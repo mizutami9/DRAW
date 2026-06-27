@@ -1,0 +1,97 @@
+{
+    "id": "1-1",
+    "displayName": "Stage 1-1",
+    "objects": [
+        {
+            "objectId": "Spawn_8dce710e",
+            "type": 2,
+            "position": {
+                "x": -5.0,
+                "y": 1.399999976158142
+            },
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.699999988079071
+            },
+            "rotation": 0.0
+        },
+        {
+            "objectId": "Goal_e652ec0c0",
+            "type": 3,
+            "position": {
+                "x": 17.123367309570314,
+                "y": 4.59999942779541
+            },
+            "size": {
+                "x": 1.149999976158142,
+                "y": 2.049999952316284
+            },
+            "rotation": 0.0
+        },
+        {
+            "objectId": "Platform_24d12",
+            "type": 0,
+            "position": {
+                "x": -2.25,
+                "y": -1.5
+            },
+            "size": {
+                "x": 11.5,
+                "y": 4.0
+            },
+            "rotation": 0.0
+        },
+        {
+            "objectId": "Platform_28830",
+            "type": 0,
+            "position": {
+                "x": 10.5,
+                "y": -1.5
+            },
+            "size": {
+                "x": 7.0,
+                "y": 4.0
+            },
+            "rotation": 0.0
+        },
+        {
+            "objectId": "BalanceScale_9",
+            "type": 4,
+            "position": {
+                "x": 12.0,
+                "y": 1.0
+            },
+            "size": {
+                "x": 4.5,
+                "y": 0.6000000238418579
+            },
+            "rotation": 0.0
+        },
+        {
+            "objectId": "Platform_a3c49",
+            "type": 0,
+            "position": {
+                "x": 16.400432586669923,
+                "y": 0.0331883430480957
+            },
+            "size": {
+                "x": 2.8888893127441408,
+                "y": 5.795832633972168
+            },
+            "rotation": 0.0
+        },
+        {
+            "objectId": "Weight_1ee1354",
+            "type": 5,
+            "position": {
+                "x": 8.0,
+                "y": 1.0
+            },
+            "size": {
+                "x": 0.8999999761581421,
+                "y": 0.8999999761581421
+            },
+            "rotation": 0.0
+        }
+    ]
+}

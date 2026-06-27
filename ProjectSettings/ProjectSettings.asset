@@ -1,0 +1,355 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 26
+  productGUID: 6e0fb7c310d142a4a8bd7fa6d85f3a19
+  AndroidProfiler: 0
+  AndroidFilterTouchesWhenObscured: 0
+  AndroidEnableSustainedPerformanceMode: 0
+  defaultScreenOrientation: 4
+  targetDevice: 2
+  useOnDemandResources: 0
+  accelerometerFrequency: 60
+  companyName: PICO
+  productName: DrawBody Prototype
+  defaultCursor: {fileID: 0}
+  cursorHotspot: {x: 0, y: 0}
+  m_SplashScreenBackgroundColor: {r: 0.12941177, g: 0.12941177, b: 0.12941177, a: 1}
+  m_ShowUnitySplashScreen: 1
+  m_ShowUnitySplashLogo: 1
+  m_SplashScreenOverlayOpacity: 1
+  m_SplashScreenAnimation: 1
+  m_SplashScreenLogoStyle: 1
+  m_SplashScreenDrawMode: 0
+  m_SplashScreenBackgroundAnimationZoom: 1
+  m_SplashScreenLogoAnimationZoom: 1
+  m_SplashScreenBackgroundLandscapeAspect: 1
+  m_SplashScreenBackgroundPortraitAspect: 1
+  m_SplashScreenBackgroundLandscapeUvs:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  m_SplashScreenBackgroundPortraitUvs:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  m_SplashScreenLogos: []
+  m_VirtualRealitySplashScreen: {fileID: 0}
+  m_HolographicTrackingLossScreen: {fileID: 0}
+  defaultScreenWidth: 1280
+  defaultScreenHeight: 720
+  defaultScreenWidthWeb: 960
+  defaultScreenHeightWeb: 600
+  m_StereoRenderingPath: 0
+  m_ActiveColorSpace: 0
+  m_MTRendering: 1
+  gcIncremental: 1
+  graphicsJobs: 0
+  xboxPIXTextureCapture: 0
+  xboxEnableAvatar: 0
+  xboxEnableKinect: 0
+  xboxEnableKinectAutoTracking: 0
+  xboxEnableFitness: 0
+  visibleInBackground: 1
+  allowFullscreenSwitch: 1
+  fullscreenMode: 1
+  scriptingBackend: {}
+  il2cppCompilerConfiguration: {}
+  managedStrippingLevel: {}
+  incrementalIl2cppBuild: {}
+  suppressCommonWarnings: 1
+  allowUnsafeCode: 0
+  useDeterministicCompilation: 1
+  enableRoslynAnalyzers: 1
+  additionalIl2CppArgs: 
+  scriptingRuntimeVersion: 1
+  gcWBarrierValidation: 0
+  apiCompatibilityLevelPerPlatform: {}
+  m_RenderingPath: 1
+  m_MobileRenderingPath: 1
+  metroPackageName: DrawBodyPrototype
+  metroPackageVersion: 
+  applicationIdentifier: {}
+  buildNumber: {}
+  iPhoneBuildNumber: 
+  tvOSBuildNumber: 
+  overrideDefaultApplicationIdentifier: 0
+  AndroidBundleVersionCode: 1
+  AndroidMinSdkVersion: 23
+  AndroidTargetSdkVersion: 0
+  AndroidPreferredInstallLocation: 1
+  aotOptions: 
+  stripEngineCode: 1
+  iPhoneStrippingLevel: 0
+  iPhoneScriptCallOptimization: 0
+  ForceInternetPermission: 0
+  ForceSDCardPermission: 0
+  CreateWallpaper: 0
+  APKExpansionFiles: 0
+  keepLoadedShadersAlive: 0
+  StripUnusedMeshComponents: 1
+  VertexChannelCompressionMask: 4054
+  iPhoneSdkVersion: 988
+  iOSTargetOSVersionString: 12.0
+  tvOSSdkVersion: 0
+  tvOSRequireExtendedGameController: 0
+  tvOSTargetOSVersionString: 12.0
+  uIPrerenderedIcon: 0
+  uIRequiresPersistentWiFi: 0
+  uIRequiresFullScreen: 1
+  uIStatusBarHidden: 1
+  uIExitOnSuspend: 0
+  uIStatusBarStyle: 0
+  appleTVSplashScreen: {fileID: 0}
+  appleTVSplashScreen2x: {fileID: 0}
+  tvOSSmallIconLayers: []
+  tvOSSmallIconLayers2x: []
+  tvOSLargeIconLayers: []
+  tvOSLargeIconLayers2x: []
+  tvOSTopShelfImageLayers: []
+  tvOSTopShelfImageLayers2x: []
+  tvOSTopShelfImageWideLayers: []
+  tvOSTopShelfImageWideLayers2x: []
+  iOSLaunchScreenType: 0
+  iOSLaunchScreenPortrait: {fileID: 0}
+  iOSLaunchScreenLandscape: {fileID: 0}
+  iOSLaunchScreenBackgroundColor:
+    serializedVersion: 2
+    rgba: 0
+  iOSLaunchScreenFillPct: 100
+  iOSLaunchScreenSize: 100
+  iOSLaunchScreenCustomXibPath: 
+  iOSLaunchScreeniPadType: 0
+  iOSLaunchScreeniPadImage: {fileID: 0}
+  iOSLaunchScreeniPadBackgroundColor:
+    serializedVersion: 2
+    rgba: 0
+  iOSLaunchScreeniPadFillPct: 100
+  iOSLaunchScreeniPadSize: 100
+  iOSLaunchScreeniPadCustomXibPath: 
+  iOSDeviceRequirements: []
+  iOSURLSchemes: []
+  iOSBackgroundModes: 0
+  iOSMetalForceHardShadows: 0
+  metalEditorSupport: 1
+  metalAPIValidation: 1
+  iOSRenderExtraFrameOnPause: 0
+  appleDeveloperTeamID: 
+  iOSManualSigningProvisioningProfileID: 
+  tvOSManualSigningProvisioningProfileID: 
+  iOSManualSigningProvisioningProfileType: 0
+  tvOSManualSigningProvisioningProfileType: 0
+  appleEnableAutomaticSigning: 0
+  iOSRequireARKit: 0
+  iOSAutomaticallyDetectAndAddCapabilities: 1
+  appleEnableProMotion: 0
+  shaderPrecisionModel: 0
+  m_BuildTargetIcons: []
+  m_BuildTargetPlatformIcons: []
+  m_BuildTargetBatching: []
+  m_BuildTargetShaderSettings: []
+  m_BuildTargetGraphicsJobs: []
+  m_BuildTargetGraphicsJobMode: []
+  m_BuildTargetGraphicsAPIs: []
+  m_BuildTargetVRSettings: []
+  openGLRequireES31: 0
+  openGLRequireES31AEP: 0
+  openGLRequireES32: 0
+  m_TemplateCustomTags: {}
+  mobileMTRendering: {}
+  m_BuildTargetGroupLightmapEncodingQuality: []
+  m_BuildTargetGroupLightmapSettings: []
+  m_BuildTargetNormalMapEncoding: []
+  playModeTestRunnerEnabled: 0
+  runPlayModeTestAsEditModeTest: 0
+  actionOnDotNetUnhandledException: 1
+  enableInternalProfiler: 0
+  logObjCUncaughtExceptions: 1
+  enableCrashReportAPI: 0
+  cameraUsageDescription: 
+  locationUsageDescription: 
+  microphoneUsageDescription: 
+  bluetoothUsageDescription: 
+  switchNMETAOverride: 
+  switchNetLibKey: 
+  switchSocketMemoryPoolSize: 6144
+  switchSocketAllocatorPoolSize: 128
+  switchSocketConcurrencyLimit: 14
+  switchScreenResolutionBehavior: 2
+  switchUseCPUProfiler: 0
+  switchApplicationID: 0x01004b9000490000
+  switchNSODependencies: 
+  switchTitleNames_0: 
+  switchTitleNames_1: 
+  switchTitleNames_2: 
+  switchTitleNames_3: 
+  switchTitleNames_4: 
+  switchTitleNames_5: 
+  switchTitleNames_6: 
+  switchTitleNames_7: 
+  switchTitleNames_8: 
+  switchTitleNames_9: 
+  switchTitleNames_10: 
+  switchTitleNames_11: 
+  switchTitleNames_12: 
+  switchTitleNames_13: 
+  switchTitleNames_14: 
+  switchPublisherNames_0: 
+  switchPublisherNames_1: 
+  switchPublisherNames_2: 
+  switchPublisherNames_3: 
+  switchPublisherNames_4: 
+  switchPublisherNames_5: 
+  switchPublisherNames_6: 
+  switchPublisherNames_7: 
+  switchPublisherNames_8: 
+  switchPublisherNames_9: 
+  switchPublisherNames_10: 
+  switchPublisherNames_11: 
+  switchPublisherNames_12: 
+  switchPublisherNames_13: 
+  switchPublisherNames_14: 
+  switchStartupUserAccount: 0
+  switchSupportedLanguagesMask: 0
+  switchLogoHandling: 0
+  switchReleaseVersion: 0
+  switchDisplayVersion: 1.0.0
+  switchStartupMovie: {fileID: 0}
+  switchLTOSetting: 0
+  switchApplicationErrorCodeCategory: 
+  switchUserAccountSaveDataSize: 0
+  switchUserAccountSaveDataJournalSize: 0
+  switchApplicationAttribute: 0
+  switchCardSpecSize: -1
+  switchCardSpecClock: -1
+  switchRatingsMask: 0
+  switchRatingsInt_0: 0
+  switchRatingsInt_1: 0
+  switchRatingsInt_2: 0
+  switchRatingsInt_3: 0
+  switchRatingsInt_4: 0
+  switchRatingsInt_5: 0
+  switchRatingsInt_6: 0
+  switchRatingsInt_7: 0
+  switchRatingsInt_8: 0
+  switchRatingsInt_9: 0
+  switchRatingsInt_10: 0
+  switchRatingsInt_11: 0
+  switchRatingsInt_12: 0
+  switchLocalCommunicationIds_0: 
+  switchLocalCommunicationIds_1: 
+  switchLocalCommunicationIds_2: 
+  switchLocalCommunicationIds_3: 
+  switchLocalCommunicationIds_4: 
+  switchLocalCommunicationIds_5: 
+  switchLocalCommunicationIds_6: 
+  switchLocalCommunicationIds_7: 
+  switchParentalControl: 0
+  switchAllowsScreenshot: 1
+  switchAllowsVideoCapturing: 1
+  switchAllowsRuntimeAddOnContentInstall: 0
+  switchDataLossConfirmation: 0
+  switchUserAccountLockEnabled: 0
+  switchSystemResourceMemory: 16777216
+  switchSupportedNpadStyles: 3
+  switchNativeFsCacheSize: 32
+  switchIsHoldTypeHorizontal: 0
+  switchSupportedNpadCount: 8
+  switchEnableTouchScreen: 1
+  switchSocketConfigEnabled: 0
+  switchTcpInitialSendBufferSize: 32
+  switchTcpInitialReceiveBufferSize: 64
+  switchTcpAutoSendBufferSizeMax: 256
+  switchTcpAutoReceiveBufferSizeMax: 256
+  switchUdpSendBufferSize: 9
+  switchUdpReceiveBufferSize: 42
+  switchSocketBufferEfficiency: 4
+  switchSocketInitializeEnabled: 1
+  switchNetworkInterfaceManagerInitializeEnabled: 1
+  switchPlayerConnectionEnabled: 1
+  ps4NPAgeRating: 12
+  ps4NPTitleSecret: 
+  ps4NPTrophyPackPath: 
+  ps4ParentalLevel: 11
+  ps4ContentID: ED1633-NPXX51362_00-0000000000000000
+  ps4Category: 0
+  ps4MasterVersion: 01.00
+  ps4AppVersion: 01.00
+  ps4AppType: 0
+  ps4ParamSfxPath: 
+  ps4VideoOutPixelFormat: 0
+  ps4VideoOutInitialWidth: 1920
+  ps4VideoOutBaseModeInitialWidth: 1920
+  ps4VideoOutReprojectionRate: 60
+  ps4PronunciationXMLPath: 
+  ps4PronunciationSIGPath: 
+  ps4BackgroundImagePath: 
+  ps4StartupImagePath: 
+  ps4SaveDataImagePath: 
+  ps4SdkOverride: 
+  ps4BGMPath: 
+  ps4ShareFilePath: 
+  ps4ShareOverlayImagePath: 
+  ps4PrivacyGuardImagePath: 
+  ps4ExtraSceSysFile: 
+  ps4NPtitleDatPath: 
+  ps4RemotePlayKeyAssignment: -1
+  ps4RemotePlayKeyMappingDir: 
+  ps4PlayTogetherPlayerCount: 0
+  ps4EnterButtonAssignment: 1
+  ps4ApplicationParam1: 0
+  ps4ApplicationParam2: 0
+  ps4ApplicationParam3: 0
+  ps4ApplicationParam4: 0
+  ps4DownloadDataSize: 0
+  ps4GarlicHeapSize: 2048
+  ps4ProGarlicHeapSize: 2560
+  playerPrefsMaxSize: 32768
+  xboxOneProductId: 
+  xboxOneUpdateKey: 
+  xboxOneSandboxId: 
+  xboxOneContentId: 
+  xboxOneTitleId: 
+  xboxOneSCId: 
+  xboxOneGameOsOverridePath: 
+  xboxOnePackagingOverridePath: 
+  xboxOneAppManifestOverridePath: 
+  xboxOneVersion: 1.0.0.0
+  xboxOneDescription: 
+  xboxOneLanguage: 
+  xboxOneCapability: []
+  xboxOneGameRating: {}
+  xboxOneIsContentPackage: 0
+  xboxOneEnhancedXboxCompatibilityMode: 0
+  xboxOneEnableGPUVariability: 1
+  xboxOneSockets: {}
+  xboxOneSplashScreen: {fileID: 0}
+  xboxOneOverrideIdentityName: 
+  xboxOneOverrideIdentityPublisher: 
+  vrEditorSettings: {}
+  cloudServicesEnabled: {}
+  luminIcon:
+    m_Name: 
+    m_ModelFolderPath: 
+    m_PortalFolderPath: 
+  luminCert:
+    m_CertPath: 
+    m_PrivateKeyPath: 
+    m_SignPackage: 1
+  luminIsChannelApp: 0
+  luminVersion:
+    m_VersionCode: 1
+    m_VersionName: 
+  apiCompatibilityLevel: 6
+  activeInputHandler: 0
+  cloudProjectId: 
+  projectName: DrawBody Prototype
+  organizationId: 
+  cloudEnabled: 0
+  legacyClampBlendShapeWeights: 0
