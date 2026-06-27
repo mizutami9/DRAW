@@ -161,9 +161,9 @@ namespace DrawBody.Prototype
             switch (tier)
             {
                 case JumpTier.Double:
-                    return 2f;
+                    return 1.5f;
                 case JumpTier.Triple:
-                    return 3f;
+                    return 2f;
                 default:
                     return 1f;
             }

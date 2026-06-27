@@ -195,6 +195,7 @@ namespace DrawBody.Prototype
             }
 
             GameObject segment = new GameObject($"{part}Segment");
+            segment.layer = gameObject.layer;
             segment.transform.SetParent(bodyRoot, false);
             segment.transform.localPosition = (start + end) * 0.5f;
             segment.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);

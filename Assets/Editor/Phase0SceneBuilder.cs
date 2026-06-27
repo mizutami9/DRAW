@@ -35,6 +35,7 @@ namespace DrawBody.EditorTools
             GameObject stageManager = new GameObject("StageManager");
             stageManager.transform.SetParent(root.transform);
             StageManager manager = stageManager.AddComponent<StageManager>();
+            OnlineManager onlineManager = stageManager.AddComponent<OnlineManager>();
             StageObjectFactory objectFactory = stageManager.AddComponent<StageObjectFactory>();
             StageLoader stageLoader = stageManager.AddComponent<StageLoader>();
             GameObject debugStageRoot = new GameObject("DebugStageRoot");
@@ -49,7 +50,7 @@ namespace DrawBody.EditorTools
             CreateLevel(debugStageRoot.transform, squareSprite, font);
             GameObject goal = CreateGoal(new Vector3(38.8f, 0.58f, 0f), debugStageRoot.transform, squareSprite);
             CreateMapDoodles(debugStageRoot.transform, font);
-            UIManager ui = CreateUi(root.transform, font, manager, out DrawManager drawManager, out RuntimeStageEditor runtimeStageEditor);
+            UIManager ui = CreateUi(root.transform, font, manager, onlineManager, out DrawManager drawManager, out RuntimeStageEditor runtimeStageEditor);
 
             goal.GetComponent<Goal>();
             AssignObject(manager, "player", player.GetComponent<PlayerController2D>());
@@ -69,6 +70,7 @@ namespace DrawBody.EditorTools
             AssignObject(runtimeStageEditor, "editorRoot", runtimeStageEditorRoot.transform);
             AssignObject(runtimeStageEditor, "worldCamera", Camera.main);
             AssignObject(drawManager, "stageManager", manager);
+            AssignObject(drawManager, "onlineManager", onlineManager);
             AssignObject(drawManager, "bodyBuilder", player.GetComponent<BodyBuilder>());
             AssignObject(drawManager, "abilityController", player.GetComponent<PlayerAbilityController>());
 
@@ -110,9 +112,17 @@ namespace DrawBody.EditorTools
             GameObject swingPivot = CreateMarker("ArmSwingPivot", new Vector3(0f, 0.1f, 0f), player.transform);
             ArmSwingController armSwing = player.AddComponent<ArmSwingController>();
             AssignObject(armSwing, "abilityController", abilityController);
+            AssignObject(armSwing, "playerController", controller);
             AssignObject(armSwing, "swingPivot", swingPivot.transform);
-            AssignLayerMask(armSwing, "pushableLayerMask", 1 << PushableLayer);
+            AssignLayerMask(armSwing, "pushableLayerMask", (1 << PushableLayer) | (1 << PlayerLayer));
             AssignFloat(armSwing, "armThickness", 0.42f);
+            AssignFloat(armSwing, "pushImpulse", 16f);
+            AssignFloat(armSwing, "swingReachMultiplier", 2f);
+            AssignFloat(armSwing, "characterLaunchMultiplier", 2.6f);
+            AssignFloat(armSwing, "armInkLaunchScale", 0.018f);
+            AssignFloat(armSwing, "characterLaunchUpSpeed", 30f);
+            AssignFloat(armSwing, "characterLaunchSideSpeed", 7f);
+            AssignBool(armSwing, "swingEnabled", false);
 
             GameObject bodyRoot = CreateMarker("GeneratedBody", Vector3.zero, player.transform);
             BodyBuilder bodyBuilder = player.AddComponent<BodyBuilder>();
@@ -125,7 +135,12 @@ namespace DrawBody.EditorTools
             AssignObject(carryController, "abilityController", abilityController);
             AssignObject(carryController, "bodyBuilder", bodyBuilder);
             AssignObject(carryController, "playerBody", rb);
-            AssignLayerMask(carryController, "carryableLayerMask", 1 << PushableLayer);
+            AssignLayerMask(carryController, "carryableLayerMask", (1 << PushableLayer) | (1 << PlayerLayer));
+            AssignFloat(carryController, "throwSpeed", 22f);
+            AssignFloat(carryController, "armInkThrowScale", 0.0175f);
+            AssignFloat(carryController, "heldPlayerThrowMultiplier", 1.25f);
+            AssignFloat(carryController, "throwAimSpeed", 1.35f);
+            AssignFloat(carryController, "throwPreviewLength", 1.8f);
 
             return player;
         }
@@ -529,7 +544,7 @@ namespace DrawBody.EditorTools
             AssignString(localizedText, "key", localizationKey);
         }
 
-        private static UIManager CreateUi(Transform parent, Font font, StageManager stageManager, out DrawManager drawManager, out RuntimeStageEditor runtimeStageEditor)
+        private static UIManager CreateUi(Transform parent, Font font, StageManager stageManager, OnlineManager onlineManager, out DrawManager drawManager, out RuntimeStageEditor runtimeStageEditor)
         {
             GameObject canvasObject = new GameObject("Canvas");
             canvasObject.transform.SetParent(parent);
@@ -589,6 +604,12 @@ namespace DrawBody.EditorTools
 
             GameObject gameplayHud = CreateGameplayHud(canvasObject.transform, font, drawManager, stageManager);
             AssignObject(ui, "gameplayHudPanel", gameplayHud);
+            GameObject titlePanel = CreateTitlePanel(canvasObject.transform, font, stageManager);
+            AssignObject(ui, "titlePanel", titlePanel);
+            GameObject multiPanel = CreateTitleMultiPanel(canvasObject.transform, font, stageManager, onlineManager);
+            AssignObject(ui, "multiPanel", multiPanel);
+            GameObject optionPanel = CreateTitleOptionPanel(canvasObject.transform, font, stageManager);
+            AssignObject(ui, "optionPanel", optionPanel);
             GameObject menuPanel = CreateMenuPanel(canvasObject.transform, font, stageManager);
             AssignObject(ui, "menuPanel", menuPanel);
             GameObject stageSelectPanel = CreateStageSelectPanel(canvasObject.transform, font, stageManager);
@@ -760,6 +781,10 @@ namespace DrawBody.EditorTools
             SetButtonLabelColor(editButton, Color.black);
             AddLocalizedText(editButton.GetComponentInChildren<Text>().gameObject, "stage_editor_open");
             AddStageEditCommand(editButton.gameObject, stageManager, "1-1");
+
+            Button titleButton = CreateButton("StageSelectTitleBackButton", panel.transform, font, "TITLE", new Vector2(470f, 560f), new Vector2(160f, 58f), new Color(0.98f, 0.78f, 0.72f, 0.95f));
+            SetButtonLabelColor(titleButton, Color.black);
+            AddTitleCommand(titleButton.gameObject, stageManager, TitleButtonCommand.Command.Title);
 
             const int groups = 15;
             const int variants = 3;
@@ -1030,6 +1055,202 @@ namespace DrawBody.EditorTools
             AddGameplayCommand(menu.gameObject, stageManager, GameplayButtonCommand.Command.Menu);
 
             return hud;
+        }
+
+        private static GameObject CreateTitlePanel(Transform parent, Font font, StageManager stageManager)
+        {
+            GameObject panel = new GameObject("TitlePanel");
+            panel.transform.SetParent(parent, false);
+            RectTransform rect = panel.AddComponent<RectTransform>();
+            Stretch(rect);
+
+            Text title = CreateText("TitleLogo", panel.transform, font, 58, TextAnchor.UpperCenter);
+            title.text = "DRAW BODY";
+            title.color = new Color(0.04f, 0.04f, 0.04f);
+            title.rectTransform.anchorMin = new Vector2(0f, 1f);
+            title.rectTransform.anchorMax = new Vector2(1f, 1f);
+            title.rectTransform.pivot = new Vector2(0.5f, 1f);
+            title.rectTransform.anchoredPosition = new Vector2(0f, -42f);
+            title.rectTransform.sizeDelta = new Vector2(0f, 72f);
+
+            Text subtitle = CreateText("TitleSubtitle", panel.transform, font, 22, TextAnchor.UpperCenter);
+            subtitle.text = "walk, jump, draw, and toss";
+            subtitle.color = new Color(0.18f, 0.18f, 0.16f, 0.85f);
+            subtitle.rectTransform.anchorMin = new Vector2(0f, 1f);
+            subtitle.rectTransform.anchorMax = new Vector2(1f, 1f);
+            subtitle.rectTransform.pivot = new Vector2(0.5f, 1f);
+            subtitle.rectTransform.anchoredPosition = new Vector2(0f, -108f);
+            subtitle.rectTransform.sizeDelta = new Vector2(0f, 34f);
+
+            GameObject bar = CreatePanel("TitleMenuBar", panel.transform, new Color(0.96f, 0.93f, 0.86f, 0.9f));
+            AddUiOutline(bar, new Color(0.12f, 0.11f, 0.1f, 0.75f), new Vector2(2f, -2f));
+            RectTransform barRect = bar.GetComponent<RectTransform>();
+            barRect.anchorMin = new Vector2(0f, 0f);
+            barRect.anchorMax = new Vector2(1f, 0f);
+            barRect.pivot = new Vector2(0.5f, 0f);
+            barRect.anchoredPosition = new Vector2(0f, 0f);
+            barRect.sizeDelta = new Vector2(0f, 88f);
+
+            AddTitleMenuButton("TitleSingleButton", bar.transform, font, "SINGLE", new Vector2(-300f, 18f), stageManager, TitleButtonCommand.Command.Single);
+            AddTitleMenuButton("TitleMultiButton", bar.transform, font, "MULTI", new Vector2(-150f, 18f), stageManager, TitleButtonCommand.Command.Multi);
+            AddTitleMenuButton("TitleDrawButton", bar.transform, font, "DRAW", new Vector2(0f, 18f), stageManager, TitleButtonCommand.Command.Draw);
+            AddTitleMenuButton("TitleOptionButton", bar.transform, font, "OPTION", new Vector2(150f, 18f), stageManager, TitleButtonCommand.Command.Option);
+            AddTitleMenuButton("TitleExitButton", bar.transform, font, "EXIT", new Vector2(300f, 18f), stageManager, TitleButtonCommand.Command.Exit);
+
+            return panel;
+        }
+
+        private static GameObject CreateTitleMultiPanel(Transform parent, Font font, StageManager stageManager, OnlineManager onlineManager)
+        {
+            GameObject panel = CreatePanel("TitleMultiPanel", parent, new Color(0.965f, 0.945f, 0.88f, 0.78f));
+            RectTransform rect = panel.GetComponent<RectTransform>();
+            Stretch(rect);
+
+            GameObject choice = CreateMultiScreen("MultiChoiceScreen", panel.transform, font, "MULTI PLAY");
+            AddMultiLargeButton("MultiRandomButton", choice.transform, font, "ランダムマッチ\nすぐに遊ぶ", new Vector2(0f, 336f), MultiMenuButtonCommand.Command.Random);
+            AddMultiLargeButton("MultiRoomButton", choice.transform, font, "ルーム\n友達と遊ぶ", new Vector2(0f, 236f), MultiMenuButtonCommand.Command.Room);
+            AddMultiSmallButton("MultiBackTitleButton", choice.transform, font, "戻る", new Vector2(0f, 126f), MultiMenuButtonCommand.Command.BackToTitle, new Color(0.98f, 0.78f, 0.72f, 0.92f));
+
+            GameObject random = CreateMultiScreen("MultiRandomScreen", panel.transform, font, "ランダムマッチ");
+            Text randomStatus = CreateMultiBodyText("MultiRandomStatus", random.transform, font, "ランダムマッチ中...\n\n参加人数 2 / 4\n\n○ あなた\n○ Player2\n□ 募集中\n□ 募集中\n\n[READY] で開始待ち");
+            AddMultiSmallButton("MultiRandomReadyButton", random.transform, font, "READY", new Vector2(-92f, 96f), MultiMenuButtonCommand.Command.Ready, new Color(0.75f, 0.95f, 0.75f, 0.92f));
+            AddMultiSmallButton("MultiRandomCancelButton", random.transform, font, "キャンセル", new Vector2(92f, 96f), MultiMenuButtonCommand.Command.Choice, new Color(0.98f, 0.78f, 0.72f, 0.92f));
+
+            GameObject room = CreateMultiScreen("MultiRoomScreen", panel.transform, font, "ROOM");
+            AddMultiLargeButton("MultiCreateRoomNavButton", room.transform, font, "ルームを作る", new Vector2(0f, 330f), MultiMenuButtonCommand.Command.CreateRoom);
+            AddMultiLargeButton("MultiJoinRoomNavButton", room.transform, font, "ルームに入る", new Vector2(0f, 244f), MultiMenuButtonCommand.Command.JoinRoom);
+            AddMultiSmallButton("MultiRoomBackButton", room.transform, font, "戻る", new Vector2(0f, 126f), MultiMenuButtonCommand.Command.Choice, new Color(0.98f, 0.78f, 0.72f, 0.92f));
+
+            GameObject create = CreateMultiScreen("MultiCreateRoomScreen", panel.transform, font, "ルーム作成");
+            CreateMultiBodyText("MultiCreateRoomBody", create.transform, font, "ルーム名\n[ みんなで落書き ]\n\n最大人数\n< 4人 >\n\n公開設定\n[公開]   [非公開]\n\nステージ\n[ホストが選ぶ]\n\n描き直し中の挙動\n[全員一時停止]");
+            AddMultiSmallButton("MultiCreateButton", create.transform, font, "作成", new Vector2(-92f, 76f), MultiMenuButtonCommand.Command.CreateRoomAction, new Color(0.75f, 0.95f, 0.75f, 0.92f));
+            AddMultiSmallButton("MultiCreateBackButton", create.transform, font, "戻る", new Vector2(92f, 76f), MultiMenuButtonCommand.Command.Room, new Color(0.98f, 0.78f, 0.72f, 0.92f));
+
+            GameObject join = CreateMultiScreen("MultiJoinRoomScreen", panel.transform, font, "ルームに入る");
+            CreateMultiBodyText("MultiJoinRoomBody", join.transform, font, "ルームID\n[ ABC123 ]\n\nルーム一覧\n\nみんなで遊ぼう    2/4\n初心者歓迎        1/4\n変な体部屋        3/4");
+            AddMultiSmallButton("MultiJoinButton", join.transform, font, "参加", new Vector2(-150f, 76f), MultiMenuButtonCommand.Command.JoinRoomAction, new Color(0.75f, 0.95f, 0.75f, 0.92f));
+            AddMultiSmallButton("MultiRefreshButton", join.transform, font, "更新", new Vector2(0f, 76f), MultiMenuButtonCommand.Command.JoinRoom, new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            AddMultiSmallButton("MultiJoinBackButton", join.transform, font, "戻る", new Vector2(150f, 76f), MultiMenuButtonCommand.Command.Room, new Color(0.98f, 0.78f, 0.72f, 0.92f));
+
+            GameObject lobby = CreateMultiScreen("MultiLobbyScreen", panel.transform, font, "ROOM LOBBY");
+            Text lobbyStatus = CreateMultiBodyText("MultiLobbyStatus", lobby.transform, font, "Room: みんなで落書き\nID: ABC123\n2 / 4\n\nプレイヤーが動けるロビー\n箱・ボール・ジャンプ台で待機中に遊べます");
+            AddMultiSmallButton("MultiLobbyDrawButton", lobby.transform, font, "DRAW", new Vector2(-222f, 76f), MultiMenuButtonCommand.Command.Draw, new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            AddMultiSmallButton("MultiLobbyReadyButton", lobby.transform, font, "READY", new Vector2(-74f, 76f), MultiMenuButtonCommand.Command.Ready, new Color(0.75f, 0.95f, 0.75f, 0.92f));
+            AddMultiSmallButton("MultiLobbyStageButton", lobby.transform, font, "STAGE", new Vector2(74f, 76f), MultiMenuButtonCommand.Command.Lobby, new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            AddMultiSmallButton("MultiLobbyExitButton", lobby.transform, font, "退出", new Vector2(222f, 76f), MultiMenuButtonCommand.Command.LeaveLobby, new Color(0.98f, 0.78f, 0.72f, 0.92f));
+
+            MultiMenuController controller = panel.AddComponent<MultiMenuController>();
+            AssignObject(controller, "onlineManager", onlineManager);
+            AssignObject(controller, "choiceScreen", choice);
+            AssignObject(controller, "randomScreen", random);
+            AssignObject(controller, "roomScreen", room);
+            AssignObject(controller, "createRoomScreen", create);
+            AssignObject(controller, "joinRoomScreen", join);
+            AssignObject(controller, "lobbyScreen", lobby);
+            AssignObject(controller, "randomStatusText", randomStatus);
+            AssignObject(controller, "lobbyStatusText", lobbyStatus);
+
+            panel.SetActive(false);
+            return panel;
+        }
+
+        private static GameObject CreateTitleOptionPanel(Transform parent, Font font, StageManager stageManager)
+        {
+            GameObject panel = CreatePanel("TitleOptionPanel", parent, new Color(0.96f, 0.93f, 0.86f, 0.94f));
+            AddUiOutline(panel, new Color(0.12f, 0.11f, 0.1f, 0.75f), new Vector2(2f, -2f));
+            RectTransform rect = panel.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = new Vector2(0f, 20f);
+            rect.sizeDelta = new Vector2(420f, 350f);
+
+            Text title = CreateText("TitleOptionTitle", panel.transform, font, 30, TextAnchor.UpperCenter);
+            title.text = "OPTION";
+            title.color = Color.black;
+            title.rectTransform.anchorMin = new Vector2(0f, 1f);
+            title.rectTransform.anchorMax = new Vector2(1f, 1f);
+            title.rectTransform.pivot = new Vector2(0.5f, 1f);
+            title.rectTransform.anchoredPosition = new Vector2(0f, -24f);
+            title.rectTransform.sizeDelta = new Vector2(0f, 44f);
+
+            Text body = CreateText("TitleOptionBody", panel.transform, font, 22, TextAnchor.MiddleLeft);
+            body.text = "BGM        □□□□□\nSE         □□□□□\nVibration  ON / OFF\nKeys       later\nLanguage   Menu";
+            body.color = Color.black;
+            body.rectTransform.anchorMin = new Vector2(0f, 0f);
+            body.rectTransform.anchorMax = new Vector2(1f, 1f);
+            body.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            body.rectTransform.anchoredPosition = new Vector2(28f, 10f);
+            body.rectTransform.sizeDelta = new Vector2(-92f, -112f);
+
+            Button back = CreateButton("TitleOptionBackButton", panel.transform, font, "Back", new Vector2(0f, 22f), new Vector2(180f, 44f), new Color(0.98f, 0.78f, 0.72f, 0.92f));
+            SetButtonLabelColor(back, Color.black);
+            AddTitleCommand(back.gameObject, stageManager, TitleButtonCommand.Command.Back);
+
+            panel.SetActive(false);
+            return panel;
+        }
+
+        private static void AddTitleMenuButton(string name, Transform parent, Font font, string label, Vector2 position, StageManager stageManager, TitleButtonCommand.Command command)
+        {
+            Button button = CreateButton(name, parent, font, label, position, new Vector2(128f, 50f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            SetButtonLabelColor(button, Color.black);
+            AddTitleCommand(button.gameObject, stageManager, command);
+        }
+
+        private static GameObject CreateMultiScreen(string name, Transform parent, Font font, string titleText)
+        {
+            GameObject screen = new GameObject(name);
+            screen.transform.SetParent(parent, false);
+            RectTransform screenRect = screen.AddComponent<RectTransform>();
+            Stretch(screenRect);
+
+            GameObject note = CreatePanel(name + "Note", screen.transform, new Color(0.96f, 0.93f, 0.86f, 0.96f));
+            AddUiOutline(note, new Color(0.12f, 0.11f, 0.1f, 0.8f), new Vector2(2f, -2f));
+            RectTransform noteRect = note.GetComponent<RectTransform>();
+            noteRect.anchorMin = new Vector2(0.5f, 0.5f);
+            noteRect.anchorMax = new Vector2(0.5f, 0.5f);
+            noteRect.pivot = new Vector2(0.5f, 0.5f);
+            noteRect.anchoredPosition = new Vector2(0f, 22f);
+            noteRect.sizeDelta = new Vector2(560f, 500f);
+
+            Text title = CreateText(name + "Title", note.transform, font, 34, TextAnchor.UpperCenter);
+            title.text = titleText;
+            title.color = Color.black;
+            title.rectTransform.anchorMin = new Vector2(0f, 1f);
+            title.rectTransform.anchorMax = new Vector2(1f, 1f);
+            title.rectTransform.pivot = new Vector2(0.5f, 1f);
+            title.rectTransform.anchoredPosition = new Vector2(0f, -26f);
+            title.rectTransform.sizeDelta = new Vector2(0f, 48f);
+
+            return note;
+        }
+
+        private static Text CreateMultiBodyText(string name, Transform parent, Font font, string bodyText)
+        {
+            Text body = CreateText(name, parent, font, 21, TextAnchor.MiddleCenter);
+            body.text = bodyText;
+            body.color = Color.black;
+            body.rectTransform.anchorMin = new Vector2(0f, 0f);
+            body.rectTransform.anchorMax = new Vector2(1f, 1f);
+            body.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            body.rectTransform.anchoredPosition = new Vector2(0f, 18f);
+            body.rectTransform.sizeDelta = new Vector2(-92f, -150f);
+            return body;
+        }
+
+        private static void AddMultiLargeButton(string name, Transform parent, Font font, string label, Vector2 position, MultiMenuButtonCommand.Command command)
+        {
+            Button button = CreateButton(name, parent, font, label, position, new Vector2(330f, 72f), new Color(0.98f, 0.96f, 0.9f, 0.94f));
+            SetButtonLabelColor(button, Color.black);
+            AddMultiCommand(button.gameObject, command);
+        }
+
+        private static void AddMultiSmallButton(string name, Transform parent, Font font, string label, Vector2 position, MultiMenuButtonCommand.Command command, Color color)
+        {
+            Button button = CreateButton(name, parent, font, label, position, new Vector2(132f, 46f), color);
+            SetButtonLabelColor(button, Color.black);
+            AddMultiCommand(button.gameObject, command);
         }
 
         private static GameObject CreateDrawPanel(
@@ -1679,6 +1900,24 @@ namespace DrawBody.EditorTools
             AssignEnum(buttonCommand, "command", (int)command);
         }
 
+        private static void AddTitleCommand(GameObject buttonObject, StageManager stageManager, TitleButtonCommand.Command command, Text statusText = null)
+        {
+            TitleButtonCommand buttonCommand = buttonObject.AddComponent<TitleButtonCommand>();
+            AssignObject(buttonCommand, "stageManager", stageManager);
+            if (statusText != null)
+            {
+                AssignObject(buttonCommand, "statusText", statusText);
+            }
+
+            AssignEnum(buttonCommand, "command", (int)command);
+        }
+
+        private static void AddMultiCommand(GameObject buttonObject, MultiMenuButtonCommand.Command command)
+        {
+            MultiMenuButtonCommand buttonCommand = buttonObject.AddComponent<MultiMenuButtonCommand>();
+            AssignEnum(buttonCommand, "command", (int)command);
+        }
+
         private static void AddRuntimeStageEditorCommand(GameObject buttonObject, StageManager stageManager, RuntimeStageEditorButtonCommand.Command command)
         {
             RuntimeStageEditorButtonCommand buttonCommand = buttonObject.AddComponent<RuntimeStageEditorButtonCommand>();
@@ -1998,6 +2237,14 @@ namespace DrawBody.EditorTools
             SerializedObject serializedObject = new SerializedObject(target);
             SerializedProperty property = serializedObject.FindProperty(propertyName);
             property.floatValue = value;
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void AssignBool(Object target, string propertyName, bool value)
+        {
+            SerializedObject serializedObject = new SerializedObject(target);
+            SerializedProperty property = serializedObject.FindProperty(propertyName);
+            property.boolValue = value;
             serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
 

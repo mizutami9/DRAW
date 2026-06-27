@@ -22,9 +22,8 @@ namespace DrawBody.Prototype
         private bool cleared;
         private bool stageStarted;
         private bool stageEditing;
+        private bool titleMode;
         private string currentStageId = "1-0";
-        private Vector3 redrawPosition;
-        private Quaternion redrawRotation;
         private readonly Dictionary<PlayerController2D, DrawManager.DrawingState> drawingStates =
             new Dictionary<PlayerController2D, DrawManager.DrawingState>();
 
@@ -67,13 +66,58 @@ namespace DrawBody.Prototype
 
         private void Start()
         {
-            Time.timeScale = 0f;
+            EnterTitle();
+        }
+
+        public void EnterTitle()
+        {
+            currentStageId = "title";
+            titleMode = true;
+            stageStarted = true;
+            stageEditing = false;
+            drawing = false;
+            cleared = false;
+            Time.timeScale = 1f;
+            stageLoader?.ShowFallbackStage();
+            SetCameraFollowEnabled(true);
             uiManager?.SetDrawing(false);
             uiManager?.SetCleared(false);
-            uiManager?.SetStageSelect(true);
+            uiManager?.SetStageSelect(false);
             uiManager?.SetStageEditor(false);
+            uiManager?.SetTitle(true);
             drawManager?.SetActive(false);
-            player?.SetControlsEnabled(false);
+            RespawnPlayers();
+            SetActivePlayer(player != null ? player : primaryPlayer, true);
+        }
+
+        public void OpenSingleMenu()
+        {
+            titleMode = false;
+            OpenStageSelect();
+        }
+
+        public void OpenMultiMenu()
+        {
+            uiManager?.SetMulti(true);
+        }
+
+        public void OpenOptionMenu()
+        {
+            uiManager?.SetOption(true);
+        }
+
+        public void CloseTitleSubmenu()
+        {
+            uiManager?.SetMulti(false);
+            uiManager?.SetOption(false);
+        }
+
+        public void ExitGame()
+        {
+            Application.Quit();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
         }
 
         private void Update()
@@ -117,9 +161,9 @@ namespace DrawBody.Prototype
                 Retry();
             }
 
-            if (!drawing && !cleared && player != null && player.transform.position.y < fallResetY)
+            if (!drawing && !cleared)
             {
-                RespawnPlayer();
+                RespawnFallenPlayers();
             }
         }
 
@@ -163,12 +207,10 @@ namespace DrawBody.Prototype
             drawing = true;
             if (player != null)
             {
-                redrawPosition = player.transform.position;
-                redrawRotation = player.transform.rotation;
                 player.ResetMotion();
             }
 
-            Time.timeScale = 0f;
+            Time.timeScale = titleMode ? 1f : 0f;
             player?.SetControlsEnabled(false);
             uiManager?.SetDrawing(true);
             drawManager?.SetActive(true);
@@ -204,6 +246,7 @@ namespace DrawBody.Prototype
         public void SelectStage(string stageId)
         {
             currentStageId = string.IsNullOrEmpty(stageId) ? "1-0" : stageId;
+            titleMode = false;
             if (stageLoader != null)
             {
                 if (currentStageId == "1-0")
@@ -221,6 +264,7 @@ namespace DrawBody.Prototype
             cleared = false;
             Time.timeScale = 1f;
             SetCameraFollowEnabled(true);
+            uiManager?.SetTitle(false);
             uiManager?.SetStageSelect(false);
             uiManager?.SetStageEditor(false);
             uiManager?.SetDrawing(false);
@@ -235,6 +279,7 @@ namespace DrawBody.Prototype
             CancelDrawingMode();
             stageStarted = false;
             stageEditing = true;
+            titleMode = false;
             cleared = false;
             Time.timeScale = 0f;
             SetCameraFollowEnabled(false);
@@ -290,11 +335,13 @@ namespace DrawBody.Prototype
             stageEditor?.Close();
             stageEditing = false;
             stageStarted = false;
+            titleMode = false;
             Time.timeScale = 0f;
             SetCameraFollowEnabled(true);
             player?.ResetMotion();
             player?.SetControlsEnabled(false);
             uiManager?.HideMenu();
+            uiManager?.SetTitle(false);
             uiManager?.SetStageEditor(false);
             uiManager?.SetStageSelect(true);
         }
@@ -345,6 +392,9 @@ namespace DrawBody.Prototype
                 SetActivePlayer(primaryPlayer, true);
             }
 
+            primaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
+            secondaryPlayer.GetComponent<PlayerCarryController>()?.ForceDrop();
+
             GameObject target = secondaryPlayer.gameObject;
             drawingStates.Remove(secondaryPlayer);
             secondaryPlayer = null;
@@ -368,9 +418,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            player.transform.SetPositionAndRotation(redrawPosition, redrawRotation);
-            LiftPlayerOutOfGround(player);
-            player.ResetMotion();
+            RespawnPlayer(player, GetRespawnOffset(player), false);
         }
 
         private void LiftPlayerOutOfGround(PlayerController2D targetPlayer)
@@ -430,15 +478,28 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void RespawnPlayer()
-        {
-            RespawnPlayer(player, Vector3.zero, true);
-        }
-
         private void RespawnPlayers()
         {
-            RespawnPlayer(primaryPlayer, Vector3.zero, primaryPlayer == player);
-            RespawnPlayer(secondaryPlayer, new Vector3(1.25f, 0f, 0f), secondaryPlayer == player);
+            RespawnPlayer(primaryPlayer, GetRespawnOffset(primaryPlayer), primaryPlayer == player);
+            RespawnPlayer(secondaryPlayer, GetRespawnOffset(secondaryPlayer), secondaryPlayer == player);
+        }
+
+        private void RespawnFallenPlayers()
+        {
+            RespawnIfFallen(primaryPlayer);
+            RespawnIfFallen(secondaryPlayer);
+        }
+
+        private void RespawnIfFallen(PlayerController2D targetPlayer)
+        {
+            if (targetPlayer == null || targetPlayer.transform.position.y >= fallResetY)
+            {
+                return;
+            }
+
+            primaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
+            secondaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
+            RespawnPlayer(targetPlayer, GetRespawnOffset(targetPlayer), targetPlayer == player);
         }
 
         private void RespawnPlayer(PlayerController2D targetPlayer, Vector3 offset, bool enableControls)
@@ -452,6 +513,11 @@ namespace DrawBody.Prototype
             targetPlayer.ResetMotion();
             targetPlayer.SetControlsEnabled(enableControls && stageStarted && !drawing && !cleared && !stageEditing);
             LiftPlayerOutOfGround(targetPlayer);
+        }
+
+        private Vector3 GetRespawnOffset(PlayerController2D targetPlayer)
+        {
+            return targetPlayer != null && targetPlayer == secondaryPlayer ? new Vector3(1.25f, 0f, 0f) : Vector3.zero;
         }
 
         private void SetActivePlayer(PlayerController2D nextPlayer, bool enableControls)

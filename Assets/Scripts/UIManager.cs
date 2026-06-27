@@ -9,12 +9,18 @@ namespace DrawBody.Prototype
         [SerializeField] private GameObject clearPanel;
         [SerializeField] private GameObject gameplayHudPanel;
         [SerializeField] private GameObject menuPanel;
+        [SerializeField] private GameObject titlePanel;
+        [SerializeField] private GameObject multiPanel;
+        [SerializeField] private GameObject optionPanel;
         [SerializeField] private GameObject stageSelectPanel;
         [SerializeField] private GameObject stageEditorPanel;
         [SerializeField] private Text statusText;
 
         private bool drawing;
         private bool cleared;
+        private bool titleShowing;
+        private bool multiShowing;
+        private bool optionShowing;
         private bool stageSelecting;
         private bool stageEditing;
 
@@ -42,7 +48,7 @@ namespace DrawBody.Prototype
 
         public void ToggleMenu()
         {
-            if (stageSelecting)
+            if (stageSelecting || titleShowing)
             {
                 return;
             }
@@ -74,9 +80,73 @@ namespace DrawBody.Prototype
                 stageSelectPanel.SetActive(selecting);
             }
 
+            if (selecting)
+            {
+                SetTitle(false);
+            }
+
             if (menuPanel != null && selecting)
             {
                 menuPanel.SetActive(false);
+            }
+
+            RefreshHudVisibility();
+        }
+
+        public void SetTitle(bool showing)
+        {
+            titleShowing = showing;
+            if (titlePanel != null)
+            {
+                titlePanel.SetActive(showing);
+            }
+
+            if (!showing)
+            {
+                SetMulti(false);
+                SetOption(false);
+            }
+
+            RefreshHudVisibility();
+        }
+
+        public void SetMulti(bool showing)
+        {
+            multiShowing = showing;
+            if (multiPanel != null)
+            {
+                multiPanel.SetActive(showing);
+            }
+
+            if (titlePanel != null && titleShowing)
+            {
+                titlePanel.SetActive(!multiShowing && !optionShowing);
+            }
+
+            if (showing)
+            {
+                SetOption(false);
+            }
+
+            RefreshHudVisibility();
+        }
+
+        public void SetOption(bool showing)
+        {
+            optionShowing = showing;
+            if (optionPanel != null)
+            {
+                optionPanel.SetActive(showing);
+            }
+
+            if (titlePanel != null && titleShowing)
+            {
+                titlePanel.SetActive(!multiShowing && !optionShowing);
+            }
+
+            if (showing)
+            {
+                SetMulti(false);
             }
 
             RefreshHudVisibility();
@@ -114,7 +184,7 @@ namespace DrawBody.Prototype
         {
             if (gameplayHudPanel != null)
             {
-                gameplayHudPanel.SetActive(!stageSelecting && !stageEditing && !drawing && !cleared && (menuPanel == null || !menuPanel.activeSelf));
+                gameplayHudPanel.SetActive(!titleShowing && !multiShowing && !optionShowing && !stageSelecting && !stageEditing && !drawing && !cleared && (menuPanel == null || !menuPanel.activeSelf));
             }
         }
 

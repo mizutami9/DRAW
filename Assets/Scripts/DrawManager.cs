@@ -57,6 +57,7 @@ namespace DrawBody.Prototype
         }
 
         [SerializeField] private StageManager stageManager;
+        [SerializeField] private OnlineManager onlineManager;
         [SerializeField] private BodyBuilder bodyBuilder;
         [SerializeField] private PlayerAbilityController abilityController;
         [SerializeField] private GameObject drawPanel;
@@ -110,6 +111,11 @@ namespace DrawBody.Prototype
             if (stageManager == null)
             {
                 stageManager = FindObjectOfType<StageManager>();
+            }
+
+            if (onlineManager == null)
+            {
+                onlineManager = FindObjectOfType<OnlineManager>();
             }
 
             if (bodyBuilder == null)
@@ -497,6 +503,11 @@ namespace DrawBody.Prototype
 
             SetMessage(string.Empty);
             ApplyDrawing();
+            onlineManager?.SendBodyData(new OnlineBodyData
+            {
+                PlayerId = "local",
+                Json = ExportCurrentBodyJson()
+            });
             return true;
         }
 
@@ -611,7 +622,21 @@ namespace DrawBody.Prototype
         public IReadOnlyList<Vector2> GetBodyPoints(BodyPart part)
         {
             EnsureInitialized();
-            return GetFittedAssembledPoints(part);
+            return GetUnscaledBodyPoints(part);
+        }
+
+        private List<Vector2> GetUnscaledBodyPoints(BodyPart part)
+        {
+            List<Vector2> result = new List<Vector2>();
+            IReadOnlyList<Vector2> source = drawings[part].Points;
+            Vector2 offset = GetBodyAnchorOffset();
+
+            for (int i = 0; i < source.Count; i++)
+            {
+                result.Add(IsBreakPoint(source[i]) ? StrokeBreak : GetRawAssembledPoint(part, source[i]) + offset);
+            }
+
+            return result;
         }
 
         private List<Vector2> GetFittedAssembledPoints(BodyPart part)
@@ -628,10 +653,45 @@ namespace DrawBody.Prototype
             return result;
         }
 
+        private Vector2 GetBodyAnchorOffset()
+        {
+            if (currentSpecies != Species.Slime && TryGetRawPartBounds(BodyPart.Torso, out Rect torsoBounds))
+            {
+                return -torsoBounds.center;
+            }
+
+            return TryGetRawAssemblyBounds(out Rect bounds) ? -bounds.center : Vector2.zero;
+        }
+
         public float GetInk(BodyPart part)
         {
             EnsureInitialized();
             return drawings[part].UsedInk;
+        }
+
+        public string ExportCurrentBodyJson()
+        {
+            EnsureInitialized();
+            BodyPart[] activeParts = GetCurrentParts();
+            SerializableBodyDrawing body = new SerializableBodyDrawing
+            {
+                Species = currentSpecies.ToString(),
+                Parts = new SerializableBodyPartDrawing[activeParts.Length]
+            };
+
+            for (int i = 0; i < activeParts.Length; i++)
+            {
+                BodyPart part = activeParts[i];
+                PartDrawing drawing = drawings[part];
+                body.Parts[i] = new SerializableBodyPartDrawing
+                {
+                    Part = part.ToString(),
+                    Points = drawing.Points.ToArray(),
+                    Ink = drawing.UsedInk
+                };
+            }
+
+            return JsonUtility.ToJson(body);
         }
 
         public static BodyPart[] GetAllParts()
@@ -1399,6 +1459,47 @@ namespace DrawBody.Prototype
                         minY = Mathf.Min(minY, point.y);
                         maxY = Mathf.Max(maxY, point.y);
                     }
+                }
+            }
+
+            bounds = found ? Rect.MinMaxRect(minX, minY, maxX, maxY) : new Rect();
+            return found;
+        }
+
+        private bool TryGetRawPartBounds(BodyPart part, out Rect bounds)
+        {
+            bool found = false;
+            float minX = 0f;
+            float maxX = 0f;
+            float minY = 0f;
+            float maxY = 0f;
+
+            if (!drawings.TryGetValue(part, out PartDrawing drawing))
+            {
+                bounds = new Rect();
+                return false;
+            }
+
+            for (int i = 0; i < drawing.Points.Count; i++)
+            {
+                if (IsBreakPoint(drawing.Points[i]))
+                {
+                    continue;
+                }
+
+                Vector2 point = GetRawAssembledPoint(part, drawing.Points[i]);
+                if (!found)
+                {
+                    minX = maxX = point.x;
+                    minY = maxY = point.y;
+                    found = true;
+                }
+                else
+                {
+                    minX = Mathf.Min(minX, point.x);
+                    maxX = Mathf.Max(maxX, point.x);
+                    minY = Mathf.Min(minY, point.y);
+                    maxY = Mathf.Max(maxY, point.y);
                 }
             }
 
