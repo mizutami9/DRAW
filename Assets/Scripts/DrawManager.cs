@@ -381,6 +381,7 @@ namespace DrawBody.Prototype
             RefreshConnectionMessage();
             UpdateConnectionMarker();
             ApplyDrawing();
+            SendCurrentBodyData();
             CurrentSpeciesChanged?.Invoke(currentSpecies);
             CurrentPartChanged?.Invoke(currentPart);
         }
@@ -503,12 +504,17 @@ namespace DrawBody.Prototype
 
             SetMessage(string.Empty);
             ApplyDrawing();
+            SendCurrentBodyData();
+            return true;
+        }
+
+        private void SendCurrentBodyData()
+        {
             onlineManager?.SendBodyData(new OnlineBodyData
             {
                 PlayerId = "local",
                 Json = ExportCurrentBodyJson()
             });
-            return true;
         }
 
         public void ApplyDrawingWithoutValidation()
@@ -692,6 +698,67 @@ namespace DrawBody.Prototype
             }
 
             return JsonUtility.ToJson(body);
+        }
+
+        public DrawingState CreateStateFromBodyJson(string json)
+        {
+            EnsureInitialized();
+            if (string.IsNullOrEmpty(json))
+            {
+                return null;
+            }
+
+            SerializableBodyDrawing body = JsonUtility.FromJson<SerializableBodyDrawing>(json);
+            if (body == null)
+            {
+                return null;
+            }
+
+            Species species = Species.Human;
+            if (!string.IsNullOrEmpty(body.Species))
+            {
+                System.Enum.TryParse(body.Species, out species);
+            }
+
+            DrawingState state = new DrawingState
+            {
+                Species = species,
+                Part = GetPartsForSpecies(species)[0]
+            };
+
+            foreach (Species entrySpecies in System.Enum.GetValues(typeof(Species)))
+            {
+                Dictionary<BodyPart, List<Vector2>> partPoints = new Dictionary<BodyPart, List<Vector2>>();
+                foreach (BodyPart part in GetAllParts())
+                {
+                    partPoints[part] = new List<Vector2>();
+                }
+
+                state.Points[entrySpecies] = partPoints;
+            }
+
+            if (body.Parts != null)
+            {
+                for (int i = 0; i < body.Parts.Length; i++)
+                {
+                    SerializableBodyPartDrawing partDrawing = body.Parts[i];
+                    if (partDrawing == null || string.IsNullOrEmpty(partDrawing.Part))
+                    {
+                        continue;
+                    }
+
+                    if (!System.Enum.TryParse(partDrawing.Part, out BodyPart part))
+                    {
+                        continue;
+                    }
+
+                    state.Points[species][part] = partDrawing.Points != null
+                        ? new List<Vector2>(partDrawing.Points)
+                        : new List<Vector2>();
+                }
+            }
+
+            return state;
         }
 
         public static BodyPart[] GetAllParts()

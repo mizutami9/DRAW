@@ -3,13 +3,24 @@ using UnityEngine;
 
 namespace DrawBody.Prototype
 {
+    public enum OnlineBackendMode
+    {
+        Fake,
+        DirectTcp,
+        Eos
+    }
+
     public interface IOnlineBackend
     {
         event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         OnlineConnectionState State { get; }
         OnlineLobbyInfo CurrentLobby { get; }
+        string LocalPlayerId { get; }
+        event Action<OnlinePlayerState> PlayerStateReceived;
+        event Action<OnlineBodyData> BodyDataReceived;
         void Initialize();
         void Login();
+        void Tick();
         void StartRandomMatch();
         void CreateRoom(string roomName, int maxPlayers, bool isPrivate);
         void JoinRoom(string roomId);
@@ -18,22 +29,41 @@ namespace DrawBody.Prototype
         void StartGame(string stageId);
         void SendBodyData(OnlineBodyData bodyData);
         void SendInput(OnlineInputData inputData);
+        void SendPlayerState(OnlinePlayerState playerState);
     }
 
     public sealed class OnlineManager : MonoBehaviour
     {
+        [SerializeField] private OnlineBackendMode backendMode = OnlineBackendMode.Eos;
         [SerializeField] private bool autoLogin = true;
+        [SerializeField] private int directTcpPort = 7777;
 
         private IOnlineBackend backend;
 
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
+        public event Action<OnlinePlayerState> PlayerStateReceived;
+        public event Action<OnlineBodyData> BodyDataReceived;
         public OnlineConnectionState State => backend != null ? backend.State : OnlineConnectionState.Offline;
         public OnlineLobbyInfo CurrentLobby => backend != null ? backend.CurrentLobby : null;
+        public string LocalPlayerId => backend != null ? backend.LocalPlayerId : string.Empty;
 
         private void Awake()
         {
-            backend = new FakeOnlineBackend();
+            switch (backendMode)
+            {
+                case OnlineBackendMode.Eos:
+                    backend = new EosOnlineBackend();
+                    break;
+                case OnlineBackendMode.DirectTcp:
+                    backend = new DirectTcpOnlineBackend(directTcpPort);
+                    break;
+                default:
+                    backend = new FakeOnlineBackend();
+                    break;
+            }
             backend.StateChanged += OnBackendStateChanged;
+            backend.PlayerStateReceived += OnBackendPlayerStateReceived;
+            backend.BodyDataReceived += OnBackendBodyDataReceived;
             backend.Initialize();
         }
 
@@ -43,6 +73,11 @@ namespace DrawBody.Prototype
             {
                 Login();
             }
+        }
+
+        private void Update()
+        {
+            backend?.Tick();
         }
 
         public void Login()
@@ -79,7 +114,18 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            backend?.SetReady(!lobby.Players[0].IsReady);
+            bool currentReady = false;
+            string localPlayerId = backend != null ? backend.LocalPlayerId : string.Empty;
+            for (int i = 0; i < lobby.Players.Length; i++)
+            {
+                if (lobby.Players[i].PlayerId == localPlayerId)
+                {
+                    currentReady = lobby.Players[i].IsReady;
+                    break;
+                }
+            }
+
+            backend?.SetReady(!currentReady);
         }
 
         public void StartGame(string stageId)
@@ -97,17 +143,35 @@ namespace DrawBody.Prototype
             backend?.SendInput(inputData);
         }
 
+        public void SendPlayerState(OnlinePlayerState playerState)
+        {
+            backend?.SendPlayerState(playerState);
+        }
+
         private void OnBackendStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
         {
             StateChanged?.Invoke(state, lobby, message);
+        }
+
+        private void OnBackendPlayerStateReceived(OnlinePlayerState playerState)
+        {
+            PlayerStateReceived?.Invoke(playerState);
+        }
+
+        private void OnBackendBodyDataReceived(OnlineBodyData bodyData)
+        {
+            BodyDataReceived?.Invoke(bodyData);
         }
     }
 
     internal sealed class FakeOnlineBackend : IOnlineBackend
     {
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
+        public event Action<OnlinePlayerState> PlayerStateReceived;
+        public event Action<OnlineBodyData> BodyDataReceived;
         public OnlineConnectionState State { get; private set; }
         public OnlineLobbyInfo CurrentLobby { get; private set; }
+        public string LocalPlayerId => "local";
 
         public void Initialize()
         {
@@ -118,6 +182,10 @@ namespace DrawBody.Prototype
         {
             SetState(OnlineConnectionState.LoggingIn, null, "Logging in...");
             SetState(OnlineConnectionState.Online, null, "Online as local test player.");
+        }
+
+        public void Tick()
+        {
         }
 
         public void StartRandomMatch()
@@ -181,6 +249,10 @@ namespace DrawBody.Prototype
         }
 
         public void SendInput(OnlineInputData inputData)
+        {
+        }
+
+        public void SendPlayerState(OnlinePlayerState playerState)
         {
         }
 

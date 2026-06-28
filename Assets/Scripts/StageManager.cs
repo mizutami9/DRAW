@@ -346,6 +346,85 @@ namespace DrawBody.Prototype
             uiManager?.SetStageSelect(true);
         }
 
+        public Transform ActivePlayerTransform => player != null ? player.transform : null;
+        public Transform RemotePlayerTransform => secondaryPlayer != null ? secondaryPlayer.transform : null;
+
+        public Rigidbody2D ActivePlayerBody
+        {
+            get
+            {
+                return player != null ? player.GetComponent<Rigidbody2D>() : null;
+            }
+        }
+
+        public void EnsureOnlineRemotePlayer()
+        {
+            if (secondaryPlayer == null)
+            {
+                AddCharacter();
+            }
+
+            if (secondaryPlayer != null)
+            {
+                secondaryPlayer.SetControlsEnabled(false);
+            }
+        }
+
+        public void ApplyOnlineRemoteState(Vector2 position, Vector2 velocity, float rotation)
+        {
+            EnsureOnlineRemotePlayer();
+            if (secondaryPlayer == null)
+            {
+                return;
+            }
+
+            Rigidbody2D remoteBody = secondaryPlayer.GetComponent<Rigidbody2D>();
+            if (remoteBody != null)
+            {
+                remoteBody.position = position;
+                remoteBody.linearVelocity = velocity;
+                remoteBody.rotation = rotation;
+            }
+            else
+            {
+                secondaryPlayer.transform.position = position;
+                secondaryPlayer.transform.rotation = Quaternion.Euler(0f, 0f, rotation);
+            }
+
+            secondaryPlayer.SetControlsEnabled(false);
+        }
+
+        public void ApplyOnlineRemoteBodyData(OnlineBodyData bodyData)
+        {
+            if (bodyData == null || drawManager == null || string.IsNullOrEmpty(bodyData.Json))
+            {
+                return;
+            }
+
+            EnsureOnlineRemotePlayer();
+            if (secondaryPlayer == null)
+            {
+                return;
+            }
+
+            DrawManager.DrawingState remoteState = drawManager.CreateStateFromBodyJson(bodyData.Json);
+            if (remoteState == null)
+            {
+                return;
+            }
+
+            SaveDrawingState(player);
+            BodyBuilder remoteBuilder = secondaryPlayer.GetComponent<BodyBuilder>();
+            PlayerAbilityController remoteAbilities = secondaryPlayer.GetComponent<PlayerAbilityController>();
+            drawManager.SetBuildTarget(remoteBuilder, remoteAbilities);
+            drawManager.LoadState(remoteState, true);
+            drawingStates[secondaryPlayer] = CloneDrawingState(remoteState);
+            ConfigureActivePlayerTargets();
+            LoadDrawingState(player);
+            secondaryPlayer.SetControlsEnabled(false);
+            LiftPlayerOutOfGround(secondaryPlayer);
+        }
+
         public void AddCharacter()
         {
             if (secondaryPlayer != null || primaryPlayer == null)

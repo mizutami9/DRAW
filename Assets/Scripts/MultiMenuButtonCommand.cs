@@ -19,6 +19,8 @@ namespace DrawBody.Prototype
             CreateRoomAction,
             JoinRoomAction,
             Ready,
+            StartStage,
+            CopyLobbyId,
             LeaveLobby,
             BackToTitle
         }
@@ -76,6 +78,12 @@ namespace DrawBody.Prototype
                     break;
                 case Command.Ready:
                     controller?.ToggleReady();
+                    break;
+                case Command.StartStage:
+                    controller?.StartStage();
+                    break;
+                case Command.CopyLobbyId:
+                    controller?.CopyLobbyId();
                     break;
                 case Command.LeaveLobby:
                     controller?.LeaveLobby();

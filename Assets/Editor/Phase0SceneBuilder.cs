@@ -36,6 +36,7 @@ namespace DrawBody.EditorTools
             stageManager.transform.SetParent(root.transform);
             StageManager manager = stageManager.AddComponent<StageManager>();
             OnlineManager onlineManager = stageManager.AddComponent<OnlineManager>();
+            OnlinePlayerSync onlinePlayerSync = stageManager.AddComponent<OnlinePlayerSync>();
             StageObjectFactory objectFactory = stageManager.AddComponent<StageObjectFactory>();
             StageLoader stageLoader = stageManager.AddComponent<StageLoader>();
             GameObject debugStageRoot = new GameObject("DebugStageRoot");
@@ -60,6 +61,8 @@ namespace DrawBody.EditorTools
             AssignObject(manager, "stageEditor", runtimeStageEditor);
             AssignObject(manager, "cameraFollow", cameraObject.GetComponent<CameraFollow2D>());
             AssignObject(manager, "spawnPoint", spawnPoint.transform);
+            AssignObject(onlinePlayerSync, "onlineManager", onlineManager);
+            AssignObject(onlinePlayerSync, "stageManager", manager);
             AssignLayerMask(manager, "groundLayer", 1 << GroundLayer);
             AssignObject(stageLoader, "stageRoot", runtimeStageRoot.transform);
             AssignObject(stageLoader, "fallbackStageRoot", debugStageRoot);
@@ -1127,20 +1130,25 @@ namespace DrawBody.EditorTools
             AddMultiSmallButton("MultiCreateBackButton", create.transform, font, "戻る", new Vector2(92f, 76f), MultiMenuButtonCommand.Command.Room, new Color(0.98f, 0.78f, 0.72f, 0.92f));
 
             GameObject join = CreateMultiScreen("MultiJoinRoomScreen", panel.transform, font, "ルームに入る");
-            CreateMultiBodyText("MultiJoinRoomBody", join.transform, font, "ルームID\n[ ABC123 ]\n\nルーム一覧\n\nみんなで遊ぼう    2/4\n初心者歓迎        1/4\n変な体部屋        3/4");
+            Text joinHelp = CreateMultiBodyText("MultiJoinRoomBody", join.transform, font, "ホストの画面に出ているLobby IDを入力\n\nEOS設定済みなら、離れた友達とも参加できます。\nDirect TCPに戻した場合は IP:7777 を入力します。");
+            joinHelp.rectTransform.anchoredPosition = new Vector2(0f, 34f);
+            joinHelp.rectTransform.sizeDelta = new Vector2(-92f, -210f);
+            InputField joinAddressInput = CreateMultiInputField("MultiJoinAddressInput", join.transform, font, "EOS Lobby ID", new Vector2(0f, 182f), new Vector2(330f, 42f));
             AddMultiSmallButton("MultiJoinButton", join.transform, font, "参加", new Vector2(-150f, 76f), MultiMenuButtonCommand.Command.JoinRoomAction, new Color(0.75f, 0.95f, 0.75f, 0.92f));
             AddMultiSmallButton("MultiRefreshButton", join.transform, font, "更新", new Vector2(0f, 76f), MultiMenuButtonCommand.Command.JoinRoom, new Color(0.98f, 0.96f, 0.9f, 0.92f));
             AddMultiSmallButton("MultiJoinBackButton", join.transform, font, "戻る", new Vector2(150f, 76f), MultiMenuButtonCommand.Command.Room, new Color(0.98f, 0.78f, 0.72f, 0.92f));
 
             GameObject lobby = CreateMultiScreen("MultiLobbyScreen", panel.transform, font, "ROOM LOBBY");
             Text lobbyStatus = CreateMultiBodyText("MultiLobbyStatus", lobby.transform, font, "Room: みんなで落書き\nID: ABC123\n2 / 4\n\nプレイヤーが動けるロビー\n箱・ボール・ジャンプ台で待機中に遊べます");
-            AddMultiSmallButton("MultiLobbyDrawButton", lobby.transform, font, "DRAW", new Vector2(-222f, 76f), MultiMenuButtonCommand.Command.Draw, new Color(0.98f, 0.96f, 0.9f, 0.92f));
-            AddMultiSmallButton("MultiLobbyReadyButton", lobby.transform, font, "READY", new Vector2(-74f, 76f), MultiMenuButtonCommand.Command.Ready, new Color(0.75f, 0.95f, 0.75f, 0.92f));
-            AddMultiSmallButton("MultiLobbyStageButton", lobby.transform, font, "STAGE", new Vector2(74f, 76f), MultiMenuButtonCommand.Command.Lobby, new Color(0.98f, 0.96f, 0.9f, 0.92f));
-            AddMultiSmallButton("MultiLobbyExitButton", lobby.transform, font, "退出", new Vector2(222f, 76f), MultiMenuButtonCommand.Command.LeaveLobby, new Color(0.98f, 0.78f, 0.72f, 0.92f));
+            AddMultiSmallButton("MultiLobbyDrawButton", lobby.transform, font, "DRAW", new Vector2(-292f, 76f), MultiMenuButtonCommand.Command.Draw, new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            AddMultiSmallButton("MultiLobbyReadyButton", lobby.transform, font, "READY", new Vector2(-146f, 76f), MultiMenuButtonCommand.Command.Ready, new Color(0.75f, 0.95f, 0.75f, 0.92f));
+            Button copyLobbyIdButton = AddMultiSmallButton("MultiLobbyCopyIdButton", lobby.transform, font, "IDコピー", new Vector2(0f, 76f), MultiMenuButtonCommand.Command.CopyLobbyId, new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Button startStageButton = AddMultiSmallButton("MultiLobbyStageButton", lobby.transform, font, "1-1開始", new Vector2(146f, 76f), MultiMenuButtonCommand.Command.StartStage, new Color(0.78f, 0.9f, 1f, 0.92f));
+            AddMultiSmallButton("MultiLobbyExitButton", lobby.transform, font, "退出", new Vector2(292f, 76f), MultiMenuButtonCommand.Command.LeaveLobby, new Color(0.98f, 0.78f, 0.72f, 0.92f));
 
             MultiMenuController controller = panel.AddComponent<MultiMenuController>();
             AssignObject(controller, "onlineManager", onlineManager);
+            AssignObject(controller, "stageManager", stageManager);
             AssignObject(controller, "choiceScreen", choice);
             AssignObject(controller, "randomScreen", random);
             AssignObject(controller, "roomScreen", room);
@@ -1149,6 +1157,9 @@ namespace DrawBody.EditorTools
             AssignObject(controller, "lobbyScreen", lobby);
             AssignObject(controller, "randomStatusText", randomStatus);
             AssignObject(controller, "lobbyStatusText", lobbyStatus);
+            AssignObject(controller, "joinAddressInput", joinAddressInput);
+            AssignObject(controller, "startStageButton", startStageButton);
+            AssignObject(controller, "copyLobbyIdButton", copyLobbyIdButton);
 
             panel.SetActive(false);
             return panel;
@@ -1246,11 +1257,46 @@ namespace DrawBody.EditorTools
             AddMultiCommand(button.gameObject, command);
         }
 
-        private static void AddMultiSmallButton(string name, Transform parent, Font font, string label, Vector2 position, MultiMenuButtonCommand.Command command, Color color)
+        private static Button AddMultiSmallButton(string name, Transform parent, Font font, string label, Vector2 position, MultiMenuButtonCommand.Command command, Color color)
         {
             Button button = CreateButton(name, parent, font, label, position, new Vector2(132f, 46f), color);
             SetButtonLabelColor(button, Color.black);
             AddMultiCommand(button.gameObject, command);
+            return button;
+        }
+
+        private static InputField CreateMultiInputField(string name, Transform parent, Font font, string placeholderText, Vector2 position, Vector2 size)
+        {
+            GameObject fieldObject = CreatePanel(name, parent, new Color(0.98f, 0.96f, 0.9f, 0.96f));
+            AddUiOutline(fieldObject, new Color(0.12f, 0.11f, 0.1f, 0.65f), new Vector2(1.5f, -1.5f));
+            RectTransform rect = fieldObject.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0f);
+            rect.anchorMax = new Vector2(0.5f, 0f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+
+            InputField input = fieldObject.AddComponent<InputField>();
+            input.lineType = InputField.LineType.SingleLine;
+
+            Text text = CreateText(name + "Text", fieldObject.transform, font, 20, TextAnchor.MiddleLeft);
+            text.color = Color.black;
+            text.rectTransform.anchorMin = Vector2.zero;
+            text.rectTransform.anchorMax = Vector2.one;
+            text.rectTransform.offsetMin = new Vector2(12f, 2f);
+            text.rectTransform.offsetMax = new Vector2(-12f, -2f);
+
+            Text placeholder = CreateText(name + "Placeholder", fieldObject.transform, font, 18, TextAnchor.MiddleLeft);
+            placeholder.text = placeholderText;
+            placeholder.color = new Color(0.25f, 0.25f, 0.25f, 0.55f);
+            placeholder.rectTransform.anchorMin = Vector2.zero;
+            placeholder.rectTransform.anchorMax = Vector2.one;
+            placeholder.rectTransform.offsetMin = new Vector2(12f, 2f);
+            placeholder.rectTransform.offsetMax = new Vector2(-12f, -2f);
+
+            input.textComponent = text;
+            input.placeholder = placeholder;
+            return input;
         }
 
         private static GameObject CreateDrawPanel(

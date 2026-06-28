@@ -56,3 +56,48 @@ Unity 2D prototype for the roadmap Phase 0.
 - Ball Hit: swing arms to push the yellow ball
 
 The first milestone intentionally starts with a normal square character. After the first valid redraw, that square is replaced by generated line renderers and capsule colliders.
+
+## Online Lobby Test
+
+This prototype now uses the EOS backend by default. Login is Device ID based, so players do not need to sign in with an Epic account. Direct TCP is still available from the `OnlineManager` inspector as a fallback.
+
+1. In Unity, run `PICO > Build Phase 0 Scene`.
+2. Configure EOS with `EOS Plugin > EOS Configuration`.
+3. Press Play and choose `MULTI`.
+4. Host player: choose `Room` -> `Create Room`.
+5. Share the EOS lobby `ID` shown on the room screen.
+6. Friend player: choose `Room` -> `Join Room`, enter that ID, then press `Join`.
+7. Host presses `1-1 Start` to load stage `1-1` for everyone.
+
+EOS setup needs values from the Epic Developer Portal:
+
+- Product Name
+- Product Version
+- Product ID
+- Sandbox ID
+- Deployment ID
+- Client ID
+- Client Secret
+- Encryption Key
+
+For the Steam version, the login path should become Steam account authentication -> EOS internal Product User ID. Until Steamworks is integrated, the prototype uses Device ID -> EOS internal Product User ID.
+
+Target auth flow:
+
+```text
+Launch game
+-> Steam build: Steam account auth ticket
+-> Non-Steam/dev build: EOS Device ID
+-> EOS Connect Product User ID
+-> EOS Lobby / P2P
+```
+
+If you switch `OnlineManager` back to `DirectTcp`, use `IP:7777` as the room ID. Direct TCP is useful for same-LAN debugging only.
+
+## Windows Build
+
+Use `PICO > Build Windows EXE` to create:
+
+`Builds/DrawBodyOnline/DrawBody.exe`
+
+Send the whole `Builds/DrawBodyOnline` folder to a friend, not only the exe.

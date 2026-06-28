@@ -21,7 +21,10 @@ namespace DrawBody.Prototype
 
         [SerializeField] private StageManager stageManager;
         [SerializeField] private UIManager uiManager;
+        [SerializeField] private OnlineManager onlineManager;
         [SerializeField] private Command command;
+        private Button button;
+        private Vector3 initialScale;
 
         private void Awake()
         {
@@ -35,15 +38,33 @@ namespace DrawBody.Prototype
                 uiManager = FindObjectOfType<UIManager>();
             }
 
-            Button button = GetComponent<Button>();
+            if (onlineManager == null)
+            {
+                onlineManager = FindObjectOfType<OnlineManager>();
+            }
+
+            button = GetComponent<Button>();
+            initialScale = transform.localScale;
             Navigation navigation = button.navigation;
             navigation.mode = Navigation.Mode.None;
             button.navigation = navigation;
             button.onClick.AddListener(Execute);
+            RefreshOnlineVisibility();
+        }
+
+        private void Update()
+        {
+            RefreshOnlineVisibility();
         }
 
         private void Execute()
         {
+            if (IsCharacterManagementCommand() && IsOnlineActive())
+            {
+                EventSystem.current?.SetSelectedGameObject(null);
+                return;
+            }
+
             switch (command)
             {
                 case Command.Redraw:
@@ -73,6 +94,40 @@ namespace DrawBody.Prototype
             }
 
             EventSystem.current?.SetSelectedGameObject(null);
+        }
+
+        private void RefreshOnlineVisibility()
+        {
+            if (!IsCharacterManagementCommand())
+            {
+                return;
+            }
+
+            bool visible = !IsOnlineActive();
+            transform.localScale = visible ? initialScale : Vector3.zero;
+            if (button != null)
+            {
+                button.interactable = visible;
+            }
+        }
+
+        private bool IsCharacterManagementCommand()
+        {
+            return command == Command.AddCharacter
+                || command == Command.DeleteCharacter
+                || command == Command.SwitchCharacter;
+        }
+
+        private bool IsOnlineActive()
+        {
+            if (onlineManager == null)
+            {
+                return false;
+            }
+
+            return onlineManager.State == OnlineConnectionState.InLobby
+                || onlineManager.State == OnlineConnectionState.Playing
+                || onlineManager.State == OnlineConnectionState.Matching;
         }
     }
 }

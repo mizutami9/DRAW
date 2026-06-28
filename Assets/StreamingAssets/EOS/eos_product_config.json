@@ -1,0 +1,38 @@
+{
+  "ProductName": "DRAW PARK",
+  "ProductId": "399c86d716704734843d6716bf7470ee",
+  "ProductVersion": "0.1.0",
+  "imported": true,
+  "Clients": [
+    {
+      "Value": {
+        "ClientId": "xyza7891iJfnzRcKnwyzHJQ7u4bLClyF",
+        "ClientSecret": "wU7Zc+SCSv0JacpIN+39bqI4Fk6Ghg5HhCIIfx5W7DQ",
+        "EncryptionKey": "C4EEF813E33FF9868635294F9D079FB36833D9D5987020E6F9A9EABEE75F37E8"
+      },
+      "Name": "Client"
+    }
+  ],
+  "Environments": {
+    "Deployments": [
+      {
+        "Value": {
+          "SandboxId": {
+            "Value": "b78399d743a24a35b46594009b61abd8"
+          },
+          "DeploymentId": "990413d7f0ef4ddd8c54fbf6bb0d9ea4"
+        },
+        "Name": "Deployment"
+      }
+    ],
+    "Sandboxes": [
+      {
+        "Value": {
+          "Value": "b78399d743a24a35b46594009b61abd8"
+        },
+        "Name": "Sandbox"
+      }
+    ]
+  },
+  "schemaVersion": "1.0"
+}
