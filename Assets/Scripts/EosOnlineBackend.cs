@@ -18,6 +18,7 @@ namespace DrawBody.Prototype
         private const string MessageStart = "start";
         private const string MessageState = "state";
         private const string MessageBody = "body";
+        private const string MessageCarry = "carry";
 
         private readonly List<ProductUserId> peers = new List<ProductUserId>();
         private readonly Queue<Action> mainThreadActions = new Queue<Action>();
@@ -33,6 +34,7 @@ namespace DrawBody.Prototype
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         public event Action<OnlinePlayerState> PlayerStateReceived;
         public event Action<OnlineBodyData> BodyDataReceived;
+        public event Action<OnlineCarryData> CarryDataReceived;
         public OnlineConnectionState State { get; private set; }
         public OnlineLobbyInfo CurrentLobby { get; private set; }
         public string LocalPlayerId => localUserId != null ? localUserId.ToString() : "eos-local";
@@ -258,6 +260,25 @@ namespace DrawBody.Prototype
             else
             {
                 SendToHost(MessageState, JsonUtility.ToJson(playerState));
+            }
+        }
+
+        public void SendCarryData(OnlineCarryData carryData)
+        {
+            if (carryData == null || State == OnlineConnectionState.Offline)
+            {
+                return;
+            }
+
+            carryData.CarrierPlayerId = LocalPlayerId;
+            string payload = JsonUtility.ToJson(carryData);
+            if (isHost)
+            {
+                Broadcast(MessageCarry, payload);
+            }
+            else
+            {
+                SendToHost(MessageCarry, payload);
             }
         }
 
@@ -506,6 +527,15 @@ namespace DrawBody.Prototype
                     Broadcast(type, payload, peer);
                 }
             }
+            else if (type == MessageCarry)
+            {
+                OnlineCarryData carryData = JsonUtility.FromJson<OnlineCarryData>(payload);
+                CarryDataReceived?.Invoke(carryData);
+                if (isHost)
+                {
+                    Broadcast(type, payload, peer);
+                }
+            }
         }
 
         private void Broadcast(string type, string payload, ProductUserId except = null)
@@ -675,6 +705,7 @@ namespace DrawBody.Prototype
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         public event Action<OnlinePlayerState> PlayerStateReceived;
         public event Action<OnlineBodyData> BodyDataReceived;
+        public event Action<OnlineCarryData> CarryDataReceived;
         public OnlineConnectionState State { get; private set; }
         public OnlineLobbyInfo CurrentLobby { get; private set; }
         public string LocalPlayerId => "eos-disabled";
@@ -690,6 +721,7 @@ namespace DrawBody.Prototype
         public void SendBodyData(OnlineBodyData bodyData) { }
         public void SendInput(OnlineInputData inputData) { }
         public void SendPlayerState(OnlinePlayerState playerState) { }
+        public void SendCarryData(OnlineCarryData carryData) { }
         private void SetState(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
         {
             State = state;

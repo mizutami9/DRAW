@@ -166,7 +166,7 @@ namespace DrawBody.Prototype
             int columns = Mathf.Min(7, parts.Length);
             int row = index / columns;
             int column = index % columns;
-            float spacingX = 122f;
+            float spacingX = 112f;
             float spacingY = 42f;
             float startX = -spacingX * (columns - 1) * 0.5f;
             rectTransform.anchoredPosition = new Vector2(startX + spacingX * column, -10f - spacingY * row);

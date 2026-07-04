@@ -11,6 +11,8 @@ namespace DrawBody.Prototype
         [SerializeField] private PlayerAbilityController abilityController;
         [SerializeField] private BodyBuilder bodyBuilder;
         [SerializeField] private Rigidbody2D playerBody;
+        [SerializeField] private OnlineManager onlineManager;
+        [SerializeField] private StageManager stageManager;
         [SerializeField] private LayerMask carryableLayerMask = ~0;
         [SerializeField] private float pickupRadius = 1.7f;
         [SerializeField] private float throwSpeed = 22f;
@@ -32,6 +34,7 @@ namespace DrawBody.Prototype
         private LineRenderer throwPreviewHeadA;
         private LineRenderer throwPreviewHeadB;
         private Material previewMaterial;
+        private string heldOnlinePlayerId;
 
         public bool IsHolding => heldTransform != null;
 
@@ -55,6 +58,16 @@ namespace DrawBody.Prototype
             if (playerBody == null)
             {
                 playerBody = GetComponent<Rigidbody2D>();
+            }
+
+            if (onlineManager == null)
+            {
+                onlineManager = FindObjectOfType<OnlineManager>();
+            }
+
+            if (stageManager == null)
+            {
+                stageManager = FindObjectOfType<StageManager>();
             }
 
             carryableLayerMask |= 1 << gameObject.layer;
@@ -182,6 +195,11 @@ namespace DrawBody.Prototype
             }
 
             heldPlayerController?.SetControlsEnabled(false);
+            heldOnlinePlayerId = GetHeldOnlinePlayerId(heldPlayerController);
+            if (!string.IsNullOrEmpty(heldOnlinePlayerId))
+            {
+                SendCarryEvent("pickup", Vector2.zero);
+            }
         }
 
         private void ThrowHeld()
@@ -189,6 +207,11 @@ namespace DrawBody.Prototype
             float multiplier = heldObject != null ? heldObject.ThrowMultiplier : 1f;
             Vector2 baseVelocity = playerBody != null ? playerBody.linearVelocity : Vector2.zero;
             Vector2 throwVelocity = baseVelocity + GetThrowDirection() * GetCurrentThrowSpeed() * multiplier;
+            if (!string.IsNullOrEmpty(heldOnlinePlayerId))
+            {
+                SendCarryEvent("throw", throwVelocity);
+            }
+
             DropHeld(throwVelocity);
         }
 
@@ -221,6 +244,7 @@ namespace DrawBody.Prototype
             heldObject = null;
             heldPlayerController = null;
             heldBody = null;
+            heldOnlinePlayerId = null;
             heldColliders.Clear();
             SetThrowPreviewVisible(false);
             bodyBuilder?.SetCarryPose(false, GetFacingDirection(), transform.position);
@@ -228,6 +252,11 @@ namespace DrawBody.Prototype
 
         public void ForceDrop()
         {
+            if (!string.IsNullOrEmpty(heldOnlinePlayerId))
+            {
+                SendCarryEvent("drop", Vector2.zero);
+            }
+
             DropHeld(Vector2.zero);
         }
 
@@ -400,6 +429,36 @@ namespace DrawBody.Prototype
             float inkMultiplier = 1f + Mathf.Clamp(armInk * armInkThrowScale, 0f, 2.5f);
             float targetMultiplier = heldPlayerController != null ? heldPlayerThrowMultiplier : 1f;
             return throwSpeed * inkMultiplier * targetMultiplier;
+        }
+
+        private string GetHeldOnlinePlayerId(PlayerController2D heldPlayer)
+        {
+            if (onlineManager == null || stageManager == null || heldPlayer == null)
+            {
+                return null;
+            }
+
+            if (onlineManager.State != OnlineConnectionState.InLobby && onlineManager.State != OnlineConnectionState.Playing)
+            {
+                return null;
+            }
+
+            return heldPlayer == stageManager.RemotePlayerController ? stageManager.RemotePlayerId : null;
+        }
+
+        private void SendCarryEvent(string action, Vector2 releaseVelocity)
+        {
+            if (onlineManager == null || string.IsNullOrEmpty(heldOnlinePlayerId))
+            {
+                return;
+            }
+
+            onlineManager.SendCarryData(new OnlineCarryData
+            {
+                TargetPlayerId = heldOnlinePlayerId,
+                Action = action,
+                ReleaseVelocity = releaseVelocity
+            });
         }
     }
 }

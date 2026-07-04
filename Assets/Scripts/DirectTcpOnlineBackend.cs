@@ -18,6 +18,7 @@ namespace DrawBody.Prototype
         private const string MessageStart = "start";
         private const string MessageState = "state";
         private const string MessageBody = "body";
+        private const string MessageCarry = "carry";
 
         private readonly int port;
         private readonly string localPlayerId;
@@ -38,6 +39,7 @@ namespace DrawBody.Prototype
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         public event Action<OnlinePlayerState> PlayerStateReceived;
         public event Action<OnlineBodyData> BodyDataReceived;
+        public event Action<OnlineCarryData> CarryDataReceived;
         public OnlineConnectionState State { get; private set; }
         public OnlineLobbyInfo CurrentLobby { get; private set; }
         public string LocalPlayerId => localPlayerId;
@@ -220,6 +222,25 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void SendCarryData(OnlineCarryData carryData)
+        {
+            if (carryData == null || CurrentLobby == null || State == OnlineConnectionState.Offline)
+            {
+                return;
+            }
+
+            carryData.CarrierPlayerId = localPlayerId;
+            string payload = JsonUtility.ToJson(carryData);
+            if (isHost)
+            {
+                Broadcast(MessageCarry, payload);
+            }
+            else
+            {
+                Send(client, MessageCarry, payload);
+            }
+        }
+
         private void AcceptLoop()
         {
             while (running && listener != null)
@@ -337,6 +358,12 @@ namespace DrawBody.Prototype
                 BodyDataReceived?.Invoke(bodyData);
                 Broadcast(MessageBody, payload);
             }
+            else if (type == MessageCarry)
+            {
+                OnlineCarryData carryData = JsonUtility.FromJson<OnlineCarryData>(payload);
+                CarryDataReceived?.Invoke(carryData);
+                Broadcast(MessageCarry, payload);
+            }
         }
 
         private void HandleClientMessage(string type, string payload)
@@ -365,6 +392,11 @@ namespace DrawBody.Prototype
             {
                 OnlineBodyData bodyData = JsonUtility.FromJson<OnlineBodyData>(payload);
                 BodyDataReceived?.Invoke(bodyData);
+            }
+            else if (type == MessageCarry)
+            {
+                OnlineCarryData carryData = JsonUtility.FromJson<OnlineCarryData>(payload);
+                CarryDataReceived?.Invoke(carryData);
             }
         }
 

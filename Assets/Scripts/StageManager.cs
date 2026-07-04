@@ -22,8 +22,16 @@ namespace DrawBody.Prototype
         private bool cleared;
         private bool stageStarted;
         private bool stageEditing;
+        private bool stageSelectEditMode;
         private bool titleMode;
         private string currentStageId = "1-0";
+        private string remotePlayerId;
+        private bool onlineCarryHeld;
+        private Rigidbody2D onlineCarryBody;
+        private RigidbodyType2D onlineCarryPreviousBodyType;
+        private float onlineCarryPreviousGravityScale;
+        private bool onlineCarryPreviousFreezeRotation;
+        private readonly List<Collider2D> onlineCarryColliders = new List<Collider2D>();
         private readonly Dictionary<PlayerController2D, DrawManager.DrawingState> drawingStates =
             new Dictionary<PlayerController2D, DrawManager.DrawingState>();
 
@@ -246,6 +254,12 @@ namespace DrawBody.Prototype
         public void SelectStage(string stageId)
         {
             currentStageId = string.IsNullOrEmpty(stageId) ? "1-0" : stageId;
+            if (stageSelectEditMode)
+            {
+                OpenStageEditor(currentStageId);
+                return;
+            }
+
             titleMode = false;
             if (stageLoader != null)
             {
@@ -307,6 +321,19 @@ namespace DrawBody.Prototype
             uiManager?.SetStageSelect(true);
         }
 
+        public bool StageSelectEditMode => stageSelectEditMode;
+
+        public void SetStageSelectEditMode(bool editing)
+        {
+            stageSelectEditMode = editing;
+        }
+
+        public bool ToggleStageSelectEditMode()
+        {
+            stageSelectEditMode = !stageSelectEditMode;
+            return stageSelectEditMode;
+        }
+
         public void TestEditedStage()
         {
             if (stageEditor == null)
@@ -334,6 +361,7 @@ namespace DrawBody.Prototype
             CancelDrawingMode();
             stageEditor?.Close();
             stageEditing = false;
+            stageSelectEditMode = false;
             stageStarted = false;
             titleMode = false;
             Time.timeScale = 0f;
@@ -348,6 +376,16 @@ namespace DrawBody.Prototype
 
         public Transform ActivePlayerTransform => player != null ? player.transform : null;
         public Transform RemotePlayerTransform => secondaryPlayer != null ? secondaryPlayer.transform : null;
+        public PlayerController2D RemotePlayerController => secondaryPlayer;
+        public string RemotePlayerId => remotePlayerId;
+
+        public void SetOnlineRemotePlayerId(string playerId)
+        {
+            if (!string.IsNullOrEmpty(playerId))
+            {
+                remotePlayerId = playerId;
+            }
+        }
 
         public Rigidbody2D ActivePlayerBody
         {
@@ -368,6 +406,12 @@ namespace DrawBody.Prototype
             {
                 secondaryPlayer.SetControlsEnabled(false);
             }
+        }
+
+        public void ApplyOnlineRemoteState(string playerId, Vector2 position, Vector2 velocity, float rotation)
+        {
+            SetOnlineRemotePlayerId(playerId);
+            ApplyOnlineRemoteState(position, velocity, rotation);
         }
 
         public void ApplyOnlineRemoteState(Vector2 position, Vector2 velocity, float rotation)
@@ -392,6 +436,126 @@ namespace DrawBody.Prototype
             }
 
             secondaryPlayer.SetControlsEnabled(false);
+        }
+
+        public void ApplyOnlineCarryData(OnlineCarryData carryData, string localPlayerId)
+        {
+            if (carryData == null || string.IsNullOrEmpty(localPlayerId) || carryData.TargetPlayerId != localPlayerId)
+            {
+                return;
+            }
+
+            if (carryData.Action == "pickup")
+            {
+                BeginOnlineCarry();
+            }
+            else if (carryData.Action == "throw")
+            {
+                EndOnlineCarry(carryData.ReleaseVelocity);
+            }
+            else if (carryData.Action == "drop")
+            {
+                EndOnlineCarry(Vector2.zero);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (onlineCarryHeld)
+            {
+                FollowOnlineCarrier();
+            }
+        }
+
+        private void BeginOnlineCarry()
+        {
+            EnsureOnlineRemotePlayer();
+            if (player == null || secondaryPlayer == null || onlineCarryHeld)
+            {
+                return;
+            }
+
+            onlineCarryHeld = true;
+            player.SetControlsEnabled(false);
+            onlineCarryBody = player.GetComponent<Rigidbody2D>();
+            if (onlineCarryBody != null)
+            {
+                onlineCarryPreviousBodyType = onlineCarryBody.bodyType;
+                onlineCarryPreviousGravityScale = onlineCarryBody.gravityScale;
+                onlineCarryPreviousFreezeRotation = onlineCarryBody.freezeRotation;
+                onlineCarryBody.bodyType = RigidbodyType2D.Kinematic;
+                onlineCarryBody.gravityScale = 0f;
+                onlineCarryBody.freezeRotation = true;
+                onlineCarryBody.linearVelocity = Vector2.zero;
+                onlineCarryBody.angularVelocity = 0f;
+            }
+
+            onlineCarryColliders.Clear();
+            player.GetComponentsInChildren(onlineCarryColliders);
+            for (int i = 0; i < onlineCarryColliders.Count; i++)
+            {
+                if (onlineCarryColliders[i] != null)
+                {
+                    onlineCarryColliders[i].enabled = false;
+                }
+            }
+
+            FollowOnlineCarrier();
+        }
+
+        private void FollowOnlineCarrier()
+        {
+            if (player == null || secondaryPlayer == null)
+            {
+                return;
+            }
+
+            Vector3 anchor = secondaryPlayer.transform.position + Vector3.up * 1.15f;
+            BodyBuilder remoteBuilder = secondaryPlayer.GetComponent<BodyBuilder>();
+            if (remoteBuilder != null)
+            {
+                anchor = remoteBuilder.GetCarryAnchorWorld(secondaryPlayer.FacingDirection);
+            }
+
+            player.transform.position = anchor;
+            player.transform.rotation = Quaternion.identity;
+            if (onlineCarryBody != null)
+            {
+                onlineCarryBody.position = anchor;
+                onlineCarryBody.linearVelocity = Vector2.zero;
+                onlineCarryBody.angularVelocity = 0f;
+            }
+        }
+
+        private void EndOnlineCarry(Vector2 releaseVelocity)
+        {
+            if (!onlineCarryHeld)
+            {
+                return;
+            }
+
+            onlineCarryHeld = false;
+            for (int i = 0; i < onlineCarryColliders.Count; i++)
+            {
+                if (onlineCarryColliders[i] != null)
+                {
+                    onlineCarryColliders[i].enabled = true;
+                }
+            }
+
+            onlineCarryColliders.Clear();
+            player?.ResetMotion();
+            if (onlineCarryBody != null)
+            {
+                onlineCarryBody.bodyType = onlineCarryPreviousBodyType;
+                onlineCarryBody.gravityScale = onlineCarryPreviousGravityScale;
+                onlineCarryBody.freezeRotation = onlineCarryPreviousFreezeRotation;
+                onlineCarryBody.linearVelocity = releaseVelocity;
+                onlineCarryBody.angularVelocity = releaseVelocity.x * -18f;
+            }
+
+            player?.SetControlsEnabled(stageStarted && !drawing && !cleared && !stageEditing);
+            onlineCarryBody = null;
         }
 
         public void ApplyOnlineRemoteBodyData(OnlineBodyData bodyData)

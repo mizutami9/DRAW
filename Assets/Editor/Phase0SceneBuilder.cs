@@ -594,6 +594,9 @@ namespace DrawBody.EditorTools
             AssignObject(ui, "clearPanel", clearPanel);
 
             drawManager = canvasObject.AddComponent<DrawManager>();
+            DrawFeedbackController drawFeedback = drawPanel.AddComponent<DrawFeedbackController>();
+            AssignObject(drawFeedback, "drawArea", drawArea);
+            AssignObject(drawFeedback, "dustRoot", lineRoot);
             AssignObject(drawManager, "drawPanel", drawPanel);
             AssignObject(drawManager, "drawArea", drawArea);
             AssignObject(drawManager, "lineRoot", lineRoot);
@@ -603,6 +606,7 @@ namespace DrawBody.EditorTools
             AssignObject(drawManager, "partText", partText);
             AssignObject(drawManager, "messageText", messageText);
             AssignObject(drawManager, "abilityText", abilityText);
+            AssignObject(drawManager, "feedback", drawFeedback);
             AssignFloat(drawManager, "maxInk", 350f);
 
             GameObject gameplayHud = CreateGameplayHud(canvasObject.transform, font, drawManager, stageManager);
@@ -650,18 +654,18 @@ namespace DrawBody.EditorTools
             rect.anchorMin = new Vector2(0f, 0f);
             rect.anchorMax = new Vector2(0f, 0f);
             rect.pivot = new Vector2(0f, 0f);
-            rect.anchoredPosition = new Vector2(24f, 22f);
-            rect.sizeDelta = new Vector2(430f, 104f);
+            rect.anchoredPosition = new Vector2(24f, 18f);
+            rect.sizeDelta = new Vector2(328f, 120f);
 
-            Text title = CreateText("DrawSpeciesTitle", speciesPanel.transform, font, 18, TextAnchor.UpperCenter);
+            Text title = CreateText("DrawSpeciesTitle", speciesPanel.transform, font, 14, TextAnchor.UpperCenter);
             title.text = LocalizationManager.T("character_switch");
             title.color = Color.black;
             AddLocalizedText(title.gameObject, "character_switch");
             title.rectTransform.anchorMin = new Vector2(0f, 1f);
             title.rectTransform.anchorMax = new Vector2(1f, 1f);
             title.rectTransform.pivot = new Vector2(0.5f, 1f);
-            title.rectTransform.anchoredPosition = new Vector2(0f, -6f);
-            title.rectTransform.sizeDelta = new Vector2(0f, 26f);
+            title.rectTransform.anchoredPosition = new Vector2(0f, -5f);
+            title.rectTransform.sizeDelta = new Vector2(0f, 22f);
 
             DrawManager.Species[] species =
             {
@@ -674,25 +678,24 @@ namespace DrawBody.EditorTools
 
             for (int i = 0; i < species.Length; i++)
             {
-                float x = -120f + i * 60f;
-                Button button = CreateButton(
+                float x = -124f + i * 62f;
+                Button button = CreateSpeciesIconButton(
                     $"{species[i]}DrawSpeciesButton",
                     speciesPanel.transform,
                     font,
-                    GetSpeciesIcon(species[i]),
-                    new Vector2(x, 36f),
-                    new Vector2(62f, 48f),
+                    species[i],
+                    new Vector2(x, 38f),
+                    new Vector2(54f, 52f),
                     new Color(0.98f, 0.96f, 0.9f, 0.82f));
-                SetButtonLabelColor(button, Color.black);
 
-                Text label = CreateText($"{species[i]}DrawSpeciesLabel", speciesPanel.transform, font, 14, TextAnchor.MiddleCenter);
+                Text label = CreateText($"{species[i]}DrawSpeciesLabel", speciesPanel.transform, font, 12, TextAnchor.MiddleCenter);
                 label.text = GetSpeciesLabel(species[i]);
                 label.color = Color.black;
                 label.rectTransform.anchorMin = new Vector2(0.5f, 0f);
                 label.rectTransform.anchorMax = new Vector2(0.5f, 0f);
                 label.rectTransform.pivot = new Vector2(0.5f, 0f);
                 label.rectTransform.anchoredPosition = new Vector2(x, 8f);
-                label.rectTransform.sizeDelta = new Vector2(68f, 22f);
+                label.rectTransform.sizeDelta = new Vector2(62f, 20f);
 
                 SpeciesButtonCommand command = button.gameObject.AddComponent<SpeciesButtonCommand>();
                 AssignObject(command, "drawManager", drawManager);
@@ -780,10 +783,11 @@ namespace DrawBody.EditorTools
             AddLocalizedText(debugButton.GetComponentInChildren<Text>().gameObject, "debug_stage");
             AddStageSelectCommand(debugButton.gameObject, stageManager, "1-0");
 
-            Button editButton = CreateButton("Stage_1_1_EditButton", panel.transform, font, LocalizationManager.T("stage_editor_open"), new Vector2(-260f, 560f), new Vector2(180f, 58f), new Color(0.78f, 0.9f, 1f, 0.95f));
+            Button editButton = CreateButton("StageSelectEditModeButton", panel.transform, font, LocalizationManager.T("stage_select_edit_off"), new Vector2(-260f, 560f), new Vector2(180f, 58f), new Color(0.98f, 0.96f, 0.9f, 0.95f));
             SetButtonLabelColor(editButton, Color.black);
-            AddLocalizedText(editButton.GetComponentInChildren<Text>().gameObject, "stage_editor_open");
-            AddStageEditCommand(editButton.gameObject, stageManager, "1-1");
+            StageSelectEditModeButtonCommand editModeCommand = editButton.gameObject.AddComponent<StageSelectEditModeButtonCommand>();
+            AssignObject(editModeCommand, "stageManager", stageManager);
+            AssignObject(editModeCommand, "label", editButton.GetComponentInChildren<Text>());
 
             Button titleButton = CreateButton("StageSelectTitleBackButton", panel.transform, font, "TITLE", new Vector2(470f, 560f), new Vector2(160f, 58f), new Color(0.98f, 0.78f, 0.72f, 0.95f));
             SetButtonLabelColor(titleButton, Color.black);
@@ -1001,15 +1005,14 @@ namespace DrawBody.EditorTools
             for (int i = 0; i < species.Length; i++)
             {
                 float x = -120f + i * 60f;
-                Button button = CreateButton(
+                Button button = CreateSpeciesIconButton(
                     $"{species[i]}GameplaySpeciesButton",
                     speciesPanel.transform,
                     font,
-                    GetSpeciesIcon(species[i]),
+                    species[i],
                     new Vector2(x, 44f),
                     new Vector2(54f, 48f),
                     new Color(0.98f, 0.96f, 0.9f, 0.82f));
-                SetButtonLabelColor(button, Color.black);
 
                 Text label = CreateText($"{species[i]}GameplaySpeciesLabel", speciesPanel.transform, font, 14, TextAnchor.MiddleCenter);
                 label.text = GetSpeciesLabel(species[i]);
@@ -1315,17 +1318,21 @@ namespace DrawBody.EditorTools
             out Button decideButton,
             out Button[] partButtons)
         {
-            GameObject panel = CreatePanel("DrawPanel", parent, new Color(0.965f, 0.945f, 0.88f, 0.96f));
+            GameObject panel = CreatePanel("DrawPanel", parent, new Color(0.98f, 0.955f, 0.865f, 0.98f));
+            AddPaperTexture(panel, new Color(0.98f, 0.955f, 0.865f, 1f), new Color(0.76f, 0.67f, 0.49f, 1f), 0.1f, 3113);
+            AddSketchbookPaper(panel.transform);
 
-            Text title = CreateText("DrawTitle", panel.transform, font, 24, TextAnchor.UpperCenter);
-            title.text = LocalizationManager.T("draw_title");
-            title.color = Color.black;
-            AddLocalizedText(title.gameObject, "draw_title");
+            Text title = CreateText("DrawTitle", panel.transform, font, 48, TextAnchor.UpperLeft);
+            title.text = "DROW";
+            title.color = new Color(0.12f, 0.1f, 0.08f);
+            title.fontStyle = FontStyle.Bold;
             title.rectTransform.anchorMin = new Vector2(0f, 1f);
             title.rectTransform.anchorMax = new Vector2(0f, 1f);
             title.rectTransform.pivot = new Vector2(0f, 1f);
-            title.rectTransform.anchoredPosition = new Vector2(28f, -18f);
-            title.rectTransform.sizeDelta = new Vector2(340f, 38f);
+            title.rectTransform.anchoredPosition = new Vector2(28f, -10f);
+            title.rectTransform.sizeDelta = new Vector2(230f, 58f);
+            CreateIconLine(panel.transform, new Vector2(-610f, 300f), new Vector2(-470f, 294f), 4f, new Color(0.95f, 0.18f, 0.14f, 0.75f));
+            CreateIconLine(panel.transform, new Vector2(-606f, 292f), new Vector2(-466f, 286f), 3f, new Color(0.18f, 0.38f, 0.9f, 0.65f));
 
             Text help = CreateText("DrawHelp", panel.transform, font, 18, TextAnchor.UpperCenter);
             help.text = LocalizationManager.T("draw_help");
@@ -1334,41 +1341,47 @@ namespace DrawBody.EditorTools
             help.rectTransform.anchorMin = new Vector2(0.5f, 1f);
             help.rectTransform.anchorMax = new Vector2(0.5f, 1f);
             help.rectTransform.pivot = new Vector2(0.5f, 1f);
-            help.rectTransform.anchoredPosition = new Vector2(-60f, -588f);
+            help.rectTransform.anchoredPosition = new Vector2(-60f, -606f);
             help.rectTransform.sizeDelta = new Vector2(420f, 78f);
 
-            GameObject partBar = CreatePanel("PartButtonBar", panel.transform, new Color(0.96f, 0.93f, 0.86f, 0.78f));
-            AddUiOutline(partBar, new Color(0.12f, 0.11f, 0.1f, 0.45f), new Vector2(1.5f, -1.5f));
+            GameObject partBar = CreatePanel("PartButtonBar", panel.transform, new Color(0.91f, 0.86f, 0.74f, 0.72f));
             RectTransform partBarRect = partBar.GetComponent<RectTransform>();
             partBarRect.anchorMin = new Vector2(0.5f, 1f);
             partBarRect.anchorMax = new Vector2(0.5f, 1f);
             partBarRect.pivot = new Vector2(0.5f, 1f);
-            partBarRect.anchoredPosition = new Vector2(-60f, -58f);
-            partBarRect.sizeDelta = new Vector2(780f, 78f);
+            partBarRect.anchoredPosition = new Vector2(96f, -58f);
+            partBarRect.sizeDelta = new Vector2(930f, 78f);
+            AddSketchFrame(partBar.transform, new Vector2(930f, 78f), new Color(0.25f, 0.18f, 0.12f, 0.65f), 2f);
             partButtons = CreatePartButtons(partBar.transform, font);
 
-            GameObject areaObject = CreatePanel("DrawArea", panel.transform, new Color(0.95f, 0.96f, 0.92f, 1f));
-            AddUiOutline(areaObject, new Color(0.12f, 0.11f, 0.1f, 0.55f), new Vector2(2f, -2f));
+            GameObject areaObject = CreatePanel("DrawArea", panel.transform, new Color(0.985f, 0.982f, 0.94f, 1f));
+            AddPaperTexture(areaObject, new Color(0.985f, 0.982f, 0.94f, 1f), new Color(0.72f, 0.66f, 0.52f, 1f), 0.085f, 4127);
             drawArea = areaObject.GetComponent<RectTransform>();
             drawArea.anchorMin = new Vector2(0.5f, 0.5f);
             drawArea.anchorMax = new Vector2(0.5f, 0.5f);
             drawArea.pivot = new Vector2(0.5f, 0.5f);
-            drawArea.anchoredPosition = new Vector2(-205f, -72f);
-            drawArea.sizeDelta = new Vector2(560f, 310f);
+            drawArea.anchoredPosition = new Vector2(-300f, -20f);
+            drawArea.sizeDelta = new Vector2(590f, 318f);
+            AddNotebookGrid(areaObject.transform, new Vector2(590f, 318f));
+            AddSketchFrame(areaObject.transform, new Vector2(590f, 318f), new Color(0.2f, 0.16f, 0.12f, 0.82f), 2.2f);
 
             GameObject lineRootObject = new GameObject("LineRoot");
             lineRootObject.transform.SetParent(areaObject.transform, false);
             lineRoot = lineRootObject.AddComponent<RectTransform>();
             Stretch(lineRoot);
 
-            GameObject previewObject = CreatePanel("PreviewArea", panel.transform, new Color(0.9f, 0.93f, 0.95f, 1f));
-            AddUiOutline(previewObject, new Color(0.12f, 0.11f, 0.1f, 0.55f), new Vector2(2f, -2f));
+            GameObject previewObject = CreatePanel("PreviewArea", panel.transform, new Color(0.965f, 0.958f, 0.91f, 0.98f));
+            AddPaperTexture(previewObject, new Color(0.965f, 0.958f, 0.91f, 1f), new Color(0.68f, 0.62f, 0.5f, 1f), 0.08f, 5519);
             RectTransform previewArea = previewObject.GetComponent<RectTransform>();
             previewArea.anchorMin = new Vector2(0.5f, 0.5f);
             previewArea.anchorMax = new Vector2(0.5f, 0.5f);
             previewArea.pivot = new Vector2(0.5f, 0.5f);
-            previewArea.anchoredPosition = new Vector2(470f, -72f);
-            previewArea.sizeDelta = new Vector2(240f, 310f);
+            previewArea.anchoredPosition = new Vector2(462f, -20f);
+            previewArea.sizeDelta = new Vector2(220f, 318f);
+            AddSketchFrame(previewObject.transform, new Vector2(220f, 318f), new Color(0.2f, 0.16f, 0.12f, 0.74f), 2f);
+            AddMaskingTape(previewObject.transform, new Vector2(-54f, 158f), -7f);
+            AddMaskingTape(previewObject.transform, new Vector2(58f, 158f), 6f);
+            AddCorkPins(previewObject.transform);
 
             Text previewTitle = CreateText("PreviewTitle", previewObject.transform, font, 18, TextAnchor.UpperCenter);
             previewTitle.text = LocalizationManager.T("preview");
@@ -1388,6 +1401,7 @@ namespace DrawBody.EditorTools
             previewRoot.pivot = new Vector2(0.5f, 0.5f);
             previewRoot.anchoredPosition = new Vector2(0f, -12f);
             previewRoot.sizeDelta = new Vector2(180f, 260f);
+            previewRootObject.AddComponent<SketchPreviewWiggle>();
 
             GameObject toolPanel = CreateDrawToolPanel(
                 panel.transform,
@@ -1399,15 +1413,15 @@ namespace DrawBody.EditorTools
                 out Slider brushSizeSlider,
                 out Text brushSizeValueText);
             RectTransform toolRect = toolPanel.GetComponent<RectTransform>();
-            toolRect.anchoredPosition = new Vector2(140f, -72f);
+            toolRect.anchoredPosition = new Vector2(126f, -20f);
 
             inkText = CreateText("InkText", toolPanel.transform, font, 16, TextAnchor.MiddleCenter);
             inkText.color = Color.black;
             inkText.rectTransform.anchorMin = new Vector2(0.5f, 1f);
             inkText.rectTransform.anchorMax = new Vector2(0.5f, 1f);
             inkText.rectTransform.pivot = new Vector2(0.5f, 1f);
-            inkText.rectTransform.anchoredPosition = new Vector2(42f, -162f);
-            inkText.rectTransform.sizeDelta = new Vector2(96f, 24f);
+            inkText.rectTransform.anchoredPosition = new Vector2(58f, -226f);
+            inkText.rectTransform.sizeDelta = new Vector2(104f, 24f);
 
             partText = CreateText("PartText", panel.transform, font, 20, TextAnchor.MiddleLeft);
             partText.color = Color.black;
@@ -1439,8 +1453,8 @@ namespace DrawBody.EditorTools
             abilityText.gameObject.SetActive(false);
 
             clearButton = toolPanel.transform.Find("ToolClearButton").GetComponent<Button>();
-            decideButton = CreateButton("DecideButton", panel.transform, font, LocalizationManager.T("decide") + "\nENTER", new Vector2(420f, 24f), new Vector2(140f, 68f), new Color(0.75f, 0.95f, 0.75f, 0.9f));
-            Button cancelButton = CreateButton("CancelDrawButton", panel.transform, font, LocalizationManager.T("cancel") + "\nESC", new Vector2(580f, 24f), new Vector2(140f, 68f), new Color(0.98f, 0.78f, 0.72f, 0.9f));
+            decideButton = CreateButton("DecideButton", panel.transform, font, "✓ " + LocalizationManager.T("draw_finish") + "\nENTER", new Vector2(384f, 14f), new Vector2(150f, 66f), new Color(0.76f, 0.95f, 0.7f, 0.92f));
+            Button cancelButton = CreateButton("CancelDrawButton", panel.transform, font, "↺ " + LocalizationManager.T("draw_redo") + "\nESC", new Vector2(554f, 14f), new Vector2(150f, 66f), new Color(0.98f, 0.74f, 0.64f, 0.92f));
             SetButtonLabelColor(clearButton, Color.black);
             SetButtonLabelColor(decideButton, Color.black);
             SetButtonLabelColor(cancelButton, Color.black);
@@ -1497,9 +1511,11 @@ namespace DrawBody.EditorTools
                     label,
                     new Vector2(startX + spacingX * column, -10f - spacingY * row),
                     new Vector2(108f, 36f),
-                    parts[i] == DrawManager.BodyPart.Torso ? new Color(0.18f, 0.42f, 0.78f) : new Color(0.28f, 0.28f, 0.32f),
+                    parts[i] == DrawManager.BodyPart.Torso ? new Color(0.52f, 0.76f, 1f, 0.95f) : new Color(0.98f, 0.94f, 0.82f, 0.95f),
                     null,
                     true);
+                SetButtonLabelColor(buttons[i], Color.black);
+                AddSketchFrame(buttons[i].transform, new Vector2(108f, 36f), new Color(0.28f, 0.2f, 0.14f, 0.45f), 1.4f);
             }
 
             return buttons;
@@ -1515,18 +1531,21 @@ namespace DrawBody.EditorTools
             out Slider brushSizeSlider,
             out Text brushSizeValueText)
         {
-            GameObject panel = CreatePanel("DrawToolPanel", parent, new Color(0.96f, 0.93f, 0.86f, 0.9f));
-            AddUiOutline(panel, new Color(0.12f, 0.11f, 0.1f, 0.65f), new Vector2(2f, -2f));
+            GameObject panel = CreatePanel("DrawToolPanel", parent, new Color(0.91f, 0.86f, 0.74f, 0.94f));
+            AddPaperTexture(panel, new Color(0.91f, 0.86f, 0.74f, 1f), new Color(0.62f, 0.5f, 0.34f, 1f), 0.12f, 7211);
             RectTransform rect = panel.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.sizeDelta = new Vector2(170f, 310f);
+            rect.sizeDelta = new Vector2(220f, 318f);
+            AddSketchFrame(panel.transform, new Vector2(220f, 318f), new Color(0.23f, 0.17f, 0.12f, 0.7f), 2f);
 
-            penButton = CreateButton("PenToolButton", panel.transform, font, LocalizationManager.T("pen"), new Vector2(-42f, 246f), new Vector2(70f, 38f), new Color(0.78f, 0.95f, 0.76f, 0.9f), "pen");
-            eraserButton = CreateButton("EraserToolButton", panel.transform, font, LocalizationManager.T("eraser"), new Vector2(42f, 246f), new Vector2(76f, 38f), new Color(0.98f, 0.96f, 0.9f, 0.9f), "eraser");
+            penButton = CreateButton("PenToolButton", panel.transform, font, "✏\n" + LocalizationManager.T("pen"), new Vector2(-48f, 248f), new Vector2(82f, 64f), new Color(0.73f, 0.94f, 0.67f, 0.92f));
+            eraserButton = CreateButton("EraserToolButton", panel.transform, font, "▱\n" + LocalizationManager.T("eraser"), new Vector2(48f, 248f), new Vector2(86f, 64f), new Color(0.98f, 0.89f, 0.8f, 0.92f));
             SetButtonLabelColor(penButton, Color.black);
             SetButtonLabelColor(eraserButton, Color.black);
+            SetButtonLabelFontSize(penButton, 17);
+            SetButtonLabelFontSize(eraserButton, 15);
 
             Text sizeTitle = CreateText("BrushSizeTitle", panel.transform, font, 16, TextAnchor.MiddleLeft);
             sizeTitle.text = LocalizationManager.T("brush_size");
@@ -1535,10 +1554,10 @@ namespace DrawBody.EditorTools
             sizeTitle.rectTransform.anchorMin = new Vector2(0f, 1f);
             sizeTitle.rectTransform.anchorMax = new Vector2(1f, 1f);
             sizeTitle.rectTransform.pivot = new Vector2(0.5f, 1f);
-            sizeTitle.rectTransform.anchoredPosition = new Vector2(14f, -88f);
+            sizeTitle.rectTransform.anchoredPosition = new Vector2(18f, -108f);
             sizeTitle.rectTransform.sizeDelta = new Vector2(-24f, 24f);
 
-            brushSizeSlider = CreateBrushSlider("BrushSizeSlider", panel.transform, new Vector2(-12f, 174f), new Vector2(108f, 14f));
+            brushSizeSlider = CreateBrushSlider("BrushSizeSlider", panel.transform, new Vector2(-12f, 172f), new Vector2(142f, 20f));
             brushSizeSlider.minValue = 3f;
             brushSizeSlider.maxValue = 10f;
             brushSizeSlider.value = 6f;
@@ -1550,7 +1569,7 @@ namespace DrawBody.EditorTools
             brushSizeValueText.rectTransform.anchorMin = new Vector2(0.5f, 0f);
             brushSizeValueText.rectTransform.anchorMax = new Vector2(0.5f, 0f);
             brushSizeValueText.rectTransform.pivot = new Vector2(0.5f, 0f);
-            brushSizeValueText.rectTransform.anchoredPosition = new Vector2(58f, 166f);
+            brushSizeValueText.rectTransform.anchoredPosition = new Vector2(80f, 164f);
             brushSizeValueText.rectTransform.sizeDelta = new Vector2(48f, 28f);
 
             Text inkTitle = CreateText("InkUsageTitle", panel.transform, font, 16, TextAnchor.MiddleLeft);
@@ -1560,26 +1579,28 @@ namespace DrawBody.EditorTools
             inkTitle.rectTransform.anchorMin = new Vector2(0f, 1f);
             inkTitle.rectTransform.anchorMax = new Vector2(1f, 1f);
             inkTitle.rectTransform.pivot = new Vector2(0.5f, 1f);
-            inkTitle.rectTransform.anchoredPosition = new Vector2(14f, -142f);
+            inkTitle.rectTransform.anchoredPosition = new Vector2(18f, -166f);
             inkTitle.rectTransform.sizeDelta = new Vector2(-24f, 24f);
 
-            GameObject gaugeBack = CreatePanel("InkGaugeBack", panel.transform, new Color(1f, 1f, 1f, 0.82f));
+            GameObject gaugeBack = CreatePanel("InkGaugeBack", panel.transform, new Color(0.98f, 0.94f, 0.82f, 0.88f));
             RectTransform gaugeBackRect = gaugeBack.GetComponent<RectTransform>();
             gaugeBackRect.anchorMin = new Vector2(0.5f, 1f);
             gaugeBackRect.anchorMax = new Vector2(0.5f, 1f);
             gaugeBackRect.pivot = new Vector2(0.5f, 1f);
-            gaugeBackRect.anchoredPosition = new Vector2(-24f, -176f);
-            gaugeBackRect.sizeDelta = new Vector2(68f, 14f);
+            gaugeBackRect.anchoredPosition = new Vector2(10f, -200f);
+            gaugeBackRect.sizeDelta = new Vector2(118f, 16f);
 
-            GameObject gaugeFill = CreatePanel("InkGaugeFill", gaugeBack.transform, new Color(0.26f, 0.85f, 0.24f, 0.9f));
+            GameObject gaugeFill = CreatePanel("InkGaugeFill", gaugeBack.transform, new Color(0.3f, 0.78f, 0.22f, 0.92f));
             inkGaugeFill = gaugeFill.GetComponent<Image>();
             inkGaugeFill.type = Image.Type.Filled;
             inkGaugeFill.fillMethod = Image.FillMethod.Horizontal;
             inkGaugeFill.fillOrigin = 0;
             inkGaugeFill.fillAmount = 0f;
+            AddSketchFrame(gaugeBack.transform, new Vector2(118f, 16f), new Color(0.25f, 0.18f, 0.12f, 0.6f), 1.2f);
+            AddInkBottleIcon(panel.transform, new Vector2(-80f, -44f));
 
-            Button clearButton = CreateButton("ToolClearButton", panel.transform, font, LocalizationManager.T("clear") + "     \u2672", new Vector2(0f, 86f), new Vector2(136f, 42f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
-            undoButton = CreateButton("ToolUndoButton", panel.transform, font, LocalizationManager.T("undo") + "  \u21b6", new Vector2(0f, 34f), new Vector2(136f, 42f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
+            Button clearButton = CreateButton("ToolClearButton", panel.transform, font, LocalizationManager.T("clear"), new Vector2(-48f, 22f), new Vector2(86f, 42f), new Color(0.98f, 0.94f, 0.82f, 0.92f));
+            undoButton = CreateButton("ToolUndoButton", panel.transform, font, "↶ " + LocalizationManager.T("undo"), new Vector2(48f, 22f), new Vector2(90f, 42f), new Color(0.98f, 0.94f, 0.82f, 0.92f));
             SetButtonLabelColor(clearButton, Color.black);
             SetButtonLabelColor(undoButton, Color.black);
 
@@ -1606,7 +1627,7 @@ namespace DrawBody.EditorTools
             backgroundRect.anchorMax = new Vector2(1f, 0.5f);
             backgroundRect.pivot = new Vector2(0.5f, 0.5f);
             backgroundRect.anchoredPosition = Vector2.zero;
-            backgroundRect.sizeDelta = new Vector2(0f, 4f);
+            backgroundRect.sizeDelta = new Vector2(0f, 6f);
 
             GameObject fillArea = new GameObject("Fill Area");
             fillArea.transform.SetParent(sliderObject.transform, false);
@@ -1622,7 +1643,7 @@ namespace DrawBody.EditorTools
             fillRect.anchorMax = new Vector2(0f, 0.5f);
             fillRect.pivot = new Vector2(0f, 0.5f);
             fillRect.anchoredPosition = Vector2.zero;
-            fillRect.sizeDelta = new Vector2(10f, 4f);
+            fillRect.sizeDelta = new Vector2(10f, 6f);
 
             GameObject handleArea = new GameObject("Handle Slide Area");
             handleArea.transform.SetParent(sliderObject.transform, false);
@@ -1638,12 +1659,221 @@ namespace DrawBody.EditorTools
             handleRect.anchorMax = new Vector2(0f, 0.5f);
             handleRect.pivot = new Vector2(0.5f, 0.5f);
             handleRect.anchoredPosition = Vector2.zero;
-            handleRect.sizeDelta = new Vector2(10f, 22f);
+            handleRect.sizeDelta = new Vector2(14f, 18f);
 
             slider.fillRect = fillRect;
             slider.handleRect = handleRect;
             slider.targetGraphic = handle.GetComponent<Image>();
             return slider;
+        }
+
+        private static Button CreateSpeciesIconButton(string name, Transform parent, Font font, DrawManager.Species species, Vector2 anchoredPosition, Vector2 size, Color color)
+        {
+            Button button = CreateButton(name, parent, font, string.Empty, anchoredPosition, size, color);
+            Text label = button.GetComponentInChildren<Text>();
+            if (label != null)
+            {
+                label.text = string.Empty;
+                label.raycastTarget = false;
+            }
+
+            CreateSpeciesSketchIcon(button.transform, species);
+            return button;
+        }
+
+        private static void AddSketchbookPaper(Transform parent)
+        {
+            Color blueLine = new Color(0.45f, 0.72f, 0.9f, 0.18f);
+            Color redLine = new Color(0.95f, 0.35f, 0.3f, 0.22f);
+            for (int i = 0; i < 13; i++)
+            {
+                float y = 240f - i * 54f;
+                CreateIconLine(parent, new Vector2(-640f, y), new Vector2(640f, y + Mathf.Sin(i * 1.7f) * 2f), 1.2f, blueLine);
+            }
+
+            CreateIconLine(parent, new Vector2(-510f, 300f), new Vector2(-508f, -350f), 1.4f, redLine);
+            AddTinyDoodle(parent, new Vector2(-430f, 205f), 0.75f);
+            AddTinyDoodle(parent, new Vector2(365f, 205f), 0.65f);
+            AddTinyDoodle(parent, new Vector2(520f, -160f), 0.55f);
+        }
+
+        private static void AddNotebookGrid(Transform parent, Vector2 size)
+        {
+            Color lineColor = new Color(0.44f, 0.72f, 0.9f, 0.12f);
+            float halfWidth = size.x * 0.5f;
+            float halfHeight = size.y * 0.5f;
+            for (float y = -halfHeight + 34f; y < halfHeight; y += 34f)
+            {
+                CreateIconLine(parent, new Vector2(-halfWidth + 14f, y), new Vector2(halfWidth - 14f, y + RandomOffset(y)), 0.8f, lineColor);
+            }
+
+            for (float x = -halfWidth + 42f; x < halfWidth; x += 42f)
+            {
+                CreateIconLine(parent, new Vector2(x, -halfHeight + 12f), new Vector2(x + RandomOffset(x), halfHeight - 12f), 0.6f, new Color(0.75f, 0.78f, 0.72f, 0.07f));
+            }
+        }
+
+        private static void AddSketchFrame(Transform parent, Vector2 size, Color color, float width)
+        {
+            float left = -size.x * 0.5f;
+            float right = size.x * 0.5f;
+            float bottom = -size.y * 0.5f;
+            float top = size.y * 0.5f;
+            CreateIconLine(parent, new Vector2(left + 3f, top - 2f), new Vector2(right - 4f, top + 1f), width, color);
+            CreateIconLine(parent, new Vector2(right - 2f, top - 4f), new Vector2(right + 1f, bottom + 3f), width, color);
+            CreateIconLine(parent, new Vector2(right - 5f, bottom + 1f), new Vector2(left + 2f, bottom - 2f), width, color);
+            CreateIconLine(parent, new Vector2(left - 1f, bottom + 4f), new Vector2(left + 2f, top - 5f), width, color);
+        }
+
+        private static void AddMaskingTape(Transform parent, Vector2 position, float rotation)
+        {
+            GameObject tape = CreatePanel("MaskingTape", parent, new Color(0.98f, 0.9f, 0.62f, 0.58f));
+            Image image = tape.GetComponent<Image>();
+            image.raycastTarget = false;
+            RectTransform rect = tape.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = new Vector2(74f, 22f);
+            rect.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            AddSketchFrame(tape.transform, new Vector2(74f, 22f), new Color(0.55f, 0.42f, 0.24f, 0.22f), 1f);
+        }
+
+        private static void AddCorkPins(Transform parent)
+        {
+            CreateIconDot(parent, new Vector2(-92f, 144f), 9f, new Color(0.82f, 0.18f, 0.12f, 0.9f));
+            CreateIconDot(parent, new Vector2(92f, 144f), 9f, new Color(0.25f, 0.52f, 0.95f, 0.9f));
+            CreateIconLine(parent, new Vector2(-92f, 139f), new Vector2(-92f, 130f), 1.5f, new Color(0.12f, 0.1f, 0.08f, 0.35f));
+            CreateIconLine(parent, new Vector2(92f, 139f), new Vector2(92f, 130f), 1.5f, new Color(0.12f, 0.1f, 0.08f, 0.35f));
+        }
+
+        private static void AddInkBottleIcon(Transform parent, Vector2 center)
+        {
+            Color outline = new Color(0.18f, 0.13f, 0.1f, 0.82f);
+            Color ink = new Color(0.24f, 0.5f, 0.95f, 0.72f);
+            CreateIconLine(parent, center + new Vector2(-10f, 12f), center + new Vector2(10f, 12f), 2f, outline);
+            CreateIconLine(parent, center + new Vector2(-7f, 12f), center + new Vector2(-12f, -14f), 2f, outline);
+            CreateIconLine(parent, center + new Vector2(7f, 12f), center + new Vector2(12f, -14f), 2f, outline);
+            CreateIconLine(parent, center + new Vector2(-12f, -14f), center + new Vector2(12f, -14f), 2f, outline);
+            CreateIconLine(parent, center + new Vector2(-9f, -2f), center + new Vector2(9f, -2f), 7f, ink);
+            CreateIconLine(parent, center + new Vector2(-5f, 18f), center + new Vector2(5f, 18f), 5f, outline);
+            CreateIconDot(parent, center + new Vector2(0f, 2f), 3f, new Color(1f, 1f, 1f, 0.65f));
+        }
+
+        private static void AddTinyDoodle(Transform parent, Vector2 position, float scale)
+        {
+            Color color = new Color(0.28f, 0.42f, 0.9f, 0.13f);
+            Vector2 p = position;
+            CreateIconLine(parent, p + new Vector2(-34f, -2f) * scale, p + new Vector2(-18f, 12f) * scale, 2f * scale, color);
+            CreateIconLine(parent, p + new Vector2(-18f, 12f) * scale, p + new Vector2(2f, 16f) * scale, 2f * scale, color);
+            CreateIconLine(parent, p + new Vector2(2f, 16f) * scale, p + new Vector2(22f, 6f) * scale, 2f * scale, color);
+            CreateIconLine(parent, p + new Vector2(22f, 6f) * scale, p + new Vector2(36f, -2f) * scale, 2f * scale, color);
+        }
+
+        private static float RandomOffset(float seed)
+        {
+            return Mathf.Sin(seed * 0.37f) * 1.8f;
+        }
+
+        private static void AddPaperTexture(GameObject target, Color baseColor, Color fiberColor, float fiberStrength, int seed)
+        {
+            SketchPaperTexture texture = target.AddComponent<SketchPaperTexture>();
+            AssignColor(texture, "baseColor", baseColor);
+            AssignColor(texture, "fiberColor", fiberColor);
+            AssignFloat(texture, "fiberStrength", fiberStrength);
+            AssignInt(texture, "seed", seed);
+        }
+
+        private static void CreateSpeciesSketchIcon(Transform parent, DrawManager.Species species)
+        {
+            Color ink = new Color(0.08f, 0.08f, 0.08f, 1f);
+            Color accent = new Color(0.18f, 0.42f, 0.95f, 1f);
+
+            switch (species)
+            {
+                case DrawManager.Species.Cat:
+                    CreateIconLine(parent, new Vector2(-10f, 7f), new Vector2(-5f, 15f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(-5f, 15f), new Vector2(-1f, 7f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(3f, 7f), new Vector2(8f, 15f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(8f, 15f), new Vector2(12f, 7f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(-12f, 7f), new Vector2(12f, 7f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(-12f, 7f), new Vector2(-14f, -6f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(12f, 7f), new Vector2(14f, -6f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(-14f, -6f), new Vector2(14f, -6f), 2f, ink);
+                    CreateIconDot(parent, new Vector2(-5f, 0f), 2.2f, ink);
+                    CreateIconDot(parent, new Vector2(5f, 0f), 2.2f, ink);
+                    CreateIconLine(parent, new Vector2(-3f, -4f), new Vector2(0f, -6f), 1.5f, ink);
+                    CreateIconLine(parent, new Vector2(3f, -4f), new Vector2(0f, -6f), 1.5f, ink);
+                    break;
+                case DrawManager.Species.Bird:
+                    CreateIconLine(parent, new Vector2(-14f, 3f), new Vector2(-2f, -5f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(-2f, -5f), new Vector2(12f, 5f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(-4f, 1f), new Vector2(4f, 10f), 2f, accent);
+                    CreateIconLine(parent, new Vector2(4f, 10f), new Vector2(12f, 2f), 2f, accent);
+                    CreateIconLine(parent, new Vector2(12f, 2f), new Vector2(17f, 5f), 1.6f, ink);
+                    CreateIconDot(parent, new Vector2(8f, 3f), 2f, ink);
+                    break;
+                case DrawManager.Species.Snake:
+                    CreateIconLine(parent, new Vector2(-15f, -7f), new Vector2(-7f, 3f), 2.5f, ink);
+                    CreateIconLine(parent, new Vector2(-7f, 3f), new Vector2(2f, -2f), 2.5f, ink);
+                    CreateIconLine(parent, new Vector2(2f, -2f), new Vector2(10f, 8f), 2.5f, ink);
+                    CreateIconLine(parent, new Vector2(10f, 8f), new Vector2(15f, 4f), 2.5f, ink);
+                    CreateIconDot(parent, new Vector2(13f, 5f), 2f, ink);
+                    break;
+                case DrawManager.Species.Slime:
+                    CreateIconLine(parent, new Vector2(-14f, -6f), new Vector2(-8f, 7f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(-8f, 7f), new Vector2(5f, 12f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(5f, 12f), new Vector2(15f, 1f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(15f, 1f), new Vector2(10f, -8f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(10f, -8f), new Vector2(-14f, -6f), 2f, ink);
+                    CreateIconDot(parent, new Vector2(-2f, 0f), 2f, ink);
+                    CreateIconDot(parent, new Vector2(6f, 1f), 2f, ink);
+                    break;
+                default:
+                    CreateIconLine(parent, new Vector2(-6f, 12f), new Vector2(6f, 12f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(6f, 12f), new Vector2(6f, 0f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(6f, 0f), new Vector2(-6f, 0f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(-6f, 0f), new Vector2(-6f, 12f), 2f, ink);
+                    CreateIconDot(parent, new Vector2(-2.5f, 6f), 2f, ink);
+                    CreateIconDot(parent, new Vector2(2.5f, 6f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(0f, 0f), new Vector2(0f, -10f), 2.2f, accent);
+                    CreateIconLine(parent, new Vector2(0f, -3f), new Vector2(-10f, -8f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(0f, -3f), new Vector2(10f, -8f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(0f, -10f), new Vector2(-7f, -16f), 2f, ink);
+                    CreateIconLine(parent, new Vector2(0f, -10f), new Vector2(7f, -16f), 2f, ink);
+                    break;
+            }
+        }
+
+        private static void CreateIconLine(Transform parent, Vector2 from, Vector2 to, float width, Color color)
+        {
+            GameObject line = CreatePanel("IconLine", parent, color);
+            Image image = line.GetComponent<Image>();
+            image.raycastTarget = false;
+
+            RectTransform rect = line.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = (from + to) * 0.5f;
+            rect.sizeDelta = new Vector2(Vector2.Distance(from, to), width);
+            float angle = Mathf.Atan2(to.y - from.y, to.x - from.x) * Mathf.Rad2Deg;
+            rect.localRotation = Quaternion.Euler(0f, 0f, angle);
+        }
+
+        private static void CreateIconDot(Transform parent, Vector2 position, float size, Color color)
+        {
+            GameObject dot = CreatePanel("IconDot", parent, color);
+            Image image = dot.GetComponent<Image>();
+            image.raycastTarget = false;
+
+            RectTransform rect = dot.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = new Vector2(size, size);
         }
 
         private static Button CreateButton(string name, Transform parent, Font font, string label, Vector2 anchoredPosition, Vector2 size, Color color, string localizationKey = null, bool anchorToTop = false)
@@ -1848,23 +2078,6 @@ namespace DrawBody.EditorTools
             }
         }
 
-        private static string GetSpeciesIcon(DrawManager.Species species)
-        {
-            switch (species)
-            {
-                case DrawManager.Species.Cat:
-                    return "=^.^=";
-                case DrawManager.Species.Bird:
-                    return "v";
-                case DrawManager.Species.Snake:
-                    return "S";
-                case DrawManager.Species.Slime:
-                    return "o";
-                default:
-                    return "o\n/|\\\n/ \\";
-            }
-        }
-
         private static void AddLocalizedText(GameObject gameObject, string localizationKey)
         {
             LocalizedText localizedText = gameObject.AddComponent<LocalizedText>();
@@ -2016,6 +2229,8 @@ namespace DrawBody.EditorTools
                 PartButtonCommand command = partButtons[i].gameObject.AddComponent<PartButtonCommand>();
                 AssignObject(command, "drawManager", drawManager);
                 AssignEnum(command, "bodyPart", (int)parts[i]);
+                AssignColor(command, "selectedColor", new Color(0.52f, 0.76f, 1f, 0.95f));
+                AssignColor(command, "normalColor", new Color(0.98f, 0.94f, 0.82f, 0.95f));
             }
         }
 
@@ -2042,6 +2257,18 @@ namespace DrawBody.EditorTools
             if (label != null)
             {
                 label.color = color;
+            }
+        }
+
+        private static void SetButtonLabelFontSize(Button button, int size)
+        {
+            Text label = button.GetComponentInChildren<Text>();
+            if (label != null)
+            {
+                label.fontSize = size;
+                label.resizeTextForBestFit = true;
+                label.resizeTextMinSize = Mathf.Max(8, size - 4);
+                label.resizeTextMaxSize = size;
             }
         }
 
@@ -2291,6 +2518,14 @@ namespace DrawBody.EditorTools
             SerializedObject serializedObject = new SerializedObject(target);
             SerializedProperty property = serializedObject.FindProperty(propertyName);
             property.boolValue = value;
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void AssignColor(Object target, string propertyName, Color value)
+        {
+            SerializedObject serializedObject = new SerializedObject(target);
+            SerializedProperty property = serializedObject.FindProperty(propertyName);
+            property.colorValue = value;
             serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
 

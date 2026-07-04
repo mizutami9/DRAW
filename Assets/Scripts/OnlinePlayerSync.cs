@@ -34,6 +34,7 @@ namespace DrawBody.Prototype
             {
                 onlineManager.PlayerStateReceived += ApplyRemoteState;
                 onlineManager.BodyDataReceived += ApplyRemoteBodyData;
+                onlineManager.CarryDataReceived += ApplyRemoteCarryData;
             }
         }
 
@@ -43,6 +44,7 @@ namespace DrawBody.Prototype
             {
                 onlineManager.PlayerStateReceived -= ApplyRemoteState;
                 onlineManager.BodyDataReceived -= ApplyRemoteBodyData;
+                onlineManager.CarryDataReceived -= ApplyRemoteCarryData;
             }
         }
 
@@ -98,6 +100,7 @@ namespace DrawBody.Prototype
             remoteTargetVelocity = state.Velocity;
             remoteTargetRotation = state.Rotation;
             hasRemoteTarget = true;
+            stageManager.SetOnlineRemotePlayerId(state.PlayerId);
         }
 
         private void ApplyRemoteTarget()
@@ -133,6 +136,16 @@ namespace DrawBody.Prototype
             }
 
             stageManager.ApplyOnlineRemoteBodyData(bodyData);
+        }
+
+        private void ApplyRemoteCarryData(OnlineCarryData carryData)
+        {
+            if (carryData == null || onlineManager == null || stageManager == null)
+            {
+                return;
+            }
+
+            stageManager.ApplyOnlineCarryData(carryData, onlineManager.LocalPlayerId);
         }
 
     }

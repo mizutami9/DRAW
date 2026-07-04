@@ -23,6 +23,9 @@ namespace DrawBody.Prototype
         private bool optionShowing;
         private bool stageSelecting;
         private bool stageEditing;
+        private bool titleVisibleBeforeDrawing;
+        private bool multiVisibleBeforeDrawing;
+        private bool optionVisibleBeforeDrawing;
 
         private void OnEnable()
         {
@@ -36,10 +39,32 @@ namespace DrawBody.Prototype
 
         public void SetDrawing(bool drawing)
         {
+            if (this.drawing == drawing)
+            {
+                return;
+            }
+
+            if (drawing)
+            {
+                titleVisibleBeforeDrawing = titleShowing;
+                multiVisibleBeforeDrawing = multiShowing;
+                optionVisibleBeforeDrawing = optionShowing;
+                SetPanelActive(titlePanel, false);
+                SetPanelActive(multiPanel, false);
+                SetPanelActive(optionPanel, false);
+            }
+
             this.drawing = drawing;
             if (drawingHintPanel != null)
             {
                 drawingHintPanel.SetActive(drawing);
+            }
+
+            if (!drawing)
+            {
+                SetPanelActive(titlePanel, titleVisibleBeforeDrawing && !multiVisibleBeforeDrawing && !optionVisibleBeforeDrawing);
+                SetPanelActive(multiPanel, multiVisibleBeforeDrawing);
+                SetPanelActive(optionPanel, optionVisibleBeforeDrawing);
             }
 
             RefreshHudVisibility();
@@ -185,6 +210,14 @@ namespace DrawBody.Prototype
             if (gameplayHudPanel != null)
             {
                 gameplayHudPanel.SetActive(!titleShowing && !multiShowing && !optionShowing && !stageSelecting && !stageEditing && !drawing && !cleared && (menuPanel == null || !menuPanel.activeSelf));
+            }
+        }
+
+        private static void SetPanelActive(GameObject panel, bool active)
+        {
+            if (panel != null)
+            {
+                panel.SetActive(active);
             }
         }
 

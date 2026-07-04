@@ -81,4 +81,13 @@ namespace DrawBody.Prototype
         public Vector2 Velocity;
         public float Rotation;
     }
+
+    [Serializable]
+    public sealed class OnlineCarryData
+    {
+        public string CarrierPlayerId;
+        public string TargetPlayerId;
+        public string Action;
+        public Vector2 ReleaseVelocity;
+    }
 }

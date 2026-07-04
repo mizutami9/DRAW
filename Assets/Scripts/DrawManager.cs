@@ -69,6 +69,7 @@ namespace DrawBody.Prototype
         [SerializeField] private Text partText;
         [SerializeField] private Text messageText;
         [SerializeField] private Text abilityText;
+        [SerializeField] private DrawFeedbackController feedback;
         [SerializeField] private float maxInk = 350f;
         [SerializeField] private float pixelsPerInk = 5f;
         [SerializeField] private float minPointDistance = 8f;
@@ -96,6 +97,7 @@ namespace DrawBody.Prototype
         private ToolMode toolMode = ToolMode.Pen;
         private readonly float[] brushSizes = { 3f, 5f, 6f, 8f, 10f };
         private int brushSizeIndex = 2;
+        private GameObject previewHighlight;
 
         public event System.Action<BodyPart> CurrentPartChanged;
         public event System.Action<Species> CurrentSpeciesChanged;
@@ -182,6 +184,7 @@ namespace DrawBody.Prototype
                 drawPanel.SetActive(value);
             }
 
+            feedback?.SetActive(value);
             RefreshInkText();
             if (value)
             {
@@ -189,6 +192,7 @@ namespace DrawBody.Prototype
                 RefreshConnectionMessage();
                 SetPartSegmentVisibility();
                 UpdateConnectionMarker();
+                UpdatePreviewHighlight();
                 CurrentPartChanged?.Invoke(currentPart);
             }
             else
@@ -230,6 +234,7 @@ namespace DrawBody.Prototype
             RefreshInkText();
             RefreshConnectionMessage();
             UpdateConnectionMarker();
+            feedback?.ButtonPress();
         }
 
         private void CaptureEditSnapshot()
@@ -290,6 +295,7 @@ namespace DrawBody.Prototype
             RefreshInkText();
             RefreshConnectionMessage();
             UpdateConnectionMarker();
+            feedback?.ButtonPress();
             CurrentSpeciesChanged?.Invoke(currentSpecies);
             CurrentPartChanged?.Invoke(currentPart);
             hasEditSnapshot = false;
@@ -328,17 +334,20 @@ namespace DrawBody.Prototype
         {
             brushSizeIndex = Mathf.Clamp(index, 0, brushSizes.Length - 1);
             lineWidth = brushSizes[brushSizeIndex];
+            feedback?.ButtonPress();
         }
 
         public void SetBrushSizePixels(float pixels)
         {
             lineWidth = Mathf.Clamp(pixels, 1f, 30f);
+            feedback?.ButtonPress();
         }
 
         public void SetToolMode(int mode)
         {
             FinishStroke();
             toolMode = mode == 1 ? ToolMode.Eraser : ToolMode.Pen;
+            feedback?.ButtonPress();
         }
 
         public void SetCurrentPart(BodyPart part)
@@ -359,6 +368,7 @@ namespace DrawBody.Prototype
             RefreshConnectionMessage();
             SetPartSegmentVisibility();
             UpdateConnectionMarker();
+            UpdatePreviewHighlight();
             CurrentPartChanged?.Invoke(currentPart);
         }
 
@@ -382,6 +392,7 @@ namespace DrawBody.Prototype
             UpdateConnectionMarker();
             ApplyDrawing();
             SendCurrentBodyData();
+            UpdatePreviewHighlight();
             CurrentSpeciesChanged?.Invoke(currentSpecies);
             CurrentPartChanged?.Invoke(currentPart);
         }
@@ -488,6 +499,7 @@ namespace DrawBody.Prototype
         {
             if (TryApplyDrawing())
             {
+                feedback?.ButtonPress();
                 hasEditSnapshot = false;
                 editSnapshot = null;
                 stageManager?.ExitDrawingMode();
@@ -604,6 +616,7 @@ namespace DrawBody.Prototype
             RefreshInkText();
             RefreshConnectionMessage();
             UpdateConnectionMarker();
+            UpdatePreviewHighlight();
             CurrentSpeciesChanged?.Invoke(currentSpecies);
             CurrentPartChanged?.Invoke(currentPart);
 
@@ -845,10 +858,10 @@ namespace DrawBody.Prototype
                     return;
                 }
 
-                drawing = TryGetDrawPoint(out Vector2 point);
-                PartDrawing current = drawings[currentPart];
-                if (drawing)
-                {
+            drawing = TryGetDrawPoint(out Vector2 point);
+            PartDrawing current = drawings[currentPart];
+            if (drawing)
+            {
                     if (!CanStartStroke(point, out Vector2 startPoint))
                     {
                         drawing = false;
@@ -862,6 +875,7 @@ namespace DrawBody.Prototype
                     }
 
                     current.Points.Add(startPoint);
+                    feedback?.BeginStroke(startPoint, GetPartColor(currentPart));
                     RefreshInkText();
                     RefreshConnectionMessage();
                 }
@@ -872,6 +886,7 @@ namespace DrawBody.Prototype
                 if (TryGetDrawPoint(out Vector2 erasePoint))
                 {
                     EraseAt(erasePoint);
+                    feedback?.Erase(erasePoint);
                 }
 
                 return;
@@ -985,6 +1000,7 @@ namespace DrawBody.Prototype
             }
 
             drawing = false;
+            feedback?.EndStroke();
         }
 
         private bool TryGetDrawPoint(out Vector2 point)
@@ -1053,6 +1069,7 @@ namespace DrawBody.Prototype
             current.Points.Add(point);
             current.UsedInk += inkCost;
             CreateSegment(current, currentPart, previous, point);
+            feedback?.DrawSegment(previous, point, GetPartColor(currentPart));
             previewDirty = true;
             RefreshInkText();
             RefreshConnectionMessage();
@@ -1634,16 +1651,73 @@ namespace DrawBody.Prototype
             segment.transform.SetParent(parent, false);
 
             Image image = segment.AddComponent<Image>();
+            image.raycastTarget = false;
             image.color = color;
 
             RectTransform rect = image.rectTransform;
             Vector2 scaledStart = start * scale;
             Vector2 scaledEnd = end * scale;
             Vector2 delta = scaledEnd - scaledStart;
-            rect.sizeDelta = new Vector2(delta.magnitude, width);
-            rect.anchoredPosition = (scaledStart + scaledEnd) * 0.5f;
+            float noise = Hash01(scaledStart.x * 12.1f + scaledStart.y * 7.7f + scaledEnd.x * 3.9f + scaledEnd.y * 5.1f);
+            bool pencilStroke = name == "InkSegment" || name == "PreviewSegment";
+            float widthJitter = Mathf.Lerp(0.72f, 1.08f, noise);
+            Vector2 normal = delta.sqrMagnitude > 0.001f ? new Vector2(-delta.y, delta.x).normalized : Vector2.up;
+            Color jitteredColor = color;
+            jitteredColor.a *= pencilStroke ? Mathf.Lerp(0.42f, 0.68f, noise) : Mathf.Lerp(0.82f, 1f, noise);
+            image.color = jitteredColor;
+            float baseWidth = pencilStroke ? width * 0.5f : width;
+            rect.sizeDelta = new Vector2(delta.magnitude * Mathf.Lerp(0.98f, 1.01f, noise), baseWidth * widthJitter);
+            rect.anchoredPosition = (scaledStart + scaledEnd) * 0.5f + normal * Mathf.Lerp(-0.8f, 0.8f, noise);
             rect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);
+
+            if (pencilStroke && delta.magnitude > 8f)
+            {
+                int fibers = name == "PreviewSegment" ? 3 : 5;
+                for (int i = 0; i < fibers; i++)
+                {
+                    float fiberNoise = Hash01(noise * 97f + i * 13.37f);
+                    GameObject fiber = new GameObject("PencilFiber");
+                    fiber.transform.SetParent(segment.transform, false);
+                    Image fiberImage = fiber.AddComponent<Image>();
+                    fiberImage.raycastTarget = false;
+                    Color fiberColor = color;
+                    fiberColor.a *= Mathf.Lerp(0.16f, 0.34f, fiberNoise);
+                    fiberImage.color = fiberColor;
+                    RectTransform fiberRect = fiberImage.rectTransform;
+                    fiberRect.anchorMin = new Vector2(0.5f, 0.5f);
+                    fiberRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    fiberRect.pivot = new Vector2(0.5f, 0.5f);
+                    fiberRect.anchoredPosition = new Vector2(
+                        Mathf.Lerp(-1.2f, 1.2f, Hash01(fiberNoise * 23f)),
+                        Mathf.Lerp(-width * 0.38f, width * 0.38f, fiberNoise));
+                    fiberRect.sizeDelta = new Vector2(delta.magnitude * Mathf.Lerp(0.72f, 1.02f, fiberNoise), Mathf.Max(0.7f, width * Mathf.Lerp(0.1f, 0.2f, fiberNoise)));
+                    fiberRect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-1.8f, 1.8f, Hash01(fiberNoise * 47f)));
+                }
+            }
+
+            if (!pencilStroke && delta.magnitude > 12f)
+            {
+                GameObject ghost = new GameObject("HandDrawnGhost");
+                ghost.transform.SetParent(segment.transform, false);
+                Image ghostImage = ghost.AddComponent<Image>();
+                ghostImage.raycastTarget = false;
+                Color ghostColor = color;
+                ghostColor.a *= 0.24f;
+                ghostImage.color = ghostColor;
+                RectTransform ghostRect = ghostImage.rectTransform;
+                ghostRect.anchorMin = new Vector2(0.5f, 0.5f);
+                ghostRect.anchorMax = new Vector2(0.5f, 0.5f);
+                ghostRect.pivot = new Vector2(0.5f, 0.5f);
+                ghostRect.anchoredPosition = new Vector2(0f, Mathf.Lerp(-1.4f, 1.4f, Hash01(noise * 41f)));
+                ghostRect.sizeDelta = new Vector2(delta.magnitude * 0.98f, Mathf.Max(1f, width * 0.38f));
+            }
+
             return segment;
+        }
+
+        private static float Hash01(float value)
+        {
+            return Mathf.Repeat(Mathf.Sin(value) * 43758.5453f, 1f);
         }
 
         private static Color GetPartColor(BodyPart part)
@@ -1886,6 +1960,7 @@ namespace DrawBody.Prototype
         {
             ClearRootChildren(lineRoot);
             ClearRootChildren(previewRoot);
+            previewHighlight = null;
 
             foreach (KeyValuePair<BodyPart, PartDrawing> pair in drawings)
             {
@@ -1907,11 +1982,14 @@ namespace DrawBody.Prototype
                     CreateSegment(drawing, part, points[i - 1], points[i]);
                 }
             }
+
+            UpdatePreviewHighlight();
         }
 
         private void RebuildPreviewVisuals()
         {
             ClearRootChildren(previewRoot);
+            previewHighlight = null;
 
             foreach (KeyValuePair<BodyPart, PartDrawing> pair in drawings)
             {
@@ -1940,6 +2018,95 @@ namespace DrawBody.Prototype
                     drawing.PreviewSegments.Add(previewSegment);
                 }
             }
+
+            UpdatePreviewHighlight();
+        }
+
+        private void UpdatePreviewHighlight()
+        {
+            if (previewRoot == null || !active)
+            {
+                if (previewHighlight != null)
+                {
+                    previewHighlight.SetActive(false);
+                }
+
+                return;
+            }
+
+            EnsurePreviewHighlight();
+            if (!TryGetCurrentPreviewBounds(out Vector2 center, out Vector2 size))
+            {
+                previewHighlight.SetActive(false);
+                return;
+            }
+
+            RectTransform rect = previewHighlight.GetComponent<RectTransform>();
+            rect.anchoredPosition = center;
+            rect.sizeDelta = size + new Vector2(22f, 22f);
+            previewHighlight.SetActive(true);
+            previewHighlight.transform.SetAsLastSibling();
+        }
+
+        private void EnsurePreviewHighlight()
+        {
+            if (previewHighlight != null)
+            {
+                return;
+            }
+
+            previewHighlight = new GameObject("CurrentPartPreviewHighlight");
+            previewHighlight.transform.SetParent(previewRoot, false);
+            Image image = previewHighlight.AddComponent<Image>();
+            image.raycastTarget = false;
+            image.color = new Color(1f, 0.84f, 0.18f, 0.08f);
+            Outline outline = previewHighlight.AddComponent<Outline>();
+            outline.effectColor = new Color(1f, 0.72f, 0.05f, 0.88f);
+            outline.effectDistance = new Vector2(2.5f, -2.5f);
+            RectTransform rect = image.rectTransform;
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+        }
+
+        private bool TryGetCurrentPreviewBounds(out Vector2 center, out Vector2 size)
+        {
+            center = Vector2.zero;
+            size = Vector2.zero;
+
+            if (!drawings.TryGetValue(currentPart, out PartDrawing drawing) || drawing.Points.Count == 0)
+            {
+                Vector2 anchor = ToPreviewPoint(currentPart, Vector2.zero);
+                center = anchor;
+                size = new Vector2(42f, 42f);
+                return true;
+            }
+
+            bool found = false;
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(float.MinValue, float.MinValue);
+            IReadOnlyList<Vector2> points = drawing.Points;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (IsBreakPoint(points[i]))
+                {
+                    continue;
+                }
+
+                Vector2 previewPoint = ToPreviewPoint(currentPart, points[i]);
+                min = Vector2.Min(min, previewPoint);
+                max = Vector2.Max(max, previewPoint);
+                found = true;
+            }
+
+            if (!found)
+            {
+                return false;
+            }
+
+            center = (min + max) * 0.5f;
+            size = new Vector2(Mathf.Max(34f, max.x - min.x), Mathf.Max(34f, max.y - min.y));
+            return true;
         }
 
         private void ClearVisuals(PartDrawing drawing)

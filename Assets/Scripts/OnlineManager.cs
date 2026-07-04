@@ -18,6 +18,7 @@ namespace DrawBody.Prototype
         string LocalPlayerId { get; }
         event Action<OnlinePlayerState> PlayerStateReceived;
         event Action<OnlineBodyData> BodyDataReceived;
+        event Action<OnlineCarryData> CarryDataReceived;
         void Initialize();
         void Login();
         void Tick();
@@ -30,6 +31,7 @@ namespace DrawBody.Prototype
         void SendBodyData(OnlineBodyData bodyData);
         void SendInput(OnlineInputData inputData);
         void SendPlayerState(OnlinePlayerState playerState);
+        void SendCarryData(OnlineCarryData carryData);
     }
 
     public sealed class OnlineManager : MonoBehaviour
@@ -43,6 +45,7 @@ namespace DrawBody.Prototype
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         public event Action<OnlinePlayerState> PlayerStateReceived;
         public event Action<OnlineBodyData> BodyDataReceived;
+        public event Action<OnlineCarryData> CarryDataReceived;
         public OnlineConnectionState State => backend != null ? backend.State : OnlineConnectionState.Offline;
         public OnlineLobbyInfo CurrentLobby => backend != null ? backend.CurrentLobby : null;
         public string LocalPlayerId => backend != null ? backend.LocalPlayerId : string.Empty;
@@ -64,6 +67,7 @@ namespace DrawBody.Prototype
             backend.StateChanged += OnBackendStateChanged;
             backend.PlayerStateReceived += OnBackendPlayerStateReceived;
             backend.BodyDataReceived += OnBackendBodyDataReceived;
+            backend.CarryDataReceived += OnBackendCarryDataReceived;
             backend.Initialize();
         }
 
@@ -148,6 +152,11 @@ namespace DrawBody.Prototype
             backend?.SendPlayerState(playerState);
         }
 
+        public void SendCarryData(OnlineCarryData carryData)
+        {
+            backend?.SendCarryData(carryData);
+        }
+
         private void OnBackendStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
         {
             StateChanged?.Invoke(state, lobby, message);
@@ -162,6 +171,11 @@ namespace DrawBody.Prototype
         {
             BodyDataReceived?.Invoke(bodyData);
         }
+
+        private void OnBackendCarryDataReceived(OnlineCarryData carryData)
+        {
+            CarryDataReceived?.Invoke(carryData);
+        }
     }
 
     internal sealed class FakeOnlineBackend : IOnlineBackend
@@ -169,6 +183,7 @@ namespace DrawBody.Prototype
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         public event Action<OnlinePlayerState> PlayerStateReceived;
         public event Action<OnlineBodyData> BodyDataReceived;
+        public event Action<OnlineCarryData> CarryDataReceived;
         public OnlineConnectionState State { get; private set; }
         public OnlineLobbyInfo CurrentLobby { get; private set; }
         public string LocalPlayerId => "local";
@@ -253,6 +268,10 @@ namespace DrawBody.Prototype
         }
 
         public void SendPlayerState(OnlinePlayerState playerState)
+        {
+        }
+
+        public void SendCarryData(OnlineCarryData carryData)
         {
         }
 
