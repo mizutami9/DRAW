@@ -1119,7 +1119,13 @@ namespace DrawBody.Prototype
 
             if (inkGaugeFill != null)
             {
-                inkGaugeFill.fillAmount = maxInk <= 0f ? 0f : Mathf.Clamp01(totalInk / maxInk);
+                float amount = maxInk <= 0f ? 0f : Mathf.Clamp01(totalInk / maxInk);
+                inkGaugeFill.fillAmount = amount;
+                RectTransform gaugeRect = inkGaugeFill.rectTransform;
+                gaugeRect.anchorMin = Vector2.zero;
+                gaugeRect.anchorMax = new Vector2(amount, 1f);
+                gaugeRect.offsetMin = Vector2.zero;
+                gaugeRect.offsetMax = Vector2.zero;
             }
 
             if (partText != null)

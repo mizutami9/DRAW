@@ -12,6 +12,8 @@ namespace DrawBody.EditorTools
         private const string ScenePath = "Assets/Scenes/GameScene.unity";
         private const string GeneratedFolder = "Assets/Generated";
         private const string SquareTexturePath = GeneratedFolder + "/SquareTexture.asset";
+        private const string TitleLogoPath = "Assets/Art/UI/NICO_DROW.png";
+        private const string ProjectFontPath = "Assets/Art/Fonts/Yomogi-Regular.ttf";
         private const int GroundLayer = 6;
         private const int PlayerLayer = 7;
         private const int GoalLayer = 8;
@@ -192,12 +194,6 @@ namespace DrawBody.EditorTools
                 AddDoodleCircle($"Notebook Hole Ring {i}", parent, 0.28f, new Color(0.46f, 0.28f, 0.14f, 0.65f), 0.025f, -87, holePosition);
             }
 
-            TextMesh title = CreateDoodleText("Title Draw Body", "DRAW BODY", new Vector3(-7.3f, 5.05f, 0f), parent, font, 54, 0.13f, Color.black, TextAnchor.MiddleLeft);
-            title.fontStyle = FontStyle.Bold;
-            title.transform.rotation = Quaternion.Euler(0f, 0f, -4f);
-            CreateDoodleText("Subtitle", "\u63cf\u3044\u3066\u3001\u52d5\u3044\u3066\u3001\u7a81\u7834\u3057\u308d\uff01", new Vector3(-5.6f, 4.25f, 0f), parent, font, 26, 0.11f, Color.black, TextAnchor.MiddleLeft).transform.rotation = Quaternion.Euler(0f, 0f, -4f);
-            AddDoodleLine("Title Red Underline", parent, new[] { new Vector3(-7.0f, 4.55f, 0f), new Vector3(-1.8f, 4.55f, 0f) }, new Color(0.95f, 0.1f, 0.12f), 0.035f, 20);
-            AddDoodleLine("Title Yellow Underline", parent, new[] { new Vector3(-5.5f, 3.95f, 0f), new Vector3(0.9f, 4.05f, 0f) }, new Color(1f, 0.78f, 0.05f), 0.035f, 20);
         }
 
         private static void CreateMapDoodles(Transform parent, Font font)
@@ -755,92 +751,126 @@ namespace DrawBody.EditorTools
         private static GameObject CreateStageSelectPanel(Transform parent, Font font, StageManager stageManager)
         {
             GameObject panel = CreatePanel("StageSelectPanel", parent, new Color(0.965f, 0.945f, 0.88f, 0.98f));
+            AddPaperTexture(panel, new Color(0.965f, 0.945f, 0.88f, 1f), new Color(0.74f, 0.66f, 0.5f, 1f), 0.08f, 8811);
             RectTransform panelRect = panel.GetComponent<RectTransform>();
             Stretch(panelRect);
 
-            Text title = CreateText("StageSelectTitle", panel.transform, font, 36, TextAnchor.UpperCenter);
+            Text title = CreateText("StageSelectTitle", panel.transform, font, 42, TextAnchor.UpperCenter);
             title.text = LocalizationManager.T("stage_select");
             title.color = Color.black;
             AddLocalizedText(title.gameObject, "stage_select");
             title.rectTransform.anchorMin = new Vector2(0.5f, 1f);
             title.rectTransform.anchorMax = new Vector2(0.5f, 1f);
             title.rectTransform.pivot = new Vector2(0.5f, 1f);
-            title.rectTransform.anchoredPosition = new Vector2(0f, -34f);
-            title.rectTransform.sizeDelta = new Vector2(520f, 48f);
+            title.rectTransform.anchoredPosition = new Vector2(0f, -20f);
+            title.rectTransform.sizeDelta = new Vector2(520f, 52f);
 
-            Text help = CreateText("StageSelectHelp", panel.transform, font, 18, TextAnchor.UpperCenter);
-            help.text = LocalizationManager.T("stage_select_help");
-            help.color = Color.black;
-            AddLocalizedText(help.gameObject, "stage_select_help");
-            help.rectTransform.anchorMin = new Vector2(0.5f, 1f);
-            help.rectTransform.anchorMax = new Vector2(0.5f, 1f);
-            help.rectTransform.pivot = new Vector2(0.5f, 1f);
-            help.rectTransform.anchoredPosition = new Vector2(0f, -84f);
-            help.rectTransform.sizeDelta = new Vector2(800f, 52f);
-
-            Button debugButton = CreateButton("Stage_1_0_Button", panel.transform, font, LocalizationManager.T("debug_stage"), new Vector2(-470f, 560f), new Vector2(180f, 58f), new Color(0.72f, 0.95f, 0.72f, 0.95f));
+            Button debugButton = CreateButton("Stage_1_0_Button", panel.transform, font, LocalizationManager.T("debug_stage"), new Vector2(-470f, 646f), new Vector2(170f, 44f), new Color(0.72f, 0.95f, 0.72f, 0.95f));
             SetButtonLabelColor(debugButton, Color.black);
             AddLocalizedText(debugButton.GetComponentInChildren<Text>().gameObject, "debug_stage");
             AddStageSelectCommand(debugButton.gameObject, stageManager, "1-0");
 
-            Button editButton = CreateButton("StageSelectEditModeButton", panel.transform, font, LocalizationManager.T("stage_select_edit_off"), new Vector2(-260f, 560f), new Vector2(180f, 58f), new Color(0.98f, 0.96f, 0.9f, 0.95f));
+            Button editButton = CreateButton("StageSelectEditModeButton", panel.transform, font, LocalizationManager.T("stage_select_edit_off"), new Vector2(-280f, 646f), new Vector2(170f, 44f), new Color(0.98f, 0.96f, 0.9f, 0.95f));
             SetButtonLabelColor(editButton, Color.black);
             StageSelectEditModeButtonCommand editModeCommand = editButton.gameObject.AddComponent<StageSelectEditModeButtonCommand>();
             AssignObject(editModeCommand, "stageManager", stageManager);
             AssignObject(editModeCommand, "label", editButton.GetComponentInChildren<Text>());
 
-            Button titleButton = CreateButton("StageSelectTitleBackButton", panel.transform, font, "TITLE", new Vector2(470f, 560f), new Vector2(160f, 58f), new Color(0.98f, 0.78f, 0.72f, 0.95f));
-            SetButtonLabelColor(titleButton, Color.black);
-            AddTitleCommand(titleButton.gameObject, stageManager, TitleButtonCommand.Command.Title);
-
             const int groups = 15;
             const int variants = 3;
-            float startX = -470f;
-            float startY = 472f;
-            float groupSpacingX = 190f;
-            float rowSpacingY = 118f;
-            float buttonSpacingY = 34f;
+            const int worldsPerPage = 5;
+            const int pageCount = 3;
+            float startX = -456f;
+            float cardY = 184f;
+            float groupSpacingX = 228f;
+            Vector2 cardSize = new Vector2(200f, 330f);
+            GameObject[] pages = new GameObject[pageCount];
+
+            for (int page = 0; page < pageCount; page++)
+            {
+                GameObject pageObject = new GameObject($"StageSelectPage{page + 1}");
+                pageObject.transform.SetParent(panel.transform, false);
+                RectTransform pageRect = pageObject.AddComponent<RectTransform>();
+                Stretch(pageRect);
+                pageObject.SetActive(page == 0);
+                pages[page] = pageObject;
+            }
 
             for (int group = 1; group <= groups; group++)
             {
-                int column = (group - 1) % 5;
-                int row = (group - 1) / 5;
+                int page = (group - 1) / worldsPerPage;
+                int column = (group - 1) % worldsPerPage;
                 float x = startX + column * groupSpacingX;
-                float y = startY - row * rowSpacingY;
 
-                Text groupLabel = CreateText($"StageGroup{group}Label", panel.transform, font, 18, TextAnchor.MiddleCenter);
-                groupLabel.text = $"{group}";
+                GameObject card = CreatePanel($"World{group}Card", pages[page].transform, new Color(0.98f, 0.94f, 0.82f, 0.92f));
+                RectTransform cardRect = card.GetComponent<RectTransform>();
+                cardRect.anchorMin = new Vector2(0.5f, 0f);
+                cardRect.anchorMax = new Vector2(0.5f, 0f);
+                cardRect.pivot = new Vector2(0.5f, 0f);
+                cardRect.anchoredPosition = new Vector2(x, cardY);
+                cardRect.sizeDelta = cardSize;
+                AddSketchFrame(card.transform, cardSize, new Color(0.25f, 0.18f, 0.12f, 0.58f), 1.6f);
+
+                Text groupLabel = CreateText($"StageGroup{group}Label", card.transform, font, 26, TextAnchor.MiddleCenter);
+                groupLabel.text = $"WORLD {group}";
                 groupLabel.color = Color.black;
-                groupLabel.rectTransform.anchorMin = new Vector2(0.5f, 0f);
-                groupLabel.rectTransform.anchorMax = new Vector2(0.5f, 0f);
-                groupLabel.rectTransform.pivot = new Vector2(0.5f, 0f);
-                groupLabel.rectTransform.anchoredPosition = new Vector2(x, y + 38f);
-                groupLabel.rectTransform.sizeDelta = new Vector2(160f, 24f);
+                groupLabel.fontStyle = FontStyle.Bold;
+                groupLabel.rectTransform.anchorMin = new Vector2(0f, 1f);
+                groupLabel.rectTransform.anchorMax = new Vector2(1f, 1f);
+                groupLabel.rectTransform.pivot = new Vector2(0.5f, 1f);
+                groupLabel.rectTransform.anchoredPosition = new Vector2(0f, -22f);
+                groupLabel.rectTransform.sizeDelta = new Vector2(-28f, 44f);
+
+                CreateIconLine(card.transform, new Vector2(-72f, 250f), new Vector2(72f, 252f), 2.2f, new Color(0.95f, 0.75f, 0.12f, 0.86f));
 
                 for (int variant = 1; variant <= variants; variant++)
                 {
+                    string stageId = $"{group}-{variant}";
                     Button button = CreateButton(
                         $"Stage_{group}_{variant}_Button",
-                        panel.transform,
+                        card.transform,
                         font,
-                        $"{group}-{variant}",
-                        new Vector2(x, y - (variant - 1) * buttonSpacingY),
-                        new Vector2(152f, 30f),
-                        new Color(0.98f, 0.96f, 0.9f, 0.86f));
+                        $"{stageId}    \u25a1",
+                        new Vector2(0f, 164f - (variant - 1) * 62f),
+                        new Vector2(156f, 46f),
+                        new Color(0.98f, 0.96f, 0.9f, 0.95f));
                     SetButtonLabelColor(button, Color.black);
-                    AddStageSelectCommand(button.gameObject, stageManager, $"{group}-{variant}");
+                    SetButtonLabelFontSize(button, 22);
+                    StageCardHover hover = button.gameObject.AddComponent<StageCardHover>();
+                    AssignObject(hover, "targetImage", button.GetComponent<Image>());
+                    AssignColor(hover, "normalColor", new Color(0.98f, 0.96f, 0.9f, 0.95f));
+                    AssignColor(hover, "hoverColor", new Color(1f, 0.88f, 0.34f, 0.98f));
+                    AddStageSelectCommand(button.gameObject, stageManager, stageId);
                 }
             }
 
-            Text locked = CreateText("LockedStageNote", panel.transform, font, 16, TextAnchor.MiddleCenter);
-            locked.text = LocalizationManager.T("locked_stage");
-            locked.color = new Color(0.25f, 0.25f, 0.25f);
-            AddLocalizedText(locked.gameObject, "locked_stage");
-            locked.rectTransform.anchorMin = new Vector2(0.5f, 0f);
-            locked.rectTransform.anchorMax = new Vector2(0.5f, 0f);
-            locked.rectTransform.pivot = new Vector2(0.5f, 0f);
-            locked.rectTransform.anchoredPosition = new Vector2(0f, 34f);
-            locked.rectTransform.sizeDelta = new Vector2(500f, 28f);
+            Button previous = CreateButton("StageSelectPreviousPageButton", panel.transform, font, "\u25c0", new Vector2(-110f, 96f), new Vector2(70f, 46f), new Color(0.98f, 0.94f, 0.82f, 0.94f));
+            Button next = CreateButton("StageSelectNextPageButton", panel.transform, font, "\u25b6", new Vector2(110f, 96f), new Vector2(70f, 46f), new Color(0.98f, 0.94f, 0.82f, 0.94f));
+            SetButtonLabelColor(previous, Color.black);
+            SetButtonLabelColor(next, Color.black);
+            SetButtonLabelFontSize(previous, 26);
+            SetButtonLabelFontSize(next, 26);
+
+            Text pageText = CreateText("StageSelectPageText", panel.transform, font, 22, TextAnchor.MiddleCenter);
+            pageText.text = "1 / 3";
+            pageText.color = Color.black;
+            pageText.rectTransform.anchorMin = new Vector2(0.5f, 0f);
+            pageText.rectTransform.anchorMax = new Vector2(0.5f, 0f);
+            pageText.rectTransform.pivot = new Vector2(0.5f, 0f);
+            pageText.rectTransform.anchoredPosition = new Vector2(0f, 102f);
+            pageText.rectTransform.sizeDelta = new Vector2(120f, 34f);
+
+            StageSelectPageController pageController = panel.AddComponent<StageSelectPageController>();
+            AssignObjectArray(pageController, "pages", pages);
+            AssignObject(pageController, "pageText", pageText);
+            AssignObject(pageController, "previousButton", previous);
+            AssignObject(pageController, "nextButton", next);
+
+            Button backButton = CreateButton("StageSelectBackButton", panel.transform, font, "\u623b\u308b", new Vector2(520f, 36f), new Vector2(150f, 54f), new Color(0.98f, 0.78f, 0.72f, 0.95f));
+            SetButtonLabelColor(backButton, Color.black);
+            SetButtonLabelFontSize(backButton, 22);
+            AddSketchFrame(backButton.transform, new Vector2(150f, 54f), new Color(0.25f, 0.18f, 0.12f, 0.5f), 1.5f);
+            AddTitleCommand(backButton.gameObject, stageManager, TitleButtonCommand.Command.Title);
 
             return panel;
         }
@@ -1070,26 +1100,30 @@ namespace DrawBody.EditorTools
             RectTransform rect = panel.AddComponent<RectTransform>();
             Stretch(rect);
 
-            Text title = CreateText("TitleLogo", panel.transform, font, 58, TextAnchor.UpperCenter);
-            title.text = "DRAW BODY";
-            title.color = new Color(0.04f, 0.04f, 0.04f);
-            title.rectTransform.anchorMin = new Vector2(0f, 1f);
-            title.rectTransform.anchorMax = new Vector2(1f, 1f);
-            title.rectTransform.pivot = new Vector2(0.5f, 1f);
-            title.rectTransform.anchoredPosition = new Vector2(0f, -42f);
-            title.rectTransform.sizeDelta = new Vector2(0f, 72f);
+            Sprite logoSprite = LoadTitleLogoSprite();
+            if (logoSprite != null)
+            {
+                GameObject logoObject = new GameObject("TitleNicoDrowLogo");
+                logoObject.transform.SetParent(panel.transform, false);
+                RectTransform logoRect = logoObject.AddComponent<RectTransform>();
+                logoRect.anchorMin = new Vector2(0.5f, 1f);
+                logoRect.anchorMax = new Vector2(0.5f, 1f);
+                logoRect.pivot = new Vector2(0.5f, 1f);
+                logoRect.anchoredPosition = new Vector2(0f, -14f);
+                logoRect.sizeDelta = new Vector2(1120f, 365f);
+                logoRect.localRotation = Quaternion.Euler(0f, 0f, -2f);
 
-            Text subtitle = CreateText("TitleSubtitle", panel.transform, font, 22, TextAnchor.UpperCenter);
-            subtitle.text = "walk, jump, draw, and toss";
-            subtitle.color = new Color(0.18f, 0.18f, 0.16f, 0.85f);
-            subtitle.rectTransform.anchorMin = new Vector2(0f, 1f);
-            subtitle.rectTransform.anchorMax = new Vector2(1f, 1f);
-            subtitle.rectTransform.pivot = new Vector2(0.5f, 1f);
-            subtitle.rectTransform.anchoredPosition = new Vector2(0f, -108f);
-            subtitle.rectTransform.sizeDelta = new Vector2(0f, 34f);
+                Image logoImage = logoObject.AddComponent<Image>();
+                logoImage.sprite = logoSprite;
+                logoImage.color = Color.white;
+                logoImage.preserveAspect = true;
+                logoImage.raycastTarget = false;
+                logoObject.AddComponent<TitleLogoReveal>();
+            }
 
             GameObject bar = CreatePanel("TitleMenuBar", panel.transform, new Color(0.96f, 0.93f, 0.86f, 0.9f));
-            AddUiOutline(bar, new Color(0.12f, 0.11f, 0.1f, 0.75f), new Vector2(2f, -2f));
+            AddPaperTexture(bar, new Color(0.97f, 0.94f, 0.84f, 1f), new Color(0.62f, 0.5f, 0.34f, 1f), 0.08f, 9301);
+            AddSketchFrame(bar.transform, new Vector2(1280f, 88f), new Color(0.23f, 0.17f, 0.12f, 0.35f), 1.8f);
             RectTransform barRect = bar.GetComponent<RectTransform>();
             barRect.anchorMin = new Vector2(0f, 0f);
             barRect.anchorMax = new Vector2(1f, 0f);
@@ -1097,11 +1131,11 @@ namespace DrawBody.EditorTools
             barRect.anchoredPosition = new Vector2(0f, 0f);
             barRect.sizeDelta = new Vector2(0f, 88f);
 
-            AddTitleMenuButton("TitleSingleButton", bar.transform, font, "SINGLE", new Vector2(-300f, 18f), stageManager, TitleButtonCommand.Command.Single);
-            AddTitleMenuButton("TitleMultiButton", bar.transform, font, "MULTI", new Vector2(-150f, 18f), stageManager, TitleButtonCommand.Command.Multi);
-            AddTitleMenuButton("TitleDrawButton", bar.transform, font, "DRAW", new Vector2(0f, 18f), stageManager, TitleButtonCommand.Command.Draw);
-            AddTitleMenuButton("TitleOptionButton", bar.transform, font, "OPTION", new Vector2(150f, 18f), stageManager, TitleButtonCommand.Command.Option);
-            AddTitleMenuButton("TitleExitButton", bar.transform, font, "EXIT", new Vector2(300f, 18f), stageManager, TitleButtonCommand.Command.Exit);
+            AddTitleMenuButton("TitleSingleButton", bar.transform, font, "SINGLE", new Vector2(-336f, 16f), stageManager, TitleButtonCommand.Command.Single, new Color(1f, 0.94f, 0.62f, 0.96f), -2.5f);
+            AddTitleMenuButton("TitleMultiButton", bar.transform, font, "MULTI", new Vector2(-168f, 18f), stageManager, TitleButtonCommand.Command.Multi, new Color(0.78f, 0.92f, 1f, 0.96f), 1.5f);
+            AddTitleMenuButton("TitleDrawButton", bar.transform, font, "DRAW", new Vector2(0f, 15f), stageManager, TitleButtonCommand.Command.Draw, new Color(0.82f, 0.96f, 0.72f, 0.96f), -1.2f);
+            AddTitleMenuButton("TitleOptionButton", bar.transform, font, "OPTION", new Vector2(168f, 18f), stageManager, TitleButtonCommand.Command.Option, new Color(0.98f, 0.84f, 0.72f, 0.96f), 2f);
+            AddTitleMenuButton("TitleExitButton", bar.transform, font, "EXIT", new Vector2(336f, 16f), stageManager, TitleButtonCommand.Command.Exit, new Color(0.94f, 0.9f, 0.98f, 0.96f), -1.8f);
 
             return panel;
         }
@@ -1171,45 +1205,205 @@ namespace DrawBody.EditorTools
         private static GameObject CreateTitleOptionPanel(Transform parent, Font font, StageManager stageManager)
         {
             GameObject panel = CreatePanel("TitleOptionPanel", parent, new Color(0.96f, 0.93f, 0.86f, 0.94f));
-            AddUiOutline(panel, new Color(0.12f, 0.11f, 0.1f, 0.75f), new Vector2(2f, -2f));
+            AddPaperTexture(panel, new Color(0.965f, 0.94f, 0.84f, 1f), new Color(0.62f, 0.5f, 0.34f, 1f), 0.09f, 9182);
             RectTransform rect = panel.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = new Vector2(0f, 20f);
-            rect.sizeDelta = new Vector2(420f, 350f);
+            rect.sizeDelta = new Vector2(560f, 490f);
+            AddSketchFrame(panel.transform, new Vector2(560f, 490f), new Color(0.2f, 0.14f, 0.1f, 0.72f), 2f);
+            AddMaskingTape(panel.transform, new Vector2(-178f, 226f), -5f);
+            AddMaskingTape(panel.transform, new Vector2(178f, 226f), 4f);
 
-            Text title = CreateText("TitleOptionTitle", panel.transform, font, 30, TextAnchor.UpperCenter);
+            Text title = CreateText("TitleOptionTitle", panel.transform, font, 36, TextAnchor.UpperCenter);
             title.text = "OPTION";
             title.color = Color.black;
             title.rectTransform.anchorMin = new Vector2(0f, 1f);
             title.rectTransform.anchorMax = new Vector2(1f, 1f);
             title.rectTransform.pivot = new Vector2(0.5f, 1f);
             title.rectTransform.anchoredPosition = new Vector2(0f, -24f);
-            title.rectTransform.sizeDelta = new Vector2(0f, 44f);
+            title.rectTransform.sizeDelta = new Vector2(0f, 48f);
 
-            Text body = CreateText("TitleOptionBody", panel.transform, font, 22, TextAnchor.MiddleLeft);
-            body.text = "BGM        □□□□□\nSE         □□□□□\nVibration  ON / OFF\nKeys       later\nLanguage   Menu";
-            body.color = Color.black;
-            body.rectTransform.anchorMin = new Vector2(0f, 0f);
-            body.rectTransform.anchorMax = new Vector2(1f, 1f);
-            body.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-            body.rectTransform.anchoredPosition = new Vector2(28f, 10f);
-            body.rectTransform.sizeDelta = new Vector2(-92f, -112f);
+            Text subtitle = CreateText("TitleOptionSubtitle", panel.transform, font, 18, TextAnchor.UpperCenter);
+            subtitle.text = LocalizationManager.T("option_subtitle");
+            subtitle.color = new Color(0.22f, 0.18f, 0.12f, 0.78f);
+            AddLocalizedText(subtitle.gameObject, "option_subtitle");
+            subtitle.rectTransform.anchorMin = new Vector2(0f, 1f);
+            subtitle.rectTransform.anchorMax = new Vector2(1f, 1f);
+            subtitle.rectTransform.pivot = new Vector2(0.5f, 1f);
+            subtitle.rectTransform.anchoredPosition = new Vector2(0f, -68f);
+            subtitle.rectTransform.sizeDelta = new Vector2(0f, 28f);
 
-            Button back = CreateButton("TitleOptionBackButton", panel.transform, font, "Back", new Vector2(0f, 22f), new Vector2(180f, 44f), new Color(0.98f, 0.78f, 0.72f, 0.92f));
+            CreateOptionLabel("OptionBgmLabel", panel.transform, font, "\u266a " + LocalizationManager.T("option_bgm"), "option_bgm", new Vector2(-178f, -118f));
+            Slider bgmSlider = CreateOptionSlider("OptionBgmSlider", panel.transform, new Vector2(58f, -122f), new Vector2(226f, 30f));
+            Text bgmValue = CreateOptionValueText("OptionBgmValue", panel.transform, font, new Vector2(210f, -118f));
+
+            CreateOptionLabel("OptionSeLabel", panel.transform, font, "\u25b7 " + LocalizationManager.T("option_se"), "option_se", new Vector2(-178f, -172f));
+            Slider seSlider = CreateOptionSlider("OptionSeSlider", panel.transform, new Vector2(58f, -176f), new Vector2(226f, 30f));
+            Text seValue = CreateOptionValueText("OptionSeValue", panel.transform, font, new Vector2(210f, -172f));
+
+            CreateOptionLabel("OptionVibrationLabel", panel.transform, font, "\u25c7 " + LocalizationManager.T("option_vibration"), "option_vibration", new Vector2(-178f, -226f));
+            Button vibrationButton = CreateButton("OptionVibrationButton", panel.transform, font, "\u25ef ON", new Vector2(50f, 242f), new Vector2(160f, 42f), new Color(0.82f, 0.96f, 0.72f, 0.94f));
+            SetButtonLabelColor(vibrationButton, Color.black);
+            SetButtonLabelFontSize(vibrationButton, 20);
+            Text vibrationValue = vibrationButton.GetComponentInChildren<Text>();
+
+            CreateOptionLabel("OptionKeysLabel", panel.transform, font, "\u2328 " + LocalizationManager.T("option_keys"), "option_keys", new Vector2(-178f, -280f));
+            Text keysValue = CreateText("OptionKeysValue", panel.transform, font, 21, TextAnchor.MiddleLeft);
+            keysValue.text = LocalizationManager.T("option_not_implemented");
+            AddLocalizedText(keysValue.gameObject, "option_not_implemented");
+            keysValue.color = new Color(0.24f, 0.2f, 0.14f, 0.78f);
+            keysValue.rectTransform.anchorMin = new Vector2(0.5f, 1f);
+            keysValue.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+            keysValue.rectTransform.pivot = new Vector2(0f, 0.5f);
+            keysValue.rectTransform.anchoredPosition = new Vector2(-22f, -280f);
+            keysValue.rectTransform.sizeDelta = new Vector2(230f, 34f);
+
+            CreateOptionLabel("OptionLanguageLabel", panel.transform, font, "\u25ce " + LocalizationManager.T("option_language"), "option_language", new Vector2(-178f, -334f));
+            Button japanese = CreateButton("OptionJapaneseButton", panel.transform, font, "\u65e5\u672c\u8a9e", new Vector2(-20f, 134f), new Vector2(116f, 40f), new Color(0.78f, 0.9f, 1f, 0.94f));
+            Button english = CreateButton("OptionEnglishButton", panel.transform, font, "English", new Vector2(116f, 134f), new Vector2(116f, 40f), new Color(0.98f, 0.96f, 0.9f, 0.94f));
+            SetButtonLabelColor(japanese, Color.black);
+            SetButtonLabelColor(english, Color.black);
+            SetButtonLabelFontSize(japanese, 17);
+            SetButtonLabelFontSize(english, 17);
+            Text languageValue = CreateText("OptionLanguageValue", panel.transform, font, 17, TextAnchor.MiddleLeft);
+            languageValue.text = "\u65e5\u672c\u8a9e";
+            languageValue.color = new Color(0.24f, 0.2f, 0.14f, 0.78f);
+            languageValue.rectTransform.anchorMin = new Vector2(0.5f, 1f);
+            languageValue.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+            languageValue.rectTransform.pivot = new Vector2(0f, 0.5f);
+            languageValue.rectTransform.anchoredPosition = new Vector2(244f, -334f);
+            languageValue.rectTransform.sizeDelta = new Vector2(96f, 30f);
+
+            Button back = CreateButton("TitleOptionBackButton", panel.transform, font, "\u2190 " + LocalizationManager.T("option_back"), new Vector2(0f, 28f), new Vector2(250f, 56f), new Color(0.98f, 0.78f, 0.72f, 0.92f));
             SetButtonLabelColor(back, Color.black);
+            SetButtonLabelFontSize(back, 22);
+            AddSketchFrame(back.transform, new Vector2(250f, 56f), new Color(0.25f, 0.18f, 0.12f, 0.5f), 1.5f);
             AddTitleCommand(back.gameObject, stageManager, TitleButtonCommand.Command.Back);
+
+            OptionSettingsController controller = panel.AddComponent<OptionSettingsController>();
+            AssignObject(controller, "bgmSlider", bgmSlider);
+            AssignObject(controller, "seSlider", seSlider);
+            AssignObject(controller, "bgmValueText", bgmValue);
+            AssignObject(controller, "seValueText", seValue);
+            AssignObject(controller, "vibrationValueText", vibrationValue);
+            AssignObject(controller, "languageValueText", languageValue);
+            AssignObject(controller, "vibrationButton", vibrationButton);
+            AssignObject(controller, "japaneseButton", japanese);
+            AssignObject(controller, "englishButton", english);
 
             panel.SetActive(false);
             return panel;
         }
 
-        private static void AddTitleMenuButton(string name, Transform parent, Font font, string label, Vector2 position, StageManager stageManager, TitleButtonCommand.Command command)
+        private static void AddTitleMenuButton(string name, Transform parent, Font font, string label, Vector2 position, StageManager stageManager, TitleButtonCommand.Command command, Color color, float rotation)
         {
-            Button button = CreateButton(name, parent, font, label, position, new Vector2(128f, 50f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Vector2 size = new Vector2(132f, 56f);
+            Button button = CreateButton(name, parent, font, label, position, size, color);
+            RectTransform rect = button.GetComponent<RectTransform>();
+            rect.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            AddSketchFrame(button.transform, size, new Color(0.25f, 0.18f, 0.12f, 0.5f), 1.5f);
+            SetButtonLabelFontSize(button, 21);
             SetButtonLabelColor(button, Color.black);
+            StageCardHover hover = button.gameObject.AddComponent<StageCardHover>();
+            AssignObject(hover, "targetImage", button.GetComponent<Image>());
+            AssignColor(hover, "normalColor", color);
+            AssignColor(hover, "hoverColor", new Color(1f, 0.97f, 0.72f, 1f));
             AddTitleCommand(button.gameObject, stageManager, command);
+        }
+
+        private static Text CreateOptionLabel(string name, Transform parent, Font font, string label, string localizationKey, Vector2 anchoredPosition)
+        {
+            Text text = CreateText(name, parent, font, 21, TextAnchor.MiddleLeft);
+            text.text = label;
+            text.color = Color.black;
+            text.rectTransform.anchorMin = new Vector2(0.5f, 1f);
+            text.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+            text.rectTransform.pivot = new Vector2(0f, 0.5f);
+            text.rectTransform.anchoredPosition = anchoredPosition;
+            text.rectTransform.sizeDelta = new Vector2(180f, 34f);
+            int separator = label.LastIndexOf(LocalizationManager.T(localizationKey), System.StringComparison.Ordinal);
+            PrefixedLocalizedText localized = text.gameObject.AddComponent<PrefixedLocalizedText>();
+            AssignString(localized, "key", localizationKey);
+            AssignString(localized, "prefix", separator > 0 ? label.Substring(0, separator) : string.Empty);
+            return text;
+        }
+
+        private static Text CreateOptionValueText(string name, Transform parent, Font font, Vector2 anchoredPosition)
+        {
+            Text text = CreateText(name, parent, font, 19, TextAnchor.MiddleRight);
+            text.text = "80%";
+            text.color = Color.black;
+            text.rectTransform.anchorMin = new Vector2(0.5f, 1f);
+            text.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+            text.rectTransform.pivot = new Vector2(1f, 0.5f);
+            text.rectTransform.anchoredPosition = anchoredPosition;
+            text.rectTransform.sizeDelta = new Vector2(78f, 32f);
+            return text;
+        }
+
+        private static Slider CreateOptionSlider(string name, Transform parent, Vector2 anchoredPosition, Vector2 size)
+        {
+            GameObject sliderObject = new GameObject(name);
+            sliderObject.transform.SetParent(parent, false);
+            RectTransform rect = sliderObject.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 1f);
+            rect.anchorMax = new Vector2(0.5f, 1f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = anchoredPosition;
+            rect.sizeDelta = size;
+
+            Slider slider = sliderObject.AddComponent<Slider>();
+            slider.direction = Slider.Direction.LeftToRight;
+
+            GameObject background = CreatePanel("Background", sliderObject.transform, new Color(0.92f, 0.87f, 0.74f, 0.95f));
+            RectTransform backgroundRect = background.GetComponent<RectTransform>();
+            backgroundRect.anchorMin = new Vector2(0f, 0.5f);
+            backgroundRect.anchorMax = new Vector2(1f, 0.5f);
+            backgroundRect.pivot = new Vector2(0.5f, 0.5f);
+            backgroundRect.anchoredPosition = Vector2.zero;
+            backgroundRect.sizeDelta = new Vector2(0f, 10f);
+            AddSketchFrame(background.transform, new Vector2(size.x, 10f), new Color(0.25f, 0.18f, 0.12f, 0.45f), 1.1f);
+
+            GameObject fillArea = new GameObject("Fill Area");
+            fillArea.transform.SetParent(sliderObject.transform, false);
+            RectTransform fillAreaRect = fillArea.AddComponent<RectTransform>();
+            fillAreaRect.anchorMin = new Vector2(0f, 0f);
+            fillAreaRect.anchorMax = new Vector2(1f, 1f);
+            fillAreaRect.offsetMin = new Vector2(4f, 0f);
+            fillAreaRect.offsetMax = new Vector2(-4f, 0f);
+
+            GameObject fill = CreatePanel("Fill", fillArea.transform, new Color(0.42f, 0.84f, 0.36f, 0.95f));
+            RectTransform fillRect = fill.GetComponent<RectTransform>();
+            fillRect.anchorMin = new Vector2(0f, 0.5f);
+            fillRect.anchorMax = new Vector2(0f, 0.5f);
+            fillRect.pivot = new Vector2(0f, 0.5f);
+            fillRect.anchoredPosition = Vector2.zero;
+            fillRect.sizeDelta = new Vector2(10f, 10f);
+
+            GameObject handleArea = new GameObject("Handle Slide Area");
+            handleArea.transform.SetParent(sliderObject.transform, false);
+            RectTransform handleAreaRect = handleArea.AddComponent<RectTransform>();
+            handleAreaRect.anchorMin = new Vector2(0f, 0f);
+            handleAreaRect.anchorMax = new Vector2(1f, 1f);
+            handleAreaRect.offsetMin = new Vector2(8f, 0f);
+            handleAreaRect.offsetMax = new Vector2(-8f, 0f);
+
+            GameObject handle = CreatePanel("Handle", handleArea.transform, new Color(0.98f, 0.72f, 0.28f, 0.98f));
+            RectTransform handleRect = handle.GetComponent<RectTransform>();
+            handleRect.anchorMin = new Vector2(0f, 0.5f);
+            handleRect.anchorMax = new Vector2(0f, 0.5f);
+            handleRect.pivot = new Vector2(0.5f, 0.5f);
+            handleRect.anchoredPosition = Vector2.zero;
+            handleRect.sizeDelta = new Vector2(24f, 24f);
+            CreateIconDot(handle.transform, Vector2.zero, 20f, new Color(0.98f, 0.72f, 0.28f, 1f));
+            CreateIconDot(handle.transform, new Vector2(-3f, 3f), 6f, new Color(1f, 0.95f, 0.72f, 0.72f));
+
+            slider.targetGraphic = handle.GetComponent<Image>();
+            slider.fillRect = fillRect;
+            slider.handleRect = handleRect;
+            return slider;
         }
 
         private static GameObject CreateMultiScreen(string name, Transform parent, Font font, string titleText)
@@ -1420,7 +1614,7 @@ namespace DrawBody.EditorTools
             inkText.rectTransform.anchorMin = new Vector2(0.5f, 1f);
             inkText.rectTransform.anchorMax = new Vector2(0.5f, 1f);
             inkText.rectTransform.pivot = new Vector2(0.5f, 1f);
-            inkText.rectTransform.anchoredPosition = new Vector2(58f, -226f);
+            inkText.rectTransform.anchoredPosition = new Vector2(58f, -220f);
             inkText.rectTransform.sizeDelta = new Vector2(104f, 24f);
 
             partText = CreateText("PartText", panel.transform, font, 20, TextAnchor.MiddleLeft);
@@ -1547,30 +1741,40 @@ namespace DrawBody.EditorTools
             SetButtonLabelFontSize(penButton, 17);
             SetButtonLabelFontSize(eraserButton, 15);
 
-            Text sizeTitle = CreateText("BrushSizeTitle", panel.transform, font, 16, TextAnchor.MiddleLeft);
+            GameObject sizeChip = CreatePanel("BrushSizeChip", panel.transform, new Color(0.98f, 0.94f, 0.82f, 0.92f));
+            RectTransform sizeChipRect = sizeChip.GetComponent<RectTransform>();
+            sizeChipRect.anchorMin = new Vector2(0.5f, 1f);
+            sizeChipRect.anchorMax = new Vector2(0.5f, 1f);
+            sizeChipRect.pivot = new Vector2(0.5f, 1f);
+            sizeChipRect.anchoredPosition = new Vector2(0f, -106f);
+            sizeChipRect.sizeDelta = new Vector2(188f, 66f);
+            AddSketchFrame(sizeChip.transform, new Vector2(188f, 66f), new Color(0.25f, 0.18f, 0.12f, 0.48f), 1.3f);
+
+            Text sizeTitle = CreateText("BrushSizeTitle", sizeChip.transform, font, 13, TextAnchor.MiddleLeft);
             sizeTitle.text = LocalizationManager.T("brush_size");
             sizeTitle.color = Color.black;
             AddLocalizedText(sizeTitle.gameObject, "brush_size");
-            sizeTitle.rectTransform.anchorMin = new Vector2(0f, 1f);
-            sizeTitle.rectTransform.anchorMax = new Vector2(1f, 1f);
-            sizeTitle.rectTransform.pivot = new Vector2(0.5f, 1f);
-            sizeTitle.rectTransform.anchoredPosition = new Vector2(18f, -108f);
-            sizeTitle.rectTransform.sizeDelta = new Vector2(-24f, 24f);
+            sizeTitle.rectTransform.anchorMin = new Vector2(0f, 0f);
+            sizeTitle.rectTransform.anchorMax = new Vector2(0f, 1f);
+            sizeTitle.rectTransform.pivot = new Vector2(0f, 0.5f);
+            sizeTitle.rectTransform.anchoredPosition = new Vector2(12f, 0f);
+            sizeTitle.rectTransform.sizeDelta = new Vector2(44f, 44f);
 
-            brushSizeSlider = CreateBrushSlider("BrushSizeSlider", panel.transform, new Vector2(-12f, 172f), new Vector2(142f, 20f));
+            brushSizeSlider = CreateBrushSlider("BrushSizeSlider", sizeChip.transform, new Vector2(12f, 32f), new Vector2(94f, 24f));
             brushSizeSlider.minValue = 3f;
             brushSizeSlider.maxValue = 10f;
             brushSizeSlider.value = 6f;
             brushSizeSlider.wholeNumbers = false;
 
-            brushSizeValueText = CreateText("BrushSizeValueText", panel.transform, font, 14, TextAnchor.MiddleCenter);
+            brushSizeValueText = CreateText("BrushSizeValueText", sizeChip.transform, font, 17, TextAnchor.MiddleCenter);
             brushSizeValueText.text = "6px";
-            brushSizeValueText.color = Color.black;
-            brushSizeValueText.rectTransform.anchorMin = new Vector2(0.5f, 0f);
-            brushSizeValueText.rectTransform.anchorMax = new Vector2(0.5f, 0f);
-            brushSizeValueText.rectTransform.pivot = new Vector2(0.5f, 0f);
-            brushSizeValueText.rectTransform.anchoredPosition = new Vector2(80f, 164f);
-            brushSizeValueText.rectTransform.sizeDelta = new Vector2(48f, 28f);
+            brushSizeValueText.color = new Color(0.05f, 0.58f, 0.72f, 1f);
+            brushSizeValueText.fontStyle = FontStyle.Bold;
+            brushSizeValueText.rectTransform.anchorMin = new Vector2(1f, 0f);
+            brushSizeValueText.rectTransform.anchorMax = new Vector2(1f, 0f);
+            brushSizeValueText.rectTransform.pivot = new Vector2(1f, 0f);
+            brushSizeValueText.rectTransform.anchoredPosition = new Vector2(-12f, 6f);
+            brushSizeValueText.rectTransform.sizeDelta = new Vector2(58f, 24f);
 
             Text inkTitle = CreateText("InkUsageTitle", panel.transform, font, 16, TextAnchor.MiddleLeft);
             inkTitle.text = LocalizationManager.T("ink_usage");
@@ -1599,10 +1803,12 @@ namespace DrawBody.EditorTools
             AddSketchFrame(gaugeBack.transform, new Vector2(118f, 16f), new Color(0.25f, 0.18f, 0.12f, 0.6f), 1.2f);
             AddInkBottleIcon(panel.transform, new Vector2(-80f, -44f));
 
-            Button clearButton = CreateButton("ToolClearButton", panel.transform, font, LocalizationManager.T("clear"), new Vector2(-48f, 22f), new Vector2(86f, 42f), new Color(0.98f, 0.94f, 0.82f, 0.92f));
-            undoButton = CreateButton("ToolUndoButton", panel.transform, font, "↶ " + LocalizationManager.T("undo"), new Vector2(48f, 22f), new Vector2(90f, 42f), new Color(0.98f, 0.94f, 0.82f, 0.92f));
+            Button clearButton = CreateButton("ToolClearButton", panel.transform, font, "♲\n" + LocalizationManager.T("clear"), new Vector2(-50f, 6f), new Vector2(88f, 50f), new Color(0.98f, 0.94f, 0.82f, 0.92f));
+            undoButton = CreateButton("ToolUndoButton", panel.transform, font, "↶\n" + LocalizationManager.T("undo"), new Vector2(50f, 6f), new Vector2(92f, 50f), new Color(0.98f, 0.94f, 0.82f, 0.92f));
             SetButtonLabelColor(clearButton, Color.black);
             SetButtonLabelColor(undoButton, Color.black);
+            SetButtonLabelFontSize(clearButton, 15);
+            SetButtonLabelFontSize(undoButton, 13);
 
             return panel;
         }
@@ -1621,13 +1827,15 @@ namespace DrawBody.EditorTools
             Slider slider = sliderObject.AddComponent<Slider>();
             slider.direction = Slider.Direction.LeftToRight;
 
-            GameObject background = CreatePanel("Background", sliderObject.transform, new Color(1f, 1f, 1f, 0.85f));
+            GameObject background = CreatePanel("Background", sliderObject.transform, new Color(1f, 1f, 1f, 0.01f));
             RectTransform backgroundRect = background.GetComponent<RectTransform>();
             backgroundRect.anchorMin = new Vector2(0f, 0.5f);
             backgroundRect.anchorMax = new Vector2(1f, 0.5f);
             backgroundRect.pivot = new Vector2(0.5f, 0.5f);
             backgroundRect.anchoredPosition = Vector2.zero;
-            backgroundRect.sizeDelta = new Vector2(0f, 6f);
+            backgroundRect.sizeDelta = new Vector2(0f, 18f);
+
+            AddPencilSliderTrack(sliderObject.transform, size.x);
 
             GameObject fillArea = new GameObject("Fill Area");
             fillArea.transform.SetParent(sliderObject.transform, false);
@@ -1637,13 +1845,13 @@ namespace DrawBody.EditorTools
             fillAreaRect.offsetMin = new Vector2(4f, 0f);
             fillAreaRect.offsetMax = new Vector2(-4f, 0f);
 
-            GameObject fill = CreatePanel("Fill", fillArea.transform, new Color(0.42f, 0.86f, 0.42f, 0.9f));
+            GameObject fill = CreatePanel("Fill", fillArea.transform, new Color(0.05f, 0.68f, 0.82f, 0.95f));
             RectTransform fillRect = fill.GetComponent<RectTransform>();
             fillRect.anchorMin = new Vector2(0f, 0.5f);
             fillRect.anchorMax = new Vector2(0f, 0.5f);
             fillRect.pivot = new Vector2(0f, 0.5f);
             fillRect.anchoredPosition = Vector2.zero;
-            fillRect.sizeDelta = new Vector2(10f, 6f);
+            fillRect.sizeDelta = new Vector2(10f, 3.5f);
 
             GameObject handleArea = new GameObject("Handle Slide Area");
             handleArea.transform.SetParent(sliderObject.transform, false);
@@ -1653,13 +1861,15 @@ namespace DrawBody.EditorTools
             handleAreaRect.offsetMin = new Vector2(8f, 0f);
             handleAreaRect.offsetMax = new Vector2(-8f, 0f);
 
-            GameObject handle = CreatePanel("Handle", handleArea.transform, new Color(0.08f, 0.08f, 0.08f, 1f));
+            GameObject handle = CreatePanel("Handle", handleArea.transform, new Color(0.05f, 0.58f, 0.72f, 0.02f));
             RectTransform handleRect = handle.GetComponent<RectTransform>();
             handleRect.anchorMin = new Vector2(0f, 0.5f);
             handleRect.anchorMax = new Vector2(0f, 0.5f);
             handleRect.pivot = new Vector2(0.5f, 0.5f);
             handleRect.anchoredPosition = Vector2.zero;
-            handleRect.sizeDelta = new Vector2(14f, 18f);
+            handleRect.sizeDelta = new Vector2(18f, 18f);
+            CreateIconDot(handle.transform, Vector2.zero, 15f, new Color(0.05f, 0.68f, 0.82f, 1f));
+            CreateIconDot(handle.transform, new Vector2(-2f, 2f), 5f, new Color(0.7f, 0.95f, 1f, 0.65f));
 
             slider.fillRect = fillRect;
             slider.handleRect = handleRect;
@@ -1759,6 +1969,17 @@ namespace DrawBody.EditorTools
             CreateIconLine(parent, center + new Vector2(-9f, -2f), center + new Vector2(9f, -2f), 7f, ink);
             CreateIconLine(parent, center + new Vector2(-5f, 18f), center + new Vector2(5f, 18f), 5f, outline);
             CreateIconDot(parent, center + new Vector2(0f, 2f), 3f, new Color(1f, 1f, 1f, 0.65f));
+        }
+
+        private static void AddPencilSliderTrack(Transform parent, float width)
+        {
+            float half = width * 0.5f - 6f;
+            Color paperLine = new Color(0.9f, 0.88f, 0.82f, 0.75f);
+            Color graphite = new Color(0.08f, 0.08f, 0.09f, 0.62f);
+
+            CreateIconLine(parent, new Vector2(-half, 0f), new Vector2(half, 1.4f), 5f, paperLine);
+            CreateIconLine(parent, new Vector2(-half + 1f, 0.4f), new Vector2(half - 1f, -0.6f), 1.8f, graphite);
+            CreateIconLine(parent, new Vector2(-half + 2f, -1.2f), new Vector2(half - 2f, 0.8f), 1.1f, new Color(0.08f, 0.08f, 0.09f, 0.28f));
         }
 
         private static void AddTinyDoodle(Transform parent, Vector2 position, float scale)
@@ -2287,6 +2508,18 @@ namespace DrawBody.EditorTools
 
         private static Font CreateDefaultFont()
         {
+            Font projectFont = AssetDatabase.LoadAssetAtPath<Font>(ProjectFontPath);
+            if (projectFont == null && System.IO.File.Exists(ProjectFontPath))
+            {
+                AssetDatabase.ImportAsset(ProjectFontPath);
+                projectFont = AssetDatabase.LoadAssetAtPath<Font>(ProjectFontPath);
+            }
+
+            if (projectFont != null)
+            {
+                return projectFont;
+            }
+
             Font font = Font.CreateDynamicFontFromOSFont(new[] { "Yu Gothic UI", "Meiryo", "Arial" }, 18);
             if (font != null)
             {
@@ -2465,6 +2698,31 @@ namespace DrawBody.EditorTools
             return sprite;
         }
 
+        private static Sprite LoadTitleLogoSprite()
+        {
+            if (!System.IO.File.Exists(TitleLogoPath))
+            {
+                Debug.LogWarning($"Title logo not found: {TitleLogoPath}");
+                return null;
+            }
+
+            TextureImporter importer = AssetImporter.GetAtPath(TitleLogoPath) as TextureImporter;
+            if (importer != null && importer.textureType != TextureImporterType.Sprite)
+            {
+                importer.textureType = TextureImporterType.Sprite;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.alphaIsTransparency = true;
+                importer.mipmapEnabled = false;
+                importer.SaveAndReimport();
+            }
+            else
+            {
+                AssetDatabase.ImportAsset(TitleLogoPath);
+            }
+
+            return AssetDatabase.LoadAssetAtPath<Sprite>(TitleLogoPath);
+        }
+
         private static GameObject CreateMarker(string name, Vector3 localPosition, Transform parent)
         {
             GameObject marker = new GameObject(name);
@@ -2486,6 +2744,19 @@ namespace DrawBody.EditorTools
             SerializedObject serializedObject = new SerializedObject(target);
             SerializedProperty property = serializedObject.FindProperty(propertyName);
             property.objectReferenceValue = value;
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void AssignObjectArray(Object target, string propertyName, Object[] values)
+        {
+            SerializedObject serializedObject = new SerializedObject(target);
+            SerializedProperty property = serializedObject.FindProperty(propertyName);
+            property.arraySize = values.Length;
+            for (int i = 0; i < values.Length; i++)
+            {
+                property.GetArrayElementAtIndex(i).objectReferenceValue = values[i];
+            }
+
             serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
 

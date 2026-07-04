@@ -177,6 +177,8 @@ namespace DrawBody.Prototype
             RefreshHudVisibility();
         }
 
+        public bool IsTitleSubmenuShowing => multiShowing || optionShowing;
+
         public void SetStageEditor(bool editing)
         {
             stageEditing = editing;

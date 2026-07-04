@@ -142,7 +142,11 @@ namespace DrawBody.Prototype
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (drawing)
+                if (uiManager != null && uiManager.IsTitleSubmenuShowing)
+                {
+                    CloseTitleSubmenu();
+                }
+                else if (drawing)
                 {
                     CancelDrawingMode();
                 }
