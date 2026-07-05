@@ -20,14 +20,66 @@ namespace DrawBody.Prototype
 
             switch (data.type)
             {
+                case StageObjectType.JumpPad:
+                    return CreateJumpPad(data, parent);
                 case StageObjectType.Spawn:
-                    return CreateMarker(data, parent, new Color(0.1f, 0.3f, 1f), "SPAWN");
+                    return CreateMarker(data, parent, new Color(0.1f, 0.3f, 1f), "START");
                 case StageObjectType.Goal:
                     return CreateGoal(data, parent);
                 case StageObjectType.BalanceScale:
+                case StageObjectType.Seesaw:
+                case StageObjectType.Catapult:
                     return CreateBalanceScale(data, parent);
                 case StageObjectType.Weight:
+                case StageObjectType.WoodBox:
+                case StageObjectType.IronBox:
+                case StageObjectType.Ball:
+                case StageObjectType.Barrel:
+                case StageObjectType.Rock:
+                case StageObjectType.IceBlock:
+                case StageObjectType.FloatingBox:
+                case StageObjectType.RubberBox:
+                case StageObjectType.Bomb:
+                case StageObjectType.Battery:
+                case StageObjectType.Bucket:
+                case StageObjectType.FallingRock:
                     return CreateWeight(data, parent);
+                case StageObjectType.Checkpoint:
+                case StageObjectType.WarpEntrance:
+                case StageObjectType.WarpExit:
+                case StageObjectType.RespawnPoint:
+                case StageObjectType.MidGoal:
+                case StageObjectType.Button:
+                case StageObjectType.WeightButton:
+                case StageObjectType.PressurePlate:
+                    return CreateButtonSwitch(data, parent);
+                case StageObjectType.Lever:
+                case StageObjectType.ToggleSwitch:
+                case StageObjectType.TimerSwitch:
+                case StageObjectType.RedSwitch:
+                case StageObjectType.BlueSwitch:
+                case StageObjectType.GreenSwitch:
+                case StageObjectType.YellowSwitch:
+                case StageObjectType.RemoteControl:
+                case StageObjectType.Key:
+                case StageObjectType.Coin:
+                case StageObjectType.Star:
+                case StageObjectType.Spring:
+                case StageObjectType.Fan:
+                case StageObjectType.Magnet:
+                case StageObjectType.Cannon:
+                case StageObjectType.Gear:
+                case StageObjectType.BigGear:
+                case StageObjectType.RopePulley:
+                case StageObjectType.Saw:
+                case StageObjectType.BlackHole:
+                case StageObjectType.Pendulum:
+                case StageObjectType.Keyhole:
+                case StageObjectType.Clock:
+                case StageObjectType.Counter:
+                case StageObjectType.TrafficLight:
+                case StageObjectType.GoalEffect:
+                    return CreateProp(data, parent);
                 case StageObjectType.Wall:
                 case StageObjectType.Platform:
                 default:
@@ -41,19 +93,58 @@ namespace DrawBody.Prototype
             switch (type)
             {
                 case StageObjectType.Wall:
+                case StageObjectType.ClimbableWall:
+                case StageObjectType.Door:
+                case StageObjectType.LockedDoor:
+                case StageObjectType.Shutter:
+                case StageObjectType.Fence:
+                case StageObjectType.LaserGate:
+                case StageObjectType.ColorGate:
+                case StageObjectType.OneWayGate:
+                case StageObjectType.TimedGate:
+                case StageObjectType.BreakableWall:
+                case StageObjectType.HiddenWall:
                     size = new Vector2(0.55f, 2.2f);
                     break;
                 case StageObjectType.Spawn:
+                case StageObjectType.Checkpoint:
+                case StageObjectType.WarpEntrance:
+                case StageObjectType.WarpExit:
+                case StageObjectType.RespawnPoint:
+                case StageObjectType.MidGoal:
                     size = new Vector2(0.7f, 0.7f);
                     break;
                 case StageObjectType.Goal:
                     size = new Vector2(1.15f, 2.05f);
                     break;
                 case StageObjectType.BalanceScale:
+                case StageObjectType.Seesaw:
+                case StageObjectType.Catapult:
                     size = new Vector2(4.5f, 0.6f);
                     break;
                 case StageObjectType.Weight:
+                case StageObjectType.WoodBox:
+                case StageObjectType.IronBox:
+                case StageObjectType.Ball:
+                case StageObjectType.Barrel:
+                case StageObjectType.Rock:
+                case StageObjectType.IceBlock:
+                case StageObjectType.FloatingBox:
+                case StageObjectType.RubberBox:
+                case StageObjectType.Bomb:
+                case StageObjectType.Battery:
+                case StageObjectType.Bucket:
+                case StageObjectType.FallingRock:
                     size = new Vector2(0.9f, 0.9f);
+                    break;
+                case StageObjectType.Rope:
+                case StageObjectType.Ladder:
+                case StageObjectType.Laser:
+                case StageObjectType.Water:
+                case StageObjectType.Poison:
+                case StageObjectType.Fire:
+                case StageObjectType.Electricity:
+                    size = new Vector2(0.55f, 2.2f);
                     break;
                 default:
                     size = new Vector2(3f, 0.4f);
@@ -72,7 +163,8 @@ namespace DrawBody.Prototype
 
         private GameObject CreateSolid(StageObjectData data, Transform parent)
         {
-            GameObject obj = CreateBox(data.objectId, data.position, data.size, new Color(0.08f, 0.08f, 0.08f, 0.025f), parent);
+            Color stroke = GetObjectColor(data.type);
+            GameObject obj = CreateBox(data.objectId, data.position, data.size, new Color(stroke.r, stroke.g, stroke.b, 0.035f), parent);
             obj.name = data.type.ToString();
             obj.layer = groundLayer;
             obj.tag = "Ground";
@@ -80,8 +172,12 @@ namespace DrawBody.Prototype
 
             BoxCollider2D collider = obj.AddComponent<BoxCollider2D>();
             collider.size = Vector2.one;
+            if (StageObjectCatalog.Get(data.type).Kind == StageObjectKind.Trigger || StageObjectCatalog.Get(data.type).Kind == StageObjectKind.Hazard)
+            {
+                collider.isTrigger = true;
+            }
 
-            AddPencilFillLocal(obj.transform, data.size, new Color(0.05f, 0.05f, 0.05f));
+            AddPencilFillLocal(obj.transform, data.size, stroke);
             AddSketchBoxOutline(obj.transform, data.size, Color.black, 0.055f);
             AddEditorMetadata(obj, data);
             return obj;
@@ -95,84 +191,185 @@ namespace DrawBody.Prototype
             root.transform.position = data.position;
             root.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
 
-            GameObject anchor = new GameObject("Pivot");
-            anchor.transform.SetParent(root.transform, false);
-            anchor.transform.localPosition = Vector3.zero;
-            Rigidbody2D anchorBody = anchor.AddComponent<Rigidbody2D>();
-            anchorBody.bodyType = RigidbodyType2D.Static;
-
             Vector2 size = data.size;
-            GameObject beam = CreateBox("Beam", Vector2.zero, new Vector2(size.x, Mathf.Max(0.18f, size.y * 0.28f)), new Color(0.08f, 0.08f, 0.08f, 0.04f), root.transform);
-            beam.transform.localPosition = new Vector3(0f, 0.28f, 0f);
-            beam.layer = groundLayer;
-            beam.tag = "Ground";
+            float height = Mathf.Max(3.2f, size.y);
+            float halfSpan = Mathf.Max(1.0f, size.x * 0.42f);
+            float trayWidth = Mathf.Max(0.85f, size.x * 0.26f);
 
-            Rigidbody2D beamBody = beam.AddComponent<Rigidbody2D>();
-            beamBody.bodyType = RigidbodyType2D.Kinematic;
-            beamBody.mass = 2.4f;
-            beamBody.angularDamping = 1.3f;
-            beamBody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-            beamBody.useFullKinematicContacts = true;
+            AddDoodleLine("Top Beam", root.transform, new[] { new Vector3(-halfSpan, height * 0.38f, 0f), new Vector3(halfSpan, height * 0.38f, 0f) }, Color.black, 0.055f, 18);
 
-            BoxCollider2D beamCollider = beam.AddComponent<BoxCollider2D>();
-            beamCollider.size = Vector2.one;
+            GameObject leftTray = CreateBalanceTray("Left Tray", root.transform, new Vector2(-halfSpan, -height * 0.08f), trayWidth);
+            GameObject rightTray = CreateBalanceTray("Right Tray", root.transform, new Vector2(halfSpan, -height * 0.08f), trayWidth);
+            AddDoodleLine("Left Rope", root.transform, new[] { new Vector3(-halfSpan, height * 0.38f, 0f), new Vector3(-halfSpan, -height * 0.08f, 0f) }, Color.black, 0.026f, 17);
+            AddDoodleLine("Right Rope", root.transform, new[] { new Vector3(halfSpan, height * 0.38f, 0f), new Vector3(halfSpan, -height * 0.08f, 0f) }, Color.black, 0.026f, 17);
 
-            AddPencilFillLocal(beam.transform, new Vector2(size.x, Mathf.Max(0.18f, size.y * 0.28f)), new Color(0.12f, 0.12f, 0.12f));
-            AddSketchBoxOutline(beam.transform, new Vector2(size.x, Mathf.Max(0.18f, size.y * 0.28f)), Color.black, 0.055f);
-            AddBalanceScaleStopper(beam.transform, -0.47f);
-            AddBalanceScaleStopper(beam.transform, 0.47f);
-
-            AddDoodleLine("Stand Left", root.transform, new[] { new Vector3(-0.35f, -0.55f, 0f), new Vector3(0f, 0.22f, 0f) }, Color.black, 0.045f, 18);
-            AddDoodleLine("Stand Right", root.transform, new[] { new Vector3(0.35f, -0.55f, 0f), new Vector3(0f, 0.22f, 0f) }, Color.black, 0.045f, 18);
-            AddDoodleLine("Stand Base", root.transform, new[] { new Vector3(-0.55f, -0.55f, 0f), new Vector3(0.55f, -0.55f, 0f) }, Color.black, 0.045f, 18);
-
-            BalanceScale scale = root.AddComponent<BalanceScale>();
-            scale.SetBeam(beamBody);
-            BalanceScaleBeam beamLoadReporter = beam.AddComponent<BalanceScaleBeam>();
-            beamLoadReporter.SetScale(scale);
-
-            GameObject loadSensor = new GameObject("LoadSensor");
-            loadSensor.transform.SetParent(beam.transform, false);
-            loadSensor.transform.localPosition = new Vector3(0f, 0.75f, 0f);
-            BalanceScaleBeam sensorReporter = loadSensor.AddComponent<BalanceScaleBeam>();
-            sensorReporter.SetScale(scale);
-            BoxCollider2D sensorCollider = loadSensor.AddComponent<BoxCollider2D>();
-            sensorCollider.isTrigger = true;
-            sensorCollider.size = new Vector2(1f, 1.5f);
+            VerticalBalanceScale scale = root.AddComponent<VerticalBalanceScale>();
+            scale.Configure(leftTray.GetComponent<Rigidbody2D>(), rightTray.GetComponent<Rigidbody2D>(), height * 0.36f);
+            ConfigureBalanceTrayReporters(leftTray, scale, -1);
+            ConfigureBalanceTrayReporters(rightTray, scale, 1);
 
             BoxCollider2D editorCollider = root.AddComponent<BoxCollider2D>();
-            editorCollider.size = new Vector2(Mathf.Max(1f, data.size.x), Mathf.Max(1f, data.size.y + 1.2f));
+            editorCollider.size = new Vector2(Mathf.Max(1f, data.size.x), Mathf.Max(1f, height + 1.2f));
             editorCollider.isTrigger = true;
             AddEditorMetadata(root, data);
             return root;
         }
 
+        private GameObject CreateBalanceTray(string name, Transform parent, Vector2 localPosition, float width)
+        {
+            GameObject tray = CreateBox(name, Vector2.zero, new Vector2(width, 0.2f), new Color(0.08f, 0.08f, 0.08f, 0.04f), parent);
+            tray.transform.localPosition = localPosition;
+            tray.layer = groundLayer;
+            tray.tag = "Ground";
+
+            Rigidbody2D body = tray.AddComponent<Rigidbody2D>();
+            body.bodyType = RigidbodyType2D.Kinematic;
+            body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            body.useFullKinematicContacts = true;
+
+            BoxCollider2D collider = tray.AddComponent<BoxCollider2D>();
+            collider.size = Vector2.one;
+
+            GameObject sensor = new GameObject("Load Sensor");
+            sensor.transform.SetParent(tray.transform, false);
+            sensor.transform.localPosition = new Vector3(0f, 0.62f, 0f);
+            BoxCollider2D sensorCollider = sensor.AddComponent<BoxCollider2D>();
+            sensorCollider.isTrigger = true;
+            sensorCollider.size = new Vector2(1.12f, 1.15f);
+            sensor.AddComponent<VerticalBalanceTray>();
+
+            AddPencilFillLocal(tray.transform, new Vector2(width, 0.2f), new Color(0.1f, 0.1f, 0.1f));
+            AddSketchBoxOutline(tray.transform, new Vector2(width, 0.2f), Color.black, 0.045f);
+            tray.AddComponent<VerticalBalanceTray>();
+            return tray;
+        }
+
+        private static void ConfigureBalanceTrayReporters(GameObject tray, VerticalBalanceScale scale, int side)
+        {
+            VerticalBalanceTray[] reporters = tray.GetComponentsInChildren<VerticalBalanceTray>(true);
+            for (int i = 0; i < reporters.Length; i++)
+            {
+                reporters[i].Configure(scale, side);
+            }
+        }
+
         private GameObject CreateWeight(StageObjectData data, Transform parent)
         {
-            GameObject obj = CreateBox(data.objectId, data.position, data.size, new Color(0.35f, 0.35f, 0.35f, 0.12f), parent);
-            obj.name = "Weight";
+            Color stroke = GetObjectColor(data.type);
+            GameObject obj = CreateBox(data.objectId, data.position, data.size, new Color(stroke.r, stroke.g, stroke.b, 0.12f), parent);
+            obj.name = data.type.ToString();
             obj.layer = pushableLayer;
             obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
 
             Rigidbody2D rb = obj.AddComponent<Rigidbody2D>();
-            rb.mass = 5f;
+            rb.mass = data.type == StageObjectType.Weight || data.type == StageObjectType.IronBox || data.type == StageObjectType.Rock ? 50f : 2.5f;
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             obj.AddComponent<CarryableObject>();
 
             BoxCollider2D collider = obj.AddComponent<BoxCollider2D>();
             collider.size = Vector2.one;
 
-            AddPencilFillLocal(obj.transform, data.size, new Color(0.3f, 0.3f, 0.3f));
+            AddPencilFillLocal(obj.transform, data.size, stroke);
             AddSketchBoxOutline(obj.transform, data.size, Color.black, 0.055f);
             AddDoodleLine("Weight Handle", obj.transform, new[]
             {
-                new Vector3(-0.22f, 0.52f, -0.01f),
-                new Vector3(-0.12f, 0.68f, -0.01f),
-                new Vector3(0.12f, 0.68f, -0.01f),
-                new Vector3(0.22f, 0.52f, -0.01f)
-            }, Color.black, 0.045f, 20);
+                new Vector3(-0.18f, 0.5f, -0.01f),
+                new Vector3(-0.08f, 0.68f, -0.01f),
+                new Vector3(0.08f, 0.68f, -0.01f),
+                new Vector3(0.18f, 0.5f, -0.01f)
+            }, Color.black, 0.04f, 20);
             AddEditorMetadata(obj, data);
             return obj;
+        }
+
+        private GameObject CreateProp(StageObjectData data, Transform parent)
+        {
+            Color stroke = GetObjectColor(data.type);
+            GameObject obj = new GameObject(data.objectId);
+            obj.name = data.type.ToString();
+            obj.transform.SetParent(parent, false);
+            obj.transform.position = data.position;
+            obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
+
+            AddDoodleCircle(obj.transform, Mathf.Max(0.28f, data.size.x * 0.38f), stroke, 0.055f);
+
+            CircleCollider2D collider = obj.AddComponent<CircleCollider2D>();
+            collider.radius = Mathf.Max(0.35f, data.size.x * 0.45f);
+            collider.isTrigger = StageObjectCatalog.Get(data.type).Kind != StageObjectKind.Pushable;
+            AddEditorMetadata(obj, data);
+            return obj;
+        }
+
+        private GameObject CreateJumpPad(StageObjectData data, Transform parent)
+        {
+            GameObject obj = new GameObject(data.objectId);
+            obj.name = data.type.ToString();
+            obj.transform.SetParent(parent, false);
+            obj.transform.position = data.position;
+            obj.transform.localScale = new Vector3(data.size.x, data.size.y, 1f);
+            obj.layer = groundLayer;
+            obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
+
+            BoxCollider2D solid = obj.AddComponent<BoxCollider2D>();
+            solid.size = new Vector2(0.85f, 0.16f);
+            solid.offset = new Vector2(0f, -0.42f);
+
+            GameObject trigger = new GameObject("Jump Trigger");
+            trigger.transform.SetParent(obj.transform, false);
+            trigger.transform.localPosition = new Vector3(0f, 0.15f, 0f);
+            BoxCollider2D triggerCollider = trigger.AddComponent<BoxCollider2D>();
+            triggerCollider.isTrigger = true;
+            triggerCollider.size = new Vector2(0.95f, 0.7f);
+            JumpPad jumpPad = trigger.AddComponent<JumpPad>();
+            jumpPad.Configure(obj.transform);
+
+            AddDoodleLine("Spring Left", obj.transform, new[]
+            {
+                new Vector3(-0.2f, -0.42f, -0.02f),
+                new Vector3(-0.36f, -0.22f, -0.02f),
+                new Vector3(-0.12f, -0.04f, -0.02f),
+                new Vector3(-0.34f, 0.16f, -0.02f),
+                new Vector3(-0.1f, 0.34f, -0.02f)
+            }, Color.black, 0.028f, 20);
+            AddDoodleLine("Spring Right", obj.transform, new[]
+            {
+                new Vector3(0.2f, -0.42f, -0.02f),
+                new Vector3(0.36f, -0.22f, -0.02f),
+                new Vector3(0.12f, -0.04f, -0.02f),
+                new Vector3(0.34f, 0.16f, -0.02f),
+                new Vector3(0.1f, 0.34f, -0.02f)
+            }, Color.black, 0.028f, 20);
+            AddDoodleLine("Spring Top", obj.transform, new[] { new Vector3(-0.46f, 0.4f, -0.02f), new Vector3(0.46f, 0.4f, -0.02f) }, Color.black, 0.055f, 21);
+            AddDoodleLine("Spring Base", obj.transform, new[] { new Vector3(-0.42f, -0.44f, -0.02f), new Vector3(0.42f, -0.44f, -0.02f) }, Color.black, 0.055f, 21);
+            AddEditorMetadata(obj, data);
+            return obj;
+        }
+
+        private GameObject CreateButtonSwitch(StageObjectData data, Transform parent)
+        {
+            GameObject root = new GameObject(data.objectId);
+            root.name = data.type.ToString();
+            root.transform.SetParent(parent, false);
+            root.transform.position = data.position;
+            root.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
+
+            Vector2 baseSize = new Vector2(data.size.x, data.size.y * 0.34f);
+            GameObject baseBox = CreateBox("Button Base", Vector2.zero, baseSize, new Color(0.08f, 0.08f, 0.08f, 0.04f), root.transform);
+            baseBox.transform.localPosition = new Vector3(0f, -data.size.y * 0.16f, 0f);
+            AddPencilFillLocal(baseBox.transform, baseSize, new Color(0.08f, 0.08f, 0.08f));
+            AddSketchBoxOutline(baseBox.transform, baseSize, Color.black, 0.045f);
+
+            Vector2 capSize = new Vector2(data.size.x * 0.72f, data.size.y * 0.28f);
+            GameObject cap = CreateBox("Button Cap", Vector2.zero, capSize, new Color(0.95f, 0.1f, 0.08f, 0.16f), root.transform);
+            cap.transform.localPosition = new Vector3(0f, data.size.y * 0.12f, -0.02f);
+            AddPencilFillLocal(cap.transform, capSize, new Color(0.85f, 0.08f, 0.05f));
+            AddSketchBoxOutline(cap.transform, capSize, Color.black, 0.04f);
+
+            BoxCollider2D trigger = root.AddComponent<BoxCollider2D>();
+            trigger.isTrigger = true;
+            trigger.size = data.size;
+            AddEditorMetadata(root, data);
+            return root;
         }
 
         private static void AddBalanceScaleStopper(Transform beam, float localX)
@@ -204,20 +401,72 @@ namespace DrawBody.Prototype
 
         private GameObject CreateGoal(StageObjectData data, Transform parent)
         {
-            GameObject obj = CreateBox(data.objectId, data.position, data.size, new Color(0f, 0.85f, 0.35f, 0.1f), parent);
+            GameObject obj = new GameObject(data.objectId);
             obj.name = "Goal";
+            obj.transform.SetParent(parent, false);
+            obj.transform.position = data.position;
+            obj.transform.localScale = new Vector3(data.size.x, data.size.y, 1f);
             obj.layer = goalLayer;
             obj.tag = "Goal";
             obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
 
             BoxCollider2D collider = obj.AddComponent<BoxCollider2D>();
-            collider.size = Vector2.one;
+            collider.size = new Vector2(0.7f, 0.92f);
+            collider.offset = new Vector2(0f, -0.08f);
             collider.isTrigger = true;
             obj.AddComponent<Goal>();
 
-            AddPencilFillLocal(obj.transform, data.size, new Color(0f, 0.65f, 0.24f));
-            AddSketchBoxOutline(obj.transform, data.size, Color.black, 0.055f);
-            AddDoorDoodle(obj.transform);
+            GameObject beam = new GameObject("Goal Beam");
+            beam.transform.SetParent(obj.transform, false);
+            beam.transform.localPosition = new Vector3(0f, -0.08f, -0.02f);
+            LineRenderer beamLine = beam.AddComponent<LineRenderer>();
+            beamLine.useWorldSpace = false;
+            beamLine.positionCount = 4;
+            beamLine.loop = true;
+            beamLine.SetPositions(new[]
+            {
+                new Vector3(-0.28f, 0.28f, 0f),
+                new Vector3(0.28f, 0.28f, 0f),
+                new Vector3(0.5f, -0.48f, 0f),
+                new Vector3(-0.5f, -0.48f, 0f)
+            });
+            beamLine.startWidth = 0.028f;
+            beamLine.endWidth = 0.028f;
+            beamLine.material = GetLineMaterial();
+            beamLine.startColor = new Color(0.2f, 0.75f, 1f, 0.55f);
+            beamLine.endColor = new Color(0.2f, 0.75f, 1f, 0.55f);
+            beamLine.sortingOrder = 16;
+
+            GameObject ufo = new GameObject("UFO");
+            ufo.transform.SetParent(obj.transform, false);
+            ufo.transform.localPosition = new Vector3(0f, 0.46f, -0.03f);
+            ufo.AddComponent<UfoGoalVisual>();
+            AddDoodleLine("UFO Body", ufo.transform, new[]
+            {
+                new Vector3(-0.34f, 0f, 0f),
+                new Vector3(-0.18f, 0.12f, 0f),
+                new Vector3(0.18f, 0.12f, 0f),
+                new Vector3(0.34f, 0f, 0f),
+                new Vector3(0.12f, -0.09f, 0f),
+                new Vector3(-0.12f, -0.09f, 0f),
+                new Vector3(-0.34f, 0f, 0f)
+            }, Color.black, 0.04f, 20);
+            AddDoodleLine("UFO Dome", ufo.transform, new[]
+            {
+                new Vector3(-0.12f, 0.1f, 0f),
+                new Vector3(-0.04f, 0.22f, 0f),
+                new Vector3(0.08f, 0.22f, 0f),
+                new Vector3(0.16f, 0.1f, 0f)
+            }, new Color(0.1f, 0.45f, 1f), 0.032f, 21);
+            AddDoodleLine("Beam Rays", obj.transform, new[]
+            {
+                new Vector3(-0.18f, 0.22f, -0.02f),
+                new Vector3(-0.42f, -0.45f, -0.02f),
+                new Vector3(0f, 0.2f, -0.02f),
+                new Vector3(0.02f, -0.5f, -0.02f),
+                new Vector3(0.18f, 0.22f, -0.02f),
+                new Vector3(0.42f, -0.45f, -0.02f)
+            }, new Color(0.2f, 0.75f, 1f, 0.42f), 0.022f, 17);
             AddEditorMetadata(obj, data);
             return obj;
         }
@@ -228,15 +477,9 @@ namespace DrawBody.Prototype
             obj.transform.SetParent(parent, false);
             obj.transform.position = data.position;
             obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
-            AddDoodleCircle(obj.transform, 0.32f, color, 0.05f);
-
-            TextMesh text = obj.AddComponent<TextMesh>();
-            text.text = label;
-            text.fontSize = 24;
-            text.characterSize = 0.08f;
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.color = color;
+            AddDoodleCircle(obj.transform, 0.28f, color, 0.045f);
+            AddDoodleLine("Flag Pole", obj.transform, new[] { new Vector3(0.18f, -0.25f, 0f), new Vector3(0.18f, 0.36f, 0f) }, color, 0.04f, 18);
+            AddDoodleLine("Flag", obj.transform, new[] { new Vector3(0.18f, 0.32f, 0f), new Vector3(0.52f, 0.22f, 0f), new Vector3(0.18f, 0.12f, 0f) }, color, 0.04f, 18);
 
             CircleCollider2D collider = obj.AddComponent<CircleCollider2D>();
             collider.radius = 0.42f;
@@ -246,12 +489,83 @@ namespace DrawBody.Prototype
             return obj;
         }
 
+        private static Color GetObjectColor(StageObjectType type)
+        {
+            switch (StageObjectCatalog.Get(type).Category)
+            {
+                case StageObjectCategory.StartGoal:
+                    return new Color(0.1f, 0.45f, 1f);
+                case StageObjectCategory.Switch:
+                    return new Color(0.95f, 0.2f, 0.2f);
+                case StageObjectCategory.DoorGate:
+                    return new Color(0.25f, 0.25f, 0.25f);
+                case StageObjectCategory.Movable:
+                    return new Color(0.52f, 0.34f, 0.18f);
+                case StageObjectCategory.Action:
+                    return new Color(0.1f, 0.65f, 0.25f);
+                case StageObjectCategory.Trap:
+                    return new Color(0.92f, 0.12f, 0.1f);
+                case StageObjectCategory.Gimmick:
+                    return new Color(0.55f, 0.25f, 0.9f);
+                default:
+                    if (type == StageObjectType.IceFloor || type == StageObjectType.IceBlock || type == StageObjectType.CloudPlatform)
+                    {
+                        return new Color(0.2f, 0.65f, 1f);
+                    }
+
+                    return new Color(0.05f, 0.05f, 0.05f);
+            }
+        }
+
+        private static void AddObjectGlyph(Transform parent, StageObjectData data)
+        {
+            string label = StageObjectCatalog.Get(data.type).Label;
+            string glyph = string.IsNullOrEmpty(label) ? data.type.ToString() : label.Substring(0, 1);
+            if (data.type == StageObjectType.Goal || data.type == StageObjectType.MidGoal)
+            {
+                glyph = "G";
+            }
+            else if (data.type == StageObjectType.Spawn || data.type == StageObjectType.RespawnPoint)
+            {
+                glyph = "S";
+            }
+            else if (data.type == StageObjectType.BalanceScale || data.type == StageObjectType.Seesaw)
+            {
+                glyph = "↔";
+            }
+            else if (data.type == StageObjectType.Key)
+            {
+                glyph = "鍵";
+            }
+            else if (data.type == StageObjectType.Coin)
+            {
+                glyph = "￥";
+            }
+            else if (data.type == StageObjectType.Star)
+            {
+                glyph = "☆";
+            }
+
+            GameObject textObject = new GameObject("Glyph");
+            textObject.transform.SetParent(parent, false);
+            textObject.transform.localPosition = new Vector3(0f, 0f, -0.05f);
+            TextMesh text = textObject.AddComponent<TextMesh>();
+            text.text = glyph;
+            text.fontSize = 30;
+            text.characterSize = Mathf.Clamp(Mathf.Min(data.size.x, data.size.y) * 0.16f, 0.06f, 0.2f);
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.color = new Color(0.02f, 0.02f, 0.02f, 0.82f);
+        }
+
         private static void AddEditorMetadata(GameObject obj, StageObjectData data)
         {
             StageEditorObject marker = obj.AddComponent<StageEditorObject>();
             marker.objectId = data.objectId;
             marker.type = data.type;
             marker.size = data.size;
+            marker.linkTargetId = data.linkTargetId;
+            marker.linkAction = data.linkAction;
         }
 
         private static GameObject CreateBox(string name, Vector2 position, Vector2 size, Color color, Transform parent)

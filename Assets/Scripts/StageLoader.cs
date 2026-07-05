@@ -87,6 +87,24 @@ namespace DrawBody.Prototype
 
                 objectFactory.Create(obj, stageRoot);
             }
+
+            ConfigureStageGimmicks(data);
+        }
+
+        private void ConfigureStageGimmicks(StageData data)
+        {
+            if (stageRoot == null)
+            {
+                return;
+            }
+
+            StageGimmickLinkController existingLinkController = stageRoot.GetComponent<StageGimmickLinkController>();
+            if (existingLinkController != null)
+            {
+                Destroy(existingLinkController);
+            }
+
+            stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
         }
 
         private void EnsureReferences()

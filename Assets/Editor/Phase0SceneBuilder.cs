@@ -617,7 +617,7 @@ namespace DrawBody.EditorTools
             AssignObject(ui, "menuPanel", menuPanel);
             GameObject stageSelectPanel = CreateStageSelectPanel(canvasObject.transform, font, stageManager);
             AssignObject(ui, "stageSelectPanel", stageSelectPanel);
-            GameObject stageEditorPanel = CreateRuntimeStageEditorPanel(canvasObject.transform, font, stageManager, out RectTransform editorUiBlocker, out Text editorStageText, out Text editorSelectedText, out Text editorStatusText, out Dropdown editorTypeDropdown);
+            GameObject stageEditorPanel = CreateRuntimeStageEditorPanel(canvasObject.transform, font, stageManager, out RectTransform editorUiBlocker, out Text editorStageText, out Text editorSelectedText, out Text editorStatusText, out Dropdown editorCategoryDropdown, out Dropdown editorTypeDropdown, out InputField editorSearchInput);
             AssignObject(ui, "stageEditorPanel", stageEditorPanel);
             CreateDrawSpeciesPanel(drawPanel.transform, font, drawManager);
 
@@ -628,7 +628,9 @@ namespace DrawBody.EditorTools
             AssignObject(runtimeStageEditor, "stageText", editorStageText);
             AssignObject(runtimeStageEditor, "selectedText", editorSelectedText);
             AssignObject(runtimeStageEditor, "statusText", editorStatusText);
+            AssignObject(runtimeStageEditor, "categoryDropdown", editorCategoryDropdown);
             AssignObject(runtimeStageEditor, "objectTypeDropdown", editorTypeDropdown);
+            AssignObject(runtimeStageEditor, "searchInput", editorSearchInput);
             RuntimeStageEditorButtonCommand[] editorCommands = stageEditorPanel.GetComponentsInChildren<RuntimeStageEditorButtonCommand>(true);
             for (int i = 0; i < editorCommands.Length; i++)
             {
@@ -770,8 +772,10 @@ namespace DrawBody.EditorTools
             AddLocalizedText(debugButton.GetComponentInChildren<Text>().gameObject, "debug_stage");
             AddStageSelectCommand(debugButton.gameObject, stageManager, "1-0");
 
-            Button editButton = CreateButton("StageSelectEditModeButton", panel.transform, font, LocalizationManager.T("stage_select_edit_off"), new Vector2(-280f, 646f), new Vector2(170f, 44f), new Color(0.98f, 0.96f, 0.9f, 0.95f));
+            Button editButton = CreateButton("StageSelectEditModeButton", panel.transform, font, LocalizationManager.T("stage_select_edit_off"), new Vector2(-520f, 36f), new Vector2(170f, 54f), new Color(0.98f, 0.96f, 0.9f, 0.95f));
             SetButtonLabelColor(editButton, Color.black);
+            SetButtonLabelFontSize(editButton, 20);
+            AddSketchFrame(editButton.transform, new Vector2(170f, 54f), new Color(0.25f, 0.18f, 0.12f, 0.5f), 1.5f);
             StageSelectEditModeButtonCommand editModeCommand = editButton.gameObject.AddComponent<StageSelectEditModeButtonCommand>();
             AssignObject(editModeCommand, "stageManager", stageManager);
             AssignObject(editModeCommand, "label", editButton.GetComponentInChildren<Text>());
@@ -875,7 +879,7 @@ namespace DrawBody.EditorTools
             return panel;
         }
 
-        private static GameObject CreateRuntimeStageEditorPanel(Transform parent, Font font, StageManager stageManager, out RectTransform uiBlocker, out Text stageText, out Text selectedText, out Text statusText, out Dropdown objectTypeDropdown)
+        private static GameObject CreateRuntimeStageEditorPanel(Transform parent, Font font, StageManager stageManager, out RectTransform uiBlocker, out Text stageText, out Text selectedText, out Text statusText, out Dropdown categoryDropdown, out Dropdown objectTypeDropdown, out InputField searchInput)
         {
             GameObject panel = new GameObject("RuntimeStageEditorPanel");
             panel.transform.SetParent(parent, false);
@@ -891,25 +895,122 @@ namespace DrawBody.EditorTools
             stageText.rectTransform.anchoredPosition = new Vector2(24f, -18f);
             stageText.rectTransform.sizeDelta = new Vector2(300f, 42f);
 
+            GameObject listPanel = CreatePanel("RuntimeStageEditorListPanel", panel.transform, new Color(0.96f, 0.93f, 0.86f, 0.86f));
+            AddUiOutline(listPanel, new Color(0.12f, 0.11f, 0.1f, 0.72f), new Vector2(2f, -2f));
+            RectTransform listRect = listPanel.GetComponent<RectTransform>();
+            listRect.anchorMin = new Vector2(0f, 1f);
+            listRect.anchorMax = new Vector2(0f, 1f);
+            listRect.pivot = new Vector2(0f, 1f);
+            listRect.anchoredPosition = new Vector2(24f, -72f);
+            listRect.sizeDelta = new Vector2(318f, 360f);
+
+            Text listTitle = CreateText("RuntimeStageEditorListTitle", listPanel.transform, font, 20, TextAnchor.UpperCenter);
+            listTitle.text = "オブジェクト一覧";
+            listTitle.color = Color.black;
+            listTitle.rectTransform.anchorMin = new Vector2(0f, 1f);
+            listTitle.rectTransform.anchorMax = new Vector2(1f, 1f);
+            listTitle.rectTransform.pivot = new Vector2(0.5f, 1f);
+            listTitle.rectTransform.anchoredPosition = new Vector2(0f, -12f);
+            listTitle.rectTransform.sizeDelta = new Vector2(-24f, 28f);
+
+            Button objectsTab = CreateButton("RuntimeStageEditorObjectsTab", listPanel.transform, font, "Objects", new Vector2(-74f, 88f), new Vector2(132f, 30f), new Color(0.88f, 0.94f, 1f, 0.92f));
+            Button linksTab = CreateButton("RuntimeStageEditorLinksTab", listPanel.transform, font, "Links", new Vector2(74f, 88f), new Vector2(132f, 30f), new Color(0.88f, 1f, 0.9f, 0.92f));
+            SetButtonLabelColor(objectsTab, Color.black);
+            SetButtonLabelColor(linksTab, Color.black);
+            AddRuntimeStageEditorCommand(objectsTab.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.ListObjects);
+            AddRuntimeStageEditorCommand(linksTab.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.ListLinks);
+
+            RuntimeStageEditorButtonCommand.Command[] listCommands =
+            {
+                RuntimeStageEditorButtonCommand.Command.ListItem0,
+                RuntimeStageEditorButtonCommand.Command.ListItem1,
+                RuntimeStageEditorButtonCommand.Command.ListItem2,
+                RuntimeStageEditorButtonCommand.Command.ListItem3,
+                RuntimeStageEditorButtonCommand.Command.ListItem4,
+            };
+
+            for (int i = 0; i < listCommands.Length; i++)
+            {
+                Button itemButton = CreateButton($"RuntimeStageEditorListItem{i}", listPanel.transform, font, "", new Vector2(0f, 48f - i * 32f), new Vector2(278f, 28f), new Color(0.98f, 0.96f, 0.9f, 0.88f));
+                Text itemLabel = itemButton.GetComponentInChildren<Text>();
+                if (itemLabel != null)
+                {
+                    itemLabel.gameObject.name = $"RuntimeStageEditorListItem{i}Label";
+                    itemLabel.alignment = TextAnchor.MiddleLeft;
+                    itemLabel.rectTransform.offsetMin = new Vector2(14f, 0f);
+                    itemLabel.rectTransform.offsetMax = new Vector2(-8f, 0f);
+                    itemLabel.color = Color.black;
+                }
+
+                AddRuntimeStageEditorCommand(itemButton.gameObject, stageManager, listCommands[i]);
+            }
+
+            Button listPrev = CreateButton("RuntimeStageEditorListPrev", listPanel.transform, font, "◀", new Vector2(-88f, 132f), new Vector2(48f, 26f), new Color(0.98f, 0.94f, 0.82f, 0.92f));
+            Button listNext = CreateButton("RuntimeStageEditorListNext", listPanel.transform, font, "▶", new Vector2(88f, 132f), new Vector2(48f, 26f), new Color(0.98f, 0.94f, 0.82f, 0.92f));
+            SetButtonLabelColor(listPrev, Color.black);
+            SetButtonLabelColor(listNext, Color.black);
+            AddRuntimeStageEditorCommand(listPrev.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.ListPrevious);
+            AddRuntimeStageEditorCommand(listNext.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.ListNext);
+
+            Text listPage = CreateText("RuntimeStageEditorListPage", listPanel.transform, font, 16, TextAnchor.MiddleCenter);
+            listPage.text = "1 / 1";
+            listPage.color = Color.black;
+            listPage.rectTransform.anchorMin = new Vector2(0.5f, 1f);
+            listPage.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+            listPage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            listPage.rectTransform.anchoredPosition = new Vector2(0f, -60f);
+            listPage.rectTransform.sizeDelta = new Vector2(90f, 26f);
+
             GameObject toolPanel = CreatePanel("RuntimeStageEditorTools", panel.transform, new Color(0.96f, 0.93f, 0.86f, 0.9f));
             AddUiOutline(toolPanel, new Color(0.12f, 0.11f, 0.1f, 0.72f), new Vector2(2f, -2f));
             RectTransform toolRect = toolPanel.GetComponent<RectTransform>();
             toolRect.anchorMin = new Vector2(1f, 1f);
             toolRect.anchorMax = new Vector2(1f, 1f);
             toolRect.pivot = new Vector2(1f, 1f);
-            toolRect.anchoredPosition = new Vector2(-24f, -72f);
-            toolRect.sizeDelta = new Vector2(304f, 420f);
+            toolRect.anchoredPosition = new Vector2(-24f, -36f);
+            toolRect.sizeDelta = new Vector2(360f, 560f);
             uiBlocker = toolRect;
 
             Text help = CreateText("RuntimeStageEditorHelp", toolPanel.transform, font, 15, TextAnchor.UpperLeft);
-            help.text = LocalizationManager.T("stage_editor_help");
+            help.text = "ドラッグで配置 / クリックで選択\nホイール: 拡大縮小  Shift+ホイール: 横  Alt+ホイール: 縦\n吸着ONで床や壁の端がつながります";
             help.color = Color.black;
-            AddLocalizedText(help.gameObject, "stage_editor_help");
             help.rectTransform.anchorMin = new Vector2(0f, 1f);
             help.rectTransform.anchorMax = new Vector2(1f, 1f);
             help.rectTransform.pivot = new Vector2(0.5f, 1f);
             help.rectTransform.anchoredPosition = new Vector2(12f, -12f);
-            help.rectTransform.sizeDelta = new Vector2(-24f, 86f);
+            help.rectTransform.sizeDelta = new Vector2(-24f, 62f);
+
+            Text categoryLabel = CreateText("RuntimeStageEditorCategoryLabel", toolPanel.transform, font, 15, TextAnchor.MiddleLeft);
+            categoryLabel.text = "\u30ab\u30c6\u30b4\u30ea";
+            categoryLabel.color = Color.black;
+            categoryLabel.rectTransform.anchorMin = new Vector2(0f, 1f);
+            categoryLabel.rectTransform.anchorMax = new Vector2(0f, 1f);
+            categoryLabel.rectTransform.pivot = new Vector2(0f, 1f);
+            categoryLabel.rectTransform.anchoredPosition = new Vector2(24f, -78f);
+            categoryLabel.rectTransform.sizeDelta = new Vector2(90f, 24f);
+
+            categoryDropdown = CreateStageCategoryDropdown(
+                "RuntimeStageCategoryDropdown",
+                toolPanel.transform,
+                font,
+                new Vector2(22f, -104f),
+                new Vector2(316f, 40f));
+
+            Text searchLabel = CreateText("RuntimeStageEditorSearchLabel", toolPanel.transform, font, 15, TextAnchor.MiddleLeft);
+            searchLabel.text = "\u691c\u7d22";
+            searchLabel.color = Color.black;
+            searchLabel.rectTransform.anchorMin = new Vector2(0f, 1f);
+            searchLabel.rectTransform.anchorMax = new Vector2(0f, 1f);
+            searchLabel.rectTransform.pivot = new Vector2(0f, 1f);
+            searchLabel.rectTransform.anchoredPosition = new Vector2(24f, -148f);
+            searchLabel.rectTransform.sizeDelta = new Vector2(90f, 24f);
+
+            searchInput = CreateStageSearchInput(
+                "RuntimeStageSearchInput",
+                toolPanel.transform,
+                font,
+                new Vector2(22f, -174f),
+                new Vector2(316f, 40f));
 
             Text typeLabel = CreateText("RuntimeStageEditorTypeLabel", toolPanel.transform, font, 15, TextAnchor.MiddleLeft);
             typeLabel.text = "\u7a2e\u5225";
@@ -917,15 +1018,15 @@ namespace DrawBody.EditorTools
             typeLabel.rectTransform.anchorMin = new Vector2(0f, 1f);
             typeLabel.rectTransform.anchorMax = new Vector2(0f, 1f);
             typeLabel.rectTransform.pivot = new Vector2(0f, 1f);
-            typeLabel.rectTransform.anchoredPosition = new Vector2(24f, -104f);
-            typeLabel.rectTransform.sizeDelta = new Vector2(70f, 28f);
+            typeLabel.rectTransform.anchoredPosition = new Vector2(24f, -218f);
+            typeLabel.rectTransform.sizeDelta = new Vector2(70f, 24f);
 
             objectTypeDropdown = CreateStageObjectDropdown(
                 "RuntimeStageObjectTypeDropdown",
                 toolPanel.transform,
                 font,
-                new Vector2(22f, -136f),
-                new Vector2(260f, 42f));
+                new Vector2(22f, -244f),
+                new Vector2(316f, 42f));
 
             selectedText = CreateText("RuntimeStageEditorSelected", toolPanel.transform, font, 15, TextAnchor.UpperLeft);
             selectedText.text = "Add: Platform";
@@ -933,8 +1034,8 @@ namespace DrawBody.EditorTools
             selectedText.rectTransform.anchorMin = new Vector2(0f, 1f);
             selectedText.rectTransform.anchorMax = new Vector2(1f, 1f);
             selectedText.rectTransform.pivot = new Vector2(0.5f, 1f);
-            selectedText.rectTransform.anchoredPosition = new Vector2(12f, -236f);
-            selectedText.rectTransform.sizeDelta = new Vector2(-24f, 40f);
+            selectedText.rectTransform.anchoredPosition = new Vector2(12f, -294f);
+            selectedText.rectTransform.sizeDelta = new Vector2(-24f, 34f);
 
             Text sizeLabel = CreateText("RuntimeStageEditorSizeLabel", toolPanel.transform, font, 15, TextAnchor.MiddleLeft);
             sizeLabel.text = LocalizationManager.T("stage_editor_size");
@@ -943,13 +1044,13 @@ namespace DrawBody.EditorTools
             sizeLabel.rectTransform.anchorMin = new Vector2(0f, 1f);
             sizeLabel.rectTransform.anchorMax = new Vector2(0f, 1f);
             sizeLabel.rectTransform.pivot = new Vector2(0f, 1f);
-            sizeLabel.rectTransform.anchoredPosition = new Vector2(24f, -246f);
+            sizeLabel.rectTransform.anchoredPosition = new Vector2(24f, -334f);
             sizeLabel.rectTransform.sizeDelta = new Vector2(70f, 28f);
 
-            Button widthMinus = CreateButton("RuntimeEditWidthMinus", toolPanel.transform, font, "Q W-", new Vector2(-100f, 116f), new Vector2(56f, 34f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
-            Button widthPlus = CreateButton("RuntimeEditWidthPlus", toolPanel.transform, font, "E W+", new Vector2(-34f, 116f), new Vector2(56f, 34f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
-            Button heightMinus = CreateButton("RuntimeEditHeightMinus", toolPanel.transform, font, "Z H-", new Vector2(34f, 116f), new Vector2(56f, 34f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
-            Button heightPlus = CreateButton("RuntimeEditHeightPlus", toolPanel.transform, font, "C H+", new Vector2(100f, 116f), new Vector2(56f, 34f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Button widthMinus = CreateButton("RuntimeEditWidthMinus", toolPanel.transform, font, "横-", new Vector2(-108f, 154f), new Vector2(62f, 30f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Button widthPlus = CreateButton("RuntimeEditWidthPlus", toolPanel.transform, font, "横+", new Vector2(-36f, 154f), new Vector2(62f, 30f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Button heightMinus = CreateButton("RuntimeEditHeightMinus", toolPanel.transform, font, "縦-", new Vector2(36f, 154f), new Vector2(62f, 30f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Button heightPlus = CreateButton("RuntimeEditHeightPlus", toolPanel.transform, font, "縦+", new Vector2(108f, 154f), new Vector2(62f, 30f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
             SetButtonLabelColor(widthMinus, Color.black);
             SetButtonLabelColor(widthPlus, Color.black);
             SetButtonLabelColor(heightMinus, Color.black);
@@ -959,21 +1060,37 @@ namespace DrawBody.EditorTools
             AddRuntimeStageEditorCommand(heightMinus.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.HeightMinus);
             AddRuntimeStageEditorCommand(heightPlus.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.HeightPlus);
 
-            Button snap = CreateButton("RuntimeEditSnapButton", toolPanel.transform, font, "G " + LocalizationManager.T("stage_editor_snap"), new Vector2(-78f, 68f), new Vector2(118f, 36f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
-            Button delete = CreateButton("RuntimeEditDeleteButton", toolPanel.transform, font, "Del " + LocalizationManager.T("stage_editor_delete"), new Vector2(78f, 68f), new Vector2(118f, 36f), new Color(0.98f, 0.78f, 0.72f, 0.92f));
+            Button undo = CreateButton("RuntimeEditUndoButton", toolPanel.transform, font, "戻す", new Vector2(-126f, 116f), new Vector2(70f, 30f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Button redo = CreateButton("RuntimeEditRedoButton", toolPanel.transform, font, "進む", new Vector2(-42f, 116f), new Vector2(70f, 30f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Button snap = CreateButton("RuntimeEditSnapButton", toolPanel.transform, font, "吸着", new Vector2(42f, 116f), new Vector2(70f, 30f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Button delete = CreateButton("RuntimeEditDeleteButton", toolPanel.transform, font, "削除", new Vector2(126f, 116f), new Vector2(70f, 30f), new Color(0.98f, 0.78f, 0.72f, 0.92f));
+            SetButtonLabelColor(undo, Color.black);
+            SetButtonLabelColor(redo, Color.black);
             SetButtonLabelColor(snap, Color.black);
             SetButtonLabelColor(delete, Color.black);
+            AddRuntimeStageEditorCommand(undo.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.Undo);
+            AddRuntimeStageEditorCommand(redo.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.Redo);
             AddRuntimeStageEditorCommand(snap.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.ToggleSnap);
             AddRuntimeStageEditorCommand(delete.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.Delete);
 
-            Button save = CreateButton("RuntimeEditSaveButton", toolPanel.transform, font, "F5 " + LocalizationManager.T("stage_editor_save"), new Vector2(-78f, 18f), new Vector2(118f, 38f), new Color(0.78f, 0.9f, 1f, 0.92f));
-            Button test = CreateButton("RuntimeEditTestButton", toolPanel.transform, font, "F6 " + LocalizationManager.T("stage_editor_test"), new Vector2(78f, 18f), new Vector2(118f, 38f), new Color(0.76f, 0.95f, 0.76f, 0.92f));
+            Button linkSource = CreateButton("RuntimeEditLinkSourceButton", toolPanel.transform, font, "リンク元", new Vector2(-104f, 78f), new Vector2(90f, 30f), new Color(0.88f, 0.94f, 1f, 0.92f));
+            Button linkTarget = CreateButton("RuntimeEditLinkTargetButton", toolPanel.transform, font, "リンク先", new Vector2(0f, 78f), new Vector2(90f, 30f), new Color(0.88f, 1f, 0.9f, 0.92f));
+            Button clearLink = CreateButton("RuntimeEditClearLinkButton", toolPanel.transform, font, "解除", new Vector2(104f, 78f), new Vector2(90f, 30f), new Color(0.98f, 0.88f, 0.78f, 0.92f));
+            SetButtonLabelColor(linkSource, Color.black);
+            SetButtonLabelColor(linkTarget, Color.black);
+            SetButtonLabelColor(clearLink, Color.black);
+            AddRuntimeStageEditorCommand(linkSource.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.LinkSource);
+            AddRuntimeStageEditorCommand(linkTarget.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.LinkTarget);
+            AddRuntimeStageEditorCommand(clearLink.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.ClearLink);
+
+            Button save = CreateButton("RuntimeEditSaveButton", toolPanel.transform, font, "F5 " + LocalizationManager.T("stage_editor_save"), new Vector2(-78f, 38f), new Vector2(118f, 34f), new Color(0.78f, 0.9f, 1f, 0.92f));
+            Button test = CreateButton("RuntimeEditTestButton", toolPanel.transform, font, "F6 " + LocalizationManager.T("stage_editor_test"), new Vector2(78f, 38f), new Vector2(118f, 34f), new Color(0.76f, 0.95f, 0.76f, 0.92f));
             SetButtonLabelColor(save, Color.black);
             SetButtonLabelColor(test, Color.black);
             AddRuntimeStageEditorCommand(save.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.Save);
             AddRuntimeStageEditorCommand(test.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.Test);
 
-            Button close = CreateButton("RuntimeEditCloseButton", toolPanel.transform, font, "Esc " + LocalizationManager.T("stage_editor_back"), new Vector2(0f, -32f), new Vector2(260f, 38f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
+            Button close = CreateButton("RuntimeEditCloseButton", panel.transform, font, "Esc " + LocalizationManager.T("stage_editor_back"), new Vector2(0f, 18f), new Vector2(260f, 38f), new Color(0.98f, 0.96f, 0.9f, 0.92f));
             SetButtonLabelColor(close, Color.black);
             AddRuntimeStageEditorCommand(close.gameObject, stageManager, RuntimeStageEditorButtonCommand.Command.Close);
 
@@ -1006,7 +1123,18 @@ namespace DrawBody.EditorTools
             speciesRect.anchoredPosition = new Vector2(24f, 22f);
             speciesRect.sizeDelta = new Vector2(430f, 118f);
 
-            Text title = CreateText("SpeciesPanelTitle", speciesPanel.transform, font, 20, TextAnchor.UpperCenter);
+            GameObject speciesContent = new GameObject("GameplaySpeciesContent");
+            speciesContent.transform.SetParent(speciesPanel.transform, false);
+            RectTransform speciesContentRect = speciesContent.AddComponent<RectTransform>();
+            Stretch(speciesContentRect);
+
+            Button speciesToggle = CreateButton("GameplaySpeciesFoldoutButton", speciesPanel.transform, font, "▼", new Vector2(196f, 90f), new Vector2(34f, 28f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
+            SetButtonLabelColor(speciesToggle, Color.black);
+            HudFoldoutToggle speciesFoldout = speciesToggle.gameObject.AddComponent<HudFoldoutToggle>();
+            AssignObject(speciesFoldout, "targetPanel", speciesContent);
+            AssignObject(speciesFoldout, "label", speciesToggle.GetComponentInChildren<Text>());
+
+            Text title = CreateText("SpeciesPanelTitle", speciesContent.transform, font, 20, TextAnchor.UpperCenter);
             title.text = LocalizationManager.T("character_switch");
             title.color = Color.black;
             AddLocalizedText(title.gameObject, "character_switch");
@@ -1016,8 +1144,8 @@ namespace DrawBody.EditorTools
             title.rectTransform.anchoredPosition = new Vector2(0f, -8f);
             title.rectTransform.sizeDelta = new Vector2(0f, 28f);
 
-            Button leftArrow = CreateButton("SpeciesLeftArrow", speciesPanel.transform, font, "\u25c0", new Vector2(-188f, 36f), new Vector2(42f, 54f), new Color(0.88f, 0.86f, 0.8f, 0.9f));
-            Button rightArrow = CreateButton("SpeciesRightArrow", speciesPanel.transform, font, "\u25b6", new Vector2(188f, 36f), new Vector2(42f, 54f), new Color(0.88f, 0.86f, 0.8f, 0.9f));
+            Button leftArrow = CreateButton("SpeciesLeftArrow", speciesContent.transform, font, "\u25c0", new Vector2(-188f, 36f), new Vector2(42f, 54f), new Color(0.88f, 0.86f, 0.8f, 0.9f));
+            Button rightArrow = CreateButton("SpeciesRightArrow", speciesContent.transform, font, "\u25b6", new Vector2(188f, 36f), new Vector2(42f, 54f), new Color(0.88f, 0.86f, 0.8f, 0.9f));
             SetButtonLabelColor(leftArrow, Color.black);
             SetButtonLabelColor(rightArrow, Color.black);
             leftArrow.interactable = false;
@@ -1037,14 +1165,14 @@ namespace DrawBody.EditorTools
                 float x = -120f + i * 60f;
                 Button button = CreateSpeciesIconButton(
                     $"{species[i]}GameplaySpeciesButton",
-                    speciesPanel.transform,
+                    speciesContent.transform,
                     font,
                     species[i],
                     new Vector2(x, 44f),
                     new Vector2(54f, 48f),
                     new Color(0.98f, 0.96f, 0.9f, 0.82f));
 
-                Text label = CreateText($"{species[i]}GameplaySpeciesLabel", speciesPanel.transform, font, 14, TextAnchor.MiddleCenter);
+                Text label = CreateText($"{species[i]}GameplaySpeciesLabel", speciesContent.transform, font, 14, TextAnchor.MiddleCenter);
                 label.text = GetSpeciesLabel(species[i]);
                 label.color = Color.black;
                 label.rectTransform.anchorMin = new Vector2(0.5f, 0f);
@@ -1067,12 +1195,23 @@ namespace DrawBody.EditorTools
             actionRect.anchoredPosition = new Vector2(-24f, 22f);
             actionRect.sizeDelta = new Vector2(420f, 174f);
 
-            Button addCharacter = CreateButton("GameplayAddCharacterButton", actionPanel.transform, font, LocalizationManager.T("character_add"), new Vector2(-136f, 104f), new Vector2(118f, 44f), new Color(0.78f, 0.9f, 1f, 0.9f));
-            Button deleteCharacter = CreateButton("GameplayDeleteCharacterButton", actionPanel.transform, font, LocalizationManager.T("character_delete"), new Vector2(0f, 104f), new Vector2(118f, 44f), new Color(0.98f, 0.78f, 0.72f, 0.9f));
-            Button switchCharacter = CreateButton("GameplaySwitchCharacterButton", actionPanel.transform, font, LocalizationManager.T("character_control_switch"), new Vector2(136f, 104f), new Vector2(118f, 44f), new Color(0.75f, 0.95f, 0.75f, 0.9f));
-            Button redraw = CreateButton("GameplayRedrawButton", actionPanel.transform, font, "\u270e\n" + LocalizationManager.T("redraw"), new Vector2(-136f, 18f), new Vector2(118f, 72f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
-            Button retry = CreateButton("GameplayRetryButton", actionPanel.transform, font, "\u21bb\n" + LocalizationManager.T("retry"), new Vector2(0f, 18f), new Vector2(118f, 72f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
-            Button menu = CreateButton("GameplayMenuButton", actionPanel.transform, font, "\u2630\n" + LocalizationManager.T("menu"), new Vector2(136f, 18f), new Vector2(118f, 72f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
+            GameObject actionContent = new GameObject("GameplayActionContent");
+            actionContent.transform.SetParent(actionPanel.transform, false);
+            RectTransform actionContentRect = actionContent.AddComponent<RectTransform>();
+            Stretch(actionContentRect);
+
+            Button actionToggle = CreateButton("GameplayActionFoldoutButton", actionPanel.transform, font, "▼", new Vector2(-196f, 146f), new Vector2(34f, 28f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
+            SetButtonLabelColor(actionToggle, Color.black);
+            HudFoldoutToggle actionFoldout = actionToggle.gameObject.AddComponent<HudFoldoutToggle>();
+            AssignObject(actionFoldout, "targetPanel", actionContent);
+            AssignObject(actionFoldout, "label", actionToggle.GetComponentInChildren<Text>());
+
+            Button addCharacter = CreateButton("GameplayAddCharacterButton", actionContent.transform, font, LocalizationManager.T("character_add"), new Vector2(-136f, 104f), new Vector2(118f, 44f), new Color(0.78f, 0.9f, 1f, 0.9f));
+            Button deleteCharacter = CreateButton("GameplayDeleteCharacterButton", actionContent.transform, font, LocalizationManager.T("character_delete"), new Vector2(0f, 104f), new Vector2(118f, 44f), new Color(0.98f, 0.78f, 0.72f, 0.9f));
+            Button switchCharacter = CreateButton("GameplaySwitchCharacterButton", actionContent.transform, font, LocalizationManager.T("character_control_switch"), new Vector2(136f, 104f), new Vector2(118f, 44f), new Color(0.75f, 0.95f, 0.75f, 0.9f));
+            Button redraw = CreateButton("GameplayRedrawButton", actionContent.transform, font, "\u270e\n" + LocalizationManager.T("redraw"), new Vector2(-136f, 18f), new Vector2(118f, 72f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
+            Button retry = CreateButton("GameplayRetryButton", actionContent.transform, font, "\u21bb\n" + LocalizationManager.T("retry"), new Vector2(0f, 18f), new Vector2(118f, 72f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
+            Button menu = CreateButton("GameplayMenuButton", actionContent.transform, font, "\u2630\n" + LocalizationManager.T("menu"), new Vector2(136f, 18f), new Vector2(118f, 72f), new Color(0.98f, 0.96f, 0.9f, 0.9f));
             SetButtonLabelColor(addCharacter, Color.black);
             SetButtonLabelColor(deleteCharacter, Color.black);
             SetButtonLabelColor(switchCharacter, Color.black);
@@ -2217,27 +2356,62 @@ namespace DrawBody.EditorTools
             itemLabel.rectTransform.offsetMax = new Vector2(-12f, 0f);
             dropdown.itemText = itemLabel;
 
-            StageObjectType[] paletteTypes =
-            {
-                StageObjectType.Platform,
-                StageObjectType.Wall,
-                StageObjectType.Spawn,
-                StageObjectType.Goal,
-                StageObjectType.BalanceScale,
-                StageObjectType.Weight
-            };
-            System.Collections.Generic.List<Dropdown.OptionData> options = new System.Collections.Generic.List<Dropdown.OptionData>();
-            for (int i = 0; i < paletteTypes.Length; i++)
-            {
-                options.Add(new Dropdown.OptionData(LocalizationManager.T(GetStageObjectLocalizationKey(paletteTypes[i]))));
-            }
-
-            dropdown.options = options;
+            dropdown.options = new System.Collections.Generic.List<Dropdown.OptionData>();
             dropdown.value = 0;
             dropdown.RefreshShownValue();
             dropdown.template = templateRect;
             template.SetActive(false);
             return dropdown;
+        }
+
+        private static Dropdown CreateStageCategoryDropdown(string name, Transform parent, Font font, Vector2 anchoredPosition, Vector2 size)
+        {
+            Dropdown dropdown = CreateStageObjectDropdown(name, parent, font, anchoredPosition, size);
+            System.Collections.Generic.List<Dropdown.OptionData> options = new System.Collections.Generic.List<Dropdown.OptionData>();
+            StageObjectCategory[] categories = StageObjectCatalog.Categories;
+            for (int i = 0; i < categories.Length; i++)
+            {
+                options.Add(new Dropdown.OptionData(StageObjectCatalog.GetCategoryLabel(categories[i])));
+            }
+
+            dropdown.options = options;
+            dropdown.value = 0;
+            dropdown.RefreshShownValue();
+            return dropdown;
+        }
+
+        private static InputField CreateStageSearchInput(string name, Transform parent, Font font, Vector2 anchoredPosition, Vector2 size)
+        {
+            GameObject fieldObject = CreatePanel(name, parent, new Color(0.98f, 0.96f, 0.9f, 0.96f));
+            RectTransform rect = fieldObject.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0f, 1f);
+            rect.anchorMax = new Vector2(0f, 1f);
+            rect.pivot = new Vector2(0f, 1f);
+            rect.anchoredPosition = anchoredPosition;
+            rect.sizeDelta = size;
+            AddUiOutline(fieldObject, new Color(0.12f, 0.11f, 0.1f, 0.65f), new Vector2(1.5f, -1.5f));
+
+            InputField input = fieldObject.AddComponent<InputField>();
+            input.targetGraphic = fieldObject.GetComponent<Image>();
+            input.characterLimit = 32;
+
+            Text text = CreateText("Text", fieldObject.transform, font, 17, TextAnchor.MiddleLeft);
+            text.color = Color.black;
+            text.rectTransform.anchorMin = Vector2.zero;
+            text.rectTransform.anchorMax = Vector2.one;
+            text.rectTransform.offsetMin = new Vector2(12f, 0f);
+            text.rectTransform.offsetMax = new Vector2(-12f, 0f);
+            input.textComponent = text;
+
+            Text placeholder = CreateText("Placeholder", fieldObject.transform, font, 16, TextAnchor.MiddleLeft);
+            placeholder.text = "\u691c\u7d22\u30ef\u30fc\u30c9";
+            placeholder.color = new Color(0.25f, 0.22f, 0.16f, 0.45f);
+            placeholder.rectTransform.anchorMin = Vector2.zero;
+            placeholder.rectTransform.anchorMax = Vector2.one;
+            placeholder.rectTransform.offsetMin = new Vector2(12f, 0f);
+            placeholder.rectTransform.offsetMax = new Vector2(-12f, 0f);
+            input.placeholder = placeholder;
+            return input;
         }
 
         private static void CreateLanguageButtons(Transform parent, Font font)

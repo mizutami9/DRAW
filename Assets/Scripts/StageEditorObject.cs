@@ -7,5 +7,7 @@ namespace DrawBody.Prototype
         public string objectId;
         public StageObjectType type;
         public Vector2 size = Vector2.one;
+        public string linkTargetId;
+        public string linkAction;
     }
 }

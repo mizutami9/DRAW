@@ -22,7 +22,24 @@ namespace DrawBody.Prototype
             HeightPlus,
             HeightMinus,
             AddBalanceScale,
-            AddWeight
+            AddWeight,
+            Undo,
+            Redo,
+            LinkSource,
+            LinkTarget,
+            ClearLink,
+            ListObjects,
+            ListLinks,
+            ListPrevious,
+            ListNext,
+            ListItem0,
+            ListItem1,
+            ListItem2,
+            ListItem3,
+            ListItem4,
+            ListItem5,
+            ListItem6,
+            ListItem7
         }
 
         [SerializeField] private RuntimeStageEditor editor;
@@ -106,6 +123,57 @@ namespace DrawBody.Prototype
                     break;
                 case Command.HeightMinus:
                     editor?.ResizeSelected(new Vector2(0f, -0.5f));
+                    break;
+                case Command.Undo:
+                    editor?.Undo();
+                    break;
+                case Command.Redo:
+                    editor?.Redo();
+                    break;
+                case Command.LinkSource:
+                    editor?.MarkSelectedAsLinkSource();
+                    break;
+                case Command.LinkTarget:
+                    editor?.LinkSelectedAsTarget();
+                    break;
+                case Command.ClearLink:
+                    editor?.ClearSelectedLink();
+                    break;
+                case Command.ListObjects:
+                    editor?.SetListModeObjects();
+                    break;
+                case Command.ListLinks:
+                    editor?.SetListModeLinks();
+                    break;
+                case Command.ListPrevious:
+                    editor?.ChangeListPage(-1);
+                    break;
+                case Command.ListNext:
+                    editor?.ChangeListPage(1);
+                    break;
+                case Command.ListItem0:
+                    editor?.SelectListItem(0);
+                    break;
+                case Command.ListItem1:
+                    editor?.SelectListItem(1);
+                    break;
+                case Command.ListItem2:
+                    editor?.SelectListItem(2);
+                    break;
+                case Command.ListItem3:
+                    editor?.SelectListItem(3);
+                    break;
+                case Command.ListItem4:
+                    editor?.SelectListItem(4);
+                    break;
+                case Command.ListItem5:
+                    editor?.SelectListItem(5);
+                    break;
+                case Command.ListItem6:
+                    editor?.SelectListItem(6);
+                    break;
+                case Command.ListItem7:
+                    editor?.SelectListItem(7);
                     break;
             }
 

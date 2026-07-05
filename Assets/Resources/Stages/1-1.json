@@ -3,95 +3,169 @@
     "displayName": "Stage 1-1",
     "objects": [
         {
-            "objectId": "Spawn_8dce710e",
+            "objectId": "stage1_start",
             "type": 2,
             "position": {
-                "x": -5.0,
-                "y": 1.399999976158142
+                "x": -7.5,
+                "y": 0.5
             },
             "size": {
                 "x": 0.699999988079071,
                 "y": 0.699999988079071
             },
-            "rotation": 0.0
+            "rotation": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
         },
         {
-            "objectId": "Goal_e652ec0c0",
+            "objectId": "stage1_goal",
             "type": 3,
             "position": {
-                "x": 17.123367309570314,
-                "y": 4.59999942779541
+                "x": 22.5,
+                "y": 9.350000381469727
             },
             "size": {
                 "x": 1.149999976158142,
                 "y": 2.049999952316284
             },
-            "rotation": 0.0
+            "rotation": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
         },
         {
-            "objectId": "Platform_24d12",
+            "objectId": "Platform_653f6",
             "type": 0,
             "position": {
-                "x": -2.25,
-                "y": -1.5
+                "x": -1.75,
+                "y": -2.25
             },
             "size": {
-                "x": 11.5,
-                "y": 4.0
+                "x": 12.5,
+                "y": 3.5
             },
-            "rotation": 0.0
+            "rotation": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
         },
         {
-            "objectId": "Platform_28830",
+            "objectId": "Platform_3601e",
             "type": 0,
+            "position": {
+                "x": 15.0,
+                "y": -2.0
+            },
+            "size": {
+                "x": 10.5,
+                "y": 3.5
+            },
+            "rotation": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "Platform_76caf",
+            "type": 0,
+            "position": {
+                "x": 15.0,
+                "y": 2.5
+            },
+            "size": {
+                "x": 1.0,
+                "y": 3.5
+            },
+            "rotation": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "Platform_659fd",
+            "type": 0,
+            "position": {
+                "x": 21.0,
+                "y": 2.0
+            },
+            "size": {
+                "x": 3.5,
+                "y": 12.0
+            },
+            "rotation": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "Button_f9e3a5e",
+            "type": 25,
             "position": {
                 "x": 10.5,
-                "y": -1.5
+                "y": 0.0
             },
             "size": {
-                "x": 7.0,
-                "y": 4.0
+                "x": 1.0,
+                "y": 0.4000000059604645
             },
-            "rotation": 0.0
+            "rotation": 0.0,
+            "linkTargetId": "Platform_81590",
+            "linkAction": "RevealGrow"
         },
         {
-            "objectId": "BalanceScale_9",
-            "type": 4,
-            "position": {
-                "x": 12.0,
-                "y": 1.0
-            },
-            "size": {
-                "x": 4.5,
-                "y": 0.6000000238418579
-            },
-            "rotation": 0.0
-        },
-        {
-            "objectId": "Platform_a3c49",
+            "objectId": "Platform_81590",
             "type": 0,
             "position": {
-                "x": 16.400432586669923,
-                "y": 0.0331883430480957
+                "x": 7.0,
+                "y": -0.5
             },
             "size": {
-                "x": 2.8888893127441408,
-                "y": 5.795832633972168
+                "x": 6.0,
+                "y": 0.699999988079071
             },
-            "rotation": 0.0
+            "rotation": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
         },
         {
-            "objectId": "Weight_1ee1354",
-            "type": 5,
+            "objectId": "BalanceScale_3",
+            "type": 4,
             "position": {
-                "x": 8.0,
-                "y": 1.0
+                "x": 17.5,
+                "y": 4.5
             },
             "size": {
-                "x": 0.8999999761581421,
-                "y": 0.8999999761581421
+                "x": 3.5,
+                "y": 8.600000381469727
             },
-            "rotation": 0.0
+            "rotation": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "JumpPad_c7559f",
+            "type": 61,
+            "position": {
+                "x": 13.0,
+                "y": 0.0
+            },
+            "size": {
+                "x": 2.0,
+                "y": 0.4000000059604645
+            },
+            "rotation": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "Button_a8e8f3b",
+            "type": 25,
+            "position": {
+                "x": 18.0,
+                "y": 0.0
+            },
+            "size": {
+                "x": 1.0,
+                "y": 0.699999988079071
+            },
+            "rotation": 0.0,
+            "linkTargetId": "JumpPad_c7559f",
+            "linkAction": "Reveal"
         }
     ]
 }
