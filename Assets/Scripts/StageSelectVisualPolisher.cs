@@ -88,14 +88,56 @@ namespace DrawBody.Prototype
                 RemoveShadow(rect.gameObject);
                 AddBoldFrame(rect, "WorldBoldFrame", 3.1f, new Color(0.18f, 0.12f, 0.07f, 0.58f));
                 rect.localRotation = Quaternion.identity;
+                LayoutStageButtons(rect);
                 BuildSpeciesRow(rect, ParseWorldNumber(rect.name));
             }
         }
 
+        private static void LayoutStageButtons(RectTransform card)
+        {
+            Button[] buttons = card.GetComponentsInChildren<Button>(true);
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                RectTransform rect = buttons[i].GetComponent<RectTransform>();
+                if (rect == null || !TryParseStageVariant(buttons[i].name, out int variant))
+                {
+                    continue;
+                }
+
+                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 146f - (variant - 1) * 54f);
+                rect.sizeDelta = new Vector2(rect.sizeDelta.x, 42f);
+            }
+        }
+
+        private static bool TryParseStageVariant(string buttonName, out int variant)
+        {
+            variant = 0;
+            if (string.IsNullOrEmpty(buttonName)
+                || !buttonName.StartsWith("Stage_", System.StringComparison.Ordinal)
+                || !buttonName.EndsWith("_Button", System.StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            string[] parts = buttonName.Split('_');
+            return parts.Length >= 4 && int.TryParse(parts[2], out variant) && variant >= 1 && variant <= 3;
+        }
+
         private static void BuildSpeciesRow(RectTransform card, int world)
         {
-            if (card == null || card.Find("AvailableSpeciesRow") != null)
+            if (card == null)
             {
+                return;
+            }
+
+            Transform existingRow = card.Find("AvailableSpeciesRow");
+            if (existingRow != null)
+            {
+                Transform obsoleteNames = existingRow.Find("AvailableSpeciesNames");
+                if (obsoleteNames != null)
+                {
+                    Object.Destroy(obsoleteNames.gameObject);
+                }
                 return;
             }
 
@@ -106,8 +148,8 @@ namespace DrawBody.Prototype
             row.anchorMin = new Vector2(0.5f, 0f);
             row.anchorMax = new Vector2(0.5f, 0f);
             row.pivot = new Vector2(0.5f, 0.5f);
-            row.anchoredPosition = new Vector2(0f, 218f);
-            row.sizeDelta = new Vector2(172f, 52f);
+            row.anchoredPosition = new Vector2(0f, 215f);
+            row.sizeDelta = new Vector2(176f, 62f);
 
             GameObject titleObject = new GameObject("AvailableSpeciesTitle", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
             titleObject.transform.SetParent(row, false);
@@ -147,9 +189,10 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                CreateSpeciesChip(row, entry, new Vector2(startX + visibleIndex * spacing, -31f));
+                CreateSpeciesChip(row, entry, new Vector2(startX + visibleIndex * spacing, -30f));
                 visibleIndex++;
             }
+
         }
 
         private static void CreateSpeciesChip(RectTransform parent, DrawManager.Species species, Vector2 position)
@@ -167,6 +210,11 @@ namespace DrawBody.Prototype
             rect.sizeDelta = new Vector2(27f, 27f);
 
             Color ink = new Color(0.12f, 0.09f, 0.06f, 0.95f);
+            if (TryCloneDetailedSpeciesIcon(rect, species))
+            {
+                return;
+            }
+
             switch (species)
             {
                 case DrawManager.Species.Cat:
@@ -181,10 +229,13 @@ namespace DrawBody.Prototype
                     CreateLine(rect, new Vector2(-2f, 5f), new Vector2(3f, -1f), 2f, ink, "Body");
                     CreateLine(rect, new Vector2(3f, -1f), new Vector2(10f, 5f), 2f, ink, "WingR");
                     break;
-                case DrawManager.Species.Snake:
-                    CreateLine(rect, new Vector2(-10f, -5f), new Vector2(-4f, 4f), 2.3f, ink, "Snake1");
-                    CreateLine(rect, new Vector2(-4f, 4f), new Vector2(3f, -2f), 2.3f, ink, "Snake2");
-                    CreateLine(rect, new Vector2(3f, -2f), new Vector2(10f, 6f), 2.3f, ink, "Snake3");
+                case DrawManager.Species.Turtle:
+                    CreateLine(rect, new Vector2(-8f, -4f), new Vector2(-5f, 5f), 2.3f, ink, "ShellL");
+                    CreateLine(rect, new Vector2(-5f, 5f), new Vector2(5f, 5f), 2.3f, ink, "ShellTop");
+                    CreateLine(rect, new Vector2(5f, 5f), new Vector2(8f, -4f), 2.3f, ink, "ShellR");
+                    CreateLine(rect, new Vector2(8f, -4f), new Vector2(-8f, -4f), 2.3f, ink, "ShellBottom");
+                    CreateLine(rect, new Vector2(8f, -2f), new Vector2(13f, 1f), 2.3f, ink, "Neck");
+                    CreateLine(rect, new Vector2(13f, 1f), new Vector2(9f, 4f), 2.3f, ink, "Head");
                     break;
                 case DrawManager.Species.Slime:
                     CreateLine(rect, new Vector2(-10f, -5f), new Vector2(-6f, 5f), 1.8f, ink, "Slime1");
@@ -202,13 +253,49 @@ namespace DrawBody.Prototype
             }
         }
 
+        private static bool TryCloneDetailedSpeciesIcon(RectTransform destination, DrawManager.Species species)
+        {
+            Transform source = FindDeep(destination.root, species + "DrawSpeciesButton");
+            if (source == null)
+            {
+                source = FindDeep(destination.root, species + "GameplaySpeciesButton");
+            }
+            if (source == null)
+            {
+                return false;
+            }
+
+            bool cloned = false;
+            for (int i = 0; i < source.childCount; i++)
+            {
+                Transform child = source.GetChild(i);
+                if (child == null
+                    || !child.gameObject.activeSelf
+                    || (child.name != "IconLine" && child.name != "IconDot"))
+                {
+                    continue;
+                }
+
+                GameObject iconPart = Instantiate(child.gameObject, destination, false);
+                iconPart.name = child.name;
+                iconPart.transform.localScale = Vector3.one * 0.72f;
+                Graphic graphic = iconPart.GetComponent<Graphic>();
+                if (graphic != null)
+                {
+                    graphic.raycastTarget = false;
+                }
+                cloned = true;
+            }
+            return cloned;
+        }
+
         private static Color GetSpeciesColor(DrawManager.Species species)
         {
             switch (species)
             {
                 case DrawManager.Species.Cat: return new Color(1f, 0.72f, 0.38f, 0.95f);
                 case DrawManager.Species.Bird: return new Color(0.45f, 0.82f, 1f, 0.95f);
-                case DrawManager.Species.Snake: return new Color(0.68f, 0.9f, 0.42f, 0.95f);
+                case DrawManager.Species.Turtle: return new Color(0.48f, 0.78f, 0.36f, 0.95f);
                 case DrawManager.Species.Slime: return new Color(0.38f, 0.9f, 0.58f, 0.95f);
                 default: return new Color(1f, 0.88f, 0.45f, 0.95f);
             }
@@ -221,9 +308,36 @@ namespace DrawBody.Prototype
             {
                 if (texts[i] != null && texts[i].name == "AvailableSpeciesTitle")
                 {
-                    texts[i].text = LocalizationManager.T("stage_species_available");
+                    Transform card = texts[i].transform.parent != null ? texts[i].transform.parent.parent : null;
+                    int world = card != null ? ParseWorldNumber(card.name) : 1;
+                    texts[i].text = LocalizationManager.Format(
+                        "stage_species_available_compact",
+                        BuildSpeciesNames(StageSpeciesRules.GetAllowedForWorld(world)));
+                    texts[i].fontSize = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese ? 11 : 8;
+                    texts[i].fontStyle = FontStyle.Bold;
                 }
             }
+        }
+
+        private static string BuildSpeciesNames(StageSpeciesMask availability)
+        {
+            System.Collections.Generic.IReadOnlyList<DrawManager.Species> species = StageSpeciesRules.GetOrderedSpecies();
+            System.Text.StringBuilder value = new System.Text.StringBuilder();
+            string separator = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese ? "\u30fb" : " / ";
+            for (int i = 0; i < species.Count; i++)
+            {
+                if (!StageSpeciesRules.IsAllowed(availability, species[i]))
+                {
+                    continue;
+                }
+
+                if (value.Length > 0)
+                {
+                    value.Append(separator);
+                }
+                value.Append(LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(species[i])));
+            }
+            return value.ToString();
         }
 
         private static Color GetWorldCardColor(int world)

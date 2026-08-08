@@ -20,6 +20,7 @@ namespace DrawBody.Prototype
             public Vector2 Position;
             public Vector2 Velocity;
             public float Rotation;
+            public bool TurtleShelled;
         }
 
         private void Awake()
@@ -100,7 +101,8 @@ namespace DrawBody.Prototype
                 PlayerId = onlineManager.LocalPlayerId,
                 Position = localTransform.position,
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
-                Rotation = body != null ? body.rotation : localTransform.eulerAngles.z
+                Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
+                TurtleShelled = localTransform.GetComponent<PlayerController2D>()?.IsTurtleShelled ?? false
             });
         }
 
@@ -120,7 +122,8 @@ namespace DrawBody.Prototype
             {
                 Position = state.Position,
                 Velocity = state.Velocity,
-                Rotation = state.Rotation
+                Rotation = state.Rotation,
+                TurtleShelled = state.TurtleShelled
             };
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
         }
@@ -143,6 +146,10 @@ namespace DrawBody.Prototype
                     ? Mathf.LerpAngle(remoteTransform.eulerAngles.z, pair.Value.Rotation, t)
                     : pair.Value.Rotation;
                 stageManager.ApplyOnlineRemoteState(pair.Key, position, pair.Value.Velocity, rotation);
+                if (remoteTransform != null)
+                {
+                    remoteTransform.GetComponent<PlayerController2D>()?.ApplyRemoteTurtleShellState(pair.Value.TurtleShelled);
+                }
             }
         }
 

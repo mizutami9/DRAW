@@ -81,6 +81,7 @@ namespace DrawBody.Prototype
         public Vector2 Position;
         public Vector2 Velocity;
         public float Rotation;
+        public bool TurtleShelled;
     }
 
     [Serializable]

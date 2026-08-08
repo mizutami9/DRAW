@@ -14,8 +14,18 @@ namespace DrawBody.Prototype
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            TryHit(other);
+        }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            TryHit(other);
+        }
+
+        private void TryHit(Collider2D other)
+        {
             PlayerController2D targetPlayer = other.GetComponentInParent<PlayerController2D>();
-            if (targetPlayer == null)
+            if (targetPlayer == null || targetPlayer.IsInvulnerable)
             {
                 return;
             }

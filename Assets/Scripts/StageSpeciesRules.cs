@@ -10,9 +10,9 @@ namespace DrawBody.Prototype
         Human = 1 << 0,
         Cat = 1 << 1,
         Bird = 1 << 2,
-        Snake = 1 << 3,
+        Turtle = 1 << 3,
         Slime = 1 << 4,
-        All = Human | Cat | Bird | Snake | Slime
+        All = Human | Cat | Bird | Turtle | Slime
     }
 
     public static class StageSpeciesRules
@@ -22,7 +22,7 @@ namespace DrawBody.Prototype
             DrawManager.Species.Human,
             DrawManager.Species.Cat,
             DrawManager.Species.Bird,
-            DrawManager.Species.Snake,
+            DrawManager.Species.Turtle,
             DrawManager.Species.Slime
         };
 
@@ -38,17 +38,17 @@ namespace DrawBody.Prototype
                 case 1: return StageSpeciesMask.Human;
                 case 2: return StageSpeciesMask.Human | StageSpeciesMask.Cat;
                 case 3: return StageSpeciesMask.Human | StageSpeciesMask.Bird;
-                case 4: return StageSpeciesMask.Human | StageSpeciesMask.Snake;
+                case 4: return StageSpeciesMask.Human | StageSpeciesMask.Turtle;
                 case 5: return StageSpeciesMask.Human | StageSpeciesMask.Slime;
                 case 6: return StageSpeciesMask.Cat | StageSpeciesMask.Bird;
-                case 7: return StageSpeciesMask.Cat | StageSpeciesMask.Snake;
+                case 7: return StageSpeciesMask.Cat | StageSpeciesMask.Turtle;
                 case 8: return StageSpeciesMask.Bird | StageSpeciesMask.Slime;
-                case 9: return StageSpeciesMask.Snake | StageSpeciesMask.Slime;
+                case 9: return StageSpeciesMask.Turtle | StageSpeciesMask.Slime;
                 case 10: return StageSpeciesMask.Human | StageSpeciesMask.Cat | StageSpeciesMask.Bird;
-                case 11: return StageSpeciesMask.Human | StageSpeciesMask.Snake | StageSpeciesMask.Slime;
-                case 12: return StageSpeciesMask.Cat | StageSpeciesMask.Bird | StageSpeciesMask.Snake;
+                case 11: return StageSpeciesMask.Human | StageSpeciesMask.Turtle | StageSpeciesMask.Slime;
+                case 12: return StageSpeciesMask.Cat | StageSpeciesMask.Bird | StageSpeciesMask.Turtle;
                 case 13: return StageSpeciesMask.Human | StageSpeciesMask.Cat | StageSpeciesMask.Slime;
-                case 14: return StageSpeciesMask.Human | StageSpeciesMask.Cat | StageSpeciesMask.Bird | StageSpeciesMask.Snake;
+                case 14: return StageSpeciesMask.Human | StageSpeciesMask.Cat | StageSpeciesMask.Bird | StageSpeciesMask.Turtle;
                 case 15: return StageSpeciesMask.All;
                 default: return StageSpeciesMask.All;
             }
@@ -94,7 +94,7 @@ namespace DrawBody.Prototype
             {
                 case DrawManager.Species.Cat: return "species_cat";
                 case DrawManager.Species.Bird: return "species_bird";
-                case DrawManager.Species.Snake: return "species_snake";
+                case DrawManager.Species.Turtle: return "species_turtle";
                 case DrawManager.Species.Slime: return "species_slime";
                 default: return "species_human";
             }
@@ -106,7 +106,7 @@ namespace DrawBody.Prototype
             {
                 case DrawManager.Species.Cat: return StageSpeciesMask.Cat;
                 case DrawManager.Species.Bird: return StageSpeciesMask.Bird;
-                case DrawManager.Species.Snake: return StageSpeciesMask.Snake;
+                case DrawManager.Species.Turtle: return StageSpeciesMask.Turtle;
                 case DrawManager.Species.Slime: return StageSpeciesMask.Slime;
                 default: return StageSpeciesMask.Human;
             }

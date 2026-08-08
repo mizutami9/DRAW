@@ -33,7 +33,7 @@ namespace DrawBody.Prototype
             Human,
             Cat,
             Bird,
-            Snake,
+            Turtle,
             Slime
         }
 
@@ -319,7 +319,7 @@ namespace DrawBody.Prototype
                 Species.Human,
                 Species.Cat,
                 Species.Bird,
-                Species.Snake,
+                Species.Turtle,
                 Species.Slime
             };
 
@@ -1082,7 +1082,14 @@ namespace DrawBody.Prototype
             Species species = Species.Human;
             if (!string.IsNullOrEmpty(body.Species))
             {
-                System.Enum.TryParse(body.Species, out species);
+                if (string.Equals(body.Species, "Snake", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    species = Species.Turtle;
+                }
+                else
+                {
+                    System.Enum.TryParse(body.Species, true, out species);
+                }
             }
             if (!IsSpeciesAllowed(species))
             {
@@ -1175,7 +1182,7 @@ namespace DrawBody.Prototype
                         BodyPart.LeftWing,
                         BodyPart.RightWing
                     };
-                case Species.Snake:
+                case Species.Turtle:
                     return new[]
                     {
                         BodyPart.Head,
@@ -1748,14 +1755,12 @@ namespace DrawBody.Prototype
                     ink = LocalizationManager.Format("ability_ink_bird", profile.WingInk);
                     accent = new Color(0.16f, 0.64f, 0.9f, 1f);
                     break;
-                case Species.Snake:
-                    progress = Mathf.Clamp01(profile.SnakeInk / 350f);
-                    title = LocalizationManager.T("ability_card_snake");
-                    effect = LocalizationManager.Format(
-                        "ability_effect_snake",
-                        PlayerController2D.CalculateSnakeJumpMultiplier(profile.SnakeInk));
-                    ink = LocalizationManager.Format("ability_ink_snake", profile.SnakeInk);
-                    accent = new Color(0.3f, 0.7f, 0.3f, 1f);
+                case Species.Turtle:
+                    progress = 1f;
+                    title = LocalizationManager.T("ability_card_turtle");
+                    effect = LocalizationManager.T("ability_effect_turtle");
+                    ink = LocalizationManager.T("ability_ink_turtle");
+                    accent = new Color(0.24f, 0.62f, 0.34f, 1f);
                     break;
                 case Species.Slime:
                     progress = PlayerController2D.CalculateSlimeStickStrength(profile.SlimeInk);
@@ -1765,12 +1770,15 @@ namespace DrawBody.Prototype
                     accent = new Color(0.68f, 0.38f, 0.86f, 1f);
                     break;
                 default:
-                    progress = Mathf.Clamp01(profile.ArmInk / 280f);
+                    progress = Mathf.Max(
+                        Mathf.Clamp01(profile.ArmInk / 280f),
+                        Mathf.Clamp01(profile.LegInk / 80f));
                     title = LocalizationManager.T("ability_card_human");
                     effect = LocalizationManager.Format(
-                        "ability_effect_human",
-                        ArmSwingController.CalculateArmStrengthMultiplier(profile.ArmInk));
-                    ink = LocalizationManager.Format("ability_ink_human", profile.ArmInk);
+                        "ability_effect_human_combined",
+                        ArmSwingController.CalculateArmStrengthMultiplier(profile.ArmInk),
+                        PlayerAbilityController.CalculateHumanJumpMultiplier(profile.LegInk));
+                    ink = LocalizationManager.Format("ability_ink_human_combined", profile.ArmInk, profile.LegInk);
                     accent = new Color(0.2f, 0.48f, 0.86f, 1f);
                     break;
             }
@@ -1781,14 +1789,20 @@ namespace DrawBody.Prototype
                 : progress >= 0.2f ? "C"
                 : "D";
 
-            abilityText.text = LocalizationManager.Format("ability_rank", rank);
+            abilityText.text = profile.Species == Species.Turtle
+                ? LocalizationManager.T("ability_turtle_badge")
+                : LocalizationManager.Format("ability_rank", rank);
             abilityText.gameObject.SetActive(true);
             if (abilityTitleText != null) abilityTitleText.text = title;
             if (abilityEffectText != null) abilityEffectText.text = effect;
             if (abilityInkText != null) abilityInkText.text = ink;
             if (abilityLowText != null) abilityLowText.text = LocalizationManager.T("ability_gauge_low");
             if (abilityHighText != null) abilityHighText.text = LocalizationManager.T("ability_gauge_high");
-            if (abilityHintText != null) abilityHintText.text = LocalizationManager.T("ability_growth_hint");
+            if (abilityHintText != null)
+            {
+                abilityHintText.text = LocalizationManager.T(
+                    profile.Species == Species.Turtle ? "ability_turtle_hint" : "ability_growth_hint");
+            }
             if (abilityHeaderImage != null) abilityHeaderImage.color = accent;
             SetInkGauge(abilityGaugeFill, progress, false);
             if (abilityGaugeFill != null) abilityGaugeFill.color = accent;
@@ -2266,7 +2280,7 @@ namespace DrawBody.Prototype
                 }
             }
 
-            if (currentSpecies == Species.Snake && part == BodyPart.Head)
+            if (currentSpecies == Species.Turtle && part == BodyPart.Head)
             {
                 point = new Vector2(torso.xMax, centerY);
                 return true;
@@ -2328,7 +2342,7 @@ namespace DrawBody.Prototype
                 }
             }
 
-            if (currentSpecies == Species.Snake && part == BodyPart.Head)
+            if (currentSpecies == Species.Turtle && part == BodyPart.Head)
             {
                 return TryGetEdgeCenter(points, PartEdge.Left, out point);
             }
@@ -2563,7 +2577,7 @@ namespace DrawBody.Prototype
             switch (part)
             {
                 case BodyPart.Head:
-                    return currentSpecies == Species.Cat || currentSpecies == Species.Snake
+                    return currentSpecies == Species.Cat || currentSpecies == Species.Turtle
                         ? new Vector2(-115f, 0f)
                         : new Vector2(0f, -70f);
                 case BodyPart.LeftArm:
@@ -2789,17 +2803,30 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (species == Species.Snake)
+            if (species == Species.Turtle)
             {
                 SetDefaultPart(BodyPart.Torso, new[]
                 {
-                    new Vector2(-120f, 20f),
-                    new Vector2(95f, 18f),
-                    new Vector2(120f, -18f),
-                    new Vector2(-105f, -22f),
-                    new Vector2(-120f, 20f)
+                    new Vector2(-105f, 0f),
+                    new Vector2(-78f, 52f),
+                    new Vector2(35f, 68f),
+                    new Vector2(100f, 28f),
+                    new Vector2(105f, -18f),
+                    new Vector2(35f, -62f),
+                    new Vector2(-78f, -48f),
+                    new Vector2(-105f, 0f),
+                    new Vector2(100f, 28f),
+                    new Vector2(-78f, -48f),
+                    new Vector2(35f, 68f),
+                    new Vector2(35f, -62f)
                 });
-                SetDefaultPart(BodyPart.Head, new[] { new Vector2(-115f, 0f), new Vector2(-35f, 42f), new Vector2(45f, 0f), new Vector2(-35f, -42f), new Vector2(-115f, 0f) });
+                SetDefaultPart(BodyPart.Head, new[]
+                {
+                    new Vector2(-115f, 0f), new Vector2(-82f, 30f),
+                    new Vector2(-36f, 22f), new Vector2(-22f, 0f),
+                    new Vector2(-36f, -22f), new Vector2(-82f, -30f),
+                    new Vector2(-115f, 0f)
+                });
                 return;
             }
 

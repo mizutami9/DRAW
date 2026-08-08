@@ -144,12 +144,15 @@ namespace DrawBody.EditorTools
                     CreateIconLine(parent, new Vector2(12f, 2f), new Vector2(17f, 5f), 1.6f, ink);
                     CreateIconDot(parent, new Vector2(8f, 3f), 2f, ink);
                     break;
-                case DrawManager.Species.Snake:
-                    CreateIconLine(parent, new Vector2(-15f, -7f), new Vector2(-7f, 3f), 2.5f, ink);
-                    CreateIconLine(parent, new Vector2(-7f, 3f), new Vector2(2f, -2f), 2.5f, ink);
-                    CreateIconLine(parent, new Vector2(2f, -2f), new Vector2(10f, 8f), 2.5f, ink);
-                    CreateIconLine(parent, new Vector2(10f, 8f), new Vector2(15f, 4f), 2.5f, ink);
-                    CreateIconDot(parent, new Vector2(13f, 5f), 2f, ink);
+                case DrawManager.Species.Turtle:
+                    CreateIconLine(parent, new Vector2(-11f, -5f), new Vector2(-7f, 7f), 2.5f, ink);
+                    CreateIconLine(parent, new Vector2(-7f, 7f), new Vector2(7f, 7f), 2.5f, ink);
+                    CreateIconLine(parent, new Vector2(7f, 7f), new Vector2(11f, -5f), 2.5f, ink);
+                    CreateIconLine(parent, new Vector2(11f, -5f), new Vector2(-11f, -5f), 2.5f, ink);
+                    CreateIconLine(parent, new Vector2(-7f, 7f), new Vector2(11f, -5f), 1.4f, accent);
+                    CreateIconLine(parent, new Vector2(7f, 7f), new Vector2(-11f, -5f), 1.4f, accent);
+                    CreateIconLine(parent, new Vector2(11f, -1f), new Vector2(16f, 2f), 2.5f, ink);
+                    CreateIconDot(parent, new Vector2(15f, 3f), 2f, ink);
                     break;
                 case DrawManager.Species.Slime:
                     CreateIconLine(parent, new Vector2(-14f, -6f), new Vector2(-8f, 7f), 2f, ink);

@@ -32,6 +32,7 @@ namespace DrawBody.Prototype
             polished = true;
             RebuildToolLayout();
             StraightenDrawUi();
+            GameplayHudDrawer.RedrawTurtleIcon(FindRect(transform, "TurtleDrawSpeciesButton"));
             RefreshLabels();
             ApplyTypography();
         }

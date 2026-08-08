@@ -95,7 +95,7 @@ namespace DrawBody.Prototype
                 DrawManager.Species.Human,
                 DrawManager.Species.Cat,
                 DrawManager.Species.Bird,
-                DrawManager.Species.Snake,
+                DrawManager.Species.Turtle,
                 DrawManager.Species.Slime
             };
 
@@ -110,6 +110,10 @@ namespace DrawBody.Prototype
                     button.anchoredPosition = new Vector2(-50f + column * 100f, 356f - row * 66f);
                     button.sizeDelta = new Vector2(82f, 62f);
                     RestyleSpeciesButton(button);
+                    if (species[i] == DrawManager.Species.Turtle)
+                    {
+                        RedrawTurtleIcon(button);
+                    }
                 }
 
                 RectTransform label = FindRect(prefix + "GameplaySpeciesLabel");
@@ -233,6 +237,53 @@ namespace DrawBody.Prototype
                     child.localScale = Vector3.one * 1.18f;
                 }
             }
+        }
+
+        public static void RedrawTurtleIcon(RectTransform parent)
+        {
+            if (parent == null)
+            {
+                return;
+            }
+
+            for (int i = parent.childCount - 1; i >= 0; i--)
+            {
+                Transform child = parent.GetChild(i);
+                if (child.name != "IconLine" && child.name != "IconDot")
+                {
+                    continue;
+                }
+
+                child.gameObject.SetActive(false);
+                Destroy(child.gameObject);
+            }
+
+            Color ink = new Color(0.08f, 0.08f, 0.08f, 1f);
+            Color shell = new Color(0.2f, 0.55f, 0.25f, 1f);
+            CreateTurtleLine(parent, new Vector2(-13f, -7f), new Vector2(-9f, 9f), 2.6f, ink);
+            CreateTurtleLine(parent, new Vector2(-9f, 9f), new Vector2(9f, 9f), 2.6f, ink);
+            CreateTurtleLine(parent, new Vector2(9f, 9f), new Vector2(13f, -7f), 2.6f, ink);
+            CreateTurtleLine(parent, new Vector2(13f, -7f), new Vector2(-13f, -7f), 2.6f, ink);
+            CreateTurtleLine(parent, new Vector2(-9f, 9f), new Vector2(13f, -7f), 1.6f, shell);
+            CreateTurtleLine(parent, new Vector2(9f, 9f), new Vector2(-13f, -7f), 1.6f, shell);
+            CreateTurtleLine(parent, new Vector2(13f, -2f), new Vector2(20f, 2f), 2.6f, ink);
+            CreateTurtleLine(parent, new Vector2(20f, 2f), new Vector2(16f, 6f), 2.6f, ink);
+        }
+
+        private static void CreateTurtleLine(RectTransform parent, Vector2 from, Vector2 to, float width, Color color)
+        {
+            GameObject line = new GameObject("IconLine", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            line.transform.SetParent(parent, false);
+            RectTransform rect = line.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = (from + to) * 0.5f;
+            rect.sizeDelta = new Vector2(Vector2.Distance(from, to), width);
+            rect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(to.y - from.y, to.x - from.x) * Mathf.Rad2Deg);
+            Image image = line.GetComponent<Image>();
+            image.color = color;
+            image.raycastTarget = false;
         }
 
         private RectTransform FindRect(string name)

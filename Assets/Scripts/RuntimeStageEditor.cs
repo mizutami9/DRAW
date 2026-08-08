@@ -150,6 +150,7 @@ namespace DrawBody.Prototype
         public bool SelectedIsBoxDropper => selectedData != null && selectedData.type == StageObjectType.BoxDropper;
         public bool SelectedIsSpikeDropper => selectedData != null && selectedData.type == StageObjectType.SpikeDropper;
         public bool SelectedIsDropper => SelectedIsBoxDropper || SelectedIsSpikeDropper;
+        public bool SelectedIsBeamEmitter => selectedData != null && selectedData.type == StageObjectType.BeamEmitter;
         public string SelectedActionStrengthLabel => LocalizationManager.T(
             SelectedIsMovingPlatform || SelectedIsElevator
                 ? "stage_editor_move_distance"
@@ -159,15 +160,17 @@ namespace DrawBody.Prototype
                         ? "stage_editor_conveyor_speed"
                         : SelectedIsDropper
                             ? "stage_editor_drop_interval"
+                            : SelectedIsBeamEmitter
+                                ? "stage_editor_beam_interval"
                             : "stage_editor_action_strength");
         public float SelectedActionStrengthMinimum => SelectedIsCrumblingFloor
             ? 0.1f
-            : SelectedIsConveyor || SelectedIsDropper
+            : SelectedIsConveyor || SelectedIsDropper || SelectedIsBeamEmitter
                 ? 0.5f
                 : SelectedIsMovingPlatform || SelectedIsElevator ? 1f : 5f;
         public float SelectedActionStrengthMaximum => SelectedIsCrumblingFloor
             ? 5f
-            : SelectedIsConveyor || SelectedIsDropper
+            : SelectedIsConveyor || SelectedIsDropper || SelectedIsBeamEmitter
                 ? 10f
                 : SelectedIsMovingPlatform || SelectedIsElevator ? 30f : 60f;
         public bool SelectedSupportsWeightThreshold => selectedData != null && selectedData.type == StageObjectType.InkScale;
@@ -179,7 +182,7 @@ namespace DrawBody.Prototype
                     ? 0.4f
                     : SelectedIsConveyor
                         ? 3f
-                        : SelectedIsDropper ? 2f : 27f;
+                        : SelectedIsDropper || SelectedIsBeamEmitter ? 2f : 27f;
         public string SelectedConveyorDirectionLabel => LocalizationManager.T(
             selectedData != null && Mathf.Cos(selectedData.movementAngle * Mathf.Deg2Rad) < 0f
                 ? "stage_editor_conveyor_left"
@@ -210,7 +213,8 @@ namespace DrawBody.Prototype
                 || type == StageObjectType.FallingFloor
                 || IsConveyorType(type)
                 || type == StageObjectType.BoxDropper
-                || type == StageObjectType.SpikeDropper;
+                || type == StageObjectType.SpikeDropper
+                || type == StageObjectType.BeamEmitter;
         }
 
         private static bool IsConveyorType(StageObjectType type)

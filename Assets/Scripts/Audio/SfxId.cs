@@ -52,8 +52,8 @@ namespace DrawBody.Prototype
         CatJump,
         BirdFlap,
         BirdGlideLoop,
-        SnakeJump,
-        SnakeLand,
+        TurtleJump,
+        TurtleLand,
         SlimeStick,
         SlimeRelease
     }

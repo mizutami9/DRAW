@@ -33,7 +33,7 @@ namespace DrawBody.Prototype
             public float ArmInk;
             public float WingInk;
             public float CatLegInk;
-            public float SnakeInk;
+            public float TurtleInk;
             public float SlimeInk;
             public float TorsoInk;
             public float TotalInk;
@@ -106,7 +106,7 @@ namespace DrawBody.Prototype
                 ArmInk = armInk,
                 WingInk = wingInk,
                 CatLegInk = catLegInk,
-                SnakeInk = species == DrawManager.Species.Snake ? totalInk : 0f,
+                TurtleInk = species == DrawManager.Species.Turtle ? totalInk : 0f,
                 SlimeInk = slimeInk,
                 TorsoInk = torsoInk,
                 TotalInk = totalInk,
@@ -149,11 +149,8 @@ namespace DrawBody.Prototype
                         "ability_bird_status",
                         profile.WingInk,
                         PlayerController2D.CalculateBirdGlideFallSpeed(profile.WingInk));
-                case DrawManager.Species.Snake:
-                    return LocalizationManager.Format(
-                        "ability_snake_status",
-                        profile.SnakeInk,
-                        PlayerController2D.CalculateSnakeJumpMultiplier(profile.SnakeInk));
+                case DrawManager.Species.Turtle:
+                    return LocalizationManager.T("ability_turtle_status");
                 case DrawManager.Species.Slime:
                     return LocalizationManager.Format(
                         "ability_slime_status",
@@ -161,22 +158,23 @@ namespace DrawBody.Prototype
                         PlayerController2D.CalculateSlimeStickStrength(profile.SlimeInk) * 100f);
                 default:
                     return LocalizationManager.Format(
-                        "ability_human_status",
+                        "ability_human_status_combined",
                         profile.ArmInk,
-                        ArmSwingController.CalculateArmStrengthMultiplier(profile.ArmInk));
+                        ArmSwingController.CalculateArmStrengthMultiplier(profile.ArmInk),
+                        profile.LegInk,
+                        CalculateHumanJumpMultiplier(profile.LegInk));
             }
         }
 
         private void ApplyProfile(AbilityProfile profile)
         {
             CurrentProfile = profile;
-            playerController.SetJumpMultiplier(
-                profile.Species == DrawManager.Species.Snake ? 1f : GetJumpMultiplier(profile.Jump));
+            playerController.SetJumpMultiplier(GetJumpMultiplier(profile.Jump));
             playerController.ApplySpeciesMovement(
                 profile.Species,
                 profile.WingInk,
                 profile.CatLegInk,
-                profile.SnakeInk,
+                profile.TurtleInk,
                 profile.SlimeInk);
 
             if (rb != null)
@@ -207,6 +205,11 @@ namespace DrawBody.Prototype
                 default:
                     return 1f;
             }
+        }
+
+        public static float CalculateHumanJumpMultiplier(float legInk)
+        {
+            return GetJumpMultiplier(legInk >= 80f ? JumpTier.Triple : legInk >= 50f ? JumpTier.Double : JumpTier.Normal);
         }
 
         private float GetMass(TorsoTier tier)

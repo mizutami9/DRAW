@@ -24,7 +24,7 @@ namespace DrawBody.Prototype
             {
                 bgmSlider.minValue = 0f;
                 bgmSlider.maxValue = 1f;
-                bgmSlider.value = PlayerPrefs.GetFloat(BgmKey, 0.8f);
+                bgmSlider.value = PlayerPrefs.GetFloat(BgmKey, GameBgm.DefaultMasterVolume);
                 bgmSlider.onValueChanged.AddListener(SetBgm);
             }
 
@@ -32,7 +32,7 @@ namespace DrawBody.Prototype
             {
                 seSlider.minValue = 0f;
                 seSlider.maxValue = 1f;
-                seSlider.value = PlayerPrefs.GetFloat(SeKey, 0.8f);
+                seSlider.value = PlayerPrefs.GetFloat(SeKey, GameSfx.DefaultMasterVolume);
                 seSlider.onValueChanged.AddListener(SetSe);
             }
 
@@ -78,14 +78,14 @@ namespace DrawBody.Prototype
         private void SetLanguage(LocalizationManager.Language language)
         {
             LocalizationManager.SetLanguage(language);
-            PlayTick(PlayerPrefs.GetFloat(SeKey, 0.8f));
+            PlayTick(PlayerPrefs.GetFloat(SeKey, GameSfx.DefaultMasterVolume));
             Refresh();
         }
 
         private void Refresh()
         {
-            float bgm = bgmSlider != null ? bgmSlider.value : PlayerPrefs.GetFloat(BgmKey, 0.8f);
-            float se = seSlider != null ? seSlider.value : PlayerPrefs.GetFloat(SeKey, 0.8f);
+            float bgm = bgmSlider != null ? bgmSlider.value : PlayerPrefs.GetFloat(BgmKey, GameBgm.DefaultMasterVolume);
+            float se = seSlider != null ? seSlider.value : PlayerPrefs.GetFloat(SeKey, GameSfx.DefaultMasterVolume);
 
             if (bgmValueText != null)
             {

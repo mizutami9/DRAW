@@ -69,7 +69,7 @@ namespace DrawBody.EditorTools
                 DrawManager.Species.Human,
                 DrawManager.Species.Cat,
                 DrawManager.Species.Bird,
-                DrawManager.Species.Snake,
+                DrawManager.Species.Turtle,
                 DrawManager.Species.Slime
             };
 

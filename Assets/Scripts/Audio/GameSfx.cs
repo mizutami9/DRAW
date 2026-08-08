@@ -6,6 +6,7 @@ namespace DrawBody.Prototype
     public sealed class GameSfx : MonoBehaviour
     {
         public const string VolumePlayerPrefsKey = "option_se_volume";
+        public const float DefaultMasterVolume = 0.3f;
         private const int SourcePoolSize = 16;
 
         private static GameSfx instance;
@@ -13,7 +14,7 @@ namespace DrawBody.Prototype
         private readonly Dictionary<SfxId, float> nextAllowedTimes = new Dictionary<SfxId, float>();
         private readonly List<AudioSource> sources = new List<AudioSource>();
         private int nextSourceIndex;
-        private float masterVolume = 0.8f;
+        private float masterVolume = DefaultMasterVolume;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -45,7 +46,7 @@ namespace DrawBody.Prototype
 
         public static float MasterVolume => instance != null
             ? instance.masterVolume
-            : PlayerPrefs.GetFloat(VolumePlayerPrefsKey, 0.8f);
+            : PlayerPrefs.GetFloat(VolumePlayerPrefsKey, DefaultMasterVolume);
 
         private static GameSfx EnsureInstance()
         {
@@ -69,7 +70,7 @@ namespace DrawBody.Prototype
             }
 
             instance = this;
-            masterVolume = PlayerPrefs.GetFloat(VolumePlayerPrefsKey, 0.8f);
+            masterVolume = PlayerPrefs.GetFloat(VolumePlayerPrefsKey, DefaultMasterVolume);
             for (int i = 0; i < SourcePoolSize; i++)
             {
                 GameObject sourceObject = new GameObject("SfxSource_" + i);

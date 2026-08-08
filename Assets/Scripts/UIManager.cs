@@ -776,7 +776,7 @@ namespace DrawBody.Prototype
         private void ApplyModernTheme()
         {
             DoodleUiDirector director = GetComponent<DoodleUiDirector>();
-            director?.ApplyTheme();
+            director?.RefreshDynamicTheme();
         }
 
         private void EnsureClearPanel()

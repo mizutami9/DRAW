@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,31 +21,57 @@ namespace DrawBody.Prototype
         private static readonly Color Violet = new Color(0.66f, 0.52f, 0.96f, 1f);
 
         private Font fallbackFont;
+        private bool themeApplied;
 
         private void Awake()
         {
             fallbackFont = FindFont();
+            LegacyPencilStrokeBatcher.BatchScene();
             ApplyTheme();
         }
 
         private void Start()
         {
-            // UIManager creates a few overlays during Awake, so run once more in Start.
-            ApplyTheme();
+            // UIManager may create these small overlays later in Awake. Refresh only
+            // those targets instead of walking the complete UI tree again.
+            ThemeGameplayHud();
+            ThemeMenuAndResults();
         }
 
         private void OnEnable()
         {
-            LocalizationManager.LanguageChanged += ApplyTheme;
+            LocalizationManager.LanguageChanged += HandleLanguageChanged;
         }
 
         private void OnDisable()
         {
-            LocalizationManager.LanguageChanged -= ApplyTheme;
+            LocalizationManager.LanguageChanged -= HandleLanguageChanged;
         }
 
         public void ApplyTheme()
         {
+            ApplyTheme(false);
+        }
+
+        public void RefreshDynamicTheme()
+        {
+            ThemeGameplayHud();
+            ThemeMenuAndResults();
+        }
+
+        private void HandleLanguageChanged()
+        {
+            ApplyTheme(true);
+        }
+
+        private void ApplyTheme(bool force)
+        {
+            if (themeApplied && !force)
+            {
+                return;
+            }
+
+            themeApplied = true;
             fallbackFont = fallbackFont != null ? fallbackFont : FindFont();
             ThemeStageBackgroundDoodles();
             ThemeTitle();
@@ -1106,6 +1133,147 @@ namespace DrawBody.Prototype
         private static float Luminance(Color color)
         {
             return color.r * 0.2126f + color.g * 0.7152f + color.b * 0.0722f;
+        }
+    }
+
+    internal static class LegacyPencilStrokeBatcher
+    {
+        private sealed class Batch
+        {
+            public Material Material;
+            public int SortingLayerId;
+            public int SortingOrder;
+            public readonly List<Vector3> Vertices = new List<Vector3>();
+            public readonly List<Color> Colors = new List<Color>();
+            public readonly List<int> Triangles = new List<int>();
+        }
+
+        private static bool completed;
+
+        public static void BatchScene()
+        {
+            if (completed || !Application.isPlaying)
+            {
+                return;
+            }
+
+            completed = true;
+            LineRenderer[] lines = Object.FindObjectsByType<LineRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            Dictionary<long, Batch> batches = new Dictionary<long, Batch>();
+            List<GameObject> obsolete = new List<GameObject>();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                LineRenderer line = lines[i];
+                if (line == null || !IsLegacyPencilStroke(line.name) || line.positionCount < 2)
+                {
+                    continue;
+                }
+
+                Material material = line.sharedMaterial;
+                int materialId = material != null ? material.GetInstanceID() : 0;
+                long key = ((long)line.sortingLayerID << 32)
+                    ^ ((long)(line.sortingOrder & 0xffff) << 16)
+                    ^ (uint)materialId;
+                if (!batches.TryGetValue(key, out Batch batch))
+                {
+                    batch = new Batch
+                    {
+                        Material = material,
+                        SortingLayerId = line.sortingLayerID,
+                        SortingOrder = line.sortingOrder
+                    };
+                    batches.Add(key, batch);
+                }
+
+                float widthScale = line.useWorldSpace
+                    ? 1f
+                    : Mathf.Max(Mathf.Abs(line.transform.lossyScale.x), Mathf.Abs(line.transform.lossyScale.y));
+                for (int pointIndex = 1; pointIndex < line.positionCount; pointIndex++)
+                {
+                    Vector3 from = line.GetPosition(pointIndex - 1);
+                    Vector3 to = line.GetPosition(pointIndex);
+                    if (!line.useWorldSpace)
+                    {
+                        from = line.transform.TransformPoint(from);
+                        to = line.transform.TransformPoint(to);
+                    }
+
+                    float amount = pointIndex / (float)(line.positionCount - 1);
+                    Color fromColor = Color.Lerp(line.startColor, line.endColor, (pointIndex - 1f) / (line.positionCount - 1f));
+                    Color toColor = Color.Lerp(line.startColor, line.endColor, amount);
+                    float width = Mathf.Lerp(line.startWidth, line.endWidth, amount) * widthScale;
+                    AppendQuad(batch, from, to, width, fromColor, toColor);
+                }
+
+                line.enabled = false;
+                line.gameObject.SetActive(false);
+                obsolete.Add(line.gameObject);
+            }
+
+            if (batches.Count == 0)
+            {
+                return;
+            }
+
+            GameObject root = new GameObject("Batched Legacy Pencil Fills");
+            int batchIndex = 0;
+            foreach (Batch batch in batches.Values)
+            {
+                GameObject visual = new GameObject("Pencil Fill Batch " + batchIndex++, typeof(MeshFilter), typeof(MeshRenderer));
+                visual.transform.SetParent(root.transform, false);
+                Mesh mesh = new Mesh { name = visual.name };
+                mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+                mesh.SetVertices(batch.Vertices);
+                mesh.SetColors(batch.Colors);
+                mesh.SetTriangles(batch.Triangles, 0);
+                mesh.RecalculateBounds();
+                visual.GetComponent<MeshFilter>().sharedMesh = mesh;
+                MeshRenderer renderer = visual.GetComponent<MeshRenderer>();
+                renderer.sharedMaterial = batch.Material != null
+                    ? batch.Material
+                    : new Material(Shader.Find("Sprites/Default"));
+                renderer.sortingLayerID = batch.SortingLayerId;
+                renderer.sortingOrder = batch.SortingOrder;
+            }
+
+            for (int i = 0; i < obsolete.Count; i++)
+            {
+                Object.Destroy(obsolete[i]);
+            }
+        }
+
+        private static bool IsLegacyPencilStroke(string objectName)
+        {
+            return objectName != null
+                && objectName.Contains("Pencil Fill", System.StringComparison.Ordinal)
+                && (objectName.Contains("Pencil Stroke", System.StringComparison.Ordinal)
+                    || objectName.Contains("Soft Horizontal Grain", System.StringComparison.Ordinal));
+        }
+
+        private static void AppendQuad(Batch batch, Vector3 from, Vector3 to, float width, Color fromColor, Color toColor)
+        {
+            Vector2 delta = (Vector2)(to - from);
+            if (delta.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 normal = new Vector2(-delta.y, delta.x).normalized * (width * 0.5f);
+            int first = batch.Vertices.Count;
+            batch.Vertices.Add(from + (Vector3)normal);
+            batch.Vertices.Add(from - (Vector3)normal);
+            batch.Vertices.Add(to + (Vector3)normal);
+            batch.Vertices.Add(to - (Vector3)normal);
+            batch.Colors.Add(fromColor);
+            batch.Colors.Add(fromColor);
+            batch.Colors.Add(toColor);
+            batch.Colors.Add(toColor);
+            batch.Triangles.Add(first);
+            batch.Triangles.Add(first + 2);
+            batch.Triangles.Add(first + 1);
+            batch.Triangles.Add(first + 2);
+            batch.Triangles.Add(first + 3);
+            batch.Triangles.Add(first + 1);
         }
     }
 

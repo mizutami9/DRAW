@@ -185,7 +185,8 @@ namespace DrawBody.Prototype
         CollectibleFish,
         CollectibleCoin,
         CollectibleStar,
-        ChallengeClock
+        ChallengeClock,
+        BeamEmitter
     }
 
     [Serializable]

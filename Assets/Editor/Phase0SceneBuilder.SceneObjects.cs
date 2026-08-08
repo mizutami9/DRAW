@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DrawBody.Prototype;
 using UnityEngine;
 
@@ -251,6 +252,9 @@ namespace DrawBody.EditorTools
             float left = centerX - width * 0.5f;
             float right = centerX + width * 0.5f;
             Color pencil = new Color(0.05f, 0.05f, 0.05f, 0.32f);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
 
             int index = 0;
             for (int layer = 0; layer < 3; layer++)
@@ -274,17 +278,12 @@ namespace DrawBody.EditorTools
                         if (endX > left && startX < right && endY > bottom)
                         {
                             Color layerColor = new Color(pencil.r, pencil.g, pencil.b, 0.14f + layer * 0.045f + Mathf.Abs(Mathf.Sin(index * 0.71f)) * 0.07f);
-                            AddDoodleLine(
-                                $"{name} Pencil Stroke {index}",
-                                parent,
-                                new[]
-                                {
-                                    new Vector3(startX, startY, 0f),
-                                    new Vector3(endX, endY, 0f)
-                                },
-                                layerColor,
+                            AppendEditorPencilQuad(
+                                vertices, colors, triangles,
+                                new Vector3(startX, startY, 0f),
+                                new Vector3(endX, endY, 0f),
                                 0.01f + layer * 0.002f,
-                                4);
+                                layerColor);
                         }
 
                         x += 0.34f + Mathf.Sin(index * 3.23f) * 0.045f;
@@ -298,18 +297,15 @@ namespace DrawBody.EditorTools
             for (int i = 0; i < 5; i++)
             {
                 float y = Mathf.Lerp(bottom + 0.16f, top - 0.12f, (i + 1f) / 6f);
-                AddDoodleLine(
-                    $"{name} Soft Horizontal Grain {i}",
-                    parent,
-                    new[]
-                    {
-                        new Vector3(left + 0.1f, y + Mathf.Sin(i * 1.3f) * 0.025f, 0f),
-                        new Vector3(right - 0.1f, y + Mathf.Cos(i * 1.9f) * 0.025f, 0f)
-                    },
-                    new Color(0.05f, 0.05f, 0.05f, 0.13f),
+                AppendEditorPencilQuad(
+                    vertices, colors, triangles,
+                    new Vector3(left + 0.1f, y + Mathf.Sin(i * 1.3f) * 0.025f, 0f),
+                    new Vector3(right - 0.1f, y + Mathf.Cos(i * 1.9f) * 0.025f, 0f),
                     0.01f,
-                    5);
+                    new Color(0.05f, 0.05f, 0.05f, 0.13f));
             }
+
+            CreateEditorPencilMesh(name, parent, vertices, colors, triangles, 4);
         }
 
         private static void AddPencilFillLocal(string name, Transform parent, Vector2 size, Color pencilColor)
@@ -317,6 +313,9 @@ namespace DrawBody.EditorTools
             float inverseScale = 1f / Mathf.Max(Mathf.Max(size.x, size.y), 0.1f);
             Color pencil = new Color(pencilColor.r, pencilColor.g, pencilColor.b, 0.28f);
             int index = 0;
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
 
             for (int layer = 0; layer < 3; layer++)
             {
@@ -334,17 +333,12 @@ namespace DrawBody.EditorTools
                         if (endX > startX + 0.02f)
                         {
                             Color layerColor = new Color(pencil.r, pencil.g, pencil.b, 0.13f + layer * 0.05f + Mathf.Abs(Mathf.Sin(index * 0.73f)) * 0.07f);
-                            AddDoodleLine(
-                                $"{name} Stroke {index}",
-                                parent,
-                                new[]
-                                {
-                                    new Vector3(startX, startY, 0f),
-                                    new Vector3(endX, endY, 0f)
-                                },
-                                layerColor,
+                            AppendEditorPencilQuad(
+                                vertices, colors, triangles,
+                                new Vector3(startX, startY, 0f),
+                                new Vector3(endX, endY, 0f),
                                 (0.012f + layer * 0.003f) * inverseScale,
-                                6);
+                                layerColor);
                         }
 
                         x += 0.12f + Mathf.Abs(Mathf.Sin(index * 2.1f)) * 0.08f;
@@ -354,6 +348,65 @@ namespace DrawBody.EditorTools
                     row += 0.18f + layer * 0.025f;
                 }
             }
+
+            CreateEditorPencilMesh(name, parent, vertices, colors, triangles, 6);
+        }
+
+        private static void AppendEditorPencilQuad(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector3 from,
+            Vector3 to,
+            float width,
+            Color color)
+        {
+            Vector2 delta = (Vector2)(to - from);
+            if (delta.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 normal = new Vector2(-delta.y, delta.x).normalized * (width * 0.5f);
+            int first = vertices.Count;
+            vertices.Add(from + (Vector3)normal);
+            vertices.Add(from - (Vector3)normal);
+            vertices.Add(to + (Vector3)normal);
+            vertices.Add(to - (Vector3)normal);
+            for (int i = 0; i < 4; i++) colors.Add(color);
+            triangles.Add(first);
+            triangles.Add(first + 2);
+            triangles.Add(first + 1);
+            triangles.Add(first + 2);
+            triangles.Add(first + 3);
+            triangles.Add(first + 1);
+        }
+
+        private static void CreateEditorPencilMesh(
+            string name,
+            Transform parent,
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            int sortingOrder)
+        {
+            if (vertices.Count == 0)
+            {
+                return;
+            }
+
+            GameObject visual = new GameObject(name + " Mesh", typeof(MeshFilter), typeof(MeshRenderer));
+            visual.transform.SetParent(parent, false);
+            Mesh mesh = new Mesh { name = name + " Mesh" };
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+            mesh.SetVertices(vertices);
+            mesh.SetColors(colors);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateBounds();
+            visual.GetComponent<MeshFilter>().sharedMesh = mesh;
+            MeshRenderer renderer = visual.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = GetDoodleLineMaterial();
+            renderer.sortingOrder = sortingOrder;
         }
 
         private static GameObject CreateGoal(Vector3 position, Transform parent, Sprite squareSprite)

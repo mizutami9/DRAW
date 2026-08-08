@@ -17,7 +17,6 @@ namespace DrawBody.Prototype
         private const float SmallestWingGlideFallSpeed = -3f;
         private const float FullGlideWingInk = 350f;
         private const float FullSpeedCatLegInk = 120f;
-        private const float FullJumpSnakeInk = 350f;
         private const float FullStickSlimeInk = 200f;
         [SerializeField] private float slimeStickDuration = 0.28f;
 
@@ -49,6 +48,8 @@ namespace DrawBody.Prototype
         private bool slimMode;
         private float lastWallContactAt = -100f;
         private int facingDirection = 1;
+        private bool turtleShelled;
+        private bool turtleTurnHeld;
         private Vector2 groundNormal = Vector2.up;
         private Vector2 supportVelocity;
         private Rigidbody2D supportBody;
@@ -60,10 +61,23 @@ namespace DrawBody.Prototype
         private readonly Collider2D[] overlapResults = new Collider2D[24];
         private readonly RaycastHit2D[] groundRayResults = new RaycastHit2D[24];
         private ContactFilter2D groundContactFilter;
+        private Collider2D[] bodyColliderCache;
 
         public bool IsGrounded { get; private set; }
         public bool ControlsEnabled => controlsEnabled;
         public int FacingDirection => facingDirection;
+        public bool IsInvulnerable => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
+        public bool IsTurtleShelled => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
+
+        public void ApplyRemoteTurtleShellState(bool active)
+        {
+            SetTurtleShellState(active && currentSpecies == DrawManager.Species.Turtle);
+        }
+
+        public void InvalidateBodyColliderCache()
+        {
+            bodyColliderCache = null;
+        }
 
         public void SetJumpMultiplier(float multiplier)
         {
@@ -81,11 +95,6 @@ namespace DrawBody.Prototype
             return Mathf.Lerp(1f, 1.5f, Mathf.Clamp01(Mathf.Max(0f, legInk) / FullSpeedCatLegInk));
         }
 
-        public static float CalculateSnakeJumpMultiplier(float totalInk)
-        {
-            return Mathf.Lerp(0.65f, 1.3f, Mathf.Clamp01(Mathf.Max(0f, totalInk) / FullJumpSnakeInk));
-        }
-
         public static float CalculateSlimeStickStrength(float slimeInk)
         {
             return Mathf.Clamp01(Mathf.Max(0f, slimeInk) / FullStickSlimeInk);
@@ -95,9 +104,11 @@ namespace DrawBody.Prototype
             DrawManager.Species species,
             float wingInk = 0f,
             float catLegInk = 0f,
-            float snakeInk = 0f,
+            float turtleInk = 0f,
             float slimeInk = 0f)
         {
+            SetTurtleShellState(false);
+            SetTurtleRotation(false);
             currentSpecies = species;
             moveSpeedMultiplier = 1f;
             jumpVelocityMultiplier = 1f;
@@ -117,10 +128,9 @@ namespace DrawBody.Prototype
                     canGlide = true;
                     jumpVelocityMultiplier = 0.85f;
                     break;
-                case DrawManager.Species.Snake:
-                    slimMode = true;
-                    moveSpeedMultiplier = 0.9f;
-                    jumpVelocityMultiplier = CalculateSnakeJumpMultiplier(snakeInk);
+                case DrawManager.Species.Turtle:
+                    moveSpeedMultiplier = 0.78f;
+                    jumpVelocityMultiplier = 0.82f;
                     break;
                 case DrawManager.Species.Slime:
                     canWallStick = true;
@@ -157,8 +167,15 @@ namespace DrawBody.Prototype
 
             horizontalInput = Input.GetAxisRaw("Horizontal");
             UpdateFacing();
+            UpdateTurtleAbilityInput();
 
-            if (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            bool jumpPressed = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow);
+            if (currentSpecies != DrawManager.Species.Turtle)
+            {
+                jumpPressed |= Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space);
+            }
+
+            if (jumpPressed)
             {
                 lastJumpPressedAt = Time.time;
             }
@@ -184,6 +201,8 @@ namespace DrawBody.Prototype
             if (!enabled)
             {
                 horizontalInput = 0f;
+                SetTurtleShellState(false);
+                SetTurtleRotation(false);
                 rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
             }
         }
@@ -192,6 +211,53 @@ namespace DrawBody.Prototype
         {
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
+            SetTurtleShellState(false);
+            SetTurtleRotation(false);
+        }
+
+        private void UpdateTurtleAbilityInput()
+        {
+            if (currentSpecies != DrawManager.Species.Turtle)
+            {
+                SetTurtleShellState(false);
+                SetTurtleRotation(false);
+                return;
+            }
+
+            SetTurtleShellState(Input.GetKey(KeyCode.Space));
+            SetTurtleRotation(Input.GetKey(KeyCode.F));
+            if (turtleShelled)
+            {
+                horizontalInput = 0f;
+            }
+        }
+
+        private void SetTurtleShellState(bool active)
+        {
+            if (turtleShelled == active)
+            {
+                return;
+            }
+
+            turtleShelled = active;
+            bodyBuilder?.SetTurtleShellPose(active);
+        }
+
+        private void SetTurtleRotation(bool active)
+        {
+            if (turtleTurnHeld == active && !active)
+            {
+                return;
+            }
+
+            turtleTurnHeld = active;
+            if (rb != null)
+            {
+                rb.rotation = active && currentSpecies == DrawManager.Species.Turtle
+                    ? -90f * facingDirection
+                    : 0f;
+                rb.angularVelocity = 0f;
+            }
         }
 
         private void UpdateGrounded()
@@ -215,7 +281,12 @@ namespace DrawBody.Prototype
 
         private bool TryGetBodyBounds(out Bounds bodyBounds)
         {
-            Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+            Collider2D[] colliders = bodyColliderCache;
+            if (colliders == null)
+            {
+                colliders = GetComponentsInChildren<Collider2D>();
+                bodyColliderCache = colliders;
+            }
             bool hasBounds = false;
             bodyBounds = new Bounds(transform.position, Vector3.zero);
 
@@ -528,7 +599,7 @@ namespace DrawBody.Prototype
             {
                 DrawManager.Species.Cat => SfxId.CatJump,
                 DrawManager.Species.Bird => SfxId.BirdFlap,
-                DrawManager.Species.Snake => SfxId.SnakeJump,
+                DrawManager.Species.Turtle => SfxId.TurtleJump,
                 _ => SfxId.PlayerJump
             };
             GameSfx.PlayAt(id, transform.position);
@@ -541,8 +612,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            SfxId id = currentSpecies == DrawManager.Species.Snake
-                ? SfxId.SnakeLand
+            SfxId id = currentSpecies == DrawManager.Species.Turtle
+                ? SfxId.TurtleLand
                 : verticalSpeedBeforeProbe < -11f ? SfxId.PlayerLandHard : SfxId.PlayerLandSoft;
             GameSfx.PlayAt(id, transform.position);
         }

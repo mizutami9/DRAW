@@ -33,9 +33,11 @@ namespace DrawBody.Prototype
         private ArmSwingController armSwingController;
         private DrawManager.Species builtSpecies = DrawManager.Species.Human;
         private int facingDirection = 1;
+        private bool turtleShellPose;
         private bool carryingPose;
         private int carryingDirection = 1;
         private Vector3 carryingHandWorldPosition;
+        private bool bodyAnimationWasActive;
 
         private struct GeneratedSegment
         {
@@ -91,6 +93,7 @@ namespace DrawBody.Prototype
 
             ClearGeneratedBody();
             builtSpecies = drawManager.CurrentSpecies;
+            turtleShellPose = false;
             bool hasTorsoBounds = TryGetPartLocalBounds(drawManager.GetBodyPoints(DrawManager.BodyPart.Torso), out Bounds torsoBounds);
 
             foreach (DrawManager.BodyPart part in drawManager.GetCurrentParts())
@@ -121,6 +124,7 @@ namespace DrawBody.Prototype
 
             ApplyFacing();
             ApplyPlayerColor();
+            playerController?.InvalidateBodyColliderCache();
         }
 
         private struct RuntimeBodySegment
@@ -338,6 +342,29 @@ namespace DrawBody.Prototype
             ApplyFacing();
         }
 
+        public void SetTurtleShellPose(bool active)
+        {
+            turtleShellPose = active && builtSpecies == DrawManager.Species.Turtle;
+            for (int i = 0; i < generatedSegments.Count; i++)
+            {
+                GeneratedSegment segment = generatedSegments[i];
+                if (segment.Part != DrawManager.BodyPart.Head)
+                {
+                    continue;
+                }
+
+                if (segment.Line != null)
+                {
+                    segment.Line.enabled = !turtleShellPose;
+                }
+                if (segment.Collider != null)
+                {
+                    segment.Collider.enabled = !turtleShellPose;
+                }
+            }
+            ApplyFacing();
+        }
+
         public Vector3 GetCarryAnchorWorld(int direction)
         {
             Bounds bounds;
@@ -408,7 +435,9 @@ namespace DrawBody.Prototype
         {
             if (bodyRoot != null)
             {
-                bodyRoot.localScale = new Vector3(facingDirection, 1f, 1f);
+                float shellWidth = turtleShellPose ? 1.12f : 1f;
+                float shellHeight = turtleShellPose ? 0.72f : 1f;
+                bodyRoot.localScale = new Vector3(facingDirection * shellWidth, shellHeight, 1f);
             }
 
             if (fallbackRenderer != null)
@@ -450,7 +479,7 @@ namespace DrawBody.Prototype
 
         private Vector2 GetHeadPivot(Bounds bounds, DrawManager.Species species)
         {
-            if (species == DrawManager.Species.Cat || species == DrawManager.Species.Snake)
+            if (species == DrawManager.Species.Cat || species == DrawManager.Species.Turtle)
             {
                 return new Vector2(bounds.min.x, bounds.center.y);
             }
@@ -497,7 +526,7 @@ namespace DrawBody.Prototype
                 }
             }
 
-            if (species == DrawManager.Species.Snake && part == DrawManager.BodyPart.Head)
+            if (species == DrawManager.Species.Turtle && part == DrawManager.BodyPart.Head)
             {
                 point = new Vector2(torsoBounds.max.x, centerY);
                 return true;
@@ -654,6 +683,23 @@ namespace DrawBody.Prototype
             float speed = rb != null ? Mathf.Abs(rb.linearVelocity.x) : 0f;
             bool moving = speed > 0.12f;
             float moveBlend = moving && (playerController == null || playerController.IsGrounded) ? Mathf.Clamp01(speed / 4f) : 0f;
+            bool armSwinging = armSwingController != null && armSwingController.IsSwinging;
+            bool animationActive = moveBlend > 0.001f || carryingPose || armSwinging;
+            if (!animationActive)
+            {
+                if (bodyAnimationWasActive)
+                {
+                    RestoreGeneratedSegmentGeometry();
+                    if (turtleShellPose)
+                    {
+                        SetTurtleShellPose(true);
+                    }
+                    bodyAnimationWasActive = false;
+                }
+                return;
+            }
+
+            bodyAnimationWasActive = true;
             DrawManager.Species species = builtSpecies;
             float phase = Time.time * walkAnimationSpeed;
             bool carryArmApplied = false;
@@ -670,7 +716,7 @@ namespace DrawBody.Prototype
                 float angle = 0f;
                 float scaleX = 1f;
                 float scaleY = 1f;
-                if (armSwingController != null && armSwingController.IsSwinging && IsHumanArm(segment.Part))
+                if (armSwinging && IsHumanArm(segment.Part))
                 {
                     continue;
                 }
@@ -1005,8 +1051,8 @@ namespace DrawBody.Prototype
                 case DrawManager.Species.Bird:
                     ApplyBirdWalk(part, phase, blend, ref angle, ref offsetY);
                     break;
-                case DrawManager.Species.Snake:
-                    ApplySnakeWalk(part, phase, blend, ref angle, ref offsetY);
+                case DrawManager.Species.Turtle:
+                    ApplyTurtleWalk(part, phase, blend, ref angle, ref offsetY);
                     break;
                 case DrawManager.Species.Slime:
                     ApplySlimeWalk(part, phase, blend, ref offsetY, ref scaleX, ref scaleY);
@@ -1090,7 +1136,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void ApplySnakeWalk(DrawManager.BodyPart part, float phase, float blend, ref float angle, ref float offsetY)
+        private void ApplyTurtleWalk(DrawManager.BodyPart part, float phase, float blend, ref float angle, ref float offsetY)
         {
             switch (part)
             {

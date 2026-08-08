@@ -1,0 +1,80 @@
+{
+    "id": "2-3",
+    "displayName": "Stage 2-3",
+    "backgroundColorHex": "#FBF9EDFF",
+    "ruleMode": 0,
+    "timeLimitSeconds": 60.0,
+    "collectionTarget": 163,
+    "requiredCollectionCount": 1,
+    "objects": [
+        {
+            "objectId": "obj_bcde8b91f9204e76",
+            "type": 2,
+            "position": {
+                "x": -5.0,
+                "y": 1.399999976158142
+            },
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.699999988079071
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "Platform_Start",
+            "type": 0,
+            "position": {
+                "x": -2.0,
+                "y": -1.0
+            },
+            "size": {
+                "x": 7.0,
+                "y": 0.44999998807907107
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_7104b76eb9fb443a",
+            "type": 3,
+            "position": {
+                "x": 1.0,
+                "y": 0.5
+            },
+            "size": {
+                "x": 1.149999976158142,
+                "y": 2.049999952316284
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        }
+    ]
+}

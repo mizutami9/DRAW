@@ -6,6 +6,7 @@ namespace DrawBody.Prototype
     public sealed class GameBgm : MonoBehaviour
     {
         public const string VolumePlayerPrefsKey = "option_bgm_volume";
+        public const float DefaultMasterVolume = 0.05f;
         private const float CrossFadeSeconds = 0.65f;
 
         private static GameBgm instance;
@@ -15,7 +16,7 @@ namespace DrawBody.Prototype
         private string currentTrack;
         private string requestedTrack;
         private int requestVersion;
-        private float masterVolume = 0.8f;
+        private float masterVolume = DefaultMasterVolume;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -101,7 +102,7 @@ namespace DrawBody.Prototype
             }
 
             instance = this;
-            masterVolume = PlayerPrefs.GetFloat(VolumePlayerPrefsKey, 0.8f);
+            masterVolume = PlayerPrefs.GetFloat(VolumePlayerPrefsKey, DefaultMasterVolume);
             sourceA = CreateSource("BgmSourceA");
             sourceB = CreateSource("BgmSourceB");
             AudioListener.volume = 1f;

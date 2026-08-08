@@ -65,6 +65,8 @@ namespace DrawBody.Prototype
                     return CreateCollectible(data, parent);
                 case StageObjectType.ChallengeClock:
                     return CreateChallengeClock(data, parent);
+                case StageObjectType.BeamEmitter:
+                    return CreateBeamEmitter(data, parent);
                 case StageObjectType.Elevator:
                     return CreateElevator(data, parent);
                 case StageObjectType.BalanceScale:
@@ -197,6 +199,9 @@ namespace DrawBody.Prototype
                     case StageObjectType.SpikeDropper:
                         size = new Vector2(1.8f, 1.4f);
                         break;
+                    case StageObjectType.BeamEmitter:
+                        size = new Vector2(1.25f, 0.9f);
+                        break;
                     case StageObjectType.Button:
                     case StageObjectType.WeightButton:
                     case StageObjectType.SimultaneousButton:
@@ -256,7 +261,7 @@ namespace DrawBody.Prototype
                                     || type == StageObjectType.ConveyorLeft
                                     || type == StageObjectType.ConveyorRight
                                         ? 3f
-                                        : type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper ? 2f : 0f,
+                                        : type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BeamEmitter ? 2f : 0f,
                 movementAngle = type == StageObjectType.ConveyorLeft ? 180f : 0f,
                 spawnPattern = 0,
                 spawnBoxSize = type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper ? 0.9f : 0f
@@ -1251,6 +1256,70 @@ namespace DrawBody.Prototype
                     data.spawnPattern,
                     data.spawnBoxSize);
             }
+            return obj;
+        }
+
+        private GameObject CreateBeamEmitter(StageObjectData data, Transform parent)
+        {
+            GameObject obj = new GameObject(data.objectId);
+            obj.name = StageObjectType.BeamEmitter.ToString();
+            obj.transform.SetParent(parent, false);
+            obj.transform.position = data.position;
+            obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
+            obj.layer = groundLayer;
+
+            BoxCollider2D selectionCollider = obj.AddComponent<BoxCollider2D>();
+            selectionCollider.size = data.size;
+            selectionCollider.isTrigger = true;
+
+            Color casing = new Color(0.25f, 0.72f, 0.86f, 1f);
+            AddSolidPaperBase(obj.transform, data.size);
+            AddSolidWash(obj.transform, data.size, casing);
+            AddSolidPencilFill(obj.transform, data.size, casing);
+            AddSolidStraightBoxOutline(obj.transform, data.size);
+
+            float halfWidth = data.size.x * 0.5f;
+            float halfHeight = data.size.y * 0.5f;
+            Color beamColor = new Color(1f, 0.12f, 0.08f, 1f);
+            AddDoodleLine("Beam Direction", obj.transform, new[]
+            {
+                new Vector3(-halfWidth * 0.34f, 0f, -0.06f),
+                new Vector3(halfWidth * 0.42f, 0f, -0.06f),
+                new Vector3(halfWidth * 0.18f, halfHeight * 0.24f, -0.06f),
+                new Vector3(halfWidth * 0.42f, 0f, -0.06f),
+                new Vector3(halfWidth * 0.18f, -halfHeight * 0.24f, -0.06f)
+            }, beamColor, 0.065f, 22);
+
+            GameObject muzzle = new GameObject("Beam Muzzle");
+            muzzle.transform.SetParent(obj.transform, false);
+            muzzle.transform.localPosition = new Vector3(halfWidth + 0.08f, 0f, -0.08f);
+            AddDoodleLine("Muzzle Top", muzzle.transform, new[]
+            {
+                new Vector3(-0.13f, halfHeight * 0.28f, 0f),
+                new Vector3(0.13f, halfHeight * 0.18f, 0f)
+            }, Color.black, 0.05f, 23);
+            AddDoodleLine("Muzzle Bottom", muzzle.transform, new[]
+            {
+                new Vector3(-0.13f, -halfHeight * 0.28f, 0f),
+                new Vector3(0.13f, -halfHeight * 0.18f, 0f)
+            }, Color.black, 0.05f, 23);
+
+            GameObject pulse = new GameObject("Beam Pulse");
+            pulse.transform.SetParent(obj.transform, false);
+            LineRenderer pulseLine = pulse.AddComponent<LineRenderer>();
+            pulseLine.useWorldSpace = true;
+            pulseLine.positionCount = 2;
+            pulseLine.startWidth = 0.14f;
+            pulseLine.endWidth = 0.1f;
+            pulseLine.material = GetLineMaterial();
+            pulseLine.startColor = new Color(1f, 0.18f, 0.08f, 0.98f);
+            pulseLine.endColor = new Color(1f, 0.72f, 0.12f, 0.92f);
+            pulseLine.sortingOrder = 40;
+            pulseLine.enabled = false;
+
+            StageBeamEmitter emitter = obj.AddComponent<StageBeamEmitter>();
+            emitter.Configure(muzzle.transform, pulseLine, data.actionStrength);
+            AddEditorMetadata(obj, data);
             return obj;
         }
 
@@ -2978,6 +3047,9 @@ namespace DrawBody.Prototype
             float bottom = -size.y * 0.5f;
             float top = size.y * 0.5f;
             Color pencil = new Color(color.r, color.g, color.b, 0.32f);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
 
             int index = 0;
             for (int layer = 0; layer < 3; layer++)
@@ -3001,17 +3073,12 @@ namespace DrawBody.Prototype
                         if (endX > left && startX < right && endY > bottom)
                         {
                             Color layerColor = new Color(pencil.r, pencil.g, pencil.b, 0.14f + layer * 0.045f + Mathf.Abs(Mathf.Sin(index * 0.71f)) * 0.07f);
-                            AddDoodleLine(
-                                $"Solid Pencil Stroke {index}",
-                                parent,
-                                new[]
-                                {
-                                    new Vector3(startX, startY, 0f),
-                                    new Vector3(endX, endY, 0f)
-                                },
-                                layerColor,
+                            AppendPencilQuad(
+                                vertices, colors, triangles,
+                                new Vector3(startX, startY, 0f),
+                                new Vector3(endX, endY, 0f),
                                 0.01f + layer * 0.002f,
-                                sortingOrder);
+                                layerColor);
                         }
 
                         x += 0.34f + Mathf.Sin(index * 3.23f) * 0.045f;
@@ -3025,18 +3092,15 @@ namespace DrawBody.Prototype
             for (int i = 0; i < 5; i++)
             {
                 float y = Mathf.Lerp(bottom + 0.16f, top - 0.12f, (i + 1f) / 6f);
-                AddDoodleLine(
-                    $"Solid Soft Horizontal Grain {i}",
-                    parent,
-                    new[]
-                    {
-                        new Vector3(left + 0.1f, y + Mathf.Sin(i * 1.3f) * 0.025f, 0f),
-                        new Vector3(right - 0.1f, y + Mathf.Cos(i * 1.9f) * 0.025f, 0f)
-                    },
-                    new Color(color.r, color.g, color.b, 0.13f),
+                AppendPencilQuad(
+                    vertices, colors, triangles,
+                    new Vector3(left + 0.1f, y + Mathf.Sin(i * 1.3f) * 0.025f, 0f),
+                    new Vector3(right - 0.1f, y + Mathf.Cos(i * 1.9f) * 0.025f, 0f),
                     0.01f,
-                    5);
+                    new Color(color.r, color.g, color.b, 0.13f));
             }
+
+            CreatePencilMesh(parent, "Solid Pencil Fill Mesh", vertices, colors, triangles, sortingOrder);
         }
 
         private static void AddDoorDoodle(Transform parent)
@@ -3056,6 +3120,9 @@ namespace DrawBody.Prototype
             Color pencil = new Color(color.r, color.g, color.b, 0.22f);
             int index = 0;
             float inverseScale = 1f / Mathf.Max(Mathf.Max(size.x, size.y), 0.1f);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
 
             for (int layer = 0; layer < 3; layer++)
             {
@@ -3067,7 +3134,7 @@ namespace DrawBody.Prototype
                     {
                         Vector3 start = new Vector3(Mathf.Clamp(x, -0.5f, 0.5f), Mathf.Clamp(y + Mathf.Sin(index) * 0.03f, -0.48f, 0.48f), -0.02f);
                         Vector3 end = new Vector3(Mathf.Clamp(start.x + 0.22f + Mathf.Abs(Mathf.Sin(index * 0.7f)) * 0.18f, -0.5f, 0.5f), Mathf.Clamp(start.y + 0.25f, -0.48f, 0.48f), -0.02f);
-                        AddDoodleLine($"Pencil {index}", parent, new[] { start, end }, pencil, 0.012f * inverseScale, 4);
+                        AppendPencilQuad(vertices, colors, triangles, start, end, 0.012f * inverseScale, pencil);
                         x += 0.16f + Mathf.Abs(Mathf.Sin(index * 1.9f)) * 0.07f;
                         index++;
                     }
@@ -3075,6 +3142,68 @@ namespace DrawBody.Prototype
                     y += 0.17f;
                 }
             }
+
+            CreatePencilMesh(parent, "Pencil Fill Mesh", vertices, colors, triangles, 4);
+        }
+
+        private static void AppendPencilQuad(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector3 from,
+            Vector3 to,
+            float width,
+            Color color)
+        {
+            Vector2 delta = (Vector2)(to - from);
+            if (delta.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 normal = new Vector2(-delta.y, delta.x).normalized * (width * 0.5f);
+            int first = vertices.Count;
+            vertices.Add(from + (Vector3)normal);
+            vertices.Add(from - (Vector3)normal);
+            vertices.Add(to + (Vector3)normal);
+            vertices.Add(to - (Vector3)normal);
+            colors.Add(color);
+            colors.Add(color);
+            colors.Add(color);
+            colors.Add(color);
+            triangles.Add(first);
+            triangles.Add(first + 2);
+            triangles.Add(first + 1);
+            triangles.Add(first + 2);
+            triangles.Add(first + 3);
+            triangles.Add(first + 1);
+        }
+
+        private static void CreatePencilMesh(
+            Transform parent,
+            string name,
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            int sortingOrder)
+        {
+            if (parent == null || vertices.Count == 0)
+            {
+                return;
+            }
+
+            GameObject visual = new GameObject(name, typeof(MeshFilter), typeof(MeshRenderer));
+            visual.transform.SetParent(parent, false);
+            Mesh mesh = new Mesh { name = name };
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+            mesh.SetVertices(vertices);
+            mesh.SetColors(colors);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateBounds();
+            visual.GetComponent<MeshFilter>().sharedMesh = mesh;
+            MeshRenderer renderer = visual.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = GetLineMaterial();
+            renderer.sortingOrder = sortingOrder;
         }
 
         private static void AddDoodleCircle(Transform parent, float radius, Color color, float width)
