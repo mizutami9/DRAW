@@ -16,6 +16,7 @@ namespace DrawBody.Prototype
             Exit,
             Title,
             Back,
+            StageSelectBack,
             RandomMatch,
             Room
         }
@@ -63,11 +64,14 @@ namespace DrawBody.Prototype
                 case Command.Back:
                     stageManager?.CloseTitleSubmenu();
                     break;
+                case Command.StageSelectBack:
+                    stageManager?.BackFromStageSelect();
+                    break;
                 case Command.RandomMatch:
-                    SetStatus("Matching...\n[.....]");
+                    SetStatus(LocalizationManager.T("multi_matching"));
                     break;
                 case Command.Room:
-                    SetStatus("Create Room\nRoom Name  [........]\nPlayers  2 / 3 / 4\nPublic / Private\n\nJoin Room\nRoom ID  [......]");
+                    SetStatus(LocalizationManager.T("multi_room_status_default"));
                     break;
             }
 

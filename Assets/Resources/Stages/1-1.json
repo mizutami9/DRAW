@@ -1,6 +1,7 @@
 {
     "id": "1-1",
     "displayName": "Stage 1-1",
+    "backgroundColorHex": "#1CFBEC28",
     "objects": [
         {
             "objectId": "stage1_start",
@@ -14,81 +15,11 @@
                 "y": 0.699999988079071
             },
             "rotation": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "stage1_goal",
-            "type": 3,
-            "position": {
-                "x": 22.5,
-                "y": 9.350000381469727
-            },
-            "size": {
-                "x": 1.149999976158142,
-                "y": 2.049999952316284
-            },
-            "rotation": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "Platform_653f6",
-            "type": 0,
-            "position": {
-                "x": -1.75,
-                "y": -2.25
-            },
-            "size": {
-                "x": 12.5,
-                "y": 3.5
-            },
-            "rotation": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "Platform_3601e",
-            "type": 0,
-            "position": {
-                "x": 15.0,
-                "y": -2.0
-            },
-            "size": {
-                "x": 10.5,
-                "y": 3.5
-            },
-            "rotation": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "Platform_76caf",
-            "type": 0,
-            "position": {
-                "x": 15.0,
-                "y": 2.5
-            },
-            "size": {
-                "x": 1.0,
-                "y": 3.5
-            },
-            "rotation": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "Platform_659fd",
-            "type": 0,
-            "position": {
-                "x": 21.0,
-                "y": 2.0
-            },
-            "size": {
-                "x": 3.5,
-                "y": 12.0
-            },
-            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -96,76 +27,1461 @@
             "objectId": "Button_f9e3a5e",
             "type": 25,
             "position": {
-                "x": 10.5,
-                "y": 0.0
+                "x": 10.0,
+                "y": -0.16799993813037873
             },
             "size": {
                 "x": 1.0,
                 "y": 0.4000000059604645
             },
             "rotation": 0.0,
-            "linkTargetId": "Platform_81590",
-            "linkAction": "RevealGrow"
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "Platform_0ac2f",
+            "linkAction": "RevealGrowRightToLeft"
         },
         {
-            "objectId": "Platform_81590",
+            "objectId": "Platform_06a40",
             "type": 0,
             "position": {
-                "x": 7.0,
-                "y": -0.5
+                "x": -2.75,
+                "y": -2.0
             },
             "size": {
-                "x": 6.0,
-                "y": 0.699999988079071
+                "x": 12.5,
+                "y": 3.4000000953674318
             },
             "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
         {
-            "objectId": "BalanceScale_3",
-            "type": 4,
+            "objectId": "Platform_0ac2f",
+            "type": 0,
             "position": {
-                "x": 17.5,
-                "y": 4.5
+                "x": 6.25,
+                "y": -1.0
             },
             "size": {
-                "x": 3.5,
-                "y": 8.600000381469727
+                "x": 5.5,
+                "y": 0.8999999761581421
             },
             "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
         {
-            "objectId": "JumpPad_c7559f",
-            "type": 61,
+            "objectId": "Platform_18a19",
+            "type": 0,
             "position": {
-                "x": 13.0,
-                "y": 0.0
+                "x": 12.375,
+                "y": -2.5
             },
             "size": {
-                "x": 2.0,
-                "y": 0.4000000059604645
+                "x": 6.75,
+                "y": 4.400000095367432
             },
             "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
         {
-            "objectId": "Button_a8e8f3b",
+            "objectId": "Platform_35bb7",
+            "type": 0,
+            "position": {
+                "x": 18.5,
+                "y": 4.0
+            },
+            "size": {
+                "x": 16.992809295654298,
+                "y": 5.5
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "Button_db2acc2",
             "type": 25,
             "position": {
-                "x": 18.0,
-                "y": 0.0
+                "x": 17.0,
+                "y": 12.62840461730957
             },
             "size": {
                 "x": 1.0,
-                "y": 0.699999988079071
+                "y": 0.4000000059604645
             },
             "rotation": 0.0,
-            "linkTargetId": "JumpPad_c7559f",
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "JumpPad_6fab90",
             "linkAction": "Reveal"
+        },
+        {
+            "objectId": "JumpPad_6fab90",
+            "type": 61,
+            "position": {
+                "x": 14.0,
+                "y": 0.0
+            },
+            "size": {
+                "x": 3.0,
+                "y": 0.4000000059604645
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 60.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "BackgroundStar",
+            "type": 149,
+            "position": {
+                "x": -6.0,
+                "y": 3.0
+            },
+            "size": {
+                "x": 5.595937252044678,
+                "y": 5.595937252044678
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "BackgroundTree",
+            "type": 93,
+            "position": {
+                "x": -0.5,
+                "y": 1.5
+            },
+            "size": {
+                "x": 4.797613143920898,
+                "y": 4.797613143920898
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "BackgroundGras",
+            "type": 94,
+            "position": {
+                "x": -3.0,
+                "y": 0.0
+            },
+            "size": {
+                "x": 2.4000000953674318,
+                "y": 2.4000000953674318
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "BackgroundClou",
+            "type": 97,
+            "position": {
+                "x": 9.5,
+                "y": 7.5
+            },
+            "size": {
+                "x": 7.613212585449219,
+                "y": 7.613212585449219
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_65dcf48cec9c449f",
+            "type": 97,
+            "position": {
+                "x": 0.5,
+                "y": 9.0
+            },
+            "size": {
+                "x": 7.04926872253418,
+                "y": 7.04926872253418
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_5513a71cebe3446f",
+            "type": 146,
+            "position": {
+                "x": 17.0,
+                "y": 13.5
+            },
+            "size": {
+                "x": 1.2005974054336548,
+                "y": 1.2005974054336548
+            },
+            "rotation": -105.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_cef90766310742f9",
+            "type": 98,
+            "position": {
+                "x": 10.5,
+                "y": 3.5
+            },
+            "size": {
+                "x": 2.4000000953674318,
+                "y": 2.4000000953674318
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_a6e5e56447904b54",
+            "type": 150,
+            "position": {
+                "x": 53.5,
+                "y": 21.0
+            },
+            "size": {
+                "x": 9.59045696258545,
+                "y": 9.59045696258545
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_3554fe509e48405d",
+            "type": 146,
+            "position": {
+                "x": 10.5,
+                "y": 2.0
+            },
+            "size": {
+                "x": 2.222222328186035,
+                "y": 2.222222328186035
+            },
+            "rotation": -105.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_e432a078a91543ee",
+            "type": 98,
+            "position": {
+                "x": 17.0,
+                "y": 14.5
+            },
+            "size": {
+                "x": 1.905197262763977,
+                "y": 1.905197262763977
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_d1cc36728e53484b",
+            "type": 0,
+            "position": {
+                "x": 23.628570556640626,
+                "y": 11.499317169189454
+            },
+            "size": {
+                "x": 4.757143020629883,
+                "y": 2.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_a7fed112a25642c1",
+            "type": 0,
+            "position": {
+                "x": 4.5,
+                "y": 26.0
+            },
+            "size": {
+                "x": 12.0,
+                "y": 5.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_3fb964f3b70d413d",
+            "type": 0,
+            "position": {
+                "x": -0.5000001192092896,
+                "y": 21.25
+            },
+            "size": {
+                "x": 4.5,
+                "y": 2.0
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_0207a5c3b50548be",
+            "type": 0,
+            "position": {
+                "x": 3.5,
+                "y": 18.5
+            },
+            "size": {
+                "x": 10.0,
+                "y": 1.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_51a1d398d022421e",
+            "type": 56,
+            "position": {
+                "x": 1.5,
+                "y": 20.0
+            },
+            "size": {
+                "x": 1.350000023841858,
+                "y": 1.600000023841858
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "obj_97cacc6c611a4413",
+            "linkAction": "Unlock"
+        },
+        {
+            "objectId": "obj_97cacc6c611a4413",
+            "type": 89,
+            "position": {
+                "x": 38.5,
+                "y": 13.5
+            },
+            "size": {
+                "x": 1.4000000953674317,
+                "y": 1.6000003814697266
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "obj_7b4b8157480f41fc",
+            "linkAction": "Hide"
+        },
+        {
+            "objectId": "obj_737a1c53c1984216",
+            "type": 56,
+            "position": {
+                "x": -0.5,
+                "y": 35.5
+            },
+            "size": {
+                "x": 1.350000023841858,
+                "y": 1.600000023841858
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "obj_07fe2ebe0ed84257",
+            "linkAction": "Unlock"
+        },
+        {
+            "objectId": "obj_07fe2ebe0ed84257",
+            "type": 89,
+            "position": {
+                "x": 43.5,
+                "y": 13.5
+            },
+            "size": {
+                "x": 1.4000000953674317,
+                "y": 1.6000003814697266
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "obj_189b60d7a10442c9",
+            "linkAction": "Hide"
+        },
+        {
+            "objectId": "obj_60fd3f038bb34cc6",
+            "type": 0,
+            "position": {
+                "x": 25.0,
+                "y": 8.249317169189454
+            },
+            "size": {
+                "x": 4.5,
+                "y": 2.0
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_75287822a98f4a14",
+            "type": 0,
+            "position": {
+                "x": 31.0,
+                "y": 4.999317169189453
+            },
+            "size": {
+                "x": 14.0,
+                "y": 2.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_d269612182254432",
+            "type": 0,
+            "position": {
+                "x": 37.0,
+                "y": 8.149612426757813
+            },
+            "size": {
+                "x": 4.300590515136719,
+                "y": 2.0
+            },
+            "rotation": 90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_50219aa925ac49a9",
+            "type": 0,
+            "position": {
+                "x": 41.25,
+                "y": 11.299907684326172
+            },
+            "size": {
+                "x": 10.5,
+                "y": 2.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_e3c4aed8b92b4ff0",
+            "type": 47,
+            "position": {
+                "x": -0.5,
+                "y": 29.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_c0e33a134dd84f5c",
+            "type": 47,
+            "position": {
+                "x": 5.5,
+                "y": 22.0
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_3bdfe638dc0344b3",
+            "type": 47,
+            "position": {
+                "x": -0.5,
+                "y": 31.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_a66d76244fa14e1b",
+            "type": 47,
+            "position": {
+                "x": 3.5,
+                "y": 22.0
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_eec80455ca2c4b39",
+            "type": 47,
+            "position": {
+                "x": -0.5,
+                "y": 33.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_d02bf78af53745f1",
+            "type": 47,
+            "position": {
+                "x": 5.5,
+                "y": 20.0
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_9027568a2b934fbb",
+            "type": 47,
+            "position": {
+                "x": 3.5,
+                "y": 20.0
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_5c24b24f770d403c",
+            "type": 47,
+            "position": {
+                "x": 1.5,
+                "y": 29.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_29d0e96c7e2745c6",
+            "type": 47,
+            "position": {
+                "x": 1.5,
+                "y": 31.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_cb0413f4753d4ce0",
+            "type": 47,
+            "position": {
+                "x": 1.5,
+                "y": 33.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_17ed0a4551ea4177",
+            "type": 47,
+            "position": {
+                "x": 3.5,
+                "y": 29.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_1681e889e8c94e2c",
+            "type": 47,
+            "position": {
+                "x": 3.5,
+                "y": 31.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_ab5c376d423643b0",
+            "type": 47,
+            "position": {
+                "x": 3.5,
+                "y": 33.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_1dfd71333fd44381",
+            "type": 47,
+            "position": {
+                "x": 5.5,
+                "y": 29.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_d1645b8951a24d7b",
+            "type": 47,
+            "position": {
+                "x": 5.5,
+                "y": 31.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_661d00089e8b4361",
+            "type": 47,
+            "position": {
+                "x": 5.5,
+                "y": 33.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_fd7a4f7d3efb475f",
+            "type": 47,
+            "position": {
+                "x": 7.5,
+                "y": 29.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_afa85d8c0bea4a5b",
+            "type": 47,
+            "position": {
+                "x": 7.5,
+                "y": 31.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_f578f9021a954834",
+            "type": 47,
+            "position": {
+                "x": 7.5,
+                "y": 33.5
+            },
+            "size": {
+                "x": 1.9000000953674317,
+                "y": 1.9000000953674317
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_eb166f5873f24e96",
+            "type": 0,
+            "position": {
+                "x": 52.75,
+                "y": 11.299907684326172
+            },
+            "size": {
+                "x": 12.5,
+                "y": 2.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_189b60d7a10442c9",
+            "type": 0,
+            "position": {
+                "x": 45.5,
+                "y": 25.399953842163087
+            },
+            "size": {
+                "x": 26.200092315673829,
+                "y": 2.0
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "stage1_boundary",
+            "type": 151,
+            "position": {
+                "x": 25.0,
+                "y": 17.5
+            },
+            "size": {
+                "x": 69.0,
+                "y": 43.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.5,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_b44c3402ed6d4547",
+            "type": 3,
+            "position": {
+                "x": 53.0,
+                "y": 16.0
+            },
+            "size": {
+                "x": 3.0,
+                "y": 4.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_7b4b8157480f41fc",
+            "type": 0,
+            "position": {
+                "x": 41.0,
+                "y": 25.399953842163087
+            },
+            "size": {
+                "x": 26.200092315673829,
+                "y": 2.0
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_af33561ba27548a5",
+            "type": 147,
+            "position": {
+                "x": 14.0,
+                "y": 2.0
+            },
+            "size": {
+                "x": 2.4000000953674318,
+                "y": 2.4000000953674318
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_36e512f83a8d45ae",
+            "type": 99,
+            "position": {
+                "x": 14.0,
+                "y": 17.5
+            },
+            "size": {
+                "x": 2.4000000953674318,
+                "y": 2.4000000953674318
+            },
+            "rotation": 151.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_0c41dbc7a3fa4b16",
+            "type": 99,
+            "position": {
+                "x": 13.5,
+                "y": 23.0
+            },
+            "size": {
+                "x": 2.4000000953674318,
+                "y": 2.4000000953674318
+            },
+            "rotation": 88.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_c8a8328abeca424f",
+            "type": 99,
+            "position": {
+                "x": 14.0,
+                "y": 5.5
+            },
+            "size": {
+                "x": 4.442234039306641,
+                "y": 4.442234039306641
+            },
+            "rotation": 88.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_d78bcaf3ab184c4b",
+            "type": 99,
+            "position": {
+                "x": 34.5,
+                "y": 11.0
+            },
+            "size": {
+                "x": 4.442234039306641,
+                "y": 4.442234039306641
+            },
+            "rotation": 88.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_1a3f9186206b4def",
+            "type": 152,
+            "position": {
+                "x": 38.0,
+                "y": 17.5
+            },
+            "size": {
+                "x": 4.89776086807251,
+                "y": 3.265174150466919
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_056fa2c21fda4f14",
+            "type": 152,
+            "position": {
+                "x": 43.0,
+                "y": 17.5
+            },
+            "size": {
+                "x": 4.199040412902832,
+                "y": 2.7993602752685549
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_1fe0430afdac4408",
+            "type": 146,
+            "position": {
+                "x": 38.5,
+                "y": 15.5
+            },
+            "size": {
+                "x": 1.2005974054336548,
+                "y": 1.2005974054336548
+            },
+            "rotation": -105.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_1d1aa4c7c4fb4fa9",
+            "type": 146,
+            "position": {
+                "x": 43.5,
+                "y": 15.5
+            },
+            "size": {
+                "x": 1.2005974054336548,
+                "y": 1.2005974054336548
+            },
+            "rotation": -105.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_09d3518405a64f23",
+            "type": 97,
+            "position": {
+                "x": 16.0,
+                "y": 33.0
+            },
+            "size": {
+                "x": 7.613212585449219,
+                "y": 7.613212585449219
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_567cf94827744575",
+            "type": 97,
+            "position": {
+                "x": 24.0,
+                "y": 30.0
+            },
+            "size": {
+                "x": 7.613212585449219,
+                "y": 7.613212585449219
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_e1fd10dcf7794f7c",
+            "type": 97,
+            "position": {
+                "x": 35.5,
+                "y": 33.5
+            },
+            "size": {
+                "x": 7.613212585449219,
+                "y": 7.613212585449219
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_14f34d651a9b4a70",
+            "type": 93,
+            "position": {
+                "x": 19.5,
+                "y": 14.5
+            },
+            "size": {
+                "x": 4.797613143920898,
+                "y": 4.797613143920898
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_7d02b0fbbca34193",
+            "type": 94,
+            "position": {
+                "x": 23.0,
+                "y": 13.0
+            },
+            "size": {
+                "x": 2.4000000953674318,
+                "y": 2.4000000953674318
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_a19afa71ac514090",
+            "type": 95,
+            "position": {
+                "x": 22.0,
+                "y": 13.0
+            },
+            "size": {
+                "x": 1.5124069452285767,
+                "y": 1.5124069452285767
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_6449a07710144e69",
+            "type": 107,
+            "position": {
+                "x": 34.5,
+                "y": 26.5
+            },
+            "size": {
+                "x": 13.047709465026856,
+                "y": 13.047709465026856
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_a490664438e14854",
+            "type": 123,
+            "position": {
+                "x": -4.5,
+                "y": 35.0
+            },
+            "size": {
+                "x": 6.043611526489258,
+                "y": 6.043611526489258
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_68fe577b294e490d",
+            "type": 117,
+            "position": {
+                "x": 56.0,
+                "y": 26.0
+            },
+            "size": {
+                "x": 4.442234039306641,
+                "y": 4.442234039306641
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_7e648879817e4309",
+            "type": 118,
+            "position": {
+                "x": 51.5,
+                "y": 28.5
+            },
+            "size": {
+                "x": 4.442234039306641,
+                "y": 4.442234039306641
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_60e98a49e4794632",
+            "type": 119,
+            "position": {
+                "x": 49.0,
+                "y": 25.0
+            },
+            "size": {
+                "x": 3.808499336242676,
+                "y": 3.808499336242676
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
         }
     ]
 }

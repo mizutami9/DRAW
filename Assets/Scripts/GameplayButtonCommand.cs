@@ -16,7 +16,12 @@ namespace DrawBody.Prototype
             StageSelect,
             AddCharacter,
             DeleteCharacter,
-            SwitchCharacter
+            SwitchCharacter,
+            Continue,
+            Option,
+            Title,
+            Exit,
+            LeaveSession
         }
 
         [SerializeField] private StageManager stageManager;
@@ -71,10 +76,29 @@ namespace DrawBody.Prototype
                     stageManager?.EnterDrawingMode();
                     break;
                 case Command.Retry:
+                    uiManager?.HideMenu();
                     stageManager?.Retry();
                     break;
                 case Command.Menu:
                     uiManager?.ToggleMenu();
+                    break;
+                case Command.Continue:
+                    uiManager?.HideMenu();
+                    break;
+                case Command.Option:
+                    uiManager?.HideMenu();
+                    stageManager?.OpenOptionMenu();
+                    break;
+                case Command.Title:
+                    uiManager?.HideMenu();
+                    stageManager?.EnterTitle();
+                    break;
+                case Command.Exit:
+                    uiManager?.HideMenu();
+                    stageManager?.ExitGame();
+                    break;
+                case Command.LeaveSession:
+                    stageManager?.RequestLeaveSession();
                     break;
                 case Command.CloseDrawing:
                     stageManager?.CancelDrawingMode();
@@ -94,6 +118,11 @@ namespace DrawBody.Prototype
             }
 
             EventSystem.current?.SetSelectedGameObject(null);
+        }
+
+        public void Configure(Command nextCommand)
+        {
+            command = nextCommand;
         }
 
         private void RefreshOnlineVisibility()

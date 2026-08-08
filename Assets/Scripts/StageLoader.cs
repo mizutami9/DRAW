@@ -9,9 +9,59 @@ namespace DrawBody.Prototype
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private StageObjectFactory objectFactory;
 
+        private bool hasStageFallBoundary;
+        private float stageFallBoundaryY;
+        public StageData CurrentStageData { get; private set; }
+
+        public int CountLoadedCollectibles(StageObjectType type)
+        {
+            if (stageRoot == null)
+            {
+                return 0;
+            }
+
+            StageCollectible[] collectibles = stageRoot.GetComponentsInChildren<StageCollectible>(false);
+            int count = 0;
+            for (int i = 0; i < collectibles.Length; i++)
+            {
+                if (collectibles[i] != null && collectibles[i].CollectibleType == type)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public StageCollectible FindLoadedCollectible(string objectId)
+        {
+            if (stageRoot == null || string.IsNullOrEmpty(objectId))
+            {
+                return null;
+            }
+
+            StageCollectible[] collectibles = stageRoot.GetComponentsInChildren<StageCollectible>(false);
+            for (int i = 0; i < collectibles.Length; i++)
+            {
+                if (collectibles[i] != null && collectibles[i].ObjectId == objectId)
+                {
+                    return collectibles[i];
+                }
+            }
+            return null;
+        }
+
+        public bool TryGetStageFallBoundaryY(out float boundaryY)
+        {
+            boundaryY = stageFallBoundaryY;
+            return hasStageFallBoundary;
+        }
+
         public void ShowFallbackStage()
         {
+            CurrentStageData = null;
+            ResetStageFallBoundary();
             ClearStageRoot();
+            StageBackgroundAppearance.Reset();
             if (fallbackStageRoot != null)
             {
                 fallbackStageRoot.SetActive(true);
@@ -20,7 +70,10 @@ namespace DrawBody.Prototype
 
         public void HideStages()
         {
+            CurrentStageData = null;
+            ResetStageFallBoundary();
             ClearStageRoot();
+            StageBackgroundAppearance.Reset();
             if (fallbackStageRoot != null)
             {
                 fallbackStageRoot.SetActive(false);
@@ -61,11 +114,16 @@ namespace DrawBody.Prototype
             }
 
             EnsureReferences();
+            CurrentStageData = data;
+            RefreshStageFallBoundary(data.objects);
             ClearStageRoot();
+            StageBackgroundAppearance.Apply(StageBackgroundAppearance.Parse(data.backgroundColorHex));
             if (fallbackStageRoot != null)
             {
                 fallbackStageRoot.SetActive(false);
             }
+
+            objectFactory.FitSeparateBridges(data.objects);
 
             for (int i = 0; i < data.objects.Length; i++)
             {
@@ -88,7 +146,64 @@ namespace DrawBody.Prototype
                 objectFactory.Create(obj, stageRoot);
             }
 
+            objectFactory.RefreshBridgeConnectionVisuals(data.objects, stageRoot);
+
             ConfigureStageGimmicks(data);
+        }
+
+        private void RefreshStageFallBoundary(StageObjectData[] objects)
+        {
+            ResetStageFallBoundary();
+            if (objects == null)
+            {
+                return;
+            }
+
+            bool hasSolidFloor = false;
+            float lowestSolidBottom = 0f;
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageObjectData obj = objects[i];
+                if (obj == null)
+                {
+                    continue;
+                }
+
+                float radians = obj.rotation * Mathf.Deg2Rad;
+                float verticalExtent = Mathf.Abs(Mathf.Sin(radians)) * Mathf.Abs(obj.size.x) * 0.5f
+                    + Mathf.Abs(Mathf.Cos(radians)) * Mathf.Abs(obj.size.y) * 0.5f;
+                float bottomY = obj.position.y - verticalExtent;
+                if (obj.type == StageObjectType.StageBoundary)
+                {
+                    if (!hasStageFallBoundary || bottomY < stageFallBoundaryY)
+                    {
+                        hasStageFallBoundary = true;
+                        stageFallBoundaryY = bottomY;
+                    }
+                    continue;
+                }
+
+                if (StageObjectCatalog.Get(obj.type).Kind == StageObjectKind.Solid
+                    && (!hasSolidFloor || bottomY < lowestSolidBottom))
+                {
+                    hasSolidFloor = true;
+                    lowestSolidBottom = bottomY;
+                }
+            }
+
+            // A stage may be expanded downward after its boundary was placed.
+            // Never let the fall-reset line sit above real solid terrain, or a
+            // player falling toward that terrain will be respawned before landing.
+            if (hasStageFallBoundary && hasSolidFloor)
+            {
+                stageFallBoundaryY = Mathf.Min(stageFallBoundaryY, lowestSolidBottom);
+            }
+        }
+
+        private void ResetStageFallBoundary()
+        {
+            hasStageFallBoundary = false;
+            stageFallBoundaryY = 0f;
         }
 
         private void ConfigureStageGimmicks(StageData data)
@@ -101,10 +216,34 @@ namespace DrawBody.Prototype
             StageGimmickLinkController existingLinkController = stageRoot.GetComponent<StageGimmickLinkController>();
             if (existingLinkController != null)
             {
-                Destroy(existingLinkController);
+                DestroyComponentNow(existingLinkController);
             }
 
+            StageGimmickSyncManager existingSyncManager = stageRoot.GetComponent<StageGimmickSyncManager>();
+            if (existingSyncManager != null)
+            {
+                DestroyComponentNow(existingSyncManager);
+            }
+
+            stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
+        }
+
+        private static void DestroyComponentNow(Component component)
+        {
+            if (component == null)
+            {
+                return;
+            }
+
+            if (Application.isPlaying)
+            {
+                DestroyImmediate(component);
+            }
+            else
+            {
+                DestroyImmediate(component);
+            }
         }
 
         private void EnsureReferences()
@@ -139,7 +278,9 @@ namespace DrawBody.Prototype
 
             for (int i = stageRoot.childCount - 1; i >= 0; i--)
             {
-                Destroy(stageRoot.GetChild(i).gameObject);
+                GameObject oldStageObject = stageRoot.GetChild(i).gameObject;
+                oldStageObject.SetActive(false);
+                Destroy(oldStageObject);
             }
         }
     }

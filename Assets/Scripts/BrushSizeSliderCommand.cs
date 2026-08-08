@@ -29,7 +29,7 @@ namespace DrawBody.Prototype
 
             if (valueText != null)
             {
-                valueText.text = $"{value:0.#}px";
+                valueText.text = $"{value:0} px";
             }
         }
     }

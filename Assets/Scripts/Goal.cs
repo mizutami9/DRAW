@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DrawBody.Prototype
@@ -6,6 +7,8 @@ namespace DrawBody.Prototype
     public sealed class Goal : MonoBehaviour
     {
         [SerializeField] private StageManager stageManager;
+        private readonly Dictionary<PlayerController2D, int> playerColliderCounts =
+            new Dictionary<PlayerController2D, int>();
 
         private void Awake()
         {
@@ -20,12 +23,37 @@ namespace DrawBody.Prototype
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.GetComponentInParent<PlayerController2D>())
+            PlayerController2D goalPlayer = other.GetComponentInParent<PlayerController2D>();
+            if (goalPlayer == null)
             {
                 return;
             }
 
-            stageManager?.ClearStage();
+            playerColliderCounts.TryGetValue(goalPlayer, out int count);
+            playerColliderCounts[goalPlayer] = count + 1;
+            if (count == 0)
+            {
+                stageManager?.SetPlayerGoalState(goalPlayer, true);
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            PlayerController2D goalPlayer = other.GetComponentInParent<PlayerController2D>();
+            if (goalPlayer == null || !playerColliderCounts.TryGetValue(goalPlayer, out int count))
+            {
+                return;
+            }
+
+            count--;
+            if (count > 0)
+            {
+                playerColliderCounts[goalPlayer] = count;
+                return;
+            }
+
+            playerColliderCounts.Remove(goalPlayer);
+            stageManager?.SetPlayerGoalState(goalPlayer, false);
         }
     }
 }

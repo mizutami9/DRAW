@@ -16,14 +16,22 @@ namespace DrawBody.Prototype
         [SerializeField] private float walkLimbAngle = 18f;
         [SerializeField] private float walkBobAmount = 0.035f;
         [SerializeField] private float carryArmMaxLength = 1.45f;
+        [SerializeField] private Color playerColor = new Color(0.95f, 0.12f, 0.1f, 1f);
 
         private readonly List<GameObject> generatedObjects = new List<GameObject>();
         private readonly List<GeneratedSegment> generatedSegments = new List<GeneratedSegment>();
+        private const float RuntimePointMergeDistance = 0.025f;
+        private const float RuntimeSimplifyTolerance = 0.022f;
+        private const float RuntimeCoverageCellSize = 0.075f;
+        private const int RuntimeOrientationBins = 8;
+        private const int MaxRuntimePointsPerStroke = 512;
+        private const int MaxRuntimeSegmentsPerPart = 32;
         private Material lineMaterial;
+        private static PhysicsMaterial2D playerContactMaterial;
         private Rigidbody2D rb;
         private PlayerController2D playerController;
-        private PlayerAbilityController abilityController;
         private ArmSwingController armSwingController;
+        private DrawManager.Species builtSpecies = DrawManager.Species.Human;
         private int facingDirection = 1;
         private bool carryingPose;
         private int carryingDirection = 1;
@@ -39,6 +47,7 @@ namespace DrawBody.Prototype
             public Quaternion BaseLocalRotation;
             public Vector2 StartLocal;
             public Vector2 EndLocal;
+            public Vector2 PivotLocal;
             public float BaseLength;
         }
 
@@ -46,7 +55,6 @@ namespace DrawBody.Prototype
         {
             rb = GetComponent<Rigidbody2D>();
             playerController = GetComponent<PlayerController2D>();
-            abilityController = GetComponent<PlayerAbilityController>();
             armSwingController = GetComponent<ArmSwingController>();
 
             if (bodyRoot == null)
@@ -65,6 +73,8 @@ namespace DrawBody.Prototype
             {
                 fallbackRenderer = GetComponent<SpriteRenderer>();
             }
+
+            ApplyPlayerContactMaterial();
         }
 
         private void Update()
@@ -80,6 +90,8 @@ namespace DrawBody.Prototype
             }
 
             ClearGeneratedBody();
+            builtSpecies = drawManager.CurrentSpecies;
+            bool hasTorsoBounds = TryGetPartLocalBounds(drawManager.GetBodyPoints(DrawManager.BodyPart.Torso), out Bounds torsoBounds);
 
             foreach (DrawManager.BodyPart part in drawManager.GetCurrentParts())
             {
@@ -89,16 +101,11 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                for (int i = 1; i < points.Count; i++)
+                Vector2 pivot = GetPartAnimationPivot(part, points, builtSpecies, hasTorsoBounds, torsoBounds);
+                List<RuntimeBodySegment> optimizedSegments = BuildOptimizedRuntimeSegments(points);
+                for (int i = 0; i < optimizedSegments.Count; i++)
                 {
-                    if (DrawManager.IsBreakPoint(points[i - 1]) || DrawManager.IsBreakPoint(points[i]))
-                    {
-                        continue;
-                    }
-
-                    Vector2 start = ToLocalBodyPoint(points[i - 1]);
-                    Vector2 end = ToLocalBodyPoint(points[i]);
-                    CreateSegment(part, start, end);
+                    CreateSegment(part, optimizedSegments[i].Start, optimizedSegments[i].End, pivot);
                 }
             }
 
@@ -113,6 +120,216 @@ namespace DrawBody.Prototype
             }
 
             ApplyFacing();
+            ApplyPlayerColor();
+        }
+
+        private struct RuntimeBodySegment
+        {
+            public Vector2 Start;
+            public Vector2 End;
+        }
+
+        private List<RuntimeBodySegment> BuildOptimizedRuntimeSegments(IReadOnlyList<Vector2> source)
+        {
+            List<RuntimeBodySegment> candidates = new List<RuntimeBodySegment>();
+            List<Vector2> stroke = new List<Vector2>();
+            for (int i = 0; i <= source.Count; i++)
+            {
+                bool endOfStroke = i == source.Count || DrawManager.IsBreakPoint(source[i]);
+                if (!endOfStroke)
+                {
+                    Vector2 point = ToLocalBodyPoint(source[i]);
+                    if (stroke.Count == 0
+                        || Vector2.Distance(stroke[stroke.Count - 1], point) >= RuntimePointMergeDistance)
+                    {
+                        stroke.Add(point);
+                    }
+                    continue;
+                }
+
+                AppendSimplifiedStrokeSegments(stroke, candidates);
+                stroke.Clear();
+            }
+
+            if (candidates.Count <= 1)
+            {
+                return candidates;
+            }
+
+            List<RuntimeBodySegment> optimized = new List<RuntimeBodySegment>(
+                Mathf.Min(candidates.Count, MaxRuntimeSegmentsPerPart));
+            HashSet<long> occupied = new HashSet<long>();
+            for (int i = 0; i < candidates.Count && optimized.Count < MaxRuntimeSegmentsPerPart; i++)
+            {
+                RuntimeBodySegment segment = candidates[i];
+                if (!AddsNewRuntimeCoverage(segment, occupied))
+                {
+                    continue;
+                }
+
+                optimized.Add(segment);
+                AddRuntimeCoverage(segment, occupied);
+            }
+
+            return optimized;
+        }
+
+        private static void AppendSimplifiedStrokeSegments(
+            List<Vector2> stroke,
+            List<RuntimeBodySegment> destination)
+        {
+            if (stroke.Count < 2)
+            {
+                return;
+            }
+
+            List<Vector2> runtimePoints = stroke;
+            if (stroke.Count > MaxRuntimePointsPerStroke)
+            {
+                runtimePoints = new List<Vector2>(MaxRuntimePointsPerStroke);
+                runtimePoints.Add(stroke[0]);
+                float step = (stroke.Count - 1f) / (MaxRuntimePointsPerStroke - 1f);
+                for (int i = 1; i < MaxRuntimePointsPerStroke - 1; i++)
+                {
+                    runtimePoints.Add(stroke[Mathf.RoundToInt(i * step)]);
+                }
+                runtimePoints.Add(stroke[stroke.Count - 1]);
+            }
+
+            List<Vector2> simplified = SimplifyRuntimeStroke(runtimePoints, RuntimeSimplifyTolerance);
+            for (int i = 1; i < simplified.Count; i++)
+            {
+                if (Vector2.Distance(simplified[i - 1], simplified[i]) < RuntimePointMergeDistance)
+                {
+                    continue;
+                }
+
+                destination.Add(new RuntimeBodySegment
+                {
+                    Start = simplified[i - 1],
+                    End = simplified[i]
+                });
+            }
+        }
+
+        private static List<Vector2> SimplifyRuntimeStroke(List<Vector2> points, float tolerance)
+        {
+            if (points.Count <= 2)
+            {
+                return new List<Vector2>(points);
+            }
+
+            bool[] keep = new bool[points.Count];
+            keep[0] = true;
+            keep[points.Count - 1] = true;
+            float toleranceSquared = tolerance * tolerance;
+            Stack<Vector2Int> pendingRanges = new Stack<Vector2Int>();
+            pendingRanges.Push(new Vector2Int(0, points.Count - 1));
+            while (pendingRanges.Count > 0)
+            {
+                Vector2Int range = pendingRanges.Pop();
+                int first = range.x;
+                int last = range.y;
+                if (last <= first + 1)
+                {
+                    continue;
+                }
+
+                Vector2 start = points[first];
+                Vector2 end = points[last];
+                float greatestDistance = 0f;
+                int greatestIndex = -1;
+                for (int i = first + 1; i < last; i++)
+                {
+                    float distance = DistanceToSegmentSquared(points[i], start, end);
+                    if (distance > greatestDistance)
+                    {
+                        greatestDistance = distance;
+                        greatestIndex = i;
+                    }
+                }
+
+                if (greatestIndex < 0 || greatestDistance <= toleranceSquared)
+                {
+                    continue;
+                }
+
+                keep[greatestIndex] = true;
+                pendingRanges.Push(new Vector2Int(first, greatestIndex));
+                pendingRanges.Push(new Vector2Int(greatestIndex, last));
+            }
+
+            List<Vector2> result = new List<Vector2>();
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (keep[i])
+                {
+                    result.Add(points[i]);
+                }
+            }
+            return result;
+        }
+
+        private static float DistanceToSegmentSquared(Vector2 point, Vector2 start, Vector2 end)
+        {
+            Vector2 delta = end - start;
+            float lengthSquared = delta.sqrMagnitude;
+            if (lengthSquared <= Mathf.Epsilon)
+            {
+                return (point - start).sqrMagnitude;
+            }
+
+            float amount = Mathf.Clamp01(Vector2.Dot(point - start, delta) / lengthSquared);
+            Vector2 nearest = start + delta * amount;
+            return (point - nearest).sqrMagnitude;
+        }
+
+        private static bool AddsNewRuntimeCoverage(RuntimeBodySegment segment, HashSet<long> occupied)
+        {
+            int sampleCount = Mathf.Max(1, Mathf.CeilToInt(
+                Vector2.Distance(segment.Start, segment.End) / RuntimeCoverageCellSize));
+            for (int i = 0; i <= sampleCount; i++)
+            {
+                Vector2 point = Vector2.Lerp(segment.Start, segment.End, i / (float)sampleCount);
+                if (!occupied.Contains(GetRuntimeCoverageKey(point, segment.End - segment.Start)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static void AddRuntimeCoverage(RuntimeBodySegment segment, HashSet<long> occupied)
+        {
+            int sampleCount = Mathf.Max(1, Mathf.CeilToInt(
+                Vector2.Distance(segment.Start, segment.End) / RuntimeCoverageCellSize));
+            for (int i = 0; i <= sampleCount; i++)
+            {
+                Vector2 point = Vector2.Lerp(segment.Start, segment.End, i / (float)sampleCount);
+                occupied.Add(GetRuntimeCoverageKey(point, segment.End - segment.Start));
+            }
+        }
+
+        private static long GetRuntimeCoverageKey(Vector2 point, Vector2 direction)
+        {
+            int x = Mathf.RoundToInt(point.x / RuntimeCoverageCellSize);
+            int y = Mathf.RoundToInt(point.y / RuntimeCoverageCellSize);
+            float directionlessAngle = Mathf.Repeat(Mathf.Atan2(direction.y, direction.x), Mathf.PI);
+            int orientation = Mathf.RoundToInt(directionlessAngle / Mathf.PI * RuntimeOrientationBins)
+                % RuntimeOrientationBins;
+            unchecked
+            {
+                long key = ((long)(uint)x << 32) | (uint)y;
+                return key * 397L ^ (uint)orientation;
+            }
+        }
+
+        public Color PlayerColor => playerColor;
+
+        public void SetPlayerColor(Color color)
+        {
+            playerColor = color;
+            ApplyPlayerColor();
         }
 
         public void SetFacingDirection(int direction)
@@ -124,15 +341,30 @@ namespace DrawBody.Prototype
         public Vector3 GetCarryAnchorWorld(int direction)
         {
             Bounds bounds;
-            if (!TryGetBaseBodyBounds(out bounds))
+            DrawManager.BodyPart corePart = builtSpecies == DrawManager.Species.Slime
+                ? DrawManager.BodyPart.SlimeBody
+                : DrawManager.BodyPart.Torso;
+            if (!TryGetGeneratedPartWorldBounds(corePart, out bounds)
+                && !TryGetBaseBodyBounds(out bounds))
             {
                 Collider2D fallback = fallbackCollider != null ? fallbackCollider : GetComponent<Collider2D>();
                 bounds = fallback != null ? fallback.bounds : new Bounds(transform.position, new Vector3(0.9f, 1.1f, 0f));
             }
 
+            // Drawn limbs can contain distant points or disconnected strokes.
+            // Carrying must remain near the playable body, otherwise the held key
+            // and throw preview appear to vanish at a remote drawing coordinate.
+            // Use the visible torso itself as the origin. Drawn bodies are not
+            // guaranteed to be centred on the player Transform, so clamping back
+            // to transform.position can move a held object far away from the
+            // character that is visibly picking it up.
+            float centerX = bounds.center.x;
+            float halfWidth = Mathf.Clamp(bounds.extents.x, 0.24f, 0.78f);
+            float halfHeight = Mathf.Clamp(bounds.extents.y, 0.28f, 1.1f);
+            float topY = bounds.center.y + halfHeight;
             float side = direction < 0 ? -1f : 1f;
-            float handY = Mathf.Max(bounds.max.y + 0.32f, bounds.center.y + bounds.size.y * 0.45f);
-            float handX = bounds.center.x + side * (bounds.size.x * 0.36f + 0.28f);
+            float handY = topY + 0.28f;
+            float handX = centerX + side * (halfWidth * 0.72f + 0.28f);
             return new Vector3(handX, handY, transform.position.z);
         }
 
@@ -185,7 +417,152 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void CreateSegment(DrawManager.BodyPart part, Vector2 start, Vector2 end)
+        private Vector2 GetPartAnimationPivot(
+            DrawManager.BodyPart part,
+            IReadOnlyList<Vector2> drawPoints,
+            DrawManager.Species species,
+            bool hasTorsoBounds,
+            Bounds torsoBounds)
+        {
+            if (!TryGetPartLocalBounds(drawPoints, out Bounds bounds))
+            {
+                return Vector2.zero;
+            }
+
+            if (part != DrawManager.BodyPart.Torso
+                && part != DrawManager.BodyPart.SlimeBody
+                && hasTorsoBounds
+                && TryGetTorsoAnimationConnection(part, species, torsoBounds, out Vector2 connectionPivot))
+            {
+                return connectionPivot;
+            }
+
+            switch (part)
+            {
+                case DrawManager.BodyPart.Head:
+                    return GetHeadPivot(bounds, species);
+                case DrawManager.BodyPart.SlimeBody:
+                    return new Vector2(bounds.center.x, bounds.min.y);
+                default:
+                    return new Vector2(bounds.center.x, bounds.center.y);
+            }
+        }
+
+        private Vector2 GetHeadPivot(Bounds bounds, DrawManager.Species species)
+        {
+            if (species == DrawManager.Species.Cat || species == DrawManager.Species.Snake)
+            {
+                return new Vector2(bounds.min.x, bounds.center.y);
+            }
+
+            return new Vector2(bounds.center.x, bounds.min.y);
+        }
+
+        private bool TryGetTorsoAnimationConnection(
+            DrawManager.BodyPart part,
+            DrawManager.Species species,
+            Bounds torsoBounds,
+            out Vector2 point)
+        {
+            point = Vector2.zero;
+            float centerX = torsoBounds.center.x;
+            float centerY = torsoBounds.center.y;
+            float lowerLeftX = Mathf.Lerp(torsoBounds.min.x, torsoBounds.max.x, 0.25f);
+            float lowerRightX = Mathf.Lerp(torsoBounds.min.x, torsoBounds.max.x, 0.75f);
+
+            if (species == DrawManager.Species.Cat)
+            {
+                float frontX = Mathf.Lerp(torsoBounds.min.x, torsoBounds.max.x, 0.72f);
+                float backX = Mathf.Lerp(torsoBounds.min.x, torsoBounds.max.x, 0.28f);
+                switch (part)
+                {
+                    case DrawManager.BodyPart.Head:
+                        point = new Vector2(torsoBounds.max.x, centerY);
+                        return true;
+                    case DrawManager.BodyPart.Tail:
+                        point = new Vector2(torsoBounds.min.x, centerY);
+                        return true;
+                    case DrawManager.BodyPart.LeftFrontLeg:
+                        point = new Vector2(frontX - 14f / pixelsPerWorldUnit, torsoBounds.min.y);
+                        return true;
+                    case DrawManager.BodyPart.RightFrontLeg:
+                        point = new Vector2(frontX + 14f / pixelsPerWorldUnit, torsoBounds.min.y);
+                        return true;
+                    case DrawManager.BodyPart.LeftBackLeg:
+                        point = new Vector2(backX - 14f / pixelsPerWorldUnit, torsoBounds.min.y);
+                        return true;
+                    case DrawManager.BodyPart.RightBackLeg:
+                        point = new Vector2(backX + 14f / pixelsPerWorldUnit, torsoBounds.min.y);
+                        return true;
+                }
+            }
+
+            if (species == DrawManager.Species.Snake && part == DrawManager.BodyPart.Head)
+            {
+                point = new Vector2(torsoBounds.max.x, centerY);
+                return true;
+            }
+
+            switch (part)
+            {
+                case DrawManager.BodyPart.Head:
+                    point = new Vector2(centerX, torsoBounds.max.y);
+                    return true;
+                case DrawManager.BodyPart.LeftArm:
+                case DrawManager.BodyPart.LeftFrontLeg:
+                case DrawManager.BodyPart.LeftWing:
+                    point = new Vector2(torsoBounds.min.x, centerY);
+                    return true;
+                case DrawManager.BodyPart.RightArm:
+                case DrawManager.BodyPart.RightFrontLeg:
+                case DrawManager.BodyPart.RightWing:
+                    point = new Vector2(torsoBounds.max.x, centerY);
+                    return true;
+                case DrawManager.BodyPart.LeftLeg:
+                case DrawManager.BodyPart.LeftBackLeg:
+                    point = new Vector2(lowerLeftX, torsoBounds.min.y);
+                    return true;
+                case DrawManager.BodyPart.RightLeg:
+                case DrawManager.BodyPart.RightBackLeg:
+                    point = new Vector2(lowerRightX, torsoBounds.min.y);
+                    return true;
+                case DrawManager.BodyPart.Tail:
+                case DrawManager.BodyPart.TailFeather:
+                    point = new Vector2(centerX, torsoBounds.min.y);
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private bool TryGetPartLocalBounds(IReadOnlyList<Vector2> drawPoints, out Bounds bounds)
+        {
+            bool hasPoint = false;
+            bounds = new Bounds(Vector3.zero, Vector3.zero);
+
+            for (int i = 0; i < drawPoints.Count; i++)
+            {
+                if (DrawManager.IsBreakPoint(drawPoints[i]))
+                {
+                    continue;
+                }
+
+                Vector2 localPoint = ToLocalBodyPoint(drawPoints[i]);
+                if (!hasPoint)
+                {
+                    bounds = new Bounds(localPoint, Vector3.zero);
+                    hasPoint = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(localPoint);
+                }
+            }
+
+            return hasPoint;
+        }
+
+        private void CreateSegment(DrawManager.BodyPart part, Vector2 start, Vector2 end, Vector2 pivot)
         {
             Vector2 delta = end - start;
             float length = delta.magnitude;
@@ -211,13 +588,17 @@ namespace DrawBody.Prototype
             line.numCornerVertices = 4;
             line.sortingOrder = 10;
             line.material = GetLineMaterial();
-            line.startColor = GetPartColor(part);
-            line.endColor = GetPartColor(part);
+            line.startColor = playerColor;
+            line.endColor = playerColor;
 
             CapsuleCollider2D collider = segment.AddComponent<CapsuleCollider2D>();
             collider.direction = CapsuleDirection2D.Horizontal;
             collider.size = new Vector2(length + colliderThickness, colliderThickness);
             collider.offset = Vector2.zero;
+            collider.sharedMaterial = GetPlayerContactMaterial();
+            // Arms are animated and mirrored independently from the locomotion body.
+            // Keeping them solid can teleport a long asymmetric arm into a wall on turn.
+            collider.isTrigger = IsHumanArm(part);
 
             generatedObjects.Add(segment);
             generatedSegments.Add(new GeneratedSegment
@@ -230,8 +611,37 @@ namespace DrawBody.Prototype
                 BaseLocalRotation = segment.transform.localRotation,
                 StartLocal = start,
                 EndLocal = end,
+                PivotLocal = pivot,
                 BaseLength = length
             });
+        }
+
+        private void ApplyPlayerContactMaterial()
+        {
+            PhysicsMaterial2D material = GetPlayerContactMaterial();
+            Collider2D[] colliders = GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i] != null)
+                {
+                    colliders[i].sharedMaterial = material;
+                }
+            }
+        }
+
+        private static PhysicsMaterial2D GetPlayerContactMaterial()
+        {
+            if (playerContactMaterial == null)
+            {
+                playerContactMaterial = new PhysicsMaterial2D("Player Low Friction")
+                {
+                    friction = 0.02f,
+                    bounciness = 0f,
+                    hideFlags = HideFlags.HideAndDontSave
+                };
+            }
+
+            return playerContactMaterial;
         }
 
         private void AnimateGeneratedBody()
@@ -244,8 +654,9 @@ namespace DrawBody.Prototype
             float speed = rb != null ? Mathf.Abs(rb.linearVelocity.x) : 0f;
             bool moving = speed > 0.12f;
             float moveBlend = moving && (playerController == null || playerController.IsGrounded) ? Mathf.Clamp01(speed / 4f) : 0f;
-            DrawManager.Species species = abilityController != null ? abilityController.CurrentProfile.Species : DrawManager.Species.Human;
+            DrawManager.Species species = builtSpecies;
             float phase = Time.time * walkAnimationSpeed;
+            bool carryArmApplied = false;
 
             for (int i = 0; i < generatedSegments.Count; i++)
             {
@@ -266,16 +677,33 @@ namespace DrawBody.Prototype
 
                 if (carryingPose && IsFacingHumanArm(segment))
                 {
-                    ApplyCarryPose(segment);
+                    if (!carryArmApplied)
+                    {
+                        ApplyCarryPose(segment);
+                        carryArmApplied = true;
+                    }
+                    else
+                    {
+                        CollapseCarrySegment(segment);
+                    }
+
                     continue;
                 }
 
                 GetWalkMotion(species, segment.Part, phase, moveBlend, ref angle, ref offsetY, ref scaleX, ref scaleY);
 
-                segment.Transform.localPosition = segment.BaseLocalPosition + new Vector3(0f, offsetY, 0f);
-                segment.Transform.localRotation = segment.BaseLocalRotation * Quaternion.Euler(0f, 0f, angle);
+                Quaternion motionRotation = Quaternion.Euler(0f, 0f, angle);
+                Vector3 pivotedPosition = RotateAroundPivot(segment.BaseLocalPosition, segment.PivotLocal, motionRotation);
+                segment.Transform.localPosition = pivotedPosition + new Vector3(0f, offsetY, 0f);
+                segment.Transform.localRotation = motionRotation * segment.BaseLocalRotation;
                 segment.Transform.localScale = new Vector3(scaleX, scaleY, 1f);
             }
+        }
+
+        private static Vector3 RotateAroundPivot(Vector3 position, Vector2 pivot, Quaternion rotation)
+        {
+            Vector3 pivot3 = new Vector3(pivot.x, pivot.y, position.z);
+            return pivot3 + rotation * (position - pivot3);
         }
 
         private static bool IsHumanArm(DrawManager.BodyPart part)
@@ -329,6 +757,20 @@ namespace DrawBody.Prototype
             }
         }
 
+        private static void CollapseCarrySegment(GeneratedSegment segment)
+        {
+            if (segment.Line != null)
+            {
+                segment.Line.SetPosition(0, Vector3.zero);
+                segment.Line.SetPosition(1, Vector3.zero);
+            }
+
+            if (segment.Collider != null)
+            {
+                segment.Collider.enabled = false;
+            }
+        }
+
         private void RestoreGeneratedSegmentGeometry()
         {
             for (int i = 0; i < generatedSegments.Count; i++)
@@ -350,6 +792,7 @@ namespace DrawBody.Prototype
 
                 if (segment.Collider != null)
                 {
+                    segment.Collider.enabled = true;
                     segment.Collider.size = new Vector2(segment.BaseLength + colliderThickness, colliderThickness);
                 }
             }
@@ -426,6 +869,104 @@ namespace DrawBody.Prototype
             }
 
             return false;
+        }
+
+        private bool TryGetGeneratedPartWorldBounds(DrawManager.BodyPart part, out Bounds bounds)
+        {
+            bounds = new Bounds(transform.position, Vector3.zero);
+            if (bodyRoot == null)
+            {
+                return false;
+            }
+
+            List<int> candidates = new List<int>();
+            for (int i = 0; i < generatedSegments.Count; i++)
+            {
+                GeneratedSegment segment = generatedSegments[i];
+                if (segment.Transform != null && segment.Part == part)
+                {
+                    candidates.Add(i);
+                }
+            }
+
+            if (candidates.Count == 0)
+            {
+                return false;
+            }
+
+            // A part may contain several separate strokes. Use the largest
+            // connected stroke group so one accidental/distant torso line does
+            // not drag the carry anchor away from the visible character.
+            const float connectionDistance = 0.12f;
+            float connectionDistanceSquared = connectionDistance * connectionDistance;
+            HashSet<int> visited = new HashSet<int>();
+            int bestSegmentCount = 0;
+            float bestLength = -1f;
+            Bounds bestBounds = bounds;
+
+            for (int candidateIndex = 0; candidateIndex < candidates.Count; candidateIndex++)
+            {
+                int seed = candidates[candidateIndex];
+                if (!visited.Add(seed))
+                {
+                    continue;
+                }
+
+                Queue<int> pending = new Queue<int>();
+                pending.Enqueue(seed);
+                bool hasComponentBounds = false;
+                Bounds componentBounds = new Bounds(transform.position, Vector3.zero);
+                int componentCount = 0;
+                float componentLength = 0f;
+
+                while (pending.Count > 0)
+                {
+                    int currentIndex = pending.Dequeue();
+                    GeneratedSegment current = generatedSegments[currentIndex];
+                    componentCount++;
+                    componentLength += Vector2.Distance(current.StartLocal, current.EndLocal);
+                    EncapsulatePoint(ref componentBounds, ref hasComponentBounds, bodyRoot.TransformPoint(current.StartLocal));
+                    EncapsulatePoint(ref componentBounds, ref hasComponentBounds, bodyRoot.TransformPoint(current.EndLocal));
+
+                    for (int otherCandidate = 0; otherCandidate < candidates.Count; otherCandidate++)
+                    {
+                        int otherIndex = candidates[otherCandidate];
+                        if (visited.Contains(otherIndex))
+                        {
+                            continue;
+                        }
+
+                        GeneratedSegment other = generatedSegments[otherIndex];
+                        bool connected =
+                            (current.StartLocal - other.StartLocal).sqrMagnitude <= connectionDistanceSquared
+                            || (current.StartLocal - other.EndLocal).sqrMagnitude <= connectionDistanceSquared
+                            || (current.EndLocal - other.StartLocal).sqrMagnitude <= connectionDistanceSquared
+                            || (current.EndLocal - other.EndLocal).sqrMagnitude <= connectionDistanceSquared;
+                        if (connected)
+                        {
+                            visited.Add(otherIndex);
+                            pending.Enqueue(otherIndex);
+                        }
+                    }
+                }
+
+                if (hasComponentBounds
+                    && (componentCount > bestSegmentCount
+                        || (componentCount == bestSegmentCount && componentLength > bestLength)))
+                {
+                    bestSegmentCount = componentCount;
+                    bestLength = componentLength;
+                    bestBounds = componentBounds;
+                }
+            }
+
+            if (bestSegmentCount <= 0)
+            {
+                return false;
+            }
+
+            bounds = bestBounds;
+            return true;
         }
 
         private static void EncapsulatePoint(ref Bounds bounds, ref bool hasBounds, Vector3 point)
@@ -616,34 +1157,38 @@ namespace DrawBody.Prototype
             return lineMaterial;
         }
 
-        private static Color GetPartColor(DrawManager.BodyPart part)
+        private void ApplyPlayerColor()
         {
-            switch (part)
+            for (int i = 0; i < generatedSegments.Count; i++)
             {
-                case DrawManager.BodyPart.Head:
-                    return new Color(1f, 0.75f, 0.22f);
-                case DrawManager.BodyPart.Torso:
-                    return new Color(0.1f, 0.35f, 1f);
-                case DrawManager.BodyPart.LeftArm:
-                case DrawManager.BodyPart.RightArm:
-                case DrawManager.BodyPart.LeftFrontLeg:
-                case DrawManager.BodyPart.RightFrontLeg:
-                case DrawManager.BodyPart.LeftBackLeg:
-                case DrawManager.BodyPart.RightBackLeg:
-                    return new Color(0.98f, 0.32f, 0.28f);
-                case DrawManager.BodyPart.LeftLeg:
-                case DrawManager.BodyPart.RightLeg:
-                    return new Color(0.16f, 0.75f, 0.32f);
-                case DrawManager.BodyPart.Tail:
-                case DrawManager.BodyPart.TailFeather:
-                    return new Color(0.95f, 0.55f, 0.18f);
-                case DrawManager.BodyPart.LeftWing:
-                case DrawManager.BodyPart.RightWing:
-                    return new Color(0.45f, 0.35f, 0.95f);
-                case DrawManager.BodyPart.SlimeBody:
-                    return new Color(0.3f, 0.85f, 0.75f);
-                default:
-                    return Color.white;
+                LineRenderer line = generatedSegments[i].Line;
+                if (line == null)
+                {
+                    continue;
+                }
+
+                line.startColor = playerColor;
+                line.endColor = playerColor;
+            }
+
+            if (bodyRoot != null)
+            {
+                LineRenderer[] bodyLines = bodyRoot.GetComponentsInChildren<LineRenderer>(true);
+                for (int i = 0; i < bodyLines.Length; i++)
+                {
+                    if (bodyLines[i] == null)
+                    {
+                        continue;
+                    }
+
+                    bodyLines[i].startColor = playerColor;
+                    bodyLines[i].endColor = playerColor;
+                }
+            }
+
+            if (fallbackRenderer != null)
+            {
+                fallbackRenderer.color = playerColor;
             }
         }
     }

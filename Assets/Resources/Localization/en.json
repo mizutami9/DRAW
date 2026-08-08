@@ -1,113 +1,1632 @@
 {
-  "entries": [
-    { "key": "lang_ja", "value": "Japanese" },
-    { "key": "lang_en", "value": "EN" },
-    { "key": "status_play", "value": "" },
-    { "key": "status_draw", "value": "" },
-    { "key": "status_clear", "value": "Clear! Press R to retry." },
-    { "key": "draw_title", "value": "Design (TAB)" },
-    { "key": "draw_help", "value": "TAB: Back to game / ENTER: Decide / ESC: Cancel" },
-    { "key": "preview", "value": "Preview" },
-    { "key": "clear", "value": "Clear" },
-    { "key": "decide", "value": "Decide" },
-    { "key": "cancel", "value": "Cancel" },
-    { "key": "retry", "value": "Retry" },
-    { "key": "menu", "value": "Menu" },
-    { "key": "redraw", "value": "Redraw" },
-    { "key": "pen", "value": "Pen" },
-    { "key": "eraser", "value": "Eraser" },
-    { "key": "shape_square", "value": "Box" },
-    { "key": "shape_circle", "value": "Circle" },
-    { "key": "shape_line", "value": "Line" },
-    { "key": "draw_finish", "value": "Done!" },
-    { "key": "draw_redo", "value": "Redraw" },
-    { "key": "brush_size", "value": "Size" },
-    { "key": "ink_usage", "value": "Ink Used" },
-    { "key": "undo", "value": "Undo" },
-    { "key": "character_switch", "value": "Character Switch" },
-    { "key": "character_add", "value": "Add Char" },
-    { "key": "character_delete", "value": "Delete Char" },
-    { "key": "character_control_switch", "value": "Switch Char" },
-    { "key": "stage_select", "value": "Stage Select" },
-    { "key": "stage_select_help", "value": "15 groups, 3 stages each. Turn Edit ON, then choose a stage to edit it." },
-    { "key": "debug_stage", "value": "1-0 Debug" },
-    { "key": "stage_editor_open", "value": "Edit 1-1" },
-    { "key": "stage_select_edit_off", "value": "Edit: OFF" },
-    { "key": "stage_select_edit_on", "value": "Edit: ON" },
-    { "key": "stage_unplayed", "value": "NEW" },
-    { "key": "stage_clear", "value": "CLEAR" },
-    { "key": "stage_locked", "value": "LOCKED" },
-    { "key": "stage_select_info", "value": "Debug mode: all worlds are unlocked. Choose a stage to play, or turn Edit ON to edit it." },
-    { "key": "stage_editor_help", "value": "1:Floor  2:Wall drag to create blocks\n3:Start  4:Goal  5:Scale  6:Weight\nA/D/W/S: move camera  Wheel: zoom\nF5:Save  F6:Test  Esc:Back" },
-    { "key": "stage_object_platform", "value": "Floor" },
-    { "key": "stage_object_wall", "value": "Wall" },
-    { "key": "stage_object_spawn", "value": "Start" },
-    { "key": "stage_object_goal", "value": "Goal" },
-    { "key": "stage_object_balance", "value": "Scale" },
-    { "key": "stage_object_weight", "value": "Weight" },
-    { "key": "stage_editor_size", "value": "Size" },
-    { "key": "stage_editor_snap", "value": "Grid" },
-    { "key": "stage_editor_delete", "value": "Delete" },
-    { "key": "stage_editor_save", "value": "Save" },
-    { "key": "stage_editor_test", "value": "Test" },
-    { "key": "stage_editor_back", "value": "Back" },
-    { "key": "option_subtitle", "value": "Game Settings" },
-    { "key": "option_bgm", "value": "BGM" },
-    { "key": "option_se", "value": "SE" },
-    { "key": "option_vibration", "value": "Vibration" },
-    { "key": "option_keys", "value": "Keys" },
-    { "key": "option_language", "value": "Language" },
-    { "key": "option_not_implemented", "value": "Not yet" },
-    { "key": "option_back", "value": "Back  ESC" },
-    { "key": "locked_stage", "value": "Stages without JSON fall back to the debug stage." },
-    { "key": "ink", "value": "Ink" },
-    { "key": "remaining", "value": "Remaining" },
-    { "key": "current", "value": "Current" },
-    { "key": "part", "value": "Part" },
-    { "key": "msg_torso_first", "value": "Draw the torso first." },
-    { "key": "msg_torso_base", "value": "Torso is the base. Draw other parts from their connection marker." },
-    { "key": "msg_start_near", "value": "{0}: start from the connection marker." },
-    { "key": "msg_draw_torso_first", "value": "Draw the torso before connecting other parts." },
-    { "key": "msg_connected", "value": "{0} is connected." },
-    { "key": "msg_not_connected", "value": "{0} did not start at the connection marker." },
-    { "key": "msg_torso_needed", "value": "Torso is required before deciding." },
-    { "key": "msg_part_must_start", "value": "{0} must start at the connection marker." },
-    { "key": "msg_start_at_marker", "value": "{0}: start from the marker." },
-    { "key": "msg_part_required", "value": "Draw {0}." },
-    { "key": "head", "value": "Head" },
-    { "key": "torso", "value": "Torso" },
-    { "key": "left_arm", "value": "Left Arm" },
-    { "key": "right_arm", "value": "Right Arm" },
-    { "key": "left_leg", "value": "Left Leg" },
-    { "key": "right_leg", "value": "Right Leg" },
-    { "key": "left_front_leg", "value": "Left Front" },
-    { "key": "right_front_leg", "value": "Right Front" },
-    { "key": "left_back_leg", "value": "Left Back" },
-    { "key": "right_back_leg", "value": "Right Back" },
-    { "key": "tail", "value": "Tail" },
-    { "key": "left_wing", "value": "Left Wing" },
-    { "key": "right_wing", "value": "Right Wing" },
-    { "key": "tail_feather", "value": "Tail Feather" },
-    { "key": "slime_body", "value": "Slime" },
-    { "key": "human", "value": "Human" },
-    { "key": "cat", "value": "Cat" },
-    { "key": "bird", "value": "Bird" },
-    { "key": "snake", "value": "Snake" },
-    { "key": "slime", "value": "Slime" },
-    { "key": "jump_normal", "value": "Normal Jump" },
-    { "key": "jump_double", "value": "Jump x2" },
-    { "key": "jump_triple", "value": "Jump x3" },
-    { "key": "arm_normal", "value": "Normal Reach" },
-    { "key": "arm_long", "value": "Long Reach" },
-    { "key": "arm_fast", "value": "Fast Swing" },
-    { "key": "torso_normal", "value": "Normal" },
-    { "key": "torso_switch", "value": "Heavy Switch" },
-    { "key": "torso_heavy", "value": "Heavy" },
-    { "key": "ability_summary", "value": "Leg {0:0.0}: {1}   Arm {2:0.0}: {3}   Torso {4:0.0}: {5}" },
-    { "key": "label_high_platform", "value": "1 High Platform" },
-    { "key": "label_heavy_switch", "value": "2 Heavy Switch" },
-    { "key": "label_far_lever", "value": "3 Far Lever" },
-    { "key": "label_narrow_hole", "value": "4 Narrow Hole" },
-    { "key": "label_ball_hit", "value": "5 Ball Hit" }
-  ]
+    "entries":  [
+                    {
+                        "key":  "stage_editor_boundary_quick",
+                        "value":  "Frame"
+                    },
+                    {
+                        "key":  "stage_editor_status_boundary_fitted",
+                        "value":  "Created a frame around the placed objects. Select it to adjust the right wall and ceiling."
+                    },
+                    {
+                        "key":  "stage_editor_background_color",
+                        "value":  "Background"
+                    },
+                    {
+                        "key":  "stage_editor_color_title",
+                        "value":  "Background Color"
+                    },
+                    {
+                        "key":  "stage_editor_color_reset",
+                        "value":  "Default"
+                    },
+                    {
+                        "key":  "stage_editor_color_close",
+                        "value":  "Close"
+                    },
+                    {
+                        "key":  "stage_editor_color_opacity",
+                        "value":  "Opacity"
+                    },
+                    {
+                        "key":  "stage_editor_status_background_color",
+                        "value":  "Background color changed. Save the stage to keep it."
+                    },
+                    {
+                        "key":  "stage_object_background_mole",
+                        "value":  "Mole"
+                    },
+                    {
+                        "key":  "stage_object_background_fossil",
+                        "value":  "Fossil"
+                    },
+                    {
+                        "key":  "stage_object_background_crystal",
+                        "value":  "Crystal"
+                    },
+                    {
+                        "key":  "stage_object_background_ancient_pot",
+                        "value":  "Ancient Pot"
+                    },
+                    {
+                        "key":  "stage_editor_copy",
+                        "value":  "Copy"
+                    },
+                    {
+                        "key":  "menu_stage_select",
+                        "value":  "Stage Select"
+                    },
+                    {
+                        "key":  "menu_leave_session",
+                        "value":  "Leave Session"
+                    },
+                    {
+                        "key":  "menu_restart_stage",
+                        "value":  "Restart Stage"
+                    },
+                    {
+                        "key":  "menu_leave_session_confirm",
+                        "value":  "Leave the online session?"
+                    },
+                    {
+                        "key":  "menu_leave_session_host_confirm",
+                        "value":  "Leaving as host will end this session for everyone. Leave?"
+                    },
+                    {
+                        "key":  "menu_leave_session_yes",
+                        "value":  "Leave"
+                    },
+                    {
+                        "key":  "stage_editor_status_copied",
+                        "value":  "Object copied."
+                    },
+                    {
+                        "key":  "stage_editor_action_strength",
+                        "value":  "Launch Power"
+                    },
+                    {
+                        "key":  "stage_editor_status_action_strength",
+                        "value":  "Launch power: {0:0.0}"
+                    },
+                    {
+                        "key":  "stage_editor_move_distance",
+                        "value":  "Move Distance"
+                    },
+                    {
+                        "key":  "stage_editor_status_move_distance",
+                        "value":  "Move distance: {0:0.0}"
+                    },
+                    {
+                        "key":  "stage_editor_status_move_direction",
+                        "value":  "Move direction: {0:0}° (Shift + wheel)"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move",
+                        "value":  "Move"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move_right",
+                        "value":  "Move Platform Right"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move_up",
+                        "value":  "Move Platform Up"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move_left",
+                        "value":  "Move Platform Left"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move_down",
+                        "value":  "Move Platform Down"
+                    },
+                    {
+                        "key":  "stage_category_decoration",
+                        "value":  "Background"
+                    },
+                    {
+                        "key":  "stage_object_background_tree",
+                        "value":  "Background Tree"
+                    },
+                    {
+                        "key":  "stage_object_background_grass",
+                        "value":  "Background Grass"
+                    },
+                    {
+                        "key":  "stage_object_background_flower",
+                        "value":  "Background Flower"
+                    },
+                    {
+                        "key":  "stage_object_background_bush",
+                        "value":  "Background Bush"
+                    },
+                    {
+                        "key":  "stage_object_background_cloud",
+                        "value":  "Background Cloud"
+                    },
+                    {
+                        "key":  "stage_object_background_push",
+                        "value":  "Background PUSH"
+                    },
+                    {
+                        "key":  "stage_object_background_arrow",
+                        "value":  "Background Arrow"
+                    },
+                    {
+                        "key":  "stage_editor_status_linked_bridge_right",
+                        "value":  "Linked as a bridge: the right edge stays connected while it extends to the left."
+                    },
+                    {
+                        "key":  "stage_editor_status_separate_split",
+                        "value":  "Split the connected terrain into individually selectable and linkable parts."
+                    },
+                    {
+                        "key":  "stage_editor_separate",
+                        "value":  "Separate"
+                    },
+                    {
+                        "key":  "stage_editor_status_separate_on",
+                        "value":  "Separate part is ON. It can snap without merging and can be linked individually."
+                    },
+                    {
+                        "key":  "stage_editor_status_separate_off",
+                        "value":  "Separate part is OFF. Touching terrain can merge."
+                    },
+                    {
+                        "key":  "stage_editor_status_terrain_connected",
+                        "value":  "Connected the floor and wall as one terrain shape."
+                    },
+                    {
+                        "key":  "stage_editor_status_add_straight",
+                        "value":  "Drag to place a straight {0}."
+                    },
+                    {
+                        "key":  "stage_editor_thickness",
+                        "value":  "Thickness"
+                    },
+                    {
+                        "key":  "stage_editor_status_thickness",
+                        "value":  "Floor and wall thickness: {0:0.00}"
+                    },
+                    {
+                        "key":  "stage_editor_straight",
+                        "value":  "Straight"
+                    },
+                    {
+                        "key":  "stage_editor_status_straight_on",
+                        "value":  "Straight-line drawing is ON."
+                    },
+                    {
+                        "key":  "stage_editor_status_straight_off",
+                        "value":  "Straight-line drawing is OFF."
+                    },
+                    {
+                        "key":  "stage_editor_freehand",
+                        "value":  "Draw mode"
+                    },
+                    {
+                        "key":  "stage_editor_draw_mode",
+                        "value":  "Draw mode"
+                    },
+                    {
+                        "key":  "stage_editor_select_mode",
+                        "value":  "Select mode"
+                    },
+                    {
+                        "key":  "stage_editor_status_draw_mode",
+                        "value":  "Draw mode: drag on empty space to place objects."
+                    },
+                    {
+                        "key":  "stage_editor_status_select_mode",
+                        "value":  "Select mode: select and move existing objects."
+                    },
+                    {
+                        "key":  "stage_editor_status_add_freehand",
+                        "value":  "Draw {0} freely by dragging."
+                    },
+                    {
+                        "key":  "stage_editor_status_freehand_on",
+                        "value":  "Freehand floor and wall drawing is ON."
+                    },
+                    {
+                        "key":  "stage_editor_status_freehand_off",
+                        "value":  "Rectangle placement is ON."
+                    },
+                    {
+                        "key":  "stage_editor_status_freehand_done",
+                        "value":  "Drew {0} as one connected path ({1} points)."
+                    },
+                    {
+                        "key":  "stage_editor_return",
+                        "value":  "Return to editor"
+                    },
+                    {
+                        "key":  "stage_editor_return_esc",
+                        "value":  "Return to editor  ESC"
+                    },
+                    {
+                        "key":  "stage_editor_status_returned",
+                        "value":  "Returned from test play. Keep editing your stage."
+                    },
+                    {
+                        "key":  "lang_ja",
+                        "value":  "Japanese"
+                    },
+                    {
+                        "key":  "lang_en",
+                        "value":  "EN"
+                    },
+                    {
+                        "key":  "status_play",
+                        "value":  ""
+                    },
+                    {
+                        "key":  "status_draw",
+                        "value":  ""
+                    },
+                    {
+                        "key":  "status_clear",
+                        "value":  "Clear! Press R to retry."
+                    },
+                    {
+                        "key":  "draw_title",
+                        "value":  "Design (TAB)"
+                    },
+                    {
+                        "key":  "draw_help",
+                        "value":  "TAB: Back to game / ENTER: Decide / ESC: Cancel"
+                    },
+                    {
+                        "key":  "preview",
+                        "value":  "Preview"
+                    },
+                    {
+                        "key":  "clear",
+                        "value":  "Clear"
+                    },
+                    {
+                        "key":  "decide",
+                        "value":  "Decide"
+                    },
+                    {
+                        "key":  "cancel",
+                        "value":  "Cancel"
+                    },
+                    {
+                        "key":  "retry",
+                        "value":  "Retry"
+                    },
+                    {
+                        "key":  "menu",
+                        "value":  "Menu"
+                    },
+                    {
+                        "key":  "redraw",
+                        "value":  "Redraw"
+                    },
+                    {
+                        "key":  "pen",
+                        "value":  "Pen"
+                    },
+                    {
+                        "key":  "eraser",
+                        "value":  "Eraser"
+                    },
+                    {
+                        "key":  "shape_square",
+                        "value":  "Box"
+                    },
+                    {
+                        "key":  "shape_circle",
+                        "value":  "Circle"
+                    },
+                    {
+                        "key":  "shape_line",
+                        "value":  "Line"
+                    },
+                    {
+                        "key":  "draw_finish",
+                        "value":  "Done!"
+                    },
+                    {
+                        "key":  "draw_redo",
+                        "value":  "Back"
+                    },
+                    {
+                        "key":  "brush_size",
+                        "value":  "Size"
+                    },
+                    {
+                        "key":  "ink_usage",
+                        "value":  "Ink Used"
+                    },
+                    {
+                        "key":  "undo",
+                        "value":  "Undo"
+                    },
+                    {
+                        "key":  "character_switch",
+                        "value":  "Character Switch"
+                    },
+                    {
+                        "key":  "character_add",
+                        "value":  "Add Char"
+                    },
+                    {
+                        "key":  "character_delete",
+                        "value":  "Delete Char"
+                    },
+                    {
+                        "key":  "character_control_switch",
+                        "value":  "Switch Char"
+                    },
+                    {
+                        "key":  "stage_select",
+                        "value":  "Stage Select"
+                    },
+                    {
+                        "key":  "stage_select_help",
+                        "value":  "15 groups, 3 stages each. Turn Edit ON, then choose a stage to edit it."
+                    },
+                    {
+                        "key":  "debug_stage",
+                        "value":  "1-0 Debug"
+                    },
+                    {
+                        "key":  "stage_editor_open",
+                        "value":  "Edit 1-1"
+                    },
+                    {
+                        "key":  "stage_select_edit_off",
+                        "value":  "Edit: OFF"
+                    },
+                    {
+                        "key":  "stage_select_edit_on",
+                        "value":  "Edit: ON"
+                    },
+                    {
+                        "key":  "stage_unplayed",
+                        "value":  "NEW"
+                    },
+                    {
+                        "key":  "stage_clear",
+                        "value":  "CLEAR"
+                    },
+                    {
+                        "key":  "stage_locked",
+                        "value":  "LOCKED"
+                    },
+                    {
+                        "key":  "stage_select_info",
+                        "value":  "Debug mode: all worlds are unlocked. Choose a stage to play, or turn Edit ON to edit it."
+                    },
+                    {
+                        "key":  "stage_editor_help",
+                        "value":  "1:Floor  2:Wall drag to create blocks\n3:Start  4:Goal  5:Scale  6:Weight\nA/D/W/S: move camera  Wheel: zoom\nF5:Save  F6:Test  Esc:Back"
+                    },
+                    {
+                        "key":  "stage_object_platform",
+                        "value":  "Floor"
+                    },
+                    {
+                        "key":  "stage_object_wall",
+                        "value":  "Wall"
+                    },
+                    {
+                        "key":  "stage_object_spawn",
+                        "value":  "Start"
+                    },
+                    {
+                        "key":  "stage_object_goal",
+                        "value":  "Goal"
+                    },
+                    {
+                        "key":  "stage_object_balance",
+                        "value":  "Scale"
+                    },
+                    {
+                        "key":  "stage_object_weight",
+                        "value":  "Weight"
+                    },
+                    {
+                        "key":  "stage_editor_size",
+                        "value":  "Size"
+                    },
+                    {
+                        "key":  "stage_editor_snap",
+                        "value":  "Grid"
+                    },
+                    {
+                        "key":  "stage_editor_delete",
+                        "value":  "Delete"
+                    },
+                    {
+                        "key":  "stage_editor_save",
+                        "value":  "Save"
+                    },
+                    {
+                        "key":  "stage_editor_test",
+                        "value":  "Test"
+                    },
+                    {
+                        "key":  "stage_editor_back",
+                        "value":  "Back"
+                    },
+                    {
+                        "key":  "option_subtitle",
+                        "value":  "Game Settings"
+                    },
+                    {
+                        "key":  "option_bgm",
+                        "value":  "BGM"
+                    },
+                    {
+                        "key":  "option_se",
+                        "value":  "SE"
+                    },
+                    {
+                        "key":  "option_keys",
+                        "value":  "Keys"
+                    },
+                    {
+                        "key":  "option_language",
+                        "value":  "Language"
+                    },
+                    {
+                        "key":  "option_not_implemented",
+                        "value":  "Not yet"
+                    },
+                    {
+                        "key":  "option_back",
+                        "value":  "Back  ESC"
+                    },
+                    {
+                        "key":  "locked_stage",
+                        "value":  "Stages without JSON fall back to the debug stage."
+                    },
+                    {
+                        "key":  "ink",
+                        "value":  "Ink"
+                    },
+                    {
+                        "key":  "remaining",
+                        "value":  "Remaining"
+                    },
+                    {
+                        "key":  "current",
+                        "value":  "Current"
+                    },
+                    {
+                        "key":  "part",
+                        "value":  "Part"
+                    },
+                    {
+                        "key":  "msg_torso_first",
+                        "value":  "Draw the torso first."
+                    },
+                    {
+                        "key":  "msg_torso_base",
+                        "value":  "Torso is the base. Draw other parts from their connection marker."
+                    },
+                    {
+                        "key":  "msg_start_near",
+                        "value":  "{0}: start from the connection marker."
+                    },
+                    {
+                        "key":  "msg_draw_torso_first",
+                        "value":  "Draw the torso before connecting other parts."
+                    },
+                    {
+                        "key":  "msg_connected",
+                        "value":  "{0} is connected."
+                    },
+                    {
+                        "key":  "msg_not_connected",
+                        "value":  "{0} did not start at the connection marker."
+                    },
+                    {
+                        "key":  "msg_torso_needed",
+                        "value":  "Torso is required before deciding."
+                    },
+                    {
+                        "key":  "msg_part_must_start",
+                        "value":  "{0} must start at the connection marker."
+                    },
+                    {
+                        "key":  "msg_start_at_marker",
+                        "value":  "{0}: start from the marker."
+                    },
+                    {
+                        "key":  "msg_part_required",
+                        "value":  "Draw {0}."
+                    },
+                    {
+                        "key":  "head",
+                        "value":  "Head"
+                    },
+                    {
+                        "key":  "torso",
+                        "value":  "Torso"
+                    },
+                    {
+                        "key":  "left_arm",
+                        "value":  "Left Arm"
+                    },
+                    {
+                        "key":  "right_arm",
+                        "value":  "Right Arm"
+                    },
+                    {
+                        "key":  "left_leg",
+                        "value":  "Left Leg"
+                    },
+                    {
+                        "key":  "right_leg",
+                        "value":  "Right Leg"
+                    },
+                    {
+                        "key":  "left_front_leg",
+                        "value":  "Left Front"
+                    },
+                    {
+                        "key":  "right_front_leg",
+                        "value":  "Right Front"
+                    },
+                    {
+                        "key":  "left_back_leg",
+                        "value":  "Left Back"
+                    },
+                    {
+                        "key":  "right_back_leg",
+                        "value":  "Right Back"
+                    },
+                    {
+                        "key":  "tail",
+                        "value":  "Tail"
+                    },
+                    {
+                        "key":  "left_wing",
+                        "value":  "Left Wing"
+                    },
+                    {
+                        "key":  "right_wing",
+                        "value":  "Right Wing"
+                    },
+                    {
+                        "key":  "tail_feather",
+                        "value":  "Tail Feather"
+                    },
+                    {
+                        "key":  "slime_body",
+                        "value":  "Slime"
+                    },
+                    {
+                        "key":  "human",
+                        "value":  "Human"
+                    },
+                    {
+                        "key":  "cat",
+                        "value":  "Cat"
+                    },
+                    {
+                        "key":  "bird",
+                        "value":  "Bird"
+                    },
+                    {
+                        "key":  "snake",
+                        "value":  "Snake"
+                    },
+                    {
+                        "key":  "slime",
+                        "value":  "Slime"
+                    },
+                    {
+                        "key":  "jump_normal",
+                        "value":  "Normal Jump"
+                    },
+                    {
+                        "key":  "jump_double",
+                        "value":  "Jump x2"
+                    },
+                    {
+                        "key":  "jump_triple",
+                        "value":  "Jump x3"
+                    },
+                    {
+                        "key":  "arm_normal",
+                        "value":  "Normal Reach"
+                    },
+                    {
+                        "key":  "arm_long",
+                        "value":  "Long Reach"
+                    },
+                    {
+                        "key":  "arm_fast",
+                        "value":  "Fast Swing"
+                    },
+                    {
+                        "key":  "torso_normal",
+                        "value":  "Normal"
+                    },
+                    {
+                        "key":  "torso_switch",
+                        "value":  "Heavy Switch"
+                    },
+                    {
+                        "key":  "torso_heavy",
+                        "value":  "Heavy"
+                    },
+                    {
+                        "key":  "ability_summary",
+                        "value":  "Leg {0:0.0}: {1}   Arm {2:0.0}: {3}   Torso {4:0.0}: {5}"
+                    },
+                    {
+                        "key":  "label_high_platform",
+                        "value":  "1 High Platform"
+                    },
+                    {
+                        "key":  "label_heavy_switch",
+                        "value":  "2 Heavy Switch"
+                    },
+                    {
+                        "key":  "label_far_lever",
+                        "value":  "3 Far Lever"
+                    },
+                    {
+                        "key":  "label_narrow_hole",
+                        "value":  "4 Narrow Hole"
+                    },
+                    {
+                        "key":  "label_ball_hit",
+                        "value":  "5 Ball Hit"
+                    },
+                    {
+                        "key":  "title_single",
+                        "value":  "SINGLE"
+                    },
+                    {
+                        "key":  "title_multi",
+                        "value":  "MULTI"
+                    },
+                    {
+                        "key":  "title_draw",
+                        "value":  "DRAW"
+                    },
+                    {
+                        "key":  "title_option",
+                        "value":  "OPTION"
+                    },
+                    {
+                        "key":  "title_exit",
+                        "value":  "EXIT"
+                    },
+                    {
+                        "key":  "language_settings",
+                        "value":  "Language Settings"
+                    },
+                    {
+                        "key":  "multi_play",
+                        "value":  "MULTI PLAY"
+                    },
+                    {
+                        "key":  "multi_random_button",
+                        "value":  "Random Match"
+                    },
+                    {
+                        "key":  "multi_room_button",
+                        "value":  "Private"
+                    },
+                    {
+                        "key":  "multi_random_match",
+                        "value":  "Random Match"
+                    },
+                    {
+                        "key":  "multi_random_status_default",
+                        "value":  "Matching...\n\nPlayers 2 / 4\n\n○ You\n○ Player2\n□ Searching\n□ Searching\n\nWaiting for [READY]"
+                    },
+                    {
+                        "key":  "multi_room_title",
+                        "value":  "ROOM"
+                    },
+                    {
+                        "key":  "multi_create_room",
+                        "value":  "Create Room"
+                    },
+                    {
+                        "key":  "multi_join_room",
+                        "value":  "Join Room"
+                    },
+                    {
+                        "key":  "multi_create_room_body",
+                        "value":  "Room Name\n[ Draw Together ]\n\nMax Players\n\u003c 4 \u003e\n\nVisibility\n[Public]   [Private]\n\nStage\n[Host Selects]\n\nRedraw Rule\n[Pause Everyone]"
+                    },
+                    {
+                        "key":  "multi_create",
+                        "value":  "Create"
+                    },
+                    {
+                        "key":  "multi_join_room_help",
+                        "value":  "Enter the Lobby ID shown on the host screen.\n\nWith EOS configured, friends can join remotely.\nIf using Direct TCP, enter IP:7777."
+                    },
+                    {
+                        "key":  "multi_lobby_id_placeholder",
+                        "value":  "Enter Lobby ID"
+                    },
+                    {
+                        "key":  "multi_join",
+                        "value":  "Join"
+                    },
+                    {
+                        "key":  "multi_refresh",
+                        "value":  "Refresh"
+                    },
+                    {
+                        "key":  "multi_room_lobby",
+                        "value":  "ROOM LOBBY"
+                    },
+                    {
+                        "key":  "multi_lobby_status_default",
+                        "value":  "Room: Draw Together\nID: ABC123\n2 / 4\n\nA playable lobby space\nPlay with boxes, balls, and jump pads while waiting."
+                    },
+                    {
+                        "key":  "multi_copy_id",
+                        "value":  "Copy ID"
+                    },
+                    {
+                        "key":  "multi_start_stage_1_1",
+                        "value":  "Start 1-1"
+                    },
+                    {
+                        "key":  "multi_leave",
+                        "value":  "Leave"
+                    },
+                    {
+                        "key":  "multi_matching",
+                        "value":  "Matching..."
+                    },
+                    {
+                        "key":  "multi_host_only_start",
+                        "value":  "Only the host can start."
+                    },
+                    {
+                        "key":  "multi_no_lobby_id",
+                        "value":  "No Lobby ID to copy."
+                    },
+                    {
+                        "key":  "multi_copied_lobby_id",
+                        "value":  "Copied Lobby ID."
+                    },
+                    {
+                        "key":  "multi_connecting",
+                        "value":  "Connecting..."
+                    },
+                    {
+                        "key":  "multi_room",
+                        "value":  "Room"
+                    },
+                    {
+                        "key":  "multi_players",
+                        "value":  "Players"
+                    },
+                    {
+                        "key":  "multi_local",
+                        "value":  "Local"
+                    },
+                    {
+                        "key":  "multi_ready",
+                        "value":  "READY"
+                    },
+                    {
+                        "key":  "multi_wait",
+                        "value":  "WAIT"
+                    },
+                    {
+                        "key":  "multi_host",
+                        "value":  "HOST"
+                    },
+                    {
+                        "key":  "stage_editor_help_runtime",
+                        "value":  "Drag to place / Click to select / WASD to move\nCtrl+Wheel: stage zoom  Wheel: selected size\nSnap ON: connect terrain ends  F5: save  F6: test"
+                    },
+                    {
+                        "key":  "stage_editor_quick",
+                        "value":  "QUICK PARTS"
+                    },
+                    {
+                        "key":  "stage_editor_selection",
+                        "value":  "SELECTION"
+                    },
+                    {
+                        "key":  "stage_editor_status_open",
+                        "value":  "Choose a part, then click or drag on the map to place it."
+                    },
+                    {
+                        "key":  "stage_editor_status_snap",
+                        "value":  "Snap: {0} / {1:0.##} unit grid"
+                    },
+                    {
+                        "key":  "stage_editor_status_select_first",
+                        "value":  "Select an object first."
+                    },
+                    {
+                        "key":  "stage_editor_status_resize_width",
+                        "value":  "Width changed. You can also use Shift+Wheel."
+                    },
+                    {
+                        "key":  "stage_editor_status_rotate_mounted",
+                        "value":  "Rotate: Shift + wheel (15°), with Alt (1°)"
+                    },
+                    {
+                        "key":  "stage_editor_status_resize_height",
+                        "value":  "Height changed. You can also use Alt+Wheel."
+                    },
+                    {
+                        "key":  "stage_editor_status_resize_all",
+                        "value":  "Size changed. Use the wheel to scale both axes."
+                    },
+                    {
+                        "key":  "stage_editor_status_drag_larger",
+                        "value":  "Drag a larger area to place this part."
+                    },
+                    {
+                        "key":  "stage_editor_status_placed_rect",
+                        "value":  "Placed {0} ({1:0.0} x {2:0.0})."
+                    },
+                    {
+                        "key":  "stage_editor_status_placed_point",
+                        "value":  "Placed {0} at {1:0.0}, {2:0.0}."
+                    },
+                    {
+                        "key":  "stage_editor_status_selected",
+                        "value":  "Selected. Drag to move and use the wheel to resize."
+                    },
+                    {
+                        "key":  "stage_editor_status_nothing_undo",
+                        "value":  "There is nothing to undo."
+                    },
+                    {
+                        "key":  "stage_editor_status_undo_done",
+                        "value":  "Undid the last edit."
+                    },
+                    {
+                        "key":  "stage_editor_status_nothing_redo",
+                        "value":  "There is nothing to redo."
+                    },
+                    {
+                        "key":  "stage_editor_status_redo_done",
+                        "value":  "Redid the edit."
+                    },
+                    {
+                        "key":  "stage_editor_status_select_link_source",
+                        "value":  "Select a switch or button first."
+                    },
+                    {
+                        "key":  "stage_editor_status_invalid_link_source",
+                        "value":  "Choose a switch or button as the link source."
+                    },
+                    {
+                        "key":  "stage_editor_status_link_source_set",
+                        "value":  "Link source: {0}. Select its target, then press Link To."
+                    },
+                    {
+                        "key":  "stage_editor_status_link_source_first",
+                        "value":  "Set a link source first."
+                    },
+                    {
+                        "key":  "stage_editor_status_select_link_target",
+                        "value":  "Select an object to use as the link target."
+                    },
+                    {
+                        "key":  "stage_editor_status_link_different",
+                        "value":  "The link source and target must be different objects."
+                    },
+                    {
+                        "key":  "stage_editor_status_linked",
+                        "value":  "Linked {0} to {1}."
+                    },
+                    {
+                        "key":  "stage_editor_status_select_linked",
+                        "value":  "Select a linked switch or button first."
+                    },
+                    {
+                        "key":  "stage_editor_status_link_cleared",
+                        "value":  "Cleared the link."
+                    },
+                    {
+                        "key":  "stage_editor_status_saved",
+                        "value":  "Saved: {0}"
+                    },
+                    {
+                        "key":  "stage_editor_status_save_editor_only",
+                        "value":  "Saving is currently available only in the Unity Editor."
+                    },
+                    {
+                        "key":  "stage_editor_status_factory_missing",
+                        "value":  "The stage object factory is missing."
+                    },
+                    {
+                        "key":  "stage_editor_category",
+                        "value":  "Category"
+                    },
+                    {
+                        "key":  "stage_editor_search",
+                        "value":  "Search"
+                    },
+                    {
+                        "key":  "stage_editor_type",
+                        "value":  "Type"
+                    },
+                    {
+                        "key":  "stage_editor_search_placeholder",
+                        "value":  "Search word"
+                    },
+                    {
+                        "key":  "stage_editor_object_list",
+                        "value":  "Object List"
+                    },
+                    {
+                        "key":  "stage_editor_link_list",
+                        "value":  "Link List"
+                    },
+                    {
+                        "key":  "stage_editor_width_minus",
+                        "value":  "W-"
+                    },
+                    {
+                        "key":  "stage_editor_width_plus",
+                        "value":  "W+"
+                    },
+                    {
+                        "key":  "stage_editor_height_minus",
+                        "value":  "H-"
+                    },
+                    {
+                        "key":  "stage_editor_height_plus",
+                        "value":  "H+"
+                    },
+                    {
+                        "key":  "stage_editor_redo",
+                        "value":  "Redo"
+                    },
+                    {
+                        "key":  "stage_editor_snap_attach",
+                        "value":  "Snap"
+                    },
+                    {
+                        "key":  "stage_editor_link_source",
+                        "value":  "Link From"
+                    },
+                    {
+                        "key":  "stage_editor_link_target",
+                        "value":  "Link To"
+                    },
+                    {
+                        "key":  "stage_editor_unlink",
+                        "value":  "Unlink"
+                    },
+                    {
+                        "key":  "stage_editor_selected_add",
+                        "value":  "Add: {0} / Snap: {1}"
+                    },
+                    {
+                        "key":  "stage_editor_selected_object",
+                        "value":  "{0}  Pos {1:0.0},{2:0.0}  Size {3:0.0},{4:0.0}"
+                    },
+                    {
+                        "key":  "stage_editor_status_add_rect",
+                        "value":  "Add mode: {0}. Drag on the map to create it."
+                    },
+                    {
+                        "key":  "stage_editor_status_add_point",
+                        "value":  "Add mode: {0}. Click the map to place it."
+                    },
+                    {
+                        "key":  "stage_editor_status_selected_from_list",
+                        "value":  "Selected from list."
+                    },
+                    {
+                        "key":  "stage_editor_no_match",
+                        "value":  "No match"
+                    },
+                    {
+                        "key":  "stage_editor_none",
+                        "value":  "(none)"
+                    },
+                    {
+                        "key":  "stage_category_terrain",
+                        "value":  "Terrain"
+                    },
+                    {
+                        "key":  "stage_category_start_goal",
+                        "value":  "Start/Goal"
+                    },
+                    {
+                        "key":  "stage_category_switch",
+                        "value":  "Switch"
+                    },
+                    {
+                        "key":  "stage_category_door_gate",
+                        "value":  "Door/Gate"
+                    },
+                    {
+                        "key":  "stage_category_movable",
+                        "value":  "Movable"
+                    },
+                    {
+                        "key":  "stage_category_action",
+                        "value":  "Action"
+                    },
+                    {
+                        "key":  "stage_category_trap",
+                        "value":  "Trap"
+                    },
+                    {
+                        "key":  "stage_category_gimmick",
+                        "value":  "Gimmick"
+                    },
+                    {
+                        "key":  "stage_object_balance_scale",
+                        "value":  "Balance Scale"
+                    },
+                    {
+                        "key":  "stage_object_ceiling",
+                        "value":  "Ceiling"
+                    },
+                    {
+                        "key":  "stage_object_half_platform",
+                        "value":  "Half Floor"
+                    },
+                    {
+                        "key":  "stage_object_one_way_platform",
+                        "value":  "One-way Floor"
+                    },
+                    {
+                        "key":  "stage_object_ice_floor",
+                        "value":  "Ice Floor"
+                    },
+                    {
+                        "key":  "stage_object_slippery_slope",
+                        "value":  "Slippery Slope"
+                    },
+                    {
+                        "key":  "stage_object_climbable_wall",
+                        "value":  "Climbable Wall"
+                    },
+                    {
+                        "key":  "stage_object_rope",
+                        "value":  "Rope"
+                    },
+                    {
+                        "key":  "stage_object_ladder",
+                        "value":  "Ladder"
+                    },
+                    {
+                        "key":  "stage_object_cloud_platform",
+                        "value":  "Cloud Floor"
+                    },
+                    {
+                        "key":  "stage_object_breakable_floor",
+                        "value":  "Breakable Floor"
+                    },
+                    {
+                        "key":  "stage_object_falling_floor",
+                        "value":  "Falling Floor"
+                    },
+                    {
+                        "key":  "stage_object_moving_platform",
+                        "value":  "Moving Floor"
+                    },
+                    {
+                        "key":  "stage_object_rotating_platform",
+                        "value":  "Rotating Floor"
+                    },
+                    {
+                        "key":  "stage_object_checkpoint",
+                        "value":  "Checkpoint"
+                    },
+                    {
+                        "key":  "stage_object_warp_entrance",
+                        "value":  "Warp Entrance"
+                    },
+                    {
+                        "key":  "stage_object_warp_exit",
+                        "value":  "Warp Exit"
+                    },
+                    {
+                        "key":  "stage_object_respawn_point",
+                        "value":  "Respawn Point"
+                    },
+                    {
+                        "key":  "stage_object_mid_goal",
+                        "value":  "Mid Goal"
+                    },
+                    {
+                        "key":  "stage_object_goal_effect",
+                        "value":  "Goal Effect"
+                    },
+                    {
+                        "key":  "stage_object_button",
+                        "value":  "Button"
+                    },
+                    {
+                        "key":  "stage_object_weight_button",
+                        "value":  "Weight Button"
+                    },
+                    {
+                        "key":  "stage_object_simultaneous_button",
+                        "value":  "Simultaneous Button"
+                    },
+                    {
+                        "key":  "stage_object_hold_button",
+                        "value":  "Hold Button"
+                    },
+                    {
+                        "key":  "stage_object_lever",
+                        "value":  "Lever"
+                    },
+                    {
+                        "key":  "stage_object_toggle_switch",
+                        "value":  "Toggle Switch"
+                    },
+                    {
+                        "key":  "stage_object_timer_switch",
+                        "value":  "Timer Switch"
+                    },
+                    {
+                        "key":  "stage_object_sensor",
+                        "value":  "Sensor"
+                    },
+                    {
+                        "key":  "stage_object_red_switch",
+                        "value":  "Red Switch"
+                    },
+                    {
+                        "key":  "stage_object_blue_switch",
+                        "value":  "Blue Switch"
+                    },
+                    {
+                        "key":  "stage_object_green_switch",
+                        "value":  "Green Switch"
+                    },
+                    {
+                        "key":  "stage_object_yellow_switch",
+                        "value":  "Yellow Switch"
+                    },
+                    {
+                        "key":  "stage_object_pressure_plate",
+                        "value":  "Pressure Plate"
+                    },
+                    {
+                        "key":  "stage_object_remote_control",
+                        "value":  "Remote Control"
+                    },
+                    {
+                        "key":  "stage_object_door",
+                        "value":  "Door"
+                    },
+                    {
+                        "key":  "stage_object_locked_door",
+                        "value":  "Locked Door"
+                    },
+                    {
+                        "key":  "stage_object_shutter",
+                        "value":  "Shutter"
+                    },
+                    {
+                        "key":  "stage_object_fence",
+                        "value":  "Fence"
+                    },
+                    {
+                        "key":  "stage_object_laser_gate",
+                        "value":  "Laser Gate"
+                    },
+                    {
+                        "key":  "stage_object_color_gate",
+                        "value":  "Color Gate"
+                    },
+                    {
+                        "key":  "stage_object_one_way_gate",
+                        "value":  "One-way Gate"
+                    },
+                    {
+                        "key":  "stage_object_timed_gate",
+                        "value":  "Timed Gate"
+                    },
+                    {
+                        "key":  "stage_object_breakable_wall",
+                        "value":  "Breakable Wall"
+                    },
+                    {
+                        "key":  "stage_object_hidden_wall",
+                        "value":  "Hidden Wall"
+                    },
+                    {
+                        "key":  "stage_object_wood_box",
+                        "value":  "Wood Box"
+                    },
+                    {
+                        "key":  "stage_object_iron_box",
+                        "value":  "Iron Box"
+                    },
+                    {
+                        "key":  "stage_object_ball",
+                        "value":  "Ball"
+                    },
+                    {
+                        "key":  "stage_object_barrel",
+                        "value":  "Barrel"
+                    },
+                    {
+                        "key":  "stage_object_rock",
+                        "value":  "Rock"
+                    },
+                    {
+                        "key":  "stage_object_ice_block",
+                        "value":  "Ice Block"
+                    },
+                    {
+                        "key":  "stage_object_floating_box",
+                        "value":  "Floating Box"
+                    },
+                    {
+                        "key":  "stage_object_rubber_box",
+                        "value":  "Rubber Box"
+                    },
+                    {
+                        "key":  "stage_object_bomb",
+                        "value":  "Bomb"
+                    },
+                    {
+                        "key":  "stage_object_key",
+                        "value":  "Key"
+                    },
+                    {
+                        "key":  "stage_object_coin",
+                        "value":  "Coin"
+                    },
+                    {
+                        "key":  "stage_object_star",
+                        "value":  "Star"
+                    },
+                    {
+                        "key":  "stage_object_battery",
+                        "value":  "Battery"
+                    },
+                    {
+                        "key":  "stage_object_bucket",
+                        "value":  "Bucket"
+                    },
+                    {
+                        "key":  "stage_object_jump_pad",
+                        "value":  "Jump Pad"
+                    },
+                    {
+                        "key":  "stage_object_spring",
+                        "value":  "Spring"
+                    },
+                    {
+                        "key":  "stage_object_conveyor_left",
+                        "value":  "Conveyor Left"
+                    },
+                    {
+                        "key":  "stage_object_conveyor_right",
+                        "value":  "Conveyor Right"
+                    },
+                    {
+                        "key":  "stage_object_elevator",
+                        "value":  "Elevator"
+                    },
+                    {
+                        "key":  "stage_object_fan",
+                        "value":  "Fan"
+                    },
+                    {
+                        "key":  "stage_object_magnet",
+                        "value":  "Magnet"
+                    },
+                    {
+                        "key":  "stage_object_belt",
+                        "value":  "Belt"
+                    },
+                    {
+                        "key":  "stage_object_seesaw",
+                        "value":  "Seesaw"
+                    },
+                    {
+                        "key":  "stage_object_turntable",
+                        "value":  "Turntable"
+                    },
+                    {
+                        "key":  "stage_object_cannon",
+                        "value":  "Cannon"
+                    },
+                    {
+                        "key":  "stage_object_catapult",
+                        "value":  "Catapult"
+                    },
+                    {
+                        "key":  "stage_object_spike",
+                        "value":  "Spike"
+                    },
+                    {
+                        "key":  "stage_object_fire",
+                        "value":  "Fire"
+                    },
+                    {
+                        "key":  "stage_object_water",
+                        "value":  "Water"
+                    },
+                    {
+                        "key":  "stage_object_poison",
+                        "value":  "Poison"
+                    },
+                    {
+                        "key":  "stage_object_laser",
+                        "value":  "Laser"
+                    },
+                    {
+                        "key":  "stage_object_falling_rock",
+                        "value":  "Falling Rock"
+                    },
+                    {
+                        "key":  "stage_object_press_machine",
+                        "value":  "Press Machine"
+                    },
+                    {
+                        "key":  "stage_object_electricity",
+                        "value":  "Electricity"
+                    },
+                    {
+                        "key":  "stage_object_saw",
+                        "value":  "Saw"
+                    },
+                    {
+                        "key":  "stage_object_black_hole",
+                        "value":  "Black Hole"
+                    },
+                    {
+                        "key":  "stage_object_gear",
+                        "value":  "Gear"
+                    },
+                    {
+                        "key":  "stage_object_big_gear",
+                        "value":  "Big Gear"
+                    },
+                    {
+                        "key":  "stage_object_rope_pulley",
+                        "value":  "Rope Pulley"
+                    },
+                    {
+                        "key":  "stage_object_slider",
+                        "value":  "Slider"
+                    },
+                    {
+                        "key":  "stage_object_rotating_bar",
+                        "value":  "Rotating Bar"
+                    },
+                    {
+                        "key":  "stage_object_pendulum",
+                        "value":  "Pendulum"
+                    },
+                    {
+                        "key":  "stage_object_keyhole",
+                        "value":  "Keyhole"
+                    },
+                    {
+                        "key":  "stage_object_clock",
+                        "value":  "Clock"
+                    },
+                    {
+                        "key":  "stage_object_counter",
+                        "value":  "Counter"
+                    },
+                    {
+                        "key":  "stage_object_traffic_light",
+                        "value":  "Traffic Light"
+                    },
+                    {
+                        "key":  "online_eos_device_create_failed",
+                        "value":  "EOS Device ID creation failed: {0}"
+                    },
+                    {
+                        "key":  "stage_world_label",
+                        "value":  "WORLD {0}"
+                    },
+                    {
+                        "key":  "online_starting_stage",
+                        "value":  "Starting stage {0}."
+                    },
+                    {
+                        "key":  "online_lobby_members_updated",
+                        "value":  "Lobby members updated."
+                    },
+                    {
+                        "key":  "online_eos_disabled",
+                        "value":  "EOS is disabled."
+                    },
+                    {
+                        "key":  "stage_editor_links_tab",
+                        "value":  "Links"
+                    },
+                    {
+                        "key":  "online_eos_left_lobby",
+                        "value":  "Left EOS lobby."
+                    },
+                    {
+                        "key":  "online_eos_login_failed",
+                        "value":  "EOS login failed: {0}"
+                    },
+                    {
+                        "key":  "online_left_lobby",
+                        "value":  "Left lobby."
+                    },
+                    {
+                        "key":  "online_eos_join_lobby_failed",
+                        "value":  "EOS join lobby failed: {0}"
+                    },
+                    {
+                        "key":  "online_room_id_format",
+                        "value":  "Room ID must be host-ip:port."
+                    },
+                    {
+                        "key":  "online_failed_to_host",
+                        "value":  "Failed to host: {0}"
+                    },
+                    {
+                        "key":  "online_ready_on",
+                        "value":  "Ready."
+                    },
+                    {
+                        "key":  "online_player_number",
+                        "value":  "Player {0}"
+                    },
+                    {
+                        "key":  "multi_default_room_name",
+                        "value":  "Draw Together"
+                    },
+                    {
+                        "key":  "stage_label",
+                        "value":  "Stage {0}"
+                    },
+                    {
+                        "key":  "online_eos_room_created",
+                        "value":  "EOS room created. Share this Lobby ID."
+                    },
+                    {
+                        "key":  "online_failed_to_join",
+                        "value":  "Failed to join: {0}"
+                    },
+                    {
+                        "key":  "online_lobby_updated",
+                        "value":  "Lobby updated."
+                    },
+                    {
+                        "key":  "online_eos_online_as",
+                        "value":  "EOS online as {0}."
+                    },
+                    {
+                        "key":  "online_player_joined",
+                        "value":  "{0} joined."
+                    },
+                    {
+                        "key":  "online_eos_create_lobby_failed",
+                        "value":  "EOS create lobby failed: {0}"
+                    },
+                    {
+                        "key":  "online_joining_room",
+                        "value":  "Joining room..."
+                    },
+                    {
+                        "key":  "online_eos_connect_not_ready",
+                        "value":  "EOS Connect interface is not ready."
+                    },
+                    {
+                        "key":  "multi_friend_room_name",
+                        "value":  "Friend Room"
+                    },
+                    {
+                        "key":  "online_ready_off",
+                        "value":  "Not ready."
+                    },
+                    {
+                        "key":  "online_eos_device_login_failed",
+                        "value":  "EOS Device ID login failed: {0}"
+                    },
+                    {
+                        "key":  "stage_editor_objects_tab",
+                        "value":  "Objects"
+                    },
+                    {
+                        "key":  "online_eos_joined_room",
+                        "value":  "Joined EOS room."
+                    },
+                    {
+                        "key":  "online_eos_creating_device_id",
+                        "value":  "Creating EOS Device ID..."
+                    },
+                    {
+                        "key":  "online_eos_not_logged_in",
+                        "value":  "EOS is not logged in. Configure EOS Plugin and login first."
+                    },
+                    {
+                        "key":  "online_ready",
+                        "value":  "Online ready. Host or join a room."
+                    },
+                    {
+                        "key":  "online_eos_login",
+                        "value":  "EOS login..."
+                    },
+                    {
+                        "key":  "online_accept_failed",
+                        "value":  "Accept failed."
+                    },
+                    {
+                        "key":  "online_ready_changed",
+                        "value":  "Ready changed."
+                    },
+                    {
+                        "key":  "online_player_you",
+                        "value":  "You"
+                    },
+                    {
+                        "key":  "player_controlled_marker",
+                        "value":  "YOU"
+                    },
+                    {
+                        "key":  "online_eos_enter_lobby_id",
+                        "value":  "Enter an EOS Lobby ID."
+                    },
+                    {
+                        "key":  "online_room_created",
+                        "value":  "Room created. Share the ID with your friend."
+                    },
+                    {
+                        "key":  "online_eos_initialized",
+                        "value":  "EOS initialized. Configure EOS Plugin before login."
+                    },
+                    {
+                        "key":  "online_direct_initialized",
+                        "value":  "Direct TCP initialized."
+                    },
+                    {
+                        "key":  "online_private_room_created",
+                        "value":  "Private room created."
+                    },
+                    {
+                        "key":  "online_joined_fake_room",
+                        "value":  "Joined fake room."
+                    },
+                    {
+                        "key":  "online_fake_random_ready",
+                        "value":  "Fake random match ready."
+                    },
+                    {
+                        "key":  "online_public_room_created",
+                        "value":  "Public room created."
+                    },
+                    {
+                        "key":  "multi_room_status_default",
+                        "value":  "Create Room\nRoom Name  [........]\nPlayers  2 / 3 / 4\nPublic / Private\n\nJoin Room\nRoom ID  [......]"
+                    },
+                    {
+                        "key":  "online_player_host",
+                        "value":  "Host"
+                    },
+                    {
+                        "key":  "online_fake_stage_start",
+                        "value":  "Fake stage start."
+                    },
+                    {
+                        "key":  "online_local_test_player",
+                        "value":  "Online as local test player."
+                    },
+                    {
+                        "key":  "online_logging_in",
+                        "value":  "Logging in..."
+                    },
+                    {
+                        "key":  "online_fake_initialized",
+                        "value":  "Fake backend initialized."
+                    }
+                ]
 }

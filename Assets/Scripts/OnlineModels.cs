@@ -34,6 +34,7 @@ namespace DrawBody.Prototype
     public sealed class OnlineLobbyInfo
     {
         public string LobbyId;
+        public string RoomCode;
         public string RoomName;
         public string StageId = "1-1";
         public int MaxPlayers = 4;
@@ -89,5 +90,35 @@ namespace DrawBody.Prototype
         public string TargetPlayerId;
         public string Action;
         public Vector2 ReleaseVelocity;
+    }
+
+    [Serializable]
+    public sealed class OnlineGimmickData
+    {
+        public string PlayerId;
+        public string ObjectId;
+        public string Kind;
+        public string Json;
+        public int Sequence;
+    }
+
+    [Serializable]
+    public sealed class OnlineTransformGimmickState
+    {
+        public Vector2 Position;
+        public Vector2 Velocity;
+        public float Rotation;
+        public float AngularVelocity;
+        public bool Active;
+    }
+
+    [Serializable]
+    public sealed class OnlineLinkGimmickState
+    {
+        public string TargetId;
+        public string Action;
+        public float Progress;
+        public bool Active;
+        public bool Pressed;
     }
 }

@@ -31,6 +31,10 @@ namespace DrawBody.Prototype
         {
             public float LegInk;
             public float ArmInk;
+            public float WingInk;
+            public float CatLegInk;
+            public float SnakeInk;
+            public float SlimeInk;
             public float TorsoInk;
             public float TotalInk;
             public DrawManager.Species Species;
@@ -84,6 +88,13 @@ namespace DrawBody.Prototype
                 + GetInkIfActive(drawManager, DrawManager.BodyPart.LeftWing)
                 + GetInkIfActive(drawManager, DrawManager.BodyPart.RightWing)
                 + GetInkIfActive(drawManager, DrawManager.BodyPart.Tail);
+            float wingInk = GetInkIfActive(drawManager, DrawManager.BodyPart.LeftWing)
+                + GetInkIfActive(drawManager, DrawManager.BodyPart.RightWing);
+            float catLegInk = GetInkIfActive(drawManager, DrawManager.BodyPart.LeftFrontLeg)
+                + GetInkIfActive(drawManager, DrawManager.BodyPart.RightFrontLeg)
+                + GetInkIfActive(drawManager, DrawManager.BodyPart.LeftBackLeg)
+                + GetInkIfActive(drawManager, DrawManager.BodyPart.RightBackLeg);
+            float slimeInk = GetInkIfActive(drawManager, DrawManager.BodyPart.SlimeBody);
             float torsoInk = GetInkIfActive(drawManager, DrawManager.BodyPart.Torso)
                 + GetInkIfActive(drawManager, DrawManager.BodyPart.SlimeBody);
             float totalInk = CalculateTotalInk(drawManager);
@@ -93,6 +104,10 @@ namespace DrawBody.Prototype
                 Species = species,
                 LegInk = legInk,
                 ArmInk = armInk,
+                WingInk = wingInk,
+                CatLegInk = catLegInk,
+                SnakeInk = species == DrawManager.Species.Snake ? totalInk : 0f,
+                SlimeInk = slimeInk,
                 TorsoInk = torsoInk,
                 TotalInk = totalInk,
                 Jump = legInk >= 80f ? JumpTier.Triple : legInk >= 50f ? JumpTier.Double : JumpTier.Normal,
@@ -122,22 +137,47 @@ namespace DrawBody.Prototype
 
         public static string GetProfileSummary(AbilityProfile profile)
         {
-            string baseSummary = LocalizationManager.Format(
-                "ability_summary",
-                profile.LegInk,
-                GetJumpLabel(profile.Jump),
-                profile.ArmInk,
-                GetArmLabel(profile.Arm),
-                profile.TorsoInk,
-                GetTorsoLabel(profile.Torso));
-            return $"{profile.Species}   {baseSummary}";
+            switch (profile.Species)
+            {
+                case DrawManager.Species.Cat:
+                    return LocalizationManager.Format(
+                        "ability_cat_status",
+                        profile.CatLegInk,
+                        PlayerController2D.CalculateCatMoveSpeedMultiplier(profile.CatLegInk));
+                case DrawManager.Species.Bird:
+                    return LocalizationManager.Format(
+                        "ability_bird_status",
+                        profile.WingInk,
+                        PlayerController2D.CalculateBirdGlideFallSpeed(profile.WingInk));
+                case DrawManager.Species.Snake:
+                    return LocalizationManager.Format(
+                        "ability_snake_status",
+                        profile.SnakeInk,
+                        PlayerController2D.CalculateSnakeJumpMultiplier(profile.SnakeInk));
+                case DrawManager.Species.Slime:
+                    return LocalizationManager.Format(
+                        "ability_slime_status",
+                        profile.SlimeInk,
+                        PlayerController2D.CalculateSlimeStickStrength(profile.SlimeInk) * 100f);
+                default:
+                    return LocalizationManager.Format(
+                        "ability_human_status",
+                        profile.ArmInk,
+                        ArmSwingController.CalculateArmStrengthMultiplier(profile.ArmInk));
+            }
         }
 
         private void ApplyProfile(AbilityProfile profile)
         {
             CurrentProfile = profile;
-            playerController.SetJumpMultiplier(GetJumpMultiplier(profile.Jump));
-            playerController.ApplySpeciesMovement(profile.Species);
+            playerController.SetJumpMultiplier(
+                profile.Species == DrawManager.Species.Snake ? 1f : GetJumpMultiplier(profile.Jump));
+            playerController.ApplySpeciesMovement(
+                profile.Species,
+                profile.WingInk,
+                profile.CatLegInk,
+                profile.SnakeInk,
+                profile.SlimeInk);
 
             if (rb != null)
             {

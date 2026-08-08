@@ -52,6 +52,7 @@ namespace DrawBody.Prototype
             if (drawManager != null && subscribed)
             {
                 drawManager.CurrentSpeciesChanged -= RefreshVisual;
+                drawManager.SpeciesAvailabilityChanged -= RefreshAvailability;
                 subscribed = false;
             }
         }
@@ -70,13 +71,22 @@ namespace DrawBody.Prototype
             }
 
             drawManager.CurrentSpeciesChanged += RefreshVisual;
+            drawManager.SpeciesAvailabilityChanged += RefreshAvailability;
             subscribed = true;
+        }
+
+        private void RefreshAvailability()
+        {
+            RefreshVisual(drawManager != null ? drawManager.CurrentSpecies : species);
         }
 
         private void RefreshVisual(DrawManager.Species currentSpecies)
         {
             bool selected = currentSpecies == species;
-            Color targetColor = selected ? selectedColor : normalColor;
+            bool allowed = drawManager == null || drawManager.IsSpeciesAllowed(species);
+            Color targetColor = allowed
+                ? selected ? selectedColor : normalColor
+                : new Color(0.55f, 0.55f, 0.55f, 0.42f);
 
             if (image != null)
             {
@@ -85,24 +95,28 @@ namespace DrawBody.Prototype
 
             if (button != null)
             {
+                button.interactable = allowed;
                 ColorBlock colors = button.colors;
                 colors.normalColor = targetColor;
                 colors.highlightedColor = targetColor * 1.08f;
                 colors.pressedColor = targetColor * 0.9f;
+                colors.disabledColor = targetColor;
                 button.colors = colors;
             }
 
             if (outline != null)
             {
-                outline.effectColor = selected
+                outline.effectColor = !allowed
+                    ? new Color(0.25f, 0.22f, 0.2f, 0.35f)
+                    : selected
                     ? new Color(0.25f, 0.45f, 1f, 0.9f)
                     : new Color(0.28f, 0.2f, 0.14f, 0.25f);
             }
 
             if (rectTransform != null)
             {
-                rectTransform.localScale = selected ? new Vector3(1.1f, 1.1f, 1f) : Vector3.one;
-                rectTransform.localRotation = Quaternion.Euler(0f, 0f, selected ? -2.5f : 0f);
+                rectTransform.localScale = selected && allowed ? new Vector3(1.1f, 1.1f, 1f) : Vector3.one;
+                rectTransform.localRotation = Quaternion.identity;
             }
         }
     }

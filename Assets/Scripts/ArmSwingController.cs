@@ -9,6 +9,7 @@ namespace DrawBody.Prototype
         [SerializeField] private PlayerAbilityController abilityController;
         [SerializeField] private PlayerController2D playerController;
         [SerializeField] private PlayerCarryController carryController;
+        [SerializeField] private BodyBuilder bodyBuilder;
         [SerializeField] private Transform swingPivot;
         [SerializeField] private float normalReach = 1.2f;
         [SerializeField] private float longReach = 1.9f;
@@ -18,7 +19,7 @@ namespace DrawBody.Prototype
         [SerializeField] private float pushImpulse = 16f;
         [SerializeField] private float swingReachMultiplier = 2f;
         [SerializeField] private float characterLaunchMultiplier = 2.6f;
-        [SerializeField] private float armInkLaunchScale = 0.018f;
+        private const float ArmInkStrengthScale = 0.018f;
         [SerializeField] private float characterLaunchUpSpeed = 30f;
         [SerializeField] private float characterLaunchSideSpeed = 7f;
         [SerializeField] private bool swingEnabled;
@@ -38,6 +39,11 @@ namespace DrawBody.Prototype
         private Material lineMaterial;
         private VisualArmSegment[] visualArmSegments = new VisualArmSegment[0];
         private readonly HashSet<Rigidbody2D> pushedBodies = new HashSet<Rigidbody2D>();
+
+        public static float CalculateArmStrengthMultiplier(float armInk)
+        {
+            return 1f + Mathf.Clamp(Mathf.Max(0f, armInk) * ArmInkStrengthScale, 0f, 5f);
+        }
         public bool IsSwinging => swinging;
 
         private struct VisualArmSegment
@@ -67,6 +73,11 @@ namespace DrawBody.Prototype
             if (carryController == null)
             {
                 carryController = GetComponent<PlayerCarryController>();
+            }
+
+            if (bodyBuilder == null)
+            {
+                bodyBuilder = GetComponent<BodyBuilder>();
             }
 
             if (swingPivot == null)
@@ -130,6 +141,7 @@ namespace DrawBody.Prototype
             pushedBodies.Clear();
 
             ConfigureSwingShape();
+            ApplySwingColor();
             CacheVisualArmSegments(profile.Species);
             swingObject.SetActive(true);
         }
@@ -198,7 +210,7 @@ namespace DrawBody.Prototype
                 }
 
                 float armInk = abilityController != null ? abilityController.CurrentProfile.ArmInk : 0f;
-                float inkMultiplier = 1f + Mathf.Clamp(armInk * armInkLaunchScale, 0f, 5f);
+                float inkMultiplier = CalculateArmStrengthMultiplier(armInk);
                 float targetMultiplier = hitPlayer ? characterLaunchMultiplier : 1f;
                 if (hitPlayer)
                 {
@@ -227,8 +239,7 @@ namespace DrawBody.Prototype
             line.numCornerVertices = 4;
             line.sortingOrder = 20;
             line.material = GetLineMaterial();
-            line.startColor = new Color(1f, 0.25f, 0.2f, 0.85f);
-            line.endColor = new Color(1f, 0.25f, 0.2f, 0.85f);
+            ApplySwingColor();
 
             swingCollider = swingObject.AddComponent<CapsuleCollider2D>();
             swingCollider.direction = CapsuleDirection2D.Horizontal;
@@ -247,6 +258,19 @@ namespace DrawBody.Prototype
             swingObject.transform.localPosition = new Vector3(0f, 0.1f, 0f);
             swingCollider.size = new Vector2(swingReach, armThickness);
             swingCollider.offset = new Vector2(swingReach * 0.5f, 0f);
+        }
+
+        private void ApplySwingColor()
+        {
+            if (line == null)
+            {
+                return;
+            }
+
+            Color color = bodyBuilder != null ? bodyBuilder.PlayerColor : PlayerColorPalette.GetColor(0);
+            color.a = 0.85f;
+            line.startColor = color;
+            line.endColor = color;
         }
 
         private void CacheVisualArmSegments(DrawManager.Species species)

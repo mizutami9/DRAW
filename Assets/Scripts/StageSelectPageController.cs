@@ -27,6 +27,11 @@ namespace DrawBody.Prototype
             ShowPage(0);
         }
 
+        private void OnEnable()
+        {
+            ShowPage(0);
+        }
+
         public void Previous()
         {
             ShowPage(currentPage - 1);
@@ -52,6 +57,9 @@ namespace DrawBody.Prototype
                     pages[i].SetActive(i == currentPage);
                 }
             }
+
+            StageSelectVisualPolisher polisher = GetComponent<StageSelectVisualPolisher>();
+            polisher?.RefreshWorldCardColors();
 
             if (pageText != null)
             {

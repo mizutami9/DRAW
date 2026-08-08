@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DrawBody.Prototype
@@ -10,10 +11,16 @@ namespace DrawBody.Prototype
         [SerializeField] private float remoteSmoothRate = 14f;
 
         private float nextSendTime;
-        private bool hasRemoteTarget;
-        private Vector2 remoteTargetPosition;
-        private Vector2 remoteTargetVelocity;
-        private float remoteTargetRotation;
+        private float nextBodyResyncTime;
+        private bool bodyResyncPending;
+        private readonly Dictionary<string, RemoteTarget> remoteTargets = new Dictionary<string, RemoteTarget>();
+
+        private sealed class RemoteTarget
+        {
+            public Vector2 Position;
+            public Vector2 Velocity;
+            public float Rotation;
+        }
 
         private void Awake()
         {
@@ -32,9 +39,18 @@ namespace DrawBody.Prototype
         {
             if (onlineManager != null)
             {
+                onlineManager.StateChanged += HandleOnlineStateChanged;
                 onlineManager.PlayerStateReceived += ApplyRemoteState;
                 onlineManager.BodyDataReceived += ApplyRemoteBodyData;
                 onlineManager.CarryDataReceived += ApplyRemoteCarryData;
+            }
+
+            if (onlineManager != null
+                && (onlineManager.State == OnlineConnectionState.InLobby
+                    || onlineManager.State == OnlineConnectionState.Matching
+                    || onlineManager.State == OnlineConnectionState.Playing))
+            {
+                RequestBodyResync();
             }
         }
 
@@ -42,6 +58,7 @@ namespace DrawBody.Prototype
         {
             if (onlineManager != null)
             {
+                onlineManager.StateChanged -= HandleOnlineStateChanged;
                 onlineManager.PlayerStateReceived -= ApplyRemoteState;
                 onlineManager.BodyDataReceived -= ApplyRemoteBodyData;
                 onlineManager.CarryDataReceived -= ApplyRemoteCarryData;
@@ -55,12 +72,15 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (onlineManager.State != OnlineConnectionState.InLobby && onlineManager.State != OnlineConnectionState.Playing)
+            if (onlineManager.State != OnlineConnectionState.InLobby
+                && onlineManager.State != OnlineConnectionState.Matching
+                && onlineManager.State != OnlineConnectionState.Playing)
             {
                 return;
             }
 
             ApplyRemoteTarget();
+            FlushPendingBodyResync();
 
             if (Time.unscaledTime < nextSendTime)
             {
@@ -96,31 +116,34 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            remoteTargetPosition = state.Position;
-            remoteTargetVelocity = state.Velocity;
-            remoteTargetRotation = state.Rotation;
-            hasRemoteTarget = true;
-            stageManager.SetOnlineRemotePlayerId(state.PlayerId);
+            remoteTargets[state.PlayerId] = new RemoteTarget
+            {
+                Position = state.Position,
+                Velocity = state.Velocity,
+                Rotation = state.Rotation
+            };
+            ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
         }
 
         private void ApplyRemoteTarget()
         {
-            if (!hasRemoteTarget || stageManager == null)
+            if (stageManager == null)
             {
-                return;
-            }
-
-            Transform remoteTransform = stageManager.RemotePlayerTransform;
-            if (remoteTransform == null)
-            {
-                stageManager.ApplyOnlineRemoteState(remoteTargetPosition, remoteTargetVelocity, remoteTargetRotation);
                 return;
             }
 
             float t = 1f - Mathf.Exp(-remoteSmoothRate * Time.unscaledDeltaTime);
-            Vector2 position = Vector2.Lerp(remoteTransform.position, remoteTargetPosition, t);
-            float rotation = Mathf.LerpAngle(remoteTransform.eulerAngles.z, remoteTargetRotation, t);
-            stageManager.ApplyOnlineRemoteState(position, remoteTargetVelocity, rotation);
+            foreach (KeyValuePair<string, RemoteTarget> pair in remoteTargets)
+            {
+                Transform remoteTransform = stageManager.GetOnlinePlayerTransform(pair.Key);
+                Vector2 position = remoteTransform != null
+                    ? Vector2.Lerp(remoteTransform.position, pair.Value.Position, t)
+                    : pair.Value.Position;
+                float rotation = remoteTransform != null
+                    ? Mathf.LerpAngle(remoteTransform.eulerAngles.z, pair.Value.Rotation, t)
+                    : pair.Value.Rotation;
+                stageManager.ApplyOnlineRemoteState(pair.Key, position, pair.Value.Velocity, rotation);
+            }
         }
 
         private void ApplyRemoteBodyData(OnlineBodyData bodyData)
@@ -136,6 +159,7 @@ namespace DrawBody.Prototype
             }
 
             stageManager.ApplyOnlineRemoteBodyData(bodyData);
+            ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
         }
 
         private void ApplyRemoteCarryData(OnlineCarryData carryData)
@@ -146,6 +170,46 @@ namespace DrawBody.Prototype
             }
 
             stageManager.ApplyOnlineCarryData(carryData, onlineManager.LocalPlayerId);
+        }
+
+        private void HandleOnlineStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
+        {
+            stageManager?.SyncOnlinePlayers(lobby, onlineManager != null ? onlineManager.LocalPlayerId : string.Empty);
+            ApplyLobbyColors(state, lobby, message);
+
+            if (state == OnlineConnectionState.InLobby
+                || state == OnlineConnectionState.Matching
+                || state == OnlineConnectionState.Playing)
+            {
+                RequestBodyResync();
+            }
+        }
+
+        private void RequestBodyResync()
+        {
+            bodyResyncPending = true;
+            nextBodyResyncTime = Time.unscaledTime + 0.25f;
+        }
+
+        private void FlushPendingBodyResync()
+        {
+            if (!bodyResyncPending || Time.unscaledTime < nextBodyResyncTime)
+            {
+                return;
+            }
+
+            bodyResyncPending = false;
+            stageManager?.SendLocalOnlineBodyData();
+        }
+
+        private void ApplyLobbyColors(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
+        {
+            if (stageManager == null || onlineManager == null)
+            {
+                return;
+            }
+
+            stageManager.ApplyOnlinePlayerColors(lobby, onlineManager.LocalPlayerId, stageManager.RemotePlayerId);
         }
 
     }

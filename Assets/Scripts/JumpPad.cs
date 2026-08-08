@@ -10,9 +10,10 @@ namespace DrawBody.Prototype
         private Vector3 animatedOrigin;
         private float bounceTimer;
 
-        public void Configure(Transform visualRoot)
+        public void Configure(Transform visualRoot, float launchVelocity)
         {
             animatedRoot = visualRoot;
+            jumpVelocity = Mathf.Clamp(launchVelocity, 5f, 60f);
             if (animatedRoot != null)
             {
                 animatedOrigin = animatedRoot.localPosition;

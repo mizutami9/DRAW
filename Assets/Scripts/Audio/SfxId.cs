@@ -1,0 +1,60 @@
+namespace DrawBody.Prototype
+{
+    public enum SfxId
+    {
+        UiCursorMove,
+        UiButtonHover,
+        UiButtonPress,
+        UiButtonBack,
+        UiTabChange,
+        UiDropdownOpen,
+        UiDropdownSelect,
+        UiSliderTick,
+        UiToggleOn,
+        UiToggleOff,
+
+        DrawPenStart,
+        DrawPenLoop,
+        DrawPenEnd,
+        DrawEraserLoop,
+        DrawEraseComplete,
+        DrawPartChange,
+        DrawSpeciesChange,
+        DrawInkWarning,
+        DrawInkOver,
+        DrawConfirm,
+
+        EditorObjectPlace,
+        EditorObjectSelect,
+        EditorObjectMove,
+        EditorObjectDrop,
+        EditorObjectResize,
+        EditorObjectRotate,
+        EditorObjectCopy,
+        EditorObjectDelete,
+        EditorUndo,
+        EditorRedo,
+
+        PlayerFootstepPaper,
+        PlayerLandSoft,
+        PlayerLandHard,
+        PlayerJump,
+        PlayerDoubleJump,
+        PlayerHit,
+        PlayerDeath,
+        PlayerRespawn,
+        PlayerPush,
+        PlayerStacked,
+
+        HumanLift,
+        HumanThrow,
+        CatRunLoop,
+        CatJump,
+        BirdFlap,
+        BirdGlideLoop,
+        SnakeJump,
+        SnakeLand,
+        SlimeStick,
+        SlimeRelease
+    }
+}

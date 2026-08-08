@@ -19,6 +19,8 @@ namespace DrawBody.Prototype
         private const string MessageState = "state";
         private const string MessageBody = "body";
         private const string MessageCarry = "carry";
+        private const string MessageStageSelect = "stage_select";
+        private const string MessageGimmick = "gimmick";
 
         private readonly int port;
         private readonly string localPlayerId;
@@ -40,18 +42,19 @@ namespace DrawBody.Prototype
         public event Action<OnlinePlayerState> PlayerStateReceived;
         public event Action<OnlineBodyData> BodyDataReceived;
         public event Action<OnlineCarryData> CarryDataReceived;
+        public event Action<OnlineGimmickData> GimmickDataReceived;
         public OnlineConnectionState State { get; private set; }
         public OnlineLobbyInfo CurrentLobby { get; private set; }
         public string LocalPlayerId => localPlayerId;
 
         public void Initialize()
         {
-            SetState(OnlineConnectionState.Offline, null, "Direct TCP backend initialized.");
+            SetState(OnlineConnectionState.Offline, null, LocalizationManager.T("online_direct_initialized"));
         }
 
         public void Login()
         {
-            SetState(OnlineConnectionState.Online, null, "Online ready. Host or join a room.");
+            SetState(OnlineConnectionState.Online, null, LocalizationManager.T("online_ready"));
         }
 
         public void Tick()
@@ -62,9 +65,19 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void Shutdown()
+        {
+            CloseSockets();
+            CurrentLobby = null;
+            State = OnlineConnectionState.Offline;
+            while (mainThreadActions.TryDequeue(out _))
+            {
+            }
+        }
+
         public void StartRandomMatch()
         {
-            CreateRoom("Random Match", 4, false);
+            CreateRoom(LocalizationManager.T("multi_random_match"), 4, false);
         }
 
         public void CreateRoom(string roomName, int maxPlayers, bool isPrivate)
@@ -76,11 +89,11 @@ namespace DrawBody.Prototype
             CurrentLobby = new OnlineLobbyInfo
             {
                 LobbyId = GetRoomAddress(),
-                RoomName = string.IsNullOrEmpty(roomName) ? "Draw Together" : roomName,
+                RoomName = string.IsNullOrEmpty(roomName) ? LocalizationManager.T("multi_default_room_name") : roomName,
                 StageId = "1-1",
                 MaxPlayers = Mathf.Clamp(maxPlayers, 2, 4),
                 Mode = OnlineLobbyMode.Room,
-                Players = new[] { CreatePlayer(localPlayerId, "You", true, false) }
+                Players = new[] { CreatePlayer(localPlayerId, LocalizationManager.T("online_player_you"), true, false) }
             };
 
             try
@@ -89,12 +102,12 @@ namespace DrawBody.Prototype
                 listener.Start();
                 acceptThread = new Thread(AcceptLoop) { IsBackground = true };
                 acceptThread.Start();
-                SetState(OnlineConnectionState.InLobby, CurrentLobby, "Room created. Share the ID with your friend.");
+                SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_room_created"));
             }
             catch (Exception ex)
             {
                 CloseSockets();
-                SetState(OnlineConnectionState.Error, CurrentLobby, "Failed to host: " + ex.Message);
+                SetState(OnlineConnectionState.Error, CurrentLobby, LocalizationManager.Format("online_failed_to_host", ex.Message));
             }
         }
 
@@ -108,7 +121,7 @@ namespace DrawBody.Prototype
             string[] parts = address.Split(':');
             if (parts.Length != 2 || !int.TryParse(parts[1], out int remotePort))
             {
-                SetState(OnlineConnectionState.Error, null, "Room ID must be host-ip:port.");
+                SetState(OnlineConnectionState.Error, null, LocalizationManager.T("online_room_id_format"));
                 return;
             }
 
@@ -117,23 +130,23 @@ namespace DrawBody.Prototype
                 client = new TcpClient();
                 client.Connect(parts[0], remotePort);
                 StartReadLoop(client);
-                Send(client, MessageHello, JsonUtility.ToJson(CreatePlayer(localPlayerId, "You", false, false)));
+                Send(client, MessageHello, JsonUtility.ToJson(CreatePlayer(localPlayerId, LocalizationManager.T("online_player_you"), false, false)));
 
                 CurrentLobby = new OnlineLobbyInfo
                 {
                     LobbyId = address,
-                    RoomName = "Friend Room",
+                    RoomName = LocalizationManager.T("multi_friend_room_name"),
                     StageId = "1-1",
                     MaxPlayers = 4,
                     Mode = OnlineLobbyMode.Room,
-                    Players = new[] { CreatePlayer(localPlayerId, "You", false, false) }
+                    Players = new[] { CreatePlayer(localPlayerId, LocalizationManager.T("online_player_you"), false, false) }
                 };
-                SetState(OnlineConnectionState.InLobby, CurrentLobby, "Joining room...");
+                SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_joining_room"));
             }
             catch (Exception ex)
             {
                 CloseSockets();
-                SetState(OnlineConnectionState.Error, null, "Failed to join: " + ex.Message);
+                SetState(OnlineConnectionState.Error, null, LocalizationManager.Format("online_failed_to_join", ex.Message));
             }
         }
 
@@ -141,7 +154,7 @@ namespace DrawBody.Prototype
         {
             CloseSockets();
             CurrentLobby = null;
-            SetState(OnlineConnectionState.Online, null, "Left lobby.");
+            SetState(OnlineConnectionState.Online, null, LocalizationManager.T("online_left_lobby"));
         }
 
         public void SetReady(bool ready)
@@ -154,7 +167,7 @@ namespace DrawBody.Prototype
             if (isHost)
             {
                 SetPlayerReady(localPlayerId, ready);
-                BroadcastLobby("Ready changed.");
+                BroadcastLobby(LocalizationManager.T("online_ready_changed"));
             }
             else
             {
@@ -171,13 +184,35 @@ namespace DrawBody.Prototype
 
             if (!isHost)
             {
-                SetState(State, CurrentLobby, "Only the host can start.");
+                SetState(State, CurrentLobby, LocalizationManager.T("multi_host_only_start"));
                 return;
             }
 
             CurrentLobby.StageId = string.IsNullOrEmpty(stageId) ? "1-1" : stageId;
             Broadcast(MessageStart, CurrentLobby.StageId);
-            SetState(OnlineConnectionState.Playing, CurrentLobby, "Starting stage " + CurrentLobby.StageId + ".");
+            SetState(OnlineConnectionState.Playing, CurrentLobby, LocalizationManager.Format("online_starting_stage", CurrentLobby.StageId));
+        }
+
+        public void OpenStageSelect()
+        {
+            if (!isHost || CurrentLobby == null)
+            {
+                return;
+            }
+
+            Broadcast(MessageStageSelect, "open");
+            SetState(State, CurrentLobby, LocalizationManager.T("online_stage_select_opened"));
+        }
+
+        public void CloseStageSelect()
+        {
+            if (!isHost || CurrentLobby == null)
+            {
+                return;
+            }
+
+            Broadcast(MessageStageSelect, "close");
+            SetState(State, CurrentLobby, LocalizationManager.T("online_stage_select_closed"));
         }
 
         public void SendBodyData(OnlineBodyData bodyData)
@@ -241,6 +276,25 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void SendGimmickData(OnlineGimmickData gimmickData)
+        {
+            if (gimmickData == null || CurrentLobby == null || State == OnlineConnectionState.Offline)
+            {
+                return;
+            }
+
+            gimmickData.PlayerId = localPlayerId;
+            string payload = JsonUtility.ToJson(gimmickData);
+            if (isHost)
+            {
+                Broadcast(MessageGimmick, payload);
+            }
+            else
+            {
+                Send(client, MessageGimmick, payload);
+            }
+        }
+
         private void AcceptLoop()
         {
             while (running && listener != null)
@@ -259,7 +313,7 @@ namespace DrawBody.Prototype
                 {
                     if (running)
                     {
-                        Enqueue(() => SetState(OnlineConnectionState.Error, CurrentLobby, "Accept failed."));
+                        Enqueue(() => SetState(OnlineConnectionState.Error, CurrentLobby, LocalizationManager.T("online_accept_failed")));
                     }
                 }
             }
@@ -338,13 +392,13 @@ namespace DrawBody.Prototype
                 player.IsReady = false;
                 MarkPeerPlayer(tcpClient, player.PlayerId);
                 AddOrReplacePlayer(player);
-                BroadcastLobby(player.DisplayName + " joined.");
+                BroadcastLobby(LocalizationManager.Format("online_player_joined", player.DisplayName));
             }
             else if (type == MessageReady)
             {
                 ReadyPayload ready = JsonUtility.FromJson<ReadyPayload>(payload);
                 SetPlayerReady(ready.PlayerId, ready.Ready);
-                BroadcastLobby("Ready changed.");
+                BroadcastLobby(LocalizationManager.T("online_ready_changed"));
             }
             else if (type == MessageState)
             {
@@ -358,11 +412,25 @@ namespace DrawBody.Prototype
                 BodyDataReceived?.Invoke(bodyData);
                 Broadcast(MessageBody, payload);
             }
+            else if (type == MessageStageSelect)
+            {
+                Broadcast(MessageStageSelect, payload);
+                string message = payload == "close"
+                    ? LocalizationManager.T("online_stage_select_closed")
+                    : LocalizationManager.T("online_stage_select_opened");
+                SetState(OnlineConnectionState.InLobby, CurrentLobby, message);
+            }
             else if (type == MessageCarry)
             {
                 OnlineCarryData carryData = JsonUtility.FromJson<OnlineCarryData>(payload);
                 CarryDataReceived?.Invoke(carryData);
                 Broadcast(MessageCarry, payload);
+            }
+            else if (type == MessageGimmick)
+            {
+                OnlineGimmickData gimmickData = JsonUtility.FromJson<OnlineGimmickData>(payload);
+                GimmickDataReceived?.Invoke(gimmickData);
+                Broadcast(MessageGimmick, payload);
             }
         }
 
@@ -371,7 +439,7 @@ namespace DrawBody.Prototype
             if (type == MessageLobby)
             {
                 CurrentLobby = JsonUtility.FromJson<OnlineLobbyInfo>(payload);
-                SetState(OnlineConnectionState.InLobby, CurrentLobby, "Lobby updated.");
+                SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_lobby_updated"));
             }
             else if (type == MessageStart)
             {
@@ -381,7 +449,7 @@ namespace DrawBody.Prototype
                 }
 
                 CurrentLobby.StageId = string.IsNullOrEmpty(payload) ? "1-1" : payload;
-                SetState(OnlineConnectionState.Playing, CurrentLobby, "Starting stage " + CurrentLobby.StageId + ".");
+                SetState(OnlineConnectionState.Playing, CurrentLobby, LocalizationManager.Format("online_starting_stage", CurrentLobby.StageId));
             }
             else if (type == MessageState)
             {
@@ -393,10 +461,22 @@ namespace DrawBody.Prototype
                 OnlineBodyData bodyData = JsonUtility.FromJson<OnlineBodyData>(payload);
                 BodyDataReceived?.Invoke(bodyData);
             }
+            else if (type == MessageStageSelect)
+            {
+                string message = payload == "close"
+                    ? LocalizationManager.T("online_stage_select_closed")
+                    : LocalizationManager.T("online_stage_select_opened");
+                SetState(OnlineConnectionState.InLobby, CurrentLobby, message);
+            }
             else if (type == MessageCarry)
             {
                 OnlineCarryData carryData = JsonUtility.FromJson<OnlineCarryData>(payload);
                 CarryDataReceived?.Invoke(carryData);
+            }
+            else if (type == MessageGimmick)
+            {
+                OnlineGimmickData gimmickData = JsonUtility.FromJson<OnlineGimmickData>(payload);
+                GimmickDataReceived?.Invoke(gimmickData);
             }
         }
 

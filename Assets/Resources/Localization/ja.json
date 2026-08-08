@@ -1,113 +1,1632 @@
 {
-  "entries": [
-    { "key": "lang_ja", "value": "\u65e5\u672c\u8a9e" },
-    { "key": "lang_en", "value": "EN" },
-    { "key": "status_play", "value": "" },
-    { "key": "status_draw", "value": "" },
-    { "key": "status_clear", "value": "\u30af\u30ea\u30a2\uff01 R\u3067\u30ea\u30c8\u30e9\u30a4" },
-    { "key": "draw_title", "value": "\u30c7\u30b6\u30a4\u30f3\uff08TAB\uff09" },
-    { "key": "draw_help", "value": "TAB: \u30b2\u30fc\u30e0\u306b\u623b\u308b / ENTER: \u6c7a\u5b9a / ESC: \u30ad\u30e3\u30f3\u30bb\u30eb" },
-    { "key": "preview", "value": "\u30d7\u30ec\u30d3\u30e5\u30fc" },
-    { "key": "clear", "value": "\u30af\u30ea\u30a2" },
-    { "key": "decide", "value": "\u6c7a\u5b9a" },
-    { "key": "cancel", "value": "\u30ad\u30e3\u30f3\u30bb\u30eb" },
-    { "key": "retry", "value": "\u30ea\u30c8\u30e9\u30a4" },
-    { "key": "menu", "value": "\u30e1\u30cb\u30e5\u30fc" },
-    { "key": "redraw", "value": "\u63cf\u304d\u76f4\u3057" },
-    { "key": "pen", "value": "\u30da\u30f3" },
-    { "key": "eraser", "value": "\u6d88\u3057\u30b4\u30e0" },
-    { "key": "shape_square", "value": "\u56db\u89d2" },
-    { "key": "shape_circle", "value": "\u4e38" },
-    { "key": "shape_line", "value": "\u7dda" },
-    { "key": "draw_finish", "value": "\u5b8c\u6210\uff01" },
-    { "key": "draw_redo", "value": "\u63cf\u304d\u76f4\u3059" },
-    { "key": "brush_size", "value": "\u592a\u3055" },
-    { "key": "ink_usage", "value": "\u30a4\u30f3\u30af\u4f7f\u7528\u91cf" },
-    { "key": "undo", "value": "\u3082\u3068\u306b\u623b\u3059" },
-    { "key": "character_switch", "value": "\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u5207\u308a\u66ff\u3048" },
-    { "key": "character_add", "value": "\u30ad\u30e3\u30e9\u8ffd\u52a0" },
-    { "key": "character_delete", "value": "\u30ad\u30e3\u30e9\u524a\u9664" },
-    { "key": "character_control_switch", "value": "\u30ad\u30e3\u30e9\u5909\u66f4" },
-    { "key": "stage_select", "value": "\u30b9\u30c6\u30fc\u30b8\u9078\u629e" },
-    { "key": "stage_select_help", "value": "\u5927\u67a0 1\u301c15\u3001\u5404 3\u30b9\u30c6\u30fc\u30b8\u3002\u7de8\u96c6ON\u3067\u30b9\u30c6\u30fc\u30b8\u3092\u62bc\u3059\u3068\u305d\u306e\u30b9\u30c6\u30fc\u30b8\u3092\u7de8\u96c6\u3057\u307e\u3059\u3002" },
-    { "key": "debug_stage", "value": "1-0 \u30c7\u30d0\u30c3\u30b0" },
-    { "key": "stage_editor_open", "value": "1-1 \u3092\u7de8\u96c6" },
-    { "key": "stage_select_edit_off", "value": "\u7de8\u96c6: OFF" },
-    { "key": "stage_select_edit_on", "value": "\u7de8\u96c6: ON" },
-    { "key": "stage_unplayed", "value": "\u672a\u30af\u30ea\u30a2" },
-    { "key": "stage_clear", "value": "CLEAR" },
-    { "key": "stage_locked", "value": "LOCKED" },
-    { "key": "stage_select_info", "value": "\u30c7\u30d0\u30c3\u30b0\u4e2d\u306e\u305f\u3081\u5168\u30ef\u30fc\u30eb\u30c9\u3092\u89e3\u653e\u4e2d\u3002\u30b9\u30c6\u30fc\u30b8\u3092\u62bc\u3059\u3068\u958b\u59cb\u3001\u7de8\u96c6ON\u306a\u3089\u305d\u306e\u30b9\u30c6\u30fc\u30b8\u3092\u7de8\u96c6\u3057\u307e\u3059\u3002" },
-    { "key": "stage_editor_help", "value": "1:\u5e8a  2:\u58c1\u306f\u30c9\u30e9\u30c3\u30b0\u3067\u7bc4\u56f2\u4f5c\u6210\n3:\u958b\u59cb  4:\u30b4\u30fc\u30eb  5:\u5929\u79e4  6:\u304a\u3082\u308a\nA/D/W/S:\u30ab\u30e1\u30e9\u79fb\u52d5  \u30db\u30a4\u30fc\u30eb:\u30ba\u30fc\u30e0\nF5:\u4fdd\u5b58  F6:\u30c6\u30b9\u30c8  Esc:\u623b\u308b" },
-    { "key": "stage_object_platform", "value": "\u5e8a" },
-    { "key": "stage_object_wall", "value": "\u58c1" },
-    { "key": "stage_object_spawn", "value": "\u958b\u59cb" },
-    { "key": "stage_object_goal", "value": "\u30b4\u30fc\u30eb" },
-    { "key": "stage_object_balance", "value": "\u5929\u79e4" },
-    { "key": "stage_object_weight", "value": "\u304a\u3082\u308a" },
-    { "key": "stage_editor_size", "value": "\u30b5\u30a4\u30ba" },
-    { "key": "stage_editor_snap", "value": "\u30b0\u30ea\u30c3\u30c9" },
-    { "key": "stage_editor_delete", "value": "\u524a\u9664" },
-    { "key": "stage_editor_save", "value": "\u4fdd\u5b58" },
-    { "key": "stage_editor_test", "value": "\u30c6\u30b9\u30c8" },
-    { "key": "stage_editor_back", "value": "\u623b\u308b" },
-    { "key": "option_subtitle", "value": "\u30b2\u30fc\u30e0\u8a2d\u5b9a" },
-    { "key": "option_bgm", "value": "BGM" },
-    { "key": "option_se", "value": "SE" },
-    { "key": "option_vibration", "value": "\u632f\u52d5" },
-    { "key": "option_keys", "value": "\u30ad\u30fc\u8a2d\u5b9a" },
-    { "key": "option_language", "value": "\u8a00\u8a9e" },
-    { "key": "option_not_implemented", "value": "\u672a\u5b9f\u88c5" },
-    { "key": "option_back", "value": "\u623b\u308b  ESC" },
-    { "key": "locked_stage", "value": "JSON\u672a\u4f5c\u6210\u306e\u30b9\u30c6\u30fc\u30b8\u306f\u30c7\u30d0\u30c3\u30b0\u8868\u793a\u306b\u623b\u308a\u307e\u3059" },
-    { "key": "ink", "value": "\u30a4\u30f3\u30af" },
-    { "key": "remaining", "value": "\u6b8b\u308a" },
-    { "key": "current", "value": "\u9078\u629e\u4e2d" },
-    { "key": "part", "value": "\u90e8\u4f4d" },
-    { "key": "msg_torso_first", "value": "\u307e\u305a\u80f4\u4f53\u3092\u63cf\u3044\u3066\u304f\u3060\u3055\u3044\u3002" },
-    { "key": "msg_torso_base", "value": "\u80f4\u4f53\u304c\u57fa\u6e96\u3067\u3059\u3002\u4ed6\u30d1\u30fc\u30c4\u306f\u63a5\u7d9a\u70b9\u304b\u3089\u63cf\u3044\u3066\u304f\u3060\u3055\u3044\u3002" },
-    { "key": "msg_start_near", "value": "{0}: \u63a5\u7d9a\u70b9\u304b\u3089\u63cf\u304d\u59cb\u3081\u3066\u304f\u3060\u3055\u3044\u3002" },
-    { "key": "msg_draw_torso_first", "value": "\u63a5\u7d9a\u3059\u308b\u524d\u306b\u3001\u307e\u305a\u80f4\u4f53\u3092\u63cf\u3044\u3066\u304f\u3060\u3055\u3044\u3002" },
-    { "key": "msg_connected", "value": "{0} \u306f\u63a5\u7d9a\u3055\u308c\u3066\u3044\u307e\u3059\u3002" },
-    { "key": "msg_not_connected", "value": "{0} \u306f\u63a5\u7d9a\u70b9\u304b\u3089\u59cb\u307e\u3063\u3066\u3044\u307e\u305b\u3093\u3002" },
-    { "key": "msg_torso_needed", "value": "\u6c7a\u5b9a\u3059\u308b\u524d\u306b\u80f4\u4f53\u304c\u5fc5\u8981\u3067\u3059\u3002" },
-    { "key": "msg_part_must_start", "value": "{0} \u306f\u63a5\u7d9a\u70b9\u304b\u3089\u59cb\u3081\u3066\u304f\u3060\u3055\u3044\u3002" },
-    { "key": "msg_start_at_marker", "value": "{0}: \u30de\u30fc\u30ab\u30fc\u304b\u3089\u63cf\u304d\u59cb\u3081\u3066\u304f\u3060\u3055\u3044\u3002" },
-    { "key": "msg_part_required", "value": "{0} \u3092\u63cf\u3044\u3066\u304f\u3060\u3055\u3044\u3002" },
-    { "key": "head", "value": "\u982d" },
-    { "key": "torso", "value": "\u80f4\u4f53" },
-    { "key": "left_arm", "value": "\u5de6\u8155" },
-    { "key": "right_arm", "value": "\u53f3\u8155" },
-    { "key": "left_leg", "value": "\u5de6\u8db3" },
-    { "key": "right_leg", "value": "\u53f3\u8db3" },
-    { "key": "left_front_leg", "value": "\u5de6\u524d\u8db3" },
-    { "key": "right_front_leg", "value": "\u53f3\u524d\u8db3" },
-    { "key": "left_back_leg", "value": "\u5de6\u5f8c\u8db3" },
-    { "key": "right_back_leg", "value": "\u53f3\u5f8c\u8db3" },
-    { "key": "tail", "value": "\u5c3b\u5c3e" },
-    { "key": "left_wing", "value": "\u5de6\u7ffc" },
-    { "key": "right_wing", "value": "\u53f3\u7ffc" },
-    { "key": "tail_feather", "value": "\u5c3e\u7fbd" },
-    { "key": "slime_body", "value": "\u30b9\u30e9\u30a4\u30e0" },
-    { "key": "human", "value": "\u4eba\u9593" },
-    { "key": "cat", "value": "\u732b" },
-    { "key": "bird", "value": "\u9ce5" },
-    { "key": "snake", "value": "\u30d8\u30d3" },
-    { "key": "slime", "value": "\u30b9\u30e9\u30a4\u30e0" },
-    { "key": "jump_normal", "value": "\u901a\u5e38\u30b8\u30e3\u30f3\u30d7" },
-    { "key": "jump_double", "value": "\u30b8\u30e3\u30f3\u30d7 x2" },
-    { "key": "jump_triple", "value": "\u30b8\u30e3\u30f3\u30d7 x3" },
-    { "key": "arm_normal", "value": "\u901a\u5e38\u30ea\u30fc\u30c1" },
-    { "key": "arm_long", "value": "\u9577\u3044\u30ea\u30fc\u30c1" },
-    { "key": "arm_fast", "value": "\u9ad8\u901f\u8155\u632f\u308a" },
-    { "key": "torso_normal", "value": "\u666e\u901a" },
-    { "key": "torso_switch", "value": "\u91cd\u3044\u30b9\u30a4\u30c3\u30c1\u53ef" },
-    { "key": "torso_heavy", "value": "\u91cd\u3044\u4f53" },
-    { "key": "ability_summary", "value": "\u8db3 {0:0.0}: {1}   \u8155 {2:0.0}: {3}   \u80f4\u4f53 {4:0.0}: {5}" },
-    { "key": "label_high_platform", "value": "1 \u9ad8\u3044\u8db3\u5834" },
-    { "key": "label_heavy_switch", "value": "2 \u91cd\u91cf\u30b9\u30a4\u30c3\u30c1" },
-    { "key": "label_far_lever", "value": "3 \u9060\u8ddd\u96e2\u30ec\u30d0\u30fc" },
-    { "key": "label_narrow_hole", "value": "4 \u72ed\u3044\u7a74" },
-    { "key": "label_ball_hit", "value": "5 \u30dc\u30fc\u30eb\u6253\u3061" }
-  ]
+    "entries":  [
+                    {
+                        "key":  "stage_editor_boundary_quick",
+                        "value":  "枠"
+                    },
+                    {
+                        "key":  "stage_editor_status_boundary_fitted",
+                        "value":  "配置物に合わせて外枠を作成しました。右壁と天井は選択後に調整できます。"
+                    },
+                    {
+                        "key":  "stage_editor_background_color",
+                        "value":  "背景色"
+                    },
+                    {
+                        "key":  "stage_editor_color_title",
+                        "value":  "背景の色"
+                    },
+                    {
+                        "key":  "stage_editor_color_reset",
+                        "value":  "元の色"
+                    },
+                    {
+                        "key":  "stage_editor_color_close",
+                        "value":  "閉じる"
+                    },
+                    {
+                        "key":  "stage_editor_color_opacity",
+                        "value":  "不透明度"
+                    },
+                    {
+                        "key":  "stage_editor_status_background_color",
+                        "value":  "背景色を変更しました。保存するとステージに反映されます。"
+                    },
+                    {
+                        "key":  "stage_object_background_mole",
+                        "value":  "モグラ"
+                    },
+                    {
+                        "key":  "stage_object_background_fossil",
+                        "value":  "化石"
+                    },
+                    {
+                        "key":  "stage_object_background_crystal",
+                        "value":  "水晶"
+                    },
+                    {
+                        "key":  "stage_object_background_ancient_pot",
+                        "value":  "古い壺"
+                    },
+                    {
+                        "key":  "stage_editor_copy",
+                        "value":  "コピー"
+                    },
+                    {
+                        "key":  "menu_stage_select",
+                        "value":  "ステージ選択へ"
+                    },
+                    {
+                        "key":  "menu_leave_session",
+                        "value":  "セッションを退出"
+                    },
+                    {
+                        "key":  "menu_restart_stage",
+                        "value":  "ステージをやり直す"
+                    },
+                    {
+                        "key":  "menu_leave_session_confirm",
+                        "value":  "オンラインセッションから退出しますか？"
+                    },
+                    {
+                        "key":  "menu_leave_session_host_confirm",
+                        "value":  "ホストが退出すると、このセッションは終了します。退出しますか？"
+                    },
+                    {
+                        "key":  "menu_leave_session_yes",
+                        "value":  "退出する"
+                    },
+                    {
+                        "key":  "stage_editor_status_copied",
+                        "value":  "オブジェクトをコピーしました。"
+                    },
+                    {
+                        "key":  "stage_editor_action_strength",
+                        "value":  "飛び出す強さ"
+                    },
+                    {
+                        "key":  "stage_editor_status_action_strength",
+                        "value":  "飛び出す強さ: {0:0.0}"
+                    },
+                    {
+                        "key":  "stage_editor_move_distance",
+                        "value":  "移動距離"
+                    },
+                    {
+                        "key":  "stage_editor_status_move_distance",
+                        "value":  "移動距離: {0:0.0}"
+                    },
+                    {
+                        "key":  "stage_editor_status_move_direction",
+                        "value":  "移動方向: {0:0}度（Shift＋ホイール）"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move",
+                        "value":  "移動"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move_right",
+                        "value":  "床を右へ"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move_up",
+                        "value":  "床を上へ"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move_left",
+                        "value":  "床を左へ"
+                    },
+                    {
+                        "key":  "stage_editor_link_mode_move_down",
+                        "value":  "床を下へ"
+                    },
+                    {
+                        "key":  "stage_category_decoration",
+                        "value":  "背景装飾"
+                    },
+                    {
+                        "key":  "stage_object_background_tree",
+                        "value":  "背景・木"
+                    },
+                    {
+                        "key":  "stage_object_background_grass",
+                        "value":  "背景・草"
+                    },
+                    {
+                        "key":  "stage_object_background_flower",
+                        "value":  "背景・花"
+                    },
+                    {
+                        "key":  "stage_object_background_bush",
+                        "value":  "背景・茂み"
+                    },
+                    {
+                        "key":  "stage_object_background_cloud",
+                        "value":  "背景・雲"
+                    },
+                    {
+                        "key":  "stage_object_background_push",
+                        "value":  "背景文字・PUSH"
+                    },
+                    {
+                        "key":  "stage_object_background_arrow",
+                        "value":  "背景・矢印"
+                    },
+                    {
+                        "key":  "stage_editor_status_linked_bridge_right",
+                        "value":  "\u6a4b\u3068\u3057\u3066\u30ea\u30f3\u30af\u3057\u307e\u3057\u305f\u3002\u53f3\u7aef\u3092\u3064\u306a\u3052\u305f\u307e\u307e\u5de6\u3078\u4f38\u3073\u307e\u3059\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_separate_split",
+                        "value":  "\u63a5\u7d9a\u5730\u5f62\u3092\u500b\u5225\u306b\u9078\u629e\u30fb\u30ea\u30f3\u30af\u3067\u304d\u308b\u30d1\u30fc\u30c4\u3078\u5206\u5272\u3057\u307e\u3057\u305f\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_separate",
+                        "value":  "\u500b\u5225"
+                    },
+                    {
+                        "key":  "stage_editor_status_separate_on",
+                        "value":  "\u500b\u5225\u30d1\u30fc\u30c4ON\u3002\u5438\u7740\u3057\u3066\u3082\u7d71\u5408\u3055\u308c\u305a\u3001\u5358\u72ec\u3067\u30ea\u30f3\u30af\u3067\u304d\u307e\u3059\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_separate_off",
+                        "value":  "\u500b\u5225\u30d1\u30fc\u30c4OFF\u3002\u63a5\u3057\u305f\u5730\u5f62\u306f\u7d71\u5408\u3067\u304d\u307e\u3059\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_terrain_connected",
+                        "value":  "\u5e8a\u3068\u58c1\u30921\u3064\u306e\u5730\u5f62\u3068\u3057\u3066\u63a5\u7d9a\u3057\u307e\u3057\u305f\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_add_straight",
+                        "value":  "\u30c9\u30e9\u30c3\u30b0\u3057\u3066{0}\u3092\u76f4\u7dda\u3067\u914d\u7f6e\u3057\u307e\u3059\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_thickness",
+                        "value":  "\u592a\u3055"
+                    },
+                    {
+                        "key":  "stage_editor_status_thickness",
+                        "value":  "\u5e8a\u30fb\u58c1\u306e\u592a\u3055: {0:0.00}"
+                    },
+                    {
+                        "key":  "stage_editor_straight",
+                        "value":  "\u76f4\u7dda"
+                    },
+                    {
+                        "key":  "stage_editor_status_straight_on",
+                        "value":  "\u76f4\u7dda\u30e2\u30fc\u30c9\u3092ON\u306b\u3057\u307e\u3057\u305f\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_straight_off",
+                        "value":  "\u76f4\u7dda\u30e2\u30fc\u30c9\u3092OFF\u306b\u3057\u307e\u3057\u305f\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_freehand",
+                        "value":  "\u63cf\u753b\u30e2\u30fc\u30c9"
+                    },
+                    {
+                        "key":  "stage_editor_draw_mode",
+                        "value":  "\u63cf\u753b\u30e2\u30fc\u30c9"
+                    },
+                    {
+                        "key":  "stage_editor_select_mode",
+                        "value":  "\u9078\u629e\u30e2\u30fc\u30c9"
+                    },
+                    {
+                        "key":  "stage_editor_status_draw_mode",
+                        "value":  "\u63cf\u753b\u30e2\u30fc\u30c9\u3067\u3059\u3002\u7a7a\u3044\u305f\u5834\u6240\u3092\u30c9\u30e9\u30c3\u30b0\u3059\u308b\u3068\u914d\u7f6e\u3067\u304d\u307e\u3059\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_select_mode",
+                        "value":  "\u9078\u629e\u30e2\u30fc\u30c9\u3067\u3059\u3002\u65e2\u5b58\u306e\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u3092\u9078\u629e\u30fb\u79fb\u52d5\u3067\u304d\u307e\u3059\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_add_freehand",
+                        "value":  "\u30c9\u30e9\u30c3\u30b0\u3057\u3066{0}\u3092\u81ea\u7531\u306b\u63cf\u3051\u307e\u3059\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_freehand_on",
+                        "value":  "\u5e8a\u30fb\u58c1\u306e\u30d5\u30ea\u30fc\u30cf\u30f3\u30c9\u914d\u7f6e\u3092ON\u306b\u3057\u307e\u3057\u305f\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_freehand_off",
+                        "value":  "\u56db\u89d2\u5f62\u3067\u306e\u914d\u7f6e\u3092ON\u306b\u3057\u307e\u3057\u305f\u3002"
+                    },
+                    {
+                        "key":  "stage_editor_status_freehand_done",
+                        "value":  "{0}\u30921\u672c\u306e\u3064\u306a\u304c\u3063\u305f\u7d4c\u8def\u3068\u3057\u3066\u63cf\u304d\u307e\u3057\u305f\u3002\uff08{1}\u70b9\uff09"
+                    },
+                    {
+                        "key":  "stage_editor_return",
+                        "value":  "\u7de8\u96c6\u3078\u623b\u308b"
+                    },
+                    {
+                        "key":  "stage_editor_return_esc",
+                        "value":  "\u7de8\u96c6\u3078\u623b\u308b  ESC"
+                    },
+                    {
+                        "key":  "stage_editor_status_returned",
+                        "value":  "\u30c6\u30b9\u30c8\u304b\u3089\u623b\u308a\u307e\u3057\u305f\u3002\u7de8\u96c6\u3092\u7d9a\u3051\u3089\u308c\u307e\u3059\u3002"
+                    },
+                    {
+                        "key":  "lang_ja",
+                        "value":  "日本語"
+                    },
+                    {
+                        "key":  "lang_en",
+                        "value":  "EN"
+                    },
+                    {
+                        "key":  "status_play",
+                        "value":  ""
+                    },
+                    {
+                        "key":  "status_draw",
+                        "value":  ""
+                    },
+                    {
+                        "key":  "status_clear",
+                        "value":  "クリア！ Rでリトライ"
+                    },
+                    {
+                        "key":  "draw_title",
+                        "value":  "デザイン（TAB）"
+                    },
+                    {
+                        "key":  "draw_help",
+                        "value":  "TAB: ゲームに戻る / ENTER: 決定 / ESC: キャンセル"
+                    },
+                    {
+                        "key":  "preview",
+                        "value":  "プレビュー"
+                    },
+                    {
+                        "key":  "clear",
+                        "value":  "クリア"
+                    },
+                    {
+                        "key":  "decide",
+                        "value":  "決定"
+                    },
+                    {
+                        "key":  "cancel",
+                        "value":  "キャンセル"
+                    },
+                    {
+                        "key":  "retry",
+                        "value":  "リトライ"
+                    },
+                    {
+                        "key":  "menu",
+                        "value":  "メニュー"
+                    },
+                    {
+                        "key":  "redraw",
+                        "value":  "描き直し"
+                    },
+                    {
+                        "key":  "pen",
+                        "value":  "ペン"
+                    },
+                    {
+                        "key":  "eraser",
+                        "value":  "消しゴム"
+                    },
+                    {
+                        "key":  "shape_square",
+                        "value":  "四角"
+                    },
+                    {
+                        "key":  "shape_circle",
+                        "value":  "丸"
+                    },
+                    {
+                        "key":  "shape_line",
+                        "value":  "線"
+                    },
+                    {
+                        "key":  "draw_finish",
+                        "value":  "完成！"
+                    },
+                    {
+                        "key":  "draw_redo",
+                        "value":  "戻る"
+                    },
+                    {
+                        "key":  "brush_size",
+                        "value":  "太さ"
+                    },
+                    {
+                        "key":  "ink_usage",
+                        "value":  "インク使用量"
+                    },
+                    {
+                        "key":  "undo",
+                        "value":  "もとに戻す"
+                    },
+                    {
+                        "key":  "character_switch",
+                        "value":  "キャラクター切り替え"
+                    },
+                    {
+                        "key":  "character_add",
+                        "value":  "キャラ追加"
+                    },
+                    {
+                        "key":  "character_delete",
+                        "value":  "キャラ削除"
+                    },
+                    {
+                        "key":  "character_control_switch",
+                        "value":  "キャラ変更"
+                    },
+                    {
+                        "key":  "stage_select",
+                        "value":  "ステージ選択"
+                    },
+                    {
+                        "key":  "stage_select_help",
+                        "value":  "大枠 1〜15、各 3ステージ。編集ONでステージを押すとそのステージを編集します。"
+                    },
+                    {
+                        "key":  "debug_stage",
+                        "value":  "1-0 デバッグ"
+                    },
+                    {
+                        "key":  "stage_editor_open",
+                        "value":  "1-1 を編集"
+                    },
+                    {
+                        "key":  "stage_select_edit_off",
+                        "value":  "編集: OFF"
+                    },
+                    {
+                        "key":  "stage_select_edit_on",
+                        "value":  "編集: ON"
+                    },
+                    {
+                        "key":  "stage_unplayed",
+                        "value":  "未クリア"
+                    },
+                    {
+                        "key":  "stage_clear",
+                        "value":  "CLEAR"
+                    },
+                    {
+                        "key":  "stage_locked",
+                        "value":  "LOCKED"
+                    },
+                    {
+                        "key":  "stage_select_info",
+                        "value":  "デバッグ中のため全ワールドを解放中。ステージを押すと開始、編集ONならそのステージを編集します。"
+                    },
+                    {
+                        "key":  "stage_editor_help",
+                        "value":  "1:床  2:壁はドラッグで範囲作成\n3:開始  4:ゴール  5:天秤  6:おもり\nA/D/W/S:カメラ移動  ホイール:ズーム\nF5:保存  F6:テスト  Esc:戻る"
+                    },
+                    {
+                        "key":  "stage_object_platform",
+                        "value":  "床"
+                    },
+                    {
+                        "key":  "stage_object_wall",
+                        "value":  "壁"
+                    },
+                    {
+                        "key":  "stage_object_spawn",
+                        "value":  "開始"
+                    },
+                    {
+                        "key":  "stage_object_goal",
+                        "value":  "ゴール"
+                    },
+                    {
+                        "key":  "stage_object_balance",
+                        "value":  "天秤"
+                    },
+                    {
+                        "key":  "stage_object_weight",
+                        "value":  "おもり"
+                    },
+                    {
+                        "key":  "stage_editor_size",
+                        "value":  "サイズ"
+                    },
+                    {
+                        "key":  "stage_editor_snap",
+                        "value":  "グリッド"
+                    },
+                    {
+                        "key":  "stage_editor_delete",
+                        "value":  "削除"
+                    },
+                    {
+                        "key":  "stage_editor_save",
+                        "value":  "保存"
+                    },
+                    {
+                        "key":  "stage_editor_test",
+                        "value":  "テスト"
+                    },
+                    {
+                        "key":  "stage_editor_back",
+                        "value":  "戻る"
+                    },
+                    {
+                        "key":  "option_subtitle",
+                        "value":  "ゲーム設定"
+                    },
+                    {
+                        "key":  "option_bgm",
+                        "value":  "BGM"
+                    },
+                    {
+                        "key":  "option_se",
+                        "value":  "SE"
+                    },
+                    {
+                        "key":  "option_keys",
+                        "value":  "キー設定"
+                    },
+                    {
+                        "key":  "option_language",
+                        "value":  "言語"
+                    },
+                    {
+                        "key":  "option_not_implemented",
+                        "value":  "未実装"
+                    },
+                    {
+                        "key":  "option_back",
+                        "value":  "戻る  ESC"
+                    },
+                    {
+                        "key":  "locked_stage",
+                        "value":  "JSON未作成のステージはデバッグ表示に戻ります"
+                    },
+                    {
+                        "key":  "ink",
+                        "value":  "インク"
+                    },
+                    {
+                        "key":  "remaining",
+                        "value":  "残り"
+                    },
+                    {
+                        "key":  "current",
+                        "value":  "選択中"
+                    },
+                    {
+                        "key":  "part",
+                        "value":  "部位"
+                    },
+                    {
+                        "key":  "msg_torso_first",
+                        "value":  "まず胴体を描いてください。"
+                    },
+                    {
+                        "key":  "msg_torso_base",
+                        "value":  "胴体が基準です。他パーツは接続点から描いてください。"
+                    },
+                    {
+                        "key":  "msg_start_near",
+                        "value":  "{0}: 接続点から描き始めてください。"
+                    },
+                    {
+                        "key":  "msg_draw_torso_first",
+                        "value":  "接続する前に、まず胴体を描いてください。"
+                    },
+                    {
+                        "key":  "msg_connected",
+                        "value":  "{0} は接続されています。"
+                    },
+                    {
+                        "key":  "msg_not_connected",
+                        "value":  "{0} は接続点から始まっていません。"
+                    },
+                    {
+                        "key":  "msg_torso_needed",
+                        "value":  "決定する前に胴体が必要です。"
+                    },
+                    {
+                        "key":  "msg_part_must_start",
+                        "value":  "{0} は接続点から始めてください。"
+                    },
+                    {
+                        "key":  "msg_start_at_marker",
+                        "value":  "{0}: マーカーから描き始めてください。"
+                    },
+                    {
+                        "key":  "msg_part_required",
+                        "value":  "{0} を描いてください。"
+                    },
+                    {
+                        "key":  "head",
+                        "value":  "頭"
+                    },
+                    {
+                        "key":  "torso",
+                        "value":  "胴体"
+                    },
+                    {
+                        "key":  "left_arm",
+                        "value":  "左腕"
+                    },
+                    {
+                        "key":  "right_arm",
+                        "value":  "右腕"
+                    },
+                    {
+                        "key":  "left_leg",
+                        "value":  "左足"
+                    },
+                    {
+                        "key":  "right_leg",
+                        "value":  "右足"
+                    },
+                    {
+                        "key":  "left_front_leg",
+                        "value":  "左前足"
+                    },
+                    {
+                        "key":  "right_front_leg",
+                        "value":  "右前足"
+                    },
+                    {
+                        "key":  "left_back_leg",
+                        "value":  "左後足"
+                    },
+                    {
+                        "key":  "right_back_leg",
+                        "value":  "右後足"
+                    },
+                    {
+                        "key":  "tail",
+                        "value":  "尻尾"
+                    },
+                    {
+                        "key":  "left_wing",
+                        "value":  "左翼"
+                    },
+                    {
+                        "key":  "right_wing",
+                        "value":  "右翼"
+                    },
+                    {
+                        "key":  "tail_feather",
+                        "value":  "尾羽"
+                    },
+                    {
+                        "key":  "slime_body",
+                        "value":  "スライム"
+                    },
+                    {
+                        "key":  "human",
+                        "value":  "人間"
+                    },
+                    {
+                        "key":  "cat",
+                        "value":  "猫"
+                    },
+                    {
+                        "key":  "bird",
+                        "value":  "鳥"
+                    },
+                    {
+                        "key":  "snake",
+                        "value":  "ヘビ"
+                    },
+                    {
+                        "key":  "slime",
+                        "value":  "スライム"
+                    },
+                    {
+                        "key":  "jump_normal",
+                        "value":  "通常ジャンプ"
+                    },
+                    {
+                        "key":  "jump_double",
+                        "value":  "ジャンプ x2"
+                    },
+                    {
+                        "key":  "jump_triple",
+                        "value":  "ジャンプ x3"
+                    },
+                    {
+                        "key":  "arm_normal",
+                        "value":  "通常リーチ"
+                    },
+                    {
+                        "key":  "arm_long",
+                        "value":  "長いリーチ"
+                    },
+                    {
+                        "key":  "arm_fast",
+                        "value":  "高速腕振り"
+                    },
+                    {
+                        "key":  "torso_normal",
+                        "value":  "普通"
+                    },
+                    {
+                        "key":  "torso_switch",
+                        "value":  "重いスイッチ可"
+                    },
+                    {
+                        "key":  "torso_heavy",
+                        "value":  "重い体"
+                    },
+                    {
+                        "key":  "ability_summary",
+                        "value":  "足 {0:0.0}: {1}   腕 {2:0.0}: {3}   胴体 {4:0.0}: {5}"
+                    },
+                    {
+                        "key":  "label_high_platform",
+                        "value":  "1 高い足場"
+                    },
+                    {
+                        "key":  "label_heavy_switch",
+                        "value":  "2 重量スイッチ"
+                    },
+                    {
+                        "key":  "label_far_lever",
+                        "value":  "3 遠距離レバー"
+                    },
+                    {
+                        "key":  "label_narrow_hole",
+                        "value":  "4 狭い穴"
+                    },
+                    {
+                        "key":  "label_ball_hit",
+                        "value":  "5 ボール打ち"
+                    },
+                    {
+                        "key":  "title_single",
+                        "value":  "SINGLE"
+                    },
+                    {
+                        "key":  "title_multi",
+                        "value":  "MULTI"
+                    },
+                    {
+                        "key":  "title_draw",
+                        "value":  "DRAW"
+                    },
+                    {
+                        "key":  "title_option",
+                        "value":  "OPTION"
+                    },
+                    {
+                        "key":  "title_exit",
+                        "value":  "EXIT"
+                    },
+                    {
+                        "key":  "language_settings",
+                        "value":  "言語設定"
+                    },
+                    {
+                        "key":  "multi_play",
+                        "value":  "MULTI PLAY"
+                    },
+                    {
+                        "key":  "multi_random_button",
+                        "value":  "ランダムマッチ"
+                    },
+                    {
+                        "key":  "multi_room_button",
+                        "value":  "プライベート"
+                    },
+                    {
+                        "key":  "multi_random_match",
+                        "value":  "ランダムマッチ"
+                    },
+                    {
+                        "key":  "multi_random_status_default",
+                        "value":  "ランダムマッチ中...\n\n参加人数 2 / 4\n\n○ あなた\n○ Player2\n□ 募集中\n□ 募集中\n\n[READY] で開始待ち"
+                    },
+                    {
+                        "key":  "multi_room_title",
+                        "value":  "ROOM"
+                    },
+                    {
+                        "key":  "multi_create_room",
+                        "value":  "ルームを作る"
+                    },
+                    {
+                        "key":  "multi_join_room",
+                        "value":  "ルームに入る"
+                    },
+                    {
+                        "key":  "multi_create_room_body",
+                        "value":  "ルーム名\n[ みんなで落書き ]\n\n最大人数\n\u003c 4人 \u003e\n\n公開設定\n[公開]   [非公開]\n\nステージ\n[ホストが選ぶ]\n\n描き直し中の挙動\n[全員一時停止]"
+                    },
+                    {
+                        "key":  "multi_create",
+                        "value":  "作成"
+                    },
+                    {
+                        "key":  "multi_join_room_help",
+                        "value":  "ホストの画面に出ているLobby IDを入力\n\nEOS設定済みなら、離れた友達とも参加できます。\nDirect TCPに戻した場合は IP:7777 を入力します。"
+                    },
+                    {
+                        "key":  "multi_lobby_id_placeholder",
+                        "value":  "Lobby IDを入力"
+                    },
+                    {
+                        "key":  "multi_join",
+                        "value":  "参加"
+                    },
+                    {
+                        "key":  "multi_refresh",
+                        "value":  "更新"
+                    },
+                    {
+                        "key":  "multi_room_lobby",
+                        "value":  "ROOM LOBBY"
+                    },
+                    {
+                        "key":  "multi_lobby_status_default",
+                        "value":  "Room: みんなで落書き\nID: ABC123\n2 / 4\n\nプレイヤーが動けるロビー\n箱・ボール・ジャンプ台で待機中に遊べます"
+                    },
+                    {
+                        "key":  "multi_copy_id",
+                        "value":  "IDコピー"
+                    },
+                    {
+                        "key":  "multi_start_stage_1_1",
+                        "value":  "1-1開始"
+                    },
+                    {
+                        "key":  "multi_leave",
+                        "value":  "退出"
+                    },
+                    {
+                        "key":  "multi_matching",
+                        "value":  "Matching..."
+                    },
+                    {
+                        "key":  "multi_host_only_start",
+                        "value":  "ホストだけが開始できます。"
+                    },
+                    {
+                        "key":  "multi_no_lobby_id",
+                        "value":  "コピーできるLobby IDがありません。"
+                    },
+                    {
+                        "key":  "multi_copied_lobby_id",
+                        "value":  "Lobby IDをコピーしました。"
+                    },
+                    {
+                        "key":  "multi_connecting",
+                        "value":  "接続中..."
+                    },
+                    {
+                        "key":  "multi_room",
+                        "value":  "Room"
+                    },
+                    {
+                        "key":  "multi_players",
+                        "value":  "Players"
+                    },
+                    {
+                        "key":  "multi_local",
+                        "value":  "Local"
+                    },
+                    {
+                        "key":  "multi_ready",
+                        "value":  "READY"
+                    },
+                    {
+                        "key":  "multi_wait",
+                        "value":  "WAIT"
+                    },
+                    {
+                        "key":  "multi_host",
+                        "value":  "HOST"
+                    },
+                    {
+                        "key":  "stage_editor_help_runtime",
+                        "value":  "ドラッグで配置 / クリックで選択 / WASDで移動\nCtrl+ホイール: ステージ表示の拡大縮小\n吸着ON: 地形の端を連結  F5: 保存  F6: テスト"
+                    },
+                    {
+                        "key":  "stage_editor_quick",
+                        "value":  "よく使うパーツ"
+                    },
+                    {
+                        "key":  "stage_editor_selection",
+                        "value":  "選択中の設定"
+                    },
+                    {
+                        "key":  "stage_editor_status_open",
+                        "value":  "パーツを選び、マップ上をクリックまたはドラッグして配置します。"
+                    },
+                    {
+                        "key":  "stage_editor_status_snap",
+                        "value":  "吸着: {0} / {1:0.##}マス単位で配置"
+                    },
+                    {
+                        "key":  "stage_editor_status_select_first",
+                        "value":  "先にオブジェクトを選択してください。"
+                    },
+                    {
+                        "key":  "stage_editor_status_resize_width",
+                        "value":  "横幅を変更しました。Shift+ホイールでも調整できます。"
+                    },
+                    {
+                        "key":  "stage_editor_status_rotate_mounted",
+                        "value":  "回転：Shift＋ホイール（15度）／Alt併用（1度）"
+                    },
+                    {
+                        "key":  "stage_editor_status_resize_height",
+                        "value":  "高さを変更しました。Alt+ホイールでも調整できます。"
+                    },
+                    {
+                        "key":  "stage_editor_status_resize_all",
+                        "value":  "サイズを変更しました。ホイールで全体を拡大・縮小できます。"
+                    },
+                    {
+                        "key":  "stage_editor_status_drag_larger",
+                        "value":  "もう少し大きくドラッグして配置してください。"
+                    },
+                    {
+                        "key":  "stage_editor_status_placed_rect",
+                        "value":  "{0}を配置しました（{1:0.0} × {2:0.0}）。"
+                    },
+                    {
+                        "key":  "stage_editor_status_placed_point",
+                        "value":  "{0}を位置 {1:0.0}, {2:0.0} に配置しました。"
+                    },
+                    {
+                        "key":  "stage_editor_status_selected",
+                        "value":  "選択しました。ドラッグで移動、ホイールでサイズ調整できます。"
+                    },
+                    {
+                        "key":  "stage_editor_status_nothing_undo",
+                        "value":  "戻せる操作がありません。"
+                    },
+                    {
+                        "key":  "stage_editor_status_undo_done",
+                        "value":  "ひとつ前の操作に戻しました。"
+                    },
+                    {
+                        "key":  "stage_editor_status_nothing_redo",
+                        "value":  "やり直せる操作がありません。"
+                    },
+                    {
+                        "key":  "stage_editor_status_redo_done",
+                        "value":  "操作をひとつやり直しました。"
+                    },
+                    {
+                        "key":  "stage_editor_status_select_link_source",
+                        "value":  "先にスイッチやボタンを選択してください。"
+                    },
+                    {
+                        "key":  "stage_editor_status_invalid_link_source",
+                        "value":  "リンク元にはスイッチまたはボタンを選択してください。"
+                    },
+                    {
+                        "key":  "stage_editor_status_link_source_set",
+                        "value":  "リンク元: {0}。次に動かしたい対象を選んで「リンク先」を押します。"
+                    },
+                    {
+                        "key":  "stage_editor_status_link_source_first",
+                        "value":  "先に「リンク元」を設定してください。"
+                    },
+                    {
+                        "key":  "stage_editor_status_select_link_target",
+                        "value":  "リンク先にするオブジェクトを選択してください。"
+                    },
+                    {
+                        "key":  "stage_editor_status_link_different",
+                        "value":  "リンク元とリンク先には別のオブジェクトを選んでください。"
+                    },
+                    {
+                        "key":  "stage_editor_status_linked",
+                        "value":  "{0} → {1} をリンクしました。"
+                    },
+                    {
+                        "key":  "stage_editor_status_select_linked",
+                        "value":  "リンク済みのスイッチまたはボタンを選択してください。"
+                    },
+                    {
+                        "key":  "stage_editor_status_link_cleared",
+                        "value":  "リンクを解除しました。"
+                    },
+                    {
+                        "key":  "stage_editor_status_saved",
+                        "value":  "保存しました: {0}"
+                    },
+                    {
+                        "key":  "stage_editor_status_save_editor_only",
+                        "value":  "現在、保存はUnity Editor上でのみ利用できます。"
+                    },
+                    {
+                        "key":  "stage_editor_status_factory_missing",
+                        "value":  "ステージオブジェクト生成機能が見つかりません。"
+                    },
+                    {
+                        "key":  "stage_editor_category",
+                        "value":  "カテゴリ"
+                    },
+                    {
+                        "key":  "stage_editor_search",
+                        "value":  "検索"
+                    },
+                    {
+                        "key":  "stage_editor_type",
+                        "value":  "種別"
+                    },
+                    {
+                        "key":  "stage_editor_search_placeholder",
+                        "value":  "検索ワード"
+                    },
+                    {
+                        "key":  "stage_editor_object_list",
+                        "value":  "オブジェクト一覧"
+                    },
+                    {
+                        "key":  "stage_editor_link_list",
+                        "value":  "リンク一覧"
+                    },
+                    {
+                        "key":  "stage_editor_width_minus",
+                        "value":  "横-"
+                    },
+                    {
+                        "key":  "stage_editor_width_plus",
+                        "value":  "横+"
+                    },
+                    {
+                        "key":  "stage_editor_height_minus",
+                        "value":  "縦-"
+                    },
+                    {
+                        "key":  "stage_editor_height_plus",
+                        "value":  "縦+"
+                    },
+                    {
+                        "key":  "stage_editor_redo",
+                        "value":  "進む"
+                    },
+                    {
+                        "key":  "stage_editor_snap_attach",
+                        "value":  "吸着"
+                    },
+                    {
+                        "key":  "stage_editor_link_source",
+                        "value":  "リンク元"
+                    },
+                    {
+                        "key":  "stage_editor_link_target",
+                        "value":  "リンク先"
+                    },
+                    {
+                        "key":  "stage_editor_unlink",
+                        "value":  "解除"
+                    },
+                    {
+                        "key":  "stage_editor_selected_add",
+                        "value":  "追加: {0} / 吸着: {1}"
+                    },
+                    {
+                        "key":  "stage_editor_selected_object",
+                        "value":  "{0}  位置 {1:0.0},{2:0.0}  サイズ {3:0.0},{4:0.0}"
+                    },
+                    {
+                        "key":  "stage_editor_status_add_rect",
+                        "value":  "追加モード: {0}。マップ上でドラッグして作成します。"
+                    },
+                    {
+                        "key":  "stage_editor_status_add_point",
+                        "value":  "追加モード: {0}。マップ上をクリックして配置します。"
+                    },
+                    {
+                        "key":  "stage_editor_status_selected_from_list",
+                        "value":  "一覧から選択しました。"
+                    },
+                    {
+                        "key":  "stage_editor_no_match",
+                        "value":  "一致なし"
+                    },
+                    {
+                        "key":  "stage_editor_none",
+                        "value":  "(なし)"
+                    },
+                    {
+                        "key":  "stage_category_terrain",
+                        "value":  "地形"
+                    },
+                    {
+                        "key":  "stage_category_start_goal",
+                        "value":  "スタート・ゴール"
+                    },
+                    {
+                        "key":  "stage_category_switch",
+                        "value":  "スイッチ"
+                    },
+                    {
+                        "key":  "stage_category_door_gate",
+                        "value":  "ドア・ゲート"
+                    },
+                    {
+                        "key":  "stage_category_movable",
+                        "value":  "可動"
+                    },
+                    {
+                        "key":  "stage_category_action",
+                        "value":  "アクション"
+                    },
+                    {
+                        "key":  "stage_category_trap",
+                        "value":  "トラップ"
+                    },
+                    {
+                        "key":  "stage_category_gimmick",
+                        "value":  "ギミック"
+                    },
+                    {
+                        "key":  "stage_object_balance_scale",
+                        "value":  "天秤"
+                    },
+                    {
+                        "key":  "stage_object_ceiling",
+                        "value":  "天井"
+                    },
+                    {
+                        "key":  "stage_object_half_platform",
+                        "value":  "半床"
+                    },
+                    {
+                        "key":  "stage_object_one_way_platform",
+                        "value":  "一方通行床"
+                    },
+                    {
+                        "key":  "stage_object_ice_floor",
+                        "value":  "氷床"
+                    },
+                    {
+                        "key":  "stage_object_slippery_slope",
+                        "value":  "滑る坂"
+                    },
+                    {
+                        "key":  "stage_object_climbable_wall",
+                        "value":  "登れる壁"
+                    },
+                    {
+                        "key":  "stage_object_rope",
+                        "value":  "ロープ"
+                    },
+                    {
+                        "key":  "stage_object_ladder",
+                        "value":  "はしご"
+                    },
+                    {
+                        "key":  "stage_object_cloud_platform",
+                        "value":  "雲床"
+                    },
+                    {
+                        "key":  "stage_object_breakable_floor",
+                        "value":  "壊れる床"
+                    },
+                    {
+                        "key":  "stage_object_falling_floor",
+                        "value":  "落下床"
+                    },
+                    {
+                        "key":  "stage_object_moving_platform",
+                        "value":  "動く床"
+                    },
+                    {
+                        "key":  "stage_object_rotating_platform",
+                        "value":  "回転床"
+                    },
+                    {
+                        "key":  "stage_object_checkpoint",
+                        "value":  "チェックポイント"
+                    },
+                    {
+                        "key":  "stage_object_warp_entrance",
+                        "value":  "ワープ入口"
+                    },
+                    {
+                        "key":  "stage_object_warp_exit",
+                        "value":  "ワープ出口"
+                    },
+                    {
+                        "key":  "stage_object_respawn_point",
+                        "value":  "リスポーン地点"
+                    },
+                    {
+                        "key":  "stage_object_mid_goal",
+                        "value":  "中間ゴール"
+                    },
+                    {
+                        "key":  "stage_object_goal_effect",
+                        "value":  "ゴール演出"
+                    },
+                    {
+                        "key":  "stage_object_button",
+                        "value":  "ボタン"
+                    },
+                    {
+                        "key":  "stage_object_weight_button",
+                        "value":  "重さボタン"
+                    },
+                    {
+                        "key":  "stage_object_simultaneous_button",
+                        "value":  "同時押しボタン"
+                    },
+                    {
+                        "key":  "stage_object_hold_button",
+                        "value":  "押している間ボタン"
+                    },
+                    {
+                        "key":  "stage_object_lever",
+                        "value":  "レバー"
+                    },
+                    {
+                        "key":  "stage_object_toggle_switch",
+                        "value":  "トグルスイッチ"
+                    },
+                    {
+                        "key":  "stage_object_timer_switch",
+                        "value":  "タイマースイッチ"
+                    },
+                    {
+                        "key":  "stage_object_sensor",
+                        "value":  "センサー"
+                    },
+                    {
+                        "key":  "stage_object_red_switch",
+                        "value":  "赤スイッチ"
+                    },
+                    {
+                        "key":  "stage_object_blue_switch",
+                        "value":  "青スイッチ"
+                    },
+                    {
+                        "key":  "stage_object_green_switch",
+                        "value":  "緑スイッチ"
+                    },
+                    {
+                        "key":  "stage_object_yellow_switch",
+                        "value":  "黄スイッチ"
+                    },
+                    {
+                        "key":  "stage_object_pressure_plate",
+                        "value":  "圧力板"
+                    },
+                    {
+                        "key":  "stage_object_remote_control",
+                        "value":  "リモコン"
+                    },
+                    {
+                        "key":  "stage_object_door",
+                        "value":  "ドア"
+                    },
+                    {
+                        "key":  "stage_object_locked_door",
+                        "value":  "鍵付きドア"
+                    },
+                    {
+                        "key":  "stage_object_shutter",
+                        "value":  "シャッター"
+                    },
+                    {
+                        "key":  "stage_object_fence",
+                        "value":  "柵"
+                    },
+                    {
+                        "key":  "stage_object_laser_gate",
+                        "value":  "レーザーゲート"
+                    },
+                    {
+                        "key":  "stage_object_color_gate",
+                        "value":  "色ゲート"
+                    },
+                    {
+                        "key":  "stage_object_one_way_gate",
+                        "value":  "一方通行ゲート"
+                    },
+                    {
+                        "key":  "stage_object_timed_gate",
+                        "value":  "時間制限ゲート"
+                    },
+                    {
+                        "key":  "stage_object_breakable_wall",
+                        "value":  "壊れる壁"
+                    },
+                    {
+                        "key":  "stage_object_hidden_wall",
+                        "value":  "隠し壁"
+                    },
+                    {
+                        "key":  "stage_object_wood_box",
+                        "value":  "木箱"
+                    },
+                    {
+                        "key":  "stage_object_iron_box",
+                        "value":  "鉄箱"
+                    },
+                    {
+                        "key":  "stage_object_ball",
+                        "value":  "ボール"
+                    },
+                    {
+                        "key":  "stage_object_barrel",
+                        "value":  "樽"
+                    },
+                    {
+                        "key":  "stage_object_rock",
+                        "value":  "岩"
+                    },
+                    {
+                        "key":  "stage_object_ice_block",
+                        "value":  "氷ブロック"
+                    },
+                    {
+                        "key":  "stage_object_floating_box",
+                        "value":  "浮遊箱"
+                    },
+                    {
+                        "key":  "stage_object_rubber_box",
+                        "value":  "ゴム箱"
+                    },
+                    {
+                        "key":  "stage_object_bomb",
+                        "value":  "爆弾"
+                    },
+                    {
+                        "key":  "stage_object_key",
+                        "value":  "鍵"
+                    },
+                    {
+                        "key":  "stage_object_coin",
+                        "value":  "コイン"
+                    },
+                    {
+                        "key":  "stage_object_star",
+                        "value":  "星"
+                    },
+                    {
+                        "key":  "stage_object_battery",
+                        "value":  "バッテリー"
+                    },
+                    {
+                        "key":  "stage_object_bucket",
+                        "value":  "バケツ"
+                    },
+                    {
+                        "key":  "stage_object_jump_pad",
+                        "value":  "ジャンプ台"
+                    },
+                    {
+                        "key":  "stage_object_spring",
+                        "value":  "バネ"
+                    },
+                    {
+                        "key":  "stage_object_conveyor_left",
+                        "value":  "コンベア左"
+                    },
+                    {
+                        "key":  "stage_object_conveyor_right",
+                        "value":  "コンベア右"
+                    },
+                    {
+                        "key":  "stage_object_elevator",
+                        "value":  "エレベーター"
+                    },
+                    {
+                        "key":  "stage_object_fan",
+                        "value":  "扇風機"
+                    },
+                    {
+                        "key":  "stage_object_magnet",
+                        "value":  "磁石"
+                    },
+                    {
+                        "key":  "stage_object_belt",
+                        "value":  "ベルト"
+                    },
+                    {
+                        "key":  "stage_object_seesaw",
+                        "value":  "シーソー"
+                    },
+                    {
+                        "key":  "stage_object_turntable",
+                        "value":  "回転台"
+                    },
+                    {
+                        "key":  "stage_object_cannon",
+                        "value":  "大砲"
+                    },
+                    {
+                        "key":  "stage_object_catapult",
+                        "value":  "投石機"
+                    },
+                    {
+                        "key":  "stage_object_spike",
+                        "value":  "トゲ"
+                    },
+                    {
+                        "key":  "stage_object_fire",
+                        "value":  "火"
+                    },
+                    {
+                        "key":  "stage_object_water",
+                        "value":  "水"
+                    },
+                    {
+                        "key":  "stage_object_poison",
+                        "value":  "毒"
+                    },
+                    {
+                        "key":  "stage_object_laser",
+                        "value":  "レーザー"
+                    },
+                    {
+                        "key":  "stage_object_falling_rock",
+                        "value":  "落石"
+                    },
+                    {
+                        "key":  "stage_object_press_machine",
+                        "value":  "プレス機"
+                    },
+                    {
+                        "key":  "stage_object_electricity",
+                        "value":  "電気"
+                    },
+                    {
+                        "key":  "stage_object_saw",
+                        "value":  "ノコギリ"
+                    },
+                    {
+                        "key":  "stage_object_black_hole",
+                        "value":  "ブラックホール"
+                    },
+                    {
+                        "key":  "stage_object_gear",
+                        "value":  "歯車"
+                    },
+                    {
+                        "key":  "stage_object_big_gear",
+                        "value":  "歯車(大)"
+                    },
+                    {
+                        "key":  "stage_object_rope_pulley",
+                        "value":  "ロープ滑車"
+                    },
+                    {
+                        "key":  "stage_object_slider",
+                        "value":  "スライダー"
+                    },
+                    {
+                        "key":  "stage_object_rotating_bar",
+                        "value":  "回転棒"
+                    },
+                    {
+                        "key":  "stage_object_pendulum",
+                        "value":  "振り子"
+                    },
+                    {
+                        "key":  "stage_object_keyhole",
+                        "value":  "カギ穴"
+                    },
+                    {
+                        "key":  "stage_object_clock",
+                        "value":  "時計"
+                    },
+                    {
+                        "key":  "stage_object_counter",
+                        "value":  "カウンター"
+                    },
+                    {
+                        "key":  "stage_object_traffic_light",
+                        "value":  "信号機"
+                    },
+                    {
+                        "key":  "online_eos_device_create_failed",
+                        "value":  "EOS Device ID作成に失敗しました: {0}"
+                    },
+                    {
+                        "key":  "stage_world_label",
+                        "value":  "WORLD {0}"
+                    },
+                    {
+                        "key":  "online_starting_stage",
+                        "value":  "ステージ {0} を開始します。"
+                    },
+                    {
+                        "key":  "online_lobby_members_updated",
+                        "value":  "ロビー参加者を更新しました。"
+                    },
+                    {
+                        "key":  "online_eos_disabled",
+                        "value":  "EOSは無効です。"
+                    },
+                    {
+                        "key":  "stage_editor_links_tab",
+                        "value":  "Links"
+                    },
+                    {
+                        "key":  "online_eos_left_lobby",
+                        "value":  "EOSロビーから退出しました。"
+                    },
+                    {
+                        "key":  "online_eos_login_failed",
+                        "value":  "EOSログインに失敗しました: {0}"
+                    },
+                    {
+                        "key":  "online_left_lobby",
+                        "value":  "ロビーから退出しました。"
+                    },
+                    {
+                        "key":  "online_eos_join_lobby_failed",
+                        "value":  "EOSロビー参加に失敗しました: {0}"
+                    },
+                    {
+                        "key":  "online_room_id_format",
+                        "value":  "ルームIDは host-ip:port 形式で入力してください。"
+                    },
+                    {
+                        "key":  "online_failed_to_host",
+                        "value":  "ホストに失敗しました: {0}"
+                    },
+                    {
+                        "key":  "online_ready_on",
+                        "value":  "READYにしました。"
+                    },
+                    {
+                        "key":  "online_player_number",
+                        "value":  "Player {0}"
+                    },
+                    {
+                        "key":  "multi_default_room_name",
+                        "value":  "みんなで落書き"
+                    },
+                    {
+                        "key":  "stage_label",
+                        "value":  "Stage {0}"
+                    },
+                    {
+                        "key":  "online_eos_room_created",
+                        "value":  "EOSルームを作成しました。Lobby IDを共有してください。"
+                    },
+                    {
+                        "key":  "online_failed_to_join",
+                        "value":  "参加に失敗しました: {0}"
+                    },
+                    {
+                        "key":  "online_lobby_updated",
+                        "value":  "ロビーを更新しました。"
+                    },
+                    {
+                        "key":  "online_eos_online_as",
+                        "value":  "EOSオンライン: {0}"
+                    },
+                    {
+                        "key":  "online_player_joined",
+                        "value":  "{0} が参加しました。"
+                    },
+                    {
+                        "key":  "online_eos_create_lobby_failed",
+                        "value":  "EOSロビー作成に失敗しました: {0}"
+                    },
+                    {
+                        "key":  "online_joining_room",
+                        "value":  "ルームに参加中..."
+                    },
+                    {
+                        "key":  "online_eos_connect_not_ready",
+                        "value":  "EOS Connectが準備できていません。"
+                    },
+                    {
+                        "key":  "multi_friend_room_name",
+                        "value":  "友達ルーム"
+                    },
+                    {
+                        "key":  "online_ready_off",
+                        "value":  "READYを解除しました。"
+                    },
+                    {
+                        "key":  "online_eos_device_login_failed",
+                        "value":  "EOS Device IDログインに失敗しました: {0}"
+                    },
+                    {
+                        "key":  "stage_editor_objects_tab",
+                        "value":  "Objects"
+                    },
+                    {
+                        "key":  "online_eos_joined_room",
+                        "value":  "EOSルームに参加しました。"
+                    },
+                    {
+                        "key":  "online_eos_creating_device_id",
+                        "value":  "EOS Device IDを作成中..."
+                    },
+                    {
+                        "key":  "online_eos_not_logged_in",
+                        "value":  "EOSにログインしていません。EOS Pluginを設定してログインしてください。"
+                    },
+                    {
+                        "key":  "online_ready",
+                        "value":  "オンライン準備完了。ルーム作成または参加できます。"
+                    },
+                    {
+                        "key":  "online_eos_login",
+                        "value":  "EOSログイン中..."
+                    },
+                    {
+                        "key":  "online_accept_failed",
+                        "value":  "接続の受け入れに失敗しました。"
+                    },
+                    {
+                        "key":  "online_ready_changed",
+                        "value":  "READY状態を変更しました。"
+                    },
+                    {
+                        "key":  "online_player_you",
+                        "value":  "あなた"
+                    },
+                    {
+                        "key":  "player_controlled_marker",
+                        "value":  "YOU"
+                    },
+                    {
+                        "key":  "online_eos_enter_lobby_id",
+                        "value":  "EOS Lobby IDを入力してください。"
+                    },
+                    {
+                        "key":  "online_room_created",
+                        "value":  "ルームを作成しました。友達にIDを共有してください。"
+                    },
+                    {
+                        "key":  "online_eos_initialized",
+                        "value":  "EOSを初期化しました。ログイン前にEOS Pluginを設定してください。"
+                    },
+                    {
+                        "key":  "online_direct_initialized",
+                        "value":  "Direct TCPを初期化しました。"
+                    },
+                    {
+                        "key":  "online_private_room_created",
+                        "value":  "非公開ルームを作成しました。"
+                    },
+                    {
+                        "key":  "online_joined_fake_room",
+                        "value":  "疑似ルームに参加しました。"
+                    },
+                    {
+                        "key":  "online_fake_random_ready",
+                        "value":  "疑似ランダムマッチの準備ができました。"
+                    },
+                    {
+                        "key":  "online_public_room_created",
+                        "value":  "公開ルームを作成しました。"
+                    },
+                    {
+                        "key":  "multi_room_status_default",
+                        "value":  "ルーム作成\nルーム名  [........]\n人数  2 / 3 / 4\n公開 / 非公開\n\nルーム参加\nルームID  [......]"
+                    },
+                    {
+                        "key":  "online_player_host",
+                        "value":  "ホスト"
+                    },
+                    {
+                        "key":  "online_fake_stage_start",
+                        "value":  "疑似ステージを開始します。"
+                    },
+                    {
+                        "key":  "online_local_test_player",
+                        "value":  "ローカルテストプレイヤーとしてオンラインです。"
+                    },
+                    {
+                        "key":  "online_logging_in",
+                        "value":  "ログイン中..."
+                    },
+                    {
+                        "key":  "online_fake_initialized",
+                        "value":  "疑似オンラインを初期化しました。"
+                    }
+                ]
 }

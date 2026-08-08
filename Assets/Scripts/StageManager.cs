@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,11 +6,24 @@ namespace DrawBody.Prototype
 {
     public sealed class StageManager : MonoBehaviour
     {
+        private const string GimmickKindClearRequest = "stage_clear_request";
+        private const string GimmickKindClear = "stage_clear";
+        private const string GimmickKindGoalState = "player_goal_state";
+        private const string GimmickKindRetry = "stage_retry";
+        private const string GimmickKindSessionEnded = "session_ended";
+        private const string GimmickKindCollectRequest = "collect_request";
+        private const string GimmickKindCollectState = "collect_state";
+        private const string GimmickKindChallengeFailed = "challenge_failed";
+        private const float StageBoundaryFallMargin = 0.5f;
+        private const float ChallengeStartCountdownDuration = 4f;
+        private const float ChallengeTimeUpReturnDelay = 5f;
+
         [SerializeField] private PlayerController2D player;
         [SerializeField] private UIManager uiManager;
         [SerializeField] private DrawManager drawManager;
         [SerializeField] private StageLoader stageLoader;
         [SerializeField] private RuntimeStageEditor stageEditor;
+        [SerializeField] private OnlineManager onlineManager;
         [SerializeField] private CameraFollow2D cameraFollow;
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private float fallResetY = -6f;
@@ -22,10 +36,17 @@ namespace DrawBody.Prototype
         private bool cleared;
         private bool stageStarted;
         private bool stageEditing;
+        private bool testingEditedStage;
         private bool stageSelectEditMode;
+        private bool stageSelectReturnToMultiLobby;
+        private bool stageSelectRemoteWaiting;
         private bool titleMode;
+        private bool onlineStateSubscribed;
         private string currentStageId = "1-0";
         private string remotePlayerId;
+        private string onlineCarrierPlayerId;
+        private readonly Dictionary<string, PlayerController2D> onlineRemotePlayers =
+            new Dictionary<string, PlayerController2D>();
         private bool onlineCarryHeld;
         private Rigidbody2D onlineCarryBody;
         private RigidbodyType2D onlineCarryPreviousBodyType;
@@ -34,6 +55,61 @@ namespace DrawBody.Prototype
         private readonly List<Collider2D> onlineCarryColliders = new List<Collider2D>();
         private readonly Dictionary<PlayerController2D, DrawManager.DrawingState> drawingStates =
             new Dictionary<PlayerController2D, DrawManager.DrawingState>();
+        private Coroutine redrawRespawnRoutine;
+        private readonly HashSet<PlayerController2D> localPlayersAtGoal = new HashSet<PlayerController2D>();
+        private readonly HashSet<string> onlinePlayerIdsAtGoal = new HashSet<string>();
+        private readonly HashSet<string> collectedObjectIds = new HashSet<string>();
+        private StageRuleMode stageRuleMode;
+        private StageObjectType collectionTarget = StageObjectType.CollectibleFish;
+        private int requiredCollectionCount;
+        private int totalCollectionTargetCount;
+        private int collectedCount;
+        private float challengeRemaining;
+        private bool challengeFailed;
+        private float nextChallengeSyncAt;
+        private bool challengeStarting;
+        private float challengeStartCountdownRemaining;
+        private float challengeTimeUpReturnRemaining;
+        private bool challengeStartPositionsCaptured;
+        private Vector3 primaryChallengeStartPosition;
+        private Vector3 secondaryChallengeStartPosition;
+        public bool IsTimedCollectionChallenge => stageRuleMode == StageRuleMode.TimedCollection;
+        public float ChallengeRemainingSeconds => challengeRemaining;
+        public bool ChallengeTimeUp => challengeFailed;
+        public StageObjectType ChallengeCollectionTarget => collectionTarget;
+        public int ChallengeCollectedCount => collectedCount;
+        public int ChallengeRequiredCollectionCount => requiredCollectionCount;
+        public int ChallengeTotalCollectionTargetCount => totalCollectionTargetCount;
+        public bool ChallengeStarting => challengeStarting;
+        public string CurrentStageId => currentStageId;
+        public string ChallengeStartCountdownText
+        {
+            get
+            {
+                if (!challengeStarting)
+                {
+                    return string.Empty;
+                }
+                if (challengeStartCountdownRemaining > 3f) return "3";
+                if (challengeStartCountdownRemaining > 2f) return "2";
+                if (challengeStartCountdownRemaining > 1f) return "1";
+                return "START!";
+            }
+        }
+
+        [System.Serializable]
+        private sealed class PlayerGoalState
+        {
+            public bool Inside;
+        }
+
+        [System.Serializable]
+        private sealed class CollectionState
+        {
+            public string CollectibleId;
+            public int Count;
+            public float RemainingSeconds;
+        }
 
         private void Awake()
         {
@@ -64,12 +140,19 @@ namespace DrawBody.Prototype
                 stageEditor = FindObjectOfType<RuntimeStageEditor>();
             }
 
+            if (onlineManager == null)
+            {
+                onlineManager = FindObjectOfType<OnlineManager>();
+            }
+
             if (cameraFollow == null)
             {
                 cameraFollow = FindObjectOfType<CameraFollow2D>();
             }
 
             ConfigureActivePlayerTargets();
+            ApplyDefaultPlayerColors();
+            SubscribeOnlineEvents();
         }
 
         private void Start()
@@ -77,14 +160,88 @@ namespace DrawBody.Prototype
             EnterTitle();
         }
 
+        private void OnEnable()
+        {
+            SubscribeOnlineEvents();
+        }
+
+        private void OnDisable()
+        {
+            if (onlineManager != null && onlineStateSubscribed)
+            {
+                onlineManager.StateChanged -= HandleOnlineStateChanged;
+                onlineManager.GimmickDataReceived -= HandleOnlineGimmickData;
+            }
+
+            onlineStateSubscribed = false;
+        }
+
+        private void SubscribeOnlineEvents()
+        {
+            if (onlineStateSubscribed)
+            {
+                return;
+            }
+
+            if (onlineManager == null)
+            {
+                onlineManager = FindObjectOfType<OnlineManager>();
+            }
+
+            if (onlineManager != null)
+            {
+                onlineManager.StateChanged += HandleOnlineStateChanged;
+                onlineManager.GimmickDataReceived += HandleOnlineGimmickData;
+                onlineStateSubscribed = true;
+            }
+        }
+
+        private void HandleOnlineStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
+        {
+            if (lobby == null)
+            {
+                return;
+            }
+
+            bool localHost = IsLocalOnlineHost(lobby);
+            if (state == OnlineConnectionState.Playing && !localHost)
+            {
+                SelectStage(!string.IsNullOrEmpty(lobby.StageId) ? lobby.StageId : "1-1");
+                return;
+            }
+
+            if (localHost)
+            {
+                if (state == OnlineConnectionState.Playing)
+                {
+                    TryClearWhenAllOnlinePlayersAtGoal();
+                }
+                return;
+            }
+
+            if (message == LocalizationManager.T("online_stage_select_opened"))
+            {
+                OpenStageSelectWaitingForHost();
+            }
+            else if (message == LocalizationManager.T("online_stage_select_closed"))
+            {
+                CloseStageSelectWaitingForHost();
+            }
+        }
+
         public void EnterTitle()
         {
+            SetEditedStageTestMode(false);
+            NotebookBackgroundDoodles.SetWorldVisible(false);
             currentStageId = "title";
+            GameBgm.PlayTitle();
+            drawManager?.SetAllowedSpecies(StageSpeciesMask.All);
             titleMode = true;
             stageStarted = true;
             stageEditing = false;
             drawing = false;
             cleared = false;
+            ResetGoalProgress();
             Time.timeScale = 1f;
             stageLoader?.ShowFallbackStage();
             SetCameraFollowEnabled(true);
@@ -93,6 +250,7 @@ namespace DrawBody.Prototype
             uiManager?.SetStageSelect(false);
             uiManager?.SetStageEditor(false);
             uiManager?.SetTitle(true);
+            ConfigureStageRule(null);
             drawManager?.SetActive(false);
             RespawnPlayers();
             SetActivePlayer(player != null ? player : primaryPlayer, true);
@@ -111,13 +269,13 @@ namespace DrawBody.Prototype
 
         public void OpenOptionMenu()
         {
-            uiManager?.SetOption(true);
+            uiManager?.OpenOption(stageStarted && !titleMode);
         }
 
         public void CloseTitleSubmenu()
         {
             uiManager?.SetMulti(false);
-            uiManager?.SetOption(false);
+            uiManager?.CloseOption();
         }
 
         public void ExitGame()
@@ -126,6 +284,44 @@ namespace DrawBody.Prototype
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
+        }
+
+        public bool IsOnlineStageActive => IsOnlineInStage();
+        public bool IsOnlineStageHost => IsOnlineInStage() && IsLocalOnlineHost(onlineManager.CurrentLobby);
+
+        public void RequestLeaveSession()
+        {
+            uiManager?.ShowLeaveSessionConfirm(IsOnlineStageHost);
+        }
+
+        public void ConfirmLeaveSession()
+        {
+            if (IsOnlineInStage() && IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = currentStageId,
+                    Kind = GimmickKindSessionEnded,
+                    Json = "{}"
+                });
+                StartCoroutine(CompleteLeaveSessionAfterBroadcast());
+                return;
+            }
+
+            CompleteLeaveSession();
+        }
+
+        private IEnumerator CompleteLeaveSessionAfterBroadcast()
+        {
+            yield return new WaitForSecondsRealtime(0.15f);
+            CompleteLeaveSession();
+        }
+
+        private void CompleteLeaveSession()
+        {
+            onlineManager?.LeaveLobby();
+            uiManager?.HideLeaveSessionConfirm();
+            EnterTitle();
         }
 
         private void Update()
@@ -142,7 +338,12 @@ namespace DrawBody.Prototype
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (uiManager != null && uiManager.IsTitleSubmenuShowing)
+                if (testingEditedStage)
+                {
+                    ReturnToStageEditor();
+                    return;
+                }
+                else if (uiManager != null && uiManager.IsTitleSubmenuShowing)
                 {
                     CloseTitleSubmenu();
                 }
@@ -150,9 +351,9 @@ namespace DrawBody.Prototype
                 {
                     CancelDrawingMode();
                 }
-                else
+                else if (!cleared)
                 {
-                    uiManager?.HideMenu();
+                    uiManager?.ToggleMenu();
                 }
             }
 
@@ -164,7 +365,7 @@ namespace DrawBody.Prototype
                 }
                 else
                 {
-                    EnterDrawingMode();
+                    uiManager?.ToggleGameplayHudDrawer();
                 }
             }
 
@@ -177,9 +378,446 @@ namespace DrawBody.Prototype
             {
                 RespawnFallenPlayers();
             }
+
+            UpdateTimedCollectionChallenge();
         }
 
         public void ClearStage()
+        {
+            if (cleared)
+            {
+                return;
+            }
+
+            if (IsOnlineInStage())
+            {
+                OnlineLobbyInfo lobby = onlineManager.CurrentLobby;
+                if (!IsLocalOnlineHost(lobby))
+                {
+                    onlineManager.SendGimmickData(new OnlineGimmickData
+                    {
+                        ObjectId = currentStageId,
+                        Kind = GimmickKindClearRequest,
+                        Json = "{}"
+                    });
+                    return;
+                }
+
+                ApplyClearStage();
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = currentStageId,
+                    Kind = GimmickKindClear,
+                    Json = "{}"
+                });
+                return;
+            }
+
+            ApplyClearStage();
+        }
+
+        public void TryCollect(StageCollectible collectible)
+        {
+            if (collectible == null || cleared || challengeFailed || challengeStarting
+                || stageRuleMode != StageRuleMode.TimedCollection
+                || collectible.CollectibleType != collectionTarget)
+            {
+                return;
+            }
+
+            if (IsOnlineInStage() && !IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = collectible.ObjectId,
+                    Kind = GimmickKindCollectRequest,
+                    Json = "{}"
+                });
+                return;
+            }
+
+            ApplyCollectible(collectible.ObjectId, IsOnlineInStage());
+        }
+
+        private void ApplyCollectible(string objectId, bool broadcast)
+        {
+            if (string.IsNullOrEmpty(objectId) || !collectedObjectIds.Add(objectId))
+            {
+                return;
+            }
+
+            StageCollectible collectible = FindCollectible(objectId);
+            if (collectible == null || collectible.CollectibleType != collectionTarget)
+            {
+                collectedObjectIds.Remove(objectId);
+                return;
+            }
+
+            collectible.ApplyCollected();
+            collectedCount++;
+            uiManager?.SetChallengeHud(true, challengeRemaining, collectionTarget, collectedCount, requiredCollectionCount, false);
+
+            CollectionState state = new CollectionState
+            {
+                CollectibleId = objectId,
+                Count = collectedCount,
+                RemainingSeconds = challengeRemaining
+            };
+            if (broadcast && onlineManager != null)
+            {
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = currentStageId,
+                    Kind = GimmickKindCollectState,
+                    Json = JsonUtility.ToJson(state)
+                });
+            }
+
+            if (collectedCount >= requiredCollectionCount)
+            {
+                ClearStage();
+            }
+        }
+
+        private void ApplyCollectibleState(CollectionState state)
+        {
+            if (state == null)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(state.CollectibleId))
+            {
+                collectedObjectIds.Add(state.CollectibleId);
+                FindCollectible(state.CollectibleId)?.ApplyCollected();
+            }
+            collectedCount = Mathf.Max(collectedCount, state.Count);
+            if (state.RemainingSeconds > 0f)
+            {
+                challengeRemaining = state.RemainingSeconds;
+            }
+            uiManager?.SetChallengeHud(true, challengeRemaining, collectionTarget, collectedCount, requiredCollectionCount, false);
+        }
+
+        private StageCollectible FindCollectible(string objectId)
+        {
+            return stageLoader != null ? stageLoader.FindLoadedCollectible(objectId) : null;
+        }
+
+        private void ConfigureStageRule(StageData data)
+        {
+            stageRuleMode = data != null ? data.ruleMode : StageRuleMode.Normal;
+            collectionTarget = data != null && IsCollectibleType(data.collectionTarget)
+                ? data.collectionTarget
+                : StageObjectType.CollectibleFish;
+            challengeRemaining = Mathf.Clamp(data != null ? data.timeLimitSeconds : 60f, 5f, 1800f);
+            collectedCount = 0;
+            challengeFailed = false;
+            challengeStarting = stageRuleMode == StageRuleMode.TimedCollection;
+            challengeStartCountdownRemaining = challengeStarting ? ChallengeStartCountdownDuration : 0f;
+            challengeTimeUpReturnRemaining = 0f;
+            challengeStartPositionsCaptured = false;
+            collectedObjectIds.Clear();
+            nextChallengeSyncAt = Time.unscaledTime + 1f;
+
+            totalCollectionTargetCount = CountCollectibles(collectionTarget);
+            int configuredCount = data != null ? data.requiredCollectionCount : 1;
+            requiredCollectionCount = configuredCount > 0
+                ? Mathf.Clamp(configuredCount, 1, 999)
+                : totalCollectionTargetCount;
+            requiredCollectionCount = Mathf.Max(1, requiredCollectionCount);
+            uiManager?.SetChallengeHud(
+                stageRuleMode == StageRuleMode.TimedCollection,
+                challengeRemaining,
+                collectionTarget,
+                collectedCount,
+                requiredCollectionCount,
+                false);
+            uiManager?.SetChallengeCountdown(challengeStarting, ChallengeStartCountdownText);
+        }
+
+        private void UpdateTimedCollectionChallenge()
+        {
+            if (stageRuleMode != StageRuleMode.TimedCollection || cleared
+                || stageEditing || !stageStarted)
+            {
+                return;
+            }
+
+            if (challengeFailed)
+            {
+                uiManager?.SetChallengeCountdown(true, "TIME UP");
+                challengeTimeUpReturnRemaining = Mathf.Max(
+                    0f,
+                    challengeTimeUpReturnRemaining - Time.unscaledDeltaTime);
+                if (challengeTimeUpReturnRemaining <= 0f
+                    && (!IsOnlineInStage() || IsLocalOnlineHost(onlineManager.CurrentLobby)))
+                {
+                    RestartAfterChallengeTimeUp();
+                }
+                return;
+            }
+
+            if (challengeStarting)
+            {
+                HoldPlayersAtChallengeStart();
+                uiManager?.SetChallengeCountdown(true, ChallengeStartCountdownText);
+                challengeStartCountdownRemaining = Mathf.Max(
+                    0f,
+                    challengeStartCountdownRemaining - Time.unscaledDeltaTime);
+                if (challengeStartCountdownRemaining <= 0f)
+                {
+                    challengeStarting = false;
+                    challengeStartPositionsCaptured = false;
+                    uiManager?.SetChallengeCountdown(false, string.Empty);
+                    SetAllPlayerControls(true);
+                }
+                return;
+            }
+
+            challengeRemaining = Mathf.Max(0f, challengeRemaining - Time.unscaledDeltaTime);
+            uiManager?.SetChallengeHud(true, challengeRemaining, collectionTarget, collectedCount, requiredCollectionCount, false);
+            if (IsOnlineInStage() && IsLocalOnlineHost(onlineManager.CurrentLobby)
+                && Time.unscaledTime >= nextChallengeSyncAt)
+            {
+                nextChallengeSyncAt = Time.unscaledTime + 1f;
+                BroadcastCollectionSnapshot();
+            }
+            if (challengeRemaining > 0f || (IsOnlineInStage() && !IsLocalOnlineHost(onlineManager.CurrentLobby)))
+            {
+                return;
+            }
+
+            ApplyChallengeFailed();
+            if (IsOnlineInStage())
+            {
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = currentStageId,
+                    Kind = GimmickKindChallengeFailed,
+                    Json = "{}"
+                });
+            }
+        }
+
+        private void HoldPlayersAtChallengeStart()
+        {
+            if (!challengeStartPositionsCaptured)
+            {
+                if (primaryPlayer != null)
+                {
+                    primaryChallengeStartPosition = primaryPlayer.transform.position;
+                }
+                if (secondaryPlayer != null)
+                {
+                    secondaryChallengeStartPosition = secondaryPlayer.transform.position;
+                }
+                challengeStartPositionsCaptured = true;
+            }
+
+            SetAllPlayerControls(false);
+            if (primaryPlayer != null)
+            {
+                primaryPlayer.transform.position = primaryChallengeStartPosition;
+                primaryPlayer.ResetMotion();
+            }
+            if (secondaryPlayer != null)
+            {
+                secondaryPlayer.transform.position = secondaryChallengeStartPosition;
+                secondaryPlayer.ResetMotion();
+            }
+        }
+
+        private void RestartAfterChallengeTimeUp()
+        {
+            if (IsOnlineInStage())
+            {
+                ApplyFullStageRetry();
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = currentStageId,
+                    Kind = GimmickKindRetry,
+                    Json = "{}"
+                });
+                return;
+            }
+
+            ApplyFullStageRetry();
+        }
+
+        private void BroadcastCollectionSnapshot()
+        {
+            if (onlineManager == null)
+            {
+                return;
+            }
+
+            if (collectedObjectIds.Count == 0)
+            {
+                SendCollectionSnapshotEntry(string.Empty);
+                return;
+            }
+
+            foreach (string objectId in collectedObjectIds)
+            {
+                SendCollectionSnapshotEntry(objectId);
+            }
+        }
+
+        private void SendCollectionSnapshotEntry(string objectId)
+        {
+            CollectionState state = new CollectionState
+            {
+                CollectibleId = objectId,
+                Count = collectedCount,
+                RemainingSeconds = challengeRemaining
+            };
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = currentStageId,
+                Kind = GimmickKindCollectState,
+                Json = JsonUtility.ToJson(state)
+            });
+        }
+
+        private void ApplyChallengeFailed()
+        {
+            if (challengeFailed || cleared)
+            {
+                return;
+            }
+            challengeFailed = true;
+            challengeStarting = false;
+            challengeTimeUpReturnRemaining = ChallengeTimeUpReturnDelay;
+            if (drawing)
+            {
+                CancelDrawingMode();
+            }
+            SetAllPlayerControls(false);
+            uiManager?.SetChallengeCountdown(true, "TIME UP");
+            uiManager?.SetChallengeHud(true, 0f, collectionTarget, collectedCount, requiredCollectionCount, true);
+        }
+
+        private static bool IsCollectibleType(StageObjectType type)
+        {
+            return type == StageObjectType.CollectibleFish
+                || type == StageObjectType.CollectibleCoin
+                || type == StageObjectType.CollectibleStar;
+        }
+
+        private int CountCollectibles(StageObjectType type)
+        {
+            return stageLoader != null ? stageLoader.CountLoadedCollectibles(type) : 0;
+        }
+
+        public void SetPlayerGoalState(PlayerController2D goalPlayer, bool inside)
+        {
+            if (goalPlayer == null || cleared || !stageStarted || stageRuleMode == StageRuleMode.TimedCollection)
+            {
+                return;
+            }
+
+            if (IsOnlineInStage())
+            {
+                if (goalPlayer != primaryPlayer || onlineManager == null || string.IsNullOrEmpty(onlineManager.LocalPlayerId))
+                {
+                    return;
+                }
+
+                SetOnlineGoalState(onlineManager.LocalPlayerId, inside);
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = currentStageId,
+                    Kind = GimmickKindGoalState,
+                    Json = JsonUtility.ToJson(new PlayerGoalState { Inside = inside })
+                });
+                TryClearWhenAllOnlinePlayersAtGoal();
+                return;
+            }
+
+            if (inside)
+            {
+                localPlayersAtGoal.Add(goalPlayer);
+            }
+            else
+            {
+                localPlayersAtGoal.Remove(goalPlayer);
+            }
+
+            if (inside && AreAllLocalPlayersAtGoal())
+            {
+                ClearStage();
+            }
+        }
+
+        private bool AreAllLocalPlayersAtGoal()
+        {
+            PlayerController2D[] activePlayers = FindObjectsOfType<PlayerController2D>();
+            int requiredPlayers = 0;
+            for (int i = 0; i < activePlayers.Length; i++)
+            {
+                PlayerController2D activePlayer = activePlayers[i];
+                if (activePlayer == null || !activePlayer.isActiveAndEnabled || !activePlayer.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                requiredPlayers++;
+                if (!localPlayersAtGoal.Contains(activePlayer))
+                {
+                    return false;
+                }
+            }
+
+            return requiredPlayers > 0;
+        }
+
+        private void SetOnlineGoalState(string playerId, bool inside)
+        {
+            if (string.IsNullOrEmpty(playerId))
+            {
+                return;
+            }
+
+            if (inside)
+            {
+                onlinePlayerIdsAtGoal.Add(playerId);
+            }
+            else
+            {
+                onlinePlayerIdsAtGoal.Remove(playerId);
+            }
+        }
+
+        private void TryClearWhenAllOnlinePlayersAtGoal()
+        {
+            OnlineLobbyInfo lobby = onlineManager != null ? onlineManager.CurrentLobby : null;
+            if (!IsLocalOnlineHost(lobby) || lobby?.Players == null || lobby.Players.Length == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < lobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo lobbyPlayer = lobby.Players[i];
+                if (lobbyPlayer == null
+                    || string.IsNullOrEmpty(lobbyPlayer.PlayerId)
+                    || !onlinePlayerIdsAtGoal.Contains(lobbyPlayer.PlayerId))
+                {
+                    return;
+                }
+            }
+
+            ClearStage();
+        }
+
+        private void ResetGoalProgress()
+        {
+            localPlayersAtGoal.Clear();
+            onlinePlayerIdsAtGoal.Clear();
+        }
+
+        private void ApplyClearStage()
         {
             if (cleared)
             {
@@ -191,7 +829,62 @@ namespace DrawBody.Prototype
             SetAllPlayerControls(false);
             player?.ResetMotion();
             secondaryPlayer?.ResetMotion();
-            uiManager?.SetCleared(true);
+            foreach (KeyValuePair<string, PlayerController2D> pair in onlineRemotePlayers)
+            {
+                pair.Value?.ResetMotion();
+            }
+            uiManager?.SetChallengeHud(false, 0f, collectionTarget, collectedCount, requiredCollectionCount, false);
+            uiManager?.SetChallengeCountdown(false, string.Empty);
+            uiManager?.SetCleared(true, currentStageId, GetNextStageId(currentStageId));
+        }
+
+        private void HandleOnlineGimmickData(OnlineGimmickData data)
+        {
+            if (data == null || onlineManager == null || data.PlayerId == onlineManager.LocalPlayerId)
+            {
+                return;
+            }
+
+            if (data.Kind == GimmickKindClearRequest && IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                ClearStage();
+            }
+            else if (data.Kind == GimmickKindClear)
+            {
+                ApplyClearStage();
+            }
+            else if (data.Kind == GimmickKindGoalState && data.ObjectId == currentStageId)
+            {
+                PlayerGoalState goalState = JsonUtility.FromJson<PlayerGoalState>(data.Json);
+                SetOnlineGoalState(data.PlayerId, goalState != null && goalState.Inside);
+                TryClearWhenAllOnlinePlayersAtGoal();
+            }
+            else if (data.Kind == GimmickKindRetry && data.ObjectId == currentStageId)
+            {
+                ApplyFullStageRetry();
+            }
+            else if (data.Kind == GimmickKindCollectRequest && IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                ApplyCollectible(data.ObjectId, true);
+            }
+            else if (data.Kind == GimmickKindCollectState)
+            {
+                CollectionState state = JsonUtility.FromJson<CollectionState>(data.Json);
+                if (state != null)
+                {
+                    ApplyCollectibleState(state);
+                }
+            }
+            else if (data.Kind == GimmickKindChallengeFailed)
+            {
+                ApplyChallengeFailed();
+            }
+            else if (data.Kind == GimmickKindSessionEnded)
+            {
+                onlineManager.LeaveLobby();
+                uiManager?.HideLeaveSessionConfirm();
+                EnterTitle();
+            }
         }
 
         public void Retry()
@@ -201,17 +894,58 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (IsOnlineInStage())
+            {
+                if (!IsLocalOnlineHost(onlineManager.CurrentLobby))
+                {
+                    return;
+                }
+
+                ApplyFullStageRetry();
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = currentStageId,
+                    Kind = GimmickKindRetry,
+                    Json = "{}"
+                });
+                return;
+            }
+
+            ApplyFullStageRetry();
+        }
+
+        private void ApplyFullStageRetry()
+        {
+            string stageToReload = currentStageId;
             cleared = false;
+            ResetGoalProgress();
             CancelDrawingMode();
+            if (!string.IsNullOrEmpty(stageToReload) && stageToReload != "title")
+            {
+                SelectStage(stageToReload);
+            }
+            else
+            {
+                RespawnPlayers();
+                uiManager?.SetCleared(false);
+            }
+        }
 
-            RespawnPlayers();
+        public void GoToNextStage()
+        {
+            string nextStageId = GetNextStageId(currentStageId);
+            if (string.IsNullOrEmpty(nextStageId))
+            {
+                OpenStageSelect();
+                return;
+            }
 
-            uiManager?.SetCleared(false);
+            SelectStage(nextStageId);
         }
 
         public void EnterDrawingMode()
         {
-            if (!stageStarted)
+            if (!stageStarted || challengeStarting || challengeFailed)
             {
                 return;
             }
@@ -257,11 +991,28 @@ namespace DrawBody.Prototype
 
         public void SelectStage(string stageId)
         {
+            SetEditedStageTestMode(false);
+            NotebookBackgroundDoodles.SetWorldVisible(true);
             currentStageId = string.IsNullOrEmpty(stageId) ? "1-0" : stageId;
+            GameBgm.PlayForStage(currentStageId);
+            ApplySpeciesRulesForCurrentStage();
+            ResetGoalProgress();
             if (stageSelectEditMode)
             {
                 OpenStageEditor(currentStageId);
                 return;
+            }
+
+            bool notifyOnline = stageSelectReturnToMultiLobby
+                && !stageSelectRemoteWaiting
+                && onlineManager != null
+                && onlineManager.CurrentLobby != null
+                && onlineManager.State == OnlineConnectionState.InLobby;
+            stageSelectReturnToMultiLobby = false;
+            stageSelectRemoteWaiting = false;
+            if (notifyOnline)
+            {
+                onlineManager.StartGame(currentStageId);
             }
 
             titleMode = false;
@@ -277,13 +1028,17 @@ namespace DrawBody.Prototype
                 }
             }
 
+            ConfigureStageRule(stageLoader != null ? stageLoader.CurrentStageData : null);
+
             stageStarted = true;
             drawing = false;
             cleared = false;
             Time.timeScale = 1f;
             SetCameraFollowEnabled(true);
             uiManager?.SetTitle(false);
+            uiManager?.SetMulti(false);
             uiManager?.SetStageSelect(false);
+            uiManager?.SetStageSelectLocked(false);
             uiManager?.SetStageEditor(false);
             uiManager?.SetDrawing(false);
             uiManager?.SetCleared(false);
@@ -293,7 +1048,11 @@ namespace DrawBody.Prototype
 
         public void OpenStageEditor(string stageId)
         {
+            SetEditedStageTestMode(false);
+            NotebookBackgroundDoodles.SetWorldVisible(true);
             currentStageId = string.IsNullOrEmpty(stageId) ? "1-1" : stageId;
+            GameBgm.PlayForStage(currentStageId);
+            ApplySpeciesRulesForCurrentStage();
             CancelDrawingMode();
             stageStarted = false;
             stageEditing = true;
@@ -309,11 +1068,15 @@ namespace DrawBody.Prototype
             uiManager?.SetDrawing(false);
             uiManager?.SetCleared(false);
             uiManager?.SetStageEditor(true);
+            uiManager?.SetChallengeHud(false, 0f, collectionTarget, 0, 1, false);
+            uiManager?.SetChallengeCountdown(false, string.Empty);
             stageEditor?.Open(currentStageId);
         }
 
         public void CloseStageEditor()
         {
+            SetEditedStageTestMode(false);
+            NotebookBackgroundDoodles.SetWorldVisible(false);
             stageEditor?.Close();
             stageEditing = false;
             stageStarted = false;
@@ -323,6 +1086,7 @@ namespace DrawBody.Prototype
             player?.SetControlsEnabled(false);
             uiManager?.SetStageEditor(false);
             uiManager?.SetStageSelect(true);
+            uiManager?.SetChallengeCountdown(false, string.Empty);
         }
 
         public bool StageSelectEditMode => stageSelectEditMode;
@@ -345,7 +1109,10 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            SetEditedStageTestMode(true);
+            NotebookBackgroundDoodles.SetWorldVisible(true);
             stageEditor.TestPlay();
+            ConfigureStageRule(stageLoader != null ? stageLoader.CurrentStageData : null);
             stageEditing = false;
             stageStarted = true;
             drawing = false;
@@ -360,28 +1127,239 @@ namespace DrawBody.Prototype
             SetActivePlayer(player != null ? player : primaryPlayer, true);
         }
 
+        public void ReturnToStageEditor()
+        {
+            if (!testingEditedStage || stageEditor == null)
+            {
+                return;
+            }
+
+            CancelDrawingMode();
+            NotebookBackgroundDoodles.SetWorldVisible(true);
+            stageStarted = false;
+            stageEditing = true;
+            drawing = false;
+            cleared = false;
+            Time.timeScale = 0f;
+            SetCameraFollowEnabled(false);
+            player?.ResetMotion();
+            secondaryPlayer?.ResetMotion();
+            SetAllPlayerControls(false);
+            stageLoader?.HideStages();
+            uiManager?.HideMenu();
+            uiManager?.SetCleared(false);
+            uiManager?.SetDrawing(false);
+            uiManager?.SetStageSelect(false);
+            uiManager?.SetStageEditor(true);
+            uiManager?.SetChallengeCountdown(false, string.Empty);
+            stageEditor.ResumeAfterTestPlay();
+            SetEditedStageTestMode(false);
+        }
+
+        private void SetEditedStageTestMode(bool testing)
+        {
+            testingEditedStage = testing;
+            uiManager?.SetEditorTestMode(testing);
+        }
+
         public void OpenStageSelect()
         {
+            GameBgm.PlayTitle();
+            SetEditedStageTestMode(false);
+            NotebookBackgroundDoodles.SetWorldVisible(false);
+            stageSelectReturnToMultiLobby = false;
+            stageSelectRemoteWaiting = false;
             CancelDrawingMode();
             stageEditor?.Close();
             stageEditing = false;
             stageSelectEditMode = false;
             stageStarted = false;
             titleMode = false;
+            cleared = false;
             Time.timeScale = 0f;
             SetCameraFollowEnabled(true);
             player?.ResetMotion();
             player?.SetControlsEnabled(false);
             uiManager?.HideMenu();
             uiManager?.SetTitle(false);
+            uiManager?.SetMulti(false);
             uiManager?.SetStageEditor(false);
+            uiManager?.SetCleared(false);
+            uiManager?.SetStageSelectLocked(false);
             uiManager?.SetStageSelect(true);
+            uiManager?.SetChallengeCountdown(false, string.Empty);
+        }
+
+        public void OpenStageSelectFromMultiLobby()
+        {
+            OpenStageSelect();
+            stageSelectReturnToMultiLobby = true;
+            stageSelectRemoteWaiting = false;
+            uiManager?.SetStageSelectLocked(false);
+            onlineManager?.OpenStageSelect();
+        }
+
+        public void OpenStageSelectWaitingForHost()
+        {
+            OpenStageSelect();
+            stageSelectReturnToMultiLobby = true;
+            stageSelectRemoteWaiting = true;
+            uiManager?.SetStageSelectLocked(true);
+        }
+
+        public void CloseStageSelectWaitingForHost()
+        {
+            if (!stageSelectRemoteWaiting)
+            {
+                return;
+            }
+
+            stageSelectReturnToMultiLobby = false;
+            stageSelectRemoteWaiting = false;
+            titleMode = true;
+            stageStarted = true;
+            stageEditing = false;
+            drawing = false;
+            cleared = false;
+            Time.timeScale = 1f;
+            SetCameraFollowEnabled(true);
+            uiManager?.SetStageSelectLocked(false);
+            uiManager?.SetStageSelect(false);
+            uiManager?.SetTitle(false);
+            uiManager?.SetMulti(true);
+            SetActivePlayer(player != null ? player : primaryPlayer, true);
+        }
+
+        public void BackFromStageSelect()
+        {
+            if (stageSelectRemoteWaiting)
+            {
+                return;
+            }
+
+            if (!stageSelectReturnToMultiLobby)
+            {
+                EnterTitle();
+                return;
+            }
+
+            stageSelectReturnToMultiLobby = false;
+            stageSelectRemoteWaiting = false;
+            onlineManager?.CloseStageSelect();
+            titleMode = true;
+            stageStarted = true;
+            stageEditing = false;
+            drawing = false;
+            cleared = false;
+            Time.timeScale = 1f;
+            SetCameraFollowEnabled(true);
+            uiManager?.SetStageSelect(false);
+            uiManager?.SetStageSelectLocked(false);
+            uiManager?.SetTitle(false);
+            uiManager?.SetMulti(true);
+            SetActivePlayer(player != null ? player : primaryPlayer, true);
+        }
+
+        private bool IsLocalOnlineHost(OnlineLobbyInfo lobby)
+        {
+            if (onlineManager == null || lobby == null || lobby.Players == null)
+            {
+                return false;
+            }
+
+            string localPlayerId = onlineManager.LocalPlayerId;
+            for (int i = 0; i < lobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo playerInfo = lobby.Players[i];
+                if (playerInfo != null && playerInfo.IsHost && playerInfo.PlayerId == localPlayerId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool IsOnlineInStage()
+        {
+            return onlineManager != null
+                && onlineManager.CurrentLobby != null
+                && onlineManager.State == OnlineConnectionState.Playing;
+        }
+
+        private static string GetNextStageId(string stageId)
+        {
+            if (string.IsNullOrEmpty(stageId) || stageId == "title")
+            {
+                return "1-1";
+            }
+
+            if (stageId == "1-0")
+            {
+                return "1-1";
+            }
+
+            string[] parts = stageId.Split('-');
+            if (parts.Length != 2
+                || !int.TryParse(parts[0], out int world)
+                || !int.TryParse(parts[1], out int stage))
+            {
+                return "1-1";
+            }
+
+            if (stage < 3)
+            {
+                return $"{world}-{stage + 1}";
+            }
+
+            if (world < 15)
+            {
+                return $"{world + 1}-1";
+            }
+
+            return null;
         }
 
         public Transform ActivePlayerTransform => player != null ? player.transform : null;
         public Transform RemotePlayerTransform => secondaryPlayer != null ? secondaryPlayer.transform : null;
         public PlayerController2D RemotePlayerController => secondaryPlayer;
         public string RemotePlayerId => remotePlayerId;
+
+        public Transform GetOnlinePlayerTransform(string playerId)
+        {
+            PlayerController2D controller = GetOnlinePlayerController(playerId);
+            return controller != null ? controller.transform : null;
+        }
+
+        public PlayerController2D GetOnlinePlayerController(string playerId)
+        {
+            if (onlineManager != null && playerId == onlineManager.LocalPlayerId)
+            {
+                return primaryPlayer;
+            }
+
+            return !string.IsNullOrEmpty(playerId) && onlineRemotePlayers.TryGetValue(playerId, out PlayerController2D remote)
+                ? remote
+                : null;
+        }
+
+        public string GetOnlinePlayerId(PlayerController2D controller)
+        {
+            if (controller == null)
+            {
+                return null;
+            }
+
+            foreach (KeyValuePair<string, PlayerController2D> pair in onlineRemotePlayers)
+            {
+                if (pair.Value == controller)
+                {
+                    return pair.Key;
+                }
+            }
+
+            return controller == primaryPlayer && onlineManager != null ? onlineManager.LocalPlayerId : null;
+        }
 
         public void SetOnlineRemotePlayerId(string playerId)
         {
@@ -401,32 +1379,123 @@ namespace DrawBody.Prototype
 
         public void EnsureOnlineRemotePlayer()
         {
+            EnsureOnlineRemotePlayer(remotePlayerId);
+        }
+
+        private PlayerController2D EnsureOnlineRemotePlayer(string playerId)
+        {
+            if (string.IsNullOrEmpty(playerId)
+                || onlineManager != null && playerId == onlineManager.LocalPlayerId)
+            {
+                return null;
+            }
+
+            if (onlineRemotePlayers.TryGetValue(playerId, out PlayerController2D existing) && existing != null)
+            {
+                return existing;
+            }
+
+            PlayerController2D remote;
             if (secondaryPlayer == null)
             {
                 AddCharacter();
+                remote = secondaryPlayer;
+            }
+            else if (!onlineRemotePlayers.ContainsValue(secondaryPlayer))
+            {
+                remote = secondaryPlayer;
+            }
+            else
+            {
+                GameObject clone = Instantiate(
+                    primaryPlayer.gameObject,
+                    primaryPlayer.transform.position + new Vector3(onlineRemotePlayers.Count * 1.25f, 0.35f, 0f),
+                    primaryPlayer.transform.rotation,
+                    primaryPlayer.transform.parent);
+                clone.name = "Online Player " + (onlineRemotePlayers.Count + 2);
+                remote = clone.GetComponent<PlayerController2D>();
+                if (remote == null)
+                {
+                    Destroy(clone);
+                    return null;
+                }
+                remote.ResetMotion();
+                remote.SetControlsEnabled(false);
             }
 
-            if (secondaryPlayer != null)
+            if (remote == null)
             {
-                secondaryPlayer.SetControlsEnabled(false);
+                return null;
+            }
+
+            remote.SetControlsEnabled(false);
+            onlineRemotePlayers[playerId] = remote;
+            if (string.IsNullOrEmpty(remotePlayerId))
+            {
+                SetOnlineRemotePlayerId(playerId);
+            }
+
+            int colorIndex = PlayerColorPalette.GetLobbyColorIndex(
+                onlineManager != null ? onlineManager.CurrentLobby : null,
+                playerId,
+                onlineRemotePlayers.Count);
+            SetPlayerColor(remote, colorIndex);
+            return remote;
+        }
+
+        public void SyncOnlinePlayers(OnlineLobbyInfo lobby, string localPlayerId)
+        {
+            HashSet<string> activeIds = new HashSet<string>();
+            if (lobby?.Players != null)
+            {
+                for (int i = 0; i < lobby.Players.Length; i++)
+                {
+                    OnlinePlayerInfo info = lobby.Players[i];
+                    if (info == null || string.IsNullOrEmpty(info.PlayerId) || info.PlayerId == localPlayerId)
+                    {
+                        continue;
+                    }
+
+                    activeIds.Add(info.PlayerId);
+                    EnsureOnlineRemotePlayer(info.PlayerId);
+                }
+            }
+
+            List<string> removed = new List<string>();
+            foreach (KeyValuePair<string, PlayerController2D> pair in onlineRemotePlayers)
+            {
+                if (!activeIds.Contains(pair.Key))
+                {
+                    removed.Add(pair.Key);
+                }
+            }
+
+            for (int i = 0; i < removed.Count; i++)
+            {
+                string id = removed[i];
+                PlayerController2D remote = onlineRemotePlayers[id];
+                onlineRemotePlayers.Remove(id);
+                if (remote != null)
+                {
+                    if (remote == secondaryPlayer)
+                    {
+                        secondaryPlayer = null;
+                    }
+                    drawingStates.Remove(remote);
+                    Destroy(remote.gameObject);
+                }
             }
         }
 
         public void ApplyOnlineRemoteState(string playerId, Vector2 position, Vector2 velocity, float rotation)
         {
-            SetOnlineRemotePlayerId(playerId);
-            ApplyOnlineRemoteState(position, velocity, rotation);
-        }
-
-        public void ApplyOnlineRemoteState(Vector2 position, Vector2 velocity, float rotation)
-        {
-            EnsureOnlineRemotePlayer();
-            if (secondaryPlayer == null)
+            PlayerController2D remote = EnsureOnlineRemotePlayer(playerId);
+            if (remote == null)
             {
                 return;
             }
 
-            Rigidbody2D remoteBody = secondaryPlayer.GetComponent<Rigidbody2D>();
+            Rigidbody2D remoteBody = remote.GetComponent<Rigidbody2D>();
             if (remoteBody != null)
             {
                 remoteBody.position = position;
@@ -435,11 +1504,21 @@ namespace DrawBody.Prototype
             }
             else
             {
-                secondaryPlayer.transform.position = position;
-                secondaryPlayer.transform.rotation = Quaternion.Euler(0f, 0f, rotation);
+                remote.transform.position = position;
+                remote.transform.rotation = Quaternion.Euler(0f, 0f, rotation);
             }
 
-            secondaryPlayer.SetControlsEnabled(false);
+            remote.SetControlsEnabled(false);
+        }
+
+        public void ApplyOnlineRemoteState(Vector2 position, Vector2 velocity, float rotation)
+        {
+            if (string.IsNullOrEmpty(remotePlayerId))
+            {
+                return;
+            }
+
+            ApplyOnlineRemoteState(remotePlayerId, position, velocity, rotation);
         }
 
         public void ApplyOnlineCarryData(OnlineCarryData carryData, string localPlayerId)
@@ -451,7 +1530,7 @@ namespace DrawBody.Prototype
 
             if (carryData.Action == "pickup")
             {
-                BeginOnlineCarry();
+                BeginOnlineCarry(carryData.CarrierPlayerId);
             }
             else if (carryData.Action == "throw")
             {
@@ -471,15 +1550,16 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void BeginOnlineCarry()
+        private void BeginOnlineCarry(string carrierPlayerId)
         {
-            EnsureOnlineRemotePlayer();
-            if (player == null || secondaryPlayer == null || onlineCarryHeld)
+            PlayerController2D carrier = EnsureOnlineRemotePlayer(carrierPlayerId);
+            if (player == null || carrier == null || onlineCarryHeld)
             {
                 return;
             }
 
             onlineCarryHeld = true;
+            onlineCarrierPlayerId = carrierPlayerId;
             player.SetControlsEnabled(false);
             onlineCarryBody = player.GetComponent<Rigidbody2D>();
             if (onlineCarryBody != null)
@@ -509,16 +1589,18 @@ namespace DrawBody.Prototype
 
         private void FollowOnlineCarrier()
         {
-            if (player == null || secondaryPlayer == null)
+            PlayerController2D carrier = GetOnlinePlayerController(onlineCarrierPlayerId);
+            if (player == null || carrier == null)
             {
                 return;
             }
 
-            Vector3 anchor = secondaryPlayer.transform.position + Vector3.up * 1.15f;
-            BodyBuilder remoteBuilder = secondaryPlayer.GetComponent<BodyBuilder>();
+            Vector3 anchor = carrier.transform.position + Vector3.up * 1.15f;
+            BodyBuilder remoteBuilder = carrier.GetComponent<BodyBuilder>();
             if (remoteBuilder != null)
             {
-                anchor = remoteBuilder.GetCarryAnchorWorld(secondaryPlayer.FacingDirection);
+                anchor = remoteBuilder.GetCarryAnchorWorld(carrier.FacingDirection);
+                remoteBuilder.SetCarryPose(true, carrier.FacingDirection, anchor);
             }
 
             player.transform.position = anchor;
@@ -539,13 +1621,22 @@ namespace DrawBody.Prototype
             }
 
             onlineCarryHeld = false;
-            for (int i = 0; i < onlineCarryColliders.Count; i++)
+            PlayerController2D carrier = GetOnlinePlayerController(onlineCarrierPlayerId);
+            BodyBuilder remoteBuilder = carrier != null ? carrier.GetComponent<BodyBuilder>() : null;
+            remoteBuilder?.SetCarryPose(false, carrier.FacingDirection, carrier.transform.position);
+            Collider2D[] releasedColliders = onlineCarryColliders.ToArray();
+            Collider2D[] carrierColliders = carrier != null
+                ? carrier.GetComponentsInChildren<Collider2D>(false)
+                : new Collider2D[0];
+
+            for (int i = 0; i < releasedColliders.Length; i++)
             {
-                if (onlineCarryColliders[i] != null)
+                if (releasedColliders[i] != null)
                 {
-                    onlineCarryColliders[i].enabled = true;
+                    releasedColliders[i].enabled = true;
                 }
             }
+            SetOnlineCarryCollisionIgnored(releasedColliders, carrierColliders, true);
 
             onlineCarryColliders.Clear();
             player?.ResetMotion();
@@ -560,6 +1651,65 @@ namespace DrawBody.Prototype
 
             player?.SetControlsEnabled(stageStarted && !drawing && !cleared && !stageEditing);
             onlineCarryBody = null;
+            onlineCarrierPlayerId = null;
+            StartCoroutine(RestoreOnlineCarryCollisions(releasedColliders, carrierColliders));
+        }
+
+        private static IEnumerator RestoreOnlineCarryCollisions(Collider2D[] released, Collider2D[] carrier)
+        {
+            float minimumRestoreAt = Time.time + 0.22f;
+            float restoreDeadline = Time.time + 1.2f;
+            while (Time.time < minimumRestoreAt
+                || (Time.time < restoreDeadline && OnlineCarryCollidersOverlap(released, carrier)))
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            SetOnlineCarryCollisionIgnored(released, carrier, false);
+        }
+
+        private static bool OnlineCarryCollidersOverlap(Collider2D[] released, Collider2D[] carrier)
+        {
+            for (int i = 0; i < released.Length; i++)
+            {
+                Collider2D first = released[i];
+                if (first == null || !first.enabled)
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < carrier.Length; j++)
+                {
+                    Collider2D second = carrier[j];
+                    if (second != null && second.enabled && first != second && first.Distance(second).isOverlapped)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static void SetOnlineCarryCollisionIgnored(Collider2D[] released, Collider2D[] carrier, bool ignored)
+        {
+            for (int i = 0; i < released.Length; i++)
+            {
+                Collider2D first = released[i];
+                if (first == null)
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < carrier.Length; j++)
+                {
+                    Collider2D second = carrier[j];
+                    if (second != null && first != second)
+                    {
+                        Physics2D.IgnoreCollision(first, second, ignored);
+                    }
+                }
+            }
         }
 
         public void ApplyOnlineRemoteBodyData(OnlineBodyData bodyData)
@@ -569,8 +1719,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            EnsureOnlineRemotePlayer();
-            if (secondaryPlayer == null)
+            PlayerController2D remotePlayer = EnsureOnlineRemotePlayer(bodyData.PlayerId);
+            if (remotePlayer == null)
             {
                 return;
             }
@@ -582,15 +1732,38 @@ namespace DrawBody.Prototype
             }
 
             SaveDrawingState(player);
-            BodyBuilder remoteBuilder = secondaryPlayer.GetComponent<BodyBuilder>();
-            PlayerAbilityController remoteAbilities = secondaryPlayer.GetComponent<PlayerAbilityController>();
+            BodyBuilder remoteBuilder = remotePlayer.GetComponent<BodyBuilder>();
+            PlayerAbilityController remoteAbilities = remotePlayer.GetComponent<PlayerAbilityController>();
             drawManager.SetBuildTarget(remoteBuilder, remoteAbilities);
             drawManager.LoadState(remoteState, true);
-            drawingStates[secondaryPlayer] = CloneDrawingState(remoteState);
+            drawingStates[remotePlayer] = CloneDrawingState(remoteState);
             ConfigureActivePlayerTargets();
             LoadDrawingState(player);
-            secondaryPlayer.SetControlsEnabled(false);
-            LiftPlayerOutOfGround(secondaryPlayer);
+            remotePlayer.SetControlsEnabled(false);
+            LiftPlayerOutOfGround(remotePlayer);
+        }
+
+        public void SendLocalOnlineBodyData()
+        {
+            if (drawManager == null || onlineManager == null)
+            {
+                return;
+            }
+
+            OnlineConnectionState state = onlineManager.State;
+            if (state != OnlineConnectionState.InLobby
+                && state != OnlineConnectionState.Matching
+                && state != OnlineConnectionState.Playing)
+            {
+                return;
+            }
+
+            if (onlineManager.CurrentLobby == null)
+            {
+                return;
+            }
+
+            drawManager.SendCurrentBodyData();
         }
 
         public void AddCharacter()
@@ -622,9 +1795,13 @@ namespace DrawBody.Prototype
             if (bodyBuilder != null)
             {
                 bodyBuilder.SetFacingDirection(primaryPlayer.FacingDirection);
+                bodyBuilder.SetPlayerColor(PlayerColorPalette.GetColor(1));
             }
 
+            ApplyDefaultPlayerColors();
             LiftPlayerOutOfGround(secondaryPlayer);
+            RefreshControlledPlayerMarkers();
+            drawManager?.RefreshInkBudgetDisplay();
         }
 
         public void DeleteAddedCharacter()
@@ -646,6 +1823,63 @@ namespace DrawBody.Prototype
             drawingStates.Remove(secondaryPlayer);
             secondaryPlayer = null;
             Destroy(target);
+            RefreshControlledPlayerMarkers();
+            drawManager?.RefreshInkBudgetDisplay();
+        }
+
+        public int GetInkBudgetPlayerCount()
+        {
+            if (IsOnlineInStage())
+            {
+                return onlineManager != null ? onlineManager.GetInkBudgetPlayerCount() : 1;
+            }
+
+            int count = 0;
+            if (IsActiveBudgetPlayer(primaryPlayer))
+            {
+                count++;
+            }
+            if (secondaryPlayer != primaryPlayer && IsActiveBudgetPlayer(secondaryPlayer))
+            {
+                count++;
+            }
+            return Mathf.Max(1, count);
+        }
+
+        public float GetConfirmedInkExcludingActivePlayer()
+        {
+            if (IsOnlineInStage())
+            {
+                return onlineManager != null ? onlineManager.GetConfirmedInkExcludingLocal() : 0f;
+            }
+
+            float total = 0f;
+            if (primaryPlayer != player && IsActiveBudgetPlayer(primaryPlayer))
+            {
+                total += GetConfirmedPlayerInk(primaryPlayer);
+            }
+            if (secondaryPlayer != player
+                && secondaryPlayer != primaryPlayer
+                && IsActiveBudgetPlayer(secondaryPlayer))
+            {
+                total += GetConfirmedPlayerInk(secondaryPlayer);
+            }
+            return total;
+        }
+
+        private static bool IsActiveBudgetPlayer(PlayerController2D target)
+        {
+            return target != null
+                && target.isActiveAndEnabled
+                && target.gameObject.activeInHierarchy;
+        }
+
+        private static float GetConfirmedPlayerInk(PlayerController2D target)
+        {
+            PlayerAbilityController abilities = target != null
+                ? target.GetComponent<PlayerAbilityController>()
+                : null;
+            return abilities != null ? Mathf.Max(0f, abilities.CurrentProfile.TotalInk) : 0f;
         }
 
         public void SwitchCharacter()
@@ -665,7 +1899,35 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            RespawnPlayer(player, GetRespawnOffset(player), false);
+            if (redrawRespawnRoutine != null)
+            {
+                StopCoroutine(redrawRespawnRoutine);
+            }
+
+            PlayerController2D redrawPlayer = player;
+            Vector3 offset = GetRespawnOffset(redrawPlayer);
+            redrawPlayer.SetControlsEnabled(false);
+            redrawPlayer.ResetMotion();
+            redrawRespawnRoutine = StartCoroutine(CompleteRedrawRespawn(redrawPlayer, offset));
+        }
+
+        private IEnumerator CompleteRedrawRespawn(PlayerController2D redrawPlayer, Vector3 offset)
+        {
+            // BodyBuilder destroys the old hand-drawn colliders at end of frame.
+            // Wait until they are gone before testing the rebuilt body against
+            // the stage, otherwise the stale body can push the player above it.
+            yield return null;
+
+            if (redrawPlayer != null && spawnPoint != null)
+            {
+                redrawPlayer.transform.position = spawnPoint.position + offset;
+                redrawPlayer.ResetMotion();
+                LiftPlayerOutOfGround(redrawPlayer);
+                redrawPlayer.SetControlsEnabled(
+                    stageStarted && !drawing && !cleared && !stageEditing);
+            }
+
+            redrawRespawnRoutine = null;
         }
 
         private void LiftPlayerOutOfGround(PlayerController2D targetPlayer)
@@ -684,8 +1946,8 @@ namespace DrawBody.Prototype
             for (int iteration = 0; iteration < 24; iteration++)
             {
                 bool overlapped = false;
-                float highestGroundTop = float.NegativeInfinity;
-                float lowestPlayerBottom = float.PositiveInfinity;
+                float requiredUp = 0f;
+                float requiredDown = 0f;
 
                 for (int i = 0; i < colliders.Length; i++)
                 {
@@ -695,7 +1957,6 @@ namespace DrawBody.Prototype
                         continue;
                     }
 
-                    lowestPlayerBottom = Mathf.Min(lowestPlayerBottom, playerCollider.bounds.min.y);
                     int hitCount = playerCollider.Overlap(filter, hits);
                     for (int hitIndex = 0; hitIndex < hitCount; hitIndex++)
                     {
@@ -706,7 +1967,18 @@ namespace DrawBody.Prototype
                         }
 
                         overlapped = true;
-                        highestGroundTop = Mathf.Max(highestGroundTop, hit.bounds.max.y);
+                        if (hit.bounds.center.y >= playerCollider.bounds.center.y)
+                        {
+                            requiredDown = Mathf.Max(
+                                requiredDown,
+                                playerCollider.bounds.max.y - hit.bounds.min.y + groundSeparation);
+                        }
+                        else
+                        {
+                            requiredUp = Mathf.Max(
+                                requiredUp,
+                                hit.bounds.max.y - playerCollider.bounds.min.y + groundSeparation);
+                        }
                     }
                 }
 
@@ -715,13 +1987,17 @@ namespace DrawBody.Prototype
                     return;
                 }
 
-                float lift = groundSeparation;
-                if (!float.IsNegativeInfinity(highestGroundTop) && !float.IsPositiveInfinity(lowestPlayerBottom))
+                float verticalMove;
+                if (requiredUp > 0f && requiredDown > 0f)
                 {
-                    lift = Mathf.Max(lift, highestGroundTop - lowestPlayerBottom + groundSeparation);
+                    verticalMove = requiredUp <= requiredDown ? requiredUp : -requiredDown;
+                }
+                else
+                {
+                    verticalMove = requiredUp > 0f ? requiredUp : -requiredDown;
                 }
 
-                targetPlayer.transform.position += Vector3.up * lift;
+                targetPlayer.transform.position += Vector3.up * verticalMove;
             }
         }
 
@@ -731,21 +2007,57 @@ namespace DrawBody.Prototype
             RespawnPlayer(secondaryPlayer, GetRespawnOffset(secondaryPlayer), secondaryPlayer == player);
         }
 
-        private void RespawnFallenPlayers()
+        public void RespawnFromHazard(PlayerController2D targetPlayer)
         {
-            RespawnIfFallen(primaryPlayer);
-            RespawnIfFallen(secondaryPlayer);
-        }
+            if (!stageStarted || cleared || targetPlayer == null)
+            {
+                return;
+            }
 
-        private void RespawnIfFallen(PlayerController2D targetPlayer)
-        {
-            if (targetPlayer == null || targetPlayer.transform.position.y >= fallResetY)
+            // Remote avatars are visual replicas. Their owning client performs the
+            // respawn and the regular player-state sync sends the new position.
+            if (IsOnlineInStage() && targetPlayer != primaryPlayer)
             {
                 return;
             }
 
             primaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
             secondaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
+            GameSfx.PlayAt(SfxId.PlayerHit, targetPlayer.transform.position);
+            GameSfx.PlayAt(SfxId.PlayerDeath, targetPlayer.transform.position);
+            RespawnPlayer(targetPlayer, GetRespawnOffset(targetPlayer), targetPlayer == player);
+        }
+
+        private void RespawnFallenPlayers()
+        {
+            RespawnIfFallen(primaryPlayer);
+            if (!IsOnlineInStage())
+            {
+                RespawnIfFallen(secondaryPlayer);
+            }
+        }
+
+        private void RespawnIfFallen(PlayerController2D targetPlayer)
+        {
+            if (targetPlayer == null)
+            {
+                return;
+            }
+
+            float resetY = fallResetY;
+            if (stageLoader != null && stageLoader.TryGetStageFallBoundaryY(out float stageBoundaryY))
+            {
+                resetY = stageBoundaryY - StageBoundaryFallMargin;
+            }
+
+            if (targetPlayer.transform.position.y >= resetY)
+            {
+                return;
+            }
+
+            primaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
+            secondaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
+            GameSfx.PlayAt(SfxId.PlayerDeath, targetPlayer.transform.position);
             RespawnPlayer(targetPlayer, GetRespawnOffset(targetPlayer), targetPlayer == player);
         }
 
@@ -760,6 +2072,10 @@ namespace DrawBody.Prototype
             targetPlayer.ResetMotion();
             targetPlayer.SetControlsEnabled(enableControls && stageStarted && !drawing && !cleared && !stageEditing);
             LiftPlayerOutOfGround(targetPlayer);
+            if (stageStarted)
+            {
+                GameSfx.PlayAt(SfxId.PlayerRespawn, targetPlayer.transform.position);
+            }
         }
 
         private Vector3 GetRespawnOffset(PlayerController2D targetPlayer)
@@ -791,6 +2107,13 @@ namespace DrawBody.Prototype
         {
             primaryPlayer?.SetControlsEnabled(enabled);
             secondaryPlayer?.SetControlsEnabled(enabled);
+            foreach (KeyValuePair<string, PlayerController2D> pair in onlineRemotePlayers)
+            {
+                if (pair.Value != null && pair.Value != primaryPlayer)
+                {
+                    pair.Value.SetControlsEnabled(false);
+                }
+            }
         }
 
         private void ConfigureActivePlayerTargets()
@@ -802,6 +2125,63 @@ namespace DrawBody.Prototype
 
             cameraFollow?.SetTarget(player.transform);
             drawManager?.SetBuildTarget(player.GetComponent<BodyBuilder>(), player.GetComponent<PlayerAbilityController>());
+            RefreshControlledPlayerMarkers();
+        }
+
+        private void RefreshControlledPlayerMarkers()
+        {
+            bool showMarker = primaryPlayer != null && secondaryPlayer != null;
+            SetControlledPlayerMarker(primaryPlayer, showMarker && player == primaryPlayer);
+            SetControlledPlayerMarker(secondaryPlayer, showMarker && player == secondaryPlayer);
+        }
+
+        private static void SetControlledPlayerMarker(PlayerController2D targetPlayer, bool controlled)
+        {
+            if (targetPlayer == null)
+            {
+                return;
+            }
+
+            ControlledPlayerMarker marker = targetPlayer.GetComponent<ControlledPlayerMarker>();
+            if (marker == null)
+            {
+                marker = targetPlayer.gameObject.AddComponent<ControlledPlayerMarker>();
+            }
+
+            marker.SetControlled(controlled);
+        }
+
+        public void ApplyDefaultPlayerColors()
+        {
+            SetPlayerColor(primaryPlayer, 0);
+            SetPlayerColor(secondaryPlayer, 1);
+        }
+
+        public void ApplyOnlinePlayerColors(OnlineLobbyInfo lobby, string localPlayerId, string remotePlayerId)
+        {
+            int localIndex = PlayerColorPalette.GetLobbyColorIndex(lobby, localPlayerId, 0);
+            int remoteIndex = PlayerColorPalette.GetLobbyColorIndex(lobby, remotePlayerId, 1);
+            SetPlayerColor(primaryPlayer, localIndex);
+            SetPlayerColor(secondaryPlayer, remoteIndex);
+            foreach (KeyValuePair<string, PlayerController2D> pair in onlineRemotePlayers)
+            {
+                int index = PlayerColorPalette.GetLobbyColorIndex(lobby, pair.Key, 1);
+                SetPlayerColor(pair.Value, index);
+            }
+        }
+
+        private static void SetPlayerColor(PlayerController2D targetPlayer, int playerIndex)
+        {
+            if (targetPlayer == null)
+            {
+                return;
+            }
+
+            BodyBuilder bodyBuilder = targetPlayer.GetComponent<BodyBuilder>();
+            if (bodyBuilder != null)
+            {
+                bodyBuilder.SetPlayerColor(PlayerColorPalette.GetColor(playerIndex));
+            }
         }
 
         private void SaveDrawingState(PlayerController2D targetPlayer)
@@ -812,6 +2192,68 @@ namespace DrawBody.Prototype
             }
 
             drawingStates[targetPlayer] = drawManager.CreateState();
+        }
+
+        private void ApplySpeciesRulesForCurrentStage()
+        {
+            if (drawManager == null)
+            {
+                return;
+            }
+
+            StageSpeciesMask availability = StageSpeciesRules.GetAllowedForStage(currentStageId);
+            drawManager.SetAllowedSpecies(availability);
+            DrawManager.Species fallback = StageSpeciesRules.GetFirstAllowed(availability);
+
+            if (player != null)
+            {
+                SaveDrawingState(player);
+            }
+
+            foreach (KeyValuePair<PlayerController2D, DrawManager.DrawingState> entry in drawingStates)
+            {
+                if (entry.Value != null && !StageSpeciesRules.IsAllowed(availability, entry.Value.Species))
+                {
+                    entry.Value.Species = fallback;
+                    entry.Value.Part = DrawManager.BodyPart.Torso;
+                }
+            }
+
+            List<PlayerController2D> playersToRefresh = new List<PlayerController2D>();
+            AddPlayerOnce(playersToRefresh, primaryPlayer);
+            AddPlayerOnce(playersToRefresh, secondaryPlayer);
+            foreach (KeyValuePair<string, PlayerController2D> remote in onlineRemotePlayers)
+            {
+                AddPlayerOnce(playersToRefresh, remote.Value);
+            }
+
+            for (int i = 0; i < playersToRefresh.Count; i++)
+            {
+                PlayerController2D target = playersToRefresh[i];
+                if (target == null || target == player || !drawingStates.TryGetValue(target, out DrawManager.DrawingState state))
+                {
+                    continue;
+                }
+
+                drawManager.SetBuildTarget(
+                    target.GetComponent<BodyBuilder>(),
+                    target.GetComponent<PlayerAbilityController>());
+                drawManager.LoadState(state, true);
+            }
+
+            ConfigureActivePlayerTargets();
+            if (player != null)
+            {
+                LoadDrawingState(player);
+            }
+        }
+
+        private static void AddPlayerOnce(List<PlayerController2D> players, PlayerController2D candidate)
+        {
+            if (candidate != null && !players.Contains(candidate))
+            {
+                players.Add(candidate);
+            }
         }
 
         private void LoadDrawingState(PlayerController2D targetPlayer)
@@ -860,5 +2302,162 @@ namespace DrawBody.Prototype
             }
         }
 
+    }
+
+    internal sealed class ControlledPlayerMarker : MonoBehaviour
+    {
+        private const string MarkerRootName = "Controlled Player Marker";
+        private PlayerController2D controller;
+        private Transform markerRoot;
+        private TextMesh mainText;
+        private TextMesh shadowText;
+        private Collider2D[] bodyColliders;
+        private float nextColliderRefreshAt;
+        private bool controlled;
+
+        private void Awake()
+        {
+            controller = GetComponent<PlayerController2D>();
+            EnsureVisual();
+            RefreshText();
+            SetRenderersVisible(false);
+        }
+
+        private void OnEnable()
+        {
+            LocalizationManager.LanguageChanged += RefreshText;
+        }
+
+        private void OnDisable()
+        {
+            LocalizationManager.LanguageChanged -= RefreshText;
+        }
+
+        public void SetControlled(bool value)
+        {
+            controlled = value;
+            SetRenderersVisible(controlled && controller != null && controller.ControlsEnabled);
+        }
+
+        private void LateUpdate()
+        {
+            bool visible = controlled && controller != null && controller.ControlsEnabled;
+            SetRenderersVisible(visible);
+            if (!visible)
+            {
+                return;
+            }
+
+            if (bodyColliders == null || Time.unscaledTime >= nextColliderRefreshAt)
+            {
+                bodyColliders = GetComponentsInChildren<Collider2D>(false);
+                nextColliderRefreshAt = Time.unscaledTime + 0.25f;
+            }
+
+            Bounds bounds = new Bounds(transform.position, Vector3.zero);
+            bool hasBounds = false;
+            for (int i = 0; i < bodyColliders.Length; i++)
+            {
+                Collider2D collider = bodyColliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger)
+                {
+                    continue;
+                }
+
+                if (!hasBounds)
+                {
+                    bounds = collider.bounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(collider.bounds);
+                }
+            }
+
+            Vector3 position = hasBounds
+                ? new Vector3(bounds.center.x, bounds.max.y + 0.62f, -0.5f)
+                : transform.position + new Vector3(0f, 1.8f, -0.5f);
+            position.y += Mathf.Sin(Time.unscaledTime * 4f) * 0.045f;
+            markerRoot.position = position;
+            markerRoot.rotation = Quaternion.identity;
+        }
+
+        private void EnsureVisual()
+        {
+            markerRoot = transform.Find(MarkerRootName);
+            if (markerRoot == null)
+            {
+                GameObject root = new GameObject(MarkerRootName);
+                markerRoot = root.transform;
+                markerRoot.SetParent(transform, false);
+            }
+
+            Transform existingShadow = markerRoot.Find("Shadow");
+            shadowText = existingShadow != null ? existingShadow.GetComponent<TextMesh>() : null;
+            if (shadowText == null)
+            {
+                shadowText = CreateText("Shadow", new Color(0.08f, 0.06f, 0.03f, 0.92f), 499);
+                shadowText.transform.localPosition = new Vector3(0.025f, -0.025f, 0.02f);
+            }
+
+            Transform existingMain = markerRoot.Find("Label");
+            mainText = existingMain != null ? existingMain.GetComponent<TextMesh>() : null;
+            if (mainText == null)
+            {
+                mainText = CreateText("Label", new Color(1f, 0.72f, 0.08f, 1f), 500);
+            }
+        }
+
+        private TextMesh CreateText(string objectName, Color color, int sortingOrder)
+        {
+            GameObject textObject = new GameObject(objectName);
+            textObject.transform.SetParent(markerRoot, false);
+            TextMesh text = textObject.AddComponent<TextMesh>();
+            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (font == null)
+            {
+                font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            }
+
+            text.font = font;
+            text.fontSize = 48;
+            text.fontStyle = FontStyle.Bold;
+            text.characterSize = 0.085f;
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.lineSpacing = 0.72f;
+            text.color = color;
+
+            MeshRenderer renderer = text.GetComponent<MeshRenderer>();
+            renderer.sortingOrder = sortingOrder;
+            if (font != null)
+            {
+                renderer.sharedMaterial = font.material;
+            }
+
+            return text;
+        }
+
+        private void RefreshText()
+        {
+            EnsureVisual();
+            string marker = LocalizationManager.T("player_controlled_marker") + "\n▼";
+            mainText.text = marker;
+            shadowText.text = marker;
+        }
+
+        private void SetRenderersVisible(bool visible)
+        {
+            if (mainText != null)
+            {
+                mainText.GetComponent<Renderer>().enabled = visible;
+            }
+
+            if (shadowText != null)
+            {
+                shadowText.GetComponent<Renderer>().enabled = visible;
+            }
+        }
     }
 }

@@ -8,18 +8,15 @@ namespace DrawBody.Prototype
     {
         [SerializeField] private RectTransform drawArea;
         [SerializeField] private RectTransform dustRoot;
-        [SerializeField] private AudioSource audioSource;
         [SerializeField] private bool soundEnabled = true;
+        [SerializeField] private bool strokeSoundEnabled = true;
         [SerializeField] private int dustPoolSize = 48;
         [SerializeField] private float dustLifetime = 0.34f;
 
         private readonly List<Dust> dustPool = new List<Dust>();
-        private AudioClip pencilLoop;
-        private AudioClip pencilTap;
-        private AudioClip eraser;
-        private AudioClip stamp;
         private bool active;
         private bool stroking;
+        private bool erasing;
         private float soundTimer;
         private float stampTimer;
         private float buttonTimer;
@@ -41,19 +38,6 @@ namespace DrawBody.Prototype
                 dustRoot = drawArea;
             }
 
-            if (audioSource == null)
-            {
-                audioSource = gameObject.AddComponent<AudioSource>();
-            }
-
-            audioSource.playOnAwake = false;
-            audioSource.loop = false;
-            audioSource.volume = 0.35f;
-
-            pencilLoop = CreateNoiseClip("PencilScratch", 0.09f, 0.22f, 0.55f);
-            pencilTap = CreateToneClip("PencilTap", 0.045f, 940f, 0.22f, 0.16f);
-            eraser = CreateNoiseClip("EraserRub", 0.08f, 0.42f, 0.28f);
-            stamp = CreateToneClip("PaperStamp", 0.08f, 220f, 0.34f, 0.3f);
             BuildDustPool();
         }
 
@@ -62,7 +46,7 @@ namespace DrawBody.Prototype
             for (int i = 0; i < dustPool.Count; i++)
             {
                 Dust dust = dustPool[i];
-                if (dust.Image == null || !dust.Image.gameObject.activeSelf)
+                if (!IsDustValid(dust) || !dust.Image.gameObject.activeSelf)
                 {
                     continue;
                 }
@@ -113,7 +97,11 @@ namespace DrawBody.Prototype
             }
 
             stroking = true;
-            Play(pencilTap, 0.45f, Random.Range(0.92f, 1.08f));
+            erasing = false;
+            if (strokeSoundEnabled)
+            {
+                Play(SfxId.DrawPenStart);
+            }
             SpawnDust(point, color, 4);
         }
 
@@ -129,10 +117,10 @@ namespace DrawBody.Prototype
             int count = Mathf.Clamp(Mathf.RoundToInt(length / 18f), 1, 4);
             SpawnDust(mid, color, count);
 
-            if (soundTimer <= 0f)
+            if (strokeSoundEnabled && soundTimer <= 0f)
             {
                 soundTimer = 0.055f;
-                Play(pencilLoop, 0.22f, Random.Range(0.88f, 1.18f));
+                Play(SfxId.DrawPenLoop);
             }
         }
 
@@ -144,10 +132,12 @@ namespace DrawBody.Prototype
             }
 
             SpawnDust(point, new Color(0.95f, 0.92f, 0.82f, 1f), 6);
-            if (soundTimer <= 0f)
+            stroking = true;
+            erasing = true;
+            if (strokeSoundEnabled && soundTimer <= 0f)
             {
                 soundTimer = 0.07f;
-                Play(eraser, 0.26f, Random.Range(0.88f, 1.08f));
+                Play(SfxId.DrawEraserLoop);
             }
         }
 
@@ -159,11 +149,12 @@ namespace DrawBody.Prototype
             }
 
             stroking = false;
-            if (active && stampTimer <= 0f)
+            if (strokeSoundEnabled && active && stampTimer <= 0f)
             {
                 stampTimer = 0.18f;
-                Play(stamp, 0.16f, Random.Range(0.96f, 1.04f));
+                Play(erasing ? SfxId.DrawEraseComplete : SfxId.DrawPenEnd);
             }
+            erasing = false;
         }
 
         public void ButtonPress()
@@ -176,7 +167,7 @@ namespace DrawBody.Prototype
             if (buttonTimer <= 0f)
             {
                 buttonTimer = 0.08f;
-                Play(stamp, 0.2f, Random.Range(0.94f, 1.08f));
+                Play(SfxId.UiButtonPress);
             }
         }
 
@@ -208,7 +199,7 @@ namespace DrawBody.Prototype
             for (int i = 0; i < count; i++)
             {
                 Dust dust = GetDust();
-                if (dust == null)
+                if (!IsDustValid(dust))
                 {
                     return;
                 }
@@ -230,61 +221,46 @@ namespace DrawBody.Prototype
 
         private Dust GetDust()
         {
+            RemoveDestroyedDust();
+            if (dustPool.Count == 0)
+            {
+                BuildDustPool();
+            }
+
             for (int i = 0; i < dustPool.Count; i++)
             {
-                if (!dustPool[i].Image.gameObject.activeSelf)
+                if (IsDustValid(dustPool[i]) && !dustPool[i].Image.gameObject.activeSelf)
                 {
                     return dustPool[i];
                 }
             }
 
-            return dustPool.Count > 0 ? dustPool[0] : null;
+            return dustPool.Count > 0 && IsDustValid(dustPool[0]) ? dustPool[0] : null;
         }
 
-        private void Play(AudioClip clip, float volume, float pitch)
+        private void RemoveDestroyedDust()
         {
-            if (!soundEnabled || audioSource == null || clip == null)
+            for (int i = dustPool.Count - 1; i >= 0; i--)
+            {
+                if (!IsDustValid(dustPool[i]))
+                {
+                    dustPool.RemoveAt(i);
+                }
+            }
+        }
+
+        private static bool IsDustValid(Dust dust)
+        {
+            return dust != null && dust.Image != null && dust.Rect != null;
+        }
+
+        private void Play(SfxId id)
+        {
+            if (!soundEnabled)
             {
                 return;
             }
-
-            audioSource.pitch = pitch;
-            audioSource.PlayOneShot(clip, volume);
-        }
-
-        private static AudioClip CreateNoiseClip(string name, float duration, float volume, float damping)
-        {
-            const int sampleRate = 22050;
-            int samples = Mathf.Max(1, Mathf.RoundToInt(sampleRate * duration));
-            float[] data = new float[samples];
-            for (int i = 0; i < samples; i++)
-            {
-                float t = i / (float)samples;
-                float envelope = Mathf.Pow(1f - t, damping);
-                data[i] = Random.Range(-1f, 1f) * volume * envelope;
-            }
-
-            AudioClip clip = AudioClip.Create(name, samples, 1, sampleRate, false);
-            clip.SetData(data, 0);
-            return clip;
-        }
-
-        private static AudioClip CreateToneClip(string name, float duration, float frequency, float volume, float damping)
-        {
-            const int sampleRate = 22050;
-            int samples = Mathf.Max(1, Mathf.RoundToInt(sampleRate * duration));
-            float[] data = new float[samples];
-            for (int i = 0; i < samples; i++)
-            {
-                float t = i / (float)sampleRate;
-                float normalized = i / (float)samples;
-                float envelope = Mathf.Pow(1f - normalized, damping);
-                data[i] = Mathf.Sin(t * frequency * Mathf.PI * 2f) * volume * envelope;
-            }
-
-            AudioClip clip = AudioClip.Create(name, samples, 1, sampleRate, false);
-            clip.SetData(data, 0);
-            return clip;
+            GameSfx.Play(id);
         }
     }
 }

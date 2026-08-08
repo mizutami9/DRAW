@@ -22,7 +22,10 @@ namespace DrawBody.Prototype
             StartStage,
             CopyLobbyId,
             LeaveLobby,
-            BackToTitle
+            BackToTitle,
+            DecreaseMaxPlayers,
+            IncreaseMaxPlayers,
+            TogglePrivateRoom
         }
 
         [SerializeField] private StageManager stageManager;
@@ -93,6 +96,15 @@ namespace DrawBody.Prototype
                     break;
                 case Command.BackToTitle:
                     stageManager?.CloseTitleSubmenu();
+                    break;
+                case Command.DecreaseMaxPlayers:
+                    controller?.ChangeCreateRoomMaxPlayers(-1);
+                    break;
+                case Command.IncreaseMaxPlayers:
+                    controller?.ChangeCreateRoomMaxPlayers(1);
+                    break;
+                case Command.TogglePrivateRoom:
+                    controller?.ToggleCreateRoomVisibility();
                     break;
             }
 

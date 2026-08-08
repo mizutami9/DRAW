@@ -27,7 +27,9 @@ Unity 2D prototype for the roadmap Phase 0.
 
 ## Drawing Rules
 
-- Total ink limit: 1000
+- Personal ink limit: 500
+- Team ink budget: number of players x 350 (validated when Decide is pressed)
+- A player's confirmed ink is deducted from the budget available to the other players
 - Torso can be drawn freely
 - Head, arms, and legs must start near the torso
 - Decide is blocked until every drawn non-torso part is connected

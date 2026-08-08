@@ -3,6 +3,20 @@ using UnityEngine;
 
 namespace DrawBody.Prototype
 {
+    public enum StageRuleMode
+    {
+        Normal,
+        TimedCollection
+    }
+
+    public static class StageObjectId
+    {
+        public static string New()
+        {
+            return "obj_" + Guid.NewGuid().ToString("N").Substring(0, 16);
+        }
+    }
+
     public enum StageObjectType
     {
         Platform,
@@ -97,7 +111,81 @@ namespace DrawBody.Prototype
         Keyhole,
         Clock,
         Counter,
-        TrafficLight
+        TrafficLight,
+        BackgroundTree,
+        BackgroundGrass,
+        BackgroundFlower,
+        BackgroundBush,
+        BackgroundCloud,
+        BackgroundPush,
+        BackgroundArrow,
+        BackgroundCatFace,
+        BackgroundDogFace,
+        BackgroundStickFigure,
+        BackgroundSmiley,
+        BackgroundHeart,
+        BackgroundStar,
+        BackgroundMoon,
+        BackgroundSun,
+        BackgroundRain,
+        BackgroundLightning,
+        BackgroundRainbow,
+        BackgroundMountain,
+        BackgroundFourLeafClover,
+        BackgroundMushroom,
+        BackgroundApple,
+        BackgroundBanana,
+        BackgroundWatermelon,
+        BackgroundDonut,
+        BackgroundIceCream,
+        BackgroundCoffeeCup,
+        BackgroundPizza,
+        BackgroundBread,
+        BackgroundPaperAirplane,
+        BackgroundAirplane,
+        BackgroundRocket,
+        BackgroundUfo,
+        BackgroundHotAirBalloon,
+        BackgroundHouse,
+        BackgroundCastle,
+        BackgroundTreasureChest,
+        BackgroundKey,
+        BackgroundSword,
+        BackgroundCrown,
+        BackgroundShield,
+        BackgroundGem,
+        BackgroundCoin,
+        BackgroundBone,
+        BackgroundLightBulb,
+        BackgroundGear,
+        BackgroundSpring,
+        BackgroundMagnet,
+        BackgroundDice,
+        BackgroundSpeechBubble,
+        BackgroundCheckMark,
+        BackgroundQuestionMark,
+        BackgroundExclamationMark,
+        BackgroundLoopArrow,
+        BackgroundJump,
+        BackgroundThrow,
+        BackgroundStart,
+        BackgroundGoal,
+        StageBoundary,
+        BackgroundKeyNeeded,
+        BackgroundMole,
+        BackgroundFossil,
+        BackgroundCrystal,
+        BackgroundAncientPot,
+        InkScale,
+        SimultaneousButton,
+        HoldButton,
+        TriangleBox,
+        BoxDropper,
+        SpikeDropper,
+        CollectibleFish,
+        CollectibleCoin,
+        CollectibleStar,
+        ChallengeClock
     }
 
     [Serializable]
@@ -105,7 +193,57 @@ namespace DrawBody.Prototype
     {
         public string id = "1-1";
         public string displayName = "New Stage";
+        public string backgroundColorHex = "#FBF9EDFF";
+        public StageRuleMode ruleMode;
+        public float timeLimitSeconds = 60f;
+        public StageObjectType collectionTarget = StageObjectType.CollectibleFish;
+        public int requiredCollectionCount = 1;
         public StageObjectData[] objects = Array.Empty<StageObjectData>();
+    }
+
+    public static class StageBackgroundAppearance
+    {
+        public static readonly Color DefaultColor = new Color(0.985f, 0.975f, 0.93f, 1f);
+
+        public static Color Parse(string hex)
+        {
+            return !string.IsNullOrEmpty(hex)
+                && ColorUtility.TryParseHtmlString(hex, out Color color)
+                    ? color
+                    : DefaultColor;
+        }
+
+        public static string ToHex(Color color)
+        {
+            Color opaque = new Color(
+                Mathf.Clamp01(color.r),
+                Mathf.Clamp01(color.g),
+                Mathf.Clamp01(color.b),
+                Mathf.Clamp01(color.a));
+            return "#" + ColorUtility.ToHtmlStringRGBA(opaque);
+        }
+
+        public static void Apply(Color color)
+        {
+            GameObject paper = GameObject.Find("Notebook Paper");
+            SpriteRenderer renderer = paper != null ? paper.GetComponent<SpriteRenderer>() : null;
+            if (renderer != null)
+            {
+                renderer.color = color;
+            }
+        }
+
+        public static void Reset()
+        {
+            Apply(DefaultColor);
+        }
+    }
+
+    [Serializable]
+    public sealed class StageRectPartData
+    {
+        public Vector2 position;
+        public Vector2 size = Vector2.one;
     }
 
     [Serializable]
@@ -116,6 +254,14 @@ namespace DrawBody.Prototype
         public Vector2 position;
         public Vector2 size = Vector2.one;
         public float rotation;
+        public Vector2[] pathPoints = Array.Empty<Vector2>();
+        public float pathThickness;
+        public StageRectPartData[] connectedRects = Array.Empty<StageRectPartData>();
+        public bool keepSeparate;
+        public float actionStrength;
+        public float movementAngle;
+        public int spawnPattern;
+        public float spawnBoxSize;
         public string linkTargetId;
         public string linkAction;
     }

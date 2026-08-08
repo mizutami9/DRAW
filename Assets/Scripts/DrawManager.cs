@@ -6,6 +6,9 @@ namespace DrawBody.Prototype
 {
     public sealed class DrawManager : MonoBehaviour
     {
+        public const float InkAllowancePerPlayer = 350f;
+        public const float IndividualInkLimit = 500f;
+
         public enum BodyPart
         {
             Head,
@@ -66,19 +69,33 @@ namespace DrawBody.Prototype
         [SerializeField] private RectTransform previewRoot;
         [SerializeField] private Text inkText;
         [SerializeField] private Image inkGaugeFill;
+        private Text personalInkValueText;
+        private Text teamInkValueText;
+        private Text personalInkLabelText;
+        private Text teamInkLabelText;
+        private Image teamInkGaugeFill;
+        private Text abilityTitleText;
+        private Text abilityEffectText;
+        private Text abilityInkText;
+        private Text abilityLowText;
+        private Text abilityHighText;
+        private Text abilityHintText;
+        private Image abilityGaugeFill;
+        private Image abilityHeaderImage;
         [SerializeField] private Text partText;
         [SerializeField] private Text messageText;
         [SerializeField] private Text abilityText;
         [SerializeField] private DrawFeedbackController feedback;
-        [SerializeField] private float maxInk = 350f;
+        [SerializeField] private float maxInk = IndividualInkLimit;
         [SerializeField] private float pixelsPerInk = 5f;
         [SerializeField] private float minPointDistance = 8f;
         [SerializeField] private float lineWidth = 6f;
         [SerializeField] private float eraserRadius = 18f;
         [SerializeField] private float previewScale = 0.7f;
         [SerializeField] private float previewLineWidth = 5f;
+        [SerializeField] private float drawAreaSquareSize = 300f;
+        [SerializeField] private float previewSquareSize = 290f;
         [SerializeField] private float startPointSnapRadius = 42f;
-        [SerializeField] private Vector2 assembledMaxSize = new Vector2(190f, 300f);
 
         private readonly Dictionary<BodyPart, PartDrawing> drawings = new Dictionary<BodyPart, PartDrawing>();
         private readonly Dictionary<Species, Dictionary<BodyPart, PartDrawing>> speciesDrawings = new Dictionary<Species, Dictionary<BodyPart, PartDrawing>>();
@@ -88,6 +105,7 @@ namespace DrawBody.Prototype
         private bool drawing;
         private bool initialized;
         private Species currentSpecies = Species.Human;
+        private StageSpeciesMask allowedSpecies = StageSpeciesMask.All;
         private BodyPart currentPart = BodyPart.Torso;
         private bool previewDirty;
         private bool hasEditSnapshot;
@@ -98,17 +116,51 @@ namespace DrawBody.Prototype
         private readonly float[] brushSizes = { 3f, 5f, 6f, 8f, 10f };
         private int brushSizeIndex = 2;
         private GameObject previewHighlight;
+        [SerializeField] private Button penToolButton;
+        [SerializeField] private Button eraserToolButton;
+        private GameObject eraserCursor;
+        private float eraserCursorRadius = -1f;
+        private readonly List<Vector2> clearedPartUndoPoints = new List<Vector2>();
+        private Species clearedPartUndoSpecies;
+        private BodyPart clearedPartUndoPart;
+        private bool hasClearedPartUndo;
 
         public event System.Action<BodyPart> CurrentPartChanged;
         public event System.Action<Species> CurrentSpeciesChanged;
+        public event System.Action SpeciesAvailabilityChanged;
         public float UsedInk => GetTotalInk();
         public BodyPart CurrentPart => currentPart;
         public Species CurrentSpecies => currentSpecies;
+        public StageSpeciesMask AllowedSpecies => allowedSpecies;
+
+        public bool IsSpeciesAllowed(Species species)
+        {
+            return StageSpeciesRules.IsAllowed(allowedSpecies, species);
+        }
+
+        public void SetAllowedSpecies(StageSpeciesMask availability)
+        {
+            StageSpeciesMask next = availability == StageSpeciesMask.None ? StageSpeciesMask.All : availability;
+            if (allowedSpecies == next)
+            {
+                return;
+            }
+
+            allowedSpecies = next;
+            SpeciesAvailabilityChanged?.Invoke();
+            if (!IsSpeciesAllowed(currentSpecies))
+            {
+                SetSpecies(StageSpeciesRules.GetFirstAllowed(allowedSpecies));
+            }
+        }
 
         private void Awake()
         {
-            maxInk = 350f;
+            maxInk = IndividualInkLimit;
+            drawAreaSquareSize = 300f;
+            previewSquareSize = 290f;
             EnsureInitialized();
+            NormalizeDrawLayout();
 
             if (stageManager == null)
             {
@@ -135,6 +187,199 @@ namespace DrawBody.Prototype
             SetPartSegmentVisibility();
         }
 
+        private void NormalizeDrawLayout()
+        {
+            DrawScreenVisualPolisher polisher = drawPanel != null ? drawPanel.GetComponent<DrawScreenVisualPolisher>() : null;
+            if (polisher == null && drawPanel != null)
+            {
+                polisher = drawPanel.AddComponent<DrawScreenVisualPolisher>();
+            }
+
+            if (drawArea != null)
+            {
+                drawArea.anchoredPosition = new Vector2(-225f, 0f);
+                drawArea.sizeDelta = Vector2.one * drawAreaSquareSize;
+                EnsureRectMask(drawArea.gameObject);
+            }
+
+            if (lineRoot != null)
+            {
+                lineRoot.anchorMin = Vector2.zero;
+                lineRoot.anchorMax = Vector2.one;
+                lineRoot.offsetMin = Vector2.zero;
+                lineRoot.offsetMax = Vector2.zero;
+            }
+
+            if (previewRoot != null)
+            {
+                RectTransform previewArea = previewRoot.parent as RectTransform;
+                if (previewArea != null)
+                {
+                    previewArea.anchoredPosition = new Vector2(390f, 0f);
+                    previewArea.sizeDelta = Vector2.one * previewSquareSize;
+                    EnsureRectMask(previewArea.gameObject);
+                    MovePreviewTitleOutside(previewArea);
+                }
+
+                previewRoot.anchoredPosition = new Vector2(0f, -8f);
+                previewRoot.localScale = Vector3.one * 0.6f;
+                previewRoot.sizeDelta = Vector2.one * (previewSquareSize - 34f);
+            }
+
+            RectTransform toolPanel = FindRect("DrawToolPanel");
+            if (toolPanel != null)
+            {
+                toolPanel.anchorMin = new Vector2(0.5f, 0f);
+                toolPanel.anchorMax = new Vector2(0.5f, 0f);
+                toolPanel.pivot = new Vector2(0.5f, 0f);
+                toolPanel.anchoredPosition = new Vector2(-145f, 14f);
+                toolPanel.sizeDelta = new Vector2(930f, 118f);
+            }
+
+            if (inkText != null)
+            {
+                inkText.gameObject.SetActive(false);
+            }
+
+            if (messageText != null)
+            {
+                messageText.rectTransform.anchorMin = new Vector2(0.5f, 0f);
+                messageText.rectTransform.anchorMax = new Vector2(0.5f, 0f);
+                messageText.rectTransform.pivot = new Vector2(0.5f, 0f);
+                messageText.rectTransform.anchoredPosition = new Vector2(90f, 536f);
+                messageText.rectTransform.sizeDelta = new Vector2(780f, 34f);
+            }
+
+            RectTransform speciesPanel = FindRect("DrawSpeciesPanel");
+            if (speciesPanel != null)
+            {
+                speciesPanel.anchorMin = new Vector2(0f, 0f);
+                speciesPanel.anchorMax = new Vector2(0f, 0f);
+                speciesPanel.pivot = new Vector2(0f, 0f);
+                speciesPanel.anchoredPosition = new Vector2(16f, 142f);
+                speciesPanel.sizeDelta = new Vector2(68f, 300f);
+                HideChild("DrawSpeciesTitle");
+                LayoutDrawSpeciesButtons(speciesPanel);
+            }
+
+            polisher?.Polish();
+            ResolveInkUi();
+        }
+
+        private static void EnsureRectMask(GameObject target)
+        {
+            if (target != null && target.GetComponent<RectMask2D>() == null)
+            {
+                target.AddComponent<RectMask2D>();
+            }
+        }
+
+        private void ResolveInkUi()
+        {
+            RectTransform personalValue = FindRect("PersonalInkValue");
+            RectTransform teamValue = FindRect("TeamInkValue");
+            RectTransform personalLabel = FindRect("PersonalInkLabel");
+            RectTransform teamLabel = FindRect("TeamInkLabel");
+            RectTransform teamFill = FindRect("TeamInkGaugeFill");
+            personalInkValueText = personalValue != null ? personalValue.GetComponent<Text>() : null;
+            teamInkValueText = teamValue != null ? teamValue.GetComponent<Text>() : null;
+            personalInkLabelText = personalLabel != null ? personalLabel.GetComponent<Text>() : null;
+            teamInkLabelText = teamLabel != null ? teamLabel.GetComponent<Text>() : null;
+            teamInkGaugeFill = teamFill != null ? teamFill.GetComponent<Image>() : null;
+            abilityTitleText = FindRect("AbilityTitleText")?.GetComponent<Text>();
+            abilityEffectText = FindRect("AbilityEffectText")?.GetComponent<Text>();
+            abilityInkText = FindRect("AbilityInkText")?.GetComponent<Text>();
+            abilityLowText = FindRect("AbilityLowText")?.GetComponent<Text>();
+            abilityHighText = FindRect("AbilityHighText")?.GetComponent<Text>();
+            abilityHintText = FindRect("AbilityHintText")?.GetComponent<Text>();
+            abilityGaugeFill = FindRect("AbilityGaugeFill")?.GetComponent<Image>();
+            abilityHeaderImage = FindRect("AbilityHeaderBand")?.GetComponent<Image>();
+        }
+
+        private void MovePreviewTitleOutside(RectTransform previewArea)
+        {
+            RectTransform title = FindRect("PreviewTitle");
+            if (title == null || drawPanel == null)
+            {
+                return;
+            }
+
+            title.SetParent(drawPanel.transform, false);
+            title.anchorMin = new Vector2(0.5f, 0.5f);
+            title.anchorMax = new Vector2(0.5f, 0.5f);
+            title.pivot = new Vector2(0.5f, 0.5f);
+            title.anchoredPosition = previewArea.anchoredPosition + new Vector2(0f, previewSquareSize * 0.5f + 11f);
+            title.sizeDelta = new Vector2(previewSquareSize, 18f);
+        }
+
+        private void LayoutDrawSpeciesButtons(RectTransform speciesPanel)
+        {
+            Species[] species =
+            {
+                Species.Human,
+                Species.Cat,
+                Species.Bird,
+                Species.Snake,
+                Species.Slime
+            };
+
+            for (int i = 0; i < species.Length; i++)
+            {
+                string prefix = species[i].ToString();
+                RectTransform button = FindRect(prefix + "DrawSpeciesButton");
+                if (button != null)
+                {
+                    button.SetParent(speciesPanel, false);
+                    button.anchorMin = new Vector2(0.5f, 1f);
+                    button.anchorMax = new Vector2(0.5f, 1f);
+                    button.pivot = new Vector2(0.5f, 1f);
+                    button.anchoredPosition = new Vector2(0f, -10f - i * 58f);
+                    button.sizeDelta = new Vector2(52f, 52f);
+                }
+
+                HideChild(prefix + "DrawSpeciesLabel");
+            }
+        }
+
+        private void HideChild(string name)
+        {
+            Transform child = FindDeep(drawPanel != null ? drawPanel.transform : transform, name);
+            if (child != null)
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
+
+        private RectTransform FindRect(string name)
+        {
+            Transform child = FindDeep(drawPanel != null ? drawPanel.transform : transform, name);
+            return child != null ? child as RectTransform : null;
+        }
+
+        private static Transform FindDeep(Transform root, string name)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            if (root.name == name)
+            {
+                return root;
+            }
+
+            for (int i = 0; i < root.childCount; i++)
+            {
+                Transform found = FindDeep(root.GetChild(i), name);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+
+            return null;
+        }
+
         private void Start()
         {
             EnsureInitialized();
@@ -147,11 +392,31 @@ namespace DrawBody.Prototype
         private void OnEnable()
         {
             LocalizationManager.LanguageChanged += RefreshLocalizedText;
+            if (onlineManager != null)
+            {
+                onlineManager.BodyDataReceived += HandleInkBudgetChanged;
+                onlineManager.StateChanged += HandleOnlineStateChanged;
+            }
         }
 
         private void OnDisable()
         {
             LocalizationManager.LanguageChanged -= RefreshLocalizedText;
+            if (onlineManager != null)
+            {
+                onlineManager.BodyDataReceived -= HandleInkBudgetChanged;
+                onlineManager.StateChanged -= HandleOnlineStateChanged;
+            }
+        }
+
+        private void HandleInkBudgetChanged(OnlineBodyData bodyData)
+        {
+            RefreshInkText();
+        }
+
+        private void HandleOnlineStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
+        {
+            RefreshInkText();
         }
 
         private void Update()
@@ -171,6 +436,7 @@ namespace DrawBody.Prototype
                 ConfirmDrawing();
             }
 
+            UpdateEraserCursor();
             HandleMouseInput();
         }
 
@@ -185,6 +451,8 @@ namespace DrawBody.Prototype
             }
 
             feedback?.SetActive(value);
+            UpdateToolButtons();
+            UpdateEraserCursor();
             RefreshInkText();
             if (value)
             {
@@ -213,6 +481,16 @@ namespace DrawBody.Prototype
         {
             FinishStroke();
             PartDrawing current = drawings[currentPart];
+            if (current.Points.Count == 0)
+            {
+                return;
+            }
+
+            clearedPartUndoPoints.Clear();
+            clearedPartUndoPoints.AddRange(current.Points);
+            clearedPartUndoSpecies = currentSpecies;
+            clearedPartUndoPart = currentPart;
+            hasClearedPartUndo = true;
             current.Points.Clear();
             current.UsedInk = 0f;
             drawing = false;
@@ -235,6 +513,37 @@ namespace DrawBody.Prototype
             RefreshConnectionMessage();
             UpdateConnectionMarker();
             feedback?.ButtonPress();
+        }
+
+        public void ResetAllToDefault()
+        {
+            EnsureInitialized();
+            FinishStroke();
+
+            currentSpecies = StageSpeciesRules.GetFirstAllowed(allowedSpecies);
+            currentPart = BodyPart.Torso;
+            InitializeDrawings();
+            UseSpeciesDrawings(currentSpecies);
+            toolMode = ToolMode.Pen;
+            hasClearedPartUndo = false;
+            clearedPartUndoPoints.Clear();
+            drawing = false;
+
+            RebuildAllVisuals();
+            SetPartSegmentVisibility();
+            RefreshInkText();
+            RefreshConnectionMessage();
+            UpdateConnectionMarker();
+            UpdatePreviewHighlight();
+            UpdateToolButtons();
+            CurrentSpeciesChanged?.Invoke(currentSpecies);
+            CurrentPartChanged?.Invoke(currentPart);
+            feedback?.ButtonPress();
+        }
+
+        public void RefreshInkBudgetDisplay()
+        {
+            RefreshInkText();
         }
 
         private void CaptureEditSnapshot()
@@ -287,7 +596,9 @@ namespace DrawBody.Prototype
                 }
             }
 
-            currentSpecies = snapshotSpecies;
+            currentSpecies = IsSpeciesAllowed(snapshotSpecies)
+                ? snapshotSpecies
+                : StageSpeciesRules.GetFirstAllowed(allowedSpecies);
             UseSpeciesDrawings(currentSpecies);
             currentPart = IsPartActive(snapshotPart) ? snapshotPart : GetCurrentParts()[0];
             RebuildAllVisuals();
@@ -305,6 +616,24 @@ namespace DrawBody.Prototype
         {
             FinishStroke();
             PartDrawing current = drawings[currentPart];
+            if (hasClearedPartUndo
+                && clearedPartUndoSpecies == currentSpecies
+                && clearedPartUndoPart == currentPart)
+            {
+                current.Points.Clear();
+                current.Points.AddRange(clearedPartUndoPoints);
+                current.UsedInk = CalculateInk(current.Points);
+                clearedPartUndoPoints.Clear();
+                hasClearedPartUndo = false;
+                RebuildAllVisuals();
+                SetPartSegmentVisibility();
+                RefreshInkText();
+                RefreshConnectionMessage();
+                UpdateConnectionMarker();
+                feedback?.ButtonPress();
+                return;
+            }
+
             if (current.Points.Count == 0)
             {
                 return;
@@ -334,12 +663,16 @@ namespace DrawBody.Prototype
         {
             brushSizeIndex = Mathf.Clamp(index, 0, brushSizes.Length - 1);
             lineWidth = brushSizes[brushSizeIndex];
+            eraserRadius = Mathf.Max(8f, lineWidth * 3.2f);
+            UpdateEraserCursor();
             feedback?.ButtonPress();
         }
 
         public void SetBrushSizePixels(float pixels)
         {
             lineWidth = Mathf.Clamp(pixels, 1f, 30f);
+            eraserRadius = Mathf.Max(8f, lineWidth * 3.2f);
+            UpdateEraserCursor();
             feedback?.ButtonPress();
         }
 
@@ -347,7 +680,16 @@ namespace DrawBody.Prototype
         {
             FinishStroke();
             toolMode = mode == 1 ? ToolMode.Eraser : ToolMode.Pen;
+            UpdateToolButtons();
+            UpdateEraserCursor();
             feedback?.ButtonPress();
+        }
+
+        public void SetToolButtons(Button penButton, Button eraserButton)
+        {
+            penToolButton = penButton;
+            eraserToolButton = eraserButton;
+            UpdateToolButtons();
         }
 
         public void SetCurrentPart(BodyPart part)
@@ -369,11 +711,22 @@ namespace DrawBody.Prototype
             SetPartSegmentVisibility();
             UpdateConnectionMarker();
             UpdatePreviewHighlight();
+            GameSfx.Play(SfxId.DrawPartChange);
             CurrentPartChanged?.Invoke(currentPart);
         }
 
         public void SetSpecies(Species species)
         {
+            if (!IsSpeciesAllowed(species))
+            {
+                SetMessage(LocalizationManager.Format(
+                    "draw_species_locked",
+                    LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(species))),
+                    true);
+                GameSfx.Play(SfxId.UiToggleOff);
+                return;
+            }
+
             if (currentSpecies == species)
             {
                 return;
@@ -391,8 +744,12 @@ namespace DrawBody.Prototype
             RefreshConnectionMessage();
             UpdateConnectionMarker();
             ApplyDrawing();
-            SendCurrentBodyData();
+            if (!active)
+            {
+                SendCurrentBodyData();
+            }
             UpdatePreviewHighlight();
+            GameSfx.Play(SfxId.DrawSpeciesChange);
             CurrentSpeciesChanged?.Invoke(currentSpecies);
             CurrentPartChanged?.Invoke(currentPart);
         }
@@ -499,7 +856,7 @@ namespace DrawBody.Prototype
         {
             if (TryApplyDrawing())
             {
-                feedback?.ButtonPress();
+                GameSfx.Play(SfxId.DrawConfirm);
                 hasEditSnapshot = false;
                 editSnapshot = null;
                 stageManager?.ExitDrawingMode();
@@ -510,7 +867,14 @@ namespace DrawBody.Prototype
         {
             if (!ValidateConnections(out string errorMessage))
             {
-                SetMessage(errorMessage);
+                SetMessage(errorMessage, true);
+                return false;
+            }
+
+            if (!ValidateInkBudget(out errorMessage))
+            {
+                SetMessage(errorMessage, true);
+                GameSfx.Play(SfxId.DrawInkOver);
                 return false;
             }
 
@@ -520,7 +884,7 @@ namespace DrawBody.Prototype
             return true;
         }
 
-        private void SendCurrentBodyData()
+        public void SendCurrentBodyData()
         {
             onlineManager?.SendBodyData(new OnlineBodyData
             {
@@ -608,7 +972,9 @@ namespace DrawBody.Prototype
                 }
             }
 
-            currentSpecies = state.Species;
+            currentSpecies = IsSpeciesAllowed(state.Species)
+                ? state.Species
+                : StageSpeciesRules.GetFirstAllowed(allowedSpecies);
             UseSpeciesDrawings(currentSpecies);
             currentPart = IsPartActive(state.Part) ? state.Part : GetCurrentParts()[0];
             RebuildAllVisuals();
@@ -653,20 +1019,6 @@ namespace DrawBody.Prototype
             for (int i = 0; i < source.Count; i++)
             {
                 result.Add(IsBreakPoint(source[i]) ? StrokeBreak : GetRawAssembledPoint(part, source[i]) + offset);
-            }
-
-            return result;
-        }
-
-        private List<Vector2> GetFittedAssembledPoints(BodyPart part)
-        {
-            List<Vector2> result = new List<Vector2>();
-            IReadOnlyList<Vector2> source = drawings[part].Points;
-            GetAssemblyFit(out float scale, out Vector2 offset);
-
-            for (int i = 0; i < source.Count; i++)
-            {
-                result.Add(IsBreakPoint(source[i]) ? StrokeBreak : GetRawAssembledPoint(part, source[i]) * scale + offset);
             }
 
             return result;
@@ -731,6 +1083,10 @@ namespace DrawBody.Prototype
             if (!string.IsNullOrEmpty(body.Species))
             {
                 System.Enum.TryParse(body.Species, out species);
+            }
+            if (!IsSpeciesAllowed(species))
+            {
+                species = StageSpeciesRules.GetFirstAllowed(allowedSpecies);
             }
 
             DrawingState state = new DrawingState
@@ -874,6 +1230,8 @@ namespace DrawBody.Prototype
                         current.Points.Add(StrokeBreak);
                     }
 
+                    hasClearedPartUndo = false;
+                    clearedPartUndoPoints.Clear();
                     current.Points.Add(startPoint);
                     feedback?.BeginStroke(startPoint, GetPartColor(currentPart));
                     RefreshInkText();
@@ -910,21 +1268,9 @@ namespace DrawBody.Prototype
         private void EraseAt(Vector2 point)
         {
             PartDrawing current = drawings[currentPart];
-            if (!TryFindStrokeAtPoint(current.Points, point, eraserRadius, out int start, out int end))
+            if (!EraseCircle(current.Points, point, eraserRadius))
             {
                 return;
-            }
-
-            current.Points.RemoveRange(start, end - start + 1);
-
-            if (start < current.Points.Count && IsBreakPoint(current.Points[start]))
-            {
-                current.Points.RemoveAt(start);
-            }
-
-            if (start > 0 && start - 1 < current.Points.Count && IsBreakPoint(current.Points[start - 1]))
-            {
-                current.Points.RemoveAt(start - 1);
             }
 
             current.UsedInk = CalculateInk(current.Points);
@@ -935,46 +1281,255 @@ namespace DrawBody.Prototype
             UpdateConnectionMarker();
         }
 
-        private static bool TryFindStrokeAtPoint(IReadOnlyList<Vector2> points, Vector2 point, float radius, out int start, out int end)
+        private static bool EraseCircle(List<Vector2> points, Vector2 center, float radius)
         {
-            start = -1;
-            end = -1;
-            int strokeStart = -1;
-            Vector2 previous = Vector2.zero;
-            bool hasPrevious = false;
-
-            for (int i = 0; i <= points.Count; i++)
+            if (points == null || points.Count == 0)
             {
-                bool atEnd = i == points.Count;
-                bool breakPoint = !atEnd && IsBreakPoint(points[i]);
-                if (atEnd || breakPoint)
-                {
-                    if (start >= 0)
-                    {
-                        end = i - 1;
-                        return true;
-                    }
+                return false;
+            }
 
-                    strokeStart = -1;
+            List<Vector2> rebuilt = new List<Vector2>();
+            bool changed = false;
+            bool hasPrevious = false;
+            Vector2 previous = Vector2.zero;
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector2 current = points[i];
+                if (IsBreakPoint(current))
+                {
+                    AppendBreak(rebuilt);
                     hasPrevious = false;
                     continue;
                 }
 
-                if (strokeStart < 0)
+                if (!hasPrevious)
                 {
-                    strokeStart = i;
+                    previous = current;
+                    hasPrevious = true;
+                    if (i == points.Count - 1 || IsBreakPoint(points[i + 1]))
+                    {
+                        if (Vector2.Distance(current, center) > radius)
+                        {
+                            AppendPoint(rebuilt, current);
+                        }
+                        else
+                        {
+                            changed = true;
+                        }
+                    }
+
+                    continue;
                 }
 
-                if (hasPrevious && DistancePointToSegment(point, previous, points[i]) <= radius)
+                int pieceCount = GetOutsidePieces(previous, current, center, radius, out Vector2 a0, out Vector2 a1, out Vector2 b0, out Vector2 b1);
+                if (pieceCount == 0)
                 {
-                    start = strokeStart;
+                    changed = true;
+                }
+                else
+                {
+                    if (pieceCount >= 1)
+                    {
+                        AppendPiece(rebuilt, a0, a1);
+                    }
+
+                    if (pieceCount >= 2)
+                    {
+                        AppendPiece(rebuilt, b0, b1);
+                    }
+
+                    if (pieceCount != 1 || a0 != previous || a1 != current)
+                    {
+                        changed = true;
+                    }
                 }
 
-                previous = points[i];
-                hasPrevious = true;
+                previous = current;
             }
 
-            return false;
+            CleanupBreaks(rebuilt);
+            if (!changed)
+            {
+                return false;
+            }
+
+            points.Clear();
+            points.AddRange(rebuilt);
+            return true;
+        }
+
+        private static int GetOutsidePieces(
+            Vector2 start,
+            Vector2 end,
+            Vector2 center,
+            float radius,
+            out Vector2 a0,
+            out Vector2 a1,
+            out Vector2 b0,
+            out Vector2 b1)
+        {
+            a0 = a1 = b0 = b1 = Vector2.zero;
+            Vector2 delta = end - start;
+            float lengthSquared = delta.sqrMagnitude;
+            if (lengthSquared <= Mathf.Epsilon)
+            {
+                if (Vector2.Distance(start, center) <= radius)
+                {
+                    return 0;
+                }
+
+                a0 = start;
+                a1 = end;
+                return 1;
+            }
+
+            float radiusSquared = radius * radius;
+            Vector2 fromCenter = start - center;
+            float qa = lengthSquared;
+            float qb = 2f * Vector2.Dot(fromCenter, delta);
+            float qc = fromCenter.sqrMagnitude - radiusSquared;
+            float discriminant = qb * qb - 4f * qa * qc;
+
+            if (discriminant <= 0f)
+            {
+                if (DistancePointToSegment(center, start, end) <= radius)
+                {
+                    return 0;
+                }
+
+                a0 = start;
+                a1 = end;
+                return 1;
+            }
+
+            float sqrt = Mathf.Sqrt(discriminant);
+            float rawT0 = (-qb - sqrt) / (2f * qa);
+            float rawT1 = (-qb + sqrt) / (2f * qa);
+            if (rawT1 < rawT0)
+            {
+                float temp = rawT0;
+                rawT0 = rawT1;
+                rawT1 = temp;
+            }
+
+            if (rawT1 <= 0f || rawT0 >= 1f)
+            {
+                if (Vector2.Distance((start + end) * 0.5f, center) <= radius)
+                {
+                    return 0;
+                }
+
+                a0 = start;
+                a1 = end;
+                return 1;
+            }
+
+            float t0 = Mathf.Clamp01(rawT0);
+            float t1 = Mathf.Clamp01(rawT1);
+            int count = 0;
+            AddOutsideInterval(start, delta, 0f, t0, center, radius, ref count, ref a0, ref a1, ref b0, ref b1);
+            AddOutsideInterval(start, delta, t1, 1f, center, radius, ref count, ref a0, ref a1, ref b0, ref b1);
+            return count;
+        }
+
+        private static void AddOutsideInterval(
+            Vector2 start,
+            Vector2 delta,
+            float from,
+            float to,
+            Vector2 center,
+            float radius,
+            ref int count,
+            ref Vector2 a0,
+            ref Vector2 a1,
+            ref Vector2 b0,
+            ref Vector2 b1)
+        {
+            const float MinInterval = 0.002f;
+            if (to - from <= MinInterval)
+            {
+                return;
+            }
+
+            float mid = (from + to) * 0.5f;
+            if (Vector2.Distance(start + delta * mid, center) <= radius)
+            {
+                return;
+            }
+
+            Vector2 p0 = start + delta * from;
+            Vector2 p1 = start + delta * to;
+            if (count == 0)
+            {
+                a0 = p0;
+                a1 = p1;
+            }
+            else
+            {
+                b0 = p0;
+                b1 = p1;
+            }
+
+            count++;
+        }
+
+        private static void AppendPiece(List<Vector2> points, Vector2 start, Vector2 end)
+        {
+            if (Vector2.Distance(start, end) <= Mathf.Epsilon)
+            {
+                AppendPoint(points, start);
+                return;
+            }
+
+            if (points.Count > 0 && !IsBreakPoint(points[points.Count - 1]) && Vector2.Distance(points[points.Count - 1], start) > 0.01f)
+            {
+                AppendBreak(points);
+            }
+
+            AppendPoint(points, start);
+            AppendPoint(points, end);
+        }
+
+        private static void AppendPoint(List<Vector2> points, Vector2 point)
+        {
+            if (points.Count > 0 && !IsBreakPoint(points[points.Count - 1]) && Vector2.Distance(points[points.Count - 1], point) <= 0.01f)
+            {
+                return;
+            }
+
+            points.Add(point);
+        }
+
+        private static void AppendBreak(List<Vector2> points)
+        {
+            if (points.Count == 0 || IsBreakPoint(points[points.Count - 1]))
+            {
+                return;
+            }
+
+            points.Add(StrokeBreak);
+        }
+
+        private static void CleanupBreaks(List<Vector2> points)
+        {
+            while (points.Count > 0 && IsBreakPoint(points[0]))
+            {
+                points.RemoveAt(0);
+            }
+
+            while (points.Count > 0 && IsBreakPoint(points[points.Count - 1]))
+            {
+                points.RemoveAt(points.Count - 1);
+            }
+
+            for (int i = points.Count - 2; i >= 0; i--)
+            {
+                if (IsBreakPoint(points[i]) && IsBreakPoint(points[i + 1]))
+                {
+                    points.RemoveAt(i + 1);
+                }
+            }
         }
 
         private static float DistancePointToSegment(Vector2 point, Vector2 start, Vector2 end)
@@ -1056,6 +1611,7 @@ namespace DrawBody.Prototype
             {
                 FinishStroke();
                 RefreshInkText();
+                GameSfx.Play(SfxId.DrawInkOver);
                 return;
             }
 
@@ -1078,6 +1634,7 @@ namespace DrawBody.Prototype
             if (inkCost >= remainingInk)
             {
                 FinishStroke();
+                GameSfx.Play(SfxId.DrawInkWarning);
             }
         }
 
@@ -1111,22 +1668,47 @@ namespace DrawBody.Prototype
         private void RefreshInkText()
         {
             float totalInk = GetTotalInk();
+            int playerCount = ResolveInkBudgetPlayerCount();
+            float otherConfirmedInk = ResolveOtherConfirmedInk();
+            float teamInk = otherConfirmedInk + totalInk;
+            float teamLimit = playerCount * InkAllowancePerPlayer;
+            bool personalOver = totalInk > maxInk;
+            bool teamOver = teamInk > teamLimit;
+
+            if (personalInkValueText == null || teamInkValueText == null || teamInkGaugeFill == null)
+            {
+                ResolveInkUi();
+            }
+
+            Color normalText = new Color(0.12f, 0.1f, 0.08f, 1f);
+            Color warningText = new Color(0.82f, 0.16f, 0.12f, 1f);
+            if (personalInkLabelText != null)
+            {
+                personalInkLabelText.text = LocalizationManager.T("ink_personal_cap");
+            }
+            if (teamInkLabelText != null)
+            {
+                teamInkLabelText.text = LocalizationManager.Format("ink_team_formula", playerCount, InkAllowancePerPlayer);
+            }
+            if (personalInkValueText != null)
+            {
+                personalInkValueText.text = $"{totalInk:0.#} / {maxInk:0}";
+                personalInkValueText.color = personalOver ? warningText : normalText;
+            }
+
+            if (teamInkValueText != null)
+            {
+                teamInkValueText.text = $"{teamInk:0.#} / {teamLimit:0}";
+                teamInkValueText.color = teamOver ? warningText : normalText;
+            }
 
             if (inkText != null)
             {
-                inkText.text = $"{totalInk:0} / {maxInk:0}";
+                inkText.gameObject.SetActive(false);
             }
 
-            if (inkGaugeFill != null)
-            {
-                float amount = maxInk <= 0f ? 0f : Mathf.Clamp01(totalInk / maxInk);
-                inkGaugeFill.fillAmount = amount;
-                RectTransform gaugeRect = inkGaugeFill.rectTransform;
-                gaugeRect.anchorMin = Vector2.zero;
-                gaugeRect.anchorMax = new Vector2(amount, 1f);
-                gaugeRect.offsetMin = Vector2.zero;
-                gaugeRect.offsetMax = Vector2.zero;
-            }
+            SetInkGauge(inkGaugeFill, maxInk <= 0f ? 0f : totalInk / maxInk, personalOver);
+            SetInkGauge(teamInkGaugeFill, teamLimit <= 0f ? 0f : teamInk / teamLimit, teamOver);
 
             if (partText != null)
             {
@@ -1136,7 +1718,241 @@ namespace DrawBody.Prototype
             if (abilityText != null)
             {
                 PlayerAbilityController.AbilityProfile profile = PlayerAbilityController.CalculateProfile(this);
-                abilityText.text = PlayerAbilityController.GetProfileSummary(profile);
+                RefreshAbilityCard(profile);
+            }
+        }
+
+        private void RefreshAbilityCard(PlayerAbilityController.AbilityProfile profile)
+        {
+            float progress;
+            string title;
+            string effect;
+            string ink;
+            Color accent;
+
+            switch (profile.Species)
+            {
+                case Species.Cat:
+                    progress = Mathf.Clamp01(profile.CatLegInk / 120f);
+                    title = LocalizationManager.T("ability_card_cat");
+                    effect = LocalizationManager.Format(
+                        "ability_effect_cat",
+                        PlayerController2D.CalculateCatMoveSpeedMultiplier(profile.CatLegInk));
+                    ink = LocalizationManager.Format("ability_ink_cat", profile.CatLegInk);
+                    accent = new Color(0.94f, 0.54f, 0.18f, 1f);
+                    break;
+                case Species.Bird:
+                    progress = Mathf.Clamp01(profile.WingInk / 350f);
+                    title = LocalizationManager.T("ability_card_bird");
+                    effect = LocalizationManager.Format("ability_effect_bird", progress * 100f);
+                    ink = LocalizationManager.Format("ability_ink_bird", profile.WingInk);
+                    accent = new Color(0.16f, 0.64f, 0.9f, 1f);
+                    break;
+                case Species.Snake:
+                    progress = Mathf.Clamp01(profile.SnakeInk / 350f);
+                    title = LocalizationManager.T("ability_card_snake");
+                    effect = LocalizationManager.Format(
+                        "ability_effect_snake",
+                        PlayerController2D.CalculateSnakeJumpMultiplier(profile.SnakeInk));
+                    ink = LocalizationManager.Format("ability_ink_snake", profile.SnakeInk);
+                    accent = new Color(0.3f, 0.7f, 0.3f, 1f);
+                    break;
+                case Species.Slime:
+                    progress = PlayerController2D.CalculateSlimeStickStrength(profile.SlimeInk);
+                    title = LocalizationManager.T("ability_card_slime");
+                    effect = LocalizationManager.Format("ability_effect_slime", progress * 100f);
+                    ink = LocalizationManager.Format("ability_ink_slime", profile.SlimeInk);
+                    accent = new Color(0.68f, 0.38f, 0.86f, 1f);
+                    break;
+                default:
+                    progress = Mathf.Clamp01(profile.ArmInk / 280f);
+                    title = LocalizationManager.T("ability_card_human");
+                    effect = LocalizationManager.Format(
+                        "ability_effect_human",
+                        ArmSwingController.CalculateArmStrengthMultiplier(profile.ArmInk));
+                    ink = LocalizationManager.Format("ability_ink_human", profile.ArmInk);
+                    accent = new Color(0.2f, 0.48f, 0.86f, 1f);
+                    break;
+            }
+
+            string rank = progress >= 0.9f ? "S"
+                : progress >= 0.7f ? "A"
+                : progress >= 0.45f ? "B"
+                : progress >= 0.2f ? "C"
+                : "D";
+
+            abilityText.text = LocalizationManager.Format("ability_rank", rank);
+            abilityText.gameObject.SetActive(true);
+            if (abilityTitleText != null) abilityTitleText.text = title;
+            if (abilityEffectText != null) abilityEffectText.text = effect;
+            if (abilityInkText != null) abilityInkText.text = ink;
+            if (abilityLowText != null) abilityLowText.text = LocalizationManager.T("ability_gauge_low");
+            if (abilityHighText != null) abilityHighText.text = LocalizationManager.T("ability_gauge_high");
+            if (abilityHintText != null) abilityHintText.text = LocalizationManager.T("ability_growth_hint");
+            if (abilityHeaderImage != null) abilityHeaderImage.color = accent;
+            SetInkGauge(abilityGaugeFill, progress, false);
+            if (abilityGaugeFill != null) abilityGaugeFill.color = accent;
+        }
+
+        private static void SetInkGauge(Image fill, float amount, bool over)
+        {
+            if (fill == null)
+            {
+                return;
+            }
+
+            float normalized = Mathf.Clamp01(amount);
+            fill.color = over
+                ? new Color(0.94f, 0.25f, 0.18f, 1f)
+                : new Color(0.12f, 0.72f, 0.48f, 1f);
+            fill.type = Image.Type.Simple;
+            fill.fillAmount = 1f;
+            RectTransform gaugeRect = fill.rectTransform;
+            gaugeRect.anchorMin = Vector2.zero;
+            gaugeRect.anchorMax = new Vector2(normalized, 1f);
+            gaugeRect.pivot = new Vector2(0f, 0.5f);
+            gaugeRect.offsetMin = Vector2.zero;
+            gaugeRect.offsetMax = Vector2.zero;
+        }
+
+        private void UpdateToolButtons()
+        {
+            ResolveToolButtons();
+            SetToolButtonVisual(penToolButton, toolMode == ToolMode.Pen, new Color(0.73f, 0.94f, 0.67f, 0.96f));
+            SetToolButtonVisual(eraserToolButton, toolMode == ToolMode.Eraser, new Color(0.98f, 0.82f, 0.68f, 0.96f));
+        }
+
+        private void ResolveToolButtons()
+        {
+            if (drawPanel == null || (penToolButton != null && eraserToolButton != null))
+            {
+                return;
+            }
+
+            Button[] buttons = drawPanel.GetComponentsInChildren<Button>(true);
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                if (penToolButton == null && buttons[i].name == "PenToolButton")
+                {
+                    penToolButton = buttons[i];
+                }
+                else if (eraserToolButton == null && buttons[i].name == "EraserToolButton")
+                {
+                    eraserToolButton = buttons[i];
+                }
+            }
+        }
+
+        private static void SetToolButtonVisual(Button button, bool selected, Color baseColor)
+        {
+            if (button == null)
+            {
+                return;
+            }
+
+            Image image = button.GetComponent<Image>();
+            Color shownColor = selected ? baseColor : new Color(0.92f, 0.91f, 0.87f, 1f);
+            if (image != null)
+            {
+                image.color = shownColor;
+            }
+
+            ColorBlock colors = button.colors;
+            colors.normalColor = Color.white;
+            colors.highlightedColor = new Color(1f, 1f, 1f, 0.88f);
+            colors.pressedColor = new Color(0.82f, 0.82f, 0.82f, 1f);
+            colors.selectedColor = colors.highlightedColor;
+            button.colors = colors;
+
+            Outline outline = button.GetComponent<Outline>();
+            if (outline == null)
+            {
+                outline = button.gameObject.AddComponent<Outline>();
+                outline.effectDistance = new Vector2(2.5f, -2.5f);
+            }
+
+            outline.enabled = true;
+            outline.effectDistance = selected ? new Vector2(4f, -4f) : new Vector2(1f, -1f);
+            outline.effectColor = selected
+                ? new Color(0.04f, 0.12f, 0.16f, 1f)
+                : new Color(0.2f, 0.18f, 0.14f, 0.42f);
+
+            Transform selectionBadge = button.transform.Find("SelectionBadge");
+            if (selectionBadge != null)
+            {
+                selectionBadge.gameObject.SetActive(selected);
+                selectionBadge.SetAsLastSibling();
+            }
+
+            Text label = button.GetComponentInChildren<Text>();
+            if (label != null)
+            {
+                label.fontStyle = FontStyle.Bold;
+                label.color = new Color(0.12f, 0.1f, 0.08f, 1f);
+            }
+        }
+
+        private void UpdateEraserCursor()
+        {
+            if (!active || toolMode != ToolMode.Eraser || drawArea == null || !TryGetDrawPoint(out Vector2 point))
+            {
+                if (eraserCursor != null)
+                {
+                    eraserCursor.SetActive(false);
+                }
+
+                return;
+            }
+
+            EnsureEraserCursor();
+            RectTransform rect = eraserCursor.GetComponent<RectTransform>();
+            rect.anchoredPosition = point;
+            eraserCursor.SetActive(true);
+            eraserCursor.transform.SetAsLastSibling();
+
+            if (!Mathf.Approximately(eraserCursorRadius, eraserRadius))
+            {
+                eraserCursorRadius = eraserRadius;
+                RebuildEraserCursorGeometry();
+            }
+        }
+
+        private void EnsureEraserCursor()
+        {
+            if (eraserCursor != null)
+            {
+                return;
+            }
+
+            eraserCursor = new GameObject("EraserCursor");
+            eraserCursor.transform.SetParent(drawArea, false);
+            RectTransform rect = eraserCursor.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = Vector2.zero;
+            eraserCursorRadius = -1f;
+            RebuildEraserCursorGeometry();
+        }
+
+        private void RebuildEraserCursorGeometry()
+        {
+            if (eraserCursor == null)
+            {
+                return;
+            }
+
+            ClearRootChildren(eraserCursor.transform);
+            const int segments = 36;
+            Color color = new Color(0.08f, 0.08f, 0.08f, 0.78f);
+            RectTransform cursorRoot = eraserCursor.GetComponent<RectTransform>();
+            for (int i = 0; i < segments; i++)
+            {
+                float a0 = Mathf.PI * 2f * i / segments;
+                float a1 = Mathf.PI * 2f * (i + 1) / segments;
+                Vector2 p0 = new Vector2(Mathf.Cos(a0), Mathf.Sin(a0)) * eraserRadius;
+                Vector2 p1 = new Vector2(Mathf.Cos(a1), Mathf.Sin(a1)) * eraserRadius;
+                CreateUiSegment("EraserCursorRing", cursorRoot, p0, p1, 2.2f, color, 1f);
             }
         }
 
@@ -1186,6 +2002,47 @@ namespace DrawBody.Prototype
             return true;
         }
 
+        private bool ValidateInkBudget(out string errorMessage)
+        {
+            float localInk = GetTotalInk();
+            if (localInk > maxInk + 0.01f)
+            {
+                errorMessage = LocalizationManager.Format("msg_personal_ink_over", localInk, maxInk, Mathf.Ceil(localInk - maxInk));
+                return false;
+            }
+
+            int playerCount = ResolveInkBudgetPlayerCount();
+            float otherConfirmedInk = ResolveOtherConfirmedInk();
+            float teamLimit = playerCount * InkAllowancePerPlayer;
+            float projectedTeamInk = otherConfirmedInk + localInk;
+            if (projectedTeamInk > teamLimit + 0.01f)
+            {
+                errorMessage = LocalizationManager.Format("msg_team_ink_over", projectedTeamInk, teamLimit, Mathf.Ceil(projectedTeamInk - teamLimit));
+                return false;
+            }
+
+            errorMessage = string.Empty;
+            return true;
+        }
+
+        private int ResolveInkBudgetPlayerCount()
+        {
+            if (stageManager != null)
+            {
+                return stageManager.GetInkBudgetPlayerCount();
+            }
+            return onlineManager != null ? onlineManager.GetInkBudgetPlayerCount() : 1;
+        }
+
+        private float ResolveOtherConfirmedInk()
+        {
+            if (stageManager != null)
+            {
+                return stageManager.GetConfirmedInkExcludingActivePlayer();
+            }
+            return onlineManager != null ? onlineManager.GetConfirmedInkExcludingLocal() : 0f;
+        }
+
         private void RefreshConnectionMessage()
         {
             if (!active)
@@ -1195,7 +2052,7 @@ namespace DrawBody.Prototype
 
             if (currentPart == BodyPart.Torso || currentSpecies == Species.Slime)
             {
-                SetMessage(LocalizationManager.T("msg_torso_base"));
+                SetMessage(string.Empty);
                 return;
             }
 
@@ -1219,11 +2076,14 @@ namespace DrawBody.Prototype
                 : LocalizationManager.Format("msg_not_connected", GetPartLabel(currentPart)));
         }
 
-        private void SetMessage(string message)
+        private void SetMessage(string message, bool alarm = false)
         {
             if (messageText != null)
             {
                 messageText.text = message;
+                messageText.color = alarm ? new Color(0.82f, 0.12f, 0.08f) : Color.black;
+                messageText.fontStyle = alarm ? FontStyle.Bold : FontStyle.Normal;
+                messageText.gameObject.SetActive(active && alarm && !string.IsNullOrEmpty(message));
             }
         }
 
@@ -1374,15 +2234,6 @@ namespace DrawBody.Prototype
                 return false;
             }
 
-            if (currentSpecies == Species.Cat || currentSpecies == Species.Snake)
-            {
-                torso = ExpandRect(torso, 180f, 70f);
-            }
-            else
-            {
-                torso = ExpandRect(torso, 80f, 130f);
-            }
-
             float centerX = (torso.xMin + torso.xMax) * 0.5f;
             float centerY = (torso.yMin + torso.yMax) * 0.5f;
             float lowerLeftX = Mathf.Lerp(torso.xMin, torso.xMax, 0.25f);
@@ -1453,21 +2304,126 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static Rect ExpandRect(Rect rect, float minWidth, float minHeight)
-        {
-            float width = Mathf.Max(rect.width, minWidth);
-            float height = Mathf.Max(rect.height, minHeight);
-            Vector2 center = rect.center;
-            return Rect.MinMaxRect(
-                center.x - width * 0.5f,
-                center.y - height * 0.5f,
-                center.x + width * 0.5f,
-                center.y + height * 0.5f);
-        }
-
         private bool TryGetPartConnectionPoint(BodyPart part, IReadOnlyList<Vector2> points, out Vector2 point)
         {
-            return TryGetFirstDrawablePoint(points, out point);
+            point = Vector2.zero;
+            if (!TryGetBounds(points, out Rect bounds))
+            {
+                return false;
+            }
+
+            if (currentSpecies == Species.Cat)
+            {
+                switch (part)
+                {
+                    case BodyPart.Head:
+                        return TryGetEdgeCenter(points, PartEdge.Left, out point);
+                    case BodyPart.Tail:
+                        return TryGetEdgeCenter(points, PartEdge.Right, out point);
+                    case BodyPart.LeftFrontLeg:
+                    case BodyPart.RightFrontLeg:
+                    case BodyPart.LeftBackLeg:
+                    case BodyPart.RightBackLeg:
+                        return TryGetEdgeCenter(points, PartEdge.Top, out point);
+                }
+            }
+
+            if (currentSpecies == Species.Snake && part == BodyPart.Head)
+            {
+                return TryGetEdgeCenter(points, PartEdge.Left, out point);
+            }
+
+            switch (part)
+            {
+                case BodyPart.Head:
+                    return TryGetEdgeCenter(points, PartEdge.Bottom, out point);
+                case BodyPart.LeftArm:
+                case BodyPart.LeftWing:
+                    return TryGetEdgeCenter(points, PartEdge.Right, out point);
+                case BodyPart.RightArm:
+                case BodyPart.RightWing:
+                    return TryGetEdgeCenter(points, PartEdge.Left, out point);
+                case BodyPart.LeftLeg:
+                case BodyPart.RightLeg:
+                case BodyPart.LeftFrontLeg:
+                case BodyPart.RightFrontLeg:
+                case BodyPart.LeftBackLeg:
+                case BodyPart.RightBackLeg:
+                case BodyPart.Tail:
+                case BodyPart.TailFeather:
+                    return TryGetEdgeCenter(points, PartEdge.Top, out point);
+                default:
+                    return TryGetFirstDrawablePoint(points, out point);
+            }
+        }
+
+        private enum PartEdge
+        {
+            Left,
+            Right,
+            Top,
+            Bottom
+        }
+
+        private static bool TryGetEdgeCenter(IReadOnlyList<Vector2> points, PartEdge edge, out Vector2 center)
+        {
+            center = Vector2.zero;
+            if (!TryGetBounds(points, out Rect bounds))
+            {
+                return false;
+            }
+
+            float target = edge switch
+            {
+                PartEdge.Left => bounds.xMin,
+                PartEdge.Right => bounds.xMax,
+                PartEdge.Top => bounds.yMax,
+                PartEdge.Bottom => bounds.yMin,
+                _ => 0f
+            };
+            float tolerance = Mathf.Max(2f, Mathf.Max(bounds.width, bounds.height) * 0.08f);
+            Vector2 sum = Vector2.zero;
+            int count = 0;
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector2 candidate = points[i];
+                if (IsBreakPoint(candidate))
+                {
+                    continue;
+                }
+
+                float value = edge == PartEdge.Left || edge == PartEdge.Right ? candidate.x : candidate.y;
+                if (Mathf.Abs(value - target) <= tolerance)
+                {
+                    sum += candidate;
+                    count++;
+                }
+            }
+
+            if (count > 0)
+            {
+                center = sum / count;
+                return true;
+            }
+
+            switch (edge)
+            {
+                case PartEdge.Left:
+                    center = new Vector2(bounds.xMin, bounds.center.y);
+                    return true;
+                case PartEdge.Right:
+                    center = new Vector2(bounds.xMax, bounds.center.y);
+                    return true;
+                case PartEdge.Top:
+                    center = new Vector2(bounds.center.x, bounds.yMax);
+                    return true;
+                case PartEdge.Bottom:
+                    center = new Vector2(bounds.center.x, bounds.yMin);
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private Vector2 ToPreviewPoint(BodyPart part, Vector2 drawPoint)
@@ -1477,8 +2433,7 @@ namespace DrawBody.Prototype
                 return drawPoint;
             }
 
-            GetAssemblyFit(out float scale, out Vector2 offset);
-            return (GetRawAssembledPoint(part, drawPoint) * scale + offset) * previewScale;
+            return (GetRawAssembledPoint(part, drawPoint) + GetBodyAnchorOffset()) * previewScale;
         }
 
         private Vector2 GetRawAssembledPoint(BodyPart part, Vector2 drawPoint)
@@ -1497,24 +2452,6 @@ namespace DrawBody.Prototype
             }
 
             return drawPoint;
-        }
-
-        private void GetAssemblyFit(out float scale, out Vector2 offset)
-        {
-            scale = 1f;
-            offset = Vector2.zero;
-
-            if (!TryGetRawAssemblyBounds(out Rect bounds))
-            {
-                return;
-            }
-
-            float width = Mathf.Max(bounds.width, 1f);
-            float height = Mathf.Max(bounds.height, 1f);
-            float fitX = assembledMaxSize.x / width;
-            float fitY = assembledMaxSize.y / height;
-            scale = Mathf.Min(1f, fitX, fitY);
-            offset = -bounds.center * scale;
         }
 
         private bool TryGetRawAssemblyBounds(out Rect bounds)
@@ -1726,35 +2663,14 @@ namespace DrawBody.Prototype
             return Mathf.Repeat(Mathf.Sin(value) * 43758.5453f, 1f);
         }
 
-        private static Color GetPartColor(BodyPart part)
+        private Color GetPartColor(BodyPart part)
         {
-            switch (part)
+            if (bodyBuilder != null)
             {
-                case BodyPart.Head:
-                    return new Color(1f, 0.72f, 0.2f);
-                case BodyPart.Torso:
-                    return new Color(0.1f, 0.35f, 1f);
-                case BodyPart.LeftArm:
-                case BodyPart.RightArm:
-                case BodyPart.LeftFrontLeg:
-                case BodyPart.RightFrontLeg:
-                case BodyPart.LeftBackLeg:
-                case BodyPart.RightBackLeg:
-                    return new Color(0.98f, 0.28f, 0.25f);
-                case BodyPart.LeftLeg:
-                case BodyPart.RightLeg:
-                    return new Color(0.1f, 0.72f, 0.32f);
-                case BodyPart.Tail:
-                case BodyPart.TailFeather:
-                    return new Color(0.95f, 0.55f, 0.18f);
-                case BodyPart.LeftWing:
-                case BodyPart.RightWing:
-                    return new Color(0.45f, 0.35f, 0.95f);
-                case BodyPart.SlimeBody:
-                    return new Color(0.3f, 0.85f, 0.75f);
-                default:
-                    return Color.black;
+                return bodyBuilder.PlayerColor;
             }
+
+            return PlayerColorPalette.GetColor(0);
         }
 
         private void InitializeDrawings()
