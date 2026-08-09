@@ -21,7 +21,7 @@ namespace DrawBody.Prototype
 
         public void Configure(float limit, float speed)
         {
-            movementLimit = Mathf.Max(1f, limit);
+            movementLimit = Mathf.Clamp(limit, 1f, 100f);
             movementSpeed = Mathf.Max(0.1f, speed);
             if (configured)
             {

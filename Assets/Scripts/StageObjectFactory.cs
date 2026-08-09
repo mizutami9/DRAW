@@ -52,6 +52,7 @@ namespace DrawBody.Prototype
                     return CreateInkScale(data, parent);
                 case StageObjectType.BoxDropper:
                 case StageObjectType.SpikeDropper:
+                case StageObjectType.BombDropper:
                     return CreateBoxDropper(data, parent);
                 case StageObjectType.Spike:
                     return CreateSpike(data, parent);
@@ -83,11 +84,14 @@ namespace DrawBody.Prototype
                 case StageObjectType.FloatingBox:
                 case StageObjectType.RubberBox:
                 case StageObjectType.Bomb:
+                case StageObjectType.PickupFuseBomb:
                 case StageObjectType.Battery:
                 case StageObjectType.Bucket:
                 case StageObjectType.FallingRock:
                 case StageObjectType.TriangleBox:
                     return CreateWeight(data, parent);
+                case StageObjectType.BreakableWall:
+                    return CreateBombBreakableWall(data, parent);
                 case StageObjectType.Checkpoint:
                 case StageObjectType.WarpEntrance:
                 case StageObjectType.WarpExit:
@@ -197,6 +201,7 @@ namespace DrawBody.Prototype
                         break;
                     case StageObjectType.BoxDropper:
                     case StageObjectType.SpikeDropper:
+                    case StageObjectType.BombDropper:
                         size = new Vector2(1.8f, 1.4f);
                         break;
                     case StageObjectType.BeamEmitter:
@@ -219,6 +224,7 @@ namespace DrawBody.Prototype
                     case StageObjectType.FloatingBox:
                     case StageObjectType.RubberBox:
                     case StageObjectType.Bomb:
+                    case StageObjectType.PickupFuseBomb:
                     case StageObjectType.Battery:
                     case StageObjectType.Bucket:
                     case StageObjectType.FallingRock:
@@ -249,6 +255,8 @@ namespace DrawBody.Prototype
                 rotation = 0f,
                 actionStrength = type == StageObjectType.InkScale
                     ? 300f
+                    : type == StageObjectType.BreakableWall
+                        ? 1f
                     : type == StageObjectType.JumpPad || type == StageObjectType.Spring
                         ? 27f
                         : type == StageObjectType.MovingPlatform
@@ -261,10 +269,14 @@ namespace DrawBody.Prototype
                                     || type == StageObjectType.ConveyorLeft
                                     || type == StageObjectType.ConveyorRight
                                         ? 3f
-                                        : type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BeamEmitter ? 2f : 0f,
+                                        : type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BombDropper || type == StageObjectType.BeamEmitter ? 2f : 0f,
                 movementAngle = type == StageObjectType.ConveyorLeft ? 180f : 0f,
+                movementSpeed = type == StageObjectType.MovingPlatform ? 3.2f : 0f,
                 spawnPattern = 0,
-                spawnBoxSize = type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper ? 0.9f : 0f
+                spawnBoxSize = type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BombDropper ? 0.9f : 0f,
+                bombFuseSeconds = type == StageObjectType.Bomb
+                    || type == StageObjectType.PickupFuseBomb
+                    || type == StageObjectType.BombDropper ? 5f : 0f
             };
         }
 
@@ -434,7 +446,10 @@ namespace DrawBody.Prototype
             }
             if (data.type == StageObjectType.MovingPlatform)
             {
-                AddMovingPlatformDirectionIndicator(obj.transform, data);
+                if (parent != null && parent.name == "RuntimeStageEditorRoot")
+                {
+                    AddMovingPlatformDirectionIndicator(obj.transform, data);
+                }
                 Rigidbody2D body = obj.AddComponent<Rigidbody2D>();
                 body.bodyType = RigidbodyType2D.Kinematic;
                 body.gravityScale = 0f;
@@ -557,45 +572,47 @@ namespace DrawBody.Prototype
 
         private static void AddMovingPlatformDirectionIndicator(Transform parent, StageObjectData data)
         {
-            float radians = data.movementAngle * Mathf.Deg2Rad;
+            // movementAngle is stored in stage space, while this guide is a child
+            // of the (possibly rotated) platform. Cancel the platform rotation so
+            // the preview points at the same destination as the runtime movement.
+            float radians = (data.movementAngle - data.rotation) * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
-            float previewLength = Mathf.Clamp(data.actionStrength > 0f ? data.actionStrength : 6f, 1f, 4f);
-            Vector2 start = direction * 0.15f;
+            float previewLength = Mathf.Clamp(data.actionStrength > 0f ? data.actionStrength : 6f, 1f, 100f);
+            Vector2 start = Vector2.zero;
             Vector2 end = direction * previewLength;
             Color guide = new Color(0.1f, 0.48f, 0.95f, 0.5f);
 
-            const int dashCount = 5;
-            for (int i = 0; i < dashCount; i++)
-            {
-                float from = Mathf.Lerp(0f, 0.82f, i / (float)dashCount);
-                float to = Mathf.Min(0.9f, from + 0.1f);
-                AddDoodleLine(
-                    "Movement Guide",
-                    parent,
-                    new[]
-                    {
-                        (Vector3)Vector2.Lerp(start, end, from),
-                        (Vector3)Vector2.Lerp(start, end, to)
-                    },
-                    guide,
-                    0.035f,
-                    20);
-            }
+            AddDoodleLine(
+                "Movement Distance Guide",
+                parent,
+                new[] { (Vector3)start, (Vector3)end },
+                guide,
+                0.045f,
+                20);
 
             Vector2 side = new Vector2(-direction.y, direction.x);
-            Vector2 arrowBase = end - direction * 0.35f;
+            float arrowSize = Mathf.Clamp(0.26f + previewLength * 0.025f, 0.3f, 0.62f);
+            Vector2 arrowBase = end - direction * arrowSize;
             AddDoodleLine(
                 "Movement Arrow",
                 parent,
                 new[]
                 {
-                    (Vector3)(arrowBase + side * 0.22f),
+                    (Vector3)(arrowBase + side * arrowSize * 0.58f),
                     (Vector3)end,
-                    (Vector3)(arrowBase - side * 0.22f)
+                    (Vector3)(arrowBase - side * arrowSize * 0.58f)
                 },
                 new Color(0.06f, 0.34f, 0.9f, 0.78f),
                 0.055f,
                 21);
+
+            AddDoodleCircleAt(
+                parent,
+                end,
+                Mathf.Clamp(0.14f + previewLength * 0.008f, 0.16f, 0.3f),
+                new Color(0.06f, 0.34f, 0.9f, 0.68f),
+                0.04f,
+                20);
         }
 
         private static void AddConveyorBeltVisual(Transform parent, StageObjectData data)
@@ -1234,6 +1251,10 @@ namespace DrawBody.Prototype
             {
                 AddSpikeDropperPreview(obj.transform, data.size);
             }
+            else if (data.type == StageObjectType.BombDropper)
+            {
+                AddBombDropperPreview(obj.transform, data.spawnPattern, data.size);
+            }
             else
             {
                 AddBoxDropperPatternPreview(obj.transform, data.spawnPattern, data.size);
@@ -1244,6 +1265,18 @@ namespace DrawBody.Prototype
             {
                 StageSpikeDropper dropper = obj.AddComponent<StageSpikeDropper>();
                 dropper.Configure(this, parent, data.size, data.actionStrength, data.spawnBoxSize);
+            }
+            else if (data.type == StageObjectType.BombDropper)
+            {
+                StageBombDropper dropper = obj.AddComponent<StageBombDropper>();
+                dropper.Configure(
+                    this,
+                    parent,
+                    data.size,
+                    data.actionStrength,
+                    data.spawnPattern,
+                    data.spawnBoxSize,
+                    data.bombFuseSeconds);
             }
             else
             {
@@ -1290,6 +1323,46 @@ namespace DrawBody.Prototype
                 new Vector3(halfWidth * 0.18f, -halfHeight * 0.24f, -0.06f)
             }, beamColor, 0.065f, 22);
 
+            float gaugeWidth = Mathf.Max(0.48f, data.size.x * 0.62f);
+            float gaugeHeight = Mathf.Clamp(data.size.y * 0.13f, 0.09f, 0.14f);
+            float gaugeY = -halfHeight * 0.68f;
+            GameObject gaugeBackObject = new GameObject("Beam Charge Gauge Back");
+            gaugeBackObject.transform.SetParent(obj.transform, false);
+            gaugeBackObject.transform.localPosition = new Vector3(0f, gaugeY, -0.075f);
+            gaugeBackObject.transform.localScale = new Vector3(gaugeWidth + 0.08f, gaugeHeight + 0.06f, 1f);
+            SpriteRenderer gaugeBack = gaugeBackObject.AddComponent<SpriteRenderer>();
+            gaugeBack.sprite = GetSquareSprite();
+            gaugeBack.color = new Color(0.055f, 0.075f, 0.09f, 0.96f);
+            gaugeBack.sortingOrder = 23;
+
+            GameObject gaugeFillObject = new GameObject("Beam Charge Gauge Fill");
+            gaugeFillObject.transform.SetParent(obj.transform, false);
+            gaugeFillObject.transform.localPosition = new Vector3(-gaugeWidth * 0.175f, gaugeY, -0.08f);
+            gaugeFillObject.transform.localScale = new Vector3(gaugeWidth * 0.65f, gaugeHeight, 1f);
+            SpriteRenderer gaugeFill = gaugeFillObject.AddComponent<SpriteRenderer>();
+            gaugeFill.sprite = GetSquareSprite();
+            gaugeFill.color = new Color(1f, 0.68f, 0.08f, 1f);
+            gaugeFill.sortingOrder = 24;
+
+            for (int tick = 1; tick < 4; tick++)
+            {
+                float tickX = Mathf.Lerp(-gaugeWidth * 0.5f, gaugeWidth * 0.5f, tick / 4f);
+                AddDoodleLine($"Beam Charge Tick {tick}", obj.transform, new[]
+                {
+                    new Vector3(tickX, gaugeY - gaugeHeight * 0.6f, -0.085f),
+                    new Vector3(tickX, gaugeY + gaugeHeight * 0.6f, -0.085f)
+                }, new Color(0.04f, 0.055f, 0.065f, 0.82f), 0.014f, 25);
+            }
+
+            GameObject readyLampObject = new GameObject("Beam Ready Lamp");
+            readyLampObject.transform.SetParent(obj.transform, false);
+            readyLampObject.transform.localPosition = new Vector3(-halfWidth * 0.38f, halfHeight * 0.3f, -0.085f);
+            readyLampObject.transform.localScale = Vector3.one * Mathf.Clamp(data.size.y * 0.13f, 0.1f, 0.16f);
+            SpriteRenderer readyLamp = readyLampObject.AddComponent<SpriteRenderer>();
+            readyLamp.sprite = GetCircleSprite();
+            readyLamp.color = new Color(0.18f, 0.4f, 0.46f, 1f);
+            readyLamp.sortingOrder = 25;
+
             GameObject muzzle = new GameObject("Beam Muzzle");
             muzzle.transform.SetParent(obj.transform, false);
             muzzle.transform.localPosition = new Vector3(halfWidth + 0.08f, 0f, -0.08f);
@@ -1318,7 +1391,14 @@ namespace DrawBody.Prototype
             pulseLine.enabled = false;
 
             StageBeamEmitter emitter = obj.AddComponent<StageBeamEmitter>();
-            emitter.Configure(muzzle.transform, pulseLine, data.actionStrength);
+            emitter.Configure(
+                muzzle.transform,
+                pulseLine,
+                gaugeFillObject.transform,
+                gaugeFill,
+                readyLamp,
+                gaugeWidth,
+                data.actionStrength);
             AddEditorMetadata(obj, data);
             return obj;
         }
@@ -1335,6 +1415,23 @@ namespace DrawBody.Prototype
                 new Vector3(radius, y - radius, -0.06f),
                 new Vector3(-radius, y - radius, -0.06f)
             }, color, 0.045f, 23);
+        }
+
+        private static void AddBombDropperPreview(Transform parent, int pattern, Vector2 size)
+        {
+            float radius = Mathf.Clamp(Mathf.Min(size.x, size.y) * 0.14f, 0.12f, 0.22f);
+            float y = size.y * 0.29f;
+            Color color = pattern == 2
+                ? new Color(0.15f, 0.55f, 0.95f, 1f)
+                : pattern == 1
+                    ? new Color(0.95f, 0.2f, 0.12f, 1f)
+                    : new Color(0.58f, 0.2f, 0.68f, 1f);
+            AddDoodleCircleAt(parent, new Vector2(0f, y), radius, color, 0.045f, 23);
+            AddDoodleLine("Bomb Dropper Fuse", parent, new[]
+            {
+                new Vector3(radius * 0.35f, y + radius * 0.72f, -0.06f),
+                new Vector3(radius * 0.78f, y + radius * 1.35f, -0.06f)
+            }, new Color(0.3f, 0.16f, 0.05f, 1f), 0.04f, 24);
         }
 
         private static void AddBoxDropperPatternPreview(Transform parent, int pattern, Vector2 size)
@@ -1383,18 +1480,22 @@ namespace DrawBody.Prototype
             string objectId,
             Vector2 position,
             float size,
-            Transform parent)
+            Transform parent,
+            float bombFuseSeconds = 5f)
         {
             if (boxType != StageObjectType.WoodBox
                 && boxType != StageObjectType.Ball
                 && boxType != StageObjectType.TriangleBox
-                && boxType != StageObjectType.Spike)
+                && boxType != StageObjectType.Spike
+                && boxType != StageObjectType.Bomb
+                && boxType != StageObjectType.PickupFuseBomb)
             {
                 boxType = StageObjectType.WoodBox;
             }
 
             StageObjectData data = CreateDefaultData(boxType, position);
             data.objectId = string.IsNullOrEmpty(objectId) ? StageObjectId.New() : objectId;
+            data.bombFuseSeconds = Mathf.Clamp(bombFuseSeconds > 0f ? bombFuseSeconds : 5f, 1f, 15f);
             float clampedSize = Mathf.Clamp(size, 0.5f, 2f);
             data.size = boxType == StageObjectType.Spike
                 ? new Vector2(clampedSize, clampedSize * 0.8f)
@@ -1452,7 +1553,22 @@ namespace DrawBody.Prototype
             AddMovableCollider(obj, data.type);
             DrawMovableObject(obj.transform, data.type);
             AddEditorMetadata(obj, data);
+            if (data.type == StageObjectType.Bomb || data.type == StageObjectType.PickupFuseBomb)
+            {
+                StageBomb bomb = obj.AddComponent<StageBomb>();
+                bomb.Configure(
+                    data.type == StageObjectType.PickupFuseBomb,
+                    data.bombFuseSeconds > 0f ? data.bombFuseSeconds : 5f);
+            }
             return obj;
+        }
+
+        private GameObject CreateBombBreakableWall(StageObjectData data, Transform parent)
+        {
+            GameObject wall = CreateSolid(data, parent);
+            StageBombBreakableWall bombWall = wall.AddComponent<StageBombBreakableWall>();
+            bombWall.Configure(Mathf.Clamp(Mathf.RoundToInt(data.actionStrength > 0f ? data.actionStrength : 1f), 1, 5), data.size);
+            return wall;
         }
 
         private static void AddMovableCollider(GameObject obj, StageObjectType type)
@@ -1461,6 +1577,7 @@ namespace DrawBody.Prototype
             {
                 case StageObjectType.Ball:
                 case StageObjectType.Bomb:
+                case StageObjectType.PickupFuseBomb:
                     CircleCollider2D circle = obj.AddComponent<CircleCollider2D>();
                     circle.radius = 0.48f;
                     break;
@@ -1583,6 +1700,12 @@ namespace DrawBody.Prototype
                     AddDoodleCircleAt(parent, new Vector2(0f, -0.05f), 0.4f, Color.black, 0.055f, 18);
                     AddDoodleLine("Bomb Fuse", parent, new[] { new Vector3(0.2f, 0.28f), new Vector3(0.32f, 0.48f), new Vector3(0.45f, 0.42f) }, new Color(0.36f, 0.2f, 0.08f), 0.055f, 20);
                     AddDoodleLine("Bomb Spark", parent, new[] { new Vector3(0.41f, 0.39f), new Vector3(0.49f, 0.49f), new Vector3(0.45f, 0.36f), new Vector3(0.53f, 0.4f) }, new Color(1f, 0.64f, 0.08f), 0.045f, 21);
+                    break;
+                case StageObjectType.PickupFuseBomb:
+                    AddMovableBase(parent, GetCircleSprite(), new Color(0.08f, 0.18f, 0.3f, 0.96f), new Vector2(0.9f, 0.9f));
+                    AddDoodleCircleAt(parent, new Vector2(0f, -0.05f), 0.4f, new Color(0.02f, 0.08f, 0.16f), 0.055f, 18);
+                    AddDoodleLine("Pickup Bomb Fuse", parent, new[] { new Vector3(0.2f, 0.28f), new Vector3(0.32f, 0.48f), new Vector3(0.45f, 0.42f) }, new Color(0.36f, 0.2f, 0.08f), 0.055f, 20);
+                    AddDoodleCircleAt(parent, new Vector2(-0.2f, 0.02f), 0.1f, new Color(0.25f, 0.72f, 1f, 1f), 0.04f, 21);
                     break;
                 case StageObjectType.Battery:
                     AddMovableBase(parent, GetSquareSprite(), new Color(0.54f, 0.78f, 0.25f, 0.88f), new Vector2(0.72f, 0.94f));
@@ -2956,8 +3079,10 @@ namespace DrawBody.Prototype
             marker.size = data.size;
             marker.actionStrength = data.actionStrength;
             marker.movementAngle = data.movementAngle;
+            marker.movementSpeed = data.movementSpeed;
             marker.spawnPattern = data.spawnPattern;
             marker.spawnBoxSize = data.spawnBoxSize;
+            marker.bombFuseSeconds = data.bombFuseSeconds;
             marker.linkTargetId = data.linkTargetId;
             marker.linkAction = data.linkAction;
         }

@@ -53,6 +53,7 @@ namespace DrawBody.Prototype
     public sealed class SerializableBodyDrawing
     {
         public string Species;
+        public int CoordinateVersion;
         public SerializableBodyPartDrawing[] Parts = Array.Empty<SerializableBodyPartDrawing>();
     }
 
@@ -82,6 +83,7 @@ namespace DrawBody.Prototype
         public Vector2 Velocity;
         public float Rotation;
         public bool TurtleShelled;
+        public string SlimeAttachedToPlayerId;
     }
 
     [Serializable]

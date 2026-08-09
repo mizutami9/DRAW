@@ -14,9 +14,13 @@ namespace DrawBody.Prototype
         private const string GimmickKindCollectRequest = "collect_request";
         private const string GimmickKindCollectState = "collect_state";
         private const string GimmickKindChallengeFailed = "challenge_failed";
-        private const float StageBoundaryFallMargin = 0.5f;
+        private const float LowestStageObjectFallMargin = 8f;
         private const float ChallengeStartCountdownDuration = 4f;
         private const float ChallengeTimeUpReturnDelay = 5f;
+        private const float RespawnCollapseDuration = 0.28f;
+        private const float RespawnPauseDuration = 0.34f;
+        private const float RespawnAppearDuration = 0.30f;
+        private const float RespawnGraceDuration = 0.85f;
 
         [SerializeField] private PlayerController2D player;
         [SerializeField] private UIManager uiManager;
@@ -55,6 +59,11 @@ namespace DrawBody.Prototype
         private readonly List<Collider2D> onlineCarryColliders = new List<Collider2D>();
         private readonly Dictionary<PlayerController2D, DrawManager.DrawingState> drawingStates =
             new Dictionary<PlayerController2D, DrawManager.DrawingState>();
+        private readonly Dictionary<PlayerController2D, RespawnAnimationState> respawnAnimations =
+            new Dictionary<PlayerController2D, RespawnAnimationState>();
+        private readonly Dictionary<PlayerController2D, float> respawnGraceUntil =
+            new Dictionary<PlayerController2D, float>();
+        private Material respawnBurstMaterial;
         private Coroutine redrawRespawnRoutine;
         private readonly HashSet<PlayerController2D> localPlayersAtGoal = new HashSet<PlayerController2D>();
         private readonly HashSet<string> onlinePlayerIdsAtGoal = new HashSet<string>();
@@ -101,6 +110,14 @@ namespace DrawBody.Prototype
         private sealed class PlayerGoalState
         {
             public bool Inside;
+        }
+
+        private sealed class RespawnAnimationState
+        {
+            public Coroutine Routine;
+            public Vector3 OriginalScale;
+            public Rigidbody2D Body;
+            public bool BodyWasSimulated;
         }
 
         [System.Serializable]
@@ -167,6 +184,7 @@ namespace DrawBody.Prototype
 
         private void OnDisable()
         {
+            CancelRespawnAnimations();
             if (onlineManager != null && onlineStateSubscribed)
             {
                 onlineManager.StateChanged -= HandleOnlineStateChanged;
@@ -174,6 +192,14 @@ namespace DrawBody.Prototype
             }
 
             onlineStateSubscribed = false;
+        }
+
+        private void OnDestroy()
+        {
+            if (respawnBurstMaterial != null)
+            {
+                Destroy(respawnBurstMaterial);
+            }
         }
 
         private void SubscribeOnlineEvents()
@@ -231,6 +257,7 @@ namespace DrawBody.Prototype
 
         public void EnterTitle()
         {
+            CancelRespawnAnimations();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(false);
             currentStageId = "title";
@@ -991,6 +1018,7 @@ namespace DrawBody.Prototype
 
         public void SelectStage(string stageId)
         {
+            CancelRespawnAnimations();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(true);
             currentStageId = string.IsNullOrEmpty(stageId) ? "1-0" : stageId;
@@ -1048,6 +1076,7 @@ namespace DrawBody.Prototype
 
         public void OpenStageEditor(string stageId)
         {
+            CancelRespawnAnimations();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(true);
             currentStageId = string.IsNullOrEmpty(stageId) ? "1-1" : stageId;
@@ -1164,6 +1193,7 @@ namespace DrawBody.Prototype
 
         public void OpenStageSelect()
         {
+            CancelRespawnAnimations();
             GameBgm.PlayTitle();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(false);
@@ -2021,11 +2051,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            primaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
-            secondaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
-            GameSfx.PlayAt(SfxId.PlayerHit, targetPlayer.transform.position);
-            GameSfx.PlayAt(SfxId.PlayerDeath, targetPlayer.transform.position);
-            RespawnPlayer(targetPlayer, GetRespawnOffset(targetPlayer), targetPlayer == player);
+            BeginRespawnAnimation(targetPlayer, true);
         }
 
         private void RespawnFallenPlayers()
@@ -2047,7 +2073,7 @@ namespace DrawBody.Prototype
             float resetY = fallResetY;
             if (stageLoader != null && stageLoader.TryGetStageFallBoundaryY(out float stageBoundaryY))
             {
-                resetY = stageBoundaryY - StageBoundaryFallMargin;
+                resetY = stageBoundaryY - LowestStageObjectFallMargin;
             }
 
             if (targetPlayer.transform.position.y >= resetY)
@@ -2055,10 +2081,239 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            primaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
-            secondaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
+            BeginRespawnAnimation(targetPlayer, false);
+        }
+
+        private void BeginRespawnAnimation(PlayerController2D targetPlayer, bool playHitSound)
+        {
+            if (targetPlayer == null || respawnAnimations.ContainsKey(targetPlayer))
+            {
+                return;
+            }
+
+            if (respawnGraceUntil.TryGetValue(targetPlayer, out float protectedUntil)
+                && Time.unscaledTime < protectedUntil)
+            {
+                return;
+            }
+
+            targetPlayer.GetComponent<PlayerCarryController>()?.ForceDrop();
+            targetPlayer.SetControlsEnabled(false);
+            targetPlayer.ResetMotion();
+            if (playHitSound)
+            {
+                GameSfx.PlayAt(SfxId.PlayerHit, targetPlayer.transform.position);
+            }
+
+            Rigidbody2D body = targetPlayer.GetComponent<Rigidbody2D>();
+            RespawnAnimationState state = new RespawnAnimationState
+            {
+                OriginalScale = targetPlayer.transform.localScale,
+                Body = body,
+                BodyWasSimulated = body == null || body.simulated
+            };
+            respawnAnimations[targetPlayer] = state;
+            state.Routine = StartCoroutine(PlayRespawnAnimation(targetPlayer, state));
+        }
+
+        private IEnumerator PlayRespawnAnimation(PlayerController2D targetPlayer, RespawnAnimationState state)
+        {
+            Color effectColor = GetPlayerEffectColor(targetPlayer);
+            CreateRespawnBurst(targetPlayer.transform.position, effectColor);
             GameSfx.PlayAt(SfxId.PlayerDeath, targetPlayer.transform.position);
-            RespawnPlayer(targetPlayer, GetRespawnOffset(targetPlayer), targetPlayer == player);
+
+            if (state.Body != null)
+            {
+                state.Body.simulated = false;
+            }
+
+            float elapsed = 0f;
+            while (elapsed < RespawnCollapseDuration && targetPlayer != null)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float progress = Mathf.Clamp01(elapsed / RespawnCollapseDuration);
+                float squash = Mathf.Sin(progress * Mathf.PI) * 0.18f;
+                float remaining = 1f - progress;
+                targetPlayer.transform.localScale = Vector3.Scale(
+                    state.OriginalScale,
+                    new Vector3((remaining + squash), Mathf.Max(0.03f, remaining - squash * 0.45f), 1f));
+                yield return null;
+            }
+
+            if (targetPlayer == null)
+            {
+                respawnAnimations.Remove(targetPlayer);
+                yield break;
+            }
+
+            targetPlayer.transform.localScale = Vector3.Scale(state.OriginalScale, new Vector3(0.03f, 0.03f, 1f));
+            yield return new WaitForSecondsRealtime(RespawnPauseDuration);
+
+            if (targetPlayer == null || !stageStarted || cleared)
+            {
+                RestoreRespawnAnimationState(targetPlayer, state);
+                respawnAnimations.Remove(targetPlayer);
+                yield break;
+            }
+
+            if (state.Body != null)
+            {
+                state.Body.simulated = state.BodyWasSimulated;
+            }
+
+            RespawnPlayer(targetPlayer, GetRespawnOffset(targetPlayer), false);
+            CreateRespawnBurst(targetPlayer.transform.position, effectColor);
+
+            elapsed = 0f;
+            while (elapsed < RespawnAppearDuration && targetPlayer != null)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float progress = Mathf.Clamp01(elapsed / RespawnAppearDuration);
+                float bounce = progress < 0.72f
+                    ? Mathf.Lerp(0.18f, 1.12f, progress / 0.72f)
+                    : Mathf.Lerp(1.12f, 1f, (progress - 0.72f) / 0.28f);
+                targetPlayer.transform.localScale = Vector3.Scale(state.OriginalScale, new Vector3(bounce, bounce, 1f));
+                yield return null;
+            }
+
+            if (targetPlayer != null)
+            {
+                targetPlayer.transform.localScale = state.OriginalScale;
+                targetPlayer.ResetMotion();
+                targetPlayer.SetControlsEnabled(
+                    targetPlayer == player && stageStarted && !drawing && !cleared && !stageEditing);
+                respawnGraceUntil[targetPlayer] = Time.unscaledTime + RespawnGraceDuration;
+            }
+
+            respawnAnimations.Remove(targetPlayer);
+        }
+
+        private void CancelRespawnAnimations()
+        {
+            if (respawnAnimations.Count == 0)
+            {
+                respawnGraceUntil.Clear();
+                return;
+            }
+
+            List<KeyValuePair<PlayerController2D, RespawnAnimationState>> active =
+                new List<KeyValuePair<PlayerController2D, RespawnAnimationState>>(respawnAnimations);
+            respawnAnimations.Clear();
+            respawnGraceUntil.Clear();
+            for (int i = 0; i < active.Count; i++)
+            {
+                RespawnAnimationState state = active[i].Value;
+                if (state.Routine != null)
+                {
+                    StopCoroutine(state.Routine);
+                }
+                RestoreRespawnAnimationState(active[i].Key, state);
+            }
+        }
+
+        private static void RestoreRespawnAnimationState(
+            PlayerController2D targetPlayer,
+            RespawnAnimationState state)
+        {
+            if (targetPlayer != null)
+            {
+                targetPlayer.transform.localScale = state.OriginalScale;
+            }
+            if (state.Body != null)
+            {
+                state.Body.simulated = state.BodyWasSimulated;
+            }
+        }
+
+        private Color GetPlayerEffectColor(PlayerController2D targetPlayer)
+        {
+            BodyBuilder builder = targetPlayer != null ? targetPlayer.GetComponent<BodyBuilder>() : null;
+            return builder != null ? builder.PlayerColor : new Color(0.2f, 0.55f, 1f, 1f);
+        }
+
+        private void CreateRespawnBurst(Vector3 position, Color color)
+        {
+            GameObject burst = new GameObject("Respawn Doodle Burst");
+            burst.transform.position = position;
+            const int rayCount = 10;
+            LineRenderer[] lines = new LineRenderer[rayCount + 1];
+
+            for (int i = 0; i < rayCount; i++)
+            {
+                float angle = i * Mathf.PI * 2f / rayCount;
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                LineRenderer line = CreateRespawnEffectLine(burst.transform, "Ray " + i, color, false);
+                line.positionCount = 3;
+                line.SetPosition(0, direction * 0.20f);
+                line.SetPosition(1, direction * 0.43f + new Vector2(-direction.y, direction.x) * 0.035f);
+                line.SetPosition(2, direction * 0.66f);
+                lines[i] = line;
+            }
+
+            LineRenderer ring = CreateRespawnEffectLine(burst.transform, "Ring", color, true);
+            ring.positionCount = 25;
+            for (int i = 0; i < ring.positionCount; i++)
+            {
+                float angle = i * Mathf.PI * 2f / (ring.positionCount - 1);
+                float radius = 0.24f + Mathf.Sin(i * 2.7f) * 0.018f;
+                ring.SetPosition(i, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius);
+            }
+            lines[rayCount] = ring;
+            StartCoroutine(AnimateRespawnBurst(burst, lines, color));
+        }
+
+        private LineRenderer CreateRespawnEffectLine(Transform parent, string lineName, Color color, bool loop)
+        {
+            GameObject lineObject = new GameObject(lineName);
+            lineObject.transform.SetParent(parent, false);
+            LineRenderer line = lineObject.AddComponent<LineRenderer>();
+            line.useWorldSpace = false;
+            line.loop = loop;
+            line.widthMultiplier = 0.055f;
+            line.numCapVertices = 2;
+            line.numCornerVertices = 2;
+            line.startColor = color;
+            line.endColor = color;
+            line.sortingOrder = 220;
+            if (respawnBurstMaterial == null)
+            {
+                Shader shader = Shader.Find("Sprites/Default");
+                if (shader != null)
+                {
+                    respawnBurstMaterial = new Material(shader) { name = "Respawn Doodle Material" };
+                }
+            }
+            line.sharedMaterial = respawnBurstMaterial;
+            return line;
+        }
+
+        private IEnumerator AnimateRespawnBurst(GameObject burst, LineRenderer[] lines, Color color)
+        {
+            const float duration = 0.48f;
+            float elapsed = 0f;
+            while (elapsed < duration && burst != null)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float progress = Mathf.Clamp01(elapsed / duration);
+                float eased = 1f - Mathf.Pow(1f - progress, 3f);
+                burst.transform.localScale = Vector3.one * Mathf.Lerp(0.45f, 1.45f, eased);
+                Color faded = color;
+                faded.a *= 1f - progress;
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i] != null)
+                    {
+                        lines[i].startColor = faded;
+                        lines[i].endColor = faded;
+                    }
+                }
+                yield return null;
+            }
+
+            if (burst != null)
+            {
+                Destroy(burst);
+            }
         }
 
         private void RespawnPlayer(PlayerController2D targetPlayer, Vector3 offset, bool enableControls)

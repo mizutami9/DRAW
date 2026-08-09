@@ -9,8 +9,10 @@ namespace DrawBody.Prototype
         public Vector2 size = Vector2.one;
         public float actionStrength;
         public float movementAngle;
+        public float movementSpeed;
         public int spawnPattern;
         public float spawnBoxSize;
+        public float bombFuseSeconds;
         public string linkTargetId;
         public string linkAction;
     }

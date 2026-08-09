@@ -190,8 +190,10 @@ namespace DrawBody.Prototype
                 marker.size = data.size;
                 marker.actionStrength = data.actionStrength;
                 marker.movementAngle = data.movementAngle;
+                marker.movementSpeed = data.movementSpeed;
                 marker.spawnPattern = data.spawnPattern;
                 marker.spawnBoxSize = data.spawnBoxSize;
+                marker.bombFuseSeconds = data.bombFuseSeconds;
                 marker.linkTargetId = data.linkTargetId;
                 marker.linkAction = data.linkAction;
             }
@@ -248,8 +250,10 @@ namespace DrawBody.Prototype
                 keepSeparate = data.keepSeparate,
                 actionStrength = data.actionStrength,
                 movementAngle = data.movementAngle,
+                movementSpeed = data.movementSpeed,
                 spawnPattern = data.spawnPattern,
                 spawnBoxSize = data.spawnBoxSize,
+                bombFuseSeconds = data.bombFuseSeconds,
                 linkTargetId = data.linkTargetId,
                 linkAction = data.linkAction
             };

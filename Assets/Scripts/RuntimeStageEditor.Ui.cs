@@ -198,6 +198,43 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void BeginMovementSpeedEdit()
+        {
+            if (SelectedSupportsSecondarySlider)
+            {
+                PushUndo();
+            }
+        }
+
+        public void SetSelectedMovementSpeed(float value)
+        {
+            if (!SelectedSupportsSecondarySlider)
+            {
+                return;
+            }
+
+            if (SelectedSupportsBombFuse)
+            {
+                selectedData.bombFuseSeconds = Mathf.Clamp(
+                    Mathf.Round(value * 10f) / 10f,
+                    1f,
+                    15f);
+                RebuildSelectedObject();
+                SetStatus(LocalizationManager.Format(
+                    "stage_editor_status_bomb_fuse_seconds",
+                    selectedData.bombFuseSeconds));
+                RefreshText();
+                return;
+            }
+
+            selectedData.movementSpeed = Mathf.Clamp(Mathf.Round(value * 10f) / 10f, 0.5f, 10f);
+            RebuildSelectedObject();
+            SetStatus(LocalizationManager.Format(
+                "stage_editor_status_move_speed",
+                selectedData.movementSpeed));
+            RefreshText();
+        }
+
         public void SetSelectedActionStrength(float value)
         {
             if (!SelectedSupportsActionStrength)
@@ -207,9 +244,11 @@ namespace DrawBody.Prototype
 
             float minimum = SelectedActionStrengthMinimum;
             float maximum = SelectedActionStrengthMaximum;
-            float rounded = SelectedIsCrumblingFloor || SelectedIsConveyor || SelectedIsDropper
-                ? Mathf.Round(value * 10f) / 10f
-                : Mathf.Round(value * 2f) / 2f;
+            float rounded = SelectedIsBombWall
+                ? Mathf.Round(value)
+                : SelectedIsCrumblingFloor || SelectedIsConveyor || SelectedIsDropper
+                    ? Mathf.Round(value * 10f) / 10f
+                    : Mathf.Round(value * 2f) / 2f;
             selectedData.actionStrength = Mathf.Clamp(rounded, minimum, maximum);
             RebuildSelectedObject();
             SetStatus(LocalizationManager.Format(
@@ -217,9 +256,11 @@ namespace DrawBody.Prototype
                     ? "stage_editor_status_move_distance"
                     : selectedData.type == StageObjectType.FallingFloor
                         ? "stage_editor_status_crumble_delay"
+                        : selectedData.type == StageObjectType.BreakableWall
+                            ? "stage_editor_status_bomb_wall_hits"
                         : IsConveyorType(selectedData.type)
                             ? "stage_editor_status_conveyor_speed"
-                            : selectedData.type == StageObjectType.BoxDropper || selectedData.type == StageObjectType.SpikeDropper
+                            : selectedData.type == StageObjectType.BoxDropper || selectedData.type == StageObjectType.SpikeDropper || selectedData.type == StageObjectType.BombDropper
                                 ? "stage_editor_status_drop_interval"
                                 : "stage_editor_status_action_strength",
                 selectedData.actionStrength));
@@ -245,16 +286,17 @@ namespace DrawBody.Prototype
 
         public void CycleSelectedDropperPattern()
         {
-            if (!SelectedIsBoxDropper)
+            if (!SelectedUsesDropperPattern)
             {
                 return;
             }
 
             PushUndo();
-            selectedData.spawnPattern = (Mathf.Clamp(selectedData.spawnPattern, 0, 3) + 1) % 4;
+            int patternCount = SelectedIsBombDropper ? 3 : 4;
+            selectedData.spawnPattern = (Mathf.Clamp(selectedData.spawnPattern, 0, patternCount - 1) + 1) % patternCount;
             RebuildSelectedObject();
             SetStatus(LocalizationManager.Format(
-                "stage_editor_status_box_pattern",
+                SelectedIsBombDropper ? "stage_editor_status_bomb_pattern" : "stage_editor_status_box_pattern",
                 SelectedDropperPatternLabel));
             RefreshText();
         }
@@ -277,7 +319,9 @@ namespace DrawBody.Prototype
             selectedData.spawnBoxSize = Mathf.Clamp(Mathf.Round(value * 10f) / 10f, 0.5f, 2f);
             RebuildSelectedObject();
             SetStatus(LocalizationManager.Format(
-                SelectedIsSpikeDropper ? "stage_editor_status_spike_size" : "stage_editor_status_box_size",
+                SelectedIsSpikeDropper
+                    ? "stage_editor_status_spike_size"
+                    : SelectedIsBombDropper ? "stage_editor_status_bomb_size" : "stage_editor_status_box_size",
                 selectedData.spawnBoxSize));
             RefreshText();
         }

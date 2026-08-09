@@ -291,6 +291,12 @@ namespace DrawBody.EditorTools
         {
             SerializedObject serializedObject = new SerializedObject(target);
             SerializedProperty property = serializedObject.FindProperty(propertyName);
+            if (property == null)
+            {
+                Debug.LogWarning($"Serialized float property was not found: {target.GetType().Name}.{propertyName}", target);
+                return;
+            }
+
             property.floatValue = value;
             serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }

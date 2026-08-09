@@ -34,6 +34,7 @@ namespace DrawBody.Prototype
         private DrawManager.Species builtSpecies = DrawManager.Species.Human;
         private int facingDirection = 1;
         private bool turtleShellPose;
+        private float turtleShellPoseBlend;
         private bool carryingPose;
         private int carryingDirection = 1;
         private Vector3 carryingHandWorldPosition;
@@ -81,7 +82,9 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
+            RestoreTurtleHeadBeforeAnimation();
             AnimateGeneratedBody();
+            UpdateTurtleHeadRetraction();
         }
 
         public void BuildFromDrawing(DrawManager drawManager)
@@ -94,6 +97,7 @@ namespace DrawBody.Prototype
             ClearGeneratedBody();
             builtSpecies = drawManager.CurrentSpecies;
             turtleShellPose = false;
+            turtleShellPoseBlend = 0f;
             bool hasTorsoBounds = TryGetPartLocalBounds(drawManager.GetBodyPoints(DrawManager.BodyPart.Torso), out Bounds torsoBounds);
 
             foreach (DrawManager.BodyPart part in drawManager.GetCurrentParts())
@@ -329,6 +333,7 @@ namespace DrawBody.Prototype
         }
 
         public Color PlayerColor => playerColor;
+        public DrawManager.Species BuiltSpecies => builtSpecies;
 
         public void SetPlayerColor(Color color)
         {
@@ -355,14 +360,78 @@ namespace DrawBody.Prototype
 
                 if (segment.Line != null)
                 {
-                    segment.Line.enabled = !turtleShellPose;
+                    segment.Line.enabled = true;
                 }
                 if (segment.Collider != null)
                 {
-                    segment.Collider.enabled = !turtleShellPose;
+                    // The head becomes protected as soon as SPACE is pressed.
+                    // It is enabled again after the release animation extends it.
+                    segment.Collider.enabled = !turtleShellPose && turtleShellPoseBlend <= 0.12f;
                 }
             }
             ApplyFacing();
+        }
+
+        private void RestoreTurtleHeadBeforeAnimation()
+        {
+            if (builtSpecies != DrawManager.Species.Turtle
+                || (!turtleShellPose && turtleShellPoseBlend <= 0f))
+            {
+                return;
+            }
+
+            for (int i = 0; i < generatedSegments.Count; i++)
+            {
+                GeneratedSegment segment = generatedSegments[i];
+                if (segment.Part != DrawManager.BodyPart.Head || segment.Transform == null)
+                {
+                    continue;
+                }
+
+                segment.Transform.localPosition = segment.BaseLocalPosition;
+                segment.Transform.localRotation = segment.BaseLocalRotation;
+                segment.Transform.localScale = Vector3.one;
+                if (segment.Line != null)
+                {
+                    segment.Line.enabled = true;
+                    segment.Line.SetPosition(0, new Vector3(-segment.BaseLength * 0.5f, 0f, 0f));
+                    segment.Line.SetPosition(1, new Vector3(segment.BaseLength * 0.5f, 0f, 0f));
+                }
+                if (segment.Collider != null)
+                {
+                    segment.Collider.size = new Vector2(segment.BaseLength + colliderThickness, colliderThickness);
+                }
+            }
+        }
+
+        private void UpdateTurtleHeadRetraction()
+        {
+            if (builtSpecies != DrawManager.Species.Turtle)
+            {
+                turtleShellPoseBlend = 0f;
+                return;
+            }
+
+            float target = turtleShellPose ? 1f : 0f;
+            turtleShellPoseBlend = Mathf.MoveTowards(turtleShellPoseBlend, target, Time.deltaTime * 8f);
+            float eased = Mathf.SmoothStep(0f, 1f, turtleShellPoseBlend);
+            for (int i = 0; i < generatedSegments.Count; i++)
+            {
+                GeneratedSegment segment = generatedSegments[i];
+                if (segment.Part != DrawManager.BodyPart.Head || segment.Transform == null)
+                {
+                    continue;
+                }
+
+                Vector3 shellOpening = new Vector3(segment.PivotLocal.x, segment.PivotLocal.y, segment.Transform.localPosition.z);
+                segment.Transform.localPosition = Vector3.Lerp(segment.Transform.localPosition, shellOpening, eased);
+                float visibleScale = Mathf.Lerp(1f, 0.08f, eased);
+                segment.Transform.localScale = Vector3.one * visibleScale;
+                if (segment.Collider != null)
+                {
+                    segment.Collider.enabled = !turtleShellPose && turtleShellPoseBlend <= 0.12f;
+                }
+            }
         }
 
         public Vector3 GetCarryAnchorWorld(int direction)

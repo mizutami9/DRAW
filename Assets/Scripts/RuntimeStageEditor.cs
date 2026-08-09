@@ -144,18 +144,37 @@ namespace DrawBody.Prototype
             : Mathf.Max(1, StagePlacedCollectionTargetCount);
         public bool SelectedSupportsActionStrength => selectedData != null && SupportsActionStrength(selectedData.type);
         public bool SelectedIsMovingPlatform => selectedData != null && selectedData.type == StageObjectType.MovingPlatform;
+        public bool SelectedSupportsBombFuse => selectedData != null &&
+            (selectedData.type == StageObjectType.Bomb ||
+             selectedData.type == StageObjectType.PickupFuseBomb ||
+             selectedData.type == StageObjectType.BombDropper);
+        public bool SelectedSupportsSecondarySlider => SelectedIsMovingPlatform || SelectedSupportsBombFuse;
+        public float SelectedMovementSpeed => SelectedSupportsBombFuse
+            ? Mathf.Clamp(selectedData.bombFuseSeconds > 0f ? selectedData.bombFuseSeconds : 5f, 1f, 15f)
+            : selectedData != null && selectedData.movementSpeed > 0f
+                ? Mathf.Clamp(selectedData.movementSpeed, 0.5f, 10f)
+                : 3.2f;
+        public float SelectedSecondarySliderMinimum => SelectedSupportsBombFuse ? 1f : 0.5f;
+        public float SelectedSecondarySliderMaximum => SelectedSupportsBombFuse ? 15f : 10f;
+        public string SelectedSecondarySliderLabel => LocalizationManager.T(
+            SelectedSupportsBombFuse ? "stage_editor_bomb_fuse_seconds" : "stage_editor_move_speed");
         public bool SelectedIsElevator => selectedData != null && selectedData.type == StageObjectType.Elevator;
         public bool SelectedIsCrumblingFloor => selectedData != null && selectedData.type == StageObjectType.FallingFloor;
+        public bool SelectedIsBombWall => selectedData != null && selectedData.type == StageObjectType.BreakableWall;
         public bool SelectedIsConveyor => selectedData != null && IsConveyorType(selectedData.type);
         public bool SelectedIsBoxDropper => selectedData != null && selectedData.type == StageObjectType.BoxDropper;
         public bool SelectedIsSpikeDropper => selectedData != null && selectedData.type == StageObjectType.SpikeDropper;
-        public bool SelectedIsDropper => SelectedIsBoxDropper || SelectedIsSpikeDropper;
+        public bool SelectedIsBombDropper => selectedData != null && selectedData.type == StageObjectType.BombDropper;
+        public bool SelectedUsesDropperPattern => SelectedIsBoxDropper || SelectedIsBombDropper;
+        public bool SelectedIsDropper => SelectedIsBoxDropper || SelectedIsSpikeDropper || SelectedIsBombDropper;
         public bool SelectedIsBeamEmitter => selectedData != null && selectedData.type == StageObjectType.BeamEmitter;
         public string SelectedActionStrengthLabel => LocalizationManager.T(
             SelectedIsMovingPlatform || SelectedIsElevator
                 ? "stage_editor_move_distance"
                 : SelectedIsCrumblingFloor
                     ? "stage_editor_crumble_delay"
+                    : SelectedIsBombWall
+                        ? "stage_editor_bomb_wall_hits"
                     : SelectedIsConveyor
                         ? "stage_editor_conveyor_speed"
                         : SelectedIsDropper
@@ -165,14 +184,18 @@ namespace DrawBody.Prototype
                             : "stage_editor_action_strength");
         public float SelectedActionStrengthMinimum => SelectedIsCrumblingFloor
             ? 0.1f
+            : SelectedIsBombWall
+                ? 1f
             : SelectedIsConveyor || SelectedIsDropper || SelectedIsBeamEmitter
                 ? 0.5f
                 : SelectedIsMovingPlatform || SelectedIsElevator ? 1f : 5f;
         public float SelectedActionStrengthMaximum => SelectedIsCrumblingFloor
             ? 5f
+            : SelectedIsBombWall
+                ? 5f
             : SelectedIsConveyor || SelectedIsDropper || SelectedIsBeamEmitter
                 ? 10f
-                : SelectedIsMovingPlatform || SelectedIsElevator ? 30f : 60f;
+                : SelectedIsMovingPlatform ? 100f : SelectedIsElevator ? 30f : 60f;
         public bool SelectedSupportsWeightThreshold => selectedData != null && selectedData.type == StageObjectType.InkScale;
         public float SelectedActionStrength => selectedData != null && selectedData.actionStrength > 0f
             ? selectedData.actionStrength
@@ -180,6 +203,8 @@ namespace DrawBody.Prototype
                 ? SelectedIsElevator ? 8f : 6f
                 : SelectedIsCrumblingFloor
                     ? 0.4f
+                    : SelectedIsBombWall
+                        ? 1f
                     : SelectedIsConveyor
                         ? 3f
                         : SelectedIsDropper || SelectedIsBeamEmitter ? 2f : 27f;
@@ -188,7 +213,13 @@ namespace DrawBody.Prototype
                 ? "stage_editor_conveyor_left"
                 : "stage_editor_conveyor_right");
         public string SelectedDropperPatternLabel => LocalizationManager.T(
-            selectedData != null && selectedData.spawnPattern == 1
+            SelectedIsBombDropper
+                ? selectedData != null && selectedData.spawnPattern == 1
+                    ? "stage_editor_bomb_pattern_spawn"
+                    : selectedData != null && selectedData.spawnPattern == 2
+                        ? "stage_editor_bomb_pattern_pickup"
+                        : "stage_editor_bomb_pattern_both"
+                : selectedData != null && selectedData.spawnPattern == 1
                 ? "stage_editor_box_pattern_square"
                 : selectedData != null && selectedData.spawnPattern == 2
                     ? "stage_editor_box_pattern_round"
@@ -199,7 +230,9 @@ namespace DrawBody.Prototype
             ? selectedData.spawnBoxSize
             : 0.9f;
         public string SelectedDropperSizeLabel => LocalizationManager.T(
-            SelectedIsSpikeDropper ? "stage_editor_spike_size" : "stage_editor_box_size");
+            SelectedIsSpikeDropper
+                ? "stage_editor_spike_size"
+                : SelectedIsBombDropper ? "stage_editor_bomb_size" : "stage_editor_box_size");
         public float SelectedWeightThreshold => selectedData != null && selectedData.actionStrength > 0f
             ? selectedData.actionStrength
             : 300f;
@@ -211,9 +244,11 @@ namespace DrawBody.Prototype
                 || type == StageObjectType.MovingPlatform
                 || type == StageObjectType.Elevator
                 || type == StageObjectType.FallingFloor
+                || type == StageObjectType.BreakableWall
                 || IsConveyorType(type)
                 || type == StageObjectType.BoxDropper
                 || type == StageObjectType.SpikeDropper
+                || type == StageObjectType.BombDropper
                 || type == StageObjectType.BeamEmitter;
         }
 

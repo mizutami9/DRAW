@@ -161,6 +161,9 @@ namespace DrawBody.Prototype
             SetActive(transform, "RuntimeEditActionStrengthLabel", showActionStrength);
             SetActive(transform, "RuntimeEditActionStrengthSlider", showActionStrength);
             SetActive(transform, "RuntimeEditActionStrengthValue", showActionStrength);
+            SetActive(transform, "RuntimeEditMovementSpeedLabel", !multipleSelection && editor.SelectedSupportsSecondarySlider);
+            SetActive(transform, "RuntimeEditMovementSpeedSlider", !multipleSelection && editor.SelectedSupportsSecondarySlider);
+            SetActive(transform, "RuntimeEditMovementSpeedValue", !multipleSelection && editor.SelectedSupportsSecondarySlider);
             SetActive(transform, "RuntimeEditWeightThresholdLabel", showWeightThreshold);
             SetActive(transform, "RuntimeEditWeightThresholdInput", showWeightThreshold);
             SetActive(transform, "RuntimeEditWeightThresholdVisibleValue", showWeightThreshold);
@@ -168,7 +171,7 @@ namespace DrawBody.Prototype
             SetActive(transform, "RuntimeEditDropperBoxSizeSlider", showBoxSize);
             SetActive(transform, "RuntimeEditDropperBoxSizeValue", showBoxSize);
             SetActive(transform, "RuntimeEditConveyorDirectionButton", !multipleSelection && editor.SelectedIsConveyor);
-            SetActive(transform, "RuntimeEditBoxPatternButton", !multipleSelection && editor.SelectedIsBoxDropper);
+            SetActive(transform, "RuntimeEditBoxPatternButton", !multipleSelection && editor.SelectedUsesDropperPattern);
 
             RectTransform conveyorDirection = FindRect(transform, "RuntimeEditConveyorDirectionButton");
             if (conveyorDirection != null)
@@ -216,6 +219,23 @@ namespace DrawBody.Prototype
                     actionSlider.maxValue = editor.SelectedActionStrengthMaximum;
                     actionSlider.SetValueWithoutNotify(editor.SelectedActionStrength);
                 }
+            }
+            Text movementSpeedLabel = FindText(transform, "RuntimeEditMovementSpeedLabel");
+            if (movementSpeedLabel != null)
+            {
+                movementSpeedLabel.text = editor.SelectedSecondarySliderLabel;
+            }
+            Text movementSpeedValue = FindText(transform, "RuntimeEditMovementSpeedValue");
+            if (movementSpeedValue != null)
+            {
+                movementSpeedValue.text = editor.SelectedMovementSpeed.ToString("0.0");
+            }
+            Slider movementSpeedSlider = FindRect(transform, "RuntimeEditMovementSpeedSlider")?.GetComponent<Slider>();
+            if (movementSpeedSlider != null)
+            {
+                movementSpeedSlider.minValue = editor.SelectedSecondarySliderMinimum;
+                movementSpeedSlider.maxValue = editor.SelectedSecondarySliderMaximum;
+                movementSpeedSlider.SetValueWithoutNotify(editor.SelectedMovementSpeed);
             }
             Text boxSizeValue = FindText(transform, "RuntimeEditDropperBoxSizeValue");
             if (boxSizeValue != null)
@@ -474,6 +494,14 @@ namespace DrawBody.Prototype
             StyleButton(conveyorDirection, new Color(0.68f, 0.88f, 1f, 1f), 12);
             PlaceTopLeft(boxPattern, new Vector2(190f, -376f), new Vector2(122f, 28f));
             StyleButton(boxPattern, new Color(1f, 0.86f, 0.46f, 1f), 12);
+
+            Text movementSpeedLabel = EnsureText(tools, "RuntimeEditMovementSpeedLabel", editor != null ? editor.SelectedSecondarySliderLabel : LocalizationManager.T("stage_editor_move_speed"), 12, TextAnchor.MiddleLeft);
+            PlaceTopLeft(movementSpeedLabel.rectTransform, new Vector2(158f, -376f), new Vector2(66f, 28f));
+            movementSpeedLabel.fontStyle = FontStyle.Bold;
+            RectTransform movementSpeedSlider = EnsureMovementSpeedSlider(tools, editor);
+            PlaceTopLeft(movementSpeedSlider, new Vector2(222f, -379f), new Vector2(54f, 22f));
+            Text movementSpeedValue = EnsureText(tools, "RuntimeEditMovementSpeedValue", editor != null ? editor.SelectedMovementSpeed.ToString("0.0") : "3.2", 13, TextAnchor.MiddleRight);
+            PlaceTopLeft(movementSpeedValue.rectTransform, new Vector2(278f, -376f), new Vector2(34f, 28f));
 
             Text selected = FindText(tools, "RuntimeStageEditorSelected");
             if (selected != null)
@@ -1113,6 +1141,75 @@ namespace DrawBody.Prototype
             }
 
             slider?.SetValueWithoutNotify(editor != null ? editor.SelectedActionStrength : 27f);
+            return rect;
+        }
+
+        private static RectTransform EnsureMovementSpeedSlider(Transform parent, RuntimeStageEditor editor)
+        {
+            const string name = "RuntimeEditMovementSpeedSlider";
+            RectTransform rect = FindRect(parent, name);
+            Slider slider;
+            if (rect == null)
+            {
+                GameObject root = new GameObject(name, typeof(RectTransform), typeof(Slider));
+                root.transform.SetParent(parent, false);
+                rect = root.GetComponent<RectTransform>();
+                slider = root.GetComponent<Slider>();
+
+                GameObject background = new GameObject("Background", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                background.transform.SetParent(root.transform, false);
+                RectTransform backgroundRect = background.GetComponent<RectTransform>();
+                Stretch(backgroundRect, new Vector2(0f, 6f));
+                background.GetComponent<Image>().color = new Color(0.78f, 0.84f, 0.86f, 1f);
+
+                GameObject fillArea = new GameObject("Fill Area", typeof(RectTransform));
+                fillArea.transform.SetParent(root.transform, false);
+                RectTransform fillAreaRect = fillArea.GetComponent<RectTransform>();
+                Stretch(fillAreaRect, new Vector2(5f, 6f));
+                GameObject fill = new GameObject("Fill", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                fill.transform.SetParent(fillArea.transform, false);
+                RectTransform fillRect = fill.GetComponent<RectTransform>();
+                Stretch(fillRect, Vector2.zero);
+                fill.GetComponent<Image>().color = new Color(0.12f, 0.58f, 0.9f, 1f);
+
+                GameObject handleArea = new GameObject("Handle Slide Area", typeof(RectTransform));
+                handleArea.transform.SetParent(root.transform, false);
+                RectTransform handleAreaRect = handleArea.GetComponent<RectTransform>();
+                Stretch(handleAreaRect, new Vector2(6f, 1f));
+                GameObject handle = new GameObject("Handle", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                handle.transform.SetParent(handleArea.transform, false);
+                RectTransform handleRect = handle.GetComponent<RectTransform>();
+                handleRect.sizeDelta = new Vector2(14f, 24f);
+                Image handleImage = handle.GetComponent<Image>();
+                handleImage.color = new Color(0.38f, 0.8f, 1f, 1f);
+                Outline handleOutline = handle.AddComponent<Outline>();
+                handleOutline.effectColor = new Color(Ink.r, Ink.g, Ink.b, 0.72f);
+                handleOutline.effectDistance = new Vector2(1.2f, -1.2f);
+
+                slider.fillRect = fillRect;
+                slider.handleRect = handleRect;
+                slider.targetGraphic = handleImage;
+                slider.direction = Slider.Direction.LeftToRight;
+                slider.minValue = 0.5f;
+                slider.maxValue = 10f;
+                slider.wholeNumbers = false;
+
+                StageEditorMovementSpeedSlider command = root.AddComponent<StageEditorMovementSpeedSlider>();
+                command.Configure(editor, slider);
+            }
+            else
+            {
+                slider = rect.GetComponent<Slider>();
+                StageEditorMovementSpeedSlider command = rect.GetComponent<StageEditorMovementSpeedSlider>();
+                command?.Configure(editor, slider);
+            }
+
+            if (slider != null)
+            {
+                slider.minValue = editor != null ? editor.SelectedSecondarySliderMinimum : 0.5f;
+                slider.maxValue = editor != null ? editor.SelectedSecondarySliderMaximum : 10f;
+                slider.SetValueWithoutNotify(editor != null ? editor.SelectedMovementSpeed : 3.2f);
+            }
             return rect;
         }
 
@@ -2128,6 +2225,34 @@ namespace DrawBody.Prototype
             {
                 editor?.SetSelectedActionStrength(value);
             }
+        }
+    }
+
+    public sealed class StageEditorMovementSpeedSlider : MonoBehaviour, IPointerDownHandler
+    {
+        private RuntimeStageEditor editor;
+        private Slider slider;
+
+        private void Awake()
+        {
+            slider = GetComponent<Slider>();
+            slider.onValueChanged.AddListener(ChangeSpeed);
+        }
+
+        public void Configure(RuntimeStageEditor targetEditor, Slider targetSlider)
+        {
+            editor = targetEditor;
+            slider = targetSlider;
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            editor?.BeginMovementSpeedEdit();
+        }
+
+        private void ChangeSpeed(float value)
+        {
+            editor?.SetSelectedMovementSpeed(value);
         }
     }
 

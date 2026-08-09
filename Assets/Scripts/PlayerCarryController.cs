@@ -24,6 +24,7 @@ namespace DrawBody.Prototype
         [SerializeField] private float throwPreviewLength = 1.8f;
         [SerializeField] private float postThrowCollisionIgnoreTime = 0.22f;
         [SerializeField] private float postThrowCollisionRestoreTimeout = 1.2f;
+        [SerializeField] private float slimeFriendAttachReach = 0.45f;
 
         // A hand-drawn body can contain far more than 64 segment colliders.
         // A fixed NonAlloc buffer could fill with the player's own long legs
@@ -49,8 +50,22 @@ namespace DrawBody.Prototype
         private string heldOnlinePlayerId;
         private StageGimmickSyncManager gimmickSyncManager;
         private ContactFilter2D pickupContactFilter;
+        private PlayerController2D slimeAttachedPlayer;
+        private Rigidbody2D slimeAttachedBody;
+        private Vector3 slimeAttachLocalOffset;
+        private RigidbodyType2D slimePreviousBodyType;
+        private float slimePreviousGravityScale;
+        private bool slimePreviousFreezeRotation;
+        private Collider2D[] slimeOwnColliders = new Collider2D[0];
+        private Collider2D[] slimeTargetColliders = new Collider2D[0];
+        private PlayerController2D remoteSlimeVisualTarget;
+        private LineRenderer slimeAttachBridge;
+        private LineRenderer slimeAttachRing;
 
         public bool IsHolding => heldTransform != null;
+        public string SlimeAttachedOnlinePlayerId => slimeAttachedPlayer != null && stageManager != null
+            ? stageManager.GetOnlinePlayerId(slimeAttachedPlayer)
+            : null;
 
         public bool IsHoldingTarget(Transform target)
         {
@@ -105,6 +120,7 @@ namespace DrawBody.Prototype
             pickupContactFilter.SetLayerMask(carryableLayerMask);
             pickupContactFilter.useTriggers = false;
             CreateThrowPreview();
+            CreateSlimeAttachmentVisual();
         }
 
         private void Update()
@@ -116,9 +132,28 @@ namespace DrawBody.Prototype
 
             if (playerController != null && !playerController.ControlsEnabled)
             {
+                DetachSlimeFromFriend(false);
                 return;
             }
 
+            if (IsSlime())
+            {
+                DropHeld(Vector2.zero);
+                if (Input.GetKey(KeyCode.F))
+                {
+                    if (slimeAttachedPlayer == null)
+                    {
+                        TryAttachSlimeToFriend();
+                    }
+                }
+                else
+                {
+                    DetachSlimeFromFriend(true);
+                }
+                return;
+            }
+
+            DetachSlimeFromFriend(false);
             if (!IsHuman())
             {
                 DropHeld(Vector2.zero);
@@ -140,6 +175,19 @@ namespace DrawBody.Prototype
 
         private void LateUpdate()
         {
+            if (slimeAttachedPlayer != null)
+            {
+                FollowSlimeAttachedFriend();
+            }
+            else if (remoteSlimeVisualTarget != null)
+            {
+                UpdateSlimeAttachmentVisual(remoteSlimeVisualTarget, false);
+            }
+            else
+            {
+                SetSlimeAttachmentVisualVisible(false);
+            }
+
             if (heldTransform == null)
             {
                 SetThrowPreviewVisible(false);
@@ -157,6 +205,152 @@ namespace DrawBody.Prototype
 
             bodyBuilder?.SetCarryPose(true, GetFacingDirection(), anchor);
             UpdateThrowPreview(anchor);
+        }
+
+        private void TryAttachSlimeToFriend()
+        {
+            PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
+            Collider2D[] ownColliders = GetComponentsInChildren<Collider2D>(false);
+            PlayerController2D bestPlayer = null;
+            Rigidbody2D bestBody = null;
+            float bestDistance = float.PositiveInfinity;
+
+            for (int i = 0; i < players.Length; i++)
+            {
+                PlayerController2D candidate = players[i];
+                if (candidate == null || candidate == playerController || !candidate.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                Rigidbody2D candidateBody = candidate.GetComponent<Rigidbody2D>();
+                if (candidateBody == null || !candidateBody.simulated)
+                {
+                    continue;
+                }
+
+                Collider2D[] candidateColliders = candidate.GetComponentsInChildren<Collider2D>(false);
+                float distance = GetClosestColliderDistance(ownColliders, candidateColliders);
+                if (distance <= slimeFriendAttachReach && distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    bestPlayer = candidate;
+                    bestBody = candidateBody;
+                }
+            }
+
+            if (bestPlayer == null || bestBody == null || playerBody == null)
+            {
+                return;
+            }
+
+            slimeAttachedPlayer = bestPlayer;
+            slimeAttachedBody = bestBody;
+            remoteSlimeVisualTarget = null;
+            slimeAttachLocalOffset = bestPlayer.transform.InverseTransformVector(
+                transform.position - bestPlayer.transform.position);
+            if (slimeAttachLocalOffset.sqrMagnitude < 0.12f)
+            {
+                slimeAttachLocalOffset = Vector3.right * -bestPlayer.FacingDirection * 0.55f;
+            }
+
+            slimePreviousBodyType = playerBody.bodyType;
+            slimePreviousGravityScale = playerBody.gravityScale;
+            slimePreviousFreezeRotation = playerBody.freezeRotation;
+            playerBody.bodyType = RigidbodyType2D.Kinematic;
+            playerBody.gravityScale = 0f;
+            playerBody.freezeRotation = true;
+            playerBody.linearVelocity = Vector2.zero;
+            playerBody.angularVelocity = 0f;
+
+            slimeOwnColliders = GetComponentsInChildren<Collider2D>(false);
+            slimeTargetColliders = bestPlayer.GetComponentsInChildren<Collider2D>(false);
+            SetCollisionIgnored(slimeOwnColliders, slimeTargetColliders, true);
+            FollowSlimeAttachedFriend();
+            GameSfx.PlayAt(SfxId.SlimeStick, transform.position, 1.25f);
+        }
+
+        private void FollowSlimeAttachedFriend()
+        {
+            if (slimeAttachedPlayer == null
+                || !slimeAttachedPlayer.gameObject.activeInHierarchy
+                || slimeAttachedBody == null)
+            {
+                DetachSlimeFromFriend(false);
+                return;
+            }
+
+            Vector3 anchor = slimeAttachedPlayer.transform.position
+                + slimeAttachedPlayer.transform.TransformVector(slimeAttachLocalOffset);
+            transform.position = anchor;
+            transform.rotation = Quaternion.identity;
+            if (playerBody != null)
+            {
+                playerBody.position = anchor;
+                playerBody.rotation = 0f;
+                playerBody.linearVelocity = slimeAttachedBody.linearVelocity;
+                playerBody.angularVelocity = 0f;
+            }
+
+            UpdateSlimeAttachmentVisual(slimeAttachedPlayer, true);
+        }
+
+        private void DetachSlimeFromFriend(bool playSound)
+        {
+            if (slimeAttachedPlayer == null)
+            {
+                return;
+            }
+
+            Vector2 releaseVelocity = slimeAttachedBody != null
+                ? slimeAttachedBody.linearVelocity
+                : Vector2.zero;
+            Collider2D[] releasedOwnColliders = slimeOwnColliders;
+            Collider2D[] releasedTargetColliders = slimeTargetColliders;
+            slimeAttachedPlayer = null;
+            slimeAttachedBody = null;
+            slimeOwnColliders = new Collider2D[0];
+            slimeTargetColliders = new Collider2D[0];
+            SetSlimeAttachmentVisualVisible(false);
+
+            if (playerBody != null)
+            {
+                playerBody.bodyType = slimePreviousBodyType;
+                playerBody.gravityScale = slimePreviousGravityScale;
+                playerBody.freezeRotation = slimePreviousFreezeRotation;
+                playerBody.rotation = 0f;
+                playerBody.linearVelocity = releaseVelocity;
+                playerBody.angularVelocity = 0f;
+            }
+
+            if (releasedOwnColliders.Length > 0 && releasedTargetColliders.Length > 0)
+            {
+                StartCoroutine(RestoreReleasedCollisions(releasedOwnColliders, releasedTargetColliders));
+            }
+            if (playSound)
+            {
+                GameSfx.PlayAt(SfxId.SlimeRelease, transform.position, 1.1f);
+            }
+        }
+
+        public void ApplyRemoteSlimeAttachment(PlayerController2D target)
+        {
+            if (remoteSlimeVisualTarget == target)
+            {
+                return;
+            }
+
+            bool wasAttached = remoteSlimeVisualTarget != null;
+            remoteSlimeVisualTarget = target;
+            if (target != null)
+            {
+                GameSfx.PlayAt(SfxId.SlimeStick, transform.position, 1.1f);
+            }
+            else if (wasAttached)
+            {
+                GameSfx.PlayAt(SfxId.SlimeRelease, transform.position, 0.9f);
+                SetSlimeAttachmentVisualVisible(false);
+            }
         }
 
         private void TryPickup()
@@ -271,6 +465,7 @@ namespace DrawBody.Prototype
 
             BringHeldObjectToFront();
             heldPlayerController?.SetControlsEnabled(false);
+            heldTransform.GetComponent<StageBomb>()?.NotifyPickedUp();
             heldOnlinePlayerId = GetHeldOnlinePlayerId(heldPlayerController);
             if (!string.IsNullOrEmpty(heldOnlinePlayerId))
             {
@@ -296,6 +491,33 @@ namespace DrawBody.Prototype
 
                 ColliderDistance2D distance = playerCollider.Distance(targetCollider);
                 bestDistance = Mathf.Min(bestDistance, Mathf.Max(0f, distance.distance));
+            }
+
+            return bestDistance;
+        }
+
+        private static float GetClosestColliderDistance(Collider2D[] first, Collider2D[] second)
+        {
+            float bestDistance = float.PositiveInfinity;
+            for (int i = 0; i < first.Length; i++)
+            {
+                Collider2D a = first[i];
+                if (a == null || !a.enabled || a.isTrigger)
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < second.Length; j++)
+                {
+                    Collider2D b = second[j];
+                    if (b == null || !b.enabled || b.isTrigger)
+                    {
+                        continue;
+                    }
+
+                    ColliderDistance2D distance = a.Distance(b);
+                    bestDistance = Mathf.Min(bestDistance, Mathf.Max(0f, distance.distance));
+                }
             }
 
             return bestDistance;
@@ -434,6 +656,7 @@ namespace DrawBody.Prototype
 
         public void ForceDrop()
         {
+            DetachSlimeFromFriend(false);
             if (!string.IsNullOrEmpty(heldOnlinePlayerId))
             {
                 SendCarryEvent("drop", Vector2.zero);
@@ -504,6 +727,12 @@ namespace DrawBody.Prototype
             return abilityController == null || abilityController.CurrentProfile.Species == DrawManager.Species.Human;
         }
 
+        private bool IsSlime()
+        {
+            return abilityController != null
+                && abilityController.CurrentProfile.Species == DrawManager.Species.Slime;
+        }
+
         private Vector2 GetThrowDirection()
         {
             float phase = Mathf.PingPong(Time.time * throwAimSpeed, 1f);
@@ -521,6 +750,148 @@ namespace DrawBody.Prototype
             throwPreviewHeadA = CreatePreviewLine("ThrowDirectionHeadA", root.transform, 0.045f);
             throwPreviewHeadB = CreatePreviewLine("ThrowDirectionHeadB", root.transform, 0.045f);
             SetThrowPreviewVisible(false);
+        }
+
+        private void CreateSlimeAttachmentVisual()
+        {
+            GameObject root = new GameObject("SlimeFriendAttachmentVisual");
+            root.transform.SetParent(transform, false);
+
+            GameObject bridgeObject = new GameObject("SlimeFriendGooBridge");
+            bridgeObject.transform.SetParent(root.transform, false);
+            slimeAttachBridge = bridgeObject.AddComponent<LineRenderer>();
+            slimeAttachBridge.useWorldSpace = true;
+            slimeAttachBridge.positionCount = 3;
+            slimeAttachBridge.numCapVertices = 8;
+            slimeAttachBridge.numCornerVertices = 8;
+            slimeAttachBridge.sortingOrder = 220;
+            slimeAttachBridge.sharedMaterial = GetPreviewMaterial();
+
+            GameObject ringObject = new GameObject("SlimeFriendContactRing");
+            ringObject.transform.SetParent(root.transform, false);
+            slimeAttachRing = ringObject.AddComponent<LineRenderer>();
+            slimeAttachRing.useWorldSpace = true;
+            slimeAttachRing.loop = true;
+            slimeAttachRing.positionCount = 24;
+            slimeAttachRing.numCapVertices = 5;
+            slimeAttachRing.numCornerVertices = 5;
+            slimeAttachRing.sortingOrder = 221;
+            slimeAttachRing.sharedMaterial = GetPreviewMaterial();
+            SetSlimeAttachmentVisualVisible(false);
+        }
+
+        private void UpdateSlimeAttachmentVisual(PlayerController2D target, bool useAttachedAnchor)
+        {
+            if (target == null || slimeAttachBridge == null || slimeAttachRing == null)
+            {
+                SetSlimeAttachmentVisualVisible(false);
+                return;
+            }
+
+            Vector3 slimeCenter = transform.position;
+            if (TryGetSolidBounds(playerController, out Bounds slimeBounds))
+            {
+                slimeCenter = slimeBounds.center;
+            }
+
+            Vector3 targetCenter = target.transform.position;
+            Bounds targetBounds = new Bounds(targetCenter, Vector3.one * 0.5f);
+            if (TryGetSolidBounds(target, out Bounds measuredTargetBounds))
+            {
+                targetBounds = measuredTargetBounds;
+                targetCenter = measuredTargetBounds.center;
+            }
+
+            Vector3 contact = useAttachedAnchor
+                ? target.transform.position + target.transform.TransformVector(slimeAttachLocalOffset) * 0.45f
+                : targetBounds.ClosestPoint(slimeCenter);
+            if ((contact - targetCenter).sqrMagnitude < 0.01f)
+            {
+                Vector3 towardSlime = (slimeCenter - targetCenter).normalized;
+                contact = targetCenter + towardSlime * 0.25f;
+            }
+
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 8f);
+            Vector3 delta = contact - slimeCenter;
+            Vector3 perpendicular = delta.sqrMagnitude > 0.001f
+                ? new Vector3(-delta.y, delta.x, 0f).normalized
+                : Vector3.up;
+            Vector3 middle = Vector3.Lerp(slimeCenter, contact, 0.55f)
+                + perpendicular * Mathf.Lerp(-0.035f, 0.055f, pulse);
+            Color gooColor = bodyBuilder != null
+                ? Color.Lerp(bodyBuilder.PlayerColor, new Color(0.2f, 1f, 0.55f, 1f), 0.42f)
+                : new Color(0.2f, 1f, 0.55f, 1f);
+            gooColor.a = 0.82f;
+
+            slimeAttachBridge.enabled = true;
+            slimeAttachBridge.startWidth = Mathf.Lerp(0.13f, 0.2f, pulse);
+            slimeAttachBridge.endWidth = Mathf.Lerp(0.2f, 0.27f, pulse);
+            slimeAttachBridge.startColor = gooColor;
+            slimeAttachBridge.endColor = gooColor;
+            slimeAttachBridge.SetPosition(0, slimeCenter);
+            slimeAttachBridge.SetPosition(1, middle);
+            slimeAttachBridge.SetPosition(2, contact);
+
+            slimeAttachRing.enabled = true;
+            slimeAttachRing.startWidth = 0.055f;
+            slimeAttachRing.endWidth = 0.055f;
+            slimeAttachRing.startColor = gooColor;
+            slimeAttachRing.endColor = gooColor;
+            float radius = Mathf.Lerp(0.22f, 0.3f, pulse);
+            for (int i = 0; i < slimeAttachRing.positionCount; i++)
+            {
+                float angle = i / (float)slimeAttachRing.positionCount * Mathf.PI * 2f;
+                float wobble = 1f + Mathf.Sin(angle * 3f + Time.unscaledTime * 6f) * 0.09f;
+                slimeAttachRing.SetPosition(
+                    i,
+                    contact + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius * wobble);
+            }
+        }
+
+        private void SetSlimeAttachmentVisualVisible(bool visible)
+        {
+            if (slimeAttachBridge != null)
+            {
+                slimeAttachBridge.enabled = visible;
+            }
+            if (slimeAttachRing != null)
+            {
+                slimeAttachRing.enabled = visible;
+            }
+        }
+
+        private static bool TryGetSolidBounds(PlayerController2D controller, out Bounds bounds)
+        {
+            bounds = controller != null
+                ? new Bounds(controller.transform.position, Vector3.zero)
+                : new Bounds(Vector3.zero, Vector3.zero);
+            if (controller == null)
+            {
+                return false;
+            }
+
+            bool hasBounds = false;
+            Collider2D[] colliders = controller.GetComponentsInChildren<Collider2D>(false);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger)
+                {
+                    continue;
+                }
+
+                if (!hasBounds)
+                {
+                    bounds = collider.bounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(collider.bounds);
+                }
+            }
+
+            return hasBounds;
         }
 
         private LineRenderer CreatePreviewLine(string name, Transform parent, float width)

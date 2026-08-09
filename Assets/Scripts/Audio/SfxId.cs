@@ -55,6 +55,10 @@ namespace DrawBody.Prototype
         TurtleJump,
         TurtleLand,
         SlimeStick,
-        SlimeRelease
+        SlimeRelease,
+        BombFuseStart,
+        BombTick,
+        BombExplosion,
+        BombWallBreak
     }
 }

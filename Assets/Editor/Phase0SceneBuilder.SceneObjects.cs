@@ -27,7 +27,6 @@ namespace DrawBody.EditorTools
             AssignObject(controller, "groundCheck", groundCheck.transform);
             AssignLayerMask(controller, "groundLayer", (1 << GroundLayer) | (1 << PushableLayer) | (1 << PlayerLayer));
             AssignVector2(controller, "groundCheckSize", new Vector2(1.2f, 0.18f));
-            AssignFloat(controller, "slimeStickDuration", 0.28f);
 
             PlayerAbilityController abilityController = player.AddComponent<PlayerAbilityController>();
             AssignObject(abilityController, "playerController", controller);

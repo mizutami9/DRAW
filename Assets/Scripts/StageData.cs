@@ -186,7 +186,9 @@ namespace DrawBody.Prototype
         CollectibleCoin,
         CollectibleStar,
         ChallengeClock,
-        BeamEmitter
+        BeamEmitter,
+        PickupFuseBomb,
+        BombDropper
     }
 
     [Serializable]
@@ -261,8 +263,10 @@ namespace DrawBody.Prototype
         public bool keepSeparate;
         public float actionStrength;
         public float movementAngle;
+        public float movementSpeed;
         public int spawnPattern;
         public float spawnBoxSize;
+        public float bombFuseSeconds;
         public string linkTargetId;
         public string linkAction;
     }

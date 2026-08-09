@@ -67,8 +67,20 @@ namespace DrawBody.Prototype
                     break;
                 case SfxId.PlayerDeath:
                 case SfxId.DrawInkOver:
+                case SfxId.BombExplosion:
                     volume = 0.85f;
                     cooldown = 0.2f;
+                    break;
+                case SfxId.BombTick:
+                    volume = 0.62f;
+                    pitchMin = 0.98f;
+                    pitchMax = 1.04f;
+                    cooldown = 0.08f;
+                    break;
+                case SfxId.BombFuseStart:
+                case SfxId.BombWallBreak:
+                    volume = 0.72f;
+                    cooldown = 0.12f;
                     break;
             }
 
@@ -77,6 +89,18 @@ namespace DrawBody.Prototype
 
         private static string BuildResourcePath(SfxId id)
         {
+            switch (id)
+            {
+                case SfxId.BombFuseStart:
+                    return "Audio/SFX/Species/slime_release";
+                case SfxId.BombTick:
+                    return "Audio/SFX/UI/ui_slider_tick";
+                case SfxId.BombExplosion:
+                    return "Audio/SFX/Player/player_death";
+                case SfxId.BombWallBreak:
+                    return "Audio/SFX/Editor/editor_object_delete";
+            }
+
             string name = id.ToString();
             string category;
             string fileName;

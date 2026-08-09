@@ -8,6 +8,8 @@ namespace DrawBody.Prototype
     {
         public const float InkAllowancePerPlayer = 350f;
         public const float IndividualInkLimit = 500f;
+        private const float TurtleGameplayCoordinateScale = 3f;
+        private const int BodyCoordinateVersion = 2;
 
         public enum BodyPart
         {
@@ -1015,10 +1017,13 @@ namespace DrawBody.Prototype
             List<Vector2> result = new List<Vector2>();
             IReadOnlyList<Vector2> source = drawings[part].Points;
             Vector2 offset = GetBodyAnchorOffset();
+            float coordinateScale = GetGameplayCoordinateScale(currentSpecies);
 
             for (int i = 0; i < source.Count; i++)
             {
-                result.Add(IsBreakPoint(source[i]) ? StrokeBreak : GetRawAssembledPoint(part, source[i]) + offset);
+                result.Add(IsBreakPoint(source[i])
+                    ? StrokeBreak
+                    : (GetRawAssembledPoint(part, source[i]) + offset) * coordinateScale);
             }
 
             return result;
@@ -1047,6 +1052,7 @@ namespace DrawBody.Prototype
             SerializableBodyDrawing body = new SerializableBodyDrawing
             {
                 Species = currentSpecies.ToString(),
+                CoordinateVersion = BodyCoordinateVersion,
                 Parts = new SerializableBodyPartDrawing[activeParts.Length]
             };
 
@@ -1128,9 +1134,14 @@ namespace DrawBody.Prototype
                         continue;
                     }
 
-                    state.Points[species][part] = partDrawing.Points != null
+                    List<Vector2> loadedPoints = partDrawing.Points != null
                         ? new List<Vector2>(partDrawing.Points)
                         : new List<Vector2>();
+                    if (species == Species.Turtle && body.CoordinateVersion < BodyCoordinateVersion)
+                    {
+                        ScaleDrawablePoints(loadedPoints, 1f / TurtleGameplayCoordinateScale);
+                    }
+                    state.Points[species][part] = loadedPoints;
                 }
             }
 
@@ -1763,9 +1774,13 @@ namespace DrawBody.Prototype
                     accent = new Color(0.24f, 0.62f, 0.34f, 1f);
                     break;
                 case Species.Slime:
-                    progress = PlayerController2D.CalculateSlimeStickStrength(profile.SlimeInk);
+                    progress = Mathf.Clamp01(profile.SlimeInk / PlayerController2D.MaximumSlimeAbilityInk);
                     title = LocalizationManager.T("ability_card_slime");
-                    effect = LocalizationManager.Format("ability_effect_slime", progress * 100f);
+                    effect = LocalizationManager.Format(
+                        "ability_effect_slime",
+                        PlayerController2D.CalculateSlimeMoveSpeedMultiplier(profile.SlimeInk),
+                        PlayerController2D.CalculateSlimeJumpMultiplier(profile.SlimeInk),
+                        PlayerController2D.CalculateSlimeStickStrength(profile.SlimeInk) * 100f);
                     ink = LocalizationManager.Format("ability_ink_slime", profile.SlimeInk);
                     accent = new Color(0.68f, 0.38f, 0.86f, 1f);
                     break;
@@ -1791,17 +1806,31 @@ namespace DrawBody.Prototype
 
             abilityText.text = profile.Species == Species.Turtle
                 ? LocalizationManager.T("ability_turtle_badge")
-                : LocalizationManager.Format("ability_rank", rank);
+                : profile.Species == Species.Slime
+                    ? LocalizationManager.Format("ability_slime_badge", progress * 100f)
+                    : LocalizationManager.Format("ability_rank", rank);
             abilityText.gameObject.SetActive(true);
             if (abilityTitleText != null) abilityTitleText.text = title;
             if (abilityEffectText != null) abilityEffectText.text = effect;
             if (abilityInkText != null) abilityInkText.text = ink;
-            if (abilityLowText != null) abilityLowText.text = LocalizationManager.T("ability_gauge_low");
-            if (abilityHighText != null) abilityHighText.text = LocalizationManager.T("ability_gauge_high");
+            if (abilityLowText != null)
+            {
+                abilityLowText.text = LocalizationManager.T(
+                    profile.Species == Species.Slime ? "ability_slime_gauge_low" : "ability_gauge_low");
+            }
+            if (abilityHighText != null)
+            {
+                abilityHighText.text = LocalizationManager.T(
+                    profile.Species == Species.Slime ? "ability_slime_gauge_high" : "ability_gauge_high");
+            }
             if (abilityHintText != null)
             {
                 abilityHintText.text = LocalizationManager.T(
-                    profile.Species == Species.Turtle ? "ability_turtle_hint" : "ability_growth_hint");
+                    profile.Species == Species.Turtle
+                        ? "ability_turtle_hint"
+                        : profile.Species == Species.Slime
+                            ? "ability_slime_hint"
+                            : "ability_growth_hint");
             }
             if (abilityHeaderImage != null) abilityHeaderImage.color = accent;
             SetInkGauge(abilityGaugeFill, progress, false);
@@ -2447,7 +2476,14 @@ namespace DrawBody.Prototype
                 return drawPoint;
             }
 
-            return (GetRawAssembledPoint(part, drawPoint) + GetBodyAnchorOffset()) * previewScale;
+            return (GetRawAssembledPoint(part, drawPoint) + GetBodyAnchorOffset())
+                * GetGameplayCoordinateScale(currentSpecies)
+                * previewScale;
+        }
+
+        private static float GetGameplayCoordinateScale(Species species)
+        {
+            return species == Species.Turtle ? TurtleGameplayCoordinateScale : 1f;
         }
 
         private Vector2 GetRawAssembledPoint(BodyPart part, Vector2 drawPoint)
@@ -2578,7 +2614,7 @@ namespace DrawBody.Prototype
             {
                 case BodyPart.Head:
                     return currentSpecies == Species.Cat || currentSpecies == Species.Turtle
-                        ? new Vector2(-115f, 0f)
+                        ? new Vector2(-115f / GetGameplayCoordinateScale(currentSpecies), 0f)
                         : new Vector2(0f, -70f);
                 case BodyPart.LeftArm:
                 case BodyPart.LeftWing:
@@ -2819,14 +2855,14 @@ namespace DrawBody.Prototype
                     new Vector2(-78f, -48f),
                     new Vector2(35f, 68f),
                     new Vector2(35f, -62f)
-                });
+                }, 1f / TurtleGameplayCoordinateScale);
                 SetDefaultPart(BodyPart.Head, new[]
                 {
                     new Vector2(-115f, 0f), new Vector2(-82f, 30f),
                     new Vector2(-36f, 22f), new Vector2(-22f, 0f),
                     new Vector2(-36f, -22f), new Vector2(-82f, -30f),
                     new Vector2(-115f, 0f)
-                });
+                }, 1f / TurtleGameplayCoordinateScale);
                 return;
             }
 
@@ -2881,12 +2917,26 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void SetDefaultPart(BodyPart part, Vector2[] points)
+        private void SetDefaultPart(BodyPart part, Vector2[] points, float coordinateScale = 1f)
         {
             PartDrawing drawing = drawings[part];
             drawing.Points.Clear();
-            drawing.Points.AddRange(points);
-            drawing.UsedInk = CalculateInk(points);
+            for (int i = 0; i < points.Length; i++)
+            {
+                drawing.Points.Add(IsBreakPoint(points[i]) ? StrokeBreak : points[i] * coordinateScale);
+            }
+            drawing.UsedInk = CalculateInk(drawing.Points);
+        }
+
+        private static void ScaleDrawablePoints(List<Vector2> points, float scale)
+        {
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (!IsBreakPoint(points[i]))
+                {
+                    points[i] *= scale;
+                }
+            }
         }
 
         private float CalculateInk(IReadOnlyList<Vector2> points)

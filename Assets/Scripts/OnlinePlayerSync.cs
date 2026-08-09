@@ -21,6 +21,7 @@ namespace DrawBody.Prototype
             public Vector2 Velocity;
             public float Rotation;
             public bool TurtleShelled;
+            public string SlimeAttachedToPlayerId;
         }
 
         private void Awake()
@@ -102,7 +103,8 @@ namespace DrawBody.Prototype
                 Position = localTransform.position,
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
                 Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
-                TurtleShelled = localTransform.GetComponent<PlayerController2D>()?.IsTurtleShelled ?? false
+                TurtleShelled = localTransform.GetComponent<PlayerController2D>()?.IsTurtleShelled ?? false,
+                SlimeAttachedToPlayerId = localTransform.GetComponent<PlayerCarryController>()?.SlimeAttachedOnlinePlayerId
             });
         }
 
@@ -123,7 +125,8 @@ namespace DrawBody.Prototype
                 Position = state.Position,
                 Velocity = state.Velocity,
                 Rotation = state.Rotation,
-                TurtleShelled = state.TurtleShelled
+                TurtleShelled = state.TurtleShelled,
+                SlimeAttachedToPlayerId = state.SlimeAttachedToPlayerId
             };
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
         }
@@ -149,6 +152,10 @@ namespace DrawBody.Prototype
                 if (remoteTransform != null)
                 {
                     remoteTransform.GetComponent<PlayerController2D>()?.ApplyRemoteTurtleShellState(pair.Value.TurtleShelled);
+                    PlayerController2D attachmentTarget = string.IsNullOrEmpty(pair.Value.SlimeAttachedToPlayerId)
+                        ? null
+                        : stageManager.GetOnlinePlayerController(pair.Value.SlimeAttachedToPlayerId);
+                    remoteTransform.GetComponent<PlayerCarryController>()?.ApplyRemoteSlimeAttachment(attachmentTarget);
                 }
             }
         }

@@ -155,6 +155,8 @@ namespace DrawBody.Prototype
                     return LocalizationManager.Format(
                         "ability_slime_status",
                         profile.SlimeInk,
+                        PlayerController2D.CalculateSlimeMoveSpeedMultiplier(profile.SlimeInk),
+                        PlayerController2D.CalculateSlimeJumpMultiplier(profile.SlimeInk),
                         PlayerController2D.CalculateSlimeStickStrength(profile.SlimeInk) * 100f);
                 default:
                     return LocalizationManager.Format(

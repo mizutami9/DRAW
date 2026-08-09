@@ -78,12 +78,12 @@ namespace DrawBody.Prototype
                 abilityValueText.verticalOverflow = VerticalWrapMode.Overflow;
             }
 
-            Text abilityEffect = EnsureLabel(abilityCard, "AbilityEffectText", string.Empty, 18, TextAnchor.MiddleCenter);
-            SetTopRect(abilityEffect.rectTransform, new Vector2(12f, -94f), new Vector2(256f, 28f), new Vector2(0f, 1f));
+            Text abilityEffect = EnsureLabel(abilityCard, "AbilityEffectText", string.Empty, 16, TextAnchor.MiddleCenter);
+            SetTopRect(abilityEffect.rectTransform, new Vector2(12f, -90f), new Vector2(256f, 42f), new Vector2(0f, 1f));
             abilityEffect.fontStyle = FontStyle.Bold;
 
             RectTransform abilityGauge = EnsureGauge(abilityCard, "AbilityGaugeBack", "AbilityGaugeFill");
-            SetTopRect(abilityGauge, new Vector2(18f, -128f), new Vector2(244f, 18f), new Vector2(0f, 1f));
+            SetTopRect(abilityGauge, new Vector2(18f, -136f), new Vector2(244f, 18f), new Vector2(0f, 1f));
             ConfigureStraightGauge(abilityGauge, "AbilityGaugeFill");
             for (int i = 1; i < 4; i++)
             {
@@ -97,14 +97,14 @@ namespace DrawBody.Prototype
             }
 
             Text abilityLow = EnsureLabel(abilityCard, "AbilityLowText", string.Empty, 12, TextAnchor.MiddleLeft);
-            SetTopRect(abilityLow.rectTransform, new Vector2(18f, -148f), new Vector2(100f, 18f), new Vector2(0f, 1f));
+            SetTopRect(abilityLow.rectTransform, new Vector2(18f, -156f), new Vector2(120f, 18f), new Vector2(0f, 1f));
             Text abilityHigh = EnsureLabel(abilityCard, "AbilityHighText", string.Empty, 12, TextAnchor.MiddleRight);
-            SetTopRect(abilityHigh.rectTransform, new Vector2(162f, -148f), new Vector2(100f, 18f), new Vector2(0f, 1f));
+            SetTopRect(abilityHigh.rectTransform, new Vector2(142f, -156f), new Vector2(120f, 18f), new Vector2(0f, 1f));
 
             Text abilityInk = EnsureLabel(abilityCard, "AbilityInkText", string.Empty, 15, TextAnchor.MiddleCenter);
-            SetTopRect(abilityInk.rectTransform, new Vector2(10f, -169f), new Vector2(260f, 22f), new Vector2(0f, 1f));
+            SetTopRect(abilityInk.rectTransform, new Vector2(10f, -177f), new Vector2(260f, 22f), new Vector2(0f, 1f));
             Text abilityHint = EnsureLabel(abilityCard, "AbilityHintText", string.Empty, 12, TextAnchor.MiddleCenter);
-            SetTopRect(abilityHint.rectTransform, new Vector2(10f, -194f), new Vector2(260f, 18f), new Vector2(0f, 1f));
+            SetTopRect(abilityHint.rectTransform, new Vector2(10f, -199f), new Vector2(260f, 17f), new Vector2(0f, 1f));
             abilityHint.color = new Color(0.28f, 0.23f, 0.16f, 0.82f);
 
             Text header = EnsureLabel(panel, "ToolPanelHeader", "TOOLS", 19, TextAnchor.MiddleLeft);

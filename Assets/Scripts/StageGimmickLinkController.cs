@@ -13,6 +13,7 @@ namespace DrawBody.Prototype
 
         private void Start()
         {
+            MovingPlatformMountBinder.Bind(transform);
             syncManager = GetComponent<StageGimmickSyncManager>();
             StageEditorObject[] objects = GetComponentsInChildren<StageEditorObject>(true);
             for (int i = 0; i < objects.Length; i++)
@@ -91,6 +92,49 @@ namespace DrawBody.Prototype
             for (int i = 0; i < links.Count; i++)
             {
                 links[i].Prepare();
+            }
+
+            ConfigureAutomaticMovingPlatforms(objects);
+        }
+
+        private static void ConfigureAutomaticMovingPlatforms(StageEditorObject[] objects)
+        {
+            HashSet<string> linkedTargetIds = new HashSet<string>();
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageEditorObject source = objects[i];
+                if (source != null && !string.IsNullOrEmpty(source.linkTargetId))
+                {
+                    linkedTargetIds.Add(source.linkTargetId);
+                }
+            }
+
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageEditorObject platform = objects[i];
+                if (platform == null
+                    || platform.type != StageObjectType.MovingPlatform
+                    || linkedTargetIds.Contains(platform.objectId))
+                {
+                    continue;
+                }
+
+                Rigidbody2D body = platform.GetComponent<Rigidbody2D>();
+                if (body == null)
+                {
+                    continue;
+                }
+
+                AutomaticMovingPlatform automatic = platform.GetComponent<AutomaticMovingPlatform>();
+                if (automatic == null)
+                {
+                    automatic = platform.gameObject.AddComponent<AutomaticMovingPlatform>();
+                }
+                automatic.Configure(
+                    body,
+                    platform.actionStrength > 0f ? platform.actionStrength : 6f,
+                    platform.movementAngle,
+                    platform.movementSpeed > 0f ? platform.movementSpeed : 3.2f);
             }
         }
 
@@ -376,6 +420,7 @@ namespace DrawBody.Prototype
             private readonly Quaternion fullLocalRotation;
             private readonly float revealWidth;
             private readonly Vector3 movementOffset;
+            private readonly float movementSpeed;
             private readonly Rigidbody2D targetBody;
             private readonly DirectionalMovingPlatform directionalPlatform;
 
@@ -450,10 +495,13 @@ namespace DrawBody.Prototype
                 fullLocalRotation = target != null ? target.localRotation : Quaternion.identity;
                 revealWidth = ResolveRevealWidth(target, targetCollider, fullScale);
                 float movementDistance = targetStageObject != null && targetStageObject.actionStrength > 0f
-                    ? targetStageObject.actionStrength
+                    ? Mathf.Clamp(targetStageObject.actionStrength, 1f, 100f)
                     : 6f;
                 float movementAngle = targetStageObject != null ? targetStageObject.movementAngle : 0f;
                 movementOffset = Quaternion.Euler(0f, 0f, movementAngle) * Vector3.right * movementDistance;
+                movementSpeed = targetStageObject != null && targetStageObject.movementSpeed > 0f
+                    ? Mathf.Clamp(targetStageObject.movementSpeed, 0.5f, 10f)
+                    : 3.2f;
                 targetBody = target != null ? target.GetComponent<Rigidbody2D>() : null;
                 if (IsDirectionalMoveAction() && target != null)
                 {
@@ -462,7 +510,7 @@ namespace DrawBody.Prototype
                     {
                         directionalPlatform = target.gameObject.AddComponent<DirectionalMovingPlatform>();
                     }
-                    directionalPlatform.Configure(movementDistance, 3.2f);
+                    directionalPlatform.Configure(movementDistance, movementSpeed);
                 }
             }
 
@@ -618,7 +666,7 @@ namespace DrawBody.Prototype
                     progress = Mathf.MoveTowards(
                         progress,
                         active ? 1f : 0f,
-                        deltaTime * 3.2f / distance);
+                        deltaTime * movementSpeed / distance);
                     ApplyMoveProgress(progress);
                 }
                 else if (active && IsRevealGrowAction())

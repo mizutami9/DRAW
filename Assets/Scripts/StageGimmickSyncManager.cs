@@ -16,6 +16,10 @@ namespace DrawBody.Prototype
         private const string KindCrumblingFloorState = "crumbling_floor_state";
         private const string KindDropperBoxSpawn = "dropper_box_spawn";
         private const string KindDropperBoxRemove = "dropper_box_remove";
+        private const string KindBombExplosion = "bomb_explosion";
+        private const string KindBombWallDamage = "bomb_wall_damage";
+        private const string KindBombArmRequest = "bomb_arm_request";
+        private const string KindBombArmState = "bomb_arm_state";
 
         [SerializeField] private OnlineManager onlineManager;
         [SerializeField] private float transformSendRate = 12f;
@@ -29,6 +33,12 @@ namespace DrawBody.Prototype
             new Dictionary<string, DropperBoxSpawnState>();
         private readonly Dictionary<string, GameObject> dropperBoxes =
             new Dictionary<string, GameObject>();
+        private readonly Dictionary<string, BombExplosionState> explodedPlacedBombs =
+            new Dictionary<string, BombExplosionState>();
+        private readonly HashSet<string> appliedBombExplosions = new HashSet<string>();
+        private readonly Dictionary<string, BombWallDamageState> bombWallDamageStates =
+            new Dictionary<string, BombWallDamageState>();
+        private readonly HashSet<string> armedPickupBombs = new HashSet<string>();
         private StageGimmickLinkController linkController;
         private StageObjectFactory objectFactory;
         private float nextTransformSendTime;
@@ -55,6 +65,21 @@ namespace DrawBody.Prototype
             public Vector2 Position;
             public float Size;
             public float Rotation;
+            public float FuseSeconds;
+        }
+
+        [System.Serializable]
+        private sealed class BombExplosionState
+        {
+            public Vector2 Position;
+            public float Radius;
+        }
+
+        [System.Serializable]
+        private sealed class BombWallDamageState
+        {
+            public int Hits;
+            public Vector2 BlastCenter;
         }
 
         public bool IsOnlineActive => onlineManager != null
@@ -122,7 +147,69 @@ namespace DrawBody.Prototype
                 BroadcastOwnershipSnapshot();
                 BroadcastCrumblingFloorStates();
                 BroadcastDropperBoxSnapshot();
+                BroadcastBombSnapshot();
             }
+        }
+
+        public void DetonateBomb(string objectId, Vector2 position, float radius)
+        {
+            if (string.IsNullOrEmpty(objectId) || IsOnlineActive && !IsHost)
+            {
+                return;
+            }
+
+            bool spawnedByDropper = dropperBoxStates.ContainsKey(objectId);
+            BombExplosionState state = new BombExplosionState
+            {
+                Position = position,
+                Radius = Mathf.Max(0.5f, radius)
+            };
+            ApplyBombExplosion(objectId, state, true);
+            if (!spawnedByDropper)
+            {
+                explodedPlacedBombs[objectId] = state;
+            }
+            if (IsOnlineActive)
+            {
+                SendBombExplosion(objectId, state);
+            }
+        }
+
+        public void RegisterBombWallDamage(string objectId, int hits, Vector2 blastCenter)
+        {
+            if (string.IsNullOrEmpty(objectId) || IsOnlineActive && !IsHost)
+            {
+                return;
+            }
+            bombWallDamageStates[objectId] = new BombWallDamageState
+            {
+                Hits = Mathf.Clamp(hits, 0, 5),
+                BlastCenter = blastCenter
+            };
+        }
+
+        public void RequestArmBomb(string objectId)
+        {
+            if (string.IsNullOrEmpty(objectId))
+            {
+                return;
+            }
+            if (!IsOnlineActive || IsHost)
+            {
+                ApplyBombArm(objectId);
+                if (IsOnlineActive)
+                {
+                    SendBombArmState(objectId);
+                }
+                return;
+            }
+
+            Send(new OnlineGimmickData
+            {
+                ObjectId = objectId,
+                Kind = KindBombArmRequest,
+                Json = "{}"
+            });
         }
 
         public GameObject SpawnDropperBox(
@@ -130,7 +217,8 @@ namespace DrawBody.Prototype
             StageObjectType type,
             Vector2 position,
             float size,
-            float rotation = 0f)
+            float rotation = 0f,
+            float fuseSeconds = 5f)
         {
             if (string.IsNullOrEmpty(objectId) || (IsOnlineActive && !IsHost))
             {
@@ -142,7 +230,8 @@ namespace DrawBody.Prototype
                 BoxType = (int)type,
                 Position = position,
                 Size = size,
-                Rotation = rotation
+                Rotation = rotation,
+                FuseSeconds = Mathf.Clamp(fuseSeconds > 0f ? fuseSeconds : 5f, 1f, 15f)
             };
             GameObject spawned = ApplyDropperBoxSpawn(objectId, state);
             if (spawned != null && IsOnlineActive)
@@ -445,6 +534,50 @@ namespace DrawBody.Prototype
                     return;
                 }
                 ApplyDropperBoxRemove(data.ObjectId);
+                return;
+            }
+
+            if (data.Kind == KindBombExplosion)
+            {
+                if (IsHost || !IsLobbyHost(data.PlayerId))
+                {
+                    return;
+                }
+                ApplyBombExplosion(
+                    data.ObjectId,
+                    JsonUtility.FromJson<BombExplosionState>(data.Json),
+                    true);
+                return;
+            }
+
+            if (data.Kind == KindBombArmRequest)
+            {
+                if (IsHost)
+                {
+                    ApplyBombArm(data.ObjectId);
+                    SendBombArmState(data.ObjectId);
+                }
+                return;
+            }
+
+            if (data.Kind == KindBombArmState)
+            {
+                if (IsHost || !IsLobbyHost(data.PlayerId))
+                {
+                    return;
+                }
+                ApplyBombArm(data.ObjectId);
+                return;
+            }
+
+            if (data.Kind == KindBombWallDamage)
+            {
+                if (IsHost || !IsLobbyHost(data.PlayerId))
+                {
+                    return;
+                }
+                BombWallDamageState state = JsonUtility.FromJson<BombWallDamageState>(data.Json);
+                ApplyBombWallDamage(data.ObjectId, state);
                 return;
             }
 
@@ -809,7 +942,8 @@ namespace DrawBody.Prototype
                 objectId,
                 state.Position,
                 state.Size,
-                transform);
+                transform,
+                state.FuseSeconds > 0f ? state.FuseSeconds : 5f);
             if (spawned == null)
             {
                 return null;
@@ -876,6 +1010,109 @@ namespace DrawBody.Prototype
                 ObjectId = objectId,
                 Kind = KindDropperBoxSpawn,
                 Json = JsonUtility.ToJson(state)
+            });
+        }
+
+        private void ApplyBombExplosion(string objectId, BombExplosionState state, bool applyGameplay)
+        {
+            if (state == null || string.IsNullOrEmpty(objectId) || !appliedBombExplosions.Add(objectId))
+            {
+                return;
+            }
+
+            StageBomb[] bombs = Object.FindObjectsByType<StageBomb>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < bombs.Length; i++)
+            {
+                if (bombs[i] != null && bombs[i].ObjectId == objectId)
+                {
+                    bombs[i].ApplyNetworkExplosion(state.Position, state.Radius, applyGameplay);
+                    break;
+                }
+            }
+
+            dropperBoxStates.Remove(objectId);
+            dropperBoxes.Remove(objectId);
+            armedPickupBombs.Remove(objectId);
+        }
+
+        private void ApplyBombArm(string objectId)
+        {
+            if (string.IsNullOrEmpty(objectId))
+            {
+                return;
+            }
+            armedPickupBombs.Add(objectId);
+            StageBomb[] bombs = Object.FindObjectsByType<StageBomb>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < bombs.Length; i++)
+            {
+                if (bombs[i] != null && bombs[i].ObjectId == objectId)
+                {
+                    bombs[i].ArmFromNetwork();
+                    return;
+                }
+            }
+        }
+
+        private void ApplyBombWallDamage(string objectId, BombWallDamageState state)
+        {
+            if (state == null)
+            {
+                return;
+            }
+            StageBombBreakableWall[] walls = Object.FindObjectsByType<StageBombBreakableWall>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < walls.Length; i++)
+            {
+                if (walls[i] != null && walls[i].ObjectId == objectId)
+                {
+                    walls[i].ApplyNetworkDamage(state.Hits, state.BlastCenter);
+                    return;
+                }
+            }
+        }
+
+        private void BroadcastBombSnapshot()
+        {
+            if (!IsOnlineActive || !IsHost)
+            {
+                return;
+            }
+
+            foreach (KeyValuePair<string, BombExplosionState> pair in explodedPlacedBombs)
+            {
+                SendBombExplosion(pair.Key, pair.Value);
+            }
+            foreach (KeyValuePair<string, BombWallDamageState> pair in bombWallDamageStates)
+            {
+                Send(new OnlineGimmickData
+                {
+                    ObjectId = pair.Key,
+                    Kind = KindBombWallDamage,
+                    Json = JsonUtility.ToJson(pair.Value)
+                });
+            }
+            foreach (string objectId in armedPickupBombs)
+            {
+                SendBombArmState(objectId);
+            }
+        }
+
+        private void SendBombExplosion(string objectId, BombExplosionState state)
+        {
+            Send(new OnlineGimmickData
+            {
+                ObjectId = objectId,
+                Kind = KindBombExplosion,
+                Json = JsonUtility.ToJson(state)
+            });
+        }
+
+        private void SendBombArmState(string objectId)
+        {
+            Send(new OnlineGimmickData
+            {
+                ObjectId = objectId,
+                Kind = KindBombArmState,
+                Json = "{}"
             });
         }
 

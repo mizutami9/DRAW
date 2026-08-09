@@ -159,8 +159,6 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bool hasSolidFloor = false;
-            float lowestSolidBottom = 0f;
             for (int i = 0; i < objects.Length; i++)
             {
                 StageObjectData obj = objects[i];
@@ -169,35 +167,63 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                float radians = obj.rotation * Mathf.Deg2Rad;
-                float verticalExtent = Mathf.Abs(Mathf.Sin(radians)) * Mathf.Abs(obj.size.x) * 0.5f
-                    + Mathf.Abs(Mathf.Cos(radians)) * Mathf.Abs(obj.size.y) * 0.5f;
-                float bottomY = obj.position.y - verticalExtent;
-                if (obj.type == StageObjectType.StageBoundary)
+                StageObjectCatalogEntry entry = StageObjectCatalog.Get(obj.type);
+                if (obj.type == StageObjectType.StageBoundary
+                    || entry.Kind == StageObjectKind.Decoration
+                    || entry.Kind == StageObjectKind.Marker)
                 {
-                    if (!hasStageFallBoundary || bottomY < stageFallBoundaryY)
-                    {
-                        hasStageFallBoundary = true;
-                        stageFallBoundaryY = bottomY;
-                    }
                     continue;
                 }
 
-                if (StageObjectCatalog.Get(obj.type).Kind == StageObjectKind.Solid
-                    && (!hasSolidFloor || bottomY < lowestSolidBottom))
+                float bottomY = CalculateObjectBottomY(obj);
+                if (!hasStageFallBoundary || bottomY < stageFallBoundaryY)
                 {
-                    hasSolidFloor = true;
-                    lowestSolidBottom = bottomY;
+                    hasStageFallBoundary = true;
+                    stageFallBoundaryY = bottomY;
                 }
             }
+        }
 
-            // A stage may be expanded downward after its boundary was placed.
-            // Never let the fall-reset line sit above real solid terrain, or a
-            // player falling toward that terrain will be respawned before landing.
-            if (hasStageFallBoundary && hasSolidFloor)
+        private static float CalculateObjectBottomY(StageObjectData obj)
+        {
+            Quaternion rotation = Quaternion.Euler(0f, 0f, obj.rotation);
+            float bottom = float.PositiveInfinity;
+            if (obj.connectedRects != null && obj.connectedRects.Length > 0)
             {
-                stageFallBoundaryY = Mathf.Min(stageFallBoundaryY, lowestSolidBottom);
+                for (int i = 0; i < obj.connectedRects.Length; i++)
+                {
+                    StageRectPartData part = obj.connectedRects[i];
+                    if (part == null)
+                    {
+                        continue;
+                    }
+
+                    Vector2 center = obj.position + (Vector2)(rotation * part.position);
+                    bottom = Mathf.Min(bottom, center.y - CalculateVerticalExtent(part.size, obj.rotation));
+                }
             }
+            else if (obj.pathPoints != null && obj.pathPoints.Length >= 2)
+            {
+                float halfThickness = Mathf.Max(0.2f, obj.pathThickness > 0f ? obj.pathThickness : 0.5f) * 0.5f;
+                for (int i = 0; i < obj.pathPoints.Length; i++)
+                {
+                    Vector2 point = obj.position + (Vector2)(rotation * obj.pathPoints[i]);
+                    bottom = Mathf.Min(bottom, point.y - halfThickness);
+                }
+            }
+            else
+            {
+                bottom = obj.position.y - CalculateVerticalExtent(obj.size, obj.rotation);
+            }
+
+            return float.IsPositiveInfinity(bottom) ? obj.position.y : bottom;
+        }
+
+        private static float CalculateVerticalExtent(Vector2 size, float rotation)
+        {
+            float radians = rotation * Mathf.Deg2Rad;
+            return Mathf.Abs(Mathf.Sin(radians)) * Mathf.Abs(size.x) * 0.5f
+                + Mathf.Abs(Mathf.Cos(radians)) * Mathf.Abs(size.y) * 0.5f;
         }
 
         private void ResetStageFallBoundary()
