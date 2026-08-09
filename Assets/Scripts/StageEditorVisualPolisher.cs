@@ -145,7 +145,7 @@ namespace DrawBody.Prototype
             RefreshButtonLabel(transform, "RuntimeStageRuleCountButton", editor.StageRequiredCountLabel);
             bool timedRule = editor.IsTimedCollectionRule;
             SetActive(transform, "RuntimeStageRuleTargetButton", timedRule);
-            SetActive(transform, "RuntimeStageRuleTimeButton", timedRule);
+            SetActive(transform, "RuntimeStageRuleTimeButton", timedRule || editor.IsSurvivalRule);
             SetActive(transform, "RuntimeStageRuleCountButton", timedRule);
 
             bool multipleSelection = editor.HasMultipleSelection;

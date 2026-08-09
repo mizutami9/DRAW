@@ -6,7 +6,8 @@ namespace DrawBody.Prototype
     public enum StageRuleMode
     {
         Normal,
-        TimedCollection
+        TimedCollection,
+        Survival
     }
 
     public static class StageObjectId

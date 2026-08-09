@@ -9,9 +9,20 @@ namespace DrawBody.Prototype
         public void CycleStageRuleMode()
         {
             PushUndo();
-            stageRuleMode = stageRuleMode == StageRuleMode.Normal
-                ? StageRuleMode.TimedCollection
-                : StageRuleMode.Normal;
+            if (stageId == "11-2")
+            {
+                stageRuleMode = stageRuleMode == StageRuleMode.Normal
+                    ? StageRuleMode.TimedCollection
+                    : stageRuleMode == StageRuleMode.TimedCollection
+                        ? StageRuleMode.Survival
+                        : StageRuleMode.Normal;
+            }
+            else
+            {
+                stageRuleMode = stageRuleMode == StageRuleMode.Normal
+                    ? StageRuleMode.TimedCollection
+                    : StageRuleMode.Normal;
+            }
             if (stageRuleMode == StageRuleMode.TimedCollection)
             {
                 if (stageRequiredCollectionCount == 1)

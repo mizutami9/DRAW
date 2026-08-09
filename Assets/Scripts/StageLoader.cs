@@ -251,8 +251,19 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingSyncManager);
             }
 
+            StageSurvivalController existingSurvival = stageRoot.GetComponent<StageSurvivalController>();
+            if (existingSurvival != null)
+            {
+                DestroyComponentNow(existingSurvival);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
+            if (data != null && data.ruleMode == StageRuleMode.Survival)
+            {
+                StageSurvivalController survival = stageRoot.gameObject.AddComponent<StageSurvivalController>();
+                survival.Configure(data.timeLimitSeconds);
+            }
         }
 
         private static void DestroyComponentNow(Component component)

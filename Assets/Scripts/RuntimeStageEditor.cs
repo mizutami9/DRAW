@@ -115,13 +115,18 @@ namespace DrawBody.Prototype
         public bool TerrainKeepSeparate => terrainKeepSeparate;
         public Color StageBackgroundColor => stageBackgroundColor;
         public string StageRuleModeLabel => LocalizationManager.T(
-            stageRuleMode == StageRuleMode.TimedCollection ? "stage_rule_timed" : "stage_rule_normal");
+            stageRuleMode == StageRuleMode.TimedCollection
+                ? "stage_rule_timed"
+                : stageRuleMode == StageRuleMode.Survival
+                    ? "stage_rule_survival"
+                    : "stage_rule_normal");
         public string StageCollectionTargetLabel => LocalizationManager.T(StageObjectCatalog.GetObjectKey(stageCollectionTarget));
         public string StageTimeLimitLabel => LocalizationManager.Format("stage_rule_seconds", stageTimeLimitSeconds);
         public string StageRequiredCountLabel => stageRequiredCollectionCount <= 0
             ? LocalizationManager.T("stage_rule_all")
             : LocalizationManager.Format("stage_rule_count", stageRequiredCollectionCount);
         public bool IsTimedCollectionRule => stageRuleMode == StageRuleMode.TimedCollection;
+        public bool IsSurvivalRule => stageRuleMode == StageRuleMode.Survival;
         public float StageTimeLimitSeconds => stageTimeLimitSeconds;
         public StageObjectType StageCollectionTarget => stageCollectionTarget;
         public int StagePlacedCollectionTargetCount

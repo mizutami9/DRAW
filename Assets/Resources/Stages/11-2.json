@@ -1,0 +1,36 @@
+{
+    "id": "11-2",
+    "displayName": "Stage 11-2 Survival",
+    "backgroundColorHex": "#F7F2DEFF",
+    "ruleMode": 2,
+    "timeLimitSeconds": 60.0,
+    "collectionTarget": 163,
+    "requiredCollectionCount": 1,
+    "objects": [
+        {
+            "objectId": "survival_spawn",
+            "type": 2,
+            "position": {
+                "x": 0.0,
+                "y": -0.75
+            },
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.699999988079071
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        }
+    ]
+}

@@ -16,6 +16,23 @@ namespace DrawBody.Prototype
 
         private Camera controlledCamera;
 
+        public float MinimumOrthographicSize => minimumOrthographicSize;
+
+        public void SetMinimumOrthographicSize(float value)
+        {
+            minimumOrthographicSize = Mathf.Clamp(value, 2f, maximumOrthographicSize);
+            if (controlledCamera == null)
+            {
+                controlledCamera = GetComponent<Camera>();
+            }
+            if (controlledCamera != null && controlledCamera.orthographic)
+            {
+                controlledCamera.orthographicSize = Mathf.Max(
+                    controlledCamera.orthographicSize,
+                    minimumOrthographicSize);
+            }
+        }
+
         private void Awake()
         {
             controlledCamera = GetComponent<Camera>();

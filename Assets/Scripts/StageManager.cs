@@ -80,9 +80,11 @@ namespace DrawBody.Prototype
         private float challengeStartCountdownRemaining;
         private float challengeTimeUpReturnRemaining;
         private bool challengeStartPositionsCaptured;
+        private StageSurvivalController survivalController;
         private Vector3 primaryChallengeStartPosition;
         private Vector3 secondaryChallengeStartPosition;
         public bool IsTimedCollectionChallenge => stageRuleMode == StageRuleMode.TimedCollection;
+        public bool IsSurvivalChallenge => stageRuleMode == StageRuleMode.Survival;
         public float ChallengeRemainingSeconds => challengeRemaining;
         public bool ChallengeTimeUp => challengeFailed;
         public StageObjectType ChallengeCollectionTarget => collectionTarget;
@@ -739,7 +741,7 @@ namespace DrawBody.Prototype
 
         public void SetPlayerGoalState(PlayerController2D goalPlayer, bool inside)
         {
-            if (goalPlayer == null || cleared || !stageStarted || stageRuleMode == StageRuleMode.TimedCollection)
+            if (goalPlayer == null || cleared || !stageStarted || stageRuleMode != StageRuleMode.Normal)
             {
                 return;
             }
@@ -972,7 +974,7 @@ namespace DrawBody.Prototype
 
         public void EnterDrawingMode()
         {
-            if (!stageStarted || challengeStarting || challengeFailed)
+            if (!stageStarted || challengeStarting || challengeFailed || IsSurvivalChallenge)
             {
                 return;
             }
@@ -1057,6 +1059,9 @@ namespace DrawBody.Prototype
             }
 
             ConfigureStageRule(stageLoader != null ? stageLoader.CurrentStageData : null);
+            survivalController = IsSurvivalChallenge
+                ? Object.FindFirstObjectByType<StageSurvivalController>()
+                : null;
 
             stageStarted = true;
             drawing = false;
@@ -1142,6 +1147,9 @@ namespace DrawBody.Prototype
             NotebookBackgroundDoodles.SetWorldVisible(true);
             stageEditor.TestPlay();
             ConfigureStageRule(stageLoader != null ? stageLoader.CurrentStageData : null);
+            survivalController = IsSurvivalChallenge
+                ? Object.FindFirstObjectByType<StageSurvivalController>()
+                : null;
             stageEditing = false;
             stageStarted = true;
             drawing = false;
@@ -2044,6 +2052,12 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (IsSurvivalChallenge && survivalController != null)
+            {
+                survivalController.RequestElimination(targetPlayer);
+                return;
+            }
+
             // Remote avatars are visual replicas. Their owning client performs the
             // respawn and the regular player-state sync sends the new position.
             if (IsOnlineInStage() && targetPlayer != primaryPlayer)
@@ -2078,6 +2092,12 @@ namespace DrawBody.Prototype
 
             if (targetPlayer.transform.position.y >= resetY)
             {
+                return;
+            }
+
+            if (IsSurvivalChallenge && survivalController != null)
+            {
+                survivalController.RequestElimination(targetPlayer);
                 return;
             }
 
