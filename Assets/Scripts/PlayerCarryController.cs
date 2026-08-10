@@ -39,6 +39,7 @@ namespace DrawBody.Prototype
         private Transform heldTransform;
         private CarryableObject heldObject;
         private PlayerController2D heldPlayerController;
+        private bool heldPlayerPreviousControlsEnabled;
         private Rigidbody2D heldBody;
         private RigidbodyType2D previousBodyType;
         private float previousGravityScale;
@@ -238,6 +239,14 @@ namespace DrawBody.Prototype
         {
             if (Time.timeScale <= 0f)
             {
+                return;
+            }
+
+            if (IsRemoteOnlineReplica())
+            {
+                // A remote avatar exists for rendering and collisions only. It
+                // must never consume this machine's F key, even for one frame
+                // while a throw restores the carried body's physics state.
                 return;
             }
 
@@ -746,6 +755,8 @@ namespace DrawBody.Prototype
             }
 
             BringHeldObjectToFront();
+            heldPlayerPreviousControlsEnabled = heldPlayerController != null
+                && heldPlayerController.ControlsEnabled;
             heldPlayerController?.SetControlsEnabled(false);
             heldTransform.GetComponent<StageBomb>()?.NotifyPickedUp();
             heldOnlinePlayerId = GetHeldOnlinePlayerId(heldPlayerController);
@@ -858,7 +869,7 @@ namespace DrawBody.Prototype
             SetCollisionIgnored(releasedColliders, carrierColliders, true);
 
             heldPlayerController?.ResetMotion();
-            heldPlayerController?.SetControlsEnabled(true);
+            heldPlayerController?.SetControlsEnabled(heldPlayerPreviousControlsEnabled);
             if (heldBody != null)
             {
                 heldBody.bodyType = previousBodyType;
@@ -871,6 +882,7 @@ namespace DrawBody.Prototype
             heldTransform = null;
             heldObject = null;
             heldPlayerController = null;
+            heldPlayerPreviousControlsEnabled = false;
             heldBody = null;
             heldOnlinePlayerId = null;
             heldColliders.Clear();
@@ -1544,6 +1556,23 @@ namespace DrawBody.Prototype
             }
 
             return stageManager.GetOnlinePlayerId(heldPlayer);
+        }
+
+        private bool IsRemoteOnlineReplica()
+        {
+            if (onlineManager == null
+                || stageManager == null
+                || playerController == null
+                || (onlineManager.State != OnlineConnectionState.InLobby
+                    && onlineManager.State != OnlineConnectionState.Matching
+                    && onlineManager.State != OnlineConnectionState.Playing))
+            {
+                return false;
+            }
+
+            string playerId = stageManager.GetOnlinePlayerId(playerController);
+            return !string.IsNullOrEmpty(playerId)
+                && playerId != onlineManager.LocalPlayerId;
         }
 
         private void SendCarryEvent(string action, Vector2 releaseVelocity)
