@@ -85,6 +85,9 @@ namespace DrawBody.Prototype
         public float Rotation;
         public bool TurtleShelled;
         public string SlimeAttachedToPlayerId;
+        public string CarriedPlayerId;
+        public string CarryAction;
+        public Vector2 CarryOffset;
     }
 
     [Serializable]

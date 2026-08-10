@@ -57,6 +57,8 @@ namespace DrawBody.Prototype
         private float onlineCarryPreviousGravityScale;
         private bool onlineCarryPreviousFreezeRotation;
         private bool onlineCarryIsCatGrab;
+        private float onlineCarryBeganAt;
+        private float onlineCarryLastConfirmedAt;
         private Vector2 onlineCarryLocalOffset;
         private readonly List<Collider2D> onlineCarryColliders = new List<Collider2D>();
         private readonly Dictionary<PlayerController2D, DrawManager.DrawingState> drawingStates =
@@ -413,6 +415,13 @@ namespace DrawBody.Prototype
             if (!stageStarted)
             {
                 return;
+            }
+
+            if (onlineCarryHeld
+                && onlineCarryLastConfirmedAt > 0f
+                && Time.unscaledTime - onlineCarryLastConfirmedAt > 1.25f)
+            {
+                EndOnlineCarry(Vector2.zero);
             }
 
             if (stageEditing)
@@ -1692,6 +1701,50 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void ReconcileOnlineCarryState(
+            string carrierPlayerId,
+            string carriedPlayerId,
+            string carryAction,
+            Vector2 carryOffset,
+            string localPlayerId,
+            Vector2 carrierVelocity)
+        {
+            if (string.IsNullOrEmpty(carrierPlayerId) || string.IsNullOrEmpty(localPlayerId))
+            {
+                return;
+            }
+
+            bool carrierClaimsLocal = carriedPlayerId == localPlayerId;
+            if (carrierClaimsLocal
+                && RejectOrResolveMutualOnlineCarry(carrierPlayerId, localPlayerId))
+            {
+                return;
+            }
+            if (onlineCarryHeld && onlineCarrierPlayerId == carrierPlayerId)
+            {
+                if (carrierClaimsLocal)
+                {
+                    onlineCarryLastConfirmedAt = Time.unscaledTime;
+                }
+                else if (Time.unscaledTime - onlineCarryBeganAt >= 0.3f
+                    && Time.unscaledTime - onlineCarryLastConfirmedAt >= 0.18f)
+                {
+                    // A release event can race with body/state rebuilding. The
+                    // carrier's continuous state is the recovery source of truth.
+                    EndOnlineCarry(carrierVelocity);
+                }
+                return;
+            }
+
+            if (!carrierClaimsLocal)
+            {
+                return;
+            }
+
+            bool attachedCarry = carryAction == "cat_grab" || carryAction == "friend_grab";
+            BeginOnlineCarry(carrierPlayerId, attachedCarry, carryOffset);
+        }
+
         private bool RejectOrResolveMutualOnlineCarry(string incomingCarrierId, string localPlayerId)
         {
             if (player == null
@@ -1716,6 +1769,10 @@ namespace DrawBody.Prototype
             bool localCarryWins = string.CompareOrdinal(localPlayerId, incomingCarrierId) < 0;
             if (localCarryWins)
             {
+                if (onlineCarryHeld && onlineCarrierPlayerId == incomingCarrierId)
+                {
+                    EndOnlineCarry(Vector2.zero);
+                }
                 return true;
             }
 
@@ -1742,6 +1799,8 @@ namespace DrawBody.Prototype
 
             onlineCarryHeld = true;
             onlineCarrierPlayerId = carrierPlayerId;
+            onlineCarryBeganAt = Time.unscaledTime;
+            onlineCarryLastConfirmedAt = Time.unscaledTime;
             onlineCarryIsCatGrab = catGrab;
             onlineCarryLocalOffset = localOffset;
             player.SetControlsEnabled(false);
@@ -1839,6 +1898,8 @@ namespace DrawBody.Prototype
             player?.SetControlsEnabled(stageStarted && !drawing && !cleared && !stageEditing);
             onlineCarryBody = null;
             onlineCarrierPlayerId = null;
+            onlineCarryBeganAt = 0f;
+            onlineCarryLastConfirmedAt = 0f;
             onlineCarryIsCatGrab = false;
             onlineCarryLocalOffset = Vector2.zero;
             StartCoroutine(RestoreOnlineCarryCollisions(releasedColliders, carrierColliders));
@@ -1913,6 +1974,13 @@ namespace DrawBody.Prototype
             {
                 return;
             }
+
+            if (onlineCarryHeld && onlineCarrierPlayerId == bodyData.PlayerId)
+            {
+                EndOnlineCarry(Vector2.zero);
+            }
+            player?.GetComponent<PlayerCarryController>()?.ReleaseIfHolding(remotePlayer.transform);
+            player?.GetComponent<PlayerCarryController>()?.ReleaseIfDraggingFriend(remotePlayer.transform);
 
             DrawManager.DrawingState remoteState = drawManager.CreateStateFromBodyJson(bodyData.Json);
             if (remoteState == null)
@@ -2196,8 +2264,19 @@ namespace DrawBody.Prototype
 
         private void RespawnPlayers()
         {
+            ResetAllCarryState();
             RespawnPlayer(primaryPlayer, GetRespawnOffset(primaryPlayer), primaryPlayer == player);
             RespawnPlayer(secondaryPlayer, GetRespawnOffset(secondaryPlayer), secondaryPlayer == player);
+        }
+
+        private void ResetAllCarryState()
+        {
+            player?.GetComponent<PlayerCarryController>()?.ForceDrop();
+            secondaryPlayer?.GetComponent<PlayerCarryController>()?.ForceDrop();
+            if (onlineCarryHeld)
+            {
+                EndOnlineCarry(Vector2.zero);
+            }
         }
 
         public void RespawnFromHazard(PlayerController2D targetPlayer)

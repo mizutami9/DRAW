@@ -70,6 +70,15 @@ namespace DrawBody.Prototype
         private bool scriptedActionEnabled;
 
         public bool IsHolding => heldTransform != null;
+        public string CurrentOnlineCarriedPlayerId => !string.IsNullOrEmpty(heldOnlinePlayerId)
+            ? heldOnlinePlayerId
+            : friendAttachedOnlinePlayerId;
+        public string CurrentOnlineCarryAction => !string.IsNullOrEmpty(heldOnlinePlayerId)
+            ? "pickup"
+            : !string.IsNullOrEmpty(friendAttachedOnlinePlayerId) ? "friend_grab" : string.Empty;
+        public Vector2 CurrentOnlineCarryOffset => !string.IsNullOrEmpty(friendAttachedOnlinePlayerId)
+            ? (Vector2)slimeAttachLocalOffset
+            : Vector2.zero;
         public string SlimeAttachedOnlinePlayerId => slimeAttachedPlayer != null && stageManager != null
             ? stageManager.GetOnlinePlayerId(slimeAttachedPlayer)
             : null;

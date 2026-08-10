@@ -104,6 +104,7 @@ namespace DrawBody.Prototype
             }
 
             Rigidbody2D body = stageManager.ActivePlayerBody;
+            PlayerCarryController localCarry = localTransform.GetComponent<PlayerCarryController>();
             onlineManager.SendPlayerState(new OnlinePlayerState
             {
                 PlayerId = onlineManager.LocalPlayerId,
@@ -112,7 +113,10 @@ namespace DrawBody.Prototype
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
                 Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
                 TurtleShelled = localTransform.GetComponent<PlayerController2D>()?.IsTurtleShelled ?? false,
-                SlimeAttachedToPlayerId = localTransform.GetComponent<PlayerCarryController>()?.SlimeAttachedOnlinePlayerId
+                SlimeAttachedToPlayerId = localCarry?.SlimeAttachedOnlinePlayerId,
+                CarriedPlayerId = localCarry?.CurrentOnlineCarriedPlayerId,
+                CarryAction = localCarry?.CurrentOnlineCarryAction,
+                CarryOffset = localCarry != null ? localCarry.CurrentOnlineCarryOffset : Vector2.zero
             });
         }
 
@@ -137,6 +141,13 @@ namespace DrawBody.Prototype
             {
                 lastRemoteSequences[state.PlayerId] = state.Sequence;
             }
+            stageManager.ReconcileOnlineCarryState(
+                state.PlayerId,
+                state.CarriedPlayerId,
+                state.CarryAction,
+                state.CarryOffset,
+                onlineManager.LocalPlayerId,
+                state.Velocity);
             if (stageManager.IsOnlineRemotePlayerHeldByLocal(state.PlayerId))
             {
                 remoteTargets.Remove(state.PlayerId);
