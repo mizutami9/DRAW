@@ -50,6 +50,7 @@ namespace DrawBody.Prototype
         private float currentSlimeWallSlideSpeed;
         private DrawManager.Species currentSpecies = DrawManager.Species.Human;
         private bool wasGliding;
+        private AudioSource birdGlideAudioSource;
         private bool wasWallSticking;
         private bool isTouchingSlimeWall;
         private float nextFootstepTime;
@@ -165,6 +166,10 @@ namespace DrawBody.Prototype
             SetTurtleShellState(false);
             SetTurtleRotation(false);
             currentSpecies = species;
+            if (species != DrawManager.Species.Bird)
+            {
+                StopBirdGlideAudio();
+            }
             moveSpeedMultiplier = 1f;
             jumpVelocityMultiplier = 1f;
             canGlide = false;
@@ -221,6 +226,7 @@ namespace DrawBody.Prototype
 
         private void OnDestroy()
         {
+            StopBirdGlideAudio();
             if (wallJumpTrajectoryMaterial != null)
             {
                 Destroy(wallJumpTrajectoryMaterial);
@@ -282,6 +288,7 @@ namespace DrawBody.Prototype
             controlsEnabled = enabled;
             if (!enabled)
             {
+                StopBirdGlideAudio();
                 horizontalInput = 0f;
                 SetTurtleShellState(false);
                 SetTurtleRotation(false);
@@ -749,6 +756,7 @@ namespace DrawBody.Prototype
                 : bodyBuilder.BuiltSpecies == DrawManager.Species.Bird;
             bool gliding = !IsGrounded
                 && !wallJumping
+                && controlsEnabled
                 && canGlide
                 && currentSpecies == DrawManager.Species.Bird
                 && isBuiltAsBird
@@ -757,8 +765,8 @@ namespace DrawBody.Prototype
             if (gliding)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, currentGlideFallSpeed);
-                GameSfx.PlayAt(wasGliding ? SfxId.BirdGlideLoop : SfxId.BirdFlap, transform.position);
             }
+            UpdateBirdGlideAudio(gliding);
             wasGliding = gliding;
 
             bool wallSticking = !wallJumping
@@ -776,6 +784,56 @@ namespace DrawBody.Prototype
                 GameSfx.PlayAt(wallSticking ? SfxId.SlimeStick : SfxId.SlimeRelease, transform.position);
             }
             wasWallSticking = wallSticking;
+        }
+
+        private void UpdateBirdGlideAudio(bool gliding)
+        {
+            if (!gliding)
+            {
+                StopBirdGlideAudio();
+                return;
+            }
+
+            if (birdGlideAudioSource == null)
+            {
+                SfxDefinition definition = SfxCatalog.Get(SfxId.BirdGlideLoop);
+                AudioClip clip = Resources.Load<AudioClip>(definition.ResourcePath);
+                if (clip == null)
+                {
+                    return;
+                }
+
+                GameObject audioObject = new GameObject("Bird Glide Audio");
+                audioObject.transform.SetParent(transform, false);
+                birdGlideAudioSource = audioObject.AddComponent<AudioSource>();
+                birdGlideAudioSource.playOnAwake = false;
+                birdGlideAudioSource.loop = true;
+                birdGlideAudioSource.clip = clip;
+                birdGlideAudioSource.spatialBlend = 0.55f;
+                birdGlideAudioSource.pitch = 0.9f;
+                birdGlideAudioSource.dopplerLevel = 0f;
+            }
+
+            SfxDefinition glide = SfxCatalog.Get(SfxId.BirdGlideLoop);
+            birdGlideAudioSource.volume = Mathf.Clamp01(
+                glide.Volume * GameSfx.MasterVolume * 0.55f);
+            if (!birdGlideAudioSource.isPlaying)
+            {
+                if (!wasGliding)
+                {
+                    GameSfx.PlayAt(SfxId.BirdFlap, transform.position, 0.7f);
+                }
+                birdGlideAudioSource.Play();
+            }
+        }
+
+        private void StopBirdGlideAudio()
+        {
+            if (birdGlideAudioSource != null && birdGlideAudioSource.isPlaying)
+            {
+                birdGlideAudioSource.Stop();
+            }
+            wasGliding = false;
         }
 
         private void PlayJumpSound()

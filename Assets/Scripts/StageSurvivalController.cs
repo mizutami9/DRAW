@@ -8,6 +8,8 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "11-2";
         private const string KindRound = "survival_round";
+        private const string KindState = "survival_state";
+        private const string KindCannon = "survival_cannon";
         private const string KindEliminateRequest = "survival_eliminate_request";
         private const string KindEliminated = "survival_eliminated";
         private const int FloorCount = 14;
@@ -33,6 +35,28 @@ namespace DrawBody.Prototype
             public int Round;
             public int[] SafeFloors;
             public float WarningSeconds;
+        }
+
+        [System.Serializable]
+        private sealed class SurvivalState
+        {
+            public int Sequence;
+            public int Phase;
+            public int Round;
+            public int[] SafeFloors;
+            public string[] EliminatedIds;
+            public float RemainingSeconds;
+            public float ElapsedSeconds;
+            public float PhaseRemaining;
+        }
+
+        [System.Serializable]
+        private sealed class CannonState
+        {
+            public int Sequence;
+            public Vector2 Position;
+            public Vector2 Direction;
+            public float Speed;
         }
 
         private sealed class CannonPoint
@@ -82,6 +106,10 @@ namespace DrawBody.Prototype
         private int lastSafeFloor = -1;
         private int bombSequence;
         private int cannonSequence;
+        private int stateSequence;
+        private int lastReceivedStateSequence;
+        private int lastReceivedCannonSequence;
+        private float nextStateBroadcastAt;
         private float previousCameraMinimum = 8f;
         private bool configured;
         private bool restoredPlayers;
@@ -158,6 +186,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (IsOnlineActive() && !HasAuthority())
+            {
+                UpdateNetworkReplica();
+                return;
+            }
+
+            BroadcastStateIfDue();
+
             if (phase == SurvivalPhase.Finished)
             {
                 return;
@@ -218,6 +254,7 @@ namespace DrawBody.Prototype
                     phase = SurvivalPhase.Collapsed;
                     phaseRemaining = GetCollapsedDuration();
                     GameSfx.Play(SfxId.EditorObjectDrop);
+                    BroadcastStateIfDue(true);
                 }
             }
             else if (phase == SurvivalPhase.Collapsed)
@@ -248,6 +285,31 @@ namespace DrawBody.Prototype
                 SetMonitorSub(LocalizationManager.T("survival_clear_sub"), 0.1f);
                 stageManager.ClearStage();
                 return;
+            }
+
+            RefreshMonitor();
+        }
+
+        private void UpdateNetworkReplica()
+        {
+            ApplyPendingOnlineEliminations();
+            CheckLocalPlayerFalls();
+
+            if (phase == SurvivalPhase.Intro
+                || phase == SurvivalPhase.StartCountdown
+                || phase == SurvivalPhase.Warning
+                || phase == SurvivalPhase.Collapsed)
+            {
+                phaseRemaining = Mathf.Max(0f, phaseRemaining - Time.deltaTime);
+            }
+            if (phase == SurvivalPhase.Warning || phase == SurvivalPhase.Collapsed)
+            {
+                elapsedSeconds += Time.deltaTime;
+                remainingSeconds = Mathf.Max(0f, remainingSeconds - Time.deltaTime);
+            }
+            if (phase == SurvivalPhase.Warning)
+            {
+                UpdateFloorPulse();
             }
 
             RefreshMonitor();
@@ -307,6 +369,7 @@ namespace DrawBody.Prototype
                     Json = JsonUtility.ToJson(new EliminationState { PlayerId = playerId })
                 });
             }
+            BroadcastStateIfDue(true);
         }
 
         private void ApplyElimination(string playerId)
@@ -371,6 +434,14 @@ namespace DrawBody.Prototype
                     ApplyRound(state);
                 }
             }
+            else if (data.Kind == KindState && IsHostPlayer(data.PlayerId) && !HasAuthority())
+            {
+                ApplyAuthoritativeState(JsonUtility.FromJson<SurvivalState>(data.Json));
+            }
+            else if (data.Kind == KindCannon && IsHostPlayer(data.PlayerId) && !HasAuthority())
+            {
+                ApplyCannonState(JsonUtility.FromJson<CannonState>(data.Json));
+            }
             else if (data.Kind == KindEliminateRequest && HasAuthority())
             {
                 EliminationState state = JsonUtility.FromJson<EliminationState>(data.Json);
@@ -426,6 +497,7 @@ namespace DrawBody.Prototype
                     Json = JsonUtility.ToJson(state)
                 });
             }
+            BroadcastStateIfDue(true);
         }
 
         private void ApplyRound(RoundState state)
@@ -576,12 +648,111 @@ namespace DrawBody.Prototype
             CannonPoint cannon = cannons[cannonSequence % cannons.Count];
             cannonSequence++;
             float speed = Mathf.Lerp(7.5f, 12.5f, Mathf.Clamp01(elapsedSeconds / durationSeconds));
-            SurvivalCannonball.Create(
-                transform,
-                cannon.Position + cannon.Direction * 0.85f,
-                cannon.Direction,
-                speed);
-            GameSfx.PlayAt(SfxId.BombTick, cannon.Position, 0.72f);
+            CannonState state = new CannonState
+            {
+                Sequence = cannonSequence,
+                Position = cannon.Position + cannon.Direction * 0.85f,
+                Direction = cannon.Direction,
+                Speed = speed
+            };
+            ApplyCannonState(state);
+            if (IsOnlineActive() && onlineManager != null)
+            {
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = StageId,
+                    Kind = KindCannon,
+                    Json = JsonUtility.ToJson(state)
+                });
+            }
+        }
+
+        private void ApplyCannonState(CannonState state)
+        {
+            if (state == null || state.Sequence <= lastReceivedCannonSequence)
+            {
+                return;
+            }
+
+            lastReceivedCannonSequence = state.Sequence;
+            SurvivalCannonball.Create(transform, state.Position, state.Direction, state.Speed);
+            GameSfx.PlayAt(SfxId.BombTick, state.Position, 0.72f);
+        }
+
+        private void BroadcastStateIfDue(bool force = false)
+        {
+            if (!IsOnlineActive() || !HasAuthority() || onlineManager == null
+                || !force && Time.unscaledTime < nextStateBroadcastAt)
+            {
+                return;
+            }
+
+            nextStateBroadcastAt = Time.unscaledTime + 0.2f;
+            SurvivalState state = new SurvivalState
+            {
+                Sequence = ++stateSequence,
+                Phase = (int)phase,
+                Round = roundNumber,
+                SafeFloors = new List<int>(safeFloors).ToArray(),
+                EliminatedIds = new List<string>(eliminatedIds).ToArray(),
+                RemainingSeconds = remainingSeconds,
+                ElapsedSeconds = elapsedSeconds,
+                PhaseRemaining = phaseRemaining
+            };
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = KindState,
+                Json = JsonUtility.ToJson(state)
+            });
+        }
+
+        private void ApplyAuthoritativeState(SurvivalState state)
+        {
+            if (state == null || state.Sequence <= lastReceivedStateSequence)
+            {
+                return;
+            }
+
+            lastReceivedStateSequence = state.Sequence;
+            SurvivalPhase previousPhase = phase;
+            int previousRound = roundNumber;
+            phase = (SurvivalPhase)Mathf.Clamp(state.Phase, 0, (int)SurvivalPhase.Failed);
+            roundNumber = Mathf.Max(roundNumber, state.Round);
+            remainingSeconds = Mathf.Max(0f, state.RemainingSeconds);
+            elapsedSeconds = Mathf.Max(0f, state.ElapsedSeconds);
+            phaseRemaining = Mathf.Max(0f, state.PhaseRemaining);
+
+            safeFloors.Clear();
+            if (state.SafeFloors != null)
+            {
+                for (int i = 0; i < state.SafeFloors.Length; i++)
+                {
+                    safeFloors.Add(Mathf.Clamp(state.SafeFloors[i], 0, FloorCount - 1));
+                }
+            }
+            if (state.EliminatedIds != null)
+            {
+                for (int i = 0; i < state.EliminatedIds.Length; i++)
+                {
+                    ApplyElimination(state.EliminatedIds[i]);
+                }
+            }
+
+            if (phase == SurvivalPhase.Collapsed)
+            {
+                CollapseUnsafeFloors();
+            }
+            else if (previousPhase != phase || previousRound != roundNumber)
+            {
+                RestoreFloors();
+            }
+            SetLocalControls(phase == SurvivalPhase.Warning || phase == SurvivalPhase.Collapsed);
+            if (previousPhase != phase && phase == SurvivalPhase.Collapsed)
+            {
+                GameSfx.Play(SfxId.EditorObjectDrop);
+            }
+            RefreshMonitor();
         }
 
         private void CheckLocalPlayerFalls()

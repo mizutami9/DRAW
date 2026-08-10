@@ -22,7 +22,7 @@ namespace DrawBody.Prototype
         private const string KindBombArmState = "bomb_arm_state";
 
         [SerializeField] private OnlineManager onlineManager;
-        [SerializeField] private float transformSendRate = 12f;
+        [SerializeField] private float transformSendRate = 20f;
 
         private readonly Dictionary<string, SyncTransformEntry> transformEntries = new Dictionary<string, SyncTransformEntry>();
         private readonly Dictionary<string, string> ownersByObjectId = new Dictionary<string, string>();
@@ -148,6 +148,24 @@ namespace DrawBody.Prototype
                 BroadcastCrumblingFloorStates();
                 BroadcastDropperBoxSnapshot();
                 BroadcastBombSnapshot();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (!ShouldAskHost)
+            {
+                return;
+            }
+
+            foreach (SyncTransformEntry entry in transformEntries.Values)
+            {
+                if (entry == null || !entry.IsHostDrivenPlatform || !entry.HasNetworkTarget)
+                {
+                    continue;
+                }
+
+                entry.ApplyNetworkTarget(Time.fixedDeltaTime);
             }
         }
 
@@ -591,6 +609,13 @@ namespace DrawBody.Prototype
                         return;
                     }
                 }
+                else if (transformEntries.TryGetValue(data.ObjectId, out SyncTransformEntry receivedEntry)
+                    && receivedEntry != null
+                    && receivedEntry.IsHostDrivenPlatform
+                    && !IsLobbyHost(data.PlayerId))
+                {
+                    return;
+                }
 
                 ApplyTransformState(data.ObjectId, JsonUtility.FromJson<OnlineTransformGimmickState>(data.Json));
                 return;
@@ -805,6 +830,12 @@ namespace DrawBody.Prototype
             }
 
             entry.Transform.gameObject.SetActive(state.Active);
+            if (ShouldAskHost && entry.IsHostDrivenPlatform)
+            {
+                entry.SetNetworkTarget(state);
+                return;
+            }
+
             if (entry.Body != null)
             {
                 entry.Body.position = state.Position;
@@ -1147,7 +1178,9 @@ namespace DrawBody.Prototype
                 }
 
                 string id = stageObject.objectId + "/" + GetRelativePath(stageObject.transform, body.transform);
-                transformEntries[id] = new SyncTransformEntry(body.transform, body);
+                bool hostDrivenPlatform = stageObject.type == StageObjectType.MovingPlatform
+                    || stageObject.type == StageObjectType.Elevator;
+                transformEntries[id] = new SyncTransformEntry(body.transform, body, hostDrivenPlatform);
             }
         }
 
@@ -1212,6 +1245,7 @@ namespace DrawBody.Prototype
         {
             public readonly Transform Transform;
             public readonly Rigidbody2D Body;
+            public readonly bool IsHostDrivenPlatform;
             public bool HasSentState;
             public Vector2 LastPosition;
             public Vector2 LastVelocity;
@@ -1219,11 +1253,59 @@ namespace DrawBody.Prototype
             public float LastAngularVelocity;
             public bool LastActive;
             public float LastSentTime;
+            public bool HasNetworkTarget;
+            private Vector2 networkPosition;
+            private Vector2 networkVelocity;
+            private float networkRotation;
+            private float networkAngularVelocity;
+            private float networkReceivedAt;
 
-            public SyncTransformEntry(Transform transform, Rigidbody2D body)
+            public SyncTransformEntry(Transform transform, Rigidbody2D body, bool isHostDrivenPlatform)
             {
                 Transform = transform;
                 Body = body;
+                IsHostDrivenPlatform = isHostDrivenPlatform;
+            }
+
+            public void SetNetworkTarget(OnlineTransformGimmickState state)
+            {
+                networkPosition = state.Position;
+                networkVelocity = state.Velocity;
+                networkRotation = state.Rotation;
+                networkAngularVelocity = state.AngularVelocity;
+                networkReceivedAt = Time.unscaledTime;
+                HasNetworkTarget = true;
+            }
+
+            public void ApplyNetworkTarget(float deltaTime)
+            {
+                if (Transform == null)
+                {
+                    return;
+                }
+
+                float age = Mathf.Clamp(Time.unscaledTime - networkReceivedAt, 0f, 0.12f);
+                Vector2 predictedPosition = networkPosition + networkVelocity * age;
+                float predictedRotation = networkRotation + networkAngularVelocity * age;
+                Vector2 currentPosition = Body != null ? Body.position : (Vector2)Transform.position;
+                float currentRotation = Body != null ? Body.rotation : Transform.eulerAngles.z;
+                float positionError = Vector2.Distance(currentPosition, predictedPosition);
+                float blend = positionError > 3f
+                    ? 1f
+                    : 1f - Mathf.Exp(-22f * Mathf.Max(0.001f, deltaTime));
+                Vector2 nextPosition = Vector2.Lerp(currentPosition, predictedPosition, blend);
+                float nextRotation = Mathf.LerpAngle(currentRotation, predictedRotation, blend);
+
+                if (Body != null)
+                {
+                    Body.MovePosition(nextPosition);
+                    Body.MoveRotation(nextRotation);
+                }
+                else
+                {
+                    Transform.position = nextPosition;
+                    Transform.rotation = Quaternion.Euler(0f, 0f, nextRotation);
+                }
             }
         }
     }

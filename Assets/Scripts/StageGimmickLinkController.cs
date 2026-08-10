@@ -144,7 +144,9 @@ namespace DrawBody.Prototype
             for (int i = 0; i < links.Count; i++)
             {
                 LinkRuntime link = links[i];
-                if (link.NeedsAnimatedUpdate && updatedTargetKeys.Add(link.TargetActionKey))
+                if (link.NeedsAnimatedUpdate
+                    && (!link.IsMovement || syncManager == null || !syncManager.ShouldAskHost)
+                    && updatedTargetKeys.Add(link.TargetActionKey))
                 {
                     link.Update(Time.deltaTime);
                     for (int peerIndex = 0; peerIndex < links.Count; peerIndex++)
@@ -258,7 +260,7 @@ namespace DrawBody.Prototype
                 source.GetComponent<KeyLockReceiver>()?.ApplyUnlockedState();
                 source.GetComponent<InkWeightScale>()?.ApplyActivatedState();
             }
-            link.ApplyState(state);
+            link.ApplyState(state, syncManager == null || !syncManager.ShouldAskHost);
             if (state.Active && link.IsSimultaneousButtonSource)
             {
                 ApplyLatchedVisual(sourceObjectId);
@@ -446,6 +448,7 @@ namespace DrawBody.Prototype
                         && !IsDirectionalMoveAction()
                         && !Mathf.Approximately(progress, active ? 1f : 0f)));
             public bool SharesProgressWhileInactive => IsMoveAction() && !IsDirectionalMoveAction();
+            public bool IsMovement => IsMoveAction();
             public string TargetActionKey => targetId + "\n" + action;
 
             public bool IsButtonSource
@@ -693,7 +696,7 @@ namespace DrawBody.Prototype
                 };
             }
 
-            public void ApplyState(OnlineLinkGimmickState state)
+            public void ApplyState(OnlineLinkGimmickState state, bool applyMovementTransform)
             {
                 if (state == null || target == null)
                 {
@@ -710,7 +713,7 @@ namespace DrawBody.Prototype
                     {
                         directionalPlatform?.SetInput(SourceId, GetMoveDirection(), active);
                     }
-                    else
+                    else if (applyMovementTransform)
                     {
                         ApplyMoveProgress(progress);
                     }

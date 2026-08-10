@@ -14,6 +14,7 @@ namespace DrawBody.Prototype
             new Dictionary<string, Vector2>();
 
         private Rigidbody2D body;
+        private StageGimmickSyncManager syncManager;
         private Vector2 startPosition;
         private float movementLimit = 6f;
         private float movementSpeed = 3.2f;
@@ -29,6 +30,7 @@ namespace DrawBody.Prototype
             }
 
             body = GetComponent<Rigidbody2D>();
+            syncManager = GetComponentInParent<StageGimmickSyncManager>();
             startPosition = body != null ? body.position : (Vector2)transform.position;
             configured = true;
         }
@@ -52,7 +54,9 @@ namespace DrawBody.Prototype
 
         private void FixedUpdate()
         {
-            if (!configured || activeInputs.Count == 0)
+            if (!configured
+                || activeInputs.Count == 0
+                || syncManager != null && syncManager.ShouldAskHost)
             {
                 return;
             }

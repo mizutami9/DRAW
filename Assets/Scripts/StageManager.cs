@@ -67,6 +67,9 @@ namespace DrawBody.Prototype
             new Dictionary<PlayerController2D, float>();
         private Material respawnBurstMaterial;
         private Coroutine redrawRespawnRoutine;
+        private PlayerController2D redrawReturnPlayer;
+        private Vector3 redrawReturnPosition;
+        private bool hasRedrawReturnPosition;
         private readonly HashSet<PlayerController2D> localPlayersAtGoal = new HashSet<PlayerController2D>();
         private readonly HashSet<string> onlinePlayerIdsAtGoal = new HashSet<string>();
         private readonly HashSet<string> collectedObjectIds = new HashSet<string>();
@@ -1034,6 +1037,9 @@ namespace DrawBody.Prototype
             drawing = true;
             if (player != null)
             {
+                redrawReturnPlayer = player;
+                redrawReturnPosition = player.transform.position;
+                hasRedrawReturnPosition = true;
                 player.ResetMotion();
             }
 
@@ -1093,7 +1099,8 @@ namespace DrawBody.Prototype
                 && !stageSelectRemoteWaiting
                 && onlineManager != null
                 && onlineManager.CurrentLobby != null
-                && onlineManager.State == OnlineConnectionState.InLobby;
+                && onlineManager.State != OnlineConnectionState.Offline
+                && IsLocalOnlineHost(onlineManager.CurrentLobby);
             stageSelectReturnToMultiLobby = false;
             stageSelectRemoteWaiting = false;
             if (notifyOnline)
@@ -1647,11 +1654,23 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            bool beginsCarry = carryData.Action == "pickup"
+                || carryData.Action == "cat_grab"
+                || carryData.Action == "friend_grab";
+            if (beginsCarry && RejectOrResolveMutualOnlineCarry(carryData.CarrierPlayerId, localPlayerId))
+            {
+                return;
+            }
+
             if (carryData.Action == "pickup")
             {
                 BeginOnlineCarry(carryData.CarrierPlayerId, false, Vector2.zero);
             }
             else if (carryData.Action == "cat_grab")
+            {
+                BeginOnlineCarry(carryData.CarrierPlayerId, true, carryData.LocalOffset);
+            }
+            else if (carryData.Action == "friend_grab")
             {
                 BeginOnlineCarry(carryData.CarrierPlayerId, true, carryData.LocalOffset);
             }
@@ -1667,6 +1686,42 @@ namespace DrawBody.Prototype
             {
                 EndOnlineCarry(carryData.ReleaseVelocity);
             }
+            else if (carryData.Action == "friend_release")
+            {
+                EndOnlineCarry(carryData.ReleaseVelocity);
+            }
+        }
+
+        private bool RejectOrResolveMutualOnlineCarry(string incomingCarrierId, string localPlayerId)
+        {
+            if (player == null
+                || string.IsNullOrEmpty(incomingCarrierId)
+                || !onlineRemotePlayers.TryGetValue(incomingCarrierId, out PlayerController2D incomingCarrier)
+                || incomingCarrier == null)
+            {
+                return false;
+            }
+
+            PlayerCarryController localCarry = player.GetComponent<PlayerCarryController>();
+            if (localCarry == null
+                || !localCarry.IsHoldingTarget(incomingCarrier.transform)
+                    && !localCarry.IsDraggingFriend(incomingCarrier.transform))
+            {
+                return false;
+            }
+
+            // Both peers make the same decision without waiting for another
+            // round trip: the lexicographically smaller player id is the carrier.
+            // This collapses simultaneous A->B and B->A requests to one edge.
+            bool localCarryWins = string.CompareOrdinal(localPlayerId, incomingCarrierId) < 0;
+            if (localCarryWins)
+            {
+                return true;
+            }
+
+            localCarry.ReleaseIfHolding(incomingCarrier.transform);
+            localCarry.ReleaseIfDraggingFriend(incomingCarrier.transform);
+            return false;
         }
 
         private void LateUpdate()
@@ -2039,22 +2094,26 @@ namespace DrawBody.Prototype
             }
 
             PlayerController2D redrawPlayer = player;
-            Vector3 offset = GetRespawnOffset(redrawPlayer);
+            Vector3 returnPosition = hasRedrawReturnPosition && redrawReturnPlayer == redrawPlayer
+                ? redrawReturnPosition
+                : redrawPlayer.transform.position;
+            hasRedrawReturnPosition = false;
+            redrawReturnPlayer = null;
             redrawPlayer.SetControlsEnabled(false);
             redrawPlayer.ResetMotion();
-            redrawRespawnRoutine = StartCoroutine(CompleteRedrawRespawn(redrawPlayer, offset));
+            redrawRespawnRoutine = StartCoroutine(CompleteRedrawRespawn(redrawPlayer, returnPosition));
         }
 
-        private IEnumerator CompleteRedrawRespawn(PlayerController2D redrawPlayer, Vector3 offset)
+        private IEnumerator CompleteRedrawRespawn(PlayerController2D redrawPlayer, Vector3 returnPosition)
         {
             // BodyBuilder destroys the old hand-drawn colliders at end of frame.
             // Wait until they are gone before testing the rebuilt body against
             // the stage, otherwise the stale body can push the player above it.
             yield return null;
 
-            if (redrawPlayer != null && spawnPoint != null)
+            if (redrawPlayer != null)
             {
-                redrawPlayer.transform.position = spawnPoint.position + offset;
+                redrawPlayer.transform.position = returnPosition;
                 redrawPlayer.ResetMotion();
                 LiftPlayerOutOfGround(redrawPlayer);
                 redrawPlayer.SetControlsEnabled(

@@ -6,6 +6,7 @@ namespace DrawBody.Prototype
     public sealed class StageElevator : MonoBehaviour
     {
         private Rigidbody2D cabin;
+        private StageGimmickSyncManager syncManager;
         private Vector2 bottomPosition;
         private Vector2 travelDirection;
         private float travelDistance = 8f;
@@ -27,6 +28,7 @@ namespace DrawBody.Prototype
         public void Configure(Rigidbody2D cabinBody, float distance, float speed)
         {
             cabin = cabinBody;
+            syncManager = GetComponentInParent<StageGimmickSyncManager>();
             travelDistance = Mathf.Max(1f, distance);
             movementSpeed = Mathf.Max(0.1f, speed);
             bottomPosition = cabin != null ? cabin.position : (Vector2)transform.position;
@@ -39,7 +41,9 @@ namespace DrawBody.Prototype
 
         private void FixedUpdate()
         {
-            if (!configured || cabin == null)
+            if (!configured
+                || cabin == null
+                || syncManager != null && syncManager.ShouldAskHost)
             {
                 return;
             }
