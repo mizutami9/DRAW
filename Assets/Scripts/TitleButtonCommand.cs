@@ -18,7 +18,8 @@ namespace DrawBody.Prototype
             Back,
             StageSelectBack,
             RandomMatch,
-            Room
+            Room,
+            Debug
         }
 
         [SerializeField] private StageManager stageManager;
@@ -37,6 +38,11 @@ namespace DrawBody.Prototype
             navigation.mode = Navigation.Mode.None;
             button.navigation = navigation;
             button.onClick.AddListener(Execute);
+        }
+
+        public void Configure(Command nextCommand)
+        {
+            command = nextCommand;
         }
 
         private void Execute()
@@ -72,6 +78,9 @@ namespace DrawBody.Prototype
                     break;
                 case Command.Room:
                     SetStatus(LocalizationManager.T("multi_room_status_default"));
+                    break;
+                case Command.Debug:
+                    stageManager?.OpenTrailerDebugMenu();
                     break;
             }
 

@@ -217,6 +217,7 @@ namespace DrawBody.Prototype
             RectTransform menu = FindRect(panel, "TitleMenuBar");
             if (menu != null)
             {
+                TrailerDebugMenuController.Ensure(panel, menu);
                 menu.anchorMin = new Vector2(0f, 0f);
                 menu.anchorMax = new Vector2(1f, 0f);
                 menu.pivot = new Vector2(0.5f, 0f);
@@ -231,6 +232,7 @@ namespace DrawBody.Prototype
                 SetButtonLayout(menu, "TitleDrawButton", new Vector2(0f, 18f), new Vector2(148f, 58f), Yellow, -0.7f);
                 SetButtonLayout(menu, "TitleOptionButton", new Vector2(172f, 18f), new Vector2(148f, 58f), Violet, 0.6f);
                 SetButtonLayout(menu, "TitleExitButton", new Vector2(344f, 18f), new Vector2(148f, 58f), Coral, -0.5f);
+                SetButtonLayout(menu, "TitleDebugButton", new Vector2(516f, 18f), new Vector2(148f, 58f), Cyan, 0.4f);
             }
 
             HideIfExists(panel, "TitleTagline");

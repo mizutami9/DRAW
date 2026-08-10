@@ -99,6 +99,10 @@ namespace DrawBody.Prototype
                     return "Audio/SFX/Player/player_death";
                 case SfxId.BombWallBreak:
                     return "Audio/SFX/Editor/editor_object_delete";
+                case SfxId.CatClawAttach:
+                    return "Audio/SFX/Species/cat_jump";
+                case SfxId.CatClawRelease:
+                    return "Audio/SFX/Species/cat_run_loop";
             }
 
             string name = id.ToString();

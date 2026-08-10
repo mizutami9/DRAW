@@ -61,6 +61,10 @@ namespace DrawBody.Prototype
         private PlayerController2D remoteSlimeVisualTarget;
         private LineRenderer slimeAttachBridge;
         private LineRenderer slimeAttachRing;
+        private readonly LineRenderer[] catClawLines = new LineRenderer[3];
+        private bool scriptedSlimeAttachment;
+        private bool scriptedSlimeAttachmentHeld;
+        private bool scriptedActionEnabled;
 
         public bool IsHolding => heldTransform != null;
         public string SlimeAttachedOnlinePlayerId => slimeAttachedPlayer != null && stageManager != null
@@ -81,6 +85,84 @@ namespace DrawBody.Prototype
 
             DropHeld(Vector2.zero);
             return true;
+        }
+
+        public bool TryPickupForScript()
+        {
+            if (heldTransform == null)
+            {
+                TryPickup();
+            }
+            return heldTransform != null;
+        }
+
+        public bool ThrowHeldForScript(Vector2 direction)
+        {
+            if (heldTransform == null)
+            {
+                return false;
+            }
+            Vector2 normalized = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.right;
+            Vector2 baseVelocity = playerBody != null ? playerBody.linearVelocity : Vector2.zero;
+            float multiplier = heldObject != null ? heldObject.ThrowMultiplier : 1f;
+            Vector2 throwVelocity = baseVelocity + normalized * GetCurrentThrowSpeed() * multiplier;
+            GameSfx.PlayAt(SfxId.HumanThrow, transform.position);
+            DropHeld(throwVelocity);
+            return true;
+        }
+
+        public bool SetSlimeAttachmentForScript(bool attached)
+        {
+            if (!CanAttachToFriend())
+            {
+                return false;
+            }
+            scriptedSlimeAttachment = true;
+            scriptedSlimeAttachmentHeld = attached;
+            if (attached)
+            {
+                if (slimeAttachedPlayer == null) TryAttachSlimeToFriend();
+            }
+            else
+            {
+                DetachSlimeFromFriend(true);
+            }
+            return slimeAttachedPlayer != null;
+        }
+
+        public Vector2 GetThrowDirectionForScript()
+        {
+            return GetThrowDirection();
+        }
+
+        public void ApplyActionForScript(
+            bool actionHeld,
+            bool actionPressed,
+            Vector2 recordedThrowDirection,
+            bool useRecordedThrowDirection)
+        {
+            scriptedActionEnabled = true;
+            if (CanAttachToFriend())
+            {
+                SetSlimeAttachmentForScript(actionHeld);
+                return;
+            }
+            if (!IsHuman() || !actionPressed)
+            {
+                return;
+            }
+            if (heldTransform == null)
+            {
+                TryPickup();
+            }
+            else if (useRecordedThrowDirection)
+            {
+                ThrowHeldForScript(recordedThrowDirection);
+            }
+            else
+            {
+                ThrowHeld();
+            }
         }
 
         private void Awake()
@@ -136,10 +218,18 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (IsSlime())
+            if (scriptedActionEnabled)
+            {
+                return;
+            }
+
+            if (CanAttachToFriend())
             {
                 DropHeld(Vector2.zero);
-                if (Input.GetKey(KeyCode.F))
+                bool attachHeld = scriptedSlimeAttachment
+                    ? scriptedSlimeAttachmentHeld
+                    : Input.GetKey(KeyCode.F);
+                if (attachHeld)
                 {
                     if (slimeAttachedPlayer == null)
                     {
@@ -181,7 +271,7 @@ namespace DrawBody.Prototype
             }
             else if (remoteSlimeVisualTarget != null)
             {
-                UpdateSlimeAttachmentVisual(remoteSlimeVisualTarget, false);
+                UpdateFriendAttachmentVisual(remoteSlimeVisualTarget, false);
             }
             else
             {
@@ -231,7 +321,8 @@ namespace DrawBody.Prototype
 
                 Collider2D[] candidateColliders = candidate.GetComponentsInChildren<Collider2D>(false);
                 float distance = GetClosestColliderDistance(ownColliders, candidateColliders);
-                if (distance <= slimeFriendAttachReach && distance < bestDistance)
+                float attachReach = IsCat() ? Mathf.Max(0.65f, slimeFriendAttachReach) : slimeFriendAttachReach;
+                if (distance <= attachReach && distance < bestDistance)
                 {
                     bestDistance = distance;
                     bestPlayer = candidate;
@@ -267,7 +358,7 @@ namespace DrawBody.Prototype
             slimeTargetColliders = bestPlayer.GetComponentsInChildren<Collider2D>(false);
             SetCollisionIgnored(slimeOwnColliders, slimeTargetColliders, true);
             FollowSlimeAttachedFriend();
-            GameSfx.PlayAt(SfxId.SlimeStick, transform.position, 1.25f);
+            GameSfx.PlayAt(IsCat() ? SfxId.CatClawAttach : SfxId.SlimeStick, transform.position, 1.25f);
         }
 
         private void FollowSlimeAttachedFriend()
@@ -292,7 +383,7 @@ namespace DrawBody.Prototype
                 playerBody.angularVelocity = 0f;
             }
 
-            UpdateSlimeAttachmentVisual(slimeAttachedPlayer, true);
+            UpdateFriendAttachmentVisual(slimeAttachedPlayer, true);
         }
 
         private void DetachSlimeFromFriend(bool playSound)
@@ -329,7 +420,7 @@ namespace DrawBody.Prototype
             }
             if (playSound)
             {
-                GameSfx.PlayAt(SfxId.SlimeRelease, transform.position, 1.1f);
+                GameSfx.PlayAt(IsCat() ? SfxId.CatClawRelease : SfxId.SlimeRelease, transform.position, 1.1f);
             }
         }
 
@@ -344,11 +435,11 @@ namespace DrawBody.Prototype
             remoteSlimeVisualTarget = target;
             if (target != null)
             {
-                GameSfx.PlayAt(SfxId.SlimeStick, transform.position, 1.1f);
+                GameSfx.PlayAt(IsCat() ? SfxId.CatClawAttach : SfxId.SlimeStick, transform.position, 1.1f);
             }
             else if (wasAttached)
             {
-                GameSfx.PlayAt(SfxId.SlimeRelease, transform.position, 0.9f);
+                GameSfx.PlayAt(IsCat() ? SfxId.CatClawRelease : SfxId.SlimeRelease, transform.position, 0.9f);
                 SetSlimeAttachmentVisualVisible(false);
             }
         }
@@ -449,6 +540,7 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
+                bool holdingPlayer = bestPlayer != null;
                 if (holdingKey)
                 {
                     // A key must keep valid world bounds while carried so the
@@ -457,10 +549,23 @@ namespace DrawBody.Prototype
                     heldCollider.isTrigger = true;
                     heldCollider.enabled = true;
                 }
+                else if (holdingPlayer)
+                {
+                    // A carried player remains a real support surface so teammates
+                    // already standing on them travel with the throw as in gameplay.
+                    heldCollider.isTrigger = i < heldColliderTriggerStates.Count
+                        && heldColliderTriggerStates[i];
+                    heldCollider.enabled = true;
+                }
                 else
                 {
                     heldCollider.enabled = false;
                 }
+            }
+
+            if (bestPlayer != null)
+            {
+                SetCollisionIgnored(heldColliders.ToArray(), playerColliders, true);
             }
 
             BringHeldObjectToFront();
@@ -576,6 +681,7 @@ namespace DrawBody.Prototype
             SetCollisionIgnored(releasedColliders, carrierColliders, true);
 
             heldPlayerController?.ResetMotion();
+            heldPlayerController?.SetControlsEnabled(true);
             if (heldBody != null)
             {
                 heldBody.bodyType = previousBodyType;
@@ -733,6 +839,17 @@ namespace DrawBody.Prototype
                 && abilityController.CurrentProfile.Species == DrawManager.Species.Slime;
         }
 
+        private bool IsCat()
+        {
+            return abilityController != null
+                && abilityController.CurrentProfile.Species == DrawManager.Species.Cat;
+        }
+
+        private bool CanAttachToFriend()
+        {
+            return IsSlime() || IsCat();
+        }
+
         private Vector2 GetThrowDirection()
         {
             float phase = Mathf.PingPong(Time.time * throwAimSpeed, 1f);
@@ -777,7 +894,84 @@ namespace DrawBody.Prototype
             slimeAttachRing.numCornerVertices = 5;
             slimeAttachRing.sortingOrder = 221;
             slimeAttachRing.sharedMaterial = GetPreviewMaterial();
+
+            for (int i = 0; i < catClawLines.Length; i++)
+            {
+                GameObject clawObject = new GameObject("CatFriendClaw" + (i + 1));
+                clawObject.transform.SetParent(root.transform, false);
+                LineRenderer claw = clawObject.AddComponent<LineRenderer>();
+                claw.useWorldSpace = true;
+                claw.positionCount = 4;
+                claw.numCapVertices = 6;
+                claw.numCornerVertices = 5;
+                claw.sortingOrder = 222 + i;
+                claw.sharedMaterial = GetPreviewMaterial();
+                catClawLines[i] = claw;
+            }
             SetSlimeAttachmentVisualVisible(false);
+        }
+
+        private void UpdateFriendAttachmentVisual(PlayerController2D target, bool useAttachedAnchor)
+        {
+            if (IsCat())
+            {
+                UpdateCatAttachmentVisual(target, useAttachedAnchor);
+            }
+            else
+            {
+                UpdateSlimeAttachmentVisual(target, useAttachedAnchor);
+            }
+        }
+
+        private void UpdateCatAttachmentVisual(PlayerController2D target, bool useAttachedAnchor)
+        {
+            if (target == null)
+            {
+                SetSlimeAttachmentVisualVisible(false);
+                return;
+            }
+            if (slimeAttachBridge != null) slimeAttachBridge.enabled = false;
+            if (slimeAttachRing != null) slimeAttachRing.enabled = false;
+
+            Vector3 catCenter = transform.position;
+            if (TryGetSolidBounds(playerController, out Bounds catBounds)) catCenter = catBounds.center;
+            Vector3 targetCenter = target.transform.position;
+            Bounds targetBounds = new Bounds(targetCenter, Vector3.one * 0.5f);
+            if (TryGetSolidBounds(target, out Bounds measuredBounds))
+            {
+                targetBounds = measuredBounds;
+                targetCenter = measuredBounds.center;
+            }
+            Vector3 contact = useAttachedAnchor
+                ? target.transform.position + target.transform.TransformVector(slimeAttachLocalOffset) * 0.42f
+                : targetBounds.ClosestPoint(catCenter);
+            Vector3 direction = contact - catCenter;
+            if (direction.sqrMagnitude < 0.001f) direction = Vector3.right;
+            direction.Normalize();
+            Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0f);
+            Color clawColor = bodyBuilder != null
+                ? Color.Lerp(bodyBuilder.PlayerColor, new Color(0.22f, 0.1f, 0.04f, 1f), 0.48f)
+                : new Color(0.7f, 0.25f, 0.08f, 1f);
+            float pulse = 0.5f + Mathf.Sin(Time.unscaledTime * 10f) * 0.5f;
+            for (int i = 0; i < catClawLines.Length; i++)
+            {
+                LineRenderer claw = catClawLines[i];
+                if (claw == null) continue;
+                float lane = i - 1f;
+                Vector3 start = catCenter + perpendicular * lane * 0.11f;
+                Vector3 knuckle = Vector3.Lerp(start, contact, 0.58f) + perpendicular * lane * 0.06f;
+                Vector3 tip = contact + perpendicular * lane * 0.14f - direction * 0.03f;
+                Vector3 hook = tip - direction * Mathf.Lerp(0.1f, 0.16f, pulse) - perpendicular * lane * 0.025f;
+                claw.enabled = true;
+                claw.startWidth = 0.065f;
+                claw.endWidth = 0.045f;
+                claw.startColor = clawColor;
+                claw.endColor = clawColor;
+                claw.SetPosition(0, start);
+                claw.SetPosition(1, knuckle);
+                claw.SetPosition(2, tip);
+                claw.SetPosition(3, hook);
+            }
         }
 
         private void UpdateSlimeAttachmentVisual(PlayerController2D target, bool useAttachedAnchor)
@@ -786,6 +980,10 @@ namespace DrawBody.Prototype
             {
                 SetSlimeAttachmentVisualVisible(false);
                 return;
+            }
+            for (int i = 0; i < catClawLines.Length; i++)
+            {
+                if (catClawLines[i] != null) catClawLines[i].enabled = false;
             }
 
             Vector3 slimeCenter = transform.position;
@@ -857,6 +1055,13 @@ namespace DrawBody.Prototype
             if (slimeAttachRing != null)
             {
                 slimeAttachRing.enabled = visible;
+            }
+            if (!visible)
+            {
+                for (int i = 0; i < catClawLines.Length; i++)
+                {
+                    if (catClawLines[i] != null) catClawLines[i].enabled = false;
+                }
             }
         }
 

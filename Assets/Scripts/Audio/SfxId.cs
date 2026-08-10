@@ -59,6 +59,8 @@ namespace DrawBody.Prototype
         BombFuseStart,
         BombTick,
         BombExplosion,
-        BombWallBreak
+        BombWallBreak,
+        CatClawAttach,
+        CatClawRelease
     }
 }

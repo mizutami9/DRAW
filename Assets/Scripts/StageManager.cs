@@ -81,6 +81,7 @@ namespace DrawBody.Prototype
         private float challengeTimeUpReturnRemaining;
         private bool challengeStartPositionsCaptured;
         private StageSurvivalController survivalController;
+        private TrailerCoopDemoController trailerDemo;
         private Vector3 primaryChallengeStartPosition;
         private Vector3 secondaryChallengeStartPosition;
         public bool IsTimedCollectionChallenge => stageRuleMode == StageRuleMode.TimedCollection;
@@ -259,6 +260,7 @@ namespace DrawBody.Prototype
 
         public void EnterTitle()
         {
+            StopTrailerDemo();
             CancelRespawnAnimations();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(false);
@@ -299,6 +301,54 @@ namespace DrawBody.Prototype
         public void OpenOptionMenu()
         {
             uiManager?.OpenOption(stageStarted && !titleMode);
+        }
+
+        public void OpenTrailerDebugMenu()
+        {
+            TrailerDebugMenuController menu = FindFirstObjectByType<TrailerDebugMenuController>();
+            menu?.Show();
+        }
+
+        public void StartTrailerCoopDemo()
+        {
+            StopTrailerDemo();
+            titleMode = false;
+            stageStarted = false;
+            stageEditing = false;
+            drawing = false;
+            cleared = false;
+            currentStageId = "trailer-debug-01";
+            Time.timeScale = 1f;
+            uiManager?.SetTitle(false);
+            uiManager?.SetStageSelect(false);
+            drawManager?.SetActive(false);
+            stageLoader?.HideStages();
+            SetCameraFollowEnabled(false);
+
+            GameObject root = new GameObject("Trailer Coop Demo");
+            trailerDemo = root.AddComponent<TrailerCoopDemoController>();
+            trailerDemo.Configure(this, player != null ? player.gameObject : null, cameraFollow, drawManager);
+        }
+
+        public void ExitTrailerCoopDemo()
+        {
+            EnterTitle();
+        }
+
+        private void StopTrailerDemo()
+        {
+            if (trailerDemo == null)
+            {
+                trailerDemo = FindFirstObjectByType<TrailerCoopDemoController>();
+            }
+            if (trailerDemo == null)
+            {
+                return;
+            }
+
+            trailerDemo.RestoreScene();
+            Destroy(trailerDemo.gameObject);
+            trailerDemo = null;
         }
 
         public void CloseTitleSubmenu()

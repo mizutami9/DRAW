@@ -79,12 +79,37 @@ namespace DrawBody.Prototype
         private Collider2D[] bodyColliderCache;
         private LineRenderer[] wallJumpTrajectoryLines;
         private Material wallJumpTrajectoryMaterial;
+        private bool scriptedInputEnabled;
+        private float scriptedHorizontalInput;
+        private bool scriptedJumpHeld;
+        private bool scriptedJumpPressed;
 
         public bool IsGrounded { get; private set; }
         public bool ControlsEnabled => controlsEnabled;
         public int FacingDirection => facingDirection;
         public bool IsInvulnerable => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
         public bool IsTurtleShelled => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
+        public bool IsWallSticking => wasWallSticking;
+
+        public void SetScriptedInput(float horizontal, bool jumpHeld, bool jumpPressed = false)
+        {
+            scriptedInputEnabled = true;
+            scriptedHorizontalInput = Mathf.Clamp(horizontal, -1f, 1f);
+            horizontalInput = scriptedHorizontalInput;
+            scriptedJumpHeld = jumpHeld;
+            if (jumpPressed)
+            {
+                lastJumpPressedAt = Time.time;
+            }
+        }
+
+        public void ClearScriptedInput()
+        {
+            scriptedInputEnabled = false;
+            scriptedHorizontalInput = 0f;
+            scriptedJumpHeld = false;
+            scriptedJumpPressed = false;
+        }
 
         public void ApplyRemoteTurtleShellState(bool active)
         {
@@ -210,14 +235,25 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            horizontalInput = Input.GetAxisRaw("Horizontal");
+            horizontalInput = scriptedInputEnabled
+                ? scriptedHorizontalInput
+                : Input.GetAxisRaw("Horizontal");
             UpdateFacing();
             UpdateTurtleAbilityInput();
 
-            bool jumpPressed = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow);
-            if (currentSpecies != DrawManager.Species.Turtle)
+            bool jumpPressed;
+            if (scriptedInputEnabled)
             {
-                jumpPressed |= Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space);
+                jumpPressed = scriptedJumpPressed;
+                scriptedJumpPressed = false;
+            }
+            else
+            {
+                jumpPressed = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow);
+                if (currentSpecies != DrawManager.Species.Turtle)
+                {
+                    jumpPressed |= Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space);
+                }
             }
 
             if (jumpPressed)
@@ -275,8 +311,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            SetTurtleShellState(Input.GetKey(KeyCode.Space));
-            SetTurtleRotation(Input.GetKey(KeyCode.F));
+            SetTurtleShellState(scriptedInputEnabled ? scriptedJumpHeld : Input.GetKey(KeyCode.Space));
+            SetTurtleRotation(!scriptedInputEnabled && Input.GetKey(KeyCode.F));
             if (turtleShelled)
             {
                 horizontalInput = 0f;
@@ -716,7 +752,7 @@ namespace DrawBody.Prototype
                 && canGlide
                 && currentSpecies == DrawManager.Species.Bird
                 && isBuiltAsBird
-                && Input.GetButton("Jump")
+                && (scriptedInputEnabled ? scriptedJumpHeld : Input.GetButton("Jump"))
                 && rb.linearVelocity.y < currentGlideFallSpeed;
             if (gliding)
             {
