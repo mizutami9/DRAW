@@ -28,6 +28,7 @@ namespace DrawBody.Prototype
         private Button clearNextButton;
         private Button clearBackButton;
         private Button editorTestReturnButton;
+        private Button gameplayLeaveSessionButton;
         private Text editorTestReturnLabel;
         private RectTransform clearStamp;
         private readonly Image[] clearBurstLines = new Image[16];
@@ -337,15 +338,24 @@ namespace DrawBody.Prototype
             Transform destination = menuPanel.transform.Find("MenuTitleButton");
             if (destination != null)
             {
-                destination.gameObject.SetActive(true);
+                destination.gameObject.SetActive(!online || host);
                 GameplayButtonCommand command = destination.GetComponent<GameplayButtonCommand>();
-                command?.Configure(online
-                    ? GameplayButtonCommand.Command.LeaveSession
-                    : GameplayButtonCommand.Command.StageSelect);
+                command?.Configure(GameplayButtonCommand.Command.StageSelect);
                 Text label = destination.GetComponentInChildren<Text>(true);
                 if (label != null)
                 {
-                    label.text = LocalizationManager.T(online ? "menu_leave_session" : "menu_stage_select");
+                    label.text = LocalizationManager.T("menu_stage_select");
+                }
+            }
+
+            EnsureGameplayLeaveSessionButton();
+            if (gameplayLeaveSessionButton != null)
+            {
+                gameplayLeaveSessionButton.gameObject.SetActive(online);
+                Text label = gameplayLeaveSessionButton.GetComponentInChildren<Text>(true);
+                if (label != null)
+                {
+                    label.text = LocalizationManager.T("menu_leave_session");
                 }
             }
 
@@ -359,6 +369,50 @@ namespace DrawBody.Prototype
                     label.text = LocalizationManager.T(online ? "menu_restart_stage" : "retry");
                 }
             }
+        }
+
+        private void EnsureGameplayLeaveSessionButton()
+        {
+            if (gameplayLeaveSessionButton != null || menuPanel == null)
+            {
+                return;
+            }
+
+            Transform existing = menuPanel.transform.Find("MenuLeaveSessionButton");
+            if (existing != null)
+            {
+                gameplayLeaveSessionButton = existing.GetComponent<Button>();
+            }
+
+            if (gameplayLeaveSessionButton == null)
+            {
+                Font font = statusText != null && statusText.font != null
+                    ? statusText.font
+                    : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                gameplayLeaveSessionButton = CreateClearButton(
+                    "MenuLeaveSessionButton",
+                    menuPanel.transform,
+                    font,
+                    new Vector2(0f, 58f),
+                    new Vector2(250f, 48f),
+                    new Color(1f, 0.72f, 0.66f, 0.94f));
+                RectTransform rect = gameplayLeaveSessionButton.GetComponent<RectTransform>();
+                rect.anchorMin = new Vector2(0.5f, 0f);
+                rect.anchorMax = new Vector2(0.5f, 0f);
+                rect.pivot = new Vector2(0.5f, 0f);
+                Text label = gameplayLeaveSessionButton.GetComponentInChildren<Text>(true);
+                if (label != null)
+                {
+                    label.fontSize = 22;
+                }
+            }
+
+            GameplayButtonCommand command = gameplayLeaveSessionButton.GetComponent<GameplayButtonCommand>();
+            if (command == null)
+            {
+                command = gameplayLeaveSessionButton.gameObject.AddComponent<GameplayButtonCommand>();
+            }
+            command.Configure(GameplayButtonCommand.Command.LeaveSession);
         }
 
         public void ShowLeaveSessionConfirm(bool host)

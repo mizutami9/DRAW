@@ -104,7 +104,17 @@ namespace DrawBody.Prototype
                     stageManager?.CancelDrawingMode();
                     break;
                 case Command.StageSelect:
-                    stageManager?.OpenStageSelect();
+                    if (stageManager != null && stageManager.IsOnlineStageActive)
+                    {
+                        if (stageManager.IsOnlineStageHost)
+                        {
+                            stageManager.OpenStageSelectFromMultiLobby();
+                        }
+                    }
+                    else
+                    {
+                        stageManager?.OpenStageSelect();
+                    }
                     break;
                 case Command.AddCharacter:
                     stageManager?.AddCharacter();

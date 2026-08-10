@@ -18,19 +18,33 @@ namespace DrawBody.Prototype
         private const string MessageStart = "start";
         private const string MessageState = "state";
         private const string MessageBody = "body";
+        private const string MessageBodyChunk = "body_chunk";
         private const string MessageCarry = "carry";
         private const string MessageStageSelect = "stage_select";
         private const string MessageGimmick = "gimmick";
         private const string RoomCodeAttributeKey = "roomCode";
         private const string RoomCodeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const int RoomCodeMaxCreateAttempts = 5;
+        private const int BodyChunkRawBytes = 700;
+        private const byte ReliableChannel = 0;
+        private const byte RealtimeStateChannel = 1;
 
         private readonly List<ProductUserId> peers = new List<ProductUserId>();
         private readonly Queue<Action> mainThreadActions = new Queue<Action>();
+        private readonly Dictionary<string, bool> readyByPlayerId = new Dictionary<string, bool>();
+        private readonly Dictionary<string, BodyChunkAssembly> bodyChunkAssemblies = new Dictionary<string, BodyChunkAssembly>();
+        private int nextBodyTransferId;
+
+        private sealed class BodyChunkAssembly
+        {
+            public byte[][] Chunks;
+            public int Received;
+        }
         private LobbyInterface lobbyInterface;
         private P2PInterface p2pInterface;
         private ConnectInterface connectInterface;
         private ProductUserId localUserId;
+        private ProductUserId hostPeer;
         private string lobbyId;
         private bool isHost;
         private bool triedCreateDeviceId;
@@ -127,9 +141,12 @@ namespace DrawBody.Prototype
             }
 
             peers.Clear();
+            readyByPlayerId.Clear();
+            bodyChunkAssemblies.Clear();
             lobbyId = null;
             CurrentLobby = null;
             localUserId = null;
+            hostPeer = null;
             lobbyInterface = null;
             p2pInterface = null;
             connectInterface = null;
@@ -151,7 +168,9 @@ namespace DrawBody.Prototype
             }
 
             isHost = true;
+            hostPeer = null;
             peers.Clear();
+            readyByPlayerId.Clear();
             TryCreateRoomWithUniqueCode(roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts);
         }
 
@@ -239,7 +258,9 @@ namespace DrawBody.Prototype
         private void JoinLobbyById(string id, string roomCode)
         {
             isHost = false;
+            hostPeer = null;
             peers.Clear();
+            readyByPlayerId.Clear();
             JoinLobbyByIdOptions options = new JoinLobbyByIdOptions
             {
                 LobbyId = id,
@@ -276,7 +297,10 @@ namespace DrawBody.Prototype
             }
 
             peers.Clear();
+            readyByPlayerId.Clear();
+            bodyChunkAssemblies.Clear();
             lobbyId = null;
+            hostPeer = null;
             CurrentLobby = null;
             SetState(OnlineConnectionState.Online, null, LocalizationManager.T("online_eos_left_lobby"));
         }
@@ -351,11 +375,11 @@ namespace DrawBody.Prototype
             string payload = JsonUtility.ToJson(bodyData);
             if (isHost)
             {
-                Broadcast(MessageBody, payload);
+                BroadcastBody(payload);
             }
             else
             {
-                SendToHost(MessageBody, payload);
+                SendBodyToHost(payload);
             }
         }
 
@@ -371,13 +395,14 @@ namespace DrawBody.Prototype
             }
 
             playerState.PlayerId = LocalPlayerId;
+            string payload = JsonUtility.ToJson(playerState);
             if (isHost)
             {
-                Broadcast(MessageState, JsonUtility.ToJson(playerState));
+                BroadcastRealtimeState(payload);
             }
             else
             {
-                SendToHost(MessageState, JsonUtility.ToJson(playerState));
+                SendRealtimeStateToHost(payload);
             }
         }
 
@@ -751,6 +776,7 @@ namespace DrawBody.Prototype
             string ownerId = owner != null ? owner.ToString() : string.Empty;
             List<OnlinePlayerInfo> players = new List<OnlinePlayerInfo>();
             peers.Clear();
+            hostPeer = null;
 
             for (uint i = 0; i < count; i++)
             {
@@ -763,13 +789,20 @@ namespace DrawBody.Prototype
 
                 bool local = member.ToString() == LocalPlayerId;
                 bool host = !string.IsNullOrEmpty(ownerId) ? member.ToString() == ownerId : i == 0;
+                if (host && !local)
+                {
+                    hostPeer = member;
+                }
                 if (!local)
                 {
                     peers.Add(member);
                     AcceptPeer(member);
                 }
 
-                players.Add(CreatePlayer(member.ToString(), local ? LocalizationManager.T("online_player_you") : LocalizationManager.Format("online_player_number", i + 1), host, local && IsLocalReady()));
+                string memberId = member.ToString();
+                bool ready = readyByPlayerId.TryGetValue(memberId, out bool rememberedReady)
+                    && rememberedReady;
+                players.Add(CreatePlayer(memberId, local ? LocalizationManager.T("online_player_you") : LocalizationManager.Format("online_player_number", i + 1), host, ready));
             }
 
             if (CurrentLobby == null)
@@ -779,6 +812,14 @@ namespace DrawBody.Prototype
 
             CurrentLobby.Players = players.ToArray();
             SetState(OnlineConnectionState.InLobby, CurrentLobby, message);
+            if (isHost)
+            {
+                for (int i = 0; i < CurrentLobby.Players.Length; i++)
+                {
+                    OnlinePlayerInfo player = CurrentLobby.Players[i];
+                    Broadcast(MessageReady, player.PlayerId + "|" + (player.IsReady ? "1" : "0"));
+                }
+            }
             details.Release();
         }
 
@@ -789,7 +830,9 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            for (int i = 0; i < 12; i++)
+            // Carried objects add transform traffic. Drain a generous number of
+            // packets so movement snapshots never accumulate behind that traffic.
+            for (int i = 0; i < 64; i++)
             {
                 GetNextReceivedPacketSizeOptions sizeOptions = new GetNextReceivedPacketSizeOptions { LocalUserId = localUserId };
                 Result sizeResult = p2pInterface.GetNextReceivedPacketSize(ref sizeOptions, out uint size);
@@ -833,8 +876,14 @@ namespace DrawBody.Prototype
                 string[] parts = payload.Split('|');
                 if (parts.Length == 2)
                 {
-                    SetPlayerReady(parts[0], parts[1] == "1");
+                    string readyPlayerId = isHost && peer != null ? peer.ToString() : parts[0];
+                    bool ready = parts[1] == "1";
+                    SetPlayerReady(readyPlayerId, ready);
                     SetState(State, CurrentLobby, LocalizationManager.T("online_ready_changed"));
+                    if (isHost)
+                    {
+                        Broadcast(MessageReady, readyPlayerId + "|" + (ready ? "1" : "0"), peer);
+                    }
                 }
             }
             else if (type == MessageStart)
@@ -860,17 +909,16 @@ namespace DrawBody.Prototype
                 PlayerStateReceived?.Invoke(state);
                 if (isHost)
                 {
-                    Broadcast(type, payload, peer);
+                    BroadcastRealtimeState(payload, peer);
                 }
             }
             else if (type == MessageBody)
             {
-                OnlineBodyData bodyData = JsonUtility.FromJson<OnlineBodyData>(payload);
-                BodyDataReceived?.Invoke(bodyData);
-                if (isHost)
-                {
-                    Broadcast(type, payload, peer);
-                }
+                HandleBodyPayload(peer, payload);
+            }
+            else if (type == MessageBodyChunk)
+            {
+                HandleBodyChunk(peer, payload);
             }
             else if (type == MessageCarry)
             {
@@ -905,15 +953,123 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void SendToHost(string type, string payload)
+        private void BroadcastRealtimeState(string payload, ProductUserId except = null)
         {
             for (int i = 0; i < peers.Count; i++)
             {
-                Send(peers[i], type, payload);
+                if (except != null && peers[i].ToString() == except.ToString()) continue;
+                SendRealtimeState(peers[i], payload);
             }
         }
 
+        private void SendRealtimeStateToHost(string payload)
+        {
+            if (hostPeer == null) return;
+            SendRealtimeState(hostPeer, payload);
+        }
+
+        private void SendRealtimeState(ProductUserId remote, string payload)
+        {
+            Send(remote, MessageState, payload, RealtimeStateChannel, PacketReliability.UnreliableUnordered);
+        }
+
+        private void BroadcastBody(string payload, ProductUserId except = null)
+        {
+            for (int i = 0; i < peers.Count; i++)
+            {
+                if (except != null && peers[i].ToString() == except.ToString()) continue;
+                SendBodyPayload(peers[i], payload);
+            }
+        }
+
+        private void SendBodyToHost(string payload)
+        {
+            if (hostPeer == null) return;
+            SendBodyPayload(hostPeer, payload);
+        }
+
+        private void SendBodyPayload(ProductUserId remote, string payload)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(payload ?? string.Empty);
+            if (bytes.Length <= BodyChunkRawBytes)
+            {
+                Send(remote, MessageBody, payload);
+                return;
+            }
+
+            string transferId = LocalPlayerId + "-" + (++nextBodyTransferId).ToString("X8");
+            int chunkCount = Mathf.CeilToInt(bytes.Length / (float)BodyChunkRawBytes);
+            for (int i = 0; i < chunkCount; i++)
+            {
+                int offset = i * BodyChunkRawBytes;
+                int length = Mathf.Min(BodyChunkRawBytes, bytes.Length - offset);
+                string encoded = Convert.ToBase64String(bytes, offset, length);
+                Send(remote, MessageBodyChunk, transferId + "|" + i + "|" + chunkCount + "|" + encoded);
+            }
+        }
+
+        private void HandleBodyChunk(ProductUserId peer, string payload)
+        {
+            string[] parts = payload.Split(new[] { '|' }, 4);
+            if (parts.Length != 4
+                || !int.TryParse(parts[1], out int index)
+                || !int.TryParse(parts[2], out int count)
+                || count <= 0 || count > 2048 || index < 0 || index >= count)
+            {
+                return;
+            }
+            byte[] chunk;
+            try { chunk = Convert.FromBase64String(parts[3]); }
+            catch (FormatException) { return; }
+
+            string peerId = peer != null ? peer.ToString() : "unknown";
+            string key = peerId + "|" + parts[0];
+            if (!bodyChunkAssemblies.TryGetValue(key, out BodyChunkAssembly assembly)
+                || assembly.Chunks.Length != count)
+            {
+                assembly = new BodyChunkAssembly { Chunks = new byte[count][] };
+                bodyChunkAssemblies[key] = assembly;
+            }
+            if (assembly.Chunks[index] == null)
+            {
+                assembly.Chunks[index] = chunk;
+                assembly.Received++;
+            }
+            if (assembly.Received != count) return;
+
+            int totalLength = 0;
+            for (int i = 0; i < count; i++) totalLength += assembly.Chunks[i].Length;
+            byte[] combined = new byte[totalLength];
+            int writeOffset = 0;
+            for (int i = 0; i < count; i++)
+            {
+                Buffer.BlockCopy(assembly.Chunks[i], 0, combined, writeOffset, assembly.Chunks[i].Length);
+                writeOffset += assembly.Chunks[i].Length;
+            }
+            bodyChunkAssemblies.Remove(key);
+            HandleBodyPayload(peer, Encoding.UTF8.GetString(combined));
+        }
+
+        private void HandleBodyPayload(ProductUserId peer, string payload)
+        {
+            OnlineBodyData bodyData = JsonUtility.FromJson<OnlineBodyData>(payload);
+            if (bodyData == null || string.IsNullOrEmpty(bodyData.PlayerId)) return;
+            BodyDataReceived?.Invoke(bodyData);
+            if (isHost) BroadcastBody(payload, peer);
+        }
+
+        private void SendToHost(string type, string payload)
+        {
+            if (hostPeer == null) return;
+            Send(hostPeer, type, payload);
+        }
+
         private void Send(ProductUserId remote, string type, string payload)
+        {
+            Send(remote, type, payload, ReliableChannel, PacketReliability.ReliableOrdered);
+        }
+
+        private void Send(ProductUserId remote, string type, string payload, byte channel, PacketReliability reliability)
         {
             if (p2pInterface == null || localUserId == null || remote == null)
             {
@@ -926,10 +1082,10 @@ namespace DrawBody.Prototype
                 LocalUserId = localUserId,
                 RemoteUserId = remote,
                 SocketId = socketId,
-                Channel = 0,
+                Channel = channel,
                 Data = new ArraySegment<byte>(bytes),
                 AllowDelayedDelivery = true,
-                Reliability = PacketReliability.ReliableOrdered,
+                Reliability = reliability,
                 DisableAutoAcceptConnection = false
             };
             p2pInterface.SendPacket(ref options);
@@ -987,6 +1143,11 @@ namespace DrawBody.Prototype
 
         private void SetPlayerReady(string playerId, bool ready)
         {
+            if (string.IsNullOrEmpty(playerId))
+            {
+                return;
+            }
+            readyByPlayerId[playerId] = ready;
             if (CurrentLobby?.Players == null)
             {
                 return;

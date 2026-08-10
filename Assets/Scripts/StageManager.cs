@@ -56,6 +56,8 @@ namespace DrawBody.Prototype
         private RigidbodyType2D onlineCarryPreviousBodyType;
         private float onlineCarryPreviousGravityScale;
         private bool onlineCarryPreviousFreezeRotation;
+        private bool onlineCarryIsCatGrab;
+        private Vector2 onlineCarryLocalOffset;
         private readonly List<Collider2D> onlineCarryColliders = new List<Collider2D>();
         private readonly Dictionary<PlayerController2D, DrawManager.DrawingState> drawingStates =
             new Dictionary<PlayerController2D, DrawManager.DrawingState>();
@@ -1054,6 +1056,10 @@ namespace DrawBody.Prototype
             uiManager?.SetDrawing(false);
             drawManager?.SetActive(false);
             SaveDrawingState(player);
+            // ConfirmDrawing sends once before closing. Send the finalized state
+            // again after the active player's state has been saved, so species
+            // switches cannot remain stale on another client.
+            SendLocalOnlineBodyData();
             player?.SetControlsEnabled(!cleared);
         }
 
@@ -1517,6 +1523,15 @@ namespace DrawBody.Prototype
             }
 
             remote.SetControlsEnabled(false);
+            Rigidbody2D remoteBody = remote.GetComponent<Rigidbody2D>();
+            if (remoteBody != null)
+            {
+                remoteBody.bodyType = RigidbodyType2D.Kinematic;
+                remoteBody.gravityScale = 0f;
+                remoteBody.freezeRotation = true;
+                remoteBody.linearVelocity = Vector2.zero;
+                remoteBody.angularVelocity = 0f;
+            }
             onlineRemotePlayers[playerId] = remote;
             if (string.IsNullOrEmpty(remotePlayerId))
             {
@@ -1586,8 +1601,11 @@ namespace DrawBody.Prototype
             Rigidbody2D remoteBody = remote.GetComponent<Rigidbody2D>();
             if (remoteBody != null)
             {
+                remoteBody.bodyType = RigidbodyType2D.Kinematic;
+                remoteBody.gravityScale = 0f;
+                remoteBody.freezeRotation = true;
                 remoteBody.position = position;
-                remoteBody.linearVelocity = velocity;
+                remoteBody.linearVelocity = Vector2.zero;
                 remoteBody.rotation = rotation;
             }
             else
@@ -1597,6 +1615,19 @@ namespace DrawBody.Prototype
             }
 
             remote.SetControlsEnabled(false);
+        }
+
+        public bool IsOnlineRemotePlayerHeldByLocal(string playerId)
+        {
+            if (player == null || string.IsNullOrEmpty(playerId)
+                || !onlineRemotePlayers.TryGetValue(playerId, out PlayerController2D remote)
+                || remote == null)
+            {
+                return false;
+            }
+            PlayerCarryController carry = player.GetComponent<PlayerCarryController>();
+            return carry != null && (carry.IsHoldingTarget(remote.transform)
+                || carry.IsDraggingFriend(remote.transform));
         }
 
         public void ApplyOnlineRemoteState(Vector2 position, Vector2 velocity, float rotation)
@@ -1618,7 +1649,11 @@ namespace DrawBody.Prototype
 
             if (carryData.Action == "pickup")
             {
-                BeginOnlineCarry(carryData.CarrierPlayerId);
+                BeginOnlineCarry(carryData.CarrierPlayerId, false, Vector2.zero);
+            }
+            else if (carryData.Action == "cat_grab")
+            {
+                BeginOnlineCarry(carryData.CarrierPlayerId, true, carryData.LocalOffset);
             }
             else if (carryData.Action == "throw")
             {
@@ -1627,6 +1662,10 @@ namespace DrawBody.Prototype
             else if (carryData.Action == "drop")
             {
                 EndOnlineCarry(Vector2.zero);
+            }
+            else if (carryData.Action == "cat_release")
+            {
+                EndOnlineCarry(carryData.ReleaseVelocity);
             }
         }
 
@@ -1638,7 +1677,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void BeginOnlineCarry(string carrierPlayerId)
+        private void BeginOnlineCarry(string carrierPlayerId, bool catGrab, Vector2 localOffset)
         {
             PlayerController2D carrier = EnsureOnlineRemotePlayer(carrierPlayerId);
             if (player == null || carrier == null || onlineCarryHeld)
@@ -1648,6 +1687,8 @@ namespace DrawBody.Prototype
 
             onlineCarryHeld = true;
             onlineCarrierPlayerId = carrierPlayerId;
+            onlineCarryIsCatGrab = catGrab;
+            onlineCarryLocalOffset = localOffset;
             player.SetControlsEnabled(false);
             onlineCarryBody = player.GetComponent<Rigidbody2D>();
             if (onlineCarryBody != null)
@@ -1683,9 +1724,11 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            Vector3 anchor = carrier.transform.position + Vector3.up * 1.15f;
+            Vector3 anchor = onlineCarryIsCatGrab
+                ? carrier.transform.position + carrier.transform.TransformVector(onlineCarryLocalOffset)
+                : carrier.transform.position + Vector3.up * 1.15f;
             BodyBuilder remoteBuilder = carrier.GetComponent<BodyBuilder>();
-            if (remoteBuilder != null)
+            if (remoteBuilder != null && !onlineCarryIsCatGrab)
             {
                 anchor = remoteBuilder.GetCarryAnchorWorld(carrier.FacingDirection);
                 remoteBuilder.SetCarryPose(true, carrier.FacingDirection, anchor);
@@ -1708,6 +1751,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            bool wasCatGrab = onlineCarryIsCatGrab;
             onlineCarryHeld = false;
             PlayerController2D carrier = GetOnlinePlayerController(onlineCarrierPlayerId);
             BodyBuilder remoteBuilder = carrier != null ? carrier.GetComponent<BodyBuilder>() : null;
@@ -1734,12 +1778,14 @@ namespace DrawBody.Prototype
                 onlineCarryBody.gravityScale = onlineCarryPreviousGravityScale;
                 onlineCarryBody.freezeRotation = onlineCarryPreviousFreezeRotation;
                 onlineCarryBody.linearVelocity = releaseVelocity;
-                onlineCarryBody.angularVelocity = releaseVelocity.x * -18f;
+                onlineCarryBody.angularVelocity = wasCatGrab ? 0f : releaseVelocity.x * -18f;
             }
 
             player?.SetControlsEnabled(stageStarted && !drawing && !cleared && !stageEditing);
             onlineCarryBody = null;
             onlineCarrierPlayerId = null;
+            onlineCarryIsCatGrab = false;
+            onlineCarryLocalOffset = Vector2.zero;
             StartCoroutine(RestoreOnlineCarryCollisions(releasedColliders, carrierColliders));
         }
 

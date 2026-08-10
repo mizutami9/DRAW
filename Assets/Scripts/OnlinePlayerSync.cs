@@ -9,11 +9,17 @@ namespace DrawBody.Prototype
         [SerializeField] private StageManager stageManager;
         [SerializeField] private float sendRate = 30f;
         [SerializeField] private float remoteSmoothRate = 14f;
+        [SerializeField] private float remotePredictionSeconds = 0.05f;
+        [SerializeField] private float remoteSnapDistance = 1.75f;
 
         private float nextSendTime;
+        private int nextStateSequence;
         private float nextBodyResyncTime;
         private bool bodyResyncPending;
+        private int bodyResyncAttempts;
+        private DrawManager.Species? lastLocalSpecies;
         private readonly Dictionary<string, RemoteTarget> remoteTargets = new Dictionary<string, RemoteTarget>();
+        private readonly Dictionary<string, int> lastRemoteSequences = new Dictionary<string, int>();
 
         private sealed class RemoteTarget
         {
@@ -82,6 +88,7 @@ namespace DrawBody.Prototype
             }
 
             ApplyRemoteTarget();
+            DetectLocalSpeciesChange();
             FlushPendingBodyResync();
 
             if (Time.unscaledTime < nextSendTime)
@@ -100,6 +107,7 @@ namespace DrawBody.Prototype
             onlineManager.SendPlayerState(new OnlinePlayerState
             {
                 PlayerId = onlineManager.LocalPlayerId,
+                Sequence = ++nextStateSequence,
                 Position = localTransform.position,
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
                 Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
@@ -117,6 +125,21 @@ namespace DrawBody.Prototype
 
             if (state.PlayerId == onlineManager.LocalPlayerId)
             {
+                return;
+            }
+            if (state.Sequence > 0
+                && lastRemoteSequences.TryGetValue(state.PlayerId, out int lastSequence)
+                && state.Sequence <= lastSequence)
+            {
+                return;
+            }
+            if (state.Sequence > 0)
+            {
+                lastRemoteSequences[state.PlayerId] = state.Sequence;
+            }
+            if (stageManager.IsOnlineRemotePlayerHeldByLocal(state.PlayerId))
+            {
+                remoteTargets.Remove(state.PlayerId);
                 return;
             }
 
@@ -141,10 +164,18 @@ namespace DrawBody.Prototype
             float t = 1f - Mathf.Exp(-remoteSmoothRate * Time.unscaledDeltaTime);
             foreach (KeyValuePair<string, RemoteTarget> pair in remoteTargets)
             {
+                if (stageManager.IsOnlineRemotePlayerHeldByLocal(pair.Key))
+                {
+                    continue;
+                }
                 Transform remoteTransform = stageManager.GetOnlinePlayerTransform(pair.Key);
+                Vector2 predictedPosition = pair.Value.Position
+                    + pair.Value.Velocity * Mathf.Clamp(remotePredictionSeconds, 0f, 0.15f);
                 Vector2 position = remoteTransform != null
-                    ? Vector2.Lerp(remoteTransform.position, pair.Value.Position, t)
-                    : pair.Value.Position;
+                    ? Vector2.Distance(remoteTransform.position, predictedPosition) >= remoteSnapDistance
+                        ? predictedPosition
+                        : Vector2.Lerp(remoteTransform.position, predictedPosition, t)
+                    : predictedPosition;
                 float rotation = remoteTransform != null
                     ? Mathf.LerpAngle(remoteTransform.eulerAngles.z, pair.Value.Rotation, t)
                     : pair.Value.Rotation;
@@ -201,8 +232,28 @@ namespace DrawBody.Prototype
 
         private void RequestBodyResync()
         {
+            RequestBodyResync(1);
+        }
+
+        private void RequestBodyResync(int attempts)
+        {
             bodyResyncPending = true;
-            nextBodyResyncTime = Time.unscaledTime + 0.25f;
+            bodyResyncAttempts = Mathf.Max(bodyResyncAttempts, Mathf.Max(1, attempts));
+            nextBodyResyncTime = Mathf.Min(
+                nextBodyResyncTime > 0f ? nextBodyResyncTime : float.PositiveInfinity,
+                Time.unscaledTime + 0.25f);
+        }
+
+        private void DetectLocalSpeciesChange()
+        {
+            Transform local = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            BodyBuilder builder = local != null ? local.GetComponent<BodyBuilder>() : null;
+            if (builder == null) return;
+
+            DrawManager.Species species = builder.BuiltSpecies;
+            if (lastLocalSpecies.HasValue && lastLocalSpecies.Value == species) return;
+            lastLocalSpecies = species;
+            RequestBodyResync(3);
         }
 
         private void FlushPendingBodyResync()
@@ -212,8 +263,12 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bodyResyncPending = false;
             stageManager?.SendLocalOnlineBodyData();
+            bodyResyncAttempts = Mathf.Max(0, bodyResyncAttempts - 1);
+            bodyResyncPending = bodyResyncAttempts > 0;
+            nextBodyResyncTime = bodyResyncPending
+                ? Time.unscaledTime + 0.65f
+                : 0f;
         }
 
         private void ApplyLobbyColors(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)

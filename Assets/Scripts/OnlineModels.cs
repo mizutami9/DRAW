@@ -79,6 +79,7 @@ namespace DrawBody.Prototype
     public sealed class OnlinePlayerState
     {
         public string PlayerId;
+        public int Sequence;
         public Vector2 Position;
         public Vector2 Velocity;
         public float Rotation;
@@ -93,6 +94,7 @@ namespace DrawBody.Prototype
         public string TargetPlayerId;
         public string Action;
         public Vector2 ReleaseVelocity;
+        public Vector2 LocalOffset;
     }
 
     [Serializable]

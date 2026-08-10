@@ -203,8 +203,9 @@ namespace DrawBody.EditorTools
             Button retryButton = CreateButton("MenuRetryButton", panel.transform, font, LocalizationManager.T("retry"), new Vector2(0f, 238f), new Vector2(250f, 48f), new Color(0.98f, 0.96f, 0.9f, 0.92f), "retry");
             Button optionButton = CreateButton("MenuOptionButton", panel.transform, font, LocalizationManager.T("title_option"), new Vector2(0f, 178f), new Vector2(250f, 48f), new Color(0.98f, 0.84f, 0.72f, 0.92f), "title_option");
             Button titleButton = CreateButton("MenuTitleButton", panel.transform, font, LocalizationManager.T("menu_stage_select"), new Vector2(0f, 118f), new Vector2(250f, 48f), new Color(0.82f, 0.9f, 1f, 0.92f), "menu_stage_select");
+            Button leaveButton = CreateButton("MenuLeaveSessionButton", panel.transform, font, LocalizationManager.T("menu_leave_session"), new Vector2(0f, 58f), new Vector2(250f, 48f), new Color(1f, 0.72f, 0.66f, 0.94f), "menu_leave_session");
 
-            Button[] buttons = { continueButton, retryButton, optionButton, titleButton };
+            Button[] buttons = { continueButton, retryButton, optionButton, titleButton, leaveButton };
             for (int i = 0; i < buttons.Length; i++)
             {
                 SetButtonLabelColor(buttons[i], Color.black);
@@ -216,6 +217,8 @@ namespace DrawBody.EditorTools
             AddGameplayCommand(retryButton.gameObject, stageManager, GameplayButtonCommand.Command.Retry);
             AddGameplayCommand(optionButton.gameObject, stageManager, GameplayButtonCommand.Command.Option);
             AddGameplayCommand(titleButton.gameObject, stageManager, GameplayButtonCommand.Command.StageSelect);
+            AddGameplayCommand(leaveButton.gameObject, stageManager, GameplayButtonCommand.Command.LeaveSession);
+            leaveButton.gameObject.SetActive(false);
 
             panel.AddComponent<SlidingMenuPanel>();
             panel.SetActive(false);

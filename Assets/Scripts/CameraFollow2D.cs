@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace DrawBody.Prototype
 {
+    [DefaultExecutionOrder(100)]
     public sealed class CameraFollow2D : MonoBehaviour
     {
         [SerializeField] private Transform target;
@@ -100,20 +101,24 @@ namespace DrawBody.Prototype
                 return false;
             }
 
-            Vector2 minimum = players[0].transform.position;
-            Vector2 maximum = minimum;
-            for (int i = 1; i < players.Length; i++)
+            Vector2 localPosition = target != null
+                ? (Vector2)target.position
+                : (Vector2)players[0].transform.position;
+            Vector2 maximumDistance = Vector2.zero;
+            for (int i = 0; i < players.Length; i++)
             {
                 Vector2 position = players[i].transform.position;
-                minimum = Vector2.Min(minimum, position);
-                maximum = Vector2.Max(maximum, position);
+                Vector2 distance = position - localPosition;
+                maximumDistance.x = Mathf.Max(maximumDistance.x, Mathf.Abs(distance.x));
+                maximumDistance.y = Mathf.Max(maximumDistance.y, Mathf.Abs(distance.y));
             }
 
-            center = (minimum + maximum) * 0.5f;
-            Vector2 halfSpread = (maximum - minimum) * 0.5f;
+            // Keep the local player as the visual anchor. The view grows toward
+            // distant partners instead of moving the camera to the group midpoint.
+            center = localPosition;
             float aspect = Mathf.Max(0.1f, controlledCamera.aspect);
-            float sizeForHeight = halfSpread.y + groupPadding.y;
-            float sizeForWidth = (halfSpread.x + groupPadding.x) / aspect;
+            float sizeForHeight = maximumDistance.y + groupPadding.y;
+            float sizeForWidth = (maximumDistance.x + groupPadding.x) / aspect;
             desiredSize = Mathf.Clamp(
                 Mathf.Max(minimumOrthographicSize, sizeForHeight, sizeForWidth),
                 minimumOrthographicSize,
