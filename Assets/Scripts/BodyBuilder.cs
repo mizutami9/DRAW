@@ -771,7 +771,10 @@ namespace DrawBody.Prototype
             bodyAnimationWasActive = true;
             DrawManager.Species species = builtSpecies;
             float phase = Time.time * walkAnimationSpeed;
-            bool carryArmApplied = false;
+            Vector2 carryShoulder = Vector2.zero;
+            Quaternion carryRotation = Quaternion.identity;
+            bool hasCarryArmRotation = carryingPose
+                && TryGetCarryArmRotation(out carryShoulder, out carryRotation);
 
             for (int i = 0; i < generatedSegments.Count; i++)
             {
@@ -792,14 +795,13 @@ namespace DrawBody.Prototype
 
                 if (carryingPose && IsFacingHumanArm(segment))
                 {
-                    if (!carryArmApplied)
+                    if (hasCarryArmRotation)
                     {
-                        ApplyCarryPose(segment);
-                        carryArmApplied = true;
+                        ApplyRigidCarryPose(segment, carryShoulder, carryRotation);
                     }
                     else
                     {
-                        CollapseCarrySegment(segment);
+                        RestoreSegmentGeometry(segment);
                     }
 
                     continue;
@@ -838,51 +840,107 @@ namespace DrawBody.Prototype
             return Mathf.Sign(armScreenSide) == carryingDirection;
         }
 
-        private void ApplyCarryPose(GeneratedSegment segment)
+        private bool TryGetCarryArmRotation(out Vector2 shoulder, out Quaternion rotation)
         {
-            if (segment.Transform == null || bodyRoot == null)
+            shoulder = Vector2.zero;
+            rotation = Quaternion.identity;
+            if (bodyRoot == null)
+            {
+                return false;
+            }
+
+            bool found = false;
+            Vector2 originalHand = Vector2.zero;
+            float farthestSqrDistance = 0f;
+            DrawManager.BodyPart carryPart = DrawManager.BodyPart.LeftArm;
+            for (int i = 0; i < generatedSegments.Count; i++)
+            {
+                GeneratedSegment candidate = generatedSegments[i];
+                if (candidate.Transform == null || !IsFacingHumanArm(candidate))
+                {
+                    continue;
+                }
+
+                if (!found)
+                {
+                    found = true;
+                    carryPart = candidate.Part;
+                    shoulder = candidate.PivotLocal;
+                }
+                if (candidate.Part != carryPart)
+                {
+                    continue;
+                }
+
+                float startDistance = (candidate.StartLocal - shoulder).sqrMagnitude;
+                if (startDistance > farthestSqrDistance)
+                {
+                    farthestSqrDistance = startDistance;
+                    originalHand = candidate.StartLocal;
+                }
+                float endDistance = (candidate.EndLocal - shoulder).sqrMagnitude;
+                if (endDistance > farthestSqrDistance)
+                {
+                    farthestSqrDistance = endDistance;
+                    originalHand = candidate.EndLocal;
+                }
+            }
+
+            if (!found || farthestSqrDistance < 0.0001f)
+            {
+                return false;
+            }
+
+            Vector3 targetLocal = bodyRoot.InverseTransformPoint(carryingHandWorldPosition);
+            Vector2 originalDirection = originalHand - shoulder;
+            Vector2 targetDirection = (Vector2)targetLocal - shoulder;
+            if (targetDirection.sqrMagnitude < 0.0001f)
+            {
+                return false;
+            }
+
+            float originalAngle = Mathf.Atan2(originalDirection.y, originalDirection.x) * Mathf.Rad2Deg;
+            float targetAngle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
+            rotation = Quaternion.Euler(0f, 0f, Mathf.DeltaAngle(originalAngle, targetAngle));
+            return true;
+        }
+
+        private void ApplyRigidCarryPose(GeneratedSegment segment, Vector2 shoulder, Quaternion rotation)
+        {
+            if (segment.Transform == null)
             {
                 return;
             }
 
-            Vector3 targetLocal = bodyRoot.InverseTransformPoint(carryingHandWorldPosition);
-            Vector2 shoulder = segment.StartLocal;
-            Vector2 delta = (Vector2)targetLocal - shoulder;
-            float length = Mathf.Clamp(delta.magnitude, 0.08f, carryArmMaxLength);
-            if (delta.sqrMagnitude > 0.0001f)
-            {
-                delta = delta.normalized * length;
-            }
-
-            float angle = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg;
-
-            segment.Transform.localPosition = shoulder + delta * 0.5f;
-            segment.Transform.localRotation = Quaternion.Euler(0f, 0f, angle);
+            segment.Transform.localPosition = RotateAroundPivot(segment.BaseLocalPosition, shoulder, rotation);
+            segment.Transform.localRotation = rotation * segment.BaseLocalRotation;
             segment.Transform.localScale = Vector3.one;
-
-            if (segment.Line != null)
-            {
-                segment.Line.SetPosition(0, new Vector3(-length * 0.5f, 0f, 0f));
-                segment.Line.SetPosition(1, new Vector3(length * 0.5f, 0f, 0f));
-            }
-
-            if (segment.Collider != null)
-            {
-                segment.Collider.size = new Vector2(length + colliderThickness, colliderThickness);
-            }
+            RestoreSegmentShape(segment);
         }
 
-        private static void CollapseCarrySegment(GeneratedSegment segment)
+        private void RestoreSegmentGeometry(GeneratedSegment segment)
+        {
+            if (segment.Transform == null)
+            {
+                return;
+            }
+            segment.Transform.localPosition = segment.BaseLocalPosition;
+            segment.Transform.localRotation = segment.BaseLocalRotation;
+            segment.Transform.localScale = Vector3.one;
+            RestoreSegmentShape(segment);
+        }
+
+        private void RestoreSegmentShape(GeneratedSegment segment)
         {
             if (segment.Line != null)
             {
-                segment.Line.SetPosition(0, Vector3.zero);
-                segment.Line.SetPosition(1, Vector3.zero);
+                segment.Line.SetPosition(0, new Vector3(-segment.BaseLength * 0.5f, 0f, 0f));
+                segment.Line.SetPosition(1, new Vector3(segment.BaseLength * 0.5f, 0f, 0f));
             }
-
             if (segment.Collider != null)
             {
-                segment.Collider.enabled = false;
+                segment.Collider.enabled = true;
+                segment.Collider.size = new Vector2(segment.BaseLength + colliderThickness, colliderThickness);
             }
         }
 

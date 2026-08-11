@@ -89,10 +89,13 @@ namespace DrawBody.Prototype
         private bool challengeStartPositionsCaptured;
         private StageSurvivalController survivalController;
         private TrailerCoopDemoController trailerDemo;
+        private SteamHeaderCaptureController steamHeaderCapture;
         private Vector3 primaryChallengeStartPosition;
         private Vector3 secondaryChallengeStartPosition;
         public bool IsTimedCollectionChallenge => stageRuleMode == StageRuleMode.TimedCollection;
         public bool IsSurvivalChallenge => stageRuleMode == StageRuleMode.Survival;
+        public bool IsDrawingMode => drawing;
+        public bool IsGameplayActive => stageStarted && !titleMode && !stageEditing && !drawing && !cleared;
         public float ChallengeRemainingSeconds => challengeRemaining;
         public bool ChallengeTimeUp => challengeFailed;
         public StageObjectType ChallengeCollectionTarget => collectionTarget;
@@ -180,6 +183,10 @@ namespace DrawBody.Prototype
             ConfigureActivePlayerTargets();
             ApplyDefaultPlayerColors();
             SubscribeOnlineEvents();
+            if (GetComponent<PlayerEmoteController>() == null)
+            {
+                gameObject.AddComponent<PlayerEmoteController>();
+            }
         }
 
         private void Start()
@@ -268,6 +275,7 @@ namespace DrawBody.Prototype
         public void EnterTitle()
         {
             StopTrailerDemo();
+            StopSteamHeaderCapture();
             CancelRespawnAnimations();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(false);
@@ -319,6 +327,7 @@ namespace DrawBody.Prototype
         public void StartTrailerCoopDemo()
         {
             StopTrailerDemo();
+            StopSteamHeaderCapture();
             titleMode = false;
             stageStarted = false;
             stageEditing = false;
@@ -342,6 +351,37 @@ namespace DrawBody.Prototype
             EnterTitle();
         }
 
+        public void StartSteamHeaderCapture()
+        {
+            StopTrailerDemo();
+            StopSteamHeaderCapture();
+            titleMode = false;
+            stageStarted = false;
+            stageEditing = false;
+            drawing = false;
+            cleared = false;
+            currentStageId = "steam-header-capture";
+            Time.timeScale = 1f;
+            uiManager?.SetTitle(false);
+            uiManager?.SetStageSelect(false);
+            drawManager?.SetActive(false);
+            stageLoader?.HideStages();
+            SetCameraFollowEnabled(false);
+
+            GameObject root = new GameObject("Steam Header Capture");
+            steamHeaderCapture = root.AddComponent<SteamHeaderCaptureController>();
+            steamHeaderCapture.Configure(
+                this,
+                player != null ? player.gameObject : null,
+                cameraFollow,
+                drawManager);
+        }
+
+        public void ExitSteamHeaderCapture()
+        {
+            EnterTitle();
+        }
+
         private void StopTrailerDemo()
         {
             if (trailerDemo == null)
@@ -356,6 +396,22 @@ namespace DrawBody.Prototype
             trailerDemo.RestoreScene();
             Destroy(trailerDemo.gameObject);
             trailerDemo = null;
+        }
+
+        private void StopSteamHeaderCapture()
+        {
+            if (steamHeaderCapture == null)
+            {
+                steamHeaderCapture = FindFirstObjectByType<SteamHeaderCaptureController>();
+            }
+            if (steamHeaderCapture == null)
+            {
+                return;
+            }
+
+            steamHeaderCapture.RestoreScene();
+            Destroy(steamHeaderCapture.gameObject);
+            steamHeaderCapture = null;
         }
 
         public void CloseTitleSubmenu()
@@ -1038,7 +1094,7 @@ namespace DrawBody.Prototype
 
         public void EnterDrawingMode()
         {
-            if (!stageStarted || challengeStarting || challengeFailed || IsSurvivalChallenge)
+            if (!stageStarted || challengeStarting || challengeFailed)
             {
                 return;
             }
@@ -1050,9 +1106,16 @@ namespace DrawBody.Prototype
                 redrawReturnPosition = player.transform.position;
                 hasRedrawReturnPosition = true;
                 player.ResetMotion();
+                if (onlineCarryHeld)
+                {
+                    EndOnlineCarry(Vector2.zero);
+                }
+                SetPlayerRedrawingState(player, true);
             }
 
-            Time.timeScale = titleMode ? 1f : 0f;
+            // An online peer cannot pause the authoritative stage for everyone.
+            // Keep 11-2 and other online stages running behind the DRAW overlay.
+            Time.timeScale = titleMode || IsOnlineInStage() ? 1f : 0f;
             player?.SetControlsEnabled(false);
             uiManager?.SetDrawing(true);
             drawManager?.SetActive(true);
@@ -1060,13 +1123,23 @@ namespace DrawBody.Prototype
 
         public void ExitDrawingMode()
         {
+            ExitDrawingMode(false);
+        }
+
+        public void ConfirmDrawingMode()
+        {
+            ExitDrawingMode(true);
+        }
+
+        private void ExitDrawingMode(bool returnToStart)
+        {
             if (!drawing)
             {
                 return;
             }
 
             drawing = false;
-            RestoreRedrawPose();
+            RestoreRedrawPose(returnToStart);
             Time.timeScale = 1f;
             uiManager?.SetDrawing(false);
             drawManager?.SetActive(false);
@@ -1633,6 +1706,37 @@ namespace DrawBody.Prototype
             remote.SetControlsEnabled(false);
         }
 
+        public void ApplyOnlineRemoteRedrawing(string playerId, bool redrawing)
+        {
+            PlayerController2D remote = EnsureOnlineRemotePlayer(playerId);
+            if (remote == null)
+            {
+                return;
+            }
+
+            SetPlayerRedrawingState(remote, redrawing);
+            if (redrawing && player != null)
+            {
+                PlayerCarryController localCarry = player.GetComponent<PlayerCarryController>();
+                localCarry?.ReleaseIfHolding(remote.transform);
+                localCarry?.ReleaseIfDraggingFriend(remote.transform);
+            }
+        }
+
+        private static void SetPlayerRedrawingState(PlayerController2D target, bool redrawing)
+        {
+            if (target == null)
+            {
+                return;
+            }
+            PlayerRedrawStateController state = target.GetComponent<PlayerRedrawStateController>();
+            if (state == null)
+            {
+                state = target.gameObject.AddComponent<PlayerRedrawStateController>();
+            }
+            state.SetRedrawing(redrawing);
+        }
+
         public bool IsOnlineRemotePlayerHeldByLocal(string playerId)
         {
             if (player == null || string.IsNullOrEmpty(playerId)
@@ -1803,7 +1907,7 @@ namespace DrawBody.Prototype
             onlineCarryLastConfirmedAt = Time.unscaledTime;
             onlineCarryIsCatGrab = catGrab;
             onlineCarryLocalOffset = localOffset;
-            player.SetControlsEnabled(false);
+            player.SetControlsEnabled(catGrab && stageStarted && !drawing && !cleared && !stageEditing);
             onlineCarryBody = player.GetComponent<Rigidbody2D>();
             if (onlineCarryBody != null)
             {
@@ -1849,7 +1953,10 @@ namespace DrawBody.Prototype
             }
 
             player.transform.position = anchor;
-            player.transform.rotation = Quaternion.identity;
+            if (!onlineCarryIsCatGrab)
+            {
+                player.transform.rotation = Quaternion.identity;
+            }
             if (onlineCarryBody != null)
             {
                 onlineCarryBody.position = anchor;
@@ -2149,7 +2256,7 @@ namespace DrawBody.Prototype
             SetActivePlayer(player == secondaryPlayer ? primaryPlayer : secondaryPlayer, true);
         }
 
-        private void RestoreRedrawPose()
+        private void RestoreRedrawPose(bool returnToStart)
         {
             if (player == null)
             {
@@ -2162,9 +2269,22 @@ namespace DrawBody.Prototype
             }
 
             PlayerController2D redrawPlayer = player;
-            Vector3 returnPosition = hasRedrawReturnPosition && redrawReturnPlayer == redrawPlayer
-                ? redrawReturnPosition
-                : redrawPlayer.transform.position;
+            Vector3 returnPosition;
+            if (returnToStart && spawnPoint != null)
+            {
+                returnPosition = spawnPoint.position + GetRespawnOffset(redrawPlayer);
+                redrawPlayer.GetComponent<PlayerCarryController>()?.ForceDrop();
+                if (onlineCarryHeld)
+                {
+                    EndOnlineCarry(Vector2.zero);
+                }
+            }
+            else
+            {
+                returnPosition = hasRedrawReturnPosition && redrawReturnPlayer == redrawPlayer
+                    ? redrawReturnPosition
+                    : redrawPlayer.transform.position;
+            }
             hasRedrawReturnPosition = false;
             redrawReturnPlayer = null;
             redrawPlayer.SetControlsEnabled(false);
@@ -2181,8 +2301,9 @@ namespace DrawBody.Prototype
 
             if (redrawPlayer != null)
             {
-                redrawPlayer.transform.position = returnPosition;
+                TeleportPlayerWithoutPhysics(redrawPlayer, returnPosition);
                 redrawPlayer.ResetMotion();
+                SetPlayerRedrawingState(redrawPlayer, false);
                 LiftPlayerOutOfGround(redrawPlayer);
                 redrawPlayer.SetControlsEnabled(
                     stageStarted && !drawing && !cleared && !stageEditing);
@@ -2410,12 +2531,16 @@ namespace DrawBody.Prototype
                 yield break;
             }
 
+            // Keep physics disabled through the teleport. Re-enabling before the
+            // position change can make continuous collision/interpolation touch
+            // every object between the death point and the spawn point.
+            RespawnPlayer(targetPlayer, GetRespawnOffset(targetPlayer), false, false);
             if (state.Body != null)
             {
                 state.Body.simulated = state.BodyWasSimulated;
             }
-
-            RespawnPlayer(targetPlayer, GetRespawnOffset(targetPlayer), false);
+            Physics2D.SyncTransforms();
+            LiftPlayerOutOfGround(targetPlayer);
             CreateRespawnBurst(targetPlayer.transform.position, effectColor);
 
             elapsed = 0f;
@@ -2570,20 +2695,57 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void RespawnPlayer(PlayerController2D targetPlayer, Vector3 offset, bool enableControls)
+        private void RespawnPlayer(
+            PlayerController2D targetPlayer,
+            Vector3 offset,
+            bool enableControls,
+            bool resolveGroundOverlap = true)
         {
             if (targetPlayer == null || spawnPoint == null)
             {
                 return;
             }
 
-            targetPlayer.transform.position = spawnPoint.position + offset;
+            TeleportPlayerWithoutPhysics(targetPlayer, spawnPoint.position + offset);
             targetPlayer.ResetMotion();
             targetPlayer.SetControlsEnabled(enableControls && stageStarted && !drawing && !cleared && !stageEditing);
-            LiftPlayerOutOfGround(targetPlayer);
+            if (resolveGroundOverlap)
+            {
+                LiftPlayerOutOfGround(targetPlayer);
+            }
             if (stageStarted)
             {
                 GameSfx.PlayAt(SfxId.PlayerRespawn, targetPlayer.transform.position);
+            }
+        }
+
+        private static void TeleportPlayerWithoutPhysics(PlayerController2D targetPlayer, Vector3 destination)
+        {
+            if (targetPlayer == null)
+            {
+                return;
+            }
+
+            Rigidbody2D body = targetPlayer.GetComponent<Rigidbody2D>();
+            bool restoreSimulation = body != null && body.simulated;
+            if (body != null)
+            {
+                body.simulated = false;
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+            }
+
+            targetPlayer.transform.position = destination;
+            if (body != null)
+            {
+                body.position = destination;
+            }
+            Physics2D.SyncTransforms();
+
+            if (body != null && restoreSimulation)
+            {
+                body.simulated = true;
+                Physics2D.SyncTransforms();
             }
         }
 

@@ -1132,7 +1132,7 @@ namespace DrawBody.Prototype
             PlayerController2D active = stageManager.ActivePlayerTransform != null
                 ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
                 : null;
-            active?.SetControlsEnabled(enabled && !IsEliminated(active));
+            active?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode && !IsEliminated(active));
             if (!IsOnlineActive())
             {
                 PlayerController2D secondary = stageManager.RemotePlayerController;

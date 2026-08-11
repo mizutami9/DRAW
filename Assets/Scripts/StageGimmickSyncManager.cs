@@ -153,14 +153,19 @@ namespace DrawBody.Prototype
 
         private void FixedUpdate()
         {
-            if (!ShouldAskHost)
+            if (!IsOnlineActive)
             {
                 return;
             }
 
-            foreach (SyncTransformEntry entry in transformEntries.Values)
+            foreach (KeyValuePair<string, SyncTransformEntry> pair in transformEntries)
             {
-                if (entry == null || !entry.IsHostDrivenPlatform || !entry.HasNetworkTarget)
+                SyncTransformEntry entry = pair.Value;
+                ownersByObjectId.TryGetValue(pair.Key, out string ownerId);
+                bool remotelyOwned = !string.IsNullOrEmpty(ownerId)
+                    && ownerId != onlineManager.LocalPlayerId;
+                bool networkDrivenPlatform = ShouldAskHost && entry != null && entry.IsHostDrivenPlatform;
+                if (entry == null || !entry.HasNetworkTarget || (!remotelyOwned && !networkDrivenPlatform))
                 {
                     continue;
                 }
@@ -666,6 +671,11 @@ namespace DrawBody.Prototype
             }
 
             ownersByObjectId[objectId] = ownerPlayerId;
+            if (transformEntries.TryGetValue(objectId, out SyncTransformEntry entry) && entry != null)
+            {
+                if (ownerPlayerId != onlineManager.LocalPlayerId) entry.BeginRemoteOwnership();
+                else entry.EndRemoteOwnership(Vector2.zero);
+            }
             BroadcastOwnership(objectId, ownerPlayerId, Vector2.zero);
         }
 
@@ -715,9 +725,9 @@ namespace DrawBody.Prototype
                 release = new OwnershipState();
             }
 
-            if (transformEntries.TryGetValue(objectId, out SyncTransformEntry entry) && entry?.Body != null)
+            if (transformEntries.TryGetValue(objectId, out SyncTransformEntry entry) && entry != null)
             {
-                entry.Body.linearVelocity = release.ReleaseVelocity;
+                entry.EndRemoteOwnership(release.ReleaseVelocity);
             }
 
             ownersByObjectId.Remove(objectId);
@@ -785,12 +795,23 @@ namespace DrawBody.Prototype
                 ReleaseDeniedLocalCarry(objectId);
                 if (transformEntries.TryGetValue(objectId, out SyncTransformEntry released) && released?.Body != null)
                 {
-                    released.Body.linearVelocity = state != null ? state.ReleaseVelocity : Vector2.zero;
+                    released.EndRemoteOwnership(state != null ? state.ReleaseVelocity : Vector2.zero);
                 }
                 return;
             }
 
             ownersByObjectId[objectId] = state.OwnerPlayerId;
+            if (transformEntries.TryGetValue(objectId, out SyncTransformEntry entry) && entry != null)
+            {
+                if (state.OwnerPlayerId != onlineManager.LocalPlayerId)
+                {
+                    entry.BeginRemoteOwnership();
+                }
+                else
+                {
+                    entry.EndRemoteOwnership(Vector2.zero);
+                }
+            }
             if (state.OwnerPlayerId != onlineManager.LocalPlayerId && locallyHeldObjectIds.Contains(objectId))
             {
                 ReleaseDeniedLocalCarry(objectId);
@@ -830,6 +851,15 @@ namespace DrawBody.Prototype
             }
 
             entry.Transform.gameObject.SetActive(state.Active);
+            ownersByObjectId.TryGetValue(objectId, out string ownerId);
+            bool remotelyOwned = !string.IsNullOrEmpty(ownerId)
+                && ownerId != onlineManager.LocalPlayerId;
+            if (remotelyOwned)
+            {
+                entry.BeginRemoteOwnership();
+                entry.SetNetworkTarget(state);
+                return;
+            }
             if (ShouldAskHost && entry.IsHostDrivenPlatform)
             {
                 entry.SetNetworkTarget(state);
@@ -1259,6 +1289,10 @@ namespace DrawBody.Prototype
             private float networkRotation;
             private float networkAngularVelocity;
             private float networkReceivedAt;
+            private bool remoteOwnershipActive;
+            private RigidbodyType2D bodyTypeBeforeRemoteOwnership;
+            private float gravityBeforeRemoteOwnership;
+            private bool freezeRotationBeforeRemoteOwnership;
 
             public SyncTransformEntry(Transform transform, Rigidbody2D body, bool isHostDrivenPlatform)
             {
@@ -1275,6 +1309,43 @@ namespace DrawBody.Prototype
                 networkAngularVelocity = state.AngularVelocity;
                 networkReceivedAt = Time.unscaledTime;
                 HasNetworkTarget = true;
+            }
+
+            public void BeginRemoteOwnership()
+            {
+                if (remoteOwnershipActive || Body == null)
+                {
+                    return;
+                }
+
+                remoteOwnershipActive = true;
+                bodyTypeBeforeRemoteOwnership = Body.bodyType;
+                gravityBeforeRemoteOwnership = Body.gravityScale;
+                freezeRotationBeforeRemoteOwnership = Body.freezeRotation;
+                Body.bodyType = RigidbodyType2D.Kinematic;
+                Body.gravityScale = 0f;
+                Body.linearVelocity = Vector2.zero;
+                Body.angularVelocity = 0f;
+            }
+
+            public void EndRemoteOwnership(Vector2 releaseVelocity)
+            {
+                if (Body == null)
+                {
+                    HasNetworkTarget = false;
+                    return;
+                }
+
+                if (remoteOwnershipActive)
+                {
+                    Body.bodyType = bodyTypeBeforeRemoteOwnership;
+                    Body.gravityScale = gravityBeforeRemoteOwnership;
+                    Body.freezeRotation = freezeRotationBeforeRemoteOwnership;
+                    remoteOwnershipActive = false;
+                }
+                Body.linearVelocity = releaseVelocity;
+                Body.angularVelocity = 0f;
+                HasNetworkTarget = false;
             }
 
             public void ApplyNetworkTarget(float deltaTime)

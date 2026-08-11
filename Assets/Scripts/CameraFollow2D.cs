@@ -11,8 +11,8 @@ namespace DrawBody.Prototype
         [Header("Group Framing")]
         [SerializeField] private bool frameAllActivePlayers = true;
         [SerializeField] private float minimumOrthographicSize = 8f;
-        [SerializeField] private float maximumOrthographicSize = 16f;
-        [SerializeField] private Vector2 groupPadding = new Vector2(3f, 2.8f);
+        [SerializeField] private float maximumOrthographicSize = 20f;
+        [SerializeField] private Vector2 groupPadding = new Vector2(4.5f, 4f);
         [SerializeField] private float zoomSpeed = 4.5f;
 
         private Camera controlledCamera;
@@ -56,15 +56,16 @@ namespace DrawBody.Prototype
 
         private void LateUpdate()
         {
+            Transform activeFocus = ResolveActiveFocusTarget();
             Vector3 focusPosition;
             float desiredSize;
-            if (TryGetGroupFrame(out Vector2 groupCenter, out desiredSize))
+            if (TryGetGroupFrame(activeFocus, out Vector2 groupCenter, out desiredSize))
             {
                 focusPosition = new Vector3(groupCenter.x, groupCenter.y, 0f);
             }
-            else if (target != null)
+            else if (activeFocus != null)
             {
-                focusPosition = target.position;
+                focusPosition = activeFocus.position;
                 desiredSize = minimumOrthographicSize;
             }
             else
@@ -84,7 +85,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        private bool TryGetGroupFrame(out Vector2 center, out float desiredSize)
+        private bool TryGetGroupFrame(Transform activeFocus, out Vector2 center, out float desiredSize)
         {
             center = Vector2.zero;
             desiredSize = minimumOrthographicSize;
@@ -101,8 +102,8 @@ namespace DrawBody.Prototype
                 return false;
             }
 
-            Vector2 localPosition = target != null
-                ? (Vector2)target.position
+            Vector2 localPosition = activeFocus != null
+                ? (Vector2)activeFocus.position
                 : (Vector2)players[0].transform.position;
             Vector2 maximumDistance = Vector2.zero;
             for (int i = 0; i < players.Length; i++)
@@ -124,6 +125,41 @@ namespace DrawBody.Prototype
                 minimumOrthographicSize,
                 maximumOrthographicSize);
             return true;
+        }
+
+        private Transform ResolveActiveFocusTarget()
+        {
+            if (target != null && target.gameObject.activeInHierarchy)
+            {
+                return target;
+            }
+
+            PlayerController2D[] players = FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
+            if (players.Length == 0)
+            {
+                return null;
+            }
+
+            // In no-respawn modes the local avatar is disabled on elimination.
+            // Spectate the closest surviving teammate without replacing the saved
+            // local target, so the camera automatically returns after a retry.
+            Vector2 lastLocalPosition = target != null
+                ? (Vector2)target.position
+                : (Vector2)transform.position;
+            Transform closest = players[0].transform;
+            float closestDistance = Vector2.SqrMagnitude((Vector2)closest.position - lastLocalPosition);
+            for (int i = 1; i < players.Length; i++)
+            {
+                float distance = Vector2.SqrMagnitude((Vector2)players[i].transform.position - lastLocalPosition);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closest = players[i].transform;
+                }
+            }
+            return closest;
         }
 
         public void SetTarget(Transform nextTarget)

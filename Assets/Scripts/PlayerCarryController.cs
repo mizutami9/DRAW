@@ -66,6 +66,9 @@ namespace DrawBody.Prototype
         private LineRenderer slimeAttachRing;
         private readonly LineRenderer[] catClawLines = new LineRenderer[3];
         private readonly LineRenderer[] birdBeakLines = new LineRenderer[2];
+        private CarryableObject catClawedObject;
+        private Rigidbody2D catClawedBody;
+        private FixedJoint2D catClawJoint;
         private bool scriptedSlimeAttachment;
         private bool scriptedSlimeAttachmentHeld;
         private bool scriptedActionEnabled;
@@ -86,7 +89,9 @@ namespace DrawBody.Prototype
 
         public bool IsHoldingTarget(Transform target)
         {
-            return target != null && heldTransform == target;
+            return target != null
+                && (heldTransform == target
+                    || catClawedObject != null && catClawedObject.transform == target);
         }
 
         public bool IsDraggingFriend(Transform target)
@@ -97,6 +102,11 @@ namespace DrawBody.Prototype
 
         public bool ReleaseIfHolding(Transform target)
         {
+            if (target != null && catClawedObject != null && catClawedObject.transform == target)
+            {
+                DetachCatFromObject(false);
+                return true;
+            }
             if (target == null || heldTransform != target)
             {
                 return false;
@@ -151,13 +161,18 @@ namespace DrawBody.Prototype
             scriptedSlimeAttachmentHeld = attached;
             if (attached)
             {
-                if (slimeAttachedPlayer == null) TryAttachSlimeToFriend();
+                if (slimeAttachedPlayer == null && catClawedObject == null)
+                {
+                    TryAttachSlimeToFriend();
+                    if (slimeAttachedPlayer == null && IsFriendCarrier()) TryAttachCatToObject();
+                }
             }
             else
             {
                 DetachSlimeFromFriend(true);
+                DetachCatFromObject(true);
             }
-            return slimeAttachedPlayer != null;
+            return slimeAttachedPlayer != null || catClawedObject != null;
         }
 
         public Vector2 GetThrowDirectionForScript()
@@ -235,6 +250,14 @@ namespace DrawBody.Prototype
             CreateSlimeAttachmentVisual();
         }
 
+        private void OnDisable()
+        {
+            if (!Application.isPlaying) return;
+            DetachSlimeFromFriend(false);
+            DetachCatFromObject(false);
+            DropHeld(Vector2.zero);
+        }
+
         private void Update()
         {
             if (Time.timeScale <= 0f)
@@ -253,6 +276,7 @@ namespace DrawBody.Prototype
             if (playerController != null && !playerController.ControlsEnabled)
             {
                 DetachSlimeFromFriend(false);
+                DetachCatFromObject(false);
                 return;
             }
 
@@ -269,19 +293,25 @@ namespace DrawBody.Prototype
                     : Input.GetKey(KeyCode.F);
                 if (attachHeld)
                 {
-                    if (slimeAttachedPlayer == null)
+                    if (slimeAttachedPlayer == null && catClawedObject == null)
                     {
                         TryAttachSlimeToFriend();
+                        if (slimeAttachedPlayer == null && IsFriendCarrier())
+                        {
+                            TryAttachCatToObject();
+                        }
                     }
                 }
                 else
                 {
                     DetachSlimeFromFriend(true);
+                    DetachCatFromObject(true);
                 }
                 return;
             }
 
             DetachSlimeFromFriend(false);
+            DetachCatFromObject(false);
             if (!IsHuman())
             {
                 DropHeld(Vector2.zero);
@@ -303,9 +333,18 @@ namespace DrawBody.Prototype
 
         private void LateUpdate()
         {
+            if (catClawedObject == null && catClawJoint != null)
+            {
+                DetachCatFromObject(false);
+            }
             if (slimeAttachedPlayer != null)
             {
                 FollowSlimeAttachedFriend();
+            }
+            else if (catClawedObject != null)
+            {
+                if (IsBird()) UpdateBirdObjectAttachmentVisual();
+                else UpdateCatObjectAttachmentVisual();
             }
             else if (remoteSlimeVisualTarget != null)
             {
@@ -410,7 +449,6 @@ namespace DrawBody.Prototype
             slimeAttachedTargetPreviousControlsEnabled = bestPlayer.ControlsEnabled;
             if (IsFriendCarrier())
             {
-                bestPlayer.SetControlsEnabled(false);
                 friendAttachedOnlinePlayerId = GetHeldOnlinePlayerId(bestPlayer);
                 SendFriendAttachEvent("friend_grab", friendAttachedOnlinePlayerId, Vector2.zero);
             }
@@ -420,6 +458,120 @@ namespace DrawBody.Prototype
             SetCollisionIgnored(slimeOwnColliders, slimeTargetColliders, true);
             FollowSlimeAttachedFriend();
             GameSfx.PlayAt(GetFriendAttachSfx(), transform.position, 1.1f);
+        }
+
+        private void TryAttachCatToObject()
+        {
+            if (!IsFriendCarrier() || playerBody == null)
+            {
+                return;
+            }
+
+            Bounds playerBounds;
+            if (!TryGetPlayerBounds(out playerBounds))
+            {
+                playerBounds = new Bounds(transform.position, Vector3.one * pickupRadius);
+            }
+
+            Vector2 searchSize = new Vector2(
+                Mathf.Max(pickupRadius, playerBounds.size.x + pickupReach * 2f),
+                Mathf.Max(pickupRadius, playerBounds.size.y + pickupReach * 2f));
+            pickupHits.Clear();
+            Physics2D.OverlapBox(playerBounds.center, searchSize, 0f, pickupContactFilter, pickupHits);
+            Collider2D[] ownColliders = GetComponentsInChildren<Collider2D>(false);
+            CarryableObject bestObject = null;
+            Rigidbody2D bestBody = null;
+            Collider2D bestCollider = null;
+            float bestDistance = float.PositiveInfinity;
+
+            for (int i = 0; i < pickupHits.Count; i++)
+            {
+                Collider2D hit = pickupHits[i];
+                if (hit == null || hit.transform.IsChildOf(transform))
+                {
+                    continue;
+                }
+
+                CarryableObject candidate = hit.GetComponentInParent<CarryableObject>();
+                Rigidbody2D candidateBody = candidate != null ? candidate.GetComponent<Rigidbody2D>() : null;
+                if (candidate == null || candidateBody == null || !candidateBody.simulated
+                    || candidateBody.bodyType == RigidbodyType2D.Static
+                    || IsCarryableControlledByAnotherPlayer(candidate.transform))
+                {
+                    continue;
+                }
+
+                float distance = GetClosestColliderDistance(ownColliders, hit);
+                if (distance <= Mathf.Max(0.75f, slimeFriendAttachReach) && distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    bestObject = candidate;
+                    bestBody = candidateBody;
+                    bestCollider = hit;
+                }
+            }
+
+            if (bestObject == null || bestBody == null || bestCollider == null)
+            {
+                return;
+            }
+
+            catClawedObject = bestObject;
+            catClawedBody = bestBody;
+            Vector2 contact = bestCollider.ClosestPoint(playerBounds.center);
+            catClawJoint = gameObject.AddComponent<FixedJoint2D>();
+            catClawJoint.autoConfigureConnectedAnchor = false;
+            catClawJoint.connectedBody = catClawedBody;
+            catClawJoint.anchor = playerBody.transform.InverseTransformPoint(contact);
+            catClawJoint.connectedAnchor = catClawedBody.transform.InverseTransformPoint(contact);
+            catClawJoint.enableCollision = false;
+            catClawJoint.breakForce = Mathf.Infinity;
+            catClawJoint.breakTorque = Mathf.Infinity;
+            ResolveGimmickSyncManager()?.BeginLocalObjectCarry(catClawedObject.transform);
+            if (IsBird()) UpdateBirdObjectAttachmentVisual();
+            else UpdateCatObjectAttachmentVisual();
+            GameSfx.PlayAt(GetFriendAttachSfx(), contact, 1.1f);
+        }
+
+        private bool IsCarryableControlledByAnotherPlayer(Transform candidate)
+        {
+            PlayerCarryController[] carriers = FindObjectsByType<PlayerCarryController>(FindObjectsSortMode.None);
+            for (int i = 0; i < carriers.Length; i++)
+            {
+                PlayerCarryController carrier = carriers[i];
+                if (carrier != null && carrier != this && carrier.IsHoldingTarget(candidate))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void DetachCatFromObject(bool playSound)
+        {
+            if (catClawedObject == null && catClawJoint == null)
+            {
+                return;
+            }
+
+            Transform releasedTransform = catClawedObject != null ? catClawedObject.transform : null;
+            Vector2 releaseVelocity = catClawedBody != null ? catClawedBody.linearVelocity : Vector2.zero;
+            if (releasedTransform != null)
+            {
+                ResolveGimmickSyncManager()?.EndLocalObjectCarry(releasedTransform, releaseVelocity);
+            }
+            if (catClawJoint != null)
+            {
+                Destroy(catClawJoint);
+            }
+            catClawJoint = null;
+            catClawedObject = null;
+            catClawedBody = null;
+            SetSlimeAttachmentVisualVisible(false);
+            if (playSound)
+            {
+                GameSfx.PlayAt(GetFriendReleaseSfx(), transform.position, 0.9f);
+            }
         }
 
         private void FollowSlimeAttachedFriend()
@@ -436,9 +588,7 @@ namespace DrawBody.Prototype
             {
                 Vector3 targetAnchor = transform.position + transform.TransformVector(slimeAttachLocalOffset);
                 slimeAttachedPlayer.transform.position = targetAnchor;
-                slimeAttachedPlayer.transform.rotation = Quaternion.identity;
                 slimeAttachedBody.position = targetAnchor;
-                slimeAttachedBody.rotation = 0f;
                 slimeAttachedBody.linearVelocity = playerBody != null ? playerBody.linearVelocity : Vector2.zero;
                 slimeAttachedBody.angularVelocity = 0f;
             }
@@ -952,6 +1102,7 @@ namespace DrawBody.Prototype
         public void ForceDrop()
         {
             DetachSlimeFromFriend(false);
+            DetachCatFromObject(false);
             if (!string.IsNullOrEmpty(heldOnlinePlayerId))
             {
                 SendCarryEvent("drop", Vector2.zero);
@@ -1180,6 +1331,36 @@ namespace DrawBody.Prototype
             Vector3 contact = useAttachedAnchor
                 ? targetBounds.center + Vector3.up * targetBounds.extents.y
                 : targetBounds.ClosestPoint(beakBase);
+            DrawBirdBeak(beakBase, contact, facing);
+        }
+
+        private void UpdateBirdObjectAttachmentVisual()
+        {
+            if (catClawedObject == null)
+            {
+                SetSlimeAttachmentVisualVisible(false);
+                return;
+            }
+            if (slimeAttachBridge != null) slimeAttachBridge.enabled = false;
+            if (slimeAttachRing != null) slimeAttachRing.enabled = false;
+            for (int i = 0; i < catClawLines.Length; i++)
+            {
+                if (catClawLines[i] != null) catClawLines[i].enabled = false;
+            }
+
+            Bounds birdBounds = new Bounds(transform.position, new Vector3(0.9f, 0.7f, 0f));
+            TryGetSolidBounds(playerController, out birdBounds);
+            float facing = GetFacingDirection();
+            Vector3 beakBase = new Vector3(
+                birdBounds.center.x + facing * birdBounds.extents.x * 0.72f,
+                birdBounds.center.y + birdBounds.extents.y * 0.28f,
+                transform.position.z);
+            Bounds objectBounds = GetSolidBounds(catClawedObject.gameObject);
+            DrawBirdBeak(beakBase, objectBounds.ClosestPoint(beakBase), facing);
+        }
+
+        private void DrawBirdBeak(Vector3 beakBase, Vector3 contact, float facing)
+        {
             Vector3 forward = (contact - beakBase).normalized;
             if (forward.sqrMagnitude < 0.001f) forward = Vector3.right * facing;
             Vector3 normal = new Vector3(-forward.y, forward.x, 0f);
@@ -1229,6 +1410,32 @@ namespace DrawBody.Prototype
             Vector3 contact = useAttachedAnchor
                 ? target.transform.position + target.transform.TransformVector(slimeAttachLocalOffset) * 0.42f
                 : targetBounds.ClosestPoint(catCenter);
+            DrawCatClaws(catCenter, contact);
+        }
+
+        private void UpdateCatObjectAttachmentVisual()
+        {
+            if (catClawedObject == null)
+            {
+                SetSlimeAttachmentVisualVisible(false);
+                return;
+            }
+            if (slimeAttachBridge != null) slimeAttachBridge.enabled = false;
+            if (slimeAttachRing != null) slimeAttachRing.enabled = false;
+            for (int i = 0; i < birdBeakLines.Length; i++)
+            {
+                if (birdBeakLines[i] != null) birdBeakLines[i].enabled = false;
+            }
+
+            Vector3 catCenter = transform.position;
+            if (TryGetSolidBounds(playerController, out Bounds catBounds)) catCenter = catBounds.center;
+            Bounds objectBounds = GetSolidBounds(catClawedObject.gameObject);
+            Vector3 contact = objectBounds.ClosestPoint(catCenter);
+            DrawCatClaws(catCenter, contact);
+        }
+
+        private void DrawCatClaws(Vector3 catCenter, Vector3 contact)
+        {
             Vector3 direction = contact - catCenter;
             if (direction.sqrMagnitude < 0.001f) direction = Vector3.right;
             direction.Normalize();
@@ -1256,6 +1463,29 @@ namespace DrawBody.Prototype
                 claw.SetPosition(2, tip);
                 claw.SetPosition(3, hook);
             }
+        }
+
+        private static Bounds GetSolidBounds(GameObject target)
+        {
+            Bounds bounds = new Bounds(target != null ? target.transform.position : Vector3.zero, Vector3.one * 0.5f);
+            if (target == null) return bounds;
+            Collider2D[] colliders = target.GetComponentsInChildren<Collider2D>(false);
+            bool found = false;
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger) continue;
+                if (!found)
+                {
+                    bounds = collider.bounds;
+                    found = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(collider.bounds);
+                }
+            }
+            return bounds;
         }
 
         private void UpdateSlimeAttachmentVisual(PlayerController2D target, bool useAttachedAnchor)

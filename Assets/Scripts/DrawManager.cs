@@ -861,7 +861,7 @@ namespace DrawBody.Prototype
                 GameSfx.Play(SfxId.DrawConfirm);
                 hasEditSnapshot = false;
                 editSnapshot = null;
-                stageManager?.ExitDrawingMode();
+                stageManager?.ConfirmDrawingMode();
             }
         }
 

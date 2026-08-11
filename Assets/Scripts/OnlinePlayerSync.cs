@@ -26,6 +26,7 @@ namespace DrawBody.Prototype
             public Vector2 Position;
             public Vector2 Velocity;
             public float Rotation;
+            public bool Redrawing;
             public bool TurtleShelled;
             public string SlimeAttachedToPlayerId;
         }
@@ -112,6 +113,7 @@ namespace DrawBody.Prototype
                 Position = localTransform.position,
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
                 Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
+                Redrawing = stageManager.IsDrawingMode,
                 TurtleShelled = localTransform.GetComponent<PlayerController2D>()?.IsTurtleShelled ?? false,
                 SlimeAttachedToPlayerId = localCarry?.SlimeAttachedOnlinePlayerId,
                 CarriedPlayerId = localCarry?.CurrentOnlineCarriedPlayerId,
@@ -141,13 +143,14 @@ namespace DrawBody.Prototype
             {
                 lastRemoteSequences[state.PlayerId] = state.Sequence;
             }
+            stageManager.ApplyOnlineRemoteRedrawing(state.PlayerId, state.Redrawing);
             stageManager.ReconcileOnlineCarryState(
                 state.PlayerId,
-                state.CarriedPlayerId,
-                state.CarryAction,
-                state.CarryOffset,
+                state.Redrawing ? null : state.CarriedPlayerId,
+                state.Redrawing ? string.Empty : state.CarryAction,
+                state.Redrawing ? Vector2.zero : state.CarryOffset,
                 onlineManager.LocalPlayerId,
-                state.Velocity);
+                state.Redrawing ? Vector2.zero : state.Velocity);
             if (stageManager.IsOnlineRemotePlayerHeldByLocal(state.PlayerId))
             {
                 remoteTargets.Remove(state.PlayerId);
@@ -159,8 +162,9 @@ namespace DrawBody.Prototype
                 Position = state.Position,
                 Velocity = state.Velocity,
                 Rotation = state.Rotation,
-                TurtleShelled = state.TurtleShelled,
-                SlimeAttachedToPlayerId = state.SlimeAttachedToPlayerId
+                Redrawing = state.Redrawing,
+                TurtleShelled = !state.Redrawing && state.TurtleShelled,
+                SlimeAttachedToPlayerId = state.Redrawing ? null : state.SlimeAttachedToPlayerId
             };
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
         }

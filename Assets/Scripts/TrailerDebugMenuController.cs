@@ -12,6 +12,7 @@ namespace DrawBody.Prototype
         private Text startLabel;
         private Text backLabel;
         private Text editShapesLabel;
+        private Text steamHeaderLabel;
 
         public static void Ensure(RectTransform titlePanel, RectTransform titleMenu)
         {
@@ -74,6 +75,7 @@ namespace DrawBody.Prototype
             {
                 overlay = existingOverlay as RectTransform;
                 CacheLabels();
+                EnsureSteamHeaderButton(card: overlay.Find("CaptureCard") as RectTransform, font: font);
                 return;
             }
 
@@ -105,11 +107,13 @@ namespace DrawBody.Prototype
             helpLabel = CreateLabel("Help", card, string.Empty, 23, font);
             SetRect(helpLabel.rectTransform, new Vector2(0f, 5f), new Vector2(680f, 56f));
 
-            Button editShapes = CreateButton("EditShapesButton", card, new Vector2(-255f, -120f), new Vector2(230f, 72f), new Color(0.35f, 0.76f, 0.96f, 1f), font, out editShapesLabel);
+            Button editShapes = CreateButton("EditShapesButton", card, new Vector2(-285f, -120f), new Vector2(160f, 72f), new Color(0.35f, 0.76f, 0.96f, 1f), font, out editShapesLabel);
             editShapes.onClick.AddListener(EditShapes);
-            Button start = CreateButton("StartButton", card, new Vector2(5f, -120f), new Vector2(260f, 72f), new Color(0.45f, 0.88f, 0.42f, 1f), font, out startLabel);
+            Button start = CreateButton("StartButton", card, new Vector2(-95f, -120f), new Vector2(190f, 72f), new Color(0.45f, 0.88f, 0.42f, 1f), font, out startLabel);
             start.onClick.AddListener(StartScenario);
-            Button back = CreateButton("BackButton", card, new Vector2(270f, -120f), new Vector2(210f, 72f), new Color(1f, 0.68f, 0.34f, 1f), font, out backLabel);
+            Button steam = CreateButton("SteamHeaderButton", card, new Vector2(115f, -120f), new Vector2(210f, 72f), new Color(0.96f, 0.48f, 0.72f, 1f), font, out steamHeaderLabel);
+            steam.onClick.AddListener(StartSteamHeader);
+            Button back = CreateButton("BackButton", card, new Vector2(305f, -120f), new Vector2(140f, 72f), new Color(1f, 0.68f, 0.34f, 1f), font, out backLabel);
             back.onClick.AddListener(Hide);
 
             overlay.gameObject.SetActive(false);
@@ -127,6 +131,23 @@ namespace DrawBody.Prototype
             FindFirstObjectByType<StageManager>()?.EnterDrawingMode();
         }
 
+        private void StartSteamHeader()
+        {
+            Hide();
+            FindFirstObjectByType<StageManager>()?.StartSteamHeaderCapture();
+        }
+
+        private void EnsureSteamHeaderButton(RectTransform card, Font font)
+        {
+            if (card == null || card.Find("SteamHeaderButton") != null)
+            {
+                CacheLabels();
+                return;
+            }
+            Button steam = CreateButton("SteamHeaderButton", card, new Vector2(115f, -120f), new Vector2(210f, 72f), new Color(0.96f, 0.48f, 0.72f, 1f), font, out steamHeaderLabel);
+            steam.onClick.AddListener(StartSteamHeader);
+        }
+
         private void CacheLabels()
         {
             titleLabel = FindText("CaptureCard/Title");
@@ -135,6 +156,7 @@ namespace DrawBody.Prototype
             startLabel = FindText("CaptureCard/StartButton/Label");
             backLabel = FindText("CaptureCard/BackButton/Label");
             editShapesLabel = FindText("CaptureCard/EditShapesButton/Label");
+            steamHeaderLabel = FindText("CaptureCard/SteamHeaderButton/Label");
         }
 
         private Text FindText(string path)
@@ -151,6 +173,7 @@ namespace DrawBody.Prototype
             if (startLabel != null) startLabel.text = LocalizationManager.T("trailer_debug_start");
             if (backLabel != null) backLabel.text = LocalizationManager.T("trailer_debug_back");
             if (editShapesLabel != null) editShapesLabel.text = LocalizationManager.T("trailer_debug_edit_shapes");
+            if (steamHeaderLabel != null) steamHeaderLabel.text = LocalizationManager.T("steam_header_debug_button");
         }
 
         private static Button CreateButton(string name, RectTransform parent, Vector2 position, Vector2 size, Color color, Font font, out Text label)
