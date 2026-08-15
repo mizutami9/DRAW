@@ -96,8 +96,13 @@ namespace DrawBody.Prototype
         private Vector2 rectStart;
         private Vector2 dragOffset;
         private CopyDirection copyDirection = CopyDirection.Right;
+        private bool draggingDebugPlayer;
+        private Vector2 debugPlayerDragOffset;
+        private bool hasDebugTestStartPosition;
+        private Vector3 debugTestStartPosition;
 
         public bool IsEditing => active;
+        public bool HasDebugTestStartPosition => hasDebugTestStartPosition;
         public bool HasMultipleSelection => rangeSelectedObjects.Count > 1;
         public CopyDirection CurrentCopyDirection => copyDirection;
         public string CopyDirectionLabel => LocalizationManager.T(
@@ -408,30 +413,90 @@ namespace DrawBody.Prototype
             terrainPathThickness = 2f;
             active = true;
             dragging = false;
+            draggingDebugPlayer = false;
+            hasDebugTestStartPosition = false;
             ClearRangeSelection();
             undoStack.Clear();
             redoStack.Clear();
             stageLoader?.HideStages();
             LoadWorkingData();
             BuildEditorObjects();
+            PositionDebugPlayerAtStageSpawn();
             SetPanel(true);
             RefreshObjectTypeDropdown();
             EnsureListReferences();
             RefreshText();
             RefreshListPanel();
-            SetStatus(LocalizationManager.T("stage_editor_status_open"));
+            SetStatus(LocalizationManager.T("stage_editor_status_debug_start_help"));
         }
 
         public void Close()
         {
             active = false;
             dragging = false;
+            draggingDebugPlayer = false;
             drawingRect = false;
             drawingTerrainStroke = false;
             ClearRangeSelection();
             ClearEditorObjects();
             ClearDragPreview();
             SetPanel(false);
+        }
+
+        public bool TryGetDebugTestStartPosition(out Vector3 position)
+        {
+            position = debugTestStartPosition;
+            return hasDebugTestStartPosition;
+        }
+
+        private void PositionDebugPlayerAtStageSpawn()
+        {
+            Transform debugPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            if (debugPlayer == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] != null && objects[i].type == StageObjectType.Spawn)
+                {
+                    MoveDebugPlayer(objects[i].position);
+                    return;
+                }
+            }
+        }
+
+        private void RestoreDebugPlayerPosition()
+        {
+            if (hasDebugTestStartPosition)
+            {
+                MoveDebugPlayer(debugTestStartPosition);
+            }
+            else
+            {
+                PositionDebugPlayerAtStageSpawn();
+            }
+        }
+
+        private void MoveDebugPlayer(Vector2 position)
+        {
+            Transform debugPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            if (debugPlayer == null)
+            {
+                return;
+            }
+
+            Vector3 destination = new Vector3(position.x, position.y, debugPlayer.position.z);
+            debugPlayer.position = destination;
+            Rigidbody2D body = debugPlayer.GetComponent<Rigidbody2D>();
+            if (body != null)
+            {
+                body.position = destination;
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+            }
+            Physics2D.SyncTransforms();
         }
 
         private void EnsureReferences()

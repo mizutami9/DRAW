@@ -29,6 +29,9 @@ namespace DrawBody.Prototype
         private const int BodyChunkRawBytes = 700;
         private const byte ReliableChannel = 0;
         private const byte RealtimeStateChannel = 1;
+        private const byte RealtimeGimmickChannel = 2;
+        private const byte BodyChannel = 3;
+        private const byte ReliableGimmickChannel = 4;
         private const float LobbyRefreshInterval = 1.5f;
         private const float SessionSyncInterval = 0.75f;
         private const int SessionModeLobby = 0;
@@ -479,13 +482,22 @@ namespace DrawBody.Prototype
                 return;
             }
             string payload = JsonUtility.ToJson(gimmickData);
-            if (isHost)
+            bool realtimeTransform = gimmickData.Kind == "transform";
+            if (isHost && realtimeTransform)
             {
-                Broadcast(MessageGimmick, payload);
+                BroadcastRealtimeGimmick(payload);
+            }
+            else if (!isHost && realtimeTransform)
+            {
+                SendRealtimeGimmickToHost(payload);
+            }
+            else if (isHost)
+            {
+                BroadcastReliableGimmick(payload);
             }
             else
             {
-                SendToHost(MessageGimmick, payload);
+                SendReliableGimmickToHost(payload);
             }
         }
 
@@ -1197,7 +1209,14 @@ namespace DrawBody.Prototype
                 GimmickDataReceived?.Invoke(gimmickData);
                 if (isHost)
                 {
-                    Broadcast(type, payload, peer);
+                    if (gimmickData != null && gimmickData.Kind == "transform")
+                    {
+                        BroadcastRealtimeGimmick(payload, peer);
+                    }
+                    else
+                    {
+                        BroadcastReliableGimmick(payload, peer);
+                    }
                 }
             }
         }
@@ -1287,6 +1306,36 @@ namespace DrawBody.Prototype
             Send(remote, MessageState, payload, RealtimeStateChannel, PacketReliability.UnreliableUnordered);
         }
 
+        private void BroadcastRealtimeGimmick(string payload, ProductUserId except = null)
+        {
+            for (int i = 0; i < peers.Count; i++)
+            {
+                if (except != null && peers[i].ToString() == except.ToString()) continue;
+                Send(peers[i], MessageGimmick, payload, RealtimeGimmickChannel, PacketReliability.UnreliableUnordered);
+            }
+        }
+
+        private void SendRealtimeGimmickToHost(string payload)
+        {
+            if (hostPeer == null) return;
+            Send(hostPeer, MessageGimmick, payload, RealtimeGimmickChannel, PacketReliability.UnreliableUnordered);
+        }
+
+        private void BroadcastReliableGimmick(string payload, ProductUserId except = null)
+        {
+            for (int i = 0; i < peers.Count; i++)
+            {
+                if (except != null && peers[i].ToString() == except.ToString()) continue;
+                Send(peers[i], MessageGimmick, payload, ReliableGimmickChannel, PacketReliability.ReliableOrdered);
+            }
+        }
+
+        private void SendReliableGimmickToHost(string payload)
+        {
+            if (hostPeer == null) return;
+            Send(hostPeer, MessageGimmick, payload, ReliableGimmickChannel, PacketReliability.ReliableOrdered);
+        }
+
         private void BroadcastBody(string payload, ProductUserId except = null)
         {
             for (int i = 0; i < peers.Count; i++)
@@ -1307,7 +1356,7 @@ namespace DrawBody.Prototype
             byte[] bytes = Encoding.UTF8.GetBytes(payload ?? string.Empty);
             if (bytes.Length <= BodyChunkRawBytes)
             {
-                Send(remote, MessageBody, payload);
+                Send(remote, MessageBody, payload, BodyChannel, PacketReliability.ReliableOrdered);
                 return;
             }
 
@@ -1318,7 +1367,12 @@ namespace DrawBody.Prototype
                 int offset = i * BodyChunkRawBytes;
                 int length = Mathf.Min(BodyChunkRawBytes, bytes.Length - offset);
                 string encoded = Convert.ToBase64String(bytes, offset, length);
-                Send(remote, MessageBodyChunk, transferId + "|" + i + "|" + chunkCount + "|" + encoded);
+                Send(
+                    remote,
+                    MessageBodyChunk,
+                    transferId + "|" + i + "|" + chunkCount + "|" + encoded,
+                    BodyChannel,
+                    PacketReliability.ReliableOrdered);
             }
         }
 
@@ -1398,7 +1452,10 @@ namespace DrawBody.Prototype
                 SocketId = socketId,
                 Channel = channel,
                 Data = new ArraySegment<byte>(bytes),
-                AllowDelayedDelivery = true,
+                // Realtime snapshots are superseded by the next packet and must
+                // not be queued during a connection interruption. Reliable
+                // controls/body data still wait for delivery as before.
+                AllowDelayedDelivery = reliability != PacketReliability.UnreliableUnordered,
                 Reliability = reliability,
                 DisableAutoAcceptConnection = false
             };

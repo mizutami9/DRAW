@@ -47,13 +47,14 @@ namespace DrawBody.Prototype
             stageLoader?.HideStages();
             StageBackgroundAppearance.Apply(stageBackgroundColor);
             BuildEditorObjects();
+            RestoreDebugPlayerPosition();
             RestoreEditorCameraStateAfterTest();
             SetPanel(true);
             RefreshObjectTypeDropdown();
             EnsureListReferences();
             RefreshText();
             RefreshListPanel();
-            SetStatus(LocalizationManager.T("stage_editor_status_returned"));
+            SetStatus(LocalizationManager.T("stage_editor_status_debug_start_help"));
         }
 
         private void StoreEditorCameraStateForTest()

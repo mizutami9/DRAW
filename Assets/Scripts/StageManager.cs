@@ -61,6 +61,7 @@ namespace DrawBody.Prototype
         private float onlineCarryLastConfirmedAt;
         private Vector2 onlineCarryLocalOffset;
         private readonly List<Collider2D> onlineCarryColliders = new List<Collider2D>();
+        private readonly List<bool> onlineCarryColliderEnabledStates = new List<bool>();
         private readonly Dictionary<PlayerController2D, DrawManager.DrawingState> drawingStates =
             new Dictionary<PlayerController2D, DrawManager.DrawingState>();
         private readonly Dictionary<PlayerController2D, RespawnAnimationState> respawnAnimations =
@@ -1303,6 +1304,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            bool hasDebugStart = stageEditor.TryGetDebugTestStartPosition(out Vector3 debugStartPosition);
             SetEditedStageTestMode(true);
             NotebookBackgroundDoodles.SetWorldVisible(true);
             stageEditor.TestPlay();
@@ -1324,6 +1326,11 @@ namespace DrawBody.Prototype
             uiManager?.SetDrawing(false);
             uiManager?.SetCleared(false);
             RespawnPlayers();
+            if (hasDebugStart && player != null)
+            {
+                TeleportPlayerWithoutPhysics(player, debugStartPosition);
+                player.ResetMotion();
+            }
             SetActivePlayer(player != null ? player : primaryPlayer, true);
         }
 
@@ -1772,6 +1779,17 @@ namespace DrawBody.Prototype
                 || carry.IsDraggingFriend(remote.transform));
         }
 
+        public bool IsOnlineBodyRebuildBlocked(string remotePlayerIdToCheck)
+        {
+            if (string.IsNullOrEmpty(remotePlayerIdToCheck))
+            {
+                return false;
+            }
+
+            return IsOnlineRemotePlayerHeldByLocal(remotePlayerIdToCheck)
+                || onlineCarryHeld && onlineCarrierPlayerId == remotePlayerIdToCheck;
+        }
+
         public void ApplyOnlineRemoteState(Vector2 position, Vector2 velocity, float rotation)
         {
             if (string.IsNullOrEmpty(remotePlayerId))
@@ -1973,9 +1991,12 @@ namespace DrawBody.Prototype
             }
 
             onlineCarryColliders.Clear();
+            onlineCarryColliderEnabledStates.Clear();
             player.GetComponentsInChildren(onlineCarryColliders);
             for (int i = 0; i < onlineCarryColliders.Count; i++)
             {
+                onlineCarryColliderEnabledStates.Add(
+                    onlineCarryColliders[i] != null && onlineCarryColliders[i].enabled);
                 if (onlineCarryColliders[i] != null)
                 {
                     onlineCarryColliders[i].enabled = false;
@@ -2037,12 +2058,15 @@ namespace DrawBody.Prototype
             {
                 if (releasedColliders[i] != null)
                 {
-                    releasedColliders[i].enabled = true;
+                    releasedColliders[i].enabled = i < onlineCarryColliderEnabledStates.Count
+                        ? onlineCarryColliderEnabledStates[i]
+                        : true;
                 }
             }
             SetOnlineCarryCollisionIgnored(releasedColliders, carrierColliders, true);
 
             onlineCarryColliders.Clear();
+            onlineCarryColliderEnabledStates.Clear();
             player?.ResetMotion();
             if (onlineCarryBody != null)
             {
@@ -2133,12 +2157,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (onlineCarryHeld && onlineCarrierPlayerId == bodyData.PlayerId)
+            if (IsOnlineBodyRebuildBlocked(bodyData.PlayerId))
             {
-                EndOnlineCarry(Vector2.zero);
+                // OnlinePlayerSync normally defers this data. Never tear down a
+                // live carry merely to rebuild the remote player's drawing: that
+                // races with continuous carry state and can leave the carried
+                // player's Rigidbody kinematic or its colliders disabled.
+                return;
             }
-            player?.GetComponent<PlayerCarryController>()?.ReleaseIfHolding(remotePlayer.transform);
-            player?.GetComponent<PlayerCarryController>()?.ReleaseIfDraggingFriend(remotePlayer.transform);
 
             DrawManager.DrawingState remoteState = drawManager.CreateStateFromBodyJson(bodyData.Json);
             if (remoteState == null)

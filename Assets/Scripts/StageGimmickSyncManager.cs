@@ -28,6 +28,8 @@ namespace DrawBody.Prototype
 
         private readonly Dictionary<string, SyncTransformEntry> transformEntries = new Dictionary<string, SyncTransformEntry>();
         private readonly Dictionary<string, string> ownersByObjectId = new Dictionary<string, string>();
+        private readonly Dictionary<string, int> lastTransformSequenceBySenderAndObject =
+            new Dictionary<string, int>();
         private readonly HashSet<string> locallyHeldObjectIds = new HashSet<string>();
         private readonly Dictionary<string, OwnershipState> pendingLocalReleases =
             new Dictionary<string, OwnershipState>();
@@ -663,6 +665,18 @@ namespace DrawBody.Prototype
 
             if (data.Kind == KindTransform)
             {
+                string transformSequenceKey = (data.PlayerId ?? string.Empty) + "|" + (data.ObjectId ?? string.Empty);
+                if (data.Sequence > 0
+                    && lastTransformSequenceBySenderAndObject.TryGetValue(transformSequenceKey, out int lastSequence)
+                    && data.Sequence <= lastSequence)
+                {
+                    return;
+                }
+                if (data.Sequence > 0)
+                {
+                    lastTransformSequenceBySenderAndObject[transformSequenceKey] = data.Sequence;
+                }
+
                 if (IsHost)
                 {
                     ownersByObjectId.TryGetValue(data.ObjectId, out string ownerId);
@@ -671,12 +685,16 @@ namespace DrawBody.Prototype
                         return;
                     }
                 }
-                else if (transformEntries.TryGetValue(data.ObjectId, out SyncTransformEntry receivedEntry)
-                    && receivedEntry != null
-                    && receivedEntry.IsHostDrivenPlatform
-                    && !IsLobbyHost(data.PlayerId))
+                else if (!IsLobbyHost(data.PlayerId))
                 {
-                    return;
+                    // A participant may only drive an object while the host's
+                    // confirmed ownership state names that participant. This also
+                    // rejects delayed unreliable transforms after a throw/release.
+                    ownersByObjectId.TryGetValue(data.ObjectId, out string confirmedOwnerId);
+                    if (confirmedOwnerId != data.PlayerId)
+                    {
+                        return;
+                    }
                 }
 
                 ApplyTransformState(data.ObjectId, JsonUtility.FromJson<OnlineTransformGimmickState>(data.Json));

@@ -498,6 +498,10 @@ namespace DrawBody.Prototype
         {
             if (IsPointerOverEditorUi())
             {
+                if (draggingDebugPlayer && Input.GetMouseButtonUp(0))
+                {
+                    draggingDebugPlayer = false;
+                }
                 if (drawingTerrainStroke && Input.GetMouseButtonUp(0))
                 {
                     CommitTerrainStroke(terrainStrokeLastPoint);
@@ -526,6 +530,11 @@ namespace DrawBody.Prototype
             Vector2 world = ScreenToWorld(Input.mousePosition);
             if (Input.GetMouseButtonDown(0))
             {
+                if (TryBeginDebugPlayerDrag(world))
+                {
+                    return;
+                }
+
                 if (snapToGrid
                     && !terrainKeepSeparate
                     && terrainFreehand
@@ -572,6 +581,30 @@ namespace DrawBody.Prototype
                         AddObject(world);
                     }
                 }
+            }
+
+            if (draggingDebugPlayer)
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    Vector2 next = world + debugPlayerDragOffset;
+                    MoveDebugPlayer(next);
+                    debugTestStartPosition = new Vector3(next.x, next.y,
+                        stageManager != null && stageManager.ActivePlayerTransform != null
+                            ? stageManager.ActivePlayerTransform.position.z
+                            : 0f);
+                    hasDebugTestStartPosition = true;
+                    SetStatus(LocalizationManager.Format(
+                        "stage_editor_status_debug_start",
+                        next.x,
+                        next.y));
+                }
+                if (Input.GetMouseButtonUp(0))
+                {
+                    draggingDebugPlayer = false;
+                    GameSfx.Play(SfxId.EditorObjectDrop);
+                }
+                return;
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -645,6 +678,56 @@ namespace DrawBody.Prototype
             {
                 HandleSelectedObjectWheel();
             }
+        }
+
+        private bool TryBeginDebugPlayerDrag(Vector2 world)
+        {
+            Transform debugPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            if (debugPlayer == null || !debugPlayer.gameObject.activeInHierarchy)
+            {
+                return false;
+            }
+
+            bool hit = false;
+            Collider2D[] colliders = debugPlayer.GetComponentsInChildren<Collider2D>(false);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i] != null && colliders[i].enabled && colliders[i].OverlapPoint(world))
+                {
+                    hit = true;
+                    break;
+                }
+            }
+
+            if (!hit)
+            {
+                Renderer[] renderers = debugPlayer.GetComponentsInChildren<Renderer>(false);
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    if (renderers[i] != null && renderers[i].enabled && renderers[i].bounds.Contains(world))
+                    {
+                        hit = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hit)
+            {
+                return false;
+            }
+
+            ClearRangeSelection();
+            selectedData = null;
+            selectedObject = null;
+            dragging = false;
+            draggingDebugPlayer = true;
+            debugPlayerDragOffset = (Vector2)debugPlayer.position - world;
+            debugTestStartPosition = debugPlayer.position;
+            hasDebugTestStartPosition = true;
+            GameSfx.Play(SfxId.EditorObjectMove);
+            SetStatus(LocalizationManager.T("stage_editor_status_debug_start_drag"));
+            return true;
         }
 
         private void HandleCameraInput()

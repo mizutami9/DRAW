@@ -762,7 +762,7 @@
             "type": 0,
             "position": {
                 "x": 42.5,
-                "y": 23.0
+                "y": 22.5
             },
             "size": {
                 "x": 25.0,
@@ -787,10 +787,10 @@
             "type": 0,
             "position": {
                 "x": 41.5,
-                "y": 14.75
+                "y": 14.5
             },
             "size": {
-                "x": 5.5,
+                "x": 5.0,
                 "y": 2.0
             },
             "rotation": 90.0,
@@ -1004,8 +1004,8 @@
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
             "bombFuseSeconds": 0.0,
-            "linkTargetId": "obj_e89fd5b8988e4c37",
-            "linkAction": "Hide"
+            "linkTargetId": "obj_884914fd167c41a6",
+            "linkAction": "RevealGrowRightToLeft"
         },
         {
             "objectId": "obj_86b2a1ea25bd4c85",
@@ -1062,10 +1062,10 @@
             "type": 0,
             "position": {
                 "x": 51.5,
-                "y": 14.75
+                "y": 14.5
             },
             "size": {
-                "x": 5.5,
+                "x": 5.0,
                 "y": 2.0
             },
             "rotation": 90.0,

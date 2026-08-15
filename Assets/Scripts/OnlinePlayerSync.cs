@@ -8,8 +8,8 @@ namespace DrawBody.Prototype
         [SerializeField] private OnlineManager onlineManager;
         [SerializeField] private StageManager stageManager;
         [SerializeField] private float sendRate = 30f;
-        [SerializeField] private float remoteSmoothRate = 14f;
-        [SerializeField] private float remotePredictionSeconds = 0.05f;
+        [SerializeField] private float remoteSmoothRate = 18f;
+        [SerializeField] private float remotePredictionSeconds = 0.075f;
         [SerializeField] private float remoteSnapDistance = 1.75f;
 
         private float nextSendTime;
@@ -18,8 +18,14 @@ namespace DrawBody.Prototype
         private bool bodyResyncPending;
         private int bodyResyncAttempts;
         private DrawManager.Species? lastLocalSpecies;
+        private OnlineConnectionState lastBodySyncConnectionState = OnlineConnectionState.Offline;
+        private string lastBodySyncRoster = string.Empty;
+        private OnlineLobbyInfo pendingRosterLobby;
+        private string pendingRosterLocalPlayerId;
         private readonly Dictionary<string, RemoteTarget> remoteTargets = new Dictionary<string, RemoteTarget>();
         private readonly Dictionary<string, int> lastRemoteSequences = new Dictionary<string, int>();
+        private readonly Dictionary<string, OnlineBodyData> pendingRemoteBodyData =
+            new Dictionary<string, OnlineBodyData>();
 
         private sealed class RemoteTarget
         {
@@ -89,6 +95,8 @@ namespace DrawBody.Prototype
             }
 
             ApplyRemoteTarget();
+            FlushPendingRosterSync();
+            FlushPendingRemoteBodyData();
             DetectLocalSpeciesChange();
             FlushPendingBodyResync();
 
@@ -218,8 +226,43 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (stageManager.IsDrawingMode || stageManager.IsOnlineBodyRebuildBlocked(bodyData.PlayerId))
+            {
+                // StageManager temporarily points the shared DrawManager at the
+                // remote body while rebuilding it. Doing that during a local mouse
+                // stroke resets DrawManager's in-progress stroke flag, so retain
+                // only the newest body for this player until DRAW closes.
+                pendingRemoteBodyData[bodyData.PlayerId] = bodyData;
+                return;
+            }
+
             stageManager.ApplyOnlineRemoteBodyData(bodyData);
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
+        }
+
+        private void FlushPendingRemoteBodyData()
+        {
+            if (stageManager == null || stageManager.IsDrawingMode || pendingRemoteBodyData.Count == 0)
+            {
+                return;
+            }
+
+            List<string> readyPlayerIds = new List<string>();
+            foreach (KeyValuePair<string, OnlineBodyData> pair in pendingRemoteBodyData)
+            {
+                if (!stageManager.IsOnlineBodyRebuildBlocked(pair.Key))
+                {
+                    readyPlayerIds.Add(pair.Key);
+                }
+            }
+
+            for (int i = 0; i < readyPlayerIds.Count; i++)
+            {
+                string playerId = readyPlayerIds[i];
+                OnlineBodyData pending = pendingRemoteBodyData[playerId];
+                pendingRemoteBodyData.Remove(playerId);
+                ApplyRemoteBodyData(pending);
+            }
         }
 
         private void ApplyRemoteCarryData(OnlineCarryData carryData)
@@ -234,15 +277,66 @@ namespace DrawBody.Prototype
 
         private void HandleOnlineStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
         {
-            stageManager?.SyncOnlinePlayers(lobby, onlineManager != null ? onlineManager.LocalPlayerId : string.Empty);
+            string localPlayerId = onlineManager != null ? onlineManager.LocalPlayerId : string.Empty;
+            if (stageManager != null && stageManager.IsDrawingMode)
+            {
+                // Adding/removing a remote avatar snapshots the shared DrawManager.
+                // CreateState intentionally finishes a stroke, so roster recovery
+                // must wait until the local player releases the pen.
+                pendingRosterLobby = lobby;
+                pendingRosterLocalPlayerId = localPlayerId;
+            }
+            else
+            {
+                stageManager?.SyncOnlinePlayers(lobby, localPlayerId);
+            }
             ApplyLobbyColors(state, lobby, message);
 
-            if (state == OnlineConnectionState.InLobby
-                || state == OnlineConnectionState.Matching
-                || state == OnlineConnectionState.Playing)
+            string roster = BuildRosterSignature(lobby);
+            bool connectionChanged = state != lastBodySyncConnectionState;
+            bool rosterChanged = roster != lastBodySyncRoster;
+            lastBodySyncConnectionState = state;
+            lastBodySyncRoster = roster;
+            if ((state == OnlineConnectionState.InLobby
+                    || state == OnlineConnectionState.Matching
+                    || state == OnlineConnectionState.Playing)
+                && (connectionChanged || rosterChanged))
             {
                 RequestBodyResync();
             }
+        }
+
+        private void FlushPendingRosterSync()
+        {
+            if (stageManager == null || stageManager.IsDrawingMode || pendingRosterLobby == null)
+            {
+                return;
+            }
+
+            OnlineLobbyInfo lobby = pendingRosterLobby;
+            string localPlayerId = pendingRosterLocalPlayerId;
+            pendingRosterLobby = null;
+            pendingRosterLocalPlayerId = null;
+            stageManager.SyncOnlinePlayers(lobby, localPlayerId);
+        }
+
+        private static string BuildRosterSignature(OnlineLobbyInfo lobby)
+        {
+            if (lobby?.Players == null || lobby.Players.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            List<string> ids = new List<string>();
+            for (int i = 0; i < lobby.Players.Length; i++)
+            {
+                if (lobby.Players[i] != null && !string.IsNullOrEmpty(lobby.Players[i].PlayerId))
+                {
+                    ids.Add(lobby.Players[i].PlayerId);
+                }
+            }
+            ids.Sort(System.StringComparer.Ordinal);
+            return string.Join("|", ids);
         }
 
         private void RequestBodyResync()
@@ -273,7 +367,9 @@ namespace DrawBody.Prototype
 
         private void FlushPendingBodyResync()
         {
-            if (!bodyResyncPending || Time.unscaledTime < nextBodyResyncTime)
+            if (!bodyResyncPending
+                || stageManager != null && stageManager.IsDrawingMode
+                || Time.unscaledTime < nextBodyResyncTime)
             {
                 return;
             }

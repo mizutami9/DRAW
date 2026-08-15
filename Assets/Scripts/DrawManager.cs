@@ -109,6 +109,7 @@ namespace DrawBody.Prototype
         private GameObject connectionMarker;
         private bool active;
         private bool drawing;
+        private float lastValidDrawPointTime;
         private bool initialized;
         private Species currentSpecies = Species.Human;
         private StageSpeciesMask allowedSpecies = StageSpeciesMask.All;
@@ -1245,10 +1246,11 @@ namespace DrawBody.Prototype
                     return;
                 }
 
-            drawing = TryGetDrawPoint(out Vector2 point);
-            PartDrawing current = drawings[currentPart];
-            if (drawing)
-            {
+                drawing = TryGetDrawPoint(out Vector2 point);
+                PartDrawing current = drawings[currentPart];
+                if (drawing)
+                {
+                    lastValidDrawPointTime = Time.unscaledTime;
                     if (!CanStartStroke(point, out Vector2 startPoint))
                     {
                         drawing = false;
@@ -1283,11 +1285,19 @@ namespace DrawBody.Prototype
 
             if (Input.GetMouseButton(0) && drawing && TryGetDrawPoint(out Vector2 currentPoint))
             {
+                lastValidDrawPointTime = Time.unscaledTime;
                 TryAddPoint(currentPoint);
             }
             else if (Input.GetMouseButton(0) && drawing)
             {
-                FinishStroke();
+                // A layout refresh or a single slow multiplayer frame can make
+                // ScreenPointToLocalPoint fail once even though the cursor never
+                // left the canvas. Keep the stroke alive briefly; mouse-up remains
+                // the authoritative end of a normal stroke.
+                if (Time.unscaledTime - lastValidDrawPointTime > 0.15f)
+                {
+                    FinishStroke();
+                }
             }
 
             if (Input.GetMouseButtonUp(0))

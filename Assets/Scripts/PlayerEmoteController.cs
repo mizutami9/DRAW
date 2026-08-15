@@ -7,8 +7,8 @@ using UnityEngine.UI;
 namespace DrawBody.Prototype
 {
     /// <summary>
-    /// Nine quick emotes for co-op communication. Local input and the right-side
-    /// palette use the same path; online peers receive only the emote id.
+    /// Nine quick emotes for co-op communication. Local input and the collapsible
+    /// left-side palette use the same path; online peers receive only the emote id.
     /// </summary>
     public sealed class PlayerEmoteController : MonoBehaviour
     {
@@ -61,6 +61,9 @@ namespace DrawBody.Prototype
         private UIManager uiManager;
         private Canvas paletteCanvas;
         private GraphicRaycaster paletteRaycaster;
+        private RectTransform palettePanel;
+        private GameObject paletteToggleRoot;
+        private bool paletteOpen;
         private Font handwrittenFont;
         private static Sprite[] emoteIcons;
 
@@ -89,15 +92,27 @@ namespace DrawBody.Prototype
         {
             bool gameplayVisible = stageManager != null && stageManager.IsGameplayActive;
             bool overlayShowing = uiManager != null && uiManager.IsGameplayOverlayShowing;
-            bool paletteVisible = gameplayVisible || stageManager != null && stageManager.IsDrawingMode;
+            bool paletteVisible = gameplayVisible;
             if (paletteCanvas != null)
             {
                 paletteCanvas.enabled = paletteVisible;
                 paletteCanvas.sortingOrder = overlayShowing ? -100 : 260;
             }
+            if (palettePanel != null)
+            {
+                palettePanel.gameObject.SetActive(paletteVisible && paletteOpen && !overlayShowing);
+            }
+            if (paletteToggleRoot != null)
+            {
+                paletteToggleRoot.SetActive(paletteVisible);
+            }
             if (paletteRaycaster != null)
             {
                 paletteRaycaster.enabled = paletteVisible && !overlayShowing;
+            }
+            if (overlayShowing)
+            {
+                paletteOpen = false;
             }
             if (gameplayVisible && !overlayShowing && !IsTypingInInputField())
             {
@@ -268,19 +283,41 @@ namespace DrawBody.Prototype
             scaler.referenceResolution = new Vector2(1920f, 1080f);
             scaler.matchWidthOrHeight = 0.5f;
 
-            RectTransform panel = CreateRect("Emote Palette", canvasObject.transform as RectTransform,
-                new Vector2(0f, 0.5f), new Vector2(22f, 0f), new Vector2(104f, 506f));
-            panel.pivot = new Vector2(0f, 0.5f);
-            Image paper = panel.gameObject.AddComponent<Image>();
+            RectTransform toggleRect = CreateRect("Open Emote Palette", canvasObject.transform as RectTransform,
+                new Vector2(0f, 0.5f), new Vector2(22f, 0f), new Vector2(62f, 62f));
+            toggleRect.pivot = new Vector2(0f, 0.5f);
+            paletteToggleRoot = toggleRect.gameObject;
+            Image togglePaper = toggleRect.gameObject.AddComponent<Image>();
+            togglePaper.color = new Color(1f, 0.82f, 0.34f, 0.98f);
+            Button toggleButton = toggleRect.gameObject.AddComponent<Button>();
+            toggleButton.targetGraphic = togglePaper;
+            Navigation toggleNavigation = toggleButton.navigation;
+            toggleNavigation.mode = Navigation.Mode.None;
+            toggleButton.navigation = toggleNavigation;
+            Outline toggleOutline = toggleRect.gameObject.AddComponent<Outline>();
+            toggleOutline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.88f);
+            toggleOutline.effectDistance = new Vector2(3f, -3f);
+            AddPaletteToggleDots(toggleRect);
+            toggleButton.onClick.AddListener(() =>
+            {
+                paletteOpen = !paletteOpen;
+                if (palettePanel != null) palettePanel.gameObject.SetActive(paletteOpen);
+                if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+            });
+
+            palettePanel = CreateRect("Emote Palette", canvasObject.transform as RectTransform,
+                new Vector2(0f, 0.5f), new Vector2(94f, 0f), new Vector2(104f, 506f));
+            palettePanel.pivot = new Vector2(0f, 0.5f);
+            Image paper = palettePanel.gameObject.AddComponent<Image>();
             paper.color = new Color(1f, 0.96f, 0.76f, 0.88f);
-            Outline panelOutline = panel.gameObject.AddComponent<Outline>();
+            Outline panelOutline = palettePanel.gameObject.AddComponent<Outline>();
             panelOutline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.88f);
             panelOutline.effectDistance = new Vector2(3f, -3f);
 
             for (int i = 0; i < EmoteCount; i++)
             {
                 int emoteId = i;
-                RectTransform buttonRect = CreateRect("Emote " + (i + 1), panel,
+                RectTransform buttonRect = CreateRect("Emote " + (i + 1), palettePanel,
                     new Vector2(0.5f, 0.5f), new Vector2(0f, 212f - i * 53f), new Vector2(84f, 44f));
                 Image image = buttonRect.gameObject.AddComponent<Image>();
                 image.color = i % 2 == 0
@@ -294,6 +331,8 @@ namespace DrawBody.Prototype
                 button.onClick.AddListener(() =>
                 {
                     SendLocalEmote(emoteId);
+                    paletteOpen = false;
+                    if (palettePanel != null) palettePanel.gameObject.SetActive(false);
                     // Unity's selected Button treats Space as Submit. Clear the
                     // pointer-selected emote so jumping cannot replay it.
                     if (EventSystem.current != null)
@@ -304,17 +343,43 @@ namespace DrawBody.Prototype
                 Outline outline = buttonRect.gameObject.AddComponent<Outline>();
                 outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.8f);
                 outline.effectDistance = new Vector2(2f, -2f);
-                CreateText("Key", buttonRect, (i + 1).ToString(), 16,
-                    new Vector2(-30f, 12f), new Vector2(20f, 20f), new Color(0.12f, 0.1f, 0.08f));
+                // Present every row as an explicit shortcut mapping:
+                // "1. [up picture]", "5. [human picture]", and so on.
+                // A large number plus period reads as a key guide rather than a
+                // decorative index, while the established picture icons remain
+                // language independent.
+                CreateText("Shortcut Key", buttonRect, (i + 1) + ".", 22,
+                    new Vector2(-25f, 0f), new Vector2(34f, 32f), new Color(0.12f, 0.1f, 0.08f));
                 RectTransform iconRect = CreateRect("Picture Mark", buttonRect,
-                    new Vector2(0.5f, 0.5f), new Vector2(7f, 0f), new Vector2(36f, 36f));
+                    new Vector2(0.5f, 0.5f), new Vector2(17f, 0f), new Vector2(38f, 38f));
                 Image icon = iconRect.gameObject.AddComponent<Image>();
                 icon.sprite = GetEmoteIcon(i);
                 icon.preserveAspect = true;
                 icon.raycastTarget = false;
             }
 
+            palettePanel.gameObject.SetActive(false);
             paletteCanvas.enabled = false;
+        }
+
+        private static void AddPaletteToggleDots(RectTransform parent)
+        {
+            Sprite circle = StageSurvivalController.GetCircleSprite();
+            Color[] colors =
+            {
+                new Color(0.92f, 0.25f, 0.2f),
+                new Color(0.1f, 0.48f, 0.9f),
+                new Color(0.18f, 0.72f, 0.32f)
+            };
+            for (int i = 0; i < 3; i++)
+            {
+                RectTransform dot = CreateRect("Emote Dot " + (i + 1), parent,
+                    new Vector2(0.5f, 0.5f), new Vector2((i - 1) * 15f, 0f), new Vector2(10f, 10f));
+                Image image = dot.gameObject.AddComponent<Image>();
+                image.sprite = circle;
+                image.color = colors[i];
+                image.raycastTarget = false;
+            }
         }
 
         private static Sprite GetEmoteIcon(int id)

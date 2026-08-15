@@ -163,7 +163,13 @@ namespace DrawBody.Prototype
             float turtleInk = 0f,
             float slimeInk = 0f)
         {
-            SetTurtleShellState(false);
+            bool preserveTurtleShell = species == DrawManager.Species.Turtle
+                && currentSpecies == DrawManager.Species.Turtle
+                && turtleShelled;
+            if (!preserveTurtleShell)
+            {
+                SetTurtleShellState(false);
+            }
             SetTurtleRotation(false);
             currentSpecies = species;
             if (species != DrawManager.Species.Bird)
@@ -298,6 +304,10 @@ namespace DrawBody.Prototype
 
         public void ResetMotion()
         {
+            bool preserveHeldTurtleShell = currentSpecies == DrawManager.Species.Turtle
+                && controlsEnabled
+                && !scriptedInputEnabled
+                && Input.GetKey(KeyCode.Space);
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
             wallJumpControlLockUntil = -100f;
@@ -305,7 +315,10 @@ namespace DrawBody.Prototype
             wallJumpSourceSide = 0;
             isTouchingSlimeWall = false;
             lastWallSide = 0;
-            SetTurtleShellState(false);
+            if (!preserveHeldTurtleShell)
+            {
+                SetTurtleShellState(false);
+            }
             SetTurtleRotation(false);
         }
 
