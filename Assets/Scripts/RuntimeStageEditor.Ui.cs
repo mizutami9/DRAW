@@ -238,7 +238,10 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            selectedData.movementSpeed = Mathf.Clamp(Mathf.Round(value * 10f) / 10f, 0.5f, 10f);
+            selectedData.movementSpeed = Mathf.Clamp(
+                Mathf.Round(value * 10f) / 10f,
+                SelectedSecondarySliderMinimum,
+                SelectedSecondarySliderMaximum);
             RebuildSelectedObject();
             SetStatus(LocalizationManager.Format(
                 "stage_editor_status_move_speed",
@@ -303,11 +306,13 @@ namespace DrawBody.Prototype
             }
 
             PushUndo();
-            int patternCount = SelectedIsBombDropper ? 3 : 4;
+            int patternCount = SelectedIsBombDropper ? 3 : SelectedIsEnemyDropper ? 5 : 4;
             selectedData.spawnPattern = (Mathf.Clamp(selectedData.spawnPattern, 0, patternCount - 1) + 1) % patternCount;
             RebuildSelectedObject();
             SetStatus(LocalizationManager.Format(
-                SelectedIsBombDropper ? "stage_editor_status_bomb_pattern" : "stage_editor_status_box_pattern",
+                SelectedIsEnemyDropper
+                    ? "stage_editor_status_enemy_pattern"
+                    : SelectedIsBombDropper ? "stage_editor_status_bomb_pattern" : "stage_editor_status_box_pattern",
                 SelectedDropperPatternLabel));
             RefreshText();
         }
@@ -332,7 +337,9 @@ namespace DrawBody.Prototype
             SetStatus(LocalizationManager.Format(
                 SelectedIsSpikeDropper
                     ? "stage_editor_status_spike_size"
-                    : SelectedIsBombDropper ? "stage_editor_status_bomb_size" : "stage_editor_status_box_size",
+                    : SelectedIsBombDropper
+                        ? "stage_editor_status_bomb_size"
+                        : SelectedIsEnemyDropper ? "stage_editor_status_enemy_size" : "stage_editor_status_box_size",
                 selectedData.spawnBoxSize));
             RefreshText();
         }

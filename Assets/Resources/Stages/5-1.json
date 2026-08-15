@@ -28,6 +28,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -73,6 +74,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -97,6 +99,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -121,6 +124,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -145,6 +149,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -169,6 +174,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -193,6 +199,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -217,6 +224,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -241,6 +249,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -265,6 +274,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -289,6 +299,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -313,6 +324,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -337,6 +349,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -361,6 +374,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -385,6 +399,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -409,6 +424,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -433,6 +449,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -457,6 +474,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -481,6 +499,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -505,6 +524,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -550,6 +570,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -574,6 +595,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -598,6 +620,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -622,6 +645,7 @@
             "movementSpeed": 3.200000047683716,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -646,6 +670,7 @@
             "movementSpeed": 3.200000047683716,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -691,6 +716,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -715,6 +741,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -739,6 +766,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -763,6 +791,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -787,6 +816,7 @@
             "movementSpeed": 3.200000047683716,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -832,6 +862,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -856,6 +887,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -880,6 +912,7 @@
             "movementSpeed": 3.200000047683716,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -904,6 +937,7 @@
             "movementSpeed": 8.5,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -928,6 +962,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         }

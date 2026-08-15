@@ -69,6 +69,7 @@ namespace DrawBody.Prototype
             public float Size;
             public float Rotation;
             public float FuseSeconds;
+            public Vector2 LaunchVelocity;
         }
 
         [System.Serializable]
@@ -262,7 +263,8 @@ namespace DrawBody.Prototype
             Vector2 position,
             float size,
             float rotation = 0f,
-            float fuseSeconds = 5f)
+            float fuseSeconds = 5f,
+            Vector2 launchVelocity = default)
         {
             if (string.IsNullOrEmpty(objectId) || (IsOnlineActive && !IsHost))
             {
@@ -275,7 +277,8 @@ namespace DrawBody.Prototype
                 Position = position,
                 Size = size,
                 Rotation = rotation,
-                FuseSeconds = Mathf.Clamp(fuseSeconds > 0f ? fuseSeconds : 5f, 1f, 15f)
+                FuseSeconds = Mathf.Clamp(fuseSeconds > 0f ? fuseSeconds : 5f, 1f, 15f),
+                LaunchVelocity = launchVelocity
             };
             GameObject spawned = ApplyDropperBoxSpawn(objectId, state);
             if (spawned != null && IsOnlineActive)
@@ -1048,6 +1051,11 @@ namespace DrawBody.Prototype
             }
 
             spawned.transform.rotation = Quaternion.Euler(0f, 0f, state.Rotation);
+            Rigidbody2D spawnedBody = spawned.GetComponent<Rigidbody2D>();
+            if (spawnedBody != null)
+            {
+                spawnedBody.linearVelocity = state.LaunchVelocity;
+            }
 
             dropperBoxes[objectId] = spawned;
             dropperBoxStates[objectId] = state;

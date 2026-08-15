@@ -23,6 +23,12 @@ namespace DrawBody.EditorTools
         [MenuItem("PICO/Build Phase 0 Scene")]
         public static void BuildScene()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                Debug.LogWarning("Phase 0 scene generation is unavailable during Play Mode. Stop Play Mode and run it again.");
+                return;
+            }
+
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             Physics2D.gravity = new Vector2(0f, -28f);
@@ -84,6 +90,13 @@ namespace DrawBody.EditorTools
             Selection.activeGameObject = player;
 
             Debug.Log($"Phase 0 scene generated: {ScenePath}");
+        }
+
+        [MenuItem("PICO/Build Phase 0 Scene", true)]
+        private static bool ValidateBuildScene()
+        {
+            return !EditorApplication.isPlayingOrWillChangePlaymode
+                && !EditorApplication.isCompiling;
         }
 
     }

@@ -16,6 +16,7 @@ namespace DrawBody.Prototype
         private float reverseLockUntil;
         private float flightPhase;
         private bool defeated;
+        private bool spawnedByDevice;
         private Rigidbody2D body;
         private Collider2D enemyCollider;
         private Transform visualRoot;
@@ -35,6 +36,11 @@ namespace DrawBody.Prototype
         }
 
         public bool IsDefeated => defeated;
+
+        public void SetSpawnedByDevice()
+        {
+            spawnedByDevice = true;
+        }
 
         public void Configure(StageObjectType type, Vector2 size, float speedOverride, float initialFacing)
         {
@@ -66,7 +72,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (syncManager != null && syncManager.ShouldAskHost && body != null)
+            if (!spawnedByDevice && syncManager != null && syncManager.ShouldAskHost && body != null)
             {
                 body.bodyType = RigidbodyType2D.Kinematic;
                 body.gravityScale = 0f;

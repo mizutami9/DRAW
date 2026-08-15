@@ -9,6 +9,12 @@ namespace DrawBody.EditorTools
         [MenuItem("PICO/Build Windows EXE")]
         public static void BuildWindowsExe()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                UnityEngine.Debug.LogWarning("Windows build is unavailable during Play Mode. Stop Play Mode and run it again.");
+                return;
+            }
+
             string scenePath = "Assets/Scenes/GameScene.unity";
             if (!File.Exists(scenePath))
             {
@@ -35,6 +41,13 @@ namespace DrawBody.EditorTools
             {
                 UnityEngine.Debug.LogError("Windows build failed: " + report.summary.result);
             }
+        }
+
+        [MenuItem("PICO/Build Windows EXE", true)]
+        private static bool ValidateBuildWindowsExe()
+        {
+            return !EditorApplication.isPlayingOrWillChangePlaymode
+                && !EditorApplication.isCompiling;
         }
     }
 }

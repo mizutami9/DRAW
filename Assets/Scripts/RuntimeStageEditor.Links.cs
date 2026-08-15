@@ -84,9 +84,16 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (selectedData.type == StageObjectType.Key || selectedData.linkAction == "Unlock")
+            if (selectedData.type == StageObjectType.Key
+                || selectedData.linkAction == "Unlock")
             {
                 SetStatus(LocalizationManager.T("stage_editor_status_unlock_action_fixed"));
+                return;
+            }
+
+            if (selectedData.linkAction == "Activate")
+            {
+                SetStatus(LocalizationManager.T("stage_editor_status_activate_action_fixed"));
                 return;
             }
 
@@ -164,7 +171,11 @@ namespace DrawBody.Prototype
 
         private static string GetDefaultLinkAction(StageObjectType targetType)
         {
-            if (targetType == StageObjectType.Dynamite)
+            if (targetType == StageObjectType.Dynamite
+                || targetType == StageObjectType.BombDropper
+                || targetType == StageObjectType.EnemyDropper
+                || targetType == StageObjectType.BeamEmitter
+                || targetType == StageObjectType.MissileLauncher)
             {
                 return "Activate";
             }
@@ -209,6 +220,11 @@ namespace DrawBody.Prototype
             if (action == "Unlock")
             {
                 return LocalizationManager.T("stage_editor_link_mode_unlock");
+            }
+
+            if (action == "Activate")
+            {
+                return LocalizationManager.T("stage_editor_link_mode_activate");
             }
 
             if (action == "Move" || action == "MoveRight")

@@ -716,7 +716,8 @@ namespace DrawBody.Prototype
         public bool IsTitleSubmenuShowing => multiShowing || optionShowing;
         public bool IsGameplayOverlayShowing => drawing
             || optionShowing
-            || menuPanel != null && menuPanel.activeInHierarchy;
+            || menuPanel != null && menuPanel.activeInHierarchy
+            || gameplayHudDrawer != null && gameplayHudDrawer.IsOpenOrTransitioning;
 
         public void SetStageEditor(bool editing)
         {

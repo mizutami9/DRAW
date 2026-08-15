@@ -9,6 +9,7 @@ namespace DrawBody.Prototype
     {
         private int requiredHits = 1;
         private int currentHits;
+        private int createdCrackStages;
         private Vector2 wallSize = new Vector2(0.5f, 2f);
         private bool broken;
         private TextMesh remainingBombText;
@@ -43,7 +44,7 @@ namespace DrawBody.Prototype
 
         public void Configure(int explosionsRequired, Vector2 size)
         {
-            requiredHits = Mathf.Clamp(explosionsRequired, 1, 5);
+            requiredHits = Mathf.Clamp(explosionsRequired, 1, 50);
             wallSize = new Vector2(Mathf.Max(0.2f, size.x), Mathf.Max(0.2f, size.y));
             CreateBombRequirementBadge();
         }
@@ -104,8 +105,16 @@ namespace DrawBody.Prototype
             int clampedTarget = Mathf.Clamp(targetHits, 0, requiredHits);
             while (currentHits < clampedTarget)
             {
-                CreateCrackStage(currentHits);
                 currentHits++;
+            }
+            int targetCrackStages = Mathf.Clamp(
+                Mathf.CeilToInt(currentHits / (float)requiredHits * 5f),
+                0,
+                5);
+            while (createdCrackStages < targetCrackStages)
+            {
+                CreateCrackStage(createdCrackStages);
+                createdCrackStages++;
             }
             RefreshBombRequirementBadge();
         }

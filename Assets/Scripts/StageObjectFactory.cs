@@ -53,6 +53,7 @@ namespace DrawBody.Prototype
                 case StageObjectType.BoxDropper:
                 case StageObjectType.SpikeDropper:
                 case StageObjectType.BombDropper:
+                case StageObjectType.EnemyDropper:
                     return CreateBoxDropper(data, parent);
                 case StageObjectType.Spike:
                     return CreateSpike(data, parent);
@@ -68,6 +69,8 @@ namespace DrawBody.Prototype
                     return CreateChallengeClock(data, parent);
                 case StageObjectType.BeamEmitter:
                     return CreateBeamEmitter(data, parent);
+                case StageObjectType.MissileLauncher:
+                    return CreateMissileLauncher(data, parent);
                 case StageObjectType.Dynamite:
                     return CreateDynamite(data, parent);
                 case StageObjectType.EnemyWalker:
@@ -217,12 +220,17 @@ namespace DrawBody.Prototype
                     case StageObjectType.InkScale:
                         size = new Vector2(3f, 0.9f);
                         break;
+                    case StageObjectType.OneWayPlatform:
+                        size = new Vector2(3f, 0.25f);
+                        break;
                     case StageObjectType.BoxDropper:
                     case StageObjectType.SpikeDropper:
                     case StageObjectType.BombDropper:
+                    case StageObjectType.EnemyDropper:
                         size = new Vector2(1.8f, 1.4f);
                         break;
                     case StageObjectType.BeamEmitter:
+                    case StageObjectType.MissileLauncher:
                         size = new Vector2(1.25f, 0.9f);
                         break;
                     case StageObjectType.Button:
@@ -287,7 +295,7 @@ namespace DrawBody.Prototype
                                     || type == StageObjectType.ConveyorLeft
                                     || type == StageObjectType.ConveyorRight
                                         ? 3f
-                                        : type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BombDropper || type == StageObjectType.BeamEmitter ? 2f : 0f,
+                                        : type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BombDropper || type == StageObjectType.EnemyDropper || type == StageObjectType.BeamEmitter || type == StageObjectType.MissileLauncher ? 2f : 0f,
                 movementAngle = type == StageObjectType.ConveyorLeft ? 180f : 0f,
                 movementSpeed = type == StageObjectType.MovingPlatform ? 3.2f
                     : type == StageObjectType.EnemyWalker ? 2.4f
@@ -295,9 +303,10 @@ namespace DrawBody.Prototype
                     : type == StageObjectType.EnemyCharger ? 1.7f
                     : type == StageObjectType.EnemyFlyer ? 2.7f
                     : type == StageObjectType.EnemyShooter ? 0.5f
+                    : type == StageObjectType.MissileLauncher ? 8f
                     : 0f,
-                spawnPattern = 0,
-                spawnBoxSize = type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BombDropper ? 0.9f : 0f,
+                spawnPattern = type == StageObjectType.BombDropper ? 1 : 0,
+                spawnBoxSize = type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BombDropper || type == StageObjectType.EnemyDropper ? 0.9f : 0f,
                 bombFuseSeconds = type == StageObjectType.Bomb
                     || type == StageObjectType.PickupFuseBomb
                     || type == StageObjectType.BombDropper
@@ -353,6 +362,26 @@ namespace DrawBody.Prototype
             enemy.Configure(data.type, size, data.movementSpeed > 0f ? data.movementSpeed : 0f, facing);
             AddEditorMetadata(obj, data);
             return obj;
+        }
+
+        public GameObject CreateSpawnedEnemy(
+            StageObjectType type,
+            string objectId,
+            Vector2 position,
+            float size,
+            Transform parent,
+            float speed,
+            float facing)
+        {
+            StageObjectData data = CreateDefaultData(type, position);
+            data.objectId = string.IsNullOrEmpty(objectId) ? StageObjectId.New() : objectId;
+            data.size = Vector2.one * Mathf.Clamp(size, 0.7f, 2f);
+            data.movementSpeed = Mathf.Clamp(speed > 0f ? speed : 2.4f, 0.5f, 8f);
+            data.rotation = facing < 0f ? 180f : 0f;
+            GameObject enemyObject = CreateEnemy(data, parent);
+            StageEnemyCharacter enemy = enemyObject != null ? enemyObject.GetComponent<StageEnemyCharacter>() : null;
+            enemy?.SetSpawnedByDevice();
+            return enemyObject;
         }
 
         private GameObject CreateStageBoundary(StageObjectData data, Transform parent)
@@ -507,11 +536,35 @@ namespace DrawBody.Prototype
             {
                 collider.isTrigger = true;
             }
+            if (data.type == StageObjectType.OneWayPlatform)
+            {
+                // PlatformEffector2D uses the object's local up direction, so a
+                // rotated one-way floor still supports characters from its drawn
+                // top side while allowing them to pass through from below.
+                collider.usedByEffector = true;
+                PlatformEffector2D effector = obj.AddComponent<PlatformEffector2D>();
+                effector.useOneWay = true;
+                effector.useOneWayGrouping = true;
+                effector.surfaceArc = 165f;
+                effector.useSideFriction = false;
+                effector.useSideBounce = false;
+            }
 
             AddSolidPaperBase(obj.transform, data.size);
+            if (data.type == StageObjectType.OneWayPlatform)
+            {
+                AddOneWayPlatformTint(obj.transform, data.size);
+            }
             AddSolidWash(obj.transform, data.size, stroke);
             AddSolidPencilFill(obj.transform, data.size, stroke);
-            AddSolidStraightBoxOutline(obj.transform, data.size);
+            if (data.type == StageObjectType.OneWayPlatform)
+            {
+                AddOneWayPlatformSurfaceVisual(obj.transform, data.size);
+            }
+            else
+            {
+                AddSolidStraightBoxOutline(obj.transform, data.size);
+            }
             bool isConveyor = data.type == StageObjectType.Belt
                 || data.type == StageObjectType.ConveyorLeft
                 || data.type == StageObjectType.ConveyorRight;
@@ -643,6 +696,91 @@ namespace DrawBody.Prototype
             Vector3[] accentOutline = new Vector3[outline.Length];
             for (int i = 0; i < outline.Length; i++) accentOutline[i] = outline[i] + accent;
             AddDoodleLine("Solid Straight Accent", parent, accentOutline, new Color(0.1f, 0.48f, 0.95f, 0.42f), 0.026f, 11);
+        }
+
+        private static void AddOneWayPlatformTint(Transform parent, Vector2 size)
+        {
+            GameObject tintObject = new GameObject("One Way Platform Blue Fill");
+            tintObject.transform.SetParent(parent, false);
+            tintObject.transform.localPosition = new Vector3(0f, 0f, 0.025f);
+            tintObject.transform.localScale = new Vector3(size.x, size.y, 1f);
+
+            SpriteRenderer renderer = tintObject.AddComponent<SpriteRenderer>();
+            renderer.sprite = GetSquareSprite();
+            renderer.color = new Color(0.56f, 0.86f, 1f, 0.72f);
+            renderer.sortingOrder = 3;
+        }
+
+        private static void AddOneWayPlatformSurfaceVisual(Transform parent, Vector2 size)
+        {
+            float halfWidth = size.x * 0.5f;
+            float bottom = -size.y * 0.5f;
+            float top = size.y * 0.5f;
+            Color surfaceBlue = new Color(0.02f, 0.42f, 0.9f, 0.95f);
+            AddDoodleLine(
+                "One Way Platform Top Surface",
+                parent,
+                new[]
+                {
+                    new Vector3(-halfWidth, top + 0.015f, 0f),
+                    new Vector3(halfWidth, top + 0.015f, 0f)
+                },
+                surfaceBlue,
+                0.075f,
+                14);
+
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            Color dashedBlue = new Color(0.02f, 0.42f, 0.9f, 0.78f);
+            AppendDashedPlatformEdge(
+                vertices, colors, triangles,
+                new Vector3(-halfWidth, bottom, 0f),
+                new Vector3(halfWidth, bottom, 0f),
+                dashedBlue);
+            AppendDashedPlatformEdge(
+                vertices, colors, triangles,
+                new Vector3(-halfWidth, bottom, 0f),
+                new Vector3(-halfWidth, top, 0f),
+                dashedBlue);
+            AppendDashedPlatformEdge(
+                vertices, colors, triangles,
+                new Vector3(halfWidth, bottom, 0f),
+                new Vector3(halfWidth, top, 0f),
+                dashedBlue);
+            CreatePencilMesh(parent, "One Way Platform Dashed Outline", vertices, colors, triangles, 13);
+        }
+
+        private static void AppendDashedPlatformEdge(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector3 from,
+            Vector3 to,
+            Color color)
+        {
+            Vector3 delta = to - from;
+            float length = delta.magnitude;
+            if (length <= 0.001f)
+            {
+                return;
+            }
+
+            Vector3 direction = delta / length;
+            const float dashLength = 0.18f;
+            const float gapLength = 0.11f;
+            for (float cursor = 0f; cursor < length; cursor += dashLength + gapLength)
+            {
+                float dashEnd = Mathf.Min(cursor + dashLength, length);
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    from + direction * cursor,
+                    from + direction * dashEnd,
+                    0.05f,
+                    color);
+            }
         }
 
         private static void AddMovingPlatformDirectionIndicator(Transform parent, StageObjectData data)
@@ -1297,7 +1435,9 @@ namespace DrawBody.Prototype
             selectionCollider.size = data.size;
             selectionCollider.isTrigger = true;
 
-            Color casing = new Color(0.94f, 0.56f, 0.16f, 1f);
+            Color casing = data.type == StageObjectType.EnemyDropper
+                ? new Color(0.68f, 0.28f, 0.78f, 1f)
+                : new Color(0.94f, 0.56f, 0.16f, 1f);
             AddSolidPaperBase(obj.transform, data.size);
             AddSolidWash(obj.transform, data.size, casing);
             AddSolidPencilFill(obj.transform, data.size, casing);
@@ -1322,7 +1462,11 @@ namespace DrawBody.Prototype
                 new Vector3(0f, -halfHeight * 0.55f, -0.05f),
                 new Vector3(halfWidth * 0.12f, -halfHeight * 0.4f, -0.05f)
             }, new Color(0.9f, 0.16f, 0.08f, 1f), 0.065f, 22);
-            if (data.type == StageObjectType.SpikeDropper)
+            if (data.type == StageObjectType.EnemyDropper)
+            {
+                AddEnemyDropperPreview(obj.transform, data.spawnPattern, data.size);
+            }
+            else if (data.type == StageObjectType.SpikeDropper)
             {
                 AddSpikeDropperPreview(obj.transform, data.size);
             }
@@ -1336,7 +1480,18 @@ namespace DrawBody.Prototype
             }
 
             AddEditorMetadata(obj, data);
-            if (data.type == StageObjectType.SpikeDropper)
+            if (data.type == StageObjectType.EnemyDropper)
+            {
+                StageEnemyDropper dropper = obj.AddComponent<StageEnemyDropper>();
+                dropper.Configure(
+                    this,
+                    parent,
+                    data.size,
+                    data.actionStrength,
+                    data.spawnPattern,
+                    data.spawnBoxSize);
+            }
+            else if (data.type == StageObjectType.SpikeDropper)
             {
                 StageSpikeDropper dropper = obj.AddComponent<StageSpikeDropper>();
                 dropper.Configure(this, parent, data.size, data.actionStrength, data.spawnBoxSize);
@@ -1365,6 +1520,27 @@ namespace DrawBody.Prototype
                     data.spawnBoxSize);
             }
             return obj;
+        }
+
+        private static void AddEnemyDropperPreview(Transform parent, int pattern, Vector2 size)
+        {
+            float radius = Mathf.Clamp(Mathf.Min(size.x, size.y) * 0.2f, 0.16f, 0.3f);
+            float y = size.y * 0.25f;
+            Color ink = new Color(0.34f, 0.08f, 0.46f, 1f);
+            AddDoodleCircleAt(parent, new Vector2(0f, y), radius, ink, 0.055f, 24);
+            float eyeOffset = radius * 0.38f;
+            AddDoodleCircleAt(parent, new Vector2(-eyeOffset, y + radius * 0.12f), radius * 0.12f, ink, 0.04f, 25);
+            AddDoodleCircleAt(parent, new Vector2(eyeOffset, y + radius * 0.12f), radius * 0.12f, ink, 0.04f, 25);
+            if (pattern == 1)
+            {
+                AddDoodleLine("Enemy Spawner Jump Mark", parent, new[]
+                {
+                    new Vector3(-radius, y - radius, -0.06f),
+                    new Vector3(-radius * 0.35f, y - radius * 1.45f, -0.06f),
+                    new Vector3(radius * 0.35f, y - radius, -0.06f),
+                    new Vector3(radius, y - radius * 1.45f, -0.06f)
+                }, ink, 0.045f, 24);
+            }
         }
 
         private GameObject CreateBeamEmitter(StageObjectData data, Transform parent)
@@ -1474,6 +1650,68 @@ namespace DrawBody.Prototype
                 readyLamp,
                 gaugeWidth,
                 data.actionStrength);
+            AddEditorMetadata(obj, data);
+            return obj;
+        }
+
+        private GameObject CreateMissileLauncher(StageObjectData data, Transform parent)
+        {
+            GameObject obj = new GameObject(data.objectId);
+            obj.name = StageObjectType.MissileLauncher.ToString();
+            obj.transform.SetParent(parent, false);
+            obj.transform.position = data.position;
+            obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
+            obj.layer = groundLayer;
+
+            BoxCollider2D selectionCollider = obj.AddComponent<BoxCollider2D>();
+            selectionCollider.size = data.size;
+            selectionCollider.isTrigger = true;
+
+            Color casing = new Color(0.86f, 0.25f, 0.18f, 1f);
+            AddSolidPaperBase(obj.transform, data.size);
+            AddSolidWash(obj.transform, data.size, casing);
+            AddSolidPencilFill(obj.transform, data.size, casing);
+            AddSolidStraightBoxOutline(obj.transform, data.size);
+
+            float halfWidth = data.size.x * 0.5f;
+            float halfHeight = data.size.y * 0.5f;
+            Color missileInk = new Color(0.55f, 0.04f, 0.035f, 1f);
+            AddDoodleLine("Missile Body Preview", obj.transform, new[]
+            {
+                new Vector3(-halfWidth * 0.36f, -halfHeight * 0.13f, -0.06f),
+                new Vector3(halfWidth * 0.22f, -halfHeight * 0.13f, -0.06f),
+                new Vector3(halfWidth * 0.46f, 0f, -0.06f),
+                new Vector3(halfWidth * 0.22f, halfHeight * 0.13f, -0.06f),
+                new Vector3(-halfWidth * 0.36f, halfHeight * 0.13f, -0.06f),
+                new Vector3(-halfWidth * 0.36f, -halfHeight * 0.13f, -0.06f)
+            }, missileInk, 0.055f, 23);
+            AddDoodleLine("Missile Fins Preview", obj.transform, new[]
+            {
+                new Vector3(-halfWidth * 0.2f, -halfHeight * 0.13f, -0.06f),
+                new Vector3(-halfWidth * 0.34f, -halfHeight * 0.32f, -0.06f),
+                new Vector3(0f, -halfHeight * 0.13f, -0.06f),
+                new Vector3(-halfWidth * 0.2f, halfHeight * 0.13f, -0.06f),
+                new Vector3(-halfWidth * 0.34f, halfHeight * 0.32f, -0.06f),
+                new Vector3(0f, halfHeight * 0.13f, -0.06f)
+            }, missileInk, 0.045f, 23);
+
+            GameObject muzzle = new GameObject("Missile Muzzle");
+            muzzle.transform.SetParent(obj.transform, false);
+            muzzle.transform.localPosition = new Vector3(halfWidth + 0.18f, 0f, -0.08f);
+            AddDoodleCircleAt(
+                muzzle.transform,
+                Vector2.zero,
+                Mathf.Max(0.15f, halfHeight * 0.48f),
+                Color.black,
+                0.065f,
+                24);
+
+            StageMissileLauncher launcher = obj.AddComponent<StageMissileLauncher>();
+            launcher.Configure(
+                parent,
+                muzzle.transform,
+                data.actionStrength,
+                data.movementSpeed > 0f ? data.movementSpeed : 8f);
             AddEditorMetadata(obj, data);
             return obj;
         }
@@ -1644,7 +1882,7 @@ namespace DrawBody.Prototype
         {
             GameObject wall = CreateSolid(data, parent);
             StageBombBreakableWall bombWall = wall.AddComponent<StageBombBreakableWall>();
-            bombWall.Configure(Mathf.Clamp(Mathf.RoundToInt(data.actionStrength > 0f ? data.actionStrength : 1f), 1, 5), data.size);
+            bombWall.Configure(Mathf.Clamp(Mathf.RoundToInt(data.actionStrength > 0f ? data.actionStrength : 1f), 1, 50), data.size);
             return wall;
         }
 
@@ -3081,6 +3319,11 @@ namespace DrawBody.Prototype
 
         private static Color GetObjectColor(StageObjectType type)
         {
+            if (type == StageObjectType.OneWayPlatform)
+            {
+                return new Color(0.02f, 0.48f, 0.92f);
+            }
+
             switch (StageObjectCatalog.Get(type).Category)
             {
                 case StageObjectCategory.StartGoal:

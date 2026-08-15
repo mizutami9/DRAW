@@ -196,7 +196,9 @@ namespace DrawBody.Prototype
         EnemyJumper,
         EnemyCharger,
         EnemyFlyer,
-        EnemyShooter
+        EnemyShooter,
+        EnemyDropper,
+        MissileLauncher
     }
 
     [Serializable]

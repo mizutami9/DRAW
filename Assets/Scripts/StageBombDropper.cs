@@ -4,7 +4,7 @@ using UnityEngine;
 namespace DrawBody.Prototype
 {
     [DisallowMultipleComponent]
-    public sealed class StageBombDropper : MonoBehaviour
+    public sealed class StageBombDropper : MonoBehaviour, IStageLinkActivatable
     {
         private const int MaximumLiveBombs = 16;
 
@@ -20,6 +20,7 @@ namespace DrawBody.Prototype
         private float fuseSeconds = 5f;
         private int sequence;
         private float nextSpawnTime;
+        private bool linkedMode;
 
         public void Configure(
             StageObjectFactory targetFactory,
@@ -55,7 +56,7 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            if (factory == null || spawnParent == null || Time.time < nextSpawnTime)
+            if (linkedMode || factory == null || spawnParent == null || Time.time < nextSpawnTime)
             {
                 return;
             }
@@ -65,6 +66,22 @@ namespace DrawBody.Prototype
             }
 
             nextSpawnTime = Time.time + interval;
+            SpawnBomb();
+        }
+
+        public void PrepareForLink()
+        {
+            linkedMode = true;
+        }
+
+        public void ActivateFromLink()
+        {
+            if (factory == null || spawnParent == null
+                || syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost)
+            {
+                return;
+            }
+
             SpawnBomb();
         }
 
@@ -78,6 +95,7 @@ namespace DrawBody.Prototype
                 : gameObject.name;
             string objectId = dropperId + "_bomb_" + sequence.ToString("D5");
             sequence++;
+            Vector2 launchVelocity = -(Vector2)transform.up * 5.5f;
 
             GameObject spawned = syncManager != null && syncManager.IsOnlineActive
                 ? syncManager.SpawnDropperBox(
@@ -85,11 +103,18 @@ namespace DrawBody.Prototype
                     type,
                     position,
                     bombSize,
-                    fuseSeconds: fuseSeconds)
+                    fuseSeconds: fuseSeconds,
+                    launchVelocity: launchVelocity)
                 : factory.CreateDroppedBox(type, objectId, position, bombSize, spawnParent, fuseSeconds);
             if (spawned == null)
             {
                 return;
+            }
+
+            Rigidbody2D body = spawned.GetComponent<Rigidbody2D>();
+            if (body != null)
+            {
+                body.linearVelocity = launchVelocity;
             }
 
             spawnedBombs.Enqueue(spawned);

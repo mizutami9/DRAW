@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +6,8 @@ namespace DrawBody.Prototype
     [DisallowMultipleComponent]
     public sealed class StageDynamite : MonoBehaviour
     {
+        private const float BlastRangeWarningSeconds = 0.8f;
+
         private float fuseSeconds = 5f;
         private Vector2 visualSize = new Vector2(1.4f, 1.25f);
         private float detonateAt;
@@ -15,6 +16,8 @@ namespace DrawBody.Prototype
         private int lastTick = -1;
         private TextMesh countdownText;
         private SpriteRenderer warningGlow;
+        private SpriteRenderer fuseSpark;
+        private ExplosionRangeIndicator rangeIndicator;
         private StageManager stageManager;
         private StageGimmickSyncManager syncManager;
         private static Sprite squareSprite;
@@ -40,6 +43,9 @@ namespace DrawBody.Prototype
                 return;
             }
             SetCountdown(fuseSeconds);
+            if (fuseSpark != null) fuseSpark.enabled = false;
+            rangeIndicator = ExplosionRangeIndicator.Create(transform.position, CalculateBlastRadius(), true);
+            rangeIndicator.gameObject.SetActive(false);
         }
 
         private void Update()
@@ -55,9 +61,28 @@ namespace DrawBody.Prototype
             }
             float urgency = 1f - Mathf.Clamp01(remaining / fuseSeconds);
             float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * Mathf.Lerp(5f, 18f, urgency));
+            if (rangeIndicator != null)
+            {
+                bool showWarning = remaining <= BlastRangeWarningSeconds;
+                rangeIndicator.gameObject.SetActive(showWarning);
+                if (showWarning)
+                {
+                    float warningUrgency = 1f - Mathf.Clamp01(remaining / BlastRangeWarningSeconds);
+                    rangeIndicator.SetPosition(transform.position);
+                    rangeIndicator.SetWarningState(warningUrgency, true);
+                }
+            }
             if (warningGlow != null)
             {
                 warningGlow.color = new Color(1f, 0.1f, 0.025f, Mathf.Lerp(0.08f, 0.55f, urgency * pulse));
+            }
+            if (fuseSpark != null)
+            {
+                fuseSpark.transform.localScale = Vector3.one * Mathf.Lerp(0.13f, 0.29f, pulse);
+                fuseSpark.color = Color.Lerp(
+                    new Color(1f, 0.82f, 0.12f, 0.8f),
+                    new Color(1f, 0.16f, 0.02f, 1f),
+                    urgency);
             }
             if (remaining <= 0f) Explode();
         }
@@ -68,6 +93,7 @@ namespace DrawBody.Prototype
             armed = true;
             detonateAt = Time.time + fuseSeconds;
             lastTick = -1;
+            if (fuseSpark != null) fuseSpark.enabled = true;
             GameSfx.PlayAt(SfxId.DynamiteFuseStart, transform.position);
         }
 
@@ -75,6 +101,7 @@ namespace DrawBody.Prototype
         {
             if (exploded) return;
             if (!armed) armed = true;
+            if (fuseSpark != null) fuseSpark.enabled = true;
             detonateAt = Mathf.Min(detonateAt > 0f ? detonateAt : float.MaxValue, Time.time + 0.18f);
         }
 
@@ -83,7 +110,8 @@ namespace DrawBody.Prototype
             if (exploded) return;
             exploded = true;
             armed = false;
-            float radius = Mathf.Clamp(Mathf.Max(visualSize.x, visualSize.y) * 5.7f, 6.5f, 12f);
+            float radius = CalculateBlastRadius();
+            DestroyRangeIndicator();
             ApplyBlast(radius);
             DamageBombWalls(radius);
             DefeatEnemies(radius);
@@ -96,6 +124,25 @@ namespace DrawBody.Prototype
             SetBundleVisible(false);
             GameSfx.PlayAt(SfxId.DynamiteExplosion, transform.position);
             Destroy(gameObject, 1.1f);
+        }
+
+        private float CalculateBlastRadius()
+        {
+            return Mathf.Clamp(Mathf.Max(visualSize.x, visualSize.y) * 5.7f, 6.5f, 12f);
+        }
+
+        private void DestroyRangeIndicator()
+        {
+            if (rangeIndicator != null)
+            {
+                Destroy(rangeIndicator.gameObject);
+                rangeIndicator = null;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            DestroyRangeIndicator();
         }
 
         private void ApplyBlast(float radius)
@@ -199,6 +246,7 @@ namespace DrawBody.Prototype
             if (transform.Find("Dynamite Visual") != null) return;
             GameObject visual = new GameObject("Dynamite Visual");
             visual.transform.SetParent(transform, false);
+            Font handwrittenFont = StageSurvivalController.FindHandwrittenFont();
             Color[] reds =
             {
                 new Color(0.92f, 0.09f, 0.07f, 1f),
@@ -226,6 +274,33 @@ namespace DrawBody.Prototype
             bandRenderer.color = new Color(0.15f, 0.11f, 0.08f, 1f);
             bandRenderer.sortingOrder = 41;
 
+            GameObject badge = new GameObject("Countdown Badge");
+            badge.transform.SetParent(visual.transform, false);
+            badge.transform.localPosition = new Vector3(0f, visualSize.y * 0.08f, -0.06f);
+            badge.transform.localScale = new Vector3(visualSize.x * 0.72f, visualSize.y * 0.54f, 1f);
+            SpriteRenderer badgeRenderer = badge.AddComponent<SpriteRenderer>();
+            badgeRenderer.sprite = GetCircleSprite();
+            badgeRenderer.color = new Color(0.08f, 0.045f, 0.025f, 0.92f);
+            badgeRenderer.sortingOrder = 43;
+
+            GameObject tntObject = new GameObject("TNT Label");
+            tntObject.transform.SetParent(visual.transform, false);
+            tntObject.transform.localPosition = new Vector3(0f, -visualSize.y * 0.19f, -0.08f);
+            TextMesh tntText = tntObject.AddComponent<TextMesh>();
+            tntText.text = "TNT";
+            tntText.anchor = TextAnchor.MiddleCenter;
+            tntText.alignment = TextAlignment.Center;
+            tntText.fontSize = 42;
+            tntText.characterSize = Mathf.Clamp(Mathf.Min(visualSize.x, visualSize.y) * 0.085f, 0.07f, 0.13f);
+            tntText.fontStyle = FontStyle.Bold;
+            tntText.color = new Color(1f, 0.88f, 0.22f, 1f);
+            if (handwrittenFont != null)
+            {
+                tntText.font = handwrittenFont;
+                tntObject.GetComponent<MeshRenderer>().sharedMaterial = handwrittenFont.material;
+            }
+            tntObject.GetComponent<MeshRenderer>().sortingOrder = 45;
+
             GameObject fuse = new GameObject("Curved Fuse");
             fuse.transform.SetParent(visual.transform, false);
             LineRenderer fuseLine = fuse.AddComponent<LineRenderer>();
@@ -243,6 +318,15 @@ namespace DrawBody.Prototype
             fuseLine.SetPosition(2, new Vector3(0.28f, visualSize.y * 0.68f, 0f));
             fuseLine.SetPosition(3, new Vector3(0.36f, visualSize.y * 0.82f, 0f));
 
+            GameObject sparkObject = new GameObject("Burning Fuse Spark");
+            sparkObject.transform.SetParent(visual.transform, false);
+            sparkObject.transform.localPosition = new Vector3(0.36f, visualSize.y * 0.82f, -0.07f);
+            sparkObject.transform.localScale = Vector3.one * 0.18f;
+            fuseSpark = sparkObject.AddComponent<SpriteRenderer>();
+            fuseSpark.sprite = GetCircleSprite();
+            fuseSpark.color = new Color(1f, 0.72f, 0.08f, 0.75f);
+            fuseSpark.sortingOrder = 46;
+
             GameObject glow = new GameObject("Warning Glow");
             glow.transform.SetParent(visual.transform, false);
             glow.transform.localScale = new Vector3(visualSize.x * 1.35f, visualSize.y * 1.35f, 1f);
@@ -253,7 +337,7 @@ namespace DrawBody.Prototype
 
             GameObject textObject = new GameObject("Dynamite Countdown");
             textObject.transform.SetParent(visual.transform, false);
-            textObject.transform.localPosition = new Vector3(0f, 0f, -0.08f);
+            textObject.transform.localPosition = new Vector3(0f, visualSize.y * 0.14f, -0.09f);
             countdownText = textObject.AddComponent<TextMesh>();
             countdownText.anchor = TextAnchor.MiddleCenter;
             countdownText.alignment = TextAlignment.Center;
@@ -261,13 +345,12 @@ namespace DrawBody.Prototype
             countdownText.characterSize = Mathf.Clamp(Mathf.Min(visualSize.x, visualSize.y) * 0.115f, 0.085f, 0.18f);
             countdownText.fontStyle = FontStyle.Bold;
             countdownText.color = new Color(1f, 0.94f, 0.62f, 1f);
-            Font font = StageSurvivalController.FindHandwrittenFont();
-            if (font != null)
+            if (handwrittenFont != null)
             {
-                countdownText.font = font;
-                textObject.GetComponent<MeshRenderer>().sharedMaterial = font.material;
+                countdownText.font = handwrittenFont;
+                textObject.GetComponent<MeshRenderer>().sharedMaterial = handwrittenFont.material;
             }
-            textObject.GetComponent<MeshRenderer>().sortingOrder = 45;
+            textObject.GetComponent<MeshRenderer>().sortingOrder = 47;
         }
 
         private void SetCountdown(float seconds)
@@ -287,43 +370,8 @@ namespace DrawBody.Prototype
         {
             GameObject root = new GameObject("Dynamite Mega Explosion");
             root.transform.position = transform.position;
-            for (int i = 0; i < 3; i++)
-            {
-                GameObject ring = new GameObject("Explosion Ring " + i);
-                ring.transform.SetParent(root.transform, false);
-                SpriteRenderer renderer = ring.AddComponent<SpriteRenderer>();
-                renderer.sprite = GetCircleSprite();
-                renderer.color = i == 0
-                    ? new Color(1f, 0.95f, 0.45f, 0.9f)
-                    : i == 1 ? new Color(1f, 0.34f, 0.05f, 0.72f) : new Color(0.8f, 0.08f, 0.03f, 0.42f);
-                renderer.sortingOrder = 310 - i;
-            }
-            StartCoroutine(AnimateExplosion(root, radius));
-        }
-
-        private static IEnumerator AnimateExplosion(GameObject root, float radius)
-        {
-            float elapsed = 0f;
-            while (root != null && elapsed < 0.7f)
-            {
-                elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / 0.7f);
-                for (int i = 0; i < root.transform.childCount; i++)
-                {
-                    Transform ring = root.transform.GetChild(i);
-                    float delayed = Mathf.Clamp01(t * 1.45f - i * 0.12f);
-                    ring.localScale = Vector3.one * radius * 2f * delayed;
-                    SpriteRenderer renderer = ring.GetComponent<SpriteRenderer>();
-                    if (renderer != null)
-                    {
-                        Color color = renderer.color;
-                        color.a *= 1f - t;
-                        renderer.color = color;
-                    }
-                }
-                yield return null;
-            }
-            if (root != null) Destroy(root);
+            BombExplosionVisual visual = root.AddComponent<BombExplosionVisual>();
+            visual.Configure(radius, true);
         }
 
         private static void AddBoxOutline(Transform parent, Color color, int order)

@@ -9,6 +9,7 @@ namespace DrawBody.Prototype
     public sealed class StageBomb : MonoBehaviour
     {
         private const float MinimumFuseSeconds = 0.2f;
+        private const float BlastRangeWarningSeconds = 0.65f;
 
         private bool startsOnPickup;
         private float fuseSeconds = 5f;
@@ -21,6 +22,7 @@ namespace DrawBody.Prototype
         private Color pulseBaseColor = Color.white;
         private StageEditorObject marker;
         private StageGimmickSyncManager syncManager;
+        private ExplosionRangeIndicator rangeIndicator;
 
         public string ObjectId => marker != null && !string.IsNullOrEmpty(marker.objectId)
             ? marker.objectId
@@ -68,6 +70,7 @@ namespace DrawBody.Prototype
 
             float remaining = Mathf.Max(0f, detonateAt - Time.time);
             UpdateCountdownVisual(remaining);
+            UpdateRangeIndicator(remaining);
             if (remaining > 0f)
             {
                 return;
@@ -123,11 +126,40 @@ namespace DrawBody.Prototype
             armed = true;
             detonateAt = Time.time + Mathf.Max(MinimumFuseSeconds, delay);
             lastTickSecond = -1;
+            EnsureRangeIndicator();
             if (countdownText != null)
             {
                 countdownText.color = Color.white;
             }
             GameSfx.PlayAt(SfxId.BombFuseStart, transform.position, 1.05f);
+        }
+
+        private void EnsureRangeIndicator()
+        {
+            if (rangeIndicator == null)
+            {
+                rangeIndicator = ExplosionRangeIndicator.Create(transform.position, BlastRadius, false);
+                rangeIndicator.gameObject.SetActive(false);
+            }
+        }
+
+        private void UpdateRangeIndicator(float remaining)
+        {
+            if (rangeIndicator == null)
+            {
+                return;
+            }
+
+            bool showWarning = remaining <= BlastRangeWarningSeconds;
+            rangeIndicator.gameObject.SetActive(showWarning);
+            if (!showWarning)
+            {
+                return;
+            }
+
+            float urgency = 1f - Mathf.Clamp01(remaining / BlastRangeWarningSeconds);
+            rangeIndicator.SetPosition(transform.position);
+            rangeIndicator.SetWarningState(urgency, true);
         }
 
         private void UpdateCountdownVisual(float remaining)
@@ -164,6 +196,7 @@ namespace DrawBody.Prototype
 
             exploded = true;
             armed = false;
+            DestroyRangeIndicator();
             ReleaseFromCarriers();
             BreakBombWalls(position, radius);
             DefeatBlockBreakerEnemies(position, radius, applyGameplay);
@@ -177,6 +210,20 @@ namespace DrawBody.Prototype
             GameSfx.PlayAt(SfxId.BombExplosion, position, 1.35f);
             gameObject.SetActive(false);
             Destroy(gameObject);
+        }
+
+        private void DestroyRangeIndicator()
+        {
+            if (rangeIndicator != null)
+            {
+                Destroy(rangeIndicator.gameObject);
+                rangeIndicator = null;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            DestroyRangeIndicator();
         }
 
         private void BreakBombWalls(Vector2 position, float radius)
@@ -337,16 +384,164 @@ namespace DrawBody.Prototype
         }
     }
 
-    public sealed class BombExplosionVisual : MonoBehaviour
+    public sealed class ExplosionRangeIndicator : MonoBehaviour
     {
-        private readonly List<LineRenderer> lines = new List<LineRenderer>();
-        private Material material;
-        private float radius;
-        private float elapsed;
+        private const int CircleSegments = 72;
 
-        public void Configure(float blastRadius)
+        private LineRenderer outerRing;
+        private LineRenderer innerRing;
+        private SpriteRenderer areaFill;
+        private float radius;
+        private bool mega;
+        private static Material sharedLineMaterial;
+        private static Sprite circleSprite;
+
+        public static ExplosionRangeIndicator Create(Vector2 position, float blastRadius, bool isMega)
+        {
+            GameObject root = new GameObject(isMega ? "Dynamite Blast Range" : "Bomb Blast Range");
+            root.transform.position = position;
+            ExplosionRangeIndicator indicator = root.AddComponent<ExplosionRangeIndicator>();
+            indicator.Configure(blastRadius, isMega);
+            return indicator;
+        }
+
+        public void SetPosition(Vector2 position)
+        {
+            transform.position = position;
+        }
+
+        public void SetWarningState(float urgency, bool active)
+        {
+            urgency = Mathf.Clamp01(urgency);
+            float speed = Mathf.Lerp(2.8f, 13f, urgency);
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * speed);
+            Color warning = Color.Lerp(
+                new Color(1f, 0.72f, 0.05f, 1f),
+                new Color(1f, 0.08f, 0.02f, 1f),
+                urgency);
+            float idleAlpha = mega ? 0.32f : 0.18f;
+            float ringAlpha = active ? Mathf.Lerp(0.48f, 0.92f, urgency * (0.7f + pulse * 0.3f)) : idleAlpha;
+            warning.a = ringAlpha;
+            outerRing.startColor = warning;
+            outerRing.endColor = warning;
+            outerRing.widthMultiplier = (mega ? 0.11f : 0.075f) * (1f + pulse * urgency * 0.35f);
+
+            Color innerColor = warning;
+            innerColor.a = ringAlpha * 0.48f;
+            innerRing.startColor = innerColor;
+            innerRing.endColor = innerColor;
+            innerRing.transform.localScale = Vector3.one * Mathf.Lerp(0.93f, 0.985f, pulse);
+
+            Color fillColor = warning;
+            fillColor.a = active
+                ? Mathf.Lerp(0.025f, mega ? 0.13f : 0.09f, urgency * (0.65f + pulse * 0.35f))
+                : mega ? 0.035f : 0.018f;
+            areaFill.color = fillColor;
+        }
+
+        private void Configure(float blastRadius, bool isMega)
         {
             radius = Mathf.Max(0.5f, blastRadius);
+            mega = isMega;
+
+            GameObject fillObject = new GameObject("Blast Area Fill");
+            fillObject.transform.SetParent(transform, false);
+            fillObject.transform.localScale = Vector3.one * radius * 2f;
+            areaFill = fillObject.AddComponent<SpriteRenderer>();
+            areaFill.sprite = GetCircleSprite();
+            areaFill.sortingOrder = 285;
+
+            outerRing = CreateRing("Blast Range Boundary", radius, 290);
+            innerRing = CreateRing("Blast Range Pulse", radius * 0.93f, 289);
+            SetWarningState(0f, false);
+        }
+
+        private LineRenderer CreateRing(string objectName, float ringRadius, int sortingOrder)
+        {
+            GameObject ringObject = new GameObject(objectName);
+            ringObject.transform.SetParent(transform, false);
+            LineRenderer line = ringObject.AddComponent<LineRenderer>();
+            line.useWorldSpace = false;
+            line.loop = true;
+            line.positionCount = CircleSegments;
+            line.numCornerVertices = 2;
+            line.sharedMaterial = GetLineMaterial();
+            line.sortingOrder = sortingOrder;
+            for (int i = 0; i < CircleSegments; i++)
+            {
+                float angle = i / (float)CircleSegments * Mathf.PI * 2f;
+                line.SetPosition(i, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * ringRadius);
+            }
+            return line;
+        }
+
+        private static Material GetLineMaterial()
+        {
+            if (sharedLineMaterial == null)
+            {
+                Shader shader = Shader.Find("Sprites/Default");
+                if (shader != null)
+                {
+                    sharedLineMaterial = new Material(shader);
+                }
+            }
+            return sharedLineMaterial;
+        }
+
+        private static Sprite GetCircleSprite()
+        {
+            if (circleSprite != null)
+            {
+                return circleSprite;
+            }
+
+            const int textureSize = 64;
+            Texture2D texture = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false);
+            texture.name = "Explosion Range Circle";
+            Color32[] pixels = new Color32[textureSize * textureSize];
+            Vector2 center = Vector2.one * (textureSize - 1) * 0.5f;
+            float maxRadius = textureSize * 0.48f;
+            for (int y = 0; y < textureSize; y++)
+            {
+                for (int x = 0; x < textureSize; x++)
+                {
+                    float normalized = Mathf.Clamp01((maxRadius - Vector2.Distance(new Vector2(x, y), center)) / 2f);
+                    pixels[y * textureSize + x] = new Color32(255, 255, 255, (byte)(normalized * 255f));
+                }
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply();
+            circleSprite = Sprite.Create(
+                texture,
+                new Rect(0f, 0f, textureSize, textureSize),
+                new Vector2(0.5f, 0.5f),
+                textureSize);
+            return circleSprite;
+        }
+    }
+
+    public sealed class BombExplosionVisual : MonoBehaviour
+    {
+        private const int CircleSegments = 64;
+
+        private readonly List<LineRenderer> rings = new List<LineRenderer>();
+        private readonly List<LineRenderer> sparks = new List<LineRenderer>();
+        private readonly List<Vector2> sparkDirections = new List<Vector2>();
+        private readonly List<SpriteRenderer> clouds = new List<SpriteRenderer>();
+        private Material material;
+        private SpriteRenderer flash;
+        private SpriteRenderer fireball;
+        private float radius;
+        private float duration;
+        private bool mega;
+        private float elapsed;
+        private static Sprite circleSprite;
+
+        public void Configure(float blastRadius, bool isMega = false)
+        {
+            radius = Mathf.Max(0.5f, blastRadius);
+            mega = isMega;
+            duration = mega ? 1.25f : 0.82f;
             Shader shader = Shader.Find("Sprites/Default");
             if (shader == null)
             {
@@ -355,62 +550,140 @@ namespace DrawBody.Prototype
             }
             material = new Material(shader);
 
-            for (int ring = 0; ring < 3; ring++)
+            flash = CreateDisc("Explosion White Flash", Color.white, 334);
+            fireball = CreateDisc(
+                "Explosion Fireball",
+                new Color(1f, 0.34f, 0.025f, 0.9f),
+                330);
+
+            for (int ring = 0; ring < (mega ? 4 : 3); ring++)
             {
                 GameObject ringObject = new GameObject("Explosion Ring " + ring);
                 ringObject.transform.SetParent(transform, false);
                 LineRenderer line = ringObject.AddComponent<LineRenderer>();
                 line.useWorldSpace = false;
                 line.loop = true;
-                line.positionCount = 40;
-                line.widthMultiplier = 0.12f - ring * 0.02f;
+                line.positionCount = CircleSegments;
+                line.numCornerVertices = 3;
+                line.widthMultiplier = (mega ? 0.2f : 0.13f) - ring * 0.018f;
                 line.sharedMaterial = material;
-                line.sortingOrder = 300 + ring;
-                lines.Add(line);
+                line.sortingOrder = 322 + ring;
+                for (int i = 0; i < CircleSegments; i++)
+                {
+                    float angle = i / (float)CircleSegments * Mathf.PI * 2f;
+                    line.SetPosition(i, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f));
+                }
+                rings.Add(line);
             }
 
-            for (int ray = 0; ray < 12; ray++)
+            int cloudCount = mega ? 18 : 11;
+            for (int cloud = 0; cloud < cloudCount; cloud++)
             {
-                GameObject rayObject = new GameObject("Explosion Ray " + ray);
-                rayObject.transform.SetParent(transform, false);
-                LineRenderer line = rayObject.AddComponent<LineRenderer>();
+                GameObject cloudObject = new GameObject("Explosion Cloud " + cloud);
+                cloudObject.transform.SetParent(transform, false);
+                SpriteRenderer renderer = cloudObject.AddComponent<SpriteRenderer>();
+                renderer.sprite = GetCircleSprite();
+                renderer.sortingOrder = 326 + cloud % 3;
+                clouds.Add(renderer);
+            }
+
+            int sparkCount = mega ? 28 : 16;
+            for (int spark = 0; spark < sparkCount; spark++)
+            {
+                GameObject sparkObject = new GameObject("Explosion Spark " + spark);
+                sparkObject.transform.SetParent(transform, false);
+                LineRenderer line = sparkObject.AddComponent<LineRenderer>();
                 line.useWorldSpace = false;
                 line.positionCount = 2;
-                line.widthMultiplier = 0.1f;
+                line.numCapVertices = 3;
+                line.widthMultiplier = mega ? 0.11f : 0.07f;
                 line.sharedMaterial = material;
-                line.sortingOrder = 304;
-                float angle = ray / 12f * Mathf.PI * 2f;
+                line.sortingOrder = 332;
+                float angle = spark / (float)sparkCount * Mathf.PI * 2f
+                    + Mathf.Sin(spark * 7.13f) * 0.16f;
                 Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-                line.SetPosition(0, direction * 0.2f);
-                line.SetPosition(1, direction * radius);
-                lines.Add(line);
+                sparkDirections.Add(direction);
+                sparks.Add(line);
             }
+        }
+
+        private SpriteRenderer CreateDisc(string objectName, Color color, int sortingOrder)
+        {
+            GameObject discObject = new GameObject(objectName);
+            discObject.transform.SetParent(transform, false);
+            SpriteRenderer renderer = discObject.AddComponent<SpriteRenderer>();
+            renderer.sprite = GetCircleSprite();
+            renderer.color = color;
+            renderer.sortingOrder = sortingOrder;
+            return renderer;
         }
 
         private void Update()
         {
             elapsed += Time.deltaTime;
-            float progress = Mathf.Clamp01(elapsed / 0.48f);
-            for (int ring = 0; ring < Mathf.Min(3, lines.Count); ring++)
+            float progress = Mathf.Clamp01(elapsed / duration);
+            float expansion = 1f - Mathf.Pow(1f - progress, 3f);
+
+            float flashProgress = Mathf.Clamp01(progress * 4.5f);
+            flash.transform.localScale = Vector3.one * radius * 2f * Mathf.Lerp(0.08f, 0.72f, flashProgress);
+            flash.color = new Color(1f, 0.98f, 0.78f, Mathf.Lerp(0.95f, 0f, flashProgress));
+
+            float fireProgress = Mathf.Clamp01(progress * 1.8f);
+            float fireFade = 1f - Mathf.Clamp01((progress - 0.28f) / 0.58f);
+            fireball.transform.localScale = Vector3.one * radius * 2f * Mathf.Lerp(0.06f, mega ? 0.62f : 0.48f, fireProgress);
+            fireball.color = new Color(
+                1f,
+                Mathf.Lerp(0.78f, 0.08f, progress),
+                0.015f,
+                fireFade * (mega ? 0.82f : 0.72f));
+
+            for (int ring = 0; ring < rings.Count; ring++)
             {
-                LineRenderer line = lines[ring];
-                float ringProgress = Mathf.Clamp01(progress * 1.45f - ring * 0.15f);
-                float ringRadius = Mathf.Lerp(0.12f, radius, ringProgress);
-                for (int i = 0; i < line.positionCount; i++)
-                {
-                    float angle = i / (float)line.positionCount * Mathf.PI * 2f;
-                    line.SetPosition(i, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * ringRadius);
-                }
-                Color color = Color.Lerp(new Color(1f, 0.95f, 0.35f, 1f), new Color(1f, 0.08f, 0.02f, 0f), progress);
+                LineRenderer line = rings[ring];
+                float ringProgress = Mathf.Clamp01(progress * (mega ? 1.55f : 1.75f) - ring * 0.09f);
+                float ringRadius = Mathf.Lerp(radius * 0.04f, radius, 1f - Mathf.Pow(1f - ringProgress, 2.5f));
+                line.transform.localScale = Vector3.one * ringRadius;
+                float fade = 1f - Mathf.Clamp01((progress - 0.35f - ring * 0.025f) / 0.58f);
+                Color color = Color.Lerp(
+                    new Color(1f, 0.96f, 0.38f, fade),
+                    new Color(1f, 0.12f, 0.015f, fade),
+                    progress);
                 line.startColor = color;
                 line.endColor = color;
             }
-            for (int i = 3; i < lines.Count; i++)
+
+            for (int i = 0; i < clouds.Count; i++)
             {
-                Color color = new Color(1f, Mathf.Lerp(0.8f, 0.1f, progress), 0.02f, 1f - progress);
-                lines[i].startColor = color;
-                lines[i].endColor = color;
-                lines[i].transform.localScale = Vector3.one * Mathf.Lerp(0.25f, 1f, progress);
+                float angle = i / (float)clouds.Count * Mathf.PI * 2f + Mathf.Sin(i * 4.17f) * 0.28f;
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                float spread = radius * Mathf.Lerp(0.08f, mega ? 0.48f : 0.38f, expansion)
+                    * Mathf.Lerp(0.72f, 1.08f, Mathf.Abs(Mathf.Sin(i * 2.31f)));
+                SpriteRenderer cloud = clouds[i];
+                cloud.transform.localPosition = direction * spread;
+                float cloudScale = radius * Mathf.Lerp(0.08f, mega ? 0.31f : 0.24f, expansion)
+                    * Mathf.Lerp(0.72f, 1.2f, Mathf.Abs(Mathf.Cos(i * 1.71f)));
+                cloud.transform.localScale = Vector3.one * cloudScale;
+                float smoke = Mathf.Clamp01((progress - 0.32f) / 0.45f);
+                float alpha = (1f - progress) * Mathf.Lerp(0.88f, mega ? 0.48f : 0.28f, smoke);
+                cloud.color = Color.Lerp(
+                    new Color(1f, 0.52f, 0.035f, alpha),
+                    new Color(0.2f, 0.16f, 0.16f, alpha),
+                    smoke);
+            }
+
+            for (int i = 0; i < sparks.Count; i++)
+            {
+                LineRenderer spark = sparks[i];
+                Vector2 direction = sparkDirections[i];
+                float variation = Mathf.Lerp(0.72f, 1.18f, Mathf.Abs(Mathf.Sin(i * 3.77f)));
+                float distance = radius * expansion * variation;
+                float tail = Mathf.Max(0.1f, radius * (mega ? 0.09f : 0.065f));
+                spark.SetPosition(0, direction * Mathf.Max(0f, distance - tail));
+                spark.SetPosition(1, direction * distance);
+                float alpha = 1f - Mathf.Clamp01(progress * 1.15f);
+                Color sparkColor = new Color(1f, Mathf.Lerp(0.95f, 0.28f, progress), 0.04f, alpha);
+                spark.startColor = sparkColor;
+                spark.endColor = new Color(sparkColor.r, sparkColor.g, sparkColor.b, 0f);
             }
 
             if (progress >= 1f)
@@ -425,6 +698,38 @@ namespace DrawBody.Prototype
             {
                 Destroy(material);
             }
+        }
+
+        private static Sprite GetCircleSprite()
+        {
+            if (circleSprite != null)
+            {
+                return circleSprite;
+            }
+
+            const int textureSize = 64;
+            Texture2D texture = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false);
+            texture.name = "Explosion Soft Circle";
+            Color32[] pixels = new Color32[textureSize * textureSize];
+            Vector2 center = Vector2.one * (textureSize - 1) * 0.5f;
+            float maxRadius = textureSize * 0.48f;
+            for (int y = 0; y < textureSize; y++)
+            {
+                for (int x = 0; x < textureSize; x++)
+                {
+                    float distance = Vector2.Distance(new Vector2(x, y), center);
+                    float alpha = Mathf.Clamp01((maxRadius - distance) / 3f);
+                    pixels[y * textureSize + x] = new Color32(255, 255, 255, (byte)(alpha * 255f));
+                }
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply();
+            circleSprite = Sprite.Create(
+                texture,
+                new Rect(0f, 0f, textureSize, textureSize),
+                new Vector2(0.5f, 0.5f),
+                textureSize);
+            return circleSprite;
         }
     }
 }

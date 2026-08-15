@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DrawBody.Prototype
 {
     [DisallowMultipleComponent]
-    public sealed class StageBeamEmitter : MonoBehaviour
+    public sealed class StageBeamEmitter : MonoBehaviour, IStageLinkActivatable
     {
         private const float MaximumRange = 120f;
         private const float PulseDuration = 0.28f;
@@ -21,6 +21,7 @@ namespace DrawBody.Prototype
         private float interval = 2f;
         private float nextShotTime;
         private float hideTime;
+        private bool linkedMode;
 
         public void Configure(
             Transform beamMuzzle,
@@ -69,6 +70,12 @@ namespace DrawBody.Prototype
                 }
             }
 
+            if (linkedMode)
+            {
+                UpdateChargeVisual(1f);
+                return;
+            }
+
             float charge = 1f - Mathf.Clamp01((nextShotTime - Time.time) / interval);
             UpdateChargeVisual(charge);
 
@@ -80,6 +87,19 @@ namespace DrawBody.Prototype
             nextShotTime = Time.time + interval;
             Fire();
             UpdateChargeVisual(0f);
+        }
+
+        public void PrepareForLink()
+        {
+            linkedMode = true;
+            SetBeamVisible(false);
+            UpdateChargeVisual(1f);
+        }
+
+        public void ActivateFromLink()
+        {
+            Fire();
+            UpdateChargeVisual(1f);
         }
 
         private void OnDisable()

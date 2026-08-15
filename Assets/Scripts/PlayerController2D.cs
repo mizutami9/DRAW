@@ -579,6 +579,11 @@ namespace DrawBody.Prototype
                         continue;
                     }
 
+                    if (!CanUseAsGround(hit.collider, origins[i]))
+                    {
+                        continue;
+                    }
+
                     bestDistance = hit.distance;
                     normal = hit.normal;
                 }
@@ -1126,13 +1131,46 @@ namespace DrawBody.Prototype
             for (int i = 0; i < hitCount; i++)
             {
                 Collider2D hit = overlapResults[i];
-                if (hit != null && hit.enabled && !hit.isTrigger && hit.attachedRigidbody != rb)
+                if (hit != null
+                    && hit.enabled
+                    && !hit.isTrigger
+                    && hit.attachedRigidbody != rb
+                    && CanUseAsGround(hit, center))
                 {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private bool CanUseAsGround(Collider2D hit, Vector2 probePosition)
+        {
+            PlatformEffector2D effector = hit != null
+                ? hit.GetComponentInParent<PlatformEffector2D>()
+                : null;
+            if (effector == null || !effector.useOneWay)
+            {
+                return true;
+            }
+
+            Transform surfaceTransform = hit.transform;
+            Vector2 localVelocity = surfaceTransform.InverseTransformVector(rb.linearVelocity);
+            if (localVelocity.y > 0.05f)
+            {
+                return false;
+            }
+
+            BoxCollider2D box = hit as BoxCollider2D;
+            if (box == null)
+            {
+                return true;
+            }
+
+            Vector2 localProbe = surfaceTransform.InverseTransformPoint(probePosition);
+            float surfaceY = box.offset.y + box.size.y * 0.5f;
+            float contactAllowance = Mathf.Max(0.12f, groundCheckSize.y * 0.75f);
+            return localProbe.y >= surfaceY - contactAllowance;
         }
 
         private void OnDrawGizmosSelected()
