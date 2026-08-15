@@ -29,6 +29,8 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, SyncTransformEntry> transformEntries = new Dictionary<string, SyncTransformEntry>();
         private readonly Dictionary<string, string> ownersByObjectId = new Dictionary<string, string>();
         private readonly HashSet<string> locallyHeldObjectIds = new HashSet<string>();
+        private readonly Dictionary<string, OwnershipState> pendingLocalReleases =
+            new Dictionary<string, OwnershipState>();
         private readonly Dictionary<string, StageCrumblingFloor> crumblingFloors =
             new Dictionary<string, StageCrumblingFloor>();
         private readonly Dictionary<string, DropperBoxSpawnState> dropperBoxStates =
@@ -53,6 +55,9 @@ namespace DrawBody.Prototype
         {
             public string OwnerPlayerId;
             public Vector2 ReleaseVelocity;
+            public bool HasReleasePose;
+            public Vector2 ReleasePosition;
+            public float ReleaseRotation;
         }
 
         [System.Serializable]
@@ -346,6 +351,7 @@ namespace DrawBody.Prototype
             }
 
             locallyHeldObjectIds.Add(objectId);
+            pendingLocalReleases.Remove(objectId);
             if (IsHost)
             {
                 GrantOwnership(objectId, onlineManager.LocalPlayerId);
@@ -364,11 +370,22 @@ namespace DrawBody.Prototype
             }
 
             locallyHeldObjectIds.Remove(objectId);
+            Rigidbody2D releaseBody = target.GetComponent<Rigidbody2D>();
             OwnershipState release = new OwnershipState
             {
                 OwnerPlayerId = onlineManager.LocalPlayerId,
-                ReleaseVelocity = releaseVelocity
+                ReleaseVelocity = releaseVelocity,
+                HasReleasePose = true,
+                ReleasePosition = releaseBody != null ? releaseBody.position : (Vector2)target.position,
+                ReleaseRotation = releaseBody != null ? releaseBody.rotation : target.eulerAngles.z
             };
+            if (!IsHost)
+            {
+                // Keep the complete release frame until the host confirms it. When
+                // the carrier is walking, sending only velocity can launch the
+                // host copy from an older position inside a player or the floor.
+                pendingLocalReleases[objectId] = release;
+            }
             if (IsHost)
             {
                 ReleaseOwnership(objectId, release);
@@ -767,14 +784,47 @@ namespace DrawBody.Prototype
 
             if (transformEntries.TryGetValue(objectId, out SyncTransformEntry entry) && entry != null)
             {
+                ApplyReleasePose(entry, release);
                 entry.EndRemoteOwnership(release.ReleaseVelocity);
             }
 
             ownersByObjectId.Remove(objectId);
-            BroadcastOwnership(objectId, string.Empty, release.ReleaseVelocity);
+            BroadcastOwnership(
+                objectId,
+                string.Empty,
+                release.ReleaseVelocity,
+                release.HasReleasePose,
+                release.ReleasePosition,
+                release.ReleaseRotation);
         }
 
-        private void BroadcastOwnership(string objectId, string ownerPlayerId, Vector2 releaseVelocity)
+        private static void ApplyReleasePose(SyncTransformEntry entry, OwnershipState release)
+        {
+            if (entry == null || entry.Transform == null || release == null || !release.HasReleasePose)
+            {
+                return;
+            }
+
+            if (entry.Body != null)
+            {
+                entry.Body.position = release.ReleasePosition;
+                entry.Body.rotation = release.ReleaseRotation;
+            }
+            else
+            {
+                entry.Transform.position = release.ReleasePosition;
+                entry.Transform.rotation = Quaternion.Euler(0f, 0f, release.ReleaseRotation);
+            }
+            Physics2D.SyncTransforms();
+        }
+
+        private void BroadcastOwnership(
+            string objectId,
+            string ownerPlayerId,
+            Vector2 releaseVelocity,
+            bool hasReleasePose = false,
+            Vector2 releasePosition = default,
+            float releaseRotation = 0f)
         {
             if (!IsHost)
             {
@@ -788,7 +838,10 @@ namespace DrawBody.Prototype
                 Json = JsonUtility.ToJson(new OwnershipState
                 {
                     OwnerPlayerId = ownerPlayerId,
-                    ReleaseVelocity = releaseVelocity
+                    ReleaseVelocity = releaseVelocity,
+                    HasReleasePose = hasReleasePose,
+                    ReleasePosition = releasePosition,
+                    ReleaseRotation = releaseRotation
                 })
             });
         }
@@ -832,9 +885,11 @@ namespace DrawBody.Prototype
             if (state == null || string.IsNullOrEmpty(state.OwnerPlayerId))
             {
                 ownersByObjectId.Remove(objectId);
+                pendingLocalReleases.Remove(objectId);
                 ReleaseDeniedLocalCarry(objectId);
                 if (transformEntries.TryGetValue(objectId, out SyncTransformEntry released) && released?.Body != null)
                 {
+                    ApplyReleasePose(released, state);
                     released.EndRemoteOwnership(state != null ? state.ReleaseVelocity : Vector2.zero);
                 }
                 return;
@@ -845,7 +900,22 @@ namespace DrawBody.Prototype
             {
                 if (state.OwnerPlayerId != onlineManager.LocalPlayerId)
                 {
+                    pendingLocalReleases.Remove(objectId);
                     entry.BeginRemoteOwnership();
+                }
+                else if (!locallyHeldObjectIds.Contains(objectId)
+                    && pendingLocalReleases.TryGetValue(objectId, out OwnershipState pendingRelease))
+                {
+                    // The participant already threw before the host's ownership
+                    // grant arrived. Preserve the throw locally and immediately
+                    // repeat the release against the now-confirmed ownership.
+                    entry.EndRemoteOwnership(pendingRelease.ReleaseVelocity);
+                    Send(new OnlineGimmickData
+                    {
+                        ObjectId = objectId,
+                        Kind = KindOwnershipRelease,
+                        Json = JsonUtility.ToJson(pendingRelease)
+                    });
                 }
                 else
                 {
@@ -888,6 +958,15 @@ namespace DrawBody.Prototype
                 {
                     return;
                 }
+            }
+
+            // While a participant is holding an object, or waiting for the host
+            // to acknowledge its throw, host snapshots describe an older frame.
+            // Applying them here cancels the carried position or release speed.
+            if (locallyHeldObjectIds.Contains(objectId)
+                || pendingLocalReleases.ContainsKey(objectId))
+            {
+                return;
             }
 
             entry.Transform.gameObject.SetActive(state.Active);

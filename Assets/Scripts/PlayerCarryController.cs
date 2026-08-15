@@ -47,6 +47,8 @@ namespace DrawBody.Prototype
         private LineRenderer throwPreviewLine;
         private LineRenderer throwPreviewHeadA;
         private LineRenderer throwPreviewHeadB;
+        private Vector2 displayedThrowDirection = Vector2.up;
+        private bool hasDisplayedThrowDirection;
         private Material previewMaterial;
         private string heldOnlinePlayerId;
         private StageGimmickSyncManager gimmickSyncManager;
@@ -144,9 +146,8 @@ namespace DrawBody.Prototype
                 return false;
             }
             Vector2 normalized = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.right;
-            Vector2 baseVelocity = playerBody != null ? playerBody.linearVelocity : Vector2.zero;
             float multiplier = heldObject != null ? heldObject.ThrowMultiplier : 1f;
-            Vector2 throwVelocity = baseVelocity + normalized * GetCurrentThrowSpeed() * multiplier;
+            Vector2 throwVelocity = normalized * GetCurrentThrowSpeed() * multiplier;
             GameSfx.PlayAt(SfxId.HumanThrow, transform.position);
             DropHeld(throwVelocity);
             return true;
@@ -987,8 +988,24 @@ namespace DrawBody.Prototype
 
         private void ThrowHeld()
         {
+            // Update can run after a walking FixedUpdate but before LateUpdate has
+            // moved the held object to the new hand position. Release from the
+            // current anchor so neither the local nor host copy starts inside the
+            // carrier's previous frame.
+            if (heldTransform != null)
+            {
+                Vector3 releaseAnchor = GetHoldPosition();
+                heldTransform.position = releaseAnchor;
+                heldTransform.rotation = Quaternion.identity;
+                if (heldBody != null)
+                {
+                    heldBody.position = releaseAnchor;
+                    heldBody.rotation = 0f;
+                }
+                Physics2D.SyncTransforms();
+            }
+
             float multiplier = heldObject != null ? heldObject.ThrowMultiplier : 1f;
-            Vector2 baseVelocity = playerBody != null ? playerBody.linearVelocity : Vector2.zero;
             float currentThrowSpeed = GetCurrentThrowSpeed();
             if (IsHeldGameplayKey())
             {
@@ -996,7 +1013,10 @@ namespace DrawBody.Prototype
                 // Keep puzzle keys controllable and on screen.
                 currentThrowSpeed = Mathf.Clamp(currentThrowSpeed * 0.45f, 8f, 14f);
             }
-            Vector2 throwVelocity = baseVelocity + GetThrowDirection() * currentThrowSpeed * multiplier;
+            Vector2 throwDirection = hasDisplayedThrowDirection
+                ? displayedThrowDirection
+                : GetThrowDirection();
+            Vector2 throwVelocity = throwDirection.normalized * currentThrowSpeed * multiplier;
             GameSfx.PlayAt(SfxId.HumanThrow, transform.position);
             if (!string.IsNullOrEmpty(heldOnlinePlayerId))
             {
@@ -1010,6 +1030,24 @@ namespace DrawBody.Prototype
         {
             if (heldTransform == null)
             {
+                bool hasStaleHeldState = heldBody != null
+                    || heldPlayerController != null
+                    || heldObject != null
+                    || !string.IsNullOrEmpty(heldOnlinePlayerId)
+                    || heldColliders.Count > 0
+                    || heldRenderers.Count > 0;
+                if (!hasStaleHeldState)
+                {
+                    return;
+                }
+
+                // The carried avatar/object can be rebuilt by an online body sync
+                // or destroyed by a stage gimmick before the release packet is
+                // processed. Unity then makes the Transform compare as null while
+                // the cached online id and physics state still remain. Clear every
+                // cache here; otherwise our continuous player state keeps claiming
+                // that we carry the other player and their controls stay disabled.
+                ClearDestroyedHeldState(releaseVelocity);
                 return;
             }
 
@@ -1054,11 +1092,40 @@ namespace DrawBody.Prototype
             heldPlayerPreviousControlsEnabled = false;
             heldBody = null;
             heldOnlinePlayerId = null;
+            hasDisplayedThrowDirection = false;
             heldColliders.Clear();
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             SetThrowPreviewVisible(false);
             StartCoroutine(RestoreReleasedCollisions(releasedColliders, carrierColliders));
+        }
+
+        private void ClearDestroyedHeldState(Vector2 releaseVelocity)
+        {
+            bodyBuilder?.SetCarryPose(false, GetFacingDirection(), transform.position);
+            RestoreHeldObjectRendering();
+
+            heldPlayerController?.ResetMotion();
+            heldPlayerController?.SetControlsEnabled(heldPlayerPreviousControlsEnabled);
+            if (heldBody != null)
+            {
+                heldBody.bodyType = previousBodyType;
+                heldBody.gravityScale = previousGravityScale;
+                heldBody.freezeRotation = previousFreezeRotation;
+                heldBody.linearVelocity = releaseVelocity;
+            }
+
+            heldTransform = null;
+            heldObject = null;
+            heldPlayerController = null;
+            heldPlayerPreviousControlsEnabled = false;
+            heldBody = null;
+            heldOnlinePlayerId = null;
+            hasDisplayedThrowDirection = false;
+            heldColliders.Clear();
+            heldColliderEnabledStates.Clear();
+            heldColliderTriggerStates.Clear();
+            SetThrowPreviewVisible(false);
         }
 
         private bool IsHeldGameplayKey()
@@ -1786,6 +1853,8 @@ namespace DrawBody.Prototype
             SetThrowPreviewVisible(true);
 
             Vector2 direction = GetThrowDirection();
+            displayedThrowDirection = direction;
+            hasDisplayedThrowDirection = true;
             Vector3 start = anchor + Vector3.up * 0.1f;
             float previewScale = Mathf.Clamp(GetCurrentThrowSpeed() / Mathf.Max(throwSpeed, 0.1f), 1f, 1.5f);
             Vector3 end = start + (Vector3)(direction * throwPreviewLength * previewScale);
@@ -1932,6 +2001,15 @@ namespace DrawBody.Prototype
                 || (onlineManager.State != OnlineConnectionState.InLobby
                     && onlineManager.State != OnlineConnectionState.Matching
                     && onlineManager.State != OnlineConnectionState.Playing))
+            {
+                return false;
+            }
+
+            // The active player is always locally controlled. During lobby/body
+            // resynchronisation the id dictionaries can be rebuilt one frame
+            // before the EOS local id settles; never let that transient state make
+            // the participant's own Human controller ignore F.
+            if (stageManager.ActivePlayerTransform == transform)
             {
                 return false;
             }

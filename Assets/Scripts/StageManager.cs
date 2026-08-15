@@ -251,7 +251,11 @@ namespace DrawBody.Prototype
             bool localHost = IsLocalOnlineHost(lobby);
             if (state == OnlineConnectionState.Playing && !localHost)
             {
-                SelectStage(!string.IsNullOrEmpty(lobby.StageId) ? lobby.StageId : "1-1");
+                string desiredStage = !string.IsNullOrEmpty(lobby.StageId) ? lobby.StageId : "1-1";
+                if (!stageStarted || currentStageId != desiredStage || stageSelectRemoteWaiting)
+                {
+                    SelectStage(desiredStage);
+                }
                 return;
             }
 
@@ -266,11 +270,17 @@ namespace DrawBody.Prototype
 
             if (message == LocalizationManager.T("online_stage_select_opened"))
             {
-                OpenStageSelectWaitingForHost();
+                if (!stageSelectRemoteWaiting)
+                {
+                    OpenStageSelectWaitingForHost();
+                }
             }
             else if (message == LocalizationManager.T("online_stage_select_closed"))
             {
-                CloseStageSelectWaitingForHost();
+                if (stageSelectRemoteWaiting)
+                {
+                    CloseStageSelectWaitingForHost();
+                }
             }
         }
 
@@ -1673,6 +1683,10 @@ namespace DrawBody.Prototype
             for (int i = 0; i < removed.Count; i++)
             {
                 string id = removed[i];
+                if (onlineCarryHeld && onlineCarrierPlayerId == id)
+                {
+                    EndOnlineCarry(Vector2.zero);
+                }
                 PlayerController2D remote = onlineRemotePlayers[id];
                 onlineRemotePlayers.Remove(id);
                 if (remote != null)
@@ -1827,6 +1841,7 @@ namespace DrawBody.Prototype
             }
 
             bool carrierClaimsLocal = carriedPlayerId == localPlayerId;
+            bool attachedCarry = carryAction == "cat_grab" || carryAction == "friend_grab";
             if (carrierClaimsLocal
                 && RejectOrResolveMutualOnlineCarry(carrierPlayerId, localPlayerId))
             {
@@ -1836,6 +1851,16 @@ namespace DrawBody.Prototype
             {
                 if (carrierClaimsLocal)
                 {
+                    if (onlineCarryIsCatGrab != attachedCarry)
+                    {
+                        // A release followed immediately by another grab from the
+                        // same peer can arrive as one continuous state transition.
+                        // Rebuild it so a previous Human pickup cannot leave the
+                        // participant's controls (and F throw) disabled forever.
+                        EndOnlineCarry(Vector2.zero);
+                        BeginOnlineCarry(carrierPlayerId, attachedCarry, carryOffset);
+                        return;
+                    }
                     onlineCarryLastConfirmedAt = Time.unscaledTime;
                 }
                 else if (Time.unscaledTime - onlineCarryBeganAt >= 0.3f
@@ -1853,7 +1878,6 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bool attachedCarry = carryAction == "cat_grab" || carryAction == "friend_grab";
             BeginOnlineCarry(carrierPlayerId, attachedCarry, carryOffset);
         }
 
@@ -1904,9 +1928,28 @@ namespace DrawBody.Prototype
         private void BeginOnlineCarry(string carrierPlayerId, bool catGrab, Vector2 localOffset)
         {
             PlayerController2D carrier = EnsureOnlineRemotePlayer(carrierPlayerId);
-            if (player == null || carrier == null || onlineCarryHeld)
+            if (player == null || carrier == null)
             {
                 return;
+            }
+
+            if (onlineCarryHeld)
+            {
+                if (onlineCarrierPlayerId == carrierPlayerId)
+                {
+                    if (onlineCarryIsCatGrab != catGrab)
+                    {
+                        EndOnlineCarry(Vector2.zero);
+                        BeginOnlineCarry(carrierPlayerId, catGrab, localOffset);
+                        return;
+                    }
+                    onlineCarryLastConfirmedAt = Time.unscaledTime;
+                    return;
+                }
+
+                // A missed release must not let an old carrier permanently lock
+                // the participant out of movement and Human F input.
+                EndOnlineCarry(Vector2.zero);
             }
 
             onlineCarryHeld = true;

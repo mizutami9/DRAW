@@ -21,6 +21,7 @@ namespace DrawBody.Prototype
         private const string MessageBodyChunk = "body_chunk";
         private const string MessageCarry = "carry";
         private const string MessageStageSelect = "stage_select";
+        private const string MessageSessionSync = "session_sync";
         private const string MessageGimmick = "gimmick";
         private const string RoomCodeAttributeKey = "roomCode";
         private const string RoomCodeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -28,10 +29,16 @@ namespace DrawBody.Prototype
         private const int BodyChunkRawBytes = 700;
         private const byte ReliableChannel = 0;
         private const byte RealtimeStateChannel = 1;
+        private const float LobbyRefreshInterval = 1.5f;
+        private const float SessionSyncInterval = 0.75f;
+        private const int SessionModeLobby = 0;
+        private const int SessionModeStageSelect = 1;
+        private const int SessionModePlaying = 2;
 
         private readonly List<ProductUserId> peers = new List<ProductUserId>();
         private readonly Queue<Action> mainThreadActions = new Queue<Action>();
         private readonly Dictionary<string, bool> readyByPlayerId = new Dictionary<string, bool>();
+        private readonly Dictionary<string, float> lastPeerPacketAt = new Dictionary<string, float>();
         private readonly Dictionary<string, BodyChunkAssembly> bodyChunkAssemblies = new Dictionary<string, BodyChunkAssembly>();
         private int nextBodyTransferId;
 
@@ -39,6 +46,15 @@ namespace DrawBody.Prototype
         {
             public byte[][] Chunks;
             public int Received;
+        }
+
+        [Serializable]
+        private sealed class SessionSyncPayload
+        {
+            public int Mode;
+            public string StageId;
+            public int StageRevision;
+            public int RetryRevision;
         }
         private LobbyInterface lobbyInterface;
         private P2PInterface p2pInterface;
@@ -50,8 +66,17 @@ namespace DrawBody.Prototype
         private bool triedCreateDeviceId;
         private bool shuttingDown;
         private ulong lobbyMemberStatusNotificationId;
+        private ulong lobbyUpdateNotificationId;
         private ulong p2pConnectionRequestNotificationId;
         private SocketId socketId;
+        private float nextLobbyRefreshAt;
+        private float nextSessionSyncAt;
+        private int sessionMode;
+        private int stageRevision;
+        private int retryRevision;
+        private int lastAppliedSessionMode = -1;
+        private int lastAppliedStageRevision = -1;
+        private int lastAppliedRetryRevision = -1;
 
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         public event Action<OnlinePlayerState> PlayerStateReceived;
@@ -114,6 +139,7 @@ namespace DrawBody.Prototype
             }
 
             PumpP2P();
+            TickSessionRecovery();
         }
 
         public void Shutdown()
@@ -142,6 +168,7 @@ namespace DrawBody.Prototype
 
             peers.Clear();
             readyByPlayerId.Clear();
+            lastPeerPacketAt.Clear();
             bodyChunkAssemblies.Clear();
             lobbyId = null;
             CurrentLobby = null;
@@ -151,6 +178,7 @@ namespace DrawBody.Prototype
             p2pInterface = null;
             connectInterface = null;
             isHost = false;
+            ResetSessionTracking();
             triedCreateDeviceId = false;
             State = OnlineConnectionState.Offline;
         }
@@ -171,6 +199,8 @@ namespace DrawBody.Prototype
             hostPeer = null;
             peers.Clear();
             readyByPlayerId.Clear();
+            lastPeerPacketAt.Clear();
+            ResetSessionTracking();
             TryCreateRoomWithUniqueCode(roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts);
         }
 
@@ -261,6 +291,8 @@ namespace DrawBody.Prototype
             hostPeer = null;
             peers.Clear();
             readyByPlayerId.Clear();
+            lastPeerPacketAt.Clear();
+            ResetSessionTracking();
             JoinLobbyByIdOptions options = new JoinLobbyByIdOptions
             {
                 LobbyId = id,
@@ -298,10 +330,12 @@ namespace DrawBody.Prototype
 
             peers.Clear();
             readyByPlayerId.Clear();
+            lastPeerPacketAt.Clear();
             bodyChunkAssemblies.Clear();
             lobbyId = null;
             hostPeer = null;
             CurrentLobby = null;
+            ResetSessionTracking();
             SetState(OnlineConnectionState.Online, null, LocalizationManager.T("online_eos_left_lobby"));
         }
 
@@ -338,7 +372,9 @@ namespace DrawBody.Prototype
             }
 
             CurrentLobby.StageId = string.IsNullOrEmpty(stageId) ? "1-1" : stageId;
-            Broadcast(MessageStart, CurrentLobby.StageId);
+            sessionMode = SessionModePlaying;
+            stageRevision++;
+            BroadcastSessionSync();
             SetState(OnlineConnectionState.Playing, CurrentLobby, LocalizationManager.Format("online_starting_stage", CurrentLobby.StageId));
         }
 
@@ -349,7 +385,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            Broadcast(MessageStageSelect, "open");
+            sessionMode = SessionModeStageSelect;
+            BroadcastSessionSync();
             SetState(State, CurrentLobby, LocalizationManager.T("online_stage_select_opened"));
         }
 
@@ -360,8 +397,9 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            Broadcast(MessageStageSelect, "close");
-            SetState(State, CurrentLobby, LocalizationManager.T("online_stage_select_closed"));
+            sessionMode = SessionModeLobby;
+            BroadcastSessionSync();
+            SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_stage_select_closed"));
         }
 
         public void SendBodyData(OnlineBodyData bodyData)
@@ -433,6 +471,13 @@ namespace DrawBody.Prototype
             }
 
             gimmickData.PlayerId = LocalPlayerId;
+            if (isHost && gimmickData.Kind == "stage_retry")
+            {
+                retryRevision++;
+                sessionMode = SessionModePlaying;
+                BroadcastSessionSync();
+                return;
+            }
             string payload = JsonUtility.ToJson(gimmickData);
             if (isHost)
             {
@@ -670,6 +715,12 @@ namespace DrawBody.Prototype
                 {
                     Enqueue(() => RefreshLobbyMembers(LocalizationManager.T("online_lobby_members_updated")));
                 });
+
+                AddNotifyLobbyUpdateReceivedOptions updateOptions = new AddNotifyLobbyUpdateReceivedOptions();
+                lobbyUpdateNotificationId = lobbyInterface.AddNotifyLobbyUpdateReceived(ref updateOptions, null, (ref LobbyUpdateReceivedCallbackInfo data) =>
+                {
+                    Enqueue(() => RefreshLobbyMembers(LocalizationManager.T("online_lobby_members_updated")));
+                });
             }
 
             if (p2pInterface != null)
@@ -710,6 +761,20 @@ namespace DrawBody.Prototype
                 }
 
                 lobbyMemberStatusNotificationId = 0;
+            }
+
+            if (lobbyInterface != null && lobbyUpdateNotificationId != 0)
+            {
+                try
+                {
+                    lobbyInterface.RemoveNotifyLobbyUpdateReceived(lobbyUpdateNotificationId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning("EOS lobby update notification cleanup failed: " + ex.Message);
+                }
+
+                lobbyUpdateNotificationId = 0;
             }
 
             if (p2pInterface != null && p2pConnectionRequestNotificationId != 0)
@@ -775,6 +840,7 @@ namespace DrawBody.Prototype
             ProductUserId owner = details.GetLobbyOwner(ref ownerOptions);
             string ownerId = owner != null ? owner.ToString() : string.Empty;
             List<OnlinePlayerInfo> players = new List<OnlinePlayerInfo>();
+            List<ProductUserId> previousPeers = new List<ProductUserId>(peers);
             peers.Clear();
             hostPeer = null;
 
@@ -805,13 +871,58 @@ namespace DrawBody.Prototype
                 players.Add(CreatePlayer(memberId, local ? LocalizationManager.T("online_player_you") : LocalizationManager.Format("online_player_number", i + 1), host, ready));
             }
 
+            if (isHost && CurrentLobby?.Players != null)
+            {
+                for (int i = 0; i < previousPeers.Count; i++)
+                {
+                    ProductUserId previousPeer = previousPeers[i];
+                    string previousId = previousPeer != null ? previousPeer.ToString() : string.Empty;
+                    if (string.IsNullOrEmpty(previousId)
+                        || !lastPeerPacketAt.TryGetValue(previousId, out float heardAt)
+                        || Time.unscaledTime - heardAt > 4f)
+                    {
+                        continue;
+                    }
+
+                    bool alreadyListed = false;
+                    for (int p = 0; p < players.Count; p++)
+                    {
+                        if (players[p] != null && players[p].PlayerId == previousId)
+                        {
+                            alreadyListed = true;
+                            break;
+                        }
+                    }
+                    if (alreadyListed)
+                    {
+                        continue;
+                    }
+
+                    peers.Add(previousPeer);
+                    for (int p = 0; p < CurrentLobby.Players.Length; p++)
+                    {
+                        OnlinePlayerInfo previousPlayer = CurrentLobby.Players[p];
+                        if (previousPlayer != null && previousPlayer.PlayerId == previousId)
+                        {
+                            players.Add(previousPlayer);
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (CurrentLobby == null)
             {
                 CurrentLobby = CreateLobbyInfo(lobbyId, isHost ? LocalizationManager.T("multi_default_room_name") : LocalizationManager.T("multi_friend_room_name"), 4);
             }
 
             CurrentLobby.Players = players.ToArray();
-            SetState(OnlineConnectionState.InLobby, CurrentLobby, message);
+            OnlineConnectionState refreshedState = sessionMode == SessionModePlaying
+                ? OnlineConnectionState.Playing
+                : State == OnlineConnectionState.Matching
+                    ? OnlineConnectionState.Matching
+                    : OnlineConnectionState.InLobby;
+            SetState(refreshedState, CurrentLobby, message);
             if (isHost)
             {
                 for (int i = 0; i < CurrentLobby.Players.Length; i++)
@@ -819,8 +930,147 @@ namespace DrawBody.Prototype
                     OnlinePlayerInfo player = CurrentLobby.Players[i];
                     Broadcast(MessageReady, player.PlayerId + "|" + (player.IsReady ? "1" : "0"));
                 }
+                BroadcastSessionSync();
+            }
+            else if (hostPeer != null)
+            {
+                SendToHost(MessageReady, LocalPlayerId + "|" + (IsLocalReady() ? "1" : "0"));
             }
             details.Release();
+        }
+
+        private void TickSessionRecovery()
+        {
+            if (string.IsNullOrEmpty(lobbyId) || CurrentLobby == null)
+            {
+                return;
+            }
+
+            float now = Time.unscaledTime;
+            if (now >= nextLobbyRefreshAt)
+            {
+                nextLobbyRefreshAt = now + LobbyRefreshInterval;
+                RefreshLobbyMembers(LocalizationManager.T("online_lobby_members_updated"));
+            }
+
+            if (now < nextSessionSyncAt)
+            {
+                return;
+            }
+
+            nextSessionSyncAt = now + SessionSyncInterval;
+            if (isHost)
+            {
+                BroadcastSessionSync();
+                if (CurrentLobby.Players != null)
+                {
+                    for (int i = 0; i < CurrentLobby.Players.Length; i++)
+                    {
+                        OnlinePlayerInfo player = CurrentLobby.Players[i];
+                        if (player != null)
+                        {
+                            Broadcast(MessageReady, player.PlayerId + "|" + (player.IsReady ? "1" : "0"));
+                        }
+                    }
+                }
+            }
+            else if (hostPeer != null)
+            {
+                SendToHost(MessageReady, LocalPlayerId + "|" + (IsLocalReady() ? "1" : "0"));
+            }
+        }
+
+        private void BroadcastSessionSync()
+        {
+            if (!isHost || CurrentLobby == null)
+            {
+                return;
+            }
+
+            SessionSyncPayload payload = new SessionSyncPayload
+            {
+                Mode = sessionMode,
+                StageId = string.IsNullOrEmpty(CurrentLobby.StageId) ? "1-1" : CurrentLobby.StageId,
+                StageRevision = stageRevision,
+                RetryRevision = retryRevision
+            };
+            Broadcast(MessageSessionSync, JsonUtility.ToJson(payload));
+        }
+
+        private void ApplySessionSync(ProductUserId peer, string json)
+        {
+            SessionSyncPayload payload = JsonUtility.FromJson<SessionSyncPayload>(json);
+            if (payload == null)
+            {
+                return;
+            }
+
+            if (CurrentLobby == null)
+            {
+                CurrentLobby = CreateLobbyInfo(lobbyId, LocalizationManager.T("multi_friend_room_name"), 4);
+            }
+            CurrentLobby.StageId = string.IsNullOrEmpty(payload.StageId) ? "1-1" : payload.StageId;
+
+            bool modeChanged = payload.Mode != lastAppliedSessionMode;
+            bool stageChanged = payload.StageRevision > lastAppliedStageRevision;
+            bool retryChanged = lastAppliedRetryRevision >= 0 && payload.RetryRevision > lastAppliedRetryRevision;
+            lastAppliedSessionMode = payload.Mode;
+            lastAppliedStageRevision = Mathf.Max(lastAppliedStageRevision, payload.StageRevision);
+            lastAppliedRetryRevision = Mathf.Max(lastAppliedRetryRevision, payload.RetryRevision);
+            sessionMode = payload.Mode;
+            stageRevision = Mathf.Max(stageRevision, payload.StageRevision);
+            retryRevision = Mathf.Max(retryRevision, payload.RetryRevision);
+
+            if (payload.Mode == SessionModePlaying && (modeChanged || stageChanged || State != OnlineConnectionState.Playing))
+            {
+                SetState(OnlineConnectionState.Playing, CurrentLobby, LocalizationManager.Format("online_starting_stage", CurrentLobby.StageId));
+            }
+            else if (payload.Mode == SessionModeStageSelect && modeChanged)
+            {
+                SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_stage_select_opened"));
+            }
+            else if (payload.Mode == SessionModeLobby && modeChanged)
+            {
+                SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_stage_select_closed"));
+            }
+
+            if (retryChanged)
+            {
+                GimmickDataReceived?.Invoke(new OnlineGimmickData
+                {
+                    PlayerId = peer != null ? peer.ToString() : GetHostPlayerId(),
+                    ObjectId = CurrentLobby.StageId,
+                    Kind = "stage_retry",
+                    Json = "{}"
+                });
+            }
+        }
+
+        private string GetHostPlayerId()
+        {
+            if (CurrentLobby?.Players != null)
+            {
+                for (int i = 0; i < CurrentLobby.Players.Length; i++)
+                {
+                    if (CurrentLobby.Players[i] != null && CurrentLobby.Players[i].IsHost)
+                    {
+                        return CurrentLobby.Players[i].PlayerId;
+                    }
+                }
+            }
+            return hostPeer != null ? hostPeer.ToString() : "eos-host";
+        }
+
+        private void ResetSessionTracking()
+        {
+            nextLobbyRefreshAt = 0f;
+            nextSessionSyncAt = 0f;
+            sessionMode = SessionModeLobby;
+            stageRevision = 0;
+            retryRevision = 0;
+            lastAppliedSessionMode = -1;
+            lastAppliedStageRevision = -1;
+            lastAppliedRetryRevision = -1;
         }
 
         private void PumpP2P()
@@ -863,6 +1113,10 @@ namespace DrawBody.Prototype
 
         private void HandleMessage(ProductUserId peer, string line)
         {
+            if (peer != null)
+            {
+                lastPeerPacketAt[peer.ToString()] = Time.unscaledTime;
+            }
             int split = line.IndexOf('\t');
             if (split <= 0)
             {
@@ -876,6 +1130,10 @@ namespace DrawBody.Prototype
                 string[] parts = payload.Split('|');
                 if (parts.Length == 2)
                 {
+                    if (isHost && peer != null)
+                    {
+                        EnsureSessionPeer(peer);
+                    }
                     string readyPlayerId = isHost && peer != null ? peer.ToString() : parts[0];
                     bool ready = parts[1] == "1";
                     SetPlayerReady(readyPlayerId, ready);
@@ -902,6 +1160,10 @@ namespace DrawBody.Prototype
                     ? LocalizationManager.T("online_stage_select_closed")
                     : LocalizationManager.T("online_stage_select_opened");
                 SetState(OnlineConnectionState.InLobby, CurrentLobby, message);
+            }
+            else if (type == MessageSessionSync)
+            {
+                ApplySessionSync(peer, payload);
             }
             else if (type == MessageState)
             {
@@ -951,6 +1213,58 @@ namespace DrawBody.Prototype
 
                 Send(peers[i], type, payload);
             }
+        }
+
+        private void EnsureSessionPeer(ProductUserId peer)
+        {
+            if (peer == null || peer.ToString() == LocalPlayerId)
+            {
+                return;
+            }
+
+            lastPeerPacketAt[peer.ToString()] = Time.unscaledTime;
+
+            bool listedPeer = false;
+            for (int i = 0; i < peers.Count; i++)
+            {
+                if (peers[i] != null && peers[i].ToString() == peer.ToString())
+                {
+                    listedPeer = true;
+                    break;
+                }
+            }
+            if (!listedPeer)
+            {
+                peers.Add(peer);
+                AcceptPeer(peer);
+            }
+
+            if (CurrentLobby == null)
+            {
+                return;
+            }
+
+            List<OnlinePlayerInfo> players = new List<OnlinePlayerInfo>(CurrentLobby.Players ?? Array.Empty<OnlinePlayerInfo>());
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i] != null && players[i].PlayerId == peer.ToString())
+                {
+                    return;
+                }
+            }
+
+            if (players.Count >= Mathf.Max(2, CurrentLobby.MaxPlayers))
+            {
+                return;
+            }
+
+            bool ready = readyByPlayerId.TryGetValue(peer.ToString(), out bool rememberedReady) && rememberedReady;
+            players.Add(CreatePlayer(
+                peer.ToString(),
+                LocalizationManager.Format("online_player_number", players.Count + 1),
+                false,
+                ready));
+            CurrentLobby.Players = players.ToArray();
         }
 
         private void BroadcastRealtimeState(string payload, ProductUserId except = null)
