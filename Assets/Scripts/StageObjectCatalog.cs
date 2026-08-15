@@ -15,7 +15,8 @@ namespace DrawBody.Prototype
         Action,
         Trap,
         Gimmick,
-        Decoration
+        Decoration,
+        Enemy
     }
 
     public enum StageObjectPlacement
@@ -153,6 +154,7 @@ namespace DrawBody.Prototype
             E(StageObjectType.Spike, StageObjectCategory.Trap, StageObjectPlacement.Rect, StageObjectKind.Hazard),
             E(StageObjectType.SpikeDropper, StageObjectCategory.Trap, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.BeamEmitter, StageObjectCategory.Trap, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.Dynamite, StageObjectCategory.Trap, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.Fire, StageObjectCategory.Trap, StageObjectPlacement.Rect, StageObjectKind.Hazard),
             E(StageObjectType.Water, StageObjectCategory.Trap, StageObjectPlacement.Rect, StageObjectKind.Trigger),
             E(StageObjectType.Poison, StageObjectCategory.Trap, StageObjectPlacement.Rect, StageObjectKind.Hazard),
@@ -162,6 +164,12 @@ namespace DrawBody.Prototype
             E(StageObjectType.Electricity, StageObjectCategory.Trap, StageObjectPlacement.Rect, StageObjectKind.Hazard),
             E(StageObjectType.Saw, StageObjectCategory.Trap, StageObjectPlacement.Point, StageObjectKind.Hazard),
             E(StageObjectType.BlackHole, StageObjectCategory.Trap, StageObjectPlacement.Point, StageObjectKind.Hazard),
+
+            E(StageObjectType.EnemyWalker, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.EnemyJumper, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.EnemyCharger, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.EnemyFlyer, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.EnemyShooter, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
 
             E(StageObjectType.Gear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),
             E(StageObjectType.BigGear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),
@@ -300,6 +308,7 @@ namespace DrawBody.Prototype
             StageObjectCategory.Action,
             StageObjectCategory.Trap,
             StageObjectCategory.Gimmick,
+            StageObjectCategory.Enemy,
             StageObjectCategory.Decoration
         };
 

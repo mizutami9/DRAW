@@ -1,0 +1,30 @@
+{
+    "id": "11-3",
+    "displayName": "Stage 11-3 Block Breaker",
+    "backgroundColorHex": "#F7F2DEFF",
+    "ruleMode": 3,
+    "timeLimitSeconds": 75.0,
+    "collectionTarget": 163,
+    "requiredCollectionCount": 1,
+    "objects": [
+        {
+            "objectId": "block_breaker_spawn",
+            "type": 2,
+            "position": { "x": 0.0, "y": -4.75 },
+            "size": { "x": 0.7, "y": 0.7 },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        }
+    ]
+}

@@ -58,7 +58,9 @@ namespace DrawBody.Prototype
         private readonly Dictionary<Transform, Bubble> bubbles = new Dictionary<Transform, Bubble>();
         private StageManager stageManager;
         private OnlineManager onlineManager;
+        private UIManager uiManager;
         private Canvas paletteCanvas;
+        private GraphicRaycaster paletteRaycaster;
         private Font handwrittenFont;
         private static Sprite[] emoteIcons;
 
@@ -67,6 +69,7 @@ namespace DrawBody.Prototype
             stageManager = GetComponent<StageManager>();
             if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
             onlineManager = FindFirstObjectByType<OnlineManager>();
+            uiManager = FindFirstObjectByType<UIManager>();
             handwrittenFont = StageSurvivalController.FindHandwrittenFont();
             BuildPalette();
         }
@@ -85,8 +88,18 @@ namespace DrawBody.Prototype
         private void Update()
         {
             bool gameplayVisible = stageManager != null && stageManager.IsGameplayActive;
-            if (paletteCanvas != null) paletteCanvas.enabled = gameplayVisible;
-            if (gameplayVisible && !IsTypingInInputField())
+            bool overlayShowing = uiManager != null && uiManager.IsGameplayOverlayShowing;
+            bool paletteVisible = gameplayVisible || stageManager != null && stageManager.IsDrawingMode;
+            if (paletteCanvas != null)
+            {
+                paletteCanvas.enabled = paletteVisible;
+                paletteCanvas.sortingOrder = overlayShowing ? -100 : 260;
+            }
+            if (paletteRaycaster != null)
+            {
+                paletteRaycaster.enabled = paletteVisible && !overlayShowing;
+            }
+            if (gameplayVisible && !overlayShowing && !IsTypingInInputField())
             {
                 for (int i = 0; i < NumberKeys.Length; i++)
                 {
@@ -110,6 +123,7 @@ namespace DrawBody.Prototype
 
             Transform localPlayer = stageManager.ActivePlayerTransform;
             if (localPlayer != null) ShowBubble(localPlayer, id);
+            GameSfx.Play(SfxId.EmotePop);
 
             ResolveOnlineManager();
             if (onlineManager != null && onlineManager.State == OnlineConnectionState.Playing)
@@ -246,6 +260,7 @@ namespace DrawBody.Prototype
             GameObject canvasObject = new GameObject("Emote Palette Canvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvasObject.transform.SetParent(transform, false);
             paletteCanvas = canvasObject.GetComponent<Canvas>();
+            paletteRaycaster = canvasObject.GetComponent<GraphicRaycaster>();
             paletteCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
             paletteCanvas.sortingOrder = 260;
             CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();

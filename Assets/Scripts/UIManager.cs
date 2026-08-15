@@ -544,6 +544,10 @@ namespace DrawBody.Prototype
                     polisher.Polish();
                     ApplyModernTheme();
                     ApplyStageSelectLockedState();
+                    // ApplyModernTheme also touches panel Images. Restore the
+                    // per-world paper colors after it, including the first frame
+                    // entered from the title screen.
+                    polisher.RefreshWorldCardColors();
                 }
             }
 
@@ -710,6 +714,9 @@ namespace DrawBody.Prototype
         }
 
         public bool IsTitleSubmenuShowing => multiShowing || optionShowing;
+        public bool IsGameplayOverlayShowing => drawing
+            || optionShowing
+            || menuPanel != null && menuPanel.activeInHierarchy;
 
         public void SetStageEditor(bool editing)
         {

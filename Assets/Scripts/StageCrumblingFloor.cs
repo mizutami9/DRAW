@@ -73,6 +73,7 @@ namespace DrawBody.Prototype
             if (!broken && elapsed >= crackDuration)
             {
                 broken = true;
+                GameSfx.PlayAt(SfxId.CrumblingFloorCollapse, transform.position);
                 SetCollidersEnabled(false);
                 syncManager?.NotifyCrumblingFloorChanged(this);
             }
@@ -127,6 +128,7 @@ namespace DrawBody.Prototype
             triggered = true;
             requestSent = true;
             elapsed = 0f;
+            GameSfx.PlayAt(SfxId.CrumblingFloorWarning, transform.position);
             ApplyProgress();
         }
 

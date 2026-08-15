@@ -29,6 +29,18 @@ namespace DrawBody.Prototype
         public int CurrentHits => currentHits;
         public int RequiredHits => requiredHits;
 
+        public void SetRequirementBadgeVisible(bool visible)
+        {
+            if (remainingBombText == null)
+            {
+                CreateBombRequirementBadge();
+            }
+            if (remainingBombText != null && remainingBombText.transform.parent != null)
+            {
+                remainingBombText.transform.parent.gameObject.SetActive(visible);
+            }
+        }
+
         public void Configure(int explosionsRequired, Vector2 size)
         {
             requiredHits = Mathf.Clamp(explosionsRequired, 1, 5);

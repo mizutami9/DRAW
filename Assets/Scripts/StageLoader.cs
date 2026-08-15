@@ -257,12 +257,23 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingSurvival);
             }
 
+            StageBlockBreakerController existingBlockBreaker = stageRoot.GetComponent<StageBlockBreakerController>();
+            if (existingBlockBreaker != null)
+            {
+                DestroyComponentNow(existingBlockBreaker);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
                 StageSurvivalController survival = stageRoot.gameObject.AddComponent<StageSurvivalController>();
                 survival.Configure(data.timeLimitSeconds);
+            }
+            else if (data != null && data.ruleMode == StageRuleMode.BlockBreaker)
+            {
+                StageBlockBreakerController blockBreaker = stageRoot.gameObject.AddComponent<StageBlockBreakerController>();
+                blockBreaker.Configure(data.timeLimitSeconds);
             }
         }
 

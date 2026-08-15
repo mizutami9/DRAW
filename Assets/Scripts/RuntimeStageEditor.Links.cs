@@ -164,6 +164,11 @@ namespace DrawBody.Prototype
 
         private static string GetDefaultLinkAction(StageObjectType targetType)
         {
+            if (targetType == StageObjectType.Dynamite)
+            {
+                return "Activate";
+            }
+
             if (targetType == StageObjectType.MovingPlatform)
             {
                 return "MoveRight";

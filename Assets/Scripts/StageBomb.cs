@@ -166,6 +166,7 @@ namespace DrawBody.Prototype
             armed = false;
             ReleaseFromCarriers();
             BreakBombWalls(position, radius);
+            DefeatBlockBreakerEnemies(position, radius, applyGameplay);
             TriggerNearbyBombs(position, radius, applyGameplay);
             if (applyGameplay)
             {
@@ -220,6 +221,39 @@ namespace DrawBody.Prototype
                 {
                     bomb.TriggerFromExplosion();
                 }
+            }
+        }
+
+        private void DefeatBlockBreakerEnemies(Vector2 position, float radius, bool applyGameplay)
+        {
+            if (!applyGameplay || syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost)
+            {
+                return;
+            }
+            StageBlockBreakerEnemy[] enemies = Object.FindObjectsByType<StageBlockBreakerEnemy>(FindObjectsSortMode.None);
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                StageBlockBreakerEnemy enemy = enemies[i];
+                if (enemy == null)
+                {
+                    continue;
+                }
+                Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+                Vector2 closest = enemyCollider != null ? enemyCollider.ClosestPoint(position) : (Vector2)enemy.transform.position;
+                if ((closest - position).sqrMagnitude <= radius * radius)
+                {
+                    enemy.HitByBomb();
+                }
+            }
+
+            StageEnemyCharacter[] placedEnemies = Object.FindObjectsByType<StageEnemyCharacter>(FindObjectsSortMode.None);
+            for (int i = 0; i < placedEnemies.Length; i++)
+            {
+                StageEnemyCharacter enemy = placedEnemies[i];
+                if (enemy == null || enemy.IsDefeated) continue;
+                Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+                Vector2 closest = enemyCollider != null ? enemyCollider.ClosestPoint(position) : (Vector2)enemy.transform.position;
+                if ((closest - position).sqrMagnitude <= radius * radius) enemy.HitByBomb();
             }
         }
 

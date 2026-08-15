@@ -9,12 +9,12 @@ namespace DrawBody.Prototype
         public void CycleStageRuleMode()
         {
             PushUndo();
-            if (stageId == "11-2")
+            if (stageId == "11-2" || stageId == "11-3")
             {
                 stageRuleMode = stageRuleMode == StageRuleMode.Normal
                     ? StageRuleMode.TimedCollection
                     : stageRuleMode == StageRuleMode.TimedCollection
-                        ? StageRuleMode.Survival
+                        ? stageId == "11-3" ? StageRuleMode.BlockBreaker : StageRuleMode.Survival
                         : StageRuleMode.Normal;
             }
             else

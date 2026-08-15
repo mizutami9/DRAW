@@ -1625,6 +1625,54 @@
                         "value":  "ログイン中..."
                     },
                     {
+                        "key":  "block_breaker_title",
+                        "value":  "11-3  ブロッククラッシュ"
+                    },
+                    {
+                        "key":  "stage_object_dynamite",
+                        "value":  "ダイナマイト"
+                    },
+                    {
+                        "key":  "stage_category_enemy",
+                        "value":  "敵キャラ"
+                    },
+                    {
+                        "key":  "stage_object_enemy_walker",
+                        "value":  "歩く敵"
+                    },
+                    {
+                        "key":  "stage_object_enemy_jumper",
+                        "value":  "ジャンプする敵"
+                    },
+                    {
+                        "key":  "stage_object_enemy_charger",
+                        "value":  "突進する敵"
+                    },
+                    {
+                        "key":  "stage_object_enemy_flyer",
+                        "value":  "空を飛ぶ敵"
+                    },
+                    {
+                        "key":  "stage_object_enemy_shooter",
+                        "value":  "弾を撃つ敵"
+                    },
+                    {
+                        "key":  "stage_rule_block_breaker",
+                        "value":  "ブロック破壊"
+                    },
+                    {
+                        "key":  "block_breaker_goal",
+                        "value":  "爆弾を投げて NICO DRAW を全部壊せ！"
+                    },
+                    {
+                        "key":  "block_breaker_blocks",
+                        "value":  "残り {0} ブロック"
+                    },
+                    {
+                        "key":  "block_breaker_retry",
+                        "value":  "失敗… {0}秒後に再開"
+                    },
+                    {
                         "key":  "online_fake_initialized",
                         "value":  "疑似オンラインを初期化しました。"
                     }

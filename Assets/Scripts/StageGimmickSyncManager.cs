@@ -20,6 +20,8 @@ namespace DrawBody.Prototype
         private const string KindBombWallDamage = "bomb_wall_damage";
         private const string KindBombArmRequest = "bomb_arm_request";
         private const string KindBombArmState = "bomb_arm_state";
+        private const string KindPlacedEnemyDefeatRequest = "placed_enemy_defeat_request";
+        private const string KindPlacedEnemyDefeatState = "placed_enemy_defeat_state";
 
         [SerializeField] private OnlineManager onlineManager;
         [SerializeField] private float transformSendRate = 20f;
@@ -39,6 +41,7 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, BombWallDamageState> bombWallDamageStates =
             new Dictionary<string, BombWallDamageState>();
         private readonly HashSet<string> armedPickupBombs = new HashSet<string>();
+        private readonly HashSet<string> defeatedPlacedEnemies = new HashSet<string>();
         private StageGimmickLinkController linkController;
         private StageObjectFactory objectFactory;
         private float nextTransformSendTime;
@@ -148,6 +151,7 @@ namespace DrawBody.Prototype
                 BroadcastCrumblingFloorStates();
                 BroadcastDropperBoxSnapshot();
                 BroadcastBombSnapshot();
+                BroadcastPlacedEnemySnapshot();
             }
         }
 
@@ -231,6 +235,23 @@ namespace DrawBody.Prototype
             {
                 ObjectId = objectId,
                 Kind = KindBombArmRequest,
+                Json = "{}"
+            });
+        }
+
+        public void RequestPlacedEnemyDefeat(string objectId)
+        {
+            if (string.IsNullOrEmpty(objectId)) return;
+            if (!IsOnlineActive || IsHost)
+            {
+                ApplyPlacedEnemyDefeat(objectId);
+                if (IsOnlineActive) SendPlacedEnemyDefeatState(objectId);
+                return;
+            }
+            Send(new OnlineGimmickData
+            {
+                ObjectId = objectId,
+                Kind = KindPlacedEnemyDefeatRequest,
                 Json = "{}"
             });
         }
@@ -590,6 +611,22 @@ namespace DrawBody.Prototype
                     return;
                 }
                 ApplyBombArm(data.ObjectId);
+                return;
+            }
+
+            if (data.Kind == KindPlacedEnemyDefeatRequest)
+            {
+                if (IsHost)
+                {
+                    ApplyPlacedEnemyDefeat(data.ObjectId);
+                    SendPlacedEnemyDefeatState(data.ObjectId);
+                }
+                return;
+            }
+
+            if (data.Kind == KindPlacedEnemyDefeatState)
+            {
+                if (!IsHost && IsLobbyHost(data.PlayerId)) ApplyPlacedEnemyDefeat(data.ObjectId);
                 return;
             }
 
@@ -1209,9 +1246,49 @@ namespace DrawBody.Prototype
 
                 string id = stageObject.objectId + "/" + GetRelativePath(stageObject.transform, body.transform);
                 bool hostDrivenPlatform = stageObject.type == StageObjectType.MovingPlatform
-                    || stageObject.type == StageObjectType.Elevator;
+                    || stageObject.type == StageObjectType.Elevator
+                    || IsPlacedEnemyType(stageObject.type);
                 transformEntries[id] = new SyncTransformEntry(body.transform, body, hostDrivenPlatform);
             }
+        }
+
+        private static bool IsPlacedEnemyType(StageObjectType type)
+        {
+            return type == StageObjectType.EnemyWalker
+                || type == StageObjectType.EnemyJumper
+                || type == StageObjectType.EnemyCharger
+                || type == StageObjectType.EnemyFlyer
+                || type == StageObjectType.EnemyShooter;
+        }
+
+        private void ApplyPlacedEnemyDefeat(string objectId)
+        {
+            if (string.IsNullOrEmpty(objectId)) return;
+            defeatedPlacedEnemies.Add(objectId);
+            StageEnemyCharacter[] enemies = Object.FindObjectsByType<StageEnemyCharacter>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                if (enemies[i] != null && enemies[i].ObjectId == objectId)
+                {
+                    enemies[i].ApplyDefeated();
+                    return;
+                }
+            }
+        }
+
+        private void SendPlacedEnemyDefeatState(string objectId)
+        {
+            Send(new OnlineGimmickData
+            {
+                ObjectId = objectId,
+                Kind = KindPlacedEnemyDefeatState,
+                Json = "{}"
+            });
+        }
+
+        private void BroadcastPlacedEnemySnapshot()
+        {
+            foreach (string objectId in defeatedPlacedEnemies) SendPlacedEnemyDefeatState(objectId);
         }
 
         private static string GetRelativePath(Transform root, Transform target)

@@ -29,7 +29,9 @@ namespace DrawBody.Prototype
 
         private void OnEnable()
         {
-            ShowPage(0);
+            // The panel is disabled while playing/editing, but the selected page
+            // belongs to the user's stage-select context and must survive that trip.
+            ShowPage(currentPage);
         }
 
         public void Previous()

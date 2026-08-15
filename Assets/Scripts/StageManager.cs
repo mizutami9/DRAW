@@ -88,12 +88,14 @@ namespace DrawBody.Prototype
         private float challengeTimeUpReturnRemaining;
         private bool challengeStartPositionsCaptured;
         private StageSurvivalController survivalController;
+        private StageBlockBreakerController blockBreakerController;
         private TrailerCoopDemoController trailerDemo;
         private SteamHeaderCaptureController steamHeaderCapture;
         private Vector3 primaryChallengeStartPosition;
         private Vector3 secondaryChallengeStartPosition;
         public bool IsTimedCollectionChallenge => stageRuleMode == StageRuleMode.TimedCollection;
         public bool IsSurvivalChallenge => stageRuleMode == StageRuleMode.Survival;
+        public bool IsBlockBreakerChallenge => stageRuleMode == StageRuleMode.BlockBreaker;
         public bool IsDrawingMode => drawing;
         public bool IsGameplayActive => stageStarted && !titleMode && !stageEditing && !drawing && !cleared;
         public float ChallengeRemainingSeconds => challengeRemaining;
@@ -1207,6 +1209,9 @@ namespace DrawBody.Prototype
             survivalController = IsSurvivalChallenge
                 ? Object.FindFirstObjectByType<StageSurvivalController>()
                 : null;
+            blockBreakerController = IsBlockBreakerChallenge
+                ? Object.FindFirstObjectByType<StageBlockBreakerController>()
+                : null;
 
             stageStarted = true;
             drawing = false;
@@ -1294,6 +1299,9 @@ namespace DrawBody.Prototype
             ConfigureStageRule(stageLoader != null ? stageLoader.CurrentStageData : null);
             survivalController = IsSurvivalChallenge
                 ? Object.FindFirstObjectByType<StageSurvivalController>()
+                : null;
+            blockBreakerController = IsBlockBreakerChallenge
+                ? Object.FindFirstObjectByType<StageBlockBreakerController>()
                 : null;
             stageEditing = false;
             stageStarted = true;
@@ -2304,7 +2312,11 @@ namespace DrawBody.Prototype
                 TeleportPlayerWithoutPhysics(redrawPlayer, returnPosition);
                 redrawPlayer.ResetMotion();
                 SetPlayerRedrawingState(redrawPlayer, false);
+                // Species changes replace all generated colliders. Register the
+                // new human geometry before resolving its contact with the floor.
+                Physics2D.SyncTransforms();
                 LiftPlayerOutOfGround(redrawPlayer);
+                Physics2D.SyncTransforms();
                 redrawPlayer.SetControlsEnabled(
                     stageStarted && !drawing && !cleared && !stageEditing);
             }
@@ -2380,6 +2392,7 @@ namespace DrawBody.Prototype
                 }
 
                 targetPlayer.transform.position += Vector3.up * verticalMove;
+                Physics2D.SyncTransforms();
             }
         }
 
@@ -2410,6 +2423,11 @@ namespace DrawBody.Prototype
             if (IsSurvivalChallenge && survivalController != null)
             {
                 survivalController.RequestElimination(targetPlayer);
+                return;
+            }
+            if (IsBlockBreakerChallenge && blockBreakerController != null)
+            {
+                blockBreakerController.RequestElimination(targetPlayer);
                 return;
             }
 
@@ -2453,6 +2471,11 @@ namespace DrawBody.Prototype
             if (IsSurvivalChallenge && survivalController != null)
             {
                 survivalController.RequestElimination(targetPlayer);
+                return;
+            }
+            if (IsBlockBreakerChallenge && blockBreakerController != null)
+            {
+                blockBreakerController.RequestElimination(targetPlayer);
                 return;
             }
 

@@ -72,6 +72,7 @@ namespace DrawBody.Prototype
         private bool scriptedSlimeAttachment;
         private bool scriptedSlimeAttachmentHeld;
         private bool scriptedActionEnabled;
+        private bool catScratchConsumesHold;
 
         public bool IsHolding => heldTransform != null;
         public string CurrentOnlineCarriedPlayerId => !string.IsNullOrEmpty(heldOnlinePlayerId)
@@ -288,6 +289,24 @@ namespace DrawBody.Prototype
             if (CanAttachToFriend())
             {
                 DropHeld(Vector2.zero);
+                if (IsCat())
+                {
+                    if (Input.GetKeyDown(KeyCode.F))
+                    {
+                        PlayCatScratchEffect();
+                        if (TryScratchEnemy())
+                        {
+                            catScratchConsumesHold = true;
+                            DetachSlimeFromFriend(false);
+                            DetachCatFromObject(false);
+                        }
+                    }
+                    if (catScratchConsumesHold)
+                    {
+                        if (!Input.GetKey(KeyCode.F)) catScratchConsumesHold = false;
+                        return;
+                    }
+                }
                 bool attachHeld = scriptedSlimeAttachment
                     ? scriptedSlimeAttachmentHeld
                     : Input.GetKey(KeyCode.F);
@@ -1462,6 +1481,123 @@ namespace DrawBody.Prototype
                 claw.SetPosition(1, knuckle);
                 claw.SetPosition(2, tip);
                 claw.SetPosition(3, hook);
+            }
+        }
+
+        private bool TryScratchEnemy()
+        {
+            StageBlockBreakerEnemy[] enemies = Object.FindObjectsByType<StageBlockBreakerEnemy>(FindObjectsSortMode.None);
+            StageEnemyCharacter[] placedEnemies = Object.FindObjectsByType<StageEnemyCharacter>(FindObjectsSortMode.None);
+            if (enemies.Length == 0 && placedEnemies.Length == 0) return false;
+
+            Bounds catBounds = new Bounds(transform.position, Vector3.one);
+            if (!TryGetSolidBounds(playerController, out catBounds))
+            {
+                catBounds = new Bounds(transform.position, Vector3.one);
+            }
+            Collider2D[] ownColliders = GetComponentsInChildren<Collider2D>(false);
+            float facing = GetFacingDirection();
+            StageBlockBreakerEnemy closestEnemy = null;
+            StageEnemyCharacter closestPlacedEnemy = null;
+            float closestDistance = float.PositiveInfinity;
+            float scratchReach = Mathf.Max(1.35f, catBounds.extents.x * 0.55f + 0.9f);
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                StageBlockBreakerEnemy enemy = enemies[i];
+                if (enemy == null || !enemy.gameObject.activeInHierarchy) continue;
+                Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+                if (enemyCollider == null) continue;
+                Vector2 towardEnemy = (Vector2)enemyCollider.bounds.center - (Vector2)catBounds.center;
+                if (towardEnemy.x * facing < -0.2f) continue;
+                float distance = GetClosestColliderDistance(ownColliders, enemyCollider);
+                if (distance <= scratchReach && distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = enemy;
+                    closestPlacedEnemy = null;
+                }
+            }
+            for (int i = 0; i < placedEnemies.Length; i++)
+            {
+                StageEnemyCharacter enemy = placedEnemies[i];
+                if (enemy == null || enemy.IsDefeated || !enemy.gameObject.activeInHierarchy) continue;
+                Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+                if (enemyCollider == null) continue;
+                Vector2 towardEnemy = (Vector2)enemyCollider.bounds.center - (Vector2)catBounds.center;
+                if (towardEnemy.x * facing < -0.2f) continue;
+                float distance = GetClosestColliderDistance(ownColliders, enemyCollider);
+                if (distance <= scratchReach && distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = null;
+                    closestPlacedEnemy = enemy;
+                }
+            }
+            if (closestEnemy == null && closestPlacedEnemy == null) return false;
+            if (closestEnemy != null) closestEnemy.HitByCatScratch();
+            else closestPlacedEnemy.HitByCatScratch();
+            return true;
+        }
+
+        private void PlayCatScratchEffect()
+        {
+            Bounds catBounds = new Bounds(transform.position, Vector3.one);
+            if (!TryGetSolidBounds(playerController, out catBounds))
+            {
+                catBounds = new Bounds(transform.position, Vector3.one);
+            }
+            float facing = GetFacingDirection();
+            Vector3 origin = catBounds.center + Vector3.right * facing * Mathf.Max(0.2f, catBounds.extents.x * 0.45f);
+            GameObject root = new GameObject("Cat Scratch Burst");
+            root.transform.SetParent(transform, true);
+            LineRenderer[] slashes = new LineRenderer[3];
+            Color scratchColor = new Color(1f, 0.42f, 0.08f, 1f);
+            for (int i = 0; i < slashes.Length; i++)
+            {
+                GameObject slashObject = new GameObject("Claw Slash " + (i + 1));
+                slashObject.transform.SetParent(root.transform, false);
+                LineRenderer slash = slashObject.AddComponent<LineRenderer>();
+                slash.useWorldSpace = true;
+                slash.positionCount = 4;
+                slash.numCapVertices = 6;
+                slash.numCornerVertices = 5;
+                slash.sortingOrder = 245 + i;
+                slash.sharedMaterial = GetPreviewMaterial();
+                slash.startWidth = 0.11f;
+                slash.endWidth = 0.035f;
+                slash.startColor = scratchColor;
+                slash.endColor = new Color(1f, 0.86f, 0.24f, 0.95f);
+                float lane = i - 1f;
+                Vector3 forward = Vector3.right * facing;
+                slash.SetPosition(0, origin + Vector3.up * (lane * 0.2f - 0.25f));
+                slash.SetPosition(1, origin + forward * 0.38f + Vector3.up * (lane * 0.16f + 0.22f));
+                slash.SetPosition(2, origin + forward * 0.82f + Vector3.up * (lane * 0.09f + 0.34f));
+                slash.SetPosition(3, origin + forward * 1.2f + Vector3.up * (lane * 0.03f + 0.12f));
+                slashes[i] = slash;
+            }
+            GameSfx.PlayAt(SfxId.CatClawAttach, origin, 1.28f);
+            Destroy(root, 0.32f);
+            StartCoroutine(FadeCatScratch(slashes, 0.28f));
+        }
+
+        private static IEnumerator FadeCatScratch(LineRenderer[] slashes, float duration)
+        {
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float alpha = 1f - Mathf.Clamp01(elapsed / duration);
+                for (int i = 0; i < slashes.Length; i++)
+                {
+                    if (slashes[i] == null) continue;
+                    Color start = slashes[i].startColor;
+                    Color end = slashes[i].endColor;
+                    start.a = alpha;
+                    end.a = alpha;
+                    slashes[i].startColor = start;
+                    slashes[i].endColor = end;
+                }
+                yield return null;
             }
         }
 

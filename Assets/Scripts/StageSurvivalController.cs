@@ -676,7 +676,7 @@ namespace DrawBody.Prototype
 
             lastReceivedCannonSequence = state.Sequence;
             SurvivalCannonball.Create(transform, state.Position, state.Direction, state.Speed);
-            GameSfx.PlayAt(SfxId.BombTick, state.Position, 0.72f);
+            GameSfx.PlayAt(SfxId.CannonFire, state.Position);
         }
 
         private void BroadcastStateIfDue(bool force = false)

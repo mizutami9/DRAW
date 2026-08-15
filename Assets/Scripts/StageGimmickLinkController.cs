@@ -425,6 +425,7 @@ namespace DrawBody.Prototype
             private readonly float movementSpeed;
             private readonly Rigidbody2D targetBody;
             private readonly DirectionalMovingPlatform directionalPlatform;
+            private readonly StageDynamite dynamite;
 
             private bool active;
             private bool pressed;
@@ -506,6 +507,7 @@ namespace DrawBody.Prototype
                     ? Mathf.Clamp(targetStageObject.movementSpeed, 0.5f, 10f)
                     : 3.2f;
                 targetBody = target != null ? target.GetComponent<Rigidbody2D>() : null;
+                dynamite = target != null ? target.GetComponent<StageDynamite>() : null;
                 if (IsDirectionalMoveAction() && target != null)
                 {
                     directionalPlatform = target.GetComponent<DirectionalMovingPlatform>();
@@ -521,6 +523,15 @@ namespace DrawBody.Prototype
             {
                 if (target == null)
                 {
+                    return;
+                }
+
+                if (dynamite != null)
+                {
+                    active = false;
+                    progress = 0f;
+                    target.gameObject.SetActive(true);
+                    if (targetCollider != null) targetCollider.enabled = true;
                     return;
                 }
 
@@ -584,6 +595,14 @@ namespace DrawBody.Prototype
                     return;
                 }
 
+                if (dynamite != null)
+                {
+                    target.gameObject.SetActive(true);
+                    active = true;
+                    dynamite.ActivateFromLink();
+                    return;
+                }
+
                 if (IsMoveAction())
                 {
                     target.gameObject.SetActive(true);
@@ -614,6 +633,13 @@ namespace DrawBody.Prototype
             {
                 if (target == null)
                 {
+                    return;
+                }
+
+                if (dynamite != null)
+                {
+                    // Once its fuse has started, releasing a hold button cannot
+                    // put the explosive back into an unlit state.
                     return;
                 }
 
@@ -706,6 +732,12 @@ namespace DrawBody.Prototype
                 pressed = state.Pressed;
                 active = state.Active;
                 progress = Mathf.Clamp01(state.Progress);
+                if (dynamite != null)
+                {
+                    target.gameObject.SetActive(true);
+                    if (active) dynamite.ActivateFromLink();
+                    return;
+                }
                 if (IsMoveAction())
                 {
                     target.gameObject.SetActive(true);

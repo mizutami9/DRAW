@@ -119,6 +119,8 @@ namespace DrawBody.Prototype
                 ? "stage_rule_timed"
                 : stageRuleMode == StageRuleMode.Survival
                     ? "stage_rule_survival"
+                    : stageRuleMode == StageRuleMode.BlockBreaker
+                        ? "stage_rule_block_breaker"
                     : "stage_rule_normal");
         public string StageCollectionTargetLabel => LocalizationManager.T(StageObjectCatalog.GetObjectKey(stageCollectionTarget));
         public string StageTimeLimitLabel => LocalizationManager.Format("stage_rule_seconds", stageTimeLimitSeconds);
@@ -127,6 +129,7 @@ namespace DrawBody.Prototype
             : LocalizationManager.Format("stage_rule_count", stageRequiredCollectionCount);
         public bool IsTimedCollectionRule => stageRuleMode == StageRuleMode.TimedCollection;
         public bool IsSurvivalRule => stageRuleMode == StageRuleMode.Survival;
+        public bool IsBlockBreakerRule => stageRuleMode == StageRuleMode.BlockBreaker;
         public float StageTimeLimitSeconds => stageTimeLimitSeconds;
         public StageObjectType StageCollectionTarget => stageCollectionTarget;
         public int StagePlacedCollectionTargetCount
@@ -149,11 +152,18 @@ namespace DrawBody.Prototype
             : Mathf.Max(1, StagePlacedCollectionTargetCount);
         public bool SelectedSupportsActionStrength => selectedData != null && SupportsActionStrength(selectedData.type);
         public bool SelectedIsMovingPlatform => selectedData != null && selectedData.type == StageObjectType.MovingPlatform;
+        public bool SelectedIsEnemy => selectedData != null &&
+            (selectedData.type == StageObjectType.EnemyWalker
+             || selectedData.type == StageObjectType.EnemyJumper
+             || selectedData.type == StageObjectType.EnemyCharger
+             || selectedData.type == StageObjectType.EnemyFlyer
+             || selectedData.type == StageObjectType.EnemyShooter);
         public bool SelectedSupportsBombFuse => selectedData != null &&
             (selectedData.type == StageObjectType.Bomb ||
              selectedData.type == StageObjectType.PickupFuseBomb ||
-             selectedData.type == StageObjectType.BombDropper);
-        public bool SelectedSupportsSecondarySlider => SelectedIsMovingPlatform || SelectedSupportsBombFuse;
+             selectedData.type == StageObjectType.BombDropper ||
+             selectedData.type == StageObjectType.Dynamite);
+        public bool SelectedSupportsSecondarySlider => SelectedIsMovingPlatform || SelectedIsEnemy || SelectedSupportsBombFuse;
         public float SelectedMovementSpeed => SelectedSupportsBombFuse
             ? Mathf.Clamp(selectedData.bombFuseSeconds > 0f ? selectedData.bombFuseSeconds : 5f, 1f, 15f)
             : selectedData != null && selectedData.movementSpeed > 0f

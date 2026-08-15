@@ -7,7 +7,8 @@ namespace DrawBody.Prototype
     {
         Normal,
         TimedCollection,
-        Survival
+        Survival,
+        BlockBreaker
     }
 
     public static class StageObjectId
@@ -189,7 +190,13 @@ namespace DrawBody.Prototype
         ChallengeClock,
         BeamEmitter,
         PickupFuseBomb,
-        BombDropper
+        BombDropper,
+        Dynamite,
+        EnemyWalker,
+        EnemyJumper,
+        EnemyCharger,
+        EnemyFlyer,
+        EnemyShooter
     }
 
     [Serializable]

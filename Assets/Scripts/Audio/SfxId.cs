@@ -61,6 +61,19 @@ namespace DrawBody.Prototype
         BombExplosion,
         BombWallBreak,
         CatClawAttach,
-        CatClawRelease
+        CatClawRelease,
+        DynamiteFuseStart,
+        DynamiteTick,
+        DynamiteExplosion,
+        EnemyCharge,
+        EnemyShoot,
+        EnemyJump,
+        EnemyDefeat,
+        EnemyShellBounce,
+        BeamFire,
+        CannonFire,
+        EmotePop,
+        CrumblingFloorWarning,
+        CrumblingFloorCollapse
     }
 }

@@ -92,6 +92,7 @@ namespace DrawBody.Prototype
             hitPlayers.Clear();
             hideTime = Time.time + PulseDuration;
             SetBeamVisible(true);
+            GameSfx.PlayAt(SfxId.BeamFire, muzzle != null ? muzzle.position : transform.position);
             UpdateActiveBeam();
         }
 

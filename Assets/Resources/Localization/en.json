@@ -1625,6 +1625,54 @@
                         "value":  "Logging in..."
                     },
                     {
+                        "key":  "block_breaker_title",
+                        "value":  "11-3  BLOCK CRASH"
+                    },
+                    {
+                        "key":  "stage_object_dynamite",
+                        "value":  "Dynamite"
+                    },
+                    {
+                        "key":  "stage_category_enemy",
+                        "value":  "Enemies"
+                    },
+                    {
+                        "key":  "stage_object_enemy_walker",
+                        "value":  "Walker Enemy"
+                    },
+                    {
+                        "key":  "stage_object_enemy_jumper",
+                        "value":  "Jumper Enemy"
+                    },
+                    {
+                        "key":  "stage_object_enemy_charger",
+                        "value":  "Charger Enemy"
+                    },
+                    {
+                        "key":  "stage_object_enemy_flyer",
+                        "value":  "Flying Enemy"
+                    },
+                    {
+                        "key":  "stage_object_enemy_shooter",
+                        "value":  "Shooter Enemy"
+                    },
+                    {
+                        "key":  "stage_rule_block_breaker",
+                        "value":  "Block Breaker"
+                    },
+                    {
+                        "key":  "block_breaker_goal",
+                        "value":  "THROW BOMBS! BREAK ALL NICO DRAW BLOCKS!"
+                    },
+                    {
+                        "key":  "block_breaker_blocks",
+                        "value":  "{0} BLOCKS LEFT"
+                    },
+                    {
+                        "key":  "block_breaker_retry",
+                        "value":  "FAILED... RESTART IN {0}"
+                    },
+                    {
                         "key":  "online_fake_initialized",
                         "value":  "Fake backend initialized."
                     }

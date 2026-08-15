@@ -68,6 +68,14 @@ namespace DrawBody.Prototype
                     return CreateChallengeClock(data, parent);
                 case StageObjectType.BeamEmitter:
                     return CreateBeamEmitter(data, parent);
+                case StageObjectType.Dynamite:
+                    return CreateDynamite(data, parent);
+                case StageObjectType.EnemyWalker:
+                case StageObjectType.EnemyJumper:
+                case StageObjectType.EnemyCharger:
+                case StageObjectType.EnemyFlyer:
+                case StageObjectType.EnemyShooter:
+                    return CreateEnemy(data, parent);
                 case StageObjectType.Elevator:
                     return CreateElevator(data, parent);
                 case StageObjectType.BalanceScale:
@@ -174,6 +182,16 @@ namespace DrawBody.Prototype
                     case StageObjectType.MidGoal:
                         size = new Vector2(0.7f, 0.7f);
                         break;
+                    case StageObjectType.Dynamite:
+                        size = new Vector2(1.4f, 1.25f);
+                        break;
+                    case StageObjectType.EnemyWalker:
+                    case StageObjectType.EnemyJumper:
+                    case StageObjectType.EnemyCharger:
+                    case StageObjectType.EnemyFlyer:
+                    case StageObjectType.EnemyShooter:
+                        size = new Vector2(1.25f, 1.3f);
+                        break;
                     case StageObjectType.Goal:
                         size = new Vector2(1.15f, 2.05f);
                         break;
@@ -271,13 +289,70 @@ namespace DrawBody.Prototype
                                         ? 3f
                                         : type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BombDropper || type == StageObjectType.BeamEmitter ? 2f : 0f,
                 movementAngle = type == StageObjectType.ConveyorLeft ? 180f : 0f,
-                movementSpeed = type == StageObjectType.MovingPlatform ? 3.2f : 0f,
+                movementSpeed = type == StageObjectType.MovingPlatform ? 3.2f
+                    : type == StageObjectType.EnemyWalker ? 2.4f
+                    : type == StageObjectType.EnemyJumper ? 2.1f
+                    : type == StageObjectType.EnemyCharger ? 1.7f
+                    : type == StageObjectType.EnemyFlyer ? 2.7f
+                    : type == StageObjectType.EnemyShooter ? 0.5f
+                    : 0f,
                 spawnPattern = 0,
                 spawnBoxSize = type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BombDropper ? 0.9f : 0f,
                 bombFuseSeconds = type == StageObjectType.Bomb
                     || type == StageObjectType.PickupFuseBomb
-                    || type == StageObjectType.BombDropper ? 5f : 0f
+                    || type == StageObjectType.BombDropper
+                    || type == StageObjectType.Dynamite ? 5f : 0f
             };
+        }
+
+        private GameObject CreateDynamite(StageObjectData data, Transform parent)
+        {
+            GameObject obj = new GameObject(data.objectId);
+            obj.name = StageObjectType.Dynamite.ToString();
+            obj.transform.SetParent(parent, false);
+            obj.transform.position = data.position;
+            obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
+
+            Vector2 size = new Vector2(Mathf.Max(0.65f, data.size.x), Mathf.Max(0.65f, data.size.y));
+            BoxCollider2D trigger = obj.AddComponent<BoxCollider2D>();
+            trigger.size = size;
+            trigger.isTrigger = true;
+
+            StageDynamite dynamite = obj.AddComponent<StageDynamite>();
+            dynamite.Configure(data.bombFuseSeconds > 0f ? data.bombFuseSeconds : 5f, size);
+            AddEditorMetadata(obj, data);
+            return obj;
+        }
+
+        private GameObject CreateEnemy(StageObjectData data, Transform parent)
+        {
+            GameObject obj = new GameObject(data.objectId);
+            obj.name = data.type.ToString();
+            obj.transform.SetParent(parent, false);
+            obj.transform.position = data.position;
+            // Enemy rotation is used as its initial facing direction. Keeping the
+            // physics body upright avoids a 180-degree left-facing enemy becoming
+            // visually upside down.
+            obj.transform.rotation = Quaternion.identity;
+            obj.layer = pushableLayer;
+
+            Vector2 size = new Vector2(Mathf.Max(0.7f, data.size.x), Mathf.Max(0.7f, data.size.y));
+            Rigidbody2D body = obj.AddComponent<Rigidbody2D>();
+            body.bodyType = RigidbodyType2D.Dynamic;
+            body.gravityScale = data.type == StageObjectType.EnemyFlyer ? 0f : 1.65f;
+            body.freezeRotation = true;
+            body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            body.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+            CapsuleCollider2D enemyCollider = obj.AddComponent<CapsuleCollider2D>();
+            enemyCollider.size = size;
+            enemyCollider.direction = CapsuleDirection2D.Vertical;
+
+            StageEnemyCharacter enemy = obj.AddComponent<StageEnemyCharacter>();
+            float facing = Mathf.Cos(data.rotation * Mathf.Deg2Rad);
+            enemy.Configure(data.type, size, data.movementSpeed > 0f ? data.movementSpeed : 0f, facing);
+            AddEditorMetadata(obj, data);
+            return obj;
         }
 
         private GameObject CreateStageBoundary(StageObjectData data, Transform parent)
@@ -1496,7 +1571,9 @@ namespace DrawBody.Prototype
             StageObjectData data = CreateDefaultData(boxType, position);
             data.objectId = string.IsNullOrEmpty(objectId) ? StageObjectId.New() : objectId;
             data.bombFuseSeconds = Mathf.Clamp(bombFuseSeconds > 0f ? bombFuseSeconds : 5f, 1f, 15f);
-            float clampedSize = Mathf.Clamp(size, 0.5f, 2f);
+            // Runtime challenge spawners can use oversized bombs. Editor-authored
+            // droppers still keep their own 0.5-2.0 input range.
+            float clampedSize = Mathf.Clamp(size, 0.5f, 3f);
             data.size = boxType == StageObjectType.Spike
                 ? new Vector2(clampedSize, clampedSize * 0.8f)
                 : Vector2.one * clampedSize;
@@ -3020,6 +3097,8 @@ namespace DrawBody.Prototype
                     return new Color(0.92f, 0.12f, 0.1f);
                 case StageObjectCategory.Gimmick:
                     return new Color(0.55f, 0.25f, 0.9f);
+                case StageObjectCategory.Enemy:
+                    return new Color(0.72f, 0.18f, 0.58f);
                 default:
                     if (type == StageObjectType.IceFloor || type == StageObjectType.IceBlock || type == StageObjectType.CloudPlatform)
                     {
