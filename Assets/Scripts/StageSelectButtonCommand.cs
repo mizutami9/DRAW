@@ -10,6 +10,8 @@ namespace DrawBody.Prototype
         [SerializeField] private StageManager stageManager;
         [SerializeField] private string stageId = "1-0";
 
+        public string StageId => stageId;
+
         private void Awake()
         {
             if (stageManager == null)

@@ -9,15 +9,15 @@ namespace DrawBody.Prototype
 
         private void OnEnable()
         {
-            LocalizationManager.LanguageChanged -= RefreshSpeciesRowText;
-            LocalizationManager.LanguageChanged += RefreshSpeciesRowText;
+            LocalizationManager.LanguageChanged -= RefreshLocalizedText;
+            LocalizationManager.LanguageChanged += RefreshLocalizedText;
             Polish();
-            RefreshSpeciesRowText();
+            RefreshLocalizedText();
         }
 
         private void OnDisable()
         {
-            LocalizationManager.LanguageChanged -= RefreshSpeciesRowText;
+            LocalizationManager.LanguageChanged -= RefreshLocalizedText;
         }
 
         public void Polish()
@@ -301,6 +301,12 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void RefreshLocalizedText()
+        {
+            RefreshSpeciesRowText();
+            RefreshStageCreationLabels();
+        }
+
         private void RefreshSpeciesRowText()
         {
             Text[] texts = GetComponentsInChildren<Text>(true);
@@ -316,6 +322,35 @@ namespace DrawBody.Prototype
                     texts[i].fontSize = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese ? 11 : 8;
                     texts[i].fontStyle = FontStyle.Bold;
                 }
+            }
+        }
+
+        private void RefreshStageCreationLabels()
+        {
+            StageSelectButtonCommand[] commands = GetComponentsInChildren<StageSelectButtonCommand>(true);
+            for (int i = 0; i < commands.Length; i++)
+            {
+                StageSelectButtonCommand command = commands[i];
+                if (command == null)
+                {
+                    continue;
+                }
+
+                Transform statusTransform = command.transform.Find("DebugCreationStatus");
+                Text status = statusTransform != null ? statusTransform.GetComponent<Text>() : null;
+                if (status == null)
+                {
+                    continue;
+                }
+
+                bool created = Resources.Load<TextAsset>($"Stages/{command.StageId}") != null;
+                status.text = LocalizationManager.T(created
+                    ? "stage_select_debug_created"
+                    : "stage_select_debug_not_created");
+                status.color = created
+                    ? new Color(0.08f, 0.48f, 0.22f, 1f)
+                    : new Color(0.68f, 0.18f, 0.12f, 1f);
+                status.fontSize = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese ? 11 : 9;
             }
         }
 
@@ -424,9 +459,56 @@ namespace DrawBody.Prototype
                 Text label = button.GetComponentInChildren<Text>(true);
                 if (label != null)
                 {
+                    StageSelectButtonCommand stageCommand = button.GetComponent<StageSelectButtonCommand>();
+                    if (stageCommand != null)
+                    {
+                        LayoutStageButtonLabel(label.rectTransform);
+                        CreateStageCreationLabel(rect, label.font);
+                    }
                     label.transform.SetAsLastSibling();
                 }
             }
+        }
+
+        private static void LayoutStageButtonLabel(RectTransform label)
+        {
+            label.anchorMin = new Vector2(0f, 1f);
+            label.anchorMax = new Vector2(1f, 1f);
+            label.pivot = new Vector2(0.5f, 1f);
+            label.anchoredPosition = new Vector2(0f, -1f);
+            label.sizeDelta = new Vector2(0f, 25f);
+        }
+
+        private static void CreateStageCreationLabel(RectTransform button, Font font)
+        {
+            Transform existing = button.Find("DebugCreationStatus");
+            if (existing != null)
+            {
+                existing.SetAsLastSibling();
+                return;
+            }
+
+            GameObject statusObject = new GameObject(
+                "DebugCreationStatus",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Text));
+            statusObject.transform.SetParent(button, false);
+
+            Text status = statusObject.GetComponent<Text>();
+            status.font = font;
+            status.fontStyle = FontStyle.Bold;
+            status.alignment = TextAnchor.MiddleCenter;
+            status.raycastTarget = false;
+            status.horizontalOverflow = HorizontalWrapMode.Overflow;
+            status.verticalOverflow = VerticalWrapMode.Overflow;
+
+            RectTransform rect = status.rectTransform;
+            rect.anchorMin = new Vector2(0f, 0f);
+            rect.anchorMax = new Vector2(1f, 0f);
+            rect.pivot = new Vector2(0.5f, 0f);
+            rect.anchoredPosition = new Vector2(0f, 1f);
+            rect.sizeDelta = new Vector2(0f, 16f);
         }
 
         private static void AddShadow(GameObject target, Vector2 distance, float alpha)
