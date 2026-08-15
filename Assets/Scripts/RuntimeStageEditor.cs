@@ -58,6 +58,7 @@ namespace DrawBody.Prototype
         private StageObjectData linkSourceData;
         private GameObject selectedObject;
         private GameObject selectionBox;
+        private GameObject linkTargetHighlight;
         private GameObject dragPreviewObject;
         private bool active;
         private bool dragging;

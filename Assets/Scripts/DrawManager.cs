@@ -9,7 +9,8 @@ namespace DrawBody.Prototype
         public const float InkAllowancePerPlayer = 350f;
         public const float IndividualInkLimit = 500f;
         private const float TurtleGameplayCoordinateScale = 3f;
-        private const int BodyCoordinateVersion = 2;
+        private const float SlimeGameplayCoordinateScale = 5f;
+        public const int BodyCoordinateVersion = 3;
 
         public enum BodyPart
         {
@@ -83,6 +84,9 @@ namespace DrawBody.Prototype
         private Text abilityHighText;
         private Text abilityHintText;
         private Image abilityGaugeFill;
+        private Image humanArmGaugeFill;
+        private Text humanJumpGaugeLabel;
+        private Text humanArmGaugeLabel;
         private Image abilityHeaderImage;
         [SerializeField] private Text partText;
         [SerializeField] private Text messageText;
@@ -118,6 +122,8 @@ namespace DrawBody.Prototype
         private readonly float[] brushSizes = { 3f, 5f, 6f, 8f, 10f };
         private int brushSizeIndex = 2;
         private GameObject previewHighlight;
+        private float previewContentScale = 1f;
+        private Vector2 previewContentOffset;
         [SerializeField] private Button penToolButton;
         [SerializeField] private Button eraserToolButton;
         private GameObject eraserCursor;
@@ -295,6 +301,9 @@ namespace DrawBody.Prototype
             abilityHighText = FindRect("AbilityHighText")?.GetComponent<Text>();
             abilityHintText = FindRect("AbilityHintText")?.GetComponent<Text>();
             abilityGaugeFill = FindRect("AbilityGaugeFill")?.GetComponent<Image>();
+            humanArmGaugeFill = FindRect("HumanArmGaugeFill")?.GetComponent<Image>();
+            humanJumpGaugeLabel = FindRect("HumanJumpGaugeLabel")?.GetComponent<Text>();
+            humanArmGaugeLabel = FindRect("HumanArmGaugeLabel")?.GetComponent<Text>();
             abilityHeaderImage = FindRect("AbilityHeaderBand")?.GetComponent<Image>();
         }
 
@@ -1137,9 +1146,13 @@ namespace DrawBody.Prototype
                     List<Vector2> loadedPoints = partDrawing.Points != null
                         ? new List<Vector2>(partDrawing.Points)
                         : new List<Vector2>();
-                    if (species == Species.Turtle && body.CoordinateVersion < BodyCoordinateVersion)
+                    if (species == Species.Turtle && body.CoordinateVersion < 2)
                     {
                         ScaleDrawablePoints(loadedPoints, 1f / TurtleGameplayCoordinateScale);
+                    }
+                    if (species == Species.Slime && body.CoordinateVersion < 3)
+                    {
+                        ScaleDrawablePoints(loadedPoints, 1f / SlimeGameplayCoordinateScale);
                     }
                     state.Points[species][part] = loadedPoints;
                 }
@@ -1743,6 +1756,8 @@ namespace DrawBody.Prototype
         private void RefreshAbilityCard(PlayerAbilityController.AbilityProfile profile)
         {
             float progress;
+            float rankProgress;
+            float secondaryProgress = 0f;
             string title;
             string effect;
             string ink;
@@ -1785,9 +1800,8 @@ namespace DrawBody.Prototype
                     accent = new Color(0.68f, 0.38f, 0.86f, 1f);
                     break;
                 default:
-                    progress = Mathf.Max(
-                        Mathf.Clamp01(profile.ArmInk / 280f),
-                        Mathf.Clamp01(profile.LegInk / 80f));
+                    progress = Mathf.Clamp01(profile.LegInk / 80f);
+                    secondaryProgress = Mathf.Clamp01(profile.ArmInk / 280f);
                     title = LocalizationManager.T("ability_card_human");
                     effect = LocalizationManager.Format(
                         "ability_effect_human_combined",
@@ -1798,10 +1812,13 @@ namespace DrawBody.Prototype
                     break;
             }
 
-            string rank = progress >= 0.9f ? "S"
-                : progress >= 0.7f ? "A"
-                : progress >= 0.45f ? "B"
-                : progress >= 0.2f ? "C"
+            bool human = profile.Species == Species.Human;
+            rankProgress = human ? Mathf.Max(progress, secondaryProgress) : progress;
+
+            string rank = rankProgress >= 0.9f ? "S"
+                : rankProgress >= 0.7f ? "A"
+                : rankProgress >= 0.45f ? "B"
+                : rankProgress >= 0.2f ? "C"
                 : "D";
 
             abilityText.text = profile.Species == Species.Turtle
@@ -1815,11 +1832,13 @@ namespace DrawBody.Prototype
             if (abilityInkText != null) abilityInkText.text = ink;
             if (abilityLowText != null)
             {
+                abilityLowText.gameObject.SetActive(!human);
                 abilityLowText.text = LocalizationManager.T(
                     profile.Species == Species.Slime ? "ability_slime_gauge_low" : "ability_gauge_low");
             }
             if (abilityHighText != null)
             {
+                abilityHighText.gameObject.SetActive(!human);
                 abilityHighText.text = LocalizationManager.T(
                     profile.Species == Species.Slime ? "ability_slime_gauge_high" : "ability_gauge_high");
             }
@@ -1833,8 +1852,30 @@ namespace DrawBody.Prototype
                             : "ability_growth_hint");
             }
             if (abilityHeaderImage != null) abilityHeaderImage.color = accent;
+            SetHumanAbilityGaugeLayout(human);
             SetInkGauge(abilityGaugeFill, progress, false);
             if (abilityGaugeFill != null) abilityGaugeFill.color = accent;
+            SetInkGauge(humanArmGaugeFill, secondaryProgress, false);
+            if (humanArmGaugeFill != null) humanArmGaugeFill.color = new Color(0.94f, 0.42f, 0.2f, 1f);
+        }
+
+        private void SetHumanAbilityGaugeLayout(bool human)
+        {
+            if (humanJumpGaugeLabel != null) humanJumpGaugeLabel.gameObject.SetActive(human);
+            if (humanArmGaugeLabel != null) humanArmGaugeLabel.gameObject.SetActive(human);
+            if (humanArmGaugeFill != null) humanArmGaugeFill.transform.parent.gameObject.SetActive(human);
+
+            RectTransform gauge = abilityGaugeFill != null ? abilityGaugeFill.transform.parent as RectTransform : null;
+            if (gauge == null)
+            {
+                return;
+            }
+
+            gauge.anchorMin = new Vector2(0f, 1f);
+            gauge.anchorMax = new Vector2(0f, 1f);
+            gauge.pivot = new Vector2(0f, 1f);
+            gauge.anchoredPosition = human ? new Vector2(68f, -133f) : new Vector2(18f, -136f);
+            gauge.sizeDelta = human ? new Vector2(194f, 14f) : new Vector2(244f, 18f);
         }
 
         private static void SetInkGauge(Image fill, float amount, bool over)
@@ -2476,14 +2517,65 @@ namespace DrawBody.Prototype
                 return drawPoint;
             }
 
-            return (GetRawAssembledPoint(part, drawPoint) + GetBodyAnchorOffset())
+            Vector2 point = (GetRawAssembledPoint(part, drawPoint) + GetBodyAnchorOffset())
                 * GetGameplayCoordinateScale(currentSpecies)
                 * previewScale;
+            return point * previewContentScale + previewContentOffset;
+        }
+
+        private void UpdatePreviewFit()
+        {
+            previewContentScale = 1f;
+            previewContentOffset = Vector2.zero;
+            if (previewRoot == null)
+            {
+                return;
+            }
+
+            bool found = false;
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(float.MinValue, float.MinValue);
+            Vector2 bodyOffset = GetBodyAnchorOffset();
+            float speciesScale = GetGameplayCoordinateScale(currentSpecies) * previewScale;
+            foreach (BodyPart part in GetCurrentParts())
+            {
+                IReadOnlyList<Vector2> points = drawings[part].Points;
+                for (int i = 0; i < points.Count; i++)
+                {
+                    if (IsBreakPoint(points[i]))
+                    {
+                        continue;
+                    }
+
+                    Vector2 point = (GetRawAssembledPoint(part, points[i]) + bodyOffset) * speciesScale;
+                    min = Vector2.Min(min, point);
+                    max = Vector2.Max(max, point);
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                return;
+            }
+
+            Vector2 contentSize = max - min;
+            const float safePadding = 24f;
+            float availableWidth = Mathf.Max(1f, previewRoot.rect.width - safePadding * 2f);
+            float availableHeight = Mathf.Max(1f, previewRoot.rect.height - safePadding * 2f);
+            float fitX = contentSize.x > 0.01f ? availableWidth / contentSize.x : 1f;
+            float fitY = contentSize.y > 0.01f ? availableHeight / contentSize.y : 1f;
+            previewContentScale = Mathf.Min(1f, fitX, fitY);
+            previewContentOffset = -(min + max) * 0.5f * previewContentScale;
         }
 
         private static float GetGameplayCoordinateScale(Species species)
         {
-            return species == Species.Turtle ? TurtleGameplayCoordinateScale : 1f;
+            return species == Species.Turtle
+                ? TurtleGameplayCoordinateScale
+                : species == Species.Slime
+                    ? SlimeGameplayCoordinateScale
+                    : 1f;
         }
 
         private Vector2 GetRawAssembledPoint(BodyPart part, Vector2 drawPoint)
@@ -2802,7 +2894,7 @@ namespace DrawBody.Prototype
                     new Vector2(-35f, -54f),
                     new Vector2(-76f, -32f),
                     new Vector2(-88f, 0f)
-                });
+                }, 1f / SlimeGameplayCoordinateScale);
                 return;
             }
 
@@ -2960,6 +3052,7 @@ namespace DrawBody.Prototype
             ClearRootChildren(lineRoot);
             ClearRootChildren(previewRoot);
             previewHighlight = null;
+            UpdatePreviewFit();
 
             foreach (KeyValuePair<BodyPart, PartDrawing> pair in drawings)
             {
@@ -2989,6 +3082,7 @@ namespace DrawBody.Prototype
         {
             ClearRootChildren(previewRoot);
             previewHighlight = null;
+            UpdatePreviewFit();
 
             foreach (KeyValuePair<BodyPart, PartDrawing> pair in drawings)
             {

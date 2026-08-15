@@ -2225,6 +2225,8 @@ namespace DrawBody.Prototype
 
         private void UpdateSelectionBox()
         {
+            UpdateLinkTargetHighlight();
+
             if (rangeSelectedObjects.Count > 1)
             {
                 SetSelectionBox(false);
@@ -2286,6 +2288,77 @@ namespace DrawBody.Prototype
             {
                 selectionBox.SetActive(visible);
             }
+        }
+
+        private void UpdateLinkTargetHighlight()
+        {
+            StageObjectData target = null;
+            if (active && selectedData != null && !string.IsNullOrEmpty(selectedData.linkTargetId))
+            {
+                for (int i = 0; i < objects.Count; i++)
+                {
+                    StageObjectData candidate = objects[i];
+                    if (candidate != null && candidate.objectId == selectedData.linkTargetId)
+                    {
+                        target = candidate;
+                        break;
+                    }
+                }
+            }
+
+            if (target == null)
+            {
+                if (linkTargetHighlight != null)
+                {
+                    linkTargetHighlight.SetActive(false);
+                }
+                return;
+            }
+
+            EnsureLinkTargetHighlight();
+            linkTargetHighlight.SetActive(true);
+            Rect bounds = GetBoundaryFitBounds(target);
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 5f);
+            float radiusX = Mathf.Max(0.55f, bounds.width * 0.5f + 0.2f + pulse * 0.06f);
+            float radiusY = Mathf.Max(0.55f, bounds.height * 0.5f + 0.2f + pulse * 0.06f);
+            Vector2 center = bounds.center;
+
+            LineRenderer line = linkTargetHighlight.GetComponent<LineRenderer>();
+            const int segmentCount = 64;
+            line.positionCount = segmentCount;
+            line.startWidth = line.endWidth = 0.065f + pulse * 0.025f;
+            Color color = new Color(1f, 0.06f, 0.04f, 0.72f + pulse * 0.26f);
+            line.startColor = color;
+            line.endColor = color;
+            for (int i = 0; i < segmentCount; i++)
+            {
+                float angle = Mathf.PI * 2f * i / segmentCount;
+                line.SetPosition(i, new Vector3(
+                    center.x + Mathf.Cos(angle) * radiusX,
+                    center.y + Mathf.Sin(angle) * radiusY,
+                    -0.08f));
+            }
+        }
+
+        private void EnsureLinkTargetHighlight()
+        {
+            if (linkTargetHighlight != null)
+            {
+                return;
+            }
+
+            linkTargetHighlight = new GameObject("RuntimeStageLinkTargetHighlight");
+            if (editorRoot != null)
+            {
+                linkTargetHighlight.transform.SetParent(editorRoot, false);
+            }
+            LineRenderer line = linkTargetHighlight.AddComponent<LineRenderer>();
+            line.useWorldSpace = true;
+            line.loop = true;
+            line.numCapVertices = 4;
+            line.numCornerVertices = 4;
+            line.material = new Material(Shader.Find("Sprites/Default"));
+            line.sortingOrder = 96;
         }
     }
 }

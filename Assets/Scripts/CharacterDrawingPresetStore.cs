@@ -12,6 +12,7 @@ namespace DrawBody.Prototype
         [Serializable]
         private sealed class PresetFile
         {
+            public int coordinateVersion;
             public int selectedSpecies;
             public int selectedPart;
             public SpeciesEntry[] species;
@@ -61,6 +62,7 @@ namespace DrawBody.Prototype
                 }
                 PresetFile file = new PresetFile
                 {
+                    coordinateVersion = DrawManager.BodyCoordinateVersion,
                     selectedSpecies = (int)state.Species,
                     selectedPart = (int)state.Part,
                     species = speciesEntries.ToArray()
@@ -103,9 +105,20 @@ namespace DrawBody.Prototype
                     for (int p = 0; p < speciesEntry.parts.Length; p++)
                     {
                         PartEntry partEntry = speciesEntry.parts[p];
-                        parts[(DrawManager.BodyPart)partEntry.part] = partEntry.points != null
+                        List<Vector2> points = partEntry.points != null
                             ? new List<Vector2>(partEntry.points)
                             : new List<Vector2>();
+                        if (species == DrawManager.Species.Slime && file.coordinateVersion < 3)
+                        {
+                            for (int point = 0; point < points.Count; point++)
+                            {
+                                if (!float.IsNaN(points[point].x) && !float.IsNaN(points[point].y))
+                                {
+                                    points[point] *= 0.2f;
+                                }
+                            }
+                        }
+                        parts[(DrawManager.BodyPart)partEntry.part] = points;
                     }
                 }
                 return state;

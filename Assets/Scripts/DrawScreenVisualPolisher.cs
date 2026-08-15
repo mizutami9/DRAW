@@ -96,6 +96,20 @@ namespace DrawBody.Prototype
                 tick.GetComponent<Image>().color = new Color(0.16f, 0.13f, 0.1f, 0.48f);
             }
 
+            Text humanJumpLabel = EnsureLabel(
+                abilityCard, "HumanJumpGaugeLabel", string.Empty, 12, TextAnchor.MiddleLeft);
+            SetTopRect(humanJumpLabel.rectTransform, new Vector2(12f, -131f), new Vector2(54f, 18f), new Vector2(0f, 1f));
+            humanJumpLabel.fontStyle = FontStyle.Bold;
+
+            RectTransform humanArmGauge = EnsureGauge(
+                abilityCard, "HumanArmGaugeBack", "HumanArmGaugeFill");
+            SetTopRect(humanArmGauge, new Vector2(68f, -155f), new Vector2(194f, 14f), new Vector2(0f, 1f));
+            ConfigureStraightGauge(humanArmGauge, "HumanArmGaugeFill");
+            Text humanArmLabel = EnsureLabel(
+                abilityCard, "HumanArmGaugeLabel", string.Empty, 12, TextAnchor.MiddleLeft);
+            SetTopRect(humanArmLabel.rectTransform, new Vector2(12f, -153f), new Vector2(54f, 18f), new Vector2(0f, 1f));
+            humanArmLabel.fontStyle = FontStyle.Bold;
+
             Text abilityLow = EnsureLabel(abilityCard, "AbilityLowText", string.Empty, 12, TextAnchor.MiddleLeft);
             SetTopRect(abilityLow.rectTransform, new Vector2(18f, -156f), new Vector2(120f, 18f), new Vector2(0f, 1f));
             Text abilityHigh = EnsureLabel(abilityCard, "AbilityHighText", string.Empty, 12, TextAnchor.MiddleRight);
@@ -227,6 +241,8 @@ namespace DrawBody.Prototype
             SetPlainText("InkUsageTitle", japanese ? "\u30a4\u30f3\u30af" : "INK");
             SetPlainText("PersonalInkLabel", LocalizationManager.T("ink_personal_cap"));
             SetPlainText("TeamInkLabel", LocalizationManager.Format("ink_team_formula", 1, DrawManager.InkAllowancePerPlayer));
+            SetPlainText("HumanJumpGaugeLabel", LocalizationManager.T("ability_human_jump_gauge"));
+            SetPlainText("HumanArmGaugeLabel", LocalizationManager.T("ability_human_arm_gauge"));
             SetButtonLabel("PenToolButton", "\u270e  " + LocalizationManager.T("pen"), 18);
             SetButtonLabel("EraserToolButton", "\u25b1  " + LocalizationManager.T("eraser"), 17);
             SetButtonLabel("ToolClearButton", japanese ? "\u2715  \u30d1\u30fc\u30c4\u6d88\u53bb" : "\u2715  CLEAR PART", 14);
