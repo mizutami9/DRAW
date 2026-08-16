@@ -71,6 +71,10 @@ namespace DrawBody.Prototype
                     return CreateBeamEmitter(data, parent);
                 case StageObjectType.MissileLauncher:
                     return CreateMissileLauncher(data, parent);
+                case StageObjectType.Handgun:
+                    return StageGun.CreateObject(data, parent, pushableLayer);
+                case StageObjectType.SpikePlanet:
+                    return StageSpikePlanet.CreateObject(data, parent);
                 case StageObjectType.EscortSpawner:
                 case StageObjectType.EscortGoal:
                 case StageObjectType.EscortPlayerOnlyFloor:
@@ -83,6 +87,8 @@ namespace DrawBody.Prototype
                 case StageObjectType.EnemyCharger:
                 case StageObjectType.EnemyFlyer:
                 case StageObjectType.EnemyShooter:
+                case StageObjectType.EnemyFlyerZigzag:
+                case StageObjectType.EnemyFlyerOrbit:
                     return CreateEnemy(data, parent);
                 case StageObjectType.Elevator:
                     return CreateElevator(data, parent);
@@ -108,6 +114,8 @@ namespace DrawBody.Prototype
                     return CreateWeight(data, parent);
                 case StageObjectType.BreakableWall:
                     return CreateBombBreakableWall(data, parent);
+                case StageObjectType.BulletBreakableWall:
+                    return CreateBulletBreakableWall(data, parent);
                 case StageObjectType.Checkpoint:
                 case StageObjectType.WarpEntrance:
                 case StageObjectType.WarpExit:
@@ -179,6 +187,7 @@ namespace DrawBody.Prototype
                     case StageObjectType.OneWayGate:
                     case StageObjectType.TimedGate:
                     case StageObjectType.BreakableWall:
+                    case StageObjectType.BulletBreakableWall:
                     case StageObjectType.HiddenWall:
                         size = new Vector2(0.5f, 2f);
                         break;
@@ -198,7 +207,15 @@ namespace DrawBody.Prototype
                     case StageObjectType.EnemyCharger:
                     case StageObjectType.EnemyFlyer:
                     case StageObjectType.EnemyShooter:
+                    case StageObjectType.EnemyFlyerZigzag:
+                    case StageObjectType.EnemyFlyerOrbit:
                         size = new Vector2(1.25f, 1.3f);
+                        break;
+                    case StageObjectType.Handgun:
+                        size = new Vector2(0.85f, 0.48f);
+                        break;
+                    case StageObjectType.SpikePlanet:
+                        size = new Vector2(2.5f, 2.5f);
                         break;
                     case StageObjectType.Goal:
                         size = new Vector2(1.15f, 2.05f);
@@ -301,6 +318,8 @@ namespace DrawBody.Prototype
                     ? 300f
                     : type == StageObjectType.BreakableWall
                         ? 1f
+                    : type == StageObjectType.BulletBreakableWall
+                        ? 3f
                     : type == StageObjectType.JumpPad || type == StageObjectType.Spring
                         ? 27f
                         : type == StageObjectType.MovingPlatform || type == StageObjectType.MovingOneWayPlatform
@@ -320,6 +339,8 @@ namespace DrawBody.Prototype
                     : type == StageObjectType.EnemyJumper ? 2.1f
                     : type == StageObjectType.EnemyCharger ? 1.7f
                     : type == StageObjectType.EnemyFlyer ? 2.7f
+                    : type == StageObjectType.EnemyFlyerZigzag ? 2.45f
+                    : type == StageObjectType.EnemyFlyerOrbit ? 1.9f
                     : type == StageObjectType.EnemyShooter ? 0.5f
                     : type == StageObjectType.MissileLauncher ? 8f
                     : 0f,
@@ -366,7 +387,9 @@ namespace DrawBody.Prototype
             Vector2 size = new Vector2(Mathf.Max(0.7f, data.size.x), Mathf.Max(0.7f, data.size.y));
             Rigidbody2D body = obj.AddComponent<Rigidbody2D>();
             body.bodyType = RigidbodyType2D.Dynamic;
-            body.gravityScale = data.type == StageObjectType.EnemyFlyer ? 0f : 1.65f;
+            body.gravityScale = data.type == StageObjectType.EnemyFlyer
+                || data.type == StageObjectType.EnemyFlyerZigzag
+                || data.type == StageObjectType.EnemyFlyerOrbit ? 0f : 1.65f;
             body.freezeRotation = true;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
@@ -1949,6 +1972,17 @@ namespace DrawBody.Prototype
             GameObject wall = CreateSolid(data, parent);
             StageBombBreakableWall bombWall = wall.AddComponent<StageBombBreakableWall>();
             bombWall.Configure(Mathf.Clamp(Mathf.RoundToInt(data.actionStrength > 0f ? data.actionStrength : 1f), 1, 50), data.size);
+            return wall;
+        }
+
+        private GameObject CreateBulletBreakableWall(StageObjectData data, Transform parent)
+        {
+            GameObject wall = CreateSolid(data, parent);
+            StageBombBreakableWall damage = wall.AddComponent<StageBombBreakableWall>();
+            damage.Configure(Mathf.Clamp(Mathf.RoundToInt(data.actionStrength > 0f ? data.actionStrength : 3f), 1, 50), data.size);
+            damage.SetRequirementBadgeVisible(false);
+            StageBulletBreakableWall bulletWall = wall.AddComponent<StageBulletBreakableWall>();
+            bulletWall.Configure(damage, data.size);
             return wall;
         }
 

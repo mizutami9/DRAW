@@ -13,7 +13,7 @@ namespace DrawBody.Prototype
         public void Configure(Transform visualRoot, float launchVelocity)
         {
             animatedRoot = visualRoot;
-            jumpVelocity = Mathf.Clamp(launchVelocity, 5f, 60f);
+            jumpVelocity = Mathf.Clamp(launchVelocity, 5f, 120f);
             if (animatedRoot != null)
             {
                 animatedOrigin = animatedRoot.localPosition;

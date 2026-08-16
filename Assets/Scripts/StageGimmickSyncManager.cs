@@ -1364,7 +1364,9 @@ namespace DrawBody.Prototype
                 || type == StageObjectType.EnemyJumper
                 || type == StageObjectType.EnemyCharger
                 || type == StageObjectType.EnemyFlyer
-                || type == StageObjectType.EnemyShooter;
+                || type == StageObjectType.EnemyShooter
+                || type == StageObjectType.EnemyFlyerZigzag
+                || type == StageObjectType.EnemyFlyerOrbit;
         }
 
         private void ApplyPlacedEnemyDefeat(string objectId)

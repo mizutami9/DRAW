@@ -272,8 +272,10 @@ namespace DrawBody.Prototype
                     ? "stage_editor_status_move_distance"
                     : selectedData.type == StageObjectType.FallingFloor
                         ? "stage_editor_status_crumble_delay"
-                        : selectedData.type == StageObjectType.BreakableWall
-                            ? "stage_editor_status_bomb_wall_hits"
+                        : selectedData.type == StageObjectType.BreakableWall || selectedData.type == StageObjectType.BulletBreakableWall
+                            ? selectedData.type == StageObjectType.BulletBreakableWall
+                                ? "stage_editor_status_bullet_wall_hits"
+                                : "stage_editor_status_bomb_wall_hits"
                         : IsConveyorType(selectedData.type)
                             ? "stage_editor_status_conveyor_speed"
                             : selectedData.type == StageObjectType.BoxDropper || selectedData.type == StageObjectType.SpikeDropper || selectedData.type == StageObjectType.BombDropper

@@ -84,9 +84,11 @@ namespace DrawBody.Prototype
         private float scriptedHorizontalInput;
         private bool scriptedJumpHeld;
         private bool scriptedJumpPressed;
+        private bool friendCarried;
 
         public bool IsGrounded { get; private set; }
         public bool ControlsEnabled => controlsEnabled;
+        public bool IsFriendCarried => friendCarried;
         public int FacingDirection => facingDirection;
         public bool IsInvulnerable => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
         public bool IsTurtleShelled => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
@@ -253,6 +255,17 @@ namespace DrawBody.Prototype
             UpdateFacing();
             UpdateTurtleAbilityInput();
 
+            // A cat/bird carrier owns the carried body's translation. Keep the
+            // turtle shell/turn inputs above available, but never let the
+            // carried character add jump or glide velocity to the carrier.
+            if (friendCarried)
+            {
+                horizontalInput = 0f;
+                scriptedJumpPressed = false;
+                lastJumpPressedAt = -100f;
+                return;
+            }
+
             bool jumpPressed;
             if (scriptedInputEnabled)
             {
@@ -276,6 +289,13 @@ namespace DrawBody.Prototype
 
         private void FixedUpdate()
         {
+            if (friendCarried)
+            {
+                StopBirdGlideAudio();
+                UpdateWallJumpTrajectoryPreview();
+                return;
+            }
+
             bool groundedBeforeProbe = IsGrounded;
             float verticalSpeedBeforeProbe = rb.linearVelocity.y;
             UpdateGrounded();
@@ -300,6 +320,22 @@ namespace DrawBody.Prototype
                 SetTurtleRotation(false);
                 rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
             }
+        }
+
+        public void SetFriendCarried(bool carried)
+        {
+            friendCarried = carried;
+            if (!carried)
+            {
+                return;
+            }
+
+            horizontalInput = 0f;
+            scriptedJumpPressed = false;
+            lastJumpPressedAt = -100f;
+            wallJumpControlLockUntil = -100f;
+            wallJumpMomentumUntil = -100f;
+            StopBirdGlideAudio();
         }
 
         public void ResetMotion()

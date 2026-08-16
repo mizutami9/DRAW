@@ -145,6 +145,11 @@ namespace DrawBody.Prototype
             {
                 return false;
             }
+            if (heldTransform.GetComponent<StageGun>() != null)
+            {
+                DropHeld(Vector2.zero);
+                return true;
+            }
             Vector2 normalized = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.right;
             float multiplier = heldObject != null ? heldObject.ThrowMultiplier : 1f;
             Vector2 throwVelocity = normalized * GetCurrentThrowSpeed() * multiplier;
@@ -282,6 +287,16 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (playerController != null && playerController.IsFriendCarried)
+            {
+                // Prevent reciprocal bird/cat grabs while being carried. The
+                // turtle's shell and turn inputs remain handled by its movement
+                // controller, so those abilities are still available.
+                DetachSlimeFromFriend(false);
+                DetachCatFromObject(false);
+                return;
+            }
+
             if (scriptedActionEnabled)
             {
                 return;
@@ -344,10 +359,21 @@ namespace DrawBody.Prototype
                 {
                     TryPickup();
                 }
+                else if (heldTransform.GetComponent<StageGun>() != null)
+                {
+                    DropHeld(Vector2.zero);
+                }
                 else
                 {
                     ThrowHeld();
                 }
+            }
+
+            StageGun heldGun = heldTransform != null ? heldTransform.GetComponent<StageGun>() : null;
+            if (heldGun != null && Input.GetMouseButtonDown(0))
+            {
+                Camera camera = Camera.main;
+                if (camera != null) heldGun.TryFire(camera.ScreenToWorldPoint(Input.mousePosition));
             }
         }
 
@@ -383,7 +409,19 @@ namespace DrawBody.Prototype
 
             Vector3 anchor = GetHoldPosition();
             heldTransform.position = anchor;
-            heldTransform.rotation = Quaternion.identity;
+            StageGun gun = heldTransform.GetComponent<StageGun>();
+            if (gun != null)
+            {
+                Camera camera = Camera.main;
+                Vector2 aim = camera != null
+                    ? (Vector2)camera.ScreenToWorldPoint(Input.mousePosition)
+                    : (Vector2)anchor + Vector2.right * GetFacingDirection();
+                gun.UpdateHeldPose(anchor, aim);
+            }
+            else
+            {
+                heldTransform.rotation = Quaternion.identity;
+            }
             if (heldBody != null)
             {
                 heldBody.linearVelocity = Vector2.zero;
@@ -391,7 +429,8 @@ namespace DrawBody.Prototype
             }
 
             bodyBuilder?.SetCarryPose(true, GetFacingDirection(), anchor);
-            UpdateThrowPreview(anchor);
+            if (gun != null) SetThrowPreviewVisible(false);
+            else UpdateThrowPreview(anchor);
         }
 
         private void TryAttachSlimeToFriend()
@@ -448,7 +487,7 @@ namespace DrawBody.Prototype
                 : bestPlayer.transform.InverseTransformVector(transform.position - bestPlayer.transform.position);
             if (IsBird())
             {
-                slimeAttachLocalOffset = new Vector3(GetFacingDirection() * 0.68f, -0.88f, 0f);
+                slimeAttachLocalOffset = CalculateBirdCarryOffset(bestPlayer);
             }
             if (slimeAttachLocalOffset.sqrMagnitude < 0.12f)
             {
@@ -469,6 +508,7 @@ namespace DrawBody.Prototype
             slimeAttachedTargetPreviousControlsEnabled = bestPlayer.ControlsEnabled;
             if (IsFriendCarrier())
             {
+                bestPlayer.SetFriendCarried(true);
                 friendAttachedOnlinePlayerId = GetHeldOnlinePlayerId(bestPlayer);
                 SendFriendAttachEvent("friend_grab", friendAttachedOnlinePlayerId, Vector2.zero);
             }
@@ -478,6 +518,30 @@ namespace DrawBody.Prototype
             SetCollisionIgnored(slimeOwnColliders, slimeTargetColliders, true);
             FollowSlimeAttachedFriend();
             GameSfx.PlayAt(GetFriendAttachSfx(), transform.position, 1.1f);
+        }
+
+        private Vector3 CalculateBirdCarryOffset(PlayerController2D target)
+        {
+            Collider2D[] own = GetComponentsInChildren<Collider2D>(false);
+            Collider2D[] carried = target != null
+                ? target.GetComponentsInChildren<Collider2D>(false)
+                : null;
+            if (!TryGetColliderBounds(own, out Bounds ownBounds)
+                || !TryGetColliderBounds(carried, out Bounds carriedBounds))
+            {
+                return new Vector3(GetFacingDirection() * 0.38f, 1.12f, 0f);
+            }
+
+            // Place the carried drawing by its actual collider bounds, rather
+            // than by its root. This keeps even unusually tall custom drawings
+            // completely above the bird.
+            const float verticalGap = 0.12f;
+            float desiredCenterX = ownBounds.center.x + GetFacingDirection() * 0.2f;
+            Vector3 desiredRoot = target.transform.position + new Vector3(
+                desiredCenterX - carriedBounds.center.x,
+                ownBounds.max.y + verticalGap - carriedBounds.min.y,
+                0f);
+            return transform.InverseTransformVector(desiredRoot - transform.position);
         }
 
         private void TryAttachCatToObject()
@@ -669,6 +733,7 @@ namespace DrawBody.Prototype
             }
             if (friendDragging)
             {
+                releasedTarget.SetFriendCarried(false);
                 releasedTarget.SetControlsEnabled(slimeAttachedTargetPreviousControlsEnabled);
             }
 
@@ -929,6 +994,7 @@ namespace DrawBody.Prototype
                 && heldPlayerController.ControlsEnabled;
             heldPlayerController?.SetControlsEnabled(false);
             heldTransform.GetComponent<StageBomb>()?.NotifyPickedUp();
+            heldTransform.GetComponent<StageGun>()?.SetHolder(this);
             heldOnlinePlayerId = GetHeldOnlinePlayerId(heldPlayerController);
             if (!string.IsNullOrEmpty(heldOnlinePlayerId))
             {
@@ -1051,6 +1117,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            StageGun releasedGun = heldTransform.GetComponent<StageGun>();
+            releasedGun?.SetHolder(null);
             bodyBuilder?.SetCarryPose(false, GetFacingDirection(), transform.position);
             if (heldObject != null)
             {

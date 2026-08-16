@@ -165,7 +165,9 @@ namespace DrawBody.Prototype
              || selectedData.type == StageObjectType.EnemyJumper
              || selectedData.type == StageObjectType.EnemyCharger
              || selectedData.type == StageObjectType.EnemyFlyer
-             || selectedData.type == StageObjectType.EnemyShooter);
+             || selectedData.type == StageObjectType.EnemyShooter
+             || selectedData.type == StageObjectType.EnemyFlyerZigzag
+             || selectedData.type == StageObjectType.EnemyFlyerOrbit);
         public bool SelectedSupportsBombFuse => selectedData != null &&
             (selectedData.type == StageObjectType.Bomb ||
              selectedData.type == StageObjectType.PickupFuseBomb ||
@@ -182,8 +184,11 @@ namespace DrawBody.Prototype
         public string SelectedSecondarySliderLabel => LocalizationManager.T(
             SelectedSupportsBombFuse ? "stage_editor_bomb_fuse_seconds" : "stage_editor_move_speed");
         public bool SelectedIsElevator => selectedData != null && selectedData.type == StageObjectType.Elevator;
+        public bool SelectedIsJumpPad => selectedData != null
+            && (selectedData.type == StageObjectType.JumpPad || selectedData.type == StageObjectType.Spring);
         public bool SelectedIsCrumblingFloor => selectedData != null && selectedData.type == StageObjectType.FallingFloor;
         public bool SelectedIsBombWall => selectedData != null && selectedData.type == StageObjectType.BreakableWall;
+        public bool SelectedIsBulletWall => selectedData != null && selectedData.type == StageObjectType.BulletBreakableWall;
         public bool SelectedIsConveyor => selectedData != null && IsConveyorType(selectedData.type);
         public bool SelectedIsBoxDropper => selectedData != null && selectedData.type == StageObjectType.BoxDropper;
         public bool SelectedIsSpikeDropper => selectedData != null && selectedData.type == StageObjectType.SpikeDropper;
@@ -198,8 +203,8 @@ namespace DrawBody.Prototype
                 ? "stage_editor_move_distance"
                 : SelectedIsCrumblingFloor
                     ? "stage_editor_crumble_delay"
-                    : SelectedIsBombWall
-                        ? "stage_editor_bomb_wall_hits"
+                    : SelectedIsBombWall || SelectedIsBulletWall
+                        ? SelectedIsBulletWall ? "stage_editor_bullet_wall_hits" : "stage_editor_bomb_wall_hits"
                     : SelectedIsConveyor
                         ? "stage_editor_conveyor_speed"
                         : SelectedIsDropper
@@ -211,18 +216,18 @@ namespace DrawBody.Prototype
                             : "stage_editor_action_strength");
         public float SelectedActionStrengthMinimum => SelectedIsCrumblingFloor
             ? 0.1f
-            : SelectedIsBombWall
+            : SelectedIsBombWall || SelectedIsBulletWall
                 ? 1f
             : SelectedIsConveyor || SelectedIsDropper || SelectedIsBeamEmitter || SelectedIsMissileLauncher
                 ? 0.5f
                 : SelectedIsMovingPlatform || SelectedIsElevator ? 1f : 5f;
         public float SelectedActionStrengthMaximum => SelectedIsCrumblingFloor
             ? 5f
-            : SelectedIsBombWall
+            : SelectedIsBombWall || SelectedIsBulletWall
                 ? 50f
             : SelectedIsConveyor || SelectedIsDropper || SelectedIsBeamEmitter || SelectedIsMissileLauncher
                 ? 10f
-                : SelectedIsMovingPlatform ? 100f : SelectedIsElevator ? 30f : 60f;
+                : SelectedIsMovingPlatform ? 100f : SelectedIsElevator ? 30f : SelectedIsJumpPad ? 120f : 60f;
         public bool SelectedSupportsWeightThreshold => selectedData != null && selectedData.type == StageObjectType.InkScale;
         public float SelectedActionStrength => selectedData != null && selectedData.actionStrength > 0f
             ? selectedData.actionStrength
@@ -230,8 +235,8 @@ namespace DrawBody.Prototype
                 ? SelectedIsElevator ? 8f : 6f
                 : SelectedIsCrumblingFloor
                     ? 0.4f
-                    : SelectedIsBombWall
-                        ? 1f
+                    : SelectedIsBombWall || SelectedIsBulletWall
+                        ? SelectedIsBulletWall ? 3f : 1f
                     : SelectedIsConveyor
                         ? 3f
                         : SelectedIsDropper || SelectedIsBeamEmitter || SelectedIsMissileLauncher ? 2f : 27f;
@@ -285,6 +290,7 @@ namespace DrawBody.Prototype
                 || type == StageObjectType.Elevator
                 || type == StageObjectType.FallingFloor
                 || type == StageObjectType.BreakableWall
+                || type == StageObjectType.BulletBreakableWall
                 || IsConveyorType(type)
                 || type == StageObjectType.BoxDropper
                 || type == StageObjectType.SpikeDropper

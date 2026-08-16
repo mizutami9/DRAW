@@ -15,6 +15,8 @@ namespace DrawBody.Prototype
         private float chargeUntil;
         private float reverseLockUntil;
         private float flightPhase;
+        private Vector2 flightOrigin;
+        private float flightStartedAt;
         private bool defeated;
         private bool spawnedByDevice;
         private Rigidbody2D body;
@@ -58,6 +60,8 @@ namespace DrawBody.Prototype
             stageManager = Object.FindFirstObjectByType<StageManager>();
             syncManager = Object.FindFirstObjectByType<StageGimmickSyncManager>();
             flightPhase = Mathf.Abs(ObjectId.GetHashCode() % 1000) * 0.01f;
+            flightOrigin = transform.position;
+            flightStartedAt = Time.time;
             nextAbilityAt = Time.time + InitialAbilityDelay();
 
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
@@ -96,7 +100,9 @@ namespace DrawBody.Prototype
         {
             if (defeated || body == null || syncManager != null && syncManager.ShouldAskHost) return;
 
-            if (enemyType == StageObjectType.EnemyFlyer)
+            if (enemyType == StageObjectType.EnemyFlyer
+                || enemyType == StageObjectType.EnemyFlyerZigzag
+                || enemyType == StageObjectType.EnemyFlyerOrbit)
             {
                 MoveFlyer();
                 return;
@@ -125,8 +131,17 @@ namespace DrawBody.Prototype
 
         private void MoveFlyer()
         {
+            if (enemyType == StageObjectType.EnemyFlyerOrbit)
+            {
+                float time = (Time.time - flightStartedAt) * Mathf.Max(0.5f, baseSpeed * 0.48f);
+                Vector2 target = flightOrigin + new Vector2(Mathf.Sin(time) * 2.6f, Mathf.Sin(time * 2f) * 1.55f);
+                body.linearVelocity = (target - body.position) / Mathf.Max(Time.fixedDeltaTime, 0.001f);
+                return;
+            }
             if (IsWallAhead()) Reverse();
-            float vertical = Mathf.Sin(Time.time * 2.25f + flightPhase) * 1.35f;
+            float vertical = enemyType == StageObjectType.EnemyFlyerZigzag
+                ? (Mathf.Repeat(Time.time * 1.3f + flightPhase, 2f) < 1f ? 2.7f : -2.7f)
+                : Mathf.Sin(Time.time * 2.25f + flightPhase) * 1.35f;
             body.linearVelocity = new Vector2(direction * baseSpeed, vertical);
         }
 
@@ -330,10 +345,16 @@ namespace DrawBody.Prototype
                 AddLine(parent, "Charge Horns", new[] { new Vector2(-0.45f, 0.27f), new Vector2(-0.78f, 0.58f), new Vector2(-0.58f, 0.08f) }, 0.1f, ink, 36);
                 AddLine(parent, "Charge Horns Right", new[] { new Vector2(0.45f, 0.27f), new Vector2(0.78f, 0.58f), new Vector2(0.58f, 0.08f) }, 0.1f, ink, 36);
             }
-            else if (enemyType == StageObjectType.EnemyFlyer)
+            else if (enemyType == StageObjectType.EnemyFlyer
+                || enemyType == StageObjectType.EnemyFlyerZigzag
+                || enemyType == StageObjectType.EnemyFlyerOrbit)
             {
                 AddLine(parent, "Left Wing", new[] { new Vector2(-0.42f, 0.08f), new Vector2(-0.9f, 0.42f), new Vector2(-0.72f, -0.05f), new Vector2(-0.98f, -0.2f) }, 0.105f, ink, 33);
                 AddLine(parent, "Right Wing", new[] { new Vector2(0.42f, 0.08f), new Vector2(0.9f, 0.42f), new Vector2(0.72f, -0.05f), new Vector2(0.98f, -0.2f) }, 0.105f, ink, 33);
+                if (enemyType == StageObjectType.EnemyFlyerZigzag)
+                    AddLine(parent, "Zigzag Mark", new[] { new Vector2(-0.3f, 0.55f), new Vector2(0f, 0.82f), new Vector2(0.3f, 0.55f) }, 0.075f, ink, 37);
+                else if (enemyType == StageObjectType.EnemyFlyerOrbit)
+                    AddLine(parent, "Orbit Mark", new[] { new Vector2(-0.42f, 0.62f), new Vector2(0f, 0.78f), new Vector2(0.42f, 0.62f), new Vector2(0f, 0.48f), new Vector2(-0.42f, 0.62f) }, 0.065f, ink, 37);
             }
             else if (enemyType == StageObjectType.EnemyShooter)
             {
@@ -413,6 +434,8 @@ namespace DrawBody.Prototype
                 case StageObjectType.EnemyJumper: return 2.1f;
                 case StageObjectType.EnemyCharger: return 1.7f;
                 case StageObjectType.EnemyFlyer: return 2.65f;
+                case StageObjectType.EnemyFlyerZigzag: return 2.45f;
+                case StageObjectType.EnemyFlyerOrbit: return 1.9f;
                 case StageObjectType.EnemyShooter: return 0.35f;
                 default: return 2.4f;
             }
@@ -431,6 +454,8 @@ namespace DrawBody.Prototype
                 case StageObjectType.EnemyJumper: return new Color(1f, 0.57f, 0.12f, 0.94f);
                 case StageObjectType.EnemyCharger: return new Color(0.93f, 0.18f, 0.15f, 0.94f);
                 case StageObjectType.EnemyFlyer: return new Color(0.18f, 0.62f, 0.95f, 0.94f);
+                case StageObjectType.EnemyFlyerZigzag: return new Color(0.95f, 0.38f, 0.72f, 0.94f);
+                case StageObjectType.EnemyFlyerOrbit: return new Color(0.55f, 0.25f, 0.92f, 0.94f);
                 case StageObjectType.EnemyShooter: return new Color(0.42f, 0.76f, 0.24f, 0.94f);
                 default: return new Color(0.62f, 0.35f, 0.82f, 0.94f);
             }

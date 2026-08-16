@@ -203,7 +203,12 @@ namespace DrawBody.Prototype
         EscortGoal,
         EscortPlayerOnlyFloor,
         EscortHeadBridge,
-        MovingOneWayPlatform
+        MovingOneWayPlatform,
+        Handgun,
+        BulletBreakableWall,
+        SpikePlanet,
+        EnemyFlyerZigzag,
+        EnemyFlyerOrbit
     }
 
     [Serializable]

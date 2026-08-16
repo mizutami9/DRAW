@@ -177,6 +177,11 @@ namespace DrawBody.Prototype
             E(StageObjectType.EnemyCharger, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
             E(StageObjectType.EnemyFlyer, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
             E(StageObjectType.EnemyShooter, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.EnemyFlyerZigzag, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.EnemyFlyerOrbit, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.SpikePlanet, StageObjectCategory.Trap, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.Handgun, StageObjectCategory.Movable, StageObjectPlacement.Point, StageObjectKind.Pushable),
+            E(StageObjectType.BulletBreakableWall, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
 
             E(StageObjectType.Gear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),
             E(StageObjectType.BigGear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),
