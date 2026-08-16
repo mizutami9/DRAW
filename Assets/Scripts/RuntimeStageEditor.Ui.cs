@@ -260,7 +260,7 @@ namespace DrawBody.Prototype
             float maximum = SelectedActionStrengthMaximum;
             float rounded = SelectedIsBombWall
                 ? Mathf.Round(value)
-                : SelectedIsCrumblingFloor || SelectedIsConveyor || SelectedIsDropper
+                : SelectedIsCrumblingFloor || SelectedIsConveyor || SelectedIsDropper || SelectedIsEnemyBomber
                     ? Mathf.Round(value * 10f) / 10f
                     : Mathf.Round(value * 2f) / 2f;
             selectedData.actionStrength = Mathf.Clamp(rounded, minimum, maximum);

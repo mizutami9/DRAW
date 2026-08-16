@@ -167,13 +167,16 @@ namespace DrawBody.Prototype
              || selectedData.type == StageObjectType.EnemyFlyer
              || selectedData.type == StageObjectType.EnemyShooter
              || selectedData.type == StageObjectType.EnemyFlyerZigzag
-             || selectedData.type == StageObjectType.EnemyFlyerOrbit);
+             || selectedData.type == StageObjectType.EnemyFlyerOrbit
+             || selectedData.type == StageObjectType.EnemyBomber);
+        public bool SelectedIsMovingSpikePlanet => selectedData != null
+            && selectedData.type == StageObjectType.MovingSpikePlanet;
         public bool SelectedSupportsBombFuse => selectedData != null &&
             (selectedData.type == StageObjectType.Bomb ||
              selectedData.type == StageObjectType.PickupFuseBomb ||
              selectedData.type == StageObjectType.BombDropper ||
              selectedData.type == StageObjectType.Dynamite);
-        public bool SelectedSupportsSecondarySlider => SelectedIsMovingPlatform || SelectedIsEnemy || SelectedIsMissileLauncher || SelectedSupportsBombFuse;
+        public bool SelectedSupportsSecondarySlider => SelectedIsMovingPlatform || SelectedIsMovingSpikePlanet || SelectedIsEnemy || SelectedIsMissileLauncher || SelectedSupportsBombFuse;
         public float SelectedMovementSpeed => SelectedSupportsBombFuse
             ? Mathf.Clamp(selectedData.bombFuseSeconds > 0f ? selectedData.bombFuseSeconds : 5f, 1f, 15f)
             : selectedData != null && selectedData.movementSpeed > 0f
@@ -194,12 +197,13 @@ namespace DrawBody.Prototype
         public bool SelectedIsSpikeDropper => selectedData != null && selectedData.type == StageObjectType.SpikeDropper;
         public bool SelectedIsBombDropper => selectedData != null && selectedData.type == StageObjectType.BombDropper;
         public bool SelectedIsEnemyDropper => selectedData != null && selectedData.type == StageObjectType.EnemyDropper;
+        public bool SelectedIsEnemyBomber => selectedData != null && selectedData.type == StageObjectType.EnemyBomber;
         public bool SelectedUsesDropperPattern => SelectedIsBoxDropper || SelectedIsBombDropper || SelectedIsEnemyDropper;
         public bool SelectedIsDropper => SelectedIsBoxDropper || SelectedIsSpikeDropper || SelectedIsBombDropper || SelectedIsEnemyDropper;
         public bool SelectedIsBeamEmitter => selectedData != null && selectedData.type == StageObjectType.BeamEmitter;
         public bool SelectedIsMissileLauncher => selectedData != null && selectedData.type == StageObjectType.MissileLauncher;
         public string SelectedActionStrengthLabel => LocalizationManager.T(
-            SelectedIsMovingPlatform || SelectedIsElevator
+            SelectedIsMovingPlatform || SelectedIsMovingSpikePlanet || SelectedIsElevator
                 ? "stage_editor_move_distance"
                 : SelectedIsCrumblingFloor
                     ? "stage_editor_crumble_delay"
@@ -207,7 +211,7 @@ namespace DrawBody.Prototype
                         ? SelectedIsBulletWall ? "stage_editor_bullet_wall_hits" : "stage_editor_bomb_wall_hits"
                     : SelectedIsConveyor
                         ? "stage_editor_conveyor_speed"
-                        : SelectedIsDropper
+                        : SelectedIsDropper || SelectedIsEnemyBomber
                             ? "stage_editor_drop_interval"
                             : SelectedIsMissileLauncher
                                 ? "stage_editor_launch_interval"
@@ -218,20 +222,20 @@ namespace DrawBody.Prototype
             ? 0.1f
             : SelectedIsBombWall || SelectedIsBulletWall
                 ? 1f
-            : SelectedIsConveyor || SelectedIsDropper || SelectedIsBeamEmitter || SelectedIsMissileLauncher
+            : SelectedIsConveyor || SelectedIsDropper || SelectedIsEnemyBomber || SelectedIsBeamEmitter || SelectedIsMissileLauncher
                 ? 0.5f
-                : SelectedIsMovingPlatform || SelectedIsElevator ? 1f : 5f;
+                : SelectedIsMovingPlatform || SelectedIsMovingSpikePlanet || SelectedIsElevator ? 1f : 5f;
         public float SelectedActionStrengthMaximum => SelectedIsCrumblingFloor
             ? 5f
             : SelectedIsBombWall || SelectedIsBulletWall
                 ? 50f
-            : SelectedIsConveyor || SelectedIsDropper || SelectedIsBeamEmitter || SelectedIsMissileLauncher
+            : SelectedIsConveyor || SelectedIsDropper || SelectedIsEnemyBomber || SelectedIsBeamEmitter || SelectedIsMissileLauncher
                 ? 10f
-                : SelectedIsMovingPlatform ? 100f : SelectedIsElevator ? 30f : SelectedIsJumpPad ? 120f : 60f;
+                : SelectedIsMovingPlatform || SelectedIsMovingSpikePlanet ? 100f : SelectedIsElevator ? 30f : SelectedIsJumpPad ? 120f : 60f;
         public bool SelectedSupportsWeightThreshold => selectedData != null && selectedData.type == StageObjectType.InkScale;
         public float SelectedActionStrength => selectedData != null && selectedData.actionStrength > 0f
             ? selectedData.actionStrength
-            : SelectedIsMovingPlatform || SelectedIsElevator
+            : SelectedIsMovingPlatform || SelectedIsMovingSpikePlanet || SelectedIsElevator
                 ? SelectedIsElevator ? 8f : 6f
                 : SelectedIsCrumblingFloor
                     ? 0.4f
@@ -239,6 +243,7 @@ namespace DrawBody.Prototype
                         ? SelectedIsBulletWall ? 3f : 1f
                     : SelectedIsConveyor
                         ? 3f
+                        : SelectedIsEnemyBomber ? 3.2f
                         : SelectedIsDropper || SelectedIsBeamEmitter || SelectedIsMissileLauncher ? 2f : 27f;
         public string SelectedConveyorDirectionLabel => LocalizationManager.T(
             selectedData != null && Mathf.Cos(selectedData.movementAngle * Mathf.Deg2Rad) < 0f
@@ -287,6 +292,7 @@ namespace DrawBody.Prototype
                 || type == StageObjectType.Spring
                 || type == StageObjectType.MovingPlatform
                 || type == StageObjectType.MovingOneWayPlatform
+                || type == StageObjectType.MovingSpikePlanet
                 || type == StageObjectType.Elevator
                 || type == StageObjectType.FallingFloor
                 || type == StageObjectType.BreakableWall
@@ -296,6 +302,7 @@ namespace DrawBody.Prototype
                 || type == StageObjectType.SpikeDropper
                 || type == StageObjectType.BombDropper
                 || type == StageObjectType.EnemyDropper
+                || type == StageObjectType.EnemyBomber
                 || type == StageObjectType.BeamEmitter
                 || type == StageObjectType.MissileLauncher;
         }

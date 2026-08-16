@@ -208,7 +208,10 @@ namespace DrawBody.Prototype
         BulletBreakableWall,
         SpikePlanet,
         EnemyFlyerZigzag,
-        EnemyFlyerOrbit
+        EnemyFlyerOrbit,
+        Bazooka,
+        EnemyBomber,
+        MovingSpikePlanet
     }
 
     [Serializable]

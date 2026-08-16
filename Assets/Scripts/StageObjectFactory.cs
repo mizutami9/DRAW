@@ -73,8 +73,14 @@ namespace DrawBody.Prototype
                     return CreateMissileLauncher(data, parent);
                 case StageObjectType.Handgun:
                     return StageGun.CreateObject(data, parent, pushableLayer);
+                case StageObjectType.Bazooka:
+                    return StageBazooka.CreateObject(data, parent, pushableLayer);
                 case StageObjectType.SpikePlanet:
                     return StageSpikePlanet.CreateObject(data, parent);
+                case StageObjectType.MovingSpikePlanet:
+                    return StageAerialHazardFactory.CreateMovingSpikePlanet(data, parent);
+                case StageObjectType.EnemyBomber:
+                    return StageAerialHazardFactory.CreateBombingEnemy(data, parent, this);
                 case StageObjectType.EscortSpawner:
                 case StageObjectType.EscortGoal:
                 case StageObjectType.EscortPlayerOnlyFloor:
@@ -214,8 +220,15 @@ namespace DrawBody.Prototype
                     case StageObjectType.Handgun:
                         size = new Vector2(0.85f, 0.48f);
                         break;
+                    case StageObjectType.Bazooka:
+                        size = new Vector2(1.45f, 0.72f);
+                        break;
                     case StageObjectType.SpikePlanet:
+                    case StageObjectType.MovingSpikePlanet:
                         size = new Vector2(2.5f, 2.5f);
+                        break;
+                    case StageObjectType.EnemyBomber:
+                        size = new Vector2(1.7f, 1.35f);
                         break;
                     case StageObjectType.Goal:
                         size = new Vector2(1.15f, 2.05f);
@@ -320,6 +333,10 @@ namespace DrawBody.Prototype
                         ? 1f
                     : type == StageObjectType.BulletBreakableWall
                         ? 3f
+                    : type == StageObjectType.MovingSpikePlanet
+                        ? 8f
+                    : type == StageObjectType.EnemyBomber
+                        ? 3.2f
                     : type == StageObjectType.JumpPad || type == StageObjectType.Spring
                         ? 27f
                         : type == StageObjectType.MovingPlatform || type == StageObjectType.MovingOneWayPlatform
@@ -341,6 +358,8 @@ namespace DrawBody.Prototype
                     : type == StageObjectType.EnemyFlyer ? 2.7f
                     : type == StageObjectType.EnemyFlyerZigzag ? 2.45f
                     : type == StageObjectType.EnemyFlyerOrbit ? 1.9f
+                    : type == StageObjectType.EnemyBomber ? 2.6f
+                    : type == StageObjectType.MovingSpikePlanet ? 2.4f
                     : type == StageObjectType.EnemyShooter ? 0.5f
                     : type == StageObjectType.MissileLauncher ? 8f
                     : 0f,
@@ -389,7 +408,8 @@ namespace DrawBody.Prototype
             body.bodyType = RigidbodyType2D.Dynamic;
             body.gravityScale = data.type == StageObjectType.EnemyFlyer
                 || data.type == StageObjectType.EnemyFlyerZigzag
-                || data.type == StageObjectType.EnemyFlyerOrbit ? 0f : 1.65f;
+                || data.type == StageObjectType.EnemyFlyerOrbit
+                || data.type == StageObjectType.EnemyBomber ? 0f : 1.65f;
             body.freezeRotation = true;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
@@ -403,6 +423,11 @@ namespace DrawBody.Prototype
             enemy.Configure(data.type, size, data.movementSpeed > 0f ? data.movementSpeed : 0f, facing);
             AddEditorMetadata(obj, data);
             return obj;
+        }
+
+        public GameObject CreateBombingEnemyBase(StageObjectData data, Transform parent)
+        {
+            return CreateEnemy(data, parent);
         }
 
         public GameObject CreateSpawnedEnemy(

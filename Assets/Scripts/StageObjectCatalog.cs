@@ -182,6 +182,9 @@ namespace DrawBody.Prototype
             E(StageObjectType.SpikePlanet, StageObjectCategory.Trap, StageObjectPlacement.Point, StageObjectKind.Hazard),
             E(StageObjectType.Handgun, StageObjectCategory.Movable, StageObjectPlacement.Point, StageObjectKind.Pushable),
             E(StageObjectType.BulletBreakableWall, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
+            E(StageObjectType.Bazooka, StageObjectCategory.Movable, StageObjectPlacement.Point, StageObjectKind.Pushable),
+            E(StageObjectType.EnemyBomber, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.MovingSpikePlanet, StageObjectCategory.Trap, StageObjectPlacement.Point, StageObjectKind.Hazard),
 
             E(StageObjectType.Gear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),
             E(StageObjectType.BigGear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),

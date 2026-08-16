@@ -102,7 +102,8 @@ namespace DrawBody.Prototype
 
             if (enemyType == StageObjectType.EnemyFlyer
                 || enemyType == StageObjectType.EnemyFlyerZigzag
-                || enemyType == StageObjectType.EnemyFlyerOrbit)
+                || enemyType == StageObjectType.EnemyFlyerOrbit
+                || enemyType == StageObjectType.EnemyBomber)
             {
                 MoveFlyer();
                 return;
@@ -347,7 +348,8 @@ namespace DrawBody.Prototype
             }
             else if (enemyType == StageObjectType.EnemyFlyer
                 || enemyType == StageObjectType.EnemyFlyerZigzag
-                || enemyType == StageObjectType.EnemyFlyerOrbit)
+                || enemyType == StageObjectType.EnemyFlyerOrbit
+                || enemyType == StageObjectType.EnemyBomber)
             {
                 AddLine(parent, "Left Wing", new[] { new Vector2(-0.42f, 0.08f), new Vector2(-0.9f, 0.42f), new Vector2(-0.72f, -0.05f), new Vector2(-0.98f, -0.2f) }, 0.105f, ink, 33);
                 AddLine(parent, "Right Wing", new[] { new Vector2(0.42f, 0.08f), new Vector2(0.9f, 0.42f), new Vector2(0.72f, -0.05f), new Vector2(0.98f, -0.2f) }, 0.105f, ink, 33);
@@ -355,6 +357,11 @@ namespace DrawBody.Prototype
                     AddLine(parent, "Zigzag Mark", new[] { new Vector2(-0.3f, 0.55f), new Vector2(0f, 0.82f), new Vector2(0.3f, 0.55f) }, 0.075f, ink, 37);
                 else if (enemyType == StageObjectType.EnemyFlyerOrbit)
                     AddLine(parent, "Orbit Mark", new[] { new Vector2(-0.42f, 0.62f), new Vector2(0f, 0.78f), new Vector2(0.42f, 0.62f), new Vector2(0f, 0.48f), new Vector2(-0.42f, 0.62f) }, 0.065f, ink, 37);
+                else if (enemyType == StageObjectType.EnemyBomber)
+                {
+                    CreateSprite("Bomb Satchel", parent, new Vector2(0f, -0.5f), new Vector2(0.52f, 0.34f), new Color(0.15f, 0.14f, 0.18f, 1f), 37, true);
+                    AddLine(parent, "Bomb Fuse Mark", new[] { new Vector2(0.12f, -0.38f), new Vector2(0.25f, -0.18f), new Vector2(0.36f, -0.28f) }, 0.065f, new Color(1f, 0.5f, 0.08f, 1f), 38);
+                }
             }
             else if (enemyType == StageObjectType.EnemyShooter)
             {
@@ -436,6 +443,7 @@ namespace DrawBody.Prototype
                 case StageObjectType.EnemyFlyer: return 2.65f;
                 case StageObjectType.EnemyFlyerZigzag: return 2.45f;
                 case StageObjectType.EnemyFlyerOrbit: return 1.9f;
+                case StageObjectType.EnemyBomber: return 2.6f;
                 case StageObjectType.EnemyShooter: return 0.35f;
                 default: return 2.4f;
             }
@@ -456,6 +464,7 @@ namespace DrawBody.Prototype
                 case StageObjectType.EnemyFlyer: return new Color(0.18f, 0.62f, 0.95f, 0.94f);
                 case StageObjectType.EnemyFlyerZigzag: return new Color(0.95f, 0.38f, 0.72f, 0.94f);
                 case StageObjectType.EnemyFlyerOrbit: return new Color(0.55f, 0.25f, 0.92f, 0.94f);
+                case StageObjectType.EnemyBomber: return new Color(0.95f, 0.55f, 0.16f, 0.94f);
                 case StageObjectType.EnemyShooter: return new Color(0.42f, 0.76f, 0.24f, 0.94f);
                 default: return new Color(0.62f, 0.35f, 0.82f, 0.94f);
             }

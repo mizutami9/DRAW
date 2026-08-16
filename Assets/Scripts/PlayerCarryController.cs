@@ -145,7 +145,7 @@ namespace DrawBody.Prototype
             {
                 return false;
             }
-            if (heldTransform.GetComponent<StageGun>() != null)
+            if (heldTransform.GetComponent<StageGun>() != null || heldTransform.GetComponent<StageBazooka>() != null)
             {
                 DropHeld(Vector2.zero);
                 return true;
@@ -294,6 +294,7 @@ namespace DrawBody.Prototype
                 // controller, so those abilities are still available.
                 DetachSlimeFromFriend(false);
                 DetachCatFromObject(false);
+                HandleHeldWeaponInput();
                 return;
             }
 
@@ -359,7 +360,7 @@ namespace DrawBody.Prototype
                 {
                     TryPickup();
                 }
-                else if (heldTransform.GetComponent<StageGun>() != null)
+                else if (heldTransform.GetComponent<StageGun>() != null || heldTransform.GetComponent<StageBazooka>() != null)
                 {
                     DropHeld(Vector2.zero);
                 }
@@ -370,10 +371,16 @@ namespace DrawBody.Prototype
             }
 
             StageGun heldGun = heldTransform != null ? heldTransform.GetComponent<StageGun>() : null;
+            StageBazooka heldBazooka = heldTransform != null ? heldTransform.GetComponent<StageBazooka>() : null;
             if (heldGun != null && Input.GetMouseButtonDown(0))
             {
                 Camera camera = Camera.main;
                 if (camera != null) heldGun.TryFire(camera.ScreenToWorldPoint(Input.mousePosition));
+            }
+            else if (heldBazooka != null && Input.GetMouseButtonDown(0))
+            {
+                Camera camera = Camera.main;
+                if (camera != null) heldBazooka.TryFire(camera.ScreenToWorldPoint(Input.mousePosition));
             }
         }
 
@@ -410,6 +417,7 @@ namespace DrawBody.Prototype
             Vector3 anchor = GetHoldPosition();
             heldTransform.position = anchor;
             StageGun gun = heldTransform.GetComponent<StageGun>();
+            StageBazooka bazooka = heldTransform.GetComponent<StageBazooka>();
             if (gun != null)
             {
                 Camera camera = Camera.main;
@@ -417,6 +425,14 @@ namespace DrawBody.Prototype
                     ? (Vector2)camera.ScreenToWorldPoint(Input.mousePosition)
                     : (Vector2)anchor + Vector2.right * GetFacingDirection();
                 gun.UpdateHeldPose(anchor, aim);
+            }
+            else if (bazooka != null)
+            {
+                Camera camera = Camera.main;
+                Vector2 aim = camera != null
+                    ? (Vector2)camera.ScreenToWorldPoint(Input.mousePosition)
+                    : (Vector2)anchor + Vector2.right * GetFacingDirection();
+                bazooka.UpdateHeldPose(anchor, aim);
             }
             else
             {
@@ -429,8 +445,51 @@ namespace DrawBody.Prototype
             }
 
             bodyBuilder?.SetCarryPose(true, GetFacingDirection(), anchor);
-            if (gun != null) SetThrowPreviewVisible(false);
+            if (gun != null || bazooka != null) SetThrowPreviewVisible(false);
             else UpdateThrowPreview(anchor);
+        }
+
+        private void HandleHeldWeaponInput()
+        {
+            if (!IsHuman() || heldTransform == null) return;
+            if (Input.GetKeyDown(KeyCode.F)
+                && (heldTransform.GetComponent<StageGun>() != null || heldTransform.GetComponent<StageBazooka>() != null))
+            {
+                DropHeld(Vector2.zero);
+                return;
+            }
+            if (!Input.GetMouseButtonDown(0)) return;
+            Camera camera = Camera.main;
+            if (camera == null) return;
+            Vector2 aim = camera.ScreenToWorldPoint(Input.mousePosition);
+            StageGun gun = heldTransform.GetComponent<StageGun>();
+            if (gun != null) gun.TryFire(aim);
+            else heldTransform.GetComponent<StageBazooka>()?.TryFire(aim);
+        }
+
+        public string GetWeaponRecoilTargetOnlineId()
+        {
+            PlayerCarryController recoilTarget = FindCarrierOfThisPlayer() ?? this;
+            if (stageManager == null) stageManager = FindObjectOfType<StageManager>();
+            return stageManager != null ? stageManager.GetOnlinePlayerId(recoilTarget.playerController) : null;
+        }
+
+        public void ApplyDirectWeaponRecoil(Vector2 velocityChange)
+        {
+            PlayerCarryController recoilTarget = FindCarrierOfThisPlayer() ?? this;
+            Rigidbody2D targetBody = recoilTarget.playerBody;
+            if (targetBody == null || targetBody.bodyType != RigidbodyType2D.Dynamic) return;
+            Vector2 velocity = targetBody.linearVelocity + velocityChange;
+            targetBody.linearVelocity = Vector2.ClampMagnitude(velocity, 28f);
+        }
+
+        private PlayerCarryController FindCarrierOfThisPlayer()
+        {
+            PlayerCarryController[] carriers = FindObjectsByType<PlayerCarryController>(FindObjectsSortMode.None);
+            for (int i = 0; i < carriers.Length; i++)
+                if (carriers[i] != null && carriers[i] != this && carriers[i].IsDraggingFriend(transform))
+                    return carriers[i];
+            return null;
         }
 
         private void TryAttachSlimeToFriend()
@@ -995,6 +1054,7 @@ namespace DrawBody.Prototype
             heldPlayerController?.SetControlsEnabled(false);
             heldTransform.GetComponent<StageBomb>()?.NotifyPickedUp();
             heldTransform.GetComponent<StageGun>()?.SetHolder(this);
+            heldTransform.GetComponent<StageBazooka>()?.SetHolder(this);
             heldOnlinePlayerId = GetHeldOnlinePlayerId(heldPlayerController);
             if (!string.IsNullOrEmpty(heldOnlinePlayerId))
             {
@@ -1119,6 +1179,8 @@ namespace DrawBody.Prototype
 
             StageGun releasedGun = heldTransform.GetComponent<StageGun>();
             releasedGun?.SetHolder(null);
+            StageBazooka releasedBazooka = heldTransform.GetComponent<StageBazooka>();
+            releasedBazooka?.SetHolder(null);
             bodyBuilder?.SetCarryPose(false, GetFacingDirection(), transform.position);
             if (heldObject != null)
             {
