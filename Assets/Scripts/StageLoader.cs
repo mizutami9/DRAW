@@ -263,6 +263,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingBlockBreaker);
             }
 
+            StageRicochetBreakerController existingRicochet = stageRoot.GetComponent<StageRicochetBreakerController>();
+            if (existingRicochet != null)
+            {
+                DestroyComponentNow(existingRicochet);
+            }
+
             StageEscortController existingEscort = stageRoot.GetComponent<StageEscortController>();
             if (existingEscort != null)
             {
@@ -290,8 +296,16 @@ namespace DrawBody.Prototype
             }
             else if (data != null && data.ruleMode == StageRuleMode.BlockBreaker)
             {
-                StageBlockBreakerController blockBreaker = stageRoot.gameObject.AddComponent<StageBlockBreakerController>();
-                blockBreaker.Configure(data.timeLimitSeconds);
+                if (data.id == "8-2")
+                {
+                    StageRicochetBreakerController ricochet = stageRoot.gameObject.AddComponent<StageRicochetBreakerController>();
+                    ricochet.Configure(data.timeLimitSeconds);
+                }
+                else
+                {
+                    StageBlockBreakerController blockBreaker = stageRoot.gameObject.AddComponent<StageBlockBreakerController>();
+                    blockBreaker.Configure(data.timeLimitSeconds);
+                }
             }
         }
 
