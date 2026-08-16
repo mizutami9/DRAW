@@ -1,0 +1,186 @@
+{
+    "id": "4-3",
+    "displayName": "Stage 4-3 Crayon King",
+    "backgroundColorHex": "#F7F5E9FF",
+    "ruleMode": 2,
+    "timeLimitSeconds": 60.0,
+    "collectionTarget": 163,
+    "requiredCollectionCount": 1,
+    "objects": [
+        {
+            "objectId": "4-3_boundary",
+            "type": 151,
+            "position": {
+                "x": 4.0,
+                "y": 3.0
+            },
+            "size": {
+                "x": 42.0,
+                "y": 20.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.699999988079071,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "4-3_spawn",
+            "type": 2,
+            "position": {
+                "x": -14.0,
+                "y": -1.2000000476837159
+            },
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.699999988079071
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "4-3_entry_floor",
+            "type": 0,
+            "position": {
+                "x": -9.299999237060547,
+                "y": -3.0
+            },
+            "size": {
+                "x": 14.0,
+                "y": 0.699999988079071
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "4-3_arena_floor",
+            "type": 0,
+            "position": {
+                "x": 10.299999237060547,
+                "y": -3.0
+            },
+            "size": {
+                "x": 28.0,
+                "y": 0.699999988079071
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "4-3_room_divider",
+            "type": 1,
+            "position": {
+                "x": -3.0,
+                "y": 7.0
+            },
+            "size": {
+                "x": 0.699999988079071,
+                "y": 10.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "4-3_gun_1",
+            "type": 183,
+            "position": {
+                "x": -13.0,
+                "y": -2.0999999046325685
+            },
+            "size": {
+                "x": 0.8500000238418579,
+                "y": 0.47999998927116396
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "4-3_gun_2",
+            "type": 183,
+            "position": {
+                "x": -11.5,
+                "y": -2.0999999046325685
+            },
+            "size": {
+                "x": 0.8500000238418579,
+                "y": 0.47999998927116396
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        }
+    ]
+}

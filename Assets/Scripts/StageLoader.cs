@@ -275,15 +275,30 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingEscort);
             }
 
+            StageBossBattleController existingBossBattle = stageRoot.GetComponent<StageBossBattleController>();
+            if (existingBossBattle != null)
+            {
+                DestroyComponentNow(existingBossBattle);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.id == "5-3")
             {
                 stageRoot.gameObject.AddComponent<StageEscortController>();
             }
+            if (data != null && data.id == "4-3")
+            {
+                stageRoot.gameObject.AddComponent<StageBossBattleController>();
+            }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
-                if (data.id == "6-2")
+                if (data.id == "4-3")
+                {
+                    // StageBossBattleController is the elimination controller
+                    // for this stage. Do not build the 11-2 survival arena.
+                }
+                else if (data.id == "6-2")
                 {
                     StageJumpRopeController jumpRope = stageRoot.gameObject.AddComponent<StageJumpRopeController>();
                     jumpRope.Configure(data.timeLimitSeconds);

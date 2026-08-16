@@ -745,7 +745,7 @@ namespace DrawBody.Prototype
                 }
                 else
                 {
-                    StartCoroutine(RestoreReleasedCollisions(releasedOwnColliders, releasedTargetColliders));
+                    RestoreReleasedCollisionsSafely(releasedOwnColliders, releasedTargetColliders);
                 }
             }
             if (playSound)
@@ -1125,7 +1125,10 @@ namespace DrawBody.Prototype
                 ResolveGimmickSyncManager()?.EndLocalObjectCarry(heldTransform, releaseVelocity);
             }
             Collider2D[] releasedColliders = heldColliders.ToArray();
-            Collider2D[] carrierColliders = GetComponentsInChildren<Collider2D>(false);
+            // OnDisable can run after the player GameObject has already become
+            // inactive. Include inactive body colliders so ignored collision
+            // pairs are still fully restored for the next retry/respawn.
+            Collider2D[] carrierColliders = GetComponentsInChildren<Collider2D>(true);
 
             for (int i = 0; i < releasedColliders.Length; i++)
             {
@@ -1165,7 +1168,7 @@ namespace DrawBody.Prototype
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             SetThrowPreviewVisible(false);
-            StartCoroutine(RestoreReleasedCollisions(releasedColliders, carrierColliders));
+            RestoreReleasedCollisionsSafely(releasedColliders, carrierColliders);
         }
 
         private void ClearDestroyedHeldState(Vector2 releaseVelocity)
@@ -1994,6 +1997,20 @@ namespace DrawBody.Prototype
                 yield return new WaitForFixedUpdate();
             }
 
+            SetCollisionIgnored(releasedColliders, carrierColliders, false);
+        }
+
+        private void RestoreReleasedCollisionsSafely(Collider2D[] releasedColliders, Collider2D[] carrierColliders)
+        {
+            if (isActiveAndEnabled && gameObject.activeInHierarchy)
+            {
+                StartCoroutine(RestoreReleasedCollisions(releasedColliders, carrierColliders));
+                return;
+            }
+
+            // A disabled/inactive player cannot host a coroutine. Its colliders
+            // are not participating in physics, so immediate restoration is safe
+            // and prevents the ignore state leaking into the next retry.
             SetCollisionIgnored(releasedColliders, carrierColliders, false);
         }
 

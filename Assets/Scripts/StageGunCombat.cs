@@ -386,6 +386,18 @@ namespace DrawBody.Prototype
                     system?.HitWall(wall, hits[i].point);
                     return true;
                 }
+                StageBossHitbox boss = collider.GetComponentInParent<StageBossHitbox>();
+                if (boss != null)
+                {
+                    boss.HitByBullet(hits[i].point);
+                    return true;
+                }
+                StageBossBomber bomber = collider.GetComponentInParent<StageBossBomber>();
+                if (bomber != null)
+                {
+                    bomber.HitByBullet(hits[i].point);
+                    return true;
+                }
                 StageEnemyCharacter enemy = collider.GetComponentInParent<StageEnemyCharacter>();
                 if (enemy != null)
                 {
