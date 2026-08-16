@@ -198,7 +198,12 @@ namespace DrawBody.Prototype
         EnemyFlyer,
         EnemyShooter,
         EnemyDropper,
-        MissileLauncher
+        MissileLauncher,
+        EscortSpawner,
+        EscortGoal,
+        EscortPlayerOnlyFloor,
+        EscortHeadBridge,
+        MovingOneWayPlatform
     }
 
     [Serializable]

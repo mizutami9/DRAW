@@ -266,7 +266,9 @@ namespace DrawBody.Prototype
             selectedData.actionStrength = Mathf.Clamp(rounded, minimum, maximum);
             RebuildSelectedObject();
             SetStatus(LocalizationManager.Format(
-                selectedData.type == StageObjectType.MovingPlatform || selectedData.type == StageObjectType.Elevator
+                selectedData.type == StageObjectType.MovingPlatform
+                    || selectedData.type == StageObjectType.MovingOneWayPlatform
+                    || selectedData.type == StageObjectType.Elevator
                     ? "stage_editor_status_move_distance"
                     : selectedData.type == StageObjectType.FallingFloor
                         ? "stage_editor_status_crumble_delay"

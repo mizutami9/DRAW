@@ -94,6 +94,10 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            Bounds previousBodyBounds = new Bounds(transform.position, Vector3.zero);
+            bool preserveGroundContact = playerController != null
+                && playerController.IsGrounded
+                && TryGetBuiltBodyColliderBounds(out previousBodyBounds);
             ClearGeneratedBody();
             builtSpecies = drawManager.CurrentSpecies;
             turtleShellPose = false;
@@ -129,6 +133,66 @@ namespace DrawBody.Prototype
             ApplyFacing();
             ApplyPlayerColor();
             playerController?.InvalidateBodyColliderCache();
+
+            // Drawn species use very different local extents. Rebuilding around
+            // the same transform origin made a large destination body extend
+            // below the floor. While grounded, preserve the previous body's
+            // lowest collider point using the newly built collider bounds.
+            if (preserveGroundContact)
+            {
+                Physics2D.SyncTransforms();
+                if (TryGetBuiltBodyColliderBounds(out Bounds rebuiltBodyBounds))
+                {
+                    float verticalCorrection = previousBodyBounds.min.y - rebuiltBodyBounds.min.y;
+                    if (Mathf.Abs(verticalCorrection) > 0.0001f)
+                    {
+                        Vector2 correctedPosition = (Vector2)transform.position + Vector2.up * verticalCorrection;
+                        if (rb != null)
+                        {
+                            rb.position = correctedPosition;
+                        }
+                        else
+                        {
+                            transform.position = new Vector3(
+                                correctedPosition.x,
+                                correctedPosition.y,
+                                transform.position.z);
+                        }
+                        Physics2D.SyncTransforms();
+                    }
+                }
+            }
+        }
+
+        private bool TryGetBuiltBodyColliderBounds(out Bounds bounds)
+        {
+            bool hasBounds = false;
+            bounds = new Bounds(transform.position, Vector3.zero);
+            for (int i = 0; i < generatedSegments.Count; i++)
+            {
+                CapsuleCollider2D collider = generatedSegments[i].Collider;
+                if (collider == null || !collider.enabled || collider.isTrigger)
+                {
+                    continue;
+                }
+
+                if (!hasBounds)
+                {
+                    bounds = collider.bounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(collider.bounds);
+                }
+            }
+
+            if (!hasBounds && fallbackCollider != null && fallbackCollider.enabled && !fallbackCollider.isTrigger)
+            {
+                bounds = fallbackCollider.bounds;
+                hasBounds = true;
+            }
+            return hasBounds;
         }
 
         private struct RuntimeBodySegment

@@ -1351,6 +1351,7 @@ namespace DrawBody.Prototype
 
                 string id = stageObject.objectId + "/" + GetRelativePath(stageObject.transform, body.transform);
                 bool hostDrivenPlatform = stageObject.type == StageObjectType.MovingPlatform
+                    || stageObject.type == StageObjectType.MovingOneWayPlatform
                     || stageObject.type == StageObjectType.Elevator
                     || IsPlacedEnemyType(stageObject.type);
                 transformEntries[id] = new SyncTransformEntry(body.transform, body, hostDrivenPlatform);

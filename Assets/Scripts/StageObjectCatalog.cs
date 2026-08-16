@@ -75,7 +75,10 @@ namespace DrawBody.Prototype
             E(StageObjectType.BreakableFloor, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.FallingFloor, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.MovingPlatform, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
+            E(StageObjectType.MovingOneWayPlatform, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.RotatingPlatform, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
+            E(StageObjectType.EscortPlayerOnlyFloor, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
+            E(StageObjectType.EscortHeadBridge, StageObjectCategory.Terrain, StageObjectPlacement.Point, StageObjectKind.Solid),
 
             E(StageObjectType.Spawn, StageObjectCategory.StartGoal, StageObjectPlacement.Point, StageObjectKind.Marker),
             E(StageObjectType.Goal, StageObjectCategory.StartGoal, StageObjectPlacement.Point, StageObjectKind.Goal),
@@ -89,6 +92,8 @@ namespace DrawBody.Prototype
             E(StageObjectType.CollectibleCoin, StageObjectCategory.StartGoal, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.CollectibleStar, StageObjectCategory.StartGoal, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.ChallengeClock, StageObjectCategory.StartGoal, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.EscortSpawner, StageObjectCategory.StartGoal, StageObjectPlacement.Point, StageObjectKind.Marker),
+            E(StageObjectType.EscortGoal, StageObjectCategory.StartGoal, StageObjectPlacement.Point, StageObjectKind.Goal),
 
             E(StageObjectType.Button, StageObjectCategory.Switch, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.WeightButton, StageObjectCategory.Switch, StageObjectPlacement.Point, StageObjectKind.Trigger),

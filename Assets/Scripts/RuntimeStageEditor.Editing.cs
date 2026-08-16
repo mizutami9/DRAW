@@ -785,7 +785,8 @@ namespace DrawBody.Prototype
             bool widthOnly = Input.GetKey(KeyCode.X);
             bool movementDirection = Input.GetKey(KeyCode.M);
             bool isDecoration = StageObjectCatalog.Get(selectedData.type).Category == StageObjectCategory.Decoration;
-            if (movementDirection && selectedData.type == StageObjectType.MovingPlatform)
+            if (movementDirection && (selectedData.type == StageObjectType.MovingPlatform
+                || selectedData.type == StageObjectType.MovingOneWayPlatform))
             {
                 RotateSelectedMovementDirection(wheel * (alt ? 1f : 15f));
                 SetStatus(LocalizationManager.Format(
@@ -832,7 +833,8 @@ namespace DrawBody.Prototype
 
         private void RotateSelectedMovementDirection(float degrees)
         {
-            if (selectedData == null || selectedData.type != StageObjectType.MovingPlatform)
+            if (selectedData == null || (selectedData.type != StageObjectType.MovingPlatform
+                && selectedData.type != StageObjectType.MovingOneWayPlatform))
             {
                 return;
             }

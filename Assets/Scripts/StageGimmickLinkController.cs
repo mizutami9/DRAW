@@ -113,7 +113,8 @@ namespace DrawBody.Prototype
             {
                 StageEditorObject platform = objects[i];
                 if (platform == null
-                    || platform.type != StageObjectType.MovingPlatform
+                    || (platform.type != StageObjectType.MovingPlatform
+                        && platform.type != StageObjectType.MovingOneWayPlatform)
                     || linkedTargetIds.Contains(platform.objectId))
                 {
                     continue;

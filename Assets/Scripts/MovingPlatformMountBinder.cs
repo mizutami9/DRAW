@@ -25,7 +25,8 @@ namespace DrawBody.Prototype
             for (int i = 0; i < allObjects.Length; i++)
             {
                 StageEditorObject candidate = allObjects[i];
-                if (candidate != null && candidate.type == StageObjectType.MovingPlatform)
+                if (candidate != null && (candidate.type == StageObjectType.MovingPlatform
+                    || candidate.type == StageObjectType.MovingOneWayPlatform))
                 {
                     platforms.Add(candidate);
                 }
@@ -70,6 +71,7 @@ namespace DrawBody.Prototype
             if (candidate == null
                 || candidate.transform == stageRoot
                 || candidate.type == StageObjectType.MovingPlatform
+                || candidate.type == StageObjectType.MovingOneWayPlatform
                 || candidate.type == StageObjectType.Elevator
                 || candidate.type == StageObjectType.StageBoundary)
             {

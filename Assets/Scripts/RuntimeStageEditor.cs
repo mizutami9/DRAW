@@ -157,7 +157,9 @@ namespace DrawBody.Prototype
             ? stageRequiredCollectionCount
             : Mathf.Max(1, StagePlacedCollectionTargetCount);
         public bool SelectedSupportsActionStrength => selectedData != null && SupportsActionStrength(selectedData.type);
-        public bool SelectedIsMovingPlatform => selectedData != null && selectedData.type == StageObjectType.MovingPlatform;
+        public bool SelectedIsMovingPlatform => selectedData != null
+            && (selectedData.type == StageObjectType.MovingPlatform
+                || selectedData.type == StageObjectType.MovingOneWayPlatform);
         public bool SelectedIsEnemy => selectedData != null &&
             (selectedData.type == StageObjectType.EnemyWalker
              || selectedData.type == StageObjectType.EnemyJumper
@@ -279,6 +281,7 @@ namespace DrawBody.Prototype
             return type == StageObjectType.JumpPad
                 || type == StageObjectType.Spring
                 || type == StageObjectType.MovingPlatform
+                || type == StageObjectType.MovingOneWayPlatform
                 || type == StageObjectType.Elevator
                 || type == StageObjectType.FallingFloor
                 || type == StageObjectType.BreakableWall

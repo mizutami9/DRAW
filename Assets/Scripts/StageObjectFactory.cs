@@ -71,6 +71,11 @@ namespace DrawBody.Prototype
                     return CreateBeamEmitter(data, parent);
                 case StageObjectType.MissileLauncher:
                     return CreateMissileLauncher(data, parent);
+                case StageObjectType.EscortSpawner:
+                case StageObjectType.EscortGoal:
+                case StageObjectType.EscortPlayerOnlyFloor:
+                case StageObjectType.EscortHeadBridge:
+                    return StageEscortEditableObjectFactory.Create(data, parent);
                 case StageObjectType.Dynamite:
                     return CreateDynamite(data, parent);
                 case StageObjectType.EnemyWalker:
@@ -221,6 +226,7 @@ namespace DrawBody.Prototype
                         size = new Vector2(3f, 0.9f);
                         break;
                     case StageObjectType.OneWayPlatform:
+                    case StageObjectType.MovingOneWayPlatform:
                         size = new Vector2(3f, 0.25f);
                         break;
                     case StageObjectType.BoxDropper:
@@ -232,6 +238,18 @@ namespace DrawBody.Prototype
                     case StageObjectType.BeamEmitter:
                     case StageObjectType.MissileLauncher:
                         size = new Vector2(1.25f, 0.9f);
+                        break;
+                    case StageObjectType.EscortSpawner:
+                        size = new Vector2(2.2f, 1.35f);
+                        break;
+                    case StageObjectType.EscortGoal:
+                        size = new Vector2(1.7f, 2.1f);
+                        break;
+                    case StageObjectType.EscortPlayerOnlyFloor:
+                        size = new Vector2(8f, 0.72f);
+                        break;
+                    case StageObjectType.EscortHeadBridge:
+                        size = new Vector2(1.25f, 3f);
                         break;
                     case StageObjectType.Button:
                     case StageObjectType.WeightButton:
@@ -285,7 +303,7 @@ namespace DrawBody.Prototype
                         ? 1f
                     : type == StageObjectType.JumpPad || type == StageObjectType.Spring
                         ? 27f
-                        : type == StageObjectType.MovingPlatform
+                        : type == StageObjectType.MovingPlatform || type == StageObjectType.MovingOneWayPlatform
                             ? 6f
                             : type == StageObjectType.Elevator
                                 ? 8f
@@ -297,7 +315,7 @@ namespace DrawBody.Prototype
                                         ? 3f
                                         : type == StageObjectType.BoxDropper || type == StageObjectType.SpikeDropper || type == StageObjectType.BombDropper || type == StageObjectType.EnemyDropper || type == StageObjectType.BeamEmitter || type == StageObjectType.MissileLauncher ? 2f : 0f,
                 movementAngle = type == StageObjectType.ConveyorLeft ? 180f : 0f,
-                movementSpeed = type == StageObjectType.MovingPlatform ? 3.2f
+                movementSpeed = type == StageObjectType.MovingPlatform || type == StageObjectType.MovingOneWayPlatform ? 3.2f
                     : type == StageObjectType.EnemyWalker ? 2.4f
                     : type == StageObjectType.EnemyJumper ? 2.1f
                     : type == StageObjectType.EnemyCharger ? 1.7f
@@ -536,7 +554,11 @@ namespace DrawBody.Prototype
             {
                 collider.isTrigger = true;
             }
-            if (data.type == StageObjectType.OneWayPlatform)
+            bool isOneWayPlatform = data.type == StageObjectType.OneWayPlatform
+                || data.type == StageObjectType.MovingOneWayPlatform;
+            bool isMovingPlatform = data.type == StageObjectType.MovingPlatform
+                || data.type == StageObjectType.MovingOneWayPlatform;
+            if (isOneWayPlatform)
             {
                 // PlatformEffector2D uses the object's local up direction, so a
                 // rotated one-way floor still supports characters from its drawn
@@ -551,13 +573,13 @@ namespace DrawBody.Prototype
             }
 
             AddSolidPaperBase(obj.transform, data.size);
-            if (data.type == StageObjectType.OneWayPlatform)
+            if (isOneWayPlatform)
             {
                 AddOneWayPlatformTint(obj.transform, data.size);
             }
             AddSolidWash(obj.transform, data.size, stroke);
             AddSolidPencilFill(obj.transform, data.size, stroke);
-            if (data.type == StageObjectType.OneWayPlatform)
+            if (isOneWayPlatform)
             {
                 AddOneWayPlatformSurfaceVisual(obj.transform, data.size);
             }
@@ -572,7 +594,12 @@ namespace DrawBody.Prototype
             {
                 AddConveyorBeltVisual(obj.transform, data);
             }
-            if (data.type == StageObjectType.MovingPlatform)
+            if (data.type == StageObjectType.MovingOneWayPlatform)
+            {
+                AddStickyMovingPlatformVisual(obj.transform, data.size);
+                obj.AddComponent<StageEscortStickySurface>();
+            }
+            if (isMovingPlatform)
             {
                 if (parent != null && parent.name == "RuntimeStageEditorRoot")
                 {
@@ -749,6 +776,45 @@ namespace DrawBody.Prototype
                 new Vector3(halfWidth, top, 0f),
                 dashedBlue);
             CreatePencilMesh(parent, "One Way Platform Dashed Outline", vertices, colors, triangles, 13);
+        }
+
+        private static void AddStickyMovingPlatformVisual(Transform parent, Vector2 size)
+        {
+            GameObject gel = new GameObject("Sticky Moving Platform Gel");
+            gel.transform.SetParent(parent, false);
+            gel.transform.localPosition = new Vector3(0f, size.y * 0.1f, 0.03f);
+            gel.transform.localScale = new Vector3(size.x * 0.96f, size.y * 0.72f, 1f);
+            SpriteRenderer gelRenderer = gel.AddComponent<SpriteRenderer>();
+            gelRenderer.sprite = GetSquareSprite();
+            gelRenderer.color = new Color(0.25f, 0.82f, 0.43f, 0.62f);
+            gelRenderer.sortingOrder = 8;
+
+            Color stickyInk = new Color(0.04f, 0.52f, 0.25f, 0.95f);
+            float halfWidth = size.x * 0.48f;
+            float top = size.y * 0.5f + 0.035f;
+            int segments = Mathf.Max(6, Mathf.CeilToInt(size.x / 0.42f));
+            Vector3[] wave = new Vector3[segments + 1];
+            for (int i = 0; i <= segments; i++)
+            {
+                float t = i / (float)segments;
+                float y = top + Mathf.Sin(t * Mathf.PI * segments) * 0.055f;
+                wave[i] = new Vector3(Mathf.Lerp(-halfWidth, halfWidth, t), y, 0f);
+            }
+            AddDoodleLine("Sticky Gel Surface", parent, wave, stickyInk, 0.075f, 16);
+
+            float bottom = -size.y * 0.5f;
+            for (int i = 1; i <= 3; i++)
+            {
+                float x = Mathf.Lerp(-halfWidth, halfWidth, i / 4f);
+                float drip = 0.08f + 0.045f * (i % 2);
+                AddDoodleLine(
+                    "Sticky Gel Drip",
+                    parent,
+                    new[] { new Vector3(x, bottom + 0.08f, 0f), new Vector3(x, bottom - drip, 0f) },
+                    stickyInk,
+                    0.06f,
+                    16);
+            }
         }
 
         private static void AppendDashedPlatformEdge(
@@ -3319,7 +3385,7 @@ namespace DrawBody.Prototype
 
         private static Color GetObjectColor(StageObjectType type)
         {
-            if (type == StageObjectType.OneWayPlatform)
+            if (type == StageObjectType.OneWayPlatform || type == StageObjectType.MovingOneWayPlatform)
             {
                 return new Color(0.02f, 0.48f, 0.92f);
             }

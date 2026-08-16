@@ -99,7 +99,7 @@ namespace DrawBody.Prototype
 
             StageObjectType targetType = FindLinkedTargetType(selectedData.linkTargetId);
             PushUndo();
-            if (targetType == StageObjectType.MovingPlatform)
+            if (targetType == StageObjectType.MovingPlatform || targetType == StageObjectType.MovingOneWayPlatform)
             {
                 selectedData.linkAction = GetNextMovingPlatformAction(selectedData.linkAction);
             }
@@ -180,7 +180,7 @@ namespace DrawBody.Prototype
                 return "Activate";
             }
 
-            if (targetType == StageObjectType.MovingPlatform)
+            if (targetType == StageObjectType.MovingPlatform || targetType == StageObjectType.MovingOneWayPlatform)
             {
                 return "MoveRight";
             }

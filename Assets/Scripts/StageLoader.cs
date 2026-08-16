@@ -263,8 +263,18 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingBlockBreaker);
             }
 
+            StageEscortController existingEscort = stageRoot.GetComponent<StageEscortController>();
+            if (existingEscort != null)
+            {
+                DestroyComponentNow(existingEscort);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
+            if (data != null && data.id == "5-3")
+            {
+                stageRoot.gameObject.AddComponent<StageEscortController>();
+            }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
                 if (data.id == "6-2")
