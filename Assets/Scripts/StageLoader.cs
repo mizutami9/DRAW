@@ -114,6 +114,7 @@ namespace DrawBody.Prototype
             }
 
             EnsureReferences();
+            StagePoseTowerRandomizer.Prepare(data);
             CurrentStageData = data;
             RefreshStageFallBoundary(data.objects);
             ClearStageRoot();

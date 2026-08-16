@@ -37,6 +37,7 @@ namespace DrawBody.Prototype
 
         private Rigidbody2D rb;
         private BodyBuilder bodyBuilder;
+        private PlayerAbilityController abilityController;
         private float horizontalInput;
         private float lastGroundedAt = -100f;
         private float lastJumpPressedAt = -100f;
@@ -93,6 +94,7 @@ namespace DrawBody.Prototype
         public bool IsInvulnerable => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
         public bool IsTurtleShelled => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
         public bool IsWallSticking => wasWallSticking;
+        public DrawManager.Species CurrentSpecies => currentSpecies;
 
         public void SetScriptedInput(float horizontal, bool jumpHeld, bool jumpPressed = false)
         {
@@ -212,6 +214,7 @@ namespace DrawBody.Prototype
         {
             rb = GetComponent<Rigidbody2D>();
             bodyBuilder = GetComponent<BodyBuilder>();
+            abilityController = GetComponent<PlayerAbilityController>();
             groundContactFilter = new ContactFilter2D();
             groundContactFilter.SetLayerMask(groundLayer);
             groundContactFilter.useTriggers = false;
@@ -307,6 +310,36 @@ namespace DrawBody.Prototype
             TryJump();
             ApplyJumpLoadProtection();
             UpdateWallJumpTrajectoryPreview();
+        }
+
+        public void NotifyStageUpdraft(float liftSpeed)
+        {
+            if (!controlsEnabled || friendCarried || rb == null
+                || rb.bodyType != RigidbodyType2D.Dynamic)
+                return;
+
+            bool isBird = canGlide
+                || currentSpecies == DrawManager.Species.Bird
+                || (bodyBuilder != null && bodyBuilder.BuiltSpecies == DrawManager.Species.Bird)
+                || (abilityController != null
+                    && abilityController.CurrentProfile.Species == DrawManager.Species.Bird);
+            if (!isBird) return;
+
+            bool riseHeld = scriptedInputEnabled
+                ? scriptedJumpHeld
+                : Input.GetButton("Jump") || Input.GetKey(KeyCode.Space);
+            float nextY = rb.linearVelocity.y;
+            if (riseHeld)
+            {
+                // Wind only adds lift. Never lower an existing jump velocity.
+                nextY = Mathf.Max(nextY, Mathf.Max(3.2f, liftSpeed));
+                IsGrounded = false;
+            }
+            else if (nextY < -0.75f)
+            {
+                nextY = -0.75f;
+            }
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, nextY);
         }
 
         public void SetControlsEnabled(bool enabled)

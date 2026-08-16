@@ -515,7 +515,7 @@ namespace DrawBody.Prototype
                 }
                 else if (!cleared)
                 {
-                    uiManager?.ToggleMenu();
+                    uiManager?.ToggleMenuFromEscape();
                 }
             }
 

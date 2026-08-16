@@ -185,6 +185,9 @@ namespace DrawBody.Prototype
             E(StageObjectType.Bazooka, StageObjectCategory.Movable, StageObjectPlacement.Point, StageObjectKind.Pushable),
             E(StageObjectType.EnemyBomber, StageObjectCategory.Enemy, StageObjectPlacement.Point, StageObjectKind.Hazard),
             E(StageObjectType.MovingSpikePlanet, StageObjectCategory.Trap, StageObjectPlacement.Point, StageObjectKind.Hazard),
+            E(StageObjectType.PoseCharacterKey, StageObjectCategory.Movable, StageObjectPlacement.Point, StageObjectKind.Pushable),
+            E(StageObjectType.PoseCharacterKeyhole, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Trigger),
+            E(StageObjectType.UpdraftZone, StageObjectCategory.Action, StageObjectPlacement.Rect, StageObjectKind.Trigger),
 
             E(StageObjectType.Gear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),
             E(StageObjectType.BigGear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),

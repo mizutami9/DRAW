@@ -211,7 +211,10 @@ namespace DrawBody.Prototype
         EnemyFlyerOrbit,
         Bazooka,
         EnemyBomber,
-        MovingSpikePlanet
+        MovingSpikePlanet,
+        PoseCharacterKey,
+        PoseCharacterKeyhole,
+        UpdraftZone
     }
 
     [Serializable]

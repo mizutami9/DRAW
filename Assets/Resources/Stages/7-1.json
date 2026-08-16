@@ -1,0 +1,3404 @@
+{
+    "id":  "7-1",
+    "displayName":  "Stage 7-1 Pose Key Toy Tower",
+    "backgroundColorHex":  "#F7FBF1FF",
+    "ruleMode":  1,
+    "timeLimitSeconds":  180,
+    "collectionTarget":  165,
+    "requiredCollectionCount":  1,
+    "objects":  [
+                    {
+                        "objectId":  "7-1_boundary",
+                        "type":  151,
+                        "position":  {
+                                         "x":  0,
+                                         "y":  12.700000000000003
+                                     },
+                        "size":  {
+                                     "x":  30,
+                                     "y":  40.8
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0.7,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_spawn",
+                        "type":  2,
+                        "position":  {
+                                         "x":  -12.149999999999999,
+                                         "y":  -1.580000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.55,
+                                     "y":  0.55
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_floor_1",
+                        "type":  0,
+                        "position":  {
+                                         "x":  0,
+                                         "y":  -3.5
+                                     },
+                        "size":  {
+                                     "x":  28.5,
+                                     "y":  0.65
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  true,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_floor_2_one_way",
+                        "type":  8,
+                        "position":  {
+                                         "x":  11.625,
+                                         "y":  7.3000000000000007
+                                     },
+                        "size":  {
+                                     "x":  5.25,
+                                     "y":  0.5
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  true,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_floor_2_solid",
+                        "type":  0,
+                        "position":  {
+                                         "x":  -2.625,
+                                         "y":  7.3000000000000007
+                                     },
+                        "size":  {
+                                     "x":  23.25,
+                                     "y":  0.5
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  true,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_floor_3_one_way",
+                        "type":  8,
+                        "position":  {
+                                         "x":  -11.625,
+                                         "y":  18.1
+                                     },
+                        "size":  {
+                                     "x":  5.25,
+                                     "y":  0.5
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  true,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_floor_3_solid",
+                        "type":  0,
+                        "position":  {
+                                         "x":  2.625,
+                                         "y":  18.1
+                                     },
+                        "size":  {
+                                     "x":  23.25,
+                                     "y":  0.5
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  true,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_ceiling",
+                        "type":  6,
+                        "position":  {
+                                         "x":  0,
+                                         "y":  28.900000000000006
+                                     },
+                        "size":  {
+                                     "x":  28.5,
+                                     "y":  0.6
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  true,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_wall_left",
+                        "type":  1,
+                        "position":  {
+                                         "x":  -14.25,
+                                         "y":  12.700000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.6,
+                                     "y":  32.400000000000006
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_wall_right",
+                        "type":  1,
+                        "position":  {
+                                         "x":  14.25,
+                                         "y":  12.700000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.6,
+                                     "y":  32.400000000000006
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_elevator_human",
+                        "type":  65,
+                        "position":  {
+                                         "x":  11.399999999999999,
+                                         "y":  -2.6600000000000006
+                                     },
+                        "size":  {
+                                     "x":  4.8000000000000007,
+                                     "y":  0.7
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  10.8,
+                        "movementAngle":  0,
+                        "movementSpeed":  2.2,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_elevator_bird",
+                        "type":  65,
+                        "position":  {
+                                         "x":  -11.399999999999999,
+                                         "y":  8.14
+                                     },
+                        "size":  {
+                                     "x":  4.8000000000000007,
+                                     "y":  0.7
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  10.8,
+                        "movementAngle":  0,
+                        "movementSpeed":  2.2,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_hole_human",
+                        "type":  192,
+                        "position":  {
+                                         "x":  8.7,
+                                         "y":  -1.2200000000000006
+                                     },
+                        "size":  {
+                                     "x":  1.25,
+                                     "y":  1.35
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  17,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "7-1_elevator_human",
+                        "linkAction":  "Reveal"
+                    },
+                    {
+                        "objectId":  "7-1_hole_bird",
+                        "type":  192,
+                        "position":  {
+                                         "x":  -8.7,
+                                         "y":  9.5800000000000018
+                                     },
+                        "size":  {
+                                     "x":  1.25,
+                                     "y":  1.35
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  123,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "7-1_elevator_bird",
+                        "linkAction":  "Reveal"
+                    },
+                    {
+                        "objectId":  "7-1_hole_turtle",
+                        "type":  192,
+                        "position":  {
+                                         "x":  8.1000000000000014,
+                                         "y":  20.38
+                                     },
+                        "size":  {
+                                     "x":  1.25,
+                                     "y":  1.35
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  211,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "7-1_goal_gate",
+                        "linkAction":  "Hide"
+                    },
+                    {
+                        "objectId":  "7-1_goal_gate",
+                        "type":  1,
+                        "position":  {
+                                         "x":  10.5,
+                                         "y":  23.5
+                                     },
+                        "size":  {
+                                     "x":  0.65,
+                                     "y":  9.6000000000000014
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_goal_star",
+                        "type":  165,
+                        "position":  {
+                                         "x":  12.375,
+                                         "y":  20.38
+                                     },
+                        "size":  {
+                                     "x":  0.14,
+                                     "y":  0.14
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_goal_ufo",
+                        "type":  3,
+                        "position":  {
+                                         "x":  12.375,
+                                         "y":  20.38
+                                     },
+                        "size":  {
+                                     "x":  1.55,
+                                     "y":  1.45
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_updraft",
+                        "type":  193,
+                        "position":  {
+                                         "x":  0,
+                                         "y":  12.700000000000003
+                                     },
+                        "size":  {
+                                     "x":  21.75,
+                                     "y":  10.2
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  1.4,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_timer_1",
+                        "type":  166,
+                        "position":  {
+                                         "x":  -9,
+                                         "y":  -6.02
+                                     },
+                        "size":  {
+                                     "x":  5.2,
+                                     "y":  1.05
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_timer_2",
+                        "type":  166,
+                        "position":  {
+                                         "x":  0,
+                                         "y":  -6.02
+                                     },
+                        "size":  {
+                                     "x":  5.2,
+                                     "y":  1.05
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_timer_3",
+                        "type":  166,
+                        "position":  {
+                                         "x":  9,
+                                         "y":  -6.02
+                                     },
+                        "size":  {
+                                     "x":  5.2,
+                                     "y":  1.05
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_01",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -11.55,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  0,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_02",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -9.629999999999999,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  1,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_03",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -7.7100000000000009,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  2,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_04",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -5.79,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  3,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_05",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -3.87,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.66
+                                 },
+                        "rotation":  8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  4,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_06",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -1.9499999999999997,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  5,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_07",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -0.0300000000000007,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.66
+                                 },
+                        "rotation":  24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  6,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_08",
+                        "type":  191,
+                        "position":  {
+                                         "x":  1.8900000000000015,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  7,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_09",
+                        "type":  191,
+                        "position":  {
+                                         "x":  3.81,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  8,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_10",
+                        "type":  191,
+                        "position":  {
+                                         "x":  5.7299999999999986,
+                                         "y":  -2.419999999999999
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  -8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  9,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_11",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -11.024999999999999,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.66
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  10,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_12",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -9.105,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  11,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_13",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -7.1850000000000014,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.66
+                                 },
+                        "rotation":  16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  12,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_14",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -5.265,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  13,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_15",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -3.3449999999999998,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  14,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_16",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -1.4249999999999998,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  15,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_17",
+                        "type":  191,
+                        "position":  {
+                                         "x":  0.49499999999999927,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  16,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_18",
+                        "type":  191,
+                        "position":  {
+                                         "x":  2.4150000000000009,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  17,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "7-1_hole_human",
+                        "linkAction":  "Unlock"
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_19",
+                        "type":  191,
+                        "position":  {
+                                         "x":  4.335,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.66
+                                 },
+                        "rotation":  8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  18,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_20",
+                        "type":  191,
+                        "position":  {
+                                         "x":  6.254999999999999,
+                                         "y":  -0.69200000000000017
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  19,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_21",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -11.55,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.66
+                                 },
+                        "rotation":  24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  20,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_22",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -9.629999999999999,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  21,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_23",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -7.7100000000000009,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  22,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_24",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -5.79,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  -8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  23,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_25",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -3.87,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.66
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  24,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_26",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -1.9499999999999997,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  25,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_27",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -0.0300000000000007,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.66
+                                 },
+                        "rotation":  16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  26,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_28",
+                        "type":  191,
+                        "position":  {
+                                         "x":  1.8900000000000015,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.47,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  27,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_29",
+                        "type":  191,
+                        "position":  {
+                                         "x":  3.81,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.495,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  28,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_human_pose_30",
+                        "type":  191,
+                        "position":  {
+                                         "x":  5.7299999999999986,
+                                         "y":  1.0359999999999996
+                                     },
+                        "size":  {
+                                     "x":  0.52,
+                                     "y":  0.6950000000000001
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  29,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_01",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -10.05,
+                                         "y":  8.620000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.48,
+                                     "y":  0.64
+                                 },
+                        "rotation":  -28,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  100,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_02",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -7.92,
+                                         "y":  8.98
+                                     },
+                        "size":  {
+                                     "x":  0.502,
+                                     "y":  0.668
+                                 },
+                        "rotation":  -21,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  101,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_03",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -5.79,
+                                         "y":  8.620000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.524,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  -14,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  102,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_04",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -3.6600000000000006,
+                                         "y":  8.98
+                                     },
+                        "size":  {
+                                     "x":  0.546,
+                                     "y":  0.64
+                                 },
+                        "rotation":  -7,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  103,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_05",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -1.5300000000000007,
+                                         "y":  8.620000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.48,
+                                     "y":  0.668
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  104,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_06",
+                        "type":  191,
+                        "position":  {
+                                         "x":  0.5999999999999992,
+                                         "y":  8.98
+                                     },
+                        "size":  {
+                                     "x":  0.502,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  7,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  105,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_07",
+                        "type":  191,
+                        "position":  {
+                                         "x":  2.7299999999999986,
+                                         "y":  8.620000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.524,
+                                     "y":  0.64
+                                 },
+                        "rotation":  14,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  106,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_08",
+                        "type":  191,
+                        "position":  {
+                                         "x":  4.8599999999999994,
+                                         "y":  8.98
+                                     },
+                        "size":  {
+                                     "x":  0.546,
+                                     "y":  0.668
+                                 },
+                        "rotation":  21,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  107,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_09",
+                        "type":  191,
+                        "position":  {
+                                         "x":  6.9899999999999984,
+                                         "y":  8.620000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.48,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  28,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  108,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_10",
+                        "type":  191,
+                        "position":  {
+                                         "x":  9.12,
+                                         "y":  8.98
+                                     },
+                        "size":  {
+                                     "x":  0.502,
+                                     "y":  0.64
+                                 },
+                        "rotation":  -28,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  109,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_11",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -9.629999999999999,
+                                         "y":  11.452000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.524,
+                                     "y":  0.668
+                                 },
+                        "rotation":  -21,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  110,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_12",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -7.5,
+                                         "y":  11.812000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.546,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  -14,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  111,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_13",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -5.37,
+                                         "y":  11.452000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.48,
+                                     "y":  0.64
+                                 },
+                        "rotation":  -7,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  112,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_14",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -3.24,
+                                         "y":  11.812000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.502,
+                                     "y":  0.668
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  113,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_15",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -1.1100000000000008,
+                                         "y":  11.452000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.524,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  7,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  114,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_16",
+                        "type":  191,
+                        "position":  {
+                                         "x":  1.0199999999999991,
+                                         "y":  11.812000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.546,
+                                     "y":  0.64
+                                 },
+                        "rotation":  14,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  115,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_17",
+                        "type":  191,
+                        "position":  {
+                                         "x":  3.1499999999999995,
+                                         "y":  11.452000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.48,
+                                     "y":  0.668
+                                 },
+                        "rotation":  21,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  116,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_18",
+                        "type":  191,
+                        "position":  {
+                                         "x":  5.2799999999999994,
+                                         "y":  11.812000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.502,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  28,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  117,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_19",
+                        "type":  191,
+                        "position":  {
+                                         "x":  7.4099999999999993,
+                                         "y":  11.452000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.524,
+                                     "y":  0.64
+                                 },
+                        "rotation":  -28,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  118,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_20",
+                        "type":  191,
+                        "position":  {
+                                         "x":  9.54,
+                                         "y":  11.812000000000001
+                                     },
+                        "size":  {
+                                     "x":  0.546,
+                                     "y":  0.668
+                                 },
+                        "rotation":  -21,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  119,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_21",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -10.05,
+                                         "y":  14.284000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.48,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  -14,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  120,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_22",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -7.92,
+                                         "y":  14.643999999999998
+                                     },
+                        "size":  {
+                                     "x":  0.502,
+                                     "y":  0.64
+                                 },
+                        "rotation":  -7,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  121,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_23",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -5.79,
+                                         "y":  14.284000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.524,
+                                     "y":  0.668
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  122,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_24",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -3.6600000000000006,
+                                         "y":  14.643999999999998
+                                     },
+                        "size":  {
+                                     "x":  0.546,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  7,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  123,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "7-1_hole_bird",
+                        "linkAction":  "Unlock"
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_25",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -1.5300000000000007,
+                                         "y":  14.284000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.48,
+                                     "y":  0.64
+                                 },
+                        "rotation":  14,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  124,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_26",
+                        "type":  191,
+                        "position":  {
+                                         "x":  0.5999999999999992,
+                                         "y":  14.643999999999998
+                                     },
+                        "size":  {
+                                     "x":  0.502,
+                                     "y":  0.668
+                                 },
+                        "rotation":  21,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  125,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_27",
+                        "type":  191,
+                        "position":  {
+                                         "x":  2.7299999999999986,
+                                         "y":  14.284000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.524,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  28,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  126,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_28",
+                        "type":  191,
+                        "position":  {
+                                         "x":  4.8599999999999994,
+                                         "y":  14.643999999999998
+                                     },
+                        "size":  {
+                                     "x":  0.546,
+                                     "y":  0.64
+                                 },
+                        "rotation":  -28,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  127,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_29",
+                        "type":  191,
+                        "position":  {
+                                         "x":  6.9899999999999984,
+                                         "y":  14.284000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.48,
+                                     "y":  0.668
+                                 },
+                        "rotation":  -21,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  128,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bird_pose_30",
+                        "type":  191,
+                        "position":  {
+                                         "x":  9.12,
+                                         "y":  14.643999999999998
+                                     },
+                        "size":  {
+                                     "x":  0.502,
+                                     "y":  0.6960000000000001
+                                 },
+                        "rotation":  -14,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  129,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_01",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -11.399999999999999,
+                                         "y":  19.060000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  200,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_02",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -9.45,
+                                         "y":  19.252000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.682
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  201,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_03",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -7.5,
+                                         "y":  19.444000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.7040000000000001
+                                 },
+                        "rotation":  -8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  202,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_04",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -5.5499999999999989,
+                                         "y":  19.060000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.726
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  203,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_05",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -3.5999999999999992,
+                                         "y":  19.252000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.66
+                                 },
+                        "rotation":  8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  204,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_06",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -1.6499999999999995,
+                                         "y":  19.444000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.682
+                                 },
+                        "rotation":  16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  205,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_07",
+                        "type":  191,
+                        "position":  {
+                                         "x":  0.30000000000000165,
+                                         "y":  19.060000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.7040000000000001
+                                 },
+                        "rotation":  24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  206,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_08",
+                        "type":  191,
+                        "position":  {
+                                         "x":  2.25,
+                                         "y":  19.252000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.726
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  207,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_09",
+                        "type":  191,
+                        "position":  {
+                                         "x":  4.2000000000000011,
+                                         "y":  19.444000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  208,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_10",
+                        "type":  191,
+                        "position":  {
+                                         "x":  6.1500000000000021,
+                                         "y":  19.060000000000002
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.682
+                                 },
+                        "rotation":  -8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  209,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_11",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -10.95,
+                                         "y":  21.940000000000005
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.7040000000000001
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  210,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_12",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -9,
+                                         "y":  22.132
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.726
+                                 },
+                        "rotation":  8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  211,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "7-1_hole_turtle",
+                        "linkAction":  "Unlock"
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_13",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -7.0500000000000007,
+                                         "y":  22.324000000000005
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.66
+                                 },
+                        "rotation":  16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  212,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_14",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -5.1,
+                                         "y":  21.940000000000005
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.682
+                                 },
+                        "rotation":  24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  213,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_15",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -3.1499999999999995,
+                                         "y":  22.132
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.7040000000000001
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  214,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_16",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -1.1999999999999993,
+                                         "y":  22.324000000000005
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.726
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  215,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_17",
+                        "type":  191,
+                        "position":  {
+                                         "x":  0.75000000000000167,
+                                         "y":  21.940000000000005
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  216,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_18",
+                        "type":  191,
+                        "position":  {
+                                         "x":  2.7,
+                                         "y":  22.132
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.682
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  217,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_19",
+                        "type":  191,
+                        "position":  {
+                                         "x":  4.65,
+                                         "y":  22.324000000000005
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.7040000000000001
+                                 },
+                        "rotation":  8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  218,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_20",
+                        "type":  191,
+                        "position":  {
+                                         "x":  6.6000000000000014,
+                                         "y":  21.940000000000005
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.726
+                                 },
+                        "rotation":  16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  219,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_21",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -11.399999999999999,
+                                         "y":  24.820000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.66
+                                 },
+                        "rotation":  24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  220,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_22",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -9.45,
+                                         "y":  25.012000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.682
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  221,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_23",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -7.5,
+                                         "y":  25.204000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.7040000000000001
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  222,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_24",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -5.5499999999999989,
+                                         "y":  24.820000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.726
+                                 },
+                        "rotation":  -8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  223,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_25",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -3.5999999999999992,
+                                         "y":  25.012000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.66
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  224,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_26",
+                        "type":  191,
+                        "position":  {
+                                         "x":  -1.6499999999999995,
+                                         "y":  25.204000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.682
+                                 },
+                        "rotation":  8,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  225,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_27",
+                        "type":  191,
+                        "position":  {
+                                         "x":  0.30000000000000165,
+                                         "y":  24.820000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.7040000000000001
+                                 },
+                        "rotation":  16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  226,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_28",
+                        "type":  191,
+                        "position":  {
+                                         "x":  2.25,
+                                         "y":  25.012000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.49,
+                                     "y":  0.726
+                                 },
+                        "rotation":  24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  227,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_29",
+                        "type":  191,
+                        "position":  {
+                                         "x":  4.2000000000000011,
+                                         "y":  25.204000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.514,
+                                     "y":  0.66
+                                 },
+                        "rotation":  -24,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  228,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_turtle_pose_30",
+                        "type":  191,
+                        "position":  {
+                                         "x":  6.1500000000000021,
+                                         "y":  24.820000000000004
+                                     },
+                        "size":  {
+                                     "x":  0.538,
+                                     "y":  0.682
+                                 },
+                        "rotation":  -16,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  0,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  229,
+                        "spawnBoxSize":  0,
+                        "bombFuseSeconds":  0,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bomb_dropper_01",
+                        "type":  169,
+                        "position":  {
+                                         "x":  -11.25,
+                                         "y":  27.700000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.9,
+                                     "y":  0.72
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  4,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  1,
+                        "spawnBoxSize":  0.68,
+                        "bombFuseSeconds":  10,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bomb_dropper_02",
+                        "type":  169,
+                        "position":  {
+                                         "x":  -6.75,
+                                         "y":  27.700000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.9,
+                                     "y":  0.72
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  4,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  1,
+                        "spawnBoxSize":  0.68,
+                        "bombFuseSeconds":  10,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bomb_dropper_03",
+                        "type":  169,
+                        "position":  {
+                                         "x":  -2.25,
+                                         "y":  27.700000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.9,
+                                     "y":  0.72
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  4,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  1,
+                        "spawnBoxSize":  0.68,
+                        "bombFuseSeconds":  10,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bomb_dropper_04",
+                        "type":  169,
+                        "position":  {
+                                         "x":  2.25,
+                                         "y":  27.700000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.9,
+                                     "y":  0.72
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  4,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  1,
+                        "spawnBoxSize":  0.68,
+                        "bombFuseSeconds":  10,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    },
+                    {
+                        "objectId":  "7-1_bomb_dropper_05",
+                        "type":  169,
+                        "position":  {
+                                         "x":  6.75,
+                                         "y":  27.700000000000003
+                                     },
+                        "size":  {
+                                     "x":  0.9,
+                                     "y":  0.72
+                                 },
+                        "rotation":  0,
+                        "pathPoints":  [
+
+                                       ],
+                        "pathThickness":  0,
+                        "connectedRects":  [
+
+                                           ],
+                        "keepSeparate":  false,
+                        "actionStrength":  4,
+                        "movementAngle":  0,
+                        "movementSpeed":  0,
+                        "spawnPattern":  1,
+                        "spawnBoxSize":  0.68,
+                        "bombFuseSeconds":  10,
+                        "linkTargetId":  "",
+                        "linkAction":  ""
+                    }
+                ]
+}

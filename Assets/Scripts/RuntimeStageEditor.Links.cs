@@ -52,7 +52,9 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (linkSourceData.type == StageObjectType.Key && selectedData.type != StageObjectType.Keyhole)
+            if ((linkSourceData.type == StageObjectType.Key && selectedData.type != StageObjectType.Keyhole)
+                || (linkSourceData.type == StageObjectType.PoseCharacterKey
+                    && selectedData.type != StageObjectType.PoseCharacterKeyhole))
             {
                 SetStatus(LocalizationManager.T("stage_editor_status_key_requires_keyhole"));
                 return;
@@ -61,6 +63,7 @@ namespace DrawBody.Prototype
             PushUndo();
             linkSourceData.linkTargetId = selectedData.objectId;
             linkSourceData.linkAction = linkSourceData.type == StageObjectType.Key
+                || linkSourceData.type == StageObjectType.PoseCharacterKey
                 ? "Unlock"
                 : GetDefaultLinkAction(selectedData.type);
             if (linkSourceData.linkAction == "RevealGrowRightToLeft")
@@ -85,6 +88,7 @@ namespace DrawBody.Prototype
             }
 
             if (selectedData.type == StageObjectType.Key
+                || selectedData.type == StageObjectType.PoseCharacterKey
                 || selectedData.linkAction == "Unlock")
             {
                 SetStatus(LocalizationManager.T("stage_editor_status_unlock_action_fixed"));
@@ -166,7 +170,9 @@ namespace DrawBody.Prototype
                 || type == StageObjectType.YellowSwitch
                 || type == StageObjectType.InkScale
                 || type == StageObjectType.Key
-                || type == StageObjectType.Keyhole;
+                || type == StageObjectType.Keyhole
+                || type == StageObjectType.PoseCharacterKey
+                || type == StageObjectType.PoseCharacterKeyhole;
         }
 
         private static string GetDefaultLinkAction(StageObjectType targetType)

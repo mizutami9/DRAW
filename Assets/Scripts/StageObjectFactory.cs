@@ -81,6 +81,12 @@ namespace DrawBody.Prototype
                     return StageAerialHazardFactory.CreateMovingSpikePlanet(data, parent);
                 case StageObjectType.EnemyBomber:
                     return StageAerialHazardFactory.CreateBombingEnemy(data, parent, this);
+                case StageObjectType.PoseCharacterKey:
+                    return StagePoseKeyFactory.CreateKey(data, parent, pushableLayer);
+                case StageObjectType.PoseCharacterKeyhole:
+                    return StagePoseKeyFactory.CreateKeyhole(data, parent);
+                case StageObjectType.UpdraftZone:
+                    return StagePoseKeyFactory.CreateUpdraft(data, parent);
                 case StageObjectType.EscortSpawner:
                 case StageObjectType.EscortGoal:
                 case StageObjectType.EscortPlayerOnlyFloor:
@@ -229,6 +235,15 @@ namespace DrawBody.Prototype
                         break;
                     case StageObjectType.EnemyBomber:
                         size = new Vector2(1.7f, 1.35f);
+                        break;
+                    case StageObjectType.PoseCharacterKey:
+                        size = new Vector2(1.25f, 1.55f);
+                        break;
+                    case StageObjectType.PoseCharacterKeyhole:
+                        size = new Vector2(1.6f, 1.9f);
+                        break;
+                    case StageObjectType.UpdraftZone:
+                        size = new Vector2(20f, 12f);
                         break;
                     case StageObjectType.Goal:
                         size = new Vector2(1.15f, 2.05f);

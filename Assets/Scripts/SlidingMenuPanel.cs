@@ -72,6 +72,23 @@ namespace DrawBody.Prototype
             open = true;
         }
 
+        public void OpenImmediate()
+        {
+            if (rectTransform == null)
+            {
+                rectTransform = GetComponent<RectTransform>();
+            }
+
+            NormalizeLayout();
+            open = true;
+            gameObject.SetActive(true);
+            transform.SetAsLastSibling();
+            if (rectTransform != null)
+            {
+                rectTransform.anchoredPosition = openPosition;
+            }
+        }
+
         public void Close()
         {
             open = false;

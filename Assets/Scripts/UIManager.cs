@@ -320,6 +320,43 @@ namespace DrawBody.Prototype
             RefreshHudVisibility();
         }
 
+        /// <summary>
+        /// Keyboard escape must feel immediate.  In particular, do not let a
+        /// second press reverse an opening slide before the panel is visible.
+        /// Mouse/TAB driven drawers keep their normal animated behaviour.
+        /// </summary>
+        public void ToggleMenuFromEscape()
+        {
+            if (stageSelecting || titleShowing || menuPanel == null)
+            {
+                return;
+            }
+
+            ResolveMenuDrawer();
+            bool menuOpen = menuDrawer != null
+                ? menuDrawer.IsOpen
+                : menuPanel.activeSelf;
+            if (menuOpen)
+            {
+                HideMenu();
+                return;
+            }
+
+            RefreshGameplayMenu();
+            gameplayHudDrawer?.Close();
+            if (menuDrawer != null)
+            {
+                menuDrawer.OpenImmediate();
+            }
+            else
+            {
+                menuPanel.SetActive(true);
+                menuPanel.transform.SetAsLastSibling();
+            }
+
+            RefreshHudVisibility();
+        }
+
         private void RefreshGameplayMenu()
         {
             if (menuPanel == null)
@@ -713,7 +750,9 @@ namespace DrawBody.Prototype
             }
         }
 
-        public bool IsTitleSubmenuShowing => multiShowing || optionShowing;
+        public bool IsTitleSubmenuShowing =>
+            multiShowing && multiPanel != null && multiPanel.activeInHierarchy
+            || optionShowing && optionPanel != null && optionPanel.activeInHierarchy;
         public bool IsGameplayOverlayShowing => drawing
             || optionShowing
             || menuPanel != null && menuPanel.activeInHierarchy

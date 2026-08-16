@@ -41,9 +41,11 @@ namespace DrawBody.Prototype
                 }
 
                 StageEditorObject targetStageObject = target.GetComponent<StageEditorObject>();
-                if (source.type == StageObjectType.Key
+                if ((source.type == StageObjectType.Key
+                        || source.type == StageObjectType.PoseCharacterKey)
                     && targetStageObject != null
-                    && targetStageObject.type == StageObjectType.Keyhole)
+                    && (targetStageObject.type == StageObjectType.Keyhole
+                        || targetStageObject.type == StageObjectType.PoseCharacterKeyhole))
                 {
                     KeyLockReceiver receiver = target.GetComponent<KeyLockReceiver>();
                     if (receiver == null)
@@ -70,7 +72,8 @@ namespace DrawBody.Prototype
                         () => ActivateFromTrigger(source.objectId),
                         () => syncManager != null && syncManager.ShouldAskHost);
                 }
-                else if (source.type != StageObjectType.Keyhole)
+                else if (source.type != StageObjectType.Keyhole
+                    && source.type != StageObjectType.PoseCharacterKeyhole)
                 {
                     StageGimmickTrigger trigger = source.gameObject.AddComponent<StageGimmickTrigger>();
                     if (source.type == StageObjectType.SimultaneousButton
@@ -219,7 +222,8 @@ namespace DrawBody.Prototype
             if (objectsById.TryGetValue(sourceObjectId, out Transform source)
                 && source != null
                 && source.TryGetComponent(out StageEditorObject stageObject)
-                && stageObject.type == StageObjectType.Keyhole)
+                && (stageObject.type == StageObjectType.Keyhole
+                    || stageObject.type == StageObjectType.PoseCharacterKeyhole))
             {
                 source.GetComponent<KeyLockReceiver>()?.TryUnlockAuthoritatively();
                 return;
@@ -1039,6 +1043,7 @@ namespace DrawBody.Prototype
         private void UnlockAndConsume(bool invokeAction)
         {
             unlocked = true;
+            GetComponent<StagePosePassageUnlock>()?.ApplyUnlockedState();
             PlayerCarryController[] carriers = Object.FindObjectsByType<PlayerCarryController>(FindObjectsSortMode.None);
             for (int i = 0; i < carriers.Length; i++)
             {
@@ -1062,6 +1067,14 @@ namespace DrawBody.Prototype
             expectedKey.position = transform.position;
             expectedKey.rotation = transform.rotation;
             expectedKey.localScale *= 0.82f;
+            if (expectedKey.GetComponent<StagePoseCharacterKey>() != null)
+            {
+                Renderer[] insertedRenderers = expectedKey.GetComponentsInChildren<Renderer>(true);
+                for (int i = 0; i < insertedRenderers.Length; i++)
+                {
+                    insertedRenderers[i].sortingOrder = Mathf.Max(140, insertedRenderers[i].sortingOrder + 100);
+                }
+            }
             if (invokeAction)
             {
                 unlockAction?.Invoke();

@@ -1052,6 +1052,7 @@ namespace DrawBody.Prototype
             heldPlayerPreviousControlsEnabled = heldPlayerController != null
                 && heldPlayerController.ControlsEnabled;
             heldPlayerController?.SetControlsEnabled(false);
+            heldPlayerController?.SetFriendCarried(true);
             heldTransform.GetComponent<StageBomb>()?.NotifyPickedUp();
             heldTransform.GetComponent<StageGun>()?.SetHolder(this);
             heldTransform.GetComponent<StageBazooka>()?.SetHolder(this);
@@ -1208,6 +1209,7 @@ namespace DrawBody.Prototype
             RestoreHeldObjectRendering();
             SetCollisionIgnored(releasedColliders, carrierColliders, true);
 
+            heldPlayerController?.SetFriendCarried(false);
             heldPlayerController?.ResetMotion();
             heldPlayerController?.SetControlsEnabled(heldPlayerPreviousControlsEnabled);
             if (heldBody != null)
@@ -1238,6 +1240,7 @@ namespace DrawBody.Prototype
             bodyBuilder?.SetCarryPose(false, GetFacingDirection(), transform.position);
             RestoreHeldObjectRendering();
 
+            heldPlayerController?.SetFriendCarried(false);
             heldPlayerController?.ResetMotion();
             heldPlayerController?.SetControlsEnabled(heldPlayerPreviousControlsEnabled);
             if (heldBody != null)
