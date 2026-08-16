@@ -1,0 +1,30 @@
+{
+    "id": "8-1",
+    "displayName": "Stage 8-1 Pillar Survival",
+    "backgroundColorHex": "#F7F2DEFF",
+    "ruleMode": 2,
+    "timeLimitSeconds": 60.0,
+    "collectionTarget": 163,
+    "requiredCollectionCount": 1,
+    "objects": [
+        {
+            "objectId": "pillar_survival_spawn",
+            "type": 2,
+            "position": { "x": 0.0, "y": -0.75 },
+            "size": { "x": 0.7, "y": 0.7 },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        }
+    ]
+}

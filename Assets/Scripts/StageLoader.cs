@@ -304,6 +304,12 @@ namespace DrawBody.Prototype
                     StageJumpRopeController jumpRope = stageRoot.gameObject.AddComponent<StageJumpRopeController>();
                     jumpRope.Configure(data.timeLimitSeconds);
                 }
+                else if (data.id == "8-1")
+                {
+                    StagePillarSurvivalController pillarSurvival =
+                        stageRoot.gameObject.AddComponent<StagePillarSurvivalController>();
+                    pillarSurvival.Configure(data.timeLimitSeconds);
+                }
                 else
                 {
                     StageSurvivalController survival = stageRoot.gameObject.AddComponent<StageSurvivalController>();

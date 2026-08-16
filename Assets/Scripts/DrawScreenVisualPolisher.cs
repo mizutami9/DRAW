@@ -515,33 +515,35 @@ namespace DrawBody.Prototype
             }
 
             RectTransform panel = EnsureCard(root, "DrawingPresetCard");
-            SetCenterRect(panel, new Vector2(85f, 170f), new Vector2(408f, 104f));
+            // Keep presets in the unused gutter beside the species selector.
+            // The drawing canvas starts to the right of this area.
+            SetTopRect(panel, new Vector2(120f, -185f), new Vector2(210f, 238f), new Vector2(0f, 1f));
             RestyleCard(panel, new Color(0.9f, 0.97f, 1f, 0.98f));
 
             Text title = EnsureLabel(panel, "DrawingPresetTitle", string.Empty, 15, TextAnchor.MiddleCenter);
-            SetTopRect(title.rectTransform, new Vector2(8f, -3f), new Vector2(392f, 22f), new Vector2(0f, 1f));
+            SetTopRect(title.rectTransform, new Vector2(8f, -3f), new Vector2(194f, 22f), new Vector2(0f, 1f));
             title.fontStyle = FontStyle.Bold;
 
             for (int i = 0; i < CharacterDrawingPresetStore.SlotCount; i++)
             {
                 int slot = i;
                 RectTransform slotCard = EnsureCard(panel, "DrawingPresetSlot" + (i + 1));
-                SetDockRect(slotCard, new Vector2(7f + i * 133f, 6f), new Vector2(128f, 72f));
+                SetDockRect(slotCard, new Vector2(7f, 146f - i * 70f), new Vector2(196f, 64f));
                 RestyleCard(slotCard, new Color(1f, 0.985f, 0.9f, 0.98f));
 
                 Text slotLabel = EnsureLabel(slotCard, "SlotLabel", string.Empty, 12, TextAnchor.MiddleLeft);
-                SetTopRect(slotLabel.rectTransform, new Vector2(7f, -2f), new Vector2(54f, 20f), new Vector2(0f, 1f));
+                SetTopRect(slotLabel.rectTransform, new Vector2(7f, -2f), new Vector2(76f, 20f), new Vector2(0f, 1f));
                 slotLabel.fontStyle = FontStyle.Bold;
                 Text status = EnsureLabel(slotCard, "StatusLabel", string.Empty, 11, TextAnchor.MiddleRight);
-                SetTopRect(status.rectTransform, new Vector2(59f, -2f), new Vector2(62f, 20f), new Vector2(0f, 1f));
+                SetTopRect(status.rectTransform, new Vector2(84f, -2f), new Vector2(105f, 20f), new Vector2(0f, 1f));
 
                 Button save = EnsureDialogButton(slotCard, "PresetSaveButton", new Color(1f, 0.74f, 0.22f, 1f));
-                SetDockRect(save.GetComponent<RectTransform>(), new Vector2(5f, 5f), new Vector2(56f, 40f));
+                SetDockRect(save.GetComponent<RectTransform>(), new Vector2(5f, 4f), new Vector2(89f, 36f));
                 save.onClick.RemoveAllListeners();
                 save.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, PresetAction.Save));
 
                 Button load = EnsureDialogButton(slotCard, "PresetLoadButton", new Color(0.3f, 0.76f, 0.92f, 1f));
-                SetDockRect(load.GetComponent<RectTransform>(), new Vector2(67f, 5f), new Vector2(56f, 40f));
+                SetDockRect(load.GetComponent<RectTransform>(), new Vector2(102f, 4f), new Vector2(89f, 36f));
                 load.onClick.RemoveAllListeners();
                 load.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, PresetAction.Load));
             }
