@@ -4,7 +4,7 @@ using UnityEngine;
 namespace DrawBody.Prototype
 {
     [DisallowMultipleComponent]
-    public sealed class StageSurvivalController : MonoBehaviour
+    public sealed class StageSurvivalController : StageEliminationChallengeController
     {
         private const string StageId = "11-2";
         private const string KindRound = "survival_round";
@@ -315,7 +315,7 @@ namespace DrawBody.Prototype
             RefreshMonitor();
         }
 
-        public void RequestElimination(PlayerController2D target)
+        public override void RequestElimination(PlayerController2D target)
         {
             if (target == null || phase == SurvivalPhase.Intro || phase == SurvivalPhase.StartCountdown
                 || phase == SurvivalPhase.Finished || phase == SurvivalPhase.Failed)
@@ -1224,6 +1224,11 @@ namespace DrawBody.Prototype
                 squareSprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), texture.width);
             }
             return squareSprite;
+        }
+
+        internal static Sprite GetSquareSpriteForChallenges()
+        {
+            return GetSquareSprite();
         }
 
         internal static Sprite GetCircleSprite()

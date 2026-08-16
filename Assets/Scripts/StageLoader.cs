@@ -251,7 +251,7 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingSyncManager);
             }
 
-            StageSurvivalController existingSurvival = stageRoot.GetComponent<StageSurvivalController>();
+            StageEliminationChallengeController existingSurvival = stageRoot.GetComponent<StageEliminationChallengeController>();
             if (existingSurvival != null)
             {
                 DestroyComponentNow(existingSurvival);
@@ -267,8 +267,16 @@ namespace DrawBody.Prototype
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
-                StageSurvivalController survival = stageRoot.gameObject.AddComponent<StageSurvivalController>();
-                survival.Configure(data.timeLimitSeconds);
+                if (data.id == "6-2")
+                {
+                    StageJumpRopeController jumpRope = stageRoot.gameObject.AddComponent<StageJumpRopeController>();
+                    jumpRope.Configure(data.timeLimitSeconds);
+                }
+                else
+                {
+                    StageSurvivalController survival = stageRoot.gameObject.AddComponent<StageSurvivalController>();
+                    survival.Configure(data.timeLimitSeconds);
+                }
             }
             else if (data != null && data.ruleMode == StageRuleMode.BlockBreaker)
             {

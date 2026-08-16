@@ -88,7 +88,7 @@ namespace DrawBody.Prototype
         private float challengeStartCountdownRemaining;
         private float challengeTimeUpReturnRemaining;
         private bool challengeStartPositionsCaptured;
-        private StageSurvivalController survivalController;
+        private StageEliminationChallengeController survivalController;
         private StageBlockBreakerController blockBreakerController;
         private TrailerCoopDemoController trailerDemo;
         private SteamHeaderCaptureController steamHeaderCapture;
@@ -1218,7 +1218,7 @@ namespace DrawBody.Prototype
 
             ConfigureStageRule(stageLoader != null ? stageLoader.CurrentStageData : null);
             survivalController = IsSurvivalChallenge
-                ? Object.FindFirstObjectByType<StageSurvivalController>()
+                ? Object.FindFirstObjectByType<StageEliminationChallengeController>()
                 : null;
             blockBreakerController = IsBlockBreakerChallenge
                 ? Object.FindFirstObjectByType<StageBlockBreakerController>()
@@ -1310,7 +1310,7 @@ namespace DrawBody.Prototype
             stageEditor.TestPlay();
             ConfigureStageRule(stageLoader != null ? stageLoader.CurrentStageData : null);
             survivalController = IsSurvivalChallenge
-                ? Object.FindFirstObjectByType<StageSurvivalController>()
+                ? Object.FindFirstObjectByType<StageEliminationChallengeController>()
                 : null;
             blockBreakerController = IsBlockBreakerChallenge
                 ? Object.FindFirstObjectByType<StageBlockBreakerController>()
