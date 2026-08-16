@@ -9,16 +9,31 @@ namespace DrawBody.Prototype
         private readonly float[] brushPresets = { 3f, 5f, 6f, 8f, 10f };
         private float selectedBrushPreset = 6f;
         private GameObject fullResetConfirmDialog;
+        private GameObject drawingPresetConfirmDialog;
+        private DrawManager drawManager;
+        private int pendingPresetSlot;
+        private PresetAction pendingPresetAction;
+
+        private enum PresetAction
+        {
+            Save,
+            Load
+        }
 
         private void OnEnable()
         {
             LocalizationManager.LanguageChanged += RefreshLabels;
+            ResolveDrawManager();
             Polish();
         }
 
         private void OnDisable()
         {
             LocalizationManager.LanguageChanged -= RefreshLabels;
+            if (drawManager != null)
+            {
+                drawManager.CurrentSpeciesChanged -= HandlePresetSpeciesChanged;
+            }
         }
 
         public void Polish()
@@ -26,6 +41,7 @@ namespace DrawBody.Prototype
             if (polished)
             {
                 RefreshLabels();
+                RefreshPresetSlotVisuals();
                 return;
             }
 
@@ -120,6 +136,9 @@ namespace DrawBody.Prototype
             Text abilityHint = EnsureLabel(abilityCard, "AbilityHintText", string.Empty, 12, TextAnchor.MiddleCenter);
             SetTopRect(abilityHint.rectTransform, new Vector2(10f, -199f), new Vector2(260f, 17f), new Vector2(0f, 1f));
             abilityHint.color = new Color(0.28f, 0.23f, 0.16f, 0.82f);
+
+            EnsureDrawingPresetPanel();
+            EnsureDrawingPresetConfirmDialog();
 
             Text header = EnsureLabel(panel, "ToolPanelHeader", "TOOLS", 19, TextAnchor.MiddleLeft);
             header.gameObject.SetActive(false);
@@ -252,6 +271,7 @@ namespace DrawBody.Prototype
             SetPlainText("FullResetConfirmMessage", LocalizationManager.T("draw_reset_confirm_message"));
             SetButtonLabel("FullResetConfirmButton", LocalizationManager.T("draw_reset_confirm_yes"), 18);
             SetButtonLabel("FullResetCancelButton", LocalizationManager.T("draw_reset_confirm_no"), 18);
+            RefreshPresetSlotVisuals();
             SetButtonLabel("DecideButton", "\u2713  " + LocalizationManager.T("draw_finish") + "\nENTER", 19);
             SetButtonLabel("CancelDrawButton", "\u2190  " + LocalizationManager.T("draw_redo") + "\nESC", 16);
             ApplyTypography();
@@ -484,6 +504,269 @@ namespace DrawBody.Prototype
         {
             FindObjectOfType<DrawManager>()?.ResetAllToDefault();
             CloseFullResetConfirmDialog();
+        }
+
+        private void EnsureDrawingPresetPanel()
+        {
+            RectTransform root = transform as RectTransform;
+            if (root == null)
+            {
+                return;
+            }
+
+            RectTransform panel = EnsureCard(root, "DrawingPresetCard");
+            SetCenterRect(panel, new Vector2(85f, 170f), new Vector2(408f, 104f));
+            RestyleCard(panel, new Color(0.9f, 0.97f, 1f, 0.98f));
+
+            Text title = EnsureLabel(panel, "DrawingPresetTitle", string.Empty, 15, TextAnchor.MiddleCenter);
+            SetTopRect(title.rectTransform, new Vector2(8f, -3f), new Vector2(392f, 22f), new Vector2(0f, 1f));
+            title.fontStyle = FontStyle.Bold;
+
+            for (int i = 0; i < CharacterDrawingPresetStore.SlotCount; i++)
+            {
+                int slot = i;
+                RectTransform slotCard = EnsureCard(panel, "DrawingPresetSlot" + (i + 1));
+                SetDockRect(slotCard, new Vector2(7f + i * 133f, 6f), new Vector2(128f, 72f));
+                RestyleCard(slotCard, new Color(1f, 0.985f, 0.9f, 0.98f));
+
+                Text slotLabel = EnsureLabel(slotCard, "SlotLabel", string.Empty, 12, TextAnchor.MiddleLeft);
+                SetTopRect(slotLabel.rectTransform, new Vector2(7f, -2f), new Vector2(54f, 20f), new Vector2(0f, 1f));
+                slotLabel.fontStyle = FontStyle.Bold;
+                Text status = EnsureLabel(slotCard, "StatusLabel", string.Empty, 11, TextAnchor.MiddleRight);
+                SetTopRect(status.rectTransform, new Vector2(59f, -2f), new Vector2(62f, 20f), new Vector2(0f, 1f));
+
+                Button save = EnsureDialogButton(slotCard, "PresetSaveButton", new Color(1f, 0.74f, 0.22f, 1f));
+                SetDockRect(save.GetComponent<RectTransform>(), new Vector2(5f, 5f), new Vector2(56f, 40f));
+                save.onClick.RemoveAllListeners();
+                save.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, PresetAction.Save));
+
+                Button load = EnsureDialogButton(slotCard, "PresetLoadButton", new Color(0.3f, 0.76f, 0.92f, 1f));
+                SetDockRect(load.GetComponent<RectTransform>(), new Vector2(67f, 5f), new Vector2(56f, 40f));
+                load.onClick.RemoveAllListeners();
+                load.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, PresetAction.Load));
+            }
+        }
+
+        private void EnsureDrawingPresetConfirmDialog()
+        {
+            RectTransform root = transform as RectTransform;
+            if (root == null)
+            {
+                return;
+            }
+
+            RectTransform overlay = FindRect(root, "DrawingPresetConfirmDialog");
+            if (overlay == null)
+            {
+                GameObject obj = new GameObject(
+                    "DrawingPresetConfirmDialog",
+                    typeof(RectTransform),
+                    typeof(CanvasRenderer),
+                    typeof(Image));
+                obj.transform.SetParent(root, false);
+                overlay = obj.GetComponent<RectTransform>();
+            }
+
+            Stretch(overlay);
+            Image blocker = overlay.GetComponent<Image>();
+            blocker.color = new Color(0.05f, 0.045f, 0.035f, 0.62f);
+            blocker.raycastTarget = true;
+
+            RectTransform card = EnsureCard(overlay, "ConfirmCard");
+            SetCenterRect(card, Vector2.zero, new Vector2(540f, 270f));
+            RestyleCard(card, new Color(1f, 0.975f, 0.88f, 1f));
+            Text title = EnsureLabel(card, "DrawingPresetConfirmTitle", string.Empty, 27, TextAnchor.MiddleCenter);
+            SetTopRect(title.rectTransform, new Vector2(28f, -24f), new Vector2(484f, 48f), new Vector2(0f, 1f));
+            title.fontStyle = FontStyle.Bold;
+            Text message = EnsureLabel(card, "DrawingPresetConfirmMessage", string.Empty, 18, TextAnchor.MiddleCenter);
+            SetTopRect(message.rectTransform, new Vector2(44f, -83f), new Vector2(452f, 82f), new Vector2(0f, 1f));
+            message.horizontalOverflow = HorizontalWrapMode.Wrap;
+            message.verticalOverflow = VerticalWrapMode.Truncate;
+
+            Button confirm = EnsureDialogButton(card, "DrawingPresetConfirmButton", new Color(0.24f, 0.72f, 0.48f, 1f));
+            SetDockRect(confirm.GetComponent<RectTransform>(), new Vector2(282f, 24f), new Vector2(210f, 58f));
+            confirm.onClick.RemoveAllListeners();
+            confirm.onClick.AddListener(ConfirmDrawingPresetAction);
+            Button cancel = EnsureDialogButton(card, "DrawingPresetCancelButton", new Color(0.82f, 0.82f, 0.75f, 1f));
+            SetDockRect(cancel.GetComponent<RectTransform>(), new Vector2(48f, 24f), new Vector2(210f, 58f));
+            cancel.onClick.RemoveAllListeners();
+            cancel.onClick.AddListener(CloseDrawingPresetConfirm);
+
+            drawingPresetConfirmDialog = overlay.gameObject;
+            drawingPresetConfirmDialog.SetActive(false);
+        }
+
+        private void ResolveDrawManager()
+        {
+            DrawManager resolved = drawManager != null ? drawManager : FindObjectOfType<DrawManager>();
+            if (drawManager != null && drawManager != resolved)
+            {
+                drawManager.CurrentSpeciesChanged -= HandlePresetSpeciesChanged;
+            }
+
+            drawManager = resolved;
+            if (drawManager != null)
+            {
+                drawManager.CurrentSpeciesChanged -= HandlePresetSpeciesChanged;
+                drawManager.CurrentSpeciesChanged += HandlePresetSpeciesChanged;
+            }
+        }
+
+        private void HandlePresetSpeciesChanged(DrawManager.Species species)
+        {
+            RefreshPresetSlotVisuals();
+        }
+
+        private void RefreshPresetSlotVisuals()
+        {
+            ResolveDrawManager();
+            if (drawManager == null)
+            {
+                return;
+            }
+
+            string speciesName = LocalizationManager.T(
+                StageSpeciesRules.GetSpeciesLocalizationKey(drawManager.CurrentSpecies));
+            SetPlainText("DrawingPresetTitle", LocalizationManager.Format("draw_preset_title", speciesName));
+            for (int i = 0; i < CharacterDrawingPresetStore.SlotCount; i++)
+            {
+                RectTransform slot = FindRect(transform, "DrawingPresetSlot" + (i + 1));
+                if (slot == null)
+                {
+                    continue;
+                }
+
+                bool exists = CharacterDrawingPresetStore.Exists(drawManager.CurrentSpecies, i);
+                Text slotLabel = slot.Find("SlotLabel")?.GetComponent<Text>();
+                Text status = slot.Find("StatusLabel")?.GetComponent<Text>();
+                if (slotLabel != null)
+                {
+                    slotLabel.text = LocalizationManager.Format("draw_preset_slot", i + 1);
+                }
+                if (status != null)
+                {
+                    status.text = LocalizationManager.T(exists ? "draw_preset_saved" : "draw_preset_empty");
+                    status.color = exists
+                        ? new Color(0.08f, 0.52f, 0.3f, 1f)
+                        : new Color(0.45f, 0.42f, 0.36f, 1f);
+                }
+
+                Button save = slot.Find("PresetSaveButton")?.GetComponent<Button>();
+                Button load = slot.Find("PresetLoadButton")?.GetComponent<Button>();
+                SetButtonText(save, LocalizationManager.T("draw_preset_register"), 12);
+                SetButtonText(load, LocalizationManager.T("draw_preset_apply"), 12);
+                if (load != null)
+                {
+                    load.interactable = exists;
+                }
+            }
+        }
+
+        private static void SetButtonText(Button button, string value, int size)
+        {
+            Text label = button != null ? button.GetComponentInChildren<Text>(true) : null;
+            if (label != null)
+            {
+                label.text = value;
+                label.fontSize = size;
+                label.fontStyle = FontStyle.Bold;
+            }
+        }
+
+        private void OpenDrawingPresetConfirm(int slot, PresetAction action)
+        {
+            ResolveDrawManager();
+            if (drawManager == null
+                || action == PresetAction.Load
+                && !CharacterDrawingPresetStore.Exists(drawManager.CurrentSpecies, slot))
+            {
+                return;
+            }
+
+            pendingPresetSlot = slot;
+            pendingPresetAction = action;
+            if (drawingPresetConfirmDialog == null)
+            {
+                EnsureDrawingPresetConfirmDialog();
+            }
+
+            string speciesName = LocalizationManager.T(
+                StageSpeciesRules.GetSpeciesLocalizationKey(drawManager.CurrentSpecies));
+            string titleKey = action == PresetAction.Save
+                ? "draw_preset_save_confirm_title"
+                : "draw_preset_load_confirm_title";
+            bool overwrite = action == PresetAction.Save
+                && CharacterDrawingPresetStore.Exists(drawManager.CurrentSpecies, slot);
+            string messageKey = action == PresetAction.Load
+                ? "draw_preset_load_confirm_message"
+                : overwrite
+                    ? "draw_preset_overwrite_confirm_message"
+                    : "draw_preset_save_confirm_message";
+            SetPlainText("DrawingPresetConfirmTitle", LocalizationManager.Format(titleKey, slot + 1));
+            SetPlainText(
+                "DrawingPresetConfirmMessage",
+                LocalizationManager.Format(messageKey, speciesName, slot + 1));
+            RectTransform confirmRect = FindRect(transform, "DrawingPresetConfirmButton");
+            SetButtonText(
+                confirmRect != null ? confirmRect.GetComponent<Button>() : null,
+                LocalizationManager.T(action == PresetAction.Save
+                    ? "draw_preset_register"
+                    : "draw_preset_apply"),
+                18);
+            RectTransform cancelRect = FindRect(transform, "DrawingPresetCancelButton");
+            SetButtonText(
+                cancelRect != null ? cancelRect.GetComponent<Button>() : null,
+                LocalizationManager.T("draw_reset_confirm_no"),
+                18);
+            ApplyTypography();
+            drawingPresetConfirmDialog.SetActive(true);
+            drawingPresetConfirmDialog.transform.SetAsLastSibling();
+        }
+
+        private void ConfirmDrawingPresetAction()
+        {
+            ResolveDrawManager();
+            if (drawManager == null)
+            {
+                CloseDrawingPresetConfirm();
+                return;
+            }
+
+            bool successful;
+            if (pendingPresetAction == PresetAction.Save)
+            {
+                successful = CharacterDrawingPresetStore.Save(
+                    drawManager.CurrentSpecies,
+                    pendingPresetSlot,
+                    drawManager.CreateState());
+            }
+            else
+            {
+                DrawManager.DrawingState preset = CharacterDrawingPresetStore.Load(
+                    drawManager.CurrentSpecies,
+                    pendingPresetSlot);
+                if (preset != null)
+                {
+                    drawManager.LoadState(preset, false);
+                }
+
+                successful = preset != null;
+            }
+
+            if (successful)
+            {
+                GameSfx.Play(SfxId.DrawConfirm);
+            }
+            CloseDrawingPresetConfirm();
+            RefreshPresetSlotVisuals();
+        }
+
+        private void CloseDrawingPresetConfirm()
+        {
+            if (drawingPresetConfirmDialog != null)
+            {
+                drawingPresetConfirmDialog.SetActive(false);
+            }
         }
 
         private void ApplyBrushPresetSelection()
@@ -760,7 +1043,8 @@ namespace DrawBody.Prototype
                 {
                     text.color = new Color(0.28f, 0.23f, 0.16f, 0.82f);
                 }
-                else if (text.name != "ConnectionMessageText")
+                else if (text.name != "ConnectionMessageText"
+                    && text.name != "StatusLabel")
                 {
                     text.color = ink;
                 }

@@ -37,7 +37,45 @@ namespace DrawBody.Prototype
             return File.Exists(GetPath(slot));
         }
 
+        public static bool Exists(DrawManager.Species species, int slot)
+        {
+            return File.Exists(GetSpeciesPath(species, slot));
+        }
+
         public static bool Save(int slot, DrawManager.DrawingState state)
+        {
+            return SaveToPath(GetPath(slot), state);
+        }
+
+        public static bool Save(DrawManager.Species species, int slot, DrawManager.DrawingState state)
+        {
+            if (state == null
+                || !state.Points.TryGetValue(
+                    species,
+                    out Dictionary<DrawManager.BodyPart, List<Vector2>> sourceParts))
+            {
+                return false;
+            }
+
+            DrawManager.DrawingState speciesState = new DrawManager.DrawingState
+            {
+                Species = species,
+                Part = state.Species == species ? state.Part : DrawManager.GetPartsForSpecies(species)[0]
+            };
+            Dictionary<DrawManager.BodyPart, List<Vector2>> copiedParts =
+                new Dictionary<DrawManager.BodyPart, List<Vector2>>();
+            foreach (KeyValuePair<DrawManager.BodyPart, List<Vector2>> part in sourceParts)
+            {
+                copiedParts[part.Key] = part.Value != null
+                    ? new List<Vector2>(part.Value)
+                    : new List<Vector2>();
+            }
+
+            speciesState.Points[species] = copiedParts;
+            return SaveToPath(GetSpeciesPath(species, slot), speciesState);
+        }
+
+        private static bool SaveToPath(string path, DrawManager.DrawingState state)
         {
             if (state == null) return false;
             try
@@ -67,7 +105,7 @@ namespace DrawBody.Prototype
                     selectedPart = (int)state.Part,
                     species = speciesEntries.ToArray()
                 };
-                File.WriteAllText(GetPath(slot), JsonUtility.ToJson(file));
+                File.WriteAllText(path, JsonUtility.ToJson(file));
                 return true;
             }
             catch (Exception exception)
@@ -79,9 +117,34 @@ namespace DrawBody.Prototype
 
         public static DrawManager.DrawingState Load(int slot)
         {
+            return LoadFromPath(GetPath(slot));
+        }
+
+        public static DrawManager.DrawingState Load(DrawManager.Species species, int slot)
+        {
+            DrawManager.DrawingState state = LoadFromPath(GetSpeciesPath(species, slot));
+            if (state == null
+                || state.Species != species
+                || !state.Points.TryGetValue(
+                    species,
+                    out Dictionary<DrawManager.BodyPart, List<Vector2>> sourceParts))
+            {
+                return null;
+            }
+
+            DrawManager.DrawingState speciesState = new DrawManager.DrawingState
+            {
+                Species = species,
+                Part = state.Part
+            };
+            speciesState.Points[species] = sourceParts;
+            return speciesState;
+        }
+
+        private static DrawManager.DrawingState LoadFromPath(string path)
+        {
             try
             {
-                string path = GetPath(slot);
                 if (!File.Exists(path)) return null;
                 PresetFile file = JsonUtility.FromJson<PresetFile>(File.ReadAllText(path));
                 if (file?.species == null) return null;
@@ -134,6 +197,15 @@ namespace DrawBody.Prototype
         {
             int safeSlot = Mathf.Clamp(slot, 0, SlotCount - 1) + 1;
             return Path.Combine(Application.persistentDataPath, "character_preset_" + safeSlot + ".json");
+        }
+
+        private static string GetSpeciesPath(DrawManager.Species species, int slot)
+        {
+            int safeSlot = Mathf.Clamp(slot, 0, SlotCount - 1) + 1;
+            string speciesName = species.ToString().ToLowerInvariant();
+            return Path.Combine(
+                Application.persistentDataPath,
+                "draw_preset_" + speciesName + "_" + safeSlot + ".json");
         }
     }
 }
