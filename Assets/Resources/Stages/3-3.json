@@ -108,6 +108,31 @@
             "linkAction": ""
         },
         {
+            "objectId": "3-3_gun_2",
+            "type": 183,
+            "position": {
+                "x": -7.5,
+                "y": -1.25
+            },
+            "size": {
+                "x": 0.8500000238418579,
+                "y": 0.47999998927116394
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
             "objectId": "3-3_jump_1",
             "type": 61,
             "position": {

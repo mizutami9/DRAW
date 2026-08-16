@@ -369,7 +369,7 @@ namespace DrawBody.Prototype
             }
             transform.position += (Vector3)(direction * distance);
             life += Time.deltaTime;
-            if (life > 4f) Destroy(gameObject);
+            if (life >= 3f) Destroy(gameObject);
         }
 
         private bool TryHit(float distance)
