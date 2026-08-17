@@ -188,6 +188,8 @@ namespace DrawBody.Prototype
             E(StageObjectType.PoseCharacterKey, StageObjectCategory.Movable, StageObjectPlacement.Point, StageObjectKind.Pushable),
             E(StageObjectType.PoseCharacterKeyhole, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.UpdraftZone, StageObjectCategory.Action, StageObjectPlacement.Rect, StageObjectKind.Trigger),
+            E(StageObjectType.SpeedRing2X, StageObjectCategory.Action, StageObjectPlacement.Point, StageObjectKind.Trigger),
+            E(StageObjectType.SpeedRing3X, StageObjectCategory.Action, StageObjectPlacement.Point, StageObjectKind.Trigger),
 
             E(StageObjectType.Gear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),
             E(StageObjectType.BigGear, StageObjectCategory.Gimmick, StageObjectPlacement.Point, StageObjectKind.Decoration),

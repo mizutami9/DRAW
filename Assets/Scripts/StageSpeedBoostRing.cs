@@ -1,0 +1,237 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace DrawBody.Prototype
+{
+    [DisallowMultipleComponent]
+    public sealed class StageSpeedBoostRing : MonoBehaviour
+    {
+        private readonly HashSet<PlayerController2D> playersInside = new HashSet<PlayerController2D>();
+        private float multiplier;
+        private float duration;
+        private Transform visual;
+        private Vector3 visualBaseScale = new Vector3(0.42f, 1f, 1f);
+        private Color ringColor;
+
+        public static GameObject CreateObject(StageObjectData data, Transform parent)
+        {
+            GameObject root = new GameObject(data.objectId) { name = data.type.ToString() };
+            root.transform.SetParent(parent, false);
+            root.transform.position = data.position;
+            root.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
+            root.transform.localScale = new Vector3(Mathf.Max(0.5f, data.size.x), Mathf.Max(0.5f, data.size.y), 1f);
+
+            float multiplier = data.actionStrength > 1f
+                ? data.actionStrength
+                : data.type == StageObjectType.SpeedRing3X ? 3f : 2f;
+            float duration = data.bombFuseSeconds > 0f ? data.bombFuseSeconds : 1.5f;
+            Color color = multiplier >= 2.5f
+                ? new Color(1f, 0.32f, 0.18f, 0.94f)
+                : new Color(0.08f, 0.76f, 1f, 0.94f);
+
+            GameObject ringGroup = new GameObject("Speed Ring Visual");
+            ringGroup.transform.SetParent(root.transform, false);
+            ringGroup.transform.localScale = new Vector3(0.42f, 1f, 1f);
+            Color dark = Color.Lerp(color, Color.black, 0.42f);
+            Color light = Color.Lerp(color, Color.white, 0.48f);
+            AddCircle(ringGroup.transform, "Ring Shadow", new Vector2(0.035f, -0.045f), new Vector2(1.08f, 1.08f), dark, 23);
+            GameObject outer = AddCircle(ringGroup.transform, "Ring Outer", Vector2.zero, Vector2.one, color, 24);
+            AddCircle(ringGroup.transform, "Ring Highlight", new Vector2(-0.015f, 0.018f), new Vector2(0.83f, 0.83f), light, 25);
+            AddCircle(ringGroup.transform, "Ring Inner Rim", Vector2.zero, new Vector2(0.69f, 0.69f), dark, 26);
+            AddCircle(ringGroup.transform, "Ring Opening", Vector2.zero, new Vector2(0.58f, 0.58f),
+                new Color(0.985f, 0.975f, 0.93f, 1f), 27);
+            AddSpeedWing(ringGroup.transform, -1f, color, 25);
+            AddSpeedWing(ringGroup.transform, 1f, color, 25);
+
+            CircleCollider2D trigger = root.AddComponent<CircleCollider2D>();
+            trigger.radius = 0.46f;
+            trigger.isTrigger = true;
+
+            StageSpeedBoostRing ring = root.AddComponent<StageSpeedBoostRing>();
+            ring.multiplier = Mathf.Clamp(multiplier, 1f, 3f);
+            ring.duration = Mathf.Clamp(duration, 0.1f, 10f);
+            ring.visual = ringGroup.transform;
+            ring.ringColor = color;
+
+            StageEditorObject marker = root.AddComponent<StageEditorObject>();
+            marker.objectId = data.objectId;
+            marker.type = data.type;
+            marker.size = data.size;
+            marker.actionStrength = data.actionStrength;
+            marker.movementAngle = data.movementAngle;
+            marker.movementSpeed = data.movementSpeed;
+            marker.spawnPattern = data.spawnPattern;
+            marker.spawnBoxSize = data.spawnBoxSize;
+            marker.bombFuseSeconds = data.bombFuseSeconds;
+            marker.linkTargetId = data.linkTargetId;
+            marker.linkAction = data.linkAction;
+            return root;
+        }
+
+        private static GameObject AddCircle(Transform parent, string name, Vector2 position, Vector2 scale, Color color, int order)
+        {
+            GameObject obj = new GameObject(name);
+            obj.transform.SetParent(parent, false);
+            obj.transform.localPosition = position;
+            obj.transform.localScale = scale;
+            SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
+            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.color = color;
+            renderer.sortingOrder = order;
+            return obj;
+        }
+
+        private static void AddSpeedWing(Transform parent, float side, Color color, int order)
+        {
+            Material material = new Material(Shader.Find("Sprites/Default"));
+            for (int i = 0; i < 2; i++)
+            {
+                GameObject wing = new GameObject("Speed Accent");
+                wing.transform.SetParent(parent, false);
+                LineRenderer line = wing.AddComponent<LineRenderer>();
+                line.useWorldSpace = false;
+                line.positionCount = 3;
+                line.numCapVertices = 5;
+                line.numCornerVertices = 4;
+                line.startWidth = 0.07f;
+                line.endWidth = 0.045f;
+                line.sharedMaterial = material;
+                line.startColor = color;
+                line.endColor = Color.Lerp(color, Color.white, 0.35f);
+                line.sortingOrder = order;
+                float y = 0.2f - i * 0.38f;
+                line.SetPosition(0, new Vector3(side * 0.46f, y, 0f));
+                line.SetPosition(1, new Vector3(side * 0.73f, y + 0.1f, 0f));
+                line.SetPosition(2, new Vector3(side * 0.94f, y + 0.02f, 0f));
+            }
+        }
+
+        private void Update()
+        {
+            if (visual == null) return;
+            float pulse = 1f + Mathf.Sin(Time.time * 5.5f) * 0.035f;
+            visual.localScale = new Vector3(
+                visualBaseScale.x * pulse,
+                visualBaseScale.y * pulse,
+                1f);
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            PlayerController2D player = other.GetComponentInParent<PlayerController2D>();
+            if (player == null || !playersInside.Add(player)) return;
+            player.ApplySpeedBoost(multiplier, duration);
+            GameSfx.PlayAt(SfxId.UiToggleOn, transform.position, multiplier >= 2.5f ? 1.22f : 1.08f);
+            StartCoroutine(Flash());
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            PlayerController2D player = other.GetComponentInParent<PlayerController2D>();
+            if (player != null) playersInside.Remove(player);
+        }
+
+        private System.Collections.IEnumerator Flash()
+        {
+            SpriteRenderer renderer = visual != null ? visual.Find("Ring Outer")?.GetComponent<SpriteRenderer>() : null;
+            if (renderer == null) yield break;
+            renderer.color = Color.white;
+            yield return new WaitForSeconds(0.12f);
+            if (renderer != null) renderer.color = ringColor;
+        }
+    }
+
+    [DisallowMultipleComponent]
+    public sealed class PlayerSpeedBoostEffect : MonoBehaviour
+    {
+        private const int StreakCount = 7;
+        private readonly LineRenderer[] streaks = new LineRenderer[StreakCount];
+        private Rigidbody2D body;
+        private PlayerController2D player;
+        private Material material;
+        private float remaining;
+        private float multiplier = 1f;
+
+        public void Activate(float value, float duration)
+        {
+            multiplier = Mathf.Max(multiplier, value);
+            remaining = Mathf.Max(remaining, duration);
+            EnsureVisuals();
+            SetVisible(true);
+        }
+
+        private void Awake()
+        {
+            body = GetComponent<Rigidbody2D>();
+            player = GetComponent<PlayerController2D>();
+        }
+
+        private void LateUpdate()
+        {
+            if (remaining <= 0f)
+            {
+                multiplier = 1f;
+                SetVisible(false);
+                return;
+            }
+            remaining = Mathf.Max(0f, remaining - Time.deltaTime);
+            EnsureVisuals();
+
+            Vector2 velocity = body != null ? body.linearVelocity : Vector2.zero;
+            Vector2 direction = velocity.sqrMagnitude > 1f
+                ? velocity.normalized
+                : new Vector2(player != null ? player.FacingDirection : 1, 0f);
+            Vector2 behind = -direction;
+            float length = Mathf.Lerp(1.1f, 2.8f, Mathf.InverseLerp(1f, 3f, multiplier));
+            float flicker = 0.85f + Mathf.Sin(Time.unscaledTime * 24f) * 0.15f;
+            Color core = multiplier >= 2.5f
+                ? new Color(1f, 0.3f, 0.08f, 0.78f)
+                : new Color(0.05f, 0.72f, 1f, 0.72f);
+            Vector2 perpendicular = new Vector2(-direction.y, direction.x);
+            Vector2 center = transform.position;
+            for (int i = 0; i < streaks.Length; i++)
+            {
+                LineRenderer line = streaks[i];
+                if (line == null) continue;
+                float lane = (i - (StreakCount - 1) * 0.5f) * 0.28f;
+                float wave = Mathf.Sin(Time.unscaledTime * 18f + i * 1.7f) * 0.11f;
+                Vector2 start = center + perpendicular * (lane + wave) + behind * 0.25f;
+                float laneLength = length * (0.62f + (i % 3) * 0.18f) * flicker;
+                line.SetPosition(0, start);
+                line.SetPosition(1, start + behind * laneLength);
+                line.startColor = core;
+                line.endColor = new Color(core.r, core.g, core.b, 0f);
+            }
+        }
+
+        private void EnsureVisuals()
+        {
+            if (streaks[0] != null) return;
+            material = new Material(Shader.Find("Sprites/Default"));
+            for (int i = 0; i < streaks.Length; i++)
+            {
+                GameObject obj = new GameObject("Boost Speed Line " + (i + 1));
+                obj.transform.SetParent(transform, false);
+                LineRenderer line = obj.AddComponent<LineRenderer>();
+                line.useWorldSpace = true;
+                line.positionCount = 2;
+                line.numCapVertices = 5;
+                line.startWidth = 0.075f + (i % 2) * 0.025f;
+                line.endWidth = 0.015f;
+                line.sharedMaterial = material;
+                line.sortingOrder = 218 + i;
+                streaks[i] = line;
+            }
+        }
+
+        private void SetVisible(bool visible)
+        {
+            for (int i = 0; i < streaks.Length; i++) if (streaks[i] != null) streaks[i].enabled = visible;
+        }
+
+        private void OnDestroy()
+        {
+            if (material != null) Destroy(material);
+        }
+    }
+}

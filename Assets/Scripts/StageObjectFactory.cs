@@ -87,6 +87,9 @@ namespace DrawBody.Prototype
                     return StagePoseKeyFactory.CreateKeyhole(data, parent);
                 case StageObjectType.UpdraftZone:
                     return StagePoseKeyFactory.CreateUpdraft(data, parent);
+                case StageObjectType.SpeedRing2X:
+                case StageObjectType.SpeedRing3X:
+                    return StageSpeedBoostRing.CreateObject(data, parent);
                 case StageObjectType.EscortSpawner:
                 case StageObjectType.EscortGoal:
                 case StageObjectType.EscortPlayerOnlyFloor:
@@ -245,6 +248,10 @@ namespace DrawBody.Prototype
                     case StageObjectType.UpdraftZone:
                         size = new Vector2(20f, 12f);
                         break;
+                    case StageObjectType.SpeedRing2X:
+                    case StageObjectType.SpeedRing3X:
+                        size = new Vector2(2.2f, 2.2f);
+                        break;
                     case StageObjectType.Goal:
                         size = new Vector2(1.15f, 2.05f);
                         break;
@@ -352,6 +359,10 @@ namespace DrawBody.Prototype
                         ? 8f
                     : type == StageObjectType.EnemyBomber
                         ? 3.2f
+                    : type == StageObjectType.SpeedRing2X
+                        ? 2f
+                    : type == StageObjectType.SpeedRing3X
+                        ? 3f
                     : type == StageObjectType.JumpPad || type == StageObjectType.Spring
                         ? 27f
                         : type == StageObjectType.MovingPlatform || type == StageObjectType.MovingOneWayPlatform
@@ -383,7 +394,8 @@ namespace DrawBody.Prototype
                 bombFuseSeconds = type == StageObjectType.Bomb
                     || type == StageObjectType.PickupFuseBomb
                     || type == StageObjectType.BombDropper
-                    || type == StageObjectType.Dynamite ? 5f : 0f
+                    || type == StageObjectType.Dynamite ? 5f
+                    : type == StageObjectType.SpeedRing2X || type == StageObjectType.SpeedRing3X ? 1.5f : 0f
             };
         }
 

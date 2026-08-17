@@ -44,6 +44,9 @@ namespace DrawBody.Prototype
         private bool controlsEnabled = true;
         private float jumpMultiplier = 1f;
         private float moveSpeedMultiplier = 1f;
+        private float temporarySpeedMultiplier = 1f;
+        private float temporarySpeedRemaining;
+        private float EffectiveMoveSpeedMultiplier => moveSpeedMultiplier * temporarySpeedMultiplier;
         private float jumpVelocityMultiplier = 1f;
         private bool canGlide;
         private float currentGlideFallSpeed;
@@ -96,6 +99,20 @@ namespace DrawBody.Prototype
         public bool IsWallSticking => wasWallSticking;
         public DrawManager.Species CurrentSpecies => currentSpecies;
 
+        public void ApplySpeedBoost(float multiplier, float duration)
+        {
+            float clampedMultiplier = Mathf.Clamp(multiplier, 1f, 3f);
+            float clampedDuration = Mathf.Clamp(duration, 0.1f, 10f);
+            if (clampedMultiplier >= temporarySpeedMultiplier)
+            {
+                temporarySpeedMultiplier = clampedMultiplier;
+            }
+            temporarySpeedRemaining = Mathf.Max(temporarySpeedRemaining, clampedDuration);
+            PlayerSpeedBoostEffect effect = GetComponent<PlayerSpeedBoostEffect>();
+            if (effect == null) effect = gameObject.AddComponent<PlayerSpeedBoostEffect>();
+            effect.Activate(clampedMultiplier, clampedDuration);
+        }
+
         public void SetScriptedInput(float horizontal, bool jumpHeld, bool jumpPressed = false)
         {
             scriptedInputEnabled = true;
@@ -139,7 +156,12 @@ namespace DrawBody.Prototype
 
         public static float CalculateCatMoveSpeedMultiplier(float legInk)
         {
-            return Mathf.Lerp(1f, 1.5f, Mathf.Clamp01(Mathf.Max(0f, legInk) / FullSpeedCatLegInk));
+            return Mathf.Lerp(1f, 2f, Mathf.Clamp01(Mathf.Max(0f, legInk) / FullSpeedCatLegInk));
+        }
+
+        public static float CalculateCatScratchRangeMultiplier(float frontLegInk)
+        {
+            return Mathf.Lerp(1f, 3f, Mathf.Clamp01(Mathf.Max(0f, frontLegInk) / FullSpeedCatLegInk));
         }
 
         public static float CalculateSlimeStickStrength(float slimeInk)
@@ -246,6 +268,15 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
+            if (temporarySpeedRemaining > 0f)
+            {
+                temporarySpeedRemaining = Mathf.Max(0f, temporarySpeedRemaining - Time.deltaTime);
+                if (temporarySpeedRemaining <= 0f)
+                {
+                    temporarySpeedMultiplier = 1f;
+                }
+            }
+
             if (!controlsEnabled)
             {
                 horizontalInput = 0f;
@@ -509,7 +540,7 @@ namespace DrawBody.Prototype
                 else
                 {
                     float desiredX = horizontalInput * Mathf.Max(
-                        moveSpeed * moveSpeedMultiplier,
+                        moveSpeed * EffectiveMoveSpeedMultiplier,
                         slimeWallJumpHorizontalSpeed);
                     bool steeringWithMomentum = Mathf.Sign(desiredX) == Mathf.Sign(velocityX);
                     if (steeringWithMomentum)
@@ -537,7 +568,7 @@ namespace DrawBody.Prototype
 
             Vector2 currentSupportVelocity = GetCurrentSupportVelocity();
             float targetSpeed = currentSupportVelocity.x
-                + horizontalInput * moveSpeed * moveSpeedMultiplier;
+                + horizontalInput * moveSpeed * EffectiveMoveSpeedMultiplier;
             float speedDifference = targetSpeed - rb.linearVelocity.x;
             float rate = Mathf.Abs(targetSpeed) > 0.01f ? acceleration : deceleration;
             float movement = Mathf.Clamp(speedDifference, -rate * Time.fixedDeltaTime, rate * Time.fixedDeltaTime);
@@ -706,7 +737,7 @@ namespace DrawBody.Prototype
                     jumpVelocity * jumpMultiplier * jumpVelocityMultiplier);
                 float horizontalSpeed = Mathf.Max(
                     slimeWallJumpHorizontalSpeed,
-                    moveSpeed * moveSpeedMultiplier * 2.9f);
+                    moveSpeed * EffectiveMoveSpeedMultiplier * 2.9f);
                 float launchDirection = -lastWallSide;
                 wallJumpSourceSide = lastWallSide;
                 wallJumpLockedVelocityX = launchDirection * horizontalSpeed;
@@ -955,7 +986,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            float speedRatio = Mathf.Clamp(Mathf.Abs(rb.linearVelocity.x) / Mathf.Max(1f, moveSpeed * moveSpeedMultiplier), 0.35f, 1f);
+            float speedRatio = Mathf.Clamp(Mathf.Abs(rb.linearVelocity.x) / Mathf.Max(1f, moveSpeed * EffectiveMoveSpeedMultiplier), 0.35f, 1f);
             nextFootstepTime = Time.time + Mathf.Lerp(0.42f, 0.19f, speedRatio);
             GameSfx.PlayAt(currentSpecies == DrawManager.Species.Cat ? SfxId.CatRunLoop : SfxId.PlayerFootstepPaper, transform.position);
         }
@@ -1135,7 +1166,7 @@ namespace DrawBody.Prototype
                 jumpVelocity * jumpMultiplier * jumpVelocityMultiplier);
             float horizontalSpeed = Mathf.Max(
                 slimeWallJumpHorizontalSpeed,
-                moveSpeed * moveSpeedMultiplier * 2.9f);
+                moveSpeed * EffectiveMoveSpeedMultiplier * 2.9f);
             Vector2 start = new Vector2(bodyBounds.center.x, bodyBounds.center.y);
             Vector2 initialVelocity = new Vector2(-lastWallSide * horizontalSpeed, verticalSpeed);
             Vector2 gravity = Physics2D.gravity * rb.gravityScale;

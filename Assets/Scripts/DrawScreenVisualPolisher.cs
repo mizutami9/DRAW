@@ -10,8 +10,10 @@ namespace DrawBody.Prototype
         private float selectedBrushPreset = 6f;
         private GameObject fullResetConfirmDialog;
         private GameObject drawingPresetConfirmDialog;
+        private GameObject drawingPresetPopup;
         private DrawManager drawManager;
         private int pendingPresetSlot;
+        private DrawManager.Species pendingPresetSpecies;
         private PresetAction pendingPresetAction;
 
         private enum PresetAction
@@ -515,38 +517,96 @@ namespace DrawBody.Prototype
             }
 
             RectTransform panel = EnsureCard(root, "DrawingPresetCard");
-            // Keep presets in the unused gutter beside the species selector.
-            // The drawing canvas starts to the right of this area.
-            SetTopRect(panel, new Vector2(120f, -185f), new Vector2(210f, 238f), new Vector2(0f, 1f));
+            SetTopRect(panel, new Vector2(92f, -190f), new Vector2(138f, 52f), new Vector2(0f, 1f));
             RestyleCard(panel, new Color(0.9f, 0.97f, 1f, 0.98f));
+            Button open = EnsureDialogButton(panel, "DrawingPresetOpenButton", new Color(0.3f, 0.7f, 0.94f, 1f));
+            Stretch(open.GetComponent<RectTransform>());
+            open.onClick.RemoveAllListeners();
+            open.onClick.AddListener(OpenDrawingPresetPopup);
 
-            Text title = EnsureLabel(panel, "DrawingPresetTitle", string.Empty, 15, TextAnchor.MiddleCenter);
-            SetTopRect(title.rectTransform, new Vector2(8f, -3f), new Vector2(194f, 22f), new Vector2(0f, 1f));
+            RectTransform overlay = FindRect(root, "DrawingPresetPopup");
+            if (overlay == null)
+            {
+                GameObject obj = new GameObject("DrawingPresetPopup", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(root, false);
+                overlay = obj.GetComponent<RectTransform>();
+            }
+            Stretch(overlay);
+            Image blocker = overlay.GetComponent<Image>();
+            blocker.color = new Color(0.04f, 0.04f, 0.035f, 0.64f);
+            blocker.raycastTarget = true;
+
+            RectTransform popup = EnsureCard(overlay, "DrawingPresetPopupCard");
+            SetCenterRect(popup, Vector2.zero, new Vector2(980f, 650f));
+            RestyleCard(popup, new Color(1f, 0.975f, 0.86f, 1f));
+            Text title = EnsureLabel(popup, "DrawingPresetTitle", string.Empty, 28, TextAnchor.MiddleCenter);
+            SetTopRect(title.rectTransform, new Vector2(35f, -16f), new Vector2(910f, 45f), new Vector2(0f, 1f));
             title.fontStyle = FontStyle.Bold;
+
+            DrawManager.Species[] presetSpecies =
+            {
+                DrawManager.Species.Human,
+                DrawManager.Species.Cat,
+                DrawManager.Species.Bird,
+                DrawManager.Species.Turtle,
+                DrawManager.Species.Slime
+            };
 
             for (int i = 0; i < CharacterDrawingPresetStore.SlotCount; i++)
             {
                 int slot = i;
-                RectTransform slotCard = EnsureCard(panel, "DrawingPresetSlot" + (i + 1));
-                SetDockRect(slotCard, new Vector2(7f, 146f - i * 70f), new Vector2(196f, 64f));
-                RestyleCard(slotCard, new Color(1f, 0.985f, 0.9f, 0.98f));
-
-                Text slotLabel = EnsureLabel(slotCard, "SlotLabel", string.Empty, 12, TextAnchor.MiddleLeft);
-                SetTopRect(slotLabel.rectTransform, new Vector2(7f, -2f), new Vector2(76f, 20f), new Vector2(0f, 1f));
+                RectTransform slotCard = EnsureCard(popup, "DrawingPresetSlot" + (i + 1));
+                SetTopRect(slotCard, new Vector2(28f + i * 310f, -72f), new Vector2(294f, 510f), new Vector2(0f, 1f));
+                RestyleCard(slotCard, i % 2 == 0
+                    ? new Color(1f, 0.94f, 0.72f, 1f)
+                    : new Color(0.9f, 0.96f, 1f, 1f));
+                Text slotLabel = EnsureLabel(slotCard, "SlotLabel", string.Empty, 19, TextAnchor.MiddleCenter);
+                SetTopRect(slotLabel.rectTransform, new Vector2(12f, -7f), new Vector2(270f, 30f), new Vector2(0f, 1f));
                 slotLabel.fontStyle = FontStyle.Bold;
-                Text status = EnsureLabel(slotCard, "StatusLabel", string.Empty, 11, TextAnchor.MiddleRight);
-                SetTopRect(status.rectTransform, new Vector2(84f, -2f), new Vector2(105f, 20f), new Vector2(0f, 1f));
-
-                Button save = EnsureDialogButton(slotCard, "PresetSaveButton", new Color(1f, 0.74f, 0.22f, 1f));
-                SetDockRect(save.GetComponent<RectTransform>(), new Vector2(5f, 4f), new Vector2(89f, 36f));
-                save.onClick.RemoveAllListeners();
-                save.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, PresetAction.Save));
-
-                Button load = EnsureDialogButton(slotCard, "PresetLoadButton", new Color(0.3f, 0.76f, 0.92f, 1f));
-                SetDockRect(load.GetComponent<RectTransform>(), new Vector2(102f, 4f), new Vector2(89f, 36f));
-                load.onClick.RemoveAllListeners();
-                load.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, PresetAction.Load));
+                for (int speciesIndex = 0; speciesIndex < presetSpecies.Length; speciesIndex++)
+                {
+                    DrawManager.Species species = presetSpecies[speciesIndex];
+                    RectTransform row = EnsureCard(slotCard, "PresetSpecies_" + species);
+                    SetTopRect(row, new Vector2(10f, -43f - speciesIndex * 90f), new Vector2(274f, 82f), new Vector2(0f, 1f));
+                    RestyleCard(row, new Color(1f, 0.99f, 0.93f, 0.96f));
+                    Text speciesLabel = EnsureLabel(row, "SpeciesLabel", string.Empty, 15, TextAnchor.MiddleLeft);
+                    SetTopRect(speciesLabel.rectTransform, new Vector2(9f, -4f), new Vector2(132f, 24f), new Vector2(0f, 1f));
+                    speciesLabel.fontStyle = FontStyle.Bold;
+                    Text status = EnsureLabel(row, "StatusLabel", string.Empty, 11, TextAnchor.MiddleRight);
+                    SetTopRect(status.rectTransform, new Vector2(144f, -4f), new Vector2(120f, 24f), new Vector2(0f, 1f));
+                    Button save = EnsureDialogButton(row, "PresetSaveButton", new Color(1f, 0.65f, 0.16f, 1f));
+                    SetDockRect(save.GetComponent<RectTransform>(), new Vector2(8f, 7f), new Vector2(122f, 42f));
+                    save.onClick.RemoveAllListeners();
+                    save.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, species, PresetAction.Save));
+                    Button load = EnsureDialogButton(row, "PresetLoadButton", new Color(0.22f, 0.68f, 0.9f, 1f));
+                    SetDockRect(load.GetComponent<RectTransform>(), new Vector2(144f, 7f), new Vector2(122f, 42f));
+                    load.onClick.RemoveAllListeners();
+                    load.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, species, PresetAction.Load));
+                }
             }
+
+            Button close = EnsureDialogButton(popup, "DrawingPresetCloseButton", new Color(0.9f, 0.42f, 0.32f, 1f));
+            SetDockRect(close.GetComponent<RectTransform>(), new Vector2(820f, 18f), new Vector2(130f, 48f));
+            close.onClick.RemoveAllListeners();
+            close.onClick.AddListener(CloseDrawingPresetPopup);
+            drawingPresetPopup = overlay.gameObject;
+            drawingPresetPopup.SetActive(false);
+        }
+
+        private void OpenDrawingPresetPopup()
+        {
+            if (drawingPresetPopup == null) EnsureDrawingPresetPanel();
+            RefreshPresetSlotVisuals();
+            if (drawingPresetPopup != null)
+            {
+                drawingPresetPopup.SetActive(true);
+                drawingPresetPopup.transform.SetAsLastSibling();
+            }
+        }
+
+        private void CloseDrawingPresetPopup()
+        {
+            if (drawingPresetPopup != null) drawingPresetPopup.SetActive(false);
         }
 
         private void EnsureDrawingPresetConfirmDialog()
@@ -627,9 +687,11 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            string speciesName = LocalizationManager.T(
-                StageSpeciesRules.GetSpeciesLocalizationKey(drawManager.CurrentSpecies));
-            SetPlainText("DrawingPresetTitle", LocalizationManager.Format("draw_preset_title", speciesName));
+            SetPlainText("DrawingPresetTitle", LocalizationManager.T("draw_preset_sets_title"));
+            SetButtonText(FindRect(transform, "DrawingPresetOpenButton")?.GetComponent<Button>(),
+                LocalizationManager.T("draw_preset_button"), 17);
+            SetButtonText(FindRect(transform, "DrawingPresetCloseButton")?.GetComponent<Button>(),
+                LocalizationManager.T("draw_reset_confirm_no"), 16);
             for (int i = 0; i < CharacterDrawingPresetStore.SlotCount; i++)
             {
                 RectTransform slot = FindRect(transform, "DrawingPresetSlot" + (i + 1));
@@ -638,28 +700,30 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                bool exists = CharacterDrawingPresetStore.Exists(drawManager.CurrentSpecies, i);
                 Text slotLabel = slot.Find("SlotLabel")?.GetComponent<Text>();
-                Text status = slot.Find("StatusLabel")?.GetComponent<Text>();
                 if (slotLabel != null)
                 {
                     slotLabel.text = LocalizationManager.Format("draw_preset_slot", i + 1);
                 }
-                if (status != null)
+                foreach (DrawManager.Species species in System.Enum.GetValues(typeof(DrawManager.Species)))
                 {
-                    status.text = LocalizationManager.T(exists ? "draw_preset_saved" : "draw_preset_empty");
-                    status.color = exists
-                        ? new Color(0.08f, 0.52f, 0.3f, 1f)
-                        : new Color(0.45f, 0.42f, 0.36f, 1f);
-                }
-
-                Button save = slot.Find("PresetSaveButton")?.GetComponent<Button>();
-                Button load = slot.Find("PresetLoadButton")?.GetComponent<Button>();
-                SetButtonText(save, LocalizationManager.T("draw_preset_register"), 12);
-                SetButtonText(load, LocalizationManager.T("draw_preset_apply"), 12);
-                if (load != null)
-                {
-                    load.interactable = exists;
+                    Transform row = slot.Find("PresetSpecies_" + species);
+                    if (row == null) continue;
+                    bool exists = CharacterDrawingPresetStore.Exists(species, i);
+                    Text speciesLabel = row.Find("SpeciesLabel")?.GetComponent<Text>();
+                    Text status = row.Find("StatusLabel")?.GetComponent<Text>();
+                    if (speciesLabel != null)
+                        speciesLabel.text = LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(species));
+                    if (status != null)
+                    {
+                        status.text = LocalizationManager.T(exists ? "draw_preset_saved" : "draw_preset_empty");
+                        status.color = exists ? new Color(0.08f, 0.52f, 0.3f, 1f) : new Color(0.45f, 0.42f, 0.36f, 1f);
+                    }
+                    Button save = row.Find("PresetSaveButton")?.GetComponent<Button>();
+                    Button load = row.Find("PresetLoadButton")?.GetComponent<Button>();
+                    SetButtonText(save, LocalizationManager.T("draw_preset_register"), 12);
+                    SetButtonText(load, LocalizationManager.T("draw_preset_apply"), 12);
+                    if (load != null) load.interactable = exists;
                 }
             }
         }
@@ -675,30 +739,30 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void OpenDrawingPresetConfirm(int slot, PresetAction action)
+        private void OpenDrawingPresetConfirm(int slot, DrawManager.Species species, PresetAction action)
         {
             ResolveDrawManager();
             if (drawManager == null
                 || action == PresetAction.Load
-                && !CharacterDrawingPresetStore.Exists(drawManager.CurrentSpecies, slot))
+                && !CharacterDrawingPresetStore.Exists(species, slot))
             {
                 return;
             }
 
             pendingPresetSlot = slot;
+            pendingPresetSpecies = species;
             pendingPresetAction = action;
             if (drawingPresetConfirmDialog == null)
             {
                 EnsureDrawingPresetConfirmDialog();
             }
 
-            string speciesName = LocalizationManager.T(
-                StageSpeciesRules.GetSpeciesLocalizationKey(drawManager.CurrentSpecies));
+            string speciesName = LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(species));
             string titleKey = action == PresetAction.Save
                 ? "draw_preset_save_confirm_title"
                 : "draw_preset_load_confirm_title";
             bool overwrite = action == PresetAction.Save
-                && CharacterDrawingPresetStore.Exists(drawManager.CurrentSpecies, slot);
+                && CharacterDrawingPresetStore.Exists(species, slot);
             string messageKey = action == PresetAction.Load
                 ? "draw_preset_load_confirm_message"
                 : overwrite
@@ -738,15 +802,12 @@ namespace DrawBody.Prototype
             if (pendingPresetAction == PresetAction.Save)
             {
                 successful = CharacterDrawingPresetStore.Save(
-                    drawManager.CurrentSpecies,
-                    pendingPresetSlot,
-                    drawManager.CreateState());
+                    pendingPresetSpecies, pendingPresetSlot, drawManager.CreateState());
             }
             else
             {
                 DrawManager.DrawingState preset = CharacterDrawingPresetStore.Load(
-                    drawManager.CurrentSpecies,
-                    pendingPresetSlot);
+                    pendingPresetSpecies, pendingPresetSlot);
                 if (preset != null)
                 {
                     drawManager.LoadState(preset, false);

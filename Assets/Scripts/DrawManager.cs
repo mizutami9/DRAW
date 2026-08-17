@@ -1776,12 +1776,15 @@ namespace DrawBody.Prototype
             switch (profile.Species)
             {
                 case Species.Cat:
-                    progress = Mathf.Clamp01(profile.CatLegInk / 120f);
+                    progress = Mathf.Clamp01(profile.CatBackLegInk / 120f);
+                    secondaryProgress = Mathf.Clamp01(profile.CatFrontLegInk / 120f);
                     title = LocalizationManager.T("ability_card_cat");
                     effect = LocalizationManager.Format(
                         "ability_effect_cat",
-                        PlayerController2D.CalculateCatMoveSpeedMultiplier(profile.CatLegInk));
-                    ink = LocalizationManager.Format("ability_ink_cat", profile.CatLegInk);
+                        PlayerController2D.CalculateCatMoveSpeedMultiplier(profile.CatBackLegInk),
+                        PlayerController2D.CalculateCatScratchRangeMultiplier(profile.CatFrontLegInk));
+                    ink = LocalizationManager.Format(
+                        "ability_ink_cat", profile.CatBackLegInk, profile.CatFrontLegInk);
                     accent = new Color(0.94f, 0.54f, 0.18f, 1f);
                     break;
                 case Species.Bird:
@@ -1823,7 +1826,9 @@ namespace DrawBody.Prototype
             }
 
             bool human = profile.Species == Species.Human;
-            rankProgress = human ? Mathf.Max(progress, secondaryProgress) : progress;
+            bool cat = profile.Species == Species.Cat;
+            bool dualGauge = human || cat;
+            rankProgress = dualGauge ? Mathf.Max(progress, secondaryProgress) : progress;
 
             string rank = rankProgress >= 0.9f ? "S"
                 : rankProgress >= 0.7f ? "A"
@@ -1842,13 +1847,13 @@ namespace DrawBody.Prototype
             if (abilityInkText != null) abilityInkText.text = ink;
             if (abilityLowText != null)
             {
-                abilityLowText.gameObject.SetActive(!human);
+                abilityLowText.gameObject.SetActive(!dualGauge);
                 abilityLowText.text = LocalizationManager.T(
                     profile.Species == Species.Slime ? "ability_slime_gauge_low" : "ability_gauge_low");
             }
             if (abilityHighText != null)
             {
-                abilityHighText.gameObject.SetActive(!human);
+                abilityHighText.gameObject.SetActive(!dualGauge);
                 abilityHighText.text = LocalizationManager.T(
                     profile.Species == Species.Slime ? "ability_slime_gauge_high" : "ability_gauge_high");
             }
@@ -1862,18 +1867,31 @@ namespace DrawBody.Prototype
                             : "ability_growth_hint");
             }
             if (abilityHeaderImage != null) abilityHeaderImage.color = accent;
-            SetHumanAbilityGaugeLayout(human);
+            SetDualAbilityGaugeLayout(human, cat);
             SetInkGauge(abilityGaugeFill, progress, false);
             if (abilityGaugeFill != null) abilityGaugeFill.color = accent;
             SetInkGauge(humanArmGaugeFill, secondaryProgress, false);
             if (humanArmGaugeFill != null) humanArmGaugeFill.color = new Color(0.94f, 0.42f, 0.2f, 1f);
         }
 
-        private void SetHumanAbilityGaugeLayout(bool human)
+        private void SetDualAbilityGaugeLayout(bool human, bool cat)
         {
-            if (humanJumpGaugeLabel != null) humanJumpGaugeLabel.gameObject.SetActive(human);
-            if (humanArmGaugeLabel != null) humanArmGaugeLabel.gameObject.SetActive(human);
-            if (humanArmGaugeFill != null) humanArmGaugeFill.transform.parent.gameObject.SetActive(human);
+            bool dual = human || cat;
+            if (humanJumpGaugeLabel != null)
+            {
+                humanJumpGaugeLabel.gameObject.SetActive(dual);
+                humanJumpGaugeLabel.text = LocalizationManager.T(cat
+                    ? "ability_cat_back_leg_gauge"
+                    : "ability_human_jump_gauge");
+            }
+            if (humanArmGaugeLabel != null)
+            {
+                humanArmGaugeLabel.gameObject.SetActive(dual);
+                humanArmGaugeLabel.text = LocalizationManager.T(cat
+                    ? "ability_cat_front_leg_gauge"
+                    : "ability_human_arm_gauge");
+            }
+            if (humanArmGaugeFill != null) humanArmGaugeFill.transform.parent.gameObject.SetActive(dual);
 
             RectTransform gauge = abilityGaugeFill != null ? abilityGaugeFill.transform.parent as RectTransform : null;
             if (gauge == null)
@@ -1884,8 +1902,8 @@ namespace DrawBody.Prototype
             gauge.anchorMin = new Vector2(0f, 1f);
             gauge.anchorMax = new Vector2(0f, 1f);
             gauge.pivot = new Vector2(0f, 1f);
-            gauge.anchoredPosition = human ? new Vector2(68f, -133f) : new Vector2(18f, -136f);
-            gauge.sizeDelta = human ? new Vector2(194f, 14f) : new Vector2(244f, 18f);
+            gauge.anchoredPosition = dual ? new Vector2(68f, -133f) : new Vector2(18f, -136f);
+            gauge.sizeDelta = dual ? new Vector2(194f, 14f) : new Vector2(244f, 18f);
         }
 
         private static void SetInkGauge(Image fill, float amount, bool over)

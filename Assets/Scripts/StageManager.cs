@@ -962,6 +962,13 @@ namespace DrawBody.Prototype
             for (int i = 0; i < lobby.Players.Length; i++)
             {
                 OnlinePlayerInfo lobbyPlayer = lobby.Players[i];
+                StageSpikeChaseController spikeChase = currentStageId == "6-3"
+                    ? Object.FindFirstObjectByType<StageSpikeChaseController>()
+                    : null;
+                if (lobbyPlayer != null && spikeChase != null && spikeChase.IsPlayerEliminated(lobbyPlayer.PlayerId))
+                {
+                    continue;
+                }
                 if (lobbyPlayer == null
                     || string.IsNullOrEmpty(lobbyPlayer.PlayerId)
                     || !onlinePlayerIdsAtGoal.Contains(lobbyPlayer.PlayerId))

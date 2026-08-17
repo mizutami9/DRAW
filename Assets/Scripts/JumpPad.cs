@@ -52,8 +52,13 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            PlayerController2D player = rb.GetComponent<PlayerController2D>();
+            float speciesMultiplier = player != null
+                && player.CurrentSpecies == DrawManager.Species.Bird
+                    ? 3f
+                    : 1f;
             Vector2 velocity = rb.linearVelocity;
-            velocity.y = Mathf.Max(velocity.y, jumpVelocity);
+            velocity.y = Mathf.Max(velocity.y, jumpVelocity * speciesMultiplier);
             rb.linearVelocity = velocity;
             bounceTimer = 0.22f;
         }

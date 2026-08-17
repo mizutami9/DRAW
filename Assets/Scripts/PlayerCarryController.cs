@@ -1703,7 +1703,11 @@ namespace DrawBody.Prototype
             StageBlockBreakerEnemy closestEnemy = null;
             StageEnemyCharacter closestPlacedEnemy = null;
             float closestDistance = float.PositiveInfinity;
-            float scratchReach = Mathf.Max(1.35f, catBounds.extents.x * 0.55f + 0.9f);
+            float frontLegInk = abilityController != null
+                ? abilityController.CurrentProfile.CatFrontLegInk
+                : 0f;
+            float rangeMultiplier = PlayerController2D.CalculateCatScratchRangeMultiplier(frontLegInk);
+            float scratchReach = Mathf.Max(1.35f, catBounds.extents.x * 0.55f + 0.9f) * rangeMultiplier;
             for (int i = 0; i < enemies.Length; i++)
             {
                 StageBlockBreakerEnemy enemy = enemies[i];
@@ -1750,6 +1754,10 @@ namespace DrawBody.Prototype
                 catBounds = new Bounds(transform.position, Vector3.one);
             }
             float facing = GetFacingDirection();
+            float frontLegInk = abilityController != null
+                ? abilityController.CurrentProfile.CatFrontLegInk
+                : 0f;
+            float rangeMultiplier = PlayerController2D.CalculateCatScratchRangeMultiplier(frontLegInk);
             Vector3 origin = catBounds.center + Vector3.right * facing * Mathf.Max(0.2f, catBounds.extents.x * 0.45f);
             GameObject root = new GameObject("Cat Scratch Burst");
             root.transform.SetParent(transform, true);
@@ -1773,9 +1781,9 @@ namespace DrawBody.Prototype
                 float lane = i - 1f;
                 Vector3 forward = Vector3.right * facing;
                 slash.SetPosition(0, origin + Vector3.up * (lane * 0.2f - 0.25f));
-                slash.SetPosition(1, origin + forward * 0.38f + Vector3.up * (lane * 0.16f + 0.22f));
-                slash.SetPosition(2, origin + forward * 0.82f + Vector3.up * (lane * 0.09f + 0.34f));
-                slash.SetPosition(3, origin + forward * 1.2f + Vector3.up * (lane * 0.03f + 0.12f));
+                slash.SetPosition(1, origin + forward * (0.38f * rangeMultiplier) + Vector3.up * (lane * 0.16f + 0.22f));
+                slash.SetPosition(2, origin + forward * (0.82f * rangeMultiplier) + Vector3.up * (lane * 0.09f + 0.34f));
+                slash.SetPosition(3, origin + forward * (1.2f * rangeMultiplier) + Vector3.up * (lane * 0.03f + 0.12f));
                 slashes[i] = slash;
             }
             GameSfx.PlayAt(SfxId.CatClawAttach, origin, 1.28f);

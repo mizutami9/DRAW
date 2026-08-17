@@ -282,6 +282,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingBossBattle);
             }
 
+            StageSpikeChaseController existingSpikeChase = stageRoot.GetComponent<StageSpikeChaseController>();
+            if (existingSpikeChase != null)
+            {
+                DestroyComponentNow(existingSpikeChase);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.id == "5-3")
@@ -292,9 +298,17 @@ namespace DrawBody.Prototype
             {
                 stageRoot.gameObject.AddComponent<StageBossBattleController>();
             }
+            if (data != null && data.id == "6-3")
+            {
+                stageRoot.gameObject.AddComponent<StageSpikeChaseController>();
+            }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
-                if (data.id == "4-3")
+                if (data.id == "6-3")
+                {
+                    // StageSpikeChaseController owns elimination and retries.
+                }
+                else if (data.id == "4-3")
                 {
                     // StageBossBattleController is the elimination controller
                     // for this stage. Do not build the 11-2 survival arena.

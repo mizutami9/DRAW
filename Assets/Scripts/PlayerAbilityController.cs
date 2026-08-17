@@ -33,6 +33,8 @@ namespace DrawBody.Prototype
             public float ArmInk;
             public float WingInk;
             public float CatLegInk;
+            public float CatFrontLegInk;
+            public float CatBackLegInk;
             public float TurtleInk;
             public float SlimeInk;
             public float TorsoInk;
@@ -90,10 +92,11 @@ namespace DrawBody.Prototype
                 + GetInkIfActive(drawManager, DrawManager.BodyPart.Tail);
             float wingInk = GetInkIfActive(drawManager, DrawManager.BodyPart.LeftWing)
                 + GetInkIfActive(drawManager, DrawManager.BodyPart.RightWing);
-            float catLegInk = GetInkIfActive(drawManager, DrawManager.BodyPart.LeftFrontLeg)
-                + GetInkIfActive(drawManager, DrawManager.BodyPart.RightFrontLeg)
-                + GetInkIfActive(drawManager, DrawManager.BodyPart.LeftBackLeg)
+            float catFrontLegInk = GetInkIfActive(drawManager, DrawManager.BodyPart.LeftFrontLeg)
+                + GetInkIfActive(drawManager, DrawManager.BodyPart.RightFrontLeg);
+            float catBackLegInk = GetInkIfActive(drawManager, DrawManager.BodyPart.LeftBackLeg)
                 + GetInkIfActive(drawManager, DrawManager.BodyPart.RightBackLeg);
+            float catLegInk = catFrontLegInk + catBackLegInk;
             float slimeInk = GetInkIfActive(drawManager, DrawManager.BodyPart.SlimeBody);
             float torsoInk = GetInkIfActive(drawManager, DrawManager.BodyPart.Torso)
                 + GetInkIfActive(drawManager, DrawManager.BodyPart.SlimeBody);
@@ -106,6 +109,8 @@ namespace DrawBody.Prototype
                 ArmInk = armInk,
                 WingInk = wingInk,
                 CatLegInk = catLegInk,
+                CatFrontLegInk = catFrontLegInk,
+                CatBackLegInk = catBackLegInk,
                 TurtleInk = species == DrawManager.Species.Turtle ? totalInk : 0f,
                 SlimeInk = slimeInk,
                 TorsoInk = torsoInk,
@@ -142,8 +147,10 @@ namespace DrawBody.Prototype
                 case DrawManager.Species.Cat:
                     return LocalizationManager.Format(
                         "ability_cat_status",
-                        profile.CatLegInk,
-                        PlayerController2D.CalculateCatMoveSpeedMultiplier(profile.CatLegInk));
+                        profile.CatBackLegInk,
+                        PlayerController2D.CalculateCatMoveSpeedMultiplier(profile.CatBackLegInk),
+                        profile.CatFrontLegInk,
+                        PlayerController2D.CalculateCatScratchRangeMultiplier(profile.CatFrontLegInk));
                 case DrawManager.Species.Bird:
                     return LocalizationManager.Format(
                         "ability_bird_status",
@@ -175,7 +182,7 @@ namespace DrawBody.Prototype
             playerController.ApplySpeciesMovement(
                 profile.Species,
                 profile.WingInk,
-                profile.CatLegInk,
+                profile.CatBackLegInk,
                 profile.TurtleInk,
                 profile.SlimeInk);
 

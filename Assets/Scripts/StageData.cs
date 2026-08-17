@@ -214,7 +214,9 @@ namespace DrawBody.Prototype
         MovingSpikePlanet,
         PoseCharacterKey,
         PoseCharacterKeyhole,
-        UpdraftZone
+        UpdraftZone,
+        SpeedRing2X,
+        SpeedRing3X
     }
 
     [Serializable]
