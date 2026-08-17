@@ -37,6 +37,8 @@ namespace DrawBody.Prototype
         public string RoomCode;
         public string RoomName;
         public string StageId = "1-1";
+        public int StageRevision;
+        public int RetryRevision;
         public int MaxPlayers = 4;
         public OnlineLobbyMode Mode;
         public OnlinePlayerInfo[] Players = Array.Empty<OnlinePlayerInfo>();
@@ -46,6 +48,7 @@ namespace DrawBody.Prototype
     public sealed class OnlineBodyData
     {
         public string PlayerId;
+        public int Revision;
         public string Json;
     }
 

@@ -12,6 +12,9 @@ namespace DrawBody.Prototype
         private float missileSpeed;
         private float nextLaunchTime;
         private bool linkedMode;
+        private int launchSequence;
+        private StageEditorObject marker;
+        private StageGimmickSyncManager syncManager;
 
         public void Configure(Transform parent, Transform launchPoint, float seconds, float speed)
         {
@@ -23,6 +26,8 @@ namespace DrawBody.Prototype
 
         private void Start()
         {
+            marker = GetComponent<StageEditorObject>();
+            syncManager = Object.FindFirstObjectByType<StageGimmickSyncManager>();
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing)
             {
@@ -34,7 +39,8 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            if (linkedMode || Time.time < nextLaunchTime)
+            if (linkedMode || Time.time < nextLaunchTime
+                || syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost)
             {
                 return;
             }
@@ -49,7 +55,8 @@ namespace DrawBody.Prototype
 
         public void ActivateFromLink()
         {
-            FireMissile();
+            if (syncManager == null || !syncManager.IsOnlineActive || syncManager.IsHost)
+                FireMissile();
         }
 
         private void FireMissile()
@@ -58,12 +65,30 @@ namespace DrawBody.Prototype
             {
                 return;
             }
-            StageMissileProjectile.Create(
-                projectileParent,
-                transform,
-                muzzle.position,
-                transform.right.normalized,
-                missileSpeed);
+            string launcherId = marker != null && !string.IsNullOrEmpty(marker.objectId)
+                ? marker.objectId
+                : gameObject.name;
+            string launchId = launcherId + "_missile_" + launchSequence.ToString("D6");
+            launchSequence++;
+            if (syncManager != null)
+            {
+                syncManager.SpawnMissile(
+                    launchId,
+                    launcherId,
+                    transform,
+                    muzzle.position,
+                    transform.right.normalized,
+                    missileSpeed);
+            }
+            else
+            {
+                StageMissileProjectile.Create(
+                    projectileParent,
+                    transform,
+                    muzzle.position,
+                    transform.right.normalized,
+                    missileSpeed);
+            }
             GameSfx.PlayAt(SfxId.CannonFire, muzzle.position, 1.05f);
         }
     }

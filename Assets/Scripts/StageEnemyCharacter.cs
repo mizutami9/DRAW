@@ -18,7 +18,6 @@ namespace DrawBody.Prototype
         private Vector2 flightOrigin;
         private float flightStartedAt;
         private bool defeated;
-        private bool spawnedByDevice;
         private Rigidbody2D body;
         private Collider2D enemyCollider;
         private Transform visualRoot;
@@ -41,7 +40,8 @@ namespace DrawBody.Prototype
 
         public void SetSpawnedByDevice()
         {
-            spawnedByDevice = true;
+            // Marker retained for factory compatibility. Spawn authority and
+            // movement now come from StageGimmickSyncManager in online play.
         }
 
         public void Configure(StageObjectType type, Vector2 size, float speedOverride, float initialFacing)
@@ -76,7 +76,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (!spawnedByDevice && syncManager != null && syncManager.ShouldAskHost && body != null)
+            if (syncManager != null && syncManager.ShouldAskHost && body != null)
             {
                 body.bodyType = RigidbodyType2D.Kinematic;
                 body.gravityScale = 0f;
@@ -89,7 +89,9 @@ namespace DrawBody.Prototype
             if (body != null && Mathf.Abs(body.linearVelocity.x) > 0.15f)
                 direction = Mathf.Sign(body.linearVelocity.x);
             SetFacingVisual();
-            if (enemyType == StageObjectType.EnemyShooter && Time.time >= nextAbilityAt)
+            if (enemyType == StageObjectType.EnemyShooter
+                && Time.time >= nextAbilityAt
+                && (syncManager == null || !syncManager.ShouldAskHost))
             {
                 nextAbilityAt = Time.time + 2.8f;
                 FireInkShot();
@@ -165,7 +167,11 @@ namespace DrawBody.Prototype
             Vector2 origin = (Vector2)transform.position + new Vector2(direction * enemySize.x * 0.55f, 0.12f);
             Vector2 aim = ((Vector2)target.transform.position - origin).normalized;
             if (Mathf.Abs(aim.x) > 0.08f) direction = Mathf.Sign(aim.x);
-            StageEnemyProjectile.Create(transform.parent, this, origin, aim, Mathf.Max(0.16f, enemySize.x * 0.16f));
+            float projectileSize = Mathf.Max(0.16f, enemySize.x * 0.16f);
+            if (syncManager != null)
+                syncManager.SpawnEnemyProjectile(ObjectId, this, origin, aim, projectileSize);
+            else
+                StageEnemyProjectile.Create(transform.parent, this, origin, aim, projectileSize);
             GameSfx.PlayAt(SfxId.EnemyShoot, origin);
         }
 

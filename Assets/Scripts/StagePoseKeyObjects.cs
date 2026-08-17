@@ -5,30 +5,16 @@ namespace DrawBody.Prototype
 {
     public static class StagePoseTowerRandomizer
     {
-        private static readonly Dictionary<string, int> LoadCounts = new Dictionary<string, int>();
         private static readonly Dictionary<string, List<int>> RecentChoices = new Dictionary<string, List<int>>();
-        private static int offlineSequence;
 
         public static void Prepare(StageData data)
         {
             if (data == null || data.id != "7-1" || data.objects == null) return;
 
             string context = ResolveRandomContext();
-            int loadCount;
-            if (context == "offline")
-            {
-                loadCount = ++offlineSequence;
-            }
-            else
-            {
-                LoadCounts.TryGetValue(context, out loadCount);
-                loadCount++;
-                LoadCounts[context] = loadCount;
-            }
-
             int seed = context == "offline"
                 ? System.Guid.NewGuid().GetHashCode()
-                : StableHash(context + "|7-1|" + loadCount);
+                : StableHash(context + "|7-1");
             System.Random random = new System.Random(seed);
             RandomizeFloor(data.objects, 0, 99, "7-1_hole_human", random, context + "|human");
             RandomizeFloor(data.objects, 100, 199, "7-1_hole_bird", random, context + "|bird");
@@ -75,16 +61,16 @@ namespace DrawBody.Prototype
                 candidates[i].rotation = random.Next(-24, 25);
             }
 
-            if (!RecentChoices.TryGetValue(historyKey, out List<int> recent))
+            List<int> available = new List<int>(candidates.Count);
+            bool keepLocalHistory = historyKey.StartsWith("offline|", System.StringComparison.Ordinal);
+            List<int> recent = null;
+            if (keepLocalHistory && !RecentChoices.TryGetValue(historyKey, out recent))
             {
                 recent = new List<int>(10);
                 RecentChoices[historyKey] = recent;
             }
-            List<int> available = new List<int>(candidates.Count);
             for (int i = 0; i < candidates.Count; i++)
-            {
-                if (!recent.Contains(candidates[i].spawnPattern)) available.Add(i);
-            }
+                if (!keepLocalHistory || !recent.Contains(candidates[i].spawnPattern)) available.Add(i);
             if (available.Count == 0)
             {
                 recent.Clear();
@@ -92,8 +78,11 @@ namespace DrawBody.Prototype
             }
             int choice = available[random.Next(available.Count)];
             StageObjectData selected = candidates[choice];
-            recent.Add(selected.spawnPattern);
-            if (recent.Count > 10) recent.RemoveAt(0);
+            if (keepLocalHistory)
+            {
+                recent.Add(selected.spawnPattern);
+                if (recent.Count > 10) recent.RemoveAt(0);
+            }
             selected.linkTargetId = keyholeId;
             selected.linkAction = "Unlock";
             keyhole.spawnPattern = selected.spawnPattern;
@@ -148,9 +137,10 @@ namespace DrawBody.Prototype
             OnlineLobbyInfo lobby = online != null ? online.CurrentLobby : null;
             if (stageManager == null || !stageManager.IsOnlineStageActive || lobby == null)
                 return "offline";
-            if (!string.IsNullOrEmpty(lobby.LobbyId)) return "lobby:" + lobby.LobbyId;
-            if (!string.IsNullOrEmpty(lobby.RoomCode)) return "room:" + lobby.RoomCode;
-            return "online";
+            string revision = "|stage:" + lobby.StageRevision + "|retry:" + lobby.RetryRevision;
+            if (!string.IsNullOrEmpty(lobby.LobbyId)) return "lobby:" + lobby.LobbyId + revision;
+            if (!string.IsNullOrEmpty(lobby.RoomCode)) return "room:" + lobby.RoomCode + revision;
+            return "online" + revision;
         }
 
         private static int StableHash(string value)

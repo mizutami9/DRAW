@@ -12,6 +12,7 @@ namespace DrawBody.Prototype
         private StageObjectFactory factory;
         private Transform spawnParent;
         private StageEditorObject marker;
+        private StageGimmickSyncManager syncManager;
         private Vector2 deviceSize;
         private float interval;
         private int enemyPattern;
@@ -39,6 +40,7 @@ namespace DrawBody.Prototype
         private void Start()
         {
             marker = GetComponent<StageEditorObject>();
+            syncManager = Object.FindFirstObjectByType<StageGimmickSyncManager>();
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing)
             {
@@ -50,7 +52,8 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            if (linkedMode || factory == null || spawnParent == null || Time.time < nextSpawnTime)
+            if (linkedMode || factory == null || spawnParent == null || Time.time < nextSpawnTime
+                || syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost)
             {
                 return;
             }
@@ -65,7 +68,8 @@ namespace DrawBody.Prototype
 
         public void ActivateFromLink()
         {
-            if (factory != null && spawnParent != null)
+            if (factory != null && spawnParent != null
+                && (syncManager == null || !syncManager.IsOnlineActive || syncManager.IsHost))
             {
                 SpawnEnemy();
             }
@@ -83,14 +87,24 @@ namespace DrawBody.Prototype
             sequence++;
 
             float facing = Mathf.Abs(direction.x) > 0.1f ? Mathf.Sign(direction.x) : 1f;
-            GameObject enemy = factory.CreateSpawnedEnemy(
-                ResolveEnemyType(),
-                objectId,
-                position,
-                enemySize,
-                spawnParent,
-                2.4f,
-                facing);
+            Vector2 launchVelocity = direction * 5.2f;
+            GameObject enemy = syncManager != null
+                ? syncManager.SpawnDropperEnemy(
+                    objectId,
+                    ResolveEnemyType(),
+                    position,
+                    enemySize,
+                    2.4f,
+                    facing,
+                    launchVelocity)
+                : factory.CreateSpawnedEnemy(
+                    ResolveEnemyType(),
+                    objectId,
+                    position,
+                    enemySize,
+                    spawnParent,
+                    2.4f,
+                    facing);
             if (enemy == null)
             {
                 return;
@@ -99,7 +113,7 @@ namespace DrawBody.Prototype
             Rigidbody2D body = enemy.GetComponent<Rigidbody2D>();
             if (body != null)
             {
-                body.linearVelocity = direction * 5.2f;
+                body.linearVelocity = launchVelocity;
             }
             GameSfx.PlayAt(SfxId.CannonFire, position, 0.52f);
 
@@ -107,7 +121,12 @@ namespace DrawBody.Prototype
             while (spawnedEnemies.Count > MaximumLiveEnemies)
             {
                 GameObject oldest = spawnedEnemies.Dequeue();
-                if (oldest != null) Destroy(oldest);
+                if (oldest == null) continue;
+                StageEditorObject oldestMarker = oldest.GetComponent<StageEditorObject>();
+                if (syncManager != null && oldestMarker != null)
+                    syncManager.RemoveDropperEnemy(oldestMarker.objectId);
+                else
+                    Destroy(oldest);
             }
         }
 

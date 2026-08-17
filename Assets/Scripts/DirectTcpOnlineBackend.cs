@@ -31,6 +31,7 @@ namespace DrawBody.Prototype
         private Thread acceptThread;
         private bool isHost;
         private bool running;
+        private int stageRevision;
 
         public DirectTcpOnlineBackend(int port)
         {
@@ -189,6 +190,7 @@ namespace DrawBody.Prototype
             }
 
             CurrentLobby.StageId = string.IsNullOrEmpty(stageId) ? "1-1" : stageId;
+            CurrentLobby.StageRevision = ++stageRevision;
             Broadcast(MessageStart, CurrentLobby.StageId);
             SetState(OnlineConnectionState.Playing, CurrentLobby, LocalizationManager.Format("online_starting_stage", CurrentLobby.StageId));
         }
@@ -284,6 +286,10 @@ namespace DrawBody.Prototype
             }
 
             gimmickData.PlayerId = localPlayerId;
+            if (isHost && gimmickData.Kind == "stage_retry" && CurrentLobby != null)
+            {
+                CurrentLobby.RetryRevision++;
+            }
             string payload = JsonUtility.ToJson(gimmickData);
             if (isHost)
             {
@@ -439,6 +445,7 @@ namespace DrawBody.Prototype
             if (type == MessageLobby)
             {
                 CurrentLobby = JsonUtility.FromJson<OnlineLobbyInfo>(payload);
+                if (CurrentLobby != null) stageRevision = Mathf.Max(stageRevision, CurrentLobby.StageRevision);
                 SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_lobby_updated"));
             }
             else if (type == MessageStart)
@@ -449,6 +456,7 @@ namespace DrawBody.Prototype
                 }
 
                 CurrentLobby.StageId = string.IsNullOrEmpty(payload) ? "1-1" : payload;
+                CurrentLobby.StageRevision = ++stageRevision;
                 SetState(OnlineConnectionState.Playing, CurrentLobby, LocalizationManager.Format("online_starting_stage", CurrentLobby.StageId));
             }
             else if (type == MessageState)
@@ -476,6 +484,10 @@ namespace DrawBody.Prototype
             else if (type == MessageGimmick)
             {
                 OnlineGimmickData gimmickData = JsonUtility.FromJson<OnlineGimmickData>(payload);
+                if (gimmickData != null && gimmickData.Kind == "stage_retry" && CurrentLobby != null)
+                {
+                    CurrentLobby.RetryRevision++;
+                }
                 GimmickDataReceived?.Invoke(gimmickData);
             }
         }

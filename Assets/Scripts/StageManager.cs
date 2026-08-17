@@ -794,13 +794,13 @@ namespace DrawBody.Prototype
         {
             if (IsOnlineInStage())
             {
-                ApplyFullStageRetry();
                 onlineManager.SendGimmickData(new OnlineGimmickData
                 {
                     ObjectId = currentStageId,
                     Kind = GimmickKindRetry,
                     Json = "{}"
                 });
+                ApplyFullStageRetry();
                 return;
             }
 
@@ -1018,7 +1018,7 @@ namespace DrawBody.Prototype
             {
                 ClearStage();
             }
-            else if (data.Kind == GimmickKindClear)
+            else if (data.Kind == GimmickKindClear && IsOnlineHostPlayer(data.PlayerId))
             {
                 ApplyClearStage();
             }
@@ -1028,7 +1028,9 @@ namespace DrawBody.Prototype
                 SetOnlineGoalState(data.PlayerId, goalState != null && goalState.Inside);
                 TryClearWhenAllOnlinePlayersAtGoal();
             }
-            else if (data.Kind == GimmickKindRetry && data.ObjectId == currentStageId)
+            else if (data.Kind == GimmickKindRetry
+                && data.ObjectId == currentStageId
+                && IsOnlineHostPlayer(data.PlayerId))
             {
                 ApplyFullStageRetry();
             }
@@ -1036,7 +1038,7 @@ namespace DrawBody.Prototype
             {
                 ApplyCollectible(data.ObjectId, true);
             }
-            else if (data.Kind == GimmickKindCollectState)
+            else if (data.Kind == GimmickKindCollectState && IsOnlineHostPlayer(data.PlayerId))
             {
                 CollectionState state = JsonUtility.FromJson<CollectionState>(data.Json);
                 if (state != null)
@@ -1044,11 +1046,11 @@ namespace DrawBody.Prototype
                     ApplyCollectibleState(state);
                 }
             }
-            else if (data.Kind == GimmickKindChallengeFailed)
+            else if (data.Kind == GimmickKindChallengeFailed && IsOnlineHostPlayer(data.PlayerId))
             {
                 ApplyChallengeFailed();
             }
-            else if (data.Kind == GimmickKindSessionEnded)
+            else if (data.Kind == GimmickKindSessionEnded && IsOnlineHostPlayer(data.PlayerId))
             {
                 onlineManager.LeaveLobby();
                 uiManager?.HideLeaveSessionConfirm();
@@ -1070,13 +1072,13 @@ namespace DrawBody.Prototype
                     return;
                 }
 
-                ApplyFullStageRetry();
                 onlineManager.SendGimmickData(new OnlineGimmickData
                 {
                     ObjectId = currentStageId,
                     Kind = GimmickKindRetry,
                     Json = "{}"
                 });
+                ApplyFullStageRetry();
                 return;
             }
 
@@ -1492,6 +1494,18 @@ namespace DrawBody.Prototype
                 }
             }
 
+            return false;
+        }
+
+        private bool IsOnlineHostPlayer(string playerId)
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null || string.IsNullOrEmpty(playerId)) return false;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] != null && players[i].IsHost && players[i].PlayerId == playerId)
+                    return true;
+            }
             return false;
         }
 

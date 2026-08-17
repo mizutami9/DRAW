@@ -523,6 +523,7 @@ namespace DrawBody.Prototype
             if (CurrentLobby != null)
             {
                 CurrentLobby.StageId = string.IsNullOrEmpty(stageId) ? "1-1" : stageId;
+                CurrentLobby.StageRevision++;
             }
 
             SetState(OnlineConnectionState.Playing, CurrentLobby, LocalizationManager.T("online_fake_stage_start"));

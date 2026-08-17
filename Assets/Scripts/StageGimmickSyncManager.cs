@@ -16,6 +16,10 @@ namespace DrawBody.Prototype
         private const string KindCrumblingFloorState = "crumbling_floor_state";
         private const string KindDropperBoxSpawn = "dropper_box_spawn";
         private const string KindDropperBoxRemove = "dropper_box_remove";
+        private const string KindDropperEnemySpawn = "dropper_enemy_spawn";
+        private const string KindDropperEnemyRemove = "dropper_enemy_remove";
+        private const string KindMissileSpawn = "missile_spawn";
+        private const string KindEnemyProjectileSpawn = "enemy_projectile_spawn";
         private const string KindBombExplosion = "bomb_explosion";
         private const string KindBombWallDamage = "bomb_wall_damage";
         private const string KindBombArmRequest = "bomb_arm_request";
@@ -38,6 +42,10 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, DropperBoxSpawnState> dropperBoxStates =
             new Dictionary<string, DropperBoxSpawnState>();
         private readonly Dictionary<string, GameObject> dropperBoxes =
+            new Dictionary<string, GameObject>();
+        private readonly Dictionary<string, DropperEnemySpawnState> dropperEnemyStates =
+            new Dictionary<string, DropperEnemySpawnState>();
+        private readonly Dictionary<string, GameObject> dropperEnemies =
             new Dictionary<string, GameObject>();
         private readonly Dictionary<string, BombExplosionState> explodedPlacedBombs =
             new Dictionary<string, BombExplosionState>();
@@ -77,6 +85,33 @@ namespace DrawBody.Prototype
             public float Rotation;
             public float FuseSeconds;
             public Vector2 LaunchVelocity;
+        }
+
+        [System.Serializable]
+        private sealed class DropperEnemySpawnState
+        {
+            public int EnemyType;
+            public Vector2 Position;
+            public float Size;
+            public float Speed;
+            public float Facing;
+            public Vector2 LaunchVelocity;
+        }
+
+        [System.Serializable]
+        private sealed class MissileSpawnState
+        {
+            public Vector2 Position;
+            public Vector2 Direction;
+            public float Speed;
+        }
+
+        [System.Serializable]
+        private sealed class EnemyProjectileSpawnState
+        {
+            public Vector2 Position;
+            public Vector2 Direction;
+            public float Size;
         }
 
         [System.Serializable]
@@ -158,6 +193,7 @@ namespace DrawBody.Prototype
                 BroadcastOwnershipSnapshot();
                 BroadcastCrumblingFloorStates();
                 BroadcastDropperBoxSnapshot();
+                BroadcastDropperEnemySnapshot();
                 BroadcastBombSnapshot();
                 BroadcastPlacedEnemySnapshot();
             }
@@ -310,6 +346,106 @@ namespace DrawBody.Prototype
                     ObjectId = objectId,
                     Kind = KindDropperBoxRemove,
                     Json = "{}"
+                });
+            }
+        }
+
+        public GameObject SpawnDropperEnemy(
+            string objectId,
+            StageObjectType type,
+            Vector2 position,
+            float size,
+            float speed,
+            float facing,
+            Vector2 launchVelocity)
+        {
+            if (string.IsNullOrEmpty(objectId) || IsOnlineActive && !IsHost)
+            {
+                return null;
+            }
+
+            DropperEnemySpawnState state = new DropperEnemySpawnState
+            {
+                EnemyType = (int)type,
+                Position = position,
+                Size = size,
+                Speed = speed,
+                Facing = facing,
+                LaunchVelocity = launchVelocity
+            };
+            GameObject spawned = ApplyDropperEnemySpawn(objectId, state);
+            if (spawned != null && IsOnlineActive)
+            {
+                SendDropperEnemySpawn(objectId, state);
+            }
+            return spawned;
+        }
+
+        public void RemoveDropperEnemy(string objectId)
+        {
+            if (string.IsNullOrEmpty(objectId) || IsOnlineActive && !IsHost) return;
+            ApplyDropperEnemyRemove(objectId);
+            if (IsOnlineActive)
+            {
+                Send(new OnlineGimmickData
+                {
+                    ObjectId = objectId,
+                    Kind = KindDropperEnemyRemove,
+                    Json = "{}"
+                });
+            }
+        }
+
+        public StageMissileProjectile SpawnMissile(
+            string launchId,
+            string launcherObjectId,
+            Transform launcher,
+            Vector2 position,
+            Vector2 direction,
+            float speed)
+        {
+            if (string.IsNullOrEmpty(launchId) || IsOnlineActive && !IsHost) return null;
+            MissileSpawnState state = new MissileSpawnState
+            {
+                Position = position,
+                Direction = direction.normalized,
+                Speed = speed
+            };
+            StageMissileProjectile projectile = ApplyMissileSpawn(launcherObjectId, state, launcher);
+            if (projectile != null && IsOnlineActive)
+            {
+                Send(new OnlineGimmickData
+                {
+                    ObjectId = launcherObjectId,
+                    Kind = KindMissileSpawn,
+                    Json = JsonUtility.ToJson(state)
+                });
+            }
+            return projectile;
+        }
+
+        public void SpawnEnemyProjectile(
+            string sourceObjectId,
+            StageEnemyCharacter source,
+            Vector2 position,
+            Vector2 direction,
+            float size)
+        {
+            if (IsOnlineActive && !IsHost) return;
+            EnemyProjectileSpawnState state = new EnemyProjectileSpawnState
+            {
+                Position = position,
+                Direction = direction.normalized,
+                Size = size
+            };
+            ApplyEnemyProjectileSpawn(sourceObjectId, state, source);
+            if (IsOnlineActive)
+            {
+                Send(new OnlineGimmickData
+                {
+                    ObjectId = sourceObjectId,
+                    Kind = KindEnemyProjectileSpawn,
+                    Json = JsonUtility.ToJson(state)
                 });
             }
         }
@@ -600,6 +736,48 @@ namespace DrawBody.Prototype
                     return;
                 }
                 ApplyDropperBoxRemove(data.ObjectId);
+                return;
+            }
+
+            if (data.Kind == KindDropperEnemySpawn)
+            {
+                if (IsHost || !IsLobbyHost(data.PlayerId))
+                {
+                    return;
+                }
+                ApplyDropperEnemySpawn(
+                    data.ObjectId,
+                    JsonUtility.FromJson<DropperEnemySpawnState>(data.Json));
+                return;
+            }
+
+            if (data.Kind == KindDropperEnemyRemove)
+            {
+                if (!IsHost && IsLobbyHost(data.PlayerId)) ApplyDropperEnemyRemove(data.ObjectId);
+                return;
+            }
+
+            if (data.Kind == KindMissileSpawn)
+            {
+                if (!IsHost && IsLobbyHost(data.PlayerId))
+                {
+                    ApplyMissileSpawn(
+                        data.ObjectId,
+                        JsonUtility.FromJson<MissileSpawnState>(data.Json),
+                        null);
+                }
+                return;
+            }
+
+            if (data.Kind == KindEnemyProjectileSpawn)
+            {
+                if (!IsHost && IsLobbyHost(data.PlayerId))
+                {
+                    ApplyEnemyProjectileSpawn(
+                        data.ObjectId,
+                        JsonUtility.FromJson<EnemyProjectileSpawnState>(data.Json),
+                        null);
+                }
                 return;
             }
 
@@ -1216,6 +1394,126 @@ namespace DrawBody.Prototype
             });
         }
 
+        private GameObject ApplyDropperEnemySpawn(string objectId, DropperEnemySpawnState state)
+        {
+            if (state == null || string.IsNullOrEmpty(objectId)) return null;
+            if (dropperEnemies.TryGetValue(objectId, out GameObject existing) && existing != null)
+            {
+                dropperEnemyStates[objectId] = state;
+                return existing;
+            }
+            if (defeatedPlacedEnemies.Contains(objectId)) return null;
+            if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
+            if (objectFactory == null) return null;
+
+            GameObject spawned = objectFactory.CreateSpawnedEnemy(
+                (StageObjectType)state.EnemyType,
+                objectId,
+                state.Position,
+                state.Size,
+                transform,
+                state.Speed,
+                state.Facing);
+            if (spawned == null) return null;
+            Rigidbody2D body = spawned.GetComponent<Rigidbody2D>();
+            if (body != null) body.linearVelocity = state.LaunchVelocity;
+            dropperEnemies[objectId] = spawned;
+            dropperEnemyStates[objectId] = state;
+            StageEditorObject marker = spawned.GetComponent<StageEditorObject>();
+            if (marker != null) AddRigidbodiesForObject(marker);
+            return spawned;
+        }
+
+        private void BroadcastDropperEnemySnapshot()
+        {
+            if (!IsOnlineActive || !IsHost) return;
+            foreach (KeyValuePair<string, DropperEnemySpawnState> pair in dropperEnemyStates)
+            {
+                if (dropperEnemies.TryGetValue(pair.Key, out GameObject spawned)
+                    && spawned != null
+                    && spawned.activeInHierarchy)
+                {
+                    SendDropperEnemySpawn(pair.Key, pair.Value);
+                }
+            }
+        }
+
+        private void ApplyDropperEnemyRemove(string objectId)
+        {
+            dropperEnemyStates.Remove(objectId);
+            if (dropperEnemies.TryGetValue(objectId, out GameObject spawned) && spawned != null)
+            {
+                Destroy(spawned);
+            }
+            dropperEnemies.Remove(objectId);
+            transformEntries.Remove(objectId + "/.");
+            ownersByObjectId.Remove(objectId + "/.");
+            locallyHeldObjectIds.Remove(objectId + "/.");
+        }
+
+        private void SendDropperEnemySpawn(string objectId, DropperEnemySpawnState state)
+        {
+            Send(new OnlineGimmickData
+            {
+                ObjectId = objectId,
+                Kind = KindDropperEnemySpawn,
+                Json = JsonUtility.ToJson(state)
+            });
+        }
+
+        private StageMissileProjectile ApplyMissileSpawn(
+            string launcherObjectId,
+            MissileSpawnState state,
+            Transform knownLauncher)
+        {
+            if (state == null) return null;
+            Transform launcher = knownLauncher;
+            if (launcher == null && !string.IsNullOrEmpty(launcherObjectId))
+            {
+                StageEditorObject[] markers = Object.FindObjectsByType<StageEditorObject>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None);
+                for (int i = 0; i < markers.Length; i++)
+                {
+                    if (markers[i] != null && markers[i].objectId == launcherObjectId)
+                    {
+                        launcher = markers[i].transform;
+                        break;
+                    }
+                }
+            }
+            return StageMissileProjectile.Create(
+                transform,
+                launcher,
+                state.Position,
+                state.Direction,
+                state.Speed);
+        }
+
+        private void ApplyEnemyProjectileSpawn(
+            string sourceObjectId,
+            EnemyProjectileSpawnState state,
+            StageEnemyCharacter knownSource)
+        {
+            if (state == null) return;
+            StageEnemyCharacter source = knownSource;
+            if (source == null)
+            {
+                StageEnemyCharacter[] enemies = Object.FindObjectsByType<StageEnemyCharacter>(
+                    FindObjectsInactive.Exclude,
+                    FindObjectsSortMode.None);
+                for (int i = 0; i < enemies.Length; i++)
+                {
+                    if (enemies[i] != null && enemies[i].ObjectId == sourceObjectId)
+                    {
+                        source = enemies[i];
+                        break;
+                    }
+                }
+            }
+            StageEnemyProjectile.Create(transform, source, state.Position, state.Direction, state.Size);
+        }
+
         private void ApplyBombExplosion(string objectId, BombExplosionState state, bool applyGameplay)
         {
             if (state == null || string.IsNullOrEmpty(objectId) || !appliedBombExplosions.Add(objectId))
@@ -1366,7 +1664,8 @@ namespace DrawBody.Prototype
                 || type == StageObjectType.EnemyFlyer
                 || type == StageObjectType.EnemyShooter
                 || type == StageObjectType.EnemyFlyerZigzag
-                || type == StageObjectType.EnemyFlyerOrbit;
+                || type == StageObjectType.EnemyFlyerOrbit
+                || type == StageObjectType.EnemyBomber;
         }
 
         private void ApplyPlacedEnemyDefeat(string objectId)

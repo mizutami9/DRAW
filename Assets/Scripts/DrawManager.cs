@@ -133,6 +133,7 @@ namespace DrawBody.Prototype
         private Species clearedPartUndoSpecies;
         private BodyPart clearedPartUndoPart;
         private bool hasClearedPartUndo;
+        private int onlineBodyRevision;
 
         public event System.Action<BodyPart> CurrentPartChanged;
         public event System.Action<Species> CurrentSpeciesChanged;
@@ -901,6 +902,7 @@ namespace DrawBody.Prototype
             onlineManager?.SendBodyData(new OnlineBodyData
             {
                 PlayerId = "local",
+                Revision = ++onlineBodyRevision,
                 Json = ExportCurrentBodyJson()
             });
         }

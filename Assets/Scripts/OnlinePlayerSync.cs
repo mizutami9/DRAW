@@ -24,8 +24,13 @@ namespace DrawBody.Prototype
         private string pendingRosterLocalPlayerId;
         private readonly Dictionary<string, RemoteTarget> remoteTargets = new Dictionary<string, RemoteTarget>();
         private readonly Dictionary<string, int> lastRemoteSequences = new Dictionary<string, int>();
+        private readonly Dictionary<string, float> lastRemoteStateReceivedAt = new Dictionary<string, float>();
         private readonly Dictionary<string, OnlineBodyData> pendingRemoteBodyData =
             new Dictionary<string, OnlineBodyData>();
+        private readonly Dictionary<string, int> lastRemoteBodyRevisions =
+            new Dictionary<string, int>();
+        private readonly Dictionary<string, float> lastRemoteBodyReceivedAt =
+            new Dictionary<string, float>();
 
         private sealed class RemoteTarget
         {
@@ -143,7 +148,10 @@ namespace DrawBody.Prototype
             }
             if (state.Sequence > 0
                 && lastRemoteSequences.TryGetValue(state.PlayerId, out int lastSequence)
-                && state.Sequence <= lastSequence)
+                && state.Sequence <= lastSequence
+                && (state.Sequence == lastSequence
+                    || lastRemoteStateReceivedAt.TryGetValue(state.PlayerId, out float lastReceivedAt)
+                        && Time.unscaledTime - lastReceivedAt < 2f))
             {
                 return;
             }
@@ -151,6 +159,7 @@ namespace DrawBody.Prototype
             {
                 lastRemoteSequences[state.PlayerId] = state.Sequence;
             }
+            lastRemoteStateReceivedAt[state.PlayerId] = Time.unscaledTime;
             stageManager.ApplyOnlineRemoteRedrawing(state.PlayerId, state.Redrawing);
             stageManager.ReconcileOnlineCarryState(
                 state.PlayerId,
@@ -226,17 +235,36 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (bodyData.Revision > 0
+                && lastRemoteBodyRevisions.TryGetValue(bodyData.PlayerId, out int appliedRevision)
+                && bodyData.Revision <= appliedRevision
+                && (bodyData.Revision == appliedRevision
+                    || lastRemoteBodyReceivedAt.TryGetValue(bodyData.PlayerId, out float bodyReceivedAt)
+                        && Time.unscaledTime - bodyReceivedAt < 2f))
+            {
+                return;
+            }
+
             if (stageManager.IsDrawingMode || stageManager.IsOnlineBodyRebuildBlocked(bodyData.PlayerId))
             {
                 // StageManager temporarily points the shared DrawManager at the
                 // remote body while rebuilding it. Doing that during a local mouse
                 // stroke resets DrawManager's in-progress stroke flag, so retain
                 // only the newest body for this player until DRAW closes.
-                pendingRemoteBodyData[bodyData.PlayerId] = bodyData;
+                if (!pendingRemoteBodyData.TryGetValue(bodyData.PlayerId, out OnlineBodyData pending)
+                    || bodyData.Revision <= 0
+                    || pending.Revision <= 0
+                    || bodyData.Revision > pending.Revision)
+                {
+                    pendingRemoteBodyData[bodyData.PlayerId] = bodyData;
+                }
                 return;
             }
 
             stageManager.ApplyOnlineRemoteBodyData(bodyData);
+            if (bodyData.Revision > 0)
+                lastRemoteBodyRevisions[bodyData.PlayerId] = bodyData.Revision;
+            lastRemoteBodyReceivedAt[bodyData.PlayerId] = Time.unscaledTime;
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
         }
 
@@ -278,6 +306,7 @@ namespace DrawBody.Prototype
         private void HandleOnlineStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
         {
             string localPlayerId = onlineManager != null ? onlineManager.LocalPlayerId : string.Empty;
+            PruneRemoteTracking(lobby, localPlayerId);
             if (stageManager != null && stageManager.IsDrawingMode)
             {
                 // Adding/removing a remote avatar snapshots the shared DrawManager.
@@ -303,6 +332,32 @@ namespace DrawBody.Prototype
                 && (connectionChanged || rosterChanged))
             {
                 RequestBodyResync();
+            }
+        }
+
+        private void PruneRemoteTracking(OnlineLobbyInfo lobby, string localPlayerId)
+        {
+            HashSet<string> active = new HashSet<string>();
+            if (lobby?.Players != null)
+            {
+                for (int i = 0; i < lobby.Players.Length; i++)
+                {
+                    string id = lobby.Players[i]?.PlayerId;
+                    if (!string.IsNullOrEmpty(id) && id != localPlayerId) active.Add(id);
+                }
+            }
+            List<string> removed = new List<string>();
+            foreach (string id in lastRemoteSequences.Keys)
+                if (!active.Contains(id)) removed.Add(id);
+            for (int i = 0; i < removed.Count; i++)
+            {
+                string id = removed[i];
+                remoteTargets.Remove(id);
+                lastRemoteSequences.Remove(id);
+                lastRemoteStateReceivedAt.Remove(id);
+                lastRemoteBodyRevisions.Remove(id);
+                lastRemoteBodyReceivedAt.Remove(id);
+                pendingRemoteBodyData.Remove(id);
             }
         }
 

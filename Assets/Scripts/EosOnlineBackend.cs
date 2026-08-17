@@ -377,6 +377,8 @@ namespace DrawBody.Prototype
             CurrentLobby.StageId = string.IsNullOrEmpty(stageId) ? "1-1" : stageId;
             sessionMode = SessionModePlaying;
             stageRevision++;
+            CurrentLobby.StageRevision = stageRevision;
+            CurrentLobby.RetryRevision = retryRevision;
             BroadcastSessionSync();
             SetState(OnlineConnectionState.Playing, CurrentLobby, LocalizationManager.Format("online_starting_stage", CurrentLobby.StageId));
         }
@@ -477,6 +479,7 @@ namespace DrawBody.Prototype
             if (isHost && gimmickData.Kind == "stage_retry")
             {
                 retryRevision++;
+                if (CurrentLobby != null) CurrentLobby.RetryRevision = retryRevision;
                 sessionMode = SessionModePlaying;
                 BroadcastSessionSync();
                 return;
@@ -1022,6 +1025,8 @@ namespace DrawBody.Prototype
                 CurrentLobby = CreateLobbyInfo(lobbyId, LocalizationManager.T("multi_friend_room_name"), 4);
             }
             CurrentLobby.StageId = string.IsNullOrEmpty(payload.StageId) ? "1-1" : payload.StageId;
+            CurrentLobby.StageRevision = payload.StageRevision;
+            CurrentLobby.RetryRevision = payload.RetryRevision;
 
             bool modeChanged = payload.Mode != lastAppliedSessionMode;
             bool stageChanged = payload.StageRevision > lastAppliedStageRevision;
