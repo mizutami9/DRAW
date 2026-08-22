@@ -278,6 +278,85 @@ namespace DrawBody.Prototype
             E(StageObjectType.BackgroundThrow, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
             E(StageObjectType.BackgroundStart, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
             E(StageObjectType.BackgroundGoal, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+
+            // Animals and characters
+            E(StageObjectType.BackgroundPawPrint, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundFish, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundYarnBall, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundTurtle, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundButterfly, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundLadybug, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBat, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundFeather, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBirdNest, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundSkeleton, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundAlien, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+
+            // Nature and weather
+            E(StageObjectType.BackgroundSnowCrystal, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundIcicle, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundSnowman, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBlizzard, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundWindLines, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundSunflower, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundTulip, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundMoss, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundTreeRoot, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundSpiderweb, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundStalactite, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+
+            // Slime and bubbles
+            E(StageObjectType.BackgroundSlimeBlob, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBubbles, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundSoapBubble, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+
+            // Machines and tools
+            E(StageObjectType.BackgroundPipe, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBolt, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundChain, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundSteam, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundHourglass, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundPadlock, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundLantern, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundMinecart, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundPickaxe, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundStopwatch, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBinoculars, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+
+            // Events and celebration
+            E(StageObjectType.BackgroundTrophy, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundMedal, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundWhistle, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBalloon, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundConfetti, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundFireworks, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundSpotlight, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundMicrophone, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundSurpriseBox, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundGiftBox, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+
+            // Buildings and structures
+            E(StageObjectType.BackgroundTowerBuilding, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBridge, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+
+            // Art and stationery
+            E(StageObjectType.BackgroundCrayon, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundPencil, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundEraser, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundNotebook, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBlackboard, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundPalette, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundPaintbrush, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundCanvas, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+
+            // Food
+            E(StageObjectType.BackgroundCheese, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+
+            // Space
+            E(StageObjectType.BackgroundPlanet, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundAlien, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundComet, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
+            E(StageObjectType.BackgroundBlackHoleDecor, StageObjectCategory.Decoration, StageObjectPlacement.Point, StageObjectKind.Decoration),
         };
 
         private static readonly Dictionary<StageObjectType, StageObjectCatalogEntry> ByType = BuildLookup();

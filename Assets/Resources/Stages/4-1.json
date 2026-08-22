@@ -1,7 +1,7 @@
 {
     "id": "4-1",
     "displayName": "Stage 4-1",
-    "backgroundColorHex": "#FBF9EDFF",
+    "backgroundColorHex": "#C5FBCD77",
     "ruleMode": 0,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,
@@ -28,6 +28,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -52,6 +53,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -76,6 +78,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -100,6 +103,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -124,6 +128,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -148,6 +153,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -172,6 +178,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -196,6 +203,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -220,6 +228,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -244,6 +253,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -268,6 +278,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -292,6 +303,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -316,6 +328,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -340,6 +353,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -364,6 +378,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -388,6 +403,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -412,6 +428,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -436,6 +453,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -460,6 +478,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -484,6 +503,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -508,6 +528,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -532,6 +553,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -556,6 +578,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -580,6 +603,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -604,6 +628,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -628,6 +653,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -652,6 +678,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -676,6 +703,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -700,6 +728,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -724,6 +753,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -748,6 +778,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -772,6 +803,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -796,6 +828,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -820,6 +853,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -844,6 +878,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -868,6 +903,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -892,6 +928,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -916,6 +953,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -940,6 +978,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -964,6 +1003,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -988,6 +1028,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1012,6 +1053,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1036,6 +1078,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1060,6 +1103,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1084,6 +1128,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1108,6 +1153,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1132,6 +1178,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1156,6 +1203,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1180,6 +1228,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1204,6 +1253,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1228,6 +1278,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1252,6 +1303,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1276,6 +1328,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1300,6 +1353,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1324,6 +1378,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1348,6 +1403,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1372,6 +1428,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1396,6 +1453,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1420,6 +1478,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1444,6 +1503,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1468,6 +1528,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1492,6 +1553,7 @@
             "movementSpeed": 4.5,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1516,6 +1578,7 @@
             "movementSpeed": 7.199999809265137,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1540,6 +1603,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1564,6 +1628,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1588,6 +1653,7 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         },
@@ -1612,6 +1678,132 @@
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_3e4b319ccbe14ab6",
+            "type": 149,
+            "position": {
+                "x": -5.0,
+                "y": 3.5
+            },
+            "size": {
+                "x": 3.808499336242676,
+                "y": 3.808499336242676
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_5080c732486d413e",
+            "type": 150,
+            "position": {
+                "x": -5.0,
+                "y": -21.5
+            },
+            "size": {
+                "x": 3.526388168334961,
+                "y": 3.526388168334961
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_34944c844f024ca1",
+            "type": 127,
+            "position": {
+                "x": -2.0,
+                "y": -0.5
+            },
+            "size": {
+                "x": 2.7993602752685549,
+                "y": 2.7993602752685549
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_9d1188a2029a463a",
+            "type": 126,
+            "position": {
+                "x": 30.0,
+                "y": 2.5
+            },
+            "size": {
+                "x": 3.526388168334961,
+                "y": 3.526388168334961
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_c720c736cd15425c",
+            "type": 125,
+            "position": {
+                "x": -4.5,
+                "y": -9.0
+            },
+            "size": {
+                "x": 3.526388168334961,
+                "y": 3.526388168334961
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
         }

@@ -1,7 +1,7 @@
 {
     "id": "4-3",
     "displayName": "Stage 4-3 Crayon King",
-    "backgroundColorHex": "#F7F5E9FF",
+    "backgroundColorHex": "#00000166",
     "ruleMode": 2,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,
@@ -167,6 +167,131 @@
             "size": {
                 "x": 0.8500000238418579,
                 "y": 0.47999998927116396
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_48fe7925d90c48a1",
+            "type": 106,
+            "position": {
+                "x": 21.5,
+                "y": 9.0
+            },
+            "size": {
+                "x": 5.181422233581543,
+                "y": 5.181422233581543
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_0ad4069636b0436f",
+            "type": 106,
+            "position": {
+                "x": -7.0,
+                "y": 29.0
+            },
+            "size": {
+                "x": 2.4000000953674318,
+                "y": 2.4000000953674318
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_dde05d02f0204caf",
+            "type": 97,
+            "position": {
+                "x": -11.0,
+                "y": 8.0
+            },
+            "size": {
+                "x": 7.613210678100586,
+                "y": 7.613210678100586
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_3b277b90977f471b",
+            "type": 97,
+            "position": {
+                "x": 3.5,
+                "y": 5.0
+            },
+            "size": {
+                "x": 7.613210678100586,
+                "y": 7.613210678100586
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_cc89b3ab678c456c",
+            "type": 97,
+            "position": {
+                "x": 14.0,
+                "y": 9.0
+            },
+            "size": {
+                "x": 7.613210678100586,
+                "y": 7.613210678100586
             },
             "rotation": 0.0,
             "pathPoints": [],

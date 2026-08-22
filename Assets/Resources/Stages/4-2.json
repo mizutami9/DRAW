@@ -1,7 +1,7 @@
 {
     "id": "4-2",
     "displayName": "Stage 4-2",
-    "backgroundColorHex": "#FBF9EDFF",
+    "backgroundColorHex": "#3E000035",
     "ruleMode": 0,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,
@@ -2996,6 +2996,306 @@
             "rotation": 0.0,
             "pathPoints": [],
             "pathThickness": 0.5,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_2dfe98e03eb14932",
+            "type": 147,
+            "position": {
+                "x": 1.0,
+                "y": 4.0
+            },
+            "size": {
+                "x": 4.113179683685303,
+                "y": 4.113179683685303
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_7457fdeeaead4c87",
+            "type": 113,
+            "position": {
+                "x": -8.5,
+                "y": 13.0
+            },
+            "size": {
+                "x": 3.526388168334961,
+                "y": 3.526388168334961
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_681cc059a2234e24",
+            "type": 113,
+            "position": {
+                "x": 8.0,
+                "y": 0.5
+            },
+            "size": {
+                "x": 3.526388168334961,
+                "y": 3.526388168334961
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_8bbedd2fa5c74d12",
+            "type": 113,
+            "position": {
+                "x": 10.0,
+                "y": 13.0
+            },
+            "size": {
+                "x": 3.526388168334961,
+                "y": 3.526388168334961
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_509063f98056447b",
+            "type": 113,
+            "position": {
+                "x": 40.0,
+                "y": 0.5
+            },
+            "size": {
+                "x": 3.526388168334961,
+                "y": 3.526388168334961
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_1cf3538a89954ae0",
+            "type": 154,
+            "position": {
+                "x": 0.5,
+                "y": 20.5
+            },
+            "size": {
+                "x": 4.442234039306641,
+                "y": 4.442234039306641
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_145e409804424cd1",
+            "type": 154,
+            "position": {
+                "x": 19.0,
+                "y": 24.0
+            },
+            "size": {
+                "x": 4.442234039306641,
+                "y": 4.442234039306641
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_9d535597844b4adc",
+            "type": 147,
+            "position": {
+                "x": 63.0,
+                "y": 14.5
+            },
+            "size": {
+                "x": 3.265174150466919,
+                "y": 3.265174150466919
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_fb5fb47a829c48c4",
+            "type": 147,
+            "position": {
+                "x": 68.5,
+                "y": 16.5
+            },
+            "size": {
+                "x": 3.265174150466919,
+                "y": 3.265174150466919
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_f28801e3194d418f",
+            "type": 147,
+            "position": {
+                "x": 75.5,
+                "y": 20.5
+            },
+            "size": {
+                "x": 3.265174150466919,
+                "y": 3.265174150466919
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_d6ccf630d7814a41",
+            "type": 150,
+            "position": {
+                "x": 95.5,
+                "y": 4.5
+            },
+            "size": {
+                "x": 4.113179683685303,
+                "y": 4.113179683685303
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_cf7e49483ef045da",
+            "type": 149,
+            "position": {
+                "x": -5.0,
+                "y": 3.5
+            },
+            "size": {
+                "x": 4.442234039306641,
+                "y": 4.442234039306641
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
             "actionStrength": 0.0,
