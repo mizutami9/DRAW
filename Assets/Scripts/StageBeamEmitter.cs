@@ -19,9 +19,11 @@ namespace DrawBody.Prototype
         private StageManager stageManager;
         private float chargeGaugeWidth;
         private float interval = 2f;
+        private float beamRange = MaximumRange;
         private float nextShotTime;
         private float hideTime;
         private bool linkedMode;
+        private bool piercesTerrain;
 
         public void Configure(
             Transform beamMuzzle,
@@ -30,7 +32,9 @@ namespace DrawBody.Prototype
             SpriteRenderer gaugeRenderer,
             SpriteRenderer lampRenderer,
             float gaugeWidth,
-            float seconds)
+            float seconds,
+            bool terrainPiercing,
+            float configuredRange)
         {
             muzzle = beamMuzzle;
             beamLine = line;
@@ -39,6 +43,10 @@ namespace DrawBody.Prototype
             readyLamp = lampRenderer;
             chargeGaugeWidth = Mathf.Max(0.1f, gaugeWidth);
             interval = Mathf.Clamp(seconds > 0f ? seconds : 2f, 0.5f, 10f);
+            piercesTerrain = terrainPiercing;
+            beamRange = configuredRange > 0f
+                ? Mathf.Clamp(configuredRange, 1f, MaximumRange)
+                : MaximumRange;
         }
 
         private void Start()
@@ -126,10 +134,10 @@ namespace DrawBody.Prototype
 
             Vector2 origin = muzzle.position;
             Vector2 direction = transform.right.normalized;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, MaximumRange);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, beamRange);
             Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
 
-            float beamDistance = MaximumRange;
+            float beamDistance = beamRange;
             for (int i = 0; i < hits.Length; i++)
             {
                 Collider2D hitCollider = hits[i].collider;
@@ -150,6 +158,11 @@ namespace DrawBody.Prototype
                 }
 
                 if (hitCollider.isTrigger)
+                {
+                    continue;
+                }
+
+                if (piercesTerrain)
                 {
                     continue;
                 }

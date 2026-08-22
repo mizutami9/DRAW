@@ -1812,7 +1812,9 @@ namespace DrawBody.Prototype
                 gaugeFill,
                 readyLamp,
                 gaugeWidth,
-                data.actionStrength);
+                data.actionStrength,
+                data.spawnPattern == 1,
+                data.spawnBoxSize);
             AddEditorMetadata(obj, data);
             return obj;
         }
