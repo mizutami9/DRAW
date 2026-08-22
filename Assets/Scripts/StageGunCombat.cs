@@ -401,7 +401,9 @@ namespace DrawBody.Prototype
                 StageEnemyCharacter enemy = collider.GetComponentInParent<StageEnemyCharacter>();
                 if (enemy != null)
                 {
-                    enemy.RequestDefeat();
+                    StageTowerDefenseEnemyHealth defenseEnemy = enemy.GetComponent<StageTowerDefenseEnemyHealth>();
+                    if (defenseEnemy != null) defenseEnemy.HitByBullet(hits[i].point);
+                    else enemy.RequestDefeat();
                     GameSfx.PlayAt(SfxId.EnemyDefeat, hits[i].point, 0.72f);
                     return true;
                 }

@@ -200,6 +200,7 @@ namespace DrawBody.Prototype
             ReleaseFromCarriers();
             BreakBombWalls(position, radius);
             DefeatBlockBreakerEnemies(position, radius, applyGameplay);
+            DamageTowerDefenseAlly(position, radius, applyGameplay);
             TriggerNearbyBombs(position, radius, applyGameplay);
             if (applyGameplay)
             {
@@ -300,8 +301,22 @@ namespace DrawBody.Prototype
                 if (enemy == null || enemy.IsDefeated) continue;
                 Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
                 Vector2 closest = enemyCollider != null ? enemyCollider.ClosestPoint(position) : (Vector2)enemy.transform.position;
-                if ((closest - position).sqrMagnitude <= radius * radius) enemy.HitByBomb();
+                if ((closest - position).sqrMagnitude <= radius * radius)
+                {
+                    StageTowerDefenseEnemyHealth defenseEnemy = enemy.GetComponent<StageTowerDefenseEnemyHealth>();
+                    if (defenseEnemy != null) defenseEnemy.HitByBomb();
+                    else enemy.HitByBomb();
+                }
             }
+        }
+
+        private void DamageTowerDefenseAlly(Vector2 position, float radius, bool applyGameplay)
+        {
+            // Only bombs dropped by the invading 8-3 bombers can hurt the
+            // protected friend. Player-triggered airstrikes remain friendly.
+            if (!applyGameplay || ObjectId.IndexOf("_air_bomb_", System.StringComparison.Ordinal) < 0) return;
+            StageTowerDefenseAlly ally = Object.FindFirstObjectByType<StageTowerDefenseAlly>();
+            ally?.TryHitByEnemyBomb(position, radius);
         }
 
         private void ApplyBlastToPlayersAndBodies(Vector2 position, float radius)

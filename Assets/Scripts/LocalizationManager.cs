@@ -210,6 +210,12 @@ namespace DrawBody.Prototype
 
         private static readonly Dictionary<string, string> GeneratedJapanese = new Dictionary<string, string>
         {
+            { "tower_defense_title", "\u0038\u002d\u0033\u0020\u0020\u5473\u65b9\u3092\u5b88\u308c\uff01" },
+            { "tower_defense_phase", "\u30d5\u30a7\u30fc\u30ba\u0020\u007b\u0030\u007d\u0020\u002f\u0020\u007b\u0031\u007d" },
+            { "tower_defense_protect", "\u5de6\u53f3\u304b\u3089\u6765\u308b\u6575\u304b\u3089\u5473\u65b9\u3092\u5b88\u308d\u3046" },
+            { "tower_defense_airstrike", "\u7a7a\u7206\u307e\u3067\u0020\u007b\u0030\u007d" },
+            { "tower_defense_retry", "\u5473\u65b9\u304c\u3084\u3089\u308c\u305f\u2026\u0020\u0020\u007b\u0030\u007d\u79d2\u5f8c\u306b\u30ea\u30c8\u30e9\u30a4" },
+            { "tower_defense_clear", "DEFENSE CLEAR!" },
             { "title_single", "SINGLE" },
             { "title_multi", "MULTI" },
             { "title_draw", "DRAW" },
@@ -790,6 +796,12 @@ namespace DrawBody.Prototype
 
         private static readonly Dictionary<string, string> GeneratedEnglish = new Dictionary<string, string>
         {
+            { "tower_defense_title", "8-3  PROTECT YOUR FRIEND!" },
+            { "tower_defense_phase", "PHASE {0} / {1}" },
+            { "tower_defense_protect", "Defend your friend from both sides" },
+            { "tower_defense_airstrike", "AIRSTRIKE IN {0}" },
+            { "tower_defense_retry", "FRIEND DOWN... RETRY IN {0}" },
+            { "tower_defense_clear", "DEFENSE CLEAR!" },
             { "title_single", "SINGLE" },
             { "title_multi", "MULTI" },
             { "title_draw", "DRAW" },

@@ -1,0 +1,873 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace DrawBody.Prototype
+{
+    [DisallowMultipleComponent]
+    public sealed class StageTowerDefenseController : MonoBehaviour
+    {
+        private const string StageId = "8-3";
+        private const string StateKind = "tower_defense_state";
+        private const string ButtonRequestKind = "tower_defense_button_request";
+        private const float IntroSeconds = 3f;
+        private const float PhaseSeconds = 30f;
+        private const float ButtonCooldown = 8f;
+        private const float AirstrikeWarning = 3f;
+        private const float ArenaHalfWidth = 22f;
+        private const float GroundY = -3.65f;
+
+        private enum MatchState { Intro, Playing, Failed, Clear }
+
+        [System.Serializable]
+        private sealed class EnemySnapshot
+        {
+            public string Id;
+            public int Type;
+            public Vector2 Position;
+            public Vector2 Velocity;
+            public float Size;
+            public float Speed;
+            public int Hp;
+            public int MaxHp;
+        }
+
+        [System.Serializable]
+        private sealed class DefenseState
+        {
+            public int Sequence;
+            public int State;
+            public float Remaining;
+            public float IntroRemaining;
+            public float LeftCooldown;
+            public float RightCooldown;
+            public float LeftWarning;
+            public float RightWarning;
+            public float OutcomeRemaining;
+            public EnemySnapshot[] Enemies;
+        }
+
+        [System.Serializable]
+        private sealed class ButtonRequest { public bool Left; }
+
+        private readonly Dictionary<string, StageTowerDefenseEnemyHealth> enemies =
+            new Dictionary<string, StageTowerDefenseEnemyHealth>();
+        private StageManager stageManager;
+        private OnlineManager onlineManager;
+        private StageObjectFactory factory;
+        private StageGimmickSyncManager syncManager;
+        private StageTowerDefenseAlly ally;
+        private StageTowerDefenseButton leftButton;
+        private StageTowerDefenseButton rightButton;
+        private TextMesh titleText;
+        private TextMesh phaseText;
+        private TextMesh timerText;
+        private TextMesh messageText;
+        private CameraFollow2D cameraFollow;
+        private Camera gameCamera;
+        private bool cameraWasEnabled;
+        private bool cameraLocked;
+        private Vector3 previousCameraPosition;
+        private float previousCameraSize;
+        private MatchState matchState = MatchState.Intro;
+        private float totalSeconds = 90f;
+        private float remainingSeconds = 90f;
+        private float introRemaining = IntroSeconds;
+        private float nextSpawnAt;
+        private float leftCooldown;
+        private float rightCooldown;
+        private float leftWarning;
+        private float rightWarning;
+        private float failedRemaining;
+        private float clearRemaining;
+        private float nextStateAt;
+        private int enemySequence;
+        private int stateSequence;
+        private int lastStateSequence;
+
+        public bool HasAuthority => stageManager == null || !stageManager.IsOnlineStageActive || stageManager.IsOnlineStageHost;
+
+        public void Configure(float seconds)
+        {
+            totalSeconds = Mathf.Max(90f, seconds);
+            remainingSeconds = totalSeconds;
+        }
+
+        private void Awake()
+        {
+            stageManager = Object.FindFirstObjectByType<StageManager>();
+            onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            factory = Object.FindFirstObjectByType<StageObjectFactory>();
+            syncManager = GetComponent<StageGimmickSyncManager>();
+            cameraFollow = Object.FindFirstObjectByType<CameraFollow2D>();
+            gameCamera = cameraFollow != null ? cameraFollow.GetComponent<Camera>() : Camera.main;
+        }
+
+        private void OnEnable()
+        {
+            if (onlineManager == null) onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
+        }
+
+        private void OnDisable()
+        {
+            if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            if (cameraLocked && cameraFollow != null) cameraFollow.enabled = cameraWasEnabled;
+            if (cameraLocked && gameCamera != null)
+            {
+                gameCamera.transform.position = previousCameraPosition;
+                gameCamera.orthographicSize = previousCameraSize;
+            }
+        }
+
+        private void Start()
+        {
+            RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
+            if (editor != null && editor.IsEditing)
+            {
+                enabled = false;
+                return;
+            }
+
+            BuildAirstrikeFloorZones();
+            BuildMonitor();
+            LockCameraToArena();
+            ally = StageTowerDefenseAlly.Create(transform, new Vector2(0f, -2.98f), this);
+            leftButton = AttachButton("8-3_left_button", true);
+            rightButton = AttachButton("8-3_right_button", false);
+            nextSpawnAt = Time.time + IntroSeconds + 1.1f;
+            RefreshDisplay();
+        }
+
+        private void Update()
+        {
+            if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+
+            if (!HasAuthority)
+            {
+                RefreshButtons();
+                RefreshDisplay();
+                return;
+            }
+
+            float dt = Time.deltaTime;
+            leftCooldown = Mathf.Max(0f, leftCooldown - dt);
+            rightCooldown = Mathf.Max(0f, rightCooldown - dt);
+            UpdateAirstrike(ref leftWarning, true, dt);
+            UpdateAirstrike(ref rightWarning, false, dt);
+
+            if (matchState == MatchState.Intro)
+            {
+                introRemaining -= dt;
+                if (introRemaining <= 0f) matchState = MatchState.Playing;
+            }
+            else if (matchState == MatchState.Playing)
+            {
+                remainingSeconds = Mathf.Max(0f, remainingSeconds - dt);
+                RemoveDefeatedEnemies();
+                if (Time.time >= nextSpawnAt) SpawnWavePair();
+                if (remainingSeconds <= 0f) BeginClear();
+            }
+            else if (matchState == MatchState.Failed)
+            {
+                failedRemaining -= dt;
+                if (failedRemaining <= 0f) stageManager.Retry();
+            }
+            else if (matchState == MatchState.Clear)
+            {
+                clearRemaining -= dt;
+                if (clearRemaining <= 0f) stageManager.ClearStage();
+            }
+
+            BroadcastState();
+            RefreshButtons();
+            RefreshDisplay();
+        }
+
+        public void RequestButton(bool left)
+        {
+            if (matchState != MatchState.Playing) return;
+            if (!HasAuthority)
+            {
+                onlineManager?.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = StageId,
+                    Kind = ButtonRequestKind,
+                    Json = JsonUtility.ToJson(new ButtonRequest { Left = left })
+                });
+                return;
+            }
+            ActivateButton(left);
+        }
+
+        private void ActivateButton(bool left)
+        {
+            if (left ? leftCooldown > 0f || leftWarning > 0f : rightCooldown > 0f || rightWarning > 0f) return;
+            if (left)
+            {
+                leftCooldown = ButtonCooldown;
+                leftWarning = AirstrikeWarning;
+            }
+            else
+            {
+                rightCooldown = ButtonCooldown;
+                rightWarning = AirstrikeWarning;
+            }
+            GameSfx.PlayAt(SfxId.BombTick, new Vector2(left ? -10f : 10f, 0f), 1.05f);
+            BroadcastState(true);
+        }
+
+        private void UpdateAirstrike(ref float warning, bool left, float dt)
+        {
+            if (warning <= 0f) return;
+            float before = warning;
+            warning = Mathf.Max(0f, warning - dt);
+            if (Mathf.CeilToInt(before) != Mathf.CeilToInt(warning))
+                GameSfx.PlayAt(SfxId.BombTick, new Vector2(left ? -10f : 10f, 1f), 0.9f);
+            if (warning <= 0f) LaunchAirstrike(left);
+        }
+
+        private void LaunchAirstrike(bool left)
+        {
+            int phase = CurrentPhase();
+            int count = 8 + phase * 3;
+            float minX = left ? -19f : 6f;
+            float maxX = left ? -6f : 19f;
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 position = new Vector2(Random.Range(minX, maxX), Random.Range(6.4f, 9f));
+                float size = Random.Range(0.72f, 1.2f);
+                string id = "8-3_airstrike_" + (left ? "l_" : "r_") + (++enemySequence);
+                GameObject bomb = syncManager != null
+                    ? syncManager.SpawnDropperBox(id, StageObjectType.Bomb, position, size, Random.Range(-18f, 18f), Random.Range(2.0f, 3.1f), new Vector2(Random.Range(-0.5f, 0.5f), -1.5f))
+                    : factory?.CreateDroppedBox(StageObjectType.Bomb, id, position, size, transform, Random.Range(2.0f, 3.1f));
+                Rigidbody2D body = bomb != null ? bomb.GetComponent<Rigidbody2D>() : null;
+                if (body != null && syncManager == null) body.linearVelocity = new Vector2(Random.Range(-0.5f, 0.5f), -1.5f);
+            }
+            GameSfx.PlayAt(SfxId.CannonFire, new Vector2(left ? -11f : 11f, 5f), 0.85f);
+        }
+
+        private void SpawnWavePair()
+        {
+            int phase = CurrentPhase();
+            int eachSide = phase == 1 ? 1 : phase == 2 ? Random.Range(1, 3) : Random.Range(2, 4);
+            for (int i = 0; i < eachSide; i++)
+            {
+                SpawnEnemy(true, phase, i);
+                SpawnEnemy(false, phase, i);
+            }
+            nextSpawnAt = Time.time + (phase == 1 ? 4.1f : phase == 2 ? 3.15f : 2.3f);
+        }
+
+        private void SpawnEnemy(bool fromLeft, int phase, int lane)
+        {
+            StageObjectType type;
+            int pattern = (enemySequence + lane + (fromLeft ? 1 : 0)) % (phase == 1 ? 2 : phase == 2 ? 5 : 6);
+            if (pattern == 1) type = StageObjectType.EnemyJumper;
+            else if (pattern == 2) type = StageObjectType.EnemyShooter;
+            else if (pattern == 3) type = StageObjectType.EnemyCharger;
+            else if (pattern == 4) type = phase >= 3 ? StageObjectType.EnemyFlyer : StageObjectType.EnemyBomber;
+            else if (pattern == 5) type = StageObjectType.EnemyBomber;
+            else type = StageObjectType.EnemyWalker;
+            float size = Random.Range(0.82f, 1.05f) + (phase - 1) * 0.08f;
+            float speed = type == StageObjectType.EnemyBomber
+                ? Random.Range(1.05f, 1.35f)
+                : Random.Range(1.7f, 2.15f) + phase * 0.42f;
+            string id = "8-3_enemy_" + (++enemySequence);
+            float spawnY = type == StageObjectType.EnemyBomber ? Random.Range(2.4f, 3.8f)
+                : type == StageObjectType.EnemyFlyer ? -2.55f
+                : GroundY + size * 0.58f + lane * 0.04f;
+            Vector2 position = new Vector2(fromLeft ? -20.2f : 20.2f, spawnY);
+            GameObject obj = factory?.CreateSpawnedEnemy(type, id, position, size, transform, speed, fromLeft ? 1f : -1f);
+            StageEnemyCharacter enemy = obj != null ? obj.GetComponent<StageEnemyCharacter>() : null;
+            if (enemy == null) return;
+            ConfigureBomberIfNeeded(obj, type, phase);
+            StageTowerDefenseEnemyHealth health = obj.AddComponent<StageTowerDefenseEnemyHealth>();
+            int enemyHp = phase <= 1 || enemySequence % 2 == 0 ? 1 : 2;
+            health.Configure(this, enemyHp, enemyHp);
+            enemies[id] = health;
+        }
+
+        private void ConfigureBomberIfNeeded(GameObject obj, StageObjectType type, int phase)
+        {
+            if (obj == null || type != StageObjectType.EnemyBomber) return;
+            StageBombingEnemy bomber = obj.GetComponent<StageBombingEnemy>();
+            if (bomber == null) bomber = obj.AddComponent<StageBombingEnemy>();
+            bomber.Configure(factory, transform, phase >= 3 ? 3.6f : 4.6f, phase >= 3 ? 0.8f : 0.68f);
+        }
+
+        public void NotifyEnemyDefeated(StageTowerDefenseEnemyHealth enemy)
+        {
+            if (enemy == null) return;
+            enemies.Remove(enemy.ObjectId);
+        }
+
+        public void NotifyAllyHit()
+        {
+            if (!HasAuthority || matchState != MatchState.Playing) return;
+            matchState = MatchState.Failed;
+            failedRemaining = 3f;
+            ally?.PlayDefeat();
+            GameSfx.PlayAt(SfxId.PlayerDeath, ally != null ? ally.transform.position : Vector3.zero, 1.1f);
+            BroadcastState(true);
+        }
+
+        private void BeginClear()
+        {
+            if (matchState != MatchState.Playing) return;
+            matchState = MatchState.Clear;
+            clearRemaining = 3.2f;
+            StageTowerDefenseEnemyHealth[] remainingEnemies = new StageTowerDefenseEnemyHealth[enemies.Count];
+            enemies.Values.CopyTo(remainingEnemies, 0);
+            for (int i = 0; i < remainingEnemies.Length; i++) remainingEnemies[i]?.ForceDefeat();
+            enemies.Clear();
+            ally?.PlayClearFlight();
+            GameSfx.PlayAt(SfxId.EmotePop, ally != null ? ally.transform.position : Vector3.zero, 1.15f);
+            BroadcastState(true);
+        }
+
+        private int CurrentPhase()
+        {
+            float elapsed = totalSeconds - remainingSeconds;
+            return Mathf.Clamp(Mathf.FloorToInt(elapsed / PhaseSeconds) + 1, 1, 3);
+        }
+
+        private void RemoveDefeatedEnemies()
+        {
+            List<string> remove = null;
+            foreach (KeyValuePair<string, StageTowerDefenseEnemyHealth> pair in enemies)
+            {
+                if (pair.Value == null || pair.Value.IsDefeated)
+                {
+                    if (remove == null) remove = new List<string>();
+                    remove.Add(pair.Key);
+                }
+            }
+            if (remove != null) for (int i = 0; i < remove.Count; i++) enemies.Remove(remove[i]);
+        }
+
+        private StageTowerDefenseButton AttachButton(string id, bool left)
+        {
+            StageEditorObject[] markers = GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < markers.Length; i++)
+            {
+                if (markers[i] == null || markers[i].objectId != id) continue;
+                StageTowerDefenseButton button = markers[i].gameObject.AddComponent<StageTowerDefenseButton>();
+                button.Configure(this, left);
+                return button;
+            }
+            return null;
+        }
+
+        private void RefreshButtons()
+        {
+            leftButton?.Refresh(leftCooldown, leftWarning);
+            rightButton?.Refresh(rightCooldown, rightWarning);
+        }
+
+        private void BuildMonitor()
+        {
+            GameObject monitor = new GameObject("8-3 Defense Monitor");
+            monitor.transform.SetParent(transform, false);
+            monitor.transform.position = new Vector3(0f, 5.15f, 0f);
+            StageGun.CreateSprite(monitor.transform, "Frame", Vector2.zero, new Vector2(13.5f, 2.75f), new Color(0.16f, 0.2f, 0.24f, 0.94f), 22);
+            StageGun.CreateSprite(monitor.transform, "Screen", Vector2.zero, new Vector2(12.8f, 2.18f), new Color(0.025f, 0.055f, 0.06f, 0.96f), 23);
+            titleText = CreateText(monitor.transform, new Vector2(0f, 0.72f), 0.095f, 25, new Color(0.35f, 0.95f, 0.82f, 1f));
+            phaseText = CreateText(monitor.transform, new Vector2(-3.5f, 0.05f), 0.14f, 25, new Color(1f, 0.78f, 0.2f, 1f));
+            timerText = CreateText(monitor.transform, new Vector2(2.5f, 0.05f), 0.18f, 25, new Color(0.4f, 0.92f, 1f, 1f));
+            messageText = CreateText(monitor.transform, new Vector2(0f, -0.7f), 0.085f, 25, Color.white);
+        }
+
+        private void LockCameraToArena()
+        {
+            if (gameCamera == null) return;
+            previousCameraPosition = gameCamera.transform.position;
+            previousCameraSize = gameCamera.orthographicSize;
+            cameraWasEnabled = cameraFollow != null && cameraFollow.enabled;
+            if (cameraFollow != null) cameraFollow.enabled = false;
+            float requiredForWidth = 23.5f / Mathf.Max(0.2f, gameCamera.aspect);
+            gameCamera.transform.position = new Vector3(0f, 1.3f, previousCameraPosition.z);
+            gameCamera.orthographicSize = Mathf.Max(9.5f, requiredForWidth);
+            cameraLocked = true;
+        }
+
+        private void BuildAirstrikeFloorZones()
+        {
+            CreateAirstrikeFloorZone(true);
+            CreateAirstrikeFloorZone(false);
+        }
+
+        private void CreateAirstrikeFloorZone(bool left)
+        {
+            float centerX = left ? -12.5f : 12.5f;
+            Color baseColor = left
+                ? new Color(1f, 0.48f, 0.16f, 0.62f)
+                : new Color(0.95f, 0.2f, 0.3f, 0.62f);
+            GameObject zone = new GameObject(left ? "Left Airstrike Floor" : "Right Airstrike Floor");
+            zone.transform.SetParent(transform, false);
+            zone.transform.position = new Vector3(centerX, -3.76f, 0f);
+            zone.layer = 2;
+            StageGun.CreateSprite(zone.transform, "Airstrike Color Band", Vector2.zero,
+                new Vector2(13f, 0.24f), baseColor, 19);
+            for (int i = -6; i <= 6; i++)
+            {
+                float x = i;
+                StageGun.AddLine(zone.transform, "Airstrike Hatch", new[]
+                {
+                    new Vector2(x - 0.35f, -0.45f), new Vector2(x + 0.35f, 0.45f)
+                }, 0.055f, new Color(1f, 0.9f, 0.45f, 0.78f), 20);
+            }
+            StageGun.AddLine(zone.transform, "Airstrike Edge", new[]
+            {
+                new Vector2(-6.5f, 0.48f), new Vector2(6.5f, 0.48f)
+            }, 0.07f, new Color(baseColor.r * 0.65f, baseColor.g * 0.65f, baseColor.b * 0.65f, 0.95f), 21);
+            foreach (Transform child in zone.transform) child.gameObject.layer = 2;
+            Collider2D[] accidentalColliders = zone.GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < accidentalColliders.Length; i++)
+                if (accidentalColliders[i] != null) Destroy(accidentalColliders[i]);
+        }
+
+        private static TextMesh CreateText(Transform parent, Vector2 position, float size, int order, Color color)
+        {
+            GameObject obj = new GameObject("Monitor Text");
+            obj.transform.SetParent(parent, false);
+            obj.transform.localPosition = new Vector3(position.x, position.y, -0.08f);
+            TextMesh text = obj.AddComponent<TextMesh>();
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.characterSize = size;
+            text.fontSize = 64;
+            text.color = color;
+            Font font = StageSurvivalController.FindHandwrittenFont();
+            if (font != null)
+            {
+                text.font = font;
+                obj.GetComponent<MeshRenderer>().sharedMaterial = font.material;
+            }
+            obj.GetComponent<MeshRenderer>().sortingOrder = order;
+            return text;
+        }
+
+        private void RefreshDisplay()
+        {
+            if (titleText == null) return;
+            titleText.text = LocalizationManager.T("tower_defense_title");
+            phaseText.text = LocalizationManager.Format("tower_defense_phase", CurrentPhase(), 3);
+            timerText.text = Mathf.CeilToInt(remainingSeconds).ToString("00") + ".0";
+            if (matchState == MatchState.Intro)
+                messageText.text = Mathf.Max(1, Mathf.CeilToInt(introRemaining)).ToString();
+            else if (matchState == MatchState.Failed)
+                messageText.text = LocalizationManager.Format("tower_defense_retry", Mathf.CeilToInt(failedRemaining));
+            else if (matchState == MatchState.Clear)
+                messageText.text = LocalizationManager.T("tower_defense_clear");
+            else if (leftWarning > 0f || rightWarning > 0f)
+                messageText.text = LocalizationManager.Format("tower_defense_airstrike", Mathf.CeilToInt(Mathf.Max(leftWarning, rightWarning)));
+            else messageText.text = LocalizationManager.T("tower_defense_protect");
+        }
+
+        private void BroadcastState(bool force = false)
+        {
+            if (onlineManager == null || stageManager == null || !stageManager.IsOnlineStageActive || !HasAuthority
+                || !force && Time.unscaledTime < nextStateAt) return;
+            nextStateAt = Time.unscaledTime + 0.1f;
+            List<EnemySnapshot> snapshots = new List<EnemySnapshot>();
+            foreach (StageTowerDefenseEnemyHealth health in enemies.Values)
+            {
+                if (health == null || health.IsDefeated) continue;
+                Rigidbody2D body = health.GetComponent<Rigidbody2D>();
+                snapshots.Add(new EnemySnapshot
+                {
+                    Id = health.ObjectId, Type = (int)health.EnemyType, Position = health.transform.position,
+                    Velocity = body != null ? body.linearVelocity : Vector2.zero, Size = health.EnemySize,
+                    Speed = health.EnemySpeed, Hp = health.Hp, MaxHp = health.MaxHp
+                });
+            }
+            DefenseState state = new DefenseState
+            {
+                Sequence = ++stateSequence, State = (int)matchState, Remaining = remainingSeconds,
+                IntroRemaining = introRemaining, LeftCooldown = leftCooldown, RightCooldown = rightCooldown,
+                LeftWarning = leftWarning, RightWarning = rightWarning,
+                OutcomeRemaining = matchState == MatchState.Failed ? failedRemaining : clearRemaining,
+                Enemies = snapshots.ToArray()
+            };
+            onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = StageId, Kind = StateKind, Json = JsonUtility.ToJson(state) });
+        }
+
+        private void HandleNetworkData(OnlineGimmickData data)
+        {
+            if (data == null || data.ObjectId != StageId) return;
+            if (data.Kind == ButtonRequestKind && HasAuthority)
+            {
+                ButtonRequest request = JsonUtility.FromJson<ButtonRequest>(data.Json);
+                if (request != null) ActivateButton(request.Left);
+                return;
+            }
+            if (data.Kind != StateKind || HasAuthority) return;
+            DefenseState state = JsonUtility.FromJson<DefenseState>(data.Json);
+            if (state == null || state.Sequence <= lastStateSequence) return;
+            lastStateSequence = state.Sequence;
+            MatchState previous = matchState;
+            matchState = (MatchState)state.State;
+            remainingSeconds = state.Remaining;
+            introRemaining = state.IntroRemaining;
+            leftCooldown = state.LeftCooldown;
+            rightCooldown = state.RightCooldown;
+            leftWarning = state.LeftWarning;
+            rightWarning = state.RightWarning;
+            if (matchState == MatchState.Failed) failedRemaining = state.OutcomeRemaining;
+            else if (matchState == MatchState.Clear) clearRemaining = state.OutcomeRemaining;
+            ApplyEnemySnapshots(state.Enemies);
+            if (previous != matchState)
+            {
+                if (matchState == MatchState.Failed) ally?.PlayDefeat();
+                else if (matchState == MatchState.Clear) ally?.PlayClearFlight();
+            }
+        }
+
+        private void ApplyEnemySnapshots(EnemySnapshot[] snapshots)
+        {
+            HashSet<string> seen = new HashSet<string>();
+            if (snapshots != null)
+            {
+                for (int i = 0; i < snapshots.Length; i++)
+                {
+                    EnemySnapshot snapshot = snapshots[i];
+                    if (snapshot == null || string.IsNullOrEmpty(snapshot.Id)) continue;
+                    seen.Add(snapshot.Id);
+                    if (!enemies.TryGetValue(snapshot.Id, out StageTowerDefenseEnemyHealth health) || health == null)
+                    {
+                        float facing = snapshot.Velocity.x < 0f ? -1f : 1f;
+                        GameObject obj = factory?.CreateSpawnedEnemy((StageObjectType)snapshot.Type, snapshot.Id, snapshot.Position,
+                            snapshot.Size, transform, snapshot.Speed, facing);
+                        ConfigureBomberIfNeeded(obj, (StageObjectType)snapshot.Type, CurrentPhase());
+                        health = obj != null ? obj.AddComponent<StageTowerDefenseEnemyHealth>() : null;
+                        if (health == null) continue;
+                        health.Configure(this, snapshot.MaxHp, snapshot.MaxHp);
+                        enemies[snapshot.Id] = health;
+                    }
+                    health.ApplyReplica(snapshot.Position, snapshot.Velocity, snapshot.Hp);
+                }
+            }
+            List<string> remove = new List<string>();
+            foreach (KeyValuePair<string, StageTowerDefenseEnemyHealth> pair in enemies)
+                if (!seen.Contains(pair.Key)) { pair.Value?.ForceDefeat(); remove.Add(pair.Key); }
+            for (int i = 0; i < remove.Count; i++) enemies.Remove(remove[i]);
+        }
+    }
+
+    public sealed class StageTowerDefenseEnemyHealth : MonoBehaviour
+    {
+        private StageTowerDefenseController owner;
+        private StageEnemyCharacter enemy;
+        private int hp;
+        private int maxHp;
+        private float size;
+        private float speed;
+        private StageObjectType enemyType;
+        private TextMesh badge;
+
+        public string ObjectId => enemy != null ? enemy.ObjectId : gameObject.name;
+        public bool IsDefeated => enemy == null || enemy.IsDefeated || hp <= 0;
+        public int Hp => hp;
+        public int MaxHp => maxHp;
+        public float EnemySize => size;
+        public float EnemySpeed => speed;
+        public StageObjectType EnemyType => enemyType;
+
+        public void Configure(StageTowerDefenseController controller, int health, int maximum)
+        {
+            owner = controller;
+            enemy = GetComponent<StageEnemyCharacter>();
+            StageEditorObject marker = GetComponent<StageEditorObject>();
+            enemyType = marker != null ? marker.type : StageObjectType.EnemyWalker;
+            size = marker != null ? Mathf.Max(marker.size.x, marker.size.y) : 1f;
+            speed = marker != null ? marker.movementSpeed : 2f;
+            maxHp = Mathf.Max(1, maximum);
+            hp = Mathf.Clamp(health, 1, maxHp);
+            if (maxHp > 1) CreateBadge();
+        }
+
+        public void HitByBullet(Vector2 point)
+        {
+            if (owner == null || !owner.HasAuthority || IsDefeated) return;
+            hp--;
+            RefreshBadge();
+            if (hp <= 0) ForceDefeat();
+            else GameSfx.PlayAt(SfxId.EnemyShellBounce, point, 0.8f);
+        }
+
+        public void HitByBomb()
+        {
+            if (owner == null || !owner.HasAuthority || IsDefeated) return;
+            hp = 0;
+            ForceDefeat();
+        }
+
+        public void ApplyReplica(Vector2 position, Vector2 velocity, int health)
+        {
+            hp = Mathf.Clamp(health, 0, maxHp);
+            Rigidbody2D body = GetComponent<Rigidbody2D>();
+            if (body != null)
+            {
+                body.position = Vector2.Lerp(body.position, position, 0.55f);
+                body.linearVelocity = velocity;
+            }
+            else transform.position = position;
+            RefreshBadge();
+        }
+
+        public void ForceDefeat()
+        {
+            if (enemy == null || enemy.IsDefeated) return;
+            hp = 0;
+            enemy.ApplyDefeated();
+            owner?.NotifyEnemyDefeated(this);
+        }
+
+        private void CreateBadge()
+        {
+            if (badge != null) return;
+            GameObject obj = new GameObject("Enemy Toughness");
+            obj.transform.SetParent(transform, false);
+            obj.transform.localPosition = new Vector3(0f, size * 0.75f, -0.08f);
+            badge = obj.AddComponent<TextMesh>();
+            badge.anchor = TextAnchor.MiddleCenter;
+            badge.alignment = TextAlignment.Center;
+            badge.fontSize = 42;
+            badge.characterSize = 0.065f;
+            badge.color = new Color(0.55f, 0.08f, 0.12f, 1f);
+            obj.GetComponent<MeshRenderer>().sortingOrder = 42;
+            RefreshBadge();
+        }
+
+        private void RefreshBadge()
+        {
+            if (badge != null) badge.text = hp > 1 ? "\u2665" + hp : string.Empty;
+        }
+    }
+
+    public sealed class StageTowerDefenseButton : MonoBehaviour
+    {
+        private StageTowerDefenseController owner;
+        private bool left;
+        private TextMesh label;
+        private SpriteRenderer glow;
+        private float nextLocalRequestAt;
+
+        public void Configure(StageTowerDefenseController controller, bool isLeft)
+        {
+            owner = controller;
+            left = isLeft;
+            BoxCollider2D trigger = GetComponent<BoxCollider2D>();
+            if (trigger == null) trigger = gameObject.AddComponent<BoxCollider2D>();
+            trigger.isTrigger = true;
+            GameObject glowObject = StageGun.CreateSprite(transform, "Airstrike Button Glow", new Vector2(0f, 0.18f),
+                new Vector2(1.15f, 0.34f), new Color(0.2f, 0.9f, 0.75f, 0.75f), 41);
+            glow = glowObject.GetComponent<SpriteRenderer>();
+            label = CreateLabel();
+        }
+
+        private TextMesh CreateLabel()
+        {
+            GameObject obj = new GameObject("Cooldown");
+            obj.transform.SetParent(transform, false);
+            obj.transform.localPosition = new Vector3(0f, 0.75f, -0.08f);
+            TextMesh text = obj.AddComponent<TextMesh>();
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.fontSize = 48;
+            text.characterSize = 0.07f;
+            text.color = new Color(0.08f, 0.2f, 0.24f, 1f);
+            obj.GetComponent<MeshRenderer>().sortingOrder = 43;
+            return text;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other == null || other.GetComponentInParent<PlayerController2D>() == null || Time.time < nextLocalRequestAt) return;
+            nextLocalRequestAt = Time.time + 0.5f;
+            owner?.RequestButton(left);
+        }
+
+        public void Refresh(float cooldown, float warning)
+        {
+            if (label == null) return;
+            if (warning > 0f)
+            {
+                label.text = Mathf.CeilToInt(warning).ToString();
+                label.color = new Color(1f, 0.22f, 0.1f, 1f);
+                if (glow != null) glow.color = new Color(1f, 0.2f, 0.08f, 0.7f + Mathf.Sin(Time.time * 12f) * 0.2f);
+            }
+            else if (cooldown > 0f)
+            {
+                label.text = cooldown.ToString("0.0");
+                label.color = new Color(0.3f, 0.34f, 0.38f, 1f);
+                if (glow != null) glow.color = new Color(0.3f, 0.34f, 0.38f, 0.45f);
+            }
+            else
+            {
+                label.text = "READY";
+                label.color = new Color(0.05f, 0.48f, 0.3f, 1f);
+                if (glow != null) glow.color = new Color(0.15f, 0.95f, 0.68f, 0.72f);
+            }
+        }
+    }
+
+    public sealed class StageTowerDefenseAlly : MonoBehaviour
+    {
+        private StageTowerDefenseController owner;
+        private Transform visual;
+        private bool finished;
+
+        public static StageTowerDefenseAlly Create(Transform parent, Vector2 position, StageTowerDefenseController owner)
+        {
+            GameObject root = new GameObject("8-3 Ally Character");
+            root.transform.SetParent(parent, false);
+            root.transform.position = position;
+            CircleCollider2D trigger = root.AddComponent<CircleCollider2D>();
+            trigger.radius = 0.78f;
+            trigger.isTrigger = true;
+            StageTowerDefenseAlly ally = root.AddComponent<StageTowerDefenseAlly>();
+            ally.owner = owner;
+            ally.BuildVisual();
+            return ally;
+        }
+
+        private void BuildVisual()
+        {
+            visual = new GameObject("Ally Visual").transform;
+            visual.SetParent(transform, false);
+            Color outline = new Color(0.05f, 0.2f, 0.38f, 1f);
+            Color blue = new Color(0.18f, 0.63f, 0.92f, 1f);
+            Color face = new Color(0.76f, 0.94f, 1f, 1f);
+            Color scarf = new Color(1f, 0.46f, 0.25f, 1f);
+
+            GameObject body = StageGun.CreateSprite(visual, "Round Body", new Vector2(0f, -0.12f),
+                new Vector2(0.72f, 0.86f), blue, 38);
+            body.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            StageGun.AddLine(visual, "Body Outline", EllipsePoints(new Vector2(0f, -0.12f), 0.37f, 0.44f), 0.065f, outline, 40);
+
+            GameObject head = StageGun.CreateSprite(visual, "Round Head", new Vector2(0f, 0.54f),
+                new Vector2(0.9f, 0.82f), face, 39);
+            head.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            StageGun.AddLine(visual, "Head Outline", EllipsePoints(new Vector2(0f, 0.54f), 0.46f, 0.42f), 0.065f, outline, 41);
+            StageGun.AddLine(visual, "Hair Tuft", new[]
+            {
+                new Vector2(-0.25f, 0.9f), new Vector2(-0.08f, 1.08f), new Vector2(0.02f, 0.91f),
+                new Vector2(0.19f, 1.05f), new Vector2(0.27f, 0.86f)
+            }, 0.075f, blue, 42);
+
+            AddDot(new Vector2(-0.17f, 0.62f), 0.075f, outline);
+            AddDot(new Vector2(0.17f, 0.62f), 0.075f, outline);
+            StageGun.AddLine(visual, "Friendly Smile", new[]
+            {
+                new Vector2(-0.17f, 0.43f), new Vector2(0f, 0.34f), new Vector2(0.18f, 0.44f)
+            }, 0.05f, outline, 43);
+            AddDot(new Vector2(-0.34f, 0.45f), 0.09f, new Color(1f, 0.55f, 0.58f, 0.55f));
+            AddDot(new Vector2(0.34f, 0.45f), 0.09f, new Color(1f, 0.55f, 0.58f, 0.55f));
+
+            StageGun.AddLine(visual, "Scarf", new[]
+            {
+                new Vector2(-0.34f, 0.17f), new Vector2(0.33f, 0.17f), new Vector2(0.55f, -0.04f)
+            }, 0.105f, scarf, 43);
+            StageGun.AddLine(visual, "Left Arm", new[]
+            {
+                new Vector2(-0.31f, 0.02f), new Vector2(-0.67f, -0.12f), new Vector2(-0.78f, 0.08f)
+            }, 0.075f, outline, 41);
+            StageGun.AddLine(visual, "Right Arm", new[]
+            {
+                new Vector2(0.31f, 0.02f), new Vector2(0.67f, -0.12f), new Vector2(0.78f, 0.08f)
+            }, 0.075f, outline, 41);
+            StageGun.AddLine(visual, "Left Leg", new[]
+            {
+                new Vector2(-0.18f, -0.45f), new Vector2(-0.22f, -0.78f), new Vector2(-0.42f, -0.8f)
+            }, 0.085f, outline, 41);
+            StageGun.AddLine(visual, "Right Leg", new[]
+            {
+                new Vector2(0.18f, -0.45f), new Vector2(0.22f, -0.78f), new Vector2(0.42f, -0.8f)
+            }, 0.085f, outline, 41);
+
+            GameObject heart = StageGun.CreateSprite(visual, "Friend Heart", new Vector2(0f, -0.12f),
+                new Vector2(0.18f, 0.18f), new Color(1f, 0.25f, 0.32f, 1f), 43);
+            heart.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+        }
+
+        private void AddDot(Vector2 position, float size, Color color)
+        {
+            GameObject dot = StageGun.CreateSprite(visual, "Face Dot", position, Vector2.one * size, color, 43);
+            dot.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+        }
+
+        private static Vector2[] EllipsePoints(Vector2 center, float radiusX, float radiusY)
+        {
+            const int count = 32;
+            Vector2[] points = new Vector2[count + 1];
+            for (int i = 0; i <= count; i++)
+            {
+                float angle = i / (float)count * Mathf.PI * 2f;
+                points[i] = center + new Vector2(Mathf.Cos(angle) * radiusX, Mathf.Sin(angle) * radiusY);
+            }
+            return points;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (finished || other == null || other.GetComponentInParent<StageTowerDefenseEnemyHealth>() == null) return;
+            owner?.NotifyAllyHit();
+        }
+
+        public void TryHitByEnemyBomb(Vector2 blastCenter, float blastRadius)
+        {
+            if (finished) return;
+            float hitRadius = Mathf.Max(0.2f, blastRadius) + 0.72f;
+            if (((Vector2)transform.position - blastCenter).sqrMagnitude <= hitRadius * hitRadius)
+                owner?.NotifyAllyHit();
+        }
+
+        public void PlayDefeat()
+        {
+            if (finished) return;
+            finished = true;
+            StartCoroutine(DefeatRoutine());
+        }
+
+        public void PlayClearFlight()
+        {
+            if (finished) return;
+            finished = true;
+            CreateWings();
+            StartCoroutine(FlyRoutine());
+        }
+
+        private void CreateWings()
+        {
+            Color wing = new Color(1f, 0.92f, 0.48f, 0.95f);
+            StageGun.AddLine(visual, "Left Clear Wing", new[] { new Vector2(-0.38f, 0.2f), new Vector2(-1.25f, 0.9f), new Vector2(-1.5f, 0.15f), new Vector2(-0.62f, -0.15f) }, 0.12f, wing, 42);
+            StageGun.AddLine(visual, "Right Clear Wing", new[] { new Vector2(0.38f, 0.2f), new Vector2(1.25f, 0.9f), new Vector2(1.5f, 0.15f), new Vector2(0.62f, -0.15f) }, 0.12f, wing, 42);
+        }
+
+        private IEnumerator FlyRoutine()
+        {
+            float elapsed = 0f;
+            while (elapsed < 3f)
+            {
+                elapsed += Time.deltaTime;
+                transform.position += new Vector3(Mathf.Sin(elapsed * 4f) * 0.012f, Time.deltaTime * Mathf.Lerp(1f, 5f, elapsed / 3f), 0f);
+                visual.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(elapsed * 7f) * 7f);
+                yield return null;
+            }
+        }
+
+        private IEnumerator DefeatRoutine()
+        {
+            float elapsed = 0f;
+            while (elapsed < 0.55f)
+            {
+                elapsed += Time.deltaTime;
+                visual.localRotation = Quaternion.Euler(0f, 0f, elapsed * 240f);
+                visual.localScale = Vector3.one * Mathf.Max(0.15f, 1f - elapsed);
+                yield return null;
+            }
+        }
+    }
+}
