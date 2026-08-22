@@ -278,7 +278,10 @@ namespace DrawBody.Prototype
         BackgroundBlackHoleDecor,
         BackgroundSoapBubble,
         BackgroundMoss,
-        BackgroundTreeRoot
+        BackgroundTreeRoot,
+        GrainEmitter,
+        GrainScale,
+        GrainGate
     }
 
     [Serializable]

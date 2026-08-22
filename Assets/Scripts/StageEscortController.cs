@@ -723,7 +723,7 @@ namespace DrawBody.Prototype
             if (TryGetGroundSupport(out Vector2 normal, out bool sticky, out Rigidbody2D supportBody))
             {
                 float speedMultiplier = sticky ? 0.3f : 1f;
-                Vector2 carrierVelocity = supportBody != null ? supportBody.linearVelocity : Vector2.zero;
+                Vector2 carrierVelocity = ResolveSupportVelocity(supportBody);
                 if (normal.y > 0.92f && HasWallAhead())
                 {
                     body.linearVelocity = new Vector2(
@@ -744,6 +744,21 @@ namespace DrawBody.Prototype
             {
                 body.linearVelocity = new Vector2(WalkSpeed, body.linearVelocity.y);
             }
+        }
+
+        private static Vector2 ResolveSupportVelocity(Rigidbody2D supportBody)
+        {
+            if (supportBody == null) return Vector2.zero;
+
+            // Kinematic platforms are driven with MovePosition. Depending on the
+            // physics step order their Rigidbody velocity can read as zero even
+            // while the platform is moving, which made the escort stop relative
+            // to the platform. Use the platform driver's exact planned velocity.
+            DirectionalMovingPlatform directional = supportBody.GetComponent<DirectionalMovingPlatform>();
+            if (directional != null) return directional.SurfaceVelocity;
+            AutomaticMovingPlatform automatic = supportBody.GetComponent<AutomaticMovingPlatform>();
+            if (automatic != null) return automatic.SurfaceVelocity;
+            return supportBody.linearVelocity;
         }
 
         private void Update()

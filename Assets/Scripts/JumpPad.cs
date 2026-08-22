@@ -53,6 +53,21 @@ namespace DrawBody.Prototype
             }
 
             PlayerController2D player = rb.GetComponent<PlayerController2D>();
+            if (player == null) player = other.GetComponentInParent<PlayerController2D>();
+            if (player != null && (player.IsFriendCarried || rb.bodyType != RigidbodyType2D.Dynamic))
+            {
+                ResolveCarrierLaunchTarget(player.transform, out rb, out player);
+            }
+
+            // Held guns and carried players use kinematic bodies that are moved by
+            // their carrier every LateUpdate. Launching those bodies creates a
+            // second, conflicting velocity and can throw the whole carry chain in
+            // an unrelated direction when the carrier reaches the pad.
+            if (rb == null || rb.bodyType != RigidbodyType2D.Dynamic)
+            {
+                return;
+            }
+
             float speciesMultiplier = player != null
                 && player.CurrentSpecies == DrawManager.Species.Bird
                     ? 3f
@@ -61,6 +76,29 @@ namespace DrawBody.Prototype
             velocity.y = Mathf.Max(velocity.y, jumpVelocity * speciesMultiplier);
             rb.linearVelocity = velocity;
             bounceTimer = 0.22f;
+        }
+
+        private static void ResolveCarrierLaunchTarget(
+            Transform carriedTarget,
+            out Rigidbody2D carrierBody,
+            out PlayerController2D carrierPlayer)
+        {
+            carrierBody = null;
+            carrierPlayer = null;
+            if (carriedTarget == null) return;
+
+            PlayerCarryController[] carriers = Object.FindObjectsByType<PlayerCarryController>(
+                FindObjectsSortMode.None);
+            for (int i = 0; i < carriers.Length; i++)
+            {
+                PlayerCarryController carrier = carriers[i];
+                if (carrier == null || !carrier.IsDraggingFriend(carriedTarget)) continue;
+                Rigidbody2D body = carrier.GetComponent<Rigidbody2D>();
+                if (body == null || body.bodyType != RigidbodyType2D.Dynamic) continue;
+                carrierBody = body;
+                carrierPlayer = carrier.GetComponent<PlayerController2D>();
+                return;
+            }
         }
     }
 }

@@ -134,6 +134,7 @@ namespace DrawBody.Prototype
         private BodyPart clearedPartUndoPart;
         private bool hasClearedPartUndo;
         private int onlineBodyRevision;
+        private bool lastUniqueSpeciesConfirmAllowed = true;
 
         public event System.Action<BodyPart> CurrentPartChanged;
         public event System.Action<Species> CurrentSpeciesChanged;
@@ -146,6 +147,25 @@ namespace DrawBody.Prototype
         public bool IsSpeciesAllowed(Species species)
         {
             return StageSpeciesRules.IsAllowed(allowedSpecies, species);
+        }
+
+        public bool CanConfirmCurrentSpecies()
+        {
+            return stageManager == null || stageManager.CanConfirmSpeciesForActivePlayer(currentSpecies);
+        }
+
+        public void ShowSpeciesSwapPending()
+        {
+            SetMessage(LocalizationManager.T("draw_species_swap_pending"), true);
+        }
+
+        public void ShowSpeciesSwapResult(bool accepted)
+        {
+            SetMessage(LocalizationManager.T(accepted
+                ? "draw_species_swap_accepted"
+                : "draw_species_swap_rejected"),
+                !accepted);
+            GameSfx.Play(accepted ? SfxId.DrawConfirm : SfxId.UiToggleOff);
         }
 
         public void SetAllowedSpecies(StageSpeciesMask availability)
@@ -439,6 +459,13 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            bool canConfirmSpecies = CanConfirmCurrentSpecies();
+            if (canConfirmSpecies != lastUniqueSpeciesConfirmAllowed)
+            {
+                lastUniqueSpeciesConfirmAllowed = canConfirmSpecies;
+                RefreshConnectionMessage();
+            }
+
             if (Input.GetKeyDown(KeyCode.C))
             {
                 ClearDrawing();
@@ -457,6 +484,7 @@ namespace DrawBody.Prototype
         {
             active = value;
             drawing = false;
+            lastUniqueSpeciesConfirmAllowed = CanConfirmCurrentSpecies();
 
             if (drawPanel != null)
             {
@@ -878,6 +906,19 @@ namespace DrawBody.Prototype
 
         public bool TryApplyDrawing()
         {
+            if (!CanConfirmCurrentSpecies())
+            {
+                if (stageManager != null && stageManager.RequestSpeciesSwap(currentSpecies))
+                {
+                    ShowSpeciesSwapPending();
+                    return false;
+                }
+
+                SetMessage(LocalizationManager.T("draw_species_swap_unavailable"), true);
+                GameSfx.Play(SfxId.UiToggleOff);
+                return false;
+            }
+
             if (!ValidateConnections(out string errorMessage))
             {
                 SetMessage(errorMessage, true);
@@ -2161,6 +2202,15 @@ namespace DrawBody.Prototype
         {
             if (!active)
             {
+                return;
+            }
+
+            if (!CanConfirmCurrentSpecies())
+            {
+                SetMessage(LocalizationManager.Format(
+                    "draw_species_swap_hint",
+                    LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(currentSpecies))),
+                    true);
                 return;
             }
 

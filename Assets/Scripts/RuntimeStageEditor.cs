@@ -37,7 +37,7 @@ namespace DrawBody.Prototype
         [SerializeField] private string displayName = "New Stage";
         [SerializeField] private float gridSize = 0.5f;
         [SerializeField] private bool snapToGrid = true;
-        [SerializeField] private float cameraMoveSpeed = 9f;
+        [SerializeField] private float cameraMoveSpeed = 1.5f;
         [SerializeField] private float minCameraSize = 2.5f;
         [SerializeField] private float maxCameraSize = 24f;
         [SerializeField] private float testPlayCameraSize = 8f;
@@ -431,10 +431,23 @@ namespace DrawBody.Prototype
             dragging = false;
             draggingDebugPlayer = false;
             hasDebugTestStartPosition = false;
+            hasEditorCameraStateBeforeTest = false;
             ClearRangeSelection();
             undoStack.Clear();
             redoStack.Clear();
             stageLoader?.HideStages();
+
+            // 別ステージを開いたとき、前のステージのカメラ座標を引き継がないようにリセット
+            EnsureReferences();
+            if (worldCamera != null)
+            {
+                Vector3 camPos = worldCamera.transform.position;
+                camPos.x = 0f;
+                camPos.y = 0f;
+                worldCamera.transform.position = camPos;
+                worldCamera.orthographicSize = testPlayCameraSize;
+            }
+
             LoadWorkingData();
             BuildEditorObjects();
             PositionDebugPlayerAtStageSpawn();
@@ -445,6 +458,7 @@ namespace DrawBody.Prototype
             RefreshListPanel();
             SetStatus(LocalizationManager.T("stage_editor_status_debug_start_help"));
         }
+
 
         public void Close()
         {

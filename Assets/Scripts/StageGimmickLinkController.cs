@@ -34,6 +34,13 @@ namespace DrawBody.Prototype
                 {
                     continue;
                 }
+                // GrainScale uses linkTargetId only to identify its custom
+                // 100 g gate. Treating it as a generic Reveal link hides the
+                // gate at load and makes it appear when a player approaches.
+                if (source.type == StageObjectType.GrainScale)
+                {
+                    continue;
+                }
 
                 if (!objectsById.TryGetValue(source.linkTargetId, out Transform target))
                 {

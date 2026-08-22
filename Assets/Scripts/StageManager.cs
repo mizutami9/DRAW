@@ -14,6 +14,9 @@ namespace DrawBody.Prototype
         private const string GimmickKindCollectRequest = "collect_request";
         private const string GimmickKindCollectState = "collect_state";
         private const string GimmickKindChallengeFailed = "challenge_failed";
+        private const string GimmickKindSpeciesSwapRequest = "species_swap_request";
+        private const string GimmickKindSpeciesSwapResponse = "species_swap_response";
+        private const string GimmickKindSpeciesSwapApply = "species_swap_apply";
         private const float LowestStageObjectFallMargin = 8f;
         private const float ChallengeStartCountdownDuration = 4f;
         private const float ChallengeTimeUpReturnDelay = 5f;
@@ -70,6 +73,11 @@ namespace DrawBody.Prototype
             new Dictionary<PlayerController2D, float>();
         private Material respawnBurstMaterial;
         private Coroutine redrawRespawnRoutine;
+        private SpeciesSwapMessage pendingIncomingSpeciesSwap;
+        private SpeciesSwapMessage pendingOutgoingSpeciesSwap;
+        private DrawManager.DrawingState pendingSpeciesSwapDrawingState;
+        private float pendingIncomingSpeciesSwapExpiresAt;
+        private float pendingOutgoingSpeciesSwapExpiresAt;
         private PlayerController2D redrawReturnPlayer;
         private Vector3 redrawReturnPosition;
         private bool hasRedrawReturnPosition;
@@ -107,6 +115,7 @@ namespace DrawBody.Prototype
         public int ChallengeTotalCollectionTargetCount => totalCollectionTargetCount;
         public bool ChallengeStarting => challengeStarting;
         public string CurrentStageId => currentStageId;
+        public bool RequiresUniquePlayerSpecies => StageSpeciesRules.RequiresUniqueSpecies(currentStageId);
         public string ChallengeStartCountdownText
         {
             get
@@ -120,6 +129,17 @@ namespace DrawBody.Prototype
                 if (challengeStartCountdownRemaining > 1f) return "1";
                 return "START!";
             }
+        }
+
+        [System.Serializable]
+        private sealed class SpeciesSwapMessage
+        {
+            public string RequestId;
+            public string RequesterId;
+            public string TargetId;
+            public int RequesterSpecies;
+            public int TargetSpecies;
+            public bool Accepted;
         }
 
         [System.Serializable]
@@ -289,6 +309,7 @@ namespace DrawBody.Prototype
         {
             StopTrailerDemo();
             StopSteamHeaderCapture();
+            ResetSpeciesSwapState();
             CancelRespawnAnimations();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(false);
@@ -492,6 +513,8 @@ namespace DrawBody.Prototype
             {
                 EndOnlineCarry(Vector2.zero);
             }
+
+            UpdateSpeciesSwapTimeouts();
 
             if (stageEditing)
             {
@@ -1056,6 +1079,48 @@ namespace DrawBody.Prototype
                 uiManager?.HideLeaveSessionConfirm();
                 EnterTitle();
             }
+            else if (data.Kind == GimmickKindSpeciesSwapRequest && data.ObjectId == currentStageId)
+            {
+                SpeciesSwapMessage request = JsonUtility.FromJson<SpeciesSwapMessage>(data.Json);
+                if (request != null
+                    && request.RequesterId == data.PlayerId
+                    && request.TargetId == onlineManager.LocalPlayerId)
+                {
+                    ShowIncomingSpeciesSwap(request);
+                }
+            }
+            else if (data.Kind == GimmickKindSpeciesSwapResponse && data.ObjectId == currentStageId)
+            {
+                SpeciesSwapMessage response = JsonUtility.FromJson<SpeciesSwapMessage>(data.Json);
+                if (response == null)
+                {
+                    return;
+                }
+
+                if (response.TargetId != data.PlayerId && !IsOnlineHostPlayer(data.PlayerId))
+                {
+                    return;
+                }
+
+                if (!response.Accepted && response.RequesterId == onlineManager.LocalPlayerId)
+                {
+                    pendingOutgoingSpeciesSwap = null;
+                    pendingOutgoingSpeciesSwapExpiresAt = 0f;
+                    pendingSpeciesSwapDrawingState = null;
+                    drawManager?.ShowSpeciesSwapResult(false);
+                }
+                else if (response.Accepted && IsLocalOnlineHost(onlineManager.CurrentLobby))
+                {
+                    TryApplyAndBroadcastSpeciesSwap(response);
+                }
+            }
+            else if (data.Kind == GimmickKindSpeciesSwapApply
+                && data.ObjectId == currentStageId
+                && IsOnlineHostPlayer(data.PlayerId))
+            {
+                SpeciesSwapMessage applied = JsonUtility.FromJson<SpeciesSwapMessage>(data.Json);
+                ApplySpeciesSwap(applied);
+            }
         }
 
         public void Retry()
@@ -1091,6 +1156,7 @@ namespace DrawBody.Prototype
             cleared = false;
             ResetGoalProgress();
             CancelDrawingMode();
+            PreparePlayersForFullStageRetry();
             if (!string.IsNullOrEmpty(stageToReload) && stageToReload != "title")
             {
                 SelectStage(stageToReload);
@@ -1099,6 +1165,22 @@ namespace DrawBody.Prototype
             {
                 RespawnPlayers();
                 uiManager?.SetCleared(false);
+            }
+        }
+
+        private void PreparePlayersForFullStageRetry()
+        {
+            SetAllPlayerControls(false);
+            ResetAllCarryState();
+            PlayerController2D[] allPlayers = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < allPlayers.Length; i++)
+            {
+                PlayerController2D current = allPlayers[i];
+                if (current == null) continue;
+                current.GetComponent<PlayerCarryController>()?.ForceDrop();
+                current.ResetMotion();
+                current.SetControlsEnabled(false);
             }
         }
 
@@ -1165,7 +1247,9 @@ namespace DrawBody.Prototype
             Time.timeScale = 1f;
             uiManager?.SetDrawing(false);
             drawManager?.SetActive(false);
-            SaveDrawingState(player);
+            pendingSpeciesSwapDrawingState = drawManager != null
+                ? drawManager.CreateState()
+                : null;
             // ConfirmDrawing sends once before closing. Send the finalized state
             // again after the active player's state has been saved, so species
             // switches cannot remain stale on another client.
@@ -1187,9 +1271,12 @@ namespace DrawBody.Prototype
         public void SelectStage(string stageId)
         {
             CancelRespawnAnimations();
+            ResetSpeciesSwapState();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(true);
-            currentStageId = string.IsNullOrEmpty(stageId) ? "1-0" : stageId;
+            string nextStageId = string.IsNullOrEmpty(stageId) ? "1-0" : stageId;
+            bool enteringDifferentStage = currentStageId != nextStageId;
+            currentStageId = nextStageId;
             GameBgm.PlayForStage(currentStageId);
             ApplySpeciesRulesForCurrentStage();
             ResetGoalProgress();
@@ -1245,8 +1332,16 @@ namespace DrawBody.Prototype
             uiManager?.SetStageEditor(false);
             uiManager?.SetDrawing(false);
             uiManager?.SetCleared(false);
+            if (enteringDifferentStage && RequiresUniquePlayerSpecies)
+            {
+                AssignInitialUniqueSpecies();
+            }
             RespawnPlayers();
             SetActivePlayer(player != null ? player : primaryPlayer, true);
+            if (RequiresUniquePlayerSpecies)
+            {
+                SendLocalOnlineBodyData();
+            }
         }
 
         public void OpenStageEditor(string stageId)
@@ -1334,6 +1429,10 @@ namespace DrawBody.Prototype
             uiManager?.SetStageSelect(false);
             uiManager?.SetDrawing(false);
             uiManager?.SetCleared(false);
+            if (RequiresUniquePlayerSpecies)
+            {
+                AssignInitialUniqueSpecies();
+            }
             RespawnPlayers();
             if (hasDebugStart && player != null)
             {
@@ -1800,6 +1899,16 @@ namespace DrawBody.Prototype
                 || carry.IsDraggingFriend(remote.transform));
         }
 
+        public string GetOnlineCarrierPlayerId(PlayerController2D target)
+        {
+            // onlineCarryHeld describes this machine's local player being moved
+            // by another peer. Weapon recoil must be applied to that carrier,
+            // because the carried player's Rigidbody is kinematic.
+            return target != null && target == player && onlineCarryHeld
+                ? onlineCarrierPlayerId
+                : null;
+        }
+
         public bool IsOnlineBodyRebuildBlocked(string remotePlayerIdToCheck)
         {
             if (string.IsNullOrEmpty(remotePlayerIdToCheck))
@@ -2203,6 +2312,7 @@ namespace DrawBody.Prototype
             LoadDrawingState(player);
             remotePlayer.SetControlsEnabled(false);
             LiftPlayerOutOfGround(remotePlayer);
+            ResolveSimultaneousUniqueSpeciesConflict(bodyData.PlayerId, remoteState.Species);
         }
 
         public void SendLocalOnlineBodyData()
@@ -2251,6 +2361,13 @@ namespace DrawBody.Prototype
             if (drawingStates.TryGetValue(primaryPlayer, out DrawManager.DrawingState state))
             {
                 drawingStates[secondaryPlayer] = CloneDrawingState(state);
+            }
+
+            if (RequiresUniquePlayerSpecies)
+            {
+                AssignSpeciesToPlayer(secondaryPlayer, GetUniqueSpeciesForSlot(1));
+                ConfigureActivePlayerTargets();
+                LoadDrawingState(player);
             }
 
             BodyBuilder bodyBuilder = secondaryPlayer.GetComponent<BodyBuilder>();
@@ -2819,6 +2936,10 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            // Elimination stages hide defeated players. Reactivate before the
+            // physics-disabled teleport so an old controller cannot leave the
+            // player disabled across a full stage reload.
+            if (!targetPlayer.gameObject.activeSelf) targetPlayer.gameObject.SetActive(true);
             TeleportPlayerWithoutPhysics(targetPlayer, spawnPoint.position + offset);
             targetPlayer.ResetMotion();
             targetPlayer.SetControlsEnabled(enableControls && stageStarted && !drawing && !cleared && !stageEditing);
@@ -2864,6 +2985,23 @@ namespace DrawBody.Prototype
 
         private Vector3 GetRespawnOffset(PlayerController2D targetPlayer)
         {
+            if (targetPlayer != null && IsOnlineInStage())
+            {
+                OnlinePlayerInfo[] lobbyPlayers = onlineManager?.CurrentLobby?.Players;
+                string targetId = GetOnlinePlayerId(targetPlayer);
+                if (lobbyPlayers != null && lobbyPlayers.Length > 1 && !string.IsNullOrEmpty(targetId))
+                {
+                    for (int i = 0; i < lobbyPlayers.Length; i++)
+                    {
+                        if (lobbyPlayers[i] == null || lobbyPlayers[i].PlayerId != targetId) continue;
+                        // Every peer derives the same slot from the lobby order,
+                        // preventing replicated characters from spawning inside
+                        // each other and being pushed below the map.
+                        float centeredIndex = i - (lobbyPlayers.Length - 1) * 0.5f;
+                        return new Vector3(centeredIndex * 2.2f, 0f, 0f);
+                    }
+                }
+            }
             return targetPlayer != null && targetPlayer == secondaryPlayer ? new Vector3(1.25f, 0f, 0f) : Vector3.zero;
         }
 
@@ -2976,6 +3114,501 @@ namespace DrawBody.Prototype
             }
 
             drawingStates[targetPlayer] = drawManager.CreateState();
+        }
+
+        public bool CanConfirmSpeciesForActivePlayer(DrawManager.Species species)
+        {
+            if (!RequiresUniquePlayerSpecies)
+            {
+                return true;
+            }
+
+            List<PlayerController2D> otherPlayers = new List<PlayerController2D>();
+            AddPlayerOnce(otherPlayers, primaryPlayer);
+            AddPlayerOnce(otherPlayers, secondaryPlayer);
+            foreach (KeyValuePair<string, PlayerController2D> remote in onlineRemotePlayers)
+            {
+                AddPlayerOnce(otherPlayers, remote.Value);
+            }
+
+            for (int i = 0; i < otherPlayers.Count; i++)
+            {
+                PlayerController2D other = otherPlayers[i];
+                if (other == null || other == player)
+                {
+                    continue;
+                }
+
+                if (TryGetConfirmedSpecies(other, out DrawManager.Species usedSpecies)
+                    && usedSpecies == species)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool RequestSpeciesSwap(DrawManager.Species requestedSpecies)
+        {
+            if (!RequiresUniquePlayerSpecies || player == null)
+            {
+                return false;
+            }
+
+            if (pendingOutgoingSpeciesSwap != null)
+            {
+                drawManager?.ShowSpeciesSwapPending();
+                return true;
+            }
+
+            PlayerController2D target = FindPlayerUsingSpecies(requestedSpecies, player);
+            if (target == null || !TryGetConfirmedSpecies(player, out DrawManager.Species currentSpecies))
+            {
+                return false;
+            }
+
+            string requesterId = GetSwapPlayerId(player);
+            string targetId = GetSwapPlayerId(target);
+            if (string.IsNullOrEmpty(requesterId) || string.IsNullOrEmpty(targetId))
+            {
+                return false;
+            }
+
+            // Preserve the requester's edits for the desired species while the
+            // other player decides. The confirmed character stays unchanged
+            // until the host applies both sides atomically.
+            SaveDrawingState(player);
+            SpeciesSwapMessage request = new SpeciesSwapMessage
+            {
+                RequestId = System.Guid.NewGuid().ToString("N"),
+                RequesterId = requesterId,
+                TargetId = targetId,
+                RequesterSpecies = (int)currentSpecies,
+                TargetSpecies = (int)requestedSpecies
+            };
+            pendingOutgoingSpeciesSwap = request;
+            pendingOutgoingSpeciesSwapExpiresAt = Time.unscaledTime + 20f;
+
+            if (!IsOnlineInStage())
+            {
+                pendingIncomingSpeciesSwap = request;
+                pendingIncomingSpeciesSwapExpiresAt = Time.unscaledTime + 15f;
+                uiManager?.ShowSpeciesSwapConfirm(
+                    GetPlayerDisplayName(requesterId),
+                    requestedSpecies,
+                    currentSpecies);
+                return true;
+            }
+
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = currentStageId,
+                Kind = GimmickKindSpeciesSwapRequest,
+                Json = JsonUtility.ToJson(request)
+            });
+            drawManager?.ShowSpeciesSwapPending();
+            return true;
+        }
+
+        public void AcceptSpeciesSwapRequest()
+        {
+            SpeciesSwapMessage request = pendingIncomingSpeciesSwap;
+            pendingIncomingSpeciesSwap = null;
+            pendingIncomingSpeciesSwapExpiresAt = 0f;
+            uiManager?.HideSpeciesSwapConfirm();
+            if (request == null)
+            {
+                return;
+            }
+
+            request.Accepted = true;
+            if (!IsOnlineInStage())
+            {
+                ApplySpeciesSwap(request);
+                return;
+            }
+
+            if (IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                TryApplyAndBroadcastSpeciesSwap(request);
+                return;
+            }
+
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = currentStageId,
+                Kind = GimmickKindSpeciesSwapResponse,
+                Json = JsonUtility.ToJson(request)
+            });
+        }
+
+        public void RejectSpeciesSwapRequest()
+        {
+            SpeciesSwapMessage request = pendingIncomingSpeciesSwap;
+            pendingIncomingSpeciesSwap = null;
+            pendingIncomingSpeciesSwapExpiresAt = 0f;
+            uiManager?.HideSpeciesSwapConfirm();
+            if (request == null || !IsOnlineInStage())
+            {
+                pendingOutgoingSpeciesSwap = null;
+                pendingOutgoingSpeciesSwapExpiresAt = 0f;
+                pendingSpeciesSwapDrawingState = null;
+                drawManager?.ShowSpeciesSwapResult(false);
+                return;
+            }
+
+            request.Accepted = false;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = currentStageId,
+                Kind = GimmickKindSpeciesSwapResponse,
+                Json = JsonUtility.ToJson(request)
+            });
+        }
+
+        private void ShowIncomingSpeciesSwap(SpeciesSwapMessage request)
+        {
+            if (request == null || pendingIncomingSpeciesSwap != null)
+            {
+                return;
+            }
+
+            pendingIncomingSpeciesSwap = request;
+            pendingIncomingSpeciesSwapExpiresAt = Time.unscaledTime + 15f;
+            uiManager?.ShowSpeciesSwapConfirm(
+                GetPlayerDisplayName(request.RequesterId),
+                (DrawManager.Species)request.TargetSpecies,
+                (DrawManager.Species)request.RequesterSpecies);
+        }
+
+        private void TryApplyAndBroadcastSpeciesSwap(SpeciesSwapMessage request)
+        {
+            if (request == null || !request.Accepted)
+            {
+                return;
+            }
+
+            PlayerController2D requester = GetSwapPlayer(request.RequesterId);
+            PlayerController2D target = GetSwapPlayer(request.TargetId);
+            if (requester == null || target == null
+                || !TryGetConfirmedSpecies(requester, out DrawManager.Species requesterSpecies)
+                || !TryGetConfirmedSpecies(target, out DrawManager.Species targetSpecies)
+                || requesterSpecies != (DrawManager.Species)request.RequesterSpecies
+                || targetSpecies != (DrawManager.Species)request.TargetSpecies)
+            {
+                request.Accepted = false;
+                onlineManager.SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = currentStageId,
+                    Kind = GimmickKindSpeciesSwapResponse,
+                    Json = JsonUtility.ToJson(request)
+                });
+                return;
+            }
+
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = currentStageId,
+                Kind = GimmickKindSpeciesSwapApply,
+                Json = JsonUtility.ToJson(request)
+            });
+            ApplySpeciesSwap(request);
+        }
+
+        private void ApplySpeciesSwap(SpeciesSwapMessage request)
+        {
+            if (request == null)
+            {
+                return;
+            }
+
+            PlayerController2D requester = GetSwapPlayer(request.RequesterId);
+            PlayerController2D target = GetSwapPlayer(request.TargetId);
+            if (requester == null || target == null)
+            {
+                return;
+            }
+
+            bool localWasRequester = request.RequesterId == GetSwapPlayerId(player);
+            bool localWasTarget = request.TargetId == GetSwapPlayerId(player);
+            if (localWasRequester && pendingSpeciesSwapDrawingState != null)
+            {
+                drawingStates[requester] = pendingSpeciesSwapDrawingState;
+            }
+
+            AssignSpeciesToPlayer(requester, (DrawManager.Species)request.TargetSpecies);
+            AssignSpeciesToPlayer(target, (DrawManager.Species)request.RequesterSpecies);
+            ConfigureActivePlayerTargets();
+            LoadDrawingState(player);
+            LiftPlayerOutOfGround(requester);
+            LiftPlayerOutOfGround(target);
+            pendingIncomingSpeciesSwap = null;
+            pendingIncomingSpeciesSwapExpiresAt = 0f;
+
+            if (localWasRequester)
+            {
+                pendingOutgoingSpeciesSwap = null;
+                pendingOutgoingSpeciesSwapExpiresAt = 0f;
+                pendingSpeciesSwapDrawingState = null;
+                drawManager?.ShowSpeciesSwapResult(true);
+                if (drawing)
+                {
+                    ConfirmDrawingMode();
+                }
+            }
+
+            if (localWasRequester || localWasTarget)
+            {
+                SendLocalOnlineBodyData();
+            }
+        }
+
+        private void UpdateSpeciesSwapTimeouts()
+        {
+            if (pendingIncomingSpeciesSwap != null
+                && pendingIncomingSpeciesSwapExpiresAt > 0f
+                && Time.unscaledTime >= pendingIncomingSpeciesSwapExpiresAt)
+            {
+                RejectSpeciesSwapRequest();
+            }
+
+            if (pendingOutgoingSpeciesSwap != null
+                && pendingOutgoingSpeciesSwapExpiresAt > 0f
+                && Time.unscaledTime >= pendingOutgoingSpeciesSwapExpiresAt)
+            {
+                pendingOutgoingSpeciesSwap = null;
+                pendingOutgoingSpeciesSwapExpiresAt = 0f;
+                pendingSpeciesSwapDrawingState = null;
+                drawManager?.ShowSpeciesSwapResult(false);
+            }
+        }
+
+        private void ResetSpeciesSwapState()
+        {
+            pendingIncomingSpeciesSwap = null;
+            pendingOutgoingSpeciesSwap = null;
+            pendingSpeciesSwapDrawingState = null;
+            pendingIncomingSpeciesSwapExpiresAt = 0f;
+            pendingOutgoingSpeciesSwapExpiresAt = 0f;
+            uiManager?.HideSpeciesSwapConfirm();
+        }
+
+        private PlayerController2D FindPlayerUsingSpecies(
+            DrawManager.Species species,
+            PlayerController2D except)
+        {
+            List<PlayerController2D> candidates = new List<PlayerController2D>();
+            AddPlayerOnce(candidates, primaryPlayer);
+            AddPlayerOnce(candidates, secondaryPlayer);
+            foreach (KeyValuePair<string, PlayerController2D> remote in onlineRemotePlayers)
+            {
+                AddPlayerOnce(candidates, remote.Value);
+            }
+
+            for (int i = 0; i < candidates.Count; i++)
+            {
+                if (candidates[i] != null && candidates[i] != except
+                    && TryGetConfirmedSpecies(candidates[i], out DrawManager.Species used)
+                    && used == species)
+                {
+                    return candidates[i];
+                }
+            }
+
+            return null;
+        }
+
+        private string GetSwapPlayerId(PlayerController2D target)
+        {
+            if (IsOnlineInStage())
+            {
+                return GetOnlinePlayerId(target);
+            }
+
+            if (target == primaryPlayer) return "offline_primary";
+            if (target == secondaryPlayer) return "offline_secondary";
+            return null;
+        }
+
+        private PlayerController2D GetSwapPlayer(string playerId)
+        {
+            if (playerId == "offline_primary") return primaryPlayer;
+            if (playerId == "offline_secondary") return secondaryPlayer;
+            return GetOnlinePlayerController(playerId);
+        }
+
+        private string GetPlayerDisplayName(string playerId)
+        {
+            OnlinePlayerInfo[] lobbyPlayers = onlineManager?.CurrentLobby?.Players;
+            if (lobbyPlayers != null)
+            {
+                for (int i = 0; i < lobbyPlayers.Length; i++)
+                {
+                    if (lobbyPlayers[i] != null && lobbyPlayers[i].PlayerId == playerId)
+                    {
+                        return string.IsNullOrEmpty(lobbyPlayers[i].DisplayName)
+                            ? LocalizationManager.Format("online_player_number", i + 1)
+                            : lobbyPlayers[i].DisplayName;
+                    }
+                }
+            }
+
+            return playerId == "offline_secondary"
+                ? LocalizationManager.Format("online_player_number", 2)
+                : LocalizationManager.Format("online_player_number", 1);
+        }
+
+        private bool TryGetConfirmedSpecies(PlayerController2D target, out DrawManager.Species species)
+        {
+            if (target != null
+                && drawingStates.TryGetValue(target, out DrawManager.DrawingState state)
+                && state != null)
+            {
+                species = state.Species;
+                return true;
+            }
+
+            PlayerAbilityController abilities = target != null
+                ? target.GetComponent<PlayerAbilityController>()
+                : null;
+            if (abilities != null)
+            {
+                species = abilities.CurrentProfile.Species;
+                return true;
+            }
+
+            species = DrawManager.Species.Human;
+            return false;
+        }
+
+        private void AssignInitialUniqueSpecies()
+        {
+            if (drawManager == null || !RequiresUniquePlayerSpecies)
+            {
+                return;
+            }
+
+            SaveDrawingState(player);
+
+            if (IsOnlineInStage() || onlineManager?.CurrentLobby != null)
+            {
+                string localPlayerId = onlineManager != null ? onlineManager.LocalPlayerId : null;
+                int localSlot = GetLobbyPlayerSlot(localPlayerId);
+                AssignSpeciesToPlayer(primaryPlayer, GetUniqueSpeciesForSlot(Mathf.Max(0, localSlot)));
+            }
+            else
+            {
+                AssignSpeciesToPlayer(primaryPlayer, GetUniqueSpeciesForSlot(0));
+                AssignSpeciesToPlayer(secondaryPlayer, GetUniqueSpeciesForSlot(1));
+            }
+
+            ConfigureActivePlayerTargets();
+            LoadDrawingState(player);
+        }
+
+        private void AssignSpeciesToPlayer(PlayerController2D target, DrawManager.Species species)
+        {
+            if (target == null || drawManager == null)
+            {
+                return;
+            }
+
+            if (!drawingStates.TryGetValue(target, out DrawManager.DrawingState state) || state == null)
+            {
+                state = CloneDrawingState(drawManager.CreateState());
+            }
+
+            state.Species = species;
+            state.Part = DrawManager.BodyPart.Torso;
+            drawingStates[target] = state;
+            drawManager.SetBuildTarget(
+                target.GetComponent<BodyBuilder>(),
+                target.GetComponent<PlayerAbilityController>());
+            drawManager.LoadState(state, true);
+        }
+
+        private static DrawManager.Species GetUniqueSpeciesForSlot(int slot)
+        {
+            IReadOnlyList<DrawManager.Species> ordered = StageSpeciesRules.GetOrderedSpecies();
+            return ordered[Mathf.Abs(slot) % ordered.Count];
+        }
+
+        private void ResolveSimultaneousUniqueSpeciesConflict(
+            string incomingPlayerId,
+            DrawManager.Species incomingSpecies)
+        {
+            if (!RequiresUniquePlayerSpecies
+                || primaryPlayer == null
+                || onlineManager?.CurrentLobby?.Players == null
+                || string.IsNullOrEmpty(incomingPlayerId)
+                || !TryGetConfirmedSpecies(primaryPlayer, out DrawManager.Species localSpecies)
+                || localSpecies != incomingSpecies)
+            {
+                return;
+            }
+
+            int localSlot = GetLobbyPlayerSlot(onlineManager.LocalPlayerId);
+            int incomingSlot = GetLobbyPlayerSlot(incomingPlayerId);
+            if (localSlot < 0 || incomingSlot < 0 || localSlot <= incomingSlot)
+            {
+                // The earlier lobby slot keeps the species. The other peer runs
+                // this same rule and moves itself, so every client converges.
+                return;
+            }
+
+            IReadOnlyList<DrawManager.Species> ordered = StageSpeciesRules.GetOrderedSpecies();
+            for (int i = 0; i < ordered.Count; i++)
+            {
+                DrawManager.Species candidate = ordered[i];
+                if (!IsSpeciesUsedByAnotherPlayer(candidate))
+                {
+                    AssignSpeciesToPlayer(primaryPlayer, candidate);
+                    ConfigureActivePlayerTargets();
+                    LoadDrawingState(player);
+                    LiftPlayerOutOfGround(primaryPlayer);
+                    SendLocalOnlineBodyData();
+                    return;
+                }
+            }
+        }
+
+        private int GetLobbyPlayerSlot(string playerId)
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null || string.IsNullOrEmpty(playerId))
+            {
+                return -1;
+            }
+
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] != null && players[i].PlayerId == playerId)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private bool IsSpeciesUsedByAnotherPlayer(DrawManager.Species species)
+        {
+            foreach (KeyValuePair<string, PlayerController2D> remote in onlineRemotePlayers)
+            {
+                if (remote.Value != null
+                    && TryGetConfirmedSpecies(remote.Value, out DrawManager.Species remoteSpecies)
+                    && remoteSpecies == species)
+                {
+                    return true;
+                }
+            }
+
+            return secondaryPlayer != null
+                && secondaryPlayer != primaryPlayer
+                && !onlineRemotePlayers.ContainsValue(secondaryPlayer)
+                && TryGetConfirmedSpecies(secondaryPlayer, out DrawManager.Species secondarySpecies)
+                && secondarySpecies == species;
         }
 
         private void ApplySpeciesRulesForCurrentStage()

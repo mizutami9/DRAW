@@ -89,6 +89,7 @@ namespace DrawBody.Prototype
         private bool scriptedJumpHeld;
         private bool scriptedJumpPressed;
         private bool friendCarried;
+        private float weaponRecoilMomentumUntil = -100f;
 
         public bool IsGrounded { get; private set; }
         public bool ControlsEnabled => controlsEnabled;
@@ -111,6 +112,20 @@ namespace DrawBody.Prototype
             PlayerSpeedBoostEffect effect = GetComponent<PlayerSpeedBoostEffect>();
             if (effect == null) effect = gameObject.AddComponent<PlayerSpeedBoostEffect>();
             effect.Activate(clampedMultiplier, clampedDuration);
+        }
+
+        public void ApplyWeaponRecoil(Vector2 velocityChange)
+        {
+            if (rb == null || rb.bodyType != RigidbodyType2D.Dynamic
+                || velocityChange.sqrMagnitude < 0.01f) return;
+            rb.linearVelocity = Vector2.ClampMagnitude(
+                rb.linearVelocity + velocityChange, 28f);
+            // Normal movement acceleration is intentionally strong. Without a
+            // brief momentum window it cancels bazooka recoil in a few physics
+            // frames and the carried pair appears not to move at all.
+            weaponRecoilMomentumUntil = Mathf.Max(
+                weaponRecoilMomentumUntil, Time.fixedTime + 0.48f);
+            IsGrounded = false;
         }
 
         public void SetScriptedInput(float horizontal, bool jumpHeld, bool jumpPressed = false)
@@ -410,6 +425,10 @@ namespace DrawBody.Prototype
                 && Input.GetKey(KeyCode.Space);
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
+            horizontalInput = 0f;
+            lastJumpPressedAt = -100f;
+            scriptedJumpPressed = false;
+            weaponRecoilMomentumUntil = -100f;
             wallJumpControlLockUntil = -100f;
             wallJumpMomentumUntil = -100f;
             wallJumpSourceSide = 0;
@@ -521,6 +540,10 @@ namespace DrawBody.Prototype
 
         private void Move()
         {
+            if (Time.fixedTime < weaponRecoilMomentumUntil)
+            {
+                return;
+            }
             if (Time.fixedTime < wallJumpControlLockUntil)
             {
                 rb.linearVelocity = new Vector2(wallJumpLockedVelocityX, rb.linearVelocity.y);

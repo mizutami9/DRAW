@@ -760,7 +760,9 @@ namespace DrawBody.Prototype
 
             if (move.sqrMagnitude > 0.01f)
             {
-                worldCamera.transform.position += move.normalized * cameraMoveSpeed * Time.unscaledDeltaTime;
+                // ズームサイズに比例させることで、広域/狭域どちらでも体感速度を一定にする
+                float effectiveSpeed = cameraMoveSpeed * worldCamera.orthographicSize;
+                worldCamera.transform.position += move.normalized * effectiveSpeed * Time.unscaledDeltaTime;
             }
 
             float wheel = Input.mouseScrollDelta.y;

@@ -57,6 +57,7 @@ namespace DrawBody.Prototype
 
         private readonly List<StageBombBreakableWall> letterBlocks = new List<StageBombBreakableWall>();
         private readonly Dictionary<string, StageBlockBreakerEnemy> enemies = new Dictionary<string, StageBlockBreakerEnemy>();
+        private readonly Dictionary<string, EnemyState> enemyStates = new Dictionary<string, EnemyState>();
         private readonly HashSet<string> eliminatedIds = new HashSet<string>();
         private readonly HashSet<string> participantIds = new HashSet<string>();
         private readonly List<PlayerController2D> hiddenPlayers = new List<PlayerController2D>();
@@ -77,6 +78,7 @@ namespace DrawBody.Prototype
         private float nextEnemyAt;
         private float failedRestartRemaining;
         private float nextStateAt;
+        private float nextEnemySnapshotAt;
         private int bombSequence;
         private int enemySequence;
         private int stateSequence;
@@ -306,12 +308,14 @@ namespace DrawBody.Prototype
             StageBlockBreakerEnemy enemy = StageBlockBreakerEnemy.Create(
                 transform, this, state.EnemyId, state.Position, state.Direction, state.Speed);
             enemies[state.EnemyId] = enemy;
+            enemyStates[state.EnemyId] = state;
         }
 
         private void RemoveEnemy(string id)
         {
             if (!enemies.TryGetValue(id, out StageBlockBreakerEnemy enemy)) return;
             enemies.Remove(id);
+            enemyStates.Remove(id);
             if (enemy != null) enemy.DefeatVisual();
         }
 
@@ -730,7 +734,10 @@ namespace DrawBody.Prototype
             else if (data.Kind == KindEnemySpawn && IsHostPlayer(data.PlayerId) && !HasAuthority())
             {
                 EnemyState state = JsonUtility.FromJson<EnemyState>(data.Json);
-                if (state != null && state.Sequence > lastEnemySequence) ApplyEnemySpawn(state);
+                // Snapshots resend every currently alive enemy. ApplyEnemySpawn
+                // deduplicates by EnemyId, so an older still-alive enemy must not
+                // be discarded merely because a newer sequence arrived first.
+                if (state != null) ApplyEnemySpawn(state);
             }
             else if (data.Kind == KindEnemyDefeat && IsHostPlayer(data.PlayerId))
             {
@@ -766,6 +773,16 @@ namespace DrawBody.Prototype
                 PhaseRemaining = phaseRemaining,
                 EliminatedIds = new List<string>(eliminatedIds).ToArray()
             });
+            if (force || Time.unscaledTime >= nextEnemySnapshotAt)
+            {
+                nextEnemySnapshotAt = Time.unscaledTime + 0.75f;
+                foreach (KeyValuePair<string, EnemyState> pair in enemyStates)
+                {
+                    if (enemies.TryGetValue(pair.Key, out StageBlockBreakerEnemy enemy)
+                        && enemy != null && enemy.gameObject.activeInHierarchy)
+                        Send(KindEnemySpawn, pair.Value);
+                }
+            }
         }
 
         private void Send<T>(string kind, T value)
@@ -811,6 +828,7 @@ namespace DrawBody.Prototype
 
         private bool IsHostPlayer(string id)
         {
+            if (onlineManager != null && onlineManager.IsHostPlayer(id)) return true;
             OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
             if (players == null) return false;
             for (int i = 0; i < players.Length; i++)

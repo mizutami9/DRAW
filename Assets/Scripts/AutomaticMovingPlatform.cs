@@ -16,6 +16,8 @@ namespace DrawBody.Prototype
         private bool movingToEnd = true;
         private bool configured;
 
+        public Vector2 SurfaceVelocity { get; private set; }
+
         public void Configure(Rigidbody2D targetBody, float distance, float angle, float speed)
         {
             body = targetBody;
@@ -32,15 +34,21 @@ namespace DrawBody.Prototype
         private void FixedUpdate()
         {
             if (!configured
-                || Time.time < resumeAt
                 || syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost)
             {
+                SurfaceVelocity = Vector2.zero;
+                return;
+            }
+            if (Time.time < resumeAt)
+            {
+                SurfaceVelocity = Vector2.zero;
                 return;
             }
 
             Vector2 current = body != null ? body.position : (Vector2)transform.position;
             Vector2 target = movingToEnd ? endPosition : startPosition;
             Vector2 next = Vector2.MoveTowards(current, target, movementSpeed * Time.fixedDeltaTime);
+            SurfaceVelocity = (next - current) / Mathf.Max(Time.fixedDeltaTime, 0.0001f);
             if (body != null)
             {
                 body.MovePosition(next);

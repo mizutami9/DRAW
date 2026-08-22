@@ -113,10 +113,28 @@ namespace DrawBody.Prototype
                 }
 
                 Vector2 pivot = GetPartAnimationPivot(part, points, builtSpecies, hasTorsoBounds, torsoBounds);
-                List<RuntimeBodySegment> optimizedSegments = BuildOptimizedRuntimeSegments(points);
+                List<RuntimeBodySegment> visualSegments = BuildRuntimeVisualSegments(points);
+                int colliderLimit = part == DrawManager.BodyPart.Head ? 96 : MaxRuntimeSegmentsPerPart;
+                List<RuntimeBodySegment> optimizedSegments = BuildOptimizedRuntimeSegments(visualSegments, colliderLimit);
+                for (int i = 0; i < visualSegments.Count; i++)
+                {
+                    CreateSegment(
+                        part,
+                        visualSegments[i].Start,
+                        visualSegments[i].End,
+                        pivot,
+                        true,
+                        false);
+                }
                 for (int i = 0; i < optimizedSegments.Count; i++)
                 {
-                    CreateSegment(part, optimizedSegments[i].Start, optimizedSegments[i].End, pivot);
+                    CreateSegment(
+                        part,
+                        optimizedSegments[i].Start,
+                        optimizedSegments[i].End,
+                        pivot,
+                        false,
+                        true);
                 }
             }
 
@@ -199,12 +217,14 @@ namespace DrawBody.Prototype
         {
             public Vector2 Start;
             public Vector2 End;
+            public int StrokeIndex;
         }
 
-        private List<RuntimeBodySegment> BuildOptimizedRuntimeSegments(IReadOnlyList<Vector2> source)
+        private List<RuntimeBodySegment> BuildRuntimeVisualSegments(IReadOnlyList<Vector2> source)
         {
             List<RuntimeBodySegment> candidates = new List<RuntimeBodySegment>();
             List<Vector2> stroke = new List<Vector2>();
+            int strokeIndex = 0;
             for (int i = 0; i <= source.Count; i++)
             {
                 bool endOfStroke = i == source.Count || DrawManager.IsBreakPoint(source[i]);
@@ -219,28 +239,84 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                AppendSimplifiedStrokeSegments(stroke, candidates);
+                AppendSimplifiedStrokeSegments(stroke, candidates, strokeIndex++);
                 stroke.Clear();
             }
 
+            return candidates;
+        }
+
+        private List<RuntimeBodySegment> BuildOptimizedRuntimeSegments(
+            List<RuntimeBodySegment> candidates,
+            int segmentLimit)
+        {
+
             if (candidates.Count <= 1)
             {
-                return candidates;
+                return new List<RuntimeBodySegment>(candidates);
             }
 
-            List<RuntimeBodySegment> optimized = new List<RuntimeBodySegment>(
-                Mathf.Min(candidates.Count, MaxRuntimeSegmentsPerPart));
-            HashSet<long> occupied = new HashSet<long>();
-            for (int i = 0; i < candidates.Count && optimized.Count < MaxRuntimeSegmentsPerPart; i++)
+            // Never truncate the tail of a drawing. Each distinct stroke gets at
+            // least one continuous collider, and dense strokes are represented
+            // by evenly distributed chords from their beginning to their end.
+            // Thus detail can be simplified for physics cost, but no region or
+            // later stroke silently loses collision altogether.
+            List<List<RuntimeBodySegment>> strokes = new List<List<RuntimeBodySegment>>();
+            Dictionary<int, int> strokeSlots = new Dictionary<int, int>();
+            for (int i = 0; i < candidates.Count; i++)
             {
                 RuntimeBodySegment segment = candidates[i];
-                if (!AddsNewRuntimeCoverage(segment, occupied))
+                if (!strokeSlots.TryGetValue(segment.StrokeIndex, out int slot))
                 {
-                    continue;
+                    slot = strokes.Count;
+                    strokeSlots.Add(segment.StrokeIndex, slot);
+                    strokes.Add(new List<RuntimeBodySegment>());
                 }
+                strokes[slot].Add(segment);
+            }
 
-                optimized.Add(segment);
-                AddRuntimeCoverage(segment, occupied);
+            int effectiveLimit = Mathf.Max(segmentLimit, strokes.Count);
+            int[] quotas = new int[strokes.Count];
+            int assigned = 0;
+            for (int i = 0; i < strokes.Count; i++)
+            {
+                quotas[i] = 1;
+                assigned++;
+            }
+            while (assigned < effectiveLimit)
+            {
+                int best = -1;
+                float bestPressure = 1f;
+                for (int i = 0; i < strokes.Count; i++)
+                {
+                    if (quotas[i] >= strokes[i].Count) continue;
+                    float pressure = strokes[i].Count / (float)quotas[i];
+                    if (pressure <= bestPressure) continue;
+                    bestPressure = pressure;
+                    best = i;
+                }
+                if (best < 0) break;
+                quotas[best]++;
+                assigned++;
+            }
+
+            List<RuntimeBodySegment> optimized = new List<RuntimeBodySegment>(assigned);
+            for (int stroke = 0; stroke < strokes.Count; stroke++)
+            {
+                List<RuntimeBodySegment> source = strokes[stroke];
+                int quota = Mathf.Min(quotas[stroke], source.Count);
+                for (int part = 0; part < quota; part++)
+                {
+                    int first = Mathf.FloorToInt(part * source.Count / (float)quota);
+                    int lastExclusive = Mathf.FloorToInt((part + 1) * source.Count / (float)quota);
+                    int last = Mathf.Max(first, lastExclusive - 1);
+                    optimized.Add(new RuntimeBodySegment
+                    {
+                        Start = source[first].Start,
+                        End = source[last].End,
+                        StrokeIndex = source[first].StrokeIndex
+                    });
+                }
             }
 
             return optimized;
@@ -248,7 +324,8 @@ namespace DrawBody.Prototype
 
         private static void AppendSimplifiedStrokeSegments(
             List<Vector2> stroke,
-            List<RuntimeBodySegment> destination)
+            List<RuntimeBodySegment> destination,
+            int strokeIndex)
         {
             if (stroke.Count < 2)
             {
@@ -279,7 +356,8 @@ namespace DrawBody.Prototype
                 destination.Add(new RuntimeBodySegment
                 {
                     Start = simplified[i - 1],
-                    End = simplified[i]
+                    End = simplified[i],
+                    StrokeIndex = strokeIndex
                 });
             }
         }
@@ -407,8 +485,17 @@ namespace DrawBody.Prototype
 
         public void SetFacingDirection(int direction)
         {
-            facingDirection = direction < 0 ? -1 : 1;
+            int nextFacing = direction < 0 ? -1 : 1;
+            if (nextFacing != facingDirection && bodyRoot != null)
+            {
+                // An asymmetric hand-drawn head moves to the opposite side when
+                // it is mirrored. Move the grains already inside it through the
+                // same reflection so turning does not dump the entire load.
+                GetComponent<StageGrainCarrier>()?.MirrorContainedParticles(bodyRoot.position.x);
+            }
+            facingDirection = nextFacing;
             ApplyFacing();
+            Physics2D.SyncTransforms();
         }
 
         public void SetTurtleShellPose(bool active)
@@ -724,7 +811,13 @@ namespace DrawBody.Prototype
             return hasPoint;
         }
 
-        private void CreateSegment(DrawManager.BodyPart part, Vector2 start, Vector2 end, Vector2 pivot)
+        private void CreateSegment(
+            DrawManager.BodyPart part,
+            Vector2 start,
+            Vector2 end,
+            Vector2 pivot,
+            bool createLine,
+            bool createCollider)
         {
             Vector2 delta = end - start;
             float length = delta.magnitude;
@@ -739,28 +832,36 @@ namespace DrawBody.Prototype
             segment.transform.localPosition = (start + end) * 0.5f;
             segment.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);
 
-            LineRenderer line = segment.AddComponent<LineRenderer>();
-            line.useWorldSpace = false;
-            line.positionCount = 2;
-            line.SetPosition(0, new Vector3(-length * 0.5f, 0f, 0f));
-            line.SetPosition(1, new Vector3(length * 0.5f, 0f, 0f));
-            line.startWidth = lineWidth;
-            line.endWidth = lineWidth;
-            line.numCapVertices = 8;
-            line.numCornerVertices = 4;
-            line.sortingOrder = 10;
-            line.material = GetLineMaterial();
-            line.startColor = playerColor;
-            line.endColor = playerColor;
+            LineRenderer line = null;
+            if (createLine)
+            {
+                line = segment.AddComponent<LineRenderer>();
+                line.useWorldSpace = false;
+                line.positionCount = 2;
+                line.SetPosition(0, new Vector3(-length * 0.5f, 0f, 0f));
+                line.SetPosition(1, new Vector3(length * 0.5f, 0f, 0f));
+                line.startWidth = lineWidth;
+                line.endWidth = lineWidth;
+                line.numCapVertices = 8;
+                line.numCornerVertices = 4;
+                line.sortingOrder = 10;
+                line.material = GetLineMaterial();
+                line.startColor = playerColor;
+                line.endColor = playerColor;
+            }
 
-            CapsuleCollider2D collider = segment.AddComponent<CapsuleCollider2D>();
-            collider.direction = CapsuleDirection2D.Horizontal;
-            collider.size = new Vector2(length + colliderThickness, colliderThickness);
-            collider.offset = Vector2.zero;
-            collider.sharedMaterial = GetPlayerContactMaterial();
-            // Arms are animated and mirrored independently from the locomotion body.
-            // Keeping them solid can teleport a long asymmetric arm into a wall on turn.
-            collider.isTrigger = IsHumanArm(part);
+            CapsuleCollider2D collider = null;
+            if (createCollider)
+            {
+                collider = segment.AddComponent<CapsuleCollider2D>();
+                collider.direction = CapsuleDirection2D.Horizontal;
+                collider.size = new Vector2(length + colliderThickness, colliderThickness);
+                collider.offset = Vector2.zero;
+                collider.sharedMaterial = GetPlayerContactMaterial();
+                // Arms are animated and mirrored independently from the locomotion body.
+                // Keeping them solid can teleport a long asymmetric arm into a wall on turn.
+                collider.isTrigger = IsHumanArm(part);
+            }
 
             generatedObjects.Add(segment);
             generatedSegments.Add(new GeneratedSegment

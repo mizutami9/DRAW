@@ -20,6 +20,8 @@ namespace DrawBody.Prototype
         private float movementSpeed = 3.2f;
         private bool configured;
 
+        public Vector2 SurfaceVelocity { get; private set; }
+
         public void Configure(float limit, float speed)
         {
             movementLimit = Mathf.Clamp(limit, 1f, 100f);
@@ -58,6 +60,7 @@ namespace DrawBody.Prototype
                 || activeInputs.Count == 0
                 || syncManager != null && syncManager.ShouldAskHost)
             {
+                SurfaceVelocity = Vector2.zero;
                 return;
             }
 
@@ -69,6 +72,7 @@ namespace DrawBody.Prototype
 
             if (input.sqrMagnitude < 0.001f)
             {
+                SurfaceVelocity = Vector2.zero;
                 return;
             }
 
@@ -79,6 +83,7 @@ namespace DrawBody.Prototype
             offset.x = Mathf.Clamp(offset.x, -movementLimit, movementLimit);
             offset.y = Mathf.Clamp(offset.y, -movementLimit, movementLimit);
             next = startPosition + offset;
+            SurfaceVelocity = (next - current) / Mathf.Max(Time.fixedDeltaTime, 0.0001f);
 
             if (body != null)
             {

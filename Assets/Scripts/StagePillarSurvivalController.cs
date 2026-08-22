@@ -318,16 +318,19 @@ namespace DrawBody.Prototype
                 Size = Random.Range(0.78f, 1.15f),
                 Speed = Mathf.Lerp(1.8f, 3.8f, progress)
             };
-            ApplyEnemy(state);
-            if (IsOnlineActive() && onlineManager != null)
+            if (syncManager != null)
             {
-                onlineManager.SendGimmickData(new OnlineGimmickData
-                {
-                    ObjectId = StageId,
-                    Kind = KindEnemy,
-                    Json = JsonUtility.ToJson(state)
-                });
+                appliedEnemySequences.Add(state.Sequence);
+                syncManager.SpawnDropperEnemy(
+                    "pillar_survival_enemy_" + state.Sequence,
+                    (StageObjectType)state.Type,
+                    state.Position,
+                    state.Size,
+                    state.Speed,
+                    state.Velocity.x,
+                    state.Velocity);
             }
+            else ApplyEnemy(state);
         }
 
         private void ApplyEnemy(EnemyState state)
@@ -672,6 +675,7 @@ namespace DrawBody.Prototype
 
         private bool IsHostPlayer(string id)
         {
+            if (onlineManager != null && onlineManager.IsHostPlayer(id)) return true;
             OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
             if (players == null) return false;
             for (int i = 0; i < players.Length; i++)

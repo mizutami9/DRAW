@@ -13,7 +13,8 @@ namespace DrawBody.Prototype
         private const string AttackKind = "boss_attack";
         private const string EliminateRequestKind = "boss_eliminate_request";
         private const int MaximumHealth = 100;
-        private const float EntryX = -1.4f;
+        private const float WaitingRoomLeftX = -8.0f;
+        private const float WaitingRoomRightX = -3.0f;
         private const float LeftArenaX = -1.4f;
         private const float RightArenaX = 24.4f;
         private const float FloorY = -2.45f;
@@ -32,6 +33,7 @@ namespace DrawBody.Prototype
             public float Facing;
             public bool Invulnerable;
             public bool Charging;
+            public bool ChargeImpactActive;
             public float ChargeRemaining;
             public string[] EliminatedIds;
         }
@@ -53,6 +55,7 @@ namespace DrawBody.Prototype
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageObjectFactory objectFactory;
+        private StageGimmickSyncManager syncManager;
         private Transform bossRoot;
         private Rigidbody2D bossBody;
         private Collider2D bossCollider;
@@ -89,11 +92,14 @@ namespace DrawBody.Prototype
         private bool spawnedMidBomber;
         private bool spawnedLowBomber;
         private bool charging;
+        private bool chargeImpactActive;
         private float chargeWarningRemaining;
         private bool failing;
         private readonly List<GameObject> specialOrbs = new List<GameObject>();
         private readonly Dictionary<string, StageBossBomber> bombers = new Dictionary<string, StageBossBomber>();
         private readonly List<GameObject> chargePlatforms = new List<GameObject>();
+        private GameObject waitingRoomLeftGate;
+        private GameObject waitingRoomRightGate;
         private readonly HashSet<string> eliminatedIds = new HashSet<string>();
         private readonly HashSet<string> participantIds = new HashSet<string>();
         private readonly List<PlayerController2D> hiddenPlayers = new List<PlayerController2D>();
@@ -106,6 +112,7 @@ namespace DrawBody.Prototype
             stageManager = Object.FindFirstObjectByType<StageManager>();
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
+            syncManager = Object.FindFirstObjectByType<StageGimmickSyncManager>();
         }
 
         private void OnEnable()
@@ -130,6 +137,7 @@ namespace DrawBody.Prototype
             }
             BuildBoss();
             BuildMonitor();
+            BuildWaitingRoomGates();
             CaptureParticipants();
             RefreshMonitor();
         }
@@ -151,7 +159,7 @@ namespace DrawBody.Prototype
             }
             if (phase == Phase.Waiting)
             {
-                if (HasPlayerEnteredArena()) StartCoroutine(BeginBattle());
+                if (AreAllPlayersInWaitingRoom()) StartCoroutine(BeginBattle());
                 return;
             }
             if (phase != Phase.Fighting || charging) return;
@@ -299,6 +307,7 @@ namespace DrawBody.Prototype
         private IEnumerator BeginBattle()
         {
             phase = Phase.Intro;
+            SetWaitingRoomGateState(true);
             invulnerable = true;
             SetBossExpression(1);
             RefreshMonitor();
@@ -477,6 +486,8 @@ namespace DrawBody.Prototype
             chargeWarningRemaining = 0f;
             SetBossFacing();
             GameSfx.PlayAt(SfxId.EnemyCharge, bossRoot.position, 1.3f);
+            chargeImpactActive = true;
+            BroadcastState(true);
             while (Mathf.Abs(bossRoot.position.x - destinationX) > 0.12f)
             {
                 float x = Mathf.MoveTowards(bossRoot.position.x, destinationX, 15.5f * Time.deltaTime);
@@ -485,6 +496,7 @@ namespace DrawBody.Prototype
                 yield return null;
             }
             facing = -facing;
+            chargeImpactActive = false;
             SetBossFacing();
             invulnerable = false;
             SetBossExpression(0);
@@ -526,6 +538,22 @@ namespace DrawBody.Prototype
                 chargePlatforms.Add(platform);
                 StartCoroutine(RevealChargePlatform(platform));
                 StageBossImpactFlash.Create(transform, positions[i], new Color(1f, 0.82f, 0.18f, 1f));
+            }
+
+            StageObjectData jumpData = StageObjectFactory.CreateDefaultData(
+                StageObjectType.JumpPad, new Vector2(10.7f, FloorY + 0.55f));
+            jumpData.objectId = "4-3_charge_escape_jump";
+            jumpData.size = Vector2.one;
+            jumpData.actionStrength = 29f;
+            GameObject jumpPad = objectFactory?.Create(jumpData, transform);
+            if (jumpPad != null)
+            {
+                jumpPad.name = "Charge Escape Jump Pad";
+                jumpPad.transform.localScale = new Vector3(1f, 0.04f, 1f);
+                chargePlatforms.Add(jumpPad);
+                StartCoroutine(RevealChargePlatform(jumpPad));
+                StageBossImpactFlash.Create(transform, jumpData.position,
+                    new Color(0.25f, 0.8f, 1f, 1f));
             }
         }
 
@@ -603,12 +631,16 @@ namespace DrawBody.Prototype
 
         private void SpawnAttack(AttackState attack, bool broadcast = true)
         {
+            AttackType type = (AttackType)attack.Type;
             if (broadcast)
             {
                 attack.Sequence = ++spawnSequence;
-                Send(AttackKind, attack);
+                // Generic minions use the shared host-authoritative spawn stream,
+                // which also supplies periodic snapshots when a client misses the
+                // first packet. Other boss attacks remain transient attack events.
+                if (type != AttackType.Enemies || syncManager == null)
+                    Send(AttackKind, attack);
             }
-            AttackType type = (AttackType)attack.Type;
             if (type == AttackType.Bombs)
             {
                 if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
@@ -627,8 +659,13 @@ namespace DrawBody.Prototype
                 if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
                 StageObjectType enemyType = attack.Variant == 1 ? StageObjectType.EnemyJumper
                     : attack.Variant == 2 ? StageObjectType.EnemyCharger : StageObjectType.EnemyWalker;
-                objectFactory?.CreateSpawnedEnemy(enemyType, "4-3_boss_enemy_" + attack.Sequence.ToString("D5"),
-                    attack.Origin, 1.05f, transform, 2.6f + attack.Variant * 0.25f, -1f);
+                string enemyId = "4-3_boss_enemy_" + attack.Sequence.ToString("D5");
+                if (syncManager != null)
+                    syncManager.SpawnDropperEnemy(enemyId, enemyType, attack.Origin, 1.05f,
+                        2.6f + attack.Variant * 0.25f, -1f, Vector2.zero);
+                else
+                    objectFactory?.CreateSpawnedEnemy(enemyType, enemyId,
+                        attack.Origin, 1.05f, transform, 2.6f + attack.Variant * 0.25f, -1f);
             }
             else if (type == AttackType.SpecialOrbs)
             {
@@ -690,13 +727,46 @@ namespace DrawBody.Prototype
             if (bossCore != null) bossCore.color = original;
         }
 
-        private bool HasPlayerEnteredArena()
+        private void BuildWaitingRoomGates()
         {
-            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
-            for (int i = 0; i < players.Length; i++)
-                if (players[i] != null && players[i].gameObject.activeInHierarchy && players[i].transform.position.x >= EntryX)
-                    return true;
-            return false;
+            StageEditorObject[] objects = Object.FindObjectsByType<StageEditorObject>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < objects.Length; i++)
+                if (objects[i] != null && objects[i].objectId == "4-3_room_divider")
+                    waitingRoomRightGate = objects[i].gameObject;
+
+            if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
+            StageObjectData gateData = StageObjectFactory.CreateDefaultData(
+                StageObjectType.Wall, new Vector2(WaitingRoomLeftX, 4.25f));
+            gateData.objectId = "4-3_waiting_room_left_gate";
+            gateData.size = new Vector2(0.7f, 13.8f);
+            gateData.keepSeparate = true;
+            waitingRoomLeftGate = objectFactory?.Create(gateData, transform);
+            if (waitingRoomLeftGate != null) waitingRoomLeftGate.name = "Waiting Room Left Gate";
+            SetWaitingRoomGateState(false);
+        }
+
+        private void SetWaitingRoomGateState(bool battleStarted)
+        {
+            if (waitingRoomLeftGate != null && waitingRoomLeftGate.activeSelf != battleStarted)
+                waitingRoomLeftGate.SetActive(battleStarted);
+            if (waitingRoomRightGate != null && waitingRoomRightGate.activeSelf == battleStarted)
+                waitingRoomRightGate.SetActive(!battleStarted);
+        }
+
+        private bool AreAllPlayersInWaitingRoom()
+        {
+            if (participantIds.Count == 0) CaptureParticipants();
+            if (participantIds.Count == 0) return false;
+            foreach (string id in participantIds)
+            {
+                if (eliminatedIds.Contains(id)) continue;
+                PlayerController2D player = ResolvePlayer(id);
+                if (player == null || !player.gameObject.activeInHierarchy) return false;
+                float x = player.transform.position.x;
+                if (x <= WaitingRoomLeftX + 0.45f || x >= WaitingRoomRightX - 0.45f) return false;
+            }
+            return true;
         }
 
         private PlayerController2D FindNearestPlayer()
@@ -716,6 +786,14 @@ namespace DrawBody.Prototype
         internal void HandleBossContact(PlayerController2D player)
         {
             if (player == null || phase == Phase.Waiting || phase == Phase.Defeated) return;
+            if (chargeImpactActive)
+            {
+                // The boss charge is the arena's unavoidable heavy attack. The
+                // temporary floors/jump pad are its counterplay, so shell guard
+                // deliberately cannot absorb it.
+                RequestElimination(player);
+                return;
+            }
             if (player.IsTurtleShelled)
             {
                 GameSfx.PlayAt(SfxId.EnemyShellBounce, player.transform.position, 0.9f);
@@ -1003,6 +1081,7 @@ namespace DrawBody.Prototype
                 Facing = facing,
                 Invulnerable = invulnerable,
                 Charging = charging,
+                ChargeImpactActive = chargeImpactActive,
                 ChargeRemaining = chargeWarningRemaining,
                 EliminatedIds = new List<string>(eliminatedIds).ToArray()
             });
@@ -1029,10 +1108,12 @@ namespace DrawBody.Prototype
                 lastStateSequence = state.Sequence;
                 health = state.Health;
                 phase = (Phase)state.Phase;
+                SetWaitingRoomGateState(phase != Phase.Waiting);
                 facing = state.Facing;
                 invulnerable = state.Invulnerable;
                 bool wasCharging = charging;
                 charging = state.Charging;
+                chargeImpactActive = state.ChargeImpactActive;
                 chargeWarningRemaining = state.ChargeRemaining;
                 if (!wasCharging && charging) CreateChargePlatforms();
                 else if (wasCharging && !charging) StartCoroutine(RemoveChargePlatforms());
@@ -1064,6 +1145,7 @@ namespace DrawBody.Prototype
 
         private bool IsHost(string playerId)
         {
+            if (onlineManager != null && onlineManager.IsHostPlayer(playerId)) return true;
             OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
             if (players == null) return false;
             for (int i = 0; i < players.Length; i++)

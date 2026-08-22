@@ -148,7 +148,7 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
-            "actionStrength": 80.0,
+            "actionStrength": 40.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,

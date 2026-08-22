@@ -6,7 +6,7 @@ namespace DrawBody.Prototype
     public sealed class StageBazooka : MonoBehaviour
     {
         private const float FireInterval = 0.9f;
-        private const float RecoilVelocity = 7.2f;
+        private const float RecoilVelocity = 13.5f;
         private PlayerCarryController holder;
         private StageBazookaSystem system;
         private float nextFireAt;

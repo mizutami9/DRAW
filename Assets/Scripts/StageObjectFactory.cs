@@ -90,6 +90,10 @@ namespace DrawBody.Prototype
                 case StageObjectType.SpeedRing2X:
                 case StageObjectType.SpeedRing3X:
                     return StageSpeedBoostRing.CreateObject(data, parent);
+                case StageObjectType.GrainEmitter:
+                case StageObjectType.GrainScale:
+                case StageObjectType.GrainGate:
+                    return CreateGrainCarryObject(data, parent);
                 case StageObjectType.EscortSpawner:
                 case StageObjectType.EscortGoal:
                 case StageObjectType.EscortPlayerOnlyFloor:
@@ -310,6 +314,15 @@ namespace DrawBody.Prototype
                     case StageObjectType.PressurePlate:
                         size = new Vector2(1f, 0.5f);
                         break;
+                    case StageObjectType.GrainEmitter:
+                        size = new Vector2(2f, 2.4f);
+                        break;
+                    case StageObjectType.GrainScale:
+                        size = new Vector2(2.4f, 1f);
+                        break;
+                    case StageObjectType.GrainGate:
+                        size = new Vector2(0.8f, 5f);
+                        break;
                     case StageObjectType.Weight:
                     case StageObjectType.WoodBox:
                     case StageObjectType.IronBox:
@@ -351,6 +364,8 @@ namespace DrawBody.Prototype
                 rotation = 0f,
                 actionStrength = type == StageObjectType.InkScale
                     ? 300f
+                    : type == StageObjectType.GrainScale
+                        ? 80f
                     : type == StageObjectType.BreakableWall
                         ? 1f
                     : type == StageObjectType.BulletBreakableWall
@@ -397,6 +412,13 @@ namespace DrawBody.Prototype
                     || type == StageObjectType.Dynamite ? 5f
                     : type == StageObjectType.SpeedRing2X || type == StageObjectType.SpeedRing3X ? 1.5f : 0f
             };
+        }
+
+        private GameObject CreateGrainCarryObject(StageObjectData data, Transform parent)
+        {
+            GameObject obj = StageGrainCarryObjectFactory.Create(data, parent, groundLayer);
+            AddEditorMetadata(obj, data);
+            return obj;
         }
 
         private GameObject CreateDynamite(StageObjectData data, Transform parent)

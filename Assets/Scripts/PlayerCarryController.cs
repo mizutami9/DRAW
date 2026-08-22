@@ -471,6 +471,10 @@ namespace DrawBody.Prototype
         {
             PlayerCarryController recoilTarget = FindCarrierOfThisPlayer() ?? this;
             if (stageManager == null) stageManager = FindObjectOfType<StageManager>();
+            string onlineCarrierId = stageManager != null
+                ? stageManager.GetOnlineCarrierPlayerId(playerController)
+                : null;
+            if (!string.IsNullOrEmpty(onlineCarrierId)) return onlineCarrierId;
             return stageManager != null ? stageManager.GetOnlinePlayerId(recoilTarget.playerController) : null;
         }
 
@@ -479,8 +483,14 @@ namespace DrawBody.Prototype
             PlayerCarryController recoilTarget = FindCarrierOfThisPlayer() ?? this;
             Rigidbody2D targetBody = recoilTarget.playerBody;
             if (targetBody == null || targetBody.bodyType != RigidbodyType2D.Dynamic) return;
-            Vector2 velocity = targetBody.linearVelocity + velocityChange;
-            targetBody.linearVelocity = Vector2.ClampMagnitude(velocity, 28f);
+            PlayerController2D targetController = recoilTarget.playerController;
+            if (targetController != null)
+            {
+                targetController.ApplyWeaponRecoil(velocityChange);
+                return;
+            }
+            targetBody.linearVelocity = Vector2.ClampMagnitude(
+                targetBody.linearVelocity + velocityChange, 28f);
         }
 
         private PlayerCarryController FindCarrierOfThisPlayer()

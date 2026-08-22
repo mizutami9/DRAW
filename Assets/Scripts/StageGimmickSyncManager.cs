@@ -20,6 +20,7 @@ namespace DrawBody.Prototype
         private const string KindDropperEnemyRemove = "dropper_enemy_remove";
         private const string KindMissileSpawn = "missile_spawn";
         private const string KindEnemyProjectileSpawn = "enemy_projectile_spawn";
+        private const string KindSnapshotRequest = "gimmick_snapshot_request";
         private const string KindBombExplosion = "bomb_explosion";
         private const string KindBombWallDamage = "bomb_wall_damage";
         private const string KindBombArmRequest = "bomb_arm_request";
@@ -56,9 +57,12 @@ namespace DrawBody.Prototype
         private readonly HashSet<string> defeatedPlacedEnemies = new HashSet<string>();
         private StageGimmickLinkController linkController;
         private StageObjectFactory objectFactory;
+        private string trustedHostPlayerId;
         private float nextTransformSendTime;
         private float nextSnapshotTime;
         private int sequence;
+        private int snapshotRequestAttempts;
+        private float nextSnapshotRequestAt;
 
         [System.Serializable]
         private sealed class OwnershipState
@@ -145,6 +149,7 @@ namespace DrawBody.Prototype
             }
 
             linkController = GetComponent<StageGimmickLinkController>();
+            RefreshTrustedHostPlayerId();
             RebuildTransformEntries();
             RebuildCrumblingFloorEntries();
         }
@@ -173,12 +178,31 @@ namespace DrawBody.Prototype
         private void Start()
         {
             linkController = GetComponent<StageGimmickLinkController>();
+            RefreshTrustedHostPlayerId();
             RebuildTransformEntries();
             RebuildCrumblingFloorEntries();
+            if (ShouldAskHost)
+            {
+                snapshotRequestAttempts = 3;
+                nextSnapshotRequestAt = Time.unscaledTime + 0.15f;
+            }
         }
 
         private void Update()
         {
+            if (ShouldAskHost && snapshotRequestAttempts > 0
+                && Time.unscaledTime >= nextSnapshotRequestAt)
+            {
+                snapshotRequestAttempts--;
+                nextSnapshotRequestAt = Time.unscaledTime + (snapshotRequestAttempts == 1 ? 0.85f : 0.45f);
+                Send(new OnlineGimmickData
+                {
+                    ObjectId = "stage_snapshot",
+                    Kind = KindSnapshotRequest,
+                    Json = "{}"
+                });
+            }
+
             if (!IsOnlineActive || Time.unscaledTime < nextTransformSendTime)
             {
                 return;
@@ -664,6 +688,21 @@ namespace DrawBody.Prototype
 
             if (onlineManager != null && data.PlayerId == onlineManager.LocalPlayerId)
             {
+                return;
+            }
+
+            if (data.Kind == KindSnapshotRequest)
+            {
+                if (IsHost)
+                {
+                    ResolveLinkController()?.BroadcastAllStates();
+                    BroadcastOwnershipSnapshot();
+                    BroadcastCrumblingFloorStates();
+                    BroadcastDropperBoxSnapshot();
+                    BroadcastDropperEnemySnapshot();
+                    BroadcastBombSnapshot();
+                    BroadcastPlacedEnemySnapshot();
+                }
                 return;
             }
 
@@ -1739,20 +1778,43 @@ namespace DrawBody.Prototype
 
         private bool IsLobbyHost(string playerId)
         {
+            if (onlineManager != null && onlineManager.IsHostPlayer(playerId))
+            {
+                trustedHostPlayerId = playerId;
+                return true;
+            }
             OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
-            if (players == null || string.IsNullOrEmpty(playerId))
+            if (string.IsNullOrEmpty(playerId))
             {
                 return false;
             }
 
-            for (int i = 0; i < players.Length; i++)
+            if (players != null)
             {
-                if (players[i] != null && players[i].IsHost && players[i].PlayerId == playerId)
+                for (int i = 0; i < players.Length; i++)
                 {
-                    return true;
+                    if (players[i] == null || !players[i].IsHost
+                        || string.IsNullOrEmpty(players[i].PlayerId)) continue;
+                    trustedHostPlayerId = players[i].PlayerId;
+                    break;
                 }
             }
-            return false;
+            return playerId == trustedHostPlayerId;
+        }
+
+        private void RefreshTrustedHostPlayerId()
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null) return;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] != null && players[i].IsHost
+                    && !string.IsNullOrEmpty(players[i].PlayerId))
+                {
+                    trustedHostPlayerId = players[i].PlayerId;
+                    return;
+                }
+            }
         }
 
         private sealed class SyncTransformEntry

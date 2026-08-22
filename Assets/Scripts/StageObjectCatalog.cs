@@ -110,6 +110,7 @@ namespace DrawBody.Prototype
             E(StageObjectType.PressurePlate, StageObjectCategory.Switch, StageObjectPlacement.Rect, StageObjectKind.Trigger),
             E(StageObjectType.RemoteControl, StageObjectCategory.Switch, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.InkScale, StageObjectCategory.Switch, StageObjectPlacement.Point, StageObjectKind.Trigger),
+            E(StageObjectType.GrainScale, StageObjectCategory.Switch, StageObjectPlacement.Point, StageObjectKind.Trigger),
 
             E(StageObjectType.Door, StageObjectCategory.DoorGate, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.LockedDoor, StageObjectCategory.DoorGate, StageObjectPlacement.Rect, StageObjectKind.Solid),
@@ -121,6 +122,7 @@ namespace DrawBody.Prototype
             E(StageObjectType.TimedGate, StageObjectCategory.DoorGate, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.BreakableWall, StageObjectCategory.DoorGate, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.HiddenWall, StageObjectCategory.DoorGate, StageObjectPlacement.Rect, StageObjectKind.Solid),
+            E(StageObjectType.GrainGate, StageObjectCategory.DoorGate, StageObjectPlacement.Rect, StageObjectKind.Solid),
 
             E(StageObjectType.WoodBox, StageObjectCategory.Movable, StageObjectPlacement.Point, StageObjectKind.Pushable),
             E(StageObjectType.IronBox, StageObjectCategory.Movable, StageObjectPlacement.Point, StageObjectKind.Pushable),
@@ -149,6 +151,7 @@ namespace DrawBody.Prototype
             E(StageObjectType.Magnet, StageObjectCategory.Action, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.Belt, StageObjectCategory.Action, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.BoxDropper, StageObjectCategory.Action, StageObjectPlacement.Point, StageObjectKind.Trigger),
+            E(StageObjectType.GrainEmitter, StageObjectCategory.Action, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.BombDropper, StageObjectCategory.Action, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.EnemyDropper, StageObjectCategory.Action, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.Seesaw, StageObjectCategory.Action, StageObjectPlacement.Point, StageObjectKind.Balance),

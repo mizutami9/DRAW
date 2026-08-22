@@ -254,7 +254,7 @@ namespace DrawBody.Prototype
         private float GetCurrentBallSpeed()
         {
             float progress = Mathf.Clamp01((duration - remaining) / Mathf.Max(1f, duration));
-            return BallSpeed * Mathf.Lerp(0.5f, 1.5f, progress);
+            return BallSpeed * Mathf.Lerp(0.35f, 1.5f, progress);
         }
 
         private void BeginFailure()
@@ -772,6 +772,18 @@ namespace DrawBody.Prototype
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (!authoritative || body == null || collision.collider == null) return;
+            if (collision.collider.GetComponentInParent<StageRicochetBallPassSurface>() != null)
+            {
+                // Pass-through floors must never contribute a bounce even if the
+                // physics callback was queued before IgnoreCollision took effect.
+                Physics2D.IgnoreCollision(hitbox, collision.collider, true);
+                Vector2 passVelocity = previousVelocity.sqrMagnitude > 0.1f
+                    ? previousVelocity.normalized * cruiseSpeed
+                    : body.linearVelocity;
+                body.linearVelocity = passVelocity;
+                previousVelocity = passVelocity;
+                return;
+            }
             Vector2 normal = collision.contactCount > 0 ? collision.GetContact(0).normal :
                 ((Vector2)transform.position - (Vector2)collision.transform.position).normalized;
             // Rigidbody2D may already have applied its material response when the

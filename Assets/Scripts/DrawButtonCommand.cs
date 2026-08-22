@@ -18,6 +18,7 @@ namespace DrawBody.Prototype
         [SerializeField] private DrawManager drawManager;
         [SerializeField] private Command command;
         [SerializeField] private int intValue;
+        private Button commandButton;
 
         private void Awake()
         {
@@ -26,8 +27,22 @@ namespace DrawBody.Prototype
                 drawManager = FindObjectOfType<DrawManager>();
             }
 
-            Button button = GetComponent<Button>();
-            button.onClick.AddListener(Execute);
+            commandButton = GetComponent<Button>();
+            commandButton.onClick.AddListener(Execute);
+        }
+
+        private void Update()
+        {
+            if (command == Command.Confirm)
+            {
+                // An occupied species is still actionable: Confirm sends a swap
+                // request instead of completing the drawing immediately.
+                bool canConfirm = drawManager != null;
+                if (commandButton != null && commandButton.interactable != canConfirm)
+                {
+                    commandButton.interactable = canConfirm;
+                }
+            }
         }
 
         private void Execute()

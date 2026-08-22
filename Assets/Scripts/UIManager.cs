@@ -25,6 +25,10 @@ namespace DrawBody.Prototype
         private Text clearBackLabel;
         private GameObject stageSelectLockedPanel;
         private GameObject leaveSessionConfirmPanel;
+        private GameObject speciesSwapConfirmPanel;
+        private string speciesSwapRequesterName;
+        private DrawManager.Species speciesSwapRequestedSpecies;
+        private DrawManager.Species speciesSwapOfferedSpecies;
         private Button clearNextButton;
         private Button clearBackButton;
         private Button editorTestReturnButton;
@@ -469,6 +473,127 @@ namespace DrawBody.Prototype
             }
             leaveSessionConfirmPanel.SetActive(true);
             leaveSessionConfirmPanel.transform.SetAsLastSibling();
+        }
+
+        public void ShowSpeciesSwapConfirm(
+            string requesterName,
+            DrawManager.Species requestedSpecies,
+            DrawManager.Species offeredSpecies)
+        {
+            EnsureSpeciesSwapConfirmPanel();
+            if (speciesSwapConfirmPanel == null)
+            {
+                return;
+            }
+
+            speciesSwapRequesterName = requesterName;
+            speciesSwapRequestedSpecies = requestedSpecies;
+            speciesSwapOfferedSpecies = offeredSpecies;
+            RefreshSpeciesSwapText();
+            speciesSwapConfirmPanel.SetActive(true);
+            speciesSwapConfirmPanel.transform.SetAsLastSibling();
+        }
+
+        public void HideSpeciesSwapConfirm()
+        {
+            if (speciesSwapConfirmPanel != null)
+            {
+                speciesSwapConfirmPanel.SetActive(false);
+            }
+        }
+
+        private void EnsureSpeciesSwapConfirmPanel()
+        {
+            if (speciesSwapConfirmPanel != null)
+            {
+                return;
+            }
+
+            Font font = statusText != null && statusText.font != null
+                ? statusText.font
+                : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            speciesSwapConfirmPanel = new GameObject(
+                "SpeciesSwapConfirmPanel",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image));
+            speciesSwapConfirmPanel.transform.SetParent(transform, false);
+            RectTransform rect = speciesSwapConfirmPanel.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = new Vector2(600f, 280f);
+            Image paper = speciesSwapConfirmPanel.GetComponent<Image>();
+            paper.color = new Color(1f, 0.965f, 0.78f, 1f);
+            Outline outline = speciesSwapConfirmPanel.AddComponent<Outline>();
+            outline.effectColor = new Color(0.04f, 0.07f, 0.11f, 1f);
+            outline.effectDistance = new Vector2(4f, -4f);
+
+            Text title = CreateClearText(
+                "SpeciesSwapTitle",
+                speciesSwapConfirmPanel.transform,
+                font,
+                30,
+                TextAnchor.MiddleCenter,
+                new Vector2(0f, 92f),
+                new Vector2(540f, 48f));
+            title.text = LocalizationManager.T("draw_species_swap_title");
+            title.fontStyle = FontStyle.Bold;
+
+            Text message = CreateClearText(
+                "SpeciesSwapMessage",
+                speciesSwapConfirmPanel.transform,
+                font,
+                23,
+                TextAnchor.MiddleCenter,
+                new Vector2(0f, 28f),
+                new Vector2(530f, 82f));
+            message.color = new Color(0.04f, 0.07f, 0.11f, 1f);
+
+            Button accept = CreateClearButton(
+                "SpeciesSwapAcceptButton",
+                speciesSwapConfirmPanel.transform,
+                font,
+                new Vector2(-125f, -82f),
+                new Vector2(220f, 66f),
+                new Color(0.3f, 0.78f, 0.42f, 1f));
+            accept.GetComponentInChildren<Text>().text = LocalizationManager.T("draw_species_swap_accept");
+            accept.onClick.AddListener(() => ResolveStageManager()?.AcceptSpeciesSwapRequest());
+
+            Button reject = CreateClearButton(
+                "SpeciesSwapRejectButton",
+                speciesSwapConfirmPanel.transform,
+                font,
+                new Vector2(125f, -82f),
+                new Vector2(220f, 66f),
+                new Color(0.94f, 0.46f, 0.36f, 1f));
+            reject.GetComponentInChildren<Text>().text = LocalizationManager.T("draw_species_swap_reject");
+            reject.onClick.AddListener(() => ResolveStageManager()?.RejectSpeciesSwapRequest());
+            speciesSwapConfirmPanel.SetActive(false);
+        }
+
+        private void RefreshSpeciesSwapText()
+        {
+            if (speciesSwapConfirmPanel == null)
+            {
+                return;
+            }
+
+            Text title = speciesSwapConfirmPanel.transform.Find("SpeciesSwapTitle")?.GetComponent<Text>();
+            if (title != null) title.text = LocalizationManager.T("draw_species_swap_title");
+            Text message = speciesSwapConfirmPanel.transform.Find("SpeciesSwapMessage")?.GetComponent<Text>();
+            if (message != null)
+            {
+                message.text = LocalizationManager.Format(
+                    "draw_species_swap_request",
+                    speciesSwapRequesterName,
+                    LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(speciesSwapRequestedSpecies)),
+                    LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(speciesSwapOfferedSpecies)));
+            }
+            Text accept = speciesSwapConfirmPanel.transform.Find("SpeciesSwapAcceptButton/SpeciesSwapAcceptButtonLabel")?.GetComponent<Text>();
+            if (accept != null) accept.text = LocalizationManager.T("draw_species_swap_accept");
+            Text reject = speciesSwapConfirmPanel.transform.Find("SpeciesSwapRejectButton/SpeciesSwapRejectButtonLabel")?.GetComponent<Text>();
+            if (reject != null) reject.text = LocalizationManager.T("draw_species_swap_reject");
         }
 
         public void HideLeaveSessionConfirm()
@@ -1205,6 +1330,7 @@ namespace DrawBody.Prototype
         private void RefreshText()
         {
             RefreshGameplayMenu();
+            RefreshSpeciesSwapText();
             if (editorTestReturnLabel != null)
             {
                 editorTestReturnLabel.text = LocalizationManager.T("stage_editor_return_esc");

@@ -31,6 +31,11 @@ namespace DrawBody.Prototype
             return GetAllowedForWorld(GetWorldNumber(stageId));
         }
 
+        public static bool RequiresUniqueSpecies(string stageId)
+        {
+            return GetWorldNumber(stageId) >= 11;
+        }
+
         public static StageSpeciesMask GetAllowedForWorld(int world)
         {
             switch (world)

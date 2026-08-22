@@ -11,7 +11,7 @@ namespace DrawBody.Prototype
         private const string StateKind = "spike_chase_state";
         private const string EliminateRequestKind = "spike_chase_eliminate_request";
         private const string EliminatedKind = "spike_chase_eliminated";
-        private const float StartX = -27.2f;
+        private const float StartX = -31.5f;
         private const float WallY = 2.2f;
         private const float StartDelay = 3f;
 

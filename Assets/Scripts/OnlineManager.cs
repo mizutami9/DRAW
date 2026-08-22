@@ -51,6 +51,7 @@ namespace DrawBody.Prototype
         private OnlineBackendMode effectiveBackendMode;
         private bool shuttingDown;
         private readonly Dictionary<string, float> confirmedInkByPlayer = new Dictionary<string, float>();
+        private string knownHostPlayerId;
 
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         public event Action<OnlinePlayerState> PlayerStateReceived;
@@ -107,6 +108,23 @@ namespace DrawBody.Prototype
             }
 
             return total;
+        }
+
+        public bool IsHostPlayer(string playerId)
+        {
+            if (string.IsNullOrEmpty(playerId)) return false;
+            OnlinePlayerInfo[] players = CurrentLobby?.Players;
+            if (players != null)
+            {
+                for (int i = 0; i < players.Length; i++)
+                {
+                    OnlinePlayerInfo player = players[i];
+                    if (player == null || !player.IsHost || string.IsNullOrEmpty(player.PlayerId)) continue;
+                    knownHostPlayerId = player.PlayerId;
+                    break;
+                }
+            }
+            return playerId == knownHostPlayerId;
         }
 
         private void Awake()
@@ -359,6 +377,19 @@ namespace DrawBody.Prototype
 
         private void OnBackendStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
         {
+            if (lobby?.Players != null)
+            {
+                for (int i = 0; i < lobby.Players.Length; i++)
+                {
+                    if (lobby.Players[i] != null && lobby.Players[i].IsHost
+                        && !string.IsNullOrEmpty(lobby.Players[i].PlayerId))
+                    {
+                        knownHostPlayerId = lobby.Players[i].PlayerId;
+                        break;
+                    }
+                }
+            }
+            if (lobby == null) knownHostPlayerId = null;
             PruneConfirmedInk(lobby);
             StateChanged?.Invoke(state, lobby, message);
         }

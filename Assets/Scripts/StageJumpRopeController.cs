@@ -203,6 +203,14 @@ namespace DrawBody.Prototype
             }
             if (remainingSeconds <= 0f)
             {
+                // A fall and the final timer tick can occur in the same frame.
+                // Never award survival clear unless a participant still exists
+                // above the fall boundary after processing that frame's falls.
+                if (!HasActiveSurvivor())
+                {
+                    BeginFailure();
+                    return;
+                }
                 phase = Phase.Finished;
                 ropeHazard?.SetDangerous(false);
                 SetLocalControls(false);
@@ -435,12 +443,28 @@ namespace DrawBody.Prototype
                 : progress > 0.45f && Random.value < 0.32f
                     ? StageObjectType.EnemyCharger
                     : StageObjectType.EnemyWalker;
-            BroadcastAttack(new AttackState
+            AttackState attack = new AttackState
             {
                 Sequence = ++attackSequence, Type = 1, Variant = (int)type, Position = position,
                 Direction = new Vector2(left ? 1f : -1f, 0f), Speed = Mathf.Lerp(1.7f, 3.5f, progress),
                 Size = Random.Range(0.75f, 1.08f)
-            });
+            };
+            if (syncManager != null)
+            {
+                appliedAttackSequences.Add(attack.Sequence);
+                Vector2 launchVelocity = attack.Position.y > 5f
+                    ? new Vector2(attack.Direction.x * 1.4f, -3.5f)
+                    : Vector2.zero;
+                syncManager.SpawnDropperEnemy(
+                    "jump_rope_enemy_" + attack.Sequence,
+                    (StageObjectType)attack.Variant,
+                    attack.Position,
+                    attack.Size,
+                    attack.Speed,
+                    attack.Direction.x,
+                    launchVelocity);
+            }
+            else BroadcastAttack(attack);
         }
 
         private void BroadcastAttack(AttackState attack)
@@ -504,6 +528,7 @@ namespace DrawBody.Prototype
 
         private void ConfirmElimination(string id, bool broadcast)
         {
+            if (string.IsNullOrEmpty(id) || eliminatedIds.Contains(id)) return;
             ApplyElimination(id);
             if (broadcast && onlineManager != null)
             {
@@ -579,9 +604,28 @@ namespace DrawBody.Prototype
 
         private void CheckFalls()
         {
+            if (phase != Phase.Playing) return;
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             for (int i = 0; i < players.Length; i++)
-                if (players[i] != null && players[i].transform.position.y < FloorY - 4f) RequestElimination(players[i]);
+            {
+                PlayerController2D fallen = players[i];
+                if (fallen == null || fallen.transform.position.y >= FloorY - 4f) continue;
+                string id = ResolvePlayerId(fallen);
+                if (IsOnlineActive() && HasAuthority()) ConfirmElimination(id, true);
+                else RequestElimination(fallen);
+            }
+        }
+
+        private bool HasActiveSurvivor()
+        {
+            foreach (string id in participantIds)
+            {
+                if (string.IsNullOrEmpty(id) || eliminatedIds.Contains(id)) continue;
+                PlayerController2D candidate = ResolvePlayer(id);
+                if (candidate != null && candidate.gameObject.activeInHierarchy
+                    && candidate.transform.position.y >= FloorY - 4f) return true;
+            }
+            return false;
         }
 
         private void CaptureParticipants()
@@ -680,6 +724,7 @@ namespace DrawBody.Prototype
 
         private bool IsHostPlayer(string id)
         {
+            if (onlineManager != null && onlineManager.IsHostPlayer(id)) return true;
             OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
             if (players == null) return false;
             for (int i = 0; i < players.Length; i++)

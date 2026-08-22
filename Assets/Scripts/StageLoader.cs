@@ -288,6 +288,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingSpikeChase);
             }
 
+            StageGrainCarryController existingGrainCarry = stageRoot.GetComponent<StageGrainCarryController>();
+            if (existingGrainCarry != null)
+            {
+                DestroyComponentNow(existingGrainCarry);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.id == "5-3")
@@ -301,6 +307,10 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "6-3")
             {
                 stageRoot.gameObject.AddComponent<StageSpikeChaseController>();
+            }
+            if (data != null && data.id == "7-2")
+            {
+                stageRoot.gameObject.AddComponent<StageGrainCarryController>();
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
