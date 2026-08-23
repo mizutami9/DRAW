@@ -303,7 +303,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (CanAttachToFriend())
+            bool ricochetWeaponMode = stageManager != null && stageManager.CurrentStageId == "10-3";
+            if (!ricochetWeaponMode && CanAttachToFriend())
             {
                 DropHeld(Vector2.zero);
                 if (IsCat())
@@ -348,7 +349,7 @@ namespace DrawBody.Prototype
 
             DetachSlimeFromFriend(false);
             DetachCatFromObject(false);
-            if (!IsHuman())
+            if (!IsHuman() && !ricochetWeaponMode)
             {
                 DropHeld(Vector2.zero);
                 return;

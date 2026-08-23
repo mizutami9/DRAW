@@ -200,6 +200,8 @@ namespace DrawBody.Prototype
         private const string FireRequestKind = "gun_fire_request";
         private const string FireKind = "gun_fire";
         private const string WallKind = "gun_wall_state";
+        private const string ReflectKind = "gun_bullet_reflect";
+        private const string EndKind = "gun_bullet_end";
 
         [System.Serializable]
         private sealed class FireData
@@ -218,10 +220,19 @@ namespace DrawBody.Prototype
             public Vector2 Point;
         }
 
+        [System.Serializable]
+        private sealed class BulletMotionData
+        {
+            public int Sequence;
+            public Vector2 Position;
+            public Vector2 Direction;
+        }
+
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private int shotSequence;
         private int lastShotSequence;
+        private readonly Dictionary<int, StageGunBullet> bullets = new Dictionary<int, StageGunBullet>();
 
         public static StageGunSystem Ensure(Transform context)
         {
@@ -262,8 +273,10 @@ namespace DrawBody.Prototype
 
         private void ConfirmFire(FireData data)
         {
+            StageRicochetChallengeController challenge = Object.FindFirstObjectByType<StageRicochetChallengeController>();
+            if (challenge != null && !challenge.TryConsumeShot()) return;
             data.Sequence = ++shotSequence;
-            StageGunBullet.Create(transform, this, data.Origin, data.Direction, true);
+            StageGunBullet.Create(transform, this, data.Sequence, data.Origin, data.Direction, true);
             GameSfx.PlayAt(SfxId.CannonFire, data.Origin, 0.66f);
             if (IsOnline()) Send(FireKind, data);
         }
@@ -289,8 +302,20 @@ namespace DrawBody.Prototype
                 FireData data = JsonUtility.FromJson<FireData>(message.Json);
                 if (data == null || data.Sequence <= lastShotSequence) return;
                 lastShotSequence = data.Sequence;
-                StageGunBullet.Create(transform, this, data.Origin, data.Direction, false);
+                StageGunBullet.Create(transform, this, data.Sequence, data.Origin, data.Direction, false);
                 GameSfx.PlayAt(SfxId.CannonFire, data.Origin, 0.66f);
+            }
+            else if (message.Kind == ReflectKind && !HasAuthority() && IsHost(message.PlayerId))
+            {
+                BulletMotionData data = JsonUtility.FromJson<BulletMotionData>(message.Json);
+                if (data != null && bullets.TryGetValue(data.Sequence, out StageGunBullet bullet) && bullet != null)
+                    bullet.ApplyNetworkReflection(data.Position, data.Direction);
+            }
+            else if (message.Kind == EndKind && !HasAuthority() && IsHost(message.PlayerId))
+            {
+                BulletMotionData data = JsonUtility.FromJson<BulletMotionData>(message.Json);
+                if (data != null && bullets.TryGetValue(data.Sequence, out StageGunBullet bullet) && bullet != null)
+                    bullet.ApplyNetworkEnd();
             }
             else if (message.Kind == WallKind && !HasAuthority() && IsHost(message.PlayerId))
             {
@@ -317,6 +342,28 @@ namespace DrawBody.Prototype
             });
         }
 
+        internal void RegisterBullet(int sequence, StageGunBullet bullet)
+        {
+            if (bullet != null) bullets[sequence] = bullet;
+        }
+
+        internal void UnregisterBullet(int sequence, StageGunBullet bullet)
+        {
+            if (bullets.TryGetValue(sequence, out StageGunBullet current) && current == bullet) bullets.Remove(sequence);
+        }
+
+        internal void BroadcastReflection(int sequence, Vector2 position, Vector2 direction)
+        {
+            if (IsOnline() && HasAuthority())
+                Send(ReflectKind, new BulletMotionData { Sequence = sequence, Position = position, Direction = direction });
+        }
+
+        internal void BroadcastEnd(int sequence, Vector2 position)
+        {
+            if (IsOnline() && HasAuthority())
+                Send(EndKind, new BulletMotionData { Sequence = sequence, Position = position });
+        }
+
         private bool IsOnline() => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority() => !IsOnline() || stageManager.IsOnlineStageHost;
 
@@ -334,11 +381,17 @@ namespace DrawBody.Prototype
     {
         private const float Speed = 23f;
         private StageGunSystem system;
+        private StageRicochetChallengeController ricochetChallenge;
         private Vector2 direction;
         private bool authoritative;
+        private bool ending;
         private float life;
+        private int sequence;
+        private int reflectionCount;
+        private PlayerController2D lastReflectPlayer;
+        private float lastReflectAt;
 
-        public static void Create(Transform parent, StageGunSystem system, Vector2 origin, Vector2 direction, bool authoritative)
+        public static void Create(Transform parent, StageGunSystem system, int sequence, Vector2 origin, Vector2 direction, bool authoritative)
         {
             GameObject root = new GameObject("Crayon Gun Bullet");
             root.transform.SetParent(parent, false);
@@ -355,8 +408,12 @@ namespace DrawBody.Prototype
             trail.sortingOrder = 46;
             StageGunBullet bullet = root.AddComponent<StageGunBullet>();
             bullet.system = system;
+            bullet.sequence = sequence;
             bullet.direction = direction.normalized;
             bullet.authoritative = authoritative;
+            bullet.ricochetChallenge = Object.FindFirstObjectByType<StageRicochetChallengeController>();
+            bullet.system?.RegisterBullet(sequence, bullet);
+            if (authoritative) bullet.ricochetChallenge?.RegisterBullet(bullet);
         }
 
         private void Update()
@@ -364,22 +421,53 @@ namespace DrawBody.Prototype
             float distance = Speed * Time.deltaTime;
             if (authoritative && TryHit(distance))
             {
-                Destroy(gameObject);
+                EndAuthoritative();
                 return;
             }
             transform.position += (Vector3)(direction * distance);
             life += Time.deltaTime;
-            if (life >= 3f) Destroy(gameObject);
+            if (life >= 3f)
+            {
+                if (authoritative) EndAuthoritative();
+                else ApplyNetworkEnd();
+            }
         }
 
         private bool TryHit(float distance)
         {
             RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, distance + 0.15f);
+            System.Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
             for (int i = 0; i < hits.Length; i++)
             {
                 Collider2D collider = hits[i].collider;
-                if (collider == null || collider.isTrigger || collider.GetComponentInParent<PlayerController2D>() != null
-                    || collider.GetComponentInParent<StageGun>() != null) continue;
+                if (collider == null || collider.isTrigger || collider.GetComponentInParent<StageGun>() != null) continue;
+
+                PlayerController2D player = collider.GetComponentInParent<PlayerController2D>();
+                if (player != null)
+                {
+                    if (ricochetChallenge == null || !ricochetChallenge.IsRoundActive) continue;
+                    if (player == lastReflectPlayer && Time.time - lastReflectAt < 0.08f) continue;
+                    Vector2 normal = hits[i].normal.sqrMagnitude > 0.2f ? hits[i].normal.normalized : -direction;
+                    direction = Vector2.Reflect(direction, normal).normalized;
+                    transform.position = hits[i].point + direction * 0.12f;
+                    transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                    reflectionCount++;
+                    lastReflectPlayer = player;
+                    lastReflectAt = Time.time;
+                    ricochetChallenge.NotifyReflection(hits[i].point);
+                    system?.BroadcastReflection(sequence, transform.position, direction);
+                    return false;
+                }
+
+                StageRicochetBulletPassage passage = collider.GetComponentInParent<StageRicochetBulletPassage>();
+                if (passage != null && passage.AllowsBullet) continue;
+
+                StageRicochetTarget ricochetTarget = collider.GetComponentInParent<StageRicochetTarget>();
+                if (ricochetTarget != null)
+                {
+                    ricochetTarget.Hit(reflectionCount, hits[i].point);
+                    return true;
+                }
                 StageBulletBreakableWall wall = collider.GetComponentInParent<StageBulletBreakableWall>();
                 if (wall != null)
                 {
@@ -410,6 +498,35 @@ namespace DrawBody.Prototype
                 return true;
             }
             return false;
+        }
+
+        public void ApplyNetworkReflection(Vector2 position, Vector2 reflectedDirection)
+        {
+            if (authoritative || ending) return;
+            transform.position = position;
+            direction = reflectedDirection.sqrMagnitude > 0.01f ? reflectedDirection.normalized : direction;
+            transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+        }
+
+        public void ApplyNetworkEnd()
+        {
+            if (ending) return;
+            ending = true;
+            Destroy(gameObject);
+        }
+
+        private void EndAuthoritative()
+        {
+            if (ending) return;
+            ending = true;
+            system?.BroadcastEnd(sequence, transform.position);
+            Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            system?.UnregisterBullet(sequence, this);
+            if (authoritative) ricochetChallenge?.UnregisterBullet(this);
         }
     }
 

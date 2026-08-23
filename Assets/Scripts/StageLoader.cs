@@ -318,6 +318,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingIceSpeedrun);
             }
 
+            StageRicochetChallengeController existingRicochetChallenge = stageRoot.GetComponent<StageRicochetChallengeController>();
+            if (existingRicochetChallenge != null)
+            {
+                DestroyComponentNow(existingRicochetChallenge);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && (data.id == "5-3" || data.id == "10-2"))
@@ -359,6 +365,10 @@ namespace DrawBody.Prototype
             {
                 StageIceSpeedrunController speedrun = stageRoot.gameObject.AddComponent<StageIceSpeedrunController>();
                 speedrun.Configure(data.timeLimitSeconds);
+            }
+            if (data != null && data.id == "10-3")
+            {
+                stageRoot.gameObject.AddComponent<StageRicochetChallengeController>();
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {

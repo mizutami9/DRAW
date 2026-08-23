@@ -18,6 +18,7 @@ namespace DrawBody.Prototype
         private Vector2 flightOrigin;
         private float flightStartedAt;
         private bool defeated;
+        private bool stationaryTarget;
         private Rigidbody2D body;
         private Collider2D enemyCollider;
         private Transform visualRoot;
@@ -44,6 +45,18 @@ namespace DrawBody.Prototype
             // movement now come from StageGimmickSyncManager in online play.
         }
 
+        public void SetStationaryTarget()
+        {
+            stationaryTarget = true;
+            Rigidbody2D targetBody = body != null ? body : GetComponent<Rigidbody2D>();
+            if (targetBody != null)
+            {
+                targetBody.bodyType = RigidbodyType2D.Kinematic;
+                targetBody.gravityScale = 0f;
+                targetBody.linearVelocity = Vector2.zero;
+            }
+        }
+
         public void Configure(StageObjectType type, Vector2 size, float speedOverride, float initialFacing)
         {
             enemyType = type;
@@ -63,6 +76,13 @@ namespace DrawBody.Prototype
             flightOrigin = transform.position;
             flightStartedAt = Time.time;
             nextAbilityAt = Time.time + InitialAbilityDelay();
+
+            if (stationaryTarget && body != null)
+            {
+                body.bodyType = RigidbodyType2D.Kinematic;
+                body.gravityScale = 0f;
+                body.linearVelocity = Vector2.zero;
+            }
 
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing)
@@ -100,7 +120,7 @@ namespace DrawBody.Prototype
 
         private void FixedUpdate()
         {
-            if (defeated || body == null || syncManager != null && syncManager.ShouldAskHost) return;
+            if (defeated || stationaryTarget || body == null || syncManager != null && syncManager.ShouldAskHost) return;
 
             if (enemyType == StageObjectType.EnemyFlyer
                 || enemyType == StageObjectType.EnemyFlyerZigzag
