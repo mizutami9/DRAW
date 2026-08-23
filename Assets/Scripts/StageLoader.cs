@@ -334,6 +334,10 @@ namespace DrawBody.Prototype
                 StageSlimeMissileSurvivalController slimeMissile = stageRoot.gameObject.AddComponent<StageSlimeMissileSurvivalController>();
                 slimeMissile.Configure(data.timeLimitSeconds);
             }
+            if (data != null && data.id == "9-2")
+            {
+                stageRoot.gameObject.AddComponent<StageCoinDescentController>();
+            }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
                 if (data.id == "8-3" || data.id == "9-1")

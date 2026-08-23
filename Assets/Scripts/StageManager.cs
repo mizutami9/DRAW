@@ -104,6 +104,7 @@ namespace DrawBody.Prototype
         private Vector3 secondaryChallengeStartPosition;
         public bool IsTimedCollectionChallenge => stageRuleMode == StageRuleMode.TimedCollection;
         public bool IsSurvivalChallenge => stageRuleMode == StageRuleMode.Survival;
+        private bool UsesEliminationController => IsSurvivalChallenge || currentStageId == "9-2";
         public bool IsBlockBreakerChallenge => stageRuleMode == StageRuleMode.BlockBreaker;
         public bool IsDrawingMode => drawing;
         public bool IsGameplayActive => stageStarted && !titleMode && !stageEditing && !drawing && !cleared;
@@ -123,6 +124,12 @@ namespace DrawBody.Prototype
                 if (!challengeStarting)
                 {
                     return string.Empty;
+                }
+                if (currentStageId == "9-2")
+                {
+                    if (challengeStartCountdownRemaining > 2f) return "3";
+                    if (challengeStartCountdownRemaining > 1f) return "2";
+                    return "1";
                 }
                 if (challengeStartCountdownRemaining > 3f) return "3";
                 if (challengeStartCountdownRemaining > 2f) return "2";
@@ -699,7 +706,9 @@ namespace DrawBody.Prototype
             collectedCount = 0;
             challengeFailed = false;
             challengeStarting = stageRuleMode == StageRuleMode.TimedCollection;
-            challengeStartCountdownRemaining = challengeStarting ? ChallengeStartCountdownDuration : 0f;
+            challengeStartCountdownRemaining = challengeStarting
+                ? currentStageId == "9-2" ? 3f : ChallengeStartCountdownDuration
+                : 0f;
             challengeTimeUpReturnRemaining = 0f;
             challengeStartPositionsCaptured = false;
             collectedObjectIds.Clear();
@@ -745,7 +754,14 @@ namespace DrawBody.Prototype
 
             if (challengeStarting)
             {
-                HoldPlayersAtChallengeStart();
+                if (currentStageId == "9-2")
+                {
+                    SetAllPlayerControls(true);
+                }
+                else
+                {
+                    HoldPlayersAtChallengeStart();
+                }
                 uiManager?.SetChallengeCountdown(true, ChallengeStartCountdownText);
                 challengeStartCountdownRemaining = Mathf.Max(
                     0f,
@@ -1313,7 +1329,7 @@ namespace DrawBody.Prototype
             }
 
             ConfigureStageRule(stageLoader != null ? stageLoader.CurrentStageData : null);
-            survivalController = IsSurvivalChallenge
+            survivalController = UsesEliminationController
                 ? Object.FindFirstObjectByType<StageEliminationChallengeController>()
                 : null;
             blockBreakerController = IsBlockBreakerChallenge
@@ -1413,7 +1429,7 @@ namespace DrawBody.Prototype
             NotebookBackgroundDoodles.SetWorldVisible(true);
             stageEditor.TestPlay();
             ConfigureStageRule(stageLoader != null ? stageLoader.CurrentStageData : null);
-            survivalController = IsSurvivalChallenge
+            survivalController = UsesEliminationController
                 ? Object.FindFirstObjectByType<StageEliminationChallengeController>()
                 : null;
             blockBreakerController = IsBlockBreakerChallenge
@@ -2627,7 +2643,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (IsSurvivalChallenge && survivalController != null)
+            if (UsesEliminationController && survivalController != null)
             {
                 survivalController.RequestElimination(targetPlayer);
                 return;
@@ -2675,7 +2691,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (IsSurvivalChallenge && survivalController != null)
+            if (UsesEliminationController && survivalController != null)
             {
                 survivalController.RequestElimination(targetPlayer);
                 return;
