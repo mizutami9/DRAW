@@ -324,6 +324,13 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingRicochetChallenge);
             }
 
+            StageRicochetEnemyChallengeController existingRicochetEnemy =
+                stageRoot.GetComponent<StageRicochetEnemyChallengeController>();
+            if (existingRicochetEnemy != null)
+            {
+                DestroyComponentNow(existingRicochetEnemy);
+            }
+
             StageValueCoinChallengeController existingValueCoinChallenge = stageRoot.GetComponent<StageValueCoinChallengeController>();
             if (existingValueCoinChallenge != null)
             {
@@ -394,6 +401,10 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "12-2")
             {
                 stageRoot.gameObject.AddComponent<StageCoinRushController>();
+            }
+            if (data != null && data.id == "13-2")
+            {
+                stageRoot.gameObject.AddComponent<StageRicochetEnemyChallengeController>();
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {

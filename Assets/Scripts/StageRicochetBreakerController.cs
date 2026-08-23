@@ -13,8 +13,8 @@ namespace DrawBody.Prototype
         private const float InnerHalfWidth = 12.35f;
         private const float InnerHalfHeight = 5.7f;
         private const float BallSpeed = 6.4f;
-        private const float IntroSeconds = 11f;
-        private const float CountdownSeconds = 4f;
+        private const float IntroSeconds = 12f;
+        private const float CountdownSeconds = 3f;
 
         private enum Phase { Intro, Countdown, Playing, Clear, Failed }
 
@@ -27,6 +27,7 @@ namespace DrawBody.Prototype
             public float PhaseRemaining;
             public Vector2 BallPosition;
             public Vector2 BallVelocity;
+            public Vector2 BallDirection;
             public bool BallActive;
             public int BallsLaunched;
             public float RetryRemaining;
@@ -73,6 +74,7 @@ namespace DrawBody.Prototype
         private float oldCameraSize;
         private Vector2 replicaBallPosition;
         private Vector2 replicaBallVelocity;
+        private Vector2 preparedBallDirection = Vector2.up;
 
         public void Configure(float seconds)
         {
@@ -145,17 +147,20 @@ namespace DrawBody.Prototype
             if (phase == Phase.Intro || phase == Phase.Countdown)
             {
                 phaseRemaining -= Time.deltaTime;
+                if (phase == Phase.Countdown && ball != null)
+                    ball.UpdateLaunchCountdown(Mathf.CeilToInt(phaseRemaining));
                 if (phaseRemaining <= 0f)
                 {
                     if (phase == Phase.Intro)
                     {
                         phase = Phase.Countdown;
                         phaseRemaining = CountdownSeconds;
+                        PrepareNextBall();
                     }
                     else
                     {
                         phase = Phase.Playing;
-                        SpawnNextBall();
+                        LaunchPreparedBall();
                         SetLocalControls(true);
                     }
                     BroadcastState(true);
@@ -173,7 +178,10 @@ namespace DrawBody.Prototype
             }
             else if (ball == null && ballsLaunched < 3 && Time.time >= nextBallSpawnAt)
             {
-                SpawnNextBall();
+                phase = Phase.Countdown;
+                phaseRemaining = CountdownSeconds;
+                PrepareNextBall();
+                BroadcastState(true);
             }
             if (remaining <= 0f)
             {
@@ -230,7 +238,7 @@ namespace DrawBody.Prototype
             BroadcastState(true);
         }
 
-        private void SpawnNextBall()
+        private void PrepareNextBall()
         {
             if (!HasAuthority() || ball != null || ballsLaunched >= 3) return;
             int corner = Random.Range(0, 4);
@@ -241,14 +249,23 @@ namespace DrawBody.Prototype
             Vector2 position = new Vector2(
                 (fromRight ? 1f : -1f) * (InnerHalfWidth - 0.72f),
                 (fromTop ? 1f : -1f) * (InnerHalfHeight - 0.72f));
-            Vector2 direction = fromTop ? Vector2.down : Vector2.up;
+            preparedBallDirection = fromTop ? Vector2.down : Vector2.up;
             ballsLaunched++;
             ball = StageRicochetBall.Create(transform, this, position, true);
             float currentSpeed = GetCurrentBallSpeed();
-            ball.Launch(direction, currentSpeed);
+            ball.PrepareLaunch(preparedBallDirection, currentSpeed, Mathf.CeilToInt(phaseRemaining));
             replicaBallPosition = position;
-            replicaBallVelocity = direction * currentSpeed;
+            replicaBallVelocity = Vector2.zero;
             BroadcastState(true);
+        }
+
+        private void LaunchPreparedBall()
+        {
+            if (!HasAuthority() || ball == null) return;
+            float currentSpeed = GetCurrentBallSpeed();
+            ball.PrepareLaunch(preparedBallDirection, currentSpeed, 1);
+            ball.LaunchPrepared();
+            replicaBallVelocity = preparedBallDirection * currentSpeed;
         }
 
         private float GetCurrentBallSpeed()
@@ -303,18 +320,17 @@ namespace DrawBody.Prototype
             data.size = size;
             data.keepSeparate = true;
             GameObject created = factory.Create(data, parent);
-            if (ballPasses && created != null) created.AddComponent<StageRicochetBallPassSurface>();
+            if (ballPasses && created != null) StageRicochetBallPassSurface.Mark(created);
             return created;
         }
 
         private void RegisterExistingBallPassSurface(string objectId)
         {
-            StageEditorObject[] objects = GetComponentsInChildren<StageEditorObject>(true);
+            StageEditorObject[] objects = Object.FindObjectsByType<StageEditorObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             for (int i = 0; i < objects.Length; i++)
             {
                 if (objects[i] == null || objects[i].objectId != objectId) continue;
-                if (objects[i].GetComponent<StageRicochetBallPassSurface>() == null)
-                    objects[i].gameObject.AddComponent<StageRicochetBallPassSurface>();
+                StageRicochetBallPassSurface.Mark(objects[i].gameObject);
                 return;
             }
         }
@@ -496,6 +512,9 @@ namespace DrawBody.Prototype
             retryRemaining = state.RetryRemaining;
             replicaBallPosition = state.BallPosition;
             replicaBallVelocity = state.BallVelocity;
+            preparedBallDirection = state.BallDirection.sqrMagnitude > 0.01f
+                ? state.BallDirection.normalized
+                : Vector2.up;
             if (state.BallActive)
             {
                 if (ball == null || replicaBallGeneration != state.BallsLaunched)
@@ -504,6 +523,9 @@ namespace DrawBody.Prototype
                     ball = StageRicochetBall.Create(transform, this, state.BallPosition, false);
                     replicaBallGeneration = state.BallsLaunched;
                 }
+                if (phase == Phase.Countdown)
+                    ball.PrepareLaunch(preparedBallDirection, GetCurrentBallSpeed(), Mathf.CeilToInt(phaseRemaining));
+                else ball.HideLaunchPreview();
             }
             else if (ball != null)
             {
@@ -548,6 +570,7 @@ namespace DrawBody.Prototype
                     PhaseRemaining = phaseRemaining,
                     BallPosition = ball != null ? (Vector2)ball.transform.position : Vector2.zero,
                     BallVelocity = ballBody != null ? ballBody.linearVelocity : Vector2.zero,
+                    BallDirection = preparedBallDirection,
                     BallActive = ball != null,
                     BallsLaunched = ballsLaunched,
                     RetryRemaining = retryRemaining,
@@ -660,18 +683,35 @@ namespace DrawBody.Prototype
     [DisallowMultipleComponent]
     public sealed class StageRicochetBallPassSurface : MonoBehaviour
     {
+        public static void Mark(GameObject root)
+        {
+            if (root == null) return;
+            if (root.GetComponent<StageRicochetBallPassSurface>() == null)
+                root.AddComponent<StageRicochetBallPassSurface>();
+            Collider2D[] colliders = root.GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                GameObject colliderObject = colliders[i].gameObject;
+                if (colliderObject.GetComponent<StageRicochetBallPassSurface>() == null)
+                    colliderObject.AddComponent<StageRicochetBallPassSurface>();
+            }
+        }
     }
 
     [DisallowMultipleComponent]
     public sealed class StageRicochetBall : MonoBehaviour
     {
         private StageRicochetBreakerController owner;
+        private StageRicochetEnemyChallengeController enemyOwner;
         private Rigidbody2D body;
         private CircleCollider2D hitbox;
         private bool authoritative;
         private Vector2 replicaTarget;
         private Vector2 previousVelocity;
+        private Vector2 preparedDirection = Vector2.up;
         private float cruiseSpeed = 3.2f;
+        private GameObject serveGuide;
+        private TextMesh serveCountdown;
 
         public Rigidbody2D Body => body;
 
@@ -731,12 +771,51 @@ namespace DrawBody.Prototype
             return ball;
         }
 
+        public static StageRicochetBall Create(Transform parent, StageRicochetEnemyChallengeController owner,
+            Vector2 position, bool authoritative)
+        {
+            StageRicochetBall ball = Create(parent, (StageRicochetBreakerController)null, position, authoritative);
+            ball.enemyOwner = owner;
+            return ball;
+        }
+
         public void Launch(Vector2 direction, float speed)
         {
             if (!authoritative || body == null) return;
             cruiseSpeed = Mathf.Max(0.5f, speed);
+            body.bodyType = RigidbodyType2D.Dynamic;
             body.linearVelocity = direction.normalized * cruiseSpeed;
             previousVelocity = body.linearVelocity;
+            SetServeGuideVisible(false);
+        }
+
+        public void PrepareLaunch(Vector2 direction, float speed, int countdown)
+        {
+            if (body == null) return;
+            preparedDirection = direction.sqrMagnitude > 0.01f ? direction.normalized : Vector2.up;
+            cruiseSpeed = Mathf.Max(0.5f, speed);
+            body.bodyType = RigidbodyType2D.Kinematic;
+            body.linearVelocity = Vector2.zero;
+            previousVelocity = Vector2.zero;
+            EnsureServeGuide();
+            UpdateServeGuide(countdown);
+            SetServeGuideVisible(true);
+        }
+
+        public void UpdateLaunchCountdown(int countdown)
+        {
+            if (serveGuide == null || !serveGuide.activeSelf) return;
+            UpdateServeGuide(countdown);
+        }
+
+        public void HideLaunchPreview()
+        {
+            SetServeGuideVisible(false);
+        }
+
+        public void LaunchPrepared()
+        {
+            Launch(preparedDirection, cruiseSpeed);
         }
 
         public void SetCruiseSpeed(float speed)
@@ -772,7 +851,7 @@ namespace DrawBody.Prototype
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (!authoritative || body == null || collision.collider == null) return;
-            if (collision.collider.GetComponentInParent<StageRicochetBallPassSurface>() != null)
+            if (IsPassThroughSurface(collision))
             {
                 // Pass-through floors must never contribute a bounce even if the
                 // physics callback was queued before IgnoreCollision took effect.
@@ -796,9 +875,15 @@ namespace DrawBody.Prototype
 
             StageBombBreakableWall wall = collision.collider.GetComponentInParent<StageBombBreakableWall>();
             if (wall != null) owner?.HitBlock(wall, transform.position);
+            StageRicochetEnemyTarget enemy = collision.collider.GetComponentInParent<StageRicochetEnemyTarget>();
+            if (enemy != null) enemyOwner?.HitEnemy(enemy, transform.position);
             PlayerController2D player = collision.collider.GetComponentInParent<PlayerController2D>();
-            if (player != null) owner?.NotifyPlayerReflection(
-                collision.contactCount > 0 ? collision.GetContact(0).point : (Vector2)transform.position);
+            if (player != null)
+            {
+                Vector2 point = collision.contactCount > 0 ? collision.GetContact(0).point : (Vector2)transform.position;
+                owner?.NotifyPlayerReflection(point);
+                enemyOwner?.NotifyPlayerReflection(point);
+            }
         }
 
         private void IgnorePassThroughSurfaces()
@@ -810,6 +895,77 @@ namespace DrawBody.Prototype
                 Collider2D[] colliders = surfaces[i].GetComponentsInChildren<Collider2D>(true);
                 for (int c = 0; c < colliders.Length; c++) Physics2D.IgnoreCollision(hitbox, colliders[c], true);
             }
+        }
+
+        private bool IsPassThroughSurface(Collision2D collision)
+        {
+            if (collision == null || collision.collider == null) return false;
+            if (collision.collider.GetComponentInParent<StageRicochetBallPassSurface>() != null) return true;
+            if (owner == null && enemyOwner == null) return false;
+            StageEditorObject stageObject = collision.collider.GetComponentInParent<StageEditorObject>();
+            if (stageObject == null) return false;
+
+            // These two stages intentionally let the ball leave through the
+            // horizontal player floors. Keep a geometry fallback because a
+            // rebuilt/connected floor can put its Collider on a sibling object,
+            // outside the marker's transform hierarchy.
+            if (collision.contactCount <= 0) return false;
+            ContactPoint2D contact = collision.GetContact(0);
+            return Mathf.Abs(contact.point.y) >= 5.25f && Mathf.Abs(contact.normal.y) >= 0.55f;
+        }
+
+        private void EnsureServeGuide()
+        {
+            if (serveGuide != null) return;
+            serveGuide = new GameObject("Ball Launch Preview");
+            serveGuide.transform.SetParent(transform, false);
+
+            GameObject arrow = new GameObject("Direction Arrow");
+            arrow.transform.SetParent(serveGuide.transform, false);
+            LineRenderer line = arrow.AddComponent<LineRenderer>();
+            line.useWorldSpace = false;
+            line.positionCount = 5;
+            line.startWidth = 0.1f;
+            line.endWidth = 0.1f;
+            line.numCapVertices = 4;
+            line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            line.startColor = new Color(0.1f, 0.75f, 1f, 0.92f);
+            line.endColor = new Color(0.1f, 0.75f, 1f, 0.92f);
+            line.sortingOrder = 50;
+
+            GameObject label = new GameObject("Launch Countdown");
+            label.transform.SetParent(serveGuide.transform, false);
+            label.transform.localPosition = new Vector3(0f, 0.8f, -0.08f);
+            serveCountdown = label.AddComponent<TextMesh>();
+            serveCountdown.anchor = TextAnchor.MiddleCenter;
+            serveCountdown.alignment = TextAlignment.Center;
+            serveCountdown.fontSize = 54;
+            serveCountdown.characterSize = 0.075f;
+            serveCountdown.color = new Color(1f, 0.72f, 0.08f, 1f);
+            label.GetComponent<MeshRenderer>().sortingOrder = 51;
+        }
+
+        private void UpdateServeGuide(int countdown)
+        {
+            if (serveGuide == null) return;
+            LineRenderer line = serveGuide.GetComponentInChildren<LineRenderer>(true);
+            if (line != null)
+            {
+                Vector2 side = new Vector2(-preparedDirection.y, preparedDirection.x);
+                Vector2 tip = preparedDirection * 1.45f;
+                Vector2 neck = preparedDirection * 0.98f;
+                line.SetPosition(0, Vector3.zero);
+                line.SetPosition(1, tip);
+                line.SetPosition(2, neck + side * 0.28f);
+                line.SetPosition(3, tip);
+                line.SetPosition(4, neck - side * 0.28f);
+            }
+            if (serveCountdown != null) serveCountdown.text = Mathf.Max(1, countdown).ToString();
+        }
+
+        private void SetServeGuideVisible(bool visible)
+        {
+            if (serveGuide != null) serveGuide.SetActive(visible);
         }
     }
 

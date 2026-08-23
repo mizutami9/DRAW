@@ -1,0 +1,13 @@
+{
+  "id":"13-2",
+  "displayName":"Stage 13-2 Ricochet Enemy Box",
+  "backgroundColorHex":"#F7F2DEFF",
+  "ruleMode":0,
+  "timeLimitSeconds":60.0,
+  "collectionTarget":163,
+  "requiredCollectionCount":1,
+  "objects":[
+    {"objectId":"13-2_spawn","type":2,"position":{"x":0.0,"y":-8.05},"size":{"x":0.7,"y":0.7},"rotation":0.0},
+    {"objectId":"13-2_outer_bottom","type":0,"position":{"x":0.0,"y":-9.0},"size":{"x":31.7,"y":0.7},"rotation":0.0,"keepSeparate":true}
+  ]
+}
