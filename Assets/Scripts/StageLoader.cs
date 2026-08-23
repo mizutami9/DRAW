@@ -330,6 +330,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingValueCoinChallenge);
             }
 
+            StageCoinRushController existingCoinRush = stageRoot.GetComponent<StageCoinRushController>();
+            if (existingCoinRush != null)
+            {
+                DestroyComponentNow(existingCoinRush);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && (data.id == "5-3" || data.id == "10-2"))
@@ -379,6 +385,10 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "12-1")
             {
                 stageRoot.gameObject.AddComponent<StageValueCoinChallengeController>();
+            }
+            if (data != null && data.id == "12-2")
+            {
+                stageRoot.gameObject.AddComponent<StageCoinRushController>();
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {

@@ -92,7 +92,7 @@ namespace DrawBody.Prototype
         public void AdjustStageRequiredCount()
         {
             PushUndo();
-            int[] values = { 0, 1, 3, 5, 10, 20, 30 };
+            int[] values = { 0, 1, 3, 5, 10, 20, 30, 50, 100, 250, 500, 1000 };
             int current = 0;
             for (int i = 0; i < values.Length; i++)
             {

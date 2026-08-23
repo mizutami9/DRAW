@@ -705,6 +705,11 @@ namespace DrawBody.Prototype
                 ? data.collectionTarget
                 : StageObjectType.CollectibleFish;
             challengeRemaining = Mathf.Clamp(data != null ? data.timeLimitSeconds : 60f, 5f, 1800f);
+            if (data != null && data.id == "12-2")
+            {
+                int playerCount = Mathf.Clamp(GetInkBudgetPlayerCount(), 1, 4);
+                challengeRemaining = playerCount >= 4 ? 60f : playerCount == 3 ? 90f : 120f;
+            }
             collectedCount = 0;
             challengeFailed = false;
             challengeStarting = stageRuleMode == StageRuleMode.TimedCollection;
@@ -719,7 +724,7 @@ namespace DrawBody.Prototype
             totalCollectionTargetCount = CountCollectibles(collectionTarget);
             int configuredCount = data != null ? data.requiredCollectionCount : 1;
             requiredCollectionCount = configuredCount > 0
-                ? Mathf.Clamp(configuredCount, 1, 999)
+                ? Mathf.Clamp(configuredCount, 1, 2000)
                 : totalCollectionTargetCount;
             requiredCollectionCount = Mathf.Max(1, requiredCollectionCount);
             uiManager?.SetChallengeHud(

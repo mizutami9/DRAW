@@ -142,6 +142,10 @@ namespace DrawBody.Prototype
         {
             get
             {
+                if (stageId == "12-2" && stageCollectionTarget == StageObjectType.CollectibleCoin)
+                {
+                    return 1000;
+                }
                 int count = 0;
                 for (int i = 0; i < objects.Count; i++)
                 {

@@ -114,7 +114,7 @@ namespace DrawBody.Prototype
                         || loaded.collectionTarget == StageObjectType.CollectibleStar
                             ? loaded.collectionTarget
                             : StageObjectType.CollectibleFish;
-                    stageRequiredCollectionCount = Mathf.Clamp(loaded.requiredCollectionCount, 0, 999);
+                    stageRequiredCollectionCount = Mathf.Clamp(loaded.requiredCollectionCount, 0, 2000);
                     for (int i = 0; i < loaded.objects.Length; i++)
                     {
                         if (loaded.objects[i] != null)
@@ -171,6 +171,10 @@ namespace DrawBody.Prototype
             }
 
             RefreshBridgeConnectionVisuals();
+            if (stageId == "12-2")
+            {
+                StageCoinRushController.CreateEditorPreview(editorRoot);
+            }
         }
 
         private void CreateEditorObject(StageObjectData data)
