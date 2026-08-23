@@ -1,0 +1,12 @@
+{
+  "id":"14-3",
+  "displayName":"Stage 14-3 Linked Shield",
+  "backgroundColorHex":"#EEF9FFFF",
+  "ruleMode":2,
+  "timeLimitSeconds":60.0,
+  "collectionTarget":0,
+  "requiredCollectionCount":0,
+  "objects":[
+    {"objectId":"14-3_spawn","type":2,"position":{"x":-7.5,"y":2.0},"size":{"x":0.7,"y":0.7},"rotation":0.0}
+  ]
+}
