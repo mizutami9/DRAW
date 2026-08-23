@@ -73,6 +73,7 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId || !stageManager.IsGameplayActive) return;
+            if (!floorGone) KeepLocalPlayersMovable();
             ApplyPendingEliminations();
             CheckFalls();
 
@@ -111,6 +112,20 @@ namespace DrawBody.Prototype
                 if (restartRemaining <= 0f) stageManager.Retry();
             }
             BroadcastState();
+        }
+
+        private void KeepLocalPlayersMovable()
+        {
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            Transform localPlayer = stageManager.ActivePlayerTransform;
+            for (int i = 0; i < players.Length; i++)
+            {
+                PlayerController2D player = players[i];
+                if (player == null || IsEliminated(player)) continue;
+                if (IsOnline() && player.transform != localPlayer) continue;
+                player.SetControlsEnabled(true);
+            }
         }
 
         public override void RequestElimination(PlayerController2D target)
@@ -247,6 +262,12 @@ namespace DrawBody.Prototype
                 PlayerController2D player = ResolvePlayer(id);
                 if (player != null && player.gameObject.activeSelf) HidePlayer(player);
             }
+        }
+
+        private bool IsEliminated(PlayerController2D player)
+        {
+            string id = ResolvePlayerId(player);
+            return !string.IsNullOrEmpty(id) && eliminated.Contains(id);
         }
 
         private void HandleNetworkData(OnlineGimmickData data)
