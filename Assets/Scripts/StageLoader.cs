@@ -300,6 +300,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingTowerDefense);
             }
 
+            StageSlimeMissileSurvivalController existingSlimeMissile = stageRoot.GetComponent<StageSlimeMissileSurvivalController>();
+            if (existingSlimeMissile != null)
+            {
+                DestroyComponentNow(existingSlimeMissile);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.id == "5-3")
@@ -323,11 +329,16 @@ namespace DrawBody.Prototype
                 StageTowerDefenseController towerDefense = stageRoot.gameObject.AddComponent<StageTowerDefenseController>();
                 towerDefense.Configure(data.timeLimitSeconds);
             }
+            if (data != null && data.id == "9-1")
+            {
+                StageSlimeMissileSurvivalController slimeMissile = stageRoot.gameObject.AddComponent<StageSlimeMissileSurvivalController>();
+                slimeMissile.Configure(data.timeLimitSeconds);
+            }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
-                if (data.id == "8-3")
+                if (data.id == "8-3" || data.id == "9-1")
                 {
-                    // StageTowerDefenseController owns its timer, defeat and retry flow.
+                    // The stage-specific controller owns its timer, elimination and retry flow.
                 }
                 else if (data.id == "6-3")
                 {

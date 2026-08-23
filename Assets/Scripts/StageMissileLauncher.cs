@@ -104,6 +104,11 @@ namespace DrawBody.Prototype
         private LineRenderer flame;
         private float destroyAt;
         private bool exploded;
+        private bool terrainPiercing;
+        private float explosionRadius = ExplosionRadius;
+        private Transform homingTarget;
+        private float homingTurnDegreesPerSecond;
+        private bool isHoming;
         private static Sprite squareSprite;
         private static Sprite circleSprite;
         private static Material lineMaterial;
@@ -113,7 +118,11 @@ namespace DrawBody.Prototype
             Transform launcher,
             Vector2 position,
             Vector2 direction,
-            float speed)
+            float speed,
+            bool passThroughTerrain = false,
+            float scale = 1f,
+            Transform trackingTarget = null,
+            float trackingTurnDegreesPerSecond = 0f)
         {
             GameObject root = new GameObject("Launched Missile");
             root.transform.SetParent(parent, true);
@@ -122,6 +131,8 @@ namespace DrawBody.Prototype
                 0f,
                 0f,
                 Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            float clampedScale = Mathf.Clamp(scale, 0.55f, 2.8f);
+            root.transform.localScale = Vector3.one * clampedScale;
 
             Rigidbody2D missileBody = root.AddComponent<Rigidbody2D>();
             missileBody.bodyType = RigidbodyType2D.Kinematic;
@@ -138,6 +149,11 @@ namespace DrawBody.Prototype
             StageMissileProjectile projectile = root.AddComponent<StageMissileProjectile>();
             projectile.owner = launcher;
             projectile.body = missileBody;
+            projectile.terrainPiercing = passThroughTerrain;
+            projectile.explosionRadius = ExplosionRadius * clampedScale;
+            projectile.homingTarget = trackingTarget;
+            projectile.homingTurnDegreesPerSecond = Mathf.Max(0f, trackingTurnDegreesPerSecond);
+            projectile.isHoming = trackingTarget != null && projectile.homingTurnDegreesPerSecond > 0f;
             projectile.BuildVisual();
             return projectile;
         }
@@ -165,6 +181,19 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void FixedUpdate()
+        {
+            if (exploded || !isHoming || homingTarget == null || body == null) return;
+            Vector2 current = body.linearVelocity;
+            float speed = current.magnitude;
+            if (speed < 0.01f) return;
+            Vector2 desired = ((Vector2)homingTarget.position - body.position).normalized;
+            float maxRadians = homingTurnDegreesPerSecond * Mathf.Deg2Rad * Time.fixedDeltaTime;
+            Vector2 steered = Vector3.RotateTowards(current.normalized, desired, maxRadians, 0f);
+            body.linearVelocity = steered.normalized * speed;
+            transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(steered.y, steered.x) * Mathf.Rad2Deg);
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (exploded || other == null || other.isTrigger
@@ -177,6 +206,11 @@ namespace DrawBody.Prototype
             if (player != null && player.IsTurtleShelled)
             {
                 Explode(false);
+                return;
+            }
+
+            if (terrainPiercing && other.gameObject.layer == 6)
+            {
                 return;
             }
 
@@ -205,14 +239,14 @@ namespace DrawBody.Prototype
             GameObject effectRoot = new GameObject("Missile Explosion");
             effectRoot.transform.position = transform.position;
             BombExplosionVisual visual = effectRoot.AddComponent<BombExplosionVisual>();
-            visual.Configure(ExplosionRadius, false);
+            visual.Configure(explosionRadius, false);
             GameSfx.PlayAt(SfxId.BombExplosion, transform.position, 1.05f);
             Destroy(gameObject);
         }
 
         private void ApplyExplosionDamage()
         {
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, ExplosionRadius);
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
             HashSet<PlayerController2D> players = new HashSet<PlayerController2D>();
             HashSet<Rigidbody2D> bodies = new HashSet<Rigidbody2D>();
             StageManager manager = Object.FindFirstObjectByType<StageManager>();
@@ -247,7 +281,9 @@ namespace DrawBody.Prototype
             bodyObject.transform.localScale = new Vector3(0.82f, 0.28f, 1f);
             SpriteRenderer bodyRenderer = bodyObject.AddComponent<SpriteRenderer>();
             bodyRenderer.sprite = GetSquareSprite();
-            bodyRenderer.color = new Color(0.92f, 0.22f, 0.12f, 1f);
+            bodyRenderer.color = isHoming
+                ? new Color(0.72f, 0.18f, 0.9f, 1f)
+                : new Color(0.92f, 0.22f, 0.12f, 1f);
             bodyRenderer.sortingOrder = 250;
 
             GameObject noseObject = new GameObject("Missile Nose");
@@ -256,7 +292,9 @@ namespace DrawBody.Prototype
             noseObject.transform.localScale = new Vector3(0.34f, 0.3f, 1f);
             SpriteRenderer nose = noseObject.AddComponent<SpriteRenderer>();
             nose.sprite = GetCircleSprite();
-            nose.color = new Color(1f, 0.62f, 0.08f, 1f);
+            nose.color = isHoming
+                ? new Color(0.2f, 0.95f, 1f, 1f)
+                : new Color(1f, 0.62f, 0.08f, 1f);
             nose.sortingOrder = 251;
 
             GameObject flameObject = new GameObject("Missile Flame");

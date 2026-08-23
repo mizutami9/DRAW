@@ -210,6 +210,9 @@ namespace DrawBody.Prototype
 
         private static readonly Dictionary<string, string> GeneratedJapanese = new Dictionary<string, string>
         {
+            { "slime_missile_title", "\u0039\u002d\u0031\u0020\u30b9\u30e9\u30a4\u30e0\u30fb\u30df\u30b5\u30a4\u30eb\u30b1\u30a4\u30d6" },
+            { "slime_missile_floor_warning", "\u5e8a\u304c\u6d88\u3048\u308b\uff01\u0020\u58c1\u306b\u3064\u304b\u307e\u308c" },
+            { "slime_missile_hint", "\u58c1\u3092\u98db\u3073\u79fb\u308a\u3001\u8cab\u901a\u30df\u30b5\u30a4\u30eb\u3092\u304b\u308f\u305b\uff01" },
             { "tower_defense_title", "\u0038\u002d\u0033\u0020\u0020\u5473\u65b9\u3092\u5b88\u308c\uff01" },
             { "tower_defense_phase", "\u30d5\u30a7\u30fc\u30ba\u0020\u007b\u0030\u007d\u0020\u002f\u0020\u007b\u0031\u007d" },
             { "tower_defense_protect", "\u5de6\u53f3\u304b\u3089\u6765\u308b\u6575\u304b\u3089\u5473\u65b9\u3092\u5b88\u308d\u3046" },
@@ -796,6 +799,9 @@ namespace DrawBody.Prototype
 
         private static readonly Dictionary<string, string> GeneratedEnglish = new Dictionary<string, string>
         {
+            { "slime_missile_title", "9-1  SLIME MISSILE CAVE" },
+            { "slime_missile_floor_warning", "FLOOR VANISHING! GRAB A WALL" },
+            { "slime_missile_hint", "WALL-JUMP AND DODGE PIERCING MISSILES!" },
             { "tower_defense_title", "8-3  PROTECT YOUR FRIEND!" },
             { "tower_defense_phase", "PHASE {0} / {1}" },
             { "tower_defense_protect", "Defend your friend from both sides" },
