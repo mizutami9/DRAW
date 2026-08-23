@@ -259,18 +259,34 @@ namespace DrawBody.Prototype
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
             HashSet<PlayerController2D> players = new HashSet<PlayerController2D>();
             HashSet<Rigidbody2D> bodies = new HashSet<Rigidbody2D>();
+            HashSet<StageEnemyCharacter> enemies = new HashSet<StageEnemyCharacter>();
             StageManager manager = Object.FindFirstObjectByType<StageManager>();
             bool online = manager != null && manager.IsOnlineStageActive;
             Transform localPlayer = manager != null ? manager.ActivePlayerTransform : null;
+            StageEditorObject ownerMarker = owner != null ? owner.GetComponent<StageEditorObject>() : null;
+            bool friendlyDefenseMissile = ownerMarker != null
+                && !string.IsNullOrEmpty(ownerMarker.objectId)
+                && ownerMarker.objectId.StartsWith("13-1_", System.StringComparison.Ordinal);
             for (int i = 0; i < hits.Length; i++)
             {
                 Collider2D hit = hits[i];
                 if (hit == null) continue;
+                StageEnemyCharacter enemy = hit.GetComponentInParent<StageEnemyCharacter>();
+                if (enemy != null && enemies.Add(enemy))
+                {
+                    StageTowerDefenseEnemyHealth defenseEnemy = enemy.GetComponent<StageTowerDefenseEnemyHealth>();
+                    if (defenseEnemy != null) defenseEnemy.HitByBomb();
+                    else enemy.HitByBomb();
+                }
                 PlayerController2D player = hit.GetComponentInParent<PlayerController2D>();
-                if (player != null && players.Add(player) && !player.IsInvulnerable
+                if (!friendlyDefenseMissile && player != null && players.Add(player) && !player.IsInvulnerable
                     && (!online || player.transform == localPlayer))
                 {
                     manager?.RespawnFromHazard(player);
+                }
+                if (friendlyDefenseMissile && player != null)
+                {
+                    continue;
                 }
 
                 Rigidbody2D targetBody = hit.attachedRigidbody;

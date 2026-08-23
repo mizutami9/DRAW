@@ -360,6 +360,11 @@ namespace DrawBody.Prototype
                 StageTowerDefenseController towerDefense = stageRoot.gameObject.AddComponent<StageTowerDefenseController>();
                 towerDefense.Configure(data.timeLimitSeconds);
             }
+            if (data != null && data.id == "13-1")
+            {
+                StageTowerDefenseController towerDefense = stageRoot.gameObject.AddComponent<StageTowerDefenseController>();
+                towerDefense.ConfigureHardMode(data.timeLimitSeconds);
+            }
             if (data != null && data.id == "9-1")
             {
                 StageSlimeMissileSurvivalController slimeMissile = stageRoot.gameObject.AddComponent<StageSlimeMissileSurvivalController>();
@@ -392,7 +397,7 @@ namespace DrawBody.Prototype
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
-                if (data.id == "8-3" || data.id == "9-1")
+                if (data.id == "8-3" || data.id == "9-1" || data.id == "13-1")
                 {
                     // The stage-specific controller owns its timer, elimination and retry flow.
                 }

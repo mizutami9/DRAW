@@ -7,7 +7,6 @@ namespace DrawBody.Prototype
     [DisallowMultipleComponent]
     public sealed class StageTowerDefenseController : MonoBehaviour
     {
-        private const string StageId = "8-3";
         private const string StateKind = "tower_defense_state";
         private const string ButtonRequestKind = "tower_defense_button_request";
         private const float IntroSeconds = 3f;
@@ -84,12 +83,24 @@ namespace DrawBody.Prototype
         private int enemySequence;
         private int stateSequence;
         private int lastStateSequence;
+        private string stageId = "8-3";
+        private bool hardMode;
+        private StageBombDropper hardBombLauncher;
+        private StageMissileLauncher hardMissileLauncher;
 
         public bool HasAuthority => stageManager == null || !stageManager.IsOnlineStageActive || stageManager.IsOnlineStageHost;
 
         public void Configure(float seconds)
         {
             totalSeconds = Mathf.Max(90f, seconds);
+            remainingSeconds = totalSeconds;
+        }
+
+        public void ConfigureHardMode(float seconds)
+        {
+            stageId = "13-1";
+            hardMode = true;
+            totalSeconds = Mathf.Max(60f, seconds);
             remainingSeconds = totalSeconds;
         }
 
@@ -129,19 +140,20 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            BuildAirstrikeFloorZones();
+            if (!hardMode) BuildAirstrikeFloorZones();
             BuildMonitor();
             LockCameraToArena();
-            ally = StageTowerDefenseAlly.Create(transform, new Vector2(0f, -2.98f), this);
-            leftButton = AttachButton("8-3_left_button", true);
-            rightButton = AttachButton("8-3_right_button", false);
-            nextSpawnAt = Time.time + IntroSeconds + 1.1f;
+            ally = StageTowerDefenseAlly.Create(transform, hardMode ? new Vector2(-19.5f, -2.98f) : new Vector2(0f, -2.98f), this);
+            leftButton = AttachButton(hardMode ? "13-1_bomb_button" : "8-3_left_button", true);
+            rightButton = AttachButton(hardMode ? "13-1_missile_button" : "8-3_right_button", false);
+            if (hardMode) ConfigureHardModeLaunchers();
+            nextSpawnAt = Time.time + IntroSeconds + (hardMode ? 0.35f : 1.1f);
             RefreshDisplay();
         }
 
         private void Update()
         {
-            if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            if (stageManager == null || stageManager.CurrentStageId != stageId) return;
 
             if (!HasAuthority)
             {
@@ -191,7 +203,7 @@ namespace DrawBody.Prototype
             {
                 onlineManager?.SendGimmickData(new OnlineGimmickData
                 {
-                    ObjectId = StageId,
+                    ObjectId = stageId,
                     Kind = ButtonRequestKind,
                     Json = JsonUtility.ToJson(new ButtonRequest { Left = left })
                 });
@@ -203,6 +215,21 @@ namespace DrawBody.Prototype
         private void ActivateButton(bool left)
         {
             if (left ? leftCooldown > 0f || leftWarning > 0f : rightCooldown > 0f || rightWarning > 0f) return;
+            if (hardMode)
+            {
+                if (left)
+                {
+                    leftCooldown = 3f;
+                    hardBombLauncher?.ActivateFromLink();
+                }
+                else
+                {
+                    rightCooldown = 3f;
+                    hardMissileLauncher?.ActivateFromLink();
+                }
+                BroadcastState(true);
+                return;
+            }
             if (left)
             {
                 leftCooldown = ButtonCooldown;
@@ -250,6 +277,13 @@ namespace DrawBody.Prototype
         private void SpawnWavePair()
         {
             int phase = CurrentPhase();
+            if (hardMode)
+            {
+                int count = phase == 1 ? Random.Range(6, 9) : phase == 2 ? Random.Range(8, 11) : Random.Range(11, 15);
+                for (int i = 0; i < count; i++) SpawnEnemy(false, phase, i);
+                nextSpawnAt = Time.time + (phase == 1 ? 2.6f : phase == 2 ? 1.8f : 1.2f);
+                return;
+            }
             int eachSide = phase == 1 ? 1 : phase == 2 ? Random.Range(1, 3) : Random.Range(2, 4);
             for (int i = 0; i < eachSide; i++)
             {
@@ -262,8 +296,18 @@ namespace DrawBody.Prototype
         private void SpawnEnemy(bool fromLeft, int phase, int lane)
         {
             StageObjectType type;
-            int pattern = (enemySequence + lane + (fromLeft ? 1 : 0)) % (phase == 1 ? 2 : phase == 2 ? 5 : 6);
-            if (pattern == 1) type = StageObjectType.EnemyJumper;
+            int pattern = (enemySequence + lane + (fromLeft ? 1 : 0))
+                % (hardMode ? phase == 1 ? 5 : 6 : phase == 1 ? 2 : phase == 2 ? 5 : 6);
+            if (hardMode)
+            {
+                if (pattern == 1) type = StageObjectType.EnemyJumper;
+                else if (pattern == 2) type = StageObjectType.EnemyFlyer;
+                else if (pattern == 3) type = StageObjectType.EnemyShooter;
+                else if (pattern == 4) type = StageObjectType.EnemyCharger;
+                else if (pattern == 5) type = StageObjectType.EnemyShooter;
+                else type = StageObjectType.EnemyWalker;
+            }
+            else if (pattern == 1) type = StageObjectType.EnemyJumper;
             else if (pattern == 2) type = StageObjectType.EnemyShooter;
             else if (pattern == 3) type = StageObjectType.EnemyCharger;
             else if (pattern == 4) type = phase >= 3 ? StageObjectType.EnemyFlyer : StageObjectType.EnemyBomber;
@@ -273,17 +317,23 @@ namespace DrawBody.Prototype
             float speed = type == StageObjectType.EnemyBomber
                 ? Random.Range(1.05f, 1.35f)
                 : Random.Range(1.7f, 2.15f) + phase * 0.42f;
-            string id = "8-3_enemy_" + (++enemySequence);
-            float spawnY = type == StageObjectType.EnemyBomber ? Random.Range(2.4f, 3.8f)
-                : type == StageObjectType.EnemyFlyer ? -2.55f
+            if (hardMode) speed *= 1.85f;
+            string id = stageId + "_enemy_" + (++enemySequence);
+            float spawnY = type == StageObjectType.EnemyBomber ? Random.Range(2.4f, hardMode ? 5.2f : 3.8f)
+                : type == StageObjectType.EnemyFlyer ? hardMode ? Random.Range(1.3f, 5.4f) : -2.55f
                 : GroundY + size * 0.58f + lane * 0.04f;
-            Vector2 position = new Vector2(fromLeft ? -20.2f : 20.2f, spawnY);
+            float edge = hardMode ? 21.3f : 20.2f;
+            Vector2 position = new Vector2(fromLeft ? -edge : edge, spawnY);
             GameObject obj = factory?.CreateSpawnedEnemy(type, id, position, size, transform, speed, fromLeft ? 1f : -1f);
             StageEnemyCharacter enemy = obj != null ? obj.GetComponent<StageEnemyCharacter>() : null;
             if (enemy == null) return;
             ConfigureBomberIfNeeded(obj, type, phase);
             StageTowerDefenseEnemyHealth health = obj.AddComponent<StageTowerDefenseEnemyHealth>();
-            int enemyHp = phase <= 1 || enemySequence % 2 == 0 ? 1 : 2;
+            int enemyHp = hardMode
+                ? phase == 1 ? (enemySequence % 5 == 0 ? 2 : 1)
+                    : phase == 2 ? (enemySequence % 3 == 0 ? 2 : 1)
+                    : enemySequence % 4 == 0 ? 3 : 2
+                : phase <= 1 || enemySequence % 2 == 0 ? 1 : 2;
             health.Configure(this, enemyHp, enemyHp);
             enemies[id] = health;
         }
@@ -329,7 +379,36 @@ namespace DrawBody.Prototype
         private int CurrentPhase()
         {
             float elapsed = totalSeconds - remainingSeconds;
-            return Mathf.Clamp(Mathf.FloorToInt(elapsed / PhaseSeconds) + 1, 1, 3);
+            float phaseLength = hardMode ? 20f : PhaseSeconds;
+            return Mathf.Clamp(Mathf.FloorToInt(elapsed / phaseLength) + 1, 1, 3);
+        }
+
+        private void ConfigureHardModeLaunchers()
+        {
+            StageEditorObject[] markers = GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < markers.Length; i++)
+            {
+                StageEditorObject marker = markers[i];
+                if (marker == null) continue;
+                if (marker.objectId == "13-1_bomb_launcher")
+                {
+                    hardBombLauncher = marker.GetComponent<StageBombDropper>();
+                    hardBombLauncher?.PrepareForLink();
+                    hardBombLauncher?.SetLinkedLaunchTuning(3f, 14f);
+                    StageOscillatingAim aim = marker.GetComponent<StageOscillatingAim>();
+                    if (aim == null) aim = marker.gameObject.AddComponent<StageOscillatingAim>();
+                    aim.Configure(45f, 45f, 1.05f);
+                }
+                else if (marker.objectId == "13-1_missile_launcher")
+                {
+                    hardMissileLauncher = marker.GetComponent<StageMissileLauncher>();
+                    hardMissileLauncher?.PrepareForLink();
+                    hardMissileLauncher?.SetLinkCooldown(3f);
+                    StageOscillatingAim aim = marker.GetComponent<StageOscillatingAim>();
+                    if (aim == null) aim = marker.gameObject.AddComponent<StageOscillatingAim>();
+                    aim.Configure(-45f, 45f, 0.92f);
+                }
+            }
         }
 
         private void RemoveDefeatedEnemies()
@@ -367,11 +446,13 @@ namespace DrawBody.Prototype
 
         private void BuildMonitor()
         {
-            GameObject monitor = new GameObject("8-3 Defense Monitor");
+            GameObject monitor = new GameObject(stageId + " Defense Monitor");
             monitor.transform.SetParent(transform, false);
             monitor.transform.position = new Vector3(0f, 5.15f, 0f);
-            StageGun.CreateSprite(monitor.transform, "Frame", Vector2.zero, new Vector2(13.5f, 2.75f), new Color(0.16f, 0.2f, 0.24f, 0.94f), 22);
-            StageGun.CreateSprite(monitor.transform, "Screen", Vector2.zero, new Vector2(12.8f, 2.18f), new Color(0.025f, 0.055f, 0.06f, 0.96f), 23);
+            Vector2 frameSize = hardMode ? new Vector2(18f, 3.2f) : new Vector2(13.5f, 2.75f);
+            Vector2 screenSize = hardMode ? new Vector2(17.2f, 2.55f) : new Vector2(12.8f, 2.18f);
+            StageGun.CreateSprite(monitor.transform, "Frame", Vector2.zero, frameSize, new Color(0.16f, 0.2f, 0.24f, 0.94f), 22);
+            StageGun.CreateSprite(monitor.transform, "Screen", Vector2.zero, screenSize, new Color(0.025f, 0.055f, 0.06f, 0.96f), 23);
             titleText = CreateText(monitor.transform, new Vector2(0f, 0.72f), 0.095f, 25, new Color(0.35f, 0.95f, 0.82f, 1f));
             phaseText = CreateText(monitor.transform, new Vector2(-3.5f, 0.05f), 0.14f, 25, new Color(1f, 0.78f, 0.2f, 1f));
             timerText = CreateText(monitor.transform, new Vector2(2.5f, 0.05f), 0.18f, 25, new Color(0.4f, 0.92f, 1f, 1f));
@@ -490,12 +571,12 @@ namespace DrawBody.Prototype
                 OutcomeRemaining = matchState == MatchState.Failed ? failedRemaining : clearRemaining,
                 Enemies = snapshots.ToArray()
             };
-            onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = StageId, Kind = StateKind, Json = JsonUtility.ToJson(state) });
+            onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = stageId, Kind = StateKind, Json = JsonUtility.ToJson(state) });
         }
 
         private void HandleNetworkData(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId) return;
+            if (data == null || data.ObjectId != stageId) return;
             if (data.Kind == ButtonRequestKind && HasAuthority)
             {
                 ButtonRequest request = JsonUtility.FromJson<ButtonRequest>(data.Json);
@@ -648,6 +729,7 @@ namespace DrawBody.Prototype
 
     public sealed class StageTowerDefenseButton : MonoBehaviour
     {
+        private readonly HashSet<Collider2D> contacts = new HashSet<Collider2D>();
         private StageTowerDefenseController owner;
         private bool left;
         private TextMesh label;
@@ -661,6 +743,8 @@ namespace DrawBody.Prototype
             BoxCollider2D trigger = GetComponent<BoxCollider2D>();
             if (trigger == null) trigger = gameObject.AddComponent<BoxCollider2D>();
             trigger.isTrigger = true;
+            trigger.size = new Vector2(Mathf.Max(1.35f, trigger.size.x), Mathf.Max(1.8f, trigger.size.y));
+            trigger.offset = new Vector2(trigger.offset.x, 0.45f);
             GameObject glowObject = StageGun.CreateSprite(transform, "Airstrike Button Glow", new Vector2(0f, 0.18f),
                 new Vector2(1.15f, 0.34f), new Color(0.2f, 0.9f, 0.75f, 0.75f), 41);
             glow = glowObject.GetComponent<SpriteRenderer>();
@@ -684,7 +768,25 @@ namespace DrawBody.Prototype
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other == null || other.GetComponentInParent<PlayerController2D>() == null || Time.time < nextLocalRequestAt) return;
+            TryPress(other);
+        }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            TryPress(other);
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other != null) contacts.Remove(other);
+        }
+
+        private void TryPress(Collider2D other)
+        {
+            if (other == null || other.GetComponentInParent<PlayerController2D>() == null || contacts.Contains(other)) return;
+            bool wasEmpty = contacts.Count == 0;
+            contacts.Add(other);
+            if (!wasEmpty || Time.time < nextLocalRequestAt) return;
             nextLocalRequestAt = Time.time + 0.5f;
             owner?.RequestButton(left);
         }
