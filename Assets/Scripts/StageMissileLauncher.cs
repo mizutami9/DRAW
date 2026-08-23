@@ -15,6 +15,8 @@ namespace DrawBody.Prototype
         private int launchSequence;
         private StageEditorObject marker;
         private StageGimmickSyncManager syncManager;
+        private float linkedCooldownSeconds;
+        private float nextLinkedLaunchTime;
 
         public void Configure(Transform parent, Transform launchPoint, float seconds, float speed)
         {
@@ -55,8 +57,15 @@ namespace DrawBody.Prototype
 
         public void ActivateFromLink()
         {
-            if (syncManager == null || !syncManager.IsOnlineActive || syncManager.IsHost)
-                FireMissile();
+            if (syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost
+                || Time.time < nextLinkedLaunchTime) return;
+            nextLinkedLaunchTime = Time.time + linkedCooldownSeconds;
+            FireMissile();
+        }
+
+        public void SetLinkCooldown(float seconds)
+        {
+            linkedCooldownSeconds = Mathf.Max(0f, seconds);
         }
 
         private void FireMissile()
@@ -246,6 +255,7 @@ namespace DrawBody.Prototype
 
         private void ApplyExplosionDamage()
         {
+            StageValueCoinChallengeController.BreakCratesInRadius(transform.position, explosionRadius);
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
             HashSet<PlayerController2D> players = new HashSet<PlayerController2D>();
             HashSet<Rigidbody2D> bodies = new HashSet<Rigidbody2D>();

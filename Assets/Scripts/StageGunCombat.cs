@@ -468,6 +468,12 @@ namespace DrawBody.Prototype
                     ricochetTarget.Hit(reflectionCount, hits[i].point);
                     return true;
                 }
+                StageValueCrate valueCrate = collider.GetComponentInParent<StageValueCrate>();
+                if (valueCrate != null)
+                {
+                    valueCrate.Hit(hits[i].point);
+                    return true;
+                }
                 StageBulletBreakableWall wall = collider.GetComponentInParent<StageBulletBreakableWall>();
                 if (wall != null)
                 {

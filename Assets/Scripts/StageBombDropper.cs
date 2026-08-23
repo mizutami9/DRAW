@@ -21,6 +21,9 @@ namespace DrawBody.Prototype
         private int sequence;
         private float nextSpawnTime;
         private bool linkedMode;
+        private float linkedCooldownSeconds;
+        private float nextLinkedLaunchTime;
+        private float launchSpeed = 5.5f;
 
         public void Configure(
             StageObjectFactory targetFactory,
@@ -77,12 +80,20 @@ namespace DrawBody.Prototype
         public void ActivateFromLink()
         {
             if (factory == null || spawnParent == null
-                || syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost)
+                || syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost
+                || Time.time < nextLinkedLaunchTime)
             {
                 return;
             }
 
+            nextLinkedLaunchTime = Time.time + linkedCooldownSeconds;
             SpawnBomb();
+        }
+
+        public void SetLinkedLaunchTuning(float cooldownSeconds, float speed)
+        {
+            linkedCooldownSeconds = Mathf.Max(0f, cooldownSeconds);
+            launchSpeed = Mathf.Clamp(speed, 5.5f, 18f);
         }
 
         private void SpawnBomb()
@@ -95,7 +106,7 @@ namespace DrawBody.Prototype
                 : gameObject.name;
             string objectId = dropperId + "_bomb_" + sequence.ToString("D5");
             sequence++;
-            Vector2 launchVelocity = -(Vector2)transform.up * 5.5f;
+            Vector2 launchVelocity = -(Vector2)transform.up * launchSpeed;
 
             GameObject spawned = syncManager != null && syncManager.IsOnlineActive
                 ? syncManager.SpawnDropperBox(

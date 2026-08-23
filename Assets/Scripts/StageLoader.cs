@@ -324,6 +324,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingRicochetChallenge);
             }
 
+            StageValueCoinChallengeController existingValueCoinChallenge = stageRoot.GetComponent<StageValueCoinChallengeController>();
+            if (existingValueCoinChallenge != null)
+            {
+                DestroyComponentNow(existingValueCoinChallenge);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && (data.id == "5-3" || data.id == "10-2"))
@@ -369,6 +375,10 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "10-3")
             {
                 stageRoot.gameObject.AddComponent<StageRicochetChallengeController>();
+            }
+            if (data != null && data.id == "12-1")
+            {
+                stageRoot.gameObject.AddComponent<StageValueCoinChallengeController>();
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {

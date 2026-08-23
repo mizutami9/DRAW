@@ -1702,7 +1702,8 @@ namespace DrawBody.Prototype
         {
             StageBlockBreakerEnemy[] enemies = Object.FindObjectsByType<StageBlockBreakerEnemy>(FindObjectsSortMode.None);
             StageEnemyCharacter[] placedEnemies = Object.FindObjectsByType<StageEnemyCharacter>(FindObjectsSortMode.None);
-            if (enemies.Length == 0 && placedEnemies.Length == 0) return false;
+            StageValueCrate[] valueCrates = Object.FindObjectsByType<StageValueCrate>(FindObjectsSortMode.None);
+            if (enemies.Length == 0 && placedEnemies.Length == 0 && valueCrates.Length == 0) return false;
 
             Bounds catBounds = new Bounds(transform.position, Vector3.one);
             if (!TryGetSolidBounds(playerController, out catBounds))
@@ -1713,6 +1714,7 @@ namespace DrawBody.Prototype
             float facing = GetFacingDirection();
             StageBlockBreakerEnemy closestEnemy = null;
             StageEnemyCharacter closestPlacedEnemy = null;
+            StageValueCrate closestValueCrate = null;
             float closestDistance = float.PositiveInfinity;
             float frontLegInk = abilityController != null
                 ? abilityController.CurrentProfile.CatFrontLegInk
@@ -1733,6 +1735,7 @@ namespace DrawBody.Prototype
                     closestDistance = distance;
                     closestEnemy = enemy;
                     closestPlacedEnemy = null;
+                    closestValueCrate = null;
                 }
             }
             for (int i = 0; i < placedEnemies.Length; i++)
@@ -1749,11 +1752,30 @@ namespace DrawBody.Prototype
                     closestDistance = distance;
                     closestEnemy = null;
                     closestPlacedEnemy = enemy;
+                    closestValueCrate = null;
                 }
             }
-            if (closestEnemy == null && closestPlacedEnemy == null) return false;
+            for (int i = 0; i < valueCrates.Length; i++)
+            {
+                StageValueCrate crate = valueCrates[i];
+                if (crate == null || crate.IsBroken || !crate.gameObject.activeInHierarchy) continue;
+                Collider2D crateCollider = crate.GetComponentInChildren<Collider2D>();
+                if (crateCollider == null) continue;
+                Vector2 towardCrate = (Vector2)crateCollider.bounds.center - (Vector2)catBounds.center;
+                if (towardCrate.x * facing < -0.2f) continue;
+                float distance = GetClosestColliderDistance(ownColliders, crateCollider);
+                if (distance <= scratchReach && distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = null;
+                    closestPlacedEnemy = null;
+                    closestValueCrate = crate;
+                }
+            }
+            if (closestEnemy == null && closestPlacedEnemy == null && closestValueCrate == null) return false;
             if (closestEnemy != null) closestEnemy.HitByCatScratch();
-            else closestPlacedEnemy.HitByCatScratch();
+            else if (closestPlacedEnemy != null) closestPlacedEnemy.HitByCatScratch();
+            else closestValueCrate.Hit(closestValueCrate.transform.position);
             return true;
         }
 

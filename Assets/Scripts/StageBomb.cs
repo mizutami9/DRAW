@@ -199,6 +199,7 @@ namespace DrawBody.Prototype
             DestroyRangeIndicator();
             ReleaseFromCarriers();
             BreakBombWalls(position, radius);
+            if (applyGameplay) StageValueCoinChallengeController.BreakCratesInRadius(position, radius);
             DefeatBlockBreakerEnemies(position, radius, applyGameplay);
             DamageTowerDefenseAlly(position, radius, applyGameplay);
             TriggerNearbyBombs(position, radius, applyGameplay);
