@@ -68,6 +68,7 @@ namespace DrawBody.Prototype
         private bool turtleShelled;
         private bool turtleTurnHeld;
         private Vector2 groundNormal = Vector2.up;
+        private bool groundedOnIce;
         private Vector2 supportVelocity;
         private Rigidbody2D supportBody;
         private float supportNormalScore;
@@ -498,6 +499,7 @@ namespace DrawBody.Prototype
             }
 
             IsGrounded = HasExternalOverlap(probeCenter, probeSize);
+            groundedOnIce = false;
             groundNormal = IsGrounded ? FindGroundNormal(probeSize) : Vector2.up;
             if (IsGrounded)
             {
@@ -593,7 +595,23 @@ namespace DrawBody.Prototype
             float targetSpeed = currentSupportVelocity.x
                 + horizontalInput * moveSpeed * EffectiveMoveSpeedMultiplier;
             float speedDifference = targetSpeed - rb.linearVelocity.x;
-            float rate = Mathf.Abs(targetSpeed) > 0.01f ? acceleration : deceleration;
+            float rate;
+            if (IsGrounded && groundedOnIce)
+            {
+                // Ice preserves momentum. Steering still works, but releasing or
+                // reversing input takes time instead of stopping in one step.
+                bool noInput = Mathf.Abs(horizontalInput) <= 0.01f;
+                bool reversing = !noInput
+                    && Mathf.Abs(rb.linearVelocity.x) > 0.05f
+                    && Mathf.Sign(targetSpeed) != Mathf.Sign(rb.linearVelocity.x);
+                rate = noInput
+                    ? deceleration * 0.015f
+                    : reversing ? acceleration * 0.16f : acceleration * 0.48f;
+            }
+            else
+            {
+                rate = Mathf.Abs(targetSpeed) > 0.01f ? acceleration : deceleration;
+            }
             float movement = Mathf.Clamp(speedDifference, -rate * Time.fixedDeltaTime, rate * Time.fixedDeltaTime);
             Vector2 nextVelocity = new Vector2(rb.linearVelocity.x + movement, rb.linearVelocity.y);
             nextVelocity = ApplySlopeAssist(nextVelocity);
@@ -722,6 +740,7 @@ namespace DrawBody.Prototype
 
                     bestDistance = hit.distance;
                     normal = hit.normal;
+                    groundedOnIce = hit.collider.GetComponentInParent<StageIceSurface>() != null;
                 }
             }
 

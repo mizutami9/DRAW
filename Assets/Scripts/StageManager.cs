@@ -920,6 +920,13 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            bool firstPlayerWins = currentStageId == "10-1";
+            if (firstPlayerWins)
+            {
+                StageIceSpeedrunController speedrun = Object.FindFirstObjectByType<StageIceSpeedrunController>();
+                if (speedrun != null && !speedrun.CanFinish) return;
+            }
+
             if (IsOnlineInStage())
             {
                 if (goalPlayer != primaryPlayer || onlineManager == null || string.IsNullOrEmpty(onlineManager.LocalPlayerId))
@@ -934,7 +941,10 @@ namespace DrawBody.Prototype
                     Kind = GimmickKindGoalState,
                     Json = JsonUtility.ToJson(new PlayerGoalState { Inside = inside })
                 });
-                TryClearWhenAllOnlinePlayersAtGoal();
+                if (inside && firstPlayerWins && IsLocalOnlineHost(onlineManager.CurrentLobby))
+                    ClearStage();
+                else
+                    TryClearWhenAllOnlinePlayersAtGoal();
                 return;
             }
 
@@ -947,7 +957,7 @@ namespace DrawBody.Prototype
                 localPlayersAtGoal.Remove(goalPlayer);
             }
 
-            if (inside && AreAllLocalPlayersAtGoal())
+            if (inside && (firstPlayerWins || AreAllLocalPlayersAtGoal()))
             {
                 ClearStage();
             }
@@ -1066,8 +1076,15 @@ namespace DrawBody.Prototype
             else if (data.Kind == GimmickKindGoalState && data.ObjectId == currentStageId)
             {
                 PlayerGoalState goalState = JsonUtility.FromJson<PlayerGoalState>(data.Json);
-                SetOnlineGoalState(data.PlayerId, goalState != null && goalState.Inside);
-                TryClearWhenAllOnlinePlayersAtGoal();
+                bool inside = goalState != null && goalState.Inside;
+                SetOnlineGoalState(data.PlayerId, inside);
+                if (currentStageId == "10-1" && inside
+                    && IsLocalOnlineHost(onlineManager.CurrentLobby))
+                {
+                    StageIceSpeedrunController speedrun = Object.FindFirstObjectByType<StageIceSpeedrunController>();
+                    if (speedrun == null || speedrun.CanFinish) ClearStage();
+                }
+                else TryClearWhenAllOnlinePlayersAtGoal();
             }
             else if (data.Kind == GimmickKindRetry
                 && data.ObjectId == currentStageId

@@ -647,6 +647,13 @@ namespace DrawBody.Prototype
 
             BoxCollider2D collider = obj.AddComponent<BoxCollider2D>();
             collider.size = data.size;
+            bool isIceSurface = data.type == StageObjectType.IceFloor
+                || data.type == StageObjectType.SlipperySlope;
+            if (isIceSurface)
+            {
+                collider.sharedMaterial = StageIceSurface.GetMaterial();
+                obj.AddComponent<StageIceSurface>();
+            }
             if (StageObjectCatalog.Get(data.type).Kind == StageObjectKind.Trigger || StageObjectCatalog.Get(data.type).Kind == StageObjectKind.Hazard)
             {
                 collider.isTrigger = true;
@@ -3519,7 +3526,8 @@ namespace DrawBody.Prototype
                 case StageObjectCategory.Enemy:
                     return new Color(0.72f, 0.18f, 0.58f);
                 default:
-                    if (type == StageObjectType.IceFloor || type == StageObjectType.IceBlock || type == StageObjectType.CloudPlatform)
+                    if (type == StageObjectType.IceFloor || type == StageObjectType.SlipperySlope
+                        || type == StageObjectType.IceBlock || type == StageObjectType.CloudPlatform)
                     {
                         return new Color(0.2f, 0.65f, 1f);
                     }

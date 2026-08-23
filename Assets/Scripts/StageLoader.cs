@@ -312,6 +312,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingGrainRain);
             }
 
+            StageIceSpeedrunController existingIceSpeedrun = stageRoot.GetComponent<StageIceSpeedrunController>();
+            if (existingIceSpeedrun != null)
+            {
+                DestroyComponentNow(existingIceSpeedrun);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.id == "5-3")
@@ -347,6 +353,11 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "9-3")
             {
                 stageRoot.gameObject.AddComponent<StageGrainRainController>();
+            }
+            if (data != null && data.id == "10-1")
+            {
+                StageIceSpeedrunController speedrun = stageRoot.gameObject.AddComponent<StageIceSpeedrunController>();
+                speedrun.Configure(data.timeLimitSeconds);
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
