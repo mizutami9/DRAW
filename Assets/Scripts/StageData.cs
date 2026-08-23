@@ -281,7 +281,9 @@ namespace DrawBody.Prototype
         BackgroundTreeRoot,
         GrainEmitter,
         GrainScale,
-        GrainGate
+        GrainGate,
+        EscortFriendButton,
+        EscortPlayerOneWayFloor
     }
 
     [Serializable]

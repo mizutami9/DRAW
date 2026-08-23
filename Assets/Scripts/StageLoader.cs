@@ -320,9 +320,10 @@ namespace DrawBody.Prototype
 
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
-            if (data != null && data.id == "5-3")
+            if (data != null && (data.id == "5-3" || data.id == "10-2"))
             {
-                stageRoot.gameObject.AddComponent<StageEscortController>();
+                StageEscortController escort = stageRoot.gameObject.AddComponent<StageEscortController>();
+                escort.Configure(data.id);
             }
             if (data != null && data.id == "4-3")
             {

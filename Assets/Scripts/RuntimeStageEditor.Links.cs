@@ -157,6 +157,7 @@ namespace DrawBody.Prototype
         private static bool CanBeLinkSource(StageObjectType type)
         {
             return type == StageObjectType.Button
+                || type == StageObjectType.EscortFriendButton
                 || type == StageObjectType.WeightButton
                 || type == StageObjectType.SimultaneousButton
                 || type == StageObjectType.HoldButton

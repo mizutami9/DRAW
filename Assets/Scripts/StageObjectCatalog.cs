@@ -79,6 +79,7 @@ namespace DrawBody.Prototype
             E(StageObjectType.RotatingPlatform, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.EscortPlayerOnlyFloor, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.EscortHeadBridge, StageObjectCategory.Terrain, StageObjectPlacement.Point, StageObjectKind.Solid),
+            E(StageObjectType.EscortPlayerOneWayFloor, StageObjectCategory.Terrain, StageObjectPlacement.Rect, StageObjectKind.Solid),
 
             E(StageObjectType.Spawn, StageObjectCategory.StartGoal, StageObjectPlacement.Point, StageObjectKind.Marker),
             E(StageObjectType.Goal, StageObjectCategory.StartGoal, StageObjectPlacement.Point, StageObjectKind.Goal),
@@ -111,6 +112,7 @@ namespace DrawBody.Prototype
             E(StageObjectType.RemoteControl, StageObjectCategory.Switch, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.InkScale, StageObjectCategory.Switch, StageObjectPlacement.Point, StageObjectKind.Trigger),
             E(StageObjectType.GrainScale, StageObjectCategory.Switch, StageObjectPlacement.Point, StageObjectKind.Trigger),
+            E(StageObjectType.EscortFriendButton, StageObjectCategory.Switch, StageObjectPlacement.Point, StageObjectKind.Trigger),
 
             E(StageObjectType.Door, StageObjectCategory.DoorGate, StageObjectPlacement.Rect, StageObjectKind.Solid),
             E(StageObjectType.LockedDoor, StageObjectCategory.DoorGate, StageObjectPlacement.Rect, StageObjectKind.Solid),

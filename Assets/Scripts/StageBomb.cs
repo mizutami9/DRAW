@@ -345,6 +345,12 @@ namespace DrawBody.Prototype
                     stageManager?.RespawnFromHazard(player);
                 }
 
+                StageEscortFriend escortFriend = hit.GetComponentInParent<StageEscortFriend>();
+                if (canSimulateWorldBodies && escortFriend != null)
+                {
+                    escortFriend.Defeat();
+                }
+
                 Rigidbody2D body = hit.attachedRigidbody;
                 if (!canSimulateWorldBodies
                     || body == null

@@ -145,6 +145,7 @@ namespace DrawBody.Prototype
                 case StageObjectType.SimultaneousButton:
                 case StageObjectType.HoldButton:
                 case StageObjectType.PressurePlate:
+                case StageObjectType.EscortFriendButton:
                     return CreateButtonSwitch(data, parent);
                 case StageObjectType.Lever:
                 case StageObjectType.ToggleSwitch:
@@ -283,6 +284,7 @@ namespace DrawBody.Prototype
                         break;
                     case StageObjectType.OneWayPlatform:
                     case StageObjectType.MovingOneWayPlatform:
+                    case StageObjectType.EscortPlayerOneWayFloor:
                         size = new Vector2(3f, 0.25f);
                         break;
                     case StageObjectType.BoxDropper:
@@ -312,6 +314,7 @@ namespace DrawBody.Prototype
                     case StageObjectType.SimultaneousButton:
                     case StageObjectType.HoldButton:
                     case StageObjectType.PressurePlate:
+                    case StageObjectType.EscortFriendButton:
                         size = new Vector2(1f, 0.5f);
                         break;
                     case StageObjectType.GrainEmitter:
@@ -659,7 +662,8 @@ namespace DrawBody.Prototype
                 collider.isTrigger = true;
             }
             bool isOneWayPlatform = data.type == StageObjectType.OneWayPlatform
-                || data.type == StageObjectType.MovingOneWayPlatform;
+                || data.type == StageObjectType.MovingOneWayPlatform
+                || data.type == StageObjectType.EscortPlayerOneWayFloor;
             bool isMovingPlatform = data.type == StageObjectType.MovingPlatform
                 || data.type == StageObjectType.MovingOneWayPlatform;
             if (isOneWayPlatform)
@@ -702,6 +706,10 @@ namespace DrawBody.Prototype
             {
                 AddStickyMovingPlatformVisual(obj.transform, data.size);
                 obj.AddComponent<StageEscortStickySurface>();
+            }
+            if (data.type == StageObjectType.EscortPlayerOneWayFloor)
+            {
+                obj.AddComponent<StageEscortPlayerOnlyFloor>();
             }
             if (isMovingPlatform)
             {
@@ -3017,7 +3025,10 @@ namespace DrawBody.Prototype
 
             bool simultaneous = data.type == StageObjectType.SimultaneousButton;
             bool hold = data.type == StageObjectType.HoldButton;
-            Color capColor = simultaneous
+            bool escortFriend = data.type == StageObjectType.EscortFriendButton;
+            Color capColor = escortFriend
+                ? new Color(0.16f, 0.78f, 0.9f)
+                : simultaneous
                 ? new Color(0.1f, 0.48f, 0.95f)
                 : hold
                     ? new Color(0.95f, 0.62f, 0.08f)

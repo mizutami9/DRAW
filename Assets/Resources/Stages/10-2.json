@@ -1,0 +1,56 @@
+{
+  "id":"10-2",
+  "displayName":"Stage 10-2 Escort Defense",
+  "backgroundColorHex":"#EAF6FFFF",
+  "ruleMode":0,
+  "timeLimitSeconds":90.0,
+  "collectionTarget":0,
+  "requiredCollectionCount":0,
+  "objects":[
+    {"objectId":"10-2_boundary","type":151,"position":{"x":6.0,"y":1.5},"size":{"x":86.0,"y":14.0},"rotation":0.0,"pathThickness":0.75},
+    {"objectId":"10-2_player_spawn","type":2,"position":{"x":-34.0,"y":-3.1},"size":{"x":0.7,"y":0.7},"rotation":0.0},
+    {"objectId":"10-2_lower_floor_left","type":0,"position":{"x":-10.5,"y":-4.5},"size":{"x":52.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"10-2_lower_floor_right","type":0,"position":{"x":35.0,"y":-4.5},"size":{"x":27.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"10-2_upper_player_route","type":260,"position":{"x":6.0,"y":0.0},"size":{"x":82.0,"y":0.45},"rotation":0.0,"keepSeparate":true},
+
+    {"objectId":"10-2_friend_spawner","type":178,"position":{"x":-33.0,"y":-1.6},"size":{"x":2.2,"y":1.35},"rotation":0.0},
+    {"objectId":"10-2_friend_goal","type":179,"position":{"x":45.5,"y":-3.0},"size":{"x":1.9,"y":2.2},"rotation":0.0},
+    {"objectId":"10-2_handgun","type":183,"position":{"x":-35.2,"y":-3.65},"size":{"x":0.85,"y":0.48},"rotation":0.0},
+
+    {"objectId":"10-2_friend_bomb_button","type":259,"position":{"x":-25.5,"y":-3.93},"size":{"x":1.25,"y":0.55},"rotation":0.0,"linkTargetId":"10-2_bomb_dropper","linkAction":"Activate"},
+    {"objectId":"10-2_bomb_dropper","type":169,"position":{"x":-22.1,"y":-1.25},"size":{"x":1.8,"y":1.4},"rotation":0.0,"actionStrength":8.0,"spawnPattern":1,"spawnBoxSize":1.1,"bombFuseSeconds":3.5},
+
+    {"objectId":"10-2_vertical_beam_1","type":167,"position":{"x":-14.0,"y":5.4},"size":{"x":1.35,"y":0.95},"rotation":-90.0,"actionStrength":4.2,"spawnPattern":1,"spawnBoxSize":11.0},
+    {"objectId":"10-2_vertical_beam_2","type":167,"position":{"x":-8.0,"y":5.4},"size":{"x":1.35,"y":0.95},"rotation":-90.0,"actionStrength":3.7,"spawnPattern":1,"spawnBoxSize":11.0},
+    {"objectId":"10-2_vertical_beam_3","type":167,"position":{"x":6.0,"y":5.4},"size":{"x":1.35,"y":0.95},"rotation":-90.0,"actionStrength":3.2,"spawnPattern":1,"spawnBoxSize":11.0},
+    {"objectId":"10-2_vertical_beam_4","type":167,"position":{"x":22.5,"y":5.4},"size":{"x":1.35,"y":0.95},"rotation":-90.0,"actionStrength":2.8,"spawnPattern":1,"spawnBoxSize":11.0},
+    {"objectId":"10-2_vertical_beam_5","type":167,"position":{"x":38.0,"y":5.4},"size":{"x":1.35,"y":0.95},"rotation":-90.0,"actionStrength":2.4,"spawnPattern":1,"spawnBoxSize":11.0},
+    {"objectId":"10-2_diagonal_beam_1","type":167,"position":{"x":-20.0,"y":5.2},"size":{"x":1.35,"y":0.95},"rotation":-62.0,"actionStrength":4.5,"spawnPattern":1,"spawnBoxSize":11.0},
+    {"objectId":"10-2_diagonal_beam_2","type":167,"position":{"x":0.0,"y":5.2},"size":{"x":1.35,"y":0.95},"rotation":-118.0,"actionStrength":3.9,"spawnPattern":1,"spawnBoxSize":11.0},
+    {"objectId":"10-2_diagonal_beam_3","type":167,"position":{"x":17.0,"y":5.2},"size":{"x":1.35,"y":0.95},"rotation":-62.0,"actionStrength":3.3,"spawnPattern":1,"spawnBoxSize":11.0},
+    {"objectId":"10-2_diagonal_beam_4","type":167,"position":{"x":34.0,"y":5.2},"size":{"x":1.35,"y":0.95},"rotation":-118.0,"actionStrength":2.7,"spawnPattern":1,"spawnBoxSize":11.0},
+
+    {"objectId":"10-2_box_01","type":47,"position":{"x":-4.3,"y":-3.55},"size":{"x":1.35,"y":1.35},"rotation":0.0},
+    {"objectId":"10-2_box_02","type":48,"position":{"x":-2.8,"y":-3.55},"size":{"x":1.25,"y":1.25},"rotation":0.0},
+    {"objectId":"10-2_box_03","type":160,"position":{"x":-1.35,"y":-3.65},"size":{"x":1.3,"y":1.3},"rotation":0.0},
+    {"objectId":"10-2_box_04","type":47,"position":{"x":0.15,"y":-3.55},"size":{"x":1.35,"y":1.35},"rotation":0.0},
+    {"objectId":"10-2_box_05","type":48,"position":{"x":1.65,"y":-3.55},"size":{"x":1.25,"y":1.25},"rotation":0.0},
+    {"objectId":"10-2_box_06","type":47,"position":{"x":3.1,"y":-3.55},"size":{"x":1.35,"y":1.35},"rotation":0.0},
+    {"objectId":"10-2_box_07","type":160,"position":{"x":4.55,"y":-3.65},"size":{"x":1.3,"y":1.3},"rotation":0.0},
+    {"objectId":"10-2_box_08","type":47,"position":{"x":-3.55,"y":-2.15},"size":{"x":1.25,"y":1.25},"rotation":0.0},
+    {"objectId":"10-2_box_09","type":48,"position":{"x":-2.05,"y":-2.15},"size":{"x":1.2,"y":1.2},"rotation":0.0},
+    {"objectId":"10-2_box_10","type":47,"position":{"x":-2.8,"y":-0.82},"size":{"x":1.15,"y":1.15},"rotation":0.0},
+    {"objectId":"10-2_box_11","type":47,"position":{"x":1.0,"y":-2.15},"size":{"x":1.25,"y":1.25},"rotation":0.0},
+    {"objectId":"10-2_box_12","type":48,"position":{"x":2.5,"y":-2.15},"size":{"x":1.2,"y":1.2},"rotation":0.0},
+    {"objectId":"10-2_box_13","type":160,"position":{"x":1.75,"y":-0.82},"size":{"x":1.15,"y":1.15},"rotation":0.0},
+
+    {"objectId":"10-2_bridge_button_platform","type":8,"position":{"x":10.0,"y":1.55},"size":{"x":4.5,"y":0.4},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"10-2_bridge_button","type":159,"position":{"x":10.0,"y":2.02},"size":{"x":1.25,"y":0.55},"rotation":0.0,"linkTargetId":"10-2_friend_bridge","linkAction":"RevealGrowRightToLeft"},
+    {"objectId":"10-2_friend_bridge","type":0,"position":{"x":18.5,"y":-4.5},"size":{"x":6.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+
+    {"objectId":"10-2_friend_bomb_button_2","type":259,"position":{"x":7.0,"y":-3.93},"size":{"x":1.25,"y":0.55},"rotation":0.0,"linkTargetId":"10-2_bomb_dropper_2","linkAction":"Activate"},
+    {"objectId":"10-2_bomb_dropper_2","type":169,"position":{"x":9.3,"y":-1.25},"size":{"x":1.8,"y":1.4},"rotation":0.0,"actionStrength":8.0,"spawnPattern":1,"spawnBoxSize":1.25,"bombFuseSeconds":3.0},
+    {"objectId":"10-2_friend_bomb_button_3","type":259,"position":{"x":24.0,"y":-3.93},"size":{"x":1.25,"y":0.55},"rotation":0.0,"linkTargetId":"10-2_bomb_dropper_3","linkAction":"Activate"},
+    {"objectId":"10-2_bomb_dropper_3","type":169,"position":{"x":26.3,"y":-1.25},"size":{"x":1.8,"y":1.4},"rotation":0.0,"actionStrength":8.0,"spawnPattern":1,"spawnBoxSize":1.4,"bombFuseSeconds":2.7}
+  ]
+}

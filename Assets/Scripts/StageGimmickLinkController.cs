@@ -1308,8 +1308,13 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static bool IsValidPresser(Collider2D other)
+        private bool IsValidPresser(Collider2D other)
         {
+            StageEditorObject marker = GetComponent<StageEditorObject>();
+            if (marker != null && marker.type == StageObjectType.EscortFriendButton)
+            {
+                return other != null && other.GetComponentInParent<StageEscortFriend>() != null;
+            }
             return other != null
                 && (other.GetComponentInParent<PlayerController2D>() != null
                     || other.GetComponentInParent<CarryableObject>() != null);

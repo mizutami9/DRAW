@@ -157,6 +157,11 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
+                if (hitCollider.GetComponentInParent<StageEscortFriend>() != null)
+                {
+                    continue;
+                }
+
                 if (hitCollider.isTrigger)
                 {
                     continue;
@@ -177,12 +182,20 @@ namespace DrawBody.Prototype
             for (int i = 0; i < hits.Length && hits[i].distance <= beamDistance + 0.001f; i++)
             {
                 Collider2D hitCollider = hits[i].collider;
-                if (hitCollider == null
-                    || hitCollider.transform.IsChildOf(transform)
-                    || !IsVisiblePlayerCollider(hitCollider))
+                if (hitCollider == null || hitCollider.transform.IsChildOf(transform))
                 {
                     continue;
                 }
+
+
+                StageEscortFriend escortFriend = hitCollider.GetComponentInParent<StageEscortFriend>();
+                if (escortFriend != null)
+                {
+                    escortFriend.Defeat();
+                    continue;
+                }
+
+                if (!IsVisiblePlayerCollider(hitCollider)) continue;
 
                 PlayerController2D player = hitCollider.GetComponentInParent<PlayerController2D>();
                 if (player == null || player.IsTurtleShelled || !hitPlayers.Add(player))

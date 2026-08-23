@@ -243,6 +243,17 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            StageEscortFriend escortFriend = collision.collider != null
+                ? collision.collider.GetComponentInParent<StageEscortFriend>()
+                : null;
+            if (escortFriend == null && collision.otherCollider != null)
+                escortFriend = collision.otherCollider.GetComponentInParent<StageEscortFriend>();
+            if (escortFriend != null)
+            {
+                escortFriend.Defeat();
+                return;
+            }
+
             for (int i = 0; i < collision.contactCount; i++)
             {
                 if (Mathf.Abs(collision.GetContact(i).normal.x) > 0.55f)
@@ -558,6 +569,13 @@ namespace DrawBody.Prototype
                     if (manager == null || !manager.IsOnlineStageActive || player.transform == manager.ActivePlayerTransform)
                         manager?.RespawnFromHazard(player);
                 }
+                Destroy(gameObject);
+                return;
+            }
+            StageEscortFriend escortFriend = other.GetComponentInParent<StageEscortFriend>();
+            if (escortFriend != null)
+            {
+                escortFriend.Defeat();
                 Destroy(gameObject);
                 return;
             }

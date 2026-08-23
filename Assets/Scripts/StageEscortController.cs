@@ -6,7 +6,6 @@ namespace DrawBody.Prototype
     [DisallowMultipleComponent]
     public sealed class StageEscortController : MonoBehaviour
     {
-        private const string StageId = "5-3";
         private const string KindState = "escort_state";
         private const float LowerFloorY = -4.2f;
         private const float RespawnDelay = 3f;
@@ -26,20 +25,28 @@ namespace DrawBody.Prototype
         private OnlineManager onlineManager;
         private StageObjectFactory factory;
         private StageEscortFriend friend;
-        private TextMesh statusTitle;
-        private TextMesh statusMain;
-        private TextMesh statusSub;
+        private readonly List<TextMesh> statusTitles = new List<TextMesh>();
+        private readonly List<TextMesh> statusMains = new List<TextMesh>();
+        private readonly List<TextMesh> statusSubs = new List<TextMesh>();
         private float respawnRemaining;
         private float nextBroadcastAt;
         private int stateSequence;
         private int lastReceivedSequence;
         private bool cleared;
         private bool built;
+        private string stageId = "5-3";
+        private float failureBottomY = -6.1f;
+        private float failureLeftX = -16.5f;
         private Vector2 replicaTarget;
         private Vector2 friendSpawnPosition = new Vector2(-13.15f, 1.35f);
         private Vector2 escortGoalPosition = new Vector2(14.2f, 1.55f);
         private StageEscortGoalMarker escortGoalMarker;
         private static Material lineMaterial;
+
+        public void Configure(string configuredStageId)
+        {
+            if (!string.IsNullOrEmpty(configuredStageId)) stageId = configuredStageId;
+        }
 
         private void Awake()
         {
@@ -75,7 +82,7 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            if (!built || stageManager == null || stageManager.CurrentStageId != StageId || cleared) return;
+            if (!built || stageManager == null || stageManager.CurrentStageId != stageId || cleared) return;
 
             if (!HasAuthority())
             {
@@ -92,7 +99,7 @@ namespace DrawBody.Prototype
             else
             {
                 Vector2 position = friend.transform.position;
-                if (position.y < -6.1f || position.x < -16.5f)
+                if (friend.IsDefeated || position.y < failureBottomY || position.x < failureLeftX)
                 {
                     RemoveFriendAndSchedule();
                 }
@@ -124,7 +131,7 @@ namespace DrawBody.Prototype
         private void SpawnFriend()
         {
             if (friend != null || cleared) return;
-            friend = StageEscortFriend.Create(transform, friendSpawnPosition, HasAuthority());
+            friend = StageEscortFriend.Create(transform, friendSpawnPosition, HasAuthority(), stageId == "10-2");
             replicaTarget = friend.transform.position;
             IgnorePlayerOnlyFloors(friend);
             respawnRemaining = 0f;
@@ -149,9 +156,7 @@ namespace DrawBody.Prototype
             if (cleared) return;
             cleared = true;
             if (friend != null) friend.StopWalking();
-            statusTitle.text = LocalizationManager.T("escort_clear_title");
-            SetText(statusMain, "CLEAR!", 0.17f, 1.55f);
-            SetText(statusSub, LocalizationManager.T("escort_clear_sub"), 0.09f, 2f);
+            RefreshStatus();
             BroadcastState(true);
             stageManager.ClearStage();
         }
@@ -183,7 +188,7 @@ namespace DrawBody.Prototype
             };
             onlineManager.SendGimmickData(new OnlineGimmickData
             {
-                ObjectId = StageId,
+                ObjectId = stageId,
                 Kind = KindState,
                 Json = JsonUtility.ToJson(state)
             });
@@ -191,7 +196,7 @@ namespace DrawBody.Prototype
 
         private void HandleNetworkData(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId || data.Kind != KindState || HasAuthority() || !IsHost(data.PlayerId)) return;
+            if (data == null || data.ObjectId != stageId || data.Kind != KindState || HasAuthority() || !IsHost(data.PlayerId)) return;
             EscortState state = JsonUtility.FromJson<EscortState>(data.Json);
             if (state == null || state.Sequence <= lastReceivedSequence) return;
             lastReceivedSequence = state.Sequence;
@@ -199,7 +204,7 @@ namespace DrawBody.Prototype
             replicaTarget = state.Position;
             if (state.Active && friend == null)
             {
-                friend = StageEscortFriend.Create(transform, state.Position, false);
+                friend = StageEscortFriend.Create(transform, state.Position, false, stageId == "10-2");
                 IgnorePlayerOnlyFloors(friend);
             }
             else if (!state.Active && friend != null)
@@ -238,9 +243,24 @@ namespace DrawBody.Prototype
                 escortGoalPosition = goal.transform.position;
             }
 
-            GameObject runtime = new GameObject("5-3 Escort Runtime UI");
+            failureBottomY = friendSpawnPosition.y - 7.5f;
+            failureLeftX = friendSpawnPosition.x - 4f;
+
+            GameObject runtime = new GameObject(stageId + " Escort Runtime UI");
             runtime.transform.SetParent(transform, false);
-            CreateMonitor(runtime.transform);
+            if (stageId == "10-2")
+            {
+                const float monitorSpacing = 14.6f;
+                float firstX = friendSpawnPosition.x + 4f;
+                for (int i = 0; i < 6; i++)
+                    CreateMonitor(runtime.transform, new Vector2(firstX + monitorSpacing * i, -6.35f));
+            }
+            else
+            {
+                CreateMonitor(
+                    runtime.transform,
+                    new Vector2((friendSpawnPosition.x + escortGoalPosition.x) * 0.5f, 5.05f));
+            }
         }
 
         private void CreatePlayerOnlyFloor(Transform parent)
@@ -357,36 +377,45 @@ namespace DrawBody.Prototype
             label.text = "GOAL";
         }
 
-        private void CreateMonitor(Transform parent)
+        private void CreateMonitor(Transform parent, Vector2 position)
         {
             GameObject monitor = new GameObject("Escort Status Monitor");
             monitor.transform.SetParent(parent, false);
-            monitor.transform.localPosition = new Vector3(0f, 5.05f, 0.5f);
+            monitor.transform.localPosition = new Vector3(position.x, position.y, 0.5f);
             AddFilledRect(monitor.transform, "Frame", Vector2.zero, new Vector2(10.2f, 2.55f), new Color(0.18f, 0.22f, 0.27f, 0.88f), -32);
             AddFilledRect(monitor.transform, "Screen", Vector2.zero, new Vector2(9.55f, 1.95f), new Color(0.01f, 0.035f, 0.045f, 0.9f), -31);
-            statusTitle = CreateText(monitor.transform, "Title", new Vector3(0f, 0.68f, -0.02f), 46, 0.12f, new Color(0.55f, 0.9f, 1f, 1f), -28);
-            statusMain = CreateText(monitor.transform, "Main", new Vector3(0f, 0f, -0.03f), 60, 0.145f, new Color(0.2f, 1f, 0.72f, 1f), -27);
-            statusSub = CreateText(monitor.transform, "Sub", new Vector3(0f, -0.68f, -0.04f), 40, 0.09f, new Color(1f, 0.84f, 0.3f, 1f), -26);
+            statusTitles.Add(CreateText(monitor.transform, "Title", new Vector3(0f, 0.68f, -0.02f), 46, 0.12f, new Color(0.55f, 0.9f, 1f, 1f), -28));
+            statusMains.Add(CreateText(monitor.transform, "Main", new Vector3(0f, 0f, -0.03f), 60, 0.145f, new Color(0.2f, 1f, 0.72f, 1f), -27));
+            statusSubs.Add(CreateText(monitor.transform, "Sub", new Vector3(0f, -0.68f, -0.04f), 40, 0.09f, new Color(1f, 0.84f, 0.3f, 1f), -26));
         }
 
         private void RefreshStatus()
         {
-            if (statusTitle == null) return;
-            statusTitle.text = cleared ? LocalizationManager.T("escort_clear_title") : LocalizationManager.T("escort_title");
-            if (cleared)
+            if (statusTitles.Count == 0) return;
+            for (int i = 0; i < statusTitles.Count; i++)
             {
-                SetText(statusMain, "CLEAR!", 0.17f, 1.55f);
-                SetText(statusSub, LocalizationManager.T("escort_clear_sub"), 0.09f, 2f);
-            }
-            else if (friend == null)
-            {
-                SetText(statusMain, LocalizationManager.Format("escort_respawning", respawnRemaining), 0.13f, 1.7f);
-                SetText(statusSub, LocalizationManager.T("escort_respawn_sub"), 0.085f, 2f);
-            }
-            else
-            {
-                SetText(statusMain, LocalizationManager.T("escort_friend_active"), 0.13f, 1.7f);
-                SetText(statusSub, LocalizationManager.T("escort_instruction"), 0.085f, 2f);
+                TextMesh title = statusTitles[i];
+                TextMesh main = i < statusMains.Count ? statusMains[i] : null;
+                TextMesh sub = i < statusSubs.Count ? statusSubs[i] : null;
+                if (title == null) continue;
+                title.text = cleared
+                    ? LocalizationManager.T("escort_clear_title")
+                    : LocalizationManager.T(stageId == "10-2" ? "escort_defense_title" : "escort_title");
+                if (cleared)
+                {
+                    SetText(main, "CLEAR!", 0.17f, 1.55f);
+                    SetText(sub, LocalizationManager.T("escort_clear_sub"), 0.09f, 2f);
+                }
+                else if (friend == null)
+                {
+                    SetText(main, LocalizationManager.Format("escort_respawning", respawnRemaining), 0.13f, 1.7f);
+                    SetText(sub, LocalizationManager.T("escort_respawn_sub"), 0.085f, 2f);
+                }
+                else
+                {
+                    SetText(main, LocalizationManager.T("escort_friend_active"), 0.13f, 1.7f);
+                    SetText(sub, LocalizationManager.T(stageId == "10-2" ? "escort_defense_instruction" : "escort_instruction"), 0.085f, 2f);
+                }
             }
         }
 
@@ -594,7 +623,15 @@ namespace DrawBody.Prototype
         {
             root.layer = 6;
             root.tag = "Ground";
-            root.AddComponent<BoxCollider2D>().size = size;
+            BoxCollider2D collider = root.AddComponent<BoxCollider2D>();
+            collider.size = size;
+            collider.usedByEffector = true;
+            PlatformEffector2D effector = root.AddComponent<PlatformEffector2D>();
+            effector.useOneWay = true;
+            effector.useOneWayGrouping = true;
+            effector.surfaceArc = 165f;
+            effector.useSideFriction = false;
+            effector.useSideBounce = false;
             root.AddComponent<StageEscortPlayerOnlyFloor>();
             Color fill = new Color(0.74f, 0.9f, 1f, 1f);
             Color ink = new Color(0.08f, 0.3f, 0.58f, 1f);
@@ -674,6 +711,10 @@ namespace DrawBody.Prototype
         private const float WalkSpeed = 1.15f;
         private bool authoritative;
         private bool stopped;
+        private bool defeated;
+        private bool ignorePlayerCollisions;
+        private bool defeatOnObstacleCollision;
+        private float nextPlayerCollisionRefresh;
         private Rigidbody2D body;
         private CircleCollider2D hitbox;
         private Transform visual;
@@ -681,8 +722,13 @@ namespace DrawBody.Prototype
 
         public Rigidbody2D Body => body;
         public Collider2D Hitbox => hitbox;
+        public bool IsDefeated => defeated;
 
-        public static StageEscortFriend Create(Transform parent, Vector2 position, bool hasAuthority)
+        public static StageEscortFriend Create(
+            Transform parent,
+            Vector2 position,
+            bool hasAuthority,
+            bool useObstacleCourseRules = false)
         {
             GameObject root = new GameObject("Friendly Doodle Walker");
             root.transform.SetParent(parent, false);
@@ -705,9 +751,12 @@ namespace DrawBody.Prototype
 
             StageEscortFriend friend = root.AddComponent<StageEscortFriend>();
             friend.authoritative = hasAuthority;
+            friend.ignorePlayerCollisions = useObstacleCourseRules;
+            friend.defeatOnObstacleCollision = useObstacleCourseRules;
             friend.body = rigidbody;
             friend.hitbox = collider;
             friend.BuildVisual();
+            friend.RefreshIgnoredPlayerCollisions();
             return friend;
         }
 
@@ -717,14 +766,27 @@ namespace DrawBody.Prototype
             if (body != null) body.linearVelocity = Vector2.zero;
         }
 
+        public void Defeat()
+        {
+            if (!authoritative || defeated) return;
+            defeated = true;
+            stopped = true;
+            if (body != null) body.linearVelocity = Vector2.zero;
+        }
+
         private void FixedUpdate()
         {
             if (!authoritative || stopped || body == null) return;
+            if (ignorePlayerCollisions && Time.time >= nextPlayerCollisionRefresh)
+            {
+                nextPlayerCollisionRefresh = Time.time + 0.5f;
+                RefreshIgnoredPlayerCollisions();
+            }
             if (TryGetGroundSupport(out Vector2 normal, out bool sticky, out Rigidbody2D supportBody))
             {
                 float speedMultiplier = sticky ? 0.3f : 1f;
                 Vector2 carrierVelocity = ResolveSupportVelocity(supportBody);
-                if (normal.y > 0.92f && HasWallAhead())
+                if (!defeatOnObstacleCollision && normal.y > 0.92f && HasWallAhead())
                 {
                     body.linearVelocity = new Vector2(
                         carrierVelocity.x + WalkSpeed * speedMultiplier,
@@ -743,6 +805,40 @@ namespace DrawBody.Prototype
             else
             {
                 body.linearVelocity = new Vector2(WalkSpeed, body.linearVelocity.y);
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (!authoritative || defeated || !defeatOnObstacleCollision || collision == null) return;
+
+            Collider2D other = collision.collider == hitbox ? collision.otherCollider : collision.collider;
+            if (other == null || other.GetComponentInParent<PlayerController2D>() != null) return;
+
+            // Ordinary support from below is safe. A side impact, something landing
+            // on the friend, or a wall/box blocking its route defeats it.
+            for (int i = 0; i < collision.contactCount; i++)
+            {
+                if (collision.GetContact(i).normal.y < 0.55f)
+                {
+                    Defeat();
+                    return;
+                }
+            }
+        }
+
+        private void RefreshIgnoredPlayerCollisions()
+        {
+            if (!ignorePlayerCollisions || hitbox == null) return;
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == null) continue;
+                Collider2D[] playerColliders = players[i].GetComponentsInChildren<Collider2D>(true);
+                for (int j = 0; j < playerColliders.Length; j++)
+                {
+                    if (playerColliders[j] != null) Physics2D.IgnoreCollision(hitbox, playerColliders[j], true);
+                }
             }
         }
 
