@@ -434,14 +434,29 @@ namespace DrawBody.Prototype
         private float lastFloorContactAt = -1f;
         private float nextContainmentCheck;
         private bool insideCarrier;
+        private float grams = 10f;
 
-        public float Grams => 10f;
+        public float Grams => grams;
+        public bool IsInsideCarrier => insideCarrier;
+        public bool IsOnGround => floorContactStartedAt >= 0f
+            && Time.time - lastFloorContactAt <= 0.15f;
         public Vector2 Velocity => body != null ? body.linearVelocity : Vector2.zero;
         public static IEnumerable<StageGrainParticle> All => ActiveParticles;
 
         public void Configure(DrawManager.Species species, Vector2 initialVelocity)
         {
+            Configure(species, initialVelocity, 10f, 0.72f, false);
+        }
+
+        public void Configure(
+            DrawManager.Species species,
+            Vector2 initialVelocity,
+            float weightGrams,
+            float gravityScale,
+            bool ignoreOneWayPlatforms)
+        {
             sourceSpecies = species;
+            grams = Mathf.Max(0.1f, weightGrams);
             gameObject.layer = 31;
             if (!grainCollisionConfigured)
             {
@@ -456,8 +471,8 @@ namespace DrawBody.Prototype
             body = gameObject.AddComponent<Rigidbody2D>();
             // Ten grains make 100 g. Their mass stays deliberately light so the
             // pile cannot shove the player around or suppress a jump.
-            body.mass = 0.0008f;
-            body.gravityScale = 0.72f;
+            body.mass = Mathf.Clamp(0.00045f + grams * 0.000035f, 0.0005f, 0.0022f);
+            body.gravityScale = Mathf.Max(0.1f, gravityScale);
             body.linearDamping = 0.08f;
             body.angularDamping = 0.15f;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
@@ -466,6 +481,22 @@ namespace DrawBody.Prototype
             CircleCollider2D collider = gameObject.AddComponent<CircleCollider2D>();
             collider.radius = 0.46f;
             collider.sharedMaterial = GetGrainMaterial();
+            if (ignoreOneWayPlatforms)
+            {
+                PlatformEffector2D[] effectors = Object.FindObjectsByType<PlatformEffector2D>(FindObjectsSortMode.None);
+                for (int i = 0; i < effectors.Length; i++)
+                {
+                    Collider2D platform = effectors[i] != null ? effectors[i].GetComponent<Collider2D>() : null;
+                    if (platform != null) Physics2D.IgnoreCollision(collider, platform, true);
+                }
+                Collider2D[] stageColliders = Object.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
+                for (int i = 0; i < stageColliders.Length; i++)
+                {
+                    Collider2D stageCollider = stageColliders[i];
+                    if (stageCollider != null && stageCollider.gameObject.name == "Boundary Ceiling")
+                        Physics2D.IgnoreCollision(collider, stageCollider, true);
+                }
+            }
         }
 
         private void OnEnable() { ActiveParticles.Add(this); }
@@ -480,7 +511,7 @@ namespace DrawBody.Prototype
                 insideCarrier = false;
                 foreach (StageGrainCarrier carrier in StageGrainCarrier.All)
                 {
-                    if (carrier != null && carrier.ContainsWorldPoint(transform.position))
+                    if (!IsOnGround && carrier != null && carrier.ContainsWorldPoint(transform.position))
                     {
                         insideCarrier = true;
                         lastInsideHeadAt = Time.time;
@@ -560,11 +591,11 @@ namespace DrawBody.Prototype
     public sealed class StageGrainCarrier : MonoBehaviour
     {
         private static readonly HashSet<StageGrainCarrier> ActiveCarriers = new HashSet<StageGrainCarrier>();
-        private readonly List<Collider2D> headColliders = new List<Collider2D>();
+        private readonly List<Collider2D> bodyColliders = new List<Collider2D>();
         private float nextColliderRefresh;
         private float nextBoundsRefresh;
-        private Bounds cachedHeadBounds;
-        private bool hasCachedHeadBounds;
+        private Bounds cachedCarrierBounds;
+        private bool hasCachedCarrierBounds;
         private Rigidbody2D playerBody;
         private PlayerAbilityController abilities;
 
@@ -582,19 +613,20 @@ namespace DrawBody.Prototype
 
         private void LateUpdate()
         {
-            RefreshHeadBounds();
+            RefreshCarrierBounds();
         }
 
         public bool ContainsWorldPoint(Vector2 point)
         {
-            if (!TryGetHeadBounds(out Bounds bounds)) return false;
-            // A particle resting on top of a closed head sits above max.y and is
-            // not counted. An open U/bowl drawing lets it fall below this line.
+            if (!TryGetCarrierBounds(out Bounds bounds)) return false;
+            // Every drawn body part may be used as a container: a turtle shell,
+            // bird wing, cat body/tail and slime torso all count. Ground contact
+            // is rejected by StageGrainParticle before this spatial test.
             const float sidePadding = 0.08f;
             return point.x >= bounds.min.x - sidePadding
                 && point.x <= bounds.max.x + sidePadding
                 && point.y >= bounds.min.y - 0.08f
-                && point.y <= bounds.max.y + 0.025f;
+                && point.y <= bounds.max.y + 0.08f;
         }
 
         public bool TryTakeContainedParticle(out StageGrainParticle result)
@@ -603,7 +635,8 @@ namespace DrawBody.Prototype
             float bestY = float.PositiveInfinity;
             foreach (StageGrainParticle particle in StageGrainParticle.All)
             {
-                if (particle == null || !ContainsWorldPoint(particle.transform.position)) continue;
+                if (particle == null || particle.IsOnGround
+                    || !ContainsWorldPoint(particle.transform.position)) continue;
                 Vector2 relativeVelocity = particle.Velocity - (playerBody != null ? playerBody.linearVelocity : Vector2.zero);
                 if (relativeVelocity.sqrMagnitude > 4f) continue;
                 if (particle.transform.position.y < bestY)
@@ -620,13 +653,13 @@ namespace DrawBody.Prototype
             List<StageGrainParticle> contained = new List<StageGrainParticle>();
             foreach (StageGrainParticle particle in StageGrainParticle.All)
             {
-                if (particle != null && ContainsWorldPoint(particle.transform.position))
+                if (particle != null && !particle.IsOnGround && ContainsWorldPoint(particle.transform.position))
                     contained.Add(particle);
             }
             for (int i = 0; i < contained.Count; i++)
                 contained[i].MirrorAcross(worldPivotX);
-            // The cached head bounds describe the pre-flip drawing.
-            hasCachedHeadBounds = false;
+            // The cached carrier bounds describe the pre-flip drawing.
+            hasCachedCarrierBounds = false;
         }
 
         public void SetGrams(float value)
@@ -638,41 +671,42 @@ namespace DrawBody.Prototype
             for (int i = 0; i < remove.Count; i++) remove[i].Consume();
         }
 
-        private bool TryGetHeadBounds(out Bounds bounds)
+        private bool TryGetCarrierBounds(out Bounds bounds)
         {
-            if (!hasCachedHeadBounds || Time.unscaledTime >= nextBoundsRefresh)
-                RefreshHeadBounds();
-            bounds = cachedHeadBounds;
-            return hasCachedHeadBounds;
+            if (!hasCachedCarrierBounds || Time.unscaledTime >= nextBoundsRefresh)
+                RefreshCarrierBounds();
+            bounds = cachedCarrierBounds;
+            return hasCachedCarrierBounds;
         }
 
-        private void RefreshHeadBounds()
+        private void RefreshCarrierBounds()
         {
             nextBoundsRefresh = Time.unscaledTime + 0.025f;
-            if (Time.unscaledTime >= nextColliderRefresh || headColliders.Count == 0)
+            if (Time.unscaledTime >= nextColliderRefresh
+                || bodyColliders.Count == 0)
             {
                 nextColliderRefresh = Time.unscaledTime + 0.35f;
-                headColliders.Clear();
+                bodyColliders.Clear();
                 Collider2D[] colliders = GetComponentsInChildren<Collider2D>(true);
                 for (int i = 0; i < colliders.Length; i++)
                 {
                     Collider2D collider = colliders[i];
-                    if (collider != null && !collider.isTrigger
-                        && collider.gameObject.name.StartsWith("HeadSegment", System.StringComparison.Ordinal))
+                    if (collider == null || collider.isTrigger) continue;
+                    if (collider.gameObject.name.EndsWith("Segment", System.StringComparison.Ordinal))
                     {
-                        headColliders.Add(collider);
+                        bodyColliders.Add(collider);
                     }
                 }
             }
 
             Bounds bounds = default;
             bool hasBounds = false;
-            for (int i = headColliders.Count - 1; i >= 0; i--)
+            for (int i = bodyColliders.Count - 1; i >= 0; i--)
             {
-                Collider2D collider = headColliders[i];
+                Collider2D collider = bodyColliders[i];
                 if (collider == null || !collider.enabled)
                 {
-                    if (collider == null) headColliders.RemoveAt(i);
+                    if (collider == null) bodyColliders.RemoveAt(i);
                     continue;
                 }
                 if (!hasBounds)
@@ -682,8 +716,8 @@ namespace DrawBody.Prototype
                 }
                 else bounds.Encapsulate(collider.bounds);
             }
-            cachedHeadBounds = bounds;
-            hasCachedHeadBounds = hasBounds;
+            cachedCarrierBounds = bounds;
+            hasCachedCarrierBounds = hasBounds;
         }
     }
 

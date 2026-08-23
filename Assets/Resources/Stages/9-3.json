@@ -1,0 +1,17 @@
+{
+  "id":"9-3",
+  "displayName":"Stage 9-3 Rare Grain Rain",
+  "backgroundColorHex":"#F3F8EEFF",
+  "ruleMode":0,
+  "timeLimitSeconds":10.0,
+  "collectionTarget":0,
+  "requiredCollectionCount":0,
+  "objects":[
+    {"objectId":"9-3_boundary","type":151,"position":{"x":0.0,"y":3.0},"size":{"x":30.0,"y":20.0},"rotation":0.0,"pathPoints":[],"pathThickness":0.7,"connectedRects":[],"keepSeparate":false,"actionStrength":0.0,"movementAngle":0.0,"movementSpeed":0.0,"spawnPattern":0,"spawnBoxSize":0.0,"bombFuseSeconds":0.0,"linkTargetId":"","linkAction":""},
+    {"objectId":"9-3_bottom_floor","type":0,"position":{"x":0.0,"y":-6.62},"size":{"x":29.25,"y":0.72},"rotation":0.0,"pathPoints":[],"pathThickness":0.0,"connectedRects":[],"keepSeparate":true,"actionStrength":0.0,"movementAngle":0.0,"movementSpeed":0.0,"spawnPattern":0,"spawnBoxSize":0.0,"bombFuseSeconds":0.0,"linkTargetId":"","linkAction":""},
+    {"objectId":"9-3_one_way_lower","type":8,"position":{"x":0.0,"y":-2.15},"size":{"x":29.25,"y":0.42},"rotation":0.0,"pathPoints":[],"pathThickness":0.0,"connectedRects":[],"keepSeparate":true,"actionStrength":0.0,"movementAngle":0.0,"movementSpeed":0.0,"spawnPattern":0,"spawnBoxSize":0.0,"bombFuseSeconds":0.0,"linkTargetId":"","linkAction":""},
+    {"objectId":"9-3_one_way_middle","type":8,"position":{"x":0.0,"y":2.35},"size":{"x":29.25,"y":0.42},"rotation":0.0,"pathPoints":[],"pathThickness":0.0,"connectedRects":[],"keepSeparate":true,"actionStrength":0.0,"movementAngle":0.0,"movementSpeed":0.0,"spawnPattern":0,"spawnBoxSize":0.0,"bombFuseSeconds":0.0,"linkTargetId":"","linkAction":""},
+    {"objectId":"9-3_one_way_upper","type":8,"position":{"x":0.0,"y":6.85},"size":{"x":29.25,"y":0.42},"rotation":0.0,"pathPoints":[],"pathThickness":0.0,"connectedRects":[],"keepSeparate":true,"actionStrength":0.0,"movementAngle":0.0,"movementSpeed":0.0,"spawnPattern":0,"spawnBoxSize":0.0,"bombFuseSeconds":0.0,"linkTargetId":"","linkAction":""},
+    {"objectId":"9-3_spawn","type":2,"position":{"x":0.0,"y":-5.45},"size":{"x":0.7,"y":0.7},"rotation":0.0,"pathPoints":[],"pathThickness":0.0,"connectedRects":[],"keepSeparate":false,"actionStrength":0.0,"movementAngle":0.0,"movementSpeed":0.0,"spawnPattern":0,"spawnBoxSize":0.0,"bombFuseSeconds":0.0,"linkTargetId":"","linkAction":""}
+  ]
+}

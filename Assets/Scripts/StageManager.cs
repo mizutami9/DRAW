@@ -81,6 +81,8 @@ namespace DrawBody.Prototype
         private PlayerController2D redrawReturnPlayer;
         private Vector3 redrawReturnPosition;
         private bool hasRedrawReturnPosition;
+        private float redrawReturnBottomY;
+        private bool hasRedrawReturnBottom;
         private readonly HashSet<PlayerController2D> localPlayersAtGoal = new HashSet<PlayerController2D>();
         private readonly HashSet<string> onlinePlayerIdsAtGoal = new HashSet<string>();
         private readonly HashSet<string> collectedObjectIds = new HashSet<string>();
@@ -1225,6 +1227,16 @@ namespace DrawBody.Prototype
                 redrawReturnPlayer = player;
                 redrawReturnPosition = player.transform.position;
                 hasRedrawReturnPosition = true;
+                Bounds redrawBounds = default;
+                hasRedrawReturnBottom = player.IsGrounded;
+                if (hasRedrawReturnBottom)
+                {
+                    hasRedrawReturnBottom = TryGetPlayerSolidBounds(player, out redrawBounds);
+                }
+                if (hasRedrawReturnBottom)
+                {
+                    redrawReturnBottomY = redrawBounds.min.y;
+                }
                 player.ResetMotion();
                 if (onlineCarryHeld)
                 {
@@ -2516,14 +2528,50 @@ namespace DrawBody.Prototype
                     ? redrawReturnPosition
                     : redrawPlayer.transform.position;
             }
+            bool alignRebuiltBottom;
+            float desiredBottomY;
+            if (returnToStart && TryFindGroundSurfaceBelow(returnPosition, out float spawnSurfaceY))
+            {
+                alignRebuiltBottom = true;
+                desiredBottomY = spawnSurfaceY + groundSeparation;
+            }
+            else
+            {
+                alignRebuiltBottom = !returnToStart
+                    && hasRedrawReturnBottom
+                    && redrawReturnPlayer == redrawPlayer;
+                desiredBottomY = redrawReturnBottomY;
+            }
             hasRedrawReturnPosition = false;
+            hasRedrawReturnBottom = false;
             redrawReturnPlayer = null;
             redrawPlayer.SetControlsEnabled(false);
             redrawPlayer.ResetMotion();
-            redrawRespawnRoutine = StartCoroutine(CompleteRedrawRespawn(redrawPlayer, returnPosition));
+            redrawRespawnRoutine = StartCoroutine(CompleteRedrawRespawn(
+                redrawPlayer,
+                returnPosition,
+                alignRebuiltBottom,
+                desiredBottomY));
         }
 
-        private IEnumerator CompleteRedrawRespawn(PlayerController2D redrawPlayer, Vector3 returnPosition)
+        private bool TryFindGroundSurfaceBelow(Vector3 position, out float surfaceY)
+        {
+            Vector2 origin = new Vector2(position.x, position.y + 0.35f);
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, 8f, groundLayer);
+            if (hit.collider != null && !hit.collider.isTrigger)
+            {
+                surfaceY = hit.point.y;
+                return true;
+            }
+            surfaceY = 0f;
+            return false;
+        }
+
+        private IEnumerator CompleteRedrawRespawn(
+            PlayerController2D redrawPlayer,
+            Vector3 returnPosition,
+            bool alignRebuiltBottom,
+            float desiredBottomY)
         {
             // BodyBuilder destroys the old hand-drawn colliders at end of frame.
             // Wait until they are gone before testing the rebuilt body against
@@ -2538,6 +2586,17 @@ namespace DrawBody.Prototype
                 // Species changes replace all generated colliders. Register the
                 // new human geometry before resolving its contact with the floor.
                 Physics2D.SyncTransforms();
+                if (alignRebuiltBottom && TryGetPlayerSolidBounds(redrawPlayer, out Bounds rebuiltBounds))
+                {
+                    float correction = desiredBottomY - rebuiltBounds.min.y;
+                    if (Mathf.Abs(correction) > 0.0001f)
+                    {
+                        Vector3 corrected = redrawPlayer.transform.position;
+                        corrected.y += correction;
+                        TeleportPlayerWithoutPhysics(redrawPlayer, corrected);
+                        Physics2D.SyncTransforms();
+                    }
+                }
                 LiftPlayerOutOfGround(redrawPlayer);
                 Physics2D.SyncTransforms();
                 redrawPlayer.SetControlsEnabled(
@@ -2545,6 +2604,27 @@ namespace DrawBody.Prototype
             }
 
             redrawRespawnRoutine = null;
+        }
+
+        private static bool TryGetPlayerSolidBounds(PlayerController2D targetPlayer, out Bounds bounds)
+        {
+            bounds = new Bounds(targetPlayer != null ? targetPlayer.transform.position : Vector3.zero, Vector3.zero);
+            if (targetPlayer == null) return false;
+
+            Collider2D[] colliders = targetPlayer.GetComponentsInChildren<Collider2D>(true);
+            bool found = false;
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger) continue;
+                if (!found)
+                {
+                    bounds = collider.bounds;
+                    found = true;
+                }
+                else bounds.Encapsulate(collider.bounds);
+            }
+            return found;
         }
 
         private void LiftPlayerOutOfGround(PlayerController2D targetPlayer)
@@ -2780,13 +2860,19 @@ namespace DrawBody.Prototype
             // Keep physics disabled through the teleport. Re-enabling before the
             // position change can make continuous collision/interpolation touch
             // every object between the death point and the spawn point.
-            RespawnPlayer(targetPlayer, GetRespawnOffset(targetPlayer), false, false);
-            if (state.Body != null)
-            {
-                state.Body.simulated = state.BodyWasSimulated;
-            }
+            // Resolve the final-size body's bottom before the appear animation.
+            // Aligning while the body is scaled to 3% makes a large drawing grow
+            // downward through the floor during the animation.
+            targetPlayer.transform.localScale = state.OriginalScale;
+            Vector3 respawnOffset = GetRespawnOffset(targetPlayer);
+            Vector3 respawnDestination = spawnPoint != null
+                ? spawnPoint.position + respawnOffset
+                : targetPlayer.transform.position;
+            RespawnPlayer(targetPlayer, respawnOffset, false, false);
+            targetPlayer.transform.localScale = Vector3.Scale(
+                state.OriginalScale,
+                new Vector3(0.03f, 0.03f, 1f));
             Physics2D.SyncTransforms();
-            LiftPlayerOutOfGround(targetPlayer);
             CreateRespawnBurst(targetPlayer.transform.position, effectColor);
 
             elapsed = 0f;
@@ -2804,6 +2890,14 @@ namespace DrawBody.Prototype
             if (targetPlayer != null)
             {
                 targetPlayer.transform.localScale = state.OriginalScale;
+                Physics2D.SyncTransforms();
+                AlignPlayerBottomToGround(targetPlayer, respawnDestination);
+                LiftPlayerOutOfGround(targetPlayer);
+                if (state.Body != null)
+                {
+                    state.Body.simulated = state.BodyWasSimulated;
+                }
+                Physics2D.SyncTransforms();
                 targetPlayer.ResetMotion();
                 targetPlayer.SetControlsEnabled(
                     targetPlayer == player && stageStarted && !drawing && !cleared && !stageEditing);
@@ -2956,7 +3050,9 @@ namespace DrawBody.Prototype
             // physics-disabled teleport so an old controller cannot leave the
             // player disabled across a full stage reload.
             if (!targetPlayer.gameObject.activeSelf) targetPlayer.gameObject.SetActive(true);
-            TeleportPlayerWithoutPhysics(targetPlayer, spawnPoint.position + offset);
+            Vector3 destination = spawnPoint.position + offset;
+            TeleportPlayerWithoutPhysics(targetPlayer, destination);
+            AlignPlayerBottomToGround(targetPlayer, destination);
             targetPlayer.ResetMotion();
             targetPlayer.SetControlsEnabled(enableControls && stageStarted && !drawing && !cleared && !stageEditing);
             if (resolveGroundOverlap)
@@ -2967,6 +3063,23 @@ namespace DrawBody.Prototype
             {
                 GameSfx.PlayAt(SfxId.PlayerRespawn, targetPlayer.transform.position);
             }
+        }
+
+        private void AlignPlayerBottomToGround(PlayerController2D targetPlayer, Vector3 spawnPosition)
+        {
+            if (targetPlayer == null) return;
+            Physics2D.SyncTransforms();
+            if (!TryFindGroundSurfaceBelow(spawnPosition, out float surfaceY)
+                || !TryGetPlayerSolidBounds(targetPlayer, out Bounds bodyBounds))
+            {
+                return;
+            }
+
+            float correction = surfaceY + groundSeparation - bodyBounds.min.y;
+            if (Mathf.Abs(correction) <= 0.0001f) return;
+            Vector3 corrected = targetPlayer.transform.position;
+            corrected.y += correction;
+            TeleportPlayerWithoutPhysics(targetPlayer, corrected);
         }
 
         private static void TeleportPlayerWithoutPhysics(PlayerController2D targetPlayer, Vector3 destination)

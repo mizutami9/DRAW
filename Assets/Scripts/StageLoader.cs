@@ -306,6 +306,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingSlimeMissile);
             }
 
+            StageGrainRainController existingGrainRain = stageRoot.GetComponent<StageGrainRainController>();
+            if (existingGrainRain != null)
+            {
+                DestroyComponentNow(existingGrainRain);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.id == "5-3")
@@ -337,6 +343,10 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "9-2")
             {
                 stageRoot.gameObject.AddComponent<StageCoinDescentController>();
+            }
+            if (data != null && data.id == "9-3")
+            {
+                stageRoot.gameObject.AddComponent<StageGrainRainController>();
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
