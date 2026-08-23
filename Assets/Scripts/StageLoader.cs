@@ -331,6 +331,20 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingRicochetEnemy);
             }
 
+            StageWindSpeedrunController existingWindSpeedrun =
+                stageRoot.GetComponent<StageWindSpeedrunController>();
+            if (existingWindSpeedrun != null)
+            {
+                DestroyComponentNow(existingWindSpeedrun);
+            }
+
+            StageUmbrellaRainController existingUmbrellaRain =
+                stageRoot.GetComponent<StageUmbrellaRainController>();
+            if (existingUmbrellaRain != null)
+            {
+                DestroyComponentNow(existingUmbrellaRain);
+            }
+
             StageValueCoinChallengeController existingValueCoinChallenge = stageRoot.GetComponent<StageValueCoinChallengeController>();
             if (existingValueCoinChallenge != null)
             {
@@ -406,6 +420,14 @@ namespace DrawBody.Prototype
             {
                 stageRoot.gameObject.AddComponent<StageRicochetEnemyChallengeController>();
             }
+            if (data != null && data.id == "14-1")
+            {
+                stageRoot.gameObject.AddComponent<StageWindSpeedrunController>();
+            }
+            if (data != null && data.id == "14-2")
+            {
+                stageRoot.gameObject.AddComponent<StageUmbrellaRainController>();
+            }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
                 if (data.id == "8-3" || data.id == "9-1" || data.id == "13-1")
@@ -431,6 +453,10 @@ namespace DrawBody.Prototype
                     StagePillarSurvivalController pillarSurvival =
                         stageRoot.gameObject.AddComponent<StagePillarSurvivalController>();
                     pillarSurvival.Configure(data.timeLimitSeconds);
+                }
+                else if (data.id == "14-2")
+                {
+                    // StageUmbrellaRainController owns elimination and retries.
                 }
                 else
                 {

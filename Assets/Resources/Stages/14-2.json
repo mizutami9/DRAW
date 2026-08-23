@@ -1,0 +1,60 @@
+{
+  "id":"14-2",
+  "displayName":"Stage 14-2 Umbrella Rain Escort",
+  "backgroundColorHex":"#EAF3F4FF",
+  "ruleMode":2,
+  "timeLimitSeconds":180.0,
+  "collectionTarget":163,
+  "requiredCollectionCount":1,
+  "objects":[
+    {"objectId":"14-2_boundary","type":151,"position":{"x":25.0,"y":0.0},"size":{"x":130.0,"y":18.0},"rotation":0.0},
+    {"objectId":"14-2_left_wall","type":1,"position":{"x":-40.0,"y":0.0},"size":{"x":0.8,"y":17.0},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_right_wall","type":1,"position":{"x":90.0,"y":0.0},"size":{"x":0.8,"y":17.0},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_spawn","type":2,"position":{"x":-34.0,"y":-2.4},"size":{"x":0.7,"y":0.7},"rotation":0.0},
+
+    {"objectId":"14-2_upper_route_01","type":0,"position":{"x":-25.0,"y":3.1},"size":{"x":30.0,"y":0.65},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_upper_route_02","type":0,"position":{"x":5.0,"y":3.1},"size":{"x":30.0,"y":0.65},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_upper_route_03","type":0,"position":{"x":35.0,"y":3.1},"size":{"x":30.0,"y":0.65},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_upper_route_04","type":0,"position":{"x":65.0,"y":3.1},"size":{"x":30.0,"y":0.65},"rotation":0.0,"keepSeparate":true},
+
+    {"objectId":"14-2_lower_00","type":0,"position":{"x":-33.0,"y":-3.8},"size":{"x":14.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_pad_00","type":61,"position":{"x":-27.2,"y":-2.95},"size":{"x":1.7,"y":0.75},"rotation":0.0,"actionStrength":44.0},
+    {"objectId":"14-2_lower_01","type":0,"position":{"x":-21.0,"y":-3.0},"size":{"x":10.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_box_01","type":47,"position":{"x":-20.0,"y":-1.95},"size":{"x":1.25,"y":1.25},"rotation":0.0},
+    {"objectId":"14-2_enemy_01","type":171,"position":{"x":-17.5,"y":-1.85},"size":{"x":1.3,"y":1.35},"rotation":180.0,"movementSpeed":2.4},
+
+    {"objectId":"14-2_lower_02","type":0,"position":{"x":-10.0,"y":-2.2},"size":{"x":9.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_pad_01","type":61,"position":{"x":-6.2,"y":-1.35},"size":{"x":1.7,"y":0.75},"rotation":0.0,"actionStrength":46.0},
+    {"objectId":"14-2_enemy_fly_01","type":174,"position":{"x":-7.5,"y":-0.2},"size":{"x":1.35,"y":1.35},"rotation":180.0,"movementSpeed":2.5},
+    {"objectId":"14-2_lower_03","type":0,"position":{"x":2.0,"y":-3.7},"size":{"x":10.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_enemy_02","type":172,"position":{"x":4.0,"y":-2.55},"size":{"x":1.3,"y":1.35},"rotation":180.0,"movementSpeed":2.6},
+
+    {"objectId":"14-2_lower_04","type":0,"position":{"x":15.0,"y":-2.5},"size":{"x":10.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_box_02","type":160,"position":{"x":13.5,"y":-1.4},"size":{"x":1.3,"y":1.3},"rotation":0.0},
+    {"objectId":"14-2_bomb_left_01","type":169,"position":{"x":20.0,"y":-0.7},"size":{"x":1.9,"y":1.4},"rotation":90.0,"actionStrength":5.2,"spawnPattern":1,"spawnBoxSize":0.95,"bombFuseSeconds":4.5},
+    {"objectId":"14-2_pad_02","type":61,"position":{"x":19.0,"y":-1.65},"size":{"x":1.7,"y":0.75},"rotation":0.0,"actionStrength":48.0},
+
+    {"objectId":"14-2_lower_05","type":0,"position":{"x":28.0,"y":-3.7},"size":{"x":11.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_enemy_03","type":173,"position":{"x":29.5,"y":-2.55},"size":{"x":1.35,"y":1.4},"rotation":180.0,"movementSpeed":2.8},
+    {"objectId":"14-2_enemy_fly_02","type":186,"position":{"x":33.0,"y":-0.4},"size":{"x":1.4,"y":1.4},"rotation":180.0,"movementSpeed":2.8},
+    {"objectId":"14-2_lower_06","type":0,"position":{"x":42.0,"y":-2.0},"size":{"x":10.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_spike_01","type":73,"position":{"x":43.0,"y":-1.1},"size":{"x":2.5,"y":1.2},"rotation":0.0},
+    {"objectId":"14-2_pad_03","type":61,"position":{"x":46.0,"y":-1.15},"size":{"x":1.7,"y":0.75},"rotation":0.0,"actionStrength":50.0},
+
+    {"objectId":"14-2_bomb_right_01","type":169,"position":{"x":50.0,"y":-0.65},"size":{"x":1.9,"y":1.4},"rotation":-90.0,"actionStrength":4.4,"spawnPattern":1,"spawnBoxSize":1.05,"bombFuseSeconds":4.0},
+    {"objectId":"14-2_lower_07","type":0,"position":{"x":56.0,"y":-3.6},"size":{"x":12.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_enemy_04","type":175,"position":{"x":55.0,"y":-2.45},"size":{"x":1.3,"y":1.35},"rotation":180.0,"movementSpeed":0.75},
+    {"objectId":"14-2_enemy_fly_03","type":187,"position":{"x":60.0,"y":-0.3},"size":{"x":1.45,"y":1.45},"rotation":0.0,"movementSpeed":2.9},
+    {"objectId":"14-2_pad_04","type":61,"position":{"x":61.0,"y":-2.75},"size":{"x":1.7,"y":0.75},"rotation":0.0,"actionStrength":51.0},
+
+    {"objectId":"14-2_lower_08","type":0,"position":{"x":70.0,"y":-2.4},"size":{"x":10.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_bomb_left_02","type":169,"position":{"x":69.0,"y":-0.55},"size":{"x":1.9,"y":1.4},"rotation":90.0,"actionStrength":3.8,"spawnPattern":1,"spawnBoxSize":1.15,"bombFuseSeconds":3.7},
+    {"objectId":"14-2_enemy_05","type":171,"position":{"x":72.0,"y":-1.25},"size":{"x":1.3,"y":1.35},"rotation":180.0,"movementSpeed":3.0},
+
+    {"objectId":"14-2_shelter_roof","type":0,"position":{"x":82.0,"y":0.15},"size":{"x":16.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_shelter_left","type":1,"position":{"x":74.2,"y":-1.6},"size":{"x":0.65,"y":3.0},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_shelter_right","type":1,"position":{"x":89.2,"y":-1.6},"size":{"x":0.65,"y":3.0},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_goal_floor","type":0,"position":{"x":82.0,"y":-3.5},"size":{"x":16.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
+    {"objectId":"14-2_goal","type":3,"position":{"x":83.0,"y":-2.05},"size":{"x":1.25,"y":2.15},"rotation":0.0}
+  ]
+}
