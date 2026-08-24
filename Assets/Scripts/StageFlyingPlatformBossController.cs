@@ -1,0 +1,1084 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace DrawBody.Prototype
+{
+    [DisallowMultipleComponent]
+    public sealed class StageFlyingPlatformBossController : StageEliminationChallengeController
+    {
+        private const string StageId = "15-1";
+        private const string StateKind = "flying_boss_state";
+        private const string PadKind = "flying_boss_pad";
+        private const string ShotRequestKind = "flying_boss_shot_request";
+        private const string ShotKind = "flying_boss_shot";
+        private const string BombRequestKind = "flying_boss_bomb_request";
+        private const string BombKind = "flying_boss_bomb";
+        private const string AttackKind = "flying_boss_attack";
+        private const string EliminateKind = "flying_boss_eliminate";
+        private const float ArenaHalfWidth = 17f;
+        private const float ArenaHalfHeight = 8.5f;
+
+        private enum BattlePhase { Ready, Fighting, Defeated, Failed }
+        private enum AttackType { Dash, Beam, Homing, Chase, Suction }
+
+        [System.Serializable] private sealed class PadMessage { public int Room; public Vector2 Position; }
+        [System.Serializable] private sealed class ShotRequest { public Vector2 Direction; }
+        [System.Serializable] private sealed class EliminationMessage { public string PlayerId; }
+        [System.Serializable]
+        private sealed class ShotState
+        {
+            public int Sequence;
+            public int OwnerRoom;
+            public Vector2 Position;
+            public Vector2 Direction;
+        }
+        [System.Serializable]
+        private sealed class BombState
+        {
+            public int Sequence;
+            public int OwnerRoom;
+            public Vector2 Position;
+        }
+        [System.Serializable]
+        private sealed class AttackState
+        {
+            public int Sequence;
+            public int Type;
+            public int TargetRoom;
+            public Vector2 Origin;
+            public Vector2 Direction;
+            public float Lane;
+        }
+        [System.Serializable]
+        private sealed class BossState
+        {
+            public int Sequence;
+            public int Phase;
+            public int Health;
+            public int MaximumHealth;
+            public Vector2 BossPosition;
+            public Vector2[] PadPositions;
+            public string[] RoomPlayerIds;
+            public string[] EliminatedIds;
+        }
+
+        private static readonly Vector2[] StartPositions =
+        {
+            new Vector2(-8f, 3.5f), new Vector2(8f, 3.5f),
+            new Vector2(-8f, -3.5f), new Vector2(8f, -3.5f)
+        };
+        private static readonly Color[] PlayerColors =
+        {
+            new Color(1f, 0.35f, 0.22f), new Color(0.18f, 0.68f, 1f),
+            new Color(1f, 0.72f, 0.15f), new Color(0.32f, 0.86f, 0.45f)
+        };
+
+        private readonly string[] roomPlayerIds = new string[4];
+        private readonly StageFlyingPlayerPad[] pads = new StageFlyingPlayerPad[4];
+        private readonly float[] nextShotAt = new float[4];
+        private readonly float[] nextBombAt = new float[4];
+        private readonly HashSet<string> eliminated = new HashSet<string>();
+        private readonly HashSet<int> receivedShots = new HashSet<int>();
+        private readonly HashSet<int> receivedAttacks = new HashSet<int>();
+        private readonly List<PlayerController2D> mountedPlayers = new List<PlayerController2D>();
+        private readonly List<StageFlyingBossShot> shots = new List<StageFlyingBossShot>();
+
+        private StageManager stageManager;
+        private OnlineManager onlineManager;
+        private Camera gameCamera;
+        private CameraFollow2D cameraFollow;
+        private Vector3 previousCameraPosition;
+        private float previousCameraSize;
+        private bool previousFollowEnabled;
+        private Transform boss;
+        private Transform bossFace;
+        private SpriteRenderer bossCore;
+        private Transform hpFill;
+        private TextMesh hpText;
+        private TextMesh statusText;
+        private LineRenderer aimLine;
+        private BattlePhase phase = BattlePhase.Ready;
+        private Vector2 bossPosition = new Vector2(0f, 10.5f);
+        private int playerCount = 1;
+        private int maximumHealth;
+        private int health;
+        private int stateSequence;
+        private int lastStateSequence;
+        private int shotSequence;
+        private int bombSequence;
+        private int attackSequence;
+        private float readyRemaining = 3f;
+        private float nextAttackAt;
+        private float nextStateAt;
+        private float nextPadSendAt;
+        private bool attackRunning;
+        private bool retryStarted;
+        private int attackCursor;
+
+        private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
+        private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
+
+        private void Awake()
+        {
+            stageManager = Object.FindFirstObjectByType<StageManager>();
+            onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            gameCamera = Camera.main;
+        }
+
+        private void OnEnable()
+        {
+            if (onlineManager == null) onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
+        }
+
+        private void OnDisable()
+        {
+            if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            RestorePlayers();
+            RestoreCamera();
+        }
+
+        private void Start()
+        {
+            RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
+            if (editor != null && editor.IsEditing) { enabled = false; return; }
+            BuildRoster();
+            maximumHealth = 50 * playerCount;
+            health = maximumHealth;
+            BuildArena();
+            BuildBoss();
+            BuildMonitor();
+            BuildAimGuide();
+            LockCamera();
+            MountLocalPlayers();
+            RefreshMonitor();
+            BroadcastState(true);
+        }
+
+        private void Update()
+        {
+            if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            UpdateLocalPadInput();
+            shots.RemoveAll(item => item == null);
+            if (boss != null)
+            {
+                Vector3 desiredBossPosition = new Vector3(bossPosition.x, bossPosition.y, -0.25f);
+                boss.position = attackRunning
+                    ? desiredBossPosition
+                    : Vector3.Lerp(boss.position, desiredBossPosition, 1f - Mathf.Exp(-18f * Time.deltaTime));
+            }
+
+            if (HasAuthority)
+            {
+                if (phase == BattlePhase.Ready)
+                {
+                    readyRemaining -= Time.deltaTime;
+                    if (readyRemaining <= 0f)
+                    {
+                        phase = BattlePhase.Fighting;
+                        nextAttackAt = Time.time + 1.8f;
+                        BroadcastState(true);
+                        GameSfx.Play(SfxId.EmotePop);
+                    }
+                }
+                else if (phase == BattlePhase.Fighting)
+                {
+                    if (!attackRunning)
+                    {
+                        Vector2 idleTarget = new Vector2(
+                            Mathf.Sin(Time.time * 0.37f) * 19.5f,
+                            6.8f + Mathf.Cos(Time.time * 0.53f) * 3.8f);
+                        bossPosition = Vector2.MoveTowards(bossPosition, idleTarget, 2.4f * Time.deltaTime);
+                    }
+                    if (!attackRunning && Time.time >= nextAttackAt) BeginNextAttack();
+                    if (AreAllEliminated() && !retryStarted) StartCoroutine(RetryAfterFailure());
+                }
+                BroadcastState(false);
+            }
+            RefreshMonitor();
+        }
+
+        private void BuildRoster()
+        {
+            if (IsOnline)
+            {
+                OnlinePlayerInfo[] roster = onlineManager?.CurrentLobby?.Players;
+                int room = 0;
+                if (roster != null)
+                    for (int i = 0; i < roster.Length && room < 4; i++)
+                        if (roster[i] != null && !string.IsNullOrEmpty(roster[i].PlayerId)) roomPlayerIds[room++] = roster[i].PlayerId;
+                playerCount = Mathf.Clamp(room, 1, 4);
+                return;
+            }
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            System.Array.Sort(players, (a, b) => a.GetInstanceID().CompareTo(b.GetInstanceID()));
+            playerCount = Mathf.Clamp(players.Length, 1, 4);
+            for (int i = 0; i < players.Length && i < 4; i++) roomPlayerIds[i] = ResolvePlayerId(players[i]);
+        }
+
+        private void BuildArena()
+        {
+            GameObject backdrop = new GameObject("15-1 Sky Arena");
+            backdrop.transform.SetParent(transform, false);
+            StageEscortController.AddBoxOutline(backdrop.transform, Vector2.zero, new Vector2(34f, 17f), new Color(0.18f, 0.45f, 0.72f, 0.5f), -20);
+            for (int i = 0; i < 4; i++)
+            {
+                pads[i] = StageFlyingPlayerPad.Create(transform, i, StartPositions[i], PlayerColors[i]);
+                pads[i].gameObject.SetActive(i < playerCount);
+            }
+        }
+
+        private void BuildBoss()
+        {
+            boss = new GameObject("15-1 Flying Boss").transform;
+            boss.SetParent(transform, false);
+            boss.position = bossPosition;
+            bossFace = new GameObject("Boss Face").transform;
+            bossFace.SetParent(boss, false);
+            AddDisc(bossFace, "Ink Outline", Vector2.zero, new Vector2(3.7f, 3.25f), new Color(0.12f, 0.05f, 0.18f), 160);
+            bossCore = AddDisc(bossFace, "Purple Body", Vector2.zero, new Vector2(3.45f, 3f), new Color(0.55f, 0.18f, 0.82f), 161);
+            AddDisc(bossFace, "Left Eye", new Vector2(-0.7f, 0.42f), new Vector2(0.54f, 0.68f), Color.white, 163);
+            AddDisc(bossFace, "Right Eye", new Vector2(0.7f, 0.42f), new Vector2(0.54f, 0.68f), Color.white, 163);
+            AddDisc(bossFace, "Left Pupil", new Vector2(-0.63f, 0.36f), new Vector2(0.2f, 0.28f), new Color(0.08f, 0.04f, 0.12f), 164);
+            AddDisc(bossFace, "Right Pupil", new Vector2(0.77f, 0.36f), new Vector2(0.2f, 0.28f), new Color(0.08f, 0.04f, 0.12f), 164);
+            StageEscortController.AddLine(bossFace, new Vector2(-0.82f, -0.55f), new Vector2(0f, -0.85f), 0.12f, Color.white, 164);
+            StageEscortController.AddLine(bossFace, new Vector2(0f, -0.85f), new Vector2(0.82f, -0.55f), 0.12f, Color.white, 164);
+            for (int i = 0; i < 8; i++)
+            {
+                float angle = i / 8f * Mathf.PI * 2f;
+                Vector2 from = new Vector2(Mathf.Cos(angle) * 1.55f, Mathf.Sin(angle) * 1.34f);
+                Vector2 to = new Vector2(Mathf.Cos(angle) * 2.18f, Mathf.Sin(angle) * 1.88f);
+                StageEscortController.AddLine(bossFace, from, to, 0.18f, new Color(0.3f, 0.06f, 0.5f), 159);
+            }
+            Color bossInk = new Color(0.12f, 0.03f, 0.2f);
+            Color neon = new Color(0.2f, 0.9f, 1f);
+            // Uneven horns, torn wings and crayon scars keep the silhouette
+            // readable while preserving the notebook-doodle style.
+            StageEscortController.AddLine(bossFace, new Vector2(-1.12f, 1.18f), new Vector2(-1.65f, 2.02f), 0.2f, bossInk, 166);
+            StageEscortController.AddLine(bossFace, new Vector2(-1.65f, 2.02f), new Vector2(-0.72f, 1.62f), 0.2f, bossInk, 166);
+            StageEscortController.AddLine(bossFace, new Vector2(0.9f, 1.3f), new Vector2(1.38f, 2.15f), 0.2f, bossInk, 166);
+            StageEscortController.AddLine(bossFace, new Vector2(1.38f, 2.15f), new Vector2(1.7f, 1.28f), 0.2f, bossInk, 166);
+            StageEscortController.AddLine(bossFace, new Vector2(-1.62f, 0.55f), new Vector2(-2.75f, 1.15f), 0.22f, bossInk, 158);
+            StageEscortController.AddLine(bossFace, new Vector2(-2.75f, 1.15f), new Vector2(-2.35f, 0.05f), 0.22f, bossInk, 158);
+            StageEscortController.AddLine(bossFace, new Vector2(-2.35f, 0.05f), new Vector2(-2.9f, -0.72f), 0.22f, bossInk, 158);
+            StageEscortController.AddLine(bossFace, new Vector2(1.62f, 0.55f), new Vector2(2.8f, 1.05f), 0.22f, bossInk, 158);
+            StageEscortController.AddLine(bossFace, new Vector2(2.8f, 1.05f), new Vector2(2.32f, -0.02f), 0.22f, bossInk, 158);
+            StageEscortController.AddLine(bossFace, new Vector2(2.32f, -0.02f), new Vector2(2.92f, -0.62f), 0.22f, bossInk, 158);
+            StageEscortController.AddLine(bossFace, new Vector2(-1.02f, 0.95f), new Vector2(-0.42f, 0.68f), 0.09f, neon, 167);
+            StageEscortController.AddLine(bossFace, new Vector2(-0.78f, 0.56f), new Vector2(-0.28f, 0.36f), 0.07f, neon, 167);
+            StageEscortController.AddLine(bossFace, new Vector2(0.25f, -1.08f), new Vector2(0.82f, -1.38f), 0.08f, new Color(1f, 0.28f, 0.55f), 167);
+        }
+
+        private void BuildMonitor()
+        {
+            GameObject monitor = new GameObject("15-1 Boss HP Monitor");
+            monitor.transform.SetParent(transform, false);
+            monitor.transform.localPosition = new Vector3(0f, 7.35f, 0.4f);
+            StageEscortController.AddFilledRect(monitor.transform, "Frame", Vector2.zero, new Vector2(15f, 2.15f), new Color(0.14f, 0.18f, 0.22f, 0.94f), 220);
+            StageEscortController.AddFilledRect(monitor.transform, "Screen", Vector2.zero, new Vector2(14.35f, 1.55f), new Color(0.01f, 0.035f, 0.05f, 0.97f), 221);
+            StageEscortController.AddFilledRect(monitor.transform, "HP Track", new Vector2(0f, -0.25f), new Vector2(11.8f, 0.48f), new Color(0.15f, 0.16f, 0.18f), 222);
+            GameObject fill = new GameObject("HP Fill");
+            fill.transform.SetParent(monitor.transform, false);
+            fill.transform.localPosition = new Vector3(-5.9f, -0.25f, -0.03f);
+            fill.transform.localScale = new Vector3(11.8f, 0.34f, 1f);
+            SpriteRenderer renderer = fill.AddComponent<SpriteRenderer>();
+            renderer.sprite = StageLinkedShieldSurvivalController.GetSquareSprite();
+            renderer.color = new Color(0.95f, 0.2f, 0.32f);
+            renderer.sortingOrder = 224;
+            hpFill = fill.transform;
+            hpText = StageEscortController.CreateText(monitor.transform, "HP", new Vector3(0f, 0.47f, -0.04f), 52, 0.12f, Color.white, 225);
+            statusText = StageEscortController.CreateText(monitor.transform, "Status", new Vector3(0f, -0.72f, -0.04f), 34, 0.07f, new Color(0.45f, 0.9f, 1f), 225);
+        }
+
+        private void BuildAimGuide()
+        {
+            GameObject root = new GameObject("Local Missile Aim Guide");
+            root.transform.SetParent(transform, false);
+            aimLine = root.AddComponent<LineRenderer>();
+            aimLine.useWorldSpace = true;
+            aimLine.positionCount = 2;
+            aimLine.startWidth = 0.075f;
+            aimLine.endWidth = 0.025f;
+            aimLine.numCapVertices = 3;
+            aimLine.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            aimLine.startColor = new Color(0.2f, 0.9f, 1f, 0.85f);
+            aimLine.endColor = new Color(0.2f, 0.9f, 1f, 0.12f);
+            aimLine.sortingOrder = 138;
+            aimLine.enabled = false;
+        }
+
+        private void UpdateLocalPadInput()
+        {
+            if (phase == BattlePhase.Defeated || phase == BattlePhase.Failed) return;
+            int localRoom = GetLocalRoom();
+            if (localRoom < 0 || localRoom >= playerCount || eliminated.Contains(roomPlayerIds[localRoom])) return;
+            StageFlyingPlayerPad pad = pads[localRoom];
+            if (pad == null) return;
+            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            if (input.sqrMagnitude > 1f) input.Normalize();
+            pad.SetPosition(ClampPadPosition(pad.Position + input * 7f * Time.deltaTime));
+            SyncMountedPlayer(localRoom);
+
+            Vector2 cursor = gameCamera != null
+                ? (Vector2)gameCamera.ScreenToWorldPoint(Input.mousePosition)
+                : pad.Position + Vector2.right;
+            Vector2 aimDirection = (cursor - pad.Position).normalized;
+            if (aimDirection.sqrMagnitude < 0.5f) aimDirection = Vector2.right;
+            if (aimLine != null)
+            {
+                aimLine.enabled = phase == BattlePhase.Fighting;
+                aimLine.SetPosition(0, pad.Position + aimDirection * 0.9f);
+                aimLine.SetPosition(1, pad.Position + aimDirection * 3.4f);
+            }
+
+            if (IsOnline && !HasAuthority && Time.unscaledTime >= nextPadSendAt)
+            {
+                nextPadSendAt = Time.unscaledTime + 0.05f;
+                Send(PadKind, new PadMessage { Room = localRoom, Position = pad.Position });
+            }
+            if (Input.GetMouseButtonDown(0) && phase == BattlePhase.Fighting)
+            {
+                if (HasAuthority) TryFire(localRoom, aimDirection);
+                else Send(ShotRequestKind, new ShotRequest { Direction = aimDirection });
+            }
+            if (Input.GetKeyDown(KeyCode.F) && phase == BattlePhase.Fighting)
+            {
+                if (HasAuthority) TryDropBomb(localRoom);
+                else Send(BombRequestKind, new PadMessage { Room = localRoom, Position = pad.Position });
+            }
+        }
+
+        private void TryFire(int room, Vector2 direction)
+        {
+            if (phase != BattlePhase.Fighting || room < 0 || room >= playerCount || Time.time < nextShotAt[room] || eliminated.Contains(roomPlayerIds[room])) return;
+            nextShotAt[room] = Time.time + 0.32f;
+            ShotState state = new ShotState { Sequence = ++shotSequence, OwnerRoom = room, Position = pads[room].Position + direction.normalized * 0.8f, Direction = direction.normalized };
+            ApplyShot(state);
+            if (IsOnline) Send(ShotKind, state);
+        }
+
+        private void ApplyShot(ShotState state)
+        {
+            if (state == null || !receivedShots.Add(state.Sequence)) return;
+            shots.Add(StageFlyingBossShot.Create(transform, this, state.Sequence, state.OwnerRoom, state.Position, state.Direction, HasAuthority));
+            GameSfx.PlayAt(SfxId.CannonFire, state.Position, 0.55f);
+        }
+
+        internal bool ResolvePlayerShot(int sequence, int ownerRoom, Vector2 position)
+        {
+            if (!HasAuthority || phase != BattlePhase.Fighting) return false;
+            if (Vector2.Distance(position, bossPosition) <= 1.9f)
+            {
+                DamageBoss(1, position);
+                return true;
+            }
+            for (int room = 0; room < playerCount; room++)
+            {
+                // The shooter is immune to their own missile, but teammates are
+                // deliberately valid collision targets for the co-op challenge.
+                if (room == ownerRoom || eliminated.Contains(roomPlayerIds[room])) continue;
+                if (Vector2.Distance(position, pads[room].Position + Vector2.up * 0.45f) > 0.8f) continue;
+                EliminateRoom(room);
+                return true;
+            }
+            return false;
+        }
+
+        private void TryDropBomb(int room)
+        {
+            if (phase != BattlePhase.Fighting || room < 0 || room >= playerCount || Time.time < nextBombAt[room] || eliminated.Contains(roomPlayerIds[room])) return;
+            nextBombAt[room] = Time.time + 1.15f;
+            BombState state = new BombState { Sequence = ++bombSequence, OwnerRoom = room, Position = pads[room].Position + Vector2.down * 0.65f };
+            ApplyBomb(state);
+            if (IsOnline) Send(BombKind, state);
+        }
+
+        private void ApplyBomb(BombState state)
+        {
+            if (state == null) return;
+            StageFlyingPlayerBomb.Create(transform, this, state.Sequence, state.OwnerRoom, state.Position, HasAuthority);
+            GameSfx.PlayAt(SfxId.BombFuseStart, state.Position, 0.7f);
+        }
+
+        internal void ResolvePlayerBomb(int ownerRoom, Vector2 position)
+        {
+            if (!HasAuthority || phase != BattlePhase.Fighting) return;
+            if (Vector2.Distance(position, bossPosition) <= 2.7f) DamageBoss(5, position);
+            for (int room = 0; room < playerCount; room++)
+                if (!eliminated.Contains(roomPlayerIds[room]) && Vector2.Distance(position, pads[room].Position) <= 2.25f) EliminateRoom(room);
+        }
+
+        private void DamageBoss(int amount, Vector2 position)
+        {
+            if (health <= 0) return;
+            health = Mathf.Max(0, health - Mathf.Max(1, amount));
+            StartCoroutine(BossHitFlash());
+            StageBossImpactFlash.Create(transform, position, new Color(1f, 0.78f, 0.18f));
+            BroadcastState(true);
+            if (health <= 0) StartCoroutine(DefeatBoss());
+        }
+
+        private void BeginNextAttack()
+        {
+            float ratio = health / (float)Mathf.Max(1, maximumHealth);
+            List<AttackType> choices = new List<AttackType> { AttackType.Dash, AttackType.Beam };
+            if (ratio <= 0.7f) { choices.Add(AttackType.Homing); choices.Add(AttackType.Chase); }
+            if (ratio <= 0.5f) choices.Add(AttackType.Suction);
+            AttackType type = choices[attackCursor++ % choices.Count];
+            if (choices.Count > 2 && Random.value < 0.55f) type = choices[Random.Range(0, choices.Count)];
+            AttackState state = BuildAttackState(type);
+            ApplyAttack(state);
+            if (IsOnline) Send(AttackKind, state);
+        }
+
+        private AttackState BuildAttackState(AttackType type)
+        {
+            int target = RandomLivingRoom();
+            Vector2 origin = Vector2.zero;
+            Vector2 direction = Vector2.right;
+            float lane = 0f;
+            if (type == AttackType.Dash)
+            {
+                bool left = Random.value < 0.5f;
+                lane = Random.Range(-5.8f, 5.8f);
+                origin = new Vector2(left ? -20f : 20f, lane);
+                direction = left ? Vector2.right : Vector2.left;
+            }
+            else if (type == AttackType.Beam || type == AttackType.Suction)
+            {
+                int side = Random.Range(0, 4);
+                origin = side == 0 ? new Vector2(-18.5f, 0f) : side == 1 ? new Vector2(18.5f, 0f)
+                    : side == 2 ? new Vector2(0f, 10f) : new Vector2(0f, -10f);
+                direction = -origin.normalized;
+                lane = Random.Range(-4.8f, 4.8f);
+                if (side < 2) origin.y = lane; else origin.x = lane;
+            }
+            else origin = bossPosition;
+            return new AttackState { Sequence = ++attackSequence, Type = (int)type, TargetRoom = target, Origin = origin, Direction = direction, Lane = lane };
+        }
+
+        private void ApplyAttack(AttackState state)
+        {
+            if (state == null || !receivedAttacks.Add(state.Sequence)) return;
+            attackRunning = true;
+            StartCoroutine(RunAttack(state));
+        }
+
+        private IEnumerator RunAttack(AttackState state)
+        {
+            AttackType type = (AttackType)state.Type;
+            if (type == AttackType.Dash) yield return RunDash(state);
+            else if (type == AttackType.Beam) yield return RunBeam(state);
+            else if (type == AttackType.Homing) yield return RunHoming(state);
+            else if (type == AttackType.Chase) yield return RunChase(state);
+            else yield return RunSuction(state);
+            attackRunning = false;
+            float ratio = health / (float)Mathf.Max(1, maximumHealth);
+            nextAttackAt = Time.time + (ratio <= 0.3f ? 0.55f : ratio <= 0.7f ? 1.15f : 1.8f);
+        }
+
+        private IEnumerator RunDash(AttackState state)
+        {
+            bossPosition = state.Origin;
+            SetBossMood(new Color(1f, 0.22f, 0.15f), 1.22f);
+            GameObject warning = CreateWarningRect(new Vector2(0f, state.Lane), new Vector2(34f, 2.2f), new Color(1f, 0.16f, 0.1f, 0.3f));
+            yield return new WaitForSeconds(1.5f);
+            Destroy(warning);
+            Vector2 end = state.Origin + state.Direction * 40f;
+            float elapsed = 0f;
+            while (elapsed < 0.95f)
+            {
+                elapsed += Time.deltaTime;
+                bossPosition = Vector2.Lerp(state.Origin, end, elapsed / 0.95f);
+                if (HasAuthority) HitPadsNear(bossPosition, 1.8f);
+                yield return null;
+            }
+            SetBossMood(new Color(0.55f, 0.18f, 0.82f), 1f);
+        }
+
+        private IEnumerator RunBeam(AttackState state)
+        {
+            bossPosition = state.Origin;
+            SetBossMood(new Color(1f, 0.38f, 0.08f), 1.12f);
+            bool horizontal = Mathf.Abs(state.Direction.x) > 0.5f;
+            Vector2 center = horizontal ? new Vector2(0f, state.Origin.y) : new Vector2(state.Origin.x, 0f);
+            Vector2 size = horizontal ? new Vector2(34f, 2.5f) : new Vector2(2.5f, 17f);
+            GameObject warning = CreateWarningRect(center, size, new Color(1f, 0.65f, 0.05f, 0.22f));
+            yield return new WaitForSeconds(1.7f);
+            SetWarningColor(warning, new Color(1f, 0.08f, 0.03f, 0.78f));
+            GameSfx.PlayAt(SfxId.BeamFire, state.Origin, 1f);
+            float elapsed = 0f;
+            while (elapsed < 0.75f)
+            {
+                elapsed += Time.deltaTime;
+                if (HasAuthority)
+                    for (int i = 0; i < playerCount; i++)
+                        if (!eliminated.Contains(roomPlayerIds[i]) && (horizontal
+                            ? Mathf.Abs(pads[i].Position.y - center.y) < 1.25f
+                            : Mathf.Abs(pads[i].Position.x - center.x) < 1.25f)) EliminateRoom(i);
+                yield return null;
+            }
+            Destroy(warning);
+            SetBossMood(new Color(0.55f, 0.18f, 0.82f), 1f);
+        }
+
+        private IEnumerator RunHoming(AttackState state)
+        {
+            bossPosition = new Vector2(0f, 10.2f);
+            SetBossMood(new Color(0.82f, 0.2f, 0.92f), 1.08f);
+            TextMesh warning = CreateWorldText(bossPosition + Vector2.down * 2.2f, LocalizationManager.T("flying_boss_homing_warning"), new Color(1f, 0.45f, 0.9f));
+            yield return new WaitForSeconds(1.45f);
+            Destroy(warning.gameObject);
+            for (int i = 0; i < playerCount; i++)
+                if (!eliminated.Contains(roomPlayerIds[i])) StageFlyingHomingHazard.Create(transform, this, i, bossPosition, HasAuthority);
+            yield return new WaitForSeconds(4.2f);
+            SetBossMood(new Color(0.55f, 0.18f, 0.82f), 1f);
+        }
+
+        private IEnumerator RunChase(AttackState state)
+        {
+            int target = Mathf.Clamp(state.TargetRoom, 0, playerCount - 1);
+            TextMesh warning = CreateWorldText(pads[target].Position + Vector2.up * 1.5f, LocalizationManager.T("flying_boss_target_warning"), Color.red);
+            SetBossMood(new Color(1f, 0.12f, 0.2f), 1.15f);
+            yield return new WaitForSeconds(1.35f);
+            Destroy(warning.gameObject);
+            float elapsed = 0f;
+            while (elapsed < 2.5f)
+            {
+                elapsed += Time.deltaTime;
+                bossPosition = Vector2.MoveTowards(bossPosition, pads[target].Position, 5f * Time.deltaTime);
+                yield return null;
+            }
+            Vector2 direction = (pads[target].Position - bossPosition).normalized;
+            Vector2 end = bossPosition + direction * 13f;
+            Vector2 start = bossPosition;
+            elapsed = 0f;
+            while (elapsed < 0.65f)
+            {
+                elapsed += Time.deltaTime;
+                bossPosition = Vector2.Lerp(start, end, elapsed / 0.65f);
+                if (HasAuthority) HitPadsNear(bossPosition, 1.8f);
+                yield return null;
+            }
+            SetBossMood(new Color(0.55f, 0.18f, 0.82f), 1f);
+        }
+
+        private IEnumerator RunSuction(AttackState state)
+        {
+            bossPosition = state.Origin;
+            SetBossMood(new Color(0.18f, 0.05f, 0.28f), 1.3f);
+            GameObject warning = CreateWarningRect(Vector2.zero, new Vector2(34f, 17f), new Color(0.45f, 0.15f, 0.8f, 0.12f));
+            TextMesh text = CreateWorldText(Vector2.zero, LocalizationManager.T("flying_boss_suction_warning"), new Color(0.8f, 0.55f, 1f));
+            yield return new WaitForSeconds(1.5f);
+            float elapsed = 0f;
+            while (elapsed < 3.2f)
+            {
+                elapsed += Time.deltaTime;
+                if (HasAuthority)
+                    for (int i = 0; i < playerCount; i++)
+                        if (!eliminated.Contains(roomPlayerIds[i])) pads[i].SetPosition(ClampPadPosition(Vector2.MoveTowards(pads[i].Position, bossPosition, 3.6f * Time.deltaTime)));
+                yield return null;
+            }
+            Destroy(warning); Destroy(text.gameObject);
+            SetBossMood(new Color(0.55f, 0.18f, 0.82f), 1f);
+        }
+
+        internal Vector2 GetPadPosition(int room) => room >= 0 && room < pads.Length && pads[room] != null ? pads[room].Position : Vector2.zero;
+        internal void HazardHitRoom(int room) { if (HasAuthority) EliminateRoom(room); }
+
+        private void HitPadsNear(Vector2 point, float radius)
+        {
+            for (int i = 0; i < playerCount; i++) if (!eliminated.Contains(roomPlayerIds[i]) && Vector2.Distance(pads[i].Position, point) <= radius) EliminateRoom(i);
+        }
+
+        private void EliminateRoom(int room)
+        {
+            if (room < 0 || room >= playerCount) return;
+            string id = roomPlayerIds[room];
+            if (string.IsNullOrEmpty(id) || eliminated.Contains(id)) return;
+            PlayerController2D player = ResolvePlayer(id);
+            if (player != null && (player.IsInvulnerable || player.IsTurtleShelled)) return;
+            ApplyElimination(id);
+            if (IsOnline) Send(EliminateKind, new EliminationMessage { PlayerId = id });
+            BroadcastState(true);
+        }
+
+        public override void RequestElimination(PlayerController2D target)
+        {
+            int room = FindRoom(ResolvePlayerId(target));
+            if (HasAuthority) EliminateRoom(room);
+        }
+
+        private void ApplyElimination(string id)
+        {
+            if (string.IsNullOrEmpty(id) || !eliminated.Add(id)) return;
+            int room = FindRoom(id);
+            if (room >= 0 && pads[room] != null) pads[room].SetDefeated(true);
+            PlayerController2D player = ResolvePlayer(id);
+            if (player != null) SetPlayerVisible(player, false);
+            GameSfx.Play(SfxId.PlayerDeath);
+        }
+
+        private IEnumerator DefeatBoss()
+        {
+            if (phase == BattlePhase.Defeated) yield break;
+            phase = BattlePhase.Defeated;
+            attackRunning = true;
+            SetBossMood(Color.white, 1.35f);
+            BroadcastState(true);
+            for (int i = 0; i < 7; i++)
+            {
+                Vector2 point = bossPosition + Random.insideUnitCircle * 1.5f;
+                GameObject explosion = new GameObject("Boss Defeat Burst");
+                explosion.transform.position = point;
+                explosion.AddComponent<BombExplosionVisual>().Configure(Random.Range(0.8f, 1.5f), false);
+                GameSfx.PlayAt(SfxId.BombExplosion, point, 0.65f);
+                yield return new WaitForSeconds(0.22f);
+            }
+            yield return new WaitForSeconds(1.4f);
+            stageManager.ClearStage();
+        }
+
+        private IEnumerator RetryAfterFailure()
+        {
+            retryStarted = true;
+            phase = BattlePhase.Failed;
+            BroadcastState(true);
+            yield return new WaitForSeconds(3f);
+            stageManager.Retry();
+        }
+
+        private IEnumerator BossHitFlash()
+        {
+            if (bossCore == null) yield break;
+            Color old = bossCore.color;
+            bossCore.color = Color.white;
+            yield return new WaitForSeconds(0.07f);
+            if (bossCore != null) bossCore.color = old;
+        }
+
+        private void SetBossMood(Color color, float scale)
+        {
+            if (bossCore != null) bossCore.color = color;
+            if (bossFace != null) bossFace.localScale = Vector3.one * scale;
+        }
+
+        private void MountLocalPlayers()
+        {
+            if (IsOnline)
+            {
+                int room = GetLocalRoom();
+                MountPlayer(stageManager.ActivePlayerTransform != null ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null, room);
+                return;
+            }
+            for (int i = 0; i < playerCount; i++) MountPlayer(ResolvePlayer(roomPlayerIds[i]), i);
+        }
+
+        private void MountPlayer(PlayerController2D player, int room)
+        {
+            if (player == null || room < 0 || room >= playerCount) return;
+            player.GetComponent<PlayerCarryController>()?.ForceDrop();
+            player.SetControlsEnabled(false);
+            Rigidbody2D body = player.GetComponent<Rigidbody2D>();
+            if (body != null) body.simulated = false;
+            if (!mountedPlayers.Contains(player)) mountedPlayers.Add(player);
+            SyncMountedPlayer(room);
+        }
+
+        private void SyncMountedPlayer(int room)
+        {
+            if (room < 0 || room >= playerCount || pads[room] == null) return;
+            PlayerController2D player = ResolvePlayer(roomPlayerIds[room]);
+            if (player == null || eliminated.Contains(roomPlayerIds[room])) return;
+            player.transform.position = new Vector3(pads[room].Position.x, pads[room].Position.y + 0.72f, -0.2f);
+        }
+
+        private void RestorePlayers()
+        {
+            for (int i = 0; i < mountedPlayers.Count; i++)
+            {
+                PlayerController2D player = mountedPlayers[i];
+                if (player == null) continue;
+                Rigidbody2D body = player.GetComponent<Rigidbody2D>();
+                if (body != null) body.simulated = true;
+                SetPlayerVisible(player, true);
+            }
+            mountedPlayers.Clear();
+        }
+
+        private static void SetPlayerVisible(PlayerController2D player, bool value)
+        {
+            Renderer[] renderers = player.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++) if (renderers[i] != null) renderers[i].enabled = value;
+        }
+
+        private void RefreshMonitor()
+        {
+            if (hpText == null) return;
+            hpText.text = LocalizationManager.Format("flying_boss_hp", health, maximumHealth);
+            float ratio = Mathf.Clamp01(health / (float)Mathf.Max(1, maximumHealth));
+            if (hpFill != null)
+            {
+                hpFill.localScale = new Vector3(11.8f * ratio, 0.34f, 1f);
+                hpFill.localPosition = new Vector3(-5.9f + 5.9f * ratio, -0.25f, -0.03f);
+            }
+            statusText.text = LocalizationManager.T(phase == BattlePhase.Ready ? "flying_boss_ready"
+                : phase == BattlePhase.Defeated ? "flying_boss_clear"
+                : phase == BattlePhase.Failed ? "flying_boss_failed" : "flying_boss_controls");
+        }
+
+        private int RandomLivingRoom()
+        {
+            List<int> living = new List<int>();
+            for (int i = 0; i < playerCount; i++) if (!eliminated.Contains(roomPlayerIds[i])) living.Add(i);
+            return living.Count > 0 ? living[Random.Range(0, living.Count)] : 0;
+        }
+
+        private bool AreAllEliminated()
+        {
+            for (int i = 0; i < playerCount; i++) if (!eliminated.Contains(roomPlayerIds[i])) return false;
+            return true;
+        }
+
+        private int GetLocalRoom() => FindRoom(IsOnline ? onlineManager?.LocalPlayerId : roomPlayerIds[0]);
+        private int FindRoom(string id) { for (int i = 0; i < playerCount; i++) if (roomPlayerIds[i] == id) return i; return -1; }
+        private static Vector2 ClampPadPosition(Vector2 value) => new Vector2(Mathf.Clamp(value.x, -15.5f, 15.5f), Mathf.Clamp(value.y, -7.2f, 6.2f));
+
+        private string ResolvePlayerId(PlayerController2D player) => player == null ? null : IsOnline ? stageManager.GetOnlinePlayerId(player) : "local_" + player.GetInstanceID();
+        private PlayerController2D ResolvePlayer(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return null;
+            if (IsOnline) return stageManager.GetOnlinePlayerController(id);
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < players.Length; i++) if (ResolvePlayerId(players[i]) == id) return players[i];
+            return null;
+        }
+
+        private bool IsHostPlayer(string id)
+        {
+            if (onlineManager != null && onlineManager.IsHostPlayer(id)) return true;
+            OnlinePlayerInfo[] roster = onlineManager?.CurrentLobby?.Players;
+            if (roster == null) return false;
+            for (int i = 0; i < roster.Length; i++) if (roster[i] != null && roster[i].IsHost && roster[i].PlayerId == id) return true;
+            return false;
+        }
+
+        private void BroadcastState(bool force)
+        {
+            if (!IsOnline || !HasAuthority || onlineManager == null || !force && Time.unscaledTime < nextStateAt) return;
+            nextStateAt = Time.unscaledTime + 0.1f;
+            Vector2[] positions = new Vector2[4];
+            for (int i = 0; i < 4; i++) positions[i] = pads[i] != null ? pads[i].Position : StartPositions[i];
+            Send(StateKind, new BossState
+            {
+                Sequence = ++stateSequence, Phase = (int)phase, Health = health, MaximumHealth = maximumHealth,
+                BossPosition = bossPosition, PadPositions = positions, RoomPlayerIds = (string[])roomPlayerIds.Clone(),
+                EliminatedIds = new List<string>(eliminated).ToArray()
+            });
+        }
+
+        private void ApplyState(BossState state)
+        {
+            if (state == null || state.Sequence <= lastStateSequence) return;
+            lastStateSequence = state.Sequence;
+            phase = (BattlePhase)Mathf.Clamp(state.Phase, 0, (int)BattlePhase.Failed);
+            health = state.Health; maximumHealth = state.MaximumHealth; bossPosition = state.BossPosition;
+            if (state.RoomPlayerIds != null) System.Array.Copy(state.RoomPlayerIds, roomPlayerIds, Mathf.Min(4, state.RoomPlayerIds.Length));
+            if (state.PadPositions != null)
+            {
+                int localRoom = GetLocalRoom();
+                for (int i = 0; i < Mathf.Min(4, state.PadPositions.Length); i++)
+                {
+                    if (pads[i] == null) continue;
+                    Vector2 value = i == localRoom
+                        ? Vector2.Lerp(pads[i].Position, state.PadPositions[i], 0.32f)
+                        : state.PadPositions[i];
+                    pads[i].SetPosition(value);
+                }
+            }
+            if (state.EliminatedIds != null) for (int i = 0; i < state.EliminatedIds.Length; i++) ApplyElimination(state.EliminatedIds[i]);
+        }
+
+        private void HandleNetworkData(OnlineGimmickData data)
+        {
+            if (data == null || data.ObjectId != StageId) return;
+            if (data.Kind == StateKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyState(JsonUtility.FromJson<BossState>(data.Json));
+            else if (data.Kind == PadKind && HasAuthority)
+            {
+                PadMessage pad = JsonUtility.FromJson<PadMessage>(data.Json);
+                int room = FindRoom(data.PlayerId);
+                if (pad != null && room == pad.Room && room >= 0) pads[room].SetPosition(ClampPadPosition(pad.Position));
+            }
+            else if (data.Kind == ShotRequestKind && HasAuthority)
+            {
+                ShotRequest request = JsonUtility.FromJson<ShotRequest>(data.Json);
+                int room = FindRoom(data.PlayerId);
+                if (request != null && room >= 0) TryFire(room, request.Direction.normalized);
+            }
+            else if (data.Kind == BombRequestKind && HasAuthority)
+            {
+                int room = FindRoom(data.PlayerId);
+                if (room >= 0) TryDropBomb(room);
+            }
+            else if (data.Kind == ShotKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyShot(JsonUtility.FromJson<ShotState>(data.Json));
+            else if (data.Kind == BombKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyBomb(JsonUtility.FromJson<BombState>(data.Json));
+            else if (data.Kind == AttackKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyAttack(JsonUtility.FromJson<AttackState>(data.Json));
+            else if (data.Kind == EliminateKind && IsHostPlayer(data.PlayerId))
+            {
+                EliminationMessage message = JsonUtility.FromJson<EliminationMessage>(data.Json);
+                if (message != null) ApplyElimination(message.PlayerId);
+            }
+        }
+
+        private void Send(string kind, object state)
+        {
+            if (onlineManager == null) return;
+            onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = StageId, Kind = kind, Json = JsonUtility.ToJson(state) });
+        }
+
+        private void LockCamera()
+        {
+            if (gameCamera == null) gameCamera = Camera.main;
+            if (gameCamera == null) return;
+            cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
+            previousCameraPosition = gameCamera.transform.position;
+            previousCameraSize = gameCamera.orthographicSize;
+            if (cameraFollow != null) { previousFollowEnabled = cameraFollow.enabled; cameraFollow.enabled = false; }
+            gameCamera.transform.position = new Vector3(0f, 0f, previousCameraPosition.z);
+            gameCamera.orthographicSize = Mathf.Max(10.8f, 19f / Mathf.Max(0.1f, gameCamera.aspect));
+        }
+
+        private void RestoreCamera()
+        {
+            if (gameCamera == null) return;
+            gameCamera.transform.position = previousCameraPosition;
+            gameCamera.orthographicSize = previousCameraSize;
+            if (cameraFollow != null) cameraFollow.enabled = previousFollowEnabled;
+        }
+
+        private GameObject CreateWarningRect(Vector2 position, Vector2 size, Color color)
+        {
+            GameObject root = new GameObject("Boss Attack Warning");
+            root.transform.SetParent(transform, false);
+            root.transform.localPosition = position;
+            StageEscortController.AddFilledRect(root.transform, "Warning", Vector2.zero, size, color, 135);
+            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, new Color(1f, 0.15f, 0.08f, 0.9f), 136);
+            return root;
+        }
+
+        private static void SetWarningColor(GameObject warning, Color color)
+        {
+            if (warning == null) return;
+            SpriteRenderer[] renderers = warning.GetComponentsInChildren<SpriteRenderer>();
+            for (int i = 0; i < renderers.Length; i++) renderers[i].color = color;
+        }
+
+        private TextMesh CreateWorldText(Vector2 position, string value, Color color)
+        {
+            TextMesh text = StageEscortController.CreateText(transform, "Attack Warning Text", new Vector3(position.x, position.y, -0.3f), 54, 0.13f, color, 190);
+            text.text = value;
+            return text;
+        }
+
+        private static SpriteRenderer AddDisc(Transform parent, string name, Vector2 position, Vector2 size, Color color, int order)
+        {
+            GameObject obj = new GameObject(name);
+            obj.transform.SetParent(parent, false);
+            obj.transform.localPosition = position;
+            obj.transform.localScale = new Vector3(size.x, size.y, 1f);
+            SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
+            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.color = color;
+            renderer.sortingOrder = order;
+            return renderer;
+        }
+    }
+
+    public sealed class StageFlyingPlayerPad : MonoBehaviour
+    {
+        private SpriteRenderer fill;
+        private TextMesh label;
+        public Vector2 Position => transform.position;
+
+        public static StageFlyingPlayerPad Create(Transform parent, int room, Vector2 position, Color color)
+        {
+            GameObject root = new GameObject("Player Flying Pad P" + (room + 1));
+            root.transform.SetParent(parent, false);
+            root.transform.localPosition = position;
+            StageFlyingPlayerPad pad = root.AddComponent<StageFlyingPlayerPad>();
+            GameObject visual = new GameObject("Pad Fill");
+            visual.transform.SetParent(root.transform, false);
+            visual.transform.localScale = new Vector3(3.2f, 0.62f, 1f);
+            pad.fill = visual.AddComponent<SpriteRenderer>();
+            pad.fill.sprite = StageLinkedShieldSurvivalController.GetSquareSprite();
+            pad.fill.color = color;
+            pad.fill.sortingOrder = 80;
+            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, new Vector2(3.25f, 0.68f), new Color(0.08f, 0.12f, 0.16f), 82);
+            StageEscortController.AddFilledRect(root.transform, "Cockpit Panel", Vector2.zero, new Vector2(1.08f, 0.44f), new Color(0.05f, 0.16f, 0.24f, 0.9f), 81);
+            StageEscortController.AddLine(root.transform, new Vector2(-1.58f, 0.08f), new Vector2(-2.05f, 0.48f), 0.12f, color, 79);
+            StageEscortController.AddLine(root.transform, new Vector2(-2.05f, 0.48f), new Vector2(-1.38f, -0.18f), 0.12f, color, 79);
+            StageEscortController.AddLine(root.transform, new Vector2(1.58f, 0.08f), new Vector2(2.05f, 0.48f), 0.12f, color, 79);
+            StageEscortController.AddLine(root.transform, new Vector2(2.05f, 0.48f), new Vector2(1.38f, -0.18f), 0.12f, color, 79);
+            AddThruster(root.transform, new Vector2(-0.92f, -0.52f), color);
+            AddThruster(root.transform, new Vector2(0.92f, -0.52f), color);
+            StageEscortController.AddLine(root.transform, new Vector2(-1.18f, -0.72f), new Vector2(-0.9f, -1.05f), 0.13f, new Color(1f, 0.78f, 0.12f), 78);
+            StageEscortController.AddLine(root.transform, new Vector2(1.18f, -0.72f), new Vector2(0.9f, -1.05f), 0.13f, new Color(1f, 0.78f, 0.12f), 78);
+            pad.label = StageEscortController.CreateText(root.transform, "Player Label", new Vector3(0f, 0f, -0.04f), 34, 0.078f, Color.white, 84);
+            pad.label.text = "P" + (room + 1);
+            return pad;
+        }
+
+        private static void AddThruster(Transform parent, Vector2 position, Color color)
+        {
+            GameObject outer = new GameObject("Thruster Ink");
+            outer.transform.SetParent(parent, false);
+            outer.transform.localPosition = position;
+            outer.transform.localScale = new Vector3(0.55f, 0.42f, 1f);
+            SpriteRenderer rim = outer.AddComponent<SpriteRenderer>();
+            rim.sprite = StageSurvivalController.GetCircleSprite();
+            rim.color = new Color(0.07f, 0.1f, 0.14f);
+            rim.sortingOrder = 82;
+            GameObject glow = new GameObject("Thruster Glow");
+            glow.transform.SetParent(outer.transform, false);
+            glow.transform.localScale = Vector3.one * 0.66f;
+            SpriteRenderer light = glow.AddComponent<SpriteRenderer>();
+            light.sprite = StageSurvivalController.GetCircleSprite();
+            light.color = color;
+            light.sortingOrder = 83;
+        }
+
+        public void SetPosition(Vector2 position) => transform.position = new Vector3(position.x, position.y, -0.1f);
+        public void SetDefeated(bool value) { if (fill != null) fill.color = value ? new Color(0.25f, 0.25f, 0.28f, 0.55f) : fill.color; }
+    }
+
+    public sealed class StageFlyingBossShot : MonoBehaviour
+    {
+        private StageFlyingPlatformBossController owner;
+        private int sequence;
+        private int ownerRoom;
+        private Vector2 velocity;
+        private float expiresAt;
+        private bool authoritative;
+
+        public static StageFlyingBossShot Create(Transform parent, StageFlyingPlatformBossController owner, int sequence, int ownerRoom, Vector2 position, Vector2 direction, bool authoritative)
+        {
+            GameObject root = new GameObject("Player Missile " + sequence);
+            root.transform.SetParent(parent, false);
+            root.transform.position = position;
+            root.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            StageFlyingBossShot shot = root.AddComponent<StageFlyingBossShot>();
+            shot.owner = owner; shot.sequence = sequence; shot.ownerRoom = ownerRoom; shot.velocity = direction.normalized * 13f; shot.expiresAt = Time.time + 4.5f; shot.authoritative = authoritative;
+            StageEscortController.AddFilledRect(root.transform, "Missile", Vector2.zero, new Vector2(0.85f, 0.28f), new Color(0.18f, 0.8f, 1f), 145);
+            StageEscortController.AddLine(root.transform, new Vector2(-0.42f, 0f), new Vector2(-0.75f, 0f), 0.14f, new Color(1f, 0.82f, 0.18f), 144);
+            return shot;
+        }
+
+        private void Update()
+        {
+            transform.position += (Vector3)(velocity * Time.deltaTime);
+            if (authoritative && owner != null && owner.ResolvePlayerShot(sequence, ownerRoom, transform.position))
+            {
+                Destroy(gameObject);
+                return;
+            }
+            if (Time.time >= expiresAt || Mathf.Abs(transform.position.x) > 24f || Mathf.Abs(transform.position.y) > 15f) Destroy(gameObject);
+        }
+    }
+
+    public sealed class StageFlyingHomingHazard : MonoBehaviour
+    {
+        private StageFlyingPlatformBossController owner;
+        private int targetRoom;
+        private Vector2 velocity;
+        private float expiresAt;
+        private bool authoritative;
+
+        public static void Create(Transform parent, StageFlyingPlatformBossController owner, int room, Vector2 position, bool authoritative)
+        {
+            GameObject root = new GameObject("Boss Homing Missile P" + (room + 1));
+            root.transform.SetParent(parent, false);
+            root.transform.position = position + new Vector2((room - 1.5f) * 0.28f, -room * 0.08f);
+            StageFlyingHomingHazard hazard = root.AddComponent<StageFlyingHomingHazard>();
+            hazard.owner = owner; hazard.targetRoom = room; hazard.authoritative = authoritative;
+            hazard.velocity = Vector2.down * 3f; hazard.expiresAt = Time.time + 4f;
+            StageEscortController.AddFilledRect(root.transform, "Homing Body", Vector2.zero, new Vector2(1f, 0.38f), new Color(1f, 0.2f, 0.48f), 150);
+            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, new Vector2(1f, 0.38f), new Color(0.3f, 0.02f, 0.1f), 152);
+        }
+
+        private void Update()
+        {
+            Vector2 target = owner != null ? owner.GetPadPosition(targetRoom) : Vector2.zero;
+            Vector2 desired = (target - (Vector2)transform.position).normalized * 5.2f;
+            velocity = Vector2.Lerp(velocity, desired, 1f - Mathf.Exp(-2.3f * Time.deltaTime));
+            transform.position += (Vector3)(velocity * Time.deltaTime);
+            transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg);
+            if (Vector2.Distance(transform.position, target) < 0.72f)
+            {
+                if (authoritative) owner?.HazardHitRoom(targetRoom);
+                GameObject explosion = new GameObject("Homing Missile Burst");
+                explosion.transform.position = transform.position;
+                explosion.AddComponent<BombExplosionVisual>().Configure(0.9f, false);
+                Destroy(gameObject);
+            }
+            else if (Time.time >= expiresAt) Destroy(gameObject);
+        }
+    }
+
+    public sealed class StageFlyingPlayerBomb : MonoBehaviour
+    {
+        private StageFlyingPlatformBossController owner;
+        private int ownerRoom;
+        private float explodeAt;
+        private float verticalSpeed;
+        private bool authoritative;
+        private TextMesh timer;
+
+        public static void Create(Transform parent, StageFlyingPlatformBossController owner, int sequence,
+            int ownerRoom, Vector2 position, bool authoritative)
+        {
+            GameObject root = new GameObject("Player Drop Bomb " + sequence);
+            root.transform.SetParent(parent, false);
+            root.transform.position = position;
+            StageFlyingPlayerBomb bomb = root.AddComponent<StageFlyingPlayerBomb>();
+            bomb.owner = owner;
+            bomb.ownerRoom = ownerRoom;
+            bomb.authoritative = authoritative;
+            bomb.explodeAt = Time.time + 1.65f;
+            bomb.verticalSpeed = -2.3f;
+
+            GameObject outline = new GameObject("Bomb Ink Outline");
+            outline.transform.SetParent(root.transform, false);
+            outline.transform.localScale = Vector3.one * 0.92f;
+            SpriteRenderer outer = outline.AddComponent<SpriteRenderer>();
+            outer.sprite = StageSurvivalController.GetCircleSprite();
+            outer.color = new Color(0.12f, 0.05f, 0.06f);
+            outer.sortingOrder = 148;
+            GameObject body = new GameObject("Bomb Red Body");
+            body.transform.SetParent(root.transform, false);
+            body.transform.localScale = Vector3.one * 0.78f;
+            SpriteRenderer inner = body.AddComponent<SpriteRenderer>();
+            inner.sprite = StageSurvivalController.GetCircleSprite();
+            inner.color = new Color(0.88f, 0.18f, 0.12f);
+            inner.sortingOrder = 149;
+            StageEscortController.AddLine(root.transform, new Vector2(0.18f, 0.36f), new Vector2(0.42f, 0.72f), 0.1f, new Color(0.18f, 0.12f, 0.05f), 150);
+            StageEscortController.AddLine(root.transform, new Vector2(0.42f, 0.72f), new Vector2(0.58f, 0.62f), 0.08f, new Color(1f, 0.72f, 0.08f), 151);
+            bomb.timer = StageEscortController.CreateText(root.transform, "Fuse", new Vector3(0f, 0f, -0.04f), 30, 0.065f, Color.white, 152);
+        }
+
+        private void Update()
+        {
+            verticalSpeed -= 4.5f * Time.deltaTime;
+            transform.position += Vector3.up * (verticalSpeed * Time.deltaTime);
+            float remaining = Mathf.Max(0f, explodeAt - Time.time);
+            if (timer != null) timer.text = remaining.ToString("0.0");
+            if (remaining > 0f) return;
+            if (authoritative) owner?.ResolvePlayerBomb(ownerRoom, transform.position);
+            GameObject explosion = new GameObject("Player Bomb Explosion");
+            explosion.transform.position = transform.position;
+            explosion.AddComponent<BombExplosionVisual>().Configure(2.25f, false);
+            GameSfx.PlayAt(SfxId.BombExplosion, transform.position, 0.9f);
+            Destroy(gameObject);
+        }
+    }
+}

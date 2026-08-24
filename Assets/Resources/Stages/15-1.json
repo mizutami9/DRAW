@@ -1,0 +1,12 @@
+{
+  "id":"15-1",
+  "displayName":"Stage 15-1 Flying Platform Boss",
+  "backgroundColorHex":"#EAF8FFFF",
+  "ruleMode":2,
+  "timeLimitSeconds":0.0,
+  "collectionTarget":0,
+  "requiredCollectionCount":0,
+  "objects":[
+    {"objectId":"15-1_spawn","type":2,"position":{"x":-8.0,"y":4.2},"size":{"x":0.7,"y":0.7},"rotation":0.0}
+  ]
+}
