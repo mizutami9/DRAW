@@ -2782,6 +2782,17 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            // Some special stages keep players inside a controller-owned arena
+            // instead of using world gravity. Their valid movement area may extend
+            // below the ordinary stage fall line, so only the stage controller's
+            // explicit attack checks may eliminate them.
+            if (UsesEliminationController
+                && survivalController != null
+                && !survivalController.UsesGlobalFallBoundary)
+            {
+                return;
+            }
+
             float resetY = fallResetY;
             if (stageLoader != null && stageLoader.TryGetStageFallBoundaryY(out float stageBoundaryY))
             {

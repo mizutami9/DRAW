@@ -15,6 +15,7 @@ namespace DrawBody.Prototype
         private const string BombRequestKind = "flying_boss_bomb_request";
         private const string BombKind = "flying_boss_bomb";
         private const string AttackKind = "flying_boss_attack";
+        private const string HomingVolleyKind = "flying_boss_homing_volley";
         private const string EliminateKind = "flying_boss_eliminate";
         private const float ArenaHalfWidth = 17f;
         private const float ArenaHalfHeight = 8.5f;
@@ -51,6 +52,12 @@ namespace DrawBody.Prototype
             public float Lane;
         }
         [System.Serializable]
+        private sealed class HomingVolleyState
+        {
+            public int Sequence;
+            public Vector2 Origin;
+        }
+        [System.Serializable]
         private sealed class BossState
         {
             public int Sequence;
@@ -81,8 +88,10 @@ namespace DrawBody.Prototype
         private readonly HashSet<string> eliminated = new HashSet<string>();
         private readonly HashSet<int> receivedShots = new HashSet<int>();
         private readonly HashSet<int> receivedAttacks = new HashSet<int>();
+        private readonly HashSet<int> receivedHomingVolleys = new HashSet<int>();
         private readonly List<PlayerController2D> mountedPlayers = new List<PlayerController2D>();
         private readonly List<StageFlyingBossShot> shots = new List<StageFlyingBossShot>();
+        private readonly List<Transform> bossOrbitShards = new List<Transform>();
 
         private StageManager stageManager;
         private OnlineManager onlineManager;
@@ -108,16 +117,21 @@ namespace DrawBody.Prototype
         private int shotSequence;
         private int bombSequence;
         private int attackSequence;
+        private int homingVolleySequence;
         private float readyRemaining = 3f;
         private float nextAttackAt;
         private float nextStateAt;
         private float nextPadSendAt;
+        private float nextPressureHomingAt;
+        private float lastDashAt = -100f;
         private bool attackRunning;
         private bool retryStarted;
         private int attackCursor;
+        private float bossMoodScale = 1f;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
+        public override bool UsesGlobalFallBoundary => false;
 
         private void Awake()
         {
@@ -144,7 +158,7 @@ namespace DrawBody.Prototype
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing) { enabled = false; return; }
             BuildRoster();
-            maximumHealth = 50 * playerCount;
+            maximumHealth = 100 * playerCount;
             health = maximumHealth;
             BuildArena();
             BuildBoss();
@@ -168,6 +182,7 @@ namespace DrawBody.Prototype
                     ? desiredBossPosition
                     : Vector3.Lerp(boss.position, desiredBossPosition, 1f - Mathf.Exp(-18f * Time.deltaTime));
             }
+            AnimateBossVisuals();
 
             if (HasAuthority)
             {
@@ -184,6 +199,7 @@ namespace DrawBody.Prototype
                 }
                 else if (phase == BattlePhase.Fighting)
                 {
+                    float healthRatio = health / (float)Mathf.Max(1, maximumHealth);
                     if (!attackRunning)
                     {
                         Vector2 idleTarget = new Vector2(
@@ -192,6 +208,10 @@ namespace DrawBody.Prototype
                         bossPosition = Vector2.MoveTowards(bossPosition, idleTarget, 2.4f * Time.deltaTime);
                     }
                     if (!attackRunning && Time.time >= nextAttackAt) BeginNextAttack();
+                    if (healthRatio <= 0.5f && Time.time >= nextPressureHomingAt)
+                    {
+                        LaunchPressureHomingVolley(healthRatio);
+                    }
                     if (AreAllEliminated() && !retryStarted) StartCoroutine(RetryAfterFailure());
                 }
                 BroadcastState(false);
@@ -268,6 +288,52 @@ namespace DrawBody.Prototype
             StageEscortController.AddLine(bossFace, new Vector2(-1.02f, 0.95f), new Vector2(-0.42f, 0.68f), 0.09f, neon, 167);
             StageEscortController.AddLine(bossFace, new Vector2(-0.78f, 0.56f), new Vector2(-0.28f, 0.36f), 0.07f, neon, 167);
             StageEscortController.AddLine(bossFace, new Vector2(0.25f, -1.08f), new Vector2(0.82f, -1.38f), 0.08f, new Color(1f, 0.28f, 0.55f), 167);
+
+            // Heavy brows, fangs and layered jaw armor give the boss a stronger
+            // silhouette while keeping every stroke in the notebook-doodle style.
+            StageEscortController.AddLine(bossFace, new Vector2(-1.12f, 0.92f), new Vector2(-0.34f, 0.72f), 0.17f, bossInk, 168);
+            StageEscortController.AddLine(bossFace, new Vector2(1.12f, 0.92f), new Vector2(0.34f, 0.72f), 0.17f, bossInk, 168);
+            StageEscortController.AddLine(bossFace, new Vector2(-0.62f, -0.65f), new Vector2(-0.38f, -1.18f), 0.14f, Color.white, 168);
+            StageEscortController.AddLine(bossFace, new Vector2(0.62f, -0.65f), new Vector2(0.38f, -1.18f), 0.14f, Color.white, 168);
+            StageEscortController.AddLine(bossFace, new Vector2(-1.3f, -1.02f), new Vector2(0f, -1.52f), 0.16f, bossInk, 166);
+            StageEscortController.AddLine(bossFace, new Vector2(0f, -1.52f), new Vector2(1.3f, -1.02f), 0.16f, bossInk, 166);
+            StageEscortController.AddLine(bossFace, new Vector2(-1.82f, -0.42f), new Vector2(-2.25f, -1.4f), 0.18f, new Color(0.82f, 0.2f, 0.95f), 160);
+            StageEscortController.AddLine(bossFace, new Vector2(1.82f, -0.42f), new Vector2(2.25f, -1.4f), 0.18f, new Color(0.82f, 0.2f, 0.95f), 160);
+            BuildBossOrbitShards(neon, bossInk);
+        }
+
+        private void BuildBossOrbitShards(Color neon, Color outline)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject shard = new GameObject("Orbiting Ink Blade " + (i + 1));
+                shard.transform.SetParent(boss, false);
+                StageEscortController.AddLine(shard.transform, new Vector2(-0.42f, 0f), new Vector2(0f, 0.3f), 0.13f, outline, 157);
+                StageEscortController.AddLine(shard.transform, new Vector2(0f, 0.3f), new Vector2(0.42f, 0f), 0.13f, neon, 158);
+                StageEscortController.AddLine(shard.transform, new Vector2(0.42f, 0f), new Vector2(0f, -0.3f), 0.13f, outline, 157);
+                StageEscortController.AddLine(shard.transform, new Vector2(0f, -0.3f), new Vector2(-0.42f, 0f), 0.13f, neon, 158);
+                bossOrbitShards.Add(shard.transform);
+            }
+        }
+
+        private void AnimateBossVisuals()
+        {
+            if (bossFace != null)
+            {
+                float pulse = 1f + Mathf.Sin(Time.time * 3.1f) * 0.025f;
+                bossFace.localScale = Vector3.one * bossMoodScale * pulse;
+                bossFace.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(Time.time * 1.7f) * 2.2f);
+            }
+            for (int i = 0; i < bossOrbitShards.Count; i++)
+            {
+                Transform shard = bossOrbitShards[i];
+                if (shard == null) continue;
+                float angle = Time.time * (0.72f + i * 0.08f) + i * Mathf.PI * 2f / bossOrbitShards.Count;
+                float radiusX = 2.8f + Mathf.Sin(Time.time * 1.4f + i) * 0.18f;
+                float radiusY = 2.25f + Mathf.Cos(Time.time * 1.1f + i) * 0.14f;
+                shard.localPosition = new Vector3(Mathf.Cos(angle) * radiusX, Mathf.Sin(angle) * radiusY, 0.08f);
+                shard.localRotation = Quaternion.Euler(0f, 0f, -angle * Mathf.Rad2Deg + 45f);
+            }
         }
 
         private void BuildMonitor()
@@ -378,7 +444,7 @@ namespace DrawBody.Prototype
                 // The shooter is immune to their own missile, but teammates are
                 // deliberately valid collision targets for the co-op challenge.
                 if (room == ownerRoom || eliminated.Contains(roomPlayerIds[room])) continue;
-                if (Vector2.Distance(position, pads[room].Position + Vector2.up * 0.45f) > 0.8f) continue;
+                if (Vector2.Distance(position, GetRoomHitPosition(room)) > 0.62f) continue;
                 EliminateRoom(room);
                 return true;
             }
@@ -406,7 +472,12 @@ namespace DrawBody.Prototype
             if (!HasAuthority || phase != BattlePhase.Fighting) return;
             if (Vector2.Distance(position, bossPosition) <= 2.7f) DamageBoss(5, position);
             for (int room = 0; room < playerCount; room++)
-                if (!eliminated.Contains(roomPlayerIds[room]) && Vector2.Distance(position, pads[room].Position) <= 2.25f) EliminateRoom(room);
+            {
+                // Player weapons never eliminate their owner. Other players remain
+                // valid friendly-fire targets, matching the missile rule.
+                if (room == ownerRoom || eliminated.Contains(roomPlayerIds[room])) continue;
+                if (Vector2.Distance(position, GetRoomHitPosition(room)) <= 2.25f) EliminateRoom(room);
+            }
         }
 
         private void DamageBoss(int amount, Vector2 position)
@@ -426,10 +497,47 @@ namespace DrawBody.Prototype
             if (ratio <= 0.7f) { choices.Add(AttackType.Homing); choices.Add(AttackType.Chase); }
             if (ratio <= 0.5f) choices.Add(AttackType.Suction);
             AttackType type = choices[attackCursor++ % choices.Count];
-            if (choices.Count > 2 && Random.value < 0.55f) type = choices[Random.Range(0, choices.Count)];
+            if (Time.time - lastDashAt >= 11f) type = AttackType.Dash;
+            else if (type != AttackType.Dash && choices.Count > 2 && Random.value < 0.42f)
+                type = choices[Random.Range(1, choices.Count)];
+            if (type == AttackType.Dash) lastDashAt = Time.time;
             AttackState state = BuildAttackState(type);
             ApplyAttack(state);
             if (IsOnline) Send(AttackKind, state);
+        }
+
+        private void LaunchPressureHomingVolley(float healthRatio)
+        {
+            float pressure = Mathf.InverseLerp(0.5f, 0f, healthRatio);
+            nextPressureHomingAt = Time.time + Mathf.Lerp(3.2f, 1.05f, pressure);
+            HomingVolleyState state = new HomingVolleyState
+            {
+                Sequence = ++homingVolleySequence,
+                Origin = bossPosition
+            };
+            ApplyPressureHomingVolley(state);
+            if (IsOnline) Send(HomingVolleyKind, state);
+        }
+
+        private void ApplyPressureHomingVolley(HomingVolleyState state)
+        {
+            if (state == null || !receivedHomingVolleys.Add(state.Sequence)) return;
+            StartCoroutine(RunPressureHomingVolley(state));
+        }
+
+        private IEnumerator RunPressureHomingVolley(HomingVolleyState state)
+        {
+            TextMesh warning = CreateWorldText(
+                state.Origin + Vector2.down * 2.1f,
+                LocalizationManager.T("flying_boss_homing_warning"),
+                new Color(1f, 0.42f, 0.88f));
+            yield return new WaitForSeconds(0.75f);
+            if (warning != null) Destroy(warning.gameObject);
+            for (int i = 0; i < playerCount; i++)
+            {
+                if (!eliminated.Contains(roomPlayerIds[i]))
+                    StageFlyingHomingHazard.Create(transform, this, i, state.Origin, HasAuthority);
+            }
         }
 
         private AttackState BuildAttackState(AttackType type)
@@ -480,10 +588,9 @@ namespace DrawBody.Prototype
 
         private IEnumerator RunDash(AttackState state)
         {
-            bossPosition = state.Origin;
             SetBossMood(new Color(1f, 0.22f, 0.15f), 1.22f);
             GameObject warning = CreateWarningRect(new Vector2(0f, state.Lane), new Vector2(34f, 2.2f), new Color(1f, 0.16f, 0.1f, 0.3f));
-            yield return new WaitForSeconds(1.5f);
+            yield return MoveBossForAttackSetup(state.Origin, 1.65f);
             Destroy(warning);
             Vector2 end = state.Origin + state.Direction * 40f;
             float elapsed = 0f;
@@ -499,13 +606,12 @@ namespace DrawBody.Prototype
 
         private IEnumerator RunBeam(AttackState state)
         {
-            bossPosition = state.Origin;
             SetBossMood(new Color(1f, 0.38f, 0.08f), 1.12f);
             bool horizontal = Mathf.Abs(state.Direction.x) > 0.5f;
             Vector2 center = horizontal ? new Vector2(0f, state.Origin.y) : new Vector2(state.Origin.x, 0f);
             Vector2 size = horizontal ? new Vector2(34f, 2.5f) : new Vector2(2.5f, 17f);
             GameObject warning = CreateWarningRect(center, size, new Color(1f, 0.65f, 0.05f, 0.22f));
-            yield return new WaitForSeconds(1.7f);
+            yield return MoveBossForAttackSetup(state.Origin, 1.7f);
             SetWarningColor(warning, new Color(1f, 0.08f, 0.03f, 0.78f));
             GameSfx.PlayAt(SfxId.BeamFire, state.Origin, 1f);
             float elapsed = 0f;
@@ -515,8 +621,8 @@ namespace DrawBody.Prototype
                 if (HasAuthority)
                     for (int i = 0; i < playerCount; i++)
                         if (!eliminated.Contains(roomPlayerIds[i]) && (horizontal
-                            ? Mathf.Abs(pads[i].Position.y - center.y) < 1.25f
-                            : Mathf.Abs(pads[i].Position.x - center.x) < 1.25f)) EliminateRoom(i);
+                            ? Mathf.Abs(GetRoomHitPosition(i).y - center.y) < 1.25f
+                            : Mathf.Abs(GetRoomHitPosition(i).x - center.x) < 1.25f)) EliminateRoom(i);
                 yield return null;
             }
             Destroy(warning);
@@ -525,10 +631,10 @@ namespace DrawBody.Prototype
 
         private IEnumerator RunHoming(AttackState state)
         {
-            bossPosition = new Vector2(0f, 10.2f);
             SetBossMood(new Color(0.82f, 0.2f, 0.92f), 1.08f);
-            TextMesh warning = CreateWorldText(bossPosition + Vector2.down * 2.2f, LocalizationManager.T("flying_boss_homing_warning"), new Color(1f, 0.45f, 0.9f));
-            yield return new WaitForSeconds(1.45f);
+            Vector2 launchPoint = new Vector2(0f, 10.2f);
+            TextMesh warning = CreateWorldText(new Vector2(0f, 7.1f), LocalizationManager.T("flying_boss_homing_warning"), new Color(1f, 0.45f, 0.9f));
+            yield return MoveBossForAttackSetup(launchPoint, 1.45f);
             Destroy(warning.gameObject);
             for (int i = 0; i < playerCount; i++)
                 if (!eliminated.Contains(roomPlayerIds[i])) StageFlyingHomingHazard.Create(transform, this, i, bossPosition, HasAuthority);
@@ -539,7 +645,7 @@ namespace DrawBody.Prototype
         private IEnumerator RunChase(AttackState state)
         {
             int target = Mathf.Clamp(state.TargetRoom, 0, playerCount - 1);
-            TextMesh warning = CreateWorldText(pads[target].Position + Vector2.up * 1.5f, LocalizationManager.T("flying_boss_target_warning"), Color.red);
+            TextMesh warning = CreateWorldText(GetRoomHitPosition(target) + Vector2.up * 1.5f, LocalizationManager.T("flying_boss_target_warning"), Color.red);
             SetBossMood(new Color(1f, 0.12f, 0.2f), 1.15f);
             yield return new WaitForSeconds(1.35f);
             Destroy(warning.gameObject);
@@ -547,10 +653,10 @@ namespace DrawBody.Prototype
             while (elapsed < 2.5f)
             {
                 elapsed += Time.deltaTime;
-                bossPosition = Vector2.MoveTowards(bossPosition, pads[target].Position, 5f * Time.deltaTime);
+                bossPosition = Vector2.MoveTowards(bossPosition, GetRoomHitPosition(target), 5f * Time.deltaTime);
                 yield return null;
             }
-            Vector2 direction = (pads[target].Position - bossPosition).normalized;
+            Vector2 direction = (GetRoomHitPosition(target) - bossPosition).normalized;
             Vector2 end = bossPosition + direction * 13f;
             Vector2 start = bossPosition;
             elapsed = 0f;
@@ -566,30 +672,59 @@ namespace DrawBody.Prototype
 
         private IEnumerator RunSuction(AttackState state)
         {
-            bossPosition = state.Origin;
             SetBossMood(new Color(0.18f, 0.05f, 0.28f), 1.3f);
             GameObject warning = CreateWarningRect(Vector2.zero, new Vector2(34f, 17f), new Color(0.45f, 0.15f, 0.8f, 0.12f));
             TextMesh text = CreateWorldText(Vector2.zero, LocalizationManager.T("flying_boss_suction_warning"), new Color(0.8f, 0.55f, 1f));
-            yield return new WaitForSeconds(1.5f);
+            yield return MoveBossForAttackSetup(state.Origin, 1.5f);
             float elapsed = 0f;
             while (elapsed < 3.2f)
             {
                 elapsed += Time.deltaTime;
                 if (HasAuthority)
                     for (int i = 0; i < playerCount; i++)
-                        if (!eliminated.Contains(roomPlayerIds[i])) pads[i].SetPosition(ClampPadPosition(Vector2.MoveTowards(pads[i].Position, bossPosition, 3.6f * Time.deltaTime)));
+                        if (!eliminated.Contains(roomPlayerIds[i])) pads[i].SetPosition(ClampPadPosition(Vector2.MoveTowards(pads[i].Position, bossPosition, 7.8f * Time.deltaTime)));
                 yield return null;
             }
             Destroy(warning); Destroy(text.gameObject);
             SetBossMood(new Color(0.55f, 0.18f, 0.82f), 1f);
         }
 
-        internal Vector2 GetPadPosition(int room) => room >= 0 && room < pads.Length && pads[room] != null ? pads[room].Position : Vector2.zero;
+        private IEnumerator MoveBossForAttackSetup(Vector2 target, float duration)
+        {
+            Vector2 start = bossPosition;
+            Vector2 delta = target - start;
+            Vector2 perpendicular = delta.sqrMagnitude > 0.01f
+                ? new Vector2(-delta.y, delta.x).normalized
+                : Vector2.up;
+            float arc = Mathf.Clamp(delta.magnitude * 0.18f, 1.2f, 3.5f);
+            Vector2 control = (start + target) * 0.5f + perpendicular * arc;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / Mathf.Max(0.01f, duration)));
+                float inverse = 1f - t;
+                bossPosition = inverse * inverse * start + 2f * inverse * t * control + t * t * target;
+                yield return null;
+            }
+            bossPosition = target;
+        }
+
+        internal Vector2 GetRoomHitPosition(int room)
+        {
+            return room >= 0 && room < pads.Length && pads[room] != null
+                ? pads[room].Position + Vector2.up * 0.72f
+                : Vector2.zero;
+        }
         internal void HazardHitRoom(int room) { if (HasAuthority) EliminateRoom(room); }
 
         private void HitPadsNear(Vector2 point, float radius)
         {
-            for (int i = 0; i < playerCount; i++) if (!eliminated.Contains(roomPlayerIds[i]) && Vector2.Distance(pads[i].Position, point) <= radius) EliminateRoom(i);
+            for (int i = 0; i < playerCount; i++)
+            {
+                if (eliminated.Contains(roomPlayerIds[i])) continue;
+                if (Vector2.Distance(GetRoomHitPosition(i), point) <= radius) EliminateRoom(i);
+            }
         }
 
         private void EliminateRoom(int room)
@@ -661,7 +796,7 @@ namespace DrawBody.Prototype
         private void SetBossMood(Color color, float scale)
         {
             if (bossCore != null) bossCore.color = color;
-            if (bossFace != null) bossFace.localScale = Vector3.one * scale;
+            bossMoodScale = scale;
         }
 
         private void MountLocalPlayers()
@@ -824,6 +959,7 @@ namespace DrawBody.Prototype
             else if (data.Kind == ShotKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyShot(JsonUtility.FromJson<ShotState>(data.Json));
             else if (data.Kind == BombKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyBomb(JsonUtility.FromJson<BombState>(data.Json));
             else if (data.Kind == AttackKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyAttack(JsonUtility.FromJson<AttackState>(data.Json));
+            else if (data.Kind == HomingVolleyKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyPressureHomingVolley(JsonUtility.FromJson<HomingVolleyState>(data.Json));
             else if (data.Kind == EliminateKind && IsHostPlayer(data.PlayerId))
             {
                 EliminationMessage message = JsonUtility.FromJson<EliminationMessage>(data.Json);
@@ -1001,14 +1137,14 @@ namespace DrawBody.Prototype
             root.transform.position = position + new Vector2((room - 1.5f) * 0.28f, -room * 0.08f);
             StageFlyingHomingHazard hazard = root.AddComponent<StageFlyingHomingHazard>();
             hazard.owner = owner; hazard.targetRoom = room; hazard.authoritative = authoritative;
-            hazard.velocity = Vector2.down * 3f; hazard.expiresAt = Time.time + 4f;
+            hazard.velocity = Vector2.down * 3f; hazard.expiresAt = Time.time + 15f;
             StageEscortController.AddFilledRect(root.transform, "Homing Body", Vector2.zero, new Vector2(1f, 0.38f), new Color(1f, 0.2f, 0.48f), 150);
             StageEscortController.AddBoxOutline(root.transform, Vector2.zero, new Vector2(1f, 0.38f), new Color(0.3f, 0.02f, 0.1f), 152);
         }
 
         private void Update()
         {
-            Vector2 target = owner != null ? owner.GetPadPosition(targetRoom) : Vector2.zero;
+            Vector2 target = owner != null ? owner.GetRoomHitPosition(targetRoom) : Vector2.zero;
             Vector2 desired = (target - (Vector2)transform.position).normalized * 5.2f;
             velocity = Vector2.Lerp(velocity, desired, 1f - Mathf.Exp(-2.3f * Time.deltaTime));
             transform.position += (Vector3)(velocity * Time.deltaTime);
