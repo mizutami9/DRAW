@@ -96,7 +96,7 @@ namespace DrawBody.Prototype
             coin.transform.localScale = new Vector3(scale, scale, 1f);
 
             SpriteRenderer renderer = coin.AddComponent<SpriteRenderer>();
-            renderer.sprite = GetCoinSprite();
+            renderer.sprite = GetSharedCoinSprite();
             renderer.color = Color.white;
             renderer.sortingOrder = 16;
 
@@ -122,7 +122,7 @@ namespace DrawBody.Prototype
             return (hash & 0xffffu) / 32767.5f - 1f;
         }
 
-        private static Sprite GetCoinSprite()
+        internal static Sprite GetSharedCoinSprite()
         {
             if (coinSprite != null)
             {

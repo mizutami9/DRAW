@@ -89,7 +89,7 @@ namespace DrawBody.Prototype
                 int total = editing && stageEditor != null
                     ? stageEditor.StagePlacedCollectionTargetCount
                     : stageManager != null
-                        ? stageManager.ChallengeTotalCollectionTargetCount
+                        ? stageManager.ChallengeRequiredCollectionCount
                         : 0;
                 progress.text = $"{GetTargetCode(target)}  {caught} / {total}";
                 progress.color = total > 0 && caught >= total

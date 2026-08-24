@@ -710,6 +710,15 @@ namespace DrawBody.Prototype
                 int playerCount = Mathf.Clamp(GetInkBudgetPlayerCount(), 1, 4);
                 challengeRemaining = playerCount >= 4 ? 60f : playerCount == 3 ? 90f : 120f;
             }
+            else if (data != null && data.id == "12-3")
+            {
+                int playerCount = Mathf.Clamp(GetInkBudgetPlayerCount(), 1, 4);
+                challengeRemaining = playerCount >= 4
+                    ? 50f
+                    : playerCount == 3
+                        ? 60f
+                        : playerCount == 2 ? 75f : 90f;
+            }
             collectedCount = 0;
             challengeFailed = false;
             challengeStarting = stageRuleMode == StageRuleMode.TimedCollection;
