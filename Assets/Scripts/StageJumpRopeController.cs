@@ -775,7 +775,7 @@ namespace DrawBody.Prototype
             fill.transform.SetParent(floor.transform, false);
             fill.transform.localScale = new Vector3(FloorWidth, 0.72f, 1f);
             SpriteRenderer renderer = fill.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetSquareSpriteForChallenges();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = new Color(0.91f, 0.87f, 0.73f, 1f);
             renderer.sortingOrder = 12;
             AddBoxOutline(floor.transform, new Vector2(FloorWidth, 0.72f), new Color(0.18f, 0.12f, 0.08f, 1f), 13);
@@ -802,7 +802,7 @@ namespace DrawBody.Prototype
             handle.transform.localPosition = new Vector2(0f, 1.5f);
             handle.transform.localScale = new Vector3(0.72f, 0.18f, 1f);
             SpriteRenderer renderer = handle.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetSquareSpriteForChallenges();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = new Color(1f, 0.63f, 0.12f, 1f);
             renderer.sortingOrder = 38;
             if (left) leftHandle = renderer; else rightHandle = renderer;
@@ -819,7 +819,7 @@ namespace DrawBody.Prototype
             ropeLine.endWidth = 0.11f;
             ropeLine.numCapVertices = 5;
             ropeLine.numCornerVertices = 3;
-            ropeLine.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            ropeLine.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
 
             GameObject hazard = new GameObject("Rope Ground Hitbox");
             hazard.transform.SetParent(rope.transform, false);
@@ -845,7 +845,7 @@ namespace DrawBody.Prototype
                 dash.transform.localPosition = new Vector3(x, 0f, 0f);
                 dash.transform.localScale = new Vector3(0.82f, 0.075f, 1f);
                 SpriteRenderer renderer = dash.AddComponent<SpriteRenderer>();
-                renderer.sprite = StageSurvivalController.GetSquareSpriteForChallenges();
+                renderer.sprite = DoodleRuntimeAssets.SquareSprite;
                 renderer.color = new Color(0.15f, 0.48f, 0.9f, 0.18f);
                 renderer.sortingOrder = 41;
                 landingGuideDashes.Add(renderer);
@@ -934,7 +934,7 @@ namespace DrawBody.Prototype
             obj.transform.SetParent(parent, false);
             obj.transform.localScale = new Vector3(size.x, size.y, 1f);
             SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetSquareSpriteForChallenges();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = color;
             renderer.sortingOrder = order;
         }
@@ -951,7 +951,7 @@ namespace DrawBody.Prototype
             text.characterSize = size;
             text.fontStyle = FontStyle.Bold;
             text.color = color;
-            Font font = StageSurvivalController.FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null)
             {
                 text.font = font;
@@ -981,7 +981,7 @@ namespace DrawBody.Prototype
             line.startWidth = width;
             line.endWidth = width;
             line.numCapVertices = 3;
-            line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startColor = color;
             line.endColor = color;
             line.sortingOrder = order;
@@ -1155,7 +1155,7 @@ namespace DrawBody.Prototype
             bolt.transform.localPosition = position;
             bolt.transform.localScale = Vector3.one * 0.13f;
             SpriteRenderer renderer = bolt.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;
             renderer.sortingOrder = 47;
         }
@@ -1168,7 +1168,7 @@ namespace DrawBody.Prototype
             bar.transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
             bar.transform.localScale = new Vector3(size.x, size.y, 1f);
             SpriteRenderer renderer = bar.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetSquareSpriteForChallenges();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = fill;
             renderer.sortingOrder = 45;
 
@@ -1217,7 +1217,7 @@ namespace DrawBody.Prototype
             line.startWidth = width;
             line.endWidth = width;
             line.numCapVertices = 4;
-            if (lineMaterial == null) lineMaterial = new Material(Shader.Find("Sprites/Default"));
+            if (lineMaterial == null) lineMaterial = DoodleRuntimeAssets.LineMaterial;
             line.sharedMaterial = lineMaterial;
             line.startColor = color;
             line.endColor = color;

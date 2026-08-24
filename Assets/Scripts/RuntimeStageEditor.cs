@@ -537,17 +537,17 @@ namespace DrawBody.Prototype
         {
             if (stageLoader == null)
             {
-                stageLoader = FindObjectOfType<StageLoader>();
+                stageLoader = FindFirstObjectByType<StageLoader>();
             }
 
             if (stageManager == null)
             {
-                stageManager = FindObjectOfType<StageManager>();
+                stageManager = FindFirstObjectByType<StageManager>();
             }
 
             if (objectFactory == null)
             {
-                objectFactory = FindObjectOfType<StageObjectFactory>();
+                objectFactory = FindFirstObjectByType<StageObjectFactory>();
             }
 
             if (worldCamera == null)

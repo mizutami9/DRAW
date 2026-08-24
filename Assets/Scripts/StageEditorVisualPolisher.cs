@@ -40,7 +40,7 @@ namespace DrawBody.Prototype
             RuntimeStageEditor editor = root.GetComponentInParent<RuntimeStageEditor>();
             if (editor == null)
             {
-                editor = Object.FindObjectOfType<RuntimeStageEditor>();
+                editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             }
             EnsureBackgroundColorButton(root, editor);
             RefreshState(editor);
@@ -408,7 +408,7 @@ namespace DrawBody.Prototype
             RuntimeStageEditor editor = root.GetComponentInParent<RuntimeStageEditor>();
             if (editor == null)
             {
-                editor = Object.FindObjectOfType<RuntimeStageEditor>();
+                editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             }
 
             RectTransform freehand = EnsureFreehandButton(tools, editor);

@@ -320,7 +320,7 @@ namespace DrawBody.Prototype
         private void Build()
         {
             targetCamera = Camera.main;
-            Material material = new Material(Shader.Find("Sprites/Default"));
+            Material material = DoodleRuntimeAssets.LineMaterial;
             for (int i = 0; i < ribbons.Length; i++)
             {
                 GameObject ribbonObject = new GameObject("Wind Ribbon " + i);

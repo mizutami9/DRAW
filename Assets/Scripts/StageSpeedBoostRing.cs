@@ -75,7 +75,7 @@ namespace DrawBody.Prototype
             obj.transform.localPosition = position;
             obj.transform.localScale = scale;
             SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;
             renderer.sortingOrder = order;
             return obj;
@@ -83,7 +83,7 @@ namespace DrawBody.Prototype
 
         private static void AddSpeedWing(Transform parent, float side, Color color, int order)
         {
-            Material material = new Material(Shader.Find("Sprites/Default"));
+            Material material = DoodleRuntimeAssets.LineMaterial;
             for (int i = 0; i < 2; i++)
             {
                 GameObject wing = new GameObject("Speed Accent");
@@ -207,7 +207,7 @@ namespace DrawBody.Prototype
         private void EnsureVisuals()
         {
             if (streaks[0] != null) return;
-            material = new Material(Shader.Find("Sprites/Default"));
+            material = DoodleRuntimeAssets.LineMaterial;
             for (int i = 0; i < streaks.Length; i++)
             {
                 GameObject obj = new GameObject("Boost Speed Line " + (i + 1));

@@ -326,7 +326,7 @@ namespace DrawBody.Prototype
             line.endWidth = width;
             line.numCapVertices = 3;
             line.numCornerVertices = 3;
-            line.material = new Material(Shader.Find("Sprites/Default"));
+            line.material = DoodleRuntimeAssets.LineMaterial;
             line.startColor = color;
             line.endColor = color;
             line.sortingOrder = sortingOrder;

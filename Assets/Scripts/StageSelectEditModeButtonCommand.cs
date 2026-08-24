@@ -17,7 +17,7 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null)
             {
-                stageManager = FindObjectOfType<StageManager>();
+                stageManager = FindFirstObjectByType<StageManager>();
             }
 
             button = GetComponent<Button>();

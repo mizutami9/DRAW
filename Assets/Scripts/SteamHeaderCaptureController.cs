@@ -467,8 +467,7 @@ namespace DrawBody.Prototype
 
         private static Sprite GetSquareSprite()
         {
-            Texture2D texture = Texture2D.whiteTexture;
-            return Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), texture.width);
+            return DoodleRuntimeAssets.SquareSprite;
         }
 
         private void CreateCrayonBlob(Vector2 position, Vector2 size, Color color, int sortingOrder)
@@ -478,7 +477,7 @@ namespace DrawBody.Prototype
             blob.transform.localPosition = position;
             blob.transform.localScale = size;
             SpriteRenderer renderer = blob.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;
             renderer.sortingOrder = sortingOrder;
         }
@@ -507,7 +506,7 @@ namespace DrawBody.Prototype
             line.endWidth = width;
             line.numCapVertices = 4;
             line.numCornerVertices = 4;
-            line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startColor = color;
             line.endColor = color;
             line.sortingOrder = sortingOrder;

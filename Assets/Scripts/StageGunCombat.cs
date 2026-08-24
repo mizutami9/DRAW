@@ -101,7 +101,7 @@ namespace DrawBody.Prototype
             obj.transform.localScale = new Vector3(size.x, size.y, 1f);
             obj.transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
             SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetSquareSpriteForChallenges();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = color;
             renderer.sortingOrder = order;
             return obj;
@@ -118,7 +118,7 @@ namespace DrawBody.Prototype
             line.endWidth = width;
             line.numCapVertices = 4;
             line.numCornerVertices = 3;
-            line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startColor = color;
             line.endColor = color;
             line.sortingOrder = order;
@@ -178,7 +178,7 @@ namespace DrawBody.Prototype
             countText.fontSize = 50;
             countText.characterSize = unit * 0.18f;
             countText.color = new Color(0.06f, 0.15f, 0.28f, 1f);
-            Font font = StageSurvivalController.FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null)
             {
                 countText.font = font;
@@ -402,7 +402,7 @@ namespace DrawBody.Prototype
             trail.time = 0.12f;
             trail.startWidth = 0.12f;
             trail.endWidth = 0.01f;
-            trail.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            trail.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             trail.startColor = new Color(0.1f, 0.55f, 1f, 0.72f);
             trail.endColor = new Color(0.1f, 0.55f, 1f, 0f);
             trail.sortingOrder = 46;
@@ -553,7 +553,7 @@ namespace DrawBody.Prototype
             core.transform.SetParent(root.transform, false);
             core.transform.localScale = Vector3.one * 0.78f;
             SpriteRenderer renderer = core.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = new Color(0.62f, 0.18f, 0.58f, 0.94f);
             renderer.sortingOrder = 24;
             Color ink = new Color(0.3f, 0.03f, 0.28f, 1f);

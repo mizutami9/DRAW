@@ -475,10 +475,10 @@ namespace DrawBody.Prototype
     internal sealed class FakeOnlineBackend : IOnlineBackend
     {
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
-        public event Action<OnlinePlayerState> PlayerStateReceived;
-        public event Action<OnlineBodyData> BodyDataReceived;
-        public event Action<OnlineCarryData> CarryDataReceived;
-        public event Action<OnlineGimmickData> GimmickDataReceived;
+        public event Action<OnlinePlayerState> PlayerStateReceived { add { } remove { } }
+        public event Action<OnlineBodyData> BodyDataReceived { add { } remove { } }
+        public event Action<OnlineCarryData> CarryDataReceived { add { } remove { } }
+        public event Action<OnlineGimmickData> GimmickDataReceived { add { } remove { } }
         public OnlineConnectionState State { get; private set; }
         public OnlineLobbyInfo CurrentLobby { get; private set; }
         public string LocalPlayerId => "local";

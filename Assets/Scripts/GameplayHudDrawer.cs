@@ -79,7 +79,7 @@ namespace DrawBody.Prototype
 
         private void OpenMenu()
         {
-            UIManager uiManager = FindObjectOfType<UIManager>();
+            UIManager uiManager = FindFirstObjectByType<UIManager>();
             uiManager?.ToggleMenu();
         }
 

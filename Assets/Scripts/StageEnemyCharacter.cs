@@ -25,7 +25,6 @@ namespace DrawBody.Prototype
         private StageManager stageManager;
         private StageGimmickSyncManager syncManager;
         private static Sprite circleSprite;
-        private static Sprite squareSprite;
         private static Material lineMaterial;
 
         public string ObjectId
@@ -509,18 +508,13 @@ namespace DrawBody.Prototype
 
         private static Material GetLineMaterial()
         {
-            if (lineMaterial == null) lineMaterial = new Material(Shader.Find("Sprites/Default"));
+            if (lineMaterial == null) lineMaterial = DoodleRuntimeAssets.LineMaterial;
             return lineMaterial;
         }
 
         private static Sprite GetSquareSprite()
         {
-            if (squareSprite == null)
-            {
-                Texture2D texture = Texture2D.whiteTexture;
-                squareSprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), texture.width);
-            }
-            return squareSprite;
+            return DoodleRuntimeAssets.SquareSprite;
         }
 
         private static Sprite GetCircleSprite()

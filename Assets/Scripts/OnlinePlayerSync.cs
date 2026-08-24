@@ -46,12 +46,12 @@ namespace DrawBody.Prototype
         {
             if (onlineManager == null)
             {
-                onlineManager = FindObjectOfType<OnlineManager>();
+                onlineManager = FindFirstObjectByType<OnlineManager>();
             }
 
             if (stageManager == null)
             {
-                stageManager = FindObjectOfType<StageManager>();
+                stageManager = FindFirstObjectByType<StageManager>();
             }
         }
 

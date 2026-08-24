@@ -366,18 +366,7 @@ namespace DrawBody.Prototype
 
         private static Font FindHandwrittenFont()
         {
-            Font[] loadedFonts = Resources.FindObjectsOfTypeAll<Font>();
-            for (int i = 0; i < loadedFonts.Length; i++)
-            {
-                Font font = loadedFonts[i];
-                if (font != null && font.name.IndexOf("Yomogi", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    return font;
-                }
-            }
-
-            Font fallback = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            return fallback != null ? fallback : Resources.GetBuiltinResource<Font>("Arial.ttf");
+            return DoodleRuntimeAssets.HandwrittenFont;
         }
 
         private void SetCollidersEnabled(bool value)
@@ -401,7 +390,7 @@ namespace DrawBody.Prototype
             LineRenderer existing = GetComponentInChildren<LineRenderer>();
             Material material = existing != null
                 ? existing.sharedMaterial
-                : new Material(Shader.Find("Sprites/Default"));
+                : DoodleRuntimeAssets.LineMaterial;
             LineRenderer[] result = new LineRenderer[3];
             for (int i = 0; i < result.Length; i++)
             {

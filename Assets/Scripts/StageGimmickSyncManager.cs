@@ -145,7 +145,7 @@ namespace DrawBody.Prototype
         {
             if (onlineManager == null)
             {
-                onlineManager = FindObjectOfType<OnlineManager>();
+                onlineManager = FindFirstObjectByType<OnlineManager>();
             }
 
             linkController = GetComponent<StageGimmickLinkController>();
@@ -158,7 +158,7 @@ namespace DrawBody.Prototype
         {
             if (onlineManager == null)
             {
-                onlineManager = FindObjectOfType<OnlineManager>();
+                onlineManager = FindFirstObjectByType<OnlineManager>();
             }
 
             if (onlineManager != null)

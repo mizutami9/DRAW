@@ -199,7 +199,7 @@ namespace DrawBody.Prototype
             int species = Mathf.Clamp(data.spawnPattern / 100, 0, 2);
             int pose = Mathf.Abs(data.spawnPattern) % 100 % 30;
             GameObject plate = StageGun.CreateSprite(root.transform, "Silhouette Plate", Vector2.zero, new Vector2(1.05f, 1.14f), new Color(0.86f, 0.87f, 0.78f, 0.96f), 19);
-            plate.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            plate.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
             DrawPose(root.transform, species, pose, new Color(0.02f, 0.02f, 0.03f, 1f), true);
             StageGun.AddLine(root.transform, "Keyhole Glow", CirclePoints(28, 0.58f), 0.045f, new Color(0.15f, 0.8f, 1f, 0.8f), 25);
             if (data.objectId == "7-1_hole_human" || data.objectId == "7-1_hole_bird")
@@ -258,7 +258,7 @@ namespace DrawBody.Prototype
             Color ink = new Color(0.04f, 0.22f, 0.4f, 1f);
             StageGun.CreateSprite(fan.transform, "Fan Stand", new Vector2(0f, -0.22f), new Vector2(1.05f, 0.28f), casing, 10);
             GameObject grill = StageGun.CreateSprite(fan.transform, "Fan Grill", new Vector2(0f, 0.08f), new Vector2(0.82f, 0.58f), new Color(0.78f, 0.94f, 1f, 0.98f), 11);
-            grill.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            grill.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
             StageGun.AddLine(fan.transform, "Fan Blades", new[]
             {
                 new Vector2(-0.35f, 0.08f), new Vector2(0.35f, 0.08f),
@@ -352,7 +352,7 @@ namespace DrawBody.Prototype
         private static void AddCircle(Transform parent, string name, Vector2 position, Vector2 size, Color color, int order)
         {
             GameObject obj = StageGun.CreateSprite(parent, name, position, size, color, order);
-            obj.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            obj.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
         }
 
         private static Vector2[] CirclePoints(int count, float radius)

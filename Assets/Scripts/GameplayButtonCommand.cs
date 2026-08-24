@@ -35,17 +35,17 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null)
             {
-                stageManager = FindObjectOfType<StageManager>();
+                stageManager = FindFirstObjectByType<StageManager>();
             }
 
             if (uiManager == null)
             {
-                uiManager = FindObjectOfType<UIManager>();
+                uiManager = FindFirstObjectByType<UIManager>();
             }
 
             if (onlineManager == null)
             {
-                onlineManager = FindObjectOfType<OnlineManager>();
+                onlineManager = FindFirstObjectByType<OnlineManager>();
             }
 
             button = GetComponent<Button>();

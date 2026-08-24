@@ -59,7 +59,7 @@ namespace DrawBody.Prototype
 
         private void Awake()
         {
-            stageManager = FindObjectOfType<StageManager>();
+            stageManager = FindFirstObjectByType<StageManager>();
             ResolveGameplayDrawer();
             ResolveMenuDrawer();
             EnsureClearPanel();
@@ -1088,7 +1088,7 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null)
             {
-                stageManager = FindObjectOfType<StageManager>();
+                stageManager = FindFirstObjectByType<StageManager>();
             }
 
             return stageManager;

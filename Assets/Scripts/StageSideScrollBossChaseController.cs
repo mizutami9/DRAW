@@ -925,7 +925,7 @@ namespace DrawBody.Prototype
         private static SpriteRenderer AddDisc(Transform parent, string name, Vector2 position, Vector2 size, Color color, int order)
         {
             GameObject obj = new GameObject(name); obj.transform.SetParent(parent, false); obj.transform.localPosition = position; obj.transform.localScale = new Vector3(size.x, size.y, 1f);
-            SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>(); renderer.sprite = StageSurvivalController.GetCircleSprite(); renderer.color = color; renderer.sortingOrder = order; return renderer;
+            SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>(); renderer.sprite = DoodleRuntimeAssets.CircleSprite; renderer.color = color; renderer.sortingOrder = order; return renderer;
         }
     }
 
@@ -1050,7 +1050,7 @@ namespace DrawBody.Prototype
             weapon.originalColors = new Color[weapon.buttonRenderers.Length];
             for (int i = 0; i < weapon.buttonRenderers.Length; i++) weapon.originalColors[i] = weapon.buttonRenderers[i].color;
             GameObject mark = new GameObject("Giant Bomb Mark"); mark.transform.SetParent(root.transform, false); mark.transform.localPosition = new Vector3(0f, -0.95f, -0.05f); mark.transform.localScale = Vector3.one * 0.72f;
-            SpriteRenderer icon = mark.AddComponent<SpriteRenderer>(); icon.sprite = StageSurvivalController.GetCircleSprite(); icon.color = new Color(0.12f, 0.12f, 0.15f); icon.sortingOrder = 28;
+            SpriteRenderer icon = mark.AddComponent<SpriteRenderer>(); icon.sprite = DoodleRuntimeAssets.CircleSprite; icon.color = new Color(0.12f, 0.12f, 0.15f); icon.sortingOrder = 28;
             StageEscortController.AddLine(mark.transform, new Vector2(0.18f, 0.32f), new Vector2(0.42f, 0.62f), 0.11f, new Color(1f, 0.5f, 0.12f), 29);
             return weapon;
         }
@@ -1090,9 +1090,9 @@ namespace DrawBody.Prototype
         {
             boss = targetBoss; owner = authoritativeOwner; weaponIndex = index;
             GameObject outline = new GameObject("Bomb Outline"); outline.transform.SetParent(transform, false); outline.transform.localScale = Vector3.one * 4.2f;
-            SpriteRenderer rim = outline.AddComponent<SpriteRenderer>(); rim.sprite = StageSurvivalController.GetCircleSprite(); rim.color = new Color(0.08f, 0.05f, 0.06f); rim.sortingOrder = 143;
+            SpriteRenderer rim = outline.AddComponent<SpriteRenderer>(); rim.sprite = DoodleRuntimeAssets.CircleSprite; rim.color = new Color(0.08f, 0.05f, 0.06f); rim.sortingOrder = 143;
             GameObject body = new GameObject("Bomb Body"); body.transform.SetParent(transform, false); body.transform.localScale = Vector3.one * 3.75f;
-            SpriteRenderer fill = body.AddComponent<SpriteRenderer>(); fill.sprite = StageSurvivalController.GetCircleSprite(); fill.color = new Color(0.82f, 0.12f, 0.16f); fill.sortingOrder = 144;
+            SpriteRenderer fill = body.AddComponent<SpriteRenderer>(); fill.sprite = DoodleRuntimeAssets.CircleSprite; fill.color = new Color(0.82f, 0.12f, 0.16f); fill.sortingOrder = 144;
             StageEscortController.AddLine(transform, new Vector2(0.75f, 1.55f), new Vector2(1.45f, 2.5f), 0.28f, new Color(0.12f, 0.08f, 0.08f), 145);
             StageEscortController.AddLine(transform, new Vector2(1.45f, 2.5f), new Vector2(1.8f, 2.9f), 0.18f, new Color(1f, 0.65f, 0.12f), 146);
         }

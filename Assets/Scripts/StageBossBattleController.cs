@@ -822,10 +822,10 @@ namespace DrawBody.Prototype
             GameObject core = StageGun.CreateSprite(visual.transform, "Boss Body", new Vector2(0f, 0.1f),
                 new Vector2(3.15f, 3.75f), new Color(0.46f, 0.25f, 0.56f, 0.96f), 34);
             bossCore = core.GetComponent<SpriteRenderer>();
-            bossCore.sprite = StageSurvivalController.GetCircleSprite();
+            bossCore.sprite = DoodleRuntimeAssets.CircleSprite;
             bossHead = StageGun.CreateSprite(visual.transform, "Boss Head", new Vector2(0f, 1.95f),
                 new Vector2(2.5f, 1.75f), new Color(0.58f, 0.32f, 0.68f, 0.96f), 35).GetComponent<SpriteRenderer>();
-            bossHead.sprite = StageSurvivalController.GetCircleSprite();
+            bossHead.sprite = DoodleRuntimeAssets.CircleSprite;
             leftEye = StageGun.CreateSprite(visual.transform, "Eye Left", new Vector2(-0.48f, 2.12f),
                 new Vector2(0.32f, 0.42f), new Color(1f, 0.87f, 0.18f, 1f), 39).GetComponent<SpriteRenderer>();
             rightEye = StageGun.CreateSprite(visual.transform, "Eye Right", new Vector2(0.48f, 2.12f),
@@ -882,7 +882,7 @@ namespace DrawBody.Prototype
             line.endWidth = width;
             line.numCapVertices = 5;
             line.numCornerVertices = 5;
-            line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startColor = line.endColor = color;
             line.sortingOrder = order;
             for (int i = 0; i < points.Length; i++) line.SetPosition(i, points[i]);
@@ -1062,7 +1062,7 @@ namespace DrawBody.Prototype
             text.fontSize = 72;
             text.characterSize = size;
             text.color = color;
-            Font font = StageSurvivalController.FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null) { text.font = font; obj.GetComponent<MeshRenderer>().sharedMaterial = font.material; }
             obj.GetComponent<MeshRenderer>().sortingOrder = order;
             return text;
@@ -1341,7 +1341,7 @@ namespace DrawBody.Prototype
             beam.line = root.AddComponent<LineRenderer>();
             beam.line.useWorldSpace = true;
             beam.line.positionCount = 2;
-            beam.line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            beam.line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             beam.line.sortingOrder = 48;
             return beam;
         }

@@ -88,7 +88,6 @@ namespace DrawBody.Prototype
         private bool cameraWasEnabled;
         private Vector3 previousCameraPosition;
         private float previousCameraSize;
-        private static Sprite squareSprite;
         private static Sprite circleSprite;
         private static Material logoLineMaterial;
 
@@ -584,7 +583,7 @@ namespace DrawBody.Prototype
 
         private static Material GetLogoLineMaterial()
         {
-            if (logoLineMaterial == null) logoLineMaterial = new Material(Shader.Find("Sprites/Default"));
+            if (logoLineMaterial == null) logoLineMaterial = DoodleRuntimeAssets.LineMaterial;
             return logoLineMaterial;
         }
 
@@ -877,25 +876,12 @@ namespace DrawBody.Prototype
 
         private static Font FindHandwrittenFont()
         {
-            Font[] fonts = Resources.FindObjectsOfTypeAll<Font>();
-            for (int i = 0; i < fonts.Length; i++)
-            {
-                if (fonts[i] != null && fonts[i].name.Contains("Yomogi"))
-                {
-                    return fonts[i];
-                }
-            }
-            return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            return DoodleRuntimeAssets.HandwrittenFont;
         }
 
         private static Sprite GetSquareSprite()
         {
-            if (squareSprite == null)
-            {
-                Texture2D texture = Texture2D.whiteTexture;
-                squareSprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), texture.width);
-            }
-            return squareSprite;
+            return DoodleRuntimeAssets.SquareSprite;
         }
 
         internal static Sprite GetCircleSprite()
@@ -1073,7 +1059,7 @@ namespace DrawBody.Prototype
 
         private static Material GetDoodleMaterial()
         {
-            if (doodleMaterial == null) doodleMaterial = new Material(Shader.Find("Sprites/Default"));
+            if (doodleMaterial == null) doodleMaterial = DoodleRuntimeAssets.LineMaterial;
             return doodleMaterial;
         }
 

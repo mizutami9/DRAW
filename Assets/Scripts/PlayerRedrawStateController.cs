@@ -162,7 +162,7 @@ namespace DrawBody.Prototype
             indicatorRoot = new GameObject("Redrawing Status");
             indicatorRoot.transform.SetParent(transform, false);
 
-            Sprite circle = StageSurvivalController.GetCircleSprite();
+            Sprite circle = DoodleRuntimeAssets.CircleSprite;
             GameObject outlineObject = new GameObject("Outline");
             outlineObject.transform.SetParent(indicatorRoot.transform, false);
             outlineObject.transform.localScale = new Vector3(2.8f, 0.92f, 1f);
@@ -189,7 +189,7 @@ namespace DrawBody.Prototype
             indicatorText.characterSize = 0.055f;
             indicatorText.fontStyle = FontStyle.Bold;
             indicatorText.color = new Color(0.16f, 0.12f, 0.08f, 1f);
-            Font font = StageSurvivalController.FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null)
             {
                 indicatorText.font = font;

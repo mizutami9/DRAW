@@ -15,7 +15,6 @@ namespace DrawBody.Prototype
         [SerializeField] private float walkAnimationSpeed = 9f;
         [SerializeField] private float walkLimbAngle = 18f;
         [SerializeField] private float walkBobAmount = 0.035f;
-        [SerializeField] private float carryArmMaxLength = 1.45f;
         [SerializeField] private Color playerColor = new Color(0.95f, 0.12f, 0.1f, 1f);
 
         private readonly List<GameObject> generatedObjects = new List<GameObject>();
@@ -636,7 +635,7 @@ namespace DrawBody.Prototype
             {
                 for (int i = bodyRoot.childCount - 1; i >= 0; i--)
                 {
-                    DestroyObject(bodyRoot.GetChild(i).gameObject);
+                    DestroyUnityObject(bodyRoot.GetChild(i).gameObject);
                 }
             }
 
@@ -1456,7 +1455,7 @@ namespace DrawBody.Prototype
             offsetY = Mathf.Abs(Mathf.Sin(phase * 1.2f)) * walkBobAmount * 0.8f * blend;
         }
 
-        private static void DestroyObject(Object target)
+        private static void DestroyUnityObject(Object target)
         {
             if (target == null)
             {

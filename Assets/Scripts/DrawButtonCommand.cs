@@ -24,7 +24,7 @@ namespace DrawBody.Prototype
         {
             if (drawManager == null)
             {
-                drawManager = FindObjectOfType<DrawManager>();
+                drawManager = FindFirstObjectByType<DrawManager>();
             }
 
             commandButton = GetComponent<Button>();

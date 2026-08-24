@@ -863,7 +863,7 @@ namespace DrawBody.Prototype
             line.endWidth = 0.05f;
             line.numCapVertices = 3;
             line.numCornerVertices = 3;
-            line.material = new Material(Shader.Find("Sprites/Default"));
+            line.material = DoodleRuntimeAssets.LineMaterial;
             line.startColor = new Color(0.1f, 0.32f, 1f, 0.95f);
             line.endColor = new Color(0.1f, 0.32f, 1f, 0.95f);
             line.sortingOrder = 90;
@@ -982,7 +982,7 @@ namespace DrawBody.Prototype
             line.endWidth = terrainPathThickness;
             line.numCapVertices = 6;
             line.numCornerVertices = 6;
-            line.material = new Material(Shader.Find("Sprites/Default"));
+            line.material = DoodleRuntimeAssets.LineMaterial;
             line.startColor = new Color(0.12f, 0.42f, 1f, 0.42f);
             line.endColor = line.startColor;
             line.sortingOrder = 90;
@@ -2338,7 +2338,7 @@ namespace DrawBody.Prototype
                 line.endWidth = 0.035f;
                 line.numCapVertices = 3;
                 line.numCornerVertices = 3;
-                line.material = new Material(Shader.Find("Sprites/Default"));
+                line.material = DoodleRuntimeAssets.LineMaterial;
                 line.startColor = new Color(0.1f, 0.32f, 1f);
                 line.endColor = new Color(0.1f, 0.32f, 1f);
                 line.sortingOrder = 80;
@@ -2444,7 +2444,7 @@ namespace DrawBody.Prototype
             line.loop = true;
             line.numCapVertices = 4;
             line.numCornerVertices = 4;
-            line.material = new Material(Shader.Find("Sprites/Default"));
+            line.material = DoodleRuntimeAssets.LineMaterial;
             line.sortingOrder = 96;
         }
     }

@@ -385,7 +385,7 @@ namespace DrawBody.Prototype
                 return lineMaterial;
             }
 
-            lineMaterial = new Material(Shader.Find("Sprites/Default"));
+            lineMaterial = DoodleRuntimeAssets.LineMaterial;
             return lineMaterial;
         }
     }

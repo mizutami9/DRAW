@@ -20,7 +20,6 @@ namespace DrawBody.Prototype
         private ExplosionRangeIndicator rangeIndicator;
         private StageManager stageManager;
         private StageGimmickSyncManager syncManager;
-        private static Sprite squareSprite;
         private static Sprite circleSprite;
         private static Material lineMaterial;
 
@@ -246,7 +245,7 @@ namespace DrawBody.Prototype
             if (transform.Find("Dynamite Visual") != null) return;
             GameObject visual = new GameObject("Dynamite Visual");
             visual.transform.SetParent(transform, false);
-            Font handwrittenFont = StageSurvivalController.FindHandwrittenFont();
+            Font handwrittenFont = DoodleRuntimeAssets.HandwrittenFont;
             Color[] reds =
             {
                 new Color(0.92f, 0.09f, 0.07f, 1f),
@@ -397,18 +396,13 @@ namespace DrawBody.Prototype
 
         private static Material GetLineMaterial()
         {
-            if (lineMaterial == null) lineMaterial = new Material(Shader.Find("Sprites/Default"));
+            if (lineMaterial == null) lineMaterial = DoodleRuntimeAssets.LineMaterial;
             return lineMaterial;
         }
 
         private static Sprite GetSquareSprite()
         {
-            if (squareSprite == null)
-            {
-                Texture2D texture = Texture2D.whiteTexture;
-                squareSprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), texture.width);
-            }
-            return squareSprite;
+            return DoodleRuntimeAssets.SquareSprite;
         }
 
         private static Sprite GetCircleSprite()

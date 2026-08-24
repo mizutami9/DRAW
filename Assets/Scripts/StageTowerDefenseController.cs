@@ -519,7 +519,7 @@ namespace DrawBody.Prototype
             text.characterSize = size;
             text.fontSize = 64;
             text.color = color;
-            Font font = StageSurvivalController.FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null)
             {
                 text.font = font;
@@ -846,12 +846,12 @@ namespace DrawBody.Prototype
 
             GameObject body = StageGun.CreateSprite(visual, "Round Body", new Vector2(0f, -0.12f),
                 new Vector2(0.72f, 0.86f), blue, 38);
-            body.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            body.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
             StageGun.AddLine(visual, "Body Outline", EllipsePoints(new Vector2(0f, -0.12f), 0.37f, 0.44f), 0.065f, outline, 40);
 
             GameObject head = StageGun.CreateSprite(visual, "Round Head", new Vector2(0f, 0.54f),
                 new Vector2(0.9f, 0.82f), face, 39);
-            head.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            head.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
             StageGun.AddLine(visual, "Head Outline", EllipsePoints(new Vector2(0f, 0.54f), 0.46f, 0.42f), 0.065f, outline, 41);
             StageGun.AddLine(visual, "Hair Tuft", new[]
             {
@@ -891,13 +891,13 @@ namespace DrawBody.Prototype
 
             GameObject heart = StageGun.CreateSprite(visual, "Friend Heart", new Vector2(0f, -0.12f),
                 new Vector2(0.18f, 0.18f), new Color(1f, 0.25f, 0.32f, 1f), 43);
-            heart.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            heart.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
         }
 
         private void AddDot(Vector2 position, float size, Color color)
         {
             GameObject dot = StageGun.CreateSprite(visual, "Face Dot", position, Vector2.one * size, color, 43);
-            dot.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            dot.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
         }
 
         private static Vector2[] EllipsePoints(Vector2 center, float radiusX, float radiusY)

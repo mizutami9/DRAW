@@ -571,7 +571,7 @@ namespace DrawBody.Prototype
             obj.transform.localPosition = position;
             obj.transform.localScale = new Vector3(size.x, size.y, 1f);
             SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;
             renderer.sortingOrder = order;
         }

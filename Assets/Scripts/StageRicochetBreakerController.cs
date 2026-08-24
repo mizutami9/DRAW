@@ -428,7 +428,7 @@ namespace DrawBody.Prototype
             fill.transform.localPosition = new Vector3(0f, 0f, -0.05f);
             fill.transform.localScale = new Vector3(size.x, size.y, 1f);
             SpriteRenderer renderer = fill.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetSquareSpriteForChallenges();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = new Color(color.r, color.g, color.b, 0.62f);
             renderer.sortingOrder = 7;
         }
@@ -622,7 +622,7 @@ namespace DrawBody.Prototype
             obj.transform.SetParent(parent, false);
             obj.transform.localScale = new Vector3(size.x, size.y, 1f);
             SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetSquareSpriteForChallenges();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = color;
             renderer.sortingOrder = order;
         }
@@ -639,7 +639,7 @@ namespace DrawBody.Prototype
             text.characterSize = size;
             text.fontStyle = FontStyle.Bold;
             text.color = color;
-            Font font = StageSurvivalController.FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null)
             {
                 text.font = font;
@@ -656,7 +656,7 @@ namespace DrawBody.Prototype
             dot.transform.localPosition = position;
             dot.transform.localScale = Vector3.one * size;
             SpriteRenderer renderer = dot.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;
             renderer.sortingOrder = 20;
         }
@@ -672,7 +672,7 @@ namespace DrawBody.Prototype
             line.endWidth = width;
             line.numCapVertices = 4;
             line.numCornerVertices = 4;
-            line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startColor = color;
             line.endColor = color;
             line.sortingOrder = 20;
@@ -741,14 +741,14 @@ namespace DrawBody.Prototype
             fill.transform.SetParent(root.transform, false);
             fill.transform.localScale = Vector3.one * 0.62f;
             SpriteRenderer renderer = fill.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = new Color(1f, 0.5f, 0.08f, 1f);
             renderer.sortingOrder = 42;
             GameObject core = new GameObject("Ball White Core");
             core.transform.SetParent(root.transform, false);
             core.transform.localScale = Vector3.one * 0.22f;
             SpriteRenderer coreRenderer = core.AddComponent<SpriteRenderer>();
-            coreRenderer.sprite = StageSurvivalController.GetCircleSprite();
+            coreRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
             coreRenderer.color = new Color(1f, 0.95f, 0.55f, 0.9f);
             coreRenderer.sortingOrder = 43;
 
@@ -756,7 +756,7 @@ namespace DrawBody.Prototype
             trail.time = 0.32f;
             trail.startWidth = 0.2f;
             trail.endWidth = 0.03f;
-            trail.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            trail.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             trail.startColor = new Color(1f, 0.55f, 0.08f, 0.7f);
             trail.endColor = new Color(1f, 0.8f, 0.1f, 0f);
             trail.sortingOrder = 40;
@@ -928,7 +928,7 @@ namespace DrawBody.Prototype
             line.startWidth = 0.1f;
             line.endWidth = 0.1f;
             line.numCapVertices = 4;
-            line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startColor = new Color(0.1f, 0.75f, 1f, 0.92f);
             line.endColor = new Color(0.1f, 0.75f, 1f, 0.92f);
             line.sortingOrder = 50;
@@ -971,7 +971,7 @@ namespace DrawBody.Prototype
 
     public sealed class StageRicochetImpactPulse : MonoBehaviour
     {
-        private SpriteRenderer renderer;
+        private SpriteRenderer pulseRenderer;
         private float elapsed;
 
         public static void Create(Transform parent, Vector2 position)
@@ -980,11 +980,11 @@ namespace DrawBody.Prototype
             obj.transform.SetParent(parent, false);
             obj.transform.position = position;
             SpriteRenderer sprite = obj.AddComponent<SpriteRenderer>();
-            sprite.sprite = StageSurvivalController.GetCircleSprite();
+            sprite.sprite = DoodleRuntimeAssets.CircleSprite;
             sprite.color = new Color(1f, 0.78f, 0.15f, 0.75f);
             sprite.sortingOrder = 44;
             StageRicochetImpactPulse pulse = obj.AddComponent<StageRicochetImpactPulse>();
-            pulse.renderer = sprite;
+            pulse.pulseRenderer = sprite;
         }
 
         private void Update()
@@ -992,7 +992,7 @@ namespace DrawBody.Prototype
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / 0.28f);
             transform.localScale = Vector3.one * Mathf.Lerp(0.25f, 1.65f, t);
-            if (renderer != null) renderer.color = new Color(1f, 0.78f, 0.15f, (1f - t) * 0.75f);
+            if (pulseRenderer != null) pulseRenderer.color = new Color(1f, 0.78f, 0.15f, (1f - t) * 0.75f);
             if (t >= 1f) Destroy(gameObject);
         }
     }

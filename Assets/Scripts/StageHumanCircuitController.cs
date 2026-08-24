@@ -425,7 +425,7 @@ namespace DrawBody.Prototype
             pulse.transform.position = position;
             pulse.transform.localScale = Vector3.one * 0.72f;
             SpriteRenderer renderer = pulse.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = index == 0
                 ? new Color(0.35f, 0.98f, 1f, 0.95f)
                 : index == 1
@@ -490,7 +490,7 @@ namespace DrawBody.Prototype
             core.transform.position = new Vector3(position.x, position.y, -0.28f);
             core.transform.localScale = Vector3.one * 0.42f;
             SpriteRenderer coreRenderer = core.AddComponent<SpriteRenderer>();
-            coreRenderer.sprite = StageSurvivalController.GetCircleSprite();
+            coreRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
             coreRenderer.color = DarkTerminal;
             coreRenderer.sortingOrder = 25;
 
@@ -499,7 +499,7 @@ namespace DrawBody.Prototype
             halo.transform.position = new Vector3(position.x, position.y, -0.27f);
             halo.transform.localScale = Vector3.one * 0.95f;
             SpriteRenderer haloRenderer = halo.AddComponent<SpriteRenderer>();
-            haloRenderer.sprite = StageSurvivalController.GetCircleSprite();
+            haloRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
             haloRenderer.sortingOrder = 24;
             haloRenderer.enabled = false;
             return new Terminal
@@ -567,7 +567,7 @@ namespace DrawBody.Prototype
             line.startColor = line.endColor = color;
             line.numCapVertices = 5;
             line.numCornerVertices = 3;
-            line.material = new Material(Shader.Find("Sprites/Default"));
+            line.material = DoodleRuntimeAssets.LineMaterial;
             line.sortingOrder = order;
         }
 
@@ -578,7 +578,7 @@ namespace DrawBody.Prototype
             halo.transform.position = new Vector3(position.x, position.y, -0.22f);
             halo.transform.localScale = Vector3.one * 2.6f;
             SpriteRenderer haloRenderer = halo.AddComponent<SpriteRenderer>();
-            haloRenderer.sprite = StageSurvivalController.GetCircleSprite();
+            haloRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
             haloRenderer.sortingOrder = 19;
             haloRenderer.enabled = false;
 
@@ -587,7 +587,7 @@ namespace DrawBody.Prototype
             glass.transform.position = new Vector3(position.x, position.y, -0.3f);
             glass.transform.localScale = Vector3.one * 1.45f;
             SpriteRenderer glassRenderer = glass.AddComponent<SpriteRenderer>();
-            glassRenderer.sprite = StageSurvivalController.GetCircleSprite();
+            glassRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
             glassRenderer.sortingOrder = 27;
             StageEscortController.AddBoxOutline(glass.transform, Vector2.down * 0.78f,
                 new Vector2(0.68f, 0.5f), new Color(0.12f, 0.15f, 0.18f), 29);
@@ -914,7 +914,7 @@ namespace DrawBody.Prototype
             flash.transform.SetParent(transform, false);
             flash.transform.position = new Vector3(centers[roomIndex], 0f, -0.18f);
             SpriteRenderer renderer = flash.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.sortingOrder = 45;
             float duration = roomIndex == 4 ? 1.35f : 0.75f;
             for (float elapsed = 0f; elapsed < duration; elapsed += Time.unscaledDeltaTime)
@@ -981,7 +981,7 @@ namespace DrawBody.Prototype
             arc.startWidth = arc.endWidth = 0.085f;
             arc.numCapVertices = 3;
             arc.numCornerVertices = 2;
-            arc.material = new Material(Shader.Find("Sprites/Default"));
+            arc.material = DoodleRuntimeAssets.LineMaterial;
             arc.sortingOrder = 48;
             return new PlayerElectricVisual { Root = root, Arc = arc };
         }

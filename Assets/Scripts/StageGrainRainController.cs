@@ -357,7 +357,7 @@ namespace DrawBody.Prototype
             text.characterSize = size;
             text.fontSize = 64;
             text.color = color;
-            Font font = StageSurvivalController.FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null)
             {
                 text.font = font;

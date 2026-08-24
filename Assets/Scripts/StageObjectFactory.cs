@@ -12,7 +12,6 @@ namespace DrawBody.Prototype
         [SerializeField] private int pushableLayer = 9;
 
         private static Material lineMaterial;
-        private static Sprite squareSprite;
         private static Sprite circleSprite;
         private static Sprite scaleBodySprite;
         private static Font digitalClockFont;
@@ -3967,22 +3966,13 @@ namespace DrawBody.Prototype
                 return lineMaterial;
             }
 
-            lineMaterial = new Material(Shader.Find("Sprites/Default"));
+            lineMaterial = DoodleRuntimeAssets.LineMaterial;
             return lineMaterial;
         }
 
         private static Sprite GetSquareSprite()
         {
-            if (squareSprite != null)
-            {
-                return squareSprite;
-            }
-
-            Texture2D texture = new Texture2D(1, 1);
-            texture.SetPixel(0, 0, Color.white);
-            texture.Apply();
-            squareSprite = Sprite.Create(texture, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1f);
-            return squareSprite;
+            return DoodleRuntimeAssets.SquareSprite;
         }
 
         private static Sprite GetCircleSprite()
@@ -4058,18 +4048,7 @@ namespace DrawBody.Prototype
 
         private static Font FindHandwrittenFont()
         {
-            Font[] loadedFonts = Resources.FindObjectsOfTypeAll<Font>();
-            for (int i = 0; i < loadedFonts.Length; i++)
-            {
-                Font font = loadedFonts[i];
-                if (font != null && font.name.IndexOf("Yomogi", System.StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    return font;
-                }
-            }
-
-            Font fallback = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            return fallback != null ? fallback : Resources.GetBuiltinResource<Font>("Arial.ttf");
+            return DoodleRuntimeAssets.HandwrittenFont;
         }
     }
 }

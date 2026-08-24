@@ -602,7 +602,7 @@ namespace DrawBody.Prototype
                 : Value >= 3 ? new Color(0.18f, 0.68f, 1f, 1f)
                 : new Color(0.82f, 0.38f, 0.12f, 1f);
             SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;
             renderer.sortingOrder = 210;
             transform.localScale = Vector3.one * (Value >= 10 ? 1f : Value >= 5 ? 0.88f : Value >= 3 ? 0.78f : 0.68f);
@@ -648,7 +648,7 @@ namespace DrawBody.Prototype
             disc.transform.localPosition = new Vector3(position.x, position.y, 0.015f);
             disc.transform.localScale = Vector3.one * size;
             SpriteRenderer renderer = disc.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;
             renderer.sortingOrder = order;
         }
@@ -660,7 +660,7 @@ namespace DrawBody.Prototype
             dot.transform.localPosition = new Vector3(position.x, position.y, -0.025f);
             dot.transform.localScale = Vector3.one * size;
             SpriteRenderer renderer = dot.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;
             renderer.sortingOrder = 214;
         }

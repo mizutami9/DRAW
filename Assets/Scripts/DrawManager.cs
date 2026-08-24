@@ -194,22 +194,22 @@ namespace DrawBody.Prototype
 
             if (stageManager == null)
             {
-                stageManager = FindObjectOfType<StageManager>();
+                stageManager = FindFirstObjectByType<StageManager>();
             }
 
             if (onlineManager == null)
             {
-                onlineManager = FindObjectOfType<OnlineManager>();
+                onlineManager = FindFirstObjectByType<OnlineManager>();
             }
 
             if (bodyBuilder == null)
             {
-                bodyBuilder = FindObjectOfType<BodyBuilder>();
+                bodyBuilder = FindFirstObjectByType<BodyBuilder>();
             }
 
             if (abilityController == null)
             {
-                abilityController = FindObjectOfType<PlayerAbilityController>();
+                abilityController = FindFirstObjectByType<PlayerAbilityController>();
             }
 
             SetActive(false);
@@ -538,12 +538,12 @@ namespace DrawBody.Prototype
 
             for (int i = 0; i < current.LineSegments.Count; i++)
             {
-                DestroyObject(current.LineSegments[i]);
+                DestroyUnityObject(current.LineSegments[i]);
             }
 
             for (int i = 0; i < current.PreviewSegments.Count; i++)
             {
-                DestroyObject(current.PreviewSegments[i]);
+                DestroyUnityObject(current.PreviewSegments[i]);
             }
 
             current.LineSegments.Clear();
@@ -3286,12 +3286,12 @@ namespace DrawBody.Prototype
         {
             for (int i = 0; i < drawing.LineSegments.Count; i++)
             {
-                DestroyObject(drawing.LineSegments[i]);
+                DestroyUnityObject(drawing.LineSegments[i]);
             }
 
             for (int i = 0; i < drawing.PreviewSegments.Count; i++)
             {
-                DestroyObject(drawing.PreviewSegments[i]);
+                DestroyUnityObject(drawing.PreviewSegments[i]);
             }
 
             drawing.LineSegments.Clear();
@@ -3307,11 +3307,11 @@ namespace DrawBody.Prototype
 
             for (int i = root.childCount - 1; i >= 0; i--)
             {
-                DestroyObject(root.GetChild(i).gameObject);
+                DestroyUnityObject(root.GetChild(i).gameObject);
             }
         }
 
-        private static void DestroyObject(Object target)
+        private static void DestroyUnityObject(Object target)
         {
             if (target == null)
             {

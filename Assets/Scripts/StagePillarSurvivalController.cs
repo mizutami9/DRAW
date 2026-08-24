@@ -689,7 +689,7 @@ namespace DrawBody.Prototype
             obj.transform.SetParent(parent, false);
             obj.transform.localScale = new Vector3(size.x, size.y, 1f);
             SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetSquareSpriteForChallenges();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = color;
             renderer.sortingOrder = order;
         }
@@ -706,7 +706,7 @@ namespace DrawBody.Prototype
             text.characterSize = size;
             text.fontStyle = FontStyle.Bold;
             text.color = color;
-            Font font = StageSurvivalController.FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null)
             {
                 text.font = font;
@@ -738,7 +738,7 @@ namespace DrawBody.Prototype
             line.endWidth = width;
             line.numCapVertices = 4;
             line.numCornerVertices = 2;
-            line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startColor = color;
             line.endColor = color;
             line.sortingOrder = order;

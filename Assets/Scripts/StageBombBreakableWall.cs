@@ -14,7 +14,6 @@ namespace DrawBody.Prototype
         private bool broken;
         private TextMesh remainingBombText;
         private static Material crackMaterial;
-        private static Sprite squareSprite;
         private static Sprite circleSprite;
 
         public string ObjectId
@@ -356,23 +355,14 @@ namespace DrawBody.Prototype
         {
             if (crackMaterial == null)
             {
-                crackMaterial = new Material(Shader.Find("Sprites/Default"));
+                crackMaterial = DoodleRuntimeAssets.LineMaterial;
             }
             return crackMaterial;
         }
 
         private static Sprite GetSquareSprite()
         {
-            if (squareSprite == null)
-            {
-                Texture2D texture = Texture2D.whiteTexture;
-                squareSprite = Sprite.Create(
-                    texture,
-                    new Rect(0f, 0f, texture.width, texture.height),
-                    new Vector2(0.5f, 0.5f),
-                    texture.width);
-            }
-            return squareSprite;
+            return DoodleRuntimeAssets.SquareSprite;
         }
 
         private static Sprite GetCircleSprite()
@@ -413,18 +403,7 @@ namespace DrawBody.Prototype
 
         private static Font FindHandwrittenFont()
         {
-            Font[] fonts = Resources.FindObjectsOfTypeAll<Font>();
-            for (int i = 0; i < fonts.Length; i++)
-            {
-                Font font = fonts[i];
-                if (font != null && font.name.IndexOf("Yomogi", System.StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    return font;
-                }
-            }
-
-            Font fallback = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            return fallback != null ? fallback : Resources.GetBuiltinResource<Font>("Arial.ttf");
+            return DoodleRuntimeAssets.HandwrittenFont;
         }
     }
 }

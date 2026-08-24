@@ -22,7 +22,7 @@ namespace DrawBody.Prototype
         {
             if (drawManager == null)
             {
-                drawManager = FindObjectOfType<DrawManager>();
+                drawManager = FindFirstObjectByType<DrawManager>();
             }
 
             image = GetComponent<Image>();

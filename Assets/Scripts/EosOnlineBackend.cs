@@ -1560,7 +1560,7 @@ namespace DrawBody.Prototype
 
         private static void EnsureEosManager()
         {
-            if (UnityEngine.Object.FindObjectOfType<EOSManager>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<EOSManager>() == null)
             {
                 new GameObject("EOSManager").AddComponent<EOSManager>();
             }

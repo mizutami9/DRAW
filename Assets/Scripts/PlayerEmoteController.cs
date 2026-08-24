@@ -73,7 +73,7 @@ namespace DrawBody.Prototype
             if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
             onlineManager = FindFirstObjectByType<OnlineManager>();
             uiManager = FindFirstObjectByType<UIManager>();
-            handwrittenFont = StageSurvivalController.FindHandwrittenFont();
+            handwrittenFont = DoodleRuntimeAssets.HandwrittenFont;
             BuildPalette();
         }
 
@@ -190,7 +190,7 @@ namespace DrawBody.Prototype
         private Bubble CreateBubble(Transform target)
         {
             GameObject root = new GameObject("Player Emote Bubble");
-            Sprite circle = StageSurvivalController.GetCircleSprite();
+            Sprite circle = DoodleRuntimeAssets.CircleSprite;
 
             GameObject outlineObject = new GameObject("Outline");
             outlineObject.transform.SetParent(root.transform, false);
@@ -364,7 +364,7 @@ namespace DrawBody.Prototype
 
         private static void AddPaletteToggleDots(RectTransform parent)
         {
-            Sprite circle = StageSurvivalController.GetCircleSprite();
+            Sprite circle = DoodleRuntimeAssets.CircleSprite;
             Color[] colors =
             {
                 new Color(0.92f, 0.25f, 0.2f),

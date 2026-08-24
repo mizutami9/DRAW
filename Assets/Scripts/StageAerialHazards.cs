@@ -80,7 +80,7 @@ namespace DrawBody.Prototype
             line.startWidth = 0.06f;
             line.endWidth = 0.06f;
             line.numCapVertices = 4;
-            line.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startColor = new Color(0.15f, 0.55f, 1f, 0.48f);
             line.endColor = line.startColor;
             line.sortingOrder = 8;

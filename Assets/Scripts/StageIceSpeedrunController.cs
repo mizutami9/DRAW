@@ -360,7 +360,7 @@ namespace DrawBody.Prototype
             text.alignment = TextAlignment.Center;
             text.fontSize = 64;
             text.characterSize = size;
-            Font font = StageSurvivalController.FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null)
             {
                 text.font = font;

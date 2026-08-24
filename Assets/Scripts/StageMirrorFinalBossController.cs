@@ -1354,11 +1354,9 @@ namespace DrawBody.Prototype
         internal void FireMissile() { if (missileLauncher != null) missileLauncher.ActivateFromLink(); }
         internal void SetDisabled(bool value) => disabled = value;
         internal void ResetMachine() { disabled = false; readyAt = 0f; }
-        private static Sprite squareSprite;
         private static Sprite GetSquareSprite()
         {
-            if (squareSprite != null) return squareSprite; Texture2D texture = new Texture2D(1, 1, TextureFormat.RGBA32, false); texture.SetPixel(0, 0, Color.white); texture.Apply();
-            squareSprite = Sprite.Create(texture, new Rect(0f, 0f, 1f, 1f), new Vector2(0.5f, 0.5f), 1f); return squareSprite;
+            return DoodleRuntimeAssets.SquareSprite;
         }
     }
 

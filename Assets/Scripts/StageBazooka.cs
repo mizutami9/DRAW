@@ -235,7 +235,7 @@ namespace DrawBody.Prototype
             trail.time = 0.28f;
             trail.startWidth = 0.24f;
             trail.endWidth = 0.02f;
-            trail.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            trail.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             trail.startColor = new Color(1f, 0.65f, 0.12f, 0.9f);
             trail.endColor = new Color(1f, 0.15f, 0.05f, 0f);
             trail.sortingOrder = 48;
@@ -283,10 +283,10 @@ namespace DrawBody.Prototype
             root.transform.position = point;
             GameObject outerObj = StageGun.CreateSprite(root.transform, "Explosion Outer", Vector2.zero, Vector2.one,
                 new Color(1f, 0.28f, 0.06f, 0.8f), 54);
-            outerObj.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            outerObj.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
             GameObject innerObj = StageGun.CreateSprite(root.transform, "Explosion Inner", Vector2.zero, Vector2.one,
                 new Color(1f, 0.88f, 0.18f, 0.95f), 55);
-            innerObj.GetComponent<SpriteRenderer>().sprite = StageSurvivalController.GetCircleSprite();
+            innerObj.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
             StageBazookaExplosion explosion = root.AddComponent<StageBazookaExplosion>();
             explosion.outer = outerObj.GetComponent<SpriteRenderer>();
             explosion.inner = innerObj.GetComponent<SpriteRenderer>();

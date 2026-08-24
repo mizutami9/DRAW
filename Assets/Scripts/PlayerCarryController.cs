@@ -241,12 +241,12 @@ namespace DrawBody.Prototype
 
             if (onlineManager == null)
             {
-                onlineManager = FindObjectOfType<OnlineManager>();
+                onlineManager = FindFirstObjectByType<OnlineManager>();
             }
 
             if (stageManager == null)
             {
-                stageManager = FindObjectOfType<StageManager>();
+                stageManager = FindFirstObjectByType<StageManager>();
             }
 
             carryableLayerMask |= 1 << gameObject.layer;
@@ -471,7 +471,7 @@ namespace DrawBody.Prototype
         public string GetWeaponRecoilTargetOnlineId()
         {
             PlayerCarryController recoilTarget = FindCarrierOfThisPlayer() ?? this;
-            if (stageManager == null) stageManager = FindObjectOfType<StageManager>();
+            if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
             string onlineCarrierId = stageManager != null
                 ? stageManager.GetOnlineCarrierPlayerId(playerController)
                 : null;
@@ -2090,7 +2090,7 @@ namespace DrawBody.Prototype
                 return previewMaterial;
             }
 
-            previewMaterial = new Material(Shader.Find("Sprites/Default"));
+            previewMaterial = DoodleRuntimeAssets.LineMaterial;
             return previewMaterial;
         }
 
@@ -2250,7 +2250,7 @@ namespace DrawBody.Prototype
         {
             if (gimmickSyncManager == null)
             {
-                gimmickSyncManager = FindObjectOfType<StageGimmickSyncManager>();
+                gimmickSyncManager = FindFirstObjectByType<StageGimmickSyncManager>();
             }
 
             return gimmickSyncManager;

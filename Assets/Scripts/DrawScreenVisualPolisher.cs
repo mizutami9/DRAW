@@ -311,7 +311,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            DrawManager drawManager = FindObjectOfType<DrawManager>();
+            DrawManager drawManager = FindFirstObjectByType<DrawManager>();
             for (int i = 0; i < brushPresets.Length; i++)
             {
                 float preset = brushPresets[i];
@@ -504,7 +504,7 @@ namespace DrawBody.Prototype
 
         private void ConfirmFullReset()
         {
-            FindObjectOfType<DrawManager>()?.ResetAllToDefault();
+            FindFirstObjectByType<DrawManager>()?.ResetAllToDefault();
             CloseFullResetConfirmDialog();
         }
 
@@ -660,7 +660,7 @@ namespace DrawBody.Prototype
 
         private void ResolveDrawManager()
         {
-            DrawManager resolved = drawManager != null ? drawManager : FindObjectOfType<DrawManager>();
+            DrawManager resolved = drawManager != null ? drawManager : FindFirstObjectByType<DrawManager>();
             if (drawManager != null && drawManager != resolved)
             {
                 drawManager.CurrentSpeciesChanged -= HandlePresetSpeciesChanged;

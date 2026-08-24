@@ -5,7 +5,6 @@ namespace DrawBody.Prototype
 {
     public static class StageGrainCarryObjectFactory
     {
-        private static Sprite squareSprite;
         private static Sprite circleSprite;
 
         public static GameObject Create(StageObjectData data, Transform parent, int groundLayer)
@@ -132,13 +131,7 @@ namespace DrawBody.Prototype
 
         private static Sprite GetSquareSprite()
         {
-            if (squareSprite != null) return squareSprite;
-            Texture2D texture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-            texture.name = "Grain Carry Square";
-            texture.SetPixel(0, 0, Color.white);
-            texture.Apply();
-            squareSprite = Sprite.Create(texture, new Rect(0f, 0f, 1f, 1f), Vector2.one * 0.5f, 1f);
-            return squareSprite;
+            return DoodleRuntimeAssets.SquareSprite;
         }
 
         private static Sprite GetCircleSprite()

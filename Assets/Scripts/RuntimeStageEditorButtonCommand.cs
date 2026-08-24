@@ -50,12 +50,12 @@ namespace DrawBody.Prototype
         {
             if (editor == null)
             {
-                editor = FindObjectOfType<RuntimeStageEditor>();
+                editor = FindFirstObjectByType<RuntimeStageEditor>();
             }
 
             if (stageManager == null)
             {
-                stageManager = FindObjectOfType<StageManager>();
+                stageManager = FindFirstObjectByType<StageManager>();
             }
 
             Button button = GetComponent<Button>();
@@ -69,12 +69,12 @@ namespace DrawBody.Prototype
         {
             if (editor == null)
             {
-                editor = FindObjectOfType<RuntimeStageEditor>();
+                editor = FindFirstObjectByType<RuntimeStageEditor>();
             }
 
             if (stageManager == null)
             {
-                stageManager = FindObjectOfType<StageManager>();
+                stageManager = FindFirstObjectByType<StageManager>();
             }
 
             switch (command)

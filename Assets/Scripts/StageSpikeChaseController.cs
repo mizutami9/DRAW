@@ -366,7 +366,7 @@ namespace DrawBody.Prototype
             body.transform.localPosition = new Vector3(-0.55f, 0f, 0f);
             body.transform.localScale = new Vector3(1.15f, 25f, 1f);
             SpriteRenderer bodyRenderer = body.AddComponent<SpriteRenderer>();
-            bodyRenderer.sprite = StageSurvivalController.GetCircleSprite();
+            bodyRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
             bodyRenderer.color = new Color(0.46f, 0.08f, 0.1f, 1f);
             bodyRenderer.sortingOrder = 31;
             for (int i = 0; i < 13; i++) CreateSpike(root.transform, -11.4f + i * 1.9f, i % 2 == 0 ? 1.55f : 1.35f);
@@ -404,7 +404,7 @@ namespace DrawBody.Prototype
             mesh.colors = new[] { new Color(0.92f, 0.17f, 0.2f), new Color(1f, 0.35f, 0.28f), new Color(0.72f, 0.04f, 0.08f) };
             obj.AddComponent<MeshFilter>().sharedMesh = mesh;
             MeshRenderer renderer = obj.AddComponent<MeshRenderer>();
-            renderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            renderer.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             renderer.sortingOrder = 32;
         }
     }

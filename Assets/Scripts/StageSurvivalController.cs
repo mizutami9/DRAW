@@ -113,9 +113,6 @@ namespace DrawBody.Prototype
         private float previousCameraMinimum = 8f;
         private bool configured;
         private bool restoredPlayers;
-        private static Sprite squareSprite;
-        private static Sprite circleSprite;
-        private static Material lineMaterial;
 
         public void Configure(float seconds)
         {
@@ -975,7 +972,7 @@ namespace DrawBody.Prototype
             baseObject.transform.SetParent(root.transform, false);
             baseObject.transform.localScale = Vector3.one * 0.82f;
             SpriteRenderer baseRenderer = baseObject.AddComponent<SpriteRenderer>();
-            baseRenderer.sprite = GetCircleSprite();
+            baseRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
             baseRenderer.color = new Color(0.22f, 0.24f, 0.27f, 1f);
             baseRenderer.sortingOrder = 37;
 
@@ -985,7 +982,7 @@ namespace DrawBody.Prototype
             barrel.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
             barrel.transform.localScale = new Vector3(1.35f, 0.48f, 1f);
             SpriteRenderer barrelRenderer = barrel.AddComponent<SpriteRenderer>();
-            barrelRenderer.sprite = GetSquareSprite();
+            barrelRenderer.sprite = DoodleRuntimeAssets.SquareSprite;
             barrelRenderer.color = new Color(0.29f, 0.31f, 0.34f, 1f);
             barrelRenderer.sortingOrder = 38;
 
@@ -1022,7 +1019,7 @@ namespace DrawBody.Prototype
             fillObject.transform.SetParent(root.transform, false);
             fillObject.transform.localScale = new Vector3(FloorWidth - 0.08f, 0.62f, 1f);
             SpriteRenderer fill = fillObject.AddComponent<SpriteRenderer>();
-            fill.sprite = GetSquareSprite();
+            fill.sprite = DoodleRuntimeAssets.SquareSprite;
             Color baseColor = index % 2 == 0
                 ? new Color(0.93f, 0.89f, 0.77f, 1f)
                 : new Color(0.88f, 0.84f, 0.72f, 1f);
@@ -1052,7 +1049,7 @@ namespace DrawBody.Prototype
             obj.transform.SetParent(parent, false);
             obj.transform.localScale = new Vector3(size.x, size.y, 1f);
             SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = GetSquareSprite();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = color;
             renderer.sortingOrder = sortingOrder;
         }
@@ -1069,7 +1066,7 @@ namespace DrawBody.Prototype
             text.characterSize = characterSize;
             text.fontStyle = FontStyle.Bold;
             text.color = color;
-            Font font = FindHandwrittenFont();
+            Font font = DoodleRuntimeAssets.HandwrittenFont;
             if (font != null)
             {
                 text.font = font;
@@ -1101,7 +1098,7 @@ namespace DrawBody.Prototype
             line.endWidth = width;
             line.numCapVertices = 3;
             line.numCornerVertices = 3;
-            line.sharedMaterial = GetLineMaterial();
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startColor = color;
             line.endColor = color;
             line.sortingOrder = sortingOrder;
@@ -1207,68 +1204,6 @@ namespace DrawBody.Prototype
             return false;
         }
 
-        private static Material GetLineMaterial()
-        {
-            if (lineMaterial == null)
-            {
-                lineMaterial = new Material(Shader.Find("Sprites/Default"));
-            }
-            return lineMaterial;
-        }
-
-        private static Sprite GetSquareSprite()
-        {
-            if (squareSprite == null)
-            {
-                Texture2D texture = Texture2D.whiteTexture;
-                squareSprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), texture.width);
-            }
-            return squareSprite;
-        }
-
-        internal static Sprite GetSquareSpriteForChallenges()
-        {
-            return GetSquareSprite();
-        }
-
-        internal static Sprite GetCircleSprite()
-        {
-            if (circleSprite != null)
-            {
-                return circleSprite;
-            }
-            const int size = 48;
-            Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
-            Color32[] pixels = new Color32[size * size];
-            Vector2 center = Vector2.one * (size - 1) * 0.5f;
-            float radius = size * 0.46f;
-            for (int y = 0; y < size; y++)
-            {
-                for (int x = 0; x < size; x++)
-                {
-                    float distance = Vector2.Distance(new Vector2(x, y), center);
-                    pixels[y * size + x] = new Color32(255, 255, 255, distance <= radius ? (byte)255 : (byte)0);
-                }
-            }
-            texture.SetPixels32(pixels);
-            texture.Apply(false, true);
-            circleSprite = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), size);
-            return circleSprite;
-        }
-
-        internal static Font FindHandwrittenFont()
-        {
-            Font[] fonts = Resources.FindObjectsOfTypeAll<Font>();
-            for (int i = 0; i < fonts.Length; i++)
-            {
-                Font font = fonts[i];
-                if (font != null && font.name.IndexOf("Yomogi", System.StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    return font;
-                }
-            }
-            return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        }
     }
 
     [DisallowMultipleComponent]
@@ -1297,7 +1232,7 @@ namespace DrawBody.Prototype
             visual.transform.SetParent(root.transform, false);
             visual.transform.localScale = Vector3.one * 0.68f;
             SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = new Color(0.08f, 0.085f, 0.1f, 1f);
             renderer.sortingOrder = 46;
 

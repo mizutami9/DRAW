@@ -367,7 +367,7 @@ namespace DrawBody.Prototype
             aimLine.startWidth = 0.075f;
             aimLine.endWidth = 0.025f;
             aimLine.numCapVertices = 3;
-            aimLine.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            aimLine.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             aimLine.startColor = new Color(0.2f, 0.9f, 1f, 0.85f);
             aimLine.endColor = new Color(0.2f, 0.9f, 1f, 0.12f);
             aimLine.sortingOrder = 138;
@@ -1024,7 +1024,7 @@ namespace DrawBody.Prototype
             obj.transform.localPosition = position;
             obj.transform.localScale = new Vector3(size.x, size.y, 1f);
             SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = StageSurvivalController.GetCircleSprite();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;
             renderer.sortingOrder = order;
             return renderer;
@@ -1072,14 +1072,14 @@ namespace DrawBody.Prototype
             outer.transform.localPosition = position;
             outer.transform.localScale = new Vector3(0.55f, 0.42f, 1f);
             SpriteRenderer rim = outer.AddComponent<SpriteRenderer>();
-            rim.sprite = StageSurvivalController.GetCircleSprite();
+            rim.sprite = DoodleRuntimeAssets.CircleSprite;
             rim.color = new Color(0.07f, 0.1f, 0.14f);
             rim.sortingOrder = 82;
             GameObject glow = new GameObject("Thruster Glow");
             glow.transform.SetParent(outer.transform, false);
             glow.transform.localScale = Vector3.one * 0.66f;
             SpriteRenderer light = glow.AddComponent<SpriteRenderer>();
-            light.sprite = StageSurvivalController.GetCircleSprite();
+            light.sprite = DoodleRuntimeAssets.CircleSprite;
             light.color = color;
             light.sortingOrder = 83;
         }
@@ -1187,14 +1187,14 @@ namespace DrawBody.Prototype
             outline.transform.SetParent(root.transform, false);
             outline.transform.localScale = Vector3.one * 0.92f;
             SpriteRenderer outer = outline.AddComponent<SpriteRenderer>();
-            outer.sprite = StageSurvivalController.GetCircleSprite();
+            outer.sprite = DoodleRuntimeAssets.CircleSprite;
             outer.color = new Color(0.12f, 0.05f, 0.06f);
             outer.sortingOrder = 148;
             GameObject body = new GameObject("Bomb Red Body");
             body.transform.SetParent(root.transform, false);
             body.transform.localScale = Vector3.one * 0.78f;
             SpriteRenderer inner = body.AddComponent<SpriteRenderer>();
-            inner.sprite = StageSurvivalController.GetCircleSprite();
+            inner.sprite = DoodleRuntimeAssets.CircleSprite;
             inner.color = new Color(0.88f, 0.18f, 0.12f);
             inner.sortingOrder = 149;
             StageEscortController.AddLine(root.transform, new Vector2(0.18f, 0.36f), new Vector2(0.42f, 0.72f), 0.1f, new Color(0.18f, 0.12f, 0.05f), 150);

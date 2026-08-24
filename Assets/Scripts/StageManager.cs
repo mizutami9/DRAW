@@ -177,39 +177,39 @@ namespace DrawBody.Prototype
         {
             if (player == null)
             {
-                player = FindObjectOfType<PlayerController2D>();
+                player = FindFirstObjectByType<PlayerController2D>();
             }
 
             primaryPlayer = player;
 
             if (uiManager == null)
             {
-                uiManager = FindObjectOfType<UIManager>();
+                uiManager = FindFirstObjectByType<UIManager>();
             }
 
             if (drawManager == null)
             {
-                drawManager = FindObjectOfType<DrawManager>();
+                drawManager = FindFirstObjectByType<DrawManager>();
             }
 
             if (stageLoader == null)
             {
-                stageLoader = FindObjectOfType<StageLoader>();
+                stageLoader = FindFirstObjectByType<StageLoader>();
             }
 
             if (stageEditor == null)
             {
-                stageEditor = FindObjectOfType<RuntimeStageEditor>();
+                stageEditor = FindFirstObjectByType<RuntimeStageEditor>();
             }
 
             if (onlineManager == null)
             {
-                onlineManager = FindObjectOfType<OnlineManager>();
+                onlineManager = FindFirstObjectByType<OnlineManager>();
             }
 
             if (cameraFollow == null)
             {
-                cameraFollow = FindObjectOfType<CameraFollow2D>();
+                cameraFollow = FindFirstObjectByType<CameraFollow2D>();
             }
 
             ConfigureActivePlayerTargets();
@@ -260,7 +260,7 @@ namespace DrawBody.Prototype
 
             if (onlineManager == null)
             {
-                onlineManager = FindObjectOfType<OnlineManager>();
+                onlineManager = FindFirstObjectByType<OnlineManager>();
             }
 
             if (onlineManager != null)
@@ -979,7 +979,7 @@ namespace DrawBody.Prototype
 
         private bool AreAllLocalPlayersAtGoal()
         {
-            PlayerController2D[] activePlayers = FindObjectsOfType<PlayerController2D>();
+            PlayerController2D[] activePlayers = FindObjectsByType<PlayerController2D>(FindObjectsSortMode.InstanceID);
             int requiredPlayers = 0;
             for (int i = 0; i < activePlayers.Length; i++)
             {
