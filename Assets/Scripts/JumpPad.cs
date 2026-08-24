@@ -6,6 +6,7 @@ namespace DrawBody.Prototype
     {
         [SerializeField] private float jumpVelocity = 27f;
         [SerializeField] private Transform animatedRoot;
+        [SerializeField] private float birdLaunchMultiplier = 3f;
 
         private Vector3 animatedOrigin;
         private float bounceTimer;
@@ -18,6 +19,11 @@ namespace DrawBody.Prototype
             {
                 animatedOrigin = animatedRoot.localPosition;
             }
+        }
+
+        public void ConfigureBirdMultiplier(float multiplier)
+        {
+            birdLaunchMultiplier = Mathf.Clamp(multiplier, 0.25f, 3f);
         }
 
         private void Update()
@@ -70,7 +76,7 @@ namespace DrawBody.Prototype
 
             float speciesMultiplier = player != null
                 && player.CurrentSpecies == DrawManager.Species.Bird
-                    ? 3f
+                    ? birdLaunchMultiplier
                     : 1f;
             Vector2 velocity = rb.linearVelocity;
             velocity.y = Mathf.Max(velocity.y, jumpVelocity * speciesMultiplier);

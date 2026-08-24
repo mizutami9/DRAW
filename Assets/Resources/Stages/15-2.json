@@ -1,0 +1,12 @@
+{
+  "id":"15-2",
+  "displayName":"Stage 15-2 Side Scroll Boss Chase",
+  "backgroundColorHex":"#EAF8FFFF",
+  "ruleMode":2,
+  "timeLimitSeconds":0.0,
+  "collectionTarget":0,
+  "requiredCollectionCount":0,
+  "objects":[
+    {"objectId":"15-2_spawn","type":2,"position":{"x":-7.0,"y":-2.5},"size":{"x":0.7,"y":0.7},"rotation":0.0}
+  ]
+}

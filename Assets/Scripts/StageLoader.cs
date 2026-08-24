@@ -450,9 +450,13 @@ namespace DrawBody.Prototype
             {
                 stageRoot.gameObject.AddComponent<StageFlyingPlatformBossController>();
             }
+            if (data != null && data.id == "15-2")
+            {
+                stageRoot.gameObject.AddComponent<StageSideScrollBossChaseController>();
+            }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
-                if (data.id == "8-3" || data.id == "9-1" || data.id == "13-1" || data.id == "14-3" || data.id == "15-1")
+                if (data.id == "8-3" || data.id == "9-1" || data.id == "13-1" || data.id == "14-3" || data.id == "15-1" || data.id == "15-2")
                 {
                     // The stage-specific controller owns its timer, elimination and retry flow.
                 }
