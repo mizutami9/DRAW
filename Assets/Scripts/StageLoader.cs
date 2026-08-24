@@ -359,6 +359,20 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingFlyingBoss);
             }
 
+            StageSideScrollBossChaseController existingSideScrollBoss =
+                stageRoot.GetComponent<StageSideScrollBossChaseController>();
+            if (existingSideScrollBoss != null)
+            {
+                DestroyComponentNow(existingSideScrollBoss);
+            }
+
+            StageMirrorFinalBossController existingMirrorBoss =
+                stageRoot.GetComponent<StageMirrorFinalBossController>();
+            if (existingMirrorBoss != null)
+            {
+                DestroyComponentNow(existingMirrorBoss);
+            }
+
             StageValueCoinChallengeController existingValueCoinChallenge = stageRoot.GetComponent<StageValueCoinChallengeController>();
             if (existingValueCoinChallenge != null)
             {
@@ -454,9 +468,13 @@ namespace DrawBody.Prototype
             {
                 stageRoot.gameObject.AddComponent<StageSideScrollBossChaseController>();
             }
+            if (data != null && data.id == "15-3")
+            {
+                stageRoot.gameObject.AddComponent<StageMirrorFinalBossController>();
+            }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
-                if (data.id == "8-3" || data.id == "9-1" || data.id == "13-1" || data.id == "14-3" || data.id == "15-1" || data.id == "15-2")
+                if (data.id == "8-3" || data.id == "9-1" || data.id == "13-1" || data.id == "14-3" || data.id == "15-1" || data.id == "15-2" || data.id == "15-3")
                 {
                     // The stage-specific controller owns its timer, elimination and retry flow.
                 }

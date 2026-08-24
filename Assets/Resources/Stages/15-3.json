@@ -1,0 +1,12 @@
+{
+  "id":"15-3",
+  "displayName":"Stage 15-3 Mirror Final Boss",
+  "backgroundColorHex":"#EEF8FFFF",
+  "ruleMode":2,
+  "timeLimitSeconds":0.0,
+  "collectionTarget":0,
+  "requiredCollectionCount":0,
+  "objects":[
+    {"objectId":"15-3_spawn","type":2,"position":{"x":-5.4,"y":-2.9},"size":{"x":0.7,"y":0.7},"rotation":0.0}
+  ]
+}

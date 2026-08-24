@@ -29,6 +29,7 @@ namespace DrawBody.Prototype
             : gameObject.name;
         public float BlastRadius => Mathf.Max(transform.lossyScale.x, transform.lossyScale.y) * 2.8f;
         public bool HasExploded => exploded;
+        public float RemainingFuseSeconds => exploded ? 0f : armed ? Mathf.Max(0f, detonateAt - Time.time) : fuseSeconds;
 
         public void Configure(bool armOnPickup, float seconds)
         {
@@ -206,6 +207,7 @@ namespace DrawBody.Prototype
             if (applyGameplay)
             {
                 ApplyBlastToPlayersAndBodies(position, radius);
+                Object.FindFirstObjectByType<StageMirrorFinalBossController>()?.ApplyAreaDamage(position, radius, 2);
             }
 
             CreateExplosionVisual(position, radius);

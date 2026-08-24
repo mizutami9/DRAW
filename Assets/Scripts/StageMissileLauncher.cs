@@ -256,6 +256,7 @@ namespace DrawBody.Prototype
         private void ApplyExplosionDamage()
         {
             StageValueCoinChallengeController.BreakCratesInRadius(transform.position, explosionRadius);
+            Object.FindFirstObjectByType<StageMirrorFinalBossController>()?.ApplyAreaDamage(transform.position, explosionRadius, 1);
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
             HashSet<PlayerController2D> players = new HashSet<PlayerController2D>();
             HashSet<Rigidbody2D> bodies = new HashSet<Rigidbody2D>();

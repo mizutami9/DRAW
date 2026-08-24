@@ -1374,6 +1374,7 @@ namespace DrawBody.Prototype
             drawing = false;
             cleared = false;
             Time.timeScale = 1f;
+            RestoreLocalPlayerPhysicsForStageEntry();
             SetCameraFollowEnabled(true);
             uiManager?.SetTitle(false);
             uiManager?.SetMulti(false);
@@ -1474,6 +1475,7 @@ namespace DrawBody.Prototype
             drawing = false;
             cleared = false;
             Time.timeScale = 1f;
+            RestoreLocalPlayerPhysicsForStageEntry();
             SetCameraFollowEnabled(true);
             uiManager?.SetStageEditor(false);
             uiManager?.SetStageSelect(false);
@@ -2728,6 +2730,25 @@ namespace DrawBody.Prototype
             RespawnPlayer(secondaryPlayer, GetRespawnOffset(secondaryPlayer), secondaryPlayer == player);
         }
 
+        private void RestoreLocalPlayerPhysicsForStageEntry()
+        {
+            RestorePlayerPhysics(primaryPlayer);
+            if (!IsOnlineInStage()) RestorePlayerPhysics(secondaryPlayer);
+            if (player != null && player != primaryPlayer && (!IsOnlineInStage() || player == secondaryPlayer))
+                RestorePlayerPhysics(player);
+        }
+
+        private static void RestorePlayerPhysics(PlayerController2D targetPlayer)
+        {
+            if (targetPlayer == null) return;
+            if (!targetPlayer.gameObject.activeSelf) targetPlayer.gameObject.SetActive(true);
+            Rigidbody2D body = targetPlayer.GetComponent<Rigidbody2D>();
+            if (body == null) return;
+            body.simulated = true;
+            body.linearVelocity = Vector2.zero;
+            body.angularVelocity = 0f;
+        }
+
         private void ResetAllCarryState()
         {
             player?.GetComponent<PlayerCarryController>()?.ForceDrop();
@@ -3083,6 +3104,12 @@ namespace DrawBody.Prototype
             // physics-disabled teleport so an old controller cannot leave the
             // player disabled across a full stage reload.
             if (!targetPlayer.gameObject.activeSelf) targetPlayer.gameObject.SetActive(true);
+            // A no-respawn challenge deliberately disables simulation when a
+            // player is eliminated. Full stage retry reuses the same player
+            // object, so physics must be restored before the safe teleport or
+            // the disabled state leaks into every subsequently selected stage.
+            Rigidbody2D respawnBody = targetPlayer.GetComponent<Rigidbody2D>();
+            if (respawnBody != null) respawnBody.simulated = true;
             Vector3 destination = spawnPoint.position + offset;
             TeleportPlayerWithoutPhysics(targetPlayer, destination);
             AlignPlayerBottomToGround(targetPlayer, destination);

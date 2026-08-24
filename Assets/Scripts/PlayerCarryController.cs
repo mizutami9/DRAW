@@ -171,7 +171,7 @@ namespace DrawBody.Prototype
                 if (slimeAttachedPlayer == null && catClawedObject == null)
                 {
                     TryAttachSlimeToFriend();
-                    if (slimeAttachedPlayer == null && IsFriendCarrier()) TryAttachCatToObject();
+                    if (slimeAttachedPlayer == null) TryAttachCatToObject();
                 }
             }
             else
@@ -333,7 +333,7 @@ namespace DrawBody.Prototype
                     if (slimeAttachedPlayer == null && catClawedObject == null)
                     {
                         TryAttachSlimeToFriend();
-                        if (slimeAttachedPlayer == null && IsFriendCarrier())
+                        if (slimeAttachedPlayer == null)
                         {
                             TryAttachCatToObject();
                         }
@@ -616,7 +616,7 @@ namespace DrawBody.Prototype
 
         private void TryAttachCatToObject()
         {
-            if (!IsFriendCarrier() || playerBody == null)
+            if (!CanAttachToFriend() || playerBody == null)
             {
                 return;
             }
@@ -1703,6 +1703,15 @@ namespace DrawBody.Prototype
             StageBlockBreakerEnemy[] enemies = Object.FindObjectsByType<StageBlockBreakerEnemy>(FindObjectsSortMode.None);
             StageEnemyCharacter[] placedEnemies = Object.FindObjectsByType<StageEnemyCharacter>(FindObjectsSortMode.None);
             StageValueCrate[] valueCrates = Object.FindObjectsByType<StageValueCrate>(FindObjectsSortMode.None);
+            StageMirrorFinalBossController mirrorBattle = Object.FindFirstObjectByType<StageMirrorFinalBossController>();
+            if (mirrorBattle != null)
+            {
+                float mirrorFrontLegInk = abilityController != null
+                    ? abilityController.CurrentProfile.CatFrontLegInk
+                    : 0f;
+                float mirrorRange = PlayerController2D.CalculateCatScratchRangeMultiplier(mirrorFrontLegInk);
+                if (mirrorBattle.TryPlayerCatScratch(playerController, mirrorRange)) return true;
+            }
             if (enemies.Length == 0 && placedEnemies.Length == 0 && valueCrates.Length == 0) return false;
 
             Bounds catBounds = new Bounds(transform.position, Vector3.one);
