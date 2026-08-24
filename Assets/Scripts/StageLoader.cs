@@ -392,6 +392,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingMovingCoinChallenge);
             }
 
+            StageHumanCircuitController existingHumanCircuit = stageRoot.GetComponent<StageHumanCircuitController>();
+            if (existingHumanCircuit != null)
+            {
+                DestroyComponentNow(existingHumanCircuit);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && (data.id == "5-3" || data.id == "10-2"))
@@ -458,6 +464,10 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "13-2")
             {
                 stageRoot.gameObject.AddComponent<StageRicochetEnemyChallengeController>();
+            }
+            if (data != null && data.id == "13-3")
+            {
+                stageRoot.gameObject.AddComponent<StageHumanCircuitController>();
             }
             if (data != null && data.id == "14-1")
             {

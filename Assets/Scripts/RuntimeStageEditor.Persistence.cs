@@ -179,6 +179,10 @@ namespace DrawBody.Prototype
             {
                 StageMovingCoinChallengeController.CreateEditorPreview(editorRoot);
             }
+            else if (stageId == "13-3")
+            {
+                StageHumanCircuitController.CreateEditorPreview(editorRoot);
+            }
         }
 
         private void CreateEditorObject(StageObjectData data)
