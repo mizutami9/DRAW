@@ -27,6 +27,13 @@ namespace DrawBody.Prototype
             collider.size = new Vector2(0.92f, 0.52f);
             root.AddComponent<CarryableObject>();
 
+            if (!TryCreateResourceSprite(
+                root.transform,
+                "StageObjects/NicoDraw/handgun",
+                "Colored Pencil Handgun",
+                new Vector2(1.68f, 0.92f),
+                38))
+            {
             CreateSprite(root.transform, "Gun Body", new Vector2(0.02f, 0.08f), new Vector2(0.95f, 0.42f), new Color(0.17f, 0.25f, 0.34f, 1f), 34);
             CreateSprite(root.transform, "Gun Barrel", new Vector2(0.52f, 0.14f), new Vector2(0.48f, 0.2f), new Color(0.08f, 0.12f, 0.17f, 1f), 35);
             CreateSprite(root.transform, "Gun Handle", new Vector2(-0.16f, -0.28f), new Vector2(0.28f, 0.52f), new Color(0.42f, 0.2f, 0.1f, 1f), 34, -14f);
@@ -35,6 +42,7 @@ namespace DrawBody.Prototype
                 new Vector2(-0.48f, -0.08f), new Vector2(0.72f, -0.08f), new Vector2(0.72f, 0.28f),
                 new Vector2(-0.48f, 0.28f), new Vector2(-0.48f, -0.08f)
             }, 0.055f, new Color(0.03f, 0.05f, 0.08f, 1f), 38);
+            }
 
             StageGun gun = root.AddComponent<StageGun>();
             AddMetadata(root, data);
@@ -63,7 +71,7 @@ namespace DrawBody.Prototype
         public void TryFire(Vector2 aimWorld)
         {
             if (holder == null || Time.time < nextFireAt) return;
-            Vector2 origin = transform.TransformPoint(new Vector2(0.78f, 0.12f));
+            Vector2 origin = transform.TransformPoint(new Vector2(0.82f, 0.08f));
             Vector2 direction = (aimWorld - origin).normalized;
             if (direction.sqrMagnitude < 0.1f) return;
             nextFireAt = Time.time + FireInterval;
@@ -105,6 +113,33 @@ namespace DrawBody.Prototype
             renderer.color = color;
             renderer.sortingOrder = order;
             return obj;
+        }
+
+        internal static bool TryCreateResourceSprite(
+            Transform parent,
+            string resourcePath,
+            string name,
+            Vector2 localSize,
+            int sortingOrder)
+        {
+            Sprite sprite = Resources.Load<Sprite>(resourcePath);
+            if (parent == null || sprite == null || sprite.bounds.size.x <= 0f || sprite.bounds.size.y <= 0f)
+            {
+                return false;
+            }
+
+            GameObject visual = new GameObject(name);
+            visual.transform.SetParent(parent, false);
+            visual.transform.localPosition = new Vector3(0f, 0f, -0.035f);
+            visual.transform.localScale = new Vector3(
+                localSize.x / sprite.bounds.size.x,
+                localSize.y / sprite.bounds.size.y,
+                1f);
+            SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = Color.white;
+            renderer.sortingOrder = sortingOrder;
+            return true;
         }
 
         internal static void AddLine(Transform parent, string name, Vector2[] points, float width, Color color, int order)
@@ -277,7 +312,7 @@ namespace DrawBody.Prototype
             if (challenge != null && !challenge.TryConsumeShot()) return;
             data.Sequence = ++shotSequence;
             StageGunBullet.Create(transform, this, data.Sequence, data.Origin, data.Direction, true);
-            GameSfx.PlayAt(SfxId.CannonFire, data.Origin, 0.66f);
+            GameSfx.PlayAt(SfxId.GunShot, data.Origin, 0.66f);
             if (IsOnline()) Send(FireKind, data);
         }
 
@@ -285,7 +320,7 @@ namespace DrawBody.Prototype
         {
             if (!HasAuthority() || wall == null || wall.IsBroken) return;
             int hits = wall.HitByBullet(point);
-            GameSfx.PlayAt(wall.IsBroken ? SfxId.BombWallBreak : SfxId.EnemyShellBounce, point, 0.72f);
+            GameSfx.PlayAt(wall.IsBroken ? SfxId.BombWallBreak : SfxId.Ricochet, point, 0.72f);
             if (IsOnline()) Send(WallKind, new WallData { WallId = wall.ObjectId, Hits = hits, Point = point });
         }
 
@@ -303,7 +338,7 @@ namespace DrawBody.Prototype
                 if (data == null || data.Sequence <= lastShotSequence) return;
                 lastShotSequence = data.Sequence;
                 StageGunBullet.Create(transform, this, data.Sequence, data.Origin, data.Direction, false);
-                GameSfx.PlayAt(SfxId.CannonFire, data.Origin, 0.66f);
+                GameSfx.PlayAt(SfxId.GunShot, data.Origin, 0.66f);
             }
             else if (message.Kind == ReflectKind && !HasAuthority() && IsHost(message.PlayerId))
             {
@@ -549,6 +584,13 @@ namespace DrawBody.Prototype
             trigger.radius = 0.48f;
             trigger.isTrigger = true;
             root.AddComponent<StageSpikeHazard>();
+            if (!StageGun.TryCreateResourceSprite(
+                root.transform,
+                "StageObjects/NicoDraw/spike-planet",
+                "Colored Pencil Spike Planet",
+                new Vector2(0.96f, 0.96f),
+                27))
+            {
             GameObject core = new GameObject("Spike Planet Core");
             core.transform.SetParent(root.transform, false);
             core.transform.localScale = Vector3.one * 0.78f;
@@ -569,6 +611,7 @@ namespace DrawBody.Prototype
                 }, 0.045f, ink, 26);
             }
             StageGun.AddLine(root.transform, "Planet Ring", CreateCirclePoints(24, 0.37f), 0.045f, ink, 27);
+            }
             StageEditorObject marker = root.AddComponent<StageEditorObject>();
             marker.objectId = data.objectId;
             marker.type = data.type;

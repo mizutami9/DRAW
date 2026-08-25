@@ -8,6 +8,7 @@ namespace DrawBody.Prototype
     {
         private Transform projectileParent;
         private Transform muzzle;
+        private SpriteRenderer readyLamp;
         private float interval;
         private float missileSpeed;
         private float nextLaunchTime;
@@ -18,10 +19,11 @@ namespace DrawBody.Prototype
         private float linkedCooldownSeconds;
         private float nextLinkedLaunchTime;
 
-        public void Configure(Transform parent, Transform launchPoint, float seconds, float speed)
+        public void Configure(Transform parent, Transform launchPoint, SpriteRenderer lamp, float seconds, float speed)
         {
             projectileParent = parent;
             muzzle = launchPoint;
+            readyLamp = lamp;
             interval = Mathf.Clamp(seconds > 0f ? seconds : 2f, 0.5f, 10f);
             missileSpeed = Mathf.Clamp(speed > 0f ? speed : 8f, 3f, 15f);
         }
@@ -37,10 +39,14 @@ namespace DrawBody.Prototype
                 return;
             }
             nextLaunchTime = Time.time + interval;
+            UpdateReadyVisual(0f);
         }
 
         private void Update()
         {
+            float readyAt = linkedMode ? nextLinkedLaunchTime : nextLaunchTime;
+            float cooldown = linkedMode ? Mathf.Max(0.05f, linkedCooldownSeconds) : interval;
+            UpdateReadyVisual(1f - Mathf.Clamp01((readyAt - Time.time) / cooldown));
             if (linkedMode || Time.time < nextLaunchTime
                 || syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost)
             {
@@ -53,6 +59,7 @@ namespace DrawBody.Prototype
         public void PrepareForLink()
         {
             linkedMode = true;
+            UpdateReadyVisual(1f);
         }
 
         public void ActivateFromLink()
@@ -61,6 +68,19 @@ namespace DrawBody.Prototype
                 || Time.time < nextLinkedLaunchTime) return;
             nextLinkedLaunchTime = Time.time + linkedCooldownSeconds;
             FireMissile();
+            UpdateReadyVisual(0f);
+        }
+
+        private void UpdateReadyVisual(float amount)
+        {
+            if (readyLamp == null) return;
+            float normalized = Mathf.Clamp01(amount);
+            readyLamp.color = Color.Lerp(
+                new Color(0.38f, 0.1f, 0.08f, 1f),
+                new Color(0.35f, 1f, 0.22f, 1f),
+                normalized);
+            float pulse = normalized > 0.98f ? 1f + Mathf.Sin(Time.unscaledTime * 12f) * 0.12f : 1f;
+            readyLamp.transform.localScale = Vector3.one * 0.17f * pulse;
         }
 
         public void SetLinkCooldown(float seconds)
@@ -97,8 +117,8 @@ namespace DrawBody.Prototype
                     muzzle.position,
                     transform.right.normalized,
                     missileSpeed);
+                GameSfx.PlayAt(SfxId.MissileLaunch, muzzle.position, 1.05f);
             }
-            GameSfx.PlayAt(SfxId.CannonFire, muzzle.position, 1.05f);
         }
     }
 
@@ -248,7 +268,7 @@ namespace DrawBody.Prototype
             effectRoot.transform.position = transform.position;
             BombExplosionVisual visual = effectRoot.AddComponent<BombExplosionVisual>();
             visual.Configure(explosionRadius, false);
-            GameSfx.PlayAt(SfxId.BombExplosion, transform.position, 1.05f);
+            GameSfx.PlayAt(SfxId.MissileImpact, transform.position, 1.05f);
             Destroy(gameObject);
         }
 

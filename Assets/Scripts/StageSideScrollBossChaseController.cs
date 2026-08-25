@@ -145,7 +145,7 @@ namespace DrawBody.Prototype
                     controlsReleased = true;
                     SetLocalControls(true);
                     nextAttackAt = elapsed + 2.5f;
-                    GameSfx.Play(SfxId.UiToggleOn, 1.15f);
+                    GameSfx.Play(SfxId.StageCountdownGo, 1.15f);
                 }
                 if (phase == Phase.Running)
                 {
@@ -347,6 +347,9 @@ namespace DrawBody.Prototype
             StageEscortController.AddLine(bossFace, new Vector2(3.1f, 1.5f), new Vector2(4.1f, 3.55f), 0.34f, ink, 69);
             StageEscortController.AddLine(bossFace, new Vector2(-3.4f, -0.4f), new Vector2(-5f, -1.6f), 0.38f, new Color(0.62f, 0.12f, 0.78f), 69);
             StageEscortController.AddLine(bossFace, new Vector2(3.4f, -0.4f), new Vector2(4.9f, -1.5f), 0.38f, new Color(0.62f, 0.12f, 0.78f), 69);
+            SpriteRenderer messyBoss = NicoDrawBossArt.Apply(
+                bossFace, "boss-chase", new Vector2(10f, 7f), 70);
+            if (messyBoss != null) bossCore = messyBoss;
         }
 
         private void BuildMonitor()
@@ -415,6 +418,7 @@ namespace DrawBody.Prototype
         private IEnumerator RunBarrage(AttackState state)
         {
             TextMesh warning = CreateAttackText(new Vector2(scrollX - 6f, 5.8f), LocalizationManager.T("side_boss_barrage_warning"), new Color(1f, 0.55f, 0.15f));
+            GameSfx.PlayAt(SfxId.BossAttackWarning, new Vector2(scrollX - 6f, 5.8f));
             yield return new WaitForSeconds(0.9f);
             if (warning != null) Destroy(warning.gameObject);
             float attackScrollX = state.Origin.x + 15f;
@@ -434,6 +438,7 @@ namespace DrawBody.Prototype
         private IEnumerator RunAimedShot(AttackState state)
         {
             GameObject marker = CreateTargetMarker(state.Target, 1.15f);
+            GameSfx.PlayAt(SfxId.BossAttackWarning, state.Target, 1.05f);
             yield return new WaitForSeconds(1.25f);
             if (marker != null) Destroy(marker);
             Vector2 direction = (state.Target - state.Origin).normalized;
@@ -446,6 +451,7 @@ namespace DrawBody.Prototype
             Vector2 center = new Vector2(scrollX + 1f, state.Lane);
             GameObject warning = CreateWarningRect(center, new Vector2(34f, 2.2f), new Color(1f, 0.2f, 0.08f, 0.2f));
             TextMesh text = CreateAttackText(new Vector2(scrollX, state.Lane + 1.6f), LocalizationManager.T("side_boss_laser_warning"), new Color(1f, 0.45f, 0.12f));
+            GameSfx.PlayAt(SfxId.BossBeamCharge, new Vector2(bossX, state.Lane), 1.05f);
             yield return new WaitForSeconds(1.65f);
             SetWarningColor(warning, new Color(1f, 0.08f, 0.03f, 0.78f));
             if (text != null) Destroy(text.gameObject);
@@ -462,6 +468,7 @@ namespace DrawBody.Prototype
             if (floor == null) yield break;
             floor.SetWarning(true);
             TextMesh text = CreateAttackText(floor.transform.position + Vector3.up * 1.25f, LocalizationManager.T("side_boss_floor_warning"), Color.red);
+            GameSfx.PlayAt(SfxId.CrumblingFloorWarning, floor.transform.position, 1.05f);
             yield return new WaitForSeconds(1.45f);
             if (text != null) Destroy(text.gameObject);
             yield return floor.BreakTemporarily(3.8f);
@@ -472,9 +479,11 @@ namespace DrawBody.Prototype
             Vector2 center = new Vector2(scrollX - 3f, state.Lane);
             GameObject warning = CreateWarningRect(center, new Vector2(25f, 1.8f), new Color(0.95f, 0.18f, 0.35f, 0.2f));
             TextMesh text = CreateAttackText(new Vector2(scrollX, state.Lane + 1.3f), LocalizationManager.T("side_boss_hand_warning"), new Color(1f, 0.35f, 0.55f));
+            GameSfx.PlayAt(SfxId.BossAttackWarning, center, 1.05f);
             yield return new WaitForSeconds(1.35f);
             if (warning != null) Destroy(warning);
             if (text != null) Destroy(text.gameObject);
+            GameSfx.PlayAt(SfxId.BossDash, new Vector2(bossX + 1f, state.Lane), 1.05f);
             GameObject hand = new GameObject("Giant Doodle Hand"); hand.transform.SetParent(transform, false); hand.transform.position = new Vector3(bossX + 1f, state.Lane, -0.3f);
             StageEscortController.AddFilledRect(hand.transform, "Arm", new Vector2(7f, 0f), new Vector2(14f, 1.25f), new Color(0.58f, 0.16f, 0.72f), 96);
             AddDisc(hand.transform, "Palm", new Vector2(14f, 0f), new Vector2(2.7f, 2.2f), new Color(0.7f, 0.22f, 0.88f), 97);
@@ -990,7 +999,7 @@ namespace DrawBody.Prototype
 
         private IEnumerator CrumbleAfterDelay()
         {
-            busy = true; SetWarning(true); yield return new WaitForSeconds(0.8f); yield return BreakTemporarily(2.4f); busy = false;
+            busy = true; SetWarning(true); GameSfx.PlayAt(SfxId.CrumblingFloorWarning, transform.position); yield return new WaitForSeconds(0.8f); yield return BreakTemporarily(2.4f); busy = false;
         }
 
         public void SetWarning(bool value)
@@ -1003,6 +1012,7 @@ namespace DrawBody.Prototype
         {
             busy = true; if (floorCollider != null) floorCollider.enabled = false;
             for (int i = 0; i < renderers.Length; i++) renderers[i].enabled = false;
+            GameSfx.PlayAt(SfxId.CrumblingFloorCollapse, transform.position);
             yield return new WaitForSeconds(duration);
             if (floorCollider != null) floorCollider.enabled = true;
             for (int i = 0; i < renderers.Length; i++) { renderers[i].enabled = true; renderers[i].color = originalColors[i]; }

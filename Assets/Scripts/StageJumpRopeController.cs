@@ -160,7 +160,7 @@ namespace DrawBody.Prototype
                 {
                     phase = Phase.Countdown;
                     phaseRemaining = CountdownSeconds;
-                    GameSfx.Play(SfxId.UiButtonPress);
+                    GameSfx.Play(SfxId.StageCountdownTick);
                 }
                 RefreshMonitor();
                 return;
@@ -173,7 +173,7 @@ namespace DrawBody.Prototype
                     phase = Phase.Playing;
                     phaseRemaining = 0f;
                     SetLocalControls(true);
-                    GameSfx.Play(SfxId.DrawConfirm);
+                    GameSfx.Play(SfxId.StageCountdownGo);
                     BroadcastState(true);
                 }
                 RefreshMonitor();

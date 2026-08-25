@@ -510,20 +510,39 @@ namespace DrawBody.Prototype
             StageEscortController.AddLine(characterVisual, new Vector2(0.25f, -0.45f), new Vector2(0.36f, -0.92f), 0.11f, ink, 44);
             StageEscortController.AddLine(characterVisual, new Vector2(-0.5f, 0.38f), new Vector2(-0.82f, 0.67f), 0.1f, frog, 44);
             StageEscortController.AddLine(characterVisual, new Vector2(0.48f, 0.38f), new Vector2(0.72f, 0.74f), 0.1f, frog, 44);
+            NicoDrawBossArt.Apply(characterVisual, "ally-umbrella", new Vector2(1.5f, 2.2f), 47);
 
             canopy = new GameObject("Wide Umbrella").transform;
             canopy.SetParent(transform, false);
             canopy.localPosition = new Vector3(0f, 1.95f, -0.08f);
-            BuildCanopy(canopy, 3.4f, 0.84f);
-            StageEscortController.AddLine(canopy, new Vector2(0f, 0f), new Vector2(0f, -1.48f), 0.11f, ink, 48);
-            StageEscortController.AddLine(canopy, new Vector2(0f, -1.48f), new Vector2(0.3f, -1.68f), 0.11f, ink, 48);
+            if (!BuildCanopy(canopy, 3.4f, 0.84f))
+            {
+                StageEscortController.AddLine(canopy, new Vector2(0f, 0f), new Vector2(0f, -1.48f), 0.11f, ink, 48);
+                StageEscortController.AddLine(canopy, new Vector2(0f, -1.48f), new Vector2(0.3f, -1.68f), 0.11f, ink, 48);
+            }
 
             cue = StageEscortController.CreateText(transform, "Motion Cue", new Vector3(0f, 3.05f, -0.1f),
                 56, 0.1f, new Color(1f, 0.35f, 0.12f), 54);
         }
 
-        private static void BuildCanopy(Transform parent, float halfWidth, float height)
+        private static bool BuildCanopy(Transform parent, float halfWidth, float height)
         {
+            Sprite umbrellaSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/umbrella");
+            if (umbrellaSprite != null && umbrellaSprite.bounds.size.x > 0f && umbrellaSprite.bounds.size.y > 0f)
+            {
+                GameObject art = new GameObject("Colored Pencil Umbrella");
+                art.transform.SetParent(parent, false);
+                art.transform.localPosition = new Vector3(0f, 0f, -0.02f);
+                float width = halfWidth * 2f;
+                float scale = width / umbrellaSprite.bounds.size.x;
+                art.transform.localScale = new Vector3(scale, scale, 1f);
+                SpriteRenderer artRenderer = art.AddComponent<SpriteRenderer>();
+                artRenderer.sprite = umbrellaSprite;
+                artRenderer.color = Color.white;
+                artRenderer.sortingOrder = 49;
+                return true;
+            }
+
             GameObject fill = new GameObject("Umbrella Canopy Fill");
             fill.transform.SetParent(parent, false);
             Mesh mesh = new Mesh();
@@ -562,6 +581,7 @@ namespace DrawBody.Prototype
             for (int i = -3; i <= 3; i++)
                 StageEscortController.AddLine(parent, Vector2.zero, new Vector2(i * halfWidth / 3f, 0f), 0.055f,
                     new Color(0.06f, 0.38f, 0.7f, 0.72f), 48);
+            return false;
         }
 
         private static void AddCircle(Transform parent, string name, Vector2 position, Vector2 size, Color color, int order)

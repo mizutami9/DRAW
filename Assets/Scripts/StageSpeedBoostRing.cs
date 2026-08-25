@@ -10,7 +10,7 @@ namespace DrawBody.Prototype
         private float multiplier;
         private float duration;
         private Transform visual;
-        private Vector3 visualBaseScale = new Vector3(0.42f, 1f, 1f);
+        private Vector3 visualBaseScale = Vector3.one;
         private Color ringColor;
 
         public static GameObject CreateObject(StageObjectData data, Transform parent)
@@ -26,22 +26,20 @@ namespace DrawBody.Prototype
                 : data.type == StageObjectType.SpeedRing3X ? 3f : 2f;
             float duration = data.bombFuseSeconds > 0f ? data.bombFuseSeconds : 1.5f;
             Color color = multiplier >= 2.5f
-                ? new Color(1f, 0.32f, 0.18f, 0.94f)
-                : new Color(0.08f, 0.76f, 1f, 0.94f);
+                ? new Color(0.08f, 0.48f, 0.96f, 1f)
+                : new Color(0.05f, 0.68f, 1f, 1f);
 
-            GameObject ringGroup = new GameObject("Speed Ring Visual");
+            GameObject ringGroup = new GameObject("Floating Speed Chevrons Visual");
             ringGroup.transform.SetParent(root.transform, false);
-            ringGroup.transform.localScale = new Vector3(0.42f, 1f, 1f);
             Color dark = Color.Lerp(color, Color.black, 0.42f);
             Color light = Color.Lerp(color, Color.white, 0.48f);
-            AddCircle(ringGroup.transform, "Ring Shadow", new Vector2(0.035f, -0.045f), new Vector2(1.08f, 1.08f), dark, 23);
-            GameObject outer = AddCircle(ringGroup.transform, "Ring Outer", Vector2.zero, Vector2.one, color, 24);
-            AddCircle(ringGroup.transform, "Ring Highlight", new Vector2(-0.015f, 0.018f), new Vector2(0.83f, 0.83f), light, 25);
-            AddCircle(ringGroup.transform, "Ring Inner Rim", Vector2.zero, new Vector2(0.69f, 0.69f), dark, 26);
-            AddCircle(ringGroup.transform, "Ring Opening", Vector2.zero, new Vector2(0.58f, 0.58f),
-                new Color(0.985f, 0.975f, 0.93f, 1f), 27);
-            AddSpeedWing(ringGroup.transform, -1f, color, 25);
-            AddSpeedWing(ringGroup.transform, 1f, color, 25);
+            AddChevron(ringGroup.transform, "Speed Chevron Left Shadow", -0.28f, new Vector2(0.035f, -0.035f), dark, 0.115f, 23);
+            AddChevron(ringGroup.transform, "Speed Chevron Right Shadow", 0.25f, new Vector2(0.035f, -0.035f), dark, 0.115f, 23);
+            AddChevron(ringGroup.transform, "Speed Chevron Left", -0.28f, Vector2.zero, color, 0.09f, 25);
+            AddChevron(ringGroup.transform, "Speed Chevron Right", 0.25f, Vector2.zero, color, 0.09f, 25);
+            // A second loose pass keeps the mark visibly hand-drawn.
+            AddChevron(ringGroup.transform, "Speed Chevron Left Pencil Pass", -0.27f, new Vector2(-0.015f, 0.018f), light, 0.035f, 26);
+            AddChevron(ringGroup.transform, "Speed Chevron Right Pencil Pass", 0.26f, new Vector2(-0.015f, 0.018f), light, 0.035f, 26);
 
             CircleCollider2D trigger = root.AddComponent<CircleCollider2D>();
             trigger.radius = 0.46f;
@@ -68,42 +66,32 @@ namespace DrawBody.Prototype
             return root;
         }
 
-        private static GameObject AddCircle(Transform parent, string name, Vector2 position, Vector2 scale, Color color, int order)
+        private static void AddChevron(
+            Transform parent,
+            string name,
+            float centerX,
+            Vector2 offset,
+            Color color,
+            float width,
+            int order)
         {
             GameObject obj = new GameObject(name);
             obj.transform.SetParent(parent, false);
-            obj.transform.localPosition = position;
-            obj.transform.localScale = scale;
-            SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
-            renderer.color = color;
-            renderer.sortingOrder = order;
-            return obj;
-        }
-
-        private static void AddSpeedWing(Transform parent, float side, Color color, int order)
-        {
-            Material material = DoodleRuntimeAssets.LineMaterial;
-            for (int i = 0; i < 2; i++)
-            {
-                GameObject wing = new GameObject("Speed Accent");
-                wing.transform.SetParent(parent, false);
-                LineRenderer line = wing.AddComponent<LineRenderer>();
-                line.useWorldSpace = false;
-                line.positionCount = 3;
-                line.numCapVertices = 5;
-                line.numCornerVertices = 4;
-                line.startWidth = 0.07f;
-                line.endWidth = 0.045f;
-                line.sharedMaterial = material;
-                line.startColor = color;
-                line.endColor = Color.Lerp(color, Color.white, 0.35f);
-                line.sortingOrder = order;
-                float y = 0.2f - i * 0.38f;
-                line.SetPosition(0, new Vector3(side * 0.46f, y, 0f));
-                line.SetPosition(1, new Vector3(side * 0.73f, y + 0.1f, 0f));
-                line.SetPosition(2, new Vector3(side * 0.94f, y + 0.02f, 0f));
-            }
+            obj.transform.localPosition = new Vector3(offset.x, offset.y, 0f);
+            LineRenderer line = obj.AddComponent<LineRenderer>();
+            line.useWorldSpace = false;
+            line.positionCount = 3;
+            line.numCapVertices = 6;
+            line.numCornerVertices = 5;
+            line.startWidth = width;
+            line.endWidth = width * 0.88f;
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+            line.startColor = color;
+            line.endColor = Color.Lerp(color, Color.white, 0.18f);
+            line.sortingOrder = order;
+            line.SetPosition(0, new Vector3(centerX - 0.22f, 0.36f, 0f));
+            line.SetPosition(1, new Vector3(centerX + 0.18f, -0.015f, 0f));
+            line.SetPosition(2, new Vector3(centerX - 0.2f, -0.38f, 0f));
         }
 
         private void Update()
@@ -121,7 +109,7 @@ namespace DrawBody.Prototype
             PlayerController2D player = other.GetComponentInParent<PlayerController2D>();
             if (player == null || !playersInside.Add(player)) return;
             player.ApplySpeedBoost(multiplier, duration);
-            GameSfx.PlayAt(SfxId.UiToggleOn, transform.position, multiplier >= 2.5f ? 1.22f : 1.08f);
+            GameSfx.PlayAt(SfxId.SpeedBoost, transform.position, multiplier >= 2.5f ? 1.22f : 1.08f);
             StartCoroutine(Flash());
         }
 
@@ -133,11 +121,21 @@ namespace DrawBody.Prototype
 
         private System.Collections.IEnumerator Flash()
         {
-            SpriteRenderer renderer = visual != null ? visual.Find("Ring Outer")?.GetComponent<SpriteRenderer>() : null;
-            if (renderer == null) yield break;
-            renderer.color = Color.white;
+            if (visual == null) yield break;
+            LineRenderer[] lines = visual.GetComponentsInChildren<LineRenderer>();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                lines[i].startColor = Color.white;
+                lines[i].endColor = Color.white;
+            }
             yield return new WaitForSeconds(0.12f);
-            if (renderer != null) renderer.color = ringColor;
+            if (visual == null) yield break;
+            lines = visual.GetComponentsInChildren<LineRenderer>();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                lines[i].startColor = ringColor;
+                lines[i].endColor = Color.Lerp(ringColor, Color.white, 0.18f);
+            }
         }
     }
 

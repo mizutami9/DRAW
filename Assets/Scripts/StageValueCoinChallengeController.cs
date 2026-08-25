@@ -354,7 +354,7 @@ namespace DrawBody.Prototype
             coin.ApplyCollected();
             coins.Remove(coinId);
             total += value;
-            GameSfx.PlayAt(SfxId.DrawConfirm, coin.transform.position, 0.82f);
+            GameSfx.PlayAt(SfxId.CoinCollect, coin.transform.position, 0.82f);
             if (total >= TargetValue && phase == 0)
             {
                 total = Mathf.Max(total, TargetValue);
@@ -513,6 +513,7 @@ namespace DrawBody.Prototype
     public sealed class StageValueCrate : MonoBehaviour
     {
         private StageValueCoinChallengeController owner;
+        private float nextImpactSfxAt;
         public string CrateId { get; private set; }
         public int Value { get; private set; }
         public bool IsBroken { get; private set; }
@@ -533,9 +534,21 @@ namespace DrawBody.Prototype
         {
             if (IsBroken) return;
             IsBroken = true;
-            GameSfx.PlayAt(SfxId.BombWallBreak, point, 0.72f);
+            GameSfx.PlayAt(SfxId.CrateBreak, point, 0.72f);
             gameObject.SetActive(false);
             Destroy(gameObject);
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (IsBroken || collision == null || collision.relativeVelocity.sqrMagnitude < 4.84f || Time.time < nextImpactSfxAt)
+            {
+                return;
+            }
+
+            nextImpactSfxAt = Time.time + 0.12f;
+            Vector2 point = collision.contactCount > 0 ? collision.GetContact(0).point : (Vector2)transform.position;
+            GameSfx.PlayAt(SfxId.CrateImpact, point, Mathf.Clamp(collision.relativeVelocity.magnitude / 7f, 0.7f, 1.2f));
         }
     }
 
@@ -601,6 +614,26 @@ namespace DrawBody.Prototype
                 : Value >= 5 ? new Color(0.78f, 0.86f, 0.94f, 1f)
                 : Value >= 3 ? new Color(0.18f, 0.68f, 1f, 1f)
                 : new Color(0.82f, 0.38f, 0.12f, 1f);
+            Sprite coloredPencilCoin = Resources.Load<Sprite>("StageObjects/NicoDraw/coin");
+            if (coloredPencilCoin != null)
+            {
+                float valueScale = Value >= 10 ? 1f : Value >= 5 ? 0.88f : Value >= 3 ? 0.78f : 0.68f;
+                transform.localScale = Vector3.one * valueScale;
+                GameObject art = new GameObject("Colored Pencil Value Coin");
+                art.transform.SetParent(transform, false);
+                art.transform.localPosition = new Vector3(0f, 0f, -0.025f);
+                art.transform.localScale = new Vector3(
+                    1f / coloredPencilCoin.bounds.size.x,
+                    1f / coloredPencilCoin.bounds.size.y,
+                    1f);
+                SpriteRenderer artRenderer = art.AddComponent<SpriteRenderer>();
+                artRenderer.sprite = coloredPencilCoin;
+                artRenderer.sortingOrder = 212;
+                artRenderer.color = Value >= 10
+                    ? Color.white
+                    : Color.Lerp(Color.white, color, Value >= 5 ? 0.2f : 0.38f);
+                return;
+            }
             SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
             renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = color;

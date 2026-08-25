@@ -390,6 +390,12 @@ namespace DrawBody.Prototype
             countdownText.fontStyle = FontStyle.Bold;
             countdownText.color = Color.white;
             MeshRenderer textRenderer = textObject.GetComponent<MeshRenderer>();
+            Font handwritten = DoodleRuntimeAssets.HandwrittenFont;
+            if (handwritten != null)
+            {
+                countdownText.font = handwritten;
+                textRenderer.sharedMaterial = handwritten.material;
+            }
             textRenderer.sortingOrder = 230;
 
             pulseRenderer = GetComponentInChildren<SpriteRenderer>();

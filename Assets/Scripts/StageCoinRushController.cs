@@ -129,6 +129,12 @@ namespace DrawBody.Prototype
                 return coinSprite;
             }
 
+            coinSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/coin");
+            if (coinSprite != null)
+            {
+                return coinSprite;
+            }
+
             const int size = 48;
             Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
             {

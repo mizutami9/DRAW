@@ -33,12 +33,45 @@ namespace DrawBody.Prototype
         private static void CreateEmitter(GameObject root, StageObjectData data)
         {
             Vector2 size = new Vector2(Mathf.Max(1.2f, data.size.x), Mathf.Max(1.6f, data.size.y));
-            AddRect(root.transform, "Dispenser Body", new Vector2(0f, size.y * 0.25f),
-                new Vector2(size.x, size.y * 0.48f), new Color(0.34f, 0.68f, 0.9f), 16);
-            AddRect(root.transform, "Dispenser Label", new Vector2(0f, size.y * 0.25f),
-                new Vector2(size.x * 0.62f, size.y * 0.18f), new Color(1f, 0.91f, 0.38f), 18);
-            AddRect(root.transform, "Dispenser Nozzle", new Vector2(0f, -size.y * 0.08f),
-                new Vector2(size.x * 0.28f, size.y * 0.25f), new Color(0.18f, 0.3f, 0.38f), 17);
+            bool hasPencilArt = AddResourceSprite(
+                root.transform,
+                "StageObjects/NicoDraw/grain-emitter",
+                "Colored Pencil Grain Emitter",
+                new Vector2(size.x / 0.707f, size.y / 0.939f),
+                24);
+            if (!hasPencilArt)
+            {
+            Color outline = new Color(0.08f, 0.19f, 0.27f, 1f);
+            Vector2 bodyCenter = new Vector2(0f, size.y * 0.25f);
+            Vector2 bodySize = new Vector2(size.x, size.y * 0.48f);
+            AddRect(root.transform, "Pencil Grain Hopper", bodyCenter,
+                bodySize, new Color(0.48f, 0.77f, 0.93f), 16);
+            AddHatching(root.transform, "Hopper Pencil Fill", bodyCenter, bodySize * 0.88f,
+                new Color(0.08f, 0.39f, 0.65f, 0.42f), 17, 7);
+            AddSketchRect(root.transform, "Hopper Loose Outline", bodyCenter, bodySize, outline, 0.055f, 20);
+
+            Vector2 windowSize = new Vector2(size.x * 0.62f, size.y * 0.18f);
+            AddRect(root.transform, "Grain Window", bodyCenter,
+                windowSize, new Color(1f, 0.88f, 0.3f), 18);
+            AddSketchRect(root.transform, "Grain Window Outline", bodyCenter, windowSize,
+                new Color(0.42f, 0.27f, 0.04f), 0.038f, 21);
+            for (int i = -2; i <= 2; i++)
+            {
+                AddDot(root.transform, "Stored Grain " + i,
+                    bodyCenter + new Vector2(i * windowSize.x * 0.13f, Mathf.Sin(i * 2.1f) * windowSize.y * 0.16f),
+                    Mathf.Min(size.x, size.y) * 0.055f,
+                    i % 2 == 0 ? new Color(1f, 0.48f, 0.08f) : new Color(0.97f, 0.68f, 0.08f), 22);
+            }
+
+            Vector2 neckCenter = new Vector2(0f, -size.y * 0.015f);
+            Vector2 neckSize = new Vector2(size.x * 0.38f, size.y * 0.22f);
+            AddRect(root.transform, "Dispenser Neck", neckCenter, neckSize, new Color(0.22f, 0.36f, 0.43f), 17);
+            AddSketchRect(root.transform, "Dispenser Neck Outline", neckCenter, neckSize, outline, 0.045f, 21);
+            Vector2 nozzleCenter = new Vector2(0f, -size.y * 0.16f);
+            Vector2 nozzleSize = new Vector2(size.x * 0.25f, size.y * 0.13f);
+            AddRect(root.transform, "Dark Grain Outlet", nozzleCenter, nozzleSize, new Color(0.07f, 0.1f, 0.12f), 22);
+            AddSketchRect(root.transform, "Outlet Lip", nozzleCenter, nozzleSize, Color.black, 0.042f, 23);
+            }
 
             BoxCollider2D trigger = root.AddComponent<BoxCollider2D>();
             trigger.isTrigger = true;
@@ -53,13 +86,48 @@ namespace DrawBody.Prototype
         {
             Vector2 size = new Vector2(Mathf.Max(1.8f, data.size.x), Mathf.Max(0.8f, data.size.y));
             root.layer = groundLayer;
+            bool hasPencilArt = AddResourceSprite(
+                root.transform,
+                "StageObjects/NicoDraw/grain-scale",
+                "Colored Pencil 100g Scale",
+                new Vector2(size.x / 0.848f, size.y / 0.576f),
+                24);
+            if (!hasPencilArt)
+            {
+            Color outline = new Color(0.18f, 0.12f, 0.035f, 1f);
             AddRect(root.transform, "Scale Body", new Vector2(0f, -size.y * 0.2f),
-                new Vector2(size.x * 0.86f, size.y * 0.62f), new Color(0.96f, 0.76f, 0.24f), 17);
+                new Vector2(size.x * 0.86f, size.y * 0.62f), new Color(0.96f, 0.72f, 0.18f), 17);
+            AddHatching(root.transform, "Scale Body Pencil Fill", new Vector2(0f, -size.y * 0.2f),
+                new Vector2(size.x * 0.76f, size.y * 0.5f), new Color(0.64f, 0.34f, 0.03f, 0.34f), 18, 7);
+            AddSketchRect(root.transform, "Scale Body Loose Outline", new Vector2(0f, -size.y * 0.2f),
+                new Vector2(size.x * 0.86f, size.y * 0.62f), outline, 0.052f, 23);
             AddRect(root.transform, "Scale Plate", new Vector2(0f, size.y * 0.31f),
-                new Vector2(size.x, size.y * 0.16f), new Color(0.74f, 0.83f, 0.86f), 20);
+                new Vector2(size.x, size.y * 0.16f), new Color(0.68f, 0.79f, 0.83f), 20);
+            AddSketchRect(root.transform, "Scale Plate Outline", new Vector2(0f, size.y * 0.31f),
+                new Vector2(size.x, size.y * 0.16f), new Color(0.12f, 0.22f, 0.25f), 0.048f, 24);
             AddRect(root.transform, "Scale Display", new Vector2(0f, -size.y * 0.18f),
                 new Vector2(size.x * 0.56f, size.y * 0.28f), new Color(0.08f, 0.13f, 0.15f), 21);
+            AddSketchRect(root.transform, "Scale Display Frame", new Vector2(0f, -size.y * 0.18f),
+                new Vector2(size.x * 0.6f, size.y * 0.32f), outline, 0.04f, 25);
             AddBowl(root.transform, new Vector2(size.x * 0.28f, size.y * 0.56f), size.x * 0.34f);
+            AddSketchLine(root.transform, "Scale Left Foot", new[]
+            {
+                new Vector2(-size.x * 0.34f, -size.y * 0.47f), new Vector2(-size.x * 0.41f, -size.y * 0.55f)
+            }, outline, 0.055f, 22);
+            AddSketchLine(root.transform, "Scale Right Foot", new[]
+            {
+                new Vector2(size.x * 0.34f, -size.y * 0.47f), new Vector2(size.x * 0.41f, -size.y * 0.55f)
+            }, outline, 0.055f, 22);
+            }
+            else
+            {
+                // StageGrainScale uses this transform as the visual anchor for
+                // grains already deposited on the pan. It intentionally has no
+                // renderer because the pan itself is part of the PNG.
+                GameObject bowlAnchor = new GameObject("Bowl Cup");
+                bowlAnchor.transform.SetParent(root.transform, false);
+                bowlAnchor.transform.localPosition = new Vector3(size.x * 0.28f, size.y * 0.42f, 0f);
+            }
 
             BoxCollider2D platform = root.AddComponent<BoxCollider2D>();
             platform.size = new Vector2(size.x, size.y * 0.16f);
@@ -80,14 +148,37 @@ namespace DrawBody.Prototype
         {
             Vector2 size = new Vector2(Mathf.Max(0.65f, data.size.x), Mathf.Max(2f, data.size.y));
             root.layer = groundLayer;
-            AddRect(root.transform, "Gate Fill", Vector2.zero, size, new Color(0.28f, 0.72f, 0.92f, 0.82f), 15);
+            bool hasPencilArt = AddResourceSprite(
+                root.transform,
+                "StageObjects/NicoDraw/grain-gate",
+                "Colored Pencil Weight Gate",
+                new Vector2(size.x / 0.969f, size.y / 0.827f),
+                24);
+            if (!hasPencilArt)
+            {
+            Color frame = new Color(0.1f, 0.23f, 0.3f, 1f);
+            AddRect(root.transform, "Gate Paper Fill", Vector2.zero, size, new Color(0.56f, 0.81f, 0.91f, 0.88f), 15);
+            AddHatching(root.transform, "Gate Blue Pencil Fill", Vector2.zero, size * 0.92f,
+                new Color(0.08f, 0.38f, 0.58f, 0.3f), 16, 12);
+            AddSketchRect(root.transform, "Gate Outer Frame", Vector2.zero, size, frame, 0.065f, 22);
+            float postWidth = Mathf.Max(0.09f, size.x * 0.17f);
+            AddRect(root.transform, "Gate Left Post", new Vector2(-size.x * 0.38f, 0f),
+                new Vector2(postWidth, size.y * 0.92f), frame, 19);
+            AddRect(root.transform, "Gate Right Post", new Vector2(size.x * 0.38f, 0f),
+                new Vector2(postWidth, size.y * 0.92f), frame, 19);
             for (int i = -2; i <= 2; i++)
             {
-                AddRect(root.transform, "Gate Bar " + i, new Vector2(i * size.x * 0.17f, 0f),
-                    new Vector2(size.x * 0.055f, size.y * 0.94f), new Color(0.08f, 0.24f, 0.36f), 18);
+                AddSketchLine(root.transform, "Gate Warning Slash " + i, new[]
+                {
+                    new Vector2(-size.x * 0.3f, i * size.y * 0.17f - size.y * 0.08f),
+                    new Vector2(size.x * 0.3f, i * size.y * 0.17f + size.y * 0.08f)
+                }, new Color(0.96f, 0.58f, 0.08f, 0.82f), 0.052f, 20);
             }
             AddRect(root.transform, "Gate Header", new Vector2(0f, size.y * 0.46f),
-                new Vector2(size.x * 1.18f, size.y * 0.12f), new Color(1f, 0.72f, 0.18f), 20);
+                new Vector2(size.x * 1.18f, size.y * 0.12f), new Color(1f, 0.68f, 0.12f), 23);
+            AddSketchRect(root.transform, "Gate Header Outline", new Vector2(0f, size.y * 0.46f),
+                new Vector2(size.x * 1.18f, size.y * 0.12f), new Color(0.4f, 0.2f, 0.02f), 0.048f, 25);
+            }
             BoxCollider2D collider = root.AddComponent<BoxCollider2D>();
             collider.size = size;
             StageGrainGate gate = root.AddComponent<StageGrainGate>();
@@ -99,6 +190,87 @@ namespace DrawBody.Prototype
             AddRect(parent, "Bowl Rim", position, new Vector2(width, 0.09f), new Color(0.9f, 0.32f, 0.24f), 24);
             AddRect(parent, "Bowl Cup", position + Vector2.down * 0.13f,
                 new Vector2(width * 0.72f, 0.22f), new Color(1f, 0.55f, 0.28f), 23);
+            AddSketchLine(parent, "Bowl Pencil Outline", new[]
+            {
+                position + new Vector2(-width * 0.5f, 0f),
+                position + new Vector2(-width * 0.34f, -0.2f),
+                position + new Vector2(width * 0.34f, -0.2f),
+                position + new Vector2(width * 0.5f, 0f)
+            }, new Color(0.45f, 0.12f, 0.04f), 0.04f, 26);
+        }
+
+        private static bool AddResourceSprite(
+            Transform parent,
+            string resourcePath,
+            string objectName,
+            Vector2 localSize,
+            int sortingOrder)
+        {
+            Sprite sprite = Resources.Load<Sprite>(resourcePath);
+            if (sprite == null || sprite.bounds.size.x <= 0f || sprite.bounds.size.y <= 0f) return false;
+            GameObject visual = new GameObject(objectName);
+            visual.transform.SetParent(parent, false);
+            visual.transform.localPosition = new Vector3(0f, 0f, -0.04f);
+            visual.transform.localScale = new Vector3(
+                localSize.x / sprite.bounds.size.x,
+                localSize.y / sprite.bounds.size.y,
+                1f);
+            SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = Color.white;
+            renderer.sortingOrder = sortingOrder;
+            return true;
+        }
+
+        private static void AddSketchRect(
+            Transform parent, string name, Vector2 center, Vector2 size, Color color, float width, int order)
+        {
+            Vector2 half = size * 0.5f;
+            AddSketchLine(parent, name, new[]
+            {
+                center + new Vector2(-half.x - 0.012f, -half.y + 0.01f),
+                center + new Vector2(half.x, -half.y - 0.008f),
+                center + new Vector2(half.x - 0.01f, half.y),
+                center + new Vector2(-half.x + 0.008f, half.y - 0.012f),
+                center + new Vector2(-half.x - 0.012f, -half.y + 0.01f)
+            }, color, width, order);
+        }
+
+        private static void AddHatching(
+            Transform parent, string name, Vector2 center, Vector2 size, Color color, int order, int count)
+        {
+            float halfX = size.x * 0.5f;
+            float halfY = size.y * 0.5f;
+            for (int i = 0; i < count; i++)
+            {
+                float t = count <= 1 ? 0.5f : i / (float)(count - 1);
+                float x = Mathf.Lerp(-halfX, halfX, t);
+                float run = Mathf.Min(size.x * 0.3f, size.y * 0.5f);
+                AddSketchLine(parent, name + " " + i, new[]
+                {
+                    center + new Vector2(Mathf.Max(-halfX, x - run), -halfY + 0.03f),
+                    center + new Vector2(Mathf.Min(halfX, x + run), halfY - 0.03f)
+                }, new Color(color.r, color.g, color.b, color.a * (0.72f + (i % 3) * 0.12f)), 0.018f, order);
+            }
+        }
+
+        private static void AddSketchLine(
+            Transform parent, string name, Vector2[] points, Color color, float width, int order)
+        {
+            GameObject child = new GameObject(name);
+            child.transform.SetParent(parent, false);
+            LineRenderer line = child.AddComponent<LineRenderer>();
+            line.useWorldSpace = false;
+            line.positionCount = points.Length;
+            line.numCapVertices = 5;
+            line.numCornerVertices = 4;
+            line.startWidth = width;
+            line.endWidth = width * 0.9f;
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+            line.startColor = color;
+            line.endColor = color;
+            line.sortingOrder = order;
+            for (int i = 0; i < points.Length; i++) line.SetPosition(i, points[i]);
         }
 
         internal static SpriteRenderer AddRect(

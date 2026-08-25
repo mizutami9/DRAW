@@ -561,6 +561,7 @@ namespace DrawBody.Prototype
 
             int spikeCount = Mathf.Clamp(Mathf.RoundToInt(size.x / Mathf.Max(0.28f, size.y * 0.72f)), 1, 48);
             float spikeWidth = size.x / spikeCount;
+            bool hasColoredPencilSpike = Resources.Load<Sprite>("StageObjects/NicoDraw/spike") != null;
             Color fill = new Color(0.94f, 0.22f, 0.18f, 0.88f);
             Color pencil = new Color(0.43f, 0.04f, 0.035f, 1f);
             for (int i = 0; i < spikeCount; i++)
@@ -568,6 +569,18 @@ namespace DrawBody.Prototype
                 float left = -size.x * 0.5f + i * spikeWidth;
                 float right = left + spikeWidth;
                 float center = (left + right) * 0.5f;
+                if (hasColoredPencilSpike
+                    && AddResourceSprite(
+                        root.transform,
+                        "StageObjects/NicoDraw/spike",
+                        new Vector2(spikeWidth, size.y),
+                        19,
+                        "Colored Pencil Spike",
+                        new Vector2(center, 0f)))
+                {
+                    continue;
+                }
+
                 Vector3[] vertices =
                 {
                     new Vector3(left, -size.y * 0.5f, -0.01f),
@@ -1010,31 +1023,110 @@ namespace DrawBody.Prototype
             float halfWidth = Mathf.Max(0.2f, data.size.x * 0.5f);
             float halfHeight = Mathf.Max(0.1f, data.size.y * 0.5f);
             float direction = Mathf.Cos(data.movementAngle * Mathf.Deg2Rad) >= 0f ? 1f : -1f;
-            Color beltInk = new Color(0.08f, 0.34f, 0.72f, 0.95f);
-            float arrowY = Mathf.Clamp(halfHeight * 0.15f, -0.08f, 0.08f);
-            int arrowCount = Mathf.Clamp(Mathf.RoundToInt(data.size.x / 1.2f), 2, 7);
-            for (int i = 0; i < arrowCount; i++)
+            float beltHalfHeight = halfHeight * 0.62f;
+            float rollerRadius = Mathf.Clamp(halfHeight * 0.42f, 0.065f, 0.24f);
+            float travelHalfWidth = Mathf.Max(0.05f, halfWidth - rollerRadius * 1.35f);
+            Color graphite = new Color(0.09f, 0.1f, 0.12f, 0.98f);
+            Color beltBlue = new Color(0.12f, 0.34f, 0.48f, 0.96f);
+            Color metal = new Color(0.78f, 0.56f, 0.18f, 0.96f);
+
+            AddMovableBase(
+                parent,
+                GetSquareSprite(),
+                new Color(0.13f, 0.2f, 0.24f, 0.94f),
+                new Vector2(data.size.x * 0.96f, beltHalfHeight * 2f));
+            AddDoodleLine("Conveyor Upper Belt Edge", parent, new[]
             {
-                float x = Mathf.Lerp(-halfWidth * 0.72f, halfWidth * 0.72f, (i + 0.5f) / arrowCount);
-                float tip = x + direction * Mathf.Min(0.28f, data.size.x / (arrowCount * 2.6f));
-                AddDoodleLine(
-                    "Conveyor Arrow",
-                    parent,
-                    new[]
-                    {
-                        new Vector3(x - direction * 0.16f, arrowY, -0.04f),
-                        new Vector3(tip, arrowY, -0.04f),
-                        new Vector3(tip - direction * 0.12f, arrowY + 0.1f, -0.04f),
-                        new Vector3(tip, arrowY, -0.04f),
-                        new Vector3(tip - direction * 0.12f, arrowY - 0.1f, -0.04f)
-                    },
-                    beltInk,
-                    0.045f,
-                    20);
+                new Vector3(-halfWidth * 0.97f, beltHalfHeight, -0.04f),
+                new Vector3(halfWidth * 0.97f, beltHalfHeight, -0.04f)
+            }, graphite, 0.065f, 21);
+            AddDoodleLine("Conveyor Lower Belt Edge", parent, new[]
+            {
+                new Vector3(-halfWidth * 0.97f, -beltHalfHeight, -0.04f),
+                new Vector3(halfWidth * 0.97f, -beltHalfHeight, -0.04f)
+            }, graphite, 0.065f, 21);
+
+            int treadCount = Mathf.Clamp(Mathf.CeilToInt(data.size.x / Mathf.Max(0.24f, data.size.y * 0.55f)), 4, 28);
+            Transform[] treads = new Transform[treadCount];
+            for (int i = 0; i < treadCount; i++)
+            {
+                GameObject tread = new GameObject("Conveyor Moving Tread");
+                tread.transform.SetParent(parent, false);
+                tread.transform.localPosition = new Vector3(
+                    Mathf.Lerp(-travelHalfWidth, travelHalfWidth, i / (float)treadCount),
+                    0f,
+                    -0.045f);
+                float lean = Mathf.Min(0.09f, data.size.y * 0.16f) * direction;
+                AddDoodleLine("Tread Pencil Stroke", tread.transform, new[]
+                {
+                    new Vector3(-lean, -beltHalfHeight * 0.74f, 0f),
+                    new Vector3(lean, beltHalfHeight * 0.74f, 0f)
+                }, beltBlue, 0.045f, 22);
+                treads[i] = tread.transform;
             }
 
-            AddDoodleCircleAt(parent, new Vector2(-halfWidth + halfHeight * 0.72f, 0f), halfHeight * 0.48f, beltInk, 0.04f, 19);
-            AddDoodleCircleAt(parent, new Vector2(halfWidth - halfHeight * 0.72f, 0f), halfHeight * 0.48f, beltInk, 0.04f, 19);
+            // Keep the travel direction readable even when the animated treads
+            // are momentarily between frames or the belt is viewed from afar.
+            Color directionInk = new Color(1f, 0.78f, 0.12f, 1f);
+            const float directionMarkInterval = 1.2f;
+            float directionMarkSpan = travelHalfWidth * 1.82f;
+            int directionMarkCount = Mathf.Clamp(
+                Mathf.FloorToInt(directionMarkSpan / directionMarkInterval) + 1,
+                1,
+                128);
+            float markHalfWidth = Mathf.Clamp(data.size.x / (directionMarkCount * 5.2f), 0.1f, 0.24f);
+            float markHalfHeight = Mathf.Clamp(beltHalfHeight * 0.5f, 0.045f, 0.13f);
+            float occupiedMarkWidth = (directionMarkCount - 1) * directionMarkInterval;
+            for (int i = 0; i < directionMarkCount; i++)
+            {
+                float x = -occupiedMarkWidth * 0.5f + i * directionMarkInterval;
+                float tipX = x + direction * markHalfWidth;
+                float tailX = x - direction * markHalfWidth;
+                AddDoodleLine("Conveyor Direction Mark", parent, new[]
+                {
+                    new Vector3(tailX, 0f, -0.07f),
+                    new Vector3(tipX, 0f, -0.07f),
+                    new Vector3(x, markHalfHeight, -0.07f),
+                    new Vector3(tipX, 0f, -0.07f),
+                    new Vector3(x, -markHalfHeight, -0.07f)
+                }, directionInk, 0.055f, 26);
+            }
+
+            Transform[] rollers = new Transform[2];
+            rollers[0] = AddConveyorRoller(parent, -travelHalfWidth, rollerRadius, metal, graphite);
+            rollers[1] = AddConveyorRoller(parent, travelHalfWidth, rollerRadius, metal, graphite);
+
+            StageConveyorVisualAnimator animator = parent.gameObject.AddComponent<StageConveyorVisualAnimator>();
+            animator.Configure(
+                treads,
+                rollers,
+                travelHalfWidth,
+                rollerRadius,
+                direction,
+                data.actionStrength > 0f ? data.actionStrength : 3f);
+        }
+
+        private static Transform AddConveyorRoller(
+            Transform parent,
+            float x,
+            float radius,
+            Color fill,
+            Color outline)
+        {
+            GameObject roller = new GameObject("Conveyor Turning Roller");
+            roller.transform.SetParent(parent, false);
+            roller.transform.localPosition = new Vector3(x, 0f, -0.055f);
+            AddMovableBase(roller.transform, GetCircleSprite(), fill, Vector2.one * radius * 1.72f);
+            AddDoodleCircleAt(roller.transform, Vector2.zero, radius, outline, 0.04f, 24);
+            AddDoodleLine("Roller Spokes", roller.transform, new[]
+            {
+                new Vector3(-radius * 0.72f, 0f, -0.02f),
+                new Vector3(radius * 0.72f, 0f, -0.02f),
+                new Vector3(0f, 0f, -0.02f),
+                new Vector3(0f, -radius * 0.72f, -0.02f),
+                new Vector3(0f, radius * 0.72f, -0.02f)
+            }, outline, 0.035f, 25);
+            return roller.transform;
         }
 
         public void RefreshBridgeConnectionVisuals(IList<StageObjectData> objects, Transform parent)
@@ -1612,6 +1704,29 @@ namespace DrawBody.Prototype
             selectionCollider.size = data.size;
             selectionCollider.isTrigger = true;
 
+            string dropperResource = data.type == StageObjectType.BoxDropper
+                ? "StageObjects/NicoDraw/box-dropper"
+                : data.type == StageObjectType.SpikeDropper
+                    ? "StageObjects/NicoDraw/spike-dropper"
+                    : data.type == StageObjectType.BombDropper
+                        ? "StageObjects/NicoDraw/bomb-dropper"
+                        : "StageObjects/NicoDraw/enemy-dropper";
+            string dropperArtworkName = data.type == StageObjectType.BoxDropper
+                ? "Colored Pencil Box Dropper"
+                : data.type == StageObjectType.SpikeDropper
+                    ? "Colored Pencil Spike Dropper"
+                    : data.type == StageObjectType.BombDropper
+                        ? "Colored Pencil Bomb Dropper"
+                        : "Colored Pencil Enemy Dropper";
+            bool usesDropperArtwork = AddResourceSprite(
+                obj.transform,
+                dropperResource,
+                data.size,
+                24,
+                dropperArtworkName);
+
+            if (!usesDropperArtwork)
+            {
             Color casing = data.type == StageObjectType.EnemyDropper
                 ? new Color(0.68f, 0.28f, 0.78f, 1f)
                 : new Color(0.94f, 0.56f, 0.16f, 1f);
@@ -1655,6 +1770,13 @@ namespace DrawBody.Prototype
             {
                 AddBoxDropperPatternPreview(obj.transform, data.spawnPattern, data.size);
             }
+            }
+
+            if (!usesDropperArtwork)
+            {
+                WrapDropperArtwork(obj.transform, dropperArtworkName);
+            }
+            AddDropperDispenseAnimation(obj.transform, data.size, dropperArtworkName);
 
             AddEditorMetadata(obj, data);
             if (data.type == StageObjectType.EnemyDropper)
@@ -1697,6 +1819,50 @@ namespace DrawBody.Prototype
                     data.spawnBoxSize);
             }
             return obj;
+        }
+
+        private static void AddDropperDispenseAnimation(
+            Transform parent,
+            Vector2 size,
+            string artworkName)
+        {
+            Transform artwork = parent != null ? parent.Find(artworkName) : null;
+            if (artwork == null) return;
+
+            GameObject puffRoot = new GameObject("Dropper Pencil Puff");
+            puffRoot.transform.SetParent(parent, false);
+            puffRoot.transform.localPosition = new Vector3(0f, -size.y * 0.54f, -0.09f);
+            float radius = Mathf.Clamp(Mathf.Min(size.x, size.y) * 0.055f, 0.045f, 0.11f);
+            Color puffInk = new Color(0.32f, 0.24f, 0.16f, 0.82f);
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject puff = new GameObject("Pencil Puff Stroke");
+                puff.transform.SetParent(puffRoot.transform, false);
+                puff.transform.localPosition = new Vector3((i - 1) * radius * 1.55f, -Mathf.Abs(i - 1) * radius * 0.28f, 0f);
+                AddDoodleCircleAt(puff.transform, Vector2.zero, radius * (i == 1 ? 1.08f : 0.82f), puffInk, 0.035f, 30);
+            }
+            puffRoot.SetActive(false);
+
+            StageDropperVisualAnimator animator = parent.gameObject.AddComponent<StageDropperVisualAnimator>();
+            animator.Configure(artwork, puffRoot.transform, Mathf.Max(0.12f, size.y * 0.16f));
+        }
+
+        private static void WrapDropperArtwork(Transform parent, string artworkName)
+        {
+            if (parent == null || parent.Find(artworkName) != null) return;
+            GameObject artworkObject = new GameObject(artworkName);
+            artworkObject.transform.SetParent(parent, false);
+            Transform artwork = artworkObject.transform;
+            List<Transform> visualChildren = new List<Transform>();
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                Transform child = parent.GetChild(i);
+                if (child != artwork) visualChildren.Add(child);
+            }
+            for (int i = 0; i < visualChildren.Count; i++)
+            {
+                visualChildren[i].SetParent(artwork, false);
+            }
         }
 
         private static void AddEnemyDropperPreview(Transform parent, int pattern, Vector2 size)
@@ -1751,26 +1917,35 @@ namespace DrawBody.Prototype
                 new Vector3(halfWidth * 0.18f, -halfHeight * 0.24f, -0.06f)
             }, beamColor, 0.065f, 22);
 
-            float gaugeWidth = Mathf.Max(0.48f, data.size.x * 0.62f);
-            float gaugeHeight = Mathf.Clamp(data.size.y * 0.13f, 0.09f, 0.14f);
-            float gaugeY = -halfHeight * 0.68f;
+            AddResourceSprite(
+                obj.transform,
+                "StageObjects/NicoDraw/beam-emitter",
+                new Vector2(data.size.x * 1.12f, data.size.y * 1.12f),
+                30,
+                "Colored Pencil Beam Emitter");
+
+            // The charge state is gameplay information, so give it most of the
+            // device width instead of hiding it in a small decorative slit.
+            float gaugeWidth = Mathf.Max(0.72f, data.size.x * 0.78f);
+            float gaugeHeight = Mathf.Clamp(data.size.y * 0.2f, 0.14f, 0.23f);
+            float gaugeY = -halfHeight * 0.58f;
             GameObject gaugeBackObject = new GameObject("Beam Charge Gauge Back");
             gaugeBackObject.transform.SetParent(obj.transform, false);
             gaugeBackObject.transform.localPosition = new Vector3(0f, gaugeY, -0.075f);
-            gaugeBackObject.transform.localScale = new Vector3(gaugeWidth + 0.08f, gaugeHeight + 0.06f, 1f);
+            gaugeBackObject.transform.localScale = new Vector3(gaugeWidth + 0.14f, gaugeHeight + 0.11f, 1f);
             SpriteRenderer gaugeBack = gaugeBackObject.AddComponent<SpriteRenderer>();
             gaugeBack.sprite = GetSquareSprite();
             gaugeBack.color = new Color(0.055f, 0.075f, 0.09f, 0.96f);
-            gaugeBack.sortingOrder = 23;
+            gaugeBack.sortingOrder = 33;
 
             GameObject gaugeFillObject = new GameObject("Beam Charge Gauge Fill");
             gaugeFillObject.transform.SetParent(obj.transform, false);
-            gaugeFillObject.transform.localPosition = new Vector3(-gaugeWidth * 0.175f, gaugeY, -0.08f);
-            gaugeFillObject.transform.localScale = new Vector3(gaugeWidth * 0.65f, gaugeHeight, 1f);
+            gaugeFillObject.transform.localPosition = new Vector3(-gaugeWidth * 0.5f, gaugeY, -0.08f);
+            gaugeFillObject.transform.localScale = new Vector3(0.001f, gaugeHeight, 1f);
             SpriteRenderer gaugeFill = gaugeFillObject.AddComponent<SpriteRenderer>();
             gaugeFill.sprite = GetSquareSprite();
             gaugeFill.color = new Color(1f, 0.68f, 0.08f, 1f);
-            gaugeFill.sortingOrder = 24;
+            gaugeFill.sortingOrder = 34;
 
             for (int tick = 1; tick < 4; tick++)
             {
@@ -1779,17 +1954,18 @@ namespace DrawBody.Prototype
                 {
                     new Vector3(tickX, gaugeY - gaugeHeight * 0.6f, -0.085f),
                     new Vector3(tickX, gaugeY + gaugeHeight * 0.6f, -0.085f)
-                }, new Color(0.04f, 0.055f, 0.065f, 0.82f), 0.014f, 25);
+                }, new Color(0.04f, 0.055f, 0.065f, 0.82f), 0.014f, 35);
             }
 
             GameObject readyLampObject = new GameObject("Beam Ready Lamp");
             readyLampObject.transform.SetParent(obj.transform, false);
             readyLampObject.transform.localPosition = new Vector3(-halfWidth * 0.38f, halfHeight * 0.3f, -0.085f);
-            readyLampObject.transform.localScale = Vector3.one * Mathf.Clamp(data.size.y * 0.13f, 0.1f, 0.16f);
+            float readyLampSize = Mathf.Clamp(data.size.y * 0.18f, 0.14f, 0.24f);
+            readyLampObject.transform.localScale = Vector3.one * readyLampSize;
             SpriteRenderer readyLamp = readyLampObject.AddComponent<SpriteRenderer>();
             readyLamp.sprite = GetCircleSprite();
             readyLamp.color = new Color(0.18f, 0.4f, 0.46f, 1f);
-            readyLamp.sortingOrder = 25;
+            readyLamp.sortingOrder = 36;
 
             GameObject muzzle = new GameObject("Beam Muzzle");
             muzzle.transform.SetParent(obj.transform, false);
@@ -1826,6 +2002,7 @@ namespace DrawBody.Prototype
                 gaugeFill,
                 readyLamp,
                 gaugeWidth,
+                readyLampSize,
                 data.actionStrength,
                 data.spawnPattern == 1,
                 data.spawnBoxSize);
@@ -1874,6 +2051,31 @@ namespace DrawBody.Prototype
                 new Vector3(0f, halfHeight * 0.13f, -0.06f)
             }, missileInk, 0.045f, 23);
 
+            AddResourceSprite(
+                obj.transform,
+                "StageObjects/NicoDraw/missile-launcher",
+                new Vector2(data.size.x * 1.12f, data.size.y * 1.18f),
+                30,
+                "Colored Pencil Missile Launcher");
+
+            GameObject launcherTube = new GameObject("Missile Launcher Tube");
+            launcherTube.transform.SetParent(obj.transform, false);
+            launcherTube.transform.localPosition = new Vector3(halfWidth * 0.08f, 0f, -0.07f);
+            launcherTube.transform.localScale = new Vector3(data.size.x * 0.74f, data.size.y * 0.34f, 1f);
+            SpriteRenderer tubeRenderer = launcherTube.AddComponent<SpriteRenderer>();
+            tubeRenderer.sprite = GetSquareSprite();
+            tubeRenderer.color = new Color(0.22f, 0.13f, 0.18f, 0.92f);
+            tubeRenderer.sortingOrder = 22;
+
+            GameObject missileReadyLampObject = new GameObject("Missile Ready Lamp");
+            missileReadyLampObject.transform.SetParent(obj.transform, false);
+            missileReadyLampObject.transform.localPosition = new Vector3(-halfWidth * 0.35f, halfHeight * 0.33f, -0.09f);
+            missileReadyLampObject.transform.localScale = Vector3.one * Mathf.Clamp(data.size.y * 0.17f, 0.13f, 0.22f);
+            SpriteRenderer missileReadyLamp = missileReadyLampObject.AddComponent<SpriteRenderer>();
+            missileReadyLamp.sprite = GetCircleSprite();
+            missileReadyLamp.color = new Color(0.95f, 0.32f, 0.1f, 1f);
+            missileReadyLamp.sortingOrder = 36;
+
             GameObject muzzle = new GameObject("Missile Muzzle");
             muzzle.transform.SetParent(obj.transform, false);
             muzzle.transform.localPosition = new Vector3(halfWidth + 0.18f, 0f, -0.08f);
@@ -1889,6 +2091,7 @@ namespace DrawBody.Prototype
             launcher.Configure(
                 parent,
                 muzzle.transform,
+                missileReadyLamp,
                 data.actionStrength,
                 data.movementSpeed > 0f ? data.movementSpeed : 8f);
             AddEditorMetadata(obj, data);
@@ -2136,6 +2339,10 @@ namespace DrawBody.Prototype
             switch (type)
             {
                 case StageObjectType.WoodBox:
+                    if (AddResourceSprite(parent, "StageObjects/NicoDraw/wood-box", Vector2.one, 20, "Colored Pencil Wood Box"))
+                    {
+                        break;
+                    }
                     // Keep the box opaque and readable without creating roughly one
                     // hundred tiny LineRenderer objects per crate. Large crate piles
                     // otherwise become CPU- and draw-call-heavy.
@@ -2147,27 +2354,56 @@ namespace DrawBody.Prototype
                     AddDoodleLine("Wood Brace B", parent, new[] { new Vector3(-0.42f, 0.4f), new Vector3(0.42f, -0.4f) }, new Color(0.28f, 0.13f, 0.04f), 0.04f, 19);
                     break;
                 case StageObjectType.IronBox:
-                    AddMovableBase(parent, GetSquareSprite(), new Color(0.48f, 0.53f, 0.58f, 0.9f));
-                    AddSketchBoxOutline(parent, Vector2.one, new Color(0.12f, 0.16f, 0.2f), 0.06f);
+                    if (AddResourceSprite(parent, "StageObjects/NicoDraw/iron-box",
+                        new Vector2(1.13f, 1.08f), 22, "Colored Pencil Iron Box")) break;
+                    AddMovableBase(parent, GetSquareSprite(), new Color(0.66f, 0.7f, 0.73f, 0.96f));
+                    AddPencilFillLocal(parent, Vector2.one, new Color(0.18f, 0.27f, 0.34f, 1f));
+                    AddSketchBoxOutline(parent, Vector2.one, new Color(0.1f, 0.14f, 0.17f), 0.068f);
                     AddDoodleLine("Iron Inset", parent, new[]
                     {
                         new Vector3(-0.34f, -0.34f), new Vector3(0.34f, -0.34f),
                         new Vector3(0.34f, 0.34f), new Vector3(-0.34f, 0.34f),
                         new Vector3(-0.34f, -0.34f)
-                    }, new Color(0.22f, 0.27f, 0.31f), 0.035f, 18);
+                    }, new Color(0.22f, 0.27f, 0.31f), 0.042f, 18);
+                    AddDoodleLine("Iron Diagonal Brace A", parent, new[]
+                    {
+                        new Vector3(-0.31f, -0.3f), new Vector3(0.29f, 0.31f)
+                    }, new Color(0.25f, 0.3f, 0.34f, 0.88f), 0.032f, 18);
+                    AddDoodleLine("Iron Diagonal Brace B", parent, new[]
+                    {
+                        new Vector3(-0.3f, 0.31f), new Vector3(0.31f, -0.29f)
+                    }, new Color(0.25f, 0.3f, 0.34f, 0.88f), 0.032f, 18);
                     AddRivets(parent, new Color(0.12f, 0.16f, 0.2f));
                     break;
                 case StageObjectType.Ball:
-                    AddMovableBase(parent, GetCircleSprite(), new Color(0.22f, 0.53f, 0.9f, 0.88f));
-                    AddDoodleCircle(parent, 0.48f, new Color(0.06f, 0.2f, 0.5f), 0.055f);
+                    if (AddResourceSprite(parent, "StageObjects/NicoDraw/ball",
+                        new Vector2(1.245f, 1.167f), 22, "Colored Pencil Ball")) break;
+                    AddMovableBase(parent, GetCircleSprite(), new Color(0.28f, 0.66f, 0.94f, 0.94f));
+                    AddDoodleCircle(parent, 0.48f, new Color(0.04f, 0.2f, 0.48f), 0.062f);
+                    AddDoodleCircleAt(parent, new Vector2(0.012f, -0.008f), 0.445f,
+                        new Color(0.12f, 0.43f, 0.76f, 0.76f), 0.025f, 17);
                     AddDoodleLine("Ball Curve", parent, new[]
                     {
                         new Vector3(-0.36f, -0.08f), new Vector3(-0.12f, 0.05f),
                         new Vector3(0.12f, 0.12f), new Vector3(0.35f, 0.06f)
                     }, new Color(0.82f, 0.92f, 1f, 0.9f), 0.04f, 18);
+                    AddDoodleLine("Ball Pencil Shade A", parent, new[]
+                    {
+                        new Vector3(-0.3f, -0.26f), new Vector3(0.22f, 0.27f)
+                    }, new Color(0.04f, 0.3f, 0.67f, 0.42f), 0.027f, 17);
+                    AddDoodleLine("Ball Pencil Shade B", parent, new[]
+                    {
+                        new Vector3(-0.38f, -0.08f), new Vector3(0.08f, 0.38f)
+                    }, new Color(0.04f, 0.3f, 0.67f, 0.34f), 0.025f, 17);
+                    AddDoodleLine("Ball Pencil Shine", parent, new[]
+                    {
+                        new Vector3(-0.22f, 0.3f), new Vector3(-0.08f, 0.39f)
+                    }, new Color(0.94f, 0.98f, 1f, 0.92f), 0.045f, 19);
                     break;
                 case StageObjectType.Barrel:
-                    AddMovableBase(parent, GetCircleSprite(), new Color(0.55f, 0.29f, 0.11f, 0.9f), new Vector2(0.82f, 1f));
+                    if (AddResourceSprite(parent, "StageObjects/NicoDraw/barrel",
+                        new Vector2(0.91f, 1.14f), 22, "Colored Pencil Barrel")) break;
+                    AddMovableBase(parent, GetCircleSprite(), new Color(0.67f, 0.35f, 0.12f, 0.96f), new Vector2(0.82f, 1f));
                     AddDoodleLine("Barrel Outline", parent, new[]
                     {
                         new Vector3(-0.3f, -0.48f), new Vector3(-0.42f, -0.28f),
@@ -2176,9 +2412,18 @@ namespace DrawBody.Prototype
                         new Vector3(0.42f, -0.28f), new Vector3(0.3f, -0.48f),
                         new Vector3(-0.3f, -0.48f)
                     }, dark, 0.055f, 18);
-                    AddDoodleLine("Barrel Top Band", parent, new[] { new Vector3(-0.38f, 0.28f), new Vector3(0.38f, 0.28f) }, new Color(0.18f, 0.19f, 0.2f), 0.075f, 19);
-                    AddDoodleLine("Barrel Bottom Band", parent, new[] { new Vector3(-0.38f, -0.28f), new Vector3(0.38f, -0.28f) }, new Color(0.18f, 0.19f, 0.2f), 0.075f, 19);
-                    AddDoodleLine("Barrel Wood Seam", parent, new[] { new Vector3(0f, -0.46f), new Vector3(0f, 0.46f) }, new Color(0.34f, 0.16f, 0.05f), 0.025f, 18);
+                    AddDoodleLine("Barrel Loose Outline", parent, new[]
+                    {
+                        new Vector3(-0.28f, -0.47f), new Vector3(-0.4f, -0.25f),
+                        new Vector3(-0.39f, 0.3f), new Vector3(-0.27f, 0.46f),
+                        new Vector3(0.28f, 0.47f), new Vector3(0.4f, 0.26f),
+                        new Vector3(0.39f, -0.3f), new Vector3(0.28f, -0.47f)
+                    }, new Color(0.31f, 0.14f, 0.045f, 0.7f), 0.027f, 17);
+                    AddDoodleLine("Barrel Top Band", parent, new[] { new Vector3(-0.38f, 0.28f), new Vector3(0.38f, 0.27f) }, new Color(0.18f, 0.19f, 0.2f), 0.082f, 19);
+                    AddDoodleLine("Barrel Bottom Band", parent, new[] { new Vector3(-0.38f, -0.28f), new Vector3(0.38f, -0.27f) }, new Color(0.18f, 0.19f, 0.2f), 0.082f, 19);
+                    AddDoodleLine("Barrel Wood Seam", parent, new[] { new Vector3(0f, -0.44f), new Vector3(0.015f, 0.44f) }, new Color(0.34f, 0.16f, 0.05f), 0.03f, 18);
+                    AddDoodleLine("Barrel Pencil Shade A", parent, new[] { new Vector3(-0.3f, -0.2f), new Vector3(0.25f, 0.23f) }, new Color(0.35f, 0.15f, 0.04f, 0.4f), 0.025f, 17);
+                    AddDoodleLine("Barrel Pencil Shade B", parent, new[] { new Vector3(-0.29f, 0.03f), new Vector3(0.24f, 0.43f) }, new Color(0.35f, 0.15f, 0.04f, 0.35f), 0.023f, 17);
                     break;
                 case StageObjectType.Rock:
                 case StageObjectType.FallingRock:
@@ -2196,21 +2441,36 @@ namespace DrawBody.Prototype
                     AddDoodleLine("Float Arrow", parent, new[] { new Vector3(0f, -0.25f), new Vector3(0f, 0.27f), new Vector3(-0.17f, 0.1f), new Vector3(0f, 0.27f), new Vector3(0.17f, 0.1f) }, Color.white, 0.045f, 19);
                     break;
                 case StageObjectType.RubberBox:
+                    if (AddResourceSprite(parent, "StageObjects/NicoDraw/rubber-box",
+                        Vector2.one, 20, "Colored Pencil Rubber Box"))
+                    {
+                        break;
+                    }
                     AddMovableBase(parent, GetSquareSprite(), new Color(0.95f, 0.46f, 0.28f, 0.86f));
                     AddSketchBoxOutline(parent, Vector2.one, new Color(0.55f, 0.15f, 0.08f), 0.055f);
                     AddDoodleLine("Rubber Zigzag", parent, new[] { new Vector3(-0.38f, 0.05f), new Vector3(-0.16f, 0.22f), new Vector3(0.05f, -0.14f), new Vector3(0.35f, 0.12f) }, new Color(1f, 0.86f, 0.5f), 0.06f, 19);
                     break;
                 case StageObjectType.Bomb:
-                    AddMovableBase(parent, GetCircleSprite(), new Color(0.12f, 0.12f, 0.14f, 0.95f), new Vector2(0.9f, 0.9f));
-                    AddDoodleCircleAt(parent, new Vector2(0f, -0.05f), 0.4f, Color.black, 0.055f, 18);
-                    AddDoodleLine("Bomb Fuse", parent, new[] { new Vector3(0.2f, 0.28f), new Vector3(0.32f, 0.48f), new Vector3(0.45f, 0.42f) }, new Color(0.36f, 0.2f, 0.08f), 0.055f, 20);
-                    AddDoodleLine("Bomb Spark", parent, new[] { new Vector3(0.41f, 0.39f), new Vector3(0.49f, 0.49f), new Vector3(0.45f, 0.36f), new Vector3(0.53f, 0.4f) }, new Color(1f, 0.64f, 0.08f), 0.045f, 21);
+                    AddMovableBase(parent, GetCircleSprite(), new Color(0.16f, 0.15f, 0.18f, 0.98f), new Vector2(0.88f, 0.88f));
+                    AddDoodleCircleAt(parent, new Vector2(0f, -0.05f), 0.405f, new Color(0.035f, 0.03f, 0.045f), 0.067f, 18);
+                    AddDoodleCircleAt(parent, new Vector2(0.012f, -0.035f), 0.37f, new Color(0.36f, 0.34f, 0.4f, 0.66f), 0.024f, 17);
+                    AddDoodleLine("Bomb Pencil Shade A", parent, new[] { new Vector3(-0.3f, -0.18f), new Vector3(0.2f, 0.25f) }, new Color(0.72f, 0.7f, 0.78f, 0.22f), 0.03f, 17);
+                    AddDoodleLine("Bomb Pencil Shade B", parent, new[] { new Vector3(-0.34f, 0.02f), new Vector3(0.08f, 0.36f) }, new Color(0.72f, 0.7f, 0.78f, 0.18f), 0.025f, 17);
+                    AddDoodleLine("Bomb Fuse Collar", parent, new[]
+                    {
+                        new Vector3(0.1f, 0.3f), new Vector3(0.26f, 0.27f),
+                        new Vector3(0.31f, 0.38f), new Vector3(0.16f, 0.42f)
+                    }, new Color(0.18f, 0.13f, 0.08f), 0.075f, 20);
+                    AddDoodleLine("Bomb Fuse", parent, new[] { new Vector3(0.21f, 0.39f), new Vector3(0.32f, 0.52f), new Vector3(0.46f, 0.45f) }, new Color(0.42f, 0.22f, 0.07f), 0.06f, 20);
+                    AddDoodleLine("Bomb Spark", parent, new[] { new Vector3(0.42f, 0.42f), new Vector3(0.51f, 0.55f), new Vector3(0.47f, 0.4f), new Vector3(0.57f, 0.45f) }, new Color(1f, 0.57f, 0.04f), 0.055f, 21);
                     break;
                 case StageObjectType.PickupFuseBomb:
-                    AddMovableBase(parent, GetCircleSprite(), new Color(0.08f, 0.18f, 0.3f, 0.96f), new Vector2(0.9f, 0.9f));
-                    AddDoodleCircleAt(parent, new Vector2(0f, -0.05f), 0.4f, new Color(0.02f, 0.08f, 0.16f), 0.055f, 18);
-                    AddDoodleLine("Pickup Bomb Fuse", parent, new[] { new Vector3(0.2f, 0.28f), new Vector3(0.32f, 0.48f), new Vector3(0.45f, 0.42f) }, new Color(0.36f, 0.2f, 0.08f), 0.055f, 20);
-                    AddDoodleCircleAt(parent, new Vector2(-0.2f, 0.02f), 0.1f, new Color(0.25f, 0.72f, 1f, 1f), 0.04f, 21);
+                    AddMovableBase(parent, GetCircleSprite(), new Color(0.08f, 0.3f, 0.54f, 0.97f), new Vector2(0.88f, 0.88f));
+                    AddDoodleCircleAt(parent, new Vector2(0f, -0.05f), 0.405f, new Color(0.02f, 0.1f, 0.2f), 0.067f, 18);
+                    AddDoodleCircleAt(parent, new Vector2(0.012f, -0.035f), 0.37f, new Color(0.2f, 0.62f, 0.9f, 0.54f), 0.024f, 17);
+                    AddDoodleLine("Pickup Bomb Pencil Shade", parent, new[] { new Vector3(-0.32f, -0.16f), new Vector3(0.16f, 0.27f) }, new Color(0.45f, 0.82f, 1f, 0.32f), 0.03f, 17);
+                    AddDoodleLine("Pickup Bomb Fuse", parent, new[] { new Vector3(0.18f, 0.34f), new Vector3(0.31f, 0.51f), new Vector3(0.46f, 0.44f) }, new Color(0.42f, 0.22f, 0.07f), 0.06f, 20);
+                    AddDoodleCircleAt(parent, new Vector2(-0.19f, 0.02f), 0.105f, new Color(0.34f, 0.82f, 1f, 1f), 0.045f, 21);
                     break;
                 case StageObjectType.Battery:
                     AddMovableBase(parent, GetSquareSprite(), new Color(0.54f, 0.78f, 0.25f, 0.88f), new Vector2(0.72f, 0.94f));
@@ -2241,6 +2501,16 @@ namespace DrawBody.Prototype
 
         private static void AddTriangleBoxVisual(Transform parent)
         {
+            if (AddResourceSprite(
+                parent,
+                "StageObjects/NicoDraw/triangle-box",
+                new Vector2(0.98f, 0.97f),
+                20,
+                "Colored Pencil Triangle Box"))
+            {
+                return;
+            }
+
             Color fill = new Color(0.76f, 0.48f, 0.2f, 0.96f);
             Color outline = new Color(0.3f, 0.14f, 0.045f, 1f);
             Vector3 left = new Vector3(-0.49f, -0.48f, 0.02f);
@@ -2336,7 +2606,14 @@ namespace DrawBody.Prototype
             obj.transform.position = data.position;
             obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
 
-            AddDoodleCircle(obj.transform, Mathf.Max(0.28f, data.size.x * 0.38f), stroke, 0.055f);
+            bool hasCoinArt = data.type == StageObjectType.Coin
+                && AddResourceSprite(obj.transform, "StageObjects/NicoDraw/coin",
+                    new Vector2(Mathf.Max(0.56f, data.size.x * 0.76f), Mathf.Max(0.56f, data.size.y * 0.76f)),
+                    20, "Colored Pencil Coin");
+            if (!hasCoinArt)
+            {
+                AddDoodleCircle(obj.transform, Mathf.Max(0.28f, data.size.x * 0.38f), stroke, 0.055f);
+            }
 
             CircleCollider2D collider = obj.AddComponent<CircleCollider2D>();
             collider.radius = Mathf.Max(0.35f, data.size.x * 0.45f);
@@ -2369,6 +2646,12 @@ namespace DrawBody.Prototype
             collider.size = new Vector2(0.5f, 0.92f);
 
             obj.AddComponent<CarryableObject>();
+
+            if (AddResourceSprite(obj.transform, "StageObjects/NicoDraw/key", new Vector2(0.72f, 1.02f), 22, "Colored Pencil Key"))
+            {
+                AddEditorMetadata(obj, data);
+                return obj;
+            }
 
             Color gold = new Color(1f, 0.7f, 0.02f, 1f);
             AddDoodleCircleAt(obj.transform, new Vector2(0f, 0.27f), 0.22f, gold, 0.065f, 22);
@@ -2413,7 +2696,10 @@ namespace DrawBody.Prototype
             trigger.size = new Vector2(0.95f, 1.1f);
             trigger.isTrigger = true;
 
-            AddFilledKeyholeSilhouette(obj.transform);
+            if (!AddResourceSprite(obj.transform, "StageObjects/NicoDraw/keyhole", new Vector2(0.72f, 0.98f), 22, "Graphite Keyhole"))
+            {
+                AddFilledKeyholeSilhouette(obj.transform);
+            }
             AddEditorMetadata(obj, data);
             return obj;
         }
@@ -2431,10 +2717,32 @@ namespace DrawBody.Prototype
                 1f);
             obj.layer = groundLayer;
 
-            SpriteRenderer body = obj.AddComponent<SpriteRenderer>();
-            body.sprite = GetScaleBodySprite();
-            body.color = new Color(0.96f, 0.77f, 0.24f, 0.94f);
-            body.sortingOrder = 8;
+            SpriteRenderer body;
+            Sprite scaleArt = Resources.Load<Sprite>("StageObjects/NicoDraw/ink-scale");
+            bool hasColoredPencilScaleArt = scaleArt != null
+                && scaleArt.bounds.size.x > 0f
+                && scaleArt.bounds.size.y > 0f;
+            if (hasColoredPencilScaleArt)
+            {
+                GameObject artObject = new GameObject("Colored Pencil Ink Scale");
+                artObject.transform.SetParent(obj.transform, false);
+                artObject.transform.localPosition = new Vector3(0f, 0f, -0.025f);
+                artObject.transform.localScale = new Vector3(
+                    1.12f / scaleArt.bounds.size.x,
+                    1.06f / scaleArt.bounds.size.y,
+                    1f);
+                body = artObject.AddComponent<SpriteRenderer>();
+                body.sprite = scaleArt;
+                body.color = Color.white;
+                body.sortingOrder = 8;
+            }
+            else
+            {
+                body = obj.AddComponent<SpriteRenderer>();
+                body.sprite = GetScaleBodySprite();
+                body.color = new Color(0.96f, 0.77f, 0.24f, 0.94f);
+                body.sortingOrder = 8;
+            }
 
             BoxCollider2D platform = obj.AddComponent<BoxCollider2D>();
             platform.size = new Vector2(1.08f, 0.16f);
@@ -2447,51 +2755,54 @@ namespace DrawBody.Prototype
             weighingArea.size = new Vector2(0.94f, 8f);
             weighingArea.offset = new Vector2(0f, 4.48f);
 
-            GameObject plateObject = new GameObject("Scale Top Plate");
-            plateObject.transform.SetParent(obj.transform, false);
-            plateObject.transform.localPosition = new Vector3(0f, 0.43f, -0.025f);
-            plateObject.transform.localScale = new Vector3(1.08f, 0.16f, 1f);
-            SpriteRenderer plate = plateObject.AddComponent<SpriteRenderer>();
-            plate.sprite = GetSquareSprite();
-            plate.color = new Color(0.84f, 0.86f, 0.82f, 1f);
-            plate.sortingOrder = 18;
-
-            AddDoodleLine("Scale Plate Outline", obj.transform, new[]
+            if (!hasColoredPencilScaleArt)
             {
-                new Vector3(-0.54f, 0.35f), new Vector3(-0.54f, 0.51f),
-                new Vector3(0.54f, 0.51f), new Vector3(0.54f, 0.35f),
-                new Vector3(-0.54f, 0.35f)
-            }, new Color(0.1f, 0.1f, 0.09f), 0.035f, 20);
-            AddDoodleLine("Scale Body Outline", obj.transform, new[]
-            {
-                new Vector3(-0.49f, -0.48f), new Vector3(0.49f, -0.48f),
-                new Vector3(0.4f, 0.35f), new Vector3(-0.4f, 0.35f),
-                new Vector3(-0.49f, -0.48f)
-            }, new Color(0.14f, 0.11f, 0.05f), 0.045f, 19);
+                GameObject plateObject = new GameObject("Scale Top Plate");
+                plateObject.transform.SetParent(obj.transform, false);
+                plateObject.transform.localPosition = new Vector3(0f, 0.43f, -0.025f);
+                plateObject.transform.localScale = new Vector3(1.08f, 0.16f, 1f);
+                SpriteRenderer plate = plateObject.AddComponent<SpriteRenderer>();
+                plate.sprite = GetSquareSprite();
+                plate.color = new Color(0.84f, 0.86f, 0.82f, 1f);
+                plate.sortingOrder = 18;
 
-            GameObject displayObject = new GameObject("Scale Display Window");
-            displayObject.transform.SetParent(obj.transform, false);
-            displayObject.transform.localPosition = new Vector3(0f, 0.08f, -0.035f);
-            displayObject.transform.localScale = new Vector3(0.72f, 0.34f, 1f);
-            SpriteRenderer display = displayObject.AddComponent<SpriteRenderer>();
-            display.sprite = GetSquareSprite();
-            display.color = new Color(0.98f, 0.97f, 0.84f, 1f);
-            display.sortingOrder = 20;
-            AddDoodleLine("Scale Display Outline", obj.transform, new[]
-            {
-                new Vector3(-0.36f, -0.09f), new Vector3(0.36f, -0.09f),
-                new Vector3(0.36f, 0.25f), new Vector3(-0.36f, 0.25f),
-                new Vector3(-0.36f, -0.09f)
-            }, new Color(0.12f, 0.11f, 0.08f), 0.025f, 22);
+                AddDoodleLine("Scale Plate Outline", obj.transform, new[]
+                {
+                    new Vector3(-0.54f, 0.35f), new Vector3(-0.54f, 0.51f),
+                    new Vector3(0.54f, 0.51f), new Vector3(0.54f, 0.35f),
+                    new Vector3(-0.54f, 0.35f)
+                }, new Color(0.1f, 0.1f, 0.09f), 0.035f, 20);
+                AddDoodleLine("Scale Body Outline", obj.transform, new[]
+                {
+                    new Vector3(-0.49f, -0.48f), new Vector3(0.49f, -0.48f),
+                    new Vector3(0.4f, 0.35f), new Vector3(-0.4f, 0.35f),
+                    new Vector3(-0.49f, -0.48f)
+                }, new Color(0.14f, 0.11f, 0.05f), 0.045f, 19);
 
-            GameObject gaugeBackObject = new GameObject("Scale Gauge Back");
-            gaugeBackObject.transform.SetParent(obj.transform, false);
-            gaugeBackObject.transform.localPosition = new Vector3(0f, -0.29f, -0.035f);
-            gaugeBackObject.transform.localScale = new Vector3(0.64f, 0.1f, 1f);
-            SpriteRenderer gaugeBack = gaugeBackObject.AddComponent<SpriteRenderer>();
-            gaugeBack.sprite = GetSquareSprite();
-            gaugeBack.color = new Color(0.12f, 0.11f, 0.09f, 0.92f);
-            gaugeBack.sortingOrder = 20;
+                GameObject displayObject = new GameObject("Scale Display Window");
+                displayObject.transform.SetParent(obj.transform, false);
+                displayObject.transform.localPosition = new Vector3(0f, 0.08f, -0.035f);
+                displayObject.transform.localScale = new Vector3(0.72f, 0.34f, 1f);
+                SpriteRenderer display = displayObject.AddComponent<SpriteRenderer>();
+                display.sprite = GetSquareSprite();
+                display.color = new Color(0.98f, 0.97f, 0.84f, 1f);
+                display.sortingOrder = 20;
+                AddDoodleLine("Scale Display Outline", obj.transform, new[]
+                {
+                    new Vector3(-0.36f, -0.09f), new Vector3(0.36f, -0.09f),
+                    new Vector3(0.36f, 0.25f), new Vector3(-0.36f, 0.25f),
+                    new Vector3(-0.36f, -0.09f)
+                }, new Color(0.12f, 0.11f, 0.08f), 0.025f, 22);
+
+                GameObject gaugeBackObject = new GameObject("Scale Gauge Back");
+                gaugeBackObject.transform.SetParent(obj.transform, false);
+                gaugeBackObject.transform.localPosition = new Vector3(0f, -0.29f, -0.035f);
+                gaugeBackObject.transform.localScale = new Vector3(0.64f, 0.1f, 1f);
+                SpriteRenderer gaugeBack = gaugeBackObject.AddComponent<SpriteRenderer>();
+                gaugeBack.sprite = GetSquareSprite();
+                gaugeBack.color = new Color(0.12f, 0.11f, 0.09f, 0.92f);
+                gaugeBack.sortingOrder = 20;
+            }
 
             GameObject gaugeFillObject = new GameObject("Scale Gauge Fill");
             gaugeFillObject.transform.SetParent(obj.transform, false);
@@ -2502,17 +2813,20 @@ namespace DrawBody.Prototype
             gaugeFill.color = new Color(0.3f, 0.82f, 0.96f, 1f);
             gaugeFill.sortingOrder = 21;
 
-            for (int tick = 0; tick <= 4; tick++)
+            if (!hasColoredPencilScaleArt)
             {
-                float x = Mathf.Lerp(-0.32f, 0.32f, tick / 4f);
-                AddDoodleLine($"Scale Gauge Tick {tick}", obj.transform, new[]
+                for (int tick = 0; tick <= 4; tick++)
                 {
-                    new Vector3(x, -0.35f, -0.05f), new Vector3(x, -0.23f, -0.05f)
-                }, new Color(0.12f, 0.11f, 0.09f, 0.7f), 0.012f, 23);
-            }
+                    float x = Mathf.Lerp(-0.32f, 0.32f, tick / 4f);
+                    AddDoodleLine($"Scale Gauge Tick {tick}", obj.transform, new[]
+                    {
+                        new Vector3(x, -0.35f, -0.05f), new Vector3(x, -0.23f, -0.05f)
+                    }, new Color(0.12f, 0.11f, 0.09f, 0.7f), 0.012f, 23);
+                }
 
-            AddScaleFoot(obj.transform, -0.32f);
-            AddScaleFoot(obj.transform, 0.32f);
+                AddScaleFoot(obj.transform, -0.32f);
+                AddScaleFoot(obj.transform, 0.32f);
+            }
 
             GameObject textObject = new GameObject("Scale Meter Text");
             textObject.transform.SetParent(obj.transform, false);
@@ -2550,7 +2864,7 @@ namespace DrawBody.Prototype
             scale.Configure(
                 data.actionStrength > 0f ? data.actionStrength : 300f,
                 meterText,
-                body,
+                hasColoredPencilScaleArt ? null : body,
                 gaugeFillObject.transform,
                 gaugeFill);
 
@@ -2593,6 +2907,13 @@ namespace DrawBody.Prototype
             JumpPad jumpPad = trigger.AddComponent<JumpPad>();
             jumpPad.Configure(obj.transform, data.actionStrength > 0f ? data.actionStrength : 27f);
 
+            if (!AddResourceSprite(
+                obj.transform,
+                "StageObjects/NicoDraw/jump-pad",
+                new Vector2(0.98f, 0.98f),
+                24,
+                "Colored Pencil Jump Pad"))
+            {
             AddDoodleLine("Spring Left", obj.transform, new[]
             {
                 new Vector3(-0.2f, -0.42f, -0.02f),
@@ -2611,6 +2932,7 @@ namespace DrawBody.Prototype
             }, Color.black, 0.028f, 20);
             AddDoodleLine("Spring Top", obj.transform, new[] { new Vector3(-0.46f, 0.4f, -0.02f), new Vector3(0.46f, 0.4f, -0.02f) }, Color.black, 0.055f, 21);
             AddDoodleLine("Spring Base", obj.transform, new[] { new Vector3(-0.42f, -0.44f, -0.02f), new Vector3(0.42f, -0.44f, -0.02f) }, Color.black, 0.055f, 21);
+            }
             AddEditorMetadata(obj, data);
             return obj;
         }
@@ -3089,10 +3411,16 @@ namespace DrawBody.Prototype
             obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
 
             BoxCollider2D collider = obj.AddComponent<BoxCollider2D>();
-            collider.size = new Vector2(0.7f, 0.92f);
-            collider.offset = new Vector2(0f, -0.08f);
+            collider.size = new Vector2(2.2f, 0.86f);
+            collider.offset = new Vector2(0f, -0.02f);
             collider.isTrigger = true;
             obj.AddComponent<Goal>();
+
+            if (AddResourceSprite(obj.transform, "StageObjects/NicoDraw/goal-door", new Vector2(2.3f, 0.92f), 20, "Colored Pencil Exit Door"))
+            {
+                AddEditorMetadata(obj, data);
+                return obj;
+            }
 
             GameObject beam = new GameObject("Goal Beam");
             beam.transform.SetParent(obj.transform, false);
@@ -3152,12 +3480,17 @@ namespace DrawBody.Prototype
         private GameObject CreateMarker(StageObjectData data, Transform parent, Color color, string label)
         {
             GameObject obj = new GameObject(data.objectId);
+            obj.name = data.type.ToString();
             obj.transform.SetParent(parent, false);
             obj.transform.position = data.position;
             obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
-            AddDoodleCircle(obj.transform, 0.28f, color, 0.045f);
-            AddDoodleLine("Flag Pole", obj.transform, new[] { new Vector3(0.18f, -0.25f, 0f), new Vector3(0.18f, 0.36f, 0f) }, color, 0.04f, 18);
-            AddDoodleLine("Flag", obj.transform, new[] { new Vector3(0.18f, 0.32f, 0f), new Vector3(0.52f, 0.22f, 0f), new Vector3(0.18f, 0.12f, 0f) }, color, 0.04f, 18);
+            if (!AddResourceSprite(obj.transform, "StageObjects/NicoDraw/start-flag",
+                new Vector2(1.18f, 1.22f), 22, "Colored Pencil Start Flag", new Vector2(0f, 0.32f)))
+            {
+                AddDoodleCircle(obj.transform, 0.28f, color, 0.045f);
+                AddDoodleLine("Flag Pole", obj.transform, new[] { new Vector3(0.18f, -0.25f, 0f), new Vector3(0.18f, 0.36f, 0f) }, color, 0.04f, 18);
+                AddDoodleLine("Flag", obj.transform, new[] { new Vector3(0.18f, 0.32f, 0f), new Vector3(0.52f, 0.22f, 0f), new Vector3(0.18f, 0.12f, 0f) }, color, 0.04f, 18);
+            }
 
             CircleCollider2D collider = obj.AddComponent<CircleCollider2D>();
             collider.radius = 0.42f;
@@ -3188,8 +3521,12 @@ namespace DrawBody.Prototype
             }
             else if (data.type == StageObjectType.CollectibleCoin)
             {
-                AddDoodleCircle(obj.transform, 0.38f, color, 0.07f);
-                AddDoodleCircle(obj.transform, 0.24f, color, 0.04f);
+                if (!AddResourceSprite(obj.transform, "StageObjects/NicoDraw/coin",
+                    Vector2.one * 0.78f, 24, "Colored Pencil Coin"))
+                {
+                    AddDoodleCircle(obj.transform, 0.38f, color, 0.07f);
+                    AddDoodleCircle(obj.transform, 0.24f, color, 0.04f);
+                }
             }
             else
             {
@@ -3215,6 +3552,16 @@ namespace DrawBody.Prototype
 
         private void DrawCollectibleFish(Transform parent)
         {
+            if (AddResourceSprite(
+                parent,
+                "StageObjects/NicoDraw/fish",
+                new Vector2(1.04f, 0.59f),
+                24,
+                "Colored Pencil Fish"))
+            {
+                return;
+            }
+
             Color bodyBlue = new Color(0.18f, 0.66f, 0.95f, 1f);
             Color tailBlue = new Color(0.08f, 0.47f, 0.86f, 1f);
             Color outlineBlue = new Color(0.025f, 0.23f, 0.55f, 1f);
@@ -3601,6 +3948,32 @@ namespace DrawBody.Prototype
             marker.bombFuseSeconds = data.bombFuseSeconds;
             marker.linkTargetId = data.linkTargetId;
             marker.linkAction = data.linkAction;
+        }
+
+        private static bool AddResourceSprite(
+            Transform parent,
+            string resourcePath,
+            Vector2 localSize,
+            int sortingOrder,
+            string objectName,
+            Vector2 localPosition = default)
+        {
+            if (parent == null || string.IsNullOrEmpty(resourcePath)) return false;
+            Sprite sprite = Resources.Load<Sprite>(resourcePath);
+            if (sprite == null || sprite.bounds.size.x <= 0f || sprite.bounds.size.y <= 0f) return false;
+
+            GameObject visual = new GameObject(string.IsNullOrEmpty(objectName) ? sprite.name : objectName);
+            visual.transform.SetParent(parent, false);
+            visual.transform.localPosition = new Vector3(localPosition.x, localPosition.y, -0.025f);
+            visual.transform.localScale = new Vector3(
+                Mathf.Max(0.001f, localSize.x) / sprite.bounds.size.x,
+                Mathf.Max(0.001f, localSize.y) / sprite.bounds.size.y,
+                1f);
+            SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = Color.white;
+            renderer.sortingOrder = sortingOrder;
+            return true;
         }
 
         private static GameObject CreateBox(string name, Vector2 position, Vector2 size, Color color, Transform parent)

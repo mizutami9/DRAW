@@ -13,6 +13,7 @@ namespace DrawBody.Prototype
         private Transform spawnParent;
         private StageEditorObject marker;
         private StageGimmickSyncManager syncManager;
+        private StageDropperVisualAnimator visualAnimator;
         private Vector2 deviceSize;
         private float interval;
         private int enemyPattern;
@@ -41,6 +42,7 @@ namespace DrawBody.Prototype
         {
             marker = GetComponent<StageEditorObject>();
             syncManager = Object.FindFirstObjectByType<StageGimmickSyncManager>();
+            visualAnimator = GetComponent<StageDropperVisualAnimator>();
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing)
             {
@@ -58,6 +60,7 @@ namespace DrawBody.Prototype
                 return;
             }
             nextSpawnTime = Time.time + interval;
+            visualAnimator?.PlayDispense();
             SpawnEnemy();
         }
 
@@ -71,6 +74,7 @@ namespace DrawBody.Prototype
             if (factory != null && spawnParent != null
                 && (syncManager == null || !syncManager.IsOnlineActive || syncManager.IsHost))
             {
+                visualAnimator?.PlayDispense();
                 SpawnEnemy();
             }
         }

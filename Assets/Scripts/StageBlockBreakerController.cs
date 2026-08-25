@@ -986,6 +986,8 @@ namespace DrawBody.Prototype
                 new[] { new Vector2(-0.34f, -0.45f), new Vector2(-0.48f, -0.7f), new Vector2(-0.7f, -0.7f), new Vector2(-0.48f, -0.7f), new Vector2(-0.2f, -0.5f), new Vector2(0.2f, -0.5f), new Vector2(0.45f, -0.7f), new Vector2(0.72f, -0.7f) },
                 0.09f, new Color(0.36f, 0.13f, 0.58f, 1f), 34);
 
+            NicoDrawBossArt.Apply(visual.transform, "enemy-walker", new Vector2(1.35f, 1.25f), 36);
+
             StageBlockBreakerEnemy enemy = root.AddComponent<StageBlockBreakerEnemy>();
             enemy.owner = owner;
             enemy.enemyId = id;

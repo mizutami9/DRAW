@@ -216,7 +216,7 @@ namespace DrawBody.Prototype
                 {
                     phase = SurvivalPhase.StartCountdown;
                     phaseRemaining = StartCountdownDuration;
-                    GameSfx.Play(SfxId.UiButtonPress);
+                    GameSfx.Play(SfxId.StageCountdownTick);
                 }
                 RefreshMonitor();
                 return;

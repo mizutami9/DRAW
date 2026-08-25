@@ -236,7 +236,7 @@ namespace DrawBody.Prototype
 
         internal void NotifyPlayerReflection(Vector2 point)
         {
-            GameSfx.PlayAt(SfxId.EnemyShellBounce, point, 0.92f);
+            GameSfx.PlayAt(SfxId.Ricochet, point, 0.92f);
             StageRicochetImpactPulse.Create(transform, point);
         }
 
@@ -556,7 +556,7 @@ namespace DrawBody.Prototype
             hp--;
             RefreshBadge();
             StageRicochetImpactPulse.Create(transform.parent, point);
-            GameSfx.PlayAt(SfxId.EnemyShellBounce, point, 1f);
+            GameSfx.PlayAt(SfxId.Ricochet, point, 1f);
             if (hp > 0) return;
             owner?.NotifyEnemyDefeated(this);
             if (enemy != null) enemy.ApplyDefeated();

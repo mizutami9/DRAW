@@ -26,6 +26,16 @@ namespace DrawBody.Prototype
             collider.size = new Vector2(0.96f, 0.48f);
             root.AddComponent<CarryableObject>();
 
+            if (!StageGun.TryCreateResourceSprite(
+                root.transform,
+                "StageObjects/NicoDraw/bazooka",
+                "Colored Pencil Bazooka",
+                // The source is a square texture whose actual drawing is already
+                // 2.2:1. Keep the texture scale square so it is not stretched into
+                // the extremely long silhouette seen in game.
+                new Vector2(1.16f, 1.16f),
+                39))
+            {
             Color green = new Color(0.18f, 0.48f, 0.25f, 1f);
             Color dark = new Color(0.04f, 0.15f, 0.08f, 1f);
             StageGun.CreateSprite(root.transform, "Bazooka Tube", new Vector2(0.02f, 0.08f), new Vector2(1.18f, 0.38f), green, 35);
@@ -41,6 +51,7 @@ namespace DrawBody.Prototype
             {
                 new Vector2(-0.45f, 0.18f), new Vector2(-0.05f, 0.13f), new Vector2(0.38f, 0.2f)
             }, 0.055f, new Color(0.56f, 0.78f, 0.3f, 0.8f), 38);
+            }
 
             StageBazooka bazooka = root.AddComponent<StageBazooka>();
             StageEditorObject marker = root.AddComponent<StageEditorObject>();
@@ -77,7 +88,7 @@ namespace DrawBody.Prototype
         public void TryFire(Vector2 aimWorld)
         {
             if (holder == null || Time.time < nextFireAt) return;
-            Vector2 origin = transform.TransformPoint(new Vector2(0.82f, 0.08f));
+            Vector2 origin = transform.TransformPoint(new Vector2(0.58f, 0.08f));
             Vector2 direction = (aimWorld - origin).normalized;
             if (direction.sqrMagnitude < 0.1f) return;
             nextFireAt = Time.time + FireInterval;

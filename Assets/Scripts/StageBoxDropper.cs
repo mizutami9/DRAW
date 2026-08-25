@@ -13,6 +13,7 @@ namespace DrawBody.Prototype
         private Transform spawnParent;
         private StageEditorObject marker;
         private StageGimmickSyncManager syncManager;
+        private StageDropperVisualAnimator visualAnimator;
         private Vector2 deviceSize = new Vector2(1.8f, 1.4f);
         private float interval = 2f;
         private int pattern;
@@ -47,6 +48,7 @@ namespace DrawBody.Prototype
             }
 
             syncManager = GetComponentInParent<StageGimmickSyncManager>();
+            visualAnimator = GetComponent<StageDropperVisualAnimator>();
             nextSpawnTime = Time.time + interval;
         }
 
@@ -57,12 +59,13 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            nextSpawnTime = Time.time + interval;
+            visualAnimator?.PlayDispense();
             if (syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost)
             {
                 return;
             }
 
-            nextSpawnTime = Time.time + interval;
             SpawnBox();
         }
 
@@ -84,6 +87,12 @@ namespace DrawBody.Prototype
             if (spawned == null)
             {
                 return;
+            }
+
+            Rigidbody2D spawnedBody = spawned.GetComponent<Rigidbody2D>();
+            if (spawnedBody != null && spawnedBody.bodyType == RigidbodyType2D.Dynamic)
+            {
+                spawnedBody.linearVelocity += -(Vector2)transform.up * 1.4f;
             }
 
             spawnedBoxes.Enqueue(spawned);

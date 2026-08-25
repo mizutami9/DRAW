@@ -245,7 +245,15 @@ namespace DrawBody.Prototype
             if (transform.Find("Dynamite Visual") != null) return;
             GameObject visual = new GameObject("Dynamite Visual");
             visual.transform.SetParent(transform, false);
+            bool hasArtwork = StageGun.TryCreateResourceSprite(
+                visual.transform,
+                "StageObjects/NicoDraw/dynamite",
+                "Colored Pencil Dynamite",
+                new Vector2(visualSize.x * 1.65f, visualSize.y * 1.05f),
+                44);
             Font handwrittenFont = DoodleRuntimeAssets.HandwrittenFont;
+            if (!hasArtwork)
+            {
             Color[] reds =
             {
                 new Color(0.92f, 0.09f, 0.07f, 1f),
@@ -276,21 +284,21 @@ namespace DrawBody.Prototype
             GameObject badge = new GameObject("Countdown Badge");
             badge.transform.SetParent(visual.transform, false);
             badge.transform.localPosition = new Vector3(0f, visualSize.y * 0.08f, -0.06f);
-            badge.transform.localScale = new Vector3(visualSize.x * 0.72f, visualSize.y * 0.54f, 1f);
+            badge.transform.localScale = new Vector3(visualSize.x * 0.9f, visualSize.y * 0.68f, 1f);
             SpriteRenderer badgeRenderer = badge.AddComponent<SpriteRenderer>();
             badgeRenderer.sprite = GetCircleSprite();
-            badgeRenderer.color = new Color(0.08f, 0.045f, 0.025f, 0.92f);
-            badgeRenderer.sortingOrder = 43;
+            badgeRenderer.color = new Color(1f, 0.91f, 0.42f, 0.98f);
+            badgeRenderer.sortingOrder = 45;
 
             GameObject tntObject = new GameObject("TNT Label");
             tntObject.transform.SetParent(visual.transform, false);
-            tntObject.transform.localPosition = new Vector3(0f, -visualSize.y * 0.19f, -0.08f);
+            tntObject.transform.localPosition = new Vector3(0f, -visualSize.y * 0.34f, -0.08f);
             TextMesh tntText = tntObject.AddComponent<TextMesh>();
             tntText.text = "TNT";
             tntText.anchor = TextAnchor.MiddleCenter;
             tntText.alignment = TextAlignment.Center;
             tntText.fontSize = 42;
-            tntText.characterSize = Mathf.Clamp(Mathf.Min(visualSize.x, visualSize.y) * 0.085f, 0.07f, 0.13f);
+            tntText.characterSize = Mathf.Clamp(Mathf.Min(visualSize.x, visualSize.y) * 0.068f, 0.055f, 0.1f);
             tntText.fontStyle = FontStyle.Bold;
             tntText.color = new Color(1f, 0.88f, 0.22f, 1f);
             if (handwrittenFont != null)
@@ -298,7 +306,7 @@ namespace DrawBody.Prototype
                 tntText.font = handwrittenFont;
                 tntObject.GetComponent<MeshRenderer>().sharedMaterial = handwrittenFont.material;
             }
-            tntObject.GetComponent<MeshRenderer>().sortingOrder = 45;
+            tntObject.GetComponent<MeshRenderer>().sortingOrder = 46;
 
             GameObject fuse = new GameObject("Curved Fuse");
             fuse.transform.SetParent(visual.transform, false);
@@ -316,15 +324,18 @@ namespace DrawBody.Prototype
             fuseLine.SetPosition(1, new Vector3(0.08f, visualSize.y * 0.62f, 0f));
             fuseLine.SetPosition(2, new Vector3(0.28f, visualSize.y * 0.68f, 0f));
             fuseLine.SetPosition(3, new Vector3(0.36f, visualSize.y * 0.82f, 0f));
+            }
 
             GameObject sparkObject = new GameObject("Burning Fuse Spark");
             sparkObject.transform.SetParent(visual.transform, false);
-            sparkObject.transform.localPosition = new Vector3(0.36f, visualSize.y * 0.82f, -0.07f);
-            sparkObject.transform.localScale = Vector3.one * 0.18f;
+            sparkObject.transform.localPosition = hasArtwork
+                ? new Vector3(-visualSize.x * 0.78f, visualSize.y * 0.27f, -0.07f)
+                : new Vector3(0.36f, visualSize.y * 0.82f, -0.07f);
+            sparkObject.transform.localScale = Vector3.one * Mathf.Clamp(visualSize.y * 0.16f, 0.08f, 0.14f);
             fuseSpark = sparkObject.AddComponent<SpriteRenderer>();
             fuseSpark.sprite = GetCircleSprite();
             fuseSpark.color = new Color(1f, 0.72f, 0.08f, 0.75f);
-            fuseSpark.sortingOrder = 46;
+            fuseSpark.sortingOrder = 48;
 
             GameObject glow = new GameObject("Warning Glow");
             glow.transform.SetParent(visual.transform, false);
@@ -336,20 +347,20 @@ namespace DrawBody.Prototype
 
             GameObject textObject = new GameObject("Dynamite Countdown");
             textObject.transform.SetParent(visual.transform, false);
-            textObject.transform.localPosition = new Vector3(0f, visualSize.y * 0.14f, -0.09f);
+            textObject.transform.localPosition = new Vector3(0f, 0f, -0.09f);
             countdownText = textObject.AddComponent<TextMesh>();
             countdownText.anchor = TextAnchor.MiddleCenter;
             countdownText.alignment = TextAlignment.Center;
             countdownText.fontSize = 56;
-            countdownText.characterSize = Mathf.Clamp(Mathf.Min(visualSize.x, visualSize.y) * 0.115f, 0.085f, 0.18f);
+            countdownText.characterSize = Mathf.Clamp(Mathf.Min(visualSize.x, visualSize.y) * 0.105f, 0.075f, 0.14f);
             countdownText.fontStyle = FontStyle.Bold;
-            countdownText.color = new Color(1f, 0.94f, 0.62f, 1f);
+            countdownText.color = new Color(0.19f, 0.035f, 0.025f, 1f);
             if (handwrittenFont != null)
             {
                 countdownText.font = handwrittenFont;
                 textObject.GetComponent<MeshRenderer>().sharedMaterial = handwrittenFont.material;
             }
-            textObject.GetComponent<MeshRenderer>().sortingOrder = 47;
+            textObject.GetComponent<MeshRenderer>().sortingOrder = 49;
         }
 
         private void SetCountdown(float seconds)

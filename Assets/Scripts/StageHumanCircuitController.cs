@@ -42,7 +42,7 @@ namespace DrawBody.Prototype
 
             public void SetPowered(bool powered)
             {
-                if (Core != null) Core.color = powered ? ActiveElectric : DarkTerminal;
+                if (Core != null) Core.color = powered ? ActiveElectric : Color.white;
                 if (Halo != null)
                 {
                     Halo.enabled = powered;
@@ -86,6 +86,7 @@ namespace DrawBody.Prototype
             public bool UsesStartTerminal;
             public bool UsesEndTerminal;
             public LineRenderer Base;
+            public LineRenderer PencilCore;
             public LineRenderer Glow;
 
             public void Refresh(bool powered)
@@ -94,6 +95,8 @@ namespace DrawBody.Prototype
                 Vector2 end = UsesEndTerminal ? EndTerminal.Position : FixedEnd;
                 Base.SetPosition(0, start);
                 Base.SetPosition(1, end);
+                PencilCore.SetPosition(0, start);
+                PencilCore.SetPosition(1, end);
                 Glow.SetPosition(0, start);
                 Glow.SetPosition(1, end);
                 Glow.enabled = powered;
@@ -114,7 +117,7 @@ namespace DrawBody.Prototype
 
             public void SetPowered(bool powered)
             {
-                Glass.color = powered ? new Color(1f, 0.87f, 0.18f, 1f) : new Color(0.22f, 0.25f, 0.27f, 1f);
+                Glass.color = powered ? new Color(1f, 0.87f, 0.18f, 1f) : new Color(0.52f, 0.54f, 0.56f, 1f);
                 Halo.enabled = powered;
                 if (powered)
                 {
@@ -488,10 +491,12 @@ namespace DrawBody.Prototype
             GameObject core = new GameObject("Broken Wire Terminal");
             core.transform.SetParent(transform, false);
             core.transform.position = new Vector3(position.x, position.y, -0.28f);
-            core.transform.localScale = Vector3.one * 0.42f;
             SpriteRenderer coreRenderer = core.AddComponent<SpriteRenderer>();
-            coreRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
-            coreRenderer.color = DarkTerminal;
+            Sprite terminalSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/circuit-terminal");
+            coreRenderer.sprite = terminalSprite != null ? terminalSprite : DoodleRuntimeAssets.CircleSprite;
+            SetSpriteWorldSize(core.transform, coreRenderer.sprite,
+                terminalSprite != null ? new Vector2(0.88f, 0.58f) : Vector2.one * 0.42f);
+            coreRenderer.color = terminalSprite != null ? Color.white : DarkTerminal;
             coreRenderer.sortingOrder = 25;
 
             GameObject halo = new GameObject("Terminal Glow");
@@ -538,7 +543,11 @@ namespace DrawBody.Prototype
             GameObject root = new GameObject("Circuit Wire");
             root.transform.SetParent(transform, false);
             LineRenderer dark = root.AddComponent<LineRenderer>();
-            ConfigureLine(dark, 0.16f, DarkWire, 20);
+            ConfigureLine(dark, 0.19f, new Color(0.08f, 0.09f, 0.11f, 1f), 20);
+            GameObject pencilObject = new GameObject("Colored Pencil Wire");
+            pencilObject.transform.SetParent(root.transform, false);
+            LineRenderer pencilCore = pencilObject.AddComponent<LineRenderer>();
+            ConfigureLine(pencilCore, 0.105f, DarkWire, 21);
             GameObject glowObject = new GameObject("Live Current");
             glowObject.transform.SetParent(root.transform, false);
             LineRenderer glow = glowObject.AddComponent<LineRenderer>();
@@ -553,6 +562,7 @@ namespace DrawBody.Prototype
                 UsesStartTerminal = usesStart,
                 UsesEndTerminal = usesEnd,
                 Base = dark,
+                PencilCore = pencilCore,
                 Glow = glow
             };
             piece.Refresh(false);
@@ -585,12 +595,17 @@ namespace DrawBody.Prototype
             GameObject glass = new GameObject("Large Circuit Bulb");
             glass.transform.SetParent(transform, false);
             glass.transform.position = new Vector3(position.x, position.y, -0.3f);
-            glass.transform.localScale = Vector3.one * 1.45f;
             SpriteRenderer glassRenderer = glass.AddComponent<SpriteRenderer>();
-            glassRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
+            Sprite bulbSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/circuit-bulb");
+            glassRenderer.sprite = bulbSprite != null ? bulbSprite : DoodleRuntimeAssets.CircleSprite;
+            SetSpriteWorldSize(glass.transform, glassRenderer.sprite,
+                bulbSprite != null ? new Vector2(1.6f, 2.15f) : Vector2.one * 1.45f);
             glassRenderer.sortingOrder = 27;
-            StageEscortController.AddBoxOutline(glass.transform, Vector2.down * 0.78f,
-                new Vector2(0.68f, 0.5f), new Color(0.12f, 0.15f, 0.18f), 29);
+            if (bulbSprite == null)
+            {
+                StageEscortController.AddBoxOutline(glass.transform, Vector2.down * 0.78f,
+                    new Vector2(0.68f, 0.5f), new Color(0.12f, 0.15f, 0.18f), 29);
+            }
 
             GameObject filamentObject = new GameObject("Bulb Filament");
             filamentObject.transform.SetParent(transform, false);
@@ -611,6 +626,15 @@ namespace DrawBody.Prototype
             GameObject root = new GameObject("Power Source Room " + (roomIndex + 1));
             root.transform.SetParent(transform, false);
             root.transform.position = new Vector3(position.x, position.y, -0.28f);
+            Sprite powerSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/circuit-power-source");
+            if (powerSprite != null)
+            {
+                SpriteRenderer renderer = root.AddComponent<SpriteRenderer>();
+                renderer.sprite = powerSprite;
+                renderer.sortingOrder = 27;
+                SetSpriteWorldSize(root.transform, powerSprite, new Vector2(1.85f, 1.45f));
+                return;
+            }
             StageEscortController.AddFilledRect(root.transform, "Battery", Vector2.zero,
                 new Vector2(1.25f, 1.65f), new Color(1f, 0.78f, 0.12f), 25);
             StageEscortController.AddBoxOutline(root.transform, Vector2.zero,
@@ -621,6 +645,15 @@ namespace DrawBody.Prototype
                 0.11f, Color.white, 29);
             StageEscortController.AddLine(root.transform, new Vector2(0.18f, 0.05f), new Vector2(-0.16f, -0.58f),
                 0.11f, Color.white, 29);
+        }
+
+        private static void SetSpriteWorldSize(Transform target, Sprite sprite, Vector2 worldSize)
+        {
+            if (target == null || sprite == null || sprite.bounds.size.x <= 0f || sprite.bounds.size.y <= 0f) return;
+            target.localScale = new Vector3(
+                Mathf.Max(0.001f, worldSize.x) / sprite.bounds.size.x,
+                Mathf.Max(0.001f, worldSize.y) / sprite.bounds.size.y,
+                1f);
         }
 
         private void CreateRoomSign(int roomIndex)
@@ -1094,19 +1127,15 @@ namespace DrawBody.Prototype
 
         private void PlayZap()
         {
-            if (previewOnly || audioSource == null || Time.unscaledTime < nextZapAt) return;
+            if (previewOnly || Time.unscaledTime < nextZapAt) return;
             nextZapAt = Time.unscaledTime + 0.11f;
-            audioSource.pitch = Random.Range(0.92f, 1.12f);
-            audioSource.volume = GameSfx.MasterVolume * 0.8f;
-            audioSource.PlayOneShot(GetZapClip());
+            GameSfx.PlayAt(SfxId.CircuitConnect, transform.position, Random.Range(0.92f, 1.12f));
         }
 
         private void PlaySuccess()
         {
-            if (previewOnly || audioSource == null) return;
-            audioSource.pitch = 1f;
-            audioSource.volume = GameSfx.MasterVolume;
-            audioSource.PlayOneShot(GetSuccessClip());
+            if (previewOnly) return;
+            GameSfx.PlayAt(SfxId.CircuitComplete, transform.position);
         }
 
         private static AudioClip GetZapClip()

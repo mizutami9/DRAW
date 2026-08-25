@@ -221,7 +221,7 @@ namespace DrawBody.Prototype
 
         internal void NotifyPlayerReflection(Vector2 point)
         {
-            GameSfx.PlayAt(SfxId.EnemyShellBounce, point, 0.92f);
+            GameSfx.PlayAt(SfxId.Ricochet, point, 0.92f);
             StageRicochetImpactPulse.Create(transform, point);
         }
 

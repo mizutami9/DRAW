@@ -13,6 +13,7 @@ namespace DrawBody.Prototype
         private Transform spawnParent;
         private StageEditorObject marker;
         private StageGimmickSyncManager syncManager;
+        private StageDropperVisualAnimator visualAnimator;
         private Vector2 deviceSize = new Vector2(1.8f, 1.4f);
         private float interval = 2f;
         private int pattern;
@@ -54,6 +55,7 @@ namespace DrawBody.Prototype
             }
 
             syncManager = GetComponentInParent<StageGimmickSyncManager>();
+            visualAnimator = GetComponent<StageDropperVisualAnimator>();
             nextSpawnTime = Time.time + interval;
         }
 
@@ -69,6 +71,7 @@ namespace DrawBody.Prototype
             }
 
             nextSpawnTime = Time.time + interval;
+            visualAnimator?.PlayDispense();
             SpawnBomb();
         }
 
@@ -87,6 +90,7 @@ namespace DrawBody.Prototype
             }
 
             nextLinkedLaunchTime = Time.time + linkedCooldownSeconds;
+            visualAnimator?.PlayDispense();
             SpawnBomb();
         }
 

@@ -187,7 +187,7 @@ namespace DrawBody.Prototype
             {
                 remaining = number;
                 RefreshMonitor();
-                GameSfx.Play(SfxId.UiSliderTick);
+                GameSfx.Play(SfxId.StageCountdownTick);
                 yield return new WaitForSeconds(1f);
             }
             yield return StartCoroutine(SetConcealment(true));
@@ -203,7 +203,7 @@ namespace DrawBody.Prototype
             transitionRunning = false;
             nextPhaseThreeDisableAt = Time.time + 10f;
             BroadcastState(true);
-            GameSfx.Play(SfxId.EmotePop);
+            GameSfx.Play(SfxId.StageCountdownGo);
         }
 
         private IEnumerator ClearBattle()
@@ -345,7 +345,7 @@ namespace DrawBody.Prototype
                 if (fake != null && bomb != null) fake.TakeBomb(bomb);
             }
             else machine.FireMissile();
-            GameSfx.PlayAt(SfxId.UiButtonPress, machine.transform.position, 1f);
+            GameSfx.PlayAt(SfxId.SwitchPress, machine.transform.position, 1f);
             BroadcastState(true);
         }
 
@@ -399,8 +399,11 @@ namespace DrawBody.Prototype
             if (syncManager == null) syncManager = GetComponent<StageGimmickSyncManager>();
             string launchId = "15-3_missile_" + (++missileSequence).ToString("D5");
             if (syncManager != null) syncManager.SpawnMissile(launchId, StageId, launcher, position + direction * 1.35f, direction, speed);
-            else StageMissileProjectile.Create(transform, launcher, position + direction * 1.35f, direction, speed);
-            GameSfx.PlayAt(SfxId.CannonFire, position, 0.9f);
+            else
+            {
+                StageMissileProjectile.Create(transform, launcher, position + direction * 1.35f, direction, speed);
+                GameSfx.PlayAt(SfxId.MissileLaunch, position, 0.9f);
+            }
         }
 
         public void ApplyAreaDamage(Vector2 center, float radius, int damage)

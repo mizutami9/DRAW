@@ -26,13 +26,18 @@ namespace DrawBody.Prototype
         [SerializeField] private float postThrowCollisionRestoreTimeout = 1.2f;
         [SerializeField] private float slimeFriendAttachReach = 0.45f;
 
+        private const float MaxHeldPlayerCarrierHorizontalSpeed = 28f;
+
         // A hand-drawn body can contain far more than 64 segment colliders.
         // A fixed NonAlloc buffer could fill with the player's own long legs
         // before the crate underneath was returned by the physics query.
         private readonly List<Collider2D> pickupHits = new List<Collider2D>(128);
         private readonly List<Collider2D> heldColliders = new List<Collider2D>();
+        private readonly HashSet<Collider2D> heldColliderSet = new HashSet<Collider2D>();
         private readonly List<bool> heldColliderEnabledStates = new List<bool>();
         private readonly List<bool> heldColliderTriggerStates = new List<bool>();
+        private readonly List<Collider2D> heldPlayerColliderScratch = new List<Collider2D>();
+        private readonly List<Collider2D> carrierColliderScratch = new List<Collider2D>();
         private readonly List<Renderer> heldRenderers = new List<Renderer>();
         private readonly List<int> heldRendererSortingOrders = new List<int>();
         private readonly List<bool> heldRendererEnabledStates = new List<bool>();
@@ -48,6 +53,7 @@ namespace DrawBody.Prototype
         private LineRenderer throwPreviewHeadA;
         private LineRenderer throwPreviewHeadB;
         private Vector2 displayedThrowDirection = Vector2.up;
+        private int displayedThrowFacingDirection = 1;
         private bool hasDisplayedThrowDirection;
         private Material previewMaterial;
         private string heldOnlinePlayerId;
@@ -385,6 +391,35 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void FixedUpdate()
+        {
+            if (heldPlayerController == null || playerBody == null)
+            {
+                return;
+            }
+
+            Vector2 velocity = playerBody.linearVelocity;
+            if (float.IsNaN(velocity.x) || float.IsInfinity(velocity.x)
+                || float.IsNaN(velocity.y) || float.IsInfinity(velocity.y))
+            {
+                playerBody.linearVelocity = Vector2.zero;
+                return;
+            }
+
+            // A newly rebuilt carried-body collider used to be able to overlap
+            // the carrier for one physics step and launch the carrier backwards.
+            // Human movement, wind and speed rings remain below this generous
+            // ceiling; only the tunnelling-producing impulse is discarded.
+            if (Mathf.Abs(velocity.x) > MaxHeldPlayerCarrierHorizontalSpeed)
+            {
+                velocity.x = Mathf.Clamp(
+                    velocity.x,
+                    -MaxHeldPlayerCarrierHorizontalSpeed,
+                    MaxHeldPlayerCarrierHorizontalSpeed);
+                playerBody.linearVelocity = velocity;
+            }
+        }
+
         private void LateUpdate()
         {
             if (catClawedObject == null && catClawJoint != null)
@@ -411,9 +446,19 @@ namespace DrawBody.Prototype
 
             if (heldTransform == null)
             {
+                if (heldBody != null
+                    || heldPlayerController != null
+                    || heldObject != null
+                    || !string.IsNullOrEmpty(heldOnlinePlayerId)
+                    || heldColliders.Count > 0)
+                {
+                    DropHeld(Vector2.zero);
+                }
                 SetThrowPreviewVisible(false);
                 return;
             }
+
+            RefreshHeldPlayerCollisionIgnores();
 
             Vector3 anchor = GetHoldPosition();
             heldTransform.position = anchor;
@@ -1017,6 +1062,7 @@ namespace DrawBody.Prototype
             heldBody.angularVelocity = 0f;
 
             heldColliders.Clear();
+            heldColliderSet.Clear();
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             heldTransform.GetComponentsInChildren(heldColliders);
@@ -1024,6 +1070,10 @@ namespace DrawBody.Prototype
             for (int i = 0; i < heldColliders.Count; i++)
             {
                 Collider2D heldCollider = heldColliders[i];
+                if (heldCollider != null)
+                {
+                    heldColliderSet.Add(heldCollider);
+                }
                 heldColliderEnabledStates.Add(heldCollider != null && heldCollider.enabled);
                 heldColliderTriggerStates.Add(heldCollider != null && heldCollider.isTrigger);
                 if (heldCollider == null)
@@ -1151,7 +1201,9 @@ namespace DrawBody.Prototype
                 // Keep puzzle keys controllable and on screen.
                 currentThrowSpeed = Mathf.Clamp(currentThrowSpeed * 0.45f, 8f, 14f);
             }
+            int currentFacingDirection = GetFacingDirection();
             Vector2 throwDirection = hasDisplayedThrowDirection
+                && displayedThrowFacingDirection == currentFacingDirection
                 ? displayedThrowDirection
                 : GetThrowDirection();
             Vector2 throwVelocity = throwDirection.normalized * currentThrowSpeed * multiplier;
@@ -1229,7 +1281,12 @@ namespace DrawBody.Prototype
                 heldBody.gravityScale = previousGravityScale;
                 heldBody.freezeRotation = previousFreezeRotation;
                 heldBody.linearVelocity = releaseVelocity;
-                heldBody.angularVelocity = releaseVelocity.x * -18f;
+                // A hand-drawn player can have long, irregular limb colliders.
+                // Spinning that entire collider set at object-throw angular speed
+                // can wedge it into a wall and create a huge reverse impulse.
+                heldBody.angularVelocity = heldPlayerController != null
+                    ? 0f
+                    : releaseVelocity.x * -18f;
             }
 
             heldTransform = null;
@@ -1240,6 +1297,7 @@ namespace DrawBody.Prototype
             heldOnlinePlayerId = null;
             hasDisplayedThrowDirection = false;
             heldColliders.Clear();
+            heldColliderSet.Clear();
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             SetThrowPreviewVisible(false);
@@ -1270,6 +1328,7 @@ namespace DrawBody.Prototype
             heldOnlinePlayerId = null;
             hasDisplayedThrowDirection = false;
             heldColliders.Clear();
+            heldColliderSet.Clear();
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             SetThrowPreviewVisible(false);
@@ -2040,6 +2099,7 @@ namespace DrawBody.Prototype
 
             Vector2 direction = GetThrowDirection();
             displayedThrowDirection = direction;
+            displayedThrowFacingDirection = GetFacingDirection();
             hasDisplayedThrowDirection = true;
             Vector3 start = anchor + Vector3.up * 0.1f;
             float previewScale = Mathf.Clamp(GetCurrentThrowSpeed() / Mathf.Max(throwSpeed, 0.1f), 1f, 1.5f);
@@ -2157,9 +2217,46 @@ namespace DrawBody.Prototype
             return false;
         }
 
-        private static void SetCollisionIgnored(Collider2D[] first, Collider2D[] second, bool ignored)
+        private void RefreshHeldPlayerCollisionIgnores()
         {
-            for (int i = 0; i < first.Length; i++)
+            if (heldPlayerController == null || heldTransform == null)
+            {
+                return;
+            }
+
+            heldPlayerColliderScratch.Clear();
+            carrierColliderScratch.Clear();
+            heldTransform.GetComponentsInChildren(true, heldPlayerColliderScratch);
+            GetComponentsInChildren(true, carrierColliderScratch);
+
+            for (int i = 0; i < heldPlayerColliderScratch.Count; i++)
+            {
+                Collider2D current = heldPlayerColliderScratch[i];
+                if (current == null || heldColliderSet.Contains(current))
+                {
+                    continue;
+                }
+
+                // Online redraw and character rebuild can replace all segment
+                // colliders without replacing the player root. Remember every
+                // replacement so release restores it and never lets it push the
+                // carrier from inside during the hold.
+                heldColliderSet.Add(current);
+                heldColliders.Add(current);
+                heldColliderEnabledStates.Add(current.enabled);
+                heldColliderTriggerStates.Add(current.isTrigger);
+                current.enabled = true;
+            }
+
+            SetCollisionIgnored(heldPlayerColliderScratch, carrierColliderScratch, true);
+        }
+
+        private static void SetCollisionIgnored(
+            IList<Collider2D> first,
+            IList<Collider2D> second,
+            bool ignored)
+        {
+            for (int i = 0; i < first.Count; i++)
             {
                 Collider2D a = first[i];
                 if (a == null)
@@ -2167,7 +2264,7 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                for (int j = 0; j < second.Length; j++)
+                for (int j = 0; j < second.Count; j++)
                 {
                     Collider2D b = second[j];
                     if (b != null && a != b)

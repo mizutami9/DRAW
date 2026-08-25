@@ -194,7 +194,7 @@ namespace DrawBody.Prototype
                         phase = BattlePhase.Fighting;
                         nextAttackAt = Time.time + 1.8f;
                         BroadcastState(true);
-                        GameSfx.Play(SfxId.EmotePop);
+                        GameSfx.Play(SfxId.StageCountdownGo);
                     }
                 }
                 else if (phase == BattlePhase.Fighting)
@@ -300,6 +300,9 @@ namespace DrawBody.Prototype
             StageEscortController.AddLine(bossFace, new Vector2(-1.82f, -0.42f), new Vector2(-2.25f, -1.4f), 0.18f, new Color(0.82f, 0.2f, 0.95f), 160);
             StageEscortController.AddLine(bossFace, new Vector2(1.82f, -0.42f), new Vector2(2.25f, -1.4f), 0.18f, new Color(0.82f, 0.2f, 0.95f), 160);
             BuildBossOrbitShards(neon, bossInk);
+            SpriteRenderer messyBoss = NicoDrawBossArt.Apply(
+                bossFace, "boss-flying", new Vector2(6.2f, 5.2f), 161);
+            if (messyBoss != null) bossCore = messyBoss;
         }
 
         private void BuildBossOrbitShards(Color neon, Color outline)
@@ -428,7 +431,7 @@ namespace DrawBody.Prototype
         {
             if (state == null || !receivedShots.Add(state.Sequence)) return;
             shots.Add(StageFlyingBossShot.Create(transform, this, state.Sequence, state.OwnerRoom, state.Position, state.Direction, HasAuthority));
-            GameSfx.PlayAt(SfxId.CannonFire, state.Position, 0.55f);
+            GameSfx.PlayAt(SfxId.MissileLaunch, state.Position, 0.55f);
         }
 
         internal bool ResolvePlayerShot(int sequence, int ownerRoom, Vector2 position)
@@ -436,6 +439,7 @@ namespace DrawBody.Prototype
             if (!HasAuthority || phase != BattlePhase.Fighting) return false;
             if (Vector2.Distance(position, bossPosition) <= 1.9f)
             {
+                GameSfx.PlayAt(SfxId.MissileImpact, position, 0.9f);
                 DamageBoss(1, position);
                 return true;
             }
@@ -445,6 +449,7 @@ namespace DrawBody.Prototype
                 // deliberately valid collision targets for the co-op challenge.
                 if (room == ownerRoom || eliminated.Contains(roomPlayerIds[room])) continue;
                 if (Vector2.Distance(position, GetRoomHitPosition(room)) > 0.62f) continue;
+                GameSfx.PlayAt(SfxId.MissileImpact, position, 0.9f);
                 EliminateRoom(room);
                 return true;
             }
@@ -531,8 +536,10 @@ namespace DrawBody.Prototype
                 state.Origin + Vector2.down * 2.1f,
                 LocalizationManager.T("flying_boss_homing_warning"),
                 new Color(1f, 0.42f, 0.88f));
+            GameSfx.PlayAt(SfxId.BossAttackWarning, state.Origin, 0.9f);
             yield return new WaitForSeconds(0.75f);
             if (warning != null) Destroy(warning.gameObject);
+            GameSfx.PlayAt(SfxId.MissileLaunch, state.Origin, 0.95f);
             for (int i = 0; i < playerCount; i++)
             {
                 if (!eliminated.Contains(roomPlayerIds[i]))
@@ -590,8 +597,10 @@ namespace DrawBody.Prototype
         {
             SetBossMood(new Color(1f, 0.22f, 0.15f), 1.22f);
             GameObject warning = CreateWarningRect(new Vector2(0f, state.Lane), new Vector2(34f, 2.2f), new Color(1f, 0.16f, 0.1f, 0.3f));
+            GameSfx.PlayAt(SfxId.BossAttackWarning, bossPosition, 1.05f);
             yield return MoveBossForAttackSetup(state.Origin, 1.65f);
             Destroy(warning);
+            GameSfx.PlayAt(SfxId.BossDash, bossPosition, 1.15f);
             Vector2 end = state.Origin + state.Direction * 40f;
             float elapsed = 0f;
             while (elapsed < 0.95f)
@@ -611,6 +620,7 @@ namespace DrawBody.Prototype
             Vector2 center = horizontal ? new Vector2(0f, state.Origin.y) : new Vector2(state.Origin.x, 0f);
             Vector2 size = horizontal ? new Vector2(34f, 2.5f) : new Vector2(2.5f, 17f);
             GameObject warning = CreateWarningRect(center, size, new Color(1f, 0.65f, 0.05f, 0.22f));
+            GameSfx.PlayAt(SfxId.BossBeamCharge, state.Origin, 1.05f);
             yield return MoveBossForAttackSetup(state.Origin, 1.7f);
             SetWarningColor(warning, new Color(1f, 0.08f, 0.03f, 0.78f));
             GameSfx.PlayAt(SfxId.BeamFire, state.Origin, 1f);
@@ -634,8 +644,10 @@ namespace DrawBody.Prototype
             SetBossMood(new Color(0.82f, 0.2f, 0.92f), 1.08f);
             Vector2 launchPoint = new Vector2(0f, 10.2f);
             TextMesh warning = CreateWorldText(new Vector2(0f, 7.1f), LocalizationManager.T("flying_boss_homing_warning"), new Color(1f, 0.45f, 0.9f));
+            GameSfx.PlayAt(SfxId.BossAttackWarning, launchPoint);
             yield return MoveBossForAttackSetup(launchPoint, 1.45f);
             Destroy(warning.gameObject);
+            GameSfx.PlayAt(SfxId.MissileLaunch, bossPosition, 1.05f);
             for (int i = 0; i < playerCount; i++)
                 if (!eliminated.Contains(roomPlayerIds[i])) StageFlyingHomingHazard.Create(transform, this, i, bossPosition, HasAuthority);
             yield return new WaitForSeconds(4.2f);
@@ -647,6 +659,7 @@ namespace DrawBody.Prototype
             int target = Mathf.Clamp(state.TargetRoom, 0, playerCount - 1);
             TextMesh warning = CreateWorldText(GetRoomHitPosition(target) + Vector2.up * 1.5f, LocalizationManager.T("flying_boss_target_warning"), Color.red);
             SetBossMood(new Color(1f, 0.12f, 0.2f), 1.15f);
+            GameSfx.PlayAt(SfxId.BossAttackWarning, GetRoomHitPosition(target), 1.05f);
             yield return new WaitForSeconds(1.35f);
             Destroy(warning.gameObject);
             float elapsed = 0f;
@@ -659,6 +672,7 @@ namespace DrawBody.Prototype
             Vector2 direction = (GetRoomHitPosition(target) - bossPosition).normalized;
             Vector2 end = bossPosition + direction * 13f;
             Vector2 start = bossPosition;
+            GameSfx.PlayAt(SfxId.BossDash, bossPosition, 1.1f);
             elapsed = 0f;
             while (elapsed < 0.65f)
             {
@@ -675,7 +689,9 @@ namespace DrawBody.Prototype
             SetBossMood(new Color(0.18f, 0.05f, 0.28f), 1.3f);
             GameObject warning = CreateWarningRect(Vector2.zero, new Vector2(34f, 17f), new Color(0.45f, 0.15f, 0.8f, 0.12f));
             TextMesh text = CreateWorldText(Vector2.zero, LocalizationManager.T("flying_boss_suction_warning"), new Color(0.8f, 0.55f, 1f));
+            GameSfx.PlayAt(SfxId.BossAttackWarning, state.Origin, 1.05f);
             yield return MoveBossForAttackSetup(state.Origin, 1.5f);
+            GameSfx.PlayAt(SfxId.BossSuction, bossPosition, 1.1f);
             float elapsed = 0f;
             while (elapsed < 3.2f)
             {
@@ -1155,6 +1171,7 @@ namespace DrawBody.Prototype
                 GameObject explosion = new GameObject("Homing Missile Burst");
                 explosion.transform.position = transform.position;
                 explosion.AddComponent<BombExplosionVisual>().Configure(0.9f, false);
+                GameSfx.PlayAt(SfxId.MissileImpact, transform.position, 0.9f);
                 Destroy(gameObject);
             }
             else if (Time.time >= expiresAt) Destroy(gameObject);

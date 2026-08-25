@@ -159,7 +159,7 @@ namespace DrawBody.Prototype
                 {
                     phase = Phase.Countdown;
                     phaseRemaining = CountdownSeconds;
-                    GameSfx.Play(SfxId.UiButtonPress);
+                    GameSfx.Play(SfxId.StageCountdownTick);
                 }
                 RefreshMonitor();
                 return;
@@ -172,7 +172,7 @@ namespace DrawBody.Prototype
                     phase = Phase.Playing;
                     phaseRemaining = 0f;
                     SetLocalControls(true);
-                    GameSfx.Play(SfxId.DrawConfirm);
+                    GameSfx.Play(SfxId.StageCountdownGo);
                     BroadcastState(true);
                 }
                 RefreshMonitor();
@@ -259,7 +259,7 @@ namespace DrawBody.Prototype
                 if (lane >= 0 && lane < pillars.Count)
                     pillars[lane]?.Activate(wave.WarningSeconds, wave.FallSpeed, wave.Sequence * 16 + i);
             }
-            GameSfx.Play(SfxId.CrumblingFloorWarning);
+            GameSfx.Play(SfxId.PillarWarning);
         }
 
         private void UpdateAttackDirector()
@@ -903,7 +903,7 @@ namespace DrawBody.Prototype
                     phase = PillarPhase.Impact;
                     impactRemaining = 0.72f;
                     impactPosition = position;
-                    GameSfx.Play(SfxId.CrumblingFloorCollapse);
+                    GameSfx.Play(SfxId.PillarImpact);
                     CheckPlayerHits();
                 }
                 return;

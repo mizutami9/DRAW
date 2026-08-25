@@ -18,6 +18,7 @@ namespace DrawBody.Prototype
         private SpriteRenderer readyLamp;
         private StageManager stageManager;
         private float chargeGaugeWidth;
+        private float readyLampBaseSize = 0.13f;
         private float interval = 2f;
         private float beamRange = MaximumRange;
         private float nextShotTime;
@@ -32,6 +33,7 @@ namespace DrawBody.Prototype
             SpriteRenderer gaugeRenderer,
             SpriteRenderer lampRenderer,
             float gaugeWidth,
+            float lampBaseSize,
             float seconds,
             bool terrainPiercing,
             float configuredRange)
@@ -42,6 +44,7 @@ namespace DrawBody.Prototype
             chargeFillRenderer = gaugeRenderer;
             readyLamp = lampRenderer;
             chargeGaugeWidth = Mathf.Max(0.1f, gaugeWidth);
+            readyLampBaseSize = Mathf.Max(0.08f, lampBaseSize);
             interval = Mathf.Clamp(seconds > 0f ? seconds : 2f, 0.5f, 10f);
             piercesTerrain = terrainPiercing;
             beamRange = configuredRange > 0f
@@ -277,7 +280,7 @@ namespace DrawBody.Prototype
                         ? color
                         : new Color(1f, 0.58f, 0.06f, 1f);
                 float pulse = nearlyReady ? 1f + Mathf.Sin(Time.unscaledTime * 20f) * 0.18f : 1f;
-                readyLamp.transform.localScale = Vector3.one * pulse * 0.13f;
+                readyLamp.transform.localScale = Vector3.one * pulse * readyLampBaseSize;
             }
         }
     }

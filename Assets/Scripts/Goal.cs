@@ -33,6 +33,7 @@ namespace DrawBody.Prototype
             playerColliderCounts[goalPlayer] = count + 1;
             if (count == 0)
             {
+                GameSfx.PlayAt(SfxId.GoalReached, transform.position);
                 stageManager?.SetPlayerGoalState(goalPlayer, true);
             }
         }

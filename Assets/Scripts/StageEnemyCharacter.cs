@@ -22,10 +22,12 @@ namespace DrawBody.Prototype
         private Rigidbody2D body;
         private Collider2D enemyCollider;
         private Transform visualRoot;
+        private Vector2 visualRootScale = Vector2.one;
         private StageManager stageManager;
         private StageGimmickSyncManager syncManager;
         private static Sprite circleSprite;
         private static Material lineMaterial;
+        private const string EnemyArtRoot = "StageObjects/NicoDraw/";
 
         public string ObjectId
         {
@@ -360,7 +362,14 @@ namespace DrawBody.Prototype
             if (transform.Find("Enemy Visual") != null) return;
             visualRoot = new GameObject("Enemy Visual").transform;
             visualRoot.SetParent(transform, false);
-            visualRoot.localScale = new Vector3(enemySize.x / 1.25f, enemySize.y / 1.3f, 1f);
+            visualRootScale = new Vector2(enemySize.x / 1.25f, enemySize.y / 1.3f);
+            visualRoot.localScale = new Vector3(visualRootScale.x, visualRootScale.y, 1f);
+
+            if (TryBuildPencilSprite())
+            {
+                SetFacingVisual();
+                return;
+            }
 
             Color bodyColor = EnemyColor(enemyType);
             GameObject bodyObject = CreateSprite("Crayon Body", visualRoot, Vector2.zero, new Vector2(1.05f, 0.9f), bodyColor, 34, true);
@@ -368,6 +377,96 @@ namespace DrawBody.Prototype
             AddEyes(visualRoot, enemyType == StageObjectType.EnemyShooter ? 1 : 2);
             AddAbilityMark(visualRoot);
             SetFacingVisual();
+        }
+
+        private bool TryBuildPencilSprite()
+        {
+            string resourceName = EnemySpriteName(enemyType);
+            if (string.IsNullOrEmpty(resourceName)) return false;
+
+            Sprite sprite = Resources.Load<Sprite>(EnemyArtRoot + resourceName);
+            if (sprite == null) return false;
+
+            GameObject spriteObject = new GameObject("Child Doodle Enemy");
+            spriteObject.transform.SetParent(visualRoot, false);
+            spriteObject.transform.localPosition = new Vector3(0f, EnemySpriteYOffset(enemyType), -0.03f);
+            SpriteRenderer renderer = spriteObject.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = Color.white;
+            renderer.sortingOrder = 36;
+
+            Vector2 target = EnemySpriteSize(enemyType);
+            Vector2 bounds = sprite.bounds.size;
+            spriteObject.transform.localScale = new Vector3(
+                target.x / Mathf.Max(0.01f, bounds.x),
+                target.y / Mathf.Max(0.01f, bounds.y),
+                1f);
+            // The source textures deliberately keep transparent breathing room.
+            // Compensate for that per silhouette so the visible drawing, rather
+            // than the full 512 px texture rect, matches the configured collider.
+            Vector2 contentCoverage = EnemySpriteContentCoverage(enemyType);
+            visualRootScale = new Vector2(
+                enemySize.x / Mathf.Max(0.01f, target.x * contentCoverage.x),
+                enemySize.y / Mathf.Max(0.01f, target.y * contentCoverage.y));
+            visualRoot.localScale = new Vector3(visualRootScale.x, visualRootScale.y, 1f);
+            return true;
+        }
+
+        private static Vector2 EnemySpriteContentCoverage(StageObjectType type)
+        {
+            // Alpha bounds measured from the pencil sprites. Keeping this here
+            // also makes replacement art explicit: update only these ratios when
+            // its transparent margin changes; physics data remains untouched.
+            switch (type)
+            {
+                case StageObjectType.EnemyWalker: return new Vector2(0.921875f, 0.792969f);
+                case StageObjectType.EnemyJumper: return new Vector2(0.906250f, 0.921875f);
+                case StageObjectType.EnemyCharger: return new Vector2(0.921875f, 0.595703f);
+                case StageObjectType.EnemyFlyer: return new Vector2(0.921875f, 0.724609f);
+                case StageObjectType.EnemyFlyerZigzag: return new Vector2(0.921875f, 0.599609f);
+                case StageObjectType.EnemyFlyerOrbit: return new Vector2(0.921875f, 0.732422f);
+                case StageObjectType.EnemyBomber: return new Vector2(0.921875f, 0.613281f);
+                case StageObjectType.EnemyShooter: return new Vector2(0.921875f, 0.697266f);
+                default: return Vector2.one;
+            }
+        }
+
+        private static string EnemySpriteName(StageObjectType type)
+        {
+            switch (type)
+            {
+                case StageObjectType.EnemyWalker: return "enemy-walker";
+                case StageObjectType.EnemyJumper: return "enemy-jumper";
+                case StageObjectType.EnemyCharger: return "enemy-charger";
+                case StageObjectType.EnemyFlyer: return "enemy-flyer";
+                case StageObjectType.EnemyFlyerZigzag: return "enemy-flyer-zigzag";
+                case StageObjectType.EnemyFlyerOrbit: return "enemy-flyer-orbit";
+                case StageObjectType.EnemyShooter: return "enemy-shooter";
+                case StageObjectType.EnemyBomber: return "enemy-bomber";
+                default: return null;
+            }
+        }
+
+        private static Vector2 EnemySpriteSize(StageObjectType type)
+        {
+            switch (type)
+            {
+                case StageObjectType.EnemyJumper: return new Vector2(1.08f, 1.28f);
+                case StageObjectType.EnemyCharger: return new Vector2(1.46f, 0.98f);
+                case StageObjectType.EnemyFlyer: return new Vector2(1.48f, 1.08f);
+                case StageObjectType.EnemyFlyerZigzag: return new Vector2(1.52f, 1.08f);
+                case StageObjectType.EnemyFlyerOrbit: return new Vector2(1.46f, 1.08f);
+                case StageObjectType.EnemyBomber: return new Vector2(1.38f, 1.34f);
+                case StageObjectType.EnemyShooter: return new Vector2(1.46f, 1.02f);
+                default: return new Vector2(1.18f, 1.08f);
+            }
+        }
+
+        private static float EnemySpriteYOffset(StageObjectType type)
+        {
+            if (type == StageObjectType.EnemyJumper) return 0.03f;
+            if (type == StageObjectType.EnemyBomber) return -0.04f;
+            return 0f;
         }
 
         private void AddAbilityMark(Transform parent)
@@ -422,8 +521,8 @@ namespace DrawBody.Prototype
         private void SetFacingVisual()
         {
             if (visualRoot == null) return;
-            float x = Mathf.Abs(enemySize.x / 1.25f) * (direction >= 0f ? 1f : -1f);
-            visualRoot.localScale = new Vector3(x, enemySize.y / 1.3f, 1f);
+            float x = Mathf.Abs(visualRootScale.x) * (direction >= 0f ? 1f : -1f);
+            visualRoot.localScale = new Vector3(x, visualRootScale.y, 1f);
         }
 
         private static GameObject CreateSprite(string name, Transform parent, Vector2 position, Vector2 scale, Color color, int order, bool circle)

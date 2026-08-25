@@ -65,6 +65,7 @@ namespace DrawBody.Prototype
             }
 
             active = value;
+            GameSfx.PlayAt(SfxId.SwitchPress, transform.position, active ? 1f : 0.72f);
             targetGate?.SetOpen(active);
             RefreshVisual();
         }

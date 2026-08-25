@@ -892,6 +892,7 @@ namespace DrawBody.Prototype
             GameObject heart = StageGun.CreateSprite(visual, "Friend Heart", new Vector2(0f, -0.12f),
                 new Vector2(0.18f, 0.18f), new Color(1f, 0.25f, 0.32f, 1f), 43);
             heart.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
+            NicoDrawBossArt.Apply(visual, "ally-defense", new Vector2(1.55f, 1.9f), 43);
         }
 
         private void AddDot(Vector2 position, float size, Color color)

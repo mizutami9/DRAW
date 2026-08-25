@@ -82,6 +82,7 @@ namespace DrawBody.Prototype
             velocity.y = Mathf.Max(velocity.y, jumpVelocity * speciesMultiplier);
             rb.linearVelocity = velocity;
             bounceTimer = 0.22f;
+            GameSfx.PlayAt(SfxId.JumpPadLaunch, transform.position, speciesMultiplier > 1f ? 1.15f : 1f);
         }
 
         private static void ResolveCarrierLaunchTarget(

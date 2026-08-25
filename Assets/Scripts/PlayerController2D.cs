@@ -468,6 +468,7 @@ namespace DrawBody.Prototype
 
             turtleShelled = active;
             bodyBuilder?.SetTurtleShellPose(active);
+            GameSfx.PlayAt(active ? SfxId.TurtleShellEnter : SfxId.TurtleShellExit, transform.position);
         }
 
         private void SetTurtleRotation(bool active)

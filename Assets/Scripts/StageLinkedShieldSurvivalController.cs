@@ -330,7 +330,7 @@ namespace DrawBody.Prototype
             shieldEndsAt[shield] = Mathf.Max(shieldEndsAt[shield], Time.time + ShieldSeconds);
             shieldWalls[shield]?.SetActive(true);
             buttons[buttonIndex]?.Pulse();
-            GameSfx.Play(SfxId.UiButtonPress, 0.82f);
+            GameSfx.Play(SfxId.SwitchPress, 0.82f);
             BroadcastState(true);
         }
 
@@ -526,7 +526,9 @@ namespace DrawBody.Prototype
             previousCameraSize = gameCamera.orthographicSize;
             if (cameraFollow != null) { previousCameraFollowEnabled = cameraFollow.enabled; cameraFollow.enabled = false; }
             gameCamera.transform.position = new Vector3(0f, 0.8f, previousCameraPosition.z);
-            gameCamera.orthographicSize = Mathf.Max(19f, 22f / Mathf.Max(0.1f, gameCamera.aspect));
+            // The four rooms and monitor stay visible, while incoming missiles
+            // enter from off-screen instead of making the whole arena look tiny.
+            gameCamera.orthographicSize = Mathf.Max(12.5f, 18.5f / Mathf.Max(0.1f, gameCamera.aspect));
             cameraLocked = true;
         }
 
@@ -741,6 +743,8 @@ namespace DrawBody.Prototype
         private StageLinkedShieldSurvivalController owner;
         private int index;
         private SpriteRenderer pad;
+        private Transform padTransform;
+        private Vector3 restScale;
         private TextMesh label;
         private float nextActivationAt;
         private Color baseColor;
@@ -760,11 +764,27 @@ namespace DrawBody.Prototype
             button.index = index;
             GameObject visual = new GameObject("Pad");
             visual.transform.SetParent(root.transform, false);
-            visual.transform.localScale = new Vector3(padSize.x, padSize.y * 0.62f, 1f);
+            button.padTransform = visual.transform;
             button.pad = visual.AddComponent<SpriteRenderer>();
-            button.pad.sprite = StageLinkedShieldSurvivalController.GetSquareSprite();
+            Sprite buttonSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/shield-button");
+            if (buttonSprite != null && buttonSprite.bounds.size.x > 0f && buttonSprite.bounds.size.y > 0f)
+            {
+                button.pad.sprite = buttonSprite;
+                Vector2 artSize = new Vector2(1.42f, 0.72f);
+                visual.transform.localScale = new Vector3(
+                    artSize.x / buttonSprite.bounds.size.x,
+                    artSize.y / buttonSprite.bounds.size.y,
+                    1f);
+                if (vertical) visual.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            }
+            else
+            {
+                visual.transform.localScale = new Vector3(padSize.x, padSize.y * 0.62f, 1f);
+                button.pad.sprite = StageLinkedShieldSurvivalController.GetSquareSprite();
+                StageEscortController.AddBoxOutline(root.transform, Vector2.zero, padSize, new Color(0.1f, 0.14f, 0.16f), 36);
+            }
+            button.restScale = visual.transform.localScale;
             button.pad.sortingOrder = 35;
-            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, padSize, new Color(0.1f, 0.14f, 0.16f), 36);
             Vector3 labelPosition = sourceSide == 0 ? new Vector3(0f, -0.62f, -0.03f)
                 : sourceSide == 1 ? new Vector3(-0.76f, 0f, -0.03f)
                 : sourceSide == 2 ? new Vector3(0f, 0.62f, -0.03f)
@@ -775,19 +795,24 @@ namespace DrawBody.Prototype
 
         public void SetMapping(int targetRoom, int targetSide, Color color)
         {
-            baseColor = color;
-            if (pad != null) pad.color = color;
+            baseColor = Color.Lerp(Color.white, color, 0.58f);
+            if (pad != null) pad.color = baseColor;
             if (label != null) label.text = "P" + (targetRoom + 1) + " " + StageLinkedShieldSurvivalController.SideArrow(targetSide);
         }
 
         public void Pulse()
         {
-            if (pad != null) pad.color = Color.white;
-            CancelInvoke(nameof(RestoreColor));
-            Invoke(nameof(RestoreColor), 0.16f);
+            if (pad != null) pad.color = new Color(0.38f, 1f, 0.5f, 1f);
+            if (padTransform != null) padTransform.localScale = restScale * 0.84f;
+            CancelInvoke(nameof(RestoreButton));
+            Invoke(nameof(RestoreButton), 0.2f);
         }
 
-        private void RestoreColor() { if (pad != null) pad.color = baseColor; }
+        private void RestoreButton()
+        {
+            if (pad != null) pad.color = baseColor;
+            if (padTransform != null) padTransform.localScale = restScale;
+        }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -817,6 +842,19 @@ namespace DrawBody.Prototype
             wall.fill.color = new Color(0.68f, 0.78f, 0.84f, 0.96f);
             wall.fill.sortingOrder = 70;
             StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, new Color(accent.r * 0.5f, accent.g * 0.5f, accent.b * 0.5f), 72);
+            bool horizontal = size.x >= size.y;
+            float length = horizontal ? size.x : size.y;
+            for (float offset = -length * 0.42f; offset <= length * 0.42f; offset += 0.55f)
+            {
+                Vector2 a = horizontal
+                    ? new Vector2(offset - 0.14f, -size.y * 0.34f)
+                    : new Vector2(-size.x * 0.34f, offset - 0.14f);
+                Vector2 b = horizontal
+                    ? new Vector2(offset + 0.14f, size.y * 0.34f)
+                    : new Vector2(size.x * 0.34f, offset + 0.14f);
+                StageEscortController.AddLine(root.transform, a, b, 0.025f,
+                    new Color(accent.r, accent.g, accent.b, 0.62f), 71);
+            }
             wall.SetActive(false);
             return wall;
         }

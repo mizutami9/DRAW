@@ -131,6 +131,8 @@ namespace DrawBody.Prototype
         private void SpawnFriend()
         {
             if (friend != null || cleared) return;
+            StageEscortSpawnerMarker spawner = Object.FindFirstObjectByType<StageEscortSpawnerMarker>();
+            spawner?.GetComponent<StageDropperVisualAnimator>()?.PlayDispense();
             friend = StageEscortFriend.Create(transform, friendSpawnPosition, HasAuthority(), stageId == "10-2");
             replicaTarget = friend.transform.position;
             IgnorePlayerOnlyFloors(friend);
@@ -204,6 +206,8 @@ namespace DrawBody.Prototype
             replicaTarget = state.Position;
             if (state.Active && friend == null)
             {
+                StageEscortSpawnerMarker spawner = Object.FindFirstObjectByType<StageEscortSpawnerMarker>();
+                spawner?.GetComponent<StageDropperVisualAnimator>()?.PlayDispense();
                 friend = StageEscortFriend.Create(transform, state.Position, false, stageId == "10-2");
                 IgnorePlayerOnlyFloors(friend);
             }
@@ -355,6 +359,15 @@ namespace DrawBody.Prototype
             GameObject spawner = new GameObject("Friendly Character Spawner");
             spawner.transform.SetParent(parent, false);
             spawner.transform.localPosition = new Vector2(-13.15f, 2.5f);
+            if (StageGun.TryCreateResourceSprite(
+                spawner.transform,
+                "StageObjects/NicoDraw/escort-spawner",
+                "Colored Pencil Friend Spawner",
+                new Vector2(2.2f, 1.65f),
+                36))
+            {
+                return;
+            }
             AddFilledRect(spawner.transform, "Spawner Body", Vector2.zero, new Vector2(2.2f, 1.35f), new Color(0.25f, 0.7f, 0.95f, 1f), 32);
             AddBoxOutline(spawner.transform, Vector2.zero, new Vector2(2.2f, 1.35f), new Color(0.04f, 0.22f, 0.45f, 1f), 33);
             AddFilledRect(spawner.transform, "Spawner Opening", new Vector2(0f, -0.48f), new Vector2(1.15f, 0.35f), new Color(0.025f, 0.055f, 0.08f, 1f), 34);
@@ -591,6 +604,19 @@ namespace DrawBody.Prototype
             selection.isTrigger = true;
             StageEscortSpawnerMarker marker = root.AddComponent<StageEscortSpawnerMarker>();
             marker.Configure(new Vector2(0f, -size.y * 0.85f));
+            const string artworkName = "Colored Pencil Friend Spawner";
+            if (StageGun.TryCreateResourceSprite(
+                root.transform,
+                "StageObjects/NicoDraw/escort-spawner",
+                artworkName,
+                new Vector2(size.x, size.y * 1.12f),
+                36))
+            {
+                Transform artwork = root.transform.Find(artworkName);
+                StageDropperVisualAnimator animator = root.AddComponent<StageDropperVisualAnimator>();
+                animator.Configure(artwork, null, Mathf.Max(0.12f, size.y * 0.16f));
+                return;
+            }
             Color fill = new Color(0.25f, 0.7f, 0.95f, 1f);
             Color ink = new Color(0.04f, 0.22f, 0.45f, 1f);
             StageEscortController.AddFilledRect(root.transform, "Spawner Body", Vector2.zero, size, fill, 32);
@@ -917,6 +943,7 @@ namespace DrawBody.Prototype
             StageEscortController.AddLine(visual, new Vector2(0f, -0.19f), new Vector2(0.15f, -0.1f), 0.045f, new Color(0.04f, 0.3f, 0.55f, 1f), 42);
             StageEscortController.AddLine(visual, new Vector2(-0.2f, -0.34f), new Vector2(-0.31f, -0.46f), 0.07f, new Color(0.04f, 0.3f, 0.55f, 1f), 41);
             StageEscortController.AddLine(visual, new Vector2(0.2f, -0.34f), new Vector2(0.34f, -0.46f), 0.07f, new Color(0.04f, 0.3f, 0.55f, 1f), 41);
+            NicoDrawBossArt.Apply(visual, "ally-escort", new Vector2(0.92f, 0.92f), 42);
         }
 
         private static void AddFaceDot(Transform parent, Vector2 position)

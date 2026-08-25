@@ -13,6 +13,7 @@ namespace DrawBody.Prototype
         private Transform spawnParent;
         private StageEditorObject marker;
         private StageGimmickSyncManager syncManager;
+        private StageDropperVisualAnimator visualAnimator;
         private Vector2 deviceSize = new Vector2(1.8f, 1.4f);
         private float interval = 2f;
         private float droppedSpikeSize = 0.9f;
@@ -44,6 +45,7 @@ namespace DrawBody.Prototype
             }
 
             syncManager = GetComponentInParent<StageGimmickSyncManager>();
+            visualAnimator = GetComponent<StageDropperVisualAnimator>();
             nextSpawnTime = Time.time + interval;
         }
 
@@ -54,12 +56,13 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            nextSpawnTime = Time.time + interval;
+            visualAnimator?.PlayDispense();
             if (syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost)
             {
                 return;
             }
 
-            nextSpawnTime = Time.time + interval;
             SpawnSpike();
         }
 
@@ -87,6 +90,11 @@ namespace DrawBody.Prototype
             }
 
             spawned.transform.rotation = transform.rotation;
+            Rigidbody2D spawnedBody = spawned.GetComponent<Rigidbody2D>();
+            if (spawnedBody != null && spawnedBody.bodyType == RigidbodyType2D.Dynamic)
+            {
+                spawnedBody.linearVelocity += -(Vector2)transform.up * 1.15f;
+            }
             spawnedSpikes.Enqueue(spawned);
             while (spawnedSpikes.Count > MaximumLiveSpikes)
             {

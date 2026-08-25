@@ -1521,12 +1521,14 @@ namespace DrawBody.Prototype
                     }
                 }
             }
-            return StageMissileProjectile.Create(
+            StageMissileProjectile projectile = StageMissileProjectile.Create(
                 transform,
                 launcher,
                 state.Position,
                 state.Direction,
                 state.Speed);
+            if (projectile != null) GameSfx.PlayAt(SfxId.MissileLaunch, state.Position, 1.05f);
+            return projectile;
         }
 
         private void ApplyEnemyProjectileSpawn(

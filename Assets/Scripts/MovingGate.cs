@@ -23,7 +23,12 @@ namespace DrawBody.Prototype
 
         public void SetOpen(bool value)
         {
+            if (open == value)
+            {
+                return;
+            }
             open = value;
+            GameSfx.PlayAt(open ? SfxId.DoorOpen : SfxId.DoorClose, transform.position);
         }
     }
 }

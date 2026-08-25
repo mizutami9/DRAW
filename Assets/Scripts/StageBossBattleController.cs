@@ -312,7 +312,7 @@ namespace DrawBody.Prototype
             SetBossExpression(1);
             RefreshMonitor();
             BroadcastState(true);
-            GameSfx.PlayAt(SfxId.EnemyCharge, bossRoot.position, 1.15f);
+            GameSfx.PlayAt(SfxId.BossCharge, bossRoot.position, 1.15f);
             float end = Time.time + 2.4f;
             while (Time.time < end)
             {
@@ -462,6 +462,7 @@ namespace DrawBody.Prototype
             SetBossExpression(1);
             CreateChargePlatforms();
             BroadcastState(true);
+            GameSfx.PlayAt(SfxId.BossAttackWarning, bossRoot.position, 1.15f);
 
             // Five full seconds of unmistakable warning: the boss turns red,
             // crouches and shakes harder while temporary escape floors appear.
@@ -485,7 +486,7 @@ namespace DrawBody.Prototype
             bossVisual.localScale = Vector3.one;
             chargeWarningRemaining = 0f;
             SetBossFacing();
-            GameSfx.PlayAt(SfxId.EnemyCharge, bossRoot.position, 1.3f);
+            GameSfx.PlayAt(SfxId.BossDash, bossRoot.position, 1.3f);
             chargeImpactActive = true;
             BroadcastState(true);
             while (Mathf.Abs(bossRoot.position.x - destinationX) > 0.12f)
@@ -643,6 +644,7 @@ namespace DrawBody.Prototype
             }
             if (type == AttackType.Bombs)
             {
+                GameSfx.PlayAt(SfxId.BossAttackWarning, attack.Origin);
                 if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
                 string id = "4-3_boss_bomb_" + attack.Sequence.ToString("D5");
                 GameObject bomb = objectFactory?.CreateDroppedBox(StageObjectType.Bomb, id, attack.Origin,
@@ -656,6 +658,7 @@ namespace DrawBody.Prototype
             }
             else if (type == AttackType.Enemies)
             {
+                GameSfx.PlayAt(SfxId.BossAttackWarning, attack.Origin);
                 if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
                 StageObjectType enemyType = attack.Variant == 1 ? StageObjectType.EnemyJumper
                     : attack.Variant == 2 ? StageObjectType.EnemyCharger : StageObjectType.EnemyWalker;
@@ -666,12 +669,14 @@ namespace DrawBody.Prototype
                 else
                     objectFactory?.CreateSpawnedEnemy(enemyType, enemyId,
                         attack.Origin, 1.05f, transform, 2.6f + attack.Variant * 0.25f, -1f);
+                GameSfx.PlayAt(SfxId.EnemyJump, attack.Origin, 0.85f);
             }
             else if (type == AttackType.SpecialOrbs)
             {
                 StageBossRicochetOrb orb = StageBossRicochetOrb.Create(transform, attack.Origin, attack.Direction,
                     attack.Variant >= 2 ? 9.2f : 8.1f, attack.Variant >= 2 ? 8.5f : 7f);
                 if (orb != null) specialOrbs.Add(orb.gameObject);
+                GameSfx.PlayAt(SfxId.EnemyShoot, attack.Origin, 0.9f);
             }
             else if (type == AttackType.Bomber)
             {
@@ -856,6 +861,13 @@ namespace DrawBody.Prototype
             StageGun.AddLine(visual.transform, "Boss Arm Left", new[] { new Vector2(-1.35f, 0.9f), new Vector2(-2.25f, 0.25f), new Vector2(-2.55f, 0.7f) }, 0.2f, outline, 36);
             StageGun.AddLine(visual.transform, "Boss Arm Right", new[] { new Vector2(1.35f, 0.9f), new Vector2(2.25f, 0.25f), new Vector2(2.55f, 0.7f) }, 0.2f, outline, 36);
             StageGun.AddLine(visual.transform, "Boss Legs", new[] { new Vector2(-0.8f, -1.45f), new Vector2(-1.05f, -2.15f), new Vector2(-0.35f, -2.15f), new Vector2(0.35f, -2.15f), new Vector2(1.05f, -2.15f), new Vector2(0.8f, -1.45f) }, 0.22f, outline, 36);
+            SpriteRenderer messyBoss = NicoDrawBossArt.Apply(
+                visual.transform, "boss-arena", new Vector2(4.9f, 5.7f), 38, true);
+            if (messyBoss != null)
+            {
+                bossCore = messyBoss;
+                bossHead = null;
+            }
             chargeAura = StageGun.CreateSprite(visual.transform, "Charge Warning Aura", new Vector2(0f, 0.45f),
                 new Vector2(5.4f, 6.2f), new Color(1f, 0.08f, 0.06f, 0.18f), 32).GetComponent<SpriteRenderer>();
             chargeAura.enabled = false;
@@ -1107,16 +1119,26 @@ namespace DrawBody.Prototype
                 if (state == null || state.Sequence <= lastStateSequence) return;
                 lastStateSequence = state.Sequence;
                 health = state.Health;
+                Phase previousPhase = phase;
                 phase = (Phase)state.Phase;
                 SetWaitingRoomGateState(phase != Phase.Waiting);
                 facing = state.Facing;
                 invulnerable = state.Invulnerable;
                 bool wasCharging = charging;
+                bool wasChargeImpactActive = chargeImpactActive;
                 charging = state.Charging;
                 chargeImpactActive = state.ChargeImpactActive;
                 chargeWarningRemaining = state.ChargeRemaining;
-                if (!wasCharging && charging) CreateChargePlatforms();
+                if (!wasCharging && charging)
+                {
+                    CreateChargePlatforms();
+                    GameSfx.PlayAt(SfxId.BossAttackWarning, bossRoot != null ? bossRoot.position : Vector3.zero, 1.15f);
+                }
                 else if (wasCharging && !charging) StartCoroutine(RemoveChargePlatforms());
+                if (!wasChargeImpactActive && chargeImpactActive)
+                    GameSfx.PlayAt(SfxId.BossDash, bossRoot != null ? bossRoot.position : Vector3.zero, 1.3f);
+                if (previousPhase != Phase.Special && phase == Phase.Special)
+                    GameSfx.PlayAt(SfxId.BombFuseStart, bossRoot != null ? bossRoot.position : Vector3.zero, 1.35f);
                 if (state.EliminatedIds != null)
                     for (int i = 0; i < state.EliminatedIds.Length; i++) ApplyElimination(state.EliminatedIds[i]);
                 if (bossRoot != null)
@@ -1238,11 +1260,14 @@ namespace DrawBody.Prototype
             StageGun.AddLine(rotor.transform, "Rotor", new[] { new Vector2(-0.8f, 0f), new Vector2(0.8f, 0f) },
                 0.09f, new Color(0.12f, 0.2f, 0.28f, 1f), 48);
 
+            SpriteRenderer messyBomber = NicoDrawBossArt.Apply(
+                root.transform, "enemy-bomber", new Vector2(1.85f, 1.5f), 47);
+
             StageBossBomber bomber = root.AddComponent<StageBossBomber>();
             bomber.owner = owner;
             bomber.BomberId = id;
             bomber.body = body;
-            bomber.shell = balloon.GetComponent<SpriteRenderer>();
+            bomber.shell = messyBomber != null ? messyBomber : balloon.GetComponent<SpriteRenderer>();
             bomber.propeller = rotor.transform;
             bomber.direction = Mathf.Abs(initialDirection) > 0.1f ? Mathf.Sign(initialDirection) : -1f;
             bomber.baseY = position.y;
@@ -1334,6 +1359,7 @@ namespace DrawBody.Prototype
             GameObject root = new GameObject("Boss Beam");
             root.transform.SetParent(parent, false);
             StageBossBeam beam = root.AddComponent<StageBossBeam>();
+            GameSfx.PlayAt(SfxId.BossBeamCharge, origin, 0.9f);
             beam.origin = origin;
             beam.direction = direction.sqrMagnitude > 0.01f ? direction.normalized : Vector2.left;
             beam.fireAt = Time.time + warning;

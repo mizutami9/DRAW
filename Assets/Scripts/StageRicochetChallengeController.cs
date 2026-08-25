@@ -156,7 +156,7 @@ namespace DrawBody.Prototype
             int requiredReflections = playerCount > 1 ? 1 : 0;
             if (reflectionCount < requiredReflections)
             {
-                GameSfx.PlayAt(SfxId.EnemyShellBounce, hitPoint, 0.7f);
+                GameSfx.PlayAt(SfxId.Ricochet, hitPoint, 0.7f);
                 return true;
             }
 
@@ -170,7 +170,7 @@ namespace DrawBody.Prototype
 
         public void NotifyReflection(Vector2 point)
         {
-            GameSfx.PlayAt(SfxId.EnemyShellBounce, point, 0.55f);
+            GameSfx.PlayAt(SfxId.Ricochet, point, 0.55f);
         }
 
         private void BeginRound(int round)

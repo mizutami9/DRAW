@@ -1050,6 +1050,7 @@ namespace DrawBody.Prototype
         private void UnlockAndConsume(bool invokeAction)
         {
             unlocked = true;
+            GameSfx.PlayAt(SfxId.KeyUnlock, transform.position);
             GetComponent<StagePosePassageUnlock>()?.ApplyUnlockedState();
             PlayerCarryController[] carriers = Object.FindObjectsByType<PlayerCarryController>(FindObjectsSortMode.None);
             for (int i = 0; i < carriers.Length; i++)
@@ -1219,6 +1220,7 @@ namespace DrawBody.Prototype
             }
 
             ApplyPressedState(true);
+            GameSfx.PlayAt(SfxId.SwitchPress, transform.position);
             pressAction?.Invoke();
         }
 

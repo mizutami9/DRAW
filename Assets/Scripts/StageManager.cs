@@ -97,6 +97,7 @@ namespace DrawBody.Prototype
         private bool challengeStarting;
         private float challengeStartCountdownRemaining;
         private float challengeTimeUpReturnRemaining;
+        private string lastChallengeCountdownSfxText = string.Empty;
         private bool challengeStartPositionsCaptured;
         private StageEliminationChallengeController survivalController;
         private StageBlockBreakerController blockBreakerController;
@@ -648,6 +649,11 @@ namespace DrawBody.Prototype
             }
 
             collectible.ApplyCollected();
+            GameSfx.PlayAt(
+                collectible.CollectibleType == StageObjectType.CollectibleCoin
+                    ? SfxId.CoinCollect
+                    : SfxId.CollectibleCollect,
+                collectible.transform.position);
             collectedCount++;
             uiManager?.SetChallengeHud(true, challengeRemaining, collectionTarget, collectedCount, requiredCollectionCount, false);
 
@@ -726,6 +732,7 @@ namespace DrawBody.Prototype
                 ? currentStageId == "9-2" ? 3f : ChallengeStartCountdownDuration
                 : 0f;
             challengeTimeUpReturnRemaining = 0f;
+            lastChallengeCountdownSfxText = string.Empty;
             challengeStartPositionsCaptured = false;
             collectedObjectIds.Clear();
             nextChallengeSyncAt = Time.unscaledTime + 1f;
@@ -778,7 +785,13 @@ namespace DrawBody.Prototype
                 {
                     HoldPlayersAtChallengeStart();
                 }
-                uiManager?.SetChallengeCountdown(true, ChallengeStartCountdownText);
+                string countdownText = ChallengeStartCountdownText;
+                uiManager?.SetChallengeCountdown(true, countdownText);
+                if (countdownText != lastChallengeCountdownSfxText)
+                {
+                    lastChallengeCountdownSfxText = countdownText;
+                    GameSfx.Play(countdownText == "START!" ? SfxId.StageCountdownGo : SfxId.StageCountdownTick);
+                }
                 challengeStartCountdownRemaining = Mathf.Max(
                     0f,
                     challengeStartCountdownRemaining - Time.unscaledDeltaTime);
@@ -904,6 +917,7 @@ namespace DrawBody.Prototype
                 return;
             }
             challengeFailed = true;
+            GameSfx.Play(SfxId.StageFailed);
             challengeStarting = false;
             challengeTimeUpReturnRemaining = ChallengeTimeUpReturnDelay;
             if (drawing)
@@ -1059,6 +1073,7 @@ namespace DrawBody.Prototype
             }
 
             cleared = true;
+            GameSfx.Play(SfxId.StageClear);
             ExitDrawingMode();
             SetAllPlayerControls(false);
             player?.ResetMotion();
