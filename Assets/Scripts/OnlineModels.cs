@@ -87,6 +87,7 @@ namespace DrawBody.Prototype
         public Vector2 Velocity;
         public float Rotation;
         public bool Redrawing;
+        public bool Respawning;
         public bool TurtleShelled;
         public string SlimeAttachedToPlayerId;
         public string CarriedPlayerId;

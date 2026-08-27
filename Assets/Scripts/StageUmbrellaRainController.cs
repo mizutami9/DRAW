@@ -17,7 +17,7 @@ namespace DrawBody.Prototype
         private const float FinalX = 80f;
         private const float FinalShelterX = 75f;
         private const float UmbrellaHalfWidth = 3.4f;
-        private const float CanopyOffsetY = 1.95f;
+        private const float CanopyOffsetY = 2.42f;
         private const float RainExposureSeconds = 0.32f;
 
         private enum MotionMode { Normal, Stop, Backstep, Slow, Fast }
@@ -106,7 +106,6 @@ namespace DrawBody.Prototype
             friend = StageUmbrellaFriend.Create(transform, new Vector2(friendX, FriendY));
             rainVisual = StageDeadlyRainVisual.Create(transform);
             rainVisual.SetShelter(friendX, FriendY + CanopyOffsetY, UmbrellaHalfWidth, FinalShelterX);
-            BuildInstructionSign();
             RefreshPlayers();
             CaptureParticipants();
             SetLocalControls(false);
@@ -289,7 +288,7 @@ namespace DrawBody.Prototype
         private IEnumerator RetryAfterDelay()
         {
             retryStarted = true;
-            uiManager?.SetChallengeCountdown(true, LocalizationManager.T("umbrella_rain_all_out"));
+            uiManager?.SetChallengeCountdown(true, LocalizationManager.T("game_over"));
             yield return new WaitForSeconds(2.5f);
             if (stageManager != null && stageManager.CurrentStageId == StageId && HasAuthority) stageManager.Retry();
         }
@@ -513,9 +512,15 @@ namespace DrawBody.Prototype
             NicoDrawBossArt.Apply(characterVisual, "ally-umbrella", new Vector2(1.5f, 2.2f), 47);
 
             canopy = new GameObject("Wide Umbrella").transform;
-            canopy.SetParent(transform, false);
-            canopy.localPosition = new Vector3(0f, 1.95f, -0.08f);
-            if (!BuildCanopy(canopy, 3.4f, 0.84f))
+            canopy.SetParent(characterVisual, false);
+            bool hasCanopyArtwork = BuildCanopy(canopy, 3.4f, 0.84f);
+            // Anchor the curved handle in the guide's raised right hand. The
+            // PNG includes the full long handle, while the fallback uses the
+            // shorter line-art handle, so their canopy offsets differ.
+            canopy.localPosition = hasCanopyArtwork
+                ? new Vector3(-0.12f, 2.42f, -0.08f)
+                : new Vector3(0.42f, 2.42f, -0.08f);
+            if (!hasCanopyArtwork)
             {
                 StageEscortController.AddLine(canopy, new Vector2(0f, 0f), new Vector2(0f, -1.48f), 0.11f, ink, 48);
                 StageEscortController.AddLine(canopy, new Vector2(0f, -1.48f), new Vector2(0.3f, -1.68f), 0.11f, ink, 48);
@@ -535,7 +540,10 @@ namespace DrawBody.Prototype
                 art.transform.localPosition = new Vector3(0f, 0f, -0.02f);
                 float width = halfWidth * 2f;
                 float scale = width / umbrellaSprite.bounds.size.x;
-                art.transform.localScale = new Vector3(scale, scale, 1f);
+                // The source PNG includes a very long handle. Compress only
+                // its vertical axis so the canopy stays wide enough to shelter
+                // players while the hook ends naturally in the guide's hand.
+                art.transform.localScale = new Vector3(scale, scale * 0.58f, 1f);
                 SpriteRenderer artRenderer = art.AddComponent<SpriteRenderer>();
                 artRenderer.sprite = umbrellaSprite;
                 artRenderer.color = Color.white;

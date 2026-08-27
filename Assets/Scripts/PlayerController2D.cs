@@ -119,13 +119,15 @@ namespace DrawBody.Prototype
         {
             if (rb == null || rb.bodyType != RigidbodyType2D.Dynamic
                 || velocityChange.sqrMagnitude < 0.01f) return;
+            float speedLimit = Mathf.Max(28f, velocityChange.magnitude);
             rb.linearVelocity = Vector2.ClampMagnitude(
-                rb.linearVelocity + velocityChange, 28f);
+                rb.linearVelocity + velocityChange, speedLimit);
             // Normal movement acceleration is intentionally strong. Without a
             // brief momentum window it cancels bazooka recoil in a few physics
             // frames and the carried pair appears not to move at all.
             weaponRecoilMomentumUntil = Mathf.Max(
-                weaponRecoilMomentumUntil, Time.fixedTime + 0.48f);
+                weaponRecoilMomentumUntil,
+                Time.fixedTime + (velocityChange.magnitude > 28f ? 0.72f : 0.48f));
             IsGrounded = false;
         }
 
@@ -499,9 +501,10 @@ namespace DrawBody.Prototype
                 probeSize = new Vector2(Mathf.Max(groundCheckSize.x, bodyBounds.size.x * widthFactor), groundCheckSize.y);
             }
 
-            IsGrounded = HasExternalOverlap(probeCenter, probeSize);
+            bool overlapsGroundCandidate = HasExternalOverlap(probeCenter, probeSize);
             groundedOnIce = false;
-            groundNormal = IsGrounded ? FindGroundNormal(probeSize) : Vector2.up;
+            groundNormal = Vector2.up;
+            IsGrounded = overlapsGroundCandidate && TryFindGroundSupport(probeSize, out groundNormal);
             if (IsGrounded)
             {
                 lastGroundedAt = Time.time;
@@ -701,11 +704,12 @@ namespace DrawBody.Prototype
             return new Vector2(velocity.x, Mathf.Max(velocity.y, slopeY));
         }
 
-        private Vector2 FindGroundNormal(Vector2 probeSize)
+        private bool TryFindGroundSupport(Vector2 probeSize, out Vector2 normal)
         {
+            normal = Vector2.up;
             if (!TryGetBodyBounds(out Bounds bodyBounds))
             {
-                return Vector2.up;
+                return false;
             }
 
             float y = bodyBounds.min.y + 0.12f;
@@ -716,7 +720,6 @@ namespace DrawBody.Prototype
                 new Vector2(bodyBounds.max.x - Mathf.Max(0.08f, probeSize.x * 0.2f), y)
             };
 
-            Vector2 normal = Vector2.up;
             float bestDistance = float.PositiveInfinity;
             for (int i = 0; i < origins.Length; i++)
             {
@@ -729,7 +732,15 @@ namespace DrawBody.Prototype
                 for (int hitIndex = 0; hitIndex < hitCount; hitIndex++)
                 {
                     RaycastHit2D hit = groundRayResults[hitIndex];
-                    if (hit.collider == null || hit.collider.attachedRigidbody == rb || hit.distance >= bestDistance)
+                    // An overlap box can include a wall beside a wide, hand-drawn
+                    // body. A downward ray that starts inside that wall reports a
+                    // zero-distance hit with an artificial upward normal, so it
+                    // must not refresh floor jump/coyote time.
+                    if (hit.collider == null
+                        || hit.collider.attachedRigidbody == rb
+                        || hit.distance <= 0.001f
+                        || hit.distance >= bestDistance
+                        || hit.normal.y <= 0.2f)
                     {
                         continue;
                     }
@@ -745,7 +756,14 @@ namespace DrawBody.Prototype
                 }
             }
 
-            return normal.y > 0.2f ? normal.normalized : Vector2.up;
+            if (float.IsPositiveInfinity(bestDistance))
+            {
+                normal = Vector2.up;
+                return false;
+            }
+
+            normal = normal.normalized;
+            return true;
         }
 
         private void UpdateFacing()

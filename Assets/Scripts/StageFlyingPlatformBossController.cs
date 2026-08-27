@@ -344,8 +344,7 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("15-1 Boss HP Monitor");
             monitor.transform.SetParent(transform, false);
             monitor.transform.localPosition = new Vector3(0f, 7.35f, 0.4f);
-            StageEscortController.AddFilledRect(monitor.transform, "Frame", Vector2.zero, new Vector2(15f, 2.15f), new Color(0.14f, 0.18f, 0.22f, 0.94f), 220);
-            StageEscortController.AddFilledRect(monitor.transform, "Screen", Vector2.zero, new Vector2(14.35f, 1.55f), new Color(0.01f, 0.035f, 0.05f, 0.97f), 221);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(15f, 2.35f), 218);
             StageEscortController.AddFilledRect(monitor.transform, "HP Track", new Vector2(0f, -0.25f), new Vector2(11.8f, 0.48f), new Color(0.15f, 0.16f, 0.18f), 222);
             GameObject fill = new GameObject("HP Fill");
             fill.transform.SetParent(monitor.transform, false);
@@ -356,8 +355,7 @@ namespace DrawBody.Prototype
             renderer.color = new Color(0.95f, 0.2f, 0.32f);
             renderer.sortingOrder = 224;
             hpFill = fill.transform;
-            hpText = StageEscortController.CreateText(monitor.transform, "HP", new Vector3(0f, 0.47f, -0.04f), 52, 0.12f, Color.white, 225);
-            statusText = StageEscortController.CreateText(monitor.transform, "Status", new Vector3(0f, -0.72f, -0.04f), 34, 0.07f, new Color(0.45f, 0.9f, 1f), 225);
+            hpText = StageEscortController.CreateText(monitor.transform, "HP", new Vector3(0f, 0.5f, -0.04f), 54, 0.13f, new Color(0.08f, 0.25f, 0.48f), 225);
         }
 
         private void BuildAimGuide()
@@ -598,19 +596,57 @@ namespace DrawBody.Prototype
             SetBossMood(new Color(1f, 0.22f, 0.15f), 1.22f);
             GameObject warning = CreateWarningRect(new Vector2(0f, state.Lane), new Vector2(34f, 2.2f), new Color(1f, 0.16f, 0.1f, 0.3f));
             GameSfx.PlayAt(SfxId.BossAttackWarning, bossPosition, 1.05f);
-            yield return MoveBossForAttackSetup(state.Origin, 1.65f);
-            Destroy(warning);
+            // The idle path can leave the boss nearly an arena-width away from
+            // the selected dash side. Give that setup travel enough time, then
+            // snap to the synchronized start so the actual charge can never be
+            // swallowed by an unfinished approach.
+            float setupDistance = Vector2.Distance(bossPosition, state.Origin);
+            float setupDuration = Mathf.Clamp(setupDistance / 18f, 0.7f, 2.35f);
+            yield return MoveBossForAttackSetup(state.Origin, setupDuration);
+            bossPosition = state.Origin;
+            if (boss != null) boss.position = new Vector3(bossPosition.x, bossPosition.y, -0.25f);
+            yield return new WaitForSeconds(0.12f);
+            if (warning != null) Destroy(warning);
             GameSfx.PlayAt(SfxId.BossDash, bossPosition, 1.15f);
-            Vector2 end = state.Origin + state.Direction * 40f;
-            float elapsed = 0f;
-            while (elapsed < 0.95f)
+            Vector2 dashDirection = state.Direction.sqrMagnitude > 0.01f
+                ? state.Direction.normalized
+                : state.Origin.x < 0f ? Vector2.right : Vector2.left;
+            Vector2 end = state.Origin + dashDirection * 40f;
+            LineRenderer trail = CreateDashTrail(bossPosition, dashDirection);
+            float dashEndsAt = Time.time + 1.25f;
+            while (Vector2.Distance(bossPosition, end) > 0.05f && Time.time < dashEndsAt)
             {
-                elapsed += Time.deltaTime;
-                bossPosition = Vector2.Lerp(state.Origin, end, elapsed / 0.95f);
+                bossPosition = Vector2.MoveTowards(bossPosition, end, 43f * Time.deltaTime);
+                if (trail != null)
+                {
+                    trail.SetPosition(0, bossPosition - dashDirection * 4.2f);
+                    trail.SetPosition(1, bossPosition - dashDirection * 1.45f);
+                }
                 if (HasAuthority) HitPadsNear(bossPosition, 1.8f);
                 yield return null;
             }
+            bossPosition = end;
+            if (trail != null) Destroy(trail.gameObject);
             SetBossMood(new Color(0.55f, 0.18f, 0.82f), 1f);
+        }
+
+        private LineRenderer CreateDashTrail(Vector2 position, Vector2 direction)
+        {
+            GameObject trailObject = new GameObject("Crayon Devil Dash Trail");
+            trailObject.transform.SetParent(transform, false);
+            LineRenderer trail = trailObject.AddComponent<LineRenderer>();
+            trail.useWorldSpace = true;
+            trail.positionCount = 2;
+            trail.numCapVertices = 5;
+            trail.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+            trail.startWidth = 0.18f;
+            trail.endWidth = 1.15f;
+            trail.startColor = new Color(1f, 0.75f, 0.12f, 0f);
+            trail.endColor = new Color(0.85f, 0.14f, 0.95f, 0.8f);
+            trail.sortingOrder = 156;
+            trail.SetPosition(0, position - direction * 4.2f);
+            trail.SetPosition(1, position - direction * 1.45f);
+            return trail;
         }
 
         private IEnumerator RunBeam(AttackState state)
@@ -874,9 +910,7 @@ namespace DrawBody.Prototype
                 hpFill.localScale = new Vector3(11.8f * ratio, 0.34f, 1f);
                 hpFill.localPosition = new Vector3(-5.9f + 5.9f * ratio, -0.25f, -0.03f);
             }
-            statusText.text = LocalizationManager.T(phase == BattlePhase.Ready ? "flying_boss_ready"
-                : phase == BattlePhase.Defeated ? "flying_boss_clear"
-                : phase == BattlePhase.Failed ? "flying_boss_failed" : "flying_boss_controls");
+            if (statusText != null) statusText.text = string.Empty;
         }
 
         private int RandomLivingRoom()
@@ -934,7 +968,13 @@ namespace DrawBody.Prototype
             if (state == null || state.Sequence <= lastStateSequence) return;
             lastStateSequence = state.Sequence;
             phase = (BattlePhase)Mathf.Clamp(state.Phase, 0, (int)BattlePhase.Failed);
-            health = state.Health; maximumHealth = state.MaximumHealth; bossPosition = state.BossPosition;
+            health = state.Health;
+            maximumHealth = state.MaximumHealth;
+            // Attack packets contain the complete deterministic path. While a
+            // client is playing that path, an older 10 Hz snapshot must not
+            // pull the boss back toward its setup position and visually erase
+            // the dash. Normal snapshot correction resumes after the attack.
+            if (!attackRunning) bossPosition = state.BossPosition;
             if (state.RoomPlayerIds != null) System.Array.Copy(state.RoomPlayerIds, roomPlayerIds, Mathf.Min(4, state.RoomPlayerIds.Length));
             if (state.PadPositions != null)
             {
@@ -1050,6 +1090,9 @@ namespace DrawBody.Prototype
     public sealed class StageFlyingPlayerPad : MonoBehaviour
     {
         private SpriteRenderer fill;
+        private Transform craftVisual;
+        private Transform playerColorLamp;
+        private float craftScaleX;
         private TextMesh label;
         public Vector2 Position => transform.position;
 
@@ -1059,24 +1102,53 @@ namespace DrawBody.Prototype
             root.transform.SetParent(parent, false);
             root.transform.localPosition = position;
             StageFlyingPlayerPad pad = root.AddComponent<StageFlyingPlayerPad>();
-            GameObject visual = new GameObject("Pad Fill");
-            visual.transform.SetParent(root.transform, false);
-            visual.transform.localScale = new Vector3(3.2f, 0.62f, 1f);
-            pad.fill = visual.AddComponent<SpriteRenderer>();
-            pad.fill.sprite = StageLinkedShieldSurvivalController.GetSquareSprite();
-            pad.fill.color = color;
-            pad.fill.sortingOrder = 80;
-            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, new Vector2(3.25f, 0.68f), new Color(0.08f, 0.12f, 0.16f), 82);
-            StageEscortController.AddFilledRect(root.transform, "Cockpit Panel", Vector2.zero, new Vector2(1.08f, 0.44f), new Color(0.05f, 0.16f, 0.24f, 0.9f), 81);
-            StageEscortController.AddLine(root.transform, new Vector2(-1.58f, 0.08f), new Vector2(-2.05f, 0.48f), 0.12f, color, 79);
-            StageEscortController.AddLine(root.transform, new Vector2(-2.05f, 0.48f), new Vector2(-1.38f, -0.18f), 0.12f, color, 79);
-            StageEscortController.AddLine(root.transform, new Vector2(1.58f, 0.08f), new Vector2(2.05f, 0.48f), 0.12f, color, 79);
-            StageEscortController.AddLine(root.transform, new Vector2(2.05f, 0.48f), new Vector2(1.38f, -0.18f), 0.12f, color, 79);
-            AddThruster(root.transform, new Vector2(-0.92f, -0.52f), color);
-            AddThruster(root.transform, new Vector2(0.92f, -0.52f), color);
-            StageEscortController.AddLine(root.transform, new Vector2(-1.18f, -0.72f), new Vector2(-0.9f, -1.05f), 0.13f, new Color(1f, 0.78f, 0.12f), 78);
-            StageEscortController.AddLine(root.transform, new Vector2(1.18f, -0.72f), new Vector2(0.9f, -1.05f), 0.13f, new Color(1f, 0.78f, 0.12f), 78);
-            pad.label = StageEscortController.CreateText(root.transform, "Player Label", new Vector3(0f, 0f, -0.04f), 34, 0.078f, Color.white, 84);
+            Sprite craftSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/flying-player-craft");
+            if (craftSprite != null && craftSprite.bounds.size.x > 0f && craftSprite.bounds.size.y > 0f)
+            {
+                GameObject visual = new GameObject("Colored Pencil Player Hovercraft");
+                visual.transform.SetParent(root.transform, false);
+                visual.transform.localPosition = new Vector3(0f, -0.12f, 0f);
+                visual.transform.localScale = new Vector3(
+                    4.35f / craftSprite.bounds.size.x,
+                    1.45f / craftSprite.bounds.size.y,
+                    1f);
+                pad.craftVisual = visual.transform;
+                pad.craftScaleX = Mathf.Abs(visual.transform.localScale.x);
+                pad.fill = visual.AddComponent<SpriteRenderer>();
+                pad.fill.sprite = craftSprite;
+                pad.fill.color = Color.white;
+                pad.fill.sortingOrder = 83;
+
+                GameObject playerLamp = new GameObject("Player Color Lamp");
+                playerLamp.transform.SetParent(root.transform, false);
+                playerLamp.transform.localPosition = new Vector3(0.92f, 0.02f, -0.03f);
+                pad.playerColorLamp = playerLamp.transform;
+                playerLamp.transform.localScale = Vector3.one * 0.22f;
+                SpriteRenderer lampRenderer = playerLamp.AddComponent<SpriteRenderer>();
+                lampRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
+                lampRenderer.color = color;
+                lampRenderer.sortingOrder = 85;
+                pad.SetFacing(position.x > 0f ? -1f : 1f);
+            }
+            else
+            {
+                GameObject visual = new GameObject("Pad Fill");
+                visual.transform.SetParent(root.transform, false);
+                visual.transform.localScale = new Vector3(3.2f, 0.62f, 1f);
+                pad.fill = visual.AddComponent<SpriteRenderer>();
+                pad.fill.sprite = StageLinkedShieldSurvivalController.GetSquareSprite();
+                pad.fill.color = color;
+                pad.fill.sortingOrder = 80;
+                StageEscortController.AddBoxOutline(root.transform, Vector2.zero, new Vector2(3.25f, 0.68f), new Color(0.08f, 0.12f, 0.16f), 82);
+                StageEscortController.AddFilledRect(root.transform, "Cockpit Panel", Vector2.zero, new Vector2(1.08f, 0.44f), new Color(0.05f, 0.16f, 0.24f, 0.9f), 81);
+                StageEscortController.AddLine(root.transform, new Vector2(-1.58f, 0.08f), new Vector2(-2.05f, 0.48f), 0.12f, color, 79);
+                StageEscortController.AddLine(root.transform, new Vector2(-2.05f, 0.48f), new Vector2(-1.38f, -0.18f), 0.12f, color, 79);
+                StageEscortController.AddLine(root.transform, new Vector2(1.58f, 0.08f), new Vector2(2.05f, 0.48f), 0.12f, color, 79);
+                StageEscortController.AddLine(root.transform, new Vector2(2.05f, 0.48f), new Vector2(1.38f, -0.18f), 0.12f, color, 79);
+                AddThruster(root.transform, new Vector2(-0.92f, -0.52f), color);
+                AddThruster(root.transform, new Vector2(0.92f, -0.52f), color);
+            }
+            pad.label = StageEscortController.CreateText(root.transform, "Player Label", new Vector3(0f, 0.02f, -0.04f), 34, 0.078f, Color.white, 86);
             pad.label.text = "P" + (room + 1);
             return pad;
         }
@@ -1100,7 +1172,30 @@ namespace DrawBody.Prototype
             light.sortingOrder = 83;
         }
 
-        public void SetPosition(Vector2 position) => transform.position = new Vector3(position.x, position.y, -0.1f);
+        public void SetPosition(Vector2 position)
+        {
+            float horizontalMovement = position.x - transform.position.x;
+            if (Mathf.Abs(horizontalMovement) >= 0.025f)
+            {
+                SetFacing(Mathf.Sign(horizontalMovement));
+            }
+            transform.position = new Vector3(position.x, position.y, -0.1f);
+        }
+
+        private void SetFacing(float direction)
+        {
+            if (craftVisual == null || craftScaleX <= 0f) return;
+            float facing = direction < 0f ? -1f : 1f;
+            Vector3 scale = craftVisual.localScale;
+            scale.x = craftScaleX * facing;
+            craftVisual.localScale = scale;
+            if (playerColorLamp != null)
+            {
+                Vector3 lampPosition = playerColorLamp.localPosition;
+                lampPosition.x = Mathf.Abs(lampPosition.x) * facing;
+                playerColorLamp.localPosition = lampPosition;
+            }
+        }
         public void SetDefeated(bool value) { if (fill != null) fill.color = value ? new Color(0.25f, 0.25f, 0.28f, 0.55f) : fill.color; }
     }
 
@@ -1121,8 +1216,8 @@ namespace DrawBody.Prototype
             root.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             StageFlyingBossShot shot = root.AddComponent<StageFlyingBossShot>();
             shot.owner = owner; shot.sequence = sequence; shot.ownerRoom = ownerRoom; shot.velocity = direction.normalized * 13f; shot.expiresAt = Time.time + 4.5f; shot.authoritative = authoritative;
-            StageEscortController.AddFilledRect(root.transform, "Missile", Vector2.zero, new Vector2(0.85f, 0.28f), new Color(0.18f, 0.8f, 1f), 145);
-            StageEscortController.AddLine(root.transform, new Vector2(-0.42f, 0f), new Vector2(-0.75f, 0f), 0.14f, new Color(1f, 0.82f, 0.18f), 144);
+            BossAttackVisuals.AddMissile(root.transform, 1.05f, 0.36f,
+                new Color(0.18f, 0.8f, 1f), new Color(1f, 0.82f, 0.18f), 145);
             return shot;
         }
 
@@ -1154,8 +1249,8 @@ namespace DrawBody.Prototype
             StageFlyingHomingHazard hazard = root.AddComponent<StageFlyingHomingHazard>();
             hazard.owner = owner; hazard.targetRoom = room; hazard.authoritative = authoritative;
             hazard.velocity = Vector2.down * 3f; hazard.expiresAt = Time.time + 15f;
-            StageEscortController.AddFilledRect(root.transform, "Homing Body", Vector2.zero, new Vector2(1f, 0.38f), new Color(1f, 0.2f, 0.48f), 150);
-            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, new Vector2(1f, 0.38f), new Color(0.3f, 0.02f, 0.1f), 152);
+            BossAttackVisuals.AddMissile(root.transform, 1.2f, 0.44f,
+                new Color(1f, 0.2f, 0.48f), new Color(0.2f, 0.95f, 1f), 150);
         }
 
         private void Update()

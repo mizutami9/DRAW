@@ -71,6 +71,8 @@ namespace DrawBody.Prototype
             new Dictionary<PlayerController2D, RespawnAnimationState>();
         private readonly Dictionary<PlayerController2D, float> respawnGraceUntil =
             new Dictionary<PlayerController2D, float>();
+        private readonly Dictionary<PlayerController2D, Vector3> assignedPlayerStartPositions =
+            new Dictionary<PlayerController2D, Vector3>();
         private Material respawnBurstMaterial;
         private Coroutine redrawRespawnRoutine;
         private SpeciesSwapMessage pendingIncomingSpeciesSwap;
@@ -101,6 +103,11 @@ namespace DrawBody.Prototype
         private bool challengeStartPositionsCaptured;
         private StageEliminationChallengeController survivalController;
         private StageBlockBreakerController blockBreakerController;
+        private StageChallengeReadyRoomController challengeReadyRoom;
+        private bool challengeRunStarted;
+        private Coroutine spawnFitValidationRoutine;
+        private bool spawnCorrectionRequired;
+        private bool drawingOpenedForSpawnCorrection;
         private TrailerCoopDemoController trailerDemo;
         private SteamHeaderCaptureController steamHeaderCapture;
         private Vector3 primaryChallengeStartPosition;
@@ -118,6 +125,7 @@ namespace DrawBody.Prototype
         public int ChallengeRequiredCollectionCount => requiredCollectionCount;
         public int ChallengeTotalCollectionTargetCount => totalCollectionTargetCount;
         public bool ChallengeStarting => challengeStarting;
+        public bool IsChallengeReadyRoomActive => challengeReadyRoom != null && !challengeRunStarted;
         public string CurrentStageId => currentStageId;
         public bool RequiresUniquePlayerSpecies => StageSpeciesRules.RequiresUniqueSpecies(currentStageId);
         public string ChallengeStartCountdownText
@@ -137,7 +145,7 @@ namespace DrawBody.Prototype
                 if (challengeStartCountdownRemaining > 3f) return "3";
                 if (challengeStartCountdownRemaining > 2f) return "2";
                 if (challengeStartCountdownRemaining > 1f) return "1";
-                return "START!";
+                return LocalizationManager.T("survival_start");
             }
         }
 
@@ -170,8 +178,10 @@ namespace DrawBody.Prototype
         private sealed class CollectionState
         {
             public string CollectibleId;
+            public string CollectorId;
             public int Count;
             public float RemainingSeconds;
+            public bool PlayFeedback;
         }
 
         private void Awake()
@@ -219,6 +229,10 @@ namespace DrawBody.Prototype
             if (GetComponent<PlayerEmoteController>() == null)
             {
                 gameObject.AddComponent<PlayerEmoteController>();
+            }
+            if (GetComponent<MultiplayerPlayerStatusHud>() == null)
+            {
+                gameObject.AddComponent<MultiplayerPlayerStatusHud>();
             }
         }
 
@@ -631,10 +645,15 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            ApplyCollectible(collectible.ObjectId, IsOnlineInStage());
+            string collectorId = IsOnlineInStage()
+                ? GetOnlinePlayerId(collectible.CollectorTransform != null
+                    ? collectible.CollectorTransform.GetComponent<PlayerController2D>()
+                    : null)
+                : null;
+            ApplyCollectible(collectible.ObjectId, IsOnlineInStage(), collectorId);
         }
 
-        private void ApplyCollectible(string objectId, bool broadcast)
+        private void ApplyCollectible(string objectId, bool broadcast, string collectorId = null)
         {
             if (string.IsNullOrEmpty(objectId) || !collectedObjectIds.Add(objectId))
             {
@@ -648,7 +667,10 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            collectible.ApplyCollected();
+            Transform collector = !string.IsNullOrEmpty(collectorId)
+                ? GetOnlinePlayerTransform(collectorId)
+                : collectible.CollectorTransform;
+            collectible.ApplyCollected(collector, true);
             GameSfx.PlayAt(
                 collectible.CollectibleType == StageObjectType.CollectibleCoin
                     ? SfxId.CoinCollect
@@ -660,8 +682,10 @@ namespace DrawBody.Prototype
             CollectionState state = new CollectionState
             {
                 CollectibleId = objectId,
+                CollectorId = collectorId,
                 Count = collectedCount,
-                RemainingSeconds = challengeRemaining
+                RemainingSeconds = challengeRemaining,
+                PlayFeedback = true
             };
             if (broadcast && onlineManager != null)
             {
@@ -689,7 +713,23 @@ namespace DrawBody.Prototype
             if (!string.IsNullOrEmpty(state.CollectibleId))
             {
                 collectedObjectIds.Add(state.CollectibleId);
-                FindCollectible(state.CollectibleId)?.ApplyCollected();
+                Transform collector = !string.IsNullOrEmpty(state.CollectorId)
+                    ? GetOnlinePlayerTransform(state.CollectorId)
+                    : null;
+                StageCollectible collectible = FindCollectible(state.CollectibleId);
+                if (collectible != null)
+                {
+                    Vector3 soundPosition = collectible.transform.position;
+                    collectible.ApplyCollected(collector, state.PlayFeedback);
+                    if (state.PlayFeedback)
+                    {
+                        GameSfx.PlayAt(
+                            collectible.CollectibleType == StageObjectType.CollectibleCoin
+                                ? SfxId.CoinCollect
+                                : SfxId.CollectibleCollect,
+                            soundPosition);
+                    }
+                }
             }
             collectedCount = Mathf.Max(collectedCount, state.Count);
             if (state.RemainingSeconds > 0f)
@@ -753,17 +793,34 @@ namespace DrawBody.Prototype
             uiManager?.SetChallengeCountdown(challengeStarting, ChallengeStartCountdownText);
         }
 
+        private bool RequiresChallengeReadyRoom()
+        {
+            return stageRuleMode == StageRuleMode.Survival
+                || stageRuleMode == StageRuleMode.BlockBreaker
+                || currentStageId == "2-2"
+                || currentStageId == "7-1"
+                || currentStageId == "9-2"
+                || currentStageId == "9-3"
+                || currentStageId == "10-1"
+                || currentStageId == "10-3"
+                || currentStageId == "12-1"
+                || currentStageId == "12-2"
+                || currentStageId == "12-3"
+                || currentStageId == "13-2"
+                || currentStageId == "14-1";
+        }
+
         private void UpdateTimedCollectionChallenge()
         {
             if (stageRuleMode != StageRuleMode.TimedCollection || cleared
-                || stageEditing || !stageStarted)
+                || stageEditing || !stageStarted || drawing || IsChallengeReadyRoomActive)
             {
                 return;
             }
 
             if (challengeFailed)
             {
-                uiManager?.SetChallengeCountdown(true, "TIME UP");
+                uiManager?.SetChallengeCountdown(true, LocalizationManager.T("challenge_time_up"));
                 challengeTimeUpReturnRemaining = Mathf.Max(
                     0f,
                     challengeTimeUpReturnRemaining - Time.unscaledDeltaTime);
@@ -790,7 +847,9 @@ namespace DrawBody.Prototype
                 if (countdownText != lastChallengeCountdownSfxText)
                 {
                     lastChallengeCountdownSfxText = countdownText;
-                    GameSfx.Play(countdownText == "START!" ? SfxId.StageCountdownGo : SfxId.StageCountdownTick);
+                    GameSfx.Play(string.Equals(countdownText, LocalizationManager.T("survival_start"), System.StringComparison.Ordinal)
+                        ? SfxId.StageCountdownGo
+                        : SfxId.StageCountdownTick);
                 }
                 challengeStartCountdownRemaining = Mathf.Max(
                     0f,
@@ -900,7 +959,8 @@ namespace DrawBody.Prototype
             {
                 CollectibleId = objectId,
                 Count = collectedCount,
-                RemainingSeconds = challengeRemaining
+                RemainingSeconds = challengeRemaining,
+                PlayFeedback = false
             };
             onlineManager.SendGimmickData(new OnlineGimmickData
             {
@@ -925,7 +985,7 @@ namespace DrawBody.Prototype
                 CancelDrawingMode();
             }
             SetAllPlayerControls(false);
-            uiManager?.SetChallengeCountdown(true, "TIME UP");
+            uiManager?.SetChallengeCountdown(true, LocalizationManager.T("challenge_time_up"));
             uiManager?.SetChallengeHud(true, 0f, collectionTarget, collectedCount, requiredCollectionCount, true);
         }
 
@@ -1123,7 +1183,7 @@ namespace DrawBody.Prototype
             }
             else if (data.Kind == GimmickKindCollectRequest && IsLocalOnlineHost(onlineManager.CurrentLobby))
             {
-                ApplyCollectible(data.ObjectId, true);
+                ApplyCollectible(data.ObjectId, true, data.PlayerId);
             }
             else if (data.Kind == GimmickKindCollectState && IsOnlineHostPlayer(data.PlayerId))
             {
@@ -1262,12 +1322,19 @@ namespace DrawBody.Prototype
 
         public void EnterDrawingMode()
         {
-            if (!stageStarted || challengeStarting || challengeFailed)
+            if (!stageStarted || challengeFailed
+                || challengeStarting && !IsChallengeReadyRoomActive && !spawnCorrectionRequired)
+            {
+                return;
+            }
+
+            if (RequiresChallengeReadyRoom() && challengeRunStarted)
             {
                 return;
             }
 
             drawing = true;
+            drawingOpenedForSpawnCorrection = spawnCorrectionRequired;
             if (player != null)
             {
                 redrawReturnPlayer = player;
@@ -1306,6 +1373,20 @@ namespace DrawBody.Prototype
 
         public void ConfirmDrawingMode()
         {
+            if (!drawing) return;
+            if (IsChallengeReadyRoomActive)
+            {
+                if (spawnFitValidationRoutine == null)
+                    spawnFitValidationRoutine = StartCoroutine(ValidateReadyRoomRedrawFitAndComplete());
+                return;
+            }
+            if (!RequiresChallengeReadyRoom() && stageStarted)
+            {
+                if (spawnFitValidationRoutine == null)
+                    spawnFitValidationRoutine = StartCoroutine(ValidateRedrawFitAndComplete());
+                return;
+            }
+            drawManager?.CommitEditing();
             ExitDrawingMode(true);
         }
 
@@ -1317,6 +1398,7 @@ namespace DrawBody.Prototype
             }
 
             drawing = false;
+            drawingOpenedForSpawnCorrection = false;
             RestoreRedrawPose(returnToStart);
             Time.timeScale = 1f;
             uiManager?.SetDrawing(false);
@@ -1338,6 +1420,15 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (spawnCorrectionRequired && drawingOpenedForSpawnCorrection)
+            {
+                drawManager?.ShowStageFitError();
+                return;
+            }
+
+            // A voluntary redraw may fail the fit check after applying its temporary
+            // body. Back cancels that edit and restores the known-good snapshot.
+            spawnCorrectionRequired = false;
             drawManager?.CancelEditing();
             ExitDrawingMode();
         }
@@ -1345,6 +1436,13 @@ namespace DrawBody.Prototype
         public void SelectStage(string stageId)
         {
             CancelRespawnAnimations();
+            if (spawnFitValidationRoutine != null) StopCoroutine(spawnFitValidationRoutine);
+            spawnFitValidationRoutine = null;
+            spawnCorrectionRequired = false;
+            if (challengeReadyRoom != null) challengeReadyRoom.Abort();
+            challengeReadyRoom = null;
+            challengeRunStarted = false;
+            assignedPlayerStartPositions.Clear();
             ResetSpeciesSwapState();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(true);
@@ -1413,6 +1511,8 @@ namespace DrawBody.Prototype
             }
             RespawnPlayers();
             SetActivePlayer(player != null ? player : primaryPlayer, true);
+            BeginChallengeReadyRoomIfNeeded();
+            BeginNormalStageSpawnValidationIfNeeded();
             if (RequiresUniquePlayerSpecies)
             {
                 SendLocalOnlineBodyData();
@@ -1422,6 +1522,8 @@ namespace DrawBody.Prototype
         public void OpenStageEditor(string stageId)
         {
             CancelRespawnAnimations();
+            if (challengeReadyRoom != null) challengeReadyRoom.Abort();
+            challengeReadyRoom = null;
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(true);
             currentStageId = string.IsNullOrEmpty(stageId) ? "1-1" : stageId;
@@ -1556,6 +1658,8 @@ namespace DrawBody.Prototype
         public void OpenStageSelect()
         {
             CancelRespawnAnimations();
+            if (challengeReadyRoom != null) challengeReadyRoom.Abort();
+            challengeReadyRoom = null;
             GameBgm.PlayTitle();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(false);
@@ -1765,6 +1869,11 @@ namespace DrawBody.Prototype
             return controller == primaryPlayer && onlineManager != null ? onlineManager.LocalPlayerId : null;
         }
 
+        public bool IsPlayerRespawning(PlayerController2D controller)
+        {
+            return controller != null && respawnAnimations.ContainsKey(controller);
+        }
+
         public void SetOnlineRemotePlayerId(string playerId)
         {
             if (!string.IsNullOrEmpty(playerId))
@@ -1902,6 +2011,7 @@ namespace DrawBody.Prototype
                     Destroy(remote.gameObject);
                 }
             }
+            drawManager?.RefreshUniqueSpeciesAvailability();
         }
 
         public void ApplyOnlineRemoteState(string playerId, Vector2 position, Vector2 velocity, float rotation)
@@ -2389,6 +2499,10 @@ namespace DrawBody.Prototype
             remotePlayer.SetControlsEnabled(false);
             LiftPlayerOutOfGround(remotePlayer);
             ResolveSimultaneousUniqueSpeciesConflict(bodyData.PlayerId, remoteState.Species);
+            // BodyDataReceived can reach DrawManager before this method has
+            // replaced the remote player's confirmed species. Refresh again after
+            // the authoritative state is applied so a resolved warning disappears.
+            drawManager.RefreshUniqueSpeciesAvailability();
         }
 
         public void SendLocalOnlineBodyData()
@@ -2561,7 +2675,16 @@ namespace DrawBody.Prototype
 
             PlayerController2D redrawPlayer = player;
             Vector3 returnPosition;
-            if (returnToStart && spawnPoint != null)
+            if (returnToStart && assignedPlayerStartPositions.TryGetValue(redrawPlayer, out Vector3 assignedPosition))
+            {
+                returnPosition = assignedPosition;
+                redrawPlayer.GetComponent<PlayerCarryController>()?.ForceDrop();
+                if (onlineCarryHeld)
+                {
+                    EndOnlineCarry(Vector2.zero);
+                }
+            }
+            else if (returnToStart && spawnPoint != null)
             {
                 returnPosition = spawnPoint.position + GetRespawnOffset(redrawPlayer);
                 redrawPlayer.GetComponent<PlayerCarryController>()?.ForceDrop();
@@ -2602,13 +2725,229 @@ namespace DrawBody.Prototype
                 desiredBottomY));
         }
 
+        public void RecordAssignedPlayerStart(PlayerController2D targetPlayer, Vector3 position)
+        {
+            if (targetPlayer != null)
+            {
+                assignedPlayerStartPositions[targetPlayer] = position;
+            }
+        }
+
+        private void BeginChallengeReadyRoomIfNeeded()
+        {
+            challengeRunStarted = !RequiresChallengeReadyRoom();
+            if (!RequiresChallengeReadyRoom() || testingEditedStage || stageLoader == null
+                || stageLoader.LoadedStageRoot == null)
+            {
+                challengeReadyRoom = null;
+                return;
+            }
+
+            GameObject readyRoot = new GameObject("Challenge Redraw Ready Room");
+            challengeReadyRoom = readyRoot.AddComponent<StageChallengeReadyRoomController>();
+            challengeReadyRoom.Configure(this, stageLoader.LoadedStageRoot);
+            uiManager?.SetChallengeCountdown(false, string.Empty);
+        }
+
+        internal void CompleteChallengeReadyRoom()
+        {
+            challengeRunStarted = true;
+            challengeReadyRoom = null;
+        }
+
+        internal void CancelChallengeReadyRoomReference(StageChallengeReadyRoomController room)
+        {
+            if (challengeReadyRoom == room)
+            {
+                challengeReadyRoom = null;
+            }
+        }
+
+        private void BeginNormalStageSpawnValidationIfNeeded()
+        {
+            if (RequiresChallengeReadyRoom() || testingEditedStage || currentStageId == "1-0") return;
+            spawnFitValidationRoutine = StartCoroutine(ValidateInitialSpawnFit());
+        }
+
+        private IEnumerator ValidateInitialSpawnFit()
+        {
+            // Let stage-specific Start methods finish placing players first.
+            yield return null;
+
+            List<PlayerController2D> candidates = new List<PlayerController2D>();
+            if (primaryPlayer != null) candidates.Add(primaryPlayer);
+            if (!IsOnlineInStage() && secondaryPlayer != null && secondaryPlayer != primaryPlayer)
+                candidates.Add(secondaryPlayer);
+
+            for (int i = 0; i < candidates.Count; i++)
+            {
+                PlayerController2D candidate = candidates[i];
+                if (candidate == null || !candidate.gameObject.activeInHierarchy) continue;
+                Vector3 preferred = candidate.transform.position;
+                if (TryPlaceAtSafeSpawn(candidate, preferred, out Vector3 safePosition))
+                {
+                    RecordAssignedPlayerStart(candidate, safePosition);
+                    continue;
+                }
+
+                spawnCorrectionRequired = true;
+                SetActivePlayer(candidate, false);
+                EnterDrawingMode();
+                drawManager?.ShowStageFitError();
+                spawnFitValidationRoutine = null;
+                yield break;
+            }
+
+            spawnCorrectionRequired = false;
+            spawnFitValidationRoutine = null;
+        }
+
+        private IEnumerator ValidateRedrawFitAndComplete()
+        {
+            // BodyBuilder replaces generated colliders at the end of the frame.
+            yield return null;
+            PlayerController2D redrawPlayer = player;
+            if (redrawPlayer == null)
+            {
+                spawnFitValidationRoutine = null;
+                yield break;
+            }
+
+            Vector3 hiddenPosition = redrawPlayer.transform.position;
+            Vector3 preferred = assignedPlayerStartPositions.TryGetValue(redrawPlayer, out Vector3 assigned)
+                ? assigned
+                : spawnPoint != null ? spawnPoint.position + GetRespawnOffset(redrawPlayer) : hiddenPosition;
+
+            SetPlayerRedrawingState(redrawPlayer, false);
+            Physics2D.SyncTransforms();
+            if (!TryPlaceAtSafeSpawn(redrawPlayer, preferred, out Vector3 safePosition))
+            {
+                TeleportPlayerWithoutPhysics(redrawPlayer, hiddenPosition);
+                redrawPlayer.ResetMotion();
+                SetPlayerRedrawingState(redrawPlayer, true);
+                spawnCorrectionRequired = true;
+                drawManager?.ShowStageFitError();
+                spawnFitValidationRoutine = null;
+                yield break;
+            }
+
+            assignedPlayerStartPositions[redrawPlayer] = safePosition;
+            TeleportPlayerWithoutPhysics(redrawPlayer, hiddenPosition);
+            SetPlayerRedrawingState(redrawPlayer, true);
+            spawnCorrectionRequired = false;
+            spawnFitValidationRoutine = null;
+            drawManager?.CommitEditing();
+            ExitDrawingMode(true);
+        }
+
+        private IEnumerator ValidateReadyRoomRedrawFitAndComplete()
+        {
+            // Wait for the selected species to finish rebuilding its colliders.
+            yield return null;
+            PlayerController2D redrawPlayer = player;
+            if (redrawPlayer == null || challengeReadyRoom == null)
+            {
+                spawnFitValidationRoutine = null;
+                yield break;
+            }
+
+            SetPlayerRedrawingState(redrawPlayer, false);
+            Physics2D.SyncTransforms();
+            if (!challengeReadyRoom.TryGetFittedReturnPosition(redrawPlayer, out Vector3 fittedPosition))
+            {
+                SetPlayerRedrawingState(redrawPlayer, true);
+                drawManager?.ShowReadyRoomFitError();
+                spawnFitValidationRoutine = null;
+                yield break;
+            }
+
+            redrawReturnPlayer = redrawPlayer;
+            redrawReturnPosition = fittedPosition;
+            hasRedrawReturnPosition = true;
+            hasRedrawReturnBottom = false;
+            SetPlayerRedrawingState(redrawPlayer, true);
+            spawnFitValidationRoutine = null;
+            drawManager?.CommitEditing();
+            ExitDrawingMode(false);
+        }
+
+        private bool TryPlaceAtSafeSpawn(PlayerController2D targetPlayer, Vector3 preferred, out Vector3 safePosition)
+        {
+            safePosition = preferred;
+            if (targetPlayer == null || !TryGetPlayerSolidBounds(targetPlayer, out _))
+                return true;
+
+            Vector3 original = targetPlayer.transform.position;
+            bool requiresGround = TryFindGroundSurfaceBelow(preferred, out _);
+            const float step = 0.75f;
+            const int searchRings = 12;
+            for (int ring = 0; ring <= searchRings; ring++)
+            {
+                int variants = ring == 0 ? 1 : 2;
+                for (int side = 0; side < variants; side++)
+                {
+                    float direction = side == 0 ? 1f : -1f;
+                    Vector3 candidate = preferred + Vector3.right * (ring * step * direction);
+                    if (requiresGround && !TryFindGroundSurfaceBelow(candidate, out _)) continue;
+                    TeleportPlayerWithoutPhysics(targetPlayer, candidate);
+                    AlignPlayerBottomToGround(targetPlayer, candidate);
+                    Physics2D.SyncTransforms();
+                    if (!HasStageSolidOverlap(targetPlayer))
+                    {
+                        safePosition = targetPlayer.transform.position;
+                        targetPlayer.ResetMotion();
+                        return true;
+                    }
+                }
+            }
+
+            TeleportPlayerWithoutPhysics(targetPlayer, original);
+            targetPlayer.ResetMotion();
+            return false;
+        }
+
+        private bool HasStageSolidOverlap(PlayerController2D targetPlayer)
+        {
+            Collider2D[] playerColliders = targetPlayer.GetComponentsInChildren<Collider2D>(true);
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.SetLayerMask(groundLayer);
+            filter.useTriggers = false;
+            List<Collider2D> overlaps = new List<Collider2D>();
+            for (int i = 0; i < playerColliders.Length; i++)
+            {
+                Collider2D playerCollider = playerColliders[i];
+                if (playerCollider == null || !playerCollider.enabled || playerCollider.isTrigger) continue;
+                overlaps.Clear();
+                playerCollider.Overlap(filter, overlaps);
+                for (int hit = 0; hit < overlaps.Count; hit++)
+                {
+                    Collider2D other = overlaps[hit];
+                    if (other == null || other.isTrigger || other.transform.IsChildOf(targetPlayer.transform)) continue;
+                    // Player layers can be included in the stage-solid mask on
+                    // multiplayer scenes. Another participant is not part of the
+                    // room or stage geometry and must never make a body fail the
+                    // spawn-size validation.
+                    if (other.GetComponentInParent<PlayerController2D>() != null) continue;
+                    if (playerCollider.Distance(other).isOverlapped) return true;
+                }
+            }
+            return false;
+        }
+
         private bool TryFindGroundSurfaceBelow(Vector3 position, out float surfaceY)
         {
             Vector2 origin = new Vector2(position.x, position.y + 0.35f);
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, 8f, groundLayer);
-            if (hit.collider != null && !hit.collider.isTrigger)
+            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, Vector2.down, 8f, groundLayer);
+            for (int i = 0; i < hits.Length; i++)
             {
-                surfaceY = hit.point.y;
+                Collider2D collider = hits[i].collider;
+                if (collider == null || collider.isTrigger
+                    || collider.GetComponentInParent<PlayerController2D>() != null)
+                {
+                    continue;
+                }
+
+                surfaceY = hits[i].point.y;
                 return true;
             }
             surfaceY = 0f;
@@ -2760,6 +3099,46 @@ namespace DrawBody.Prototype
             if (!IsOnlineInStage()) RestorePlayerPhysics(secondaryPlayer);
             if (player != null && player != primaryPlayer && (!IsOnlineInStage() || player == secondaryPlayer))
                 RestorePlayerPhysics(player);
+            EnsureEliminationSpectatorRelay(primaryPlayer);
+            EnsureEliminationSpectatorRelay(secondaryPlayer);
+        }
+
+        private void EnsureEliminationSpectatorRelay(PlayerController2D targetPlayer)
+        {
+            if (targetPlayer == null) return;
+            StageEliminationSpectatorRelay relay = targetPlayer.GetComponent<StageEliminationSpectatorRelay>();
+            if (relay == null) relay = targetPlayer.gameObject.AddComponent<StageEliminationSpectatorRelay>();
+            relay.Configure(this, targetPlayer);
+        }
+
+        internal void FollowSurvivorAfterElimination(PlayerController2D eliminatedPlayer)
+        {
+            if (!stageStarted || cleared || !challengeRunStarted || !RequiresChallengeReadyRoom()) return;
+            PlayerController2D[] candidates = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            PlayerController2D survivor = null;
+            float nearest = float.PositiveInfinity;
+            Vector2 origin = eliminatedPlayer != null
+                ? (Vector2)eliminatedPlayer.transform.position
+                : cameraFollow != null ? (Vector2)cameraFollow.transform.position : Vector2.zero;
+            for (int i = 0; i < candidates.Length; i++)
+            {
+                PlayerController2D candidate = candidates[i];
+                if (candidate == null || candidate == eliminatedPlayer || !candidate.gameObject.activeInHierarchy) continue;
+                Rigidbody2D body = candidate.GetComponent<Rigidbody2D>();
+                if (body != null && !body.simulated) continue;
+                float distance = Vector2.SqrMagnitude((Vector2)candidate.transform.position - origin);
+                if (distance < nearest)
+                {
+                    nearest = distance;
+                    survivor = candidate;
+                }
+            }
+            if (survivor == null) return;
+            if (cameraFollow == null && Camera.main != null) cameraFollow = Camera.main.GetComponent<CameraFollow2D>();
+            if (cameraFollow == null) return;
+            cameraFollow.SetTarget(survivor.transform);
+            cameraFollow.enabled = true;
         }
 
         private static void RestorePlayerPhysics(PlayerController2D targetPlayer)
@@ -3198,24 +3577,71 @@ namespace DrawBody.Prototype
 
         private Vector3 GetRespawnOffset(PlayerController2D targetPlayer)
         {
+            int playerCount;
+            int playerSlot;
             if (targetPlayer != null && IsOnlineInStage())
             {
-                OnlinePlayerInfo[] lobbyPlayers = onlineManager?.CurrentLobby?.Players;
                 string targetId = GetOnlinePlayerId(targetPlayer);
-                if (lobbyPlayers != null && lobbyPlayers.Length > 1 && !string.IsNullOrEmpty(targetId))
-                {
-                    for (int i = 0; i < lobbyPlayers.Length; i++)
-                    {
-                        if (lobbyPlayers[i] == null || lobbyPlayers[i].PlayerId != targetId) continue;
-                        // Every peer derives the same slot from the lobby order,
-                        // preventing replicated characters from spawning inside
-                        // each other and being pushed below the map.
-                        float centeredIndex = i - (lobbyPlayers.Length - 1) * 0.5f;
-                        return new Vector3(centeredIndex * 2.2f, 0f, 0f);
-                    }
-                }
+                playerCount = GetLobbyPlayerCount();
+                playerSlot = GetLobbyPlayerSlot(targetId);
             }
-            return targetPlayer != null && targetPlayer == secondaryPlayer ? new Vector3(1.25f, 0f, 0f) : Vector3.zero;
+            else
+            {
+                playerCount = secondaryPlayer != null ? 2 : 1;
+                playerSlot = targetPlayer != null && targetPlayer == secondaryPlayer ? 1 : 0;
+            }
+
+            if (playerCount <= 1 || playerSlot < 0)
+            {
+                return Vector3.zero;
+            }
+
+            const float preferredSpacing = 2.2f;
+            float spacing = preferredSpacing;
+            float firstOffset = -(playerCount - 1) * preferredSpacing * 0.5f;
+            if (spawnPoint != null
+                && TryGetSpawnSurfaceHorizontalBounds(spawnPoint.position, out float surfaceLeft, out float surfaceRight))
+            {
+                // A number of stages deliberately put the marker close to the
+                // left edge of a small starting platform. Fit the whole group into
+                // that platform instead of blindly spreading around the marker.
+                const float edgeMargin = 0.75f;
+                float allowedMin = surfaceLeft + edgeMargin - spawnPoint.position.x;
+                float allowedMax = surfaceRight - edgeMargin - spawnPoint.position.x;
+                float availableWidth = Mathf.Max(0f, allowedMax - allowedMin);
+                spacing = Mathf.Min(preferredSpacing, availableWidth / (playerCount - 1));
+                float groupWidth = spacing * (playerCount - 1);
+                float centeredStart = -groupWidth * 0.5f;
+                firstOffset = Mathf.Clamp(centeredStart, allowedMin, allowedMax - groupWidth);
+            }
+
+            return new Vector3(firstOffset + playerSlot * spacing, 0f, 0f);
+        }
+
+        private bool TryGetSpawnSurfaceHorizontalBounds(
+            Vector3 spawnPosition,
+            out float surfaceLeft,
+            out float surfaceRight)
+        {
+            surfaceLeft = 0f;
+            surfaceRight = 0f;
+            Vector2 origin = new Vector2(spawnPosition.x, spawnPosition.y + 0.5f);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, Vector2.down, 8f, groundLayer);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                Collider2D collider = hits[i].collider;
+                if (collider == null || collider.isTrigger
+                    || collider.GetComponentInParent<PlayerController2D>() != null
+                    || hits[i].normal.y < 0.35f)
+                {
+                    continue;
+                }
+
+                surfaceLeft = collider.bounds.min.x;
+                surfaceRight = collider.bounds.max.x;
+                return surfaceRight > surfaceLeft;
+            }
+            return false;
         }
 
         private void SetActivePlayer(PlayerController2D nextPlayer, bool enableControls)
@@ -3794,15 +4220,50 @@ namespace DrawBody.Prototype
                 return -1;
             }
 
+            List<OnlinePlayerInfo> orderedPlayers = new List<OnlinePlayerInfo>();
             for (int i = 0; i < players.Length; i++)
             {
-                if (players[i] != null && players[i].PlayerId == playerId)
+                OnlinePlayerInfo candidate = players[i];
+                if (candidate == null || string.IsNullOrEmpty(candidate.PlayerId)) continue;
+                bool duplicate = false;
+                for (int known = 0; known < orderedPlayers.Count; known++)
                 {
-                    return i;
+                    if (orderedPlayers[known].PlayerId == candidate.PlayerId)
+                    {
+                        duplicate = true;
+                        break;
+                    }
                 }
+                if (!duplicate) orderedPlayers.Add(candidate);
+            }
+
+            // Backends can expose the roster in local-first order. Derive one
+            // canonical slot order on every peer: host=P1, then stable player ids.
+            orderedPlayers.Sort((left, right) =>
+            {
+                if (left.IsHost != right.IsHost) return left.IsHost ? -1 : 1;
+                return string.CompareOrdinal(left.PlayerId, right.PlayerId);
+            });
+            for (int i = 0; i < orderedPlayers.Count; i++)
+            {
+                if (orderedPlayers[i].PlayerId == playerId) return i;
             }
 
             return -1;
+        }
+
+        private int GetLobbyPlayerCount()
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null) return 1;
+
+            HashSet<string> playerIds = new HashSet<string>();
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] != null && !string.IsNullOrEmpty(players[i].PlayerId))
+                    playerIds.Add(players[i].PlayerId);
+            }
+            return Mathf.Max(1, playerIds.Count);
         }
 
         private bool IsSpeciesUsedByAnotherPlayer(DrawManager.Species species)
@@ -3928,6 +4389,22 @@ namespace DrawBody.Prototype
         {
             if (cameraFollow != null)
             {
+                if (enabled)
+                {
+                    Camera stageCamera = cameraFollow.GetComponent<Camera>();
+                    if (stageCamera != null && stageCamera.orthographic)
+                    {
+                        stageCamera.orthographicSize = Mathf.Max(
+                            stageCamera.orthographicSize,
+                            cameraFollow.MinimumOrthographicSize);
+                        Vector3 cameraPosition = stageCamera.transform.position;
+                        if (cameraPosition.z > -1f)
+                        {
+                            cameraPosition.z = -10f;
+                            stageCamera.transform.position = cameraPosition;
+                        }
+                    }
+                }
                 cameraFollow.enabled = enabled;
             }
         }
@@ -4088,6 +4565,50 @@ namespace DrawBody.Prototype
             {
                 shadowText.GetComponent<Renderer>().enabled = visible;
             }
+        }
+    }
+
+    [DisallowMultipleComponent]
+    public sealed class StageEliminationSpectatorRelay : MonoBehaviour
+    {
+        private StageManager stageManager;
+        private PlayerController2D player;
+        private Rigidbody2D body;
+        private bool configured;
+        private bool notified;
+
+        public void Configure(StageManager manager, PlayerController2D controller)
+        {
+            stageManager = manager;
+            player = controller;
+            body = controller != null ? controller.GetComponent<Rigidbody2D>() : null;
+            configured = true;
+            notified = false;
+        }
+
+        private void OnEnable()
+        {
+            notified = false;
+        }
+
+        private void Update()
+        {
+            if (configured && !notified && body != null && !body.simulated)
+            {
+                NotifyEliminated();
+            }
+        }
+
+        private void OnDisable()
+        {
+            NotifyEliminated();
+        }
+
+        private void NotifyEliminated()
+        {
+            if (notified || !configured || stageManager == null || player == null || !Application.isPlaying) return;
+            notified = true;
+            stageManager.FollowSurvivorAfterElimination(player);
         }
     }
 }

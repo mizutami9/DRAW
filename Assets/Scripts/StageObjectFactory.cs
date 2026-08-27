@@ -14,7 +14,7 @@ namespace DrawBody.Prototype
         private static Material lineMaterial;
         private static Sprite circleSprite;
         private static Sprite scaleBodySprite;
-        private static Font digitalClockFont;
+        private static Font monitorFont;
 
         public GameObject Create(StageObjectData data, Transform parent)
         {
@@ -3484,12 +3484,21 @@ namespace DrawBody.Prototype
             obj.transform.SetParent(parent, false);
             obj.transform.position = data.position;
             obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
-            if (!AddResourceSprite(obj.transform, "StageObjects/NicoDraw/start-flag",
-                new Vector2(1.18f, 1.22f), 22, "Colored Pencil Start Flag", new Vector2(0f, 0.32f)))
+            bool showMarkerVisual = parent != null && parent.name == "RuntimeStageEditorRoot";
+            if (showMarkerVisual && AddResourceSprite(obj.transform, "StageObjects/NicoDraw/start-flag",
+                new Vector2(1.18f, 1.22f), 6, "Colored Pencil Start Flag", new Vector2(0f, 0.32f)))
             {
-                AddDoodleCircle(obj.transform, 0.28f, color, 0.045f);
-                AddDoodleLine("Flag Pole", obj.transform, new[] { new Vector3(0.18f, -0.25f, 0f), new Vector3(0.18f, 0.36f, 0f) }, color, 0.04f, 18);
-                AddDoodleLine("Flag", obj.transform, new[] { new Vector3(0.18f, 0.32f, 0f), new Vector3(0.52f, 0.22f, 0f), new Vector3(0.18f, 0.12f, 0f) }, color, 0.04f, 18);
+                Transform flagVisual = obj.transform.Find("Colored Pencil Start Flag");
+                if (flagVisual != null)
+                {
+                    flagVisual.gameObject.AddComponent<StartFlagWave>();
+                }
+            }
+            else if (showMarkerVisual)
+            {
+                AddDoodleCircleAt(obj.transform, Vector2.zero, 0.28f, color, 0.045f, 6);
+                AddDoodleLine("Flag Pole", obj.transform, new[] { new Vector3(0.18f, -0.25f, 0f), new Vector3(0.18f, 0.36f, 0f) }, color, 0.04f, 6);
+                AddDoodleLine("Flag", obj.transform, new[] { new Vector3(0.18f, 0.32f, 0f), new Vector3(0.52f, 0.22f, 0f), new Vector3(0.18f, 0.12f, 0f) }, color, 0.04f, 6);
             }
 
             CircleCollider2D collider = obj.AddComponent<CircleCollider2D>();
@@ -3683,35 +3692,83 @@ namespace DrawBody.Prototype
             Vector2 size = new Vector2(Mathf.Max(1.4f, data.size.x), Mathf.Max(0.65f, data.size.y));
             data.size = size;
             float clockScale = Mathf.Max(0.35f, Mathf.Min(size.x / 3.2f, size.y / 1.25f));
+            Color graphite = new Color(0.16f, 0.2f, 0.26f, 0.94f);
+            Color caseBlue = new Color(0.34f, 0.66f, 0.88f, 0.74f);
+            Color screenPaper = new Color(0.91f, 0.97f, 0.91f, 0.98f);
             CreateClockPanelLayer(
                 obj.transform,
-                "Timer Outer Case",
+                "Crayon Monitor Paper Case",
                 size,
-                new Color(0.09f, 0.12f, 0.16f, 0.34f),
+                new Color(0.98f, 0.95f, 0.82f, 0.98f),
                 -24,
                 new Vector3(0f, 0f, -0.02f));
             CreateClockPanelLayer(
                 obj.transform,
-                "Timer Bezel",
-                new Vector2(size.x - 0.14f * clockScale, size.y - 0.14f * clockScale),
-                new Color(0.27f, 0.31f, 0.35f, 0.34f),
+                "Blue Pencil Case Wash",
+                new Vector2(size.x - 0.12f * clockScale, size.y - 0.12f * clockScale),
+                caseBlue,
                 -23,
                 new Vector3(0f, 0f, -0.03f));
+            Vector2 screenSize = new Vector2(
+                Mathf.Max(0.5f, size.x - 0.34f * clockScale),
+                Mathf.Max(0.3f, size.y * 0.64f));
+            Vector3 screenPosition = new Vector3(0f, -size.y * 0.075f, -0.04f);
             CreateClockPanelLayer(
                 obj.transform,
-                "Timer LCD",
-                new Vector2(size.x - 0.3f * clockScale, size.y * 0.62f),
-                new Color(0.012f, 0.035f, 0.038f, 0.34f),
-                -22,
-                new Vector3(0f, -size.y * 0.1f, -0.04f));
+                "Pale Paper Screen",
+                screenSize,
+                screenPaper,
+                -21,
+                screenPosition);
+            AddClockPencilHatching(obj.transform, size, caseBlue, -22);
             AddDoodleLine("Timer Outer Outline", obj.transform, new[]
             {
-                new Vector3(-size.x * 0.5f, -size.y * 0.5f, -0.05f),
-                new Vector3(size.x * 0.5f, -size.y * 0.5f, -0.05f),
-                new Vector3(size.x * 0.5f, size.y * 0.5f, -0.05f),
-                new Vector3(-size.x * 0.5f, size.y * 0.5f, -0.05f),
-                new Vector3(-size.x * 0.5f, -size.y * 0.5f, -0.05f)
-            }, new Color(0.025f, 0.04f, 0.055f, 0.9f), 0.055f * clockScale, -19);
+                new Vector3(-size.x * 0.5f - 0.02f * clockScale, -size.y * 0.47f, -0.05f),
+                new Vector3(size.x * 0.49f, -size.y * 0.5f, -0.05f),
+                new Vector3(size.x * 0.5f + 0.015f * clockScale, size.y * 0.47f, -0.05f),
+                new Vector3(-size.x * 0.47f, size.y * 0.5f, -0.05f),
+                new Vector3(-size.x * 0.5f - 0.02f * clockScale, -size.y * 0.47f, -0.05f)
+            }, graphite, 0.045f * clockScale, -18);
+            AddDoodleLine("Timer Loose Blue Outline", obj.transform, new[]
+            {
+                new Vector3(-size.x * 0.48f, -size.y * 0.5f, -0.055f),
+                new Vector3(size.x * 0.5f + 0.02f * clockScale, -size.y * 0.46f, -0.055f),
+                new Vector3(size.x * 0.47f, size.y * 0.5f + 0.02f * clockScale, -0.055f),
+                new Vector3(-size.x * 0.5f, size.y * 0.46f, -0.055f)
+            }, new Color(0.1f, 0.42f, 0.72f, 0.7f), 0.025f * clockScale, -17);
+            AddDoodleLine("Crooked Screen Outline", obj.transform, new[]
+            {
+                screenPosition + new Vector3(-screenSize.x * 0.5f, -screenSize.y * 0.48f, -0.02f),
+                screenPosition + new Vector3(screenSize.x * 0.49f, -screenSize.y * 0.5f, -0.02f),
+                screenPosition + new Vector3(screenSize.x * 0.5f, screenSize.y * 0.47f, -0.02f),
+                screenPosition + new Vector3(-screenSize.x * 0.48f, screenSize.y * 0.5f, -0.02f),
+                screenPosition + new Vector3(-screenSize.x * 0.5f, -screenSize.y * 0.48f, -0.02f)
+            }, graphite, 0.028f * clockScale, -17);
+
+            // Uneven antennae and feet make the silhouette immediately read as a
+            // child's drawing of a monitor, even when the clock is very small.
+            AddDoodleLine("Left Crayon Antenna", obj.transform, new[]
+            {
+                new Vector3(-0.1f * clockScale, size.y * 0.5f, -0.055f),
+                new Vector3(-0.34f * clockScale, size.y * 0.5f + 0.25f * clockScale, -0.055f)
+            }, graphite, 0.035f * clockScale, -17);
+            AddDoodleLine("Right Crayon Antenna", obj.transform, new[]
+            {
+                new Vector3(0.08f * clockScale, size.y * 0.5f, -0.055f),
+                new Vector3(0.39f * clockScale, size.y * 0.5f + 0.2f * clockScale, -0.055f)
+            }, graphite, 0.035f * clockScale, -17);
+            AddDoodleLine("Monitor Feet", obj.transform, new[]
+            {
+                new Vector3(-size.x * 0.28f, -size.y * 0.49f, -0.055f),
+                new Vector3(-size.x * 0.32f, -size.y * 0.5f - 0.13f * clockScale, -0.055f),
+                new Vector3(-size.x * 0.18f, -size.y * 0.5f - 0.13f * clockScale, -0.055f)
+            }, graphite, 0.04f * clockScale, -17);
+            AddDoodleLine("Monitor Right Foot", obj.transform, new[]
+            {
+                new Vector3(size.x * 0.27f, -size.y * 0.49f, -0.055f),
+                new Vector3(size.x * 0.31f, -size.y * 0.5f - 0.12f * clockScale, -0.055f),
+                new Vector3(size.x * 0.17f, -size.y * 0.5f - 0.12f * clockScale, -0.055f)
+            }, graphite, 0.04f * clockScale, -17);
 
             GameObject statusLed = new GameObject("Timer Status LED");
             statusLed.transform.SetParent(obj.transform, false);
@@ -3726,47 +3783,54 @@ namespace DrawBody.Prototype
             selection.size = size;
             selection.isTrigger = true;
 
-            Font font = GetDigitalClockFont();
-            float characterSize = 0.094f * clockScale;
-            CreateClockText(
-                obj.transform,
-                "Timer Label",
-                font,
-                0.042f * clockScale,
-                new Color(0.86f, 0.9f, 0.92f, 0.95f),
-                -20,
-                new Vector3(0f, size.y * 0.31f, -0.065f),
-                "TIME LIMIT");
+            Font font = GetMonitorFont();
+            bool compactClock = size.y < 1.45f;
+            float characterSize = (compactClock ? 0.067f : 0.075f) * clockScale;
+            float digitsY = compactClock ? size.y * 0.075f : -size.y * 0.075f;
+            float progressY = compactClock ? -size.y * 0.275f : -size.y * 0.32f;
+            if (!compactClock)
+            {
+                CreateClockText(
+                    obj.transform,
+                    "Timer Label",
+                    font,
+                    0.034f * clockScale,
+                    new Color(0.08f, 0.22f, 0.38f, 0.95f),
+                    -20,
+                    new Vector3(0f, size.y * 0.3f, -0.065f),
+                    "TIME");
+            }
             TextMesh shadow = CreateClockText(
                 obj.transform,
                 "Clock Shadow",
                 font,
                 characterSize,
-                new Color(0f, 0f, 0f, 0.72f),
+                new Color(0.18f, 0.27f, 0.3f, 0.28f),
                 -20,
-                new Vector3(0.025f * clockScale, -size.y * 0.1f - 0.025f * clockScale, -0.07f),
+                new Vector3(0.02f * clockScale, digitsY - 0.02f * clockScale, -0.07f),
                 "01:00.0");
             TextMesh digits = CreateClockText(
                 obj.transform,
                 "Clock Digits",
                 font,
                 characterSize,
-                new Color(0.2f, 1f, 0.68f, 1f),
+                new Color(0.04f, 0.43f, 0.58f, 1f),
                 -19,
-                new Vector3(0f, -size.y * 0.1f, -0.08f),
+                new Vector3(0f, digitsY, -0.08f),
                 "01:00.0");
             TextMesh progress = CreateClockText(
                 obj.transform,
                 "Clock Fish Progress",
                 font,
-                0.034f * clockScale,
-                new Color(0.72f, 0.9f, 1f, 1f),
+                (compactClock ? 0.024f : 0.029f) * clockScale,
+                new Color(0.1f, 0.28f, 0.5f, 1f),
                 -19,
-                new Vector3(0f, -size.y * 0.34f, -0.08f),
+                new Vector3(0f, progressY, -0.08f),
                 "FISH  0 / 0");
 
             StageChallengeClock clock = obj.AddComponent<StageChallengeClock>();
             clock.Configure(digits, shadow, progress, ledRenderer, 60f);
+            obj.AddComponent<DoodleMonitorTextReadability>().Configure(size);
             AddEditorMetadata(obj, data);
             return obj;
         }
@@ -3832,29 +3896,36 @@ namespace DrawBody.Prototype
             renderer.sortingOrder = sortingOrder;
         }
 
-        private static Font GetDigitalClockFont()
+        private static void AddClockPencilHatching(Transform parent, Vector2 size, Color color, int sortingOrder)
         {
-            if (digitalClockFont != null)
+            int strokeCount = Mathf.Clamp(Mathf.RoundToInt((size.x + size.y) * 0.55f), 5, 18);
+            Color pencil = new Color(color.r * 0.7f, color.g * 0.8f, color.b, 0.2f);
+            for (int i = 0; i < strokeCount; i++)
             {
-                return digitalClockFont;
-            }
-
-            string[] preferred = { "Consolas", "Courier New", "Lucida Console" };
-            string[] installed = Font.GetOSInstalledFontNames();
-            for (int i = 0; i < preferred.Length; i++)
-            {
-                for (int j = 0; j < installed.Length; j++)
+                float t = (i + 0.5f) / strokeCount;
+                float y = Mathf.Lerp(-size.y * 0.44f, size.y * 0.44f, t);
+                float wobble = Mathf.Sin(i * 2.31f) * 0.035f;
+                AddDoodleLine("Blue Case Pencil Stroke", parent, new[]
                 {
-                    if (string.Equals(preferred[i], installed[j], StringComparison.OrdinalIgnoreCase))
-                    {
-                        digitalClockFont = Font.CreateDynamicFontFromOSFont(installed[j], 64);
-                        return digitalClockFont;
-                    }
-                }
+                    new Vector3(-size.x * 0.46f, y - 0.12f + wobble, -0.045f),
+                    new Vector3(size.x * 0.46f, y + 0.12f - wobble, -0.045f)
+                }, pencil, Mathf.Max(0.012f, Mathf.Min(size.x, size.y) * 0.008f), sortingOrder);
+            }
+        }
+
+        private static Font GetMonitorFont()
+        {
+            if (monitorFont != null)
+            {
+                return monitorFont;
             }
 
-            digitalClockFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            return digitalClockFont;
+            monitorFont = DoodleRuntimeAssets.HandwrittenFont;
+            if (monitorFont == null)
+            {
+                monitorFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            }
+            return monitorFont;
         }
 
         private static Color GetObjectColor(StageObjectType type)

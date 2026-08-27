@@ -662,7 +662,7 @@ namespace DrawBody.Prototype
             TextMesh text = StageEscortController.CreateText(transform, "Room Sign " + roomIndex,
                 new Vector3(centers[roomIndex], 7.15f, -0.38f), 52, 0.11f,
                 new Color(0.13f, 0.28f, 0.38f, 0.82f), 32);
-            text.text = "ROOM " + (roomIndex + 1);
+            text.text = LocalizationManager.Format("stage_room_number", roomIndex + 1);
         }
 
         private void EvaluateActiveRoom(float deltaTime)

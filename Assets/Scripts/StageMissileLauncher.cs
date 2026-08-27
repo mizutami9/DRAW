@@ -138,7 +138,6 @@ namespace DrawBody.Prototype
         private Transform homingTarget;
         private float homingTurnDegreesPerSecond;
         private bool isHoming;
-        private static Sprite circleSprite;
         private static Material lineMaterial;
 
         public static StageMissileProjectile Create(
@@ -322,26 +321,11 @@ namespace DrawBody.Prototype
 
         private void BuildVisual()
         {
-            GameObject bodyObject = new GameObject("Missile Body");
-            bodyObject.transform.SetParent(transform, false);
-            bodyObject.transform.localScale = new Vector3(0.82f, 0.28f, 1f);
-            SpriteRenderer bodyRenderer = bodyObject.AddComponent<SpriteRenderer>();
-            bodyRenderer.sprite = GetSquareSprite();
-            bodyRenderer.color = isHoming
-                ? new Color(0.72f, 0.18f, 0.9f, 1f)
-                : new Color(0.92f, 0.22f, 0.12f, 1f);
-            bodyRenderer.sortingOrder = 250;
-
-            GameObject noseObject = new GameObject("Missile Nose");
-            noseObject.transform.SetParent(transform, false);
-            noseObject.transform.localPosition = new Vector3(0.45f, 0f, -0.02f);
-            noseObject.transform.localScale = new Vector3(0.34f, 0.3f, 1f);
-            SpriteRenderer nose = noseObject.AddComponent<SpriteRenderer>();
-            nose.sprite = GetCircleSprite();
-            nose.color = isHoming
-                ? new Color(0.2f, 0.95f, 1f, 1f)
-                : new Color(1f, 0.62f, 0.08f, 1f);
-            nose.sortingOrder = 251;
+            BossAttackVisuals.AddMissile(transform, 1.12f, 0.4f,
+                isHoming ? new Color(0.72f, 0.18f, 0.9f, 1f) : new Color(0.92f, 0.22f, 0.12f, 1f),
+                isHoming ? new Color(0.2f, 0.95f, 1f, 1f) : new Color(1f, 0.62f, 0.08f, 1f),
+                250,
+                false);
 
             GameObject flameObject = new GameObject("Missile Flame");
             flameObject.transform.SetParent(transform, false);
@@ -365,26 +349,5 @@ namespace DrawBody.Prototype
             return lineMaterial;
         }
 
-        private static Sprite GetSquareSprite()
-        {
-            return DoodleRuntimeAssets.SquareSprite;
-        }
-
-        private static Sprite GetCircleSprite()
-        {
-            if (circleSprite != null) return circleSprite;
-            const int size = 48;
-            Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
-            Color32[] pixels = new Color32[size * size];
-            Vector2 center = Vector2.one * (size - 1) * 0.5f;
-            for (int y = 0; y < size; y++)
-                for (int x = 0; x < size; x++)
-                    pixels[y * size + x] = new Color32(255, 255, 255,
-                        Vector2.Distance(new Vector2(x, y), center) <= size * 0.46f ? (byte)255 : (byte)0);
-            texture.SetPixels32(pixels);
-            texture.Apply();
-            circleSprite = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), size);
-            return circleSprite;
-        }
     }
 }

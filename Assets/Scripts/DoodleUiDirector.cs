@@ -108,6 +108,17 @@ namespace DrawBody.Prototype
             if (paper != null && paper.transform.parent != null)
             {
                 ExpandWorldNotebook(paper);
+
+                SpriteRenderer paperRenderer = paper.GetComponent<SpriteRenderer>();
+                if (paperRenderer != null)
+                {
+                    CrayonStageBackground texture = paper.GetComponent<CrayonStageBackground>();
+                    if (texture == null)
+                    {
+                        texture = paper.AddComponent<CrayonStageBackground>();
+                    }
+                    texture.Configure(paperRenderer.color, paperRenderer);
+                }
             }
             NotebookBackgroundDoodles.RemoveWorld();
         }
@@ -400,14 +411,26 @@ namespace DrawBody.Prototype
             }
 
             PlaceOptionText(FindRect(panel, "OptionBgmLabel"), new Vector2(-190f, rowY[0]), new Vector2(160f, 40f), TextAnchor.MiddleLeft, 20, true);
-            PlaceOptionRect(FindRect(panel, "OptionBgmSlider"), new Vector2(35f, rowY[0]), new Vector2(250f, 36f));
+            RectTransform bgmSlider = FindRect(panel, "OptionBgmSlider");
+            PlaceOptionRect(bgmSlider, new Vector2(35f, rowY[0]), new Vector2(250f, 36f));
+            ThemeOptionSlider(bgmSlider, Cyan);
             PlaceOptionText(FindRect(panel, "OptionBgmValue"), new Vector2(218f, rowY[0]), new Vector2(72f, 36f), TextAnchor.MiddleRight, 18, true);
 
             PlaceOptionText(FindRect(panel, "OptionSeLabel"), new Vector2(-190f, rowY[1]), new Vector2(160f, 40f), TextAnchor.MiddleLeft, 20, true);
-            PlaceOptionRect(FindRect(panel, "OptionSeSlider"), new Vector2(35f, rowY[1]), new Vector2(250f, 36f));
+            RectTransform seSlider = FindRect(panel, "OptionSeSlider");
+            PlaceOptionRect(seSlider, new Vector2(35f, rowY[1]), new Vector2(250f, 36f));
+            ThemeOptionSlider(seSlider, Coral);
             PlaceOptionText(FindRect(panel, "OptionSeValue"), new Vector2(218f, rowY[1]), new Vector2(72f, 36f), TextAnchor.MiddleRight, 18, true);
 
-            PlaceOptionText(FindRect(panel, "OptionLanguageLabel"), new Vector2(-190f, rowY[2]), new Vector2(160f, 40f), TextAnchor.MiddleLeft, 20, true);
+            RectTransform languageLabel = FindRect(panel, "OptionLanguageLabel");
+            PlaceOptionText(languageLabel, new Vector2(-190f, rowY[2]), new Vector2(160f, 40f), TextAnchor.MiddleLeft, 20, true);
+            Text languageText = languageLabel != null ? languageLabel.GetComponent<Text>() : null;
+            if (languageText != null)
+            {
+                LocalizedText localized = languageText.GetComponent<LocalizedText>();
+                if (localized == null) localized = languageText.gameObject.AddComponent<LocalizedText>();
+                localized.SetKey("option_language");
+            }
             RectTransform japanese = FindRect(panel, "OptionJapaneseButton");
             RectTransform english = FindRect(panel, "OptionEnglishButton");
             PlaceOptionRect(japanese, new Vector2(-12f, rowY[2]), new Vector2(130f, 42f));
@@ -425,6 +448,13 @@ namespace DrawBody.Prototype
             RectTransform back = FindRect(panel, "TitleOptionBackButton");
             PlaceOptionRect(back, new Vector2(0f, 48f), new Vector2(260f, 58f));
             ThemeOptionButton(back, Coral, 21);
+            Text backLabel = back != null ? back.GetComponentInChildren<Text>(true) : null;
+            if (backLabel != null)
+            {
+                LocalizedText localized = backLabel.GetComponent<LocalizedText>();
+                if (localized == null) localized = backLabel.gameObject.AddComponent<LocalizedText>();
+                localized.SetKey("option_back_esc");
+            }
 
             BringOptionControlsForward(panel);
         }
@@ -515,6 +545,252 @@ namespace DrawBody.Prototype
                     child.gameObject.SetActive(false);
                 }
             }
+        }
+
+        private static void ThemeOptionSlider(RectTransform rect, Color accent)
+        {
+            if (rect == null) return;
+            Slider slider = rect.GetComponent<Slider>();
+            if (slider == null) return;
+
+            // Keep the hand-drawn knob unchanged while it is hovered, pressed, or dragged.
+            // Unity's Selectable transition otherwise tints/replaces the target graphic on pointer down.
+            slider.transition = Selectable.Transition.None;
+
+            RectTransform background = rect.Find("Background") as RectTransform;
+            if (background != null)
+            {
+                background.anchorMin = new Vector2(0f, 0.5f);
+                background.anchorMax = new Vector2(1f, 0.5f);
+                background.pivot = new Vector2(0.5f, 0.5f);
+                background.anchoredPosition = Vector2.zero;
+                background.sizeDelta = new Vector2(-12f, 11f);
+                Image backgroundImage = background.GetComponent<Image>();
+                if (backgroundImage != null)
+                {
+                    backgroundImage.color = new Color(0.96f, 0.925f, 0.79f, 1f);
+                    backgroundImage.raycastTarget = false;
+                    backgroundImage.type = Image.Type.Simple;
+                }
+                EnsureOutline(background.gameObject, 1.2f, 0.58f);
+                EnsureSliderTrackScribbles(background);
+                background.SetAsFirstSibling();
+            }
+
+            RectTransform fill = slider.fillRect;
+            RectTransform fillArea = fill != null ? fill.parent as RectTransform : null;
+            if (fillArea != null)
+            {
+                fillArea.anchorMin = new Vector2(0f, 0.5f);
+                fillArea.anchorMax = new Vector2(1f, 0.5f);
+                fillArea.pivot = new Vector2(0.5f, 0.5f);
+                fillArea.anchoredPosition = Vector2.zero;
+                fillArea.sizeDelta = new Vector2(-12f, 7f);
+                fillArea.SetSiblingIndex(Mathf.Min(1, rect.childCount - 1));
+            }
+            if (fill != null)
+            {
+                fill.offsetMin = Vector2.zero;
+                fill.offsetMax = Vector2.zero;
+                Image fillImage = fill.GetComponent<Image>();
+                if (fillImage != null)
+                {
+                    fillImage.color = new Color(accent.r, accent.g, accent.b, 0.9f);
+                    fillImage.raycastTarget = false;
+                    fillImage.type = Image.Type.Simple;
+                }
+                EnsureSliderFillScribbles(fill, accent);
+            }
+
+            RectTransform handle = slider.handleRect;
+            RectTransform handleArea = handle != null ? handle.parent as RectTransform : null;
+            if (handleArea != null)
+            {
+                handleArea.anchorMin = new Vector2(0f, 0.5f);
+                handleArea.anchorMax = new Vector2(1f, 0.5f);
+                handleArea.pivot = new Vector2(0.5f, 0.5f);
+                handleArea.anchoredPosition = Vector2.zero;
+                handleArea.sizeDelta = new Vector2(-12f, 28f);
+                handleArea.SetAsLastSibling();
+            }
+            if (handle != null)
+            {
+                handle.anchorMin = new Vector2(handle.anchorMin.x, 0.5f);
+                handle.anchorMax = new Vector2(handle.anchorMax.x, 0.5f);
+                handle.pivot = new Vector2(0.5f, 0.5f);
+                handle.anchoredPosition = new Vector2(handle.anchoredPosition.x, 0f);
+                handle.sizeDelta = new Vector2(24f, 26f);
+                handle.localRotation = Quaternion.Euler(0f, 0f, accent == Cyan ? -3.5f : 3.2f);
+                Image handleImage = handle.GetComponent<Image>();
+                if (handleImage != null)
+                {
+                    handleImage.sprite = DoodleRuntimeAssets.CircleSprite;
+                    handleImage.color = accent;
+                    handleImage.type = Image.Type.Simple;
+                }
+                EnsureOutline(handle.gameObject, 1.5f, 0.72f);
+                EnsureShadow(handle.gameObject, new Vector2(2f, -2f), 0.16f);
+                EnsureSliderKnobScribbles(handle, accent);
+                EnsureSliderKnobDot(handle);
+            }
+
+            RectTransform ticks = EnsureOptionSliderTicks(rect);
+            if (ticks != null)
+            {
+                int index = handleArea != null ? handleArea.GetSiblingIndex() : rect.childCount - 1;
+                ticks.SetSiblingIndex(Mathf.Max(0, index));
+            }
+
+        }
+
+        private static RectTransform EnsureOptionSliderTicks(RectTransform slider)
+        {
+            Transform existing = slider.Find("Crayon Volume Ticks");
+            RectTransform root;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject("Crayon Volume Ticks", typeof(RectTransform));
+                obj.transform.SetParent(slider, false);
+                root = obj.GetComponent<RectTransform>();
+            }
+            else root = existing as RectTransform;
+            if (root == null) return null;
+
+            root.anchorMin = new Vector2(0f, 0.5f);
+            root.anchorMax = new Vector2(1f, 0.5f);
+            root.pivot = new Vector2(0.5f, 0.5f);
+            root.anchoredPosition = Vector2.zero;
+            root.sizeDelta = new Vector2(-12f, 18f);
+            for (int i = 0; i <= 10; i++)
+            {
+                string name = "Tick " + i;
+                Transform found = root.Find(name);
+                RectTransform tick;
+                if (found == null)
+                {
+                    GameObject obj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                    obj.transform.SetParent(root, false);
+                    tick = obj.GetComponent<RectTransform>();
+                }
+                else tick = found as RectTransform;
+                if (tick == null) continue;
+                float anchor = i / 10f;
+                tick.anchorMin = new Vector2(anchor, 0.5f);
+                tick.anchorMax = new Vector2(anchor, 0.5f);
+                tick.pivot = new Vector2(0.5f, 0.5f);
+                tick.anchoredPosition = new Vector2(0f, (i % 3 - 1) * 0.8f);
+                tick.sizeDelta = new Vector2(i % 5 == 0 ? 2.2f : 1.4f,
+                    (i % 5 == 0 ? 15f : 10f) + i % 2 * 1.8f);
+                tick.localRotation = Quaternion.Euler(0f, 0f, (i % 4 - 1.5f) * 2.2f);
+                Image image = tick.GetComponent<Image>();
+                image.color = new Color(Ink.r, Ink.g, Ink.b, i % 5 == 0 ? 0.42f : 0.22f);
+                image.raycastTarget = false;
+            }
+            return root;
+        }
+
+        private static void EnsureSliderTrackScribbles(RectTransform background)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                string name = "Pencil Track " + i;
+                Transform found = background.Find(name);
+                RectTransform stroke;
+                if (found == null)
+                {
+                    GameObject obj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                    obj.transform.SetParent(background, false);
+                    stroke = obj.GetComponent<RectTransform>();
+                }
+                else stroke = found as RectTransform;
+                if (stroke == null) continue;
+                stroke.anchorMin = new Vector2(0f, 0.5f);
+                stroke.anchorMax = new Vector2(1f, 0.5f);
+                stroke.pivot = new Vector2(0.5f, 0.5f);
+                stroke.anchoredPosition = new Vector2(0f, i == 0 ? -3.1f : 3.2f);
+                stroke.sizeDelta = new Vector2(-3f, 1.2f);
+                stroke.localRotation = Quaternion.Euler(0f, 0f, i == 0 ? -0.45f : 0.35f);
+                Image image = stroke.GetComponent<Image>();
+                image.color = new Color(Ink.r, Ink.g, Ink.b, 0.34f);
+                image.raycastTarget = false;
+            }
+        }
+
+        private static void EnsureSliderFillScribbles(RectTransform fill, Color accent)
+        {
+            Image baseImage = fill.GetComponent<Image>();
+            if (baseImage != null) baseImage.color = new Color(accent.r, accent.g, accent.b, 0.48f);
+            for (int i = 0; i < 3; i++)
+            {
+                string name = "Crayon Stroke " + i;
+                Transform found = fill.Find(name);
+                RectTransform stroke;
+                if (found == null)
+                {
+                    GameObject obj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                    obj.transform.SetParent(fill, false);
+                    stroke = obj.GetComponent<RectTransform>();
+                }
+                else stroke = found as RectTransform;
+                if (stroke == null) continue;
+                stroke.anchorMin = new Vector2(0f, 0.5f);
+                stroke.anchorMax = new Vector2(1f, 0.5f);
+                stroke.pivot = new Vector2(0.5f, 0.5f);
+                stroke.anchoredPosition = new Vector2(i - 1f, (i - 1f) * 1.7f);
+                stroke.sizeDelta = new Vector2(-1f - i, 2.7f);
+                stroke.localRotation = Quaternion.Euler(0f, 0f, (i - 1f) * 0.65f);
+                Image image = stroke.GetComponent<Image>();
+                image.color = new Color(accent.r, accent.g, accent.b, 0.55f);
+                image.raycastTarget = false;
+            }
+        }
+
+        private static void EnsureSliderKnobScribbles(RectTransform handle, Color accent)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                string name = "Knob Crayon " + i;
+                Transform found = handle.Find(name);
+                RectTransform scribble;
+                if (found == null)
+                {
+                    GameObject obj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                    obj.transform.SetParent(handle, false);
+                    scribble = obj.GetComponent<RectTransform>();
+                }
+                else scribble = found as RectTransform;
+                if (scribble == null) continue;
+                scribble.anchorMin = scribble.anchorMax = new Vector2(0.5f, 0.5f);
+                scribble.pivot = new Vector2(0.5f, 0.5f);
+                scribble.anchoredPosition = i == 0 ? new Vector2(-1.6f, 1.1f) : new Vector2(1.3f, -1.4f);
+                scribble.sizeDelta = i == 0 ? new Vector2(19f, 22f) : new Vector2(21f, 18f);
+                Image image = scribble.GetComponent<Image>();
+                image.sprite = DoodleRuntimeAssets.CircleSprite;
+                image.color = new Color(accent.r, accent.g, accent.b, 0.46f);
+                image.raycastTarget = false;
+            }
+        }
+
+        private static void EnsureSliderKnobDot(RectTransform handle)
+        {
+            Transform existing = handle.Find("Knob Highlight");
+            RectTransform dot;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject("Knob Highlight", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(handle, false);
+                dot = obj.GetComponent<RectTransform>();
+            }
+            else dot = existing as RectTransform;
+            if (dot == null) return;
+            dot.anchorMin = dot.anchorMax = new Vector2(0.5f, 0.5f);
+            dot.pivot = new Vector2(0.5f, 0.5f);
+            dot.anchoredPosition = new Vector2(-2f, 2f);
+            dot.sizeDelta = new Vector2(7f, 7f);
+            Image image = dot.GetComponent<Image>();
+            image.sprite = DoodleRuntimeAssets.CircleSprite;
+            image.color = new Color(1f, 0.98f, 0.88f, 0.88f);
+            image.raycastTarget = false;
         }
 
         private static void BringOptionControlsForward(RectTransform panel)

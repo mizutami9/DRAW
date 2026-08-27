@@ -328,6 +328,13 @@ namespace DrawBody.Prototype
             if (renderer != null)
             {
                 renderer.color = color;
+
+                CrayonStageBackground texture = paper.GetComponent<CrayonStageBackground>();
+                if (texture == null)
+                {
+                    texture = paper.AddComponent<CrayonStageBackground>();
+                }
+                texture.Configure(color, renderer);
             }
         }
 

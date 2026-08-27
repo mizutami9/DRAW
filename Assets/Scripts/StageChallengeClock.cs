@@ -49,7 +49,7 @@ namespace DrawBody.Prototype
             string value = starting
                 ? stageManager.ChallengeStartCountdownText
                 : timeUp
-                    ? "TIME UP"
+                    ? LocalizationManager.T("challenge_time_up")
                     : activeRule ? FormatTime(seconds, showColon) : "--:--.-";
             if (digits != null)
             {
@@ -60,7 +60,7 @@ namespace DrawBody.Prototype
                     ? new Color(1f, 0.16f, 0.1f, 1f)
                     : urgent
                         ? new Color(1f, 0.38f, 0.12f, 1f)
-                        : new Color(0.2f, 1f, 0.68f, 1f);
+                        : new Color(0.04f, 0.43f, 0.58f, 1f);
             }
             if (shadow != null)
             {
@@ -93,8 +93,8 @@ namespace DrawBody.Prototype
                         : 0;
                 progress.text = $"{GetTargetCode(target)}  {caught} / {total}";
                 progress.color = total > 0 && caught >= total
-                    ? new Color(0.35f, 1f, 0.48f, 1f)
-                    : new Color(0.72f, 0.9f, 1f, 1f);
+                    ? new Color(0.12f, 0.58f, 0.26f, 1f)
+                    : new Color(0.1f, 0.28f, 0.5f, 1f);
             }
         }
 

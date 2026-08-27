@@ -633,10 +633,12 @@ namespace DrawBody.Prototype
 
         private void BuildMachines()
         {
-            machines.Add(CreateExistingMachine(0, WeaponType.Bomb, new Vector2(-11f, 5.25f), new Vector2(-8.6f, UpperFloorY + 0.4f)));
-            machines.Add(CreateExistingMachine(1, WeaponType.Missile, new Vector2(18.55f, 1.25f), new Vector2(15.5f, LowerFloorY + 0.42f)));
-            machines.Add(CreateExistingMachine(2, WeaponType.Missile, new Vector2(-18.55f, 0f), new Vector2(-15.5f, LowerFloorY + 0.42f)));
-            machines.Add(CreateExistingMachine(3, WeaponType.Bomb, new Vector2(10.7f, -0.2f), new Vector2(8.3f, LowerFloorY + 0.4f)));
+            const float lowerButtonY = LowerFloorY + 0.17f;
+            const float upperButtonY = UpperFloorY + 0.48f;
+            machines.Add(CreateExistingMachine(0, WeaponType.Bomb, new Vector2(-11f, 5.25f), new Vector2(-8.6f, upperButtonY)));
+            machines.Add(CreateExistingMachine(1, WeaponType.Missile, new Vector2(18.55f, 1.25f), new Vector2(13.2f, lowerButtonY)));
+            machines.Add(CreateExistingMachine(2, WeaponType.Missile, new Vector2(-18.55f, 0f), new Vector2(-13.2f, lowerButtonY)));
+            machines.Add(CreateExistingMachine(3, WeaponType.Bomb, new Vector2(10.7f, -0.2f), new Vector2(8.3f, lowerButtonY)));
         }
 
         private StageMirrorWeaponMachine CreateExistingMachine(int index, WeaponType type, Vector2 position, Vector2 buttonPosition)
@@ -664,11 +666,9 @@ namespace DrawBody.Prototype
         private void BuildMonitor()
         {
             GameObject monitor = new GameObject("15-3 Battle Monitor"); monitor.transform.SetParent(transform, false); monitor.transform.localPosition = new Vector3(0f, 6.7f, 0.6f);
-            StageEscortController.AddFilledRect(monitor.transform, "Frame", Vector2.zero, new Vector2(15f, 2.1f), new Color(0.16f, 0.2f, 0.25f, 0.92f), -22);
-            StageEscortController.AddFilledRect(monitor.transform, "Screen", Vector2.zero, new Vector2(14.4f, 1.55f), new Color(0.01f, 0.04f, 0.055f, 0.96f), -21);
-            phaseText = StageEscortController.CreateText(monitor.transform, "Phase", new Vector3(-4.4f, 0.28f, -0.03f), 42, 0.09f, new Color(0.35f, 1f, 0.76f), -20);
-            timerText = StageEscortController.CreateText(monitor.transform, "Time", new Vector3(4.4f, 0.28f, -0.03f), 50, 0.1f, new Color(1f, 0.78f, 0.22f), -20);
-            hintText = StageEscortController.CreateText(monitor.transform, "Hint", new Vector3(0f, -0.52f, -0.03f), 25, 0.065f, new Color(0.67f, 0.87f, 1f), -20);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(15f, 2.25f), -24);
+            phaseText = StageEscortController.CreateText(monitor.transform, "Phase", new Vector3(-4.1f, 0f, -0.03f), 48, 0.11f, new Color(0.04f, 0.43f, 0.58f), -18);
+            timerText = StageEscortController.CreateText(monitor.transform, "Time", new Vector3(4.1f, 0f, -0.03f), 54, 0.13f, new Color(0.78f, 0.39f, 0.06f), -18);
         }
 
         private void BuildConcealment()
@@ -781,22 +781,20 @@ namespace DrawBody.Prototype
             if (phaseText == null) return;
             if (battleState == BattleState.Cleared)
             {
-                phaseText.text = LocalizationManager.T("mirror_brawl_clear"); timerText.text = ""; hintText.text = LocalizationManager.T("mirror_brawl_clear_sub");
+                phaseText.text = LocalizationManager.T("mirror_brawl_clear"); timerText.text = ""; if (hintText != null) hintText.text = "";
             }
             else if (battleState == BattleState.Failed)
             {
-                phaseText.text = LocalizationManager.T("mirror_brawl_failed"); timerText.text = "0.0"; hintText.text = LocalizationManager.T("mirror_brawl_retry");
+                phaseText.text = LocalizationManager.T("mirror_brawl_failed"); timerText.text = "0.0"; if (hintText != null) hintText.text = "";
             }
             else if (battleState == BattleState.Intro || battleState == BattleState.Intermission)
             {
-                phaseText.text = LocalizationManager.Format("mirror_brawl_phase_ready", Mathf.Max(1, phase)); timerText.text = Mathf.CeilToInt(remaining).ToString(); hintText.text = LocalizationManager.T("mirror_brawl_ready_hint");
+                phaseText.text = LocalizationManager.Format("mirror_brawl_phase_ready", Mathf.Max(1, phase)); timerText.text = Mathf.CeilToInt(remaining).ToString(); if (hintText != null) hintText.text = "";
             }
             else
             {
                 phaseText.text = LocalizationManager.Format("mirror_brawl_phase", phase, CountLivingFakes()); timerText.text = Mathf.Max(0f, remaining).ToString("00.0");
-                string localId = stageManager != null && stageManager.ActivePlayerTransform != null ? ResolvePlayerId(stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()) : null;
-                bool ready = !string.IsNullOrEmpty(localId) && realMissileAmmo.TryGetValue(localId, out int ammo) && ammo > 0;
-                hintText.text = LocalizationManager.T(ready ? "mirror_brawl_missile_ready" : "mirror_brawl_hint");
+                if (hintText != null) hintText.text = "";
             }
         }
 
@@ -1245,9 +1243,9 @@ namespace DrawBody.Prototype
             }
             if (missileProp != null) return;
             GameObject prop = new GameObject("Held Missile"); prop.transform.SetParent(transform, false); prop.transform.localPosition = new Vector3(facing * 0.85f, 0.65f, -0.12f);
-            StageEscortController.AddFilledRect(prop.transform, "Missile", Vector2.zero, new Vector2(0.95f, 0.28f), new Color(0.92f, 0.22f, 0.12f), 45);
-            StageEscortController.AddLine(prop.transform, new Vector2(-0.5f, -0.24f), new Vector2(-0.18f, 0f), 0.08f, new Color(1f, 0.65f, 0.08f), 46);
-            StageEscortController.AddLine(prop.transform, new Vector2(-0.5f, 0.24f), new Vector2(-0.18f, 0f), 0.08f, new Color(1f, 0.65f, 0.08f), 46);
+            prop.transform.localScale = new Vector3(facing, 1f, 1f);
+            BossAttackVisuals.AddMissile(prop.transform, 1.05f, 0.36f,
+                new Color(0.92f, 0.22f, 0.12f), new Color(1f, 0.65f, 0.08f), 45, false);
             missileProp = prop.transform;
         }
 
@@ -1335,7 +1333,7 @@ namespace DrawBody.Prototype
             StageEscortController.AddFilledRect(root.transform, "Opening", new Vector2(0f, 0.05f), new Vector2(1.15f, 0.42f), new Color(0.03f, 0.05f, 0.07f), 32);
             GameObject statusObject = new GameObject("Status"); statusObject.transform.SetParent(root.transform, false); statusObject.transform.localPosition = new Vector3(0f, 1.38f, -0.04f); statusObject.transform.localScale = new Vector3(1.8f, 0.2f, 1f);
             SpriteRenderer status = statusObject.AddComponent<SpriteRenderer>(); status.sprite = GetSquareSprite(); status.color = new Color(0.18f, 1f, 0.4f); status.sortingOrder = 33;
-            TextMesh label = StageEscortController.CreateText(root.transform, "Type", new Vector3(0f, 0.75f, -0.05f), 27, 0.075f, Color.white, 34); label.text = type == StageMirrorFinalBossController.WeaponType.Bomb ? "BOMB" : "MISSILE";
+            TextMesh label = StageEscortController.CreateText(root.transform, "Type", new Vector3(0f, 0.75f, -0.05f), 27, 0.075f, Color.white, 34); label.text = type == StageMirrorFinalBossController.WeaponType.Bomb ? LocalizationManager.T("stage_weapon_bomb") : LocalizationManager.T("stage_weapon_missile");
             GameObject button = new GameObject("Machine Button"); button.transform.SetParent(root.transform, false); button.transform.localPosition = new Vector3(type == StageMirrorFinalBossController.WeaponType.Bomb ? 1.8f : -1.8f, -0.42f, 0f);
             BoxCollider2D trigger = button.AddComponent<BoxCollider2D>(); trigger.size = new Vector2(1.1f, 0.75f); trigger.isTrigger = true;
             StageEscortController.AddFilledRect(button.transform, "Button", Vector2.zero, new Vector2(1.05f, 0.38f), new Color(1f, 0.23f, 0.16f), 35);
@@ -1349,7 +1347,7 @@ namespace DrawBody.Prototype
             if (Type == StageMirrorFinalBossController.WeaponType.Missile && owner != null && owner.enabled)
                 transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Repeat(transform.eulerAngles.z + 62f * Time.deltaTime, 360f));
             if (status == null) return; status.color = disabled ? new Color(0.32f, 0.32f, 0.36f) : IsReady ? new Color(0.18f, 1f, 0.4f) : new Color(1f, 0.2f, 0.12f);
-            if (label != null && disabled) label.text = "X"; else if (label != null) label.text = Type == StageMirrorFinalBossController.WeaponType.Bomb ? "BOMB" : "MISSILE";
+            if (label != null && disabled) label.text = "X"; else if (label != null) label.text = Type == StageMirrorFinalBossController.WeaponType.Bomb ? LocalizationManager.T("stage_weapon_bomb") : LocalizationManager.T("stage_weapon_missile");
         }
         internal bool TryConsume(float now, float cooldown) { if (!IsReady) return false; cooldownDuration = Mathf.Max(0.01f, cooldown); readyAt = now + cooldownDuration; return true; }
         internal void ApplyRemoteCooldown(float seconds) { cooldownDuration = Mathf.Max(cooldownDuration, seconds); readyAt = Time.time + Mathf.Max(0f, seconds); }

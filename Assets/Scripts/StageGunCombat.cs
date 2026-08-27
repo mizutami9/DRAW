@@ -11,6 +11,8 @@ namespace DrawBody.Prototype
         private StageGunSystem system;
         private float nextFireAt;
 
+        public PlayerCarryController Holder => holder;
+
         public static GameObject CreateObject(StageObjectData data, Transform parent, int pushableLayer)
         {
             GameObject root = new GameObject(data.objectId) { name = StageObjectType.Handgun.ToString(), layer = pushableLayer };

@@ -68,9 +68,7 @@ namespace DrawBody.Prototype
         private StageObjectFactory objectFactory;
         private StageGimmickSyncManager syncManager;
         private CameraFollow2D cameraFollow;
-        private TextMesh monitorTitle;
         private TextMesh monitorMain;
-        private TextMesh monitorSub;
         private Phase phase = Phase.Intro;
         private float durationSeconds = 60f;
         private float remainingSeconds = 60f;
@@ -514,52 +512,39 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("Pillar Survival Monitor");
             monitor.transform.SetParent(parent, false);
             monitor.transform.localPosition = new Vector3(0f, 3.8f, 0.5f);
-            CreateRect(monitor.transform, new Vector2(11.2f, 2.8f), new Color(0.18f, 0.22f, 0.27f, 0.82f), -32);
-            CreateRect(monitor.transform, new Vector2(10.6f, 2.25f), new Color(0.01f, 0.03f, 0.045f, 0.84f), -31);
-            monitorTitle = CreateText(monitor.transform, "Title", new Vector3(0f, 0.78f, -0.02f), 46, 0.12f, new Color(0.55f, 0.9f, 1f, 1f), -28);
-            monitorMain = CreateText(monitor.transform, "Main", new Vector3(0f, 0f, -0.03f), 68, 0.17f, new Color(0.2f, 1f, 0.72f, 1f), -27);
-            monitorSub = CreateText(monitor.transform, "Sub", new Vector3(0f, -0.78f, -0.04f), 42, 0.1f, new Color(1f, 0.82f, 0.24f, 1f), -26);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(11.2f, 2.8f), -32);
+            monitorMain = CreateText(monitor.transform, "Main", new Vector3(0f, -0.05f, -0.03f), 72, 0.19f, new Color(0.04f, 0.43f, 0.58f, 1f), -25);
         }
 
         private void RefreshMonitor()
         {
-            if (monitorTitle == null) return;
+            if (monitorMain == null) return;
             if (phase == Phase.Intro)
             {
-                monitorTitle.text = LocalizationManager.T("pillar_survival_title");
-                SetMonitorMain(LocalizationManager.T("survival_goal"), 0.105f);
-                SetMonitorSub(LocalizationManager.T("pillar_survival_goal_sub"), 0.09f);
+                SetMonitorMain(string.Empty, 0.19f);
                 return;
             }
             if (phase == Phase.Countdown)
             {
-                monitorTitle.text = LocalizationManager.T("survival_get_ready");
                 if (phaseRemaining > 3f) SetMonitorMain("3", 0.2f);
                 else if (phaseRemaining > 2f) SetMonitorMain("2", 0.2f);
                 else if (phaseRemaining > 1f) SetMonitorMain("1", 0.2f);
                 else SetMonitorMain(LocalizationManager.T("survival_start"), 0.14f);
-                SetMonitorSub(LocalizationManager.T("pillar_survival_watch_up"), 0.09f);
                 return;
             }
             if (phase == Phase.Failed)
             {
-                monitorTitle.text = LocalizationManager.T("survival_all_dead");
-                SetMonitorMain("GAME OVER", 0.14f);
-                SetMonitorSub(LocalizationManager.T("survival_retrying"), 0.09f);
+                SetMonitorMain(LocalizationManager.T("game_over"), 0.14f);
                 return;
             }
             if (phase == Phase.Finished)
             {
-                monitorTitle.text = LocalizationManager.T("pillar_survival_clear");
-                SetMonitorMain("CLEAR!", 0.17f);
-                SetMonitorSub(LocalizationManager.T("survival_clear_sub"), 0.1f);
+                SetMonitorMain(LocalizationManager.T("clear"), 0.17f);
                 return;
             }
             int minutes = Mathf.FloorToInt(remainingSeconds / 60f);
             float seconds = remainingSeconds - minutes * 60f;
-            monitorTitle.text = LocalizationManager.T("pillar_survival_title");
             SetMonitorMain(string.Format("{0:00}:{1:00.0}", minutes, seconds), 0.17f);
-            SetMonitorSub(LocalizationManager.T("pillar_survival_watch_up"), 0.1f);
         }
 
         private void SetMonitorMain(string value, float size)
@@ -570,8 +555,7 @@ namespace DrawBody.Prototype
 
         private void SetMonitorSub(string value, float size)
         {
-            monitorSub.text = value;
-            monitorSub.characterSize = Mathf.Min(size, 1.9f / Mathf.Max(1, value != null ? value.Length : 0));
+            // The 8-1 monitor intentionally shows only its central value.
         }
 
         private void CheckFalls()

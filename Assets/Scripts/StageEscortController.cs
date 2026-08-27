@@ -252,19 +252,8 @@ namespace DrawBody.Prototype
 
             GameObject runtime = new GameObject(stageId + " Escort Runtime UI");
             runtime.transform.SetParent(transform, false);
-            if (stageId == "10-2")
-            {
-                const float monitorSpacing = 14.6f;
-                float firstX = friendSpawnPosition.x + 4f;
-                for (int i = 0; i < 6; i++)
-                    CreateMonitor(runtime.transform, new Vector2(firstX + monitorSpacing * i, -6.35f));
-            }
-            else
-            {
-                CreateMonitor(
-                    runtime.transform,
-                    new Vector2((friendSpawnPosition.x + escortGoalPosition.x) * 0.5f, 5.05f));
-            }
+            // Stages 5-3 and 10-2 communicate through the friend, goal and hazards;
+            // extra status monitors only obscure their routes.
         }
 
         private void CreatePlayerOnlyFloor(Transform parent)
@@ -387,7 +376,7 @@ namespace DrawBody.Prototype
             AddLine(goal.transform, new Vector2(-1.05f, 1.05f), new Vector2(0f, 1.72f), 0.13f, new Color(0.05f, 0.38f, 0.16f, 1f), 33);
             AddLine(goal.transform, new Vector2(0f, 1.72f), new Vector2(1.05f, 1.05f), 0.13f, new Color(0.05f, 0.38f, 0.16f, 1f), 33);
             TextMesh label = CreateText(goal.transform, "Goal Label", new Vector3(0f, 2.15f, -0.03f), 42, 0.1f, new Color(0.05f, 0.38f, 0.16f, 1f), 34);
-            label.text = "GOAL";
+            label.text = LocalizationManager.T("stage_goal_label");
         }
 
         private void CreateMonitor(Transform parent, Vector2 position)
@@ -416,7 +405,7 @@ namespace DrawBody.Prototype
                     : LocalizationManager.T(stageId == "10-2" ? "escort_defense_title" : "escort_title");
                 if (cleared)
                 {
-                    SetText(main, "CLEAR!", 0.17f, 1.55f);
+                    SetText(main, LocalizationManager.T("clear"), 0.17f, 1.55f);
                     SetText(sub, LocalizationManager.T("escort_clear_sub"), 0.09f, 2f);
                 }
                 else if (friend == null)
@@ -642,7 +631,7 @@ namespace DrawBody.Prototype
             StageEscortController.AddLine(root.transform, new Vector2(-size.x * 0.62f, size.y * 0.5f), new Vector2(0f, size.y * 0.82f), 0.13f, ink, 33);
             StageEscortController.AddLine(root.transform, new Vector2(0f, size.y * 0.82f), new Vector2(size.x * 0.62f, size.y * 0.5f), 0.13f, ink, 33);
             TextMesh label = StageEscortController.CreateText(root.transform, "Goal Label", new Vector3(0f, size.y * 1.02f, -0.03f), 42, 0.1f, ink, 34);
-            label.text = "GOAL";
+            label.text = LocalizationManager.T("stage_goal_label");
         }
 
         private static void BuildPlayerOnlyFloor(GameObject root, Vector2 size)

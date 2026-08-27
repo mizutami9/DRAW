@@ -1,7 +1,7 @@
 {
     "id": "5-2",
     "displayName": "Stage 5-2",
-    "backgroundColorHex": "#15332B68",
+    "backgroundColorHex": "#15332B26",
     "ruleMode": 0,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,
@@ -61,12 +61,12 @@
             "objectId": "obj_d692a1a176c348ca",
             "type": 3,
             "position": {
-                "x": -55.0,
-                "y": -33.5
+                "x": -52.5,
+                "y": -34.0
             },
             "size": {
-                "x": 1.149999976158142,
-                "y": 2.049999952316284
+                "x": 2.5,
+                "y": 3.5
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -583,10 +583,10 @@
             "type": 0,
             "position": {
                 "x": 5.500000476837158,
-                "y": -26.5
+                "y": -26.862499237060548
             },
             "size": {
-                "x": 18.0,
+                "x": 17.274999618530275,
                 "y": 2.0
             },
             "rotation": -90.0,
@@ -2354,8 +2354,8 @@
             "objectId": "obj_bf7487b7f14e4017",
             "type": 150,
             "position": {
-                "x": -55.0,
-                "y": -29.5
+                "x": -52.5,
+                "y": -30.5
             },
             "size": {
                 "x": 3.526388168334961,
@@ -2585,6 +2585,56 @@
             "size": {
                 "x": 5.181422710418701,
                 "y": 5.181422710418701
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_3c1ca54c3d184252",
+            "type": 151,
+            "position": {
+                "x": -16.75,
+                "y": -26.25
+            },
+            "size": {
+                "x": 79.5,
+                "y": 67.5
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.5,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_5307a384bfdf4d11",
+            "type": 0,
+            "position": {
+                "x": -6.725000381469727,
+                "y": 2.5
+            },
+            "size": {
+                "x": 9.0,
+                "y": 0.44999998807907107
             },
             "rotation": -90.0,
             "pathPoints": [],

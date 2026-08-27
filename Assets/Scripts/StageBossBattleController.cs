@@ -1025,15 +1025,13 @@ namespace DrawBody.Prototype
             GameObject board = new GameObject("4-3 Boss HP Monitor");
             board.transform.SetParent(transform, false);
             board.transform.position = new Vector3(10.8f, -5.15f, 0f);
-            StageGun.CreateSprite(board.transform, "Monitor Frame", Vector2.zero, new Vector2(13.2f, 3.1f), new Color(0.18f, 0.22f, 0.26f, 0.96f), 6);
-            StageGun.CreateSprite(board.transform, "Monitor Screen", Vector2.zero, new Vector2(12.5f, 2.5f), new Color(0.018f, 0.045f, 0.055f, 0.98f), 7);
-            monitorTitle = CreateText(board.transform, new Vector3(-5.65f, 0.72f, -0.04f), 0.085f, new Color(0.45f, 0.9f, 1f, 1f), 9, TextAnchor.MiddleLeft);
-            monitorHealth = CreateText(board.transform, new Vector3(5.65f, 0.72f, -0.04f), 0.085f, new Color(1f, 0.82f, 0.2f, 1f), 9, TextAnchor.MiddleRight);
-            StageGun.CreateSprite(board.transform, "Health Track", new Vector2(0f, 0f), new Vector2(11.2f, 0.52f), new Color(0.16f, 0.18f, 0.2f, 1f), 8);
+            DoodleMonitorVisuals.Build(board.transform, new Vector2(13.2f, 3.1f), 3);
+            monitorTitle = CreateText(board.transform, new Vector3(-5.65f, 0.84f, -0.04f), 0.072f, new Color(0.08f, 0.25f, 0.48f, 1f), 9, TextAnchor.MiddleLeft);
+            monitorHealth = CreateText(board.transform, new Vector3(5.65f, 0.84f, -0.04f), 0.072f, new Color(0.78f, 0.39f, 0.06f, 1f), 9, TextAnchor.MiddleRight);
+            StageGun.CreateSprite(board.transform, "Health Track", new Vector2(0f, 0f), new Vector2(11.2f, 0.52f), new Color(0.35f, 0.39f, 0.4f, 0.58f), 8);
             GameObject fill = StageGun.CreateSprite(board.transform, "Health Fill", new Vector2(-5.6f, 0f), new Vector2(11.2f, 0.38f), new Color(0.25f, 0.9f, 0.38f, 1f), 9);
             healthFill = fill.transform;
             healthFillRenderer = fill.GetComponent<SpriteRenderer>();
-            monitorStatus = CreateText(board.transform, new Vector3(0f, -0.72f, -0.04f), 0.09f, new Color(0.3f, 1f, 0.76f, 1f), 9, TextAnchor.MiddleCenter);
         }
 
         private void RefreshMonitor()
@@ -1054,13 +1052,7 @@ namespace DrawBody.Prototype
             if (healthFillRenderer != null)
                 healthFillRenderer.color = ratio > 0.5f ? new Color(0.25f, 0.9f, 0.38f, 1f)
                     : ratio > 0.1f ? new Color(1f, 0.72f, 0.12f, 1f) : new Color(1f, 0.18f, 0.12f, 1f);
-            monitorStatus.text = phase == Phase.Waiting ? LocalizationManager.T("boss_enter_room")
-                : phase == Phase.Intro ? LocalizationManager.T("boss_appears")
-                : phase == Phase.Special ? LocalizationManager.T("boss_special_warning")
-                : phase == Phase.Defeated ? LocalizationManager.T("boss_defeated")
-                : phase == Phase.Failed ? LocalizationManager.T("boss_all_out")
-                : charging && chargeWarningRemaining > 0f ? LocalizationManager.Format("boss_charge_countdown", Mathf.CeilToInt(chargeWarningRemaining))
-                : invulnerable ? LocalizationManager.T("boss_invulnerable") : LocalizationManager.T("boss_fight");
+            if (monitorStatus != null) monitorStatus.text = string.Empty;
         }
 
         private static TextMesh CreateText(Transform parent, Vector3 position, float size, Color color, int order, TextAnchor anchor)

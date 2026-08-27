@@ -294,7 +294,7 @@ namespace DrawBody.Prototype
             tntObject.transform.SetParent(visual.transform, false);
             tntObject.transform.localPosition = new Vector3(0f, -visualSize.y * 0.34f, -0.08f);
             TextMesh tntText = tntObject.AddComponent<TextMesh>();
-            tntText.text = "TNT";
+            tntText.text = LocalizationManager.T("stage_dynamite_label");
             tntText.anchor = TextAnchor.MiddleCenter;
             tntText.alignment = TextAlignment.Center;
             tntText.fontSize = 42;
@@ -347,12 +347,15 @@ namespace DrawBody.Prototype
 
             GameObject textObject = new GameObject("Dynamite Countdown");
             textObject.transform.SetParent(visual.transform, false);
-            textObject.transform.localPosition = new Vector3(0f, 0f, -0.09f);
+            // The imported artwork has a small round timer badge slightly to
+            // the right of center. Keep three-character values such as "5.0"
+            // inside that badge even on the compact 4-2 dynamite objects.
+            textObject.transform.localPosition = new Vector3(visualSize.x * 0.08f, 0f, -0.09f);
             countdownText = textObject.AddComponent<TextMesh>();
             countdownText.anchor = TextAnchor.MiddleCenter;
             countdownText.alignment = TextAlignment.Center;
             countdownText.fontSize = 56;
-            countdownText.characterSize = Mathf.Clamp(Mathf.Min(visualSize.x, visualSize.y) * 0.105f, 0.075f, 0.14f);
+            countdownText.characterSize = Mathf.Clamp(Mathf.Min(visualSize.x, visualSize.y) * 0.052f, 0.04f, 0.07f);
             countdownText.fontStyle = FontStyle.Bold;
             countdownText.color = new Color(0.19f, 0.035f, 0.025f, 1f);
             if (handwrittenFont != null)

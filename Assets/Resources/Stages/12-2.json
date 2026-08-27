@@ -1,7 +1,7 @@
 {
   "id":"12-2",
   "displayName":"Stage 12-2 Coin Rush Hall",
-  "backgroundColorHex":"#EEF9FFFF",
+  "backgroundColorHex":"#EEF9FF26",
   "ruleMode":1,
   "timeLimitSeconds":120.0,
   "collectionTarget":164,
@@ -10,7 +10,7 @@
     {"objectId":"12-2_boundary","type":151,"position":{"x":0.0,"y":0.0},"size":{"x":95.0,"y":32.0},"rotation":0.0,"pathThickness":0.7,"keepSeparate":true},
     {"objectId":"12-2_floor","type":0,"position":{"x":0.0,"y":-15.55},"size":{"x":94.3,"y":0.9},"rotation":0.0,"keepSeparate":true},
     {"objectId":"12-2_spawn","type":2,"position":{"x":0.0,"y":-14.45},"size":{"x":0.7,"y":0.7},"rotation":0.0},
-    {"objectId":"12-2_clock_main","type":166,"position":{"x":0.0,"y":13.8},"size":{"x":6.2,"y":2.0},"rotation":0.0},
+    {"objectId":"12-2_clock_main","type":166,"position":{"x":0.0,"y":-17.2},"size":{"x":8.0,"y":2.0},"rotation":0.0},
 
     {"objectId":"12-2_left_divider_a","type":1,"position":{"x":-30.0,"y":-13.35},"size":{"x":0.65,"y":3.3},"rotation":0.0,"keepSeparate":true},
     {"objectId":"12-2_left_divider_b","type":1,"position":{"x":-30.0,"y":-5.0},"size":{"x":0.65,"y":7.4},"rotation":0.0,"keepSeparate":true},
@@ -88,11 +88,13 @@
     {"objectId":"12-2_jump_right_mid_room","type":61,"position":{"x":42.5,"y":-4.0},"size":{"x":1.8,"y":0.75},"rotation":0.0,"actionStrength":54.0},
     {"objectId":"12-2_jump_right_upper_room","type":61,"position":{"x":42.5,"y":6.0},"size":{"x":1.8,"y":0.75},"rotation":0.0,"actionStrength":54.0},
 
-    {"objectId":"12-2_clock_left_lower","type":166,"position":{"x":-33.7,"y":-10.0},"size":{"x":2.2,"y":1.0},"rotation":0.0},
-    {"objectId":"12-2_clock_left_mid","type":166,"position":{"x":-33.7,"y":0.0},"size":{"x":2.2,"y":1.0},"rotation":0.0},
-    {"objectId":"12-2_clock_left_upper","type":166,"position":{"x":-33.7,"y":10.0},"size":{"x":2.2,"y":1.0},"rotation":0.0},
-    {"objectId":"12-2_clock_right_lower","type":166,"position":{"x":33.7,"y":-10.0},"size":{"x":2.2,"y":1.0},"rotation":0.0},
-    {"objectId":"12-2_clock_right_mid","type":166,"position":{"x":33.7,"y":0.0},"size":{"x":2.2,"y":1.0},"rotation":0.0},
-    {"objectId":"12-2_clock_right_upper","type":166,"position":{"x":33.7,"y":10.0},"size":{"x":2.2,"y":1.0},"rotation":0.0}
+    {"objectId":"12-2_clock_left_lower","type":166,"position":{"x":-42.0,"y":-17.2},"size":{"x":8.0,"y":2.0},"rotation":0.0},
+    {"objectId":"12-2_clock_left_mid","type":166,"position":{"x":-31.5,"y":-17.2},"size":{"x":8.0,"y":2.0},"rotation":0.0},
+    {"objectId":"12-2_clock_left_upper","type":166,"position":{"x":-21.0,"y":-17.2},"size":{"x":8.0,"y":2.0},"rotation":0.0},
+    {"objectId":"12-2_clock_left_inner","type":166,"position":{"x":-10.5,"y":-17.2},"size":{"x":8.0,"y":2.0},"rotation":0.0},
+    {"objectId":"12-2_clock_right_inner","type":166,"position":{"x":10.5,"y":-17.2},"size":{"x":8.0,"y":2.0},"rotation":0.0},
+    {"objectId":"12-2_clock_right_lower","type":166,"position":{"x":21.0,"y":-17.2},"size":{"x":8.0,"y":2.0},"rotation":0.0},
+    {"objectId":"12-2_clock_right_mid","type":166,"position":{"x":31.5,"y":-17.2},"size":{"x":8.0,"y":2.0},"rotation":0.0},
+    {"objectId":"12-2_clock_right_upper","type":166,"position":{"x":42.0,"y":-17.2},"size":{"x":8.0,"y":2.0},"rotation":0.0}
   ]
 }

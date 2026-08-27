@@ -60,7 +60,33 @@ namespace DrawBody.Prototype
 
             PlayerController2D player = rb.GetComponent<PlayerController2D>();
             if (player == null) player = other.GetComponentInParent<PlayerController2D>();
-            if (player != null && (player.IsFriendCarried || rb.bodyType != RigidbodyType2D.Dynamic))
+            if (player == null && rb.bodyType != RigidbodyType2D.Dynamic)
+            {
+                // A held weapon can hang below its owner and be the first member
+                // of a bird -> player -> gun chain to touch the pad. Follow the
+                // weapon back to its holder before resolving the outer carrier.
+                PlayerCarryController weaponHolder = rb.GetComponent<StageGun>()?.Holder;
+                if (weaponHolder == null)
+                    weaponHolder = rb.GetComponent<StageBazooka>()?.Holder;
+                if (weaponHolder == null)
+                {
+                    StageGimmickSyncManager sync = rb.GetComponentInParent<StageGimmickSyncManager>();
+                    StageManager manager = Object.FindFirstObjectByType<StageManager>();
+                    if (sync != null && manager != null
+                        && sync.TryGetObjectOwnerPlayerId(rb.transform, out string ownerId))
+                    {
+                        weaponHolder = manager.GetOnlinePlayerController(ownerId)
+                            ?.GetComponent<PlayerCarryController>();
+                    }
+                }
+                if (weaponHolder != null)
+                {
+                    player = weaponHolder.GetComponent<PlayerController2D>();
+                    rb = weaponHolder.GetComponent<Rigidbody2D>();
+                }
+            }
+            if (player != null && (player.IsFriendCarried || rb == null
+                || rb.bodyType != RigidbodyType2D.Dynamic))
             {
                 ResolveCarrierLaunchTarget(player.transform, out rb, out player);
             }

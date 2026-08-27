@@ -563,6 +563,14 @@ namespace DrawBody.Prototype
             }
         }
 
+        public bool TryGetObjectOwnerPlayerId(Transform target, out string playerId)
+        {
+            playerId = null;
+            return TryGetSyncId(target, out string objectId)
+                && ownersByObjectId.TryGetValue(objectId, out playerId)
+                && !string.IsNullOrEmpty(playerId);
+        }
+
         public void RequestLinkActivation(string sourceObjectId)
         {
             if (string.IsNullOrEmpty(sourceObjectId) || !IsOnlineActive)

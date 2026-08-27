@@ -308,21 +308,10 @@ namespace DrawBody.Prototype
                 GameObject monitor = new GameObject("10-1 Speed Clock " + i);
                 monitor.transform.SetParent(transform, false);
                 monitor.transform.position = new Vector3(positions[i].x, positions[i].y, 0.3f);
-                StageGrainCarryObjectFactory.AddRect(monitor.transform, "Clock Frame", Vector2.zero,
-                    new Vector2(i == 0 ? 7.2f : 4.4f, i == 0 ? 1.9f : 1.35f),
-                    new Color(0.14f, 0.23f, 0.3f, 0.72f), 3);
-                StageGrainCarryObjectFactory.AddRect(monitor.transform, "Clock Screen", Vector2.zero,
-                    new Vector2(i == 0 ? 6.75f : 4.05f, i == 0 ? 1.48f : 1.03f),
-                    new Color(0.015f, 0.06f, 0.1f, 0.75f), 4);
-                TextMesh clock = CreateText(monitor.transform, i == 0 ? 0.18f : 0.13f, 5);
+                DoodleMonitorVisuals.Build(monitor.transform,
+                    new Vector2(i == 0 ? 7.2f : 4.4f, i == 0 ? 1.9f : 1.45f), 1);
+                TextMesh clock = CreateText(monitor.transform, i == 0 ? 0.18f : 0.13f, 7);
                 clocks.Add(clock);
-                if (i == 0)
-                {
-                    TextMesh title = CreateText(monitor.transform, 0.055f, 5);
-                    title.transform.localPosition = new Vector3(0f, 0.62f, -0.08f);
-                    title.color = new Color(0.65f, 0.9f, 1f);
-                    title.text = LocalizationManager.T("ice_speedrun_title");
-                }
             }
         }
 

@@ -86,6 +86,7 @@ namespace DrawBody.Prototype
         private int lastEnemySequence;
         private bool configured;
         private bool cameraWasEnabled;
+        private bool cameraLocked;
         private Vector3 previousCameraPosition;
         private float previousCameraSize;
         private static Sprite circleSprite;
@@ -118,11 +119,15 @@ namespace DrawBody.Prototype
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
             RestorePlayers();
-            if (cameraFollow != null) cameraFollow.enabled = cameraWasEnabled;
-            if (gameCamera != null)
+            if (cameraLocked)
             {
-                gameCamera.transform.position = previousCameraPosition;
-                gameCamera.orthographicSize = previousCameraSize;
+                if (cameraFollow != null) cameraFollow.enabled = cameraWasEnabled;
+                if (gameCamera != null)
+                {
+                    gameCamera.transform.position = previousCameraPosition;
+                    gameCamera.orthographicSize = previousCameraSize;
+                }
+                cameraLocked = false;
             }
         }
 
@@ -591,11 +596,11 @@ namespace DrawBody.Prototype
         {
             GameObject board = new GameObject("11-3 Status Board");
             board.transform.SetParent(parent, false);
-            board.transform.localPosition = new Vector3(0f, 10.55f, 0.3f);
-            CreateRect(board.transform, new Vector2(25.5f, 2.3f), new Color(0.04f, 0.07f, 0.08f, 0.9f), -20);
-            titleText = CreateText(board.transform, new Vector3(-8.2f, 0.52f, -0.02f), 0.1f, new Color(0.42f, 0.9f, 1f, 1f), -18);
-            countText = CreateText(board.transform, new Vector3(8.2f, 0.52f, -0.03f), 0.1f, new Color(1f, 0.83f, 0.28f, 1f), -17);
-            statusText = CreateText(board.transform, new Vector3(0f, -0.5f, -0.04f), 0.12f, new Color(0.2f, 1f, 0.7f, 1f), -16);
+            board.transform.localPosition = new Vector3(0f, 10.25f, 0.3f);
+            DoodleMonitorVisuals.Build(board.transform, new Vector2(25.5f, 3.0f), -22);
+            titleText = CreateText(board.transform, new Vector3(-8.2f, 0.68f, -0.02f), 0.085f, new Color(0.08f, 0.25f, 0.48f, 1f), -16);
+            countText = CreateText(board.transform, new Vector3(8.2f, 0.68f, -0.03f), 0.085f, new Color(0.78f, 0.39f, 0.06f, 1f), -16);
+            statusText = CreateText(board.transform, new Vector3(0f, -0.58f, -0.04f), 0.105f, new Color(0.04f, 0.43f, 0.58f, 1f), -15);
         }
 
         private void LockCameraToArena()
@@ -609,6 +614,7 @@ namespace DrawBody.Prototype
             float requiredForWidth = (ArenaHalfWidth + 1f) / Mathf.Max(0.2f, gameCamera.aspect);
             gameCamera.transform.position = new Vector3(0f, 2f, previousCameraPosition.z);
             gameCamera.orthographicSize = Mathf.Max(halfHeight, requiredForWidth);
+            cameraLocked = true;
         }
 
         private int CountRemainingBlocks()
@@ -635,7 +641,7 @@ namespace DrawBody.Prototype
             }
             else if (phase == ChallengePhase.Failed)
                 status = LocalizationManager.Format("block_breaker_retry", Mathf.CeilToInt(failedRestartRemaining));
-            else if (phase == ChallengePhase.Clear) status = "CLEAR!";
+            else if (phase == ChallengePhase.Clear) status = LocalizationManager.T("clear");
             else status = FormatTime(remainingSeconds);
             SetFittedBoardText(statusText, status, 22.5f, 0.12f);
         }

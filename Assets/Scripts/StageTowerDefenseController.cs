@@ -432,7 +432,7 @@ namespace DrawBody.Prototype
             {
                 if (markers[i] == null || markers[i].objectId != id) continue;
                 StageTowerDefenseButton button = markers[i].gameObject.AddComponent<StageTowerDefenseButton>();
-                button.Configure(this, left);
+                button.Configure(this, left, hardMode);
                 return button;
             }
             return null;
@@ -448,15 +448,21 @@ namespace DrawBody.Prototype
         {
             GameObject monitor = new GameObject(stageId + " Defense Monitor");
             monitor.transform.SetParent(transform, false);
-            monitor.transform.position = new Vector3(0f, 5.15f, 0f);
-            Vector2 frameSize = hardMode ? new Vector2(18f, 3.2f) : new Vector2(13.5f, 2.75f);
-            Vector2 screenSize = hardMode ? new Vector2(17.2f, 2.55f) : new Vector2(12.8f, 2.18f);
-            StageGun.CreateSprite(monitor.transform, "Frame", Vector2.zero, frameSize, new Color(0.16f, 0.2f, 0.24f, 0.94f), 22);
-            StageGun.CreateSprite(monitor.transform, "Screen", Vector2.zero, screenSize, new Color(0.025f, 0.055f, 0.06f, 0.96f), 23);
-            titleText = CreateText(monitor.transform, new Vector2(0f, 0.72f), 0.095f, 25, new Color(0.35f, 0.95f, 0.82f, 1f));
-            phaseText = CreateText(monitor.transform, new Vector2(-3.5f, 0.05f), 0.14f, 25, new Color(1f, 0.78f, 0.2f, 1f));
-            timerText = CreateText(monitor.transform, new Vector2(2.5f, 0.05f), 0.18f, 25, new Color(0.4f, 0.92f, 1f, 1f));
-            messageText = CreateText(monitor.transform, new Vector2(0f, -0.7f), 0.085f, 25, Color.white);
+            monitor.transform.position = new Vector3(0f, 5.65f, 0f);
+            Vector2 frameSize = hardMode ? new Vector2(18f, 3.7f) : new Vector2(14.5f, 2.25f);
+            DoodleMonitorVisuals.Build(monitor.transform, frameSize, 20);
+            if (hardMode)
+            {
+                titleText = CreateText(monitor.transform, new Vector2(0f, 0.88f), 0.075f, 26, new Color(0.08f, 0.25f, 0.48f, 1f));
+                phaseText = CreateText(monitor.transform, new Vector2(-3.4f, 0.08f), 0.125f, 26, new Color(0.78f, 0.39f, 0.06f, 1f));
+                timerText = CreateText(monitor.transform, new Vector2(3.1f, 0.08f), 0.16f, 26, new Color(0.04f, 0.43f, 0.58f, 1f));
+                messageText = CreateText(monitor.transform, new Vector2(0f, -0.92f), 0.072f, 26, new Color(0.18f, 0.3f, 0.38f, 1f));
+            }
+            else
+            {
+                phaseText = CreateText(monitor.transform, new Vector2(-3.25f, 0f), 0.14f, 26, new Color(0.78f, 0.39f, 0.06f, 1f));
+                timerText = CreateText(monitor.transform, new Vector2(3.25f, 0f), 0.17f, 26, new Color(0.04f, 0.43f, 0.58f, 1f));
+            }
         }
 
         private void LockCameraToArena()
@@ -531,10 +537,13 @@ namespace DrawBody.Prototype
 
         private void RefreshDisplay()
         {
-            if (titleText == null) return;
-            titleText.text = LocalizationManager.T("tower_defense_title");
+            if (phaseText == null || timerText == null) return;
             phaseText.text = LocalizationManager.Format("tower_defense_phase", CurrentPhase(), 3);
-            timerText.text = Mathf.CeilToInt(remainingSeconds).ToString("00") + ".0";
+            timerText.text = hardMode
+                ? Mathf.CeilToInt(remainingSeconds).ToString("00") + ".0"
+                : LocalizationManager.Format("tower_defense_time_remaining", remainingSeconds);
+            if (!hardMode) return;
+            titleText.text = LocalizationManager.T("tower_defense_title");
             if (matchState == MatchState.Intro)
                 messageText.text = Mathf.Max(1, Mathf.CeilToInt(introRemaining)).ToString();
             else if (matchState == MatchState.Failed)
@@ -735,11 +744,13 @@ namespace DrawBody.Prototype
         private TextMesh label;
         private SpriteRenderer glow;
         private float nextLocalRequestAt;
+        private bool showStatusLabel;
 
-        public void Configure(StageTowerDefenseController controller, bool isLeft)
+        public void Configure(StageTowerDefenseController controller, bool isLeft, bool showStatus)
         {
             owner = controller;
             left = isLeft;
+            showStatusLabel = showStatus;
             BoxCollider2D trigger = GetComponent<BoxCollider2D>();
             if (trigger == null) trigger = gameObject.AddComponent<BoxCollider2D>();
             trigger.isTrigger = true;
@@ -749,6 +760,7 @@ namespace DrawBody.Prototype
                 new Vector2(1.15f, 0.34f), new Color(0.2f, 0.9f, 0.75f, 0.75f), 41);
             glow = glowObject.GetComponent<SpriteRenderer>();
             label = CreateLabel();
+            label.gameObject.SetActive(showStatusLabel);
         }
 
         private TextMesh CreateLabel()
@@ -793,23 +805,31 @@ namespace DrawBody.Prototype
 
         public void Refresh(float cooldown, float warning)
         {
-            if (label == null) return;
             if (warning > 0f)
             {
-                label.text = Mathf.CeilToInt(warning).ToString();
-                label.color = new Color(1f, 0.22f, 0.1f, 1f);
+                if (label != null && showStatusLabel)
+                {
+                    label.text = Mathf.CeilToInt(warning).ToString();
+                    label.color = new Color(1f, 0.22f, 0.1f, 1f);
+                }
                 if (glow != null) glow.color = new Color(1f, 0.2f, 0.08f, 0.7f + Mathf.Sin(Time.time * 12f) * 0.2f);
             }
             else if (cooldown > 0f)
             {
-                label.text = cooldown.ToString("0.0");
-                label.color = new Color(0.3f, 0.34f, 0.38f, 1f);
+                if (label != null && showStatusLabel)
+                {
+                    label.text = cooldown.ToString("0.0");
+                    label.color = new Color(0.3f, 0.34f, 0.38f, 1f);
+                }
                 if (glow != null) glow.color = new Color(0.3f, 0.34f, 0.38f, 0.45f);
             }
             else
             {
-                label.text = "READY";
-                label.color = new Color(0.05f, 0.48f, 0.3f, 1f);
+                if (label != null && showStatusLabel)
+                {
+                    label.text = LocalizationManager.T("stage_ready_label");
+                    label.color = new Color(0.05f, 0.48f, 0.3f, 1f);
+                }
                 if (glow != null) glow.color = new Color(0.15f, 0.95f, 0.68f, 0.72f);
             }
         }

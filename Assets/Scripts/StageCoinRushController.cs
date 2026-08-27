@@ -95,8 +95,11 @@ namespace DrawBody.Prototype
             float scale = 0.52f + (index % 5) * 0.012f;
             coin.transform.localScale = new Vector3(scale, scale, 1f);
 
-            SpriteRenderer renderer = coin.AddComponent<SpriteRenderer>();
+            GameObject art = new GameObject("Coin Art");
+            art.transform.SetParent(coin.transform, false);
+            SpriteRenderer renderer = art.AddComponent<SpriteRenderer>();
             renderer.sprite = GetSharedCoinSprite();
+            NormalizeCoinArtwork(renderer);
             renderer.color = Color.white;
             renderer.sortingOrder = 16;
 
@@ -176,6 +179,21 @@ namespace DrawBody.Prototype
             coinSprite.name = "12-2 Crayon Coin Sprite";
             coinSprite.hideFlags = HideFlags.HideAndDontSave;
             return coinSprite;
+        }
+
+        internal static void NormalizeCoinArtwork(SpriteRenderer renderer)
+        {
+            if (renderer == null || renderer.sprite == null)
+            {
+                return;
+            }
+
+            Vector2 bounds = renderer.sprite.bounds.size;
+            float largestSide = Mathf.Max(bounds.x, bounds.y);
+            if (largestSide > 0.0001f)
+            {
+                renderer.transform.localScale = Vector3.one / largestSide;
+            }
         }
     }
 }

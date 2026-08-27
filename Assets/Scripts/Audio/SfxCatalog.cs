@@ -154,13 +154,19 @@ namespace DrawBody.Prototype
                 case SfxId.GunShot:
                 case SfxId.Ricochet:
                 case SfxId.BossCharge:
-                case SfxId.TurtleShellEnter:
-                case SfxId.TurtleShellExit:
                 case SfxId.BossDash:
                 case SfxId.BossBeamCharge:
                 case SfxId.BossSuction:
                     volume = 0.78f;
                     cooldown = 0.1f;
+                    break;
+                case SfxId.TurtleShellEnter:
+                    volume = 0.3f;
+                    cooldown = 0.12f;
+                    break;
+                case SfxId.TurtleShellExit:
+                    volume = 0.24f;
+                    cooldown = 0.12f;
                     break;
                 case SfxId.BossAttackWarning:
                     volume = 0.78f;

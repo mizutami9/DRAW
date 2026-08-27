@@ -32,10 +32,8 @@ namespace DrawBody.Prototype
         private StageObjectFactory factory;
         private StageGun activeGun;
         private StageRicochetTarget activeTarget;
-        private TextMesh titleText;
         private TextMesh roundText;
         private TextMesh ammoText;
-        private TextMesh helpText;
         private ChallengeState state = new ChallengeState();
         private int playerCount;
         private int appliedRoundVersion = -1;
@@ -411,6 +409,7 @@ namespace DrawBody.Prototype
                 Physics2D.SyncTransforms();
             }
             player.ResetMotion();
+            stageManager?.RecordAssignedPlayerStart(player, destination);
         }
 
         private void LockCameraToArena()
@@ -429,7 +428,7 @@ namespace DrawBody.Prototype
 
             gameCamera.transform.position = new Vector3(0f, 0f, previousCameraPosition.z);
             // Keep the complete 34 x 18 arena visible even on narrower window aspects.
-            gameCamera.orthographicSize = Mathf.Max(10.6f, 19f / Mathf.Max(0.1f, gameCamera.aspect));
+            gameCamera.orthographicSize = Mathf.Max(11.2f, 19f / Mathf.Max(0.1f, gameCamera.aspect));
             cameraLocked = true;
         }
 
@@ -446,23 +445,17 @@ namespace DrawBody.Prototype
         {
             GameObject monitor = new GameObject("10-3 Ricochet Monitor");
             monitor.transform.SetParent(transform, false);
-            monitor.transform.localPosition = new Vector3(0f, 7.15f, 0.4f);
-            StageEscortController.AddFilledRect(monitor.transform, "Frame", Vector2.zero, new Vector2(12f, 2.6f), new Color(0.18f, 0.22f, 0.27f, 0.92f), -32);
-            StageEscortController.AddFilledRect(monitor.transform, "Screen", Vector2.zero, new Vector2(11.3f, 2f), new Color(0.01f, 0.035f, 0.045f, 0.94f), -31);
-            titleText = StageEscortController.CreateText(monitor.transform, "Title", new Vector3(0f, 0.68f, -0.02f), 48, 0.12f, new Color(0.55f, 0.9f, 1f), -28);
-            roundText = StageEscortController.CreateText(monitor.transform, "Round", new Vector3(-2.5f, 0f, -0.03f), 58, 0.15f, new Color(0.2f, 1f, 0.72f), -27);
-            ammoText = StageEscortController.CreateText(monitor.transform, "Ammo", new Vector3(2.5f, 0f, -0.03f), 58, 0.15f, new Color(1f, 0.75f, 0.2f), -27);
-            helpText = StageEscortController.CreateText(monitor.transform, "Help", new Vector3(0f, -0.7f, -0.04f), 42, 0.09f, new Color(1f, 0.88f, 0.42f), -26);
+            monitor.transform.localPosition = new Vector3(0f, 9.8f, 0.4f);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(10.5f, 1.75f), -32);
+            roundText = StageEscortController.CreateText(monitor.transform, "Round", new Vector3(-2.45f, -0.03f, -0.03f), 54, 0.135f, new Color(0.04f, 0.43f, 0.58f), -26);
+            ammoText = StageEscortController.CreateText(monitor.transform, "Ammo", new Vector3(2.45f, -0.03f, -0.03f), 54, 0.135f, new Color(0.78f, 0.39f, 0.06f), -26);
         }
 
         private void RefreshMonitor()
         {
-            if (titleText == null || state == null) return;
-            titleText.text = LocalizationManager.T("ricochet_title");
+            if (roundText == null || state == null) return;
             roundText.text = LocalizationManager.Format("ricochet_round", state.Round, TotalRounds);
             ammoText.text = LocalizationManager.Format("ricochet_ammo", state.Ammo);
-            helpText.text = LocalizationManager.T(state.Phase == 2
-                ? "ricochet_failed" : state.Phase == 3 ? "ricochet_clear" : "ricochet_instruction");
         }
 
         private void CreateTargetRing(Transform target)

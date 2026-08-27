@@ -1,7 +1,7 @@
 {
     "id": "5-1",
     "displayName": "Stage 5-1",
-    "backgroundColorHex": "#CFFBF396",
+    "backgroundColorHex": "#CFFBF326",
     "ruleMode": 0,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,
@@ -946,7 +946,7 @@
             "type": 151,
             "position": {
                 "x": 30.0,
-                "y": -20.25
+                "y": -16.75
             },
             "size": {
                 "x": 72.0,
@@ -1382,6 +1382,31 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_3cc51901216c4eae",
+            "type": 0,
+            "position": {
+                "x": 5.0,
+                "y": 2.75
+            },
+            "size": {
+                "x": 3.5,
+                "y": 2.0
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
             "actionStrength": 0.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,

@@ -767,7 +767,8 @@ namespace DrawBody.Prototype
             }
             if (randomReadyLabel != null)
             {
-                randomReadyLabel.text = ready ? "\u2713 READY" : "READY";
+                string readyLabel = LocalizationManager.T("multi_ready");
+                randomReadyLabel.text = ready ? "\u2713 " + readyLabel : readyLabel;
                 randomReadyLabel.color = Color.black;
                 randomReadyLabel.fontStyle = FontStyle.Bold;
             }

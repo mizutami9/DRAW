@@ -1,7 +1,7 @@
 {
     "id": "7-3",
     "displayName": "Stage 7-3 Twin Descent",
-    "backgroundColorHex": "#EAF6FFFF",
+    "backgroundColorHex": "#EAF6FF26",
     "ruleMode": 0,
     "timeLimitSeconds": 180.0,
     "collectionTarget": 165,

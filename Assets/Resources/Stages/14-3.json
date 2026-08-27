@@ -1,7 +1,7 @@
 {
   "id":"14-3",
   "displayName":"Stage 14-3 Linked Shield",
-  "backgroundColorHex":"#EEF9FFFF",
+  "backgroundColorHex":"#EEF9FF26",
   "ruleMode":2,
   "timeLimitSeconds":60.0,
   "collectionTarget":0,

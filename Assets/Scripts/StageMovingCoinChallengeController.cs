@@ -164,8 +164,11 @@ namespace DrawBody.Prototype
             float scale = 0.48f + (index % 5) * 0.018f;
             coin.transform.localScale = new Vector3(scale, scale, 1f);
 
-            SpriteRenderer renderer = coin.AddComponent<SpriteRenderer>();
+            GameObject art = new GameObject("Coin Art");
+            art.transform.SetParent(coin.transform, false);
+            SpriteRenderer renderer = art.AddComponent<SpriteRenderer>();
             renderer.sprite = StageCoinRushController.GetSharedCoinSprite();
+            StageCoinRushController.NormalizeCoinArtwork(renderer);
             renderer.color = index % 7 == 0
                 ? new Color(1f, 0.92f, 0.48f, 1f)
                 : Color.white;

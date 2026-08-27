@@ -90,9 +90,7 @@ namespace DrawBody.Prototype
         private StageObjectFactory objectFactory;
         private StageGimmickSyncManager syncManager;
         private CameraFollow2D cameraFollow;
-        private TextMesh monitorTitle;
         private TextMesh monitorMain;
-        private TextMesh monitorSub;
         private SurvivalPhase phase = SurvivalPhase.Intro;
         private float durationSeconds = 60f;
         private float remainingSeconds;
@@ -277,9 +275,7 @@ namespace DrawBody.Prototype
             {
                 phase = SurvivalPhase.Finished;
                 RestoreFloors();
-                monitorTitle.text = LocalizationManager.T("survival_clear_title");
-                SetMonitorMain("CLEAR!", 0.17f);
-                SetMonitorSub(LocalizationManager.T("survival_clear_sub"), 0.1f);
+                SetMonitorMain(string.Empty, 0.17f);
                 stageManager.ClearStage();
                 return;
             }
@@ -852,9 +848,7 @@ namespace DrawBody.Prototype
             failedRestartRemaining = 2.2f;
             RestoreFloors();
             SetLocalControls(false);
-            monitorTitle.text = LocalizationManager.T("survival_all_dead");
-            SetMonitorMain("GAME OVER", 0.14f);
-            SetMonitorSub(LocalizationManager.T("survival_retrying"), 0.095f);
+            SetMonitorMain(string.Empty, 0.14f);
             GameSfx.Play(SfxId.PlayerHit);
         }
 
@@ -871,42 +865,20 @@ namespace DrawBody.Prototype
 
         private void RefreshMonitor()
         {
-            if (monitorTitle == null || monitorMain == null || monitorSub == null)
+            if (monitorMain == null)
             {
                 return;
             }
 
-            if (phase == SurvivalPhase.Intro)
-            {
-                monitorTitle.text = LocalizationManager.T("survival_mode_title");
-                SetMonitorMain(LocalizationManager.T("survival_goal"), 0.105f);
-                SetMonitorSub(LocalizationManager.T("survival_goal_sub"), 0.095f);
-                return;
-            }
             if (phase == SurvivalPhase.StartCountdown)
             {
-                monitorTitle.text = LocalizationManager.T("survival_get_ready");
                 if (phaseRemaining > 3f) SetMonitorMain("3", 0.19f);
                 else if (phaseRemaining > 2f) SetMonitorMain("2", 0.19f);
                 else if (phaseRemaining > 1f) SetMonitorMain("1", 0.19f);
                 else SetMonitorMain(LocalizationManager.T("survival_start"), 0.145f);
-                SetMonitorSub(LocalizationManager.T("survival_watch_floor"), 0.095f);
                 return;
             }
-            if (phase == SurvivalPhase.Failed || phase == SurvivalPhase.Finished)
-            {
-                return;
-            }
-
-            int minutes = Mathf.FloorToInt(remainingSeconds / 60f);
-            float seconds = remainingSeconds - minutes * 60f;
-            monitorTitle.text = LocalizationManager.T("survival_remaining");
-            SetMonitorMain(string.Format("{0:00}:{1:00.0}", minutes, seconds), 0.17f);
-            SetMonitorSub(
-                phase == SurvivalPhase.Warning
-                    ? LocalizationManager.Format("survival_safe_countdown", safeFloors.Count, phaseRemaining)
-                    : LocalizationManager.T("survival_floor_dropped"),
-                phase == SurvivalPhase.Warning ? 0.073f : 0.095f);
+            SetMonitorMain(string.Empty, 0.17f);
         }
 
         private void SetMonitorMain(string value, float characterSize)
@@ -918,17 +890,6 @@ namespace DrawBody.Prototype
             monitorMain.text = value;
             float fitSize = 1.55f / Mathf.Max(1, value != null ? value.Length : 0);
             monitorMain.characterSize = Mathf.Min(characterSize, fitSize);
-        }
-
-        private void SetMonitorSub(string value, float characterSize)
-        {
-            if (monitorSub == null)
-            {
-                return;
-            }
-            monitorSub.text = value;
-            float fitSize = 2f / Mathf.Max(1, value != null ? value.Length : 0);
-            monitorSub.characterSize = Mathf.Min(characterSize, fitSize);
         }
 
         private void BuildArena()
@@ -1035,12 +996,8 @@ namespace DrawBody.Prototype
             monitor.transform.SetParent(parent, false);
             monitor.transform.localPosition = new Vector3(0f, 2.65f, 0.4f);
 
-            CreateMonitorRect(monitor.transform, "Monitor Frame", new Vector2(10.6f, 4.8f), new Color(0.19f, 0.23f, 0.27f, 0.88f), -32);
-            CreateMonitorRect(monitor.transform, "Monitor Screen", new Vector2(9.8f, 4.0f), new Color(0.015f, 0.035f, 0.045f, 0.88f), -31);
-            AddBoxOutline(monitor.transform, new Vector2(10.6f, 4.8f), new Color(0.05f, 0.06f, 0.07f, 1f), -30);
-            monitorTitle = CreateMonitorText(monitor.transform, "Monitor Title", new Vector3(0f, 1.42f, -0.02f), 52, 0.135f, new Color(0.55f, 0.9f, 1f, 1f), -28);
-            monitorMain = CreateMonitorText(monitor.transform, "Monitor Main", new Vector3(0f, 0.05f, -0.03f), 72, 0.17f, new Color(0.2f, 1f, 0.72f, 1f), -27);
-            monitorSub = CreateMonitorText(monitor.transform, "Monitor Sub", new Vector3(0f, -1.43f, -0.04f), 46, 0.115f, new Color(1f, 0.86f, 0.3f, 1f), -26);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(8.4f, 2.3f), -32);
+            monitorMain = CreateMonitorText(monitor.transform, "Monitor Main", new Vector3(0f, -0.02f, -0.03f), 78, 0.23f, new Color(0.04f, 0.43f, 0.58f, 1f), -25);
         }
 
         private static void CreateMonitorRect(Transform parent, string name, Vector2 size, Color color, int sortingOrder)

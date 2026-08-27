@@ -12,6 +12,8 @@ namespace DrawBody.Prototype
     /// </summary>
     public sealed class PlayerEmoteController : MonoBehaviour
     {
+        public static event Action<string, int> EmoteShown;
+
         private const string NetworkKind = "player_emote";
         private const float DisplaySeconds = 3f;
         private const int EmoteCount = 9;
@@ -141,6 +143,7 @@ namespace DrawBody.Prototype
             GameSfx.Play(SfxId.EmotePop);
 
             ResolveOnlineManager();
+            EmoteShown?.Invoke(onlineManager != null ? onlineManager.LocalPlayerId : string.Empty, id);
             if (onlineManager != null && onlineManager.State == OnlineConnectionState.Playing)
             {
                 onlineManager.SendGimmickData(new OnlineGimmickData
@@ -166,6 +169,7 @@ namespace DrawBody.Prototype
             if (payload != null && remotePlayer != null && payload.Id >= 0 && payload.Id < EmoteCount)
             {
                 ShowBubble(remotePlayer, payload.Id);
+                EmoteShown?.Invoke(data.PlayerId, payload.Id);
             }
         }
 
@@ -382,7 +386,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static Sprite GetEmoteIcon(int id)
+        internal static Sprite GetEmoteIcon(int id)
         {
             if (emoteIcons == null)
             {

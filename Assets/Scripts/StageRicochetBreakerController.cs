@@ -70,6 +70,7 @@ namespace DrawBody.Prototype
         private float nextBallSpawnAt;
         private bool configured;
         private bool cameraWasEnabled;
+        private bool cameraStateCaptured;
         private Vector3 oldCameraPosition;
         private float oldCameraSize;
         private Vector2 replicaBallPosition;
@@ -101,11 +102,15 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
-            if (cameraFollow != null) cameraFollow.enabled = cameraWasEnabled;
-            if (gameCamera != null)
+            if (cameraStateCaptured)
             {
-                gameCamera.transform.position = oldCameraPosition;
-                gameCamera.orthographicSize = oldCameraSize;
+                if (cameraFollow != null) cameraFollow.enabled = cameraWasEnabled;
+                if (gameCamera != null)
+                {
+                    gameCamera.transform.position = oldCameraPosition;
+                    gameCamera.orthographicSize = oldCameraSize;
+                }
+                cameraStateCaptured = false;
             }
             SetLocalControls(true);
         }
@@ -465,6 +470,7 @@ namespace DrawBody.Prototype
             oldCameraPosition = gameCamera.transform.position;
             oldCameraSize = gameCamera.orthographicSize;
             cameraWasEnabled = cameraFollow != null && cameraFollow.enabled;
+            cameraStateCaptured = true;
             if (cameraFollow != null) cameraFollow.enabled = false;
             float requiredWidth = (OuterHalfWidth + 1.2f) / Mathf.Max(0.2f, gameCamera.aspect);
             gameCamera.transform.position = new Vector3(0f, 0.75f, oldCameraPosition.z);
@@ -495,7 +501,7 @@ namespace DrawBody.Prototype
                     : LocalizationManager.T("survival_start");
             }
             else if (phase == Phase.Failed) statusText.text = LocalizationManager.Format("ricochet_breaker_retry", Mathf.CeilToInt(retryRemaining));
-            else if (phase == Phase.Clear) statusText.text = "CLEAR!";
+            else if (phase == Phase.Clear) statusText.text = LocalizationManager.T("clear");
             else statusText.text = FormatTime(remaining);
             FitText(statusText, 0.1f, 18f);
         }

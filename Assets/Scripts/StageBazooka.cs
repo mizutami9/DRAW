@@ -11,6 +11,8 @@ namespace DrawBody.Prototype
         private StageBazookaSystem system;
         private float nextFireAt;
 
+        public PlayerCarryController Holder => holder;
+
         public static GameObject CreateObject(StageObjectData data, Transform parent, int pushableLayer)
         {
             GameObject root = new GameObject(data.objectId) { name = StageObjectType.Bazooka.ToString(), layer = pushableLayer };
@@ -93,7 +95,8 @@ namespace DrawBody.Prototype
             if (direction.sqrMagnitude < 0.1f) return;
             nextFireAt = Time.time + FireInterval;
             if (system == null) system = StageBazookaSystem.Ensure(transform);
-            Vector2 recoil = -direction * RecoilVelocity;
+            float recoilMultiplier = holder.IsCarriedForWeaponRecoil() ? 5f : 1f;
+            Vector2 recoil = -direction * (RecoilVelocity * recoilMultiplier);
             if (system != null && system.IsOnline)
                 system.RequestFire(GetObjectId(), origin, direction, holder.GetWeaponRecoilTargetOnlineId(), recoil);
             else

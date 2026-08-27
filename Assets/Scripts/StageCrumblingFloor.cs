@@ -84,7 +84,17 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            TryTriggerFromPlayerContact(collision);
+        }
+
         private void OnCollisionStay2D(Collision2D collision)
+        {
+            TryTriggerFromPlayerContact(collision);
+        }
+
+        private void TryTriggerFromPlayerContact(Collision2D collision)
         {
             if (triggered || requestSent || collision == null)
             {

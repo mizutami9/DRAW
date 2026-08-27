@@ -323,7 +323,7 @@ namespace DrawBody.Prototype
 
         private void BuildBoss()
         {
-            boss = new GameObject("15-2 Giant Pursuer").transform;
+            boss = new GameObject("15-2 Crayon Stalker").transform;
             boss.SetParent(transform, false);
             bossFace = new GameObject("Giant Boss Doodle").transform;
             bossFace.SetParent(boss, false);
@@ -356,15 +356,13 @@ namespace DrawBody.Prototype
         {
             GameObject monitor = new GameObject("15-2 Chase Monitor");
             monitor.transform.SetParent(transform, false);
-            StageEscortController.AddFilledRect(monitor.transform, "Frame", Vector2.zero, new Vector2(12.8f, 1.75f), new Color(0.12f, 0.16f, 0.2f, 0.94f), 180);
-            StageEscortController.AddFilledRect(monitor.transform, "Screen", Vector2.zero, new Vector2(12.2f, 1.2f), new Color(0.01f, 0.04f, 0.055f), 181);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(12.8f, 2.05f), 178);
             StageEscortController.AddFilledRect(monitor.transform, "HP Track", new Vector2(0f, -0.28f), new Vector2(8.8f, 0.32f), new Color(0.18f, 0.2f, 0.22f), 182);
             GameObject fill = new GameObject("Boss HP Fill"); fill.transform.SetParent(monitor.transform, false);
             fill.transform.localPosition = new Vector3(-4.4f, -0.28f, -0.03f); fill.transform.localScale = new Vector3(8.8f, 0.22f, 1f);
             SpriteRenderer renderer = fill.AddComponent<SpriteRenderer>(); renderer.sprite = StageLinkedShieldSurvivalController.GetSquareSprite(); renderer.color = new Color(0.95f, 0.2f, 0.35f); renderer.sortingOrder = 184;
             hpFill = fill.transform;
-            monitorMain = StageEscortController.CreateText(monitor.transform, "Main", new Vector3(0f, 0.38f, -0.04f), 42, 0.1f, Color.white, 185);
-            monitorSub = StageEscortController.CreateText(monitor.transform, "Sub", new Vector3(0f, -0.66f, -0.04f), 28, 0.065f, new Color(0.45f, 0.9f, 1f), 185);
+            monitorMain = StageEscortController.CreateText(monitor.transform, "Main", new Vector3(0f, 0.4f, -0.04f), 48, 0.12f, new Color(0.08f, 0.25f, 0.48f), 185);
         }
 
         private void BeginAttack(float progress)
@@ -417,10 +415,8 @@ namespace DrawBody.Prototype
 
         private IEnumerator RunBarrage(AttackState state)
         {
-            TextMesh warning = CreateAttackText(new Vector2(scrollX - 6f, 5.8f), LocalizationManager.T("side_boss_barrage_warning"), new Color(1f, 0.55f, 0.15f));
             GameSfx.PlayAt(SfxId.BossAttackWarning, new Vector2(scrollX - 6f, 5.8f));
             yield return new WaitForSeconds(0.9f);
-            if (warning != null) Destroy(warning.gameObject);
             float attackScrollX = state.Origin.x + 15f;
             int count = attackScrollX >= 130f ? 9 : attackScrollX >= 60f ? 7 : 5;
             System.Random random = new System.Random(state.Sequence * 7919 + 152);
@@ -450,15 +446,16 @@ namespace DrawBody.Prototype
         {
             Vector2 center = new Vector2(scrollX + 1f, state.Lane);
             GameObject warning = CreateWarningRect(center, new Vector2(34f, 2.2f), new Color(1f, 0.2f, 0.08f, 0.2f));
-            TextMesh text = CreateAttackText(new Vector2(scrollX, state.Lane + 1.6f), LocalizationManager.T("side_boss_laser_warning"), new Color(1f, 0.45f, 0.12f));
             GameSfx.PlayAt(SfxId.BossBeamCharge, new Vector2(bossX, state.Lane), 1.05f);
             yield return new WaitForSeconds(1.65f);
-            SetWarningColor(warning, new Color(1f, 0.08f, 0.03f, 0.78f));
-            if (text != null) Destroy(text.gameObject);
-            GameSfx.PlayAt(SfxId.BeamFire, new Vector2(bossX, state.Lane), 1f);
-            if (HasAuthority) HitPlayersInHorizontalBand(state.Lane, 1.1f);
-            yield return new WaitForSeconds(0.14f);
             if (warning != null) Destroy(warning);
+            GameSfx.PlayAt(SfxId.BeamFire, new Vector2(bossX, state.Lane), 1f);
+            GameObject laser = BossAttackVisuals.CreateLaser(transform,
+                new Vector2(scrollX - 16f, state.Lane),
+                new Vector2(scrollX + 18f, state.Lane), 1.05f, 121);
+            if (HasAuthority) HitPlayersInHorizontalBand(state.Lane, 1.1f);
+            yield return new WaitForSeconds(0.2f);
+            if (laser != null) Destroy(laser);
         }
 
         private IEnumerator RunBreakFloor(AttackState state)
@@ -467,10 +464,8 @@ namespace DrawBody.Prototype
             StageSideBossFloor floor = floors[state.FloorIndex];
             if (floor == null) yield break;
             floor.SetWarning(true);
-            TextMesh text = CreateAttackText(floor.transform.position + Vector3.up * 1.25f, LocalizationManager.T("side_boss_floor_warning"), Color.red);
             GameSfx.PlayAt(SfxId.CrumblingFloorWarning, floor.transform.position, 1.05f);
             yield return new WaitForSeconds(1.45f);
-            if (text != null) Destroy(text.gameObject);
             yield return floor.BreakTemporarily(3.8f);
         }
 
@@ -478,11 +473,9 @@ namespace DrawBody.Prototype
         {
             Vector2 center = new Vector2(scrollX - 3f, state.Lane);
             GameObject warning = CreateWarningRect(center, new Vector2(25f, 1.8f), new Color(0.95f, 0.18f, 0.35f, 0.2f));
-            TextMesh text = CreateAttackText(new Vector2(scrollX, state.Lane + 1.3f), LocalizationManager.T("side_boss_hand_warning"), new Color(1f, 0.35f, 0.55f));
             GameSfx.PlayAt(SfxId.BossAttackWarning, center, 1.05f);
             yield return new WaitForSeconds(1.35f);
             if (warning != null) Destroy(warning);
-            if (text != null) Destroy(text.gameObject);
             GameSfx.PlayAt(SfxId.BossDash, new Vector2(bossX + 1f, state.Lane), 1.05f);
             GameObject hand = new GameObject("Giant Doodle Hand"); hand.transform.SetParent(transform, false); hand.transform.position = new Vector3(bossX + 1f, state.Lane, -0.3f);
             StageEscortController.AddFilledRect(hand.transform, "Arm", new Vector2(7f, 0f), new Vector2(14f, 1.25f), new Color(0.58f, 0.16f, 0.72f), 96);
@@ -667,7 +660,7 @@ namespace DrawBody.Prototype
         {
             if (monitorMain == null) return;
             monitorMain.text = LocalizationManager.Format("side_boss_hp", bossHealth, RequiredHits);
-            monitorSub.text = LocalizationManager.T(phase == Phase.Ready ? "side_boss_ready" : phase == Phase.Defeated ? "side_boss_clear" : phase == Phase.Failed ? "side_boss_failed" : "side_boss_run");
+            if (monitorSub != null) monitorSub.text = string.Empty;
             float ratio = Mathf.Clamp01(bossHealth / (float)RequiredHits);
             hpFill.localScale = new Vector3(8.8f * ratio, 0.22f, 1f);
             hpFill.localPosition = new Vector3(-4.4f + 4.4f * ratio, -0.28f, -0.03f);
@@ -920,17 +913,6 @@ namespace DrawBody.Prototype
             StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, new Color(1f, 0.12f, 0.08f), 112); return root;
         }
 
-        private static void SetWarningColor(GameObject warning, Color color)
-        {
-            if (warning == null) return; SpriteRenderer[] renderers = warning.GetComponentsInChildren<SpriteRenderer>();
-            for (int i = 0; i < renderers.Length; i++) renderers[i].color = color;
-        }
-
-        private TextMesh CreateAttackText(Vector2 position, string value, Color color)
-        {
-            TextMesh text = StageEscortController.CreateText(transform, "15-2 Attack Text", new Vector3(position.x, position.y, -0.4f), 42, 0.1f, color, 160); text.text = value; return text;
-        }
-
         private static SpriteRenderer AddDisc(Transform parent, string name, Vector2 position, Vector2 size, Color color, int order)
         {
             GameObject obj = new GameObject(name); obj.transform.SetParent(parent, false); obj.transform.localPosition = position; obj.transform.localScale = new Vector3(size.x, size.y, 1f);
@@ -949,9 +931,7 @@ namespace DrawBody.Prototype
         {
             GameObject root = new GameObject(fast ? "Aimed Boss Bullet" : "Boss Barrage Bullet"); root.transform.SetParent(parent, false); root.transform.position = position;
             StageSideBossProjectile projectile = root.AddComponent<StageSideBossProjectile>(); projectile.owner = owner; projectile.velocity = velocity; projectile.authoritative = authoritative; projectile.expiresAt = Time.time + 6f;
-            Vector2 size = fast ? new Vector2(1.25f, 0.42f) : new Vector2(0.72f, 0.72f);
-            StageEscortController.AddFilledRect(root.transform, "Ink Shot", Vector2.zero, size, fast ? new Color(1f, 0.18f, 0.12f) : new Color(0.75f, 0.2f, 0.95f), 125);
-            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, new Color(0.15f, 0.02f, 0.2f), 127);
+            BossAttackVisuals.AddInkBolt(root.transform, fast, 125);
         }
 
         private void Update()

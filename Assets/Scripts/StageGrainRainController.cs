@@ -290,31 +290,10 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("9-3 Grain Monitor");
             monitor.transform.SetParent(transform, false);
             monitor.transform.position = new Vector3(0f, 10.8f, 0.2f);
-            StageGrainCarryObjectFactory.AddRect(monitor.transform, "Frame", Vector2.zero,
-                new Vector2(10.8f, 2.55f), new Color(0.16f, 0.21f, 0.25f, 0.88f), 5);
-            StageGrainCarryObjectFactory.AddRect(monitor.transform, "Screen", Vector2.zero,
-                new Vector2(10.25f, 2.08f), new Color(0.025f, 0.055f, 0.06f, 0.9f), 6);
-            timerText = CreateText(monitor.transform, new Vector2(0f, 0.46f), 0.18f, 8, new Color(0.22f, 1f, 0.72f));
-            scoreText = CreateText(monitor.transform, new Vector2(0f, -0.12f), 0.105f, 8, new Color(0.72f, 0.9f, 1f));
-            statusText = CreateText(monitor.transform, new Vector2(0f, -0.68f), 0.085f, 8, new Color(1f, 0.82f, 0.25f));
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(10.8f, 2.65f), 3);
+            timerText = CreateText(monitor.transform, new Vector2(0f, 0.42f), 0.16f, 9, new Color(0.04f, 0.43f, 0.58f));
+            scoreText = CreateText(monitor.transform, new Vector2(0f, -0.45f), 0.095f, 9, new Color(0.1f, 0.28f, 0.5f));
 
-            float start = -3.6f;
-            float[] weights = { 3f, 6f, 12f, 20f, 40f };
-            Color[] colors =
-            {
-                new Color(0.45f, 0.76f, 0.96f), new Color(0.28f, 0.88f, 0.48f),
-                new Color(1f, 0.72f, 0.08f), new Color(0.72f, 0.26f, 0.96f), Color.white
-            };
-            for (int i = 0; i < weights.Length; i++)
-            {
-                SpriteRenderer dot = StageGrainCarryObjectFactory.AddDot(monitor.transform, "Legend " + i,
-                    new Vector2(start + i * 1.8f, -1.07f), 0.18f + i * 0.018f, colors[i], 9);
-                if (i == weights.Length - 1) dot.gameObject.AddComponent<StageRainbowGrainVisual>();
-                TextMesh label = CreateText(monitor.transform, new Vector2(start + 0.4f + i * 1.8f, -1.07f),
-                    0.055f, 9, Color.white);
-                label.anchor = TextAnchor.MiddleLeft;
-                label.text = weights[i].ToString("0") + "g";
-            }
         }
 
         private void RefreshDisplay()
@@ -324,25 +303,21 @@ namespace DrawBody.Prototype
             {
                 timerText.text = Mathf.CeilToInt(remaining).ToString("00") + ".0";
                 scoreText.text = LocalizationManager.Format("grain_rain_target", targetGrams);
-                statusText.text = LocalizationManager.T("grain_rain_ready");
             }
             else if (state == RoundState.Rain)
             {
                 timerText.text = Mathf.CeilToInt(remaining).ToString("00") + ".0";
                 scoreText.text = LocalizationManager.Format("grain_rain_target", targetGrams);
-                statusText.text = LocalizationManager.T("grain_rain_catch");
             }
             else if (state == RoundState.Settle)
             {
                 timerText.text = LocalizationManager.T("grain_rain_measuring");
                 scoreText.text = LocalizationManager.Format("grain_rain_target", targetGrams);
-                statusText.text = LocalizationManager.T("grain_rain_floor_clear");
             }
             else
             {
                 timerText.text = success ? LocalizationManager.T("grain_rain_clear") : LocalizationManager.T("grain_rain_failed");
                 scoreText.text = LocalizationManager.Format("grain_rain_result", measuredGrams, targetGrams);
-                statusText.text = success ? LocalizationManager.T("grain_rain_success") : LocalizationManager.T("grain_rain_retry");
             }
         }
 

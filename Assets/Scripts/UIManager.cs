@@ -89,15 +89,32 @@ namespace DrawBody.Prototype
         public void SetChallengeCountdown(bool visible, string value)
         {
             EnsureChallengeCountdownOverlay();
+            // A challenge controller may finish its current Update after the
+            // player has already left gameplay. Never allow that late update
+            // to revive the countdown over stage select/title/editor screens.
+            visible = visible
+                && !titleShowing
+                && !multiShowing
+                && !optionShowing
+                && !stageSelecting
+                && !stageEditing
+                && !drawing
+                && !cleared
+                && stageManager != null
+                && stageManager.IsGameplayActive;
             challengeCountdownOverlay.SetActive(visible);
             if (!visible)
             {
+                if (challengeCountdownText != null)
+                {
+                    challengeCountdownText.text = string.Empty;
+                }
                 return;
             }
 
             challengeCountdownText.text = value ?? string.Empty;
-            bool timeUp = string.Equals(value, "TIME UP", System.StringComparison.Ordinal);
-            bool start = string.Equals(value, "START!", System.StringComparison.Ordinal);
+            bool timeUp = string.Equals(value, LocalizationManager.T("challenge_time_up"), System.StringComparison.Ordinal);
+            bool start = string.Equals(value, LocalizationManager.T("survival_start"), System.StringComparison.Ordinal);
             challengeCountdownText.color = timeUp
                 ? new Color(1f, 0.2f, 0.12f, 1f)
                 : start

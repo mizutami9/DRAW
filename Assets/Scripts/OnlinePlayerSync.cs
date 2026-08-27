@@ -127,6 +127,7 @@ namespace DrawBody.Prototype
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
                 Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
                 Redrawing = stageManager.IsDrawingMode,
+                Respawning = stageManager.IsPlayerRespawning(localTransform.GetComponent<PlayerController2D>()),
                 TurtleShelled = localTransform.GetComponent<PlayerController2D>()?.IsTurtleShelled ?? false,
                 SlimeAttachedToPlayerId = localCarry?.SlimeAttachedOnlinePlayerId,
                 CarriedPlayerId = localCarry?.CurrentOnlineCarriedPlayerId,

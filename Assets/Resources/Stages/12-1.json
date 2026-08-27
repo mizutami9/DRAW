@@ -1,7 +1,7 @@
 {
   "id":"12-1",
   "displayName":"Stage 12-1 Coin Crusher",
-  "backgroundColorHex":"#EEF9FFFF",
+  "backgroundColorHex":"#EEF9FF26",
   "ruleMode":0,
   "timeLimitSeconds":60.0,
   "collectionTarget":0,

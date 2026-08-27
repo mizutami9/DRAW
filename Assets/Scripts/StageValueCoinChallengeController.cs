@@ -302,7 +302,7 @@ namespace DrawBody.Prototype
                 startCountdownActive = false;
                 startFlashUntil = Time.unscaledTime + 0.65f;
                 countdownPlayer?.SetControlsEnabled(true);
-                uiManager?.SetChallengeCountdown(true, "START!");
+                uiManager?.SetChallengeCountdown(true, LocalizationManager.T("survival_start"));
                 RefreshMonitors();
             }
             if (startFlashUntil > 0f && Time.unscaledTime >= startFlashUntil)
@@ -391,11 +391,10 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("12-1 Value Monitor");
             monitor.transform.SetParent(transform, false);
             monitor.transform.localPosition = new Vector3(x, 10.45f, 0.35f);
-            StageEscortController.AddFilledRect(monitor.transform, "Frame", Vector2.zero, new Vector2(10.2f, 2.1f), new Color(0.16f, 0.2f, 0.24f, 0.94f), -32);
-            StageEscortController.AddFilledRect(monitor.transform, "Screen", Vector2.zero, new Vector2(9.65f, 1.62f), new Color(0.01f, 0.035f, 0.04f, 0.96f), -31);
-            TextMesh amount = StageEscortController.CreateText(monitor.transform, "Amount", new Vector3(0f, 0.35f, -0.03f), 56, 0.13f, new Color(1f, 0.78f, 0.12f), -28);
-            TextMesh time = StageEscortController.CreateText(monitor.transform, "Time", new Vector3(-2.75f, -0.38f, -0.03f), 44, 0.1f, new Color(0.3f, 1f, 0.78f), -28);
-            TextMesh state = StageEscortController.CreateText(monitor.transform, "State", new Vector3(1.65f, -0.38f, -0.03f), 38, 0.085f, new Color(0.65f, 0.9f, 1f), -28);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(10.2f, 2.35f), -32);
+            TextMesh amount = StageEscortController.CreateText(monitor.transform, "Amount", new Vector3(0f, 0.4f, -0.03f), 54, 0.12f, new Color(0.78f, 0.39f, 0.06f), -26);
+            TextMesh time = StageEscortController.CreateText(monitor.transform, "Time", new Vector3(-2.75f, -0.42f, -0.03f), 42, 0.09f, new Color(0.04f, 0.43f, 0.58f), -26);
+            TextMesh state = StageEscortController.CreateText(monitor.transform, "State", new Vector3(1.65f, -0.42f, -0.03f), 36, 0.075f, new Color(0.1f, 0.28f, 0.5f), -26);
             amountTexts.Add(amount);
             timeTexts.Add(time);
             stateTexts.Add(state);
@@ -406,10 +405,9 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("12-1 Side Value Monitor");
             monitor.transform.SetParent(transform, false);
             monitor.transform.localPosition = new Vector3(x, y, 0.35f);
-            StageEscortController.AddFilledRect(monitor.transform, "Frame", Vector2.zero, new Vector2(4.2f, 1.55f), new Color(0.16f, 0.2f, 0.24f, 0.92f), -32);
-            StageEscortController.AddFilledRect(monitor.transform, "Screen", Vector2.zero, new Vector2(3.8f, 1.18f), new Color(0.01f, 0.035f, 0.04f, 0.95f), -31);
-            TextMesh amount = StageEscortController.CreateText(monitor.transform, "Amount", new Vector3(0f, 0.27f, -0.03f), 42, 0.095f, new Color(1f, 0.78f, 0.12f), -28);
-            TextMesh time = StageEscortController.CreateText(monitor.transform, "Time", new Vector3(0f, -0.32f, -0.03f), 36, 0.08f, new Color(0.3f, 1f, 0.78f), -28);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(4.2f, 1.65f), -32);
+            TextMesh amount = StageEscortController.CreateText(monitor.transform, "Amount", new Vector3(0f, 0.28f, -0.03f), 40, 0.085f, new Color(0.78f, 0.39f, 0.06f), -26);
+            TextMesh time = StageEscortController.CreateText(monitor.transform, "Time", new Vector3(0f, -0.34f, -0.03f), 34, 0.07f, new Color(0.04f, 0.43f, 0.58f), -26);
             amountTexts.Add(amount);
             timeTexts.Add(time);
         }
@@ -467,7 +465,7 @@ namespace DrawBody.Prototype
                 ItemMessage item = JsonUtility.FromJson<ItemMessage>(message.Json);
                 if (item != null)
                 {
-                    ApplyCollectRemote(item.Id);
+                    ApplyCollectRemote(item.Id, true);
                     total = item.Total;
                     RefreshMonitors();
                 }
@@ -478,10 +476,15 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void ApplyCollectRemote(string coinId)
+        private void ApplyCollectRemote(string coinId, bool playFeedback)
         {
             if (!collectedIds.Add(coinId)) return;
-            if (coins.TryGetValue(coinId, out StageValueCoin coin) && coin != null) coin.ApplyCollected();
+            if (coins.TryGetValue(coinId, out StageValueCoin coin) && coin != null)
+            {
+                Vector3 soundPosition = coin.transform.position;
+                coin.ApplyCollected(playFeedback);
+                if (playFeedback) GameSfx.PlayAt(SfxId.CoinCollect, soundPosition, 0.82f);
+            }
             coins.Remove(coinId);
         }
 
@@ -493,7 +496,7 @@ namespace DrawBody.Prototype
             remaining = snapshot.Remaining;
             phase = snapshot.Phase;
             if (snapshot.Collected != null)
-                for (int i = 0; i < snapshot.Collected.Length; i++) ApplyCollectRemote(snapshot.Collected[i]);
+                for (int i = 0; i < snapshot.Collected.Length; i++) ApplyCollectRemote(snapshot.Collected[i], false);
             if (snapshot.Broken != null)
             {
                 for (int i = 0; i < snapshot.Broken.Length; i++)
@@ -556,6 +559,8 @@ namespace DrawBody.Prototype
     {
         private StageValueCoinChallengeController owner;
         private string coinId;
+        private Transform collectorTransform;
+        private bool collected;
         public int Value { get; private set; }
 
         public static StageValueCoin Create(Transform parent, StageValueCoinChallengeController challenge, string id, int value, Vector2 position)
@@ -589,22 +594,41 @@ namespace DrawBody.Prototype
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other != null && other.GetComponentInParent<PlayerController2D>() != null) owner?.RequestCollect(coinId);
+            PlayerController2D player = other != null ? other.GetComponentInParent<PlayerController2D>() : null;
+            if (!collected && player != null)
+            {
+                collectorTransform = player.transform;
+                owner?.RequestCollect(coinId);
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision != null && collision.collider != null
-                && collision.collider.GetComponentInParent<PlayerController2D>() != null)
+                && collision.collider.GetComponentInParent<PlayerController2D>() is PlayerController2D player)
             {
+                collectorTransform = player.transform;
                 owner?.RequestCollect(coinId);
             }
         }
 
-        public void ApplyCollected()
+        public void ApplyCollected(bool playFeedback = true)
         {
-            gameObject.SetActive(false);
-            Destroy(gameObject);
+            if (collected) return;
+            collected = true;
+            if (!playFeedback)
+            {
+                gameObject.SetActive(false);
+                Destroy(gameObject);
+                return;
+            }
+
+            Color color = Value >= 10
+                ? new Color(1f, 0.7f, 0.05f, 1f)
+                : Value >= 5 ? new Color(0.78f, 0.86f, 0.94f, 1f)
+                : Value >= 3 ? new Color(0.18f, 0.68f, 1f, 1f)
+                : new Color(0.82f, 0.38f, 0.12f, 1f);
+            CollectibleAbsorbMover.Begin(gameObject, collectorTransform, color);
         }
 
         private void BuildVisual()

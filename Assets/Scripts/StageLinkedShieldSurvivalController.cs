@@ -458,7 +458,7 @@ namespace DrawBody.Prototype
             for (int room = 0; room < occupiedRooms; room++) PlacePlayer(ResolvePlayer(roomPlayerIds[room]), room);
         }
 
-        private static void PlacePlayer(PlayerController2D player, int room)
+        private void PlacePlayer(PlayerController2D player, int room)
         {
             if (player == null) return;
             float floorY = RoomCenters[room].y - 1.68f;
@@ -476,6 +476,7 @@ namespace DrawBody.Prototype
             player.transform.position = destination;
             player.ResetMotion();
             Physics2D.SyncTransforms();
+            stageManager?.RecordAssignedPlayerStart(player, destination);
         }
 
         private void BuildMonitor()
@@ -484,36 +485,28 @@ namespace DrawBody.Prototype
             root.transform.SetParent(transform, false);
             hud = root.transform;
             hud.localPosition = new Vector3(0f, 7.2f, 0.45f);
-            StageEscortController.AddFilledRect(hud, "Frame", Vector2.zero, new Vector2(10f, 3.2f), new Color(0.16f, 0.2f, 0.24f, 0.95f), 210);
-            StageEscortController.AddFilledRect(hud, "Screen", Vector2.zero, new Vector2(9.35f, 2.58f), new Color(0.01f, 0.04f, 0.055f, 0.96f), 211);
-            titleText = StageEscortController.CreateText(hud, "Title", new Vector3(0f, 0.86f, -0.02f), 52, 0.12f, new Color(0.4f, 0.95f, 1f), 213);
-            timerText = StageEscortController.CreateText(hud, "Timer", new Vector3(0f, 0.05f, -0.03f), 72, 0.2f, new Color(0.25f, 1f, 0.68f), 213);
-            helpText = StageEscortController.CreateText(hud, "Help", new Vector3(0f, -0.92f, -0.04f), 40, 0.08f, new Color(1f, 0.75f, 0.2f), 213);
+            DoodleMonitorVisuals.Build(hud, new Vector2(10f, 2.45f), 208);
+            timerText = StageEscortController.CreateText(hud, "Countdown", new Vector3(0f, -0.04f, -0.03f), 76, 0.22f, new Color(0.04f, 0.43f, 0.58f), 214);
         }
 
         private void RefreshPresentation()
         {
-            if (titleText == null) return;
-            titleText.text = LocalizationManager.T("linked_shield_title");
+            if (timerText == null) return;
             if (phase == Phase.Preparation)
             {
                 timerText.text = Mathf.Max(1, Mathf.CeilToInt(preparation)).ToString();
-                helpText.text = LocalizationManager.T("linked_shield_ready");
             }
             else if (phase == Phase.Playing)
             {
-                timerText.text = remaining.ToString("00.0");
-                helpText.text = LocalizationManager.T("linked_shield_hint");
+                timerText.text = string.Empty;
             }
             else if (phase == Phase.Failed)
             {
-                timerText.text = "NG";
-                helpText.text = LocalizationManager.T("linked_shield_failed");
+                timerText.text = string.Empty;
             }
             else
             {
-                timerText.text = "CLEAR";
-                helpText.text = LocalizationManager.T("linked_shield_clear");
+                timerText.text = string.Empty;
             }
         }
 

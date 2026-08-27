@@ -1,7 +1,7 @@
 {
   "id":"12-3",
   "displayName":"Stage 12-3 Moving Coin Carnival",
-  "backgroundColorHex":"#EEF9FFFF",
+  "backgroundColorHex":"#EEF9FF26",
   "ruleMode":1,
   "timeLimitSeconds":90.0,
   "collectionTarget":164,
@@ -43,8 +43,12 @@
     {"objectId":"12-3_jump_upper_left","type":61,"position":{"x":-23.0,"y":5.65},"size":{"x":1.8,"y":0.75},"rotation":0.0,"actionStrength":42.0},
     {"objectId":"12-3_jump_upper_right","type":61,"position":{"x":18.0,"y":5.65},"size":{"x":1.8,"y":0.75},"rotation":0.0,"actionStrength":42.0},
 
-    {"objectId":"12-3_clock_main","type":166,"position":{"x":0.0,"y":11.75},"size":{"x":6.4,"y":2.0},"rotation":0.0},
-    {"objectId":"12-3_clock_left","type":166,"position":{"x":-26.3,"y":3.0},"size":{"x":2.4,"y":1.1},"rotation":0.0},
-    {"objectId":"12-3_clock_right","type":166,"position":{"x":26.3,"y":-1.7},"size":{"x":2.4,"y":1.1},"rotation":0.0}
+    {"objectId":"12-3_clock_main","type":166,"position":{"x":0.0,"y":-15.3},"size":{"x":6.6,"y":1.8},"rotation":0.0},
+    {"objectId":"12-3_clock_left","type":166,"position":{"x":-24.0,"y":-15.3},"size":{"x":6.6,"y":1.8},"rotation":0.0},
+    {"objectId":"12-3_clock_left_mid","type":166,"position":{"x":-16.0,"y":-15.3},"size":{"x":6.6,"y":1.8},"rotation":0.0},
+    {"objectId":"12-3_clock_left_inner","type":166,"position":{"x":-8.0,"y":-15.3},"size":{"x":6.6,"y":1.8},"rotation":0.0},
+    {"objectId":"12-3_clock_right_inner","type":166,"position":{"x":8.0,"y":-15.3},"size":{"x":6.6,"y":1.8},"rotation":0.0},
+    {"objectId":"12-3_clock_right_mid","type":166,"position":{"x":16.0,"y":-15.3},"size":{"x":6.6,"y":1.8},"rotation":0.0},
+    {"objectId":"12-3_clock_right","type":166,"position":{"x":24.0,"y":-15.3},"size":{"x":6.6,"y":1.8},"rotation":0.0}
   ]
 }

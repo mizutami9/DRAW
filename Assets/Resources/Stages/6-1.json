@@ -1,7 +1,7 @@
 {
     "id": "6-1",
     "displayName": "Stage 6-1 Bazooka Skyway",
-    "backgroundColorHex": "#BCFFF7FF",
+    "backgroundColorHex": "#BCFFF726",
     "ruleMode": 0,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,
@@ -262,11 +262,11 @@
             "type": 3,
             "position": {
                 "x": 199.0,
-                "y": 2.799999952316284
+                "y": 3.0
             },
             "size": {
-                "x": 2.5,
-                "y": 3.5
+                "x": 3.0,
+                "y": 4.0
             },
             "rotation": 0.0,
             "pathPoints": [],

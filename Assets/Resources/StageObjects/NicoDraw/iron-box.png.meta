@@ -5,7 +5,7 @@ TextureImporter:
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
   isReadable: 0
   textureSettings:
@@ -40,4 +40,3 @@ TextureImporter:
   userData:
   assetBundleName:
   assetBundleVariant:
-

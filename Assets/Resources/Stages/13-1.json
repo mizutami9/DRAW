@@ -1,7 +1,7 @@
 {
   "id":"13-1",
   "displayName":"Stage 13-1 Last Line Defense",
-  "backgroundColorHex":"#F7F2DEFF",
+  "backgroundColorHex":"#F7F2DE26",
   "ruleMode":2,
   "timeLimitSeconds":60.0,
   "collectionTarget":163,

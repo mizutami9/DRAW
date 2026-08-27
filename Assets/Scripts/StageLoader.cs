@@ -12,6 +12,7 @@ namespace DrawBody.Prototype
         private bool hasStageFallBoundary;
         private float stageFallBoundaryY;
         public StageData CurrentStageData { get; private set; }
+        public Transform LoadedStageRoot => stageRoot;
 
         public int CountLoadedCollectibles(StageObjectType type)
         {
@@ -108,6 +109,10 @@ namespace DrawBody.Prototype
 
         public void LoadStage(StageData data)
         {
+            if (stageRoot != null && !stageRoot.gameObject.activeSelf)
+            {
+                stageRoot.gameObject.SetActive(true);
+            }
             if (data == null)
             {
                 return;

@@ -1,5 +1,5 @@
 {
-  "id":"9-1","displayName":"Stage 9-1 Slime Missile Cave","backgroundColorHex":"#F1F8E9FF",
+  "id":"9-1","displayName":"Stage 9-1 Slime Missile Cave","backgroundColorHex":"#F1F8E926",
   "ruleMode":2,"timeLimitSeconds":60.0,"collectionTarget":163,"requiredCollectionCount":1,
   "objects":[
     {"objectId":"9-1_boundary","type":151,"position":{"x":0.0,"y":-19.5},"size":{"x":19.0,"y":41.0},"rotation":0.0,"pathPoints":[],"pathThickness":0.65,"connectedRects":[],"keepSeparate":false,"actionStrength":0.0,"movementAngle":0.0,"movementSpeed":0.0,"spawnPattern":0,"spawnBoxSize":0.0,"bombFuseSeconds":0.0,"linkTargetId":"","linkAction":""},

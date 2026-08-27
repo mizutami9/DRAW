@@ -1,7 +1,7 @@
 {
     "id": "2-3",
     "displayName": "Stage 2-3",
-    "backgroundColorHex": "#FBF9EDFF",
+    "backgroundColorHex": "#FBF9ED26",
     "ruleMode": 0,
     "timeLimitSeconds": 300.0,
     "collectionTarget": 163,

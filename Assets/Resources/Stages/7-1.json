@@ -1,7 +1,7 @@
 {
     "id": "7-1",
     "displayName": "Stage 7-1 Pose Key Toy Tower",
-    "backgroundColorHex": "#C8FBCFFF",
+    "backgroundColorHex": "#C8FBCF26",
     "ruleMode": 1,
     "timeLimitSeconds": 180.0,
     "collectionTarget": 165,
@@ -490,8 +490,8 @@
                 "y": -6.019999980926514
             },
             "size": {
-                "x": 5.199999809265137,
-                "y": 1.0499999523162842
+                "x": 7.0,
+                "y": 1.8
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -515,8 +515,8 @@
                 "y": -6.019999980926514
             },
             "size": {
-                "x": 5.199999809265137,
-                "y": 1.0499999523162842
+                "x": 7.0,
+                "y": 1.8
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -540,8 +540,8 @@
                 "y": -6.019999980926514
             },
             "size": {
-                "x": 5.199999809265137,
-                "y": 1.0499999523162842
+                "x": 7.0,
+                "y": 1.8
             },
             "rotation": 0.0,
             "pathPoints": [],

@@ -102,7 +102,6 @@ namespace DrawBody.Prototype
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing) { enabled = false; return; }
             FindStartFloor();
-            BuildHud();
             BuildSideMonitors();
             CaptureParticipants();
             SetLocalControls(true);
@@ -164,14 +163,6 @@ namespace DrawBody.Prototype
 
             BroadcastState();
             RefreshHud();
-        }
-
-        private void LateUpdate()
-        {
-            if (hud == null || gameCamera == null) return;
-            float scale = Mathf.Max(0.8f, gameCamera.orthographicSize / 10f);
-            hud.position = new Vector3(gameCamera.transform.position.x, gameCamera.transform.position.y + gameCamera.orthographicSize - 1.15f * scale, 0f);
-            hud.localScale = Vector3.one * scale;
         }
 
         private void FireVolley()
@@ -417,10 +408,8 @@ namespace DrawBody.Prototype
             GameObject root = new GameObject("9-1 Missile Survival HUD");
             root.transform.SetParent(transform, false);
             hud = root.transform;
-            StagePillarSurvivalController.CreateRect(hud, new Vector2(10.5f, 1.55f), new Color(0.04f, 0.08f, 0.1f, 0.82f), 280);
-            hudTitle = StagePillarSurvivalController.CreateText(hud, "Title", new Vector3(-3.2f, 0.25f, -0.03f), 44, 0.085f, new Color(0.4f, 1f, 0.78f, 1f), 282);
-            hudTimer = StagePillarSurvivalController.CreateText(hud, "Timer", new Vector3(2.8f, 0.25f, -0.03f), 56, 0.13f, new Color(0.35f, 0.86f, 1f, 1f), 282);
-            hudSub = StagePillarSurvivalController.CreateText(hud, "Sub", new Vector3(0f, -0.43f, -0.03f), 38, 0.07f, new Color(1f, 0.76f, 0.2f, 1f), 282);
+            DoodleMonitorVisuals.Build(hud, new Vector2(10.5f, 2.1f), 278);
+            hudTimer = StagePillarSurvivalController.CreateText(hud, "Timer", new Vector3(0f, -0.03f, -0.03f), 64, 0.17f, new Color(0.04f, 0.43f, 0.58f, 1f), 284);
         }
 
         private void BuildSideMonitors()
@@ -438,37 +427,30 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("9-1 Side Timer");
             monitor.transform.SetParent(transform, false);
             monitor.transform.localPosition = new Vector3(x, y, 0.35f);
-            StagePillarSurvivalController.CreateRect(monitor.transform, new Vector2(1.9f, 1.18f), new Color(0.18f, 0.22f, 0.27f, 0.9f), 14);
-            StagePillarSurvivalController.CreateRect(monitor.transform, new Vector2(1.62f, 0.9f), new Color(0.01f, 0.035f, 0.045f, 0.92f), 15);
-            TextMesh timer = StagePillarSurvivalController.CreateText(monitor.transform, "Timer", new Vector3(0f, 0f, -0.03f), 42, 0.07f, new Color(0.24f, 1f, 0.72f, 1f), 17);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(2.35f, 1.45f), 14);
+            TextMesh timer = StagePillarSurvivalController.CreateText(monitor.transform, "Timer", new Vector3(0f, -0.02f, -0.03f), 42, 0.075f, new Color(0.04f, 0.43f, 0.58f, 1f), 20);
             sideTimers.Add(timer);
         }
 
         private void RefreshHud()
         {
-            if (hudTitle == null) return;
-            hudTitle.text = LocalizationManager.T("slime_missile_title");
-            if (phase == Phase.Preparation)
+            if (hudTimer != null && phase == Phase.Preparation)
             {
                 hudTimer.text = Mathf.Max(1, Mathf.CeilToInt(preparation)).ToString();
-                hudSub.text = LocalizationManager.T("slime_missile_floor_warning");
             }
-            else if (phase == Phase.Failed)
+            else if (hudTimer != null && phase == Phase.Failed)
             {
-                hudTimer.text = "GAME OVER";
-                hudSub.text = LocalizationManager.Format("tower_defense_retry", Mathf.CeilToInt(restartRemaining));
+                hudTimer.text = LocalizationManager.T("game_over");
             }
-            else if (phase == Phase.Finished)
+            else if (hudTimer != null && phase == Phase.Finished)
             {
-                hudTimer.text = "CLEAR!";
-                hudSub.text = LocalizationManager.T("survival_clear_sub");
+                hudTimer.text = LocalizationManager.T("clear");
             }
-            else
+            else if (hudTimer != null)
             {
                 int minutes = Mathf.FloorToInt(remaining / 60f);
                 float seconds = remaining - minutes * 60f;
                 hudTimer.text = string.Format("{0:00}:{1:00.0}", minutes, seconds);
-                hudSub.text = LocalizationManager.T("slime_missile_hint");
             }
             RefreshSideTimers();
         }

@@ -131,5 +131,8 @@ NICO DRAWのゲーム内で使う2Dスプライト。
 - Stage 14-2 umbrella: a wide blue/cyan colored-pencil canopy with ribs, scalloped edge and full crooked handle. Rain shelter width remains controller-owned.
 - Stage 14-3 shield button: pale metal pencil button that is tinted by its current link color, turns green and depresses briefly when activated.
 - Stage 14-3 temporary steel shield: gray paper-steel fill, dark outline and colored diagonal pencil strokes; its one-second active state remains authoritative gameplay state.
+- In-world monitors: one shared child-drawn blue television silhouette with crooked outlines, sparse pencil strokes, antennae and uneven feet. The pale paper screen is shared by challenge clocks and stage status panels so live text and gauges stay readable; avoid dark digital-device panels.
+- Stage 6-3 chasing wall: pale red pencil-scribbled slab with crooked graphite edges and individually repeated side-facing colored-pencil spike sprites. Movement and the broad trigger remain controller-owned.
+- Collectible pickup feedback: coins, fish and stars arc into the collecting character with a thin bright pencil trail, then produce two fast angular diamond flashes and a sparse burst of sharp directional slashes. Avoid soft expanding discs and large circular glows. Network snapshots hide already-collected items without replaying the effect.
 
 Runtime assets live under `Resources/StageObjects/NicoDraw`. Physics, stage IDs and saved data remain separate from the artwork.

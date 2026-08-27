@@ -1,5 +1,5 @@
 {
-  "id":"8-3","displayName":"Stage 8-3 Tower Defense","backgroundColorHex":"#F7F2DEFF",
+  "id":"8-3","displayName":"Stage 8-3 Tower Defense","backgroundColorHex":"#F7F2DE26",
   "ruleMode":2,"timeLimitSeconds":90.0,"collectionTarget":163,"requiredCollectionCount":1,
   "objects":[
     {"objectId":"8-3_boundary","type":151,"position":{"x":0.0,"y":1.3},"size":{"x":46.0,"y":18.0},"rotation":0.0,"pathPoints":[],"pathThickness":0.65,"connectedRects":[],"keepSeparate":false,"actionStrength":0.0,"movementAngle":0.0,"movementSpeed":0.0,"spawnPattern":0,"spawnBoxSize":0.0,"bombFuseSeconds":0.0,"linkTargetId":"","linkAction":""},

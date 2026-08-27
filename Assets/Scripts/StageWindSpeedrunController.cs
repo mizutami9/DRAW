@@ -70,7 +70,6 @@ namespace DrawBody.Prototype
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing) { enabled = false; return; }
             visual = StageHorizontalWindVisual.Create(transform);
-            BuildStartSign();
             BuildTimeMonitors();
             RefreshPlayers();
             SetLocalControls(false);
@@ -117,9 +116,9 @@ namespace DrawBody.Prototype
                 float influence = Mathf.Lerp(1.85f, 0.48f, inkRatio);
                 float opposingMultiplier = body.linearVelocity.x * direction < -0.25f ? 1.28f : 1f;
                 float airborneMultiplier = player.IsGrounded ? 1f : 1.18f;
-                float acceleration = 16.4f * influence * gust * opposingMultiplier * airborneMultiplier;
+                float acceleration = 34f * influence * gust * opposingMultiplier * airborneMultiplier;
                 Vector2 velocity = body.linearVelocity;
-                velocity.x = Mathf.Clamp(velocity.x + direction * acceleration * Time.fixedDeltaTime, -24f, 24f);
+                velocity.x = Mathf.Clamp(velocity.x + direction * acceleration * Time.fixedDeltaTime, -36f, 36f);
                 body.linearVelocity = velocity;
             }
         }
@@ -193,16 +192,17 @@ namespace DrawBody.Prototype
 
         private void BuildTimeMonitors()
         {
-            float[] positions = { -25f, 17f, 59f, 101f, 143f, 183f };
-            for (int i = 0; i < positions.Length; i++)
+            const float firstMonitorX = -25f;
+            const float monitorSpacing = 42f;
+            const int monitorCount = 6;
+            for (int i = 0; i < monitorCount; i++)
             {
                 GameObject board = new GameObject("14-1 Time Monitor " + (i + 1));
                 board.transform.SetParent(transform, false);
-                board.transform.position = new Vector3(positions[i], 5.65f, 0.22f);
-                StageEscortController.AddFilledRect(board.transform, "Frame", Vector2.zero,
-                    new Vector2(7.2f, 1.55f), new Color(0.04f, 0.08f, 0.1f, 0.9f), 24);
+                board.transform.position = new Vector3(firstMonitorX + monitorSpacing * i, -7.9f, 0.22f);
+                DoodleMonitorVisuals.Build(board.transform, new Vector2(8.4f, 2.0f), 22);
                 TextMesh display = StageEscortController.CreateText(board.transform, "Time",
-                    new Vector3(0f, 0f, -0.04f), 50, 0.09f, new Color(0.18f, 1f, 0.74f), 27);
+                    new Vector3(0f, -0.03f, -0.04f), 58, 0.13f, new Color(0.04f, 0.43f, 0.58f), 28);
                 timerDisplays.Add(display);
             }
             RefreshTimerDisplays(TimeLimitSeconds, false);

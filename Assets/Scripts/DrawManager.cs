@@ -90,6 +90,9 @@ namespace DrawBody.Prototype
         private Image abilityHeaderImage;
         [SerializeField] private Text partText;
         [SerializeField] private Text messageText;
+        private GameObject validationBanner;
+        private Text validationBannerText;
+        private Button decideButton;
         [SerializeField] private Text abilityText;
         [SerializeField] private DrawFeedbackController feedback;
         [SerializeField] private float maxInk = IndividualInkLimit;
@@ -100,7 +103,7 @@ namespace DrawBody.Prototype
         [SerializeField] private float previewScale = 0.7f;
         [SerializeField] private float previewLineWidth = 5f;
         [SerializeField] private float drawAreaSquareSize = 300f;
-        [SerializeField] private float previewSquareSize = 290f;
+        [SerializeField] private float previewSquareSize = 300f;
         [SerializeField] private float startPointSnapRadius = 42f;
 
         private readonly Dictionary<BodyPart, PartDrawing> drawings = new Dictionary<BodyPart, PartDrawing>();
@@ -154,6 +157,13 @@ namespace DrawBody.Prototype
             return stageManager == null || stageManager.CanConfirmSpeciesForActivePlayer(currentSpecies);
         }
 
+        public void RefreshUniqueSpeciesAvailability()
+        {
+            lastUniqueSpeciesConfirmAllowed = CanConfirmCurrentSpecies();
+            SpeciesAvailabilityChanged?.Invoke();
+            RefreshConnectionMessage();
+        }
+
         public void ShowSpeciesSwapPending()
         {
             SetMessage(LocalizationManager.T("draw_species_swap_pending"), true);
@@ -166,6 +176,18 @@ namespace DrawBody.Prototype
                 : "draw_species_swap_rejected"),
                 !accepted);
             GameSfx.Play(accepted ? SfxId.DrawConfirm : SfxId.UiToggleOff);
+        }
+
+        public void ShowStageFitError()
+        {
+            SetMessage(LocalizationManager.T("msg_body_too_large_for_spawn"), true);
+            GameSfx.Play(SfxId.DrawInkWarning);
+        }
+
+        public void ShowReadyRoomFitError()
+        {
+            SetMessage(LocalizationManager.T("msg_body_too_large_for_ready_room"), true);
+            GameSfx.Play(SfxId.DrawInkWarning);
         }
 
         public void SetAllowedSpecies(StageSpeciesMask availability)
@@ -188,7 +210,7 @@ namespace DrawBody.Prototype
         {
             maxInk = IndividualInkLimit;
             drawAreaSquareSize = 300f;
-            previewSquareSize = 290f;
+            previewSquareSize = 300f;
             EnsureInitialized();
             NormalizeDrawLayout();
 
@@ -286,14 +308,81 @@ namespace DrawBody.Prototype
                 speciesPanel.anchorMin = new Vector2(0f, 0f);
                 speciesPanel.anchorMax = new Vector2(0f, 0f);
                 speciesPanel.pivot = new Vector2(0f, 0f);
-                speciesPanel.anchoredPosition = new Vector2(16f, 142f);
+                speciesPanel.anchoredPosition = new Vector2(16f, 144f);
                 speciesPanel.sizeDelta = new Vector2(68f, 300f);
                 HideChild("DrawSpeciesTitle");
                 LayoutDrawSpeciesButtons(speciesPanel);
             }
 
             polisher?.Polish();
+            ApplyResponsiveWorkspaceLayout();
             ResolveInkUi();
+        }
+
+        private void ApplyResponsiveWorkspaceLayout()
+        {
+            RectTransform panelRect = drawPanel != null ? drawPanel.transform as RectTransform : null;
+            if (panelRect == null)
+            {
+                return;
+            }
+
+            // The canvas scales from its width. On wide Game views the usable UI height can
+            // therefore be much shorter than 720, making the square workspaces overlap both
+            // the part bar above and the tool dock below. Preserve drawing coordinates by
+            // scaling the workspace transforms instead of changing their RectTransform sizes.
+            const float topControlsDepth = 136f;
+            const float bottomControlsHeight = 132f;
+            const float workspaceGap = 12f;
+            float panelHeight = panelRect.rect.height;
+            float availableHeight = panelHeight
+                - topControlsDepth
+                - bottomControlsHeight
+                - workspaceGap * 2f;
+            float workspaceScale = Mathf.Clamp(availableHeight / drawAreaSquareSize, 0.78f, 1f);
+            float usableBottom = bottomControlsHeight + workspaceGap;
+            float usableTop = panelHeight - topControlsDepth - workspaceGap;
+            float workspaceCenterY = (usableBottom + usableTop) * 0.5f - panelHeight * 0.5f;
+
+            if (drawArea != null)
+            {
+                drawArea.anchoredPosition = new Vector2(-225f, workspaceCenterY);
+                drawArea.localScale = Vector3.one * workspaceScale;
+            }
+
+            if (previewRoot != null && previewRoot.parent is RectTransform previewArea)
+            {
+                previewArea.anchoredPosition = new Vector2(390f, workspaceCenterY);
+                previewArea.localScale = Vector3.one * workspaceScale;
+            }
+
+            RectTransform speciesPanel = FindRect("DrawSpeciesPanel");
+            if (speciesPanel != null)
+            {
+                speciesPanel.anchoredPosition = new Vector2(16f, usableBottom);
+            }
+
+            float workspaceLeft = -225f - drawAreaSquareSize * workspaceScale * 0.5f;
+            float workspaceRight = 390f + previewSquareSize * workspaceScale * 0.5f;
+            float headerCenterX = (workspaceLeft + workspaceRight) * 0.5f;
+            float headerWidth = workspaceRight - workspaceLeft;
+
+            RectTransform partBar = FindRect("PartButtonBar");
+            if (partBar != null)
+            {
+                partBar.anchoredPosition = new Vector2(headerCenterX, -58f);
+                partBar.sizeDelta = new Vector2(headerWidth, 78f);
+            }
+
+            if (validationBanner != null)
+            {
+                RectTransform bannerRect = validationBanner.transform as RectTransform;
+                if (bannerRect != null)
+                {
+                    bannerRect.anchoredPosition = new Vector2(headerCenterX, -4f);
+                    bannerRect.sizeDelta = new Vector2(headerWidth, 42f);
+                }
+            }
         }
 
         private static void EnsureRectMask(GameObject target)
@@ -445,11 +534,13 @@ namespace DrawBody.Prototype
         private void HandleInkBudgetChanged(OnlineBodyData bodyData)
         {
             RefreshInkText();
+            if (active) RefreshConnectionMessage();
         }
 
         private void HandleOnlineStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
         {
             RefreshInkText();
+            if (active) RefreshConnectionMessage();
         }
 
         private void Update()
@@ -457,6 +548,11 @@ namespace DrawBody.Prototype
             if (!active)
             {
                 return;
+            }
+
+            if (validationBanner != null && validationBanner.activeSelf)
+            {
+                validationBanner.transform.SetAsLastSibling();
             }
 
             bool canConfirmSpecies = CanConfirmCurrentSpecies();
@@ -497,6 +593,7 @@ namespace DrawBody.Prototype
             RefreshInkText();
             if (value)
             {
+                ApplyResponsiveWorkspaceLayout();
                 CaptureEditSnapshot();
                 RefreshConnectionMessage();
                 SetPartSegmentVisibility();
@@ -774,6 +871,21 @@ namespace DrawBody.Prototype
             }
 
             EnsureInitialized();
+            bool targetExceedsInkBudget = !ValidateInkBudget(
+                GetTotalInk(species),
+                out string targetInkError);
+            if (targetExceedsInkBudget && !active)
+            {
+                // An immediate gameplay switch must not publish an over-budget
+                // stored body. Open DRAW so it can be reduced before confirmation.
+                stageManager?.EnterDrawingMode();
+                if (!active)
+                {
+                    GameSfx.Play(SfxId.DrawInkOver);
+                    return;
+                }
+            }
+
             FinishStroke();
             currentSpecies = species;
             UseSpeciesDrawings(species);
@@ -783,6 +895,11 @@ namespace DrawBody.Prototype
             SetPartSegmentVisibility();
             RefreshInkText();
             RefreshConnectionMessage();
+            if (targetExceedsInkBudget)
+            {
+                SetMessage(targetInkError, true);
+                GameSfx.Play(SfxId.DrawInkOver);
+            }
             UpdateConnectionMarker();
             ApplyDrawing();
             if (!active)
@@ -898,10 +1015,24 @@ namespace DrawBody.Prototype
             if (TryApplyDrawing())
             {
                 GameSfx.Play(SfxId.DrawConfirm);
-                hasEditSnapshot = false;
-                editSnapshot = null;
-                stageManager?.ConfirmDrawingMode();
+                if (stageManager != null)
+                {
+                    // Keep the pre-edit snapshot until the stage-side fit check succeeds.
+                    // If it fails, Back must restore the old valid body instead of carrying
+                    // the rejected body into the ready room or stage.
+                    stageManager.ConfirmDrawingMode();
+                }
+                else
+                {
+                    CommitEditing();
+                }
             }
+        }
+
+        public void CommitEditing()
+        {
+            hasEditSnapshot = false;
+            editSnapshot = null;
         }
 
         public bool TryApplyDrawing()
@@ -940,6 +1071,17 @@ namespace DrawBody.Prototype
 
         public void SendCurrentBodyData()
         {
+            if (!ValidateInkBudget(out string inkError))
+            {
+                // No over-budget body may become the confirmed/networked body,
+                // including automatic species assignment and gameplay shortcuts.
+                if (!active) stageManager?.EnterDrawingMode();
+                RefreshInkText();
+                SetMessage(inkError, true);
+                GameSfx.Play(SfxId.DrawInkOver);
+                return;
+            }
+
             onlineManager?.SendBodyData(new OnlineBodyData
             {
                 PlayerId = "local",
@@ -1690,11 +1832,17 @@ namespace DrawBody.Prototype
             }
 
             float inkCost = pixelLength / pixelsPerInk;
-            float remainingInk = maxInk - GetTotalInk();
+            float currentInk = GetTotalInk();
+            float personalRemainingInk = maxInk - currentInk;
+            float teamRemainingInk = ResolveInkBudgetPlayerCount() * InkAllowancePerPlayer
+                - ResolveOtherConfirmedInk()
+                - currentInk;
+            float remainingInk = Mathf.Min(personalRemainingInk, teamRemainingInk);
             if (remainingInk <= 0f)
             {
                 FinishStroke();
                 RefreshInkText();
+                RefreshConnectionMessage();
                 GameSfx.Play(SfxId.DrawInkOver);
                 return;
             }
@@ -1793,6 +1941,11 @@ namespace DrawBody.Prototype
 
             SetInkGauge(inkGaugeFill, maxInk <= 0f ? 0f : totalInk / maxInk, personalOver);
             SetInkGauge(teamInkGaugeFill, teamLimit <= 0f ? 0f : teamInk / teamLimit, teamOver);
+            ResolveDecideButton();
+            if (decideButton != null)
+            {
+                decideButton.interactable = !personalOver && !teamOver;
+            }
 
             if (partText != null)
             {
@@ -2159,7 +2312,11 @@ namespace DrawBody.Prototype
 
         private bool ValidateInkBudget(out string errorMessage)
         {
-            float localInk = GetTotalInk();
+            return ValidateInkBudget(GetTotalInk(), out errorMessage);
+        }
+
+        private bool ValidateInkBudget(float localInk, out string errorMessage)
+        {
             if (localInk > maxInk + 0.01f)
             {
                 errorMessage = LocalizationManager.Format("msg_personal_ink_over", localInk, maxInk, Mathf.Ceil(localInk - maxInk));
@@ -2178,6 +2335,12 @@ namespace DrawBody.Prototype
 
             errorMessage = string.Empty;
             return true;
+        }
+
+        private void ResolveDecideButton()
+        {
+            if (decideButton != null) return;
+            decideButton = FindRect("DecideButton")?.GetComponent<Button>();
         }
 
         private int ResolveInkBudgetPlayerCount()
@@ -2214,6 +2377,12 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (!ValidateInkBudget(out string inkError))
+            {
+                SetMessage(inkError, true);
+                return;
+            }
+
             if (currentPart == BodyPart.Torso || currentSpecies == Species.Slime)
             {
                 SetMessage(string.Empty);
@@ -2242,13 +2411,85 @@ namespace DrawBody.Prototype
 
         private void SetMessage(string message, bool alarm = false)
         {
+            bool showAlarm = active && alarm && !string.IsNullOrEmpty(message);
+            EnsureValidationBanner();
             if (messageText != null)
             {
                 messageText.text = message;
                 messageText.color = alarm ? new Color(0.82f, 0.12f, 0.08f) : Color.black;
                 messageText.fontStyle = alarm ? FontStyle.Bold : FontStyle.Normal;
-                messageText.gameObject.SetActive(active && alarm && !string.IsNullOrEmpty(message));
+                // Alarm text belongs in the dedicated banner. Keeping the legacy
+                // lower label visible duplicates the same warning below the box.
+                messageText.gameObject.SetActive(showAlarm && validationBanner == null);
             }
+
+            if (validationBannerText != null)
+            {
+                validationBannerText.text = showAlarm ? message : string.Empty;
+            }
+            if (validationBanner != null)
+            {
+                validationBanner.SetActive(showAlarm);
+                if (showAlarm) validationBanner.transform.SetAsLastSibling();
+            }
+        }
+
+        private void EnsureValidationBanner()
+        {
+            if (validationBanner != null || drawPanel == null) return;
+            Transform existing = drawPanel.transform.Find("DrawValidationBanner");
+            if (existing != null)
+            {
+                validationBanner = existing.gameObject;
+                validationBannerText = existing.GetComponentInChildren<Text>(true);
+                return;
+            }
+
+            validationBanner = new GameObject(
+                "DrawValidationBanner",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image));
+            validationBanner.transform.SetParent(drawPanel.transform, false);
+            RectTransform bannerRect = validationBanner.GetComponent<RectTransform>();
+            bannerRect.anchorMin = new Vector2(0.5f, 1f);
+            bannerRect.anchorMax = new Vector2(0.5f, 1f);
+            bannerRect.pivot = new Vector2(0.5f, 1f);
+            bannerRect.anchoredPosition = new Vector2(0f, -4f);
+            bannerRect.sizeDelta = new Vector2(760f, 42f);
+
+            Image background = validationBanner.GetComponent<Image>();
+            background.color = new Color(1f, 0.88f, 0.82f, 0.98f);
+            Outline backgroundOutline = validationBanner.AddComponent<Outline>();
+            backgroundOutline.effectColor = new Color(0.72f, 0.08f, 0.08f, 0.9f);
+            backgroundOutline.effectDistance = new Vector2(3f, -3f);
+
+            GameObject textObject = new GameObject(
+                "ValidationMessage",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Text));
+            textObject.transform.SetParent(validationBanner.transform, false);
+            RectTransform textRect = textObject.GetComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(16f, 3f);
+            textRect.offsetMax = new Vector2(-16f, -3f);
+            validationBannerText = textObject.GetComponent<Text>();
+            validationBannerText.font = messageText != null && messageText.font != null
+                ? messageText.font
+                : DoodleRuntimeAssets.HandwrittenFont;
+            validationBannerText.fontSize = 17;
+            validationBannerText.fontStyle = FontStyle.Bold;
+            validationBannerText.alignment = TextAnchor.MiddleCenter;
+            validationBannerText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            validationBannerText.verticalOverflow = VerticalWrapMode.Truncate;
+            validationBannerText.color = new Color(0.68f, 0.06f, 0.06f);
+            Outline textOutline = textObject.AddComponent<Outline>();
+            textOutline.effectColor = new Color(1f, 1f, 1f, 0.75f);
+            textOutline.effectDistance = new Vector2(1f, -1f);
+            validationBanner.SetActive(false);
+            ApplyResponsiveWorkspaceLayout();
         }
 
         private void SetPartSegmentVisibility()
@@ -3341,6 +3582,28 @@ namespace DrawBody.Prototype
                 total += drawings[part].UsedInk;
             }
 
+            return total;
+        }
+
+        private float GetTotalInk(Species species)
+        {
+            if (!speciesDrawings.TryGetValue(
+                species,
+                out Dictionary<BodyPart, PartDrawing> speciesParts))
+            {
+                return 0f;
+            }
+
+            float total = 0f;
+            BodyPart[] activeParts = GetPartsForSpecies(species);
+            for (int i = 0; i < activeParts.Length; i++)
+            {
+                if (speciesParts.TryGetValue(activeParts[i], out PartDrawing drawing)
+                    && drawing != null)
+                {
+                    total += drawing.UsedInk;
+                }
+            }
             return total;
         }
 

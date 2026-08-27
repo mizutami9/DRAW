@@ -33,9 +33,8 @@ namespace DrawBody.Prototype
 
         public static bool RequiresUniqueSpecies(string stageId)
         {
-            // 11-3 is a free-composition block-breaker stage. Multiple players may
-            // deliberately bring the same character ability, unlike other stages
-            // from world 11 onward.
+            // 11-3 intentionally allows free team composition. Unlike the other
+            // stages from world 11 onward, duplicate character species are valid.
             if (string.Equals(stageId, "11-3", StringComparison.OrdinalIgnoreCase))
             {
                 return false;

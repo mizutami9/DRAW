@@ -241,8 +241,8 @@ namespace DrawBody.Prototype
 
             RectTransform decide = FindRect(transform, "DecideButton");
             RectTransform cancel = FindRect(transform, "CancelDrawButton");
-            SetBottomRect(decide, new Vector2(420f, 14f), new Vector2(168f, 104f));
-            SetBottomRect(cancel, new Vector2(570f, 14f), new Vector2(96f, 104f));
+            SetBottomRect(decide, new Vector2(420f, 14f), new Vector2(168f, 118f));
+            SetBottomRect(cancel, new Vector2(570f, 14f), new Vector2(96f, 118f));
 
             HideLegacyDecoration(brush);
             HideLegacyDecoration(gauge);
@@ -589,8 +589,26 @@ namespace DrawBody.Prototype
             SetDockRect(close.GetComponent<RectTransform>(), new Vector2(820f, 18f), new Vector2(130f, 48f));
             close.onClick.RemoveAllListeners();
             close.onClick.AddListener(CloseDrawingPresetPopup);
+            FitDrawingPresetPopup(root, popup);
             drawingPresetPopup = overlay.gameObject;
             drawingPresetPopup.SetActive(false);
+        }
+
+        private static void FitDrawingPresetPopup(RectTransform root, RectTransform popup)
+        {
+            if (root == null || popup == null)
+            {
+                return;
+            }
+
+            const float horizontalMargin = 20f;
+            const float verticalMargin = 12f;
+            const float popupWidth = 980f;
+            const float popupHeight = 650f;
+            float widthScale = (root.rect.width - horizontalMargin * 2f) / popupWidth;
+            float heightScale = (root.rect.height - verticalMargin * 2f) / popupHeight;
+            float scale = Mathf.Clamp(Mathf.Min(widthScale, heightScale), 0.72f, 1f);
+            popup.localScale = Vector3.one * scale;
         }
 
         private void OpenDrawingPresetPopup()
@@ -599,6 +617,9 @@ namespace DrawBody.Prototype
             RefreshPresetSlotVisuals();
             if (drawingPresetPopup != null)
             {
+                FitDrawingPresetPopup(
+                    transform as RectTransform,
+                    FindRect(drawingPresetPopup.transform, "DrawingPresetPopupCard"));
                 drawingPresetPopup.SetActive(true);
                 drawingPresetPopup.transform.SetAsLastSibling();
             }

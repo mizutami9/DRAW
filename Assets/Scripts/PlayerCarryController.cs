@@ -524,6 +524,14 @@ namespace DrawBody.Prototype
             return stageManager != null ? stageManager.GetOnlinePlayerId(recoilTarget.playerController) : null;
         }
 
+        public bool IsCarriedForWeaponRecoil()
+        {
+            if (FindCarrierOfThisPlayer() != null) return true;
+            if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
+            return stageManager != null
+                && !string.IsNullOrEmpty(stageManager.GetOnlineCarrierPlayerId(playerController));
+        }
+
         public void ApplyDirectWeaponRecoil(Vector2 velocityChange)
         {
             PlayerCarryController recoilTarget = FindCarrierOfThisPlayer() ?? this;
@@ -535,8 +543,9 @@ namespace DrawBody.Prototype
                 targetController.ApplyWeaponRecoil(velocityChange);
                 return;
             }
+            float speedLimit = Mathf.Max(28f, velocityChange.magnitude);
             targetBody.linearVelocity = Vector2.ClampMagnitude(
-                targetBody.linearVelocity + velocityChange, 28f);
+                targetBody.linearVelocity + velocityChange, speedLimit);
         }
 
         private PlayerCarryController FindCarrierOfThisPlayer()

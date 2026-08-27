@@ -1,7 +1,7 @@
 {
     "id": "11-3",
     "displayName": "Stage 11-3 Block Breaker",
-    "backgroundColorHex": "#F7F2DEFF",
+    "backgroundColorHex": "#F7F2DE26",
     "ruleMode": 3,
     "timeLimitSeconds": 75.0,
     "collectionTarget": 163,
