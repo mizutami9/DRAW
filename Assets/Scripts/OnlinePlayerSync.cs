@@ -37,6 +37,7 @@ namespace DrawBody.Prototype
             public Vector2 Position;
             public Vector2 Velocity;
             public float Rotation;
+            public int FacingDirection;
             public bool Redrawing;
             public bool TurtleShelled;
             public string SlimeAttachedToPlayerId;
@@ -118,6 +119,7 @@ namespace DrawBody.Prototype
             }
 
             Rigidbody2D body = stageManager.ActivePlayerBody;
+            PlayerController2D localPlayer = localTransform.GetComponent<PlayerController2D>();
             PlayerCarryController localCarry = localTransform.GetComponent<PlayerCarryController>();
             onlineManager.SendPlayerState(new OnlinePlayerState
             {
@@ -126,9 +128,10 @@ namespace DrawBody.Prototype
                 Position = localTransform.position,
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
                 Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
+                FacingDirection = localPlayer != null ? localPlayer.FacingDirection : 1,
                 Redrawing = stageManager.IsDrawingMode,
-                Respawning = stageManager.IsPlayerRespawning(localTransform.GetComponent<PlayerController2D>()),
-                TurtleShelled = localTransform.GetComponent<PlayerController2D>()?.IsTurtleShelled ?? false,
+                Respawning = stageManager.IsPlayerRespawning(localPlayer),
+                TurtleShelled = localPlayer?.IsTurtleShelled ?? false,
                 SlimeAttachedToPlayerId = localCarry?.SlimeAttachedOnlinePlayerId,
                 CarriedPlayerId = localCarry?.CurrentOnlineCarriedPlayerId,
                 CarryAction = localCarry?.CurrentOnlineCarryAction,
@@ -169,6 +172,8 @@ namespace DrawBody.Prototype
                 state.Redrawing ? Vector2.zero : state.CarryOffset,
                 onlineManager.LocalPlayerId,
                 state.Redrawing ? Vector2.zero : state.Velocity);
+            PlayerController2D remotePlayer = stageManager.GetOnlinePlayerController(state.PlayerId);
+            remotePlayer?.ApplyRemoteFacingDirection(state.FacingDirection);
             if (stageManager.IsOnlineRemotePlayerHeldByLocal(state.PlayerId))
             {
                 remoteTargets.Remove(state.PlayerId);
@@ -180,6 +185,7 @@ namespace DrawBody.Prototype
                 Position = state.Position,
                 Velocity = state.Velocity,
                 Rotation = state.Rotation,
+                FacingDirection = state.FacingDirection,
                 Redrawing = state.Redrawing,
                 TurtleShelled = !state.Redrawing && state.TurtleShelled,
                 SlimeAttachedToPlayerId = state.Redrawing ? null : state.SlimeAttachedToPlayerId
@@ -215,7 +221,9 @@ namespace DrawBody.Prototype
                 stageManager.ApplyOnlineRemoteState(pair.Key, position, pair.Value.Velocity, rotation);
                 if (remoteTransform != null)
                 {
-                    remoteTransform.GetComponent<PlayerController2D>()?.ApplyRemoteTurtleShellState(pair.Value.TurtleShelled);
+                    PlayerController2D remotePlayer = remoteTransform.GetComponent<PlayerController2D>();
+                    remotePlayer?.ApplyRemoteFacingDirection(pair.Value.FacingDirection);
+                    remotePlayer?.ApplyRemoteTurtleShellState(pair.Value.TurtleShelled);
                     PlayerController2D attachmentTarget = string.IsNullOrEmpty(pair.Value.SlimeAttachedToPlayerId)
                         ? null
                         : stageManager.GetOnlinePlayerController(pair.Value.SlimeAttachedToPlayerId);

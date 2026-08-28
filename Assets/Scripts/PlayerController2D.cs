@@ -156,6 +156,24 @@ namespace DrawBody.Prototype
             SetTurtleShellState(active && currentSpecies == DrawManager.Species.Turtle);
         }
 
+        public void ApplyRemoteFacingDirection(int direction)
+        {
+            // Older peers do not send this field and deserialize it as zero.
+            if (direction == 0)
+            {
+                return;
+            }
+
+            int nextDirection = direction < 0 ? -1 : 1;
+            if (nextDirection == facingDirection)
+            {
+                return;
+            }
+
+            facingDirection = nextDirection;
+            bodyBuilder?.SetFacingDirection(facingDirection);
+        }
+
         public void InvalidateBodyColliderCache()
         {
             bodyColliderCache = null;
