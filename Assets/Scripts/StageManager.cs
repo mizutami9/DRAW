@@ -3755,6 +3755,12 @@ namespace DrawBody.Prototype
             drawingStates[targetPlayer] = drawManager.CreateState();
         }
 
+        internal void RecordActivePlayerDrawingState()
+        {
+            SaveDrawingState(player);
+            drawManager?.RefreshUniqueSpeciesAvailability();
+        }
+
         public bool CanConfirmSpeciesForActivePlayer(DrawManager.Species species)
         {
             if (!RequiresUniquePlayerSpecies)

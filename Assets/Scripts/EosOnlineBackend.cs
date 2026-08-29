@@ -1211,6 +1211,12 @@ namespace DrawBody.Prototype
             else if (type == MessageGimmick)
             {
                 OnlineGimmickData gimmickData = JsonUtility.FromJson<OnlineGimmickData>(payload);
+                if (isHost && peer != null && gimmickData != null)
+                {
+                    EnsureSessionPeer(peer);
+                    gimmickData.PlayerId = peer.ToString();
+                    payload = JsonUtility.ToJson(gimmickData);
+                }
                 GimmickDataReceived?.Invoke(gimmickData);
                 if (isHost)
                 {

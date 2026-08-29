@@ -435,6 +435,12 @@ namespace DrawBody.Prototype
             else if (type == MessageGimmick)
             {
                 OnlineGimmickData gimmickData = JsonUtility.FromJson<OnlineGimmickData>(payload);
+                string peerPlayerId = GetPeerPlayerId(tcpClient);
+                if (gimmickData != null && !string.IsNullOrEmpty(peerPlayerId))
+                {
+                    gimmickData.PlayerId = peerPlayerId;
+                    payload = JsonUtility.ToJson(gimmickData);
+                }
                 GimmickDataReceived?.Invoke(gimmickData);
                 Broadcast(MessageGimmick, payload);
             }
@@ -581,6 +587,22 @@ namespace DrawBody.Prototype
                     }
                 }
             }
+        }
+
+        private string GetPeerPlayerId(TcpClient tcpClient)
+        {
+            lock (peers)
+            {
+                for (int i = 0; i < peers.Count; i++)
+                {
+                    if (peers[i].Client == tcpClient)
+                    {
+                        return peers[i].PlayerId;
+                    }
+                }
+            }
+
+            return null;
         }
 
         private void RemovePeer(TcpClient tcpClient)

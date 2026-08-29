@@ -870,6 +870,22 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (!active
+                && stageManager != null
+                && !stageManager.CanConfirmSpeciesForActivePlayer(species))
+            {
+                if (stageManager.RequestSpeciesSwap(species))
+                {
+                    ShowSpeciesSwapPending();
+                }
+                else
+                {
+                    SetMessage(LocalizationManager.T("draw_species_swap_unavailable"), true);
+                    GameSfx.Play(SfxId.UiToggleOff);
+                }
+                return;
+            }
+
             EnsureInitialized();
             bool targetExceedsInkBudget = !ValidateInkBudget(
                 GetTotalInk(species),
@@ -904,6 +920,7 @@ namespace DrawBody.Prototype
             ApplyDrawing();
             if (!active)
             {
+                stageManager?.RecordActivePlayerDrawingState();
                 SendCurrentBodyData();
             }
             UpdatePreviewHighlight();

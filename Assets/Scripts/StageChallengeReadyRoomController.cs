@@ -9,6 +9,7 @@ namespace DrawBody.Prototype
         private const string NetworkKind = "challenge_ready_room";
         private const float MinimumRoomWidth = 5.4f;
         private const float MinimumRoomHeight = 4.6f;
+        private const float ReadyStateResendInterval = 0.5f;
 
         [System.Serializable]
         private sealed class ReadyMessage
@@ -23,6 +24,7 @@ namespace DrawBody.Prototype
             public Vector2 Center;
             public Vector2 ButtonCenter;
             public Transform ButtonCap;
+            public Collider2D ButtonCollider;
         }
 
         private readonly List<PlayerController2D> offlinePlayers = new List<PlayerController2D>();
@@ -48,6 +50,7 @@ namespace DrawBody.Prototype
         private float maximumBodyWidth = 1.5f;
         private float maximumBodyHeight = 2.5f;
         private float nextBodyFitScanTime;
+        private float nextLocalReadySendTime;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -102,14 +105,23 @@ namespace DrawBody.Prototype
 
             if (IsOnline)
             {
-                bool overlappingButton = IsLocalPlayerOnAssignedButton();
-                if (!overlappingButton && !string.IsNullOrEmpty(localId)) buttonArmedIds.Add(localId);
-                bool localReady = buttonArmedIds.Contains(localId) && overlappingButton;
-                if (localReady != lastLocalReady)
+                if (HasAuthority)
                 {
-                    lastLocalReady = localReady;
-                    SendReadyRequest(localReady);
-                    if (HasAuthority) SetReady(localId, localReady);
+                    RefreshAuthoritativeOnlineReadyState();
+                }
+                else
+                {
+                    bool localReady = IsLocalPlayerOnAssignedButton();
+                    bool readyChanged = localReady != lastLocalReady;
+                    if (readyChanged)
+                    {
+                        lastLocalReady = localReady;
+                    }
+                    if (readyChanged || Time.unscaledTime >= nextLocalReadySendTime)
+                    {
+                        nextLocalReadySendTime = Time.unscaledTime + ReadyStateResendInterval;
+                        SendReadyRequest(localReady);
+                    }
                 }
             }
             else
@@ -232,7 +244,8 @@ namespace DrawBody.Prototype
                 {
                     Center = center,
                     ButtonCenter = buttonCenter,
-                    ButtonCap = cap
+                    ButtonCap = cap,
+                    ButtonCollider = capCollider
                 });
             }
 
@@ -480,9 +493,50 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void RefreshAuthoritativeOnlineReadyState()
+        {
+            bool changed = false;
+            for (int i = 0; i < expectedIds.Count; i++)
+            {
+                string playerId = expectedIds[i];
+                PlayerController2D onlinePlayer = stageManager.GetOnlinePlayerController(playerId);
+                bool ready = onlinePlayer != null
+                    && i < rooms.Count
+                    && IsPlayerPressingRoomButton(onlinePlayer, i);
+                if (ready)
+                {
+                    changed |= readyIds.Add(playerId);
+                }
+                else
+                {
+                    changed |= readyIds.Remove(playerId);
+                }
+            }
+
+            if (changed)
+            {
+                BroadcastSnapshot(false);
+            }
+        }
+
         private bool IsPlayerPressingRoomButton(PlayerController2D player, int room)
         {
             if (player == null || !player.gameObject.activeInHierarchy) return false;
+            Collider2D buttonCollider = rooms[room].ButtonCollider;
+            if (buttonCollider != null && buttonCollider.enabled)
+            {
+                Bounds contactBounds = buttonCollider.bounds;
+                contactBounds.Expand(new Vector3(0.12f, 0.16f, 0f));
+                Collider2D[] playerColliders = player.GetComponentsInChildren<Collider2D>(true);
+                for (int i = 0; i < playerColliders.Length; i++)
+                {
+                    Collider2D playerCollider = playerColliders[i];
+                    if (playerCollider == null || !playerCollider.enabled || playerCollider.isTrigger) continue;
+                    if (buttonCollider.IsTouching(playerCollider)
+                        || contactBounds.Intersects(playerCollider.bounds)) return true;
+                }
+            }
+
             // The character stands on top of the cap, so scan above its physical
             // surface. The old box ended below short cat/slime bodies and could
             // leave a non-host client unable to report its ready state.
@@ -512,9 +566,8 @@ namespace DrawBody.Prototype
         private void SetReady(string playerId, bool ready)
         {
             if (string.IsNullOrEmpty(playerId)) return;
-            if (ready) readyIds.Add(playerId);
-            else readyIds.Remove(playerId);
-            if (HasAuthority) BroadcastSnapshot(false);
+            bool changed = ready ? readyIds.Add(playerId) : readyIds.Remove(playerId);
+            if (changed && HasAuthority) BroadcastSnapshot(false);
         }
 
         private bool AreAllPlayersReady()
@@ -534,7 +587,8 @@ namespace DrawBody.Prototype
             for (int i = 0; i < rooms.Count; i++)
             {
                 string id = IsOnline && i < expectedIds.Count ? expectedIds[i] : "offline-" + i;
-                bool ready = readyIds.Contains(id);
+                bool ready = readyIds.Contains(id)
+                    || IsOnline && !HasAuthority && id == localId && lastLocalReady;
                 if (rooms[i].ButtonCap != null)
                 {
                     SpriteRenderer[] fills = rooms[i].ButtonCap.GetComponentsInChildren<SpriteRenderer>(true);
