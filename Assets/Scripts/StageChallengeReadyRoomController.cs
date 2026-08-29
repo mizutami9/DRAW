@@ -217,6 +217,10 @@ namespace DrawBody.Prototype
                 Transform cap = new GameObject("Wonky Crayon Cap").transform;
                 cap.SetParent(button.transform, false);
                 cap.localPosition = new Vector2(0f, 0.5f);
+                cap.gameObject.layer = 6;
+                cap.gameObject.tag = "Ground";
+                BoxCollider2D capCollider = cap.gameObject.AddComponent<BoxCollider2D>();
+                capCollider.size = new Vector2(1.68f, 0.43f);
                 AddButtonOval(cap, "Crayon Fill 1", new Vector2(-0.035f, 0.01f),
                     new Vector2(1.62f, 0.39f), new Color(0.94f, 0.2f, 0.15f, 0.74f), 45).transform.localRotation = Quaternion.Euler(0f, 0f, 2.5f);
                 AddButtonOval(cap, "Crayon Fill 2", new Vector2(0.04f, -0.015f),
@@ -479,8 +483,11 @@ namespace DrawBody.Prototype
         private bool IsPlayerPressingRoomButton(PlayerController2D player, int room)
         {
             if (player == null || !player.gameObject.activeInHierarchy) return false;
-            Vector2 buttonCenter = rooms[room].ButtonCenter + Vector2.up * 0.24f;
-            Collider2D[] hits = Physics2D.OverlapBoxAll(buttonCenter, new Vector2(2.45f, 0.72f), 0f);
+            // The character stands on top of the cap, so scan above its physical
+            // surface. The old box ended below short cat/slime bodies and could
+            // leave a non-host client unable to report its ready state.
+            Vector2 buttonCenter = rooms[room].ButtonCenter + Vector2.up * 0.78f;
+            Collider2D[] hits = Physics2D.OverlapBoxAll(buttonCenter, new Vector2(2.45f, 0.78f), 0f);
             for (int i = 0; i < hits.Length; i++)
                 if (hits[i] != null && hits[i].GetComponentInParent<PlayerController2D>() == player) return true;
             return false;
