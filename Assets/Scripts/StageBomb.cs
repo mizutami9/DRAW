@@ -565,10 +565,19 @@ namespace DrawBody.Prototype
         private float duration;
         private bool mega;
         private float elapsed;
+        private string originStageId;
+        private StageManager stageManager;
         private static Sprite circleSprite;
 
-        public void Configure(float blastRadius, bool isMega = false)
+        public void Configure(float blastRadius, bool isMega = false, string sourceStageId = null)
         {
+            originStageId = sourceStageId;
+            if (!IsOriginStageCurrent())
+            {
+                HideAndDestroy();
+                return;
+            }
+
             radius = Mathf.Max(0.5f, blastRadius);
             mega = isMega;
             duration = mega ? 1.25f : 0.82f;
@@ -650,7 +659,13 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            elapsed += Time.deltaTime;
+            if (!IsOriginStageCurrent())
+            {
+                HideAndDestroy();
+                return;
+            }
+
+            elapsed += Time.unscaledDeltaTime;
             float progress = Mathf.Clamp01(elapsed / duration);
             float expansion = 1f - Mathf.Pow(1f - progress, 3f);
 
@@ -722,8 +737,40 @@ namespace DrawBody.Prototype
             }
         }
 
+        private bool IsOriginStageCurrent()
+        {
+            if (string.IsNullOrEmpty(originStageId))
+            {
+                return true;
+            }
+
+            if (stageManager == null)
+            {
+                stageManager = Object.FindFirstObjectByType<StageManager>();
+            }
+
+            return stageManager == null || stageManager.CurrentStageId == originStageId;
+        }
+
+        private void HideAndDestroy()
+        {
+            Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                renderers[i].enabled = false;
+            }
+
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
+
         private void OnDestroy()
         {
+            Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null) renderers[i].enabled = false;
+            }
             if (material != null)
             {
                 Destroy(material);

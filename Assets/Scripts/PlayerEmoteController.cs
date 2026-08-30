@@ -68,6 +68,14 @@ namespace DrawBody.Prototype
         private bool paletteOpen;
         private Font handwrittenFont;
         private static Sprite[] emoteIcons;
+        private int localEmoteId = -1;
+        private int localEmoteSequence;
+        private float localEmoteUntil;
+        private readonly Dictionary<string, int> remoteSnapshotSequences = new Dictionary<string, int>();
+
+        public int CurrentLocalEmoteId => Time.unscaledTime < localEmoteUntil ? localEmoteId : -1;
+        public int CurrentLocalEmoteSequence => localEmoteSequence;
+        public float CurrentLocalEmoteRemaining => Mathf.Max(0f, localEmoteUntil - Time.unscaledTime);
 
         private void Awake()
         {
@@ -140,6 +148,9 @@ namespace DrawBody.Prototype
 
             Transform localPlayer = stageManager.ActivePlayerTransform;
             if (localPlayer != null) ShowBubble(localPlayer, id);
+            localEmoteId = id;
+            localEmoteSequence++;
+            localEmoteUntil = Time.unscaledTime + DisplaySeconds;
             GameSfx.Play(SfxId.EmotePop);
 
             ResolveOnlineManager();
@@ -153,6 +164,23 @@ namespace DrawBody.Prototype
                     Json = JsonUtility.ToJson(new EmotePayload { Id = id })
                 });
             }
+        }
+
+        public void ApplyRemoteSnapshot(string playerId, int id, int sequence, float remaining)
+        {
+            if (string.IsNullOrEmpty(playerId) || id < 0 || id >= EmoteCount || remaining <= 0f
+                || stageManager == null || sequence <= 0)
+            {
+                return;
+            }
+            if (remoteSnapshotSequences.TryGetValue(playerId, out int applied) && sequence <= applied) return;
+            remoteSnapshotSequences[playerId] = sequence;
+            Transform remotePlayer = stageManager.GetOnlinePlayerTransform(playerId);
+            if (remotePlayer == null) return;
+            ShowBubble(remotePlayer, id);
+            if (bubbles.TryGetValue(remotePlayer, out Bubble bubble))
+                bubble.HideAt = Time.unscaledTime + Mathf.Min(DisplaySeconds, remaining);
+            EmoteShown?.Invoke(playerId, id);
         }
 
         private void HandleNetworkEmote(OnlineGimmickData data)

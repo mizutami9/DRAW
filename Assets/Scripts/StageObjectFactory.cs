@@ -2906,6 +2906,14 @@ namespace DrawBody.Prototype
             triggerCollider.size = new Vector2(0.95f, 0.7f);
             JumpPad jumpPad = trigger.AddComponent<JumpPad>();
             jumpPad.Configure(obj.transform, data.actionStrength > 0f ? data.actionStrength : 27f);
+            if (!string.IsNullOrEmpty(data.objectId)
+                && data.objectId.StartsWith("6-1_", System.StringComparison.Ordinal))
+            {
+                // 6-1 already defines the launch velocity for the bird carrying
+                // a teammate. The common x3 bird bonus made 40 become 120 and
+                // launched the pair directly into the upper spikes.
+                jumpPad.ConfigureBirdMultiplier(1f);
+            }
 
             if (!AddResourceSprite(
                 obj.transform,
@@ -3788,7 +3796,8 @@ namespace DrawBody.Prototype
             float characterSize = (compactClock ? 0.067f : 0.075f) * clockScale;
             float digitsY = compactClock ? size.y * 0.075f : -size.y * 0.075f;
             float progressY = compactClock ? -size.y * 0.275f : -size.y * 0.32f;
-            if (!compactClock)
+            if (!compactClock && (string.IsNullOrEmpty(data.objectId)
+                || !data.objectId.StartsWith("9-2_", System.StringComparison.Ordinal)))
             {
                 CreateClockText(
                     obj.transform,

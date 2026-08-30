@@ -38,6 +38,8 @@ namespace DrawBody.Prototype
         private int carryingDirection = 1;
         private Vector3 carryingHandWorldPosition;
         private bool bodyAnimationWasActive;
+        private bool remoteAnimationVelocityEnabled;
+        private Vector2 remoteAnimationVelocity;
 
         private struct GeneratedSegment
         {
@@ -497,6 +499,12 @@ namespace DrawBody.Prototype
             Physics2D.SyncTransforms();
         }
 
+        public void SetRemoteAnimationVelocity(Vector2 velocity)
+        {
+            remoteAnimationVelocityEnabled = true;
+            remoteAnimationVelocity = velocity;
+        }
+
         public void SetTurtleShellPose(bool active)
         {
             turtleShellPose = active && builtSpecies == DrawManager.Species.Turtle;
@@ -913,9 +921,11 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            float speed = rb != null ? Mathf.Abs(rb.linearVelocity.x) : 0f;
+            float speed = remoteAnimationVelocityEnabled
+                ? Mathf.Abs(remoteAnimationVelocity.x)
+                : rb != null ? Mathf.Abs(rb.linearVelocity.x) : 0f;
             bool moving = speed > 0.12f;
-            float moveBlend = moving && (playerController == null || playerController.IsGrounded) ? Mathf.Clamp01(speed / 4f) : 0f;
+            float moveBlend = moving && (playerController == null || playerController.IsAnimationGrounded) ? Mathf.Clamp01(speed / 4f) : 0f;
             bool armSwinging = armSwingController != null && armSwingController.IsSwinging;
             bool animationActive = moveBlend > 0.001f || carryingPose || armSwinging;
             if (!animationActive)
@@ -1383,26 +1393,36 @@ namespace DrawBody.Prototype
 
         private void ApplyCatWalk(DrawManager.BodyPart part, float phase, float blend, ref float angle, ref float offsetY)
         {
-            float frontStep = Mathf.Max(0f, Mathf.Sin(phase)) * walkBobAmount * 0.9f * blend;
-            float backStep = Mathf.Max(0f, Mathf.Sin(phase + Mathf.PI)) * walkBobAmount * 0.9f * blend;
+            float diagonalA = Mathf.Sin(phase);
+            float diagonalB = Mathf.Sin(phase + Mathf.PI);
+            float diagonalAAngle = diagonalA * walkLimbAngle * 0.72f * blend;
+            float diagonalBAngle = diagonalB * walkLimbAngle * 0.72f * blend;
+            float diagonalALift = Mathf.Max(0f, diagonalA) * walkBobAmount * 1.35f * blend;
+            float diagonalBLift = Mathf.Max(0f, diagonalB) * walkBobAmount * 1.35f * blend;
 
             switch (part)
             {
                 case DrawManager.BodyPart.LeftFrontLeg:
                 case DrawManager.BodyPart.RightBackLeg:
-                    offsetY = frontStep;
+                    angle = diagonalAAngle;
+                    offsetY = diagonalALift;
                     break;
                 case DrawManager.BodyPart.RightFrontLeg:
                 case DrawManager.BodyPart.LeftBackLeg:
-                    offsetY = backStep;
+                    angle = diagonalBAngle;
+                    offsetY = diagonalBLift;
                     break;
                 case DrawManager.BodyPart.Tail:
-                    angle = Mathf.Sin(phase * 0.65f) * 14f * blend;
-                    offsetY = Mathf.Sin(phase * 0.65f) * walkBobAmount * 0.6f * blend;
+                    angle = (Mathf.Sin(phase * 0.72f) * 19f + Mathf.Sin(phase * 1.85f) * 4f) * blend;
+                    offsetY = Mathf.Sin(phase * 0.72f) * walkBobAmount * 0.75f * blend;
                     break;
-                case DrawManager.BodyPart.Torso:
                 case DrawManager.BodyPart.Head:
                     offsetY = Mathf.Abs(Mathf.Sin(phase * 2f)) * walkBobAmount * 0.65f * blend;
+                    angle = -Mathf.Sin(phase * 2f) * 1.8f * blend;
+                    break;
+                case DrawManager.BodyPart.Torso:
+                    offsetY = Mathf.Abs(Mathf.Sin(phase * 2f)) * walkBobAmount * 0.65f * blend;
+                    angle = Mathf.Sin(phase) * 1.2f * blend;
                     break;
             }
         }

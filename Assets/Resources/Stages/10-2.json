@@ -7,7 +7,7 @@
   "collectionTarget":0,
   "requiredCollectionCount":0,
   "objects":[
-    {"objectId":"10-2_boundary","type":151,"position":{"x":6.0,"y":1.5},"size":{"x":86.0,"y":14.0},"rotation":0.0,"pathThickness":0.75},
+    {"objectId":"10-2_boundary","type":151,"position":{"x":6.0,"y":1.5},"size":{"x":86.0,"y":20.0},"rotation":0.0,"pathThickness":0.75},
     {"objectId":"10-2_player_spawn","type":2,"position":{"x":-34.0,"y":-3.1},"size":{"x":0.7,"y":0.7},"rotation":0.0},
     {"objectId":"10-2_lower_floor_left","type":0,"position":{"x":-10.5,"y":-4.5},"size":{"x":52.0,"y":0.8},"rotation":0.0,"keepSeparate":true},
     {"objectId":"10-2_lower_floor_right","type":0,"position":{"x":35.0,"y":-4.5},"size":{"x":27.0,"y":0.8},"rotation":0.0,"keepSeparate":true},

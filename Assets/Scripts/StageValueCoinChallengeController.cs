@@ -14,6 +14,7 @@ namespace DrawBody.Prototype
         private const int TargetValue = 100;
         private const int CrateColumns = 24;
         private const int CrateRows = 7;
+        private const int BaseCrateCount = CrateColumns * CrateRows;
 
         [System.Serializable]
         private sealed class ItemMessage
@@ -46,7 +47,13 @@ namespace DrawBody.Prototype
         private OnlineManager onlineManager;
         private UIManager uiManager;
         private StageObjectFactory factory;
+        private StageGimmickSyncManager syncManager;
+        private StageBombDropper bombLauncher;
+        private StageMissileLauncher missileLauncher;
+        private StageOscillatingAim bombAim;
+        private StageOscillatingAim missileAim;
         private float remaining = 60f;
+        private float configuredTimeLimit = 60f;
         private float retryAt;
         private float nextSnapshotAt;
         private int total;
@@ -66,6 +73,7 @@ namespace DrawBody.Prototype
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             uiManager = Object.FindFirstObjectByType<UIManager>();
             factory = Object.FindFirstObjectByType<StageObjectFactory>();
+            syncManager = GetComponent<StageGimmickSyncManager>();
         }
 
         private void OnEnable()
@@ -91,6 +99,7 @@ namespace DrawBody.Prototype
             }
 
             remaining = ResolveTimeLimit();
+            configuredTimeLimit = remaining;
             BuildCrateField();
             ConfigureLaunchers();
             CreateMonitors();
@@ -102,6 +111,7 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            RefreshLauncherAimClock();
             if (UpdateStartCountdown()) return;
             if (!HasAuthority) return;
             if (phase == 0)
@@ -164,7 +174,10 @@ namespace DrawBody.Prototype
         private void BuildCrateField()
         {
             if (factory == null) return;
-            List<int> values = BuildGuaranteedValues(CrateColumns * CrateRows);
+            int playerCount = ResolvePlayerCount();
+            int crateCount = Mathf.Max(BaseCrateCount,
+                Mathf.RoundToInt(BaseCrateCount * Mathf.Pow(1.3f, playerCount - 1)));
+            List<int> values = BuildGuaranteedValues(crateCount);
             Dictionary<string, GameObject> authoredCrates = new Dictionary<string, GameObject>();
             StageEditorObject[] authoredObjects = Object.FindObjectsByType<StageEditorObject>(FindObjectsSortMode.None);
             for (int i = 0; i < authoredObjects.Length; i++)
@@ -184,46 +197,79 @@ namespace DrawBody.Prototype
                 StageObjectType.Barrel,
                 StageObjectType.RubberBox
             };
-            bool usesAuthoredField = authoredCrates.Count > 0;
             const float spacingX = 1.78f;
             const float spacingY = 1.72f;
             float startX = -(CrateColumns - 1) * spacingX * 0.5f;
             float startY = -10.65f;
-            for (int row = 0; row < CrateRows; row++)
+            for (int index = 0; index < crateCount; index++)
             {
-                for (int column = 0; column < CrateColumns; column++)
+                int layoutColumns = playerCount > 1 ? 30 : CrateColumns;
+                int row = index / layoutColumns;
+                int column = index % layoutColumns;
+                Vector2 position;
+                float size;
+                if (playerCount > 1)
                 {
-                    int index = row * CrateColumns + column;
-                    string id = StageId + "_crate_" + index.ToString("D3");
-                    Vector2 position = new Vector2(startX + column * spacingX, startY + row * spacingY);
-                    StageObjectType shape = shapes[(index * 7 + row) % shapes.Length];
-                    StageObjectData data = StageObjectFactory.CreateDefaultData(shape, position);
-                    data.objectId = id;
-                    float size = 1.5f + ((index * 13) % 4) * 0.06f;
-                    data.size = new Vector2(size, size);
-                    data.rotation = shape == StageObjectType.TriangleBox && (index & 1) == 1 ? 180f : 0f;
-                    GameObject crateObject = authoredCrates.TryGetValue(id, out GameObject authored)
-                        ? authored
-                        : usesAuthoredField ? null : factory.Create(data, transform);
-                    if (crateObject == null) continue;
-                    Rigidbody2D body = crateObject.GetComponent<Rigidbody2D>();
-                    if (body != null)
-                    {
-                        body.bodyType = RigidbodyType2D.Dynamic;
-                        body.gravityScale = 1f;
-                        body.mass = Mathf.Max(1.4f, size * size);
-                        body.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
-                        body.sleepMode = RigidbodySleepMode2D.StartAwake;
-                        body.WakeUp();
-                    }
-                    CarryableObject carryable = crateObject.GetComponent<CarryableObject>();
-                    if (carryable != null) Destroy(carryable);
-                    StageValueCrate crate = crateObject.GetComponent<StageValueCrate>();
-                    if (crate == null) crate = crateObject.AddComponent<StageValueCrate>();
-                    crate.Configure(this, id, values[index]);
-                    crates[id] = crate;
-                    crateValues[id] = values[index];
+                    int layoutRows = Mathf.CeilToInt(crateCount / (float)layoutColumns);
+                    float compactSpacingX = 1.5f;
+                    float compactSpacingY = layoutRows > 1 ? Mathf.Min(1.45f, 10.8f / (layoutRows - 1f)) : 1.45f;
+                    position = new Vector2(
+                        -(layoutColumns - 1) * compactSpacingX * 0.5f + column * compactSpacingX,
+                        startY + row * compactSpacingY);
+                    size = Mathf.Clamp(compactSpacingY * 0.82f, 0.72f, 1.24f);
                 }
+                else if (index < BaseCrateCount)
+                {
+                    position = new Vector2(startX + column * spacingX, startY + row * spacingY);
+                    size = 1.5f + ((index * 13) % 4) * 0.06f;
+                }
+                else
+                {
+                    int extraIndex = index - BaseCrateCount;
+                    const int extraColumns = 30;
+                    const float extraSpacingX = 1.54f;
+                    const float extraSpacingY = 1.48f;
+                    int extraRow = extraIndex / extraColumns;
+                    int extraColumn = extraIndex % extraColumns;
+                    position = new Vector2(
+                        -(extraColumns - 1) * extraSpacingX * 0.5f + extraColumn * extraSpacingX,
+                        1.05f + extraRow * extraSpacingY);
+                    size = 1.18f + ((index * 13) % 3) * 0.05f;
+                }
+
+                string id = StageId + "_crate_" + index.ToString("D3");
+                StageObjectType shape = shapes[(index * 7 + row) % shapes.Length];
+                StageObjectData data = StageObjectFactory.CreateDefaultData(shape, position);
+                data.objectId = id;
+                data.size = new Vector2(size, size);
+                data.rotation = shape == StageObjectType.TriangleBox && (index & 1) == 1 ? 180f : 0f;
+                GameObject crateObject = authoredCrates.TryGetValue(id, out GameObject authored)
+                    ? authored
+                    : factory.Create(data, transform);
+                if (crateObject == null) continue;
+                if (playerCount > 1)
+                {
+                    crateObject.transform.position = position;
+                    crateObject.transform.localScale = new Vector3(size, size, 1f);
+                }
+                Rigidbody2D body = crateObject.GetComponent<Rigidbody2D>();
+                if (body != null)
+                {
+                    body.bodyType = RigidbodyType2D.Dynamic;
+                    body.gravityScale = 1f;
+                    body.mass = Mathf.Max(1.4f, size * size);
+                    body.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+                    body.sleepMode = RigidbodySleepMode2D.StartAwake;
+                    body.WakeUp();
+                }
+                if (crateObject.GetComponent<CarryableObject>() == null)
+                    crateObject.AddComponent<CarryableObject>();
+                StageValueCrate crate = crateObject.GetComponent<StageValueCrate>();
+                if (crate == null) crate = crateObject.AddComponent<StageValueCrate>();
+                crate.Configure(this, id, values[index]);
+                crates[id] = crate;
+                crateValues[id] = values[index];
+                if (index >= BaseCrateCount) syncManager?.RegisterRuntimeObject(crateObject.transform);
             }
         }
 
@@ -232,10 +278,11 @@ namespace DrawBody.Prototype
             List<int> values = new List<int>(count);
             for (int i = 0; i < count; i++) values.Add(0);
             int cursor = 0;
-            for (int i = 0; i < 4 && cursor < count; i++) values[cursor++] = 10;
-            for (int i = 0; i < 8 && cursor < count; i++) values[cursor++] = 5;
-            for (int i = 0; i < 10 && cursor < count; i++) values[cursor++] = 3;
-            for (int i = 0; i < 20 && cursor < count; i++) values[cursor++] = 1;
+            float scale = count / (float)BaseCrateCount;
+            for (int i = 0; i < Mathf.RoundToInt(4 * scale) && cursor < count; i++) values[cursor++] = 10;
+            for (int i = 0; i < Mathf.RoundToInt(8 * scale) && cursor < count; i++) values[cursor++] = 5;
+            for (int i = 0; i < Mathf.RoundToInt(10 * scale) && cursor < count; i++) values[cursor++] = 3;
+            for (int i = 0; i < Mathf.RoundToInt(20 * scale) && cursor < count; i++) values[cursor++] = 1;
             uint shuffle = 0x12C01u;
             for (int i = values.Count - 1; i > 0; i--)
             {
@@ -257,22 +304,50 @@ namespace DrawBody.Prototype
                 if (marker == null) continue;
                 if (marker.objectId == "12-1_bomb_launcher")
                 {
-                    marker.gameObject.AddComponent<StageOscillatingAim>().Configure(90f, 34f, 1.05f);
-                    marker.GetComponent<StageBombDropper>()?.SetLinkedLaunchTuning(5f, 11.5f);
+                    bombAim = marker.GetComponent<StageOscillatingAim>();
+                    if (bombAim == null) bombAim = marker.gameObject.AddComponent<StageOscillatingAim>();
+                    // BombDropper launches along -transform.up. A 60 degree body
+                    // angle therefore aims down-right at roughly -30 degrees.
+                    bombAim.Configure(60f, 20f, 1.05f);
+                    bombLauncher = marker.GetComponent<StageBombDropper>();
+                    bombLauncher?.SetLinkedLaunchTuning(5f, 11.5f);
                 }
                 else if (marker.objectId == "12-1_missile_launcher")
                 {
-                    marker.gameObject.AddComponent<StageOscillatingAim>().Configure(180f, 34f, 1.18f);
-                    marker.GetComponent<StageMissileLauncher>()?.SetLinkCooldown(5f);
+                    missileAim = marker.GetComponent<StageOscillatingAim>();
+                    if (missileAim == null) missileAim = marker.gameObject.AddComponent<StageOscillatingAim>();
+                    // Missiles launch along transform.right. Keep the full sweep
+                    // down-left so the launcher never points at the ceiling.
+                    missileAim.Configure(-150f, 20f, 1.18f);
+                    missileLauncher = marker.GetComponent<StageMissileLauncher>();
+                    missileLauncher?.SetLinkCooldown(5f);
                 }
             }
+
+            StageLauncherTrajectoryPreview preview = GetComponent<StageLauncherTrajectoryPreview>();
+            if (preview == null) preview = gameObject.AddComponent<StageLauncherTrajectoryPreview>();
+            preview.Configure(bombLauncher, missileLauncher, 28f, -13f, 13f);
+        }
+
+        private void RefreshLauncherAimClock()
+        {
+            float clock = startCountdownActive
+                ? Mathf.Max(0f, 3f - startCountdownRemaining)
+                : 3f + Mathf.Max(0f, configuredTimeLimit - remaining);
+            bombAim?.ApplyExternalClock(clock);
+            missileAim?.ApplyExternalClock(clock);
+        }
+
+        private int ResolvePlayerCount()
+        {
+            int reported = stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1;
+            int spawned = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None).Length;
+            return Mathf.Clamp(Mathf.Max(reported, spawned), 1, 4);
         }
 
         private float ResolveTimeLimit()
         {
-            int reported = stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1;
-            int spawned = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None).Length;
-            int players = Mathf.Clamp(Mathf.Max(reported, spawned), 1, 4);
+            int players = ResolvePlayerCount();
             return players >= 4 ? 30f : players == 3 ? 45f : 60f;
         }
 
@@ -753,6 +828,7 @@ namespace DrawBody.Prototype
         private float amplitude;
         private float speed;
         private float phase;
+        private bool usesExternalClock;
 
         public void Configure(float center, float range, float cycles)
         {
@@ -764,7 +840,18 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            transform.rotation = Quaternion.Euler(0f, 0f, centerAngle + Mathf.Sin(Time.time * speed + phase) * amplitude);
+            if (!usesExternalClock) ApplyClock(Time.time);
+        }
+
+        public void ApplyExternalClock(float clock)
+        {
+            usesExternalClock = true;
+            ApplyClock(clock);
+        }
+
+        private void ApplyClock(float clock)
+        {
+            transform.rotation = Quaternion.Euler(0f, 0f, centerAngle + Mathf.Sin(clock * speed + phase) * amplitude);
         }
     }
 }

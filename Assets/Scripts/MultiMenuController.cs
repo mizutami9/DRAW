@@ -25,6 +25,16 @@ namespace DrawBody.Prototype
         private Text randomReadyLabel;
         private Text randomSearchingLabel;
         private Text randomSearchingDotsLabel;
+        private Text lobbySummaryText;
+        private Text lobbyPlayersText;
+        private Text lobbyRosterHeaderText;
+        private readonly Text[] lobbyRosterRows = new Text[4];
+        private readonly Text[] lobbyRosterSlots = new Text[4];
+        private readonly Text[] lobbyRosterNames = new Text[4];
+        private readonly Text[] lobbyRosterYouBadges = new Text[4];
+        private readonly Text[] lobbyRosterHostBadges = new Text[4];
+        private readonly Text[] lobbyRosterStatuses = new Text[4];
+        private Text lobbyRoomIdText;
         private GameObject leaveConfirmPanel;
         private Text createRoomMaxPlayersText;
         private Text createRoomVisibilityText;
@@ -81,6 +91,7 @@ namespace DrawBody.Prototype
 
         private void OnDisable()
         {
+            stageManager?.SetTitleTextInputActive(false);
             if (onlineManager != null)
             {
                 onlineManager.StateChanged -= RefreshOnlineText;
@@ -89,6 +100,11 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
+            bool typingLobbyId = joinRoomScreen != null
+                && joinRoomScreen.activeInHierarchy
+                && joinAddressInput != null
+                && joinAddressInput.isFocused;
+            stageManager?.SetTitleTextInputActive(typingLobbyId);
             UpdateLobbyNotice();
 
             if (randomScreen == null || !randomScreen.activeInHierarchy || randomStatusText == null)
@@ -109,6 +125,16 @@ namespace DrawBody.Prototype
 
         public void ShowChoice()
         {
+            bool cancellingRandomSearch = randomScreen != null && randomScreen.activeInHierarchy
+                && onlineManager != null
+                && (onlineManager.State == OnlineConnectionState.Matching
+                    || onlineManager.CurrentLobby != null
+                    && onlineManager.CurrentLobby.Mode == OnlineLobbyMode.Random);
+            if (cancellingRandomSearch)
+            {
+                onlineManager.LeaveLobby();
+                randomStartRequested = false;
+            }
             ShowOnly(choiceScreen);
         }
 
@@ -451,11 +477,178 @@ namespace DrawBody.Prototype
                 TryAutoStartRandomMatch(state, lobby);
             }
 
-            if (lobbyScreen != null && lobbyScreen.activeInHierarchy && lobbyStatusText != null)
+            if (lobbyScreen != null && lobbyScreen.activeInHierarchy)
             {
                 OnlineBackendMode mode = onlineManager != null ? onlineManager.EffectiveBackendMode : OnlineBackendMode.Fake;
-                lobbyStatusText.text = FormatLobbyStatus(lobby, message, onlineManager != null ? onlineManager.LocalPlayerId : string.Empty, mode);
+                ResolveLobbyRosterTexts();
+                string localPlayerId = onlineManager != null ? onlineManager.LocalPlayerId : string.Empty;
+                if (lobbyRosterHeaderText != null)
+                {
+                    RefreshLobbyRoster(lobby, localPlayerId);
+                    if (lobbyStatusText != null)
+                    {
+                        lobbyStatusText.gameObject.SetActive(false);
+                    }
+                }
+                else if (lobbyStatusText != null)
+                {
+                    lobbyStatusText.gameObject.SetActive(true);
+                    lobbyStatusText.text = FormatLobbyStatus(lobby, message, localPlayerId, mode);
+                }
                 SetLobbyButtonState(lobby != null);
+            }
+        }
+
+        private void ResolveLobbyRosterTexts()
+        {
+            if (lobbyRosterHeaderText == null)
+            {
+                GameObject header = GameObject.Find("MultiLobbyRosterHeader");
+                if (header != null)
+                {
+                    lobbyRosterHeaderText = header.GetComponentInChildren<Text>(true);
+                }
+            }
+
+            for (int i = 0; i < lobbyRosterRows.Length; i++)
+            {
+                if (lobbyRosterRows[i] != null)
+                {
+                    continue;
+                }
+                GameObject row = GameObject.Find("MultiLobbyPlayerRow" + i);
+                if (row != null)
+                {
+                    lobbyRosterRows[i] = row.GetComponentInChildren<Text>(true);
+                    lobbyRosterSlots[i] = ResolveRosterCellText(row.transform, "Slot");
+                    lobbyRosterNames[i] = ResolveRosterCellText(row.transform, "Name");
+                    lobbyRosterYouBadges[i] = ResolveRosterCellText(row.transform, "You");
+                    lobbyRosterHostBadges[i] = ResolveRosterCellText(row.transform, "Host");
+                    lobbyRosterStatuses[i] = ResolveRosterCellText(row.transform, "Status");
+                }
+            }
+
+            if (lobbyRoomIdText == null)
+            {
+                GameObject roomId = GameObject.Find("MultiLobbyRoomIdText");
+                if (roomId != null)
+                {
+                    lobbyRoomIdText = roomId.GetComponent<Text>();
+                }
+            }
+        }
+
+        private static Text ResolveRosterCellText(Transform row, string name)
+        {
+            Transform cell = row != null ? row.Find(name) : null;
+            if (cell == null)
+            {
+                return null;
+            }
+            Text direct = cell.GetComponent<Text>();
+            return direct != null ? direct : cell.GetComponentInChildren<Text>(true);
+        }
+
+        private void RefreshLobbyRoster(OnlineLobbyInfo lobby, string localPlayerId)
+        {
+            int playerCount = lobby != null && lobby.Players != null ? lobby.Players.Length : 0;
+            int maxPlayers = lobby != null ? lobby.MaxPlayers : 4;
+            lobbyRosterHeaderText.text = lobby == null
+                ? LocalizationManager.T("multi_connecting")
+                : $"{LocalizationManager.T("multi_participants")}  {playerCount} / {maxPlayers}";
+
+            if (lobbyRoomIdText != null)
+            {
+                string roomId = lobby == null
+                    ? LocalizationManager.T("multi_connecting")
+                    : onlineManager == null || onlineManager.EffectiveBackendMode == OnlineBackendMode.Fake
+                        ? LocalizationManager.T("multi_local_test_no_invite")
+                        : !string.IsNullOrEmpty(lobby.RoomCode)
+                            ? lobby.RoomCode
+                            : ShortId(lobby.LobbyId);
+                lobbyRoomIdText.text = LocalizationManager.T("multi_room_id") + ":  " + roomId;
+            }
+
+            for (int i = 0; i < lobbyRosterRows.Length; i++)
+            {
+                Text row = lobbyRosterRows[i];
+                if (row == null)
+                {
+                    continue;
+                }
+
+                OnlinePlayerInfo player = lobby != null && lobby.Players != null && i < lobby.Players.Length
+                    ? lobby.Players[i]
+                    : null;
+                row.transform.parent.gameObject.SetActive(player != null);
+                if (player == null)
+                {
+                    row.text = string.Empty;
+                    continue;
+                }
+
+                int playerSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, player.PlayerId);
+                Color playerColor = PlayerColorPalette.GetColor(Mathf.Max(0, playerSlot));
+                Text slotText = lobbyRosterSlots[i];
+                Text nameText = lobbyRosterNames[i];
+                Text youText = lobbyRosterYouBadges[i];
+                Text hostText = lobbyRosterHostBadges[i];
+                Text statusText = lobbyRosterStatuses[i];
+                if (slotText != null)
+                {
+                    slotText.text = $"P{Mathf.Max(0, playerSlot) + 1}";
+                    slotText.color = playerColor;
+                }
+                if (nameText != null)
+                {
+                    nameText.text = player.DisplayName;
+                    nameText.color = Color.Lerp(playerColor, Color.black, 0.18f);
+                }
+                if (youText != null)
+                {
+                    bool isLocal = player.PlayerId == localPlayerId;
+                    youText.transform.parent.gameObject.SetActive(isLocal);
+                    youText.text = LocalizationManager.T("multi_you_badge");
+                }
+                if (hostText != null)
+                {
+                    hostText.transform.parent.gameObject.SetActive(player.IsHost);
+                    hostText.text = LocalizationManager.T("multi_host");
+                }
+                if (statusText != null)
+                {
+                    statusText.text = player.IsReady
+                        ? LocalizationManager.T("multi_ready")
+                        : LocalizationManager.T("multi_wait");
+                    Image statusImage = statusText.transform.parent.GetComponent<Image>();
+                    if (statusImage != null)
+                    {
+                        statusImage.color = player.IsReady
+                            ? new Color(0.45f, 0.88f, 0.42f, 1f)
+                            : new Color(0.86f, 0.82f, 0.72f, 1f);
+                    }
+                }
+            }
+        }
+
+        private void ResolveLobbyInfoTexts()
+        {
+            if (lobbySummaryText == null)
+            {
+                GameObject summary = GameObject.Find("MultiLobbySummaryText");
+                if (summary != null)
+                {
+                    lobbySummaryText = summary.GetComponent<Text>();
+                }
+            }
+
+            if (lobbyPlayersText == null)
+            {
+                GameObject players = GameObject.Find("MultiLobbyPlayersText");
+                if (players != null)
+                {
+                    lobbyPlayersText = players.GetComponent<Text>();
+                }
             }
         }
 
@@ -466,14 +659,16 @@ namespace DrawBody.Prototype
             if (createRoomMaxPlayersText != null)
             {
                 createRoomMaxPlayersText.supportRichText = true;
-                createRoomMaxPlayersText.text = $"<color=#1F63D8><b>{createRoomMaxPlayers}</b></color>";
+                createRoomMaxPlayersText.text = LocalizationManager.T("multi_max_players") +
+                    $":  <color=#1F63D8><b>{createRoomMaxPlayers}</b></color>";
             }
 
             if (createRoomVisibilityText != null)
             {
                 string visibilityValue = createRoomPrivate ? LocalizationManager.T("multi_private") : LocalizationManager.T("multi_public");
                 createRoomVisibilityText.supportRichText = true;
-                createRoomVisibilityText.text = $"<color=#0E7A2A><b>{visibilityValue}</b></color>";
+                createRoomVisibilityText.text = LocalizationManager.T("multi_visibility") +
+                    $":  <color=#0E7A2A><b>{visibilityValue}</b></color>";
             }
 
             if (createRoomStatusText == null || createRoomMaxPlayersText != null)
@@ -533,7 +728,13 @@ namespace DrawBody.Prototype
 
             if (copyLobbyIdButton != null)
             {
-                copyLobbyIdButton.interactable = hasLobby;
+                bool hasShareableCode = hasLobby
+                    && onlineManager != null
+                    && onlineManager.EffectiveBackendMode != OnlineBackendMode.Fake
+                    && lobby != null
+                    && (!string.IsNullOrEmpty(lobby.RoomCode) || !string.IsNullOrEmpty(lobby.LobbyId));
+                copyLobbyIdButton.gameObject.SetActive(true);
+                copyLobbyIdButton.interactable = hasShareableCode;
             }
         }
 
@@ -623,7 +824,8 @@ namespace DrawBody.Prototype
 
                 string ready = player.IsReady ? LocalizationManager.T("multi_ready") : LocalizationManager.T("multi_wait");
                 string host = player.IsHost ? " " + LocalizationManager.T("multi_host") : string.Empty;
-                string playerLabel = player.PlayerId == localPlayerId ? "P1" : $"P{i + 1}";
+                int playerSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, player.PlayerId);
+                string playerLabel = $"P{Mathf.Max(0, playerSlot) + 1}";
                 text += $"\n{playerLabel}  {player.DisplayName}  {ready}{host}";
             }
 
@@ -633,6 +835,49 @@ namespace DrawBody.Prototype
             }
 
             return text;
+        }
+
+        private static string FormatLobbySummary(OnlineLobbyInfo lobby, OnlineBackendMode mode)
+        {
+            if (lobby == null)
+            {
+                return LocalizationManager.T("multi_connecting");
+            }
+
+            string displayId = mode == OnlineBackendMode.Fake
+                ? LocalizationManager.T("multi_offline_lobby_id")
+                : !string.IsNullOrEmpty(lobby.RoomCode) ? lobby.RoomCode : ShortId(lobby.LobbyId);
+            int playerCount = lobby.Players != null ? lobby.Players.Length : 0;
+            return $"{LocalizationManager.T("multi_room_code_label")}: {displayId}\n" +
+                $"{LocalizationManager.T("multi_players")} {playerCount} / {lobby.MaxPlayers}";
+        }
+
+        private static string FormatLobbyPlayers(OnlineLobbyInfo lobby, string localPlayerId)
+        {
+            if (lobby == null || lobby.Players == null || lobby.Players.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            System.Text.StringBuilder text = new System.Text.StringBuilder();
+            for (int i = 0; i < lobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo player = lobby.Players[i];
+                if (player == null)
+                {
+                    continue;
+                }
+
+                if (text.Length > 0)
+                {
+                    text.Append('\n');
+                }
+                string ready = player.IsReady ? LocalizationManager.T("multi_ready") : LocalizationManager.T("multi_wait");
+                string host = player.IsHost ? " " + LocalizationManager.T("multi_host") : string.Empty;
+                int playerSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, player.PlayerId);
+                text.Append($"P{Mathf.Max(0, playerSlot) + 1}  {player.DisplayName}  {ready}{host}");
+            }
+            return text.ToString();
         }
 
         private static bool ShouldShowLobbyMessage(string message)
@@ -668,7 +913,8 @@ namespace DrawBody.Prototype
                 {
                     OnlinePlayerInfo player = players[i];
                     bool local = player.PlayerId == localPlayerId;
-                    string icon = local ? "P1" : $"P{i + 1}";
+                    int playerSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, player.PlayerId);
+                    string icon = $"P{Mathf.Max(0, playerSlot) + 1}";
                     string ready = player.IsReady ? LocalizationManager.T("multi_ready") : LocalizationManager.T("multi_wait");
                     text += $"{icon}  {player.DisplayName}    {ready}\n";
                 }

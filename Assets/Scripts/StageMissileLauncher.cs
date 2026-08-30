@@ -88,6 +88,13 @@ namespace DrawBody.Prototype
             linkedCooldownSeconds = Mathf.Max(0f, seconds);
         }
 
+        public bool TryGetLaunchPrediction(out Vector2 position, out Vector2 velocity)
+        {
+            position = muzzle != null ? (Vector2)muzzle.position : (Vector2)transform.position;
+            velocity = (Vector2)transform.right.normalized * missileSpeed;
+            return muzzle != null && missileSpeed > 0f;
+        }
+
         private void FireMissile()
         {
             if (muzzle == null)

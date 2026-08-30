@@ -19,9 +19,10 @@ namespace DrawBody.Prototype
         private const float RightArenaX = 24.4f;
         private const float FloorY = -2.45f;
         private const float CeilingY = 11.2f;
+        private const float HealthBarWidth = 15.5f;
 
         private enum Phase { Waiting, Intro, Fighting, Special, Defeated, Failed }
-        private enum AttackType { Bombs, Beam, Enemies, SpecialOrbs, Bomber, RemoveBomber }
+        private enum AttackType { Bombs, Beam, Enemies, SpecialOrbs, Bomber, RemoveBomber, EnemyWarning }
 
         [System.Serializable]
         private sealed class BossState
@@ -65,6 +66,7 @@ namespace DrawBody.Prototype
         private SpriteRenderer leftEye;
         private SpriteRenderer rightEye;
         private SpriteRenderer chargeAura;
+        private bool usesStaticBossArtwork;
         private LineRenderer mouthLine;
         private LineRenderer leftBrow;
         private LineRenderer rightBrow;
@@ -100,9 +102,16 @@ namespace DrawBody.Prototype
         private readonly List<GameObject> chargePlatforms = new List<GameObject>();
         private GameObject waitingRoomLeftGate;
         private GameObject waitingRoomRightGate;
+        private readonly List<GameObject> waitingRoomGuides = new List<GameObject>();
         private readonly HashSet<string> eliminatedIds = new HashSet<string>();
         private readonly HashSet<string> participantIds = new HashSet<string>();
         private readonly List<PlayerController2D> hiddenPlayers = new List<PlayerController2D>();
+        private Camera gameCamera;
+        private CameraFollow2D cameraFollow;
+        private Vector3 previousCameraPosition;
+        private float previousCameraSize;
+        private bool previousCameraFollowEnabled;
+        private bool cameraLocked;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -124,6 +133,7 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            RestoreCamera();
             RestorePlayers();
         }
 
@@ -137,9 +147,12 @@ namespace DrawBody.Prototype
             }
             BuildBoss();
             BuildMonitor();
+            LockCameraToArena();
             BuildWaitingRoomGates();
+            BuildWaitingRoomGuide();
             CaptureParticipants();
             RefreshMonitor();
+            UpdateWaitingStatus();
         }
 
         private void Update()
@@ -159,6 +172,7 @@ namespace DrawBody.Prototype
             }
             if (phase == Phase.Waiting)
             {
+                UpdateWaitingStatus();
                 if (AreAllPlayersInWaitingRoom()) StartCoroutine(BeginBattle());
                 return;
             }
@@ -308,6 +322,7 @@ namespace DrawBody.Prototype
         {
             phase = Phase.Intro;
             SetWaitingRoomGateState(true);
+            RemoveWaitingRoomGuide();
             invulnerable = true;
             SetBossExpression(1);
             RefreshMonitor();
@@ -443,14 +458,27 @@ namespace DrawBody.Prototype
             int count = health <= 40 ? 3 : 2;
             for (int i = 0; i < count; i++)
             {
-                SpawnAttack(new AttackState
+                AttackState enemy = new AttackState
                 {
                     Type = (int)AttackType.Enemies,
                     Origin = new Vector2(RightArenaX - 1.6f - i * 0.8f, FloorY + 1.25f),
                     Direction = Vector2.left,
                     Variant = (attackIndex + i) % 3
+                };
+                SpawnAttack(new AttackState
+                {
+                    Type = (int)AttackType.EnemyWarning,
+                    Origin = enemy.Origin,
+                    Variant = enemy.Variant
                 });
+                StartCoroutine(SpawnEnemyAfterWarning(enemy, 0.9f));
             }
+        }
+
+        private IEnumerator SpawnEnemyAfterWarning(AttackState enemy, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            if (phase == Phase.Fighting && !failing && health > 0) SpawnAttack(enemy);
         }
 
         private IEnumerator ChargeAcrossArena()
@@ -545,7 +573,7 @@ namespace DrawBody.Prototype
                 StageObjectType.JumpPad, new Vector2(10.7f, FloorY + 0.55f));
             jumpData.objectId = "4-3_charge_escape_jump";
             jumpData.size = Vector2.one;
-            jumpData.actionStrength = 29f;
+            jumpData.actionStrength = 58f;
             GameObject jumpPad = objectFactory?.Create(jumpData, transform);
             if (jumpPad != null)
             {
@@ -691,6 +719,29 @@ namespace DrawBody.Prototype
                 bombers.Remove(attack.TargetId);
                 if (bomber != null) bomber.ApplyDefeat();
             }
+            else if (type == AttackType.EnemyWarning)
+            {
+                StartCoroutine(ShowEnemySpawnWarning(attack.Origin, 0.9f));
+            }
+        }
+
+        private IEnumerator ShowEnemySpawnWarning(Vector2 position, float duration)
+        {
+            GameObject warning = StageGun.CreateSprite(transform, "Enemy Spawn Danger", position,
+                new Vector2(2.1f, 0.42f), new Color(1f, 0.08f, 0.05f, 0.72f), 52);
+            if (warning == null) yield break;
+            SpriteRenderer renderer = warning.GetComponent<SpriteRenderer>();
+            float elapsed = 0f;
+            while (warning != null && elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float pulse = 0.72f + Mathf.Abs(Mathf.Sin(elapsed * 18f)) * 0.5f;
+                warning.transform.localScale = new Vector3(pulse, pulse, 1f);
+                if (renderer != null)
+                    renderer.color = new Color(1f, 0.06f, 0.04f, Mathf.Lerp(0.35f, 0.9f, Mathf.Abs(Mathf.Sin(elapsed * 18f))));
+                yield return null;
+            }
+            if (warning != null) Destroy(warning);
         }
 
         private IEnumerator DefeatBoss()
@@ -763,15 +814,44 @@ namespace DrawBody.Prototype
         {
             if (participantIds.Count == 0) CaptureParticipants();
             if (participantIds.Count == 0) return false;
+            int activeCount = 0;
             foreach (string id in participantIds)
             {
                 if (eliminatedIds.Contains(id)) continue;
                 PlayerController2D player = ResolvePlayer(id);
-                if (player == null || !player.gameObject.activeInHierarchy) return false;
+                if (player == null || !player.gameObject.activeInHierarchy) continue;
+                activeCount++;
                 float x = player.transform.position.x;
                 if (x <= WaitingRoomLeftX + 0.45f || x >= WaitingRoomRightX - 0.45f) return false;
             }
-            return true;
+            return activeCount > 0;
+        }
+
+        private int CountPlayersInWaitingRoom(out int totalActive)
+        {
+            if (participantIds.Count == 0) CaptureParticipants();
+            int inside = 0;
+            totalActive = 0;
+            foreach (string id in participantIds)
+            {
+                if (eliminatedIds.Contains(id)) continue;
+                PlayerController2D player = ResolvePlayer(id);
+                if (player == null || !player.gameObject.activeInHierarchy) continue;
+                totalActive++;
+                float x = player.transform.position.x;
+                if (x > WaitingRoomLeftX + 0.45f && x < WaitingRoomRightX - 0.45f) inside++;
+            }
+            return inside;
+        }
+
+        private void UpdateWaitingStatus()
+        {
+            if (monitorStatus == null || phase != Phase.Waiting) return;
+            int inside = CountPlayersInWaitingRoom(out int total);
+            if (total <= 1)
+                monitorStatus.text = LocalizationManager.T("boss_enter_room");
+            else
+                monitorStatus.text = LocalizationManager.Format("boss_waiting_count", inside, total);
         }
 
         private PlayerController2D FindNearestPlayer()
@@ -867,6 +947,14 @@ namespace DrawBody.Prototype
             {
                 bossCore = messyBoss;
                 bossHead = null;
+                usesStaticBossArtwork = true;
+                leftEye.enabled = false;
+                rightEye.enabled = false;
+                mouthLine.enabled = false;
+                leftBrow.enabled = false;
+                rightBrow.enabled = false;
+                leftEyeX.enabled = false;
+                rightEyeX.enabled = false;
             }
             chargeAura = StageGun.CreateSprite(visual.transform, "Charge Warning Aura", new Vector2(0f, 0.45f),
                 new Vector2(5.4f, 6.2f), new Color(1f, 0.08f, 0.06f, 0.18f), 32).GetComponent<SpriteRenderer>();
@@ -959,11 +1047,7 @@ namespace DrawBody.Prototype
         // 0: normal, 1: charge/angry, 2: special/grin, 3: defeated.
         private void SetBossExpression(int expression)
         {
-            if (leftEye == null || rightEye == null) return;
             bool defeated = expression == 3;
-            leftEye.enabled = rightEye.enabled = !defeated;
-            if (leftEyeX != null) leftEyeX.enabled = defeated;
-            if (rightEyeX != null) rightEyeX.enabled = defeated;
             if (chargeAura != null) chargeAura.enabled = expression == 1;
 
             Color normalBody = new Color(0.46f, 0.25f, 0.56f, 0.96f);
@@ -983,6 +1067,26 @@ namespace DrawBody.Prototype
                         : (i % 2 == 0 ? new Color(0.24f, 0.06f, 0.34f, 0.64f) : new Color(0.72f, 0.46f, 0.78f, 0.48f));
                 stroke.startColor = stroke.endColor = strokeColor;
             }
+
+            // The authored crayon image already contains its own face. Do not
+            // draw code-generated eyes, brows or mouths over that artwork;
+            // attacks are communicated by tint, shake, squash and aura only.
+            if (usesStaticBossArtwork)
+            {
+                if (leftEye != null) leftEye.enabled = false;
+                if (rightEye != null) rightEye.enabled = false;
+                if (mouthLine != null) mouthLine.enabled = false;
+                if (leftBrow != null) leftBrow.enabled = false;
+                if (rightBrow != null) rightBrow.enabled = false;
+                if (leftEyeX != null) leftEyeX.enabled = false;
+                if (rightEyeX != null) rightEyeX.enabled = false;
+                return;
+            }
+
+            if (leftEye == null || rightEye == null) return;
+            leftEye.enabled = rightEye.enabled = !defeated;
+            if (leftEyeX != null) leftEyeX.enabled = defeated;
+            if (rightEyeX != null) rightEyeX.enabled = defeated;
 
             Color eyeColor = expression == 1 ? new Color(1f, 0.12f, 0.08f, 1f)
                 : expression == 2 ? new Color(0.35f, 1f, 0.9f, 1f) : new Color(1f, 0.87f, 0.18f, 1f);
@@ -1024,14 +1128,124 @@ namespace DrawBody.Prototype
         {
             GameObject board = new GameObject("4-3 Boss HP Monitor");
             board.transform.SetParent(transform, false);
-            board.transform.position = new Vector3(10.8f, -5.15f, 0f);
-            DoodleMonitorVisuals.Build(board.transform, new Vector2(13.2f, 3.1f), 3);
-            monitorTitle = CreateText(board.transform, new Vector3(-5.65f, 0.84f, -0.04f), 0.072f, new Color(0.08f, 0.25f, 0.48f, 1f), 9, TextAnchor.MiddleLeft);
-            monitorHealth = CreateText(board.transform, new Vector3(5.65f, 0.84f, -0.04f), 0.072f, new Color(0.78f, 0.39f, 0.06f, 1f), 9, TextAnchor.MiddleRight);
-            StageGun.CreateSprite(board.transform, "Health Track", new Vector2(0f, 0f), new Vector2(11.2f, 0.52f), new Color(0.35f, 0.39f, 0.4f, 0.58f), 8);
-            GameObject fill = StageGun.CreateSprite(board.transform, "Health Fill", new Vector2(-5.6f, 0f), new Vector2(11.2f, 0.38f), new Color(0.25f, 0.9f, 0.38f, 1f), 9);
+            board.transform.position = new Vector3(11.5f, 9.75f, 0f);
+            DoodleMonitorVisuals.Build(board.transform, new Vector2(18f, 2.45f), 3);
+            monitorTitle = CreateText(board.transform, new Vector3(-7.75f, 0.45f, -0.04f), 0.064f,
+                new Color(0.08f, 0.25f, 0.48f, 1f), 9, TextAnchor.MiddleLeft);
+            monitorHealth = CreateText(board.transform, new Vector3(7.75f, 0.45f, -0.04f), 0.064f,
+                new Color(0.78f, 0.39f, 0.06f, 1f), 9, TextAnchor.MiddleRight);
+            monitorStatus = null;
+            StageGun.CreateSprite(board.transform, "Health Track", new Vector2(0f, -0.5f),
+                new Vector2(HealthBarWidth, 0.52f), new Color(0.35f, 0.39f, 0.4f, 0.58f), 8);
+            GameObject fill = StageGun.CreateSprite(board.transform, "Health Fill",
+                new Vector2(-HealthBarWidth * 0.5f, -0.5f), new Vector2(HealthBarWidth, 0.38f),
+                new Color(0.25f, 0.9f, 0.38f, 1f), 9);
             healthFill = fill.transform;
             healthFillRenderer = fill.GetComponent<SpriteRenderer>();
+        }
+
+        private void LockCameraToArena()
+        {
+            gameCamera = Camera.main;
+            if (gameCamera == null) return;
+            cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
+            previousCameraPosition = gameCamera.transform.position;
+            previousCameraSize = gameCamera.orthographicSize;
+            previousCameraFollowEnabled = cameraFollow != null && cameraFollow.enabled;
+            if (cameraFollow != null) cameraFollow.enabled = false;
+            gameCamera.transform.position = new Vector3(8.2f, 4.15f, previousCameraPosition.z);
+            gameCamera.orthographicSize = Mathf.Max(9.2f, 17.5f / Mathf.Max(0.2f, gameCamera.aspect));
+            cameraLocked = true;
+        }
+
+        private void RestoreCamera()
+        {
+            if (!cameraLocked || gameCamera == null) return;
+            gameCamera.transform.position = previousCameraPosition;
+            gameCamera.orthographicSize = previousCameraSize;
+            if (cameraFollow != null) cameraFollow.enabled = previousCameraFollowEnabled;
+            cameraLocked = false;
+        }
+
+        private void BuildWaitingRoomGuide()
+        {
+            // Dashed vertical lines at the waiting room boundaries so players
+            // can see the area where everyone must gather.
+            Color guideColor = new Color(1f, 0.72f, 0.18f, 0.55f);
+            float dashWidth = 0.12f;
+            float dashLength = 0.65f;
+            float gapLength = 0.45f;
+            float bottomY = FloorY;
+            float topY = CeilingY;
+
+            // Left boundary guide (at WaitingRoomLeftX)
+            for (float y = bottomY; y < topY; y += dashLength + gapLength)
+            {
+                float endY = Mathf.Min(y + dashLength, topY);
+                GameObject dash = new GameObject("WR Guide L");
+                dash.transform.SetParent(transform, false);
+                LineRenderer line = dash.AddComponent<LineRenderer>();
+                line.useWorldSpace = true;
+                line.positionCount = 2;
+                line.SetPosition(0, new Vector3(WaitingRoomLeftX, y, 0f));
+                line.SetPosition(1, new Vector3(WaitingRoomLeftX, endY, 0f));
+                line.startWidth = dashWidth;
+                line.endWidth = dashWidth;
+                line.numCapVertices = 3;
+                line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+                line.startColor = line.endColor = guideColor;
+                line.sortingOrder = 5;
+                waitingRoomGuides.Add(dash);
+            }
+
+            // Right boundary guide (at WaitingRoomRightX = room_divider position)
+            for (float y = bottomY; y < topY; y += dashLength + gapLength)
+            {
+                float endY = Mathf.Min(y + dashLength, topY);
+                GameObject dash = new GameObject("WR Guide R");
+                dash.transform.SetParent(transform, false);
+                LineRenderer line = dash.AddComponent<LineRenderer>();
+                line.useWorldSpace = true;
+                line.positionCount = 2;
+                line.SetPosition(0, new Vector3(WaitingRoomRightX, y, 0f));
+                line.SetPosition(1, new Vector3(WaitingRoomRightX, endY, 0f));
+                line.startWidth = dashWidth;
+                line.endWidth = dashWidth;
+                line.numCapVertices = 3;
+                line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+                line.startColor = line.endColor = guideColor;
+                line.sortingOrder = 5;
+                waitingRoomGuides.Add(dash);
+            }
+
+            // Arrow marker on the floor pointing into the waiting room
+            GameObject arrow = new GameObject("WR Arrow");
+            arrow.transform.SetParent(transform, false);
+            LineRenderer arrowLine = arrow.AddComponent<LineRenderer>();
+            arrowLine.useWorldSpace = true;
+            arrowLine.positionCount = 5;
+            float arrowX = (WaitingRoomLeftX + WaitingRoomRightX) * 0.5f;
+            float arrowY = FloorY + 0.55f;
+            arrowLine.SetPosition(0, new Vector3(arrowX - 1.5f, arrowY, 0f));
+            arrowLine.SetPosition(1, new Vector3(arrowX + 0.5f, arrowY, 0f));
+            arrowLine.SetPosition(2, new Vector3(arrowX, arrowY + 0.45f, 0f));
+            arrowLine.SetPosition(3, new Vector3(arrowX + 0.5f, arrowY, 0f));
+            arrowLine.SetPosition(4, new Vector3(arrowX, arrowY - 0.45f, 0f));
+            arrowLine.startWidth = 0.14f;
+            arrowLine.endWidth = 0.14f;
+            arrowLine.numCapVertices = 3;
+            arrowLine.numCornerVertices = 3;
+            arrowLine.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+            arrowLine.startColor = arrowLine.endColor = new Color(1f, 0.85f, 0.22f, 0.72f);
+            arrowLine.sortingOrder = 5;
+            waitingRoomGuides.Add(arrow);
+        }
+
+        private void RemoveWaitingRoomGuide()
+        {
+            for (int i = waitingRoomGuides.Count - 1; i >= 0; i--)
+                if (waitingRoomGuides[i] != null) Destroy(waitingRoomGuides[i]);
+            waitingRoomGuides.Clear();
         }
 
         private void RefreshMonitor()
@@ -1043,10 +1257,10 @@ namespace DrawBody.Prototype
             if (healthFill != null)
             {
                 Vector3 scale = healthFill.localScale;
-                scale.x = 11.2f * ratio;
+                scale.x = HealthBarWidth * ratio;
                 healthFill.localScale = scale;
                 Vector3 position = healthFill.localPosition;
-                position.x = -5.6f + scale.x * 0.5f;
+                position.x = -HealthBarWidth * 0.5f + scale.x * 0.5f;
                 healthFill.localPosition = position;
             }
             if (healthFillRenderer != null)
@@ -1114,6 +1328,8 @@ namespace DrawBody.Prototype
                 Phase previousPhase = phase;
                 phase = (Phase)state.Phase;
                 SetWaitingRoomGateState(phase != Phase.Waiting);
+                if (previousPhase == Phase.Waiting && phase != Phase.Waiting)
+                    RemoveWaitingRoomGuide();
                 facing = state.Facing;
                 invulnerable = state.Invulnerable;
                 bool wasCharging = charging;

@@ -312,6 +312,13 @@ namespace DrawBody.Prototype
             CreateSolid(arena.transform, "Inner Top Player Floor", StageObjectType.OneWayPlatform,
                 new Vector2(0f, InnerHalfHeight), new Vector2(InnerHalfWidth * 2f, 0.45f), true);
 
+            CreateJumpPad(arena.transform, "Left High Jump", new Vector2(-14.15f, -8.25f));
+            CreateJumpPad(arena.transform, "Right High Jump", new Vector2(14.15f, -8.25f));
+            CreateSolid(arena.transform, "Left Upper Landing", StageObjectType.OneWayPlatform,
+                new Vector2(-13.8f, 5.7f), new Vector2(3.1f, 0.45f), true);
+            CreateSolid(arena.transform, "Right Upper Landing", StageObjectType.OneWayPlatform,
+                new Vector2(13.8f, 5.7f), new Vector2(3.1f, 0.45f), true);
+
             CreateLetterBlocks(arena.transform);
             CreateStatusBoard(arena.transform);
         }
@@ -327,6 +334,17 @@ namespace DrawBody.Prototype
             GameObject created = factory.Create(data, parent);
             if (ballPasses && created != null) StageRicochetBallPassSurface.Mark(created);
             return created;
+        }
+
+        private void CreateJumpPad(Transform parent, string id, Vector2 position)
+        {
+            if (factory == null) return;
+            StageObjectData data = StageObjectFactory.CreateDefaultData(StageObjectType.JumpPad, position);
+            data.objectId = "ricochet_" + id.Replace(' ', '_').ToLowerInvariant();
+            data.size = new Vector2(1.55f, 0.68f);
+            data.actionStrength = 82f;
+            GameObject created = factory.Create(data, parent);
+            if (created != null) StageRicochetBallPassSurface.Mark(created);
         }
 
         private void RegisterExistingBallPassSurface(string objectId)
@@ -458,6 +476,7 @@ namespace DrawBody.Prototype
             GameObject board = new GameObject("8-2 Status Board");
             board.transform.SetParent(parent, false);
             board.transform.position = new Vector3(0f, 10.15f, 0.2f);
+            DoodleMonitorVisuals.KeepBehindPlayers(board.transform);
             CreateRect(board.transform, new Vector2(19f, 1.85f), new Color(0.04f, 0.07f, 0.08f, 0.9f), 24);
             titleText = CreateText(board.transform, new Vector3(-5.8f, 0.35f, -0.02f), 0.08f, new Color(0.4f, 0.9f, 1f, 1f), 26);
             countText = CreateText(board.transform, new Vector3(5.8f, 0.35f, -0.03f), 0.08f, new Color(1f, 0.82f, 0.25f, 1f), 27);
@@ -562,7 +581,7 @@ namespace DrawBody.Prototype
         private void BroadcastState(bool force = false)
         {
             if (!IsOnline() || !HasAuthority() || !force && Time.unscaledTime < nextStateAt) return;
-            nextStateAt = Time.unscaledTime + 0.1f;
+            nextStateAt = Time.unscaledTime + 0.05f;
             Rigidbody2D ballBody = ball != null ? ball.Body : null;
             onlineManager.SendGimmickData(new OnlineGimmickData
             {
@@ -713,6 +732,8 @@ namespace DrawBody.Prototype
         private CircleCollider2D hitbox;
         private bool authoritative;
         private Vector2 replicaTarget;
+        private Vector2 replicaVelocity;
+        private float replicaReceivedAt;
         private Vector2 previousVelocity;
         private Vector2 preparedDirection = Vector2.up;
         private float cruiseSpeed = 3.2f;
@@ -837,6 +858,8 @@ namespace DrawBody.Prototype
         public void SetReplicaTarget(Vector2 position, Vector2 velocity)
         {
             replicaTarget = position;
+            replicaVelocity = velocity;
+            replicaReceivedAt = Time.unscaledTime;
             if (body != null) body.linearVelocity = velocity;
         }
 
@@ -845,7 +868,10 @@ namespace DrawBody.Prototype
             if (body == null) return;
             if (!authoritative)
             {
-                body.position = Vector2.Lerp(body.position, replicaTarget, 0.48f);
+                float age = Mathf.Clamp(Time.unscaledTime - replicaReceivedAt, 0f, 0.35f);
+                Vector2 predicted = replicaTarget + replicaVelocity * age;
+                float blend = 1f - Mathf.Exp(-24f * Time.fixedUnscaledDeltaTime);
+                body.position = Vector2.Lerp(body.position, predicted, blend);
                 return;
             }
             float speed = body.linearVelocity.magnitude;

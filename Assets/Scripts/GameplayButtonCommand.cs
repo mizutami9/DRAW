@@ -143,7 +143,12 @@ namespace DrawBody.Prototype
             }
 
             bool visible = !IsOnlineActive();
-            transform.localScale = visible ? initialScale : Vector3.zero;
+            CanvasGroup group = GetComponent<CanvasGroup>();
+            if (group == null) group = gameObject.AddComponent<CanvasGroup>();
+            group.alpha = visible ? 1f : 0f;
+            group.interactable = visible;
+            group.blocksRaycasts = visible;
+            transform.localScale = initialScale;
             if (button != null)
             {
                 button.interactable = visible;

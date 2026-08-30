@@ -29,6 +29,7 @@ namespace DrawBody.Prototype
         private const string KindPlacedEnemyDefeatState = "placed_enemy_defeat_state";
 
         [SerializeField] private OnlineManager onlineManager;
+        [SerializeField] private StageManager stageManager;
         [SerializeField] private float transformSendRate = 20f;
 
         private readonly Dictionary<string, SyncTransformEntry> transformEntries = new Dictionary<string, SyncTransformEntry>();
@@ -86,6 +87,7 @@ namespace DrawBody.Prototype
             public int BoxType;
             public Vector2 Position;
             public float Size;
+            public Vector2 Scale;
             public float Rotation;
             public float FuseSeconds;
             public Vector2 LaunchVelocity;
@@ -147,6 +149,7 @@ namespace DrawBody.Prototype
             {
                 onlineManager = FindFirstObjectByType<OnlineManager>();
             }
+            if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
 
             linkController = GetComponent<StageGimmickLinkController>();
             RefreshTrustedHostPlayerId();
@@ -236,8 +239,14 @@ namespace DrawBody.Prototype
                 ownersByObjectId.TryGetValue(pair.Key, out string ownerId);
                 bool remotelyOwned = !string.IsNullOrEmpty(ownerId)
                     && ownerId != onlineManager.LocalPlayerId;
-                bool networkDrivenPlatform = ShouldAskHost && entry != null && entry.IsHostDrivenPlatform;
-                if (entry == null || !entry.HasNetworkTarget || (!remotelyOwned && !networkDrivenPlatform))
+                // On a participant machine every unheld rigidbody is driven by
+                // the host. Letting the local physics simulation run between
+                // snapshots made balls, boxes and launchers visibly snap or
+                // occasionally settle in a different place from the host.
+                bool hostDrivenReplica = ShouldAskHost
+                    && entry != null
+                    && !locallyHeldObjectIds.Contains(pair.Key);
+                if (entry == null || !entry.HasNetworkTarget || (!remotelyOwned && !hostDrivenReplica))
                 {
                     continue;
                 }
@@ -333,16 +342,31 @@ namespace DrawBody.Prototype
             float fuseSeconds = 5f,
             Vector2 launchVelocity = default)
         {
+            return SpawnDropperBox(objectId, type, position, Vector2.one * size, rotation, fuseSeconds, launchVelocity);
+        }
+
+        public GameObject SpawnDropperBox(
+            string objectId,
+            StageObjectType type,
+            Vector2 position,
+            Vector2 scale,
+            float rotation = 0f,
+            float fuseSeconds = 5f,
+            Vector2 launchVelocity = default)
+        {
             if (string.IsNullOrEmpty(objectId) || (IsOnlineActive && !IsHost))
             {
                 return null;
             }
 
+            scale = new Vector2(Mathf.Clamp(scale.x, 0.5f, 3f), Mathf.Clamp(scale.y, 0.5f, 3f));
+
             DropperBoxSpawnState state = new DropperBoxSpawnState
             {
                 BoxType = (int)type,
                 Position = position,
-                Size = size,
+                Size = 1f,
+                Scale = scale,
                 Rotation = rotation,
                 FuseSeconds = Mathf.Clamp(fuseSeconds > 0f ? fuseSeconds : 5f, 1f, 15f),
                 LaunchVelocity = launchVelocity
@@ -524,6 +548,31 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void RegisterRuntimeObject(Transform target)
+        {
+            StageEditorObject marker = target != null ? target.GetComponentInParent<StageEditorObject>() : null;
+            if (marker == null || string.IsNullOrEmpty(marker.objectId)) return;
+            UnregisterRuntimeObject(marker.transform);
+            AddRigidbodiesForObject(marker);
+        }
+
+        public void UnregisterRuntimeObject(Transform target)
+        {
+            StageEditorObject marker = target != null ? target.GetComponentInParent<StageEditorObject>() : null;
+            if (marker == null || string.IsNullOrEmpty(marker.objectId)) return;
+            string prefix = marker.objectId + "/";
+            List<string> remove = new List<string>();
+            foreach (string id in transformEntries.Keys)
+                if (id.StartsWith(prefix, System.StringComparison.Ordinal)) remove.Add(id);
+            for (int i = 0; i < remove.Count; i++)
+            {
+                transformEntries.Remove(remove[i]);
+                ownersByObjectId.Remove(remove[i]);
+                locallyHeldObjectIds.Remove(remove[i]);
+                pendingLocalReleases.Remove(remove[i]);
+            }
+        }
+
         public void EndLocalObjectCarry(Transform target, Vector2 releaseVelocity)
         {
             if (!IsOnlineActive || !TryGetSyncId(target, out string objectId))
@@ -690,6 +739,11 @@ namespace DrawBody.Prototype
         private void ApplyNetworkGimmickData(OnlineGimmickData data)
         {
             if (data == null || string.IsNullOrEmpty(data.Kind) || string.IsNullOrEmpty(data.ObjectId))
+            {
+                return;
+            }
+
+            if (IsObjectFromDifferentStage(data.ObjectId))
             {
                 return;
             }
@@ -963,6 +1017,23 @@ namespace DrawBody.Prototype
             }
         }
 
+        private bool IsObjectFromDifferentStage(string objectId)
+        {
+            if (string.IsNullOrEmpty(objectId) || objectId == "stage_snapshot") return false;
+            if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
+            string currentStage = stageManager != null ? stageManager.CurrentStageId : null;
+            if (string.IsNullOrEmpty(currentStage)) return false;
+
+            int separator = objectId.IndexOf('_');
+            if (separator <= 0) return false;
+            string prefix = objectId.Substring(0, separator);
+            int dash = prefix.IndexOf('-');
+            if (dash <= 0 || dash >= prefix.Length - 1) return false;
+            if (!int.TryParse(prefix.Substring(0, dash), out _)
+                || !int.TryParse(prefix.Substring(dash + 1), out _)) return false;
+            return prefix != currentStage;
+        }
+
         private void GrantOwnership(string objectId, string ownerPlayerId)
         {
             if (string.IsNullOrEmpty(objectId) || string.IsNullOrEmpty(ownerPlayerId) || !transformEntries.ContainsKey(objectId))
@@ -1015,7 +1086,8 @@ namespace DrawBody.Prototype
                 }
             }
 
-            return closest <= 1.15f;
+            float allowedDistance = entry.Transform.GetComponentInParent<StageGun>() != null ? 1.75f : 1.15f;
+            return closest <= allowedDistance;
         }
 
         private void ReleaseOwnership(string objectId, OwnershipState release)
@@ -1222,8 +1294,13 @@ namespace DrawBody.Prototype
                 entry.SetNetworkTarget(state);
                 return;
             }
-            if (ShouldAskHost && entry.IsHostDrivenPlatform)
+            if (ShouldAskHost)
             {
+                // Host snapshots are authoritative for every object that is not
+                // currently controlled by this participant. Switch its body to
+                // a kinematic display proxy and interpolate instead of applying
+                // teleport corrections to a second local physics simulation.
+                entry.BeginRemoteOwnership();
                 entry.SetNetworkTarget(state);
                 return;
             }
@@ -1373,6 +1450,10 @@ namespace DrawBody.Prototype
             }
 
             spawned.transform.rotation = Quaternion.Euler(0f, 0f, state.Rotation);
+            Vector2 scale = state.Scale.x > 0f && state.Scale.y > 0f
+                ? state.Scale
+                : Vector2.one * Mathf.Max(0.5f, state.Size);
+            spawned.transform.localScale = new Vector3(scale.x, scale.y, 1f);
             Rigidbody2D spawnedBody = spawned.GetComponent<Rigidbody2D>();
             if (spawnedBody != null)
             {
@@ -1570,7 +1651,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            StageBomb[] bombs = Object.FindObjectsByType<StageBomb>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            StageBomb[] bombs = Object.FindObjectsByType<StageBomb>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             for (int i = 0; i < bombs.Length; i++)
             {
                 if (bombs[i] != null && bombs[i].ObjectId == objectId)
@@ -1849,12 +1931,21 @@ namespace DrawBody.Prototype
             private RigidbodyType2D bodyTypeBeforeRemoteOwnership;
             private float gravityBeforeRemoteOwnership;
             private bool freezeRotationBeforeRemoteOwnership;
+            private readonly Collider2D[] remoteWeaponColliders;
+            private readonly bool[] remoteWeaponColliderStates;
 
             public SyncTransformEntry(Transform transform, Rigidbody2D body, bool isHostDrivenPlatform)
             {
                 Transform = transform;
                 Body = body;
                 IsHostDrivenPlatform = isHostDrivenPlatform;
+                bool collisionlessWeapon = transform != null
+                    && (transform.GetComponentInParent<StageGun>() != null
+                        || transform.GetComponentInParent<StageBazooka>() != null);
+                remoteWeaponColliders = collisionlessWeapon
+                    ? transform.GetComponentsInChildren<Collider2D>(true)
+                    : new Collider2D[0];
+                remoteWeaponColliderStates = new bool[remoteWeaponColliders.Length];
             }
 
             public void SetNetworkTarget(OnlineTransformGimmickState state)
@@ -1882,6 +1973,15 @@ namespace DrawBody.Prototype
                 Body.gravityScale = 0f;
                 Body.linearVelocity = Vector2.zero;
                 Body.angularVelocity = 0f;
+                // The owning client disables a held weapon's colliders. Mirror
+                // that state on every replica; a kinematic bazooka collider can
+                // otherwise push the carrier chain or strike the jump pad first.
+                for (int i = 0; i < remoteWeaponColliders.Length; i++)
+                {
+                    Collider2D collider = remoteWeaponColliders[i];
+                    remoteWeaponColliderStates[i] = collider != null && collider.enabled;
+                    if (collider != null) collider.enabled = false;
+                }
             }
 
             public void EndRemoteOwnership(Vector2 releaseVelocity)
@@ -1897,6 +1997,9 @@ namespace DrawBody.Prototype
                     Body.bodyType = bodyTypeBeforeRemoteOwnership;
                     Body.gravityScale = gravityBeforeRemoteOwnership;
                     Body.freezeRotation = freezeRotationBeforeRemoteOwnership;
+                    for (int i = 0; i < remoteWeaponColliders.Length; i++)
+                        if (remoteWeaponColliders[i] != null)
+                            remoteWeaponColliders[i].enabled = remoteWeaponColliderStates[i];
                     remoteOwnershipActive = false;
                 }
                 Body.linearVelocity = releaseVelocity;

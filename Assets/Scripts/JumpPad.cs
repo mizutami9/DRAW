@@ -59,7 +59,15 @@ namespace DrawBody.Prototype
             }
 
             PlayerController2D player = rb.GetComponent<PlayerController2D>();
+            bool resolvedCarryChain = false;
             if (player == null) player = other.GetComponentInParent<PlayerController2D>();
+            if (player != null && !player.ControlsEnabled && !player.IsFriendCarried)
+            {
+                // Remote replicas and ready-room players are positioned by their
+                // owner/controller. Never launch them or emit one sound per body
+                // segment while they overlap a pad.
+                return;
+            }
             if (player == null && rb.bodyType != RigidbodyType2D.Dynamic)
             {
                 // A held weapon can hang below its owner and be the first member
@@ -89,6 +97,7 @@ namespace DrawBody.Prototype
                 || rb.bodyType != RigidbodyType2D.Dynamic))
             {
                 ResolveCarrierLaunchTarget(player.transform, out rb, out player);
+                resolvedCarryChain = rb != null;
             }
 
             // Held guns and carried players use kinematic bodies that are moved by
@@ -105,6 +114,16 @@ namespace DrawBody.Prototype
                     ? birdLaunchMultiplier
                     : 1f;
             Vector2 velocity = rb.linearVelocity;
+            PlayerCarryController launchCarry = player != null
+                ? player.GetComponent<PlayerCarryController>()
+                : null;
+            if (resolvedCarryChain || launchCarry != null && launchCarry.IsCarryingFriend)
+            {
+                // Bird -> player -> held item can touch the pad through several
+                // kinematic colliders in one physics step. Keep the launch rooted
+                // in the bird and discard large sideways collision impulses.
+                velocity.x = Mathf.Clamp(velocity.x * 0.2f, -4f, 4f);
+            }
             velocity.y = Mathf.Max(velocity.y, jumpVelocity * speciesMultiplier);
             rb.linearVelocity = velocity;
             bounceTimer = 0.22f;

@@ -320,7 +320,24 @@ namespace DrawBody.Prototype
                 new Vector2(0f, -InnerHalfHeight), new Vector2(InnerHalfWidth * 2f, 0.45f), true);
             CreateSolid(arena.transform, "inner_top", StageObjectType.OneWayPlatform,
                 new Vector2(0f, InnerHalfHeight), new Vector2(InnerHalfWidth * 2f, 0.45f), true);
+            CreateJumpPad(arena.transform, "left_high_jump", new Vector2(-14.15f, -8.25f));
+            CreateJumpPad(arena.transform, "right_high_jump", new Vector2(14.15f, -8.25f));
+            CreateSolid(arena.transform, "left_upper_landing", StageObjectType.OneWayPlatform,
+                new Vector2(-13.8f, 5.7f), new Vector2(3.1f, 0.45f), true);
+            CreateSolid(arena.transform, "right_upper_landing", StageObjectType.OneWayPlatform,
+                new Vector2(13.8f, 5.7f), new Vector2(3.1f, 0.45f), true);
             BuildMonitor(arena.transform);
+        }
+
+        private void CreateJumpPad(Transform parent, string id, Vector2 position)
+        {
+            if (factory == null) return;
+            StageObjectData data = StageObjectFactory.CreateDefaultData(StageObjectType.JumpPad, position);
+            data.objectId = "13-2_" + id;
+            data.size = new Vector2(1.55f, 0.68f);
+            data.actionStrength = 82f;
+            GameObject created = factory.Create(data, parent);
+            if (created != null) StageRicochetBallPassSurface.Mark(created);
         }
 
         private void CreateSolid(Transform parent, string id, StageObjectType type,
@@ -350,6 +367,7 @@ namespace DrawBody.Prototype
             GameObject board = new GameObject("13-2 Status Board");
             board.transform.SetParent(parent, false);
             board.transform.position = new Vector3(0f, 10.15f, 0.2f);
+            DoodleMonitorVisuals.KeepBehindPlayers(board.transform);
             StageEscortController.AddFilledRect(board.transform, "Frame", Vector2.zero,
                 new Vector2(19f, 1.9f), new Color(0.04f, 0.07f, 0.08f, 0.92f), 24);
             roundText = StageEscortController.CreateText(board.transform, "Round",
@@ -496,6 +514,9 @@ namespace DrawBody.Prototype
         private Collider2D hitbox;
         private TextMesh hpText;
         private Vector2 velocity;
+        private Vector2 replicaTarget;
+        private Vector2 replicaVelocity;
+        private bool hasReplicaTarget;
         private string id;
         private int hp;
         private int maxHp;
@@ -549,6 +570,15 @@ namespace DrawBody.Prototype
             body.MovePosition(next);
         }
 
+        private void Update()
+        {
+            if (authoritative || !hasReplicaTarget || hp <= 0) return;
+            Vector2 predicted = replicaTarget + replicaVelocity * 0.07f;
+            float blend = 1f - Mathf.Exp(-16f * Time.deltaTime);
+            if (body != null) body.position = Vector2.Lerp(body.position, predicted, blend);
+            else transform.position = Vector2.Lerp(transform.position, predicted, blend);
+        }
+
         internal void ApplyBallHit(Vector2 point)
         {
             if (!authoritative || hp <= 0 || Time.time < nextHitAt) return;
@@ -566,9 +596,16 @@ namespace DrawBody.Prototype
         internal void ApplyReplica(Vector2 position, Vector2 targetVelocity, int health)
         {
             velocity = targetVelocity;
+            replicaVelocity = targetVelocity;
+            replicaTarget = position;
+            hasReplicaTarget = true;
             hp = Mathf.Clamp(health, 0, maxHp);
-            if (body != null) body.position = Vector2.Lerp(body.position, position, 0.55f);
-            else transform.position = position;
+            Vector2 current = body != null ? body.position : (Vector2)transform.position;
+            if ((current - position).sqrMagnitude > 16f)
+            {
+                if (body != null) body.position = position;
+                else transform.position = position;
+            }
             RefreshBadge();
         }
 

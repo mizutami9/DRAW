@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DrawBody.Prototype
 {
@@ -11,7 +12,7 @@ namespace DrawBody.Prototype
         private const float StartDelay = 3f;
         private const float GustSeconds = 6f;
         private const float MaximumInk = 350f;
-        private const float TimeLimitSeconds = 20f;
+        private const float TimeLimitSeconds = 30f;
 
         [System.Serializable]
         private sealed class WindState
@@ -284,6 +285,209 @@ namespace DrawBody.Prototype
             if (lobbyPlayers == null) return false;
             for (int i = 0; i < lobbyPlayers.Length; i++)
                 if (lobbyPlayers[i] != null && lobbyPlayers[i].IsHost && lobbyPlayers[i].PlayerId == playerId) return true;
+            return false;
+        }
+    }
+
+    [DisallowMultipleComponent]
+    public sealed class StageTimedGoalController : MonoBehaviour
+    {
+        private const string StateKind = "timed_goal_state";
+        private const float RetryDelay = 2.5f;
+
+        [System.Serializable]
+        private sealed class TimerState
+        {
+            public int Sequence;
+            public float Remaining;
+            public bool Started;
+            public bool Failed;
+            public float RetryRemaining;
+        }
+
+        private StageManager stageManager;
+        private OnlineManager onlineManager;
+        private string stageId;
+        private float duration = 180f;
+        private float remaining = 180f;
+        private float retryRemaining;
+        private float nextBroadcastAt;
+        private int sequence;
+        private int receivedSequence;
+        private bool started;
+        private bool failed;
+        private GameObject canvasObject;
+        private Text timerText;
+
+        private bool HasAuthority => stageManager == null
+            || !stageManager.IsOnlineStageActive
+            || stageManager.IsOnlineStageHost;
+
+        public void Configure(string id, float seconds)
+        {
+            stageId = id;
+            duration = Mathf.Clamp(seconds, 5f, 1800f);
+            remaining = duration;
+        }
+
+        private void Awake()
+        {
+            stageManager = Object.FindFirstObjectByType<StageManager>();
+            onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+        }
+
+        private void OnEnable()
+        {
+            if (onlineManager == null) onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
+        }
+
+        private void OnDisable()
+        {
+            if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            if (canvasObject != null) Destroy(canvasObject);
+        }
+
+        private void Start()
+        {
+            RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
+            if (editor != null && editor.IsEditing) { enabled = false; return; }
+            BuildTimerHud();
+            RefreshHud();
+        }
+
+        private void Update()
+        {
+            if (stageManager == null || stageManager.CurrentStageId != stageId) return;
+            if (!started)
+            {
+                if (!stageManager.IsGameplayActive) return;
+                started = true;
+                BroadcastState(true);
+            }
+
+            if (failed)
+            {
+                retryRemaining = Mathf.Max(0f, retryRemaining - Time.unscaledDeltaTime);
+                RefreshHud();
+                if (HasAuthority)
+                {
+                    BroadcastState();
+                    if (retryRemaining <= 0f) stageManager.Retry();
+                }
+                return;
+            }
+
+            if (!stageManager.IsDrawingMode)
+                remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
+            if (HasAuthority && remaining <= 0f)
+            {
+                failed = true;
+                retryRemaining = RetryDelay;
+                GameSfx.Play(SfxId.PlayerHit);
+                BroadcastState(true);
+            }
+            RefreshHud();
+            if (HasAuthority) BroadcastState();
+        }
+
+        private void BuildTimerHud()
+        {
+            canvasObject = new GameObject("Timed Goal HUD", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+            Canvas canvas = canvasObject.GetComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 115;
+            CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.matchWidthOrHeight = 0.5f;
+
+            GameObject panel = new GameObject("Crayon Timer Panel", typeof(RectTransform), typeof(Image), typeof(Outline));
+            panel.transform.SetParent(canvasObject.transform, false);
+            RectTransform panelRect = panel.GetComponent<RectTransform>();
+            panelRect.anchorMin = new Vector2(0.5f, 1f);
+            panelRect.anchorMax = new Vector2(0.5f, 1f);
+            panelRect.pivot = new Vector2(0.5f, 1f);
+            panelRect.anchoredPosition = new Vector2(0f, -22f);
+            panelRect.sizeDelta = new Vector2(260f, 66f);
+            panel.GetComponent<Image>().color = new Color(1f, 0.96f, 0.75f, 0.94f);
+            Outline outline = panel.GetComponent<Outline>();
+            outline.effectColor = new Color(0.08f, 0.22f, 0.34f, 0.9f);
+            outline.effectDistance = new Vector2(3f, -3f);
+
+            GameObject textObject = new GameObject("Remaining Time", typeof(RectTransform), typeof(Text));
+            textObject.transform.SetParent(panel.transform, false);
+            RectTransform textRect = textObject.GetComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(8f, 5f);
+            textRect.offsetMax = new Vector2(-8f, -5f);
+            timerText = textObject.GetComponent<Text>();
+            Text reference = Object.FindFirstObjectByType<Text>();
+            timerText.font = reference != null && reference.font != null
+                ? reference.font
+                : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            timerText.fontSize = 40;
+            timerText.fontStyle = FontStyle.Bold;
+            timerText.alignment = TextAnchor.MiddleCenter;
+            timerText.color = new Color(0.04f, 0.31f, 0.5f, 1f);
+        }
+
+        private void RefreshHud()
+        {
+            if (timerText == null) return;
+            if (failed)
+            {
+                timerText.text = LocalizationManager.T("challenge_time_up");
+                timerText.color = new Color(0.85f, 0.08f, 0.08f, 1f);
+                return;
+            }
+            int totalSeconds = Mathf.CeilToInt(remaining);
+            timerText.text = (totalSeconds / 60).ToString("00") + ":" + (totalSeconds % 60).ToString("00");
+        }
+
+        private void BroadcastState(bool force = false)
+        {
+            if (onlineManager == null || stageManager == null || !stageManager.IsOnlineStageActive || !HasAuthority
+                || !force && Time.unscaledTime < nextBroadcastAt) return;
+            nextBroadcastAt = Time.unscaledTime + 0.2f;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = stageId,
+                Kind = StateKind,
+                Json = JsonUtility.ToJson(new TimerState
+                {
+                    Sequence = ++sequence,
+                    Remaining = remaining,
+                    Started = started,
+                    Failed = failed,
+                    RetryRemaining = retryRemaining
+                })
+            });
+        }
+
+        private void HandleNetworkData(OnlineGimmickData message)
+        {
+            if (message == null || message.ObjectId != stageId || message.Kind != StateKind || HasAuthority
+                || !IsHost(message.PlayerId)) return;
+            TimerState state = JsonUtility.FromJson<TimerState>(message.Json);
+            if (state == null || state.Sequence <= receivedSequence) return;
+            receivedSequence = state.Sequence;
+            started = state.Started;
+            failed = state.Failed;
+            retryRemaining = state.RetryRemaining;
+            remaining = Mathf.Abs(remaining - state.Remaining) > 1f
+                ? state.Remaining
+                : Mathf.Lerp(remaining, state.Remaining, 0.35f);
+            RefreshHud();
+        }
+
+        private bool IsHost(string playerId)
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null) return false;
+            for (int i = 0; i < players.Length; i++)
+                if (players[i] != null && players[i].IsHost && players[i].PlayerId == playerId) return true;
             return false;
         }
     }

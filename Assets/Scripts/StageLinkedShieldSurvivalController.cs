@@ -15,6 +15,9 @@ namespace DrawBody.Prototype
         private const float PreparationSeconds = 3f;
         private const float DurationSeconds = 60f;
         private const float ShieldSeconds = 1f;
+        private const float ButtonCooldownSeconds = 1f;
+        private const float RoomHalfWidth = 2.9f;
+        private const float RoomHalfHeight = 2.1f;
 
         private enum Phase { Preparation, Playing, Finished, Failed }
 
@@ -29,6 +32,7 @@ namespace DrawBody.Prototype
             public int[] MapTargets;
             public int[] MapSides;
             public float[] ShieldRemaining;
+            public float[] ButtonCooldownRemaining;
             public string[] RoomPlayerIds;
             public string[] EliminatedIds;
         }
@@ -70,6 +74,7 @@ namespace DrawBody.Prototype
         private readonly int[] mapTargets = new int[16];
         private readonly int[] mapSides = new int[16];
         private readonly float[] shieldEndsAt = new float[16];
+        private readonly float[] buttonCooldownEndsAt = new float[16];
         private readonly string[] roomPlayerIds = new string[4];
 
         private StageManager stageManager;
@@ -94,6 +99,7 @@ namespace DrawBody.Prototype
         private int lastStateSequence;
         private int missileSequence;
         private int nextTargetCursor;
+        private int nextSideCursor;
         private int occupiedRooms = 1;
         private bool restored;
         private static Sprite squareSprite;
@@ -144,6 +150,7 @@ namespace DrawBody.Prototype
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
             ApplyPendingEliminations();
             RefreshShields();
+            RefreshButtons();
             missiles.RemoveAll(item => item == null);
 
             if (HasAuthority)
@@ -196,15 +203,19 @@ namespace DrawBody.Prototype
             if (IsOnline)
             {
                 OnlinePlayerInfo[] roster = onlineManager?.CurrentLobby?.Players;
-                int room = 0;
                 if (roster != null)
-                    for (int i = 0; i < roster.Length && room < 4; i++)
+                    for (int i = 0; i < roster.Length; i++)
                     {
                         if (roster[i] == null || string.IsNullOrEmpty(roster[i].PlayerId)) continue;
-                        roomPlayerIds[room++] = roster[i].PlayerId;
+                        int room = PlayerColorPalette.GetLobbyPlayerSlot(onlineManager.CurrentLobby, roster[i].PlayerId);
+                        if (room < 0 || room >= roomPlayerIds.Length) continue;
+                        roomPlayerIds[room] = roster[i].PlayerId;
                         participants.Add(roster[i].PlayerId);
                     }
-                occupiedRooms = Mathf.Max(1, room);
+                occupiedRooms = 0;
+                for (int i = 0; i < roomPlayerIds.Length; i++)
+                    if (!string.IsNullOrEmpty(roomPlayerIds[i])) occupiedRooms = i + 1;
+                occupiedRooms = Mathf.Max(1, occupiedRooms);
                 return;
             }
 
@@ -225,11 +236,11 @@ namespace DrawBody.Prototype
             {
                 Vector2 center = RoomCenters[room];
                 Color color = RoomColors[room];
-                CreateTerrain("Room " + (room + 1) + " Floor", center + Vector2.down * 1.9f, new Vector2(5.2f, 0.42f));
-                CreateTerrain("Room " + (room + 1) + " Ceiling", center + Vector2.up * 1.9f, new Vector2(5.2f, 0.42f));
-                CreateTerrain("Room " + (room + 1) + " Left", center + Vector2.left * 2.6f, new Vector2(0.42f, 4.18f));
-                CreateTerrain("Room " + (room + 1) + " Right", center + Vector2.right * 2.6f, new Vector2(0.42f, 4.18f));
-                CreateRoomBadge(room, center + new Vector2(0f, 2.48f), color);
+                CreateTerrain("Room " + (room + 1) + " Floor", center + Vector2.down * RoomHalfHeight, new Vector2(RoomHalfWidth * 2f, 0.42f));
+                CreateTerrain("Room " + (room + 1) + " Ceiling", center + Vector2.up * RoomHalfHeight, new Vector2(RoomHalfWidth * 2f, 0.42f));
+                CreateTerrain("Room " + (room + 1) + " Left", center + Vector2.left * RoomHalfWidth, new Vector2(0.42f, RoomHalfHeight * 2f + 0.42f));
+                CreateTerrain("Room " + (room + 1) + " Right", center + Vector2.right * RoomHalfWidth, new Vector2(0.42f, RoomHalfHeight * 2f + 0.42f));
+                CreateRoomBadge(room, center + new Vector2(0f, RoomHalfHeight + 0.58f), color);
 
                 for (int side = 0; side < 4; side++)
                     shieldWalls.Add(StageLinkedShieldWall.Create(transform, GetShieldPosition(room, side), GetShieldSize(side), color));
@@ -237,10 +248,10 @@ namespace DrawBody.Prototype
                 for (int button = 0; button < 4; button++)
                 {
                     int index = room * 4 + button;
-                    Vector2 position = button == 0 ? center + Vector2.up * 1.52f
-                        : button == 1 ? center + Vector2.right * 2.22f
-                        : button == 2 ? center + Vector2.down * 1.52f
-                        : center + Vector2.left * 2.22f;
+                    Vector2 position = button == 0 ? center + Vector2.up * (RoomHalfHeight - 0.38f)
+                        : button == 1 ? center + Vector2.right * (RoomHalfWidth - 0.38f)
+                        : button == 2 ? center + Vector2.down * (RoomHalfHeight - 0.38f)
+                        : center + Vector2.left * (RoomHalfWidth - 0.38f);
                     buttons.Add(StageLinkedShieldButton.Create(transform, this, index, button, position));
                 }
             }
@@ -324,6 +335,8 @@ namespace DrawBody.Prototype
 
         private void ActivateMappedShield(int buttonIndex)
         {
+            if (Time.time < buttonCooldownEndsAt[buttonIndex]) return;
+            buttonCooldownEndsAt[buttonIndex] = Time.time + ButtonCooldownSeconds;
             int target = Mathf.Clamp(mapTargets[buttonIndex], 0, 3);
             int side = Mathf.Clamp(mapSides[buttonIndex], 0, 3);
             int shield = target * 4 + side;
@@ -340,19 +353,27 @@ namespace DrawBody.Prototype
                 shieldWalls[i]?.SetActive(Time.time < shieldEndsAt[i]);
         }
 
+        private void RefreshButtons()
+        {
+            for (int i = 0; i < buttons.Count; i++)
+                buttons[i]?.SetCooldown(Mathf.Max(0f, buttonCooldownEndsAt[i] - Time.time));
+        }
+
         private void FireVolley()
         {
             List<int> livingRooms = GetLivingRooms();
             if (livingRooms.Count == 0) return;
             float progress = 1f - remaining / DurationSeconds;
-            int maxCount = Mathf.Clamp(1 + Mathf.CeilToInt(progress * occupiedRooms), 1, Mathf.Min(4, livingRooms.Count + 1));
-            int count = Mathf.Clamp(1 + Mathf.FloorToInt(progress * maxCount), 1, maxCount);
+            float ramp = Mathf.Pow(Mathf.Clamp01(progress), 1.65f);
+            int maxCount = Mathf.Clamp(1 + Mathf.CeilToInt(ramp * occupiedRooms), 1, Mathf.Min(4, livingRooms.Count + 1));
+            int count = Mathf.Clamp(1 + Mathf.FloorToInt(ramp * maxCount), 1, maxCount);
             for (int i = 0; i < count; i++)
             {
                 int room = livingRooms[(nextTargetCursor + i) % livingRooms.Count];
-                int side = Random.Range(0, 4);
-                Vector2 impact = GetRandomImpact(room, side);
+                int side = (nextSideCursor + i) % 4;
+                Vector2 impact = GetShieldPosition(room, side);
                 Vector2 outward = SideVector(side);
+                Vector2 tangent = new Vector2(-outward.y, outward.x);
                 float distance = Mathf.Lerp(11.5f, 8.5f, progress) + Random.Range(-0.3f, 1.3f);
                 MissileState state = new MissileState
                 {
@@ -360,8 +381,10 @@ namespace DrawBody.Prototype
                     TargetRoom = room,
                     TargetSide = side,
                     Impact = impact,
-                    Position = impact + outward * distance,
-                    Speed = Mathf.Lerp(3.2f, 9.2f, progress) * Random.Range(0.92f, 1.08f),
+                    // Always hit the middle of the selected wall. Vary only the
+                    // launch position so missiles still approach at lively angles.
+                    Position = impact + outward * distance + tangent * Random.Range(-2.1f, 2.1f),
+                    Speed = Mathf.Lerp(2.5f, 6f, progress) * Random.Range(0.94f, 1.06f),
                     Size = Random.Range(0.8f, Mathf.Lerp(1f, 1.4f, progress))
                 };
                 ApplyMissile(state);
@@ -369,7 +392,8 @@ namespace DrawBody.Prototype
                     onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = StageId, Kind = MissileKind, Json = JsonUtility.ToJson(state) });
             }
             nextTargetCursor = (nextTargetCursor + count) % livingRooms.Count;
-            nextVolleyAt = Time.time + Mathf.Lerp(3.6f, 0.8f, progress) / Mathf.Lerp(1f, 1.18f, (occupiedRooms - 1) / 3f);
+            nextSideCursor = (nextSideCursor + count) % 4;
+            nextVolleyAt = Time.time + Mathf.Lerp(3.8f, 1.25f, ramp) / Mathf.Lerp(1f, 1.12f, (occupiedRooms - 1) / 3f);
         }
 
         private void ApplyMissile(MissileState state)
@@ -378,7 +402,7 @@ namespace DrawBody.Prototype
             StageLinkedShieldMissile missile = StageLinkedShieldMissile.Create(transform, this, state.Sequence,
                 state.TargetRoom, state.TargetSide, state.Position, state.Impact, state.Speed, state.Size, HasAuthority);
             missiles.Add(missile);
-            StageIncomingShieldMarker.Create(transform, state.Impact, GetShieldSize(state.TargetSide), RoomColors[state.TargetRoom],
+            StageIncomingShieldMarker.Create(transform, GetShieldPosition(state.TargetRoom, state.TargetSide), GetShieldSize(state.TargetSide), RoomColors[state.TargetRoom],
                 Vector2.Distance(state.Position, state.Impact) / Mathf.Max(0.1f, state.Speed));
             GameSfx.PlayAt(SfxId.CannonFire, state.Position, 0.65f);
         }
@@ -423,25 +447,18 @@ namespace DrawBody.Prototype
             return result;
         }
 
-        private static Vector2 GetRandomImpact(int room, int side)
-        {
-            Vector2 center = RoomCenters[Mathf.Clamp(room, 0, 3)];
-            if (side == 0) return center + new Vector2(Random.Range(-1.85f, 1.85f), 2.16f);
-            if (side == 1) return center + new Vector2(2.86f, Random.Range(-1.28f, 1.28f));
-            if (side == 2) return center + new Vector2(Random.Range(-1.85f, 1.85f), -2.16f);
-            return center + new Vector2(-2.86f, Random.Range(-1.28f, 1.28f));
-        }
-
         private static Vector2 GetShieldPosition(int room, int side)
         {
-            Vector2 center = RoomCenters[room];
-            if (side == 0) return center + Vector2.up * 2.16f;
-            if (side == 1) return center + Vector2.right * 2.86f;
-            if (side == 2) return center + Vector2.down * 2.16f;
-            return center + Vector2.left * 2.86f;
+            Vector2 center = RoomCenters[Mathf.Clamp(room, 0, RoomCenters.Length - 1)];
+            if (side == 0) return center + Vector2.up * (RoomHalfHeight + 0.21f);
+            if (side == 1) return center + Vector2.right * (RoomHalfWidth + 0.21f);
+            if (side == 2) return center + Vector2.down * (RoomHalfHeight + 0.21f);
+            return center + Vector2.left * (RoomHalfWidth + 0.21f);
         }
 
-        private static Vector2 GetShieldSize(int side) => side == 0 || side == 2 ? new Vector2(4.35f, 0.34f) : new Vector2(0.34f, 3f);
+        private static Vector2 GetShieldSize(int side) => side == 0 || side == 2
+            ? new Vector2(RoomHalfWidth * 2f - 0.7f, 0.34f)
+            : new Vector2(0.34f, RoomHalfHeight * 2f - 0.7f);
         private static Vector2 SideVector(int side) => side == 0 ? Vector2.up : side == 1 ? Vector2.right : side == 2 ? Vector2.down : Vector2.left;
         internal static string SideArrow(int side) => side == 0 ? "↑" : side == 1 ? "→" : side == 2 ? "↓" : "←";
 
@@ -461,7 +478,7 @@ namespace DrawBody.Prototype
         private void PlacePlayer(PlayerController2D player, int room)
         {
             if (player == null) return;
-            float floorY = RoomCenters[room].y - 1.68f;
+            float floorY = RoomCenters[room].y - RoomHalfHeight + 0.21f;
             Vector2 destination = RoomCenters[room] + new Vector2(0f, -0.72f);
             Rigidbody2D body = player.GetComponent<Rigidbody2D>();
             if (body != null) { body.position = destination; body.linearVelocity = Vector2.zero; }
@@ -498,16 +515,22 @@ namespace DrawBody.Prototype
             }
             else if (phase == Phase.Playing)
             {
-                timerText.text = string.Empty;
+                timerText.text = FormatRemainingTime(remaining);
             }
             else if (phase == Phase.Failed)
             {
-                timerText.text = string.Empty;
+                timerText.text = FormatRemainingTime(remaining);
             }
             else
             {
-                timerText.text = string.Empty;
+                timerText.text = "0:00";
             }
+        }
+
+        private static string FormatRemainingTime(float seconds)
+        {
+            int totalSeconds = Mathf.Max(0, Mathf.CeilToInt(seconds));
+            return (totalSeconds / 60) + ":" + (totalSeconds % 60).ToString("00");
         }
 
         private void LockCamera()
@@ -660,11 +683,14 @@ namespace DrawBody.Prototype
             nextStateAt = Time.unscaledTime + 0.15f;
             float[] shieldRemaining = new float[16];
             for (int i = 0; i < shieldRemaining.Length; i++) shieldRemaining[i] = Mathf.Max(0f, shieldEndsAt[i] - Time.time);
+            float[] buttonCooldownRemaining = new float[16];
+            for (int i = 0; i < buttonCooldownRemaining.Length; i++) buttonCooldownRemaining[i] = Mathf.Max(0f, buttonCooldownEndsAt[i] - Time.time);
             NetworkState state = new NetworkState
             {
                 Sequence = ++stateSequence, Phase = (int)phase, Preparation = preparation, Remaining = remaining,
                 Restart = restartRemaining, MapTargets = (int[])mapTargets.Clone(), MapSides = (int[])mapSides.Clone(),
-                ShieldRemaining = shieldRemaining, RoomPlayerIds = (string[])roomPlayerIds.Clone(),
+                ShieldRemaining = shieldRemaining, ButtonCooldownRemaining = buttonCooldownRemaining,
+                RoomPlayerIds = (string[])roomPlayerIds.Clone(),
                 EliminatedIds = new List<string>(eliminated).ToArray()
             };
             onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = StageId, Kind = StateKind, Json = JsonUtility.ToJson(state) });
@@ -691,6 +717,8 @@ namespace DrawBody.Prototype
             }
             if (state.ShieldRemaining != null)
                 for (int i = 0; i < Mathf.Min(16, state.ShieldRemaining.Length); i++) shieldEndsAt[i] = Time.time + Mathf.Max(0f, state.ShieldRemaining[i]);
+            if (state.ButtonCooldownRemaining != null)
+                for (int i = 0; i < Mathf.Min(16, state.ButtonCooldownRemaining.Length); i++) buttonCooldownEndsAt[i] = Time.time + Mathf.Max(0f, state.ButtonCooldownRemaining[i]);
             if (state.EliminatedIds != null) for (int i = 0; i < state.EliminatedIds.Length; i++) ApplyElimination(state.EliminatedIds[i]);
             RefreshButtonLabels();
             if (oldPhase != phase) SetLocalControls(phase == Phase.Playing);
@@ -741,6 +769,7 @@ namespace DrawBody.Prototype
         private TextMesh label;
         private float nextActivationAt;
         private Color baseColor;
+        private string mappingText;
 
         public static StageLinkedShieldButton Create(Transform parent, StageLinkedShieldSurvivalController owner, int index, int sourceSide, Vector2 position)
         {
@@ -768,7 +797,8 @@ namespace DrawBody.Prototype
                     artSize.x / buttonSprite.bounds.size.x,
                     artSize.y / buttonSprite.bounds.size.y,
                     1f);
-                if (vertical) visual.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+                visual.transform.localRotation = Quaternion.Euler(0f, 0f,
+                    sourceSide == 0 ? 180f : sourceSide == 1 ? 90f : sourceSide == 2 ? 0f : -90f);
             }
             else
             {
@@ -790,7 +820,16 @@ namespace DrawBody.Prototype
         {
             baseColor = Color.Lerp(Color.white, color, 0.58f);
             if (pad != null) pad.color = baseColor;
-            if (label != null) label.text = "P" + (targetRoom + 1) + " " + StageLinkedShieldSurvivalController.SideArrow(targetSide);
+            mappingText = "P" + (targetRoom + 1) + " " + StageLinkedShieldSurvivalController.SideArrow(targetSide);
+            if (label != null) label.text = mappingText;
+        }
+
+        public void SetCooldown(float remaining)
+        {
+            bool cooling = remaining > 0.01f;
+            if (pad != null) pad.color = cooling ? new Color(0.35f, 0.42f, 0.44f, 0.92f) : baseColor;
+            if (padTransform != null) padTransform.localScale = cooling ? restScale * 0.82f : restScale;
+            if (label != null) label.text = cooling ? mappingText + "\n" + remaining.ToString("0.0") : mappingText;
         }
 
         public void Pulse()
@@ -798,7 +837,7 @@ namespace DrawBody.Prototype
             if (pad != null) pad.color = new Color(0.38f, 1f, 0.5f, 1f);
             if (padTransform != null) padTransform.localScale = restScale * 0.84f;
             CancelInvoke(nameof(RestoreButton));
-            Invoke(nameof(RestoreButton), 0.2f);
+            Invoke(nameof(RestoreButton), 0.12f);
         }
 
         private void RestoreButton()

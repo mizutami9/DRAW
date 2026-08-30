@@ -563,11 +563,18 @@ namespace DrawBody.Prototype
 
         private int GetSafeFloorCount()
         {
-            if (remainingSeconds > 40f)
+            float progress = durationSeconds > 0f
+                ? Mathf.Clamp01(remainingSeconds / durationSeconds)
+                : 0f;
+            if (progress > 0.75f)
             {
-                return 3;
+                return 5;
             }
-            return remainingSeconds > 20f ? 2 : 1;
+            if (progress > 0.5f)
+            {
+                return 4;
+            }
+            return progress > 0.25f ? 3 : 2;
         }
 
         private void UpdateAttackDirector()
@@ -878,6 +885,16 @@ namespace DrawBody.Prototype
                 else SetMonitorMain(LocalizationManager.T("survival_start"), 0.145f);
                 return;
             }
+
+            if (phase == SurvivalPhase.Warning || phase == SurvivalPhase.Collapsed)
+            {
+                string remaining = string.Format(
+                    LocalizationManager.T("challenge_time_remaining"),
+                    Mathf.Max(0f, remainingSeconds));
+                SetMonitorMain(remaining, 0.17f);
+                return;
+            }
+
             SetMonitorMain(string.Empty, 0.17f);
         }
 

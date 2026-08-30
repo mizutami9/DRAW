@@ -27,6 +27,7 @@ namespace DrawBody.Prototype
         [SerializeField] private float slimeFriendAttachReach = 0.45f;
 
         private const float MaxHeldPlayerCarrierHorizontalSpeed = 28f;
+        private const float CatScratchCooldown = 0.7f;
 
         // A hand-drawn body can contain far more than 64 segment colliders.
         // A fixed NonAlloc buffer could fill with the player's own long legs
@@ -76,13 +77,29 @@ namespace DrawBody.Prototype
         private readonly LineRenderer[] birdBeakLines = new LineRenderer[2];
         private CarryableObject catClawedObject;
         private Rigidbody2D catClawedBody;
-        private FixedJoint2D catClawJoint;
+        private RigidbodyType2D catClawedPreviousBodyType;
+        private float catClawedPreviousGravityScale;
+        private bool catClawedPreviousFreezeRotation;
+        private Vector3 catClawedLocalOffset;
+        private Quaternion catClawedLocalRotation = Quaternion.identity;
+        private readonly List<Collider2D> catClawedColliders = new List<Collider2D>();
+        private readonly List<bool> catClawedColliderEnabledStates = new List<bool>();
+        private readonly List<bool> catClawedColliderTriggerStates = new List<bool>();
         private bool scriptedSlimeAttachment;
         private bool scriptedSlimeAttachmentHeld;
         private bool scriptedActionEnabled;
         private bool catScratchConsumesHold;
+        private float nextCatScratchTime;
+        private bool remoteWeaponAimEnabled;
+        private Vector2 remoteWeaponAimDirection = Vector2.right;
+        private Vector2 currentWeaponAimDirection = Vector2.right;
 
         public bool IsHolding => heldTransform != null;
+        public bool IsAimingWeapon => heldTransform != null
+            && (heldTransform.GetComponent<StageGun>() != null || heldTransform.GetComponent<StageBazooka>() != null);
+        public Vector2 CurrentOnlineWeaponAimDirection => currentWeaponAimDirection.sqrMagnitude > 0.01f
+            ? currentWeaponAimDirection.normalized
+            : new Vector2(GetFacingDirection(), 0f);
         public string CurrentOnlineCarriedPlayerId => !string.IsNullOrEmpty(heldOnlinePlayerId)
             ? heldOnlinePlayerId
             : friendAttachedOnlinePlayerId;
@@ -103,11 +120,22 @@ namespace DrawBody.Prototype
                     || catClawedObject != null && catClawedObject.transform == target);
         }
 
+        public void ApplyRemoteWeaponAim(bool aiming, Vector2 direction)
+        {
+            remoteWeaponAimEnabled = aiming;
+            if (direction.sqrMagnitude > 0.01f)
+            {
+                remoteWeaponAimDirection = direction.normalized;
+            }
+        }
+
         public bool IsDraggingFriend(Transform target)
         {
             return IsFriendCarrier() && target != null && slimeAttachedPlayer != null
                 && slimeAttachedPlayer.transform == target;
         }
+
+        public bool IsCarryingFriend => IsFriendCarrier() && slimeAttachedPlayer != null;
 
         public bool ReleaseIfHolding(Transform target)
         {
@@ -315,8 +343,9 @@ namespace DrawBody.Prototype
                 DropHeld(Vector2.zero);
                 if (IsCat())
                 {
-                    if (Input.GetKeyDown(KeyCode.F))
+                    if (Input.GetKeyDown(KeyCode.F) && Time.time >= nextCatScratchTime)
                     {
+                        nextCatScratchTime = Time.time + CatScratchCooldown;
                         PlayCatScratchEffect();
                         if (TryScratchEnemy())
                         {
@@ -393,7 +422,13 @@ namespace DrawBody.Prototype
 
         private void FixedUpdate()
         {
-            if (heldPlayerController == null || playerBody == null)
+            bool draggingFriend = slimeAttachedPlayer != null && IsFriendCarrier();
+            if (draggingFriend)
+            {
+                RefreshFriendAttachmentCollisionIgnores();
+            }
+
+            if ((heldPlayerController == null && !draggingFriend) || playerBody == null)
             {
                 return;
             }
@@ -410,7 +445,8 @@ namespace DrawBody.Prototype
             // the carrier for one physics step and launch the carrier backwards.
             // Human movement, wind and speed rings remain below this generous
             // ceiling; only the tunnelling-producing impulse is discarded.
-            if (Mathf.Abs(velocity.x) > MaxHeldPlayerCarrierHorizontalSpeed)
+            if (!playerController.HasWeaponRecoilMomentum
+                && Mathf.Abs(velocity.x) > MaxHeldPlayerCarrierHorizontalSpeed)
             {
                 velocity.x = Mathf.Clamp(
                     velocity.x,
@@ -418,11 +454,12 @@ namespace DrawBody.Prototype
                     MaxHeldPlayerCarrierHorizontalSpeed);
                 playerBody.linearVelocity = velocity;
             }
+
         }
 
         private void LateUpdate()
         {
-            if (catClawedObject == null && catClawJoint != null)
+            if (catClawedObject == null && (catClawedBody != null || catClawedColliders.Count > 0))
             {
                 DetachCatFromObject(false);
             }
@@ -432,6 +469,7 @@ namespace DrawBody.Prototype
             }
             else if (catClawedObject != null)
             {
+                UpdateCatClawedObjectPose();
                 if (IsBird()) UpdateBirdObjectAttachmentVisual();
                 else UpdateCatObjectAttachmentVisual();
             }
@@ -466,18 +504,12 @@ namespace DrawBody.Prototype
             StageBazooka bazooka = heldTransform.GetComponent<StageBazooka>();
             if (gun != null)
             {
-                Camera camera = Camera.main;
-                Vector2 aim = camera != null
-                    ? (Vector2)camera.ScreenToWorldPoint(Input.mousePosition)
-                    : (Vector2)anchor + Vector2.right * GetFacingDirection();
+                Vector2 aim = ResolveHeldWeaponAim(anchor);
                 gun.UpdateHeldPose(anchor, aim);
             }
             else if (bazooka != null)
             {
-                Camera camera = Camera.main;
-                Vector2 aim = camera != null
-                    ? (Vector2)camera.ScreenToWorldPoint(Input.mousePosition)
-                    : (Vector2)anchor + Vector2.right * GetFacingDirection();
+                Vector2 aim = ResolveHeldWeaponAim(anchor);
                 bazooka.UpdateHeldPose(anchor, aim);
             }
             else
@@ -493,6 +525,27 @@ namespace DrawBody.Prototype
             bodyBuilder?.SetCarryPose(true, GetFacingDirection(), anchor);
             if (gun != null || bazooka != null) SetThrowPreviewVisible(false);
             else UpdateThrowPreview(anchor);
+        }
+
+        private Vector2 ResolveHeldWeaponAim(Vector3 anchor)
+        {
+            Vector2 direction;
+            if (IsRemoteOnlineReplica() && remoteWeaponAimEnabled)
+            {
+                direction = remoteWeaponAimDirection;
+            }
+            else
+            {
+                Camera camera = Camera.main;
+                Vector2 aimWorld = camera != null
+                    ? (Vector2)camera.ScreenToWorldPoint(Input.mousePosition)
+                    : (Vector2)anchor + Vector2.right * GetFacingDirection();
+                direction = aimWorld - (Vector2)anchor;
+            }
+
+            if (direction.sqrMagnitude < 0.01f) direction = new Vector2(GetFacingDirection(), 0f);
+            currentWeaponAimDirection = direction.normalized;
+            return (Vector2)anchor + currentWeaponAimDirection * 8f;
         }
 
         private void HandleHeldWeaponInput()
@@ -727,14 +780,39 @@ namespace DrawBody.Prototype
             catClawedObject = bestObject;
             catClawedBody = bestBody;
             Vector2 contact = bestCollider.ClosestPoint(playerBounds.center);
-            catClawJoint = gameObject.AddComponent<FixedJoint2D>();
-            catClawJoint.autoConfigureConnectedAnchor = false;
-            catClawJoint.connectedBody = catClawedBody;
-            catClawJoint.anchor = playerBody.transform.InverseTransformPoint(contact);
-            catClawJoint.connectedAnchor = catClawedBody.transform.InverseTransformPoint(contact);
-            catClawJoint.enableCollision = false;
-            catClawJoint.breakForce = Mathf.Infinity;
-            catClawJoint.breakTorque = Mathf.Infinity;
+            catClawedPreviousBodyType = catClawedBody.bodyType;
+            catClawedPreviousGravityScale = catClawedBody.gravityScale;
+            catClawedPreviousFreezeRotation = catClawedBody.freezeRotation;
+
+            Bounds objectBounds = GetSolidBounds(catClawedObject.gameObject);
+            float facing = GetFacingDirection();
+            Vector3 desiredCenter = new Vector3(
+                playerBounds.center.x + facing * (playerBounds.extents.x + objectBounds.extents.x + 0.16f),
+                playerBounds.center.y,
+                catClawedObject.transform.position.z);
+            Vector3 desiredRoot = catClawedObject.transform.position + desiredCenter - objectBounds.center;
+            desiredRoot.z = catClawedObject.transform.position.z;
+            catClawedLocalOffset = transform.InverseTransformPoint(desiredRoot);
+            catClawedLocalRotation = Quaternion.Inverse(transform.rotation) * catClawedObject.transform.rotation;
+
+            catClawedColliders.Clear();
+            catClawedColliderEnabledStates.Clear();
+            catClawedColliderTriggerStates.Clear();
+            catClawedObject.GetComponentsInChildren(true, catClawedColliders);
+            for (int i = 0; i < catClawedColliders.Count; i++)
+            {
+                Collider2D collider = catClawedColliders[i];
+                catClawedColliderEnabledStates.Add(collider != null && collider.enabled);
+                catClawedColliderTriggerStates.Add(collider != null && collider.isTrigger);
+                if (collider != null) collider.enabled = false;
+            }
+
+            catClawedBody.bodyType = RigidbodyType2D.Kinematic;
+            catClawedBody.gravityScale = 0f;
+            catClawedBody.freezeRotation = true;
+            catClawedBody.linearVelocity = Vector2.zero;
+            catClawedBody.angularVelocity = 0f;
+            UpdateCatClawedObjectPose();
             ResolveGimmickSyncManager()?.BeginLocalObjectCarry(catClawedObject.transform);
             if (IsBird()) UpdateBirdObjectAttachmentVisual();
             else UpdateCatObjectAttachmentVisual();
@@ -757,29 +835,61 @@ namespace DrawBody.Prototype
 
         private void DetachCatFromObject(bool playSound)
         {
-            if (catClawedObject == null && catClawJoint == null)
+            if (catClawedObject == null && catClawedBody == null && catClawedColliders.Count == 0)
             {
                 return;
             }
 
             Transform releasedTransform = catClawedObject != null ? catClawedObject.transform : null;
-            Vector2 releaseVelocity = catClawedBody != null ? catClawedBody.linearVelocity : Vector2.zero;
+            Vector2 releaseVelocity = playerBody != null ? playerBody.linearVelocity : Vector2.zero;
             if (releasedTransform != null)
             {
                 ResolveGimmickSyncManager()?.EndLocalObjectCarry(releasedTransform, releaseVelocity);
             }
-            if (catClawJoint != null)
+            Collider2D[] releasedColliders = catClawedColliders.ToArray();
+            Collider2D[] carrierColliders = GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < catClawedColliders.Count; i++)
             {
-                Destroy(catClawJoint);
+                Collider2D collider = catClawedColliders[i];
+                if (collider == null) continue;
+                collider.isTrigger = i < catClawedColliderTriggerStates.Count && catClawedColliderTriggerStates[i];
+                collider.enabled = i < catClawedColliderEnabledStates.Count
+                    ? catClawedColliderEnabledStates[i]
+                    : true;
             }
-            catClawJoint = null;
+            if (catClawedBody != null)
+            {
+                catClawedBody.bodyType = catClawedPreviousBodyType;
+                catClawedBody.gravityScale = catClawedPreviousGravityScale;
+                catClawedBody.freezeRotation = catClawedPreviousFreezeRotation;
+                catClawedBody.linearVelocity = releaseVelocity;
+                catClawedBody.angularVelocity = 0f;
+            }
+            SetCollisionIgnored(releasedColliders, carrierColliders, true);
+            RestoreReleasedCollisionsSafely(releasedColliders, carrierColliders);
             catClawedObject = null;
             catClawedBody = null;
+            catClawedColliders.Clear();
+            catClawedColliderEnabledStates.Clear();
+            catClawedColliderTriggerStates.Clear();
             SetSlimeAttachmentVisualVisible(false);
             if (playSound)
             {
                 GameSfx.PlayAt(GetFriendReleaseSfx(), transform.position, 0.9f);
             }
+        }
+
+        private void UpdateCatClawedObjectPose()
+        {
+            if (catClawedObject == null || catClawedBody == null) return;
+            Vector3 localOffset = catClawedLocalOffset;
+            localOffset.x = Mathf.Abs(localOffset.x) * GetFacingDirection();
+            Vector3 target = transform.TransformPoint(localOffset);
+            catClawedObject.transform.position = target;
+            catClawedObject.transform.rotation = transform.rotation * catClawedLocalRotation;
+            catClawedBody.position = target;
+            catClawedBody.linearVelocity = Vector2.zero;
+            catClawedBody.angularVelocity = 0f;
         }
 
         private void FollowSlimeAttachedFriend()
@@ -795,6 +905,7 @@ namespace DrawBody.Prototype
             if (IsFriendCarrier())
             {
                 Vector3 targetAnchor = transform.position + transform.TransformVector(slimeAttachLocalOffset);
+                targetAnchor = ConstrainCarriedFriendToStageBoundary(targetAnchor);
                 slimeAttachedPlayer.transform.position = targetAnchor;
                 slimeAttachedBody.position = targetAnchor;
                 slimeAttachedBody.linearVelocity = playerBody != null ? playerBody.linearVelocity : Vector2.zero;
@@ -816,6 +927,54 @@ namespace DrawBody.Prototype
             }
 
             UpdateFriendAttachmentVisual(slimeAttachedPlayer, true);
+        }
+
+        private Vector3 ConstrainCarriedFriendToStageBoundary(Vector3 targetAnchor)
+        {
+            if (!TryGetSolidBounds(slimeAttachedPlayer, out Bounds carriedBounds))
+            {
+                return targetAnchor;
+            }
+
+            StageEditorObject[] stageObjects = Object.FindObjectsByType<StageEditorObject>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < stageObjects.Length; i++)
+            {
+                StageEditorObject boundary = stageObjects[i];
+                if (boundary == null || boundary.type != StageObjectType.StageBoundary) continue;
+
+                const float margin = 0.10f;
+                float left = boundary.transform.position.x - boundary.size.x * 0.5f + margin;
+                float right = boundary.transform.position.x + boundary.size.x * 0.5f - margin;
+                float top = boundary.transform.position.y + boundary.size.y * 0.5f - margin;
+                Vector3 boundsCenterOffset = carriedBounds.center - slimeAttachedPlayer.transform.position;
+                Vector3 proposedCenter = targetAnchor + boundsCenterOffset;
+                Vector3 correction = Vector3.zero;
+
+                if (proposedCenter.x - carriedBounds.extents.x < left)
+                    correction.x = left - (proposedCenter.x - carriedBounds.extents.x);
+                else if (proposedCenter.x + carriedBounds.extents.x > right)
+                    correction.x = right - (proposedCenter.x + carriedBounds.extents.x);
+                if (proposedCenter.y + carriedBounds.extents.y > top)
+                    correction.y = top - (proposedCenter.y + carriedBounds.extents.y);
+
+                if (correction.sqrMagnitude > 0.000001f)
+                {
+                    targetAnchor += correction;
+                    transform.position += correction;
+                    if (playerBody != null)
+                    {
+                        playerBody.position += (Vector2)correction;
+                        Vector2 velocity = playerBody.linearVelocity;
+                        if (correction.y < 0f && velocity.y > 0f) velocity.y = 0f;
+                        if (Mathf.Abs(correction.x) > 0.001f) velocity.x = 0f;
+                        playerBody.linearVelocity = velocity;
+                    }
+                }
+                break;
+            }
+
+            return targetAnchor;
         }
 
         private void DetachSlimeFromFriend(bool playSound)
@@ -1033,6 +1192,12 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
+                if (candidatePlayer != null
+                    && HasSolidRoomBarrier(playerBounds.center, hit.bounds.center, transform, candidatePlayer.transform))
+                {
+                    continue;
+                }
+
                 float distance = GetClosestColliderDistance(playerColliders, hit);
                 if (distance > pickupReach)
                 {
@@ -1154,6 +1319,23 @@ namespace DrawBody.Prototype
             }
 
             return bestDistance;
+        }
+
+        private static bool HasSolidRoomBarrier(Vector2 from, Vector2 to, Transform carrier, Transform candidate)
+        {
+            Vector2 delta = to - from;
+            float distance = delta.magnitude;
+            if (distance <= 0.01f) return false;
+            RaycastHit2D[] hits = Physics2D.RaycastAll(from, delta / distance, distance);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                Collider2D blocker = hits[i].collider;
+                if (blocker == null || blocker.isTrigger
+                    || blocker.transform.IsChildOf(carrier)
+                    || blocker.transform.IsChildOf(candidate)) continue;
+                if (blocker.gameObject.layer == 6 || blocker.CompareTag("Ground")) return true;
+            }
+            return false;
         }
 
         private static float GetClosestColliderDistance(Collider2D[] first, Collider2D[] second)
@@ -1858,6 +2040,16 @@ namespace DrawBody.Prototype
 
         private void PlayCatScratchEffect()
         {
+            PlayCatScratchEffect(true);
+        }
+
+        internal void PlayRemoteCatScratchEffect()
+        {
+            PlayCatScratchEffect(false);
+        }
+
+        private void PlayCatScratchEffect(bool broadcast)
+        {
             Bounds catBounds = new Bounds(transform.position, Vector3.one);
             if (!TryGetSolidBounds(playerController, out catBounds))
             {
@@ -1899,6 +2091,8 @@ namespace DrawBody.Prototype
             GameSfx.PlayAt(SfxId.CatClawAttach, origin, 1.28f);
             Destroy(root, 0.32f);
             StartCoroutine(FadeCatScratch(slashes, 0.28f));
+            if (broadcast)
+                stageManager?.BroadcastLocalAbilityEffect(playerController, "cat_scratch");
         }
 
         private static IEnumerator FadeCatScratch(LineRenderer[] slashes, float duration)
@@ -2182,6 +2376,7 @@ namespace DrawBody.Prototype
             }
 
             SetCollisionIgnored(releasedColliders, carrierColliders, false);
+            stageManager?.RefreshOnlinePlayerCollisionSafety();
         }
 
         private void RestoreReleasedCollisionsSafely(Collider2D[] releasedColliders, Collider2D[] carrierColliders)
@@ -2196,6 +2391,7 @@ namespace DrawBody.Prototype
             // are not participating in physics, so immediate restoration is safe
             // and prevents the ignore state leaking into the next retry.
             SetCollisionIgnored(releasedColliders, carrierColliders, false);
+            stageManager?.RefreshOnlinePlayerCollisionSafety();
         }
 
         private static bool AnyCollidersOverlap(Collider2D[] first, Collider2D[] second)
@@ -2258,6 +2454,48 @@ namespace DrawBody.Prototype
             }
 
             SetCollisionIgnored(heldPlayerColliderScratch, carrierColliderScratch, true);
+        }
+
+        private void RefreshFriendAttachmentCollisionIgnores()
+        {
+            if (slimeAttachedPlayer == null || !IsFriendCarrier()) return;
+
+            heldPlayerColliderScratch.Clear();
+            carrierColliderScratch.Clear();
+            slimeAttachedPlayer.GetComponentsInChildren(true, heldPlayerColliderScratch);
+            GetComponentsInChildren(true, carrierColliderScratch);
+
+            if (ColliderListMatchesArray(carrierColliderScratch, slimeOwnColliders)
+                && ColliderListMatchesArray(heldPlayerColliderScratch, slimeTargetColliders))
+            {
+                return;
+            }
+
+            // Online redraw and species changes can replace a player's many
+            // segment colliders without replacing the player root. Ignore every
+            // replacement before the next physics simulation so a carried body
+            // cannot launch its cat/bird carrier from inside on a slope.
+            SetCollisionIgnored(carrierColliderScratch, heldPlayerColliderScratch, true);
+            slimeOwnColliders = carrierColliderScratch.ToArray();
+            slimeTargetColliders = heldPlayerColliderScratch.ToArray();
+        }
+
+        private static bool ColliderListMatchesArray(IList<Collider2D> current, Collider2D[] previous)
+        {
+            if (previous == null || current.Count != previous.Length) return false;
+            for (int i = 0; i < current.Count; i++)
+            {
+                Collider2D collider = current[i];
+                bool found = false;
+                for (int j = 0; j < previous.Length; j++)
+                {
+                    if (previous[j] != collider) continue;
+                    found = true;
+                    break;
+                }
+                if (!found) return false;
+            }
+            return true;
         }
 
         private static void SetCollisionIgnored(

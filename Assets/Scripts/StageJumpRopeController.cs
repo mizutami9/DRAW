@@ -17,6 +17,7 @@ namespace DrawBody.Prototype
         private const float RopeHalfWidth = 12.2f;
         private const float IntroSeconds = 2.8f;
         private const float CountdownSeconds = 4f;
+        private const float DangerWarningSeconds = 1.15f;
 
         private enum Phase { Intro, Countdown, Playing, Finished, Failed }
 
@@ -397,6 +398,30 @@ namespace DrawBody.Prototype
             }
             float size = Random.Range(0.65f, Mathf.Lerp(0.95f, 1.45f, progress));
             float fuse = Random.Range(3.2f, 6.2f);
+            Vector2 warningPosition = fromSide
+                ? position
+                : new Vector2(position.x, FloorY + 0.16f);
+            BroadcastAttack(new AttackState
+            {
+                Sequence = ++attackSequence,
+                Type = 3,
+                Variant = 0,
+                Position = warningPosition,
+                Direction = velocity.normalized,
+                Speed = DangerWarningSeconds,
+                Size = Mathf.Max(0.9f, size)
+            });
+            StartCoroutine(SpawnBombAfterWarning(position, velocity, size, fuse));
+        }
+
+        private System.Collections.IEnumerator SpawnBombAfterWarning(
+            Vector2 position,
+            Vector2 velocity,
+            float size,
+            float fuse)
+        {
+            yield return new WaitForSeconds(DangerWarningSeconds);
+            if (phase != Phase.Playing || stageManager == null || stageManager.CurrentStageId != StageId) yield break;
             string id = "jump_rope_bomb_" + (++bombSequence);
             GameObject bomb = IsOnlineActive() && syncManager != null
                 ? syncManager.SpawnDropperBox(id, StageObjectType.Bomb, position, size, 0f, fuse, velocity)
@@ -421,11 +446,29 @@ namespace DrawBody.Prototype
                 position = new Vector2(left ? -12.25f : 12.25f, Random.Range(-0.3f, 4.5f));
                 direction = new Vector2(left ? 1f : -1f, Random.Range(-0.12f, 0.12f)).normalized;
             }
-            BroadcastAttack(new AttackState
+            AttackState missile = new AttackState
             {
                 Sequence = ++attackSequence, Type = 0, Position = position, Direction = direction,
                 Speed = Mathf.Lerp(6.5f, 11.5f, progress), Size = 1f
+            };
+            BroadcastAttack(new AttackState
+            {
+                Sequence = ++attackSequence,
+                Type = 3,
+                Variant = 1,
+                Position = position,
+                Direction = direction,
+                Speed = DangerWarningSeconds,
+                Size = 1f
             });
+            StartCoroutine(SpawnMissileAfterWarning(missile));
+        }
+
+        private System.Collections.IEnumerator SpawnMissileAfterWarning(AttackState missile)
+        {
+            yield return new WaitForSeconds(DangerWarningSeconds);
+            if (phase == Phase.Playing && stageManager != null && stageManager.CurrentStageId == StageId)
+                BroadcastAttack(missile);
         }
 
         private void SpawnEnemy(float progress)
@@ -446,6 +489,23 @@ namespace DrawBody.Prototype
                 Direction = new Vector2(left ? 1f : -1f, 0f), Speed = Mathf.Lerp(1.7f, 3.5f, progress),
                 Size = Random.Range(0.75f, 1.08f)
             };
+            BroadcastAttack(new AttackState
+            {
+                Sequence = ++attackSequence,
+                Type = 3,
+                Variant = 2,
+                Position = position,
+                Direction = attack.Direction,
+                Speed = DangerWarningSeconds,
+                Size = attack.Size
+            });
+            StartCoroutine(SpawnEnemyAfterWarning(attack));
+        }
+
+        private System.Collections.IEnumerator SpawnEnemyAfterWarning(AttackState attack)
+        {
+            yield return new WaitForSeconds(DangerWarningSeconds);
+            if (phase != Phase.Playing || stageManager == null || stageManager.CurrentStageId != StageId) yield break;
             if (syncManager != null)
             {
                 appliedAttackSequences.Add(attack.Sequence);
@@ -479,6 +539,18 @@ namespace DrawBody.Prototype
         private void ApplyAttack(AttackState attack)
         {
             if (attack == null || !appliedAttackSequences.Add(attack.Sequence)) return;
+            if (attack.Type == 3)
+            {
+                StageJumpRopeDangerWarning.Create(
+                    transform,
+                    attack.Position,
+                    attack.Direction,
+                    attack.Variant,
+                    Mathf.Max(0.35f, attack.Speed),
+                    attack.Size);
+                GameSfx.PlayAt(SfxId.CrumblingFloorWarning, attack.Position, 0.58f);
+                return;
+            }
             if (attack.Type == 0)
             {
                 StageMissileProjectile.Create(transform, transform, attack.Position, attack.Direction, attack.Speed);
@@ -1203,6 +1275,85 @@ namespace DrawBody.Prototype
             line.startColor = color;
             line.endColor = color;
             line.sortingOrder = 44;
+        }
+    }
+
+    internal sealed class StageJumpRopeDangerWarning : MonoBehaviour
+    {
+        private readonly List<SpriteRenderer> marks = new List<SpriteRenderer>();
+        private LineRenderer directionLine;
+        private float duration;
+        private float elapsed;
+
+        public static void Create(
+            Transform parent,
+            Vector2 position,
+            Vector2 direction,
+            int hazardType,
+            float seconds,
+            float size)
+        {
+            GameObject root = new GameObject("6-2 Danger Preview");
+            root.transform.SetParent(parent, false);
+            root.transform.position = new Vector3(position.x, position.y, -0.35f);
+            StageJumpRopeDangerWarning warning = root.AddComponent<StageJumpRopeDangerWarning>();
+            warning.duration = seconds;
+            warning.Build(direction, hazardType, Mathf.Max(0.75f, size));
+        }
+
+        private void Build(Vector2 direction, int hazardType, float size)
+        {
+            Color red = new Color(1f, 0.12f, 0.05f, 0.78f);
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject mark = new GameObject("Warning Ring " + (i + 1));
+                mark.transform.SetParent(transform, false);
+                mark.transform.localScale = hazardType == 0
+                    ? new Vector3((1.4f + i * 0.28f) * size, 0.22f + i * 0.06f, 1f)
+                    : Vector3.one * ((0.72f + i * 0.22f) * size);
+                SpriteRenderer renderer = mark.AddComponent<SpriteRenderer>();
+                renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+                renderer.color = new Color(red.r, red.g, red.b, red.a * (1f - i * 0.2f));
+                renderer.sortingOrder = 68 + i;
+                marks.Add(renderer);
+            }
+
+            if (hazardType != 1 || direction.sqrMagnitude < 0.01f) return;
+            directionLine = new GameObject("Missile Warning Direction").AddComponent<LineRenderer>();
+            directionLine.transform.SetParent(transform, false);
+            directionLine.useWorldSpace = false;
+            directionLine.positionCount = 2;
+            directionLine.SetPosition(0, Vector3.zero);
+            directionLine.SetPosition(1, direction.normalized * 5.2f);
+            directionLine.startWidth = 0.16f;
+            directionLine.endWidth = 0.045f;
+            directionLine.numCapVertices = 5;
+            directionLine.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+            directionLine.startColor = red;
+            directionLine.endColor = new Color(red.r, red.g, red.b, 0.12f);
+            directionLine.sortingOrder = 71;
+        }
+
+        private void Update()
+        {
+            elapsed += Time.deltaTime;
+            float normalized = Mathf.Clamp01(elapsed / Mathf.Max(0.01f, duration));
+            float pulse = 0.82f + Mathf.Sin(elapsed * 22f) * 0.16f;
+            for (int i = 0; i < marks.Count; i++)
+            {
+                SpriteRenderer mark = marks[i];
+                if (mark == null) continue;
+                Color color = mark.color;
+                color.a = (0.78f - i * 0.14f) * pulse * (1f - normalized * 0.55f);
+                mark.color = color;
+            }
+            if (directionLine != null)
+            {
+                Color start = directionLine.startColor;
+                start.a = 0.78f * pulse;
+                directionLine.startColor = start;
+            }
+            if (elapsed >= duration) Destroy(gameObject);
         }
     }
 }

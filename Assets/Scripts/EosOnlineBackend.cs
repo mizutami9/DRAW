@@ -24,8 +24,11 @@ namespace DrawBody.Prototype
         private const string MessageSessionSync = "session_sync";
         private const string MessageGimmick = "gimmick";
         private const string RoomCodeAttributeKey = "roomCode";
+        private const string RandomMatchAttributeKey = "matchType";
+        private const string RandomMatchAttributeValue = "drawbody-random-v1";
         private const string RoomCodeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const int RoomCodeMaxCreateAttempts = 5;
+        private const int RandomMatchSearchRetries = 3;
         private const int BodyChunkRawBytes = 700;
         private const byte ReliableChannel = 0;
         private const byte RealtimeStateChannel = 1;
@@ -80,6 +83,10 @@ namespace DrawBody.Prototype
         private int lastAppliedSessionMode = -1;
         private int lastAppliedStageRevision = -1;
         private int lastAppliedRetryRevision = -1;
+        private int randomMatchOperation;
+        private int scheduledRandomSearchOperation;
+        private int scheduledRandomSearchRetries;
+        private float scheduledRandomSearchAt = -1f;
 
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         public event Action<OnlinePlayerState> PlayerStateReceived;
@@ -143,6 +150,7 @@ namespace DrawBody.Prototype
 
             PumpP2P();
             TickSessionRecovery();
+            TickRandomMatchSearch();
         }
 
         public void Shutdown()
@@ -188,7 +196,247 @@ namespace DrawBody.Prototype
 
         public void StartRandomMatch()
         {
-            CreateRoom(LocalizationManager.T("multi_random_match"), 4, false);
+            if (!RequireLoggedIn()) return;
+
+            int operation = ++randomMatchOperation;
+            CancelScheduledRandomSearch();
+            ResetLobbyConnectionForJoin(false);
+            SetState(OnlineConnectionState.Matching, null, LocalizationManager.T("multi_matching"));
+            FindRandomMatchLobby(operation, RandomMatchSearchRetries);
+        }
+
+        private void TickRandomMatchSearch()
+        {
+            if (scheduledRandomSearchAt < 0f || Time.unscaledTime < scheduledRandomSearchAt) return;
+
+            int operation = scheduledRandomSearchOperation;
+            int retries = scheduledRandomSearchRetries;
+            CancelScheduledRandomSearch();
+            if (operation != randomMatchOperation || State != OnlineConnectionState.Matching) return;
+            FindRandomMatchLobby(operation, retries);
+        }
+
+        private void ScheduleRandomMatchSearch(int operation, int retries)
+        {
+            if (operation != randomMatchOperation) return;
+            scheduledRandomSearchOperation = operation;
+            scheduledRandomSearchRetries = Mathf.Max(0, retries);
+            scheduledRandomSearchAt = Time.unscaledTime + UnityEngine.Random.Range(0.28f, 0.82f);
+        }
+
+        private void CancelScheduledRandomSearch()
+        {
+            scheduledRandomSearchAt = -1f;
+            scheduledRandomSearchOperation = 0;
+            scheduledRandomSearchRetries = 0;
+        }
+
+        private void FindRandomMatchLobby(int operation, int retriesRemaining)
+        {
+            if (operation != randomMatchOperation || !RequireLoggedIn()) return;
+
+            CreateLobbySearchOptions searchOptions = new CreateLobbySearchOptions { MaxResults = 20 };
+            Result createResult = lobbyInterface.CreateLobbySearch(ref searchOptions, out LobbySearch search);
+            if (createResult != Result.Success || search == null)
+            {
+                SetState(OnlineConnectionState.Error, null,
+                    LocalizationManager.Format("online_eos_room_code_search_failed", createResult));
+                return;
+            }
+
+            AttributeData parameter = new AttributeData
+            {
+                Key = RandomMatchAttributeKey,
+                Value = RandomMatchAttributeValue
+            };
+            LobbySearchSetParameterOptions parameterOptions = new LobbySearchSetParameterOptions
+            {
+                Parameter = parameter,
+                ComparisonOp = ComparisonOp.Equal
+            };
+            Result parameterResult = search.SetParameter(ref parameterOptions);
+            if (parameterResult != Result.Success)
+            {
+                search.Release();
+                SetState(OnlineConnectionState.Error, null,
+                    LocalizationManager.Format("online_eos_room_code_search_failed", parameterResult));
+                return;
+            }
+
+            LobbySearchFindOptions findOptions = new LobbySearchFindOptions { LocalUserId = localUserId };
+            search.Find(ref findOptions, null, (ref LobbySearchFindCallbackInfo data) =>
+            {
+                Result searchResult = data.ResultCode;
+                Enqueue(() =>
+                {
+                    if (operation != randomMatchOperation)
+                    {
+                        search.Release();
+                        return;
+                    }
+
+                    if (searchResult != Result.Success && searchResult != Result.NotFound)
+                    {
+                        search.Release();
+                        SetState(OnlineConnectionState.Error, null,
+                            LocalizationManager.Format("online_eos_room_code_search_failed", searchResult));
+                        return;
+                    }
+
+                    string bestLobbyId = string.Empty;
+                    int bestMaxPlayers = 4;
+                    int bestMemberCount = -1;
+                    LobbySearchGetSearchResultCountOptions countOptions = new LobbySearchGetSearchResultCountOptions();
+                    uint count = searchResult == Result.Success ? search.GetSearchResultCount(ref countOptions) : 0;
+                    for (uint i = 0; i < count; i++)
+                    {
+                        LobbySearchCopySearchResultByIndexOptions copyOptions = new LobbySearchCopySearchResultByIndexOptions
+                        {
+                            LobbyIndex = i
+                        };
+                        Result copyResult = search.CopySearchResultByIndex(ref copyOptions, out LobbyDetails details);
+                        if (copyResult != Result.Success || details == null) continue;
+
+                        LobbyDetailsCopyInfoOptions infoOptions = new LobbyDetailsCopyInfoOptions();
+                        Result infoResult = details.CopyInfo(ref infoOptions, out LobbyDetailsInfo? info);
+                        details.Release();
+                        if (infoResult != Result.Success || info == null
+                            || info.Value.AvailableSlots == 0
+                            || string.IsNullOrEmpty(info.Value.LobbyId))
+                        {
+                            continue;
+                        }
+
+                        int maxPlayers = Mathf.Max(2, (int)info.Value.MaxMembers);
+                        int memberCount = Mathf.Max(0, maxPlayers - (int)info.Value.AvailableSlots);
+                        if (memberCount <= bestMemberCount) continue;
+                        bestMemberCount = memberCount;
+                        bestMaxPlayers = maxPlayers;
+                        bestLobbyId = info.Value.LobbyId;
+                    }
+                    search.Release();
+
+                    if (!string.IsNullOrEmpty(bestLobbyId))
+                    {
+                        JoinRandomMatchLobby(bestLobbyId, bestMaxPlayers, operation, retriesRemaining);
+                    }
+                    else if (retriesRemaining > 0)
+                    {
+                        ScheduleRandomMatchSearch(operation, retriesRemaining - 1);
+                    }
+                    else
+                    {
+                        CreateRandomMatchLobby(operation);
+                    }
+                });
+            });
+        }
+
+        private void JoinRandomMatchLobby(string targetLobbyId, int maxPlayers, int operation, int retriesRemaining)
+        {
+            if (operation != randomMatchOperation) return;
+            ResetLobbyConnectionForJoin(false);
+
+            JoinLobbyByIdOptions options = new JoinLobbyByIdOptions
+            {
+                LobbyId = targetLobbyId,
+                LocalUserId = localUserId,
+                PresenceEnabled = true
+            };
+            lobbyInterface.JoinLobbyById(ref options, null, (ref JoinLobbyByIdCallbackInfo data) =>
+            {
+                Result resultCode = data.ResultCode;
+                string joinedLobbyId = data.LobbyId;
+                Enqueue(() =>
+                {
+                    if (operation != randomMatchOperation) return;
+                    if (resultCode != Result.Success)
+                    {
+                        if (resultCode == Result.LobbyTooManyPlayers
+                            || resultCode == Result.LobbySessionInProgress
+                            || resultCode == Result.LobbyInvalidSession
+                            || resultCode == Result.LobbyNoPermission
+                            || resultCode == Result.NotFound)
+                        {
+                            ScheduleRandomMatchSearch(operation, Mathf.Max(1, retriesRemaining));
+                            return;
+                        }
+
+                        SetState(OnlineConnectionState.Error, null,
+                            LocalizationManager.Format("online_eos_join_lobby_failed", resultCode));
+                        return;
+                    }
+
+                    lobbyId = joinedLobbyId;
+                    CurrentLobby = CreateLobbyInfo(lobbyId, LocalizationManager.T("multi_random_match"), maxPlayers,
+                        string.Empty, OnlineLobbyMode.Random);
+                    CurrentLobby.Players = new[]
+                    {
+                        CreatePlayer(LocalPlayerId, PlayerNameSettings.CurrentName, false, false)
+                    };
+                    SetState(OnlineConnectionState.Matching, CurrentLobby, LocalizationManager.T("multi_searching_players"));
+                    RefreshLobbyMembers(LocalizationManager.T("multi_searching_players"));
+                    SendToHost(MessageReady, "0");
+                });
+            });
+        }
+
+        private void CreateRandomMatchLobby(int operation)
+        {
+            if (operation != randomMatchOperation) return;
+            ResetLobbyConnectionForJoin(true);
+
+            CreateLobbyOptions options = new CreateLobbyOptions
+            {
+                LocalUserId = localUserId,
+                MaxLobbyMembers = 4,
+                PermissionLevel = LobbyPermissionLevel.Publicadvertised,
+                PresenceEnabled = true,
+                AllowInvites = true,
+                BucketId = "drawbody-room",
+                DisableHostMigration = true,
+                EnableJoinById = true
+            };
+            lobbyInterface.CreateLobby(ref options, null, (ref CreateLobbyCallbackInfo data) =>
+            {
+                Result resultCode = data.ResultCode;
+                string createdLobbyId = data.LobbyId;
+                Enqueue(() =>
+                {
+                    if (operation != randomMatchOperation) return;
+                    if (resultCode != Result.Success)
+                    {
+                        SetState(OnlineConnectionState.Error, null,
+                            LocalizationManager.Format("online_eos_create_lobby_failed", resultCode));
+                        return;
+                    }
+
+                    lobbyId = createdLobbyId;
+                    CurrentLobby = CreateLobbyInfo(lobbyId, LocalizationManager.T("multi_random_match"), 4,
+                        string.Empty, OnlineLobbyMode.Random);
+                    CurrentLobby.Players = new[]
+                    {
+                        CreatePlayer(LocalPlayerId, PlayerNameSettings.CurrentName, true, false)
+                    };
+                    SetState(OnlineConnectionState.Matching, CurrentLobby, LocalizationManager.T("multi_searching_players"));
+                    AddLobbyAttribute(lobbyId, RandomMatchAttributeKey, RandomMatchAttributeValue,
+                        () => RefreshLobbyMembers(LocalizationManager.T("multi_searching_players")));
+                });
+            });
+        }
+
+        private void ResetLobbyConnectionForJoin(bool host)
+        {
+            CloseP2PConnections();
+            isHost = host;
+            hostPeer = null;
+            peers.Clear();
+            readyByPlayerId.Clear();
+            lastPeerPacketAt.Clear();
+            bodyChunkAssemblies.Clear();
+            lobbyId = null;
+            CurrentLobby = null;
+            ResetSessionTracking();
         }
 
         public void CreateRoom(string roomName, int maxPlayers, bool isPrivate)
@@ -198,11 +446,15 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            randomMatchOperation++;
+            CancelScheduledRandomSearch();
+            CloseP2PConnections();
             isHost = true;
             hostPeer = null;
             peers.Clear();
             readyByPlayerId.Clear();
             lastPeerPacketAt.Clear();
+            bodyChunkAssemblies.Clear();
             ResetSessionTracking();
             TryCreateRoomWithUniqueCode(roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts);
         }
@@ -257,7 +509,7 @@ namespace DrawBody.Prototype
 
                         lobbyId = createdLobbyId;
                         CurrentLobby = CreateLobbyInfo(lobbyId, string.IsNullOrEmpty(roomName) ? LocalizationManager.T("multi_default_room_name") : roomName, Mathf.Clamp(maxPlayers, 2, 4), roomCode);
-                        CurrentLobby.Players = new[] { CreatePlayer(LocalPlayerId, LocalizationManager.T("online_player_you"), true, false) };
+                        CurrentLobby.Players = new[] { CreatePlayer(LocalPlayerId, PlayerNameSettings.CurrentName, true, false) };
                         AddRoomCodeAttribute(lobbyId, roomCode, () => RefreshLobbyMembers(LocalizationManager.T("online_eos_room_created")));
                     });
                 });
@@ -271,6 +523,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            randomMatchOperation++;
+            CancelScheduledRandomSearch();
             string id = string.IsNullOrWhiteSpace(roomId) ? string.Empty : roomId.Trim();
             if (string.IsNullOrEmpty(id))
             {
@@ -290,12 +544,7 @@ namespace DrawBody.Prototype
 
         private void JoinLobbyById(string id, string roomCode)
         {
-            isHost = false;
-            hostPeer = null;
-            peers.Clear();
-            readyByPlayerId.Clear();
-            lastPeerPacketAt.Clear();
-            ResetSessionTracking();
+            ResetLobbyConnectionForJoin(false);
             JoinLobbyByIdOptions options = new JoinLobbyByIdOptions
             {
                 LobbyId = id,
@@ -325,12 +574,17 @@ namespace DrawBody.Prototype
 
         public void LeaveLobby()
         {
+            randomMatchOperation++;
+            CancelScheduledRandomSearch();
             if (lobbyInterface != null && localUserId != null && !string.IsNullOrEmpty(lobbyId))
             {
                 LeaveLobbyOptions options = new LeaveLobbyOptions { LocalUserId = localUserId, LobbyId = lobbyId };
                 lobbyInterface.LeaveLobby(ref options, null, (ref LeaveLobbyCallbackInfo data) => { });
             }
 
+            // Reliable packets from the previous room must not be accepted by a
+            // later P2P session (especially old stage-start/session-sync data).
+            CloseP2PConnections();
             peers.Clear();
             readyByPlayerId.Clear();
             lastPeerPacketAt.Clear();
@@ -390,9 +644,44 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (CurrentLobby.Mode == OnlineLobbyMode.Random)
+            {
+                CloseRandomMatchAdvertising();
+            }
             sessionMode = SessionModeStageSelect;
             BroadcastSessionSync();
             SetState(State, CurrentLobby, LocalizationManager.T("online_stage_select_opened"));
+        }
+
+        private void CloseRandomMatchAdvertising()
+        {
+            if (lobbyInterface == null || localUserId == null || string.IsNullOrEmpty(lobbyId)) return;
+
+            UpdateLobbyModificationOptions modificationOptions = new UpdateLobbyModificationOptions
+            {
+                LocalUserId = localUserId,
+                LobbyId = lobbyId
+            };
+            Result result = lobbyInterface.UpdateLobbyModification(ref modificationOptions,
+                out LobbyModification modification);
+            if (result != Result.Success || modification == null) return;
+
+            LobbyModificationRemoveAttributeOptions removeOptions = new LobbyModificationRemoveAttributeOptions
+            {
+                Key = RandomMatchAttributeKey
+            };
+            modification.RemoveAttribute(ref removeOptions);
+            LobbyModificationSetPermissionLevelOptions permissionOptions = new LobbyModificationSetPermissionLevelOptions
+            {
+                PermissionLevel = LobbyPermissionLevel.Inviteonly
+            };
+            modification.SetPermissionLevel(ref permissionOptions);
+
+            UpdateLobbyOptions updateOptions = new UpdateLobbyOptions { LobbyModificationHandle = modification };
+            lobbyInterface.UpdateLobby(ref updateOptions, null, (ref UpdateLobbyCallbackInfo data) =>
+            {
+                Enqueue(() => modification.Release());
+            });
         }
 
         public void CloseStageSelect()
@@ -485,7 +774,11 @@ namespace DrawBody.Prototype
                 return;
             }
             string payload = JsonUtility.ToJson(gimmickData);
-            bool realtimeTransform = gimmickData.Kind == "transform";
+            bool realtimeTransform = gimmickData.Kind == "transform"
+                || gimmickData.Kind == "mirror_brawl_state"
+                || gimmickData.Kind == "mirror_brawl_fakes"
+                || gimmickData.Kind == "flying_boss_state"
+                || gimmickData.Kind == "flying_boss_pad";
             if (isHost && realtimeTransform)
             {
                 BroadcastRealtimeGimmick(payload);
@@ -547,6 +840,11 @@ namespace DrawBody.Prototype
 
         private void AddRoomCodeAttribute(string targetLobbyId, string roomCode, Action onComplete)
         {
+            AddLobbyAttribute(targetLobbyId, RoomCodeAttributeKey, roomCode, onComplete);
+        }
+
+        private void AddLobbyAttribute(string targetLobbyId, string key, string value, Action onComplete)
+        {
             UpdateLobbyModificationOptions modificationOptions = new UpdateLobbyModificationOptions
             {
                 LocalUserId = localUserId,
@@ -562,8 +860,8 @@ namespace DrawBody.Prototype
 
             AttributeData data = new AttributeData
             {
-                Key = RoomCodeAttributeKey,
-                Value = roomCode
+                Key = key,
+                Value = value
             };
             LobbyModificationAddAttributeOptions attributeOptions = new LobbyModificationAddAttributeOptions
             {
@@ -883,7 +1181,17 @@ namespace DrawBody.Prototype
                 string memberId = member.ToString();
                 bool ready = readyByPlayerId.TryGetValue(memberId, out bool rememberedReady)
                     && rememberedReady;
-                players.Add(CreatePlayer(memberId, local ? LocalizationManager.T("online_player_you") : LocalizationManager.Format("online_player_number", i + 1), host, ready));
+                string displayName = local ? PlayerNameSettings.CurrentName : null;
+                OnlinePlayerInfo[] oldPlayers = CurrentLobby?.Players;
+                if (!local && oldPlayers != null)
+                    for (int oldIndex = 0; oldIndex < oldPlayers.Length; oldIndex++)
+                        if (oldPlayers[oldIndex] != null && oldPlayers[oldIndex].PlayerId == memberId)
+                        {
+                            displayName = oldPlayers[oldIndex].DisplayName;
+                            break;
+                        }
+                if (string.IsNullOrEmpty(displayName)) displayName = LocalizationManager.Format("online_player_number", i + 1);
+                players.Add(CreatePlayer(memberId, displayName, host, ready));
             }
 
             if (isHost && CurrentLobby?.Players != null)
@@ -1185,6 +1493,13 @@ namespace DrawBody.Prototype
             else if (type == MessageState)
             {
                 OnlinePlayerState state = JsonUtility.FromJson<OnlinePlayerState>(payload);
+                if (isHost && peer != null && state != null)
+                {
+                    EnsureSessionPeer(peer);
+                    state.PlayerId = peer.ToString();
+                    state.PlayerSlot = PlayerColorPalette.GetLobbyPlayerSlot(CurrentLobby, state.PlayerId);
+                    payload = JsonUtility.ToJson(state);
+                }
                 PlayerStateReceived?.Invoke(state);
                 if (isHost)
                 {
@@ -1579,6 +1894,12 @@ namespace DrawBody.Prototype
 
         private static OnlineLobbyInfo CreateLobbyInfo(string id, string name, int maxPlayers, string roomCode)
         {
+            return CreateLobbyInfo(id, name, maxPlayers, roomCode, OnlineLobbyMode.Room);
+        }
+
+        private static OnlineLobbyInfo CreateLobbyInfo(string id, string name, int maxPlayers, string roomCode,
+            OnlineLobbyMode mode)
+        {
             return new OnlineLobbyInfo
             {
                 LobbyId = id,
@@ -1586,7 +1907,7 @@ namespace DrawBody.Prototype
                 RoomName = name,
                 MaxPlayers = maxPlayers,
                 StageId = "1-1",
-                Mode = OnlineLobbyMode.Room,
+                Mode = mode,
                 Players = Array.Empty<OnlinePlayerInfo>()
             };
         }

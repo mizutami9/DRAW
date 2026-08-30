@@ -129,6 +129,9 @@ namespace DrawBody.Prototype
 
         private void Awake()
         {
+            // The host owns the simulation. Window focus must not freeze the
+            // network and physics for every participant.
+            Application.runInBackground = true;
             effectiveBackendMode = GetEffectiveBackendMode();
             switch (effectiveBackendMode)
             {
@@ -169,6 +172,16 @@ namespace DrawBody.Prototype
             {
                 backend?.Tick();
             }
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus) Application.runInBackground = true;
+        }
+
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused) Application.runInBackground = true;
         }
 
         private void OnDestroy()
@@ -509,7 +522,7 @@ namespace DrawBody.Prototype
             CurrentLobby = CreateLobby("RANDOM", LocalizationManager.T("multi_random_match"), OnlineLobbyMode.Random, 4);
             CurrentLobby.Players = new[]
             {
-                CreatePlayer("local", LocalizationManager.T("online_player_you"), true, false)
+                CreatePlayer("local", PlayerNameSettings.CurrentName, true, false)
             };
             SetState(OnlineConnectionState.Matching, CurrentLobby, LocalizationManager.T("online_fake_random_ready"));
         }
@@ -517,7 +530,7 @@ namespace DrawBody.Prototype
         public void CreateRoom(string roomName, int maxPlayers, bool isPrivate)
         {
             CurrentLobby = CreateLobby("TEST-" + Guid.NewGuid().ToString("N").Substring(0, 6).ToUpperInvariant(), string.IsNullOrEmpty(roomName) ? LocalizationManager.T("multi_default_room_name") : roomName, OnlineLobbyMode.Room, maxPlayers);
-            CurrentLobby.Players = new[] { CreatePlayer("local", LocalizationManager.T("online_player_you"), true, false) };
+            CurrentLobby.Players = new[] { CreatePlayer("local", PlayerNameSettings.CurrentName, true, false) };
             SetState(OnlineConnectionState.InLobby, CurrentLobby, isPrivate ? LocalizationManager.T("online_private_room_created") : LocalizationManager.T("online_public_room_created"));
         }
 
@@ -527,7 +540,7 @@ namespace DrawBody.Prototype
             CurrentLobby.Players = new[]
             {
                 CreatePlayer("host", LocalizationManager.T("online_player_host"), true, true),
-                CreatePlayer("local", LocalizationManager.T("online_player_you"), false, false)
+                CreatePlayer("local", PlayerNameSettings.CurrentName, false, false)
             };
             SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_joined_fake_room"));
         }

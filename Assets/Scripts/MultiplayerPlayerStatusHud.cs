@@ -40,6 +40,7 @@ namespace DrawBody.Prototype
 
         private readonly PlayerSlot[] slots = new PlayerSlot[MaximumPlayers];
         private readonly Dictionary<string, bool> remoteRespawning = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> remoteEliminated = new Dictionary<string, bool>();
         private OnlineManager onlineManager;
         private StageManager stageManager;
         private Canvas canvas;
@@ -113,6 +114,7 @@ namespace DrawBody.Prototype
             if (state != OnlineConnectionState.Playing)
             {
                 remoteRespawning.Clear();
+                remoteEliminated.Clear();
                 if (canvas != null) canvas.enabled = false;
             }
         }
@@ -121,6 +123,7 @@ namespace DrawBody.Prototype
         {
             if (state == null || string.IsNullOrEmpty(state.PlayerId)) return;
             remoteRespawning[state.PlayerId] = state.Respawning;
+            remoteEliminated[state.PlayerId] = state.Eliminated;
         }
 
         private void HandleEmoteShown(string playerId, int emoteId)
@@ -141,10 +144,22 @@ namespace DrawBody.Prototype
         {
             rosterSignature = GetRosterSignature(lobby);
             OnlinePlayerInfo[] players = lobby?.Players;
+            OnlinePlayerInfo[] orderedPlayers = new OnlinePlayerInfo[MaximumPlayers];
+            if (players != null)
+            {
+                for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+                {
+                    OnlinePlayerInfo member = players[playerIndex];
+                    if (member == null || string.IsNullOrEmpty(member.PlayerId)) continue;
+                    int stableSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, member.PlayerId);
+                    if (stableSlot >= 0 && stableSlot < orderedPlayers.Length)
+                        orderedPlayers[stableSlot] = member;
+                }
+            }
             for (int i = 0; i < slots.Length; i++)
             {
                 PlayerSlot slot = slots[i];
-                OnlinePlayerInfo player = players != null && i < players.Length ? players[i] : null;
+                OnlinePlayerInfo player = orderedPlayers[i];
                 bool active = player != null && !string.IsNullOrEmpty(player.PlayerId);
                 slot.Root.gameObject.SetActive(active);
                 if (!active)
@@ -186,17 +201,20 @@ namespace DrawBody.Prototype
 
         private void RefreshStatuses(OnlineLobbyInfo lobby)
         {
-            OnlinePlayerInfo[] players = lobby?.Players;
             for (int i = 0; i < slots.Length; i++)
             {
-                if (players == null || i >= players.Length || players[i] == null) continue;
                 PlayerSlot slot = slots[i];
+                if (slot == null || string.IsNullOrEmpty(slot.PlayerId)
+                    || !slot.Root.gameObject.activeSelf) continue;
                 PlayerController2D player = stageManager.GetOnlinePlayerController(slot.PlayerId);
                 bool local = onlineManager != null && slot.PlayerId == onlineManager.LocalPlayerId;
                 bool respawning = local
                     ? stageManager.IsPlayerRespawning(player)
                     : remoteRespawning.TryGetValue(slot.PlayerId, out bool remoteValue) && remoteValue;
-                bool dead = respawning || player != null && !player.gameObject.activeInHierarchy;
+                bool eliminated = local
+                    ? stageManager.IsPlayerEliminated(player)
+                    : remoteEliminated.TryGetValue(slot.PlayerId, out bool eliminatedValue) && eliminatedValue;
+                bool dead = respawning || eliminated || player != null && !player.gameObject.activeInHierarchy;
                 PlayerRedrawStateController redraw = player != null
                     ? player.GetComponent<PlayerRedrawStateController>()
                     : null;
@@ -371,10 +389,16 @@ namespace DrawBody.Prototype
             StringBuilder builder = new StringBuilder();
             OnlinePlayerInfo[] players = lobby?.Players;
             if (players == null) return string.Empty;
-            for (int i = 0; i < players.Length && i < MaximumPlayers; i++)
+            string[] orderedIds = new string[MaximumPlayers];
+            for (int i = 0; i < players.Length; i++)
             {
-                builder.Append(players[i]?.PlayerId).Append('|');
+                OnlinePlayerInfo member = players[i];
+                if (member == null || string.IsNullOrEmpty(member.PlayerId)) continue;
+                int stableSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, member.PlayerId);
+                if (stableSlot >= 0 && stableSlot < orderedIds.Length)
+                    orderedIds[stableSlot] = member.PlayerId;
             }
+            for (int i = 0; i < orderedIds.Length; i++) builder.Append(orderedIds[i]).Append('|');
             return builder.ToString();
         }
 

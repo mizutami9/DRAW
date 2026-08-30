@@ -9,6 +9,7 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "15-3";
         private const string StateKind = "mirror_brawl_state";
+        private const string FakeStateKind = "mirror_brawl_fakes";
         private const string MachineRequestKind = "mirror_brawl_machine_request";
         private const string MissileRequestKind = "mirror_brawl_missile_request";
         private const string ScratchRequestKind = "mirror_brawl_scratch_request";
@@ -17,6 +18,7 @@ namespace DrawBody.Prototype
         private const float ArenaHalfWidth = 20f;
         private const float LowerFloorY = -4.6f;
         private const float UpperFloorY = 1.15f;
+        private const int FakeHealth = 1;
 
         private enum BattleState { Intro, Fighting, Intermission, Cleared, Failed }
         internal enum WeaponType { Bomb, Missile }
@@ -24,8 +26,13 @@ namespace DrawBody.Prototype
         [System.Serializable] private sealed class MachineRequest { public int Machine; }
         [System.Serializable] private sealed class MissileRequest { public Vector2 Direction; }
         [System.Serializable] private sealed class ScratchRequest { public int FakeId; }
-        [System.Serializable] private sealed class RealHitState { public string PlayerId; }
+        [System.Serializable] private sealed class RealHitState { public string PlayerId; public int FakeId; }
         [System.Serializable] private sealed class WeaponGrantState { public string PlayerId; public int Ammo; }
+        [System.Serializable] private sealed class FakeStateBatch
+        {
+            public int Sequence;
+            public FakeState[] Fakes;
+        }
         [System.Serializable] internal sealed class FakeState
         {
             public int Id;
@@ -66,6 +73,9 @@ namespace DrawBody.Prototype
         private readonly List<StageMirrorWeaponMachine> machines = new List<StageMirrorWeaponMachine>();
         private readonly Dictionary<string, int> realMissileAmmo = new Dictionary<string, int>();
         private readonly HashSet<string> eliminatedPlayers = new HashSet<string>();
+        private readonly Dictionary<int, int> lastFakeSequenceById = new Dictionary<int, int>();
+        private readonly Dictionary<PlayerController2D, Dictionary<Renderer, bool>> hiddenPlayerRenderers =
+            new Dictionary<PlayerController2D, Dictionary<Renderer, bool>>();
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageObjectFactory objectFactory;
@@ -81,6 +91,8 @@ namespace DrawBody.Prototype
         private GameObject concealRoot;
         private SpriteRenderer concealInk;
         private readonly List<LineRenderer> concealStrokes = new List<LineRenderer>();
+        private readonly List<Transform> concealSplatPieces = new List<Transform>();
+        private readonly List<Vector3> concealSplatTargetScales = new List<Vector3>();
         private GameObject eraserVisual;
         private TextMesh resultText;
         private BattleState battleState = BattleState.Intro;
@@ -99,10 +111,18 @@ namespace DrawBody.Prototype
         private bool transitionRunning;
         private bool concealed;
         private bool concealAnimationRunning;
+        private Coroutine networkConcealRoutine;
+        private int networkConcealSeenPhase = -1;
+        private int networkConcealCompletedPhase = -1;
+        private float networkConcealDeadline = -1f;
         private int failureReason;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
+        internal bool IsCurrentStageActive => isActiveAndEnabled
+            && stageManager != null
+            && stageManager.IsGameplayActive
+            && stageManager.CurrentStageId == StageId;
         public override bool UsesGlobalFallBoundary => false;
 
         private void Awake()
@@ -123,6 +143,17 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            if (networkConcealRoutine != null) StopCoroutine(networkConcealRoutine);
+            networkConcealRoutine = null;
+            SetConcealmentImmediate(false);
+            if (eraserVisual != null) eraserVisual.SetActive(false);
+            BombExplosionVisual[] looseEffects = Object.FindObjectsByType<BombExplosionVisual>(FindObjectsSortMode.None);
+            for (int i = 0; i < looseEffects.Length; i++)
+                if (looseEffects[i] != null && looseEffects[i].gameObject.name == "INK Knockout")
+                {
+                    looseEffects[i].gameObject.SetActive(false);
+                    Destroy(looseEffects[i].gameObject);
+                }
             RestorePlayersForStageExit();
             RestoreCamera();
         }
@@ -156,6 +187,7 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            UpdateClientConcealmentFailsafe();
             fakes.RemoveAll(item => item == null);
             if (HasAuthority && battleState == BattleState.Fighting)
             {
@@ -176,6 +208,20 @@ namespace DrawBody.Prototype
             RefreshMonitor();
         }
 
+        private void UpdateClientConcealmentFailsafe()
+        {
+            if (HasAuthority || !concealed || networkConcealDeadline < 0f
+                || Time.unscaledTime < networkConcealDeadline) return;
+
+            networkConcealCompletedPhase = Mathf.Max(networkConcealCompletedPhase, phase);
+            networkConcealDeadline = -1f;
+            if (networkConcealRoutine != null) StopCoroutine(networkConcealRoutine);
+            networkConcealRoutine = null;
+            concealAnimationRunning = false;
+            SetConcealmentImmediate(false);
+            if (eraserVisual != null) eraserVisual.SetActive(false);
+        }
+
         private IEnumerator StartPhase(int nextPhase)
         {
             transitionRunning = true;
@@ -193,6 +239,7 @@ namespace DrawBody.Prototype
             yield return StartCoroutine(SetConcealment(true));
             DestroyFakes();
             ResetMachinesForPhase();
+            ReviveAllPlayersForPhase();
             SpawnPhaseFakes();
             RandomizeLivingCharacters();
             BroadcastState(true);
@@ -233,12 +280,12 @@ namespace DrawBody.Prototype
             int count = GetFakeCount(phase, playerCount);
             for (int i = 0; i < count; i++)
             {
-                int sourceRoom = i < playerCount ? i : Mathf.Abs(i * 2 + phase) % playerCount;
+                int sourceRoom = i < playerCount ? i : i % playerCount;
                 PlayerController2D source = ResolvePlayer(roomPlayerIds[sourceRoom]);
                 if (source == null) continue;
                 Vector2 position = GetSpawnPosition(i, count);
                 StageMirrorCombatant fake = StageMirrorCombatant.Create(
-                    transform, this, source, nextFakeId++, sourceRoom, phase, GetFakeHealth(phase), position, HasAuthority);
+                    transform, this, source, nextFakeId++, sourceRoom, phase, GetFakeHealth(), position, HasAuthority);
                 bool addedCopy = i >= playerCount;
                 bool berserk = addedCopy && (phase >= 3 || (i - playerCount) % 2 == 0);
                 fake.ConfigureVariant(berserk);
@@ -253,6 +300,9 @@ namespace DrawBody.Prototype
         private void GiveInitialLoadout(StageMirrorCombatant fake, int variantIndex)
         {
             if (fake == null) return;
+            if (fake.Species == DrawManager.Species.Cat
+                || fake.Species == DrawManager.Species.Turtle
+                || fake.Species == DrawManager.Species.Slime) return;
             bool giveBomb;
             switch (fake.Species)
             {
@@ -290,11 +340,11 @@ namespace DrawBody.Prototype
         private static int GetFakeCount(int targetPhase, int humans)
         {
             if (targetPhase <= 1) return humans;
-            int phaseTwo = humans + Mathf.CeilToInt(humans * 0.5f);
-            return targetPhase == 2 ? phaseTwo : phaseTwo + 1;
+            if (targetPhase == 2) return 3;
+            return humans >= 4 ? 20 : 5;
         }
 
-        private static int GetFakeHealth(int targetPhase) => targetPhase == 1 ? 2 : targetPhase == 2 ? 3 : 4;
+        private static int GetFakeHealth() => FakeHealth;
         private static float GetPhaseTimeLimit(int targetPhase, int humans)
         {
             float baseTime = targetPhase == 1 ? 55f : targetPhase == 2 ? 48f : 42f;
@@ -330,7 +380,8 @@ namespace DrawBody.Prototype
 
         internal void RequestMachineUse(int machineIndex, StageMirrorCombatant fake)
         {
-            if (!HasAuthority || fake == null || battleState != BattleState.Fighting) return;
+            if (!HasAuthority || fake == null || !fake.CanUseWeaponMachines
+                || battleState != BattleState.Fighting) return;
             UseMachine(machineIndex, null, fake);
         }
 
@@ -396,6 +447,7 @@ namespace DrawBody.Prototype
 
         private void SpawnMissile(Transform launcher, Vector2 position, Vector2 direction, float speed)
         {
+            direction = KeepMissileAimedInsideArena(position, direction);
             if (syncManager == null) syncManager = GetComponent<StageGimmickSyncManager>();
             string launchId = "15-3_missile_" + (++missileSequence).ToString("D5");
             if (syncManager != null) syncManager.SpawnMissile(launchId, StageId, launcher, position + direction * 1.35f, direction, speed);
@@ -404,6 +456,18 @@ namespace DrawBody.Prototype
                 StageMissileProjectile.Create(transform, launcher, position + direction * 1.35f, direction, speed);
                 GameSfx.PlayAt(SfxId.MissileLaunch, position, 0.9f);
             }
+        }
+
+        private static Vector2 KeepMissileAimedInsideArena(Vector2 position, Vector2 direction)
+        {
+            if (direction.sqrMagnitude < 0.01f) direction = position.x >= 0f ? Vector2.left : Vector2.right;
+            direction.Normalize();
+            const float wallSafetyMargin = 3.2f;
+            if (position.x >= ArenaHalfWidth - wallSafetyMargin && direction.x > -0.08f)
+                direction.x = -Mathf.Max(0.18f, Mathf.Abs(direction.x));
+            else if (position.x <= -ArenaHalfWidth + wallSafetyMargin && direction.x < 0.08f)
+                direction.x = Mathf.Max(0.18f, Mathf.Abs(direction.x));
+            return direction.normalized;
         }
 
         public void ApplyAreaDamage(Vector2 center, float radius, int damage)
@@ -510,7 +574,7 @@ namespace DrawBody.Prototype
             if (target == null || target.IsInvulnerable || target.IsTurtleShelled || Vector2.Distance(target.transform.position, fake.transform.position) > fake.ScratchReach) return;
             PlayScratchVisual(fake.transform, fake.Facing);
             string targetId = ResolvePlayerId(target);
-            if (IsOnline) Send(RealHitKind, new RealHitState { PlayerId = targetId });
+            if (IsOnline) Send(RealHitKind, new RealHitState { PlayerId = targetId, FakeId = fake.FakeId });
             ApplyRealHit(targetId);
         }
 
@@ -564,10 +628,31 @@ namespace DrawBody.Prototype
             return present > 0;
         }
 
-        private static void SetPlayerVisible(PlayerController2D player, bool visible)
+        private void SetPlayerVisible(PlayerController2D player, bool visible)
         {
+            if (player == null) return;
             Renderer[] renderers = player.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++) if (renderers[i] != null) renderers[i].enabled = visible;
+            if (!visible)
+            {
+                if (!hiddenPlayerRenderers.ContainsKey(player))
+                {
+                    Dictionary<Renderer, bool> states = new Dictionary<Renderer, bool>();
+                    for (int i = 0; i < renderers.Length; i++)
+                        if (renderers[i] != null) states[renderers[i]] = renderers[i].enabled;
+                    hiddenPlayerRenderers[player] = states;
+                }
+                for (int i = 0; i < renderers.Length; i++)
+                    if (renderers[i] != null) renderers[i].enabled = false;
+                return;
+            }
+
+            // BodyBuilder intentionally keeps helper/fill renderers disabled.
+            // Enabling every child here exposed those shapes as solid blocks and
+            // a large white circle on the authority instance after a revive.
+            if (!hiddenPlayerRenderers.TryGetValue(player, out Dictionary<Renderer, bool> savedStates)) return;
+            foreach (KeyValuePair<Renderer, bool> state in savedStates)
+                if (state.Key != null) state.Key.enabled = state.Value;
+            hiddenPlayerRenderers.Remove(player);
         }
 
         private void UpdatePhaseThreeMachineLock()
@@ -589,12 +674,42 @@ namespace DrawBody.Prototype
             for (int i = 0; i < machines.Count; i++) machines[i]?.ResetMachine();
         }
 
+        private void ReviveAllPlayersForPhase()
+        {
+            for (int i = 0; i < playerCount; i++)
+            {
+                string playerId = roomPlayerIds[i];
+                if (string.IsNullOrEmpty(playerId)) continue;
+                PlayerController2D player = ResolvePlayer(playerId);
+                if (player == null) continue;
+
+                eliminatedPlayers.Remove(playerId);
+                player.GetComponent<PlayerCarryController>()?.ForceDrop();
+                Rigidbody2D body = player.GetComponent<Rigidbody2D>();
+                if (body != null)
+                {
+                    body.simulated = true;
+                    body.linearVelocity = Vector2.zero;
+                    body.angularVelocity = 0f;
+                }
+                SetPlayerVisible(player, true);
+                if (!IsOnline || stageManager.ActivePlayerTransform == player.transform)
+                    player.SetControlsEnabled(true);
+            }
+            eliminatedPlayers.Clear();
+        }
+
         private void BuildArena()
         {
             CreateSolid("Lower Ground", new Vector2(0f, LowerFloorY - 0.45f), new Vector2(40f, 0.9f));
             CreateSolid("Left Wall", new Vector2(-20.45f, -0.3f), new Vector2(0.9f, 10.4f));
             CreateSolid("Right Wall", new Vector2(20.45f, -0.3f), new Vector2(0.9f, 10.4f));
-            CreateUpperSegment(-12f, 12f); CreateUpperSegment(0f, 10f); CreateUpperSegment(12f, 12f);
+            // One continuous collider avoids side seams catching only one of a
+            // hand-drawn character's many body colliders while rising through it.
+            // Leave broad drop openings at both ends. The upper weapon buttons
+            // sit around x=+/-8.6, so a 28-unit span keeps them supported while
+            // leaving roughly six world units to descend on either side.
+            CreateUpperSegment(0f, 28f);
             CreateJumpAccess(-16f); CreateJumpAccess(16f);
         }
 
@@ -602,7 +717,12 @@ namespace DrawBody.Prototype
         {
             GameObject root = new GameObject("Upper One Way Floor"); root.transform.SetParent(transform, false); root.transform.localPosition = new Vector2(x, UpperFloorY); root.layer = 6; root.tag = "Ground";
             BoxCollider2D collider = root.AddComponent<BoxCollider2D>(); collider.size = new Vector2(width, 0.62f); collider.usedByEffector = true;
-            PlatformEffector2D effector = root.AddComponent<PlatformEffector2D>(); effector.useOneWay = true; effector.surfaceArc = 165f;
+            PlatformEffector2D effector = root.AddComponent<PlatformEffector2D>();
+            effector.useOneWay = true;
+            effector.useOneWayGrouping = true;
+            effector.surfaceArc = 180f;
+            effector.useSideFriction = false;
+            effector.useSideBounce = false;
             StageEscortController.AddFilledRect(root.transform, "One Way Paper", Vector2.zero, new Vector2(width, 0.62f), new Color(0.76f, 0.91f, 1f, 0.9f), 8);
             StageEscortController.AddLine(root.transform, new Vector2(-width * 0.5f, 0.3f), new Vector2(width * 0.5f, 0.3f), 0.08f, new Color(0.1f, 0.46f, 0.85f), 10);
         }
@@ -619,7 +739,7 @@ namespace DrawBody.Prototype
         {
             if (objectFactory == null) return;
             StageObjectData data = StageObjectFactory.CreateDefaultData(StageObjectType.JumpPad, new Vector2(x, LowerFloorY + 0.38f));
-            data.objectId = "15-3_layer_jump_" + x.ToString("0"); data.actionStrength = 22f;
+            data.objectId = "15-3_layer_jump_" + x.ToString("0"); data.actionStrength = 66f;
             objectFactory.Create(data, transform);
         }
 
@@ -639,6 +759,8 @@ namespace DrawBody.Prototype
             machines.Add(CreateExistingMachine(1, WeaponType.Missile, new Vector2(18.55f, 1.25f), new Vector2(13.2f, lowerButtonY)));
             machines.Add(CreateExistingMachine(2, WeaponType.Missile, new Vector2(-18.55f, 0f), new Vector2(-13.2f, lowerButtonY)));
             machines.Add(CreateExistingMachine(3, WeaponType.Bomb, new Vector2(10.7f, -0.2f), new Vector2(8.3f, lowerButtonY)));
+            machines.Add(CreateExistingMachine(4, WeaponType.Bomb, new Vector2(11f, 5.25f), new Vector2(8.6f, upperButtonY)));
+            machines.Add(CreateExistingMachine(5, WeaponType.Bomb, new Vector2(-10.7f, -0.2f), new Vector2(-8.3f, lowerButtonY)));
         }
 
         private StageMirrorWeaponMachine CreateExistingMachine(int index, WeaponType type, Vector2 position, Vector2 buttonPosition)
@@ -676,6 +798,7 @@ namespace DrawBody.Prototype
             concealRoot = new GameObject("15-3 Ink Mix Overlay"); concealRoot.transform.SetParent(transform, false); concealRoot.transform.localPosition = new Vector3(0f, 0.7f, -5f);
             StageEscortController.AddFilledRect(concealRoot.transform, "Ink", Vector2.zero, new Vector2(45f, 23f), new Color(0.035f, 0.02f, 0.055f, 0f), 980);
             Transform ink = concealRoot.transform.Find("Ink"); concealInk = ink != null ? ink.GetComponent<SpriteRenderer>() : null;
+            BuildPaintSplat();
             for (int i = 0; i < 27; i++)
             {
                 string strokeName = "INK Stroke " + i.ToString("D2");
@@ -698,17 +821,151 @@ namespace DrawBody.Prototype
             result.SetActive(false);
         }
 
+        private void BuildPaintSplat()
+        {
+            Color[] colors =
+            {
+                new Color(0.12f, 0.025f, 0.18f, 0.98f),
+                new Color(0.025f, 0.04f, 0.09f, 0.98f),
+                new Color(0.19f, 0.035f, 0.2f, 0.96f),
+                new Color(0.04f, 0.015f, 0.055f, 0.99f)
+            };
+
+            AddPaintSplatPiece("Paint Splat Core", Vector2.zero, new Vector2(18f, 12.5f), 0f, colors[0], 982);
+            for (int i = 0; i < 12; i++)
+            {
+                float angle = (i * 137.5f + 18f) * Mathf.Deg2Rad;
+                float radius = 2.2f + i % 4 * 1.05f;
+                Vector2 position = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+                Vector2 size = new Vector2(7.2f + i % 3 * 1.5f, 5.1f + (i + 1) % 4 * 0.9f);
+                AddPaintSplatPiece("Paint Splat Blob " + i.ToString("D2"), position, size,
+                    i * 19f - 7f, colors[i % colors.Length], 982 + i % 2);
+            }
+
+            for (int i = 0; i < 20; i++)
+            {
+                float degrees = i * 137.5f + 9f;
+                float angle = degrees * Mathf.Deg2Rad;
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                float distance = 5.4f + i % 6 * 1.15f;
+                float length = 4.8f + i % 5 * 1.2f;
+                float thickness = 0.34f + i % 4 * 0.13f;
+                AddPaintSplatPiece("Paint Splat Streak " + i.ToString("D2"), direction * distance,
+                    new Vector2(length, thickness), degrees, colors[(i + 1) % colors.Length], 983);
+            }
+
+            for (int i = 0; i < 30; i++)
+            {
+                float angle = (i * 97f + 31f) * Mathf.Deg2Rad;
+                float radius = 7.5f + i % 8 * 1.72f;
+                Vector2 position = new Vector2(
+                    Mathf.Cos(angle) * radius * 1.35f,
+                    Mathf.Sin(angle) * Mathf.Min(radius, 9.8f));
+                float diameter = 0.48f + i % 5 * 0.29f;
+                AddPaintSplatPiece("Paint Splat Drop " + i.ToString("D2"), position,
+                    new Vector2(diameter * (1f + i % 3 * 0.18f), diameter),
+                    i * 23f, colors[(i + 2) % colors.Length], 984);
+            }
+            SetPaintSplatImmediate(false);
+        }
+
+        private void AddPaintSplatPiece(string name, Vector2 position, Vector2 size,
+            float rotation, Color color, int sortingOrder)
+        {
+            GameObject piece = new GameObject(name);
+            piece.transform.SetParent(concealRoot.transform, false);
+            piece.transform.localPosition = new Vector3(position.x, position.y, -0.08f);
+            piece.transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            SpriteRenderer renderer = piece.AddComponent<SpriteRenderer>();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+            renderer.color = color;
+            renderer.sortingOrder = sortingOrder;
+            concealSplatPieces.Add(piece.transform);
+            concealSplatTargetScales.Add(new Vector3(size.x, size.y, 1f));
+        }
+
+        private void SetPaintSplatImmediate(bool visible)
+        {
+            for (int i = 0; i < concealSplatPieces.Count; i++)
+            {
+                Transform piece = concealSplatPieces[i];
+                if (piece == null) continue;
+                piece.gameObject.SetActive(visible);
+                piece.localScale = visible ? concealSplatTargetScales[i] : Vector3.zero;
+            }
+        }
+
+        private IEnumerator SplashPaintOntoScreen()
+        {
+            for (int i = 0; i < concealSplatPieces.Count; i++)
+            {
+                Transform piece = concealSplatPieces[i];
+                if (piece == null) continue;
+                piece.gameObject.SetActive(true);
+                piece.localScale = concealSplatTargetScales[i] * 0.025f;
+            }
+            GameSfx.Play(SfxId.DrawInkOver);
+
+            const float duration = 0.24f;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                float squash = Mathf.Sin(t * Mathf.PI) * 0.13f;
+                for (int i = 0; i < concealSplatPieces.Count; i++)
+                {
+                    Transform piece = concealSplatPieces[i];
+                    if (piece == null) continue;
+                    float delay = i < 13 ? 0f : i < 33 ? (i % 4) * 0.025f : (i % 6) * 0.018f;
+                    float localT = Mathf.Clamp01((t - delay) / Mathf.Max(0.01f, 1f - delay));
+                    float localBurst = 1f - Mathf.Pow(1f - localT, 3f);
+                    float amount = Mathf.Max(0.025f, localBurst + squash * localT);
+                    piece.localScale = concealSplatTargetScales[i] * amount;
+                }
+                yield return null;
+            }
+            SetPaintSplatImmediate(true);
+        }
+
+        private IEnumerator PullPaintSplatAway()
+        {
+            const float duration = 0.14f;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float amount = 1f - Mathf.Clamp01(elapsed / duration);
+                amount *= amount;
+                for (int i = 0; i < concealSplatPieces.Count; i++)
+                {
+                    if (concealSplatPieces[i] != null)
+                        concealSplatPieces[i].localScale = concealSplatTargetScales[i] * amount;
+                }
+                yield return null;
+            }
+            SetPaintSplatImmediate(false);
+        }
+
         private IEnumerator SetConcealment(bool visible)
         {
             concealAnimationRunning = true;
             concealed = visible;
+            if (concealRoot != null) concealRoot.SetActive(true);
             if (concealInk != null) { Color baseColor = concealInk.color; baseColor.a = 0f; concealInk.color = baseColor; }
             if (visible)
             {
                 if (eraserVisual != null) eraserVisual.SetActive(false);
-                for (int i = 0; i < concealStrokes.Count; i++) { if (concealStrokes[i] != null) concealStrokes[i].enabled = true; yield return new WaitForSecondsRealtime(0.018f); }
+                yield return StartCoroutine(SplashPaintOntoScreen());
+                for (int i = 0; i < concealStrokes.Count; i++)
+                {
+                    if (concealStrokes[i] != null) concealStrokes[i].enabled = true;
+                    if (i % 3 == 2) yield return new WaitForSecondsRealtime(0.012f);
+                }
+                for (int i = 0; i < concealStrokes.Count; i++) if (concealStrokes[i] != null) concealStrokes[i].enabled = true;
                 concealAnimationRunning = false; yield break;
             }
+            yield return StartCoroutine(PullPaintSplatAway());
             if (eraserVisual != null) eraserVisual.SetActive(true);
             for (int i = concealStrokes.Count - 1; i >= 0; i--)
             {
@@ -717,15 +974,35 @@ namespace DrawBody.Prototype
                 yield return new WaitForSecondsRealtime(0.022f);
             }
             if (eraserVisual != null) eraserVisual.SetActive(false);
+            for (int i = 0; i < concealStrokes.Count; i++) if (concealStrokes[i] != null) concealStrokes[i].enabled = false;
+            if (concealRoot != null) concealRoot.SetActive(false);
             concealAnimationRunning = false;
+        }
+
+        private void ApplyNetworkConcealment(bool visible)
+        {
+            if (networkConcealRoutine != null) StopCoroutine(networkConcealRoutine);
+            networkConcealRoutine = StartCoroutine(ApplyNetworkConcealmentRoutine(visible));
+        }
+
+        private IEnumerator ApplyNetworkConcealmentRoutine(bool visible)
+        {
+            yield return SetConcealment(visible);
+            networkConcealRoutine = null;
         }
 
         private void SetConcealmentImmediate(bool visible)
         {
-            concealed = visible; if (concealInk == null) return;
-            Color color = concealInk.color; color.a = visible ? 1f : 0f; concealInk.color = color;
+            concealed = visible;
+            if (concealRoot != null) concealRoot.SetActive(visible);
+            if (concealInk != null)
+            {
+                Color color = concealInk.color;
+                color.a = 0f;
+                concealInk.color = color;
+            }
             for (int i = 0; i < concealStrokes.Count; i++) if (concealStrokes[i] != null) concealStrokes[i].enabled = visible;
-            color.a = 0f; concealInk.color = color;
+            SetPaintSplatImmediate(visible);
         }
 
         private void ShowFailure(int reason)
@@ -802,9 +1079,17 @@ namespace DrawBody.Prototype
         {
             if (IsOnline)
             {
-                OnlinePlayerInfo[] roster = onlineManager?.CurrentLobby?.Players; int room = 0;
-                if (roster != null) for (int i = 0; i < roster.Length && room < 4; i++) if (roster[i] != null && !string.IsNullOrEmpty(roster[i].PlayerId)) roomPlayerIds[room++] = roster[i].PlayerId;
-                playerCount = Mathf.Max(1, room); return;
+                OnlinePlayerInfo[] roster = onlineManager?.CurrentLobby?.Players;
+                if (roster != null) for (int i = 0; i < roster.Length; i++)
+                {
+                    if (roster[i] == null || string.IsNullOrEmpty(roster[i].PlayerId)) continue;
+                    int room = PlayerColorPalette.GetLobbyPlayerSlot(onlineManager.CurrentLobby, roster[i].PlayerId);
+                    if (room >= 0 && room < roomPlayerIds.Length) roomPlayerIds[room] = roster[i].PlayerId;
+                }
+                playerCount = 0;
+                for (int i = 0; i < roomPlayerIds.Length; i++)
+                    if (!string.IsNullOrEmpty(roomPlayerIds[i])) playerCount = i + 1;
+                playerCount = Mathf.Max(1, playerCount); return;
             }
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             playerCount = Mathf.Clamp(players.Length, 1, 4);
@@ -849,14 +1134,27 @@ namespace DrawBody.Prototype
             nextStateAt = Time.unscaledTime + 0.1f;
             float[] cooldowns = new float[machines.Count]; float[] angles = new float[machines.Count];
             for (int i = 0; i < cooldowns.Length; i++) { cooldowns[i] = machines[i] != null ? machines[i].CooldownRemaining : 0f; angles[i] = machines[i] != null ? machines[i].AimAngle : 0f; }
+            FakeState[] fakeStates = GetFakeStates();
             Send(StateKind, new BattleSnapshot
             {
                 Sequence = ++stateSequence, State = (int)battleState, Phase = phase, PlayerCount = playerCount, Remaining = remaining,
-                RoomPlayerIds = (string[])roomPlayerIds.Clone(), Fakes = GetFakeStates(), RealAmmo = GetRealAmmo(), MachineCooldowns = cooldowns,
+                RoomPlayerIds = (string[])roomPlayerIds.Clone(), Fakes = null, RealAmmo = GetRealAmmo(), MachineCooldowns = cooldowns,
                 MachineAngles = angles, EliminatedPlayerIds = new List<string>(eliminatedPlayers).ToArray(),
                 DisabledMachine = disabledMachine, DisabledRemaining = Mathf.Max(0f, disabledUntil - Time.time), Concealed = concealed,
                 FailureReason = failureReason, RealPositions = GetRealPositions()
             });
+            const int fakesPerPacket = 3;
+            for (int start = 0; start < fakeStates.Length; start += fakesPerPacket)
+            {
+                int count = Mathf.Min(fakesPerPacket, fakeStates.Length - start);
+                FakeState[] batch = new FakeState[count];
+                System.Array.Copy(fakeStates, start, batch, 0, count);
+                Send(FakeStateKind, new FakeStateBatch
+                {
+                    Sequence = stateSequence,
+                    Fakes = batch
+                });
+            }
         }
 
         private FakeState[] GetFakeStates()
@@ -870,9 +1168,39 @@ namespace DrawBody.Prototype
             lastStateSequence = state.Sequence; battleState = (BattleState)Mathf.Clamp(state.State, 0, (int)BattleState.Failed); phase = state.Phase; remaining = state.Remaining;
             if (state.RoomPlayerIds != null) System.Array.Copy(state.RoomPlayerIds, roomPlayerIds, Mathf.Min(4, state.RoomPlayerIds.Length));
             playerCount = Mathf.Clamp(state.PlayerCount, 1, 4);
-            ApplyFakeStates(state.Fakes);
-            if (state.Concealed != concealed) StartCoroutine(SetConcealment(state.Concealed));
-            else if (!concealAnimationRunning) SetConcealmentImmediate(state.Concealed);
+            if (state.Fakes != null) ApplyFakeStates(state.Fakes, state.Sequence);
+            if (!state.Concealed)
+            {
+                // The host's Concealed=false is authoritative. A client may have
+                // missed or interrupted an earlier paint coroutine, so never let
+                // a cosmetic erase animation keep the play field covered.
+                if (networkConcealRoutine != null) StopCoroutine(networkConcealRoutine);
+                networkConcealRoutine = null;
+                concealAnimationRunning = false;
+                SetConcealmentImmediate(false);
+                if (eraserVisual != null) eraserVisual.SetActive(false);
+                if (networkConcealSeenPhase == state.Phase)
+                    networkConcealCompletedPhase = Mathf.Max(
+                        networkConcealCompletedPhase, state.Phase);
+                networkConcealDeadline = -1f;
+            }
+            else if (networkConcealCompletedPhase == state.Phase)
+            {
+                // Reliable packets can arrive late. Once this phase has already
+                // been revealed, an older Concealed=true snapshot must not paint
+                // the participant's screen again.
+                SetConcealmentImmediate(false);
+            }
+            else
+            {
+                if (networkConcealSeenPhase != state.Phase)
+                {
+                    networkConcealSeenPhase = state.Phase;
+                    networkConcealDeadline = Time.unscaledTime + 1.8f;
+                }
+                if (!concealed) ApplyNetworkConcealment(true);
+                else if (!concealAnimationRunning) SetConcealmentImmediate(true);
+            }
             ApplyRealPositions(state.RealPositions);
             ApplyEliminatedPlayers(state.EliminatedPlayerIds);
             if (battleState == BattleState.Failed) ShowFailure(state.FailureReason);
@@ -912,7 +1240,7 @@ namespace DrawBody.Prototype
                 {
                     if (!wasDead) continue;
                     eliminatedPlayers.Remove(id); Rigidbody2D restoredBody = player.GetComponent<Rigidbody2D>();
-                    if (restoredBody != null) { restoredBody.simulated = true; restoredBody.linearVelocity = Vector2.zero; }
+                    if (restoredBody != null) { restoredBody.simulated = true; restoredBody.linearVelocity = Vector2.zero; restoredBody.angularVelocity = 0f; }
                     SetPlayerVisible(player, true);
                     if (!IsOnline || stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
                     continue;
@@ -923,12 +1251,17 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void ApplyFakeStates(FakeState[] states)
+        private void ApplyFakeStates(FakeState[] states, int snapshotSequence)
         {
             if (states == null) return;
             for (int i = 0; i < states.Length; i++)
             {
-                FakeState state = states[i]; StageMirrorCombatant fake = FindFake(state.Id);
+                FakeState state = states[i];
+                if (state == null || state.Id <= 0) continue;
+                if (lastFakeSequenceById.TryGetValue(state.Id, out int appliedSequence)
+                    && snapshotSequence < appliedSequence) continue;
+                lastFakeSequenceById[state.Id] = snapshotSequence;
+                StageMirrorCombatant fake = FindFake(state.Id);
                 if (!state.Alive) { fake?.ApplyDefeat(); continue; }
                 if (fake == null)
                 {
@@ -942,8 +1275,16 @@ namespace DrawBody.Prototype
 
         private void HandleNetworkData(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId) return;
+            // A packet queued just before a stage transition can be delivered
+            // before this old controller reaches OnDisable. Never let it create
+            // combatants or defeat flashes outside 15-3.
+            if (!IsCurrentStageActive || data == null || data.ObjectId != StageId) return;
             if (data.Kind == StateKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplySnapshot(JsonUtility.FromJson<BattleSnapshot>(data.Json));
+            else if (data.Kind == FakeStateKind && IsHostPlayer(data.PlayerId) && !HasAuthority)
+            {
+                FakeStateBatch batch = JsonUtility.FromJson<FakeStateBatch>(data.Json);
+                if (batch != null) ApplyFakeStates(batch.Fakes, batch.Sequence);
+            }
             else if (data.Kind == MachineRequestKind && HasAuthority)
             {
                 MachineRequest request = JsonUtility.FromJson<MachineRequest>(data.Json); if (request != null && FindRoom(data.PlayerId) >= 0) UseMachine(request.Machine, data.PlayerId, null);
@@ -960,7 +1301,13 @@ namespace DrawBody.Prototype
             }
             else if (data.Kind == RealHitKind && IsHostPlayer(data.PlayerId) && !HasAuthority)
             {
-                RealHitState hit = JsonUtility.FromJson<RealHitState>(data.Json); if (hit != null) ApplyRealHit(hit.PlayerId);
+                RealHitState hit = JsonUtility.FromJson<RealHitState>(data.Json);
+                if (hit != null)
+                {
+                    StageMirrorCombatant source = hit.FakeId > 0 ? FindFake(hit.FakeId) : null;
+                    if (source != null) PlayScratchVisual(source.transform, source.Facing);
+                    ApplyRealHit(hit.PlayerId);
+                }
             }
             else if (data.Kind == RealHitKind && HasAuthority)
             {
@@ -1030,8 +1377,11 @@ namespace DrawBody.Prototype
         private float desiredX;
         private bool wantsUpper;
         private Vector2 networkTarget;
+        private Vector2 networkVelocity;
         private Vector2 lastProgressPosition;
         private float lastProgressAt;
+        private int committedMoveDirection;
+        private float moveDirectionCommittedUntil;
         public int FakeId { get; private set; }
         public int SourceRoom { get; private set; }
         public bool IsAlive => alive;
@@ -1063,7 +1413,7 @@ namespace DrawBody.Prototype
             StageMirrorCombatant fake = root.AddComponent<StageMirrorCombatant>(); fake.owner = owner; fake.body = rb; fake.visualRoot = clone;
             fake.species = builder != null ? builder.BuiltSpecies : ability != null ? ability.CurrentProfile.Species : DrawManager.Species.Human;
             fake.FakeId = id; fake.SourceRoom = sourceRoom; fake.phase = phase; fake.health = fake.maximumHealth = Mathf.Max(1, hp); fake.authoritative = authoritative;
-            fake.personalityAggression = Random.Range(0.25f, 0.9f); fake.personalityCuriosity = Random.Range(0.2f, 0.95f);
+            fake.personalityAggression = Random.Range(0.48f, 1f); fake.personalityCuriosity = Random.Range(0.38f, 1f);
             fake.lastProgressPosition = position; fake.lastProgressAt = Time.time;
             if (ability != null) fake.ScratchReach = 1.35f * PlayerController2D.CalculateCatScratchRangeMultiplier(ability.CurrentProfile.CatFrontLegInk);
             fake.DecideMood(true); return fake;
@@ -1082,7 +1432,13 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (!alive) return;
-            if (!authoritative) { transform.position = Vector2.Lerp(transform.position, networkTarget, 0.38f); return; }
+            if (!authoritative)
+            {
+                Vector2 predicted = networkTarget + networkVelocity * 0.075f;
+                float blend = 1f - Mathf.Exp(-15f * Time.deltaTime);
+                transform.position = Vector2.Lerp(transform.position, predicted, blend);
+                return;
+            }
             bool heldByPlayer = owner != null && owner.IsFakeCurrentlyHeld(transform);
             if (heldByPlayer) { lastProgressPosition = transform.position; lastProgressAt = Time.time; return; }
             if (body != null && (!body.simulated || body.bodyType != RigidbodyType2D.Dynamic))
@@ -1108,6 +1464,17 @@ namespace DrawBody.Prototype
         private void DecideMood(bool immediate)
         {
             float aggression = personalityAggression + (phase - 1) * 0.17f + (berserk ? 0.32f : 0f);
+            if (species == DrawManager.Species.Cat || species == DrawManager.Species.Slime)
+            {
+                mood = Random.value < 0.82f ? Mood.Attack : Mood.ChangeFloor;
+                PlayerController2D prey = owner.FindRealTarget(transform.position);
+                    desiredX = prey != null
+                        ? GetApproachPosition(prey.transform.position.x)
+                        : Random.Range(-17f, 17f);
+                wantsUpper = prey != null ? prey.transform.position.y > -1f : Random.value < 0.5f;
+                nextDecisionAt = Time.time + (immediate ? 0.1f : Random.Range(0.28f, 0.78f));
+                return;
+            }
             if (owner.IsBombDangerNear(transform.position, out Vector2 danger)
                 && heldBomb == null
                 && (!berserk || Random.value < 0.48f))
@@ -1116,15 +1483,16 @@ namespace DrawBody.Prototype
             }
             float roll = Random.value;
             if (HasWeapon && roll < 0.3f + aggression * 0.45f) mood = Mood.Attack;
-            else if (!HasWeapon && roll < 0.22f + phase * 0.12f + (berserk ? 0.22f : 0f)) mood = Mood.SeekWeapon;
+            else if (!HasWeapon && CanUseWeaponMachines
+                && roll < 0.22f + phase * 0.12f + (berserk ? 0.22f : 0f)) mood = Mood.SeekWeapon;
             else if (roll < 0.43f) mood = Mood.Wander;
             else if (roll < 0.58f) mood = Mood.Observe;
             else if (roll < 0.76f + personalityCuriosity * 0.1f) mood = Mood.ChangeFloor;
             else mood = Random.value < 0.5f ? Mood.Flee : Mood.Attack;
             desiredX = Random.Range(-17f, 17f); wantsUpper = Random.value < (phase == 1 ? 0.38f : 0.52f);
-            float minimum = mood == Mood.Observe ? 1.2f : berserk ? 0.85f : 1.7f;
-            float maximum = berserk ? 2.8f : mood == Mood.Attack ? 3.8f : 5.8f;
-            nextDecisionAt = Time.time + (immediate ? 0.2f : Random.Range(minimum, maximum));
+            float minimum = mood == Mood.Observe ? 0.65f : berserk ? 0.5f : 0.9f;
+            float maximum = berserk ? 1.8f : mood == Mood.Attack ? 2.4f : 3.2f;
+            nextDecisionAt = Time.time + (immediate ? 0.12f : Random.Range(minimum, maximum));
         }
 
         private void Act()
@@ -1132,6 +1500,22 @@ namespace DrawBody.Prototype
             SetTurtleShell(species == DrawManager.Species.Turtle && mood == Mood.Flee);
             if (turtleShelled) { MoveHorizontal(0f); return; }
             if (mood == Mood.Observe) { MoveHorizontal(0f); return; }
+            if (species == DrawManager.Species.Cat || species == DrawManager.Species.Slime)
+            {
+                PlayerController2D prey = owner.FindRealTarget(transform.position);
+                if (prey != null)
+                {
+                    Vector2 delta = prey.transform.position - transform.position;
+                    desiredX = GetApproachPosition(prey.transform.position.x);
+                    wantsUpper = prey.transform.position.y > -1f;
+                    mood = Mood.Attack;
+                    if (species == DrawManager.Species.Cat && delta.magnitude <= ScratchReach * 1.12f && Time.time >= nextAttackAt)
+                    {
+                        nextAttackAt = Time.time + Random.Range(0.8f, 1.35f);
+                        owner.FakeCatScratch(this);
+                    }
+                }
+            }
             if (mood == Mood.SeekWeapon)
             {
                 StageMirrorWeaponMachine machine = owner.FindMachine(transform.position, true);
@@ -1146,8 +1530,15 @@ namespace DrawBody.Prototype
                 PlayerController2D target = owner.FindRealTarget(transform.position);
                 if (target != null)
                 {
-                    Vector2 delta = target.transform.position - transform.position; desiredX = target.transform.position.x;
-                    if (heldBomb != null && Time.time >= nextAttackAt && delta.magnitude < 9f) ThrowBomb((delta.normalized + Vector2.up * 0.28f).normalized * 12f);
+                    Vector2 delta = target.transform.position - transform.position;
+                    desiredX = GetApproachPosition(target.transform.position.x);
+                    if (heldBomb != null && Time.time >= nextAttackAt && delta.magnitude < 9f)
+                    {
+                        Vector2 velocity = species == DrawManager.Species.Bird
+                            ? new Vector2(Mathf.Clamp(delta.x, -3.5f, 3.5f), -2.5f)
+                            : (delta.normalized + Vector2.up * 0.28f).normalized * 12f;
+                        ThrowBomb(velocity);
+                    }
                     else if (hasMissile && Time.time >= nextAttackAt) { SetMissile(false); nextAttackAt = Time.time + Random.Range(1.5f, 2.8f); owner.FireFakeMissile(this, (delta + Random.insideUnitCircle * (berserk ? 1.15f : phase == 1 ? 1.2f : 0.45f)).normalized); nextDecisionAt = Time.time + 0.4f; }
                     else if (species == DrawManager.Species.Cat && delta.magnitude <= ScratchReach && Time.time >= nextAttackAt)
                     { nextAttackAt = Time.time + (phase == 1 ? 2.4f : phase == 2 ? 1.6f : 1.05f) * (berserk ? 0.68f : 1f); owner.FakeCatScratch(this); nextDecisionAt = Time.time + Random.Range(0.45f, 1.2f); }
@@ -1159,13 +1550,60 @@ namespace DrawBody.Prototype
                 PlayerController2D target = owner.FindRealTarget(transform.position); if (target != null && heldBomb == null) desiredX = transform.position.x + Mathf.Sign(transform.position.x - target.transform.position.x) * 7f;
             }
             NavigateLayers();
-            float speed = species == DrawManager.Species.Cat ? 7.2f : species == DrawManager.Species.Turtle ? 4.2f : 5.6f;
-            speed *= phase == 1 ? 0.9f : phase == 2 ? 1f : 1.08f;
-            if (berserk) speed *= 1.16f;
-            float direction = Mathf.Abs(desiredX - transform.position.x) < 0.35f ? 0f : Mathf.Sign(desiredX - transform.position.x);
+            float speed = species == DrawManager.Species.Cat ? 10.2f
+                : species == DrawManager.Species.Slime ? 9.1f
+                : species == DrawManager.Species.Turtle ? 5.3f : 7.1f;
+            speed *= phase == 1 ? 1f : phase == 2 ? 1.08f : 1.18f;
+            if (berserk) speed *= 1.22f;
+            float requestedDirection = Mathf.Abs(desiredX - transform.position.x) < 0.7f
+                ? 0f
+                : Mathf.Sign(desiredX - transform.position.x);
+            float direction = StabilizeMoveDirection(requestedDirection);
             MoveHorizontal(direction * speed);
             if (direction != 0f) SetFacing(direction < 0f ? -1 : 1);
-            if (Random.value < Time.deltaTime * (species == DrawManager.Species.Slime ? 0.4f : 0.18f) * (berserk ? 2f : 1f) && Time.time >= nextJumpAt) Jump();
+            if (Random.value < Time.deltaTime * (species == DrawManager.Species.Slime ? 0.68f : 0.34f) * (berserk ? 2.2f : 1f) && Time.time >= nextJumpAt) Jump();
+        }
+
+        private float GetApproachPosition(float targetX)
+        {
+            float delta = targetX - transform.position.x;
+            float comfortableDistance = species == DrawManager.Species.Cat
+                ? Mathf.Max(0.9f, ScratchReach * 0.68f)
+                : species == DrawManager.Species.Slime ? 1.15f : 1.4f;
+            if (Mathf.Abs(delta) <= comfortableDistance)
+            {
+                return transform.position.x;
+            }
+            return targetX - Mathf.Sign(delta) * comfortableDistance;
+        }
+
+        private float StabilizeMoveDirection(float requestedDirection)
+        {
+            int requested = requestedDirection < -0.01f ? -1 : requestedDirection > 0.01f ? 1 : 0;
+            // Reaching a goal should look like a brief human pause, not an
+            // immediate left-right twitch around the exact target coordinate.
+            if (requested == 0)
+            {
+                return 0f;
+            }
+
+            // Arena edges always override the commitment so an enemy cannot
+            // intentionally keep running into the outside wall.
+            if (transform.position.x >= 17.2f && requested > 0) requested = -1;
+            else if (transform.position.x <= -17.2f && requested < 0) requested = 1;
+
+            if (committedMoveDirection == 0)
+            {
+                committedMoveDirection = requested;
+                moveDirectionCommittedUntil = Time.time + Random.Range(0.65f, 1.15f);
+            }
+            else if (requested != committedMoveDirection
+                && Time.time >= moveDirectionCommittedUntil)
+            {
+                committedMoveDirection = requested;
+                moveDirectionCommittedUntil = Time.time + Random.Range(0.8f, 1.45f);
+            }
+            return committedMoveDirection;
         }
 
         private void NavigateLayers()
@@ -1180,14 +1618,14 @@ namespace DrawBody.Prototype
 
         private void MoveHorizontal(float x)
         {
-            if (body == null) return; float acceleration = 1f - Mathf.Exp(-10f * Time.deltaTime);
+            if (body == null) return; float acceleration = 1f - Mathf.Exp(-14f * Time.deltaTime);
             body.linearVelocity = new Vector2(Mathf.Lerp(body.linearVelocity.x, x, acceleration), body.linearVelocity.y);
             if (species == DrawManager.Species.Bird && body.linearVelocity.y < -2.2f) body.linearVelocity = new Vector2(body.linearVelocity.x, -2.2f);
         }
 
         private void Jump()
         {
-            if (!IsGrounded()) return; nextJumpAt = Time.time + Random.Range(0.7f, 1.8f);
+            if (!IsGrounded()) return; nextJumpAt = Time.time + Random.Range(0.48f, 1.2f);
             float force = species == DrawManager.Species.Bird ? 12.5f : species == DrawManager.Species.Slime ? 11.8f : 10.5f;
             body.linearVelocity = new Vector2(body.linearVelocity.x, force);
         }
@@ -1201,7 +1639,7 @@ namespace DrawBody.Prototype
 
         internal void TakeBomb(GameObject bomb)
         {
-            if (bomb == null || heldBomb != null) return; heldBomb = bomb; heldBombBody = bomb.GetComponent<Rigidbody2D>(); heldBombColliders = bomb.GetComponentsInChildren<Collider2D>();
+            if (bomb == null || heldBomb != null || !CanUseWeaponMachines) return; heldBomb = bomb; heldBombBody = bomb.GetComponent<Rigidbody2D>(); heldBombColliders = bomb.GetComponentsInChildren<Collider2D>();
             if (heldBombBody != null) heldBombBody.simulated = false;
             for (int i = 0; i < heldBombColliders.Length; i++) heldBombColliders[i].enabled = false;
             bomb.transform.SetParent(transform, true); bomb.transform.position = transform.position + new Vector3(facing * 0.75f, 0.8f, -0.1f);
@@ -1230,7 +1668,14 @@ namespace DrawBody.Prototype
             GameSfx.PlayAt(SfxId.HumanThrow, transform.position, 0.9f);
         }
 
-        internal void GiveMissile() { SetMissile(true); mood = Mood.Attack; nextDecisionAt = Time.time + 0.2f; }
+        internal void GiveMissile()
+        {
+            if (!CanUseWeaponMachines) return;
+            SetMissile(true); mood = Mood.Attack; nextDecisionAt = Time.time + 0.2f;
+        }
+
+        internal bool CanUseWeaponMachines => species == DrawManager.Species.Human
+            || species == DrawManager.Species.Bird;
 
         private void SetMissile(bool value)
         {
@@ -1261,7 +1706,10 @@ namespace DrawBody.Prototype
         {
             if (!alive) return; alive = false;
             if (heldBomb != null) ThrowBomb(new Vector2(Random.Range(-2f, 2f), 2f));
-            GameObject burst = new GameObject("INK Knockout"); burst.transform.position = transform.position; burst.AddComponent<BombExplosionVisual>().Configure(0.75f, false);
+            if (owner != null && owner.IsCurrentStageActive)
+            {
+                GameObject burst = new GameObject("INK Knockout"); burst.transform.SetParent(transform.parent, true); burst.transform.position = transform.position; burst.AddComponent<BombExplosionVisual>().Configure(0.75f, false, "15-3");
+            }
             GameSfx.PlayAt(SfxId.EnemyDefeat, transform.position, 0.85f); gameObject.SetActive(false);
         }
 
@@ -1294,6 +1742,7 @@ namespace DrawBody.Prototype
         {
             if (state == null) return; health = state.Health; maximumHealth = state.MaximumHealth; SetMissile(state.HasMissile);
             if (!state.Alive) { ApplyDefeat(); return; } berserk = state.Berserk; networkTarget = state.Position; SetFacing(state.Facing); SetTurtleShell(state.Shelled); body.simulated = false;
+            networkVelocity = state.Velocity;
         }
 
         internal StageMirrorFinalBossController.FakeState ToState() => new StageMirrorFinalBossController.FakeState
@@ -1345,7 +1794,11 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (Type == StageMirrorFinalBossController.WeaponType.Missile && owner != null && owner.enabled)
-                transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Repeat(transform.eulerAngles.z + 62f * Time.deltaTime, 360f));
+            {
+                float inwardAngle = transform.position.x >= 0f ? 180f : 0f;
+                float sweep = Mathf.Sin(Time.time * 1.55f + Index * 0.73f) * 65f;
+                transform.rotation = Quaternion.Euler(0f, 0f, inwardAngle + sweep);
+            }
             if (status == null) return; status.color = disabled ? new Color(0.32f, 0.32f, 0.36f) : IsReady ? new Color(0.18f, 1f, 0.4f) : new Color(1f, 0.2f, 0.12f);
             if (label != null && disabled) label.text = "X"; else if (label != null) label.text = Type == StageMirrorFinalBossController.WeaponType.Bomb ? LocalizationManager.T("stage_weapon_bomb") : LocalizationManager.T("stage_weapon_missile");
         }

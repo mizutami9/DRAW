@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DrawBody.Prototype
@@ -9,9 +10,16 @@ namespace DrawBody.Prototype
     /// </summary>
     internal static class DoodleMonitorVisuals
     {
+        // Character body strokes use sorting order 10.  A monitor may use much
+        // larger child orders to arrange its case, screen and text internally,
+        // so keep the whole assembly in a group behind characters.
+        private const int WorldMonitorSortingOrder = 5;
+
         internal static void Build(Transform parent, Vector2 size, int backOrder)
         {
             if (parent == null) return;
+
+            KeepBehindPlayers(parent);
 
             DoodleMonitorTextReadability readability = parent.GetComponent<DoodleMonitorTextReadability>();
             if (readability == null) readability = parent.gameObject.AddComponent<DoodleMonitorTextReadability>();
@@ -42,6 +50,22 @@ namespace DrawBody.Prototype
                 Mathf.Max(0.3f, size.y * 0.7f));
             Vector2 screenAt = new Vector2(0f, -size.y * 0.045f);
             AddRect(parent, "Pale Paper Screen", screenSize, new Color(0.91f, 0.97f, 0.91f, 0.98f), backOrder + 3, screenAt);
+            AddRect(parent, "Screen Phosphor Wash", screenSize * 0.96f,
+                new Color(0.18f, 0.78f, 0.88f, 0.055f), backOrder + 4, screenAt);
+            int scanLineCount = Mathf.Clamp(Mathf.RoundToInt(screenSize.y * 2.4f), 5, 10);
+            for (int i = 0; i < scanLineCount; i++)
+            {
+                float t = (i + 0.5f) / scanLineCount;
+                float y = Mathf.Lerp(-screenSize.y * 0.43f, screenSize.y * 0.43f, t);
+                AddRect(parent, "Screen Scanline", new Vector2(screenSize.x * 0.91f, 0.012f * scale),
+                    new Color(0.04f, 0.42f, 0.58f, 0.065f), backOrder + 5,
+                    screenAt + new Vector2(0f, y));
+            }
+            AddLine(parent, "Screen Glass Gleam", new[]
+            {
+                screenAt + new Vector2(-screenSize.x * 0.43f, screenSize.y * 0.31f),
+                screenAt + new Vector2(screenSize.x * 0.05f, screenSize.y * 0.42f)
+            }, 0.018f * scale, new Color(0.75f, 1f, 1f, 0.16f), backOrder + 5);
             AddCrookedBox(parent, "Crooked Screen Outline", screenSize, screenAt, graphite, 0.028f * scale, backOrder + 4);
             AddCrookedBox(parent, "Loose Monitor Outline", size, Vector2.zero, graphite, 0.045f * scale, backOrder + 4);
 
@@ -67,6 +91,15 @@ namespace DrawBody.Prototype
                 new Vector2(size.x * 0.31f, -size.y * 0.5f - 0.11f * scale),
                 new Vector2(size.x * 0.17f, -size.y * 0.5f - 0.11f * scale)
             }, 0.04f * scale, graphite, backOrder + 4);
+        }
+
+        internal static void KeepBehindPlayers(Transform parent)
+        {
+            if (parent == null) return;
+            UnityEngine.Rendering.SortingGroup group = parent.GetComponent<UnityEngine.Rendering.SortingGroup>();
+            if (group == null) group = parent.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>();
+            group.sortingOrder = WorldMonitorSortingOrder;
+            group.sortAtRoot = true;
         }
 
         private static void AddRect(Transform parent, string name, Vector2 size, Color color, int order, Vector2 offset = default)
@@ -120,6 +153,10 @@ namespace DrawBody.Prototype
     {
         private Vector2 monitorSize;
         private TextMesh[] labels = System.Array.Empty<TextMesh>();
+        private readonly Dictionary<int, float> preferredSizes = new Dictionary<int, float>();
+        private readonly Dictionary<int, TextMesh> glowLabels = new Dictionary<int, TextMesh>();
+        private readonly Dictionary<int, string> rawTexts = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> wrappedTexts = new Dictionary<int, string>();
         private int knownChildCount = -1;
 
         internal void Configure(Vector2 size)
@@ -132,19 +169,141 @@ namespace DrawBody.Prototype
         {
             if (knownChildCount != transform.childCount)
             {
-                labels = GetComponentsInChildren<TextMesh>(true);
+                TextMesh[] allLabels = GetComponentsInChildren<TextMesh>(true);
+                List<TextMesh> sourceLabels = new List<TextMesh>();
+                for (int i = 0; i < allLabels.Length; i++)
+                {
+                    TextMesh candidate = allLabels[i];
+                    if (candidate == null || candidate.name.EndsWith(" Screen Glow")) continue;
+                    sourceLabels.Add(candidate);
+                    int id = candidate.GetInstanceID();
+                    if (!preferredSizes.ContainsKey(id)) preferredSizes[id] = candidate.characterSize;
+                    EnsureGlow(candidate);
+                }
+                labels = sourceLabels.ToArray();
                 knownChildCount = transform.childCount;
             }
 
-            float preferredMinimum = Mathf.Clamp(monitorSize.y * 0.045f, 0.065f, 0.13f);
             for (int i = 0; i < labels.Length; i++)
             {
                 TextMesh label = labels[i];
                 if (label == null || string.IsNullOrEmpty(label.text)) continue;
-                float fit = monitorSize.x * 0.82f / Mathf.Max(2.7f, label.text.Length * 2.7f);
-                float readableSize = Mathf.Min(preferredMinimum, fit);
-                if (label.characterSize < readableSize) label.characterSize = readableSize;
+                int id = label.GetInstanceID();
+                string current = label.text;
+                if (!wrappedTexts.TryGetValue(id, out string previousWrapped) || current != previousWrapped)
+                    rawTexts[id] = current;
+
+                string raw = rawTexts.TryGetValue(id, out string savedRaw) ? savedRaw : current;
+                float preferredSize = preferredSizes.TryGetValue(id, out float savedSize)
+                    ? savedSize
+                    : label.characterSize;
+                float safeWidth = monitorSize.x * 0.68f;
+                float maximumLineUnits = safeWidth / Mathf.Max(0.025f, preferredSize * 2.7f);
+                string wrapped = WrapText(raw, maximumLineUnits, 2);
+                label.text = wrapped;
+                wrappedTexts[id] = wrapped;
+
+                GetTextDimensions(wrapped, out float longestLineUnits, out int lineCount);
+                float widthFit = safeWidth / Mathf.Max(2.7f, longestLineUnits * 2.7f);
+                float safeHeight = monitorSize.y * 0.52f;
+                float heightFit = safeHeight / Mathf.Max(3.1f, lineCount * 3.1f);
+                label.characterSize = Mathf.Min(preferredSize, widthFit, heightFit);
+
+                if (glowLabels.TryGetValue(id, out TextMesh glow) && glow != null)
+                {
+                    glow.text = label.text;
+                    glow.font = label.font;
+                    glow.fontSize = label.fontSize;
+                    glow.anchor = label.anchor;
+                    glow.alignment = label.alignment;
+                    glow.characterSize = label.characterSize * 1.035f;
+                    glow.lineSpacing = label.lineSpacing;
+                    glow.tabSize = label.tabSize;
+                    glow.transform.localPosition = label.transform.localPosition + new Vector3(0.012f, -0.012f, 0.006f);
+                    glow.transform.localRotation = label.transform.localRotation;
+                    glow.transform.localScale = label.transform.localScale;
+                }
             }
+        }
+
+        private void EnsureGlow(TextMesh label)
+        {
+            int id = label.GetInstanceID();
+            if (glowLabels.TryGetValue(id, out TextMesh existing) && existing != null) return;
+
+            GameObject glowObject = new GameObject(label.name + " Screen Glow");
+            glowObject.transform.SetParent(label.transform.parent, false);
+            TextMesh glow = glowObject.AddComponent<TextMesh>();
+            glow.color = new Color(0.08f, 0.68f, 0.88f, 0.18f);
+            MeshRenderer sourceRenderer = label.GetComponent<MeshRenderer>();
+            MeshRenderer glowRenderer = glow.GetComponent<MeshRenderer>();
+            if (sourceRenderer != null && glowRenderer != null)
+            {
+                glowRenderer.sharedMaterial = sourceRenderer.sharedMaterial;
+                glowRenderer.sortingLayerID = sourceRenderer.sortingLayerID;
+                glowRenderer.sortingOrder = sourceRenderer.sortingOrder - 1;
+            }
+            glowLabels[id] = glow;
+        }
+
+        private static string WrapText(string value, float maximumLineUnits, int maximumLines)
+        {
+            if (string.IsNullOrEmpty(value) || maximumLines <= 1 || value.IndexOf('\n') >= 0) return value;
+            float totalUnits = MeasureTextUnits(value);
+            if (totalUnits <= maximumLineUnits) return value;
+
+            int bestBreak = -1;
+            int whitespaceBreak = -1;
+            float units = 0f;
+            float target = Mathf.Min(maximumLineUnits, totalUnits * 0.5f);
+            for (int i = 0; i < value.Length; i++)
+            {
+                units += MeasureCharacter(value[i]);
+                if (char.IsWhiteSpace(value[i])) whitespaceBreak = i;
+                if (units < target) continue;
+                bestBreak = whitespaceBreak > 0 && units - MeasureTextUnits(value.Substring(0, whitespaceBreak)) < 6f
+                    ? whitespaceBreak
+                    : i + 1;
+                break;
+            }
+            if (bestBreak <= 0 || bestBreak >= value.Length) return value;
+            string left = value.Substring(0, bestBreak).TrimEnd();
+            string right = value.Substring(bestBreak).TrimStart();
+            return string.IsNullOrEmpty(right) ? value : left + "\n" + right;
+        }
+
+        private static void GetTextDimensions(string value, out float longestLineUnits, out int lineCount)
+        {
+            longestLineUnits = 0f;
+            lineCount = 1;
+            float current = 0f;
+            for (int i = 0; i < value.Length; i++)
+            {
+                if (value[i] == '\n')
+                {
+                    longestLineUnits = Mathf.Max(longestLineUnits, current);
+                    current = 0f;
+                    lineCount++;
+                    continue;
+                }
+                current += MeasureCharacter(value[i]);
+            }
+            longestLineUnits = Mathf.Max(longestLineUnits, current);
+        }
+
+        private static float MeasureTextUnits(string value)
+        {
+            float units = 0f;
+            for (int i = 0; i < value.Length; i++) units += MeasureCharacter(value[i]);
+            return units;
+        }
+
+        private static float MeasureCharacter(char character)
+        {
+            if (char.IsWhiteSpace(character)) return 0.35f;
+            if (character <= 0x007f)
+                return char.IsPunctuation(character) ? 0.5f : 0.68f;
+            return 1f;
         }
     }
 }

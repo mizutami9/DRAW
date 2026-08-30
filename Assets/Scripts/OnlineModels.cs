@@ -82,14 +82,31 @@ namespace DrawBody.Prototype
     public sealed class OnlinePlayerState
     {
         public string PlayerId;
+        public string DisplayName;
         public int Sequence;
+        public int PlayerSlot;
         public Vector2 Position;
         public Vector2 Velocity;
         public float Rotation;
         public int FacingDirection;
         public bool Redrawing;
         public bool Respawning;
+        public bool Eliminated;
         public bool TurtleShelled;
+        public bool Grounded;
+        public bool WallSticking;
+        public bool Gliding;
+        public int JumpSequence;
+        public int LandingSequence;
+        public bool HardLanding;
+        public bool AimingWeapon;
+        public Vector2 AimDirection;
+        public float SpeedBoostMultiplier;
+        public float SpeedBoostRemaining;
+        public float RespawnGraceRemaining;
+        public int EmoteId = -1;
+        public int EmoteSequence;
+        public float EmoteRemaining;
         public string SlimeAttachedToPlayerId;
         public string CarriedPlayerId;
         public string CarryAction;

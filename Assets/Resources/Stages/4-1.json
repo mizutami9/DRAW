@@ -11,8 +11,8 @@
             "objectId": "obj_90f34bfd2b3e477c",
             "type": 2,
             "position": {
-                "x": -5.0,
-                "y": 1.399999976158142
+                "x": -3.5,
+                "y": 1.5
             },
             "size": {
                 "x": 0.699999988079071,
@@ -124,56 +124,6 @@
             "connectedRects": [],
             "keepSeparate": true,
             "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "obj_01507844fd694255",
-            "type": 167,
-            "position": {
-                "x": 0.0,
-                "y": 5.0
-            },
-            "size": {
-                "x": 1.25,
-                "y": 0.8999999761581421
-            },
-            "rotation": -90.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 2.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "obj_390dea96ceae4148",
-            "type": 167,
-            "position": {
-                "x": 0.9000000357627869,
-                "y": 5.0
-            },
-            "size": {
-                "x": 1.25,
-                "y": 0.8999999761581421
-            },
-            "rotation": -90.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 2.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,
@@ -1074,31 +1024,6 @@
             "connectedRects": [],
             "keepSeparate": false,
             "actionStrength": 4.5,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "obj_7e948c6da2a7407c",
-            "type": 167,
-            "position": {
-                "x": 0.9000000357627869,
-                "y": 5.0
-            },
-            "size": {
-                "x": 1.25,
-                "y": 0.8999999761581421
-            },
-            "rotation": -90.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 2.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,

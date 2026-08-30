@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DrawBody.Prototype
@@ -20,32 +21,52 @@ namespace DrawBody.Prototype
 
         public static int GetLobbyColorIndex(OnlineLobbyInfo lobby, string playerId, int fallbackIndex)
         {
+            int slot = GetLobbyPlayerSlot(lobby, playerId);
+            return slot >= 0 ? slot : fallbackIndex;
+        }
+
+        public static int GetLobbyPlayerSlot(OnlineLobbyInfo lobby, string playerId)
+        {
             if (lobby == null || lobby.Players == null || string.IsNullOrEmpty(playerId))
             {
-                return fallbackIndex;
+                return -1;
             }
 
-            int nonHostIndex = 1;
+            List<OnlinePlayerInfo> ordered = new List<OnlinePlayerInfo>();
             for (int i = 0; i < lobby.Players.Length; i++)
             {
                 OnlinePlayerInfo player = lobby.Players[i];
-                if (player == null)
+                if (player == null || string.IsNullOrEmpty(player.PlayerId))
                 {
                     continue;
                 }
-
-                if (player.PlayerId == playerId)
+                bool duplicate = false;
+                for (int known = 0; known < ordered.Count; known++)
                 {
-                    return player.IsHost ? 0 : nonHostIndex;
+                    if (ordered[known].PlayerId == player.PlayerId)
+                    {
+                        duplicate = true;
+                        break;
+                    }
                 }
-
-                if (!player.IsHost)
+                if (!duplicate)
                 {
-                    nonHostIndex++;
+                    ordered.Add(player);
                 }
             }
 
-            return fallbackIndex;
+            // EOS may expose the roster in local-first order. Every peer must
+            // derive the same P-number and color from stable data instead.
+            ordered.Sort((left, right) =>
+            {
+                if (left.IsHost != right.IsHost) return left.IsHost ? -1 : 1;
+                return string.CompareOrdinal(left.PlayerId, right.PlayerId);
+            });
+            for (int i = 0; i < ordered.Count; i++)
+            {
+                if (ordered[i].PlayerId == playerId) return i;
+            }
+            return -1;
         }
     }
 }

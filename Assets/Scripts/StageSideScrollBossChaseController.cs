@@ -47,6 +47,16 @@ namespace DrawBody.Prototype
         [System.Serializable] private sealed class EliminationState { public string PlayerId; }
         [System.Serializable] private sealed class WeaponRequest { public int Index; }
 
+        private sealed class BossDecayPiece
+        {
+            public Transform Transform;
+            public SpriteRenderer Renderer;
+            public Vector2 Velocity;
+            public float Spin;
+            public Vector3 InitialScale;
+            public Color InitialColor;
+        }
+
         private readonly HashSet<string> participants = new HashSet<string>();
         private readonly HashSet<string> eliminated = new HashSet<string>();
         private readonly HashSet<int> receivedAttacks = new HashSet<int>();
@@ -88,6 +98,7 @@ namespace DrawBody.Prototype
         private bool controlsReleased;
         private bool retryStarted;
         private bool restored;
+        private bool bossDefeatVisualStarted;
 
         public override bool UsesGlobalFallBoundary => false;
         private bool HasAuthority => stageManager == null || !stageManager.IsOnlineStageActive || stageManager.IsOnlineStageHost;
@@ -132,6 +143,7 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            if (phase == Phase.Ready) StabilizePlayersOnStartFloor();
             HandleRedrawProtection();
             RefreshCountdown();
             if (phase == Phase.Defeated || phase == Phase.Failed) { UpdateCameraAndBoss(); return; }
@@ -477,17 +489,131 @@ namespace DrawBody.Prototype
             yield return new WaitForSeconds(1.35f);
             if (warning != null) Destroy(warning);
             GameSfx.PlayAt(SfxId.BossDash, new Vector2(bossX + 1f, state.Lane), 1.05f);
-            GameObject hand = new GameObject("Giant Doodle Hand"); hand.transform.SetParent(transform, false); hand.transform.position = new Vector3(bossX + 1f, state.Lane, -0.3f);
-            StageEscortController.AddFilledRect(hand.transform, "Arm", new Vector2(7f, 0f), new Vector2(14f, 1.25f), new Color(0.58f, 0.16f, 0.72f), 96);
-            AddDisc(hand.transform, "Palm", new Vector2(14f, 0f), new Vector2(2.7f, 2.2f), new Color(0.7f, 0.22f, 0.88f), 97);
-            for (int i = 0; i < 4; i++) StageEscortController.AddLine(hand.transform, new Vector2(13.5f + i * 0.35f, 0.5f), new Vector2(14.2f + i * 0.45f, 1.55f), 0.24f, new Color(0.12f, 0.02f, 0.18f), 98);
-            float end = Time.time + 0.75f;
-            while (Time.time < end)
+            GameObject hand = CreateGiantDoodleHand(out LineRenderer armOutline, out LineRenderer armFill, out Transform handTip);
+            hand.transform.position = new Vector3(bossX + 1f, state.Lane, -0.3f);
+
+            const float maximumReach = 14f;
+            float timer = 0f;
+            while (timer < 0.34f && phase == Phase.Running)
             {
-                if (HasAuthority) HitPlayersInRect(new Vector2(bossX + 8f, state.Lane), new Vector2(15.5f, 0.9f));
+                timer += Time.deltaTime;
+                float normalized = Mathf.Clamp01(timer / 0.34f);
+                float reach = maximumReach * EaseOutBack(normalized);
+                UpdateGiantHandPose(armOutline, armFill, handTip, reach, normalized);
+                HitPlayersAlongHand(hand.transform.position, state.Lane, reach);
                 yield return null;
             }
-            Destroy(hand);
+
+            timer = 0f;
+            while (timer < 0.22f && phase == Phase.Running)
+            {
+                timer += Time.deltaTime;
+                UpdateGiantHandPose(armOutline, armFill, handTip, maximumReach, 1f);
+                HitPlayersAlongHand(hand.transform.position, state.Lane, maximumReach);
+                yield return null;
+            }
+
+            timer = 0f;
+            while (timer < 0.38f && phase == Phase.Running)
+            {
+                timer += Time.deltaTime;
+                float normalized = Mathf.Clamp01(timer / 0.38f);
+                float reach = maximumReach * (1f - Mathf.SmoothStep(0f, 1f, normalized));
+                UpdateGiantHandPose(armOutline, armFill, handTip, reach, 1f - normalized);
+                HitPlayersAlongHand(hand.transform.position, state.Lane, reach);
+                yield return null;
+            }
+            if (hand != null) Destroy(hand);
+        }
+
+        private GameObject CreateGiantDoodleHand(out LineRenderer armOutline, out LineRenderer armFill, out Transform handTip)
+        {
+            Color outline = new Color(0.16f, 0.025f, 0.22f);
+            Color crayon = new Color(0.68f, 0.2f, 0.84f);
+            GameObject root = new GameObject("Giant Child Doodle Hand");
+            root.transform.SetParent(transform, false);
+            armOutline = CreateHandStroke(root.transform, "Wobbly Arm Outline", 1.35f, outline, 96);
+            armFill = CreateHandStroke(root.transform, "Wobbly Arm Crayon", 0.94f, crayon, 97);
+
+            handTip = new GameObject("Wonky Five Finger Hand").transform;
+            handTip.SetParent(root.transform, false);
+            AddDisc(handTip, "Palm Outline", Vector2.zero, new Vector2(3.05f, 2.55f), outline, 98);
+            AddDisc(handTip, "Palm Crayon", new Vector2(-0.04f, 0.02f), new Vector2(2.7f, 2.2f), new Color(0.76f, 0.3f, 0.9f), 99);
+
+            Vector2[] fingerStarts =
+            {
+                new Vector2(0.5f, 0.78f), new Vector2(0.72f, 0.32f),
+                new Vector2(0.72f, -0.14f), new Vector2(0.5f, -0.58f),
+                new Vector2(0.05f, -0.75f)
+            };
+            Vector2[] fingerEnds =
+            {
+                new Vector2(1.7f, 1.18f), new Vector2(2.05f, 0.52f),
+                new Vector2(1.95f, -0.12f), new Vector2(1.55f, -0.76f),
+                new Vector2(0.72f, -1.48f)
+            };
+            for (int i = 0; i < fingerStarts.Length; i++)
+            {
+                string label = i == fingerStarts.Length - 1 ? "Thumb" : "Finger " + (i + 1);
+                StageEscortController.AddLine(handTip, fingerStarts[i], fingerEnds[i], 0.48f, outline, 100);
+                StageEscortController.AddLine(handTip, fingerStarts[i], fingerEnds[i], 0.27f, crayon, 101);
+                AddDisc(handTip, label + " Tip", fingerEnds[i], new Vector2(0.5f, 0.5f), crayon, 102);
+            }
+            StageEscortController.AddLine(handTip, new Vector2(-0.75f, 0.46f), new Vector2(0.38f, 0.2f), 0.1f, new Color(0.46f, 0.1f, 0.6f), 102);
+            StageEscortController.AddLine(handTip, new Vector2(-0.62f, -0.24f), new Vector2(0.32f, -0.43f), 0.1f, new Color(0.46f, 0.1f, 0.6f), 102);
+            UpdateGiantHandPose(armOutline, armFill, handTip, 0.05f, 0f);
+            return root;
+        }
+
+        private static LineRenderer CreateHandStroke(Transform parent, string name, float width, Color color, int sortingOrder)
+        {
+            GameObject stroke = new GameObject(name);
+            stroke.transform.SetParent(parent, false);
+            LineRenderer line = stroke.AddComponent<LineRenderer>();
+            line.useWorldSpace = false;
+            line.positionCount = 7;
+            line.startWidth = line.endWidth = width;
+            line.numCapVertices = 8;
+            line.numCornerVertices = 6;
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+            line.startColor = line.endColor = color;
+            line.sortingOrder = sortingOrder;
+            return line;
+        }
+
+        private static void UpdateGiantHandPose(LineRenderer armOutline, LineRenderer armFill, Transform handTip, float reach, float motion)
+        {
+            float wobbleTime = Time.time * 10f;
+            Vector3 endPoint = Vector3.zero;
+            for (int i = 0; i < 7; i++)
+            {
+                float t = i / 6f;
+                float envelope = Mathf.Sin(t * Mathf.PI);
+                float y = envelope * (Mathf.Sin(wobbleTime + t * 7f) * 0.16f + Mathf.Sin(t * 4.7f) * 0.1f);
+                y += t * Mathf.Sin(wobbleTime * 0.55f) * 0.07f * Mathf.Clamp01(motion);
+                Vector3 point = new Vector3(reach * t, y, 0f);
+                armOutline.SetPosition(i, point);
+                armFill.SetPosition(i, point);
+                if (i == 6) endPoint = point;
+            }
+            handTip.localPosition = endPoint;
+            handTip.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(wobbleTime * 0.65f) * 4.5f);
+            float squash = Mathf.Clamp01(reach / 2.2f);
+            handTip.localScale = new Vector3(Mathf.Lerp(0.45f, 1f, squash), Mathf.Lerp(1.15f, 1f, squash), 1f);
+        }
+
+        private void HitPlayersAlongHand(Vector3 origin, float lane, float reach)
+        {
+            if (!HasAuthority || phase != Phase.Running || reach < 0.45f) return;
+            float width = reach + 2.2f;
+            HitPlayersInRect(new Vector2(origin.x + reach * 0.5f, lane), new Vector2(width, 1.35f));
+        }
+
+        private static float EaseOutBack(float value)
+        {
+            const float overshoot = 1.25f;
+            float shifted = Mathf.Clamp01(value) - 1f;
+            return 1f + (overshoot + 1f) * shifted * shifted * shifted + overshoot * shifted * shifted;
         }
 
         private void CheckCounterWeapons()
@@ -525,6 +651,7 @@ namespace DrawBody.Prototype
         }
 
         internal void ProjectileHit(PlayerController2D player) => RequestElimination(player);
+        internal bool CanProjectileHit(PlayerController2D player) => IsLiving(player);
 
         internal void NotifyCounterButtonTouched(int weaponIndex, PlayerController2D player)
         {
@@ -607,16 +734,151 @@ namespace DrawBody.Prototype
         {
             if (phase == Phase.Defeated) yield break;
             phase = Phase.Defeated; SetLocalControls(false); BroadcastState(true);
-            for (int i = 0; i < 8; i++)
-            {
-                Vector2 point = (Vector2)boss.position + Random.insideUnitCircle * 3f;
-                GameObject burst = new GameObject("15-2 Boss Defeat Burst"); burst.transform.position = point;
-                burst.AddComponent<BombExplosionVisual>().Configure(Random.Range(0.8f, 1.7f), false);
-                GameSfx.PlayAt(SfxId.BombExplosion, point, 0.6f);
-                yield return new WaitForSeconds(0.18f);
-            }
-            yield return new WaitForSeconds(1.4f);
+            yield return PlayBossExplosionAndDecay();
+            yield return new WaitForSeconds(0.65f);
             if (HasAuthority) stageManager.ClearStage();
+        }
+
+        private IEnumerator PlayBossExplosionAndDecay()
+        {
+            if (bossDefeatVisualStarted || bossFace == null) yield break;
+            bossDefeatVisualStarted = true;
+
+            Collider2D[] colliders = boss.GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < colliders.Length; i++) colliders[i].enabled = false;
+
+            SpriteRenderer[] sprites = bossFace.GetComponentsInChildren<SpriteRenderer>(true);
+            Color[] spriteColors = new Color[sprites.Length];
+            for (int i = 0; i < sprites.Length; i++) spriteColors[i] = sprites[i].color;
+            LineRenderer[] lines = bossFace.GetComponentsInChildren<LineRenderer>(true);
+            Color[] lineStartColors = new Color[lines.Length];
+            Color[] lineEndColors = new Color[lines.Length];
+            for (int i = 0; i < lines.Length; i++)
+            {
+                lineStartColors[i] = lines[i].startColor;
+                lineEndColors[i] = lines[i].endColor;
+            }
+
+            Vector3 originalPosition = bossFace.localPosition;
+            Vector3 originalScale = bossFace.localScale;
+            List<BossDecayPiece> pieces = new List<BossDecayPiece>();
+            const int burstCount = 15;
+            const float duration = 2.25f;
+            int burstIndex = 0;
+            float timer = 0f;
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                float normalized = Mathf.Clamp01(timer / duration);
+                while (burstIndex < burstCount && timer >= 0.08f + burstIndex * 0.115f)
+                {
+                    Vector2 localPoint = Random.insideUnitCircle;
+                    localPoint = new Vector2(localPoint.x * 3.6f, localPoint.y * 3.65f);
+                    Vector2 worldPoint = bossFace.TransformPoint(localPoint);
+                    GameObject burst = new GameObject("15-2 Boss Crayon Burst");
+                    burst.transform.position = worldPoint;
+                    burst.AddComponent<BombExplosionVisual>().Configure(Random.Range(0.75f, 1.45f), false);
+                    AddDisc(bossFace, "Charred Crayon Hole", localPoint, Vector2.one * Random.Range(0.45f, 1.05f), new Color(0.08f, 0.035f, 0.09f, 0.92f), 88 + burstIndex % 3);
+                    SpawnBossDecayPieces(worldPoint, pieces, 2 + burstIndex % 2);
+                    if (burstIndex % 2 == 0) GameSfx.PlayAt(SfxId.BombExplosion, worldPoint, 0.52f);
+                    burstIndex++;
+                }
+
+                float fade = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.42f, 1f, normalized));
+                Color charred = new Color(0.075f, 0.035f, 0.085f, 1f);
+                for (int i = 0; i < sprites.Length; i++)
+                {
+                    if (sprites[i] == null) continue;
+                    Color color = Color.Lerp(spriteColors[i], charred, normalized * 0.82f);
+                    color.a = spriteColors[i].a * (1f - fade);
+                    sprites[i].color = color;
+                }
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i] == null) continue;
+                    Color start = Color.Lerp(lineStartColors[i], charred, normalized * 0.82f);
+                    Color end = Color.Lerp(lineEndColors[i], charred, normalized * 0.82f);
+                    start.a = lineStartColors[i].a * (1f - fade);
+                    end.a = lineEndColors[i].a * (1f - fade);
+                    lines[i].startColor = start;
+                    lines[i].endColor = end;
+                }
+
+                float collapse = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.3f, 1f, normalized));
+                float shakeStrength = (1f - normalized) * 0.14f;
+                bossFace.localPosition = originalPosition + new Vector3(
+                    Random.Range(-shakeStrength, shakeStrength),
+                    -1.45f * collapse + Random.Range(-shakeStrength, shakeStrength),
+                    0f);
+                bossFace.localScale = new Vector3(
+                    originalScale.x * Mathf.Lerp(1f, 0.66f, collapse),
+                    originalScale.y * Mathf.Lerp(1f, 0.12f, collapse),
+                    originalScale.z);
+                bossFace.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(timer * 28f) * (1f - normalized) * 5f + collapse * 8f);
+                UpdateBossDecayPieces(pieces, normalized);
+                yield return null;
+            }
+
+            if (bossFace != null) bossFace.gameObject.SetActive(false);
+            float debrisTimer = 0f;
+            while (debrisTimer < 0.55f)
+            {
+                debrisTimer += Time.deltaTime;
+                UpdateBossDecayPieces(pieces, Mathf.Lerp(0.82f, 1f, debrisTimer / 0.55f));
+                yield return null;
+            }
+            for (int i = 0; i < pieces.Count; i++) if (pieces[i].Transform != null) Destroy(pieces[i].Transform.gameObject);
+        }
+
+        private void SpawnBossDecayPieces(Vector2 worldPoint, List<BossDecayPiece> pieces, int count)
+        {
+            Color[] colors =
+            {
+                new Color(0.54f, 0.12f, 0.7f), new Color(0.76f, 0.24f, 0.88f),
+                new Color(0.18f, 0.04f, 0.25f), new Color(0.92f, 0.34f, 0.6f)
+            };
+            for (int i = 0; i < count; i++)
+            {
+                GameObject pieceObject = new GameObject("Falling Crayon Boss Scrap");
+                pieceObject.transform.SetParent(transform, true);
+                pieceObject.transform.position = worldPoint + Random.insideUnitCircle * 0.35f;
+                float size = Random.Range(0.28f, 0.72f);
+                pieceObject.transform.localScale = new Vector3(size * Random.Range(0.7f, 1.45f), size, 1f);
+                pieceObject.transform.rotation = Quaternion.Euler(0f, 0f, Random.Range(-35f, 35f));
+                SpriteRenderer renderer = pieceObject.AddComponent<SpriteRenderer>();
+                renderer.sprite = Random.value > 0.45f ? DoodleRuntimeAssets.CircleSprite : StageLinkedShieldSurvivalController.GetSquareSprite();
+                renderer.color = colors[Random.Range(0, colors.Length)];
+                renderer.sortingOrder = 94;
+                Vector2 direction = ((Vector2)pieceObject.transform.position - (Vector2)boss.position).normalized;
+                direction = (direction + Random.insideUnitCircle * 0.75f).normalized;
+                pieces.Add(new BossDecayPiece
+                {
+                    Transform = pieceObject.transform,
+                    Renderer = renderer,
+                    Velocity = direction * Random.Range(2.4f, 5.8f) + Vector2.up * Random.Range(1.6f, 4.2f),
+                    Spin = Random.Range(-260f, 260f),
+                    InitialScale = pieceObject.transform.localScale,
+                    InitialColor = renderer.color
+                });
+            }
+        }
+
+        private static void UpdateBossDecayPieces(List<BossDecayPiece> pieces, float fadeProgress)
+        {
+            float delta = Time.deltaTime;
+            for (int i = 0; i < pieces.Count; i++)
+            {
+                BossDecayPiece piece = pieces[i];
+                if (piece.Transform == null || piece.Renderer == null) continue;
+                piece.Velocity += Vector2.down * (7.5f * delta);
+                piece.Transform.position += (Vector3)(piece.Velocity * delta);
+                piece.Transform.Rotate(0f, 0f, piece.Spin * delta);
+                float remaining = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.55f, 1f, fadeProgress));
+                piece.Transform.localScale = piece.InitialScale * Mathf.Lerp(1f, 0.2f, 1f - remaining);
+                Color color = piece.InitialColor;
+                color.a *= remaining;
+                piece.Renderer.color = color;
+            }
         }
 
         private void BeginFailure()
@@ -650,7 +912,8 @@ namespace DrawBody.Prototype
             if (boss != null)
             {
                 boss.position = new Vector3(bossX, 0.1f + Mathf.Sin(Time.time * 2f) * 0.3f, -0.25f);
-                bossFace.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(Time.time * 1.4f) * 2.5f);
+                if (bossFace != null && phase != Phase.Defeated)
+                    bossFace.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(Time.time * 1.4f) * 2.5f);
             }
             Transform monitor = monitorMain != null ? monitorMain.transform.parent : null;
             if (monitor != null) monitor.position = new Vector3(scrollX, 7.25f, -0.45f);
@@ -790,7 +1053,29 @@ namespace DrawBody.Prototype
             {
                 players[i].transform.position = new Vector3(-7f + i * 1.3f, FloorY + 1.3f, -0.2f);
                 players[i].ResetMotion();
+                StageMirrorFinalBossController.AlignCharacterBottomToSurface(
+                    players[i].transform,
+                    FloorY + 0.325f);
+                Rigidbody2D body = players[i].GetComponent<Rigidbody2D>();
+                if (body != null) body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             }
+            Physics2D.SyncTransforms();
+        }
+
+        private void StabilizePlayersOnStartFloor()
+        {
+            for (int i = 0; i < players.Length; i++)
+            {
+                PlayerController2D candidate = players[i];
+                if (candidate == null || stageManager.IsOnlineStageActive
+                    && candidate.transform != stageManager.ActivePlayerTransform) continue;
+                Rigidbody2D body = candidate.GetComponent<Rigidbody2D>();
+                if (body != null) body.linearVelocity = Vector2.zero;
+                StageMirrorFinalBossController.AlignCharacterBottomToSurface(
+                    candidate.transform,
+                    FloorY + 0.325f);
+            }
+            Physics2D.SyncTransforms();
         }
 
         private void SetLocalControls(bool value)
@@ -850,6 +1135,7 @@ namespace DrawBody.Prototype
         private void ApplyState(ChaseState state)
         {
             if (state == null || state.Sequence <= receivedSequence) return;
+            Phase previousPhase = phase;
             receivedSequence = state.Sequence; phase = (Phase)Mathf.Clamp(state.Phase, 0, (int)Phase.Failed);
             elapsed = state.Elapsed; scrollX = Mathf.Lerp(scrollX, state.ScrollX, 0.65f); bossX = state.BossX; bossHealth = state.BossHealth;
             if (activatedWeapons == null || activatedWeapons.Length != weapons.Count) activatedWeapons = new bool[weapons.Count];
@@ -863,6 +1149,8 @@ namespace DrawBody.Prototype
             if (state.EliminatedIds != null) for (int i = 0; i < state.EliminatedIds.Length; i++) ApplyElimination(state.EliminatedIds[i]);
             if (phase == Phase.Running && !controlsReleased) { controlsReleased = true; SetLocalControls(true); }
             else if (phase == Phase.Defeated || phase == Phase.Failed) SetLocalControls(false);
+            if (phase == Phase.Defeated && previousPhase != Phase.Defeated && !bossDefeatVisualStarted)
+                StartCoroutine(PlayBossExplosionAndDecay());
         }
 
         private void HandleNetworkData(OnlineGimmickData data)
@@ -926,11 +1214,13 @@ namespace DrawBody.Prototype
         private Vector2 velocity;
         private bool authoritative;
         private float expiresAt;
+        private float hitRadius;
 
         public static void Create(Transform parent, StageSideScrollBossChaseController owner, Vector2 position, Vector2 velocity, bool authoritative, bool fast)
         {
             GameObject root = new GameObject(fast ? "Aimed Boss Bullet" : "Boss Barrage Bullet"); root.transform.SetParent(parent, false); root.transform.position = position;
             StageSideBossProjectile projectile = root.AddComponent<StageSideBossProjectile>(); projectile.owner = owner; projectile.velocity = velocity; projectile.authoritative = authoritative; projectile.expiresAt = Time.time + 6f;
+            projectile.hitRadius = fast ? 0.72f : 0.62f;
             BossAttackVisuals.AddInkBolt(root.transform, fast, 125);
         }
 
@@ -943,11 +1233,64 @@ namespace DrawBody.Prototype
                 PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
                 for (int i = 0; i < players.Length; i++)
                 {
-                    if (DistanceToSegment(players[i].transform.position, previous, transform.position) > 0.55f) continue;
+                    if (!owner.CanProjectileHit(players[i])
+                        || !IntersectsPlayerBody(players[i], previous, transform.position, hitRadius)) continue;
                     owner.ProjectileHit(players[i]); Destroy(gameObject); return;
                 }
             }
             if (Time.time >= expiresAt) Destroy(gameObject);
+        }
+
+        private static bool IntersectsPlayerBody(
+            PlayerController2D player,
+            Vector2 start,
+            Vector2 end,
+            float radius)
+        {
+            if (player == null) return false;
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(false);
+            bool foundSolidCollider = false;
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger) continue;
+                foundSolidCollider = true;
+                Bounds bounds = collider.bounds;
+                bounds.Expand(radius * 2f);
+                if (SegmentIntersectsBounds(start, end, bounds)) return true;
+            }
+            return !foundSolidCollider
+                && DistanceToSegment(player.transform.position, start, end) <= radius;
+        }
+
+        private static bool SegmentIntersectsBounds(Vector2 start, Vector2 end, Bounds bounds)
+        {
+            Vector2 delta = end - start;
+            float minimumTime = 0f;
+            float maximumTime = 1f;
+            if (!ClipAxis(start.x, delta.x, bounds.min.x, bounds.max.x,
+                    ref minimumTime, ref maximumTime)) return false;
+            return ClipAxis(start.y, delta.y, bounds.min.y, bounds.max.y,
+                ref minimumTime, ref maximumTime);
+        }
+
+        private static bool ClipAxis(
+            float start,
+            float delta,
+            float minimum,
+            float maximum,
+            ref float minimumTime,
+            ref float maximumTime)
+        {
+            if (Mathf.Abs(delta) < 0.00001f)
+                return start >= minimum && start <= maximum;
+            float inverse = 1f / delta;
+            float near = (minimum - start) * inverse;
+            float far = (maximum - start) * inverse;
+            if (near > far) (near, far) = (far, near);
+            minimumTime = Mathf.Max(minimumTime, near);
+            maximumTime = Mathf.Min(maximumTime, far);
+            return minimumTime <= maximumTime;
         }
 
         private static float DistanceToSegment(Vector2 point, Vector2 a, Vector2 b)

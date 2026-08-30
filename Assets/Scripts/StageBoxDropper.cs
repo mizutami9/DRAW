@@ -20,6 +20,7 @@ namespace DrawBody.Prototype
         private float droppedBoxSize = 0.9f;
         private int sequence;
         private float nextSpawnTime;
+        private bool manualDispense;
 
         public void Configure(
             StageObjectFactory targetFactory,
@@ -54,7 +55,7 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            if (factory == null || spawnParent == null || Time.time < nextSpawnTime)
+            if (manualDispense || factory == null || spawnParent == null || Time.time < nextSpawnTime)
             {
                 return;
             }
@@ -66,15 +67,34 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            SpawnBox();
+            SpawnBox(Vector2.one * droppedBoxSize);
         }
 
-        private void SpawnBox()
+        public void ConfigureManualDispense()
+        {
+            manualDispense = true;
+        }
+
+        public bool DispenseSelectedSize(float selectedSize)
+        {
+            return DispenseSelectedSize(Vector2.one * selectedSize);
+        }
+
+        public bool DispenseSelectedSize(Vector2 selectedSize)
+        {
+            if (factory == null || spawnParent == null) return false;
+            if (syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost) return false;
+            visualAnimator?.PlayDispense();
+            selectedSize = new Vector2(Mathf.Clamp(selectedSize.x, 0.5f, 3f), Mathf.Clamp(selectedSize.y, 0.5f, 3f));
+            return SpawnBox(selectedSize);
+        }
+
+        private bool SpawnBox(Vector2 selectedSize)
         {
             StageObjectType type = ResolveNextBoxType();
-            float boxSize = droppedBoxSize;
+            Vector2 boxSize = selectedSize;
             Vector2 position = (Vector2)transform.position
-                - (Vector2)transform.up * (deviceSize.y * 0.5f + boxSize * 0.62f);
+                - (Vector2)transform.up * (deviceSize.y * 0.5f + boxSize.y * 0.62f);
             string dropperId = marker != null && !string.IsNullOrEmpty(marker.objectId)
                 ? marker.objectId
                 : gameObject.name;
@@ -83,11 +103,13 @@ namespace DrawBody.Prototype
 
             GameObject spawned = syncManager != null && syncManager.IsOnlineActive
                 ? syncManager.SpawnDropperBox(objectId, type, position, boxSize)
-                : factory.CreateDroppedBox(type, objectId, position, boxSize, spawnParent);
+                : factory.CreateDroppedBox(type, objectId, position, 1f, spawnParent);
             if (spawned == null)
             {
-                return;
+                return false;
             }
+            if (syncManager == null || !syncManager.IsOnlineActive)
+                spawned.transform.localScale = new Vector3(boxSize.x, boxSize.y, 1f);
 
             Rigidbody2D spawnedBody = spawned.GetComponent<Rigidbody2D>();
             if (spawnedBody != null && spawnedBody.bodyType == RigidbodyType2D.Dynamic)
@@ -114,6 +136,7 @@ namespace DrawBody.Prototype
                     Destroy(oldest);
                 }
             }
+            return true;
         }
 
         private StageObjectType ResolveNextBoxType()

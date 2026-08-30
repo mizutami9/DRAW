@@ -33,31 +33,6 @@
             "linkAction": ""
         },
         {
-            "objectId": "escort_left_wall",
-            "type": 1,
-            "position": {
-                "x": -15.550000190734864,
-                "y": 0.4000000059604645
-            },
-            "size": {
-                "x": 0.6499999761581421,
-                "y": 9.899999618530274
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": true,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
             "objectId": "escort_right_wall",
             "type": 1,
             "position": {
@@ -112,7 +87,7 @@
             "type": 0,
             "position": {
                 "x": -13.887499809265137,
-                "y": 0.44999998807907107
+                "y": 0.8100000023841858
             },
             "size": {
                 "x": 4.225000381469727,
@@ -236,11 +211,11 @@
             "objectId": "obj_e2e6795b5f2b497e",
             "type": 182,
             "position": {
-                "x": 22.75,
+                "x": 25.0,
                 "y": -1.25
             },
             "size": {
-                "x": 3.5,
+                "x": 5.0,
                 "y": 0.5
             },
             "rotation": 0.0,

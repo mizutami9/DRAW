@@ -27,6 +27,18 @@ namespace DrawBody.Prototype
             public Collider2D ButtonCollider;
         }
 
+        private readonly struct RecommendationEntry
+        {
+            public readonly DrawManager.Species Species;
+            public readonly int Count;
+
+            public RecommendationEntry(DrawManager.Species species, int count)
+            {
+                Species = species;
+                Count = count;
+            }
+        }
+
         private readonly List<PlayerController2D> offlinePlayers = new List<PlayerController2D>();
         private readonly List<string> expectedIds = new List<string>();
         private readonly List<RoomVisual> rooms = new List<RoomVisual>();
@@ -40,6 +52,8 @@ namespace DrawBody.Prototype
         private Transform suspendedStageRoot;
         private TextMesh descriptionText;
         private TextMesh statusText;
+        private TextMesh recommendationTitleText;
+        private TextMesh recommendationNoneText;
         private string stageId;
         private string localId;
         private bool configured;
@@ -51,6 +65,8 @@ namespace DrawBody.Prototype
         private float maximumBodyHeight = 2.5f;
         private float nextBodyFitScanTime;
         private float nextLocalReadySendTime;
+        private float nextSessionStateRequestTime;
+        private bool hostSessionStateKnown;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -70,6 +86,7 @@ namespace DrawBody.Prototype
             if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
             configured = true;
             RefreshPresentation();
+            if (IsOnline && !HasAuthority) RequestHostSessionState();
         }
 
         public void Abort()
@@ -111,6 +128,8 @@ namespace DrawBody.Prototype
                 }
                 else
                 {
+                    if (!hostSessionStateKnown && Time.unscaledTime >= nextSessionStateRequestTime)
+                        RequestHostSessionState();
                     bool localReady = IsLocalPlayerOnAssignedButton();
                     bool readyChanged = localReady != lastLocalReady;
                     if (readyChanged)
@@ -131,6 +150,18 @@ namespace DrawBody.Prototype
 
             RefreshPresentation();
             if (HasAuthority && AreAllPlayersReady()) LaunchForEveryone();
+        }
+
+        private void RequestHostSessionState()
+        {
+            nextSessionStateRequestTime = Time.unscaledTime + 0.75f;
+            stageManager?.RequestChallengeSessionState();
+        }
+
+        internal void ApplyHostRunState(bool runStarted)
+        {
+            hostSessionStateKnown = true;
+            if (runStarted) Launch();
         }
 
         private void CaptureRosterAndReturnPositions()
@@ -211,10 +242,10 @@ namespace DrawBody.Prototype
                 Vector2 center = new Vector2(
                     (column - (columns - 1) * 0.5f) * roomWidth,
                     ((rows - 1) * 0.5f - row) * roomHeight);
-                CreateTerrain("Floor", center + Vector2.down * roomHeight * 0.5f, new Vector2(roomWidth, 0.38f));
-                CreateTerrain("Ceiling", center + Vector2.up * roomHeight * 0.5f, new Vector2(roomWidth, 0.38f));
-                CreateTerrain("Left Wall", center + Vector2.left * roomWidth * 0.5f, new Vector2(0.38f, roomHeight));
-                CreateTerrain("Right Wall", center + Vector2.right * roomWidth * 0.5f, new Vector2(0.38f, roomHeight));
+                CreateTerrain("Floor", center + Vector2.down * roomHeight * 0.5f, new Vector2(roomWidth, 0.72f));
+                CreateTerrain("Ceiling", center + Vector2.up * roomHeight * 0.5f, new Vector2(roomWidth, 0.72f));
+                CreateTerrain("Left Wall", center + Vector2.left * roomWidth * 0.5f, new Vector2(0.72f, roomHeight));
+                CreateTerrain("Right Wall", center + Vector2.right * roomWidth * 0.5f, new Vector2(0.72f, roomHeight));
 
                 GameObject button = new GameObject("Ready Button P" + (i + 1));
                 button.transform.SetParent(transform, false);
@@ -249,16 +280,196 @@ namespace DrawBody.Prototype
                 });
             }
 
-            GameObject monitor = new GameObject("Ready Room Monitor");
+            bool showRecommendations = ShouldShowRecommendationMonitor();
+            float monitorY = rows * roomHeight * 0.5f + 2.35f;
+            bool spaciousDescription = stageId == "14-3";
+            float descriptionWidth = showRecommendations ? 12f : spaciousDescription ? 18.5f : 16.5f;
+            float descriptionX = showRecommendations ? -2.8f : 0f;
+            GameObject monitor = new GameObject("Ready Room Game Monitor");
             monitor.transform.SetParent(transform, false);
-            monitor.transform.localPosition = new Vector3(0f, rows * roomHeight * 0.5f + 2.05f, 0.25f);
-            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(15f, 2.75f), 55);
+            monitor.transform.localPosition = new Vector3(descriptionX, monitorY, 0.25f);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(descriptionWidth, spaciousDescription ? 3.8f : 3.3f), 55);
             descriptionText = StageEscortController.CreateText(monitor.transform, "Game Description",
-                new Vector3(0f, 0.36f, -0.03f), 58, 0.115f,
+                new Vector3(0f, 0.43f, -0.03f), 58, spaciousDescription ? 0.09f : showRecommendations ? 0.105f : 0.12f,
                 new Color(0.04f, 0.34f, 0.5f), 61);
             statusText = StageEscortController.CreateText(monitor.transform, "Status",
-                new Vector3(0f, -0.58f, -0.03f), 64, 0.145f,
+                new Vector3(0f, -0.72f, -0.03f), 64, 0.145f,
                 new Color(0.04f, 0.43f, 0.58f), 61);
+
+            if (showRecommendations)
+            {
+                BuildRecommendationMonitor(new Vector3(6.2f, monitorY, 0.25f), count);
+            }
+        }
+
+        private bool ShouldShowRecommendationMonitor()
+        {
+            if (string.IsNullOrEmpty(stageId)) return false;
+            int separator = stageId.IndexOf('-');
+            return separator > 0
+                && int.TryParse(stageId.Substring(0, separator), out int world)
+                && world < 11;
+        }
+
+        private void BuildRecommendationMonitor(Vector3 position, int playerCount)
+        {
+            GameObject monitor = new GameObject("Ready Room Recommendation Monitor");
+            monitor.transform.SetParent(transform, false);
+            monitor.transform.localPosition = position;
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(5.2f, 3.3f), 55);
+            recommendationTitleText = StageEscortController.CreateText(monitor.transform, "Recommendation Title",
+                new Vector3(0f, 0.78f, -0.03f), 48, 0.085f,
+                new Color(0.04f, 0.34f, 0.5f), 61);
+
+            RecommendationEntry[] entries = GetRecommendations(playerCount);
+            if (entries.Length == 0)
+            {
+                recommendationNoneText = StageEscortController.CreateText(monitor.transform, "No Recommendation",
+                    new Vector3(0f, -0.43f, -0.03f), 52, 0.105f,
+                    new Color(0.18f, 0.2f, 0.2f), 61);
+                return;
+            }
+
+            float spacing = entries.Length >= 3 ? 1.4f : entries.Length == 2 ? 1.85f : 0f;
+            float startX = -(entries.Length - 1) * spacing * 0.5f;
+            for (int i = 0; i < entries.Length; i++)
+            {
+                CreateRecommendationIcon(monitor.transform, entries[i],
+                    new Vector2(startX + i * spacing, -0.43f));
+            }
+        }
+
+        private RecommendationEntry[] GetRecommendations(int playerCount)
+        {
+            int count = Mathf.Clamp(playerCount, 1, 4);
+            switch (stageId)
+            {
+                case "2-2":
+                case "8-1":
+                    if (count == 1) return Recommendations((DrawManager.Species.Human, 1));
+                    if (count == 2) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Cat, 1));
+                    if (count == 3) return Recommendations((DrawManager.Species.Human, 2), (DrawManager.Species.Cat, 1));
+                    if (count == 4) return Recommendations((DrawManager.Species.Human, 2), (DrawManager.Species.Cat, 2));
+                    break;
+                case "4-3":
+                    if (count == 1) return Recommendations((DrawManager.Species.Human, 1));
+                    if (count == 2) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Turtle, 1));
+                    if (count == 3) return Recommendations((DrawManager.Species.Human, 2), (DrawManager.Species.Turtle, 1));
+                    if (count == 4) return Recommendations((DrawManager.Species.Human, 2), (DrawManager.Species.Turtle, 2));
+                    break;
+                case "6-2":
+                    if (count == 1) return Recommendations((DrawManager.Species.Human, 1));
+                    if (count == 2) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Cat, 1));
+                    if (count == 3) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Cat, 2));
+                    if (count == 4) return Recommendations((DrawManager.Species.Human, 2), (DrawManager.Species.Cat, 2));
+                    break;
+                case "6-3":
+                    if (count == 1) return Recommendations((DrawManager.Species.Human, 1));
+                    if (count == 2) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Cat, 1));
+                    if (count == 3) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Cat, 1), (DrawManager.Species.Bird, 1));
+                    if (count == 4) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Cat, 1), (DrawManager.Species.Bird, 2));
+                    break;
+                case "8-2":
+                    if (count == 1) return Recommendations((DrawManager.Species.Human, 1));
+                    if (count >= 2) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Slime, count - 1));
+                    break;
+                case "8-3":
+                    if (count == 1) return Recommendations((DrawManager.Species.Human, 1));
+                    if (count >= 2) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Cat, count - 1));
+                    break;
+                case "9-1":
+                case "9-3":
+                case "10-1":
+                    return Recommendations((DrawManager.Species.Slime, count));
+                case "9-2":
+                    if (count == 1) return Recommendations((DrawManager.Species.Human, 1));
+                    if (count == 2) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Bird, 1));
+                    if (count == 3) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Bird, 2));
+                    if (count == 4) return Recommendations((DrawManager.Species.Human, 2), (DrawManager.Species.Bird, 2));
+                    break;
+                case "10-3":
+                    return Recommendations((DrawManager.Species.Human, count));
+            }
+            return System.Array.Empty<RecommendationEntry>();
+        }
+
+        private static RecommendationEntry[] Recommendations(
+            params (DrawManager.Species species, int count)[] entries)
+        {
+            RecommendationEntry[] result = new RecommendationEntry[entries.Length];
+            for (int i = 0; i < entries.Length; i++)
+                result[i] = new RecommendationEntry(entries[i].species, entries[i].count);
+            return result;
+        }
+
+        private static void CreateRecommendationIcon(Transform parent, RecommendationEntry entry, Vector2 position)
+        {
+            Transform root = new GameObject("Recommended " + entry.Species).transform;
+            root.SetParent(parent, false);
+            root.localPosition = new Vector3(position.x - 0.22f, position.y, -0.03f);
+            Color ink = GetRecommendationColor(entry.Species);
+
+            switch (entry.Species)
+            {
+                case DrawManager.Species.Cat:
+                    AddIconLine(root, new Vector2(-0.38f, -0.28f), new Vector2(-0.34f, 0.31f), ink);
+                    AddIconLine(root, new Vector2(-0.34f, 0.31f), new Vector2(-0.12f, 0.12f), ink);
+                    AddIconLine(root, new Vector2(-0.12f, 0.12f), new Vector2(0.12f, 0.12f), ink);
+                    AddIconLine(root, new Vector2(0.12f, 0.12f), new Vector2(0.34f, 0.31f), ink);
+                    AddIconLine(root, new Vector2(0.34f, 0.31f), new Vector2(0.38f, -0.28f), ink);
+                    AddIconLine(root, new Vector2(0.38f, -0.28f), new Vector2(-0.38f, -0.28f), ink);
+                    break;
+                case DrawManager.Species.Bird:
+                    AddIconLine(root, new Vector2(-0.43f, -0.2f), new Vector2(-0.12f, 0.2f), ink);
+                    AddIconLine(root, new Vector2(-0.12f, 0.2f), new Vector2(0.08f, -0.08f), ink);
+                    AddIconLine(root, new Vector2(0.08f, -0.08f), new Vector2(0.42f, 0.2f), ink);
+                    AddIconLine(root, new Vector2(0.08f, -0.08f), new Vector2(0.34f, -0.25f), ink);
+                    break;
+                case DrawManager.Species.Turtle:
+                    AddIconLine(root, new Vector2(-0.4f, -0.25f), new Vector2(-0.28f, 0.23f), ink);
+                    AddIconLine(root, new Vector2(-0.28f, 0.23f), new Vector2(0.23f, 0.23f), ink);
+                    AddIconLine(root, new Vector2(0.23f, 0.23f), new Vector2(0.38f, -0.25f), ink);
+                    AddIconLine(root, new Vector2(0.38f, -0.25f), new Vector2(-0.4f, -0.25f), ink);
+                    AddIconLine(root, new Vector2(0.38f, -0.12f), new Vector2(0.56f, 0.02f), ink);
+                    break;
+                case DrawManager.Species.Slime:
+                    AddIconLine(root, new Vector2(-0.43f, -0.27f), new Vector2(-0.29f, 0.16f), ink);
+                    AddIconLine(root, new Vector2(-0.29f, 0.16f), new Vector2(0.02f, 0.3f), ink);
+                    AddIconLine(root, new Vector2(0.02f, 0.3f), new Vector2(0.37f, 0.12f), ink);
+                    AddIconLine(root, new Vector2(0.37f, 0.12f), new Vector2(0.43f, -0.27f), ink);
+                    AddIconLine(root, new Vector2(0.43f, -0.27f), new Vector2(-0.43f, -0.27f), ink);
+                    break;
+                default:
+                    AddIconLine(root, new Vector2(-0.17f, 0.34f), new Vector2(0.17f, 0.34f), ink);
+                    AddIconLine(root, new Vector2(0.17f, 0.34f), new Vector2(0.17f, 0.06f), ink);
+                    AddIconLine(root, new Vector2(0.17f, 0.06f), new Vector2(-0.17f, 0.06f), ink);
+                    AddIconLine(root, new Vector2(-0.17f, 0.06f), new Vector2(-0.17f, 0.34f), ink);
+                    AddIconLine(root, new Vector2(0f, 0.06f), new Vector2(0f, -0.34f), ink);
+                    AddIconLine(root, new Vector2(-0.34f, -0.05f), new Vector2(0.34f, -0.05f), ink);
+                    AddIconLine(root, new Vector2(0f, -0.34f), new Vector2(-0.25f, -0.55f), ink);
+                    AddIconLine(root, new Vector2(0f, -0.34f), new Vector2(0.25f, -0.55f), ink);
+                    break;
+            }
+
+            StageEscortController.CreateText(root, "Count", new Vector3(0.72f, -0.08f, 0f),
+                48, 0.08f, ink, 62).text = "×" + entry.Count;
+        }
+
+        private static void AddIconLine(Transform parent, Vector2 from, Vector2 to, Color color)
+        {
+            StageEscortController.AddLine(parent, from, to, 0.055f, color, 62);
+        }
+
+        private static Color GetRecommendationColor(DrawManager.Species species)
+        {
+            switch (species)
+            {
+                case DrawManager.Species.Cat: return new Color(0.92f, 0.48f, 0.08f);
+                case DrawManager.Species.Bird: return new Color(0.08f, 0.35f, 0.92f);
+                case DrawManager.Species.Turtle: return new Color(0.08f, 0.55f, 0.25f);
+                case DrawManager.Species.Slime: return new Color(0.55f, 0.2f, 0.82f);
+                default: return new Color(0.88f, 0.12f, 0.12f);
+            }
         }
 
         private static SpriteRenderer AddButtonOval(Transform parent, string name, Vector2 position,
@@ -353,7 +564,7 @@ namespace DrawBody.Prototype
                 : offlinePlayers.IndexOf(player);
             if (room < 0 || room >= rooms.Count) return false;
 
-            const float wallInset = 0.31f;
+            const float wallInset = 0.48f;
             const float bodyMargin = 0.12f;
             float interiorWidth = roomWidth - (wallInset + bodyMargin) * 2f;
             float interiorHeight = roomHeight - (wallInset + bodyMargin) * 2f;
@@ -361,7 +572,7 @@ namespace DrawBody.Prototype
 
             Vector2 center = rooms[room].Center;
             float leftInside = center.x - roomWidth * 0.5f + wallInset + bodyMargin;
-            float floorInside = center.y - roomHeight * 0.5f + 0.19f + bodyMargin;
+            float floorInside = center.y - roomHeight * 0.5f + 0.36f + bodyMargin;
             float desiredBodyCenterX = leftInside + bounds.extents.x;
             fittedPosition.x += desiredBodyCenterX - bounds.center.x;
             fittedPosition.y += floorInside - bounds.min.y;
@@ -459,7 +670,7 @@ namespace DrawBody.Prototype
             Physics2D.SyncTransforms();
             if (TryGetSolidBounds(player, out Bounds bounds))
             {
-                float floorTop = rooms[room].Center.y - roomHeight * 0.5f + 0.19f;
+                float floorTop = rooms[room].Center.y - roomHeight * 0.5f + 0.36f;
                 float desiredBodyCenterX = rooms[room].Center.x - roomWidth * 0.5f
                     + bounds.size.x * 0.5f + 0.55f;
                 destination.x += desiredBodyCenterX - bounds.center.x;
@@ -612,7 +823,28 @@ namespace DrawBody.Prototype
             }
             if (descriptionText != null)
             {
-                descriptionText.text = LocalizationManager.T(GetGameDescriptionKey());
+                string description = LocalizationManager.T(GetGameDescriptionKey());
+                string clearConditionKey = GetClearConditionKey();
+                if (!string.IsNullOrEmpty(clearConditionKey))
+                {
+                    description += "\n" + LocalizationManager.T(clearConditionKey);
+                    descriptionText.transform.localPosition = new Vector3(0f, 0.52f, -0.03f);
+                    descriptionText.characterSize = stageId == "14-3" ? 0.088f : ShouldShowRecommendationMonitor() ? 0.09f : 0.105f;
+                }
+                else
+                {
+                    descriptionText.transform.localPosition = new Vector3(0f, 0.43f, -0.03f);
+                    descriptionText.characterSize = ShouldShowRecommendationMonitor() ? 0.105f : 0.12f;
+                }
+                descriptionText.text = description;
+            }
+            if (recommendationTitleText != null)
+            {
+                recommendationTitleText.text = LocalizationManager.T("ready_room_recommended");
+            }
+            if (recommendationNoneText != null)
+            {
+                recommendationNoneText.text = LocalizationManager.T("ready_room_recommended_none");
             }
         }
 
@@ -621,6 +853,23 @@ namespace DrawBody.Prototype
             return "ready_room_game_" + (string.IsNullOrEmpty(stageId)
                 ? "default"
                 : stageId.Replace('-', '_'));
+        }
+
+        private string GetClearConditionKey()
+        {
+            switch (stageId)
+            {
+                case "6-2":
+                case "8-1":
+                case "9-1":
+                case "11-2":
+                case "14-3":
+                    return "ready_room_clear_one_survivor";
+                case "10-1":
+                    return "ready_room_clear_one_goal";
+                default:
+                    return string.Empty;
+            }
         }
 
         private void SendReadyRequest(bool ready)

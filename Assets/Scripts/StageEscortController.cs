@@ -145,7 +145,9 @@ namespace DrawBody.Prototype
         {
             if (friend != null)
             {
-                GameSfx.PlayAt(SfxId.PlayerDeath, friend.transform.position, 0.72f);
+                Vector2 defeatPosition = friend.transform.position;
+                GameSfx.PlayAt(SfxId.PlayerDeath, defeatPosition, 0.72f);
+                if (stageId == "10-2") StageEscortFriendDefeatEffect.Create(transform, defeatPosition);
                 Destroy(friend.gameObject);
                 friend = null;
             }
@@ -213,6 +215,8 @@ namespace DrawBody.Prototype
             }
             else if (!state.Active && friend != null)
             {
+                if (stageId == "10-2") StageEscortFriendDefeatEffect.Create(transform, friend.transform.position);
+                GameSfx.PlayAt(SfxId.PlayerDeath, friend.transform.position, 0.72f);
                 Destroy(friend.gameObject);
                 friend = null;
             }
@@ -375,8 +379,12 @@ namespace DrawBody.Prototype
             AddFilledRect(goal.transform, "Goal Door", new Vector2(0f, -0.48f), new Vector2(0.75f, 1.1f), new Color(0.03f, 0.12f, 0.08f, 1f), 32);
             AddLine(goal.transform, new Vector2(-1.05f, 1.05f), new Vector2(0f, 1.72f), 0.13f, new Color(0.05f, 0.38f, 0.16f, 1f), 33);
             AddLine(goal.transform, new Vector2(0f, 1.72f), new Vector2(1.05f, 1.05f), 0.13f, new Color(0.05f, 0.38f, 0.16f, 1f), 33);
-            TextMesh label = CreateText(goal.transform, "Goal Label", new Vector3(0f, 2.15f, -0.03f), 42, 0.1f, new Color(0.05f, 0.38f, 0.16f, 1f), 34);
-            label.text = LocalizationManager.T("stage_goal_label");
+            if (stageId != "10-2")
+            {
+                TextMesh label = CreateText(goal.transform, "Goal Label", new Vector3(0f, 2.15f, -0.03f),
+                    42, 0.1f, new Color(0.05f, 0.38f, 0.16f, 1f), 34);
+                label.text = LocalizationManager.T("stage_goal_label");
+            }
         }
 
         private void CreateMonitor(Transform parent, Vector2 position)
@@ -384,6 +392,7 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("Escort Status Monitor");
             monitor.transform.SetParent(parent, false);
             monitor.transform.localPosition = new Vector3(position.x, position.y, 0.5f);
+            DoodleMonitorVisuals.KeepBehindPlayers(monitor.transform);
             AddFilledRect(monitor.transform, "Frame", Vector2.zero, new Vector2(10.2f, 2.55f), new Color(0.18f, 0.22f, 0.27f, 0.88f), -32);
             AddFilledRect(monitor.transform, "Screen", Vector2.zero, new Vector2(9.55f, 1.95f), new Color(0.01f, 0.035f, 0.045f, 0.9f), -31);
             statusTitles.Add(CreateText(monitor.transform, "Title", new Vector3(0f, 0.68f, -0.02f), 46, 0.12f, new Color(0.55f, 0.9f, 1f, 1f), -28));
@@ -572,7 +581,7 @@ namespace DrawBody.Prototype
                     BuildSpawner(root, size);
                     break;
                 case StageObjectType.EscortGoal:
-                    BuildGoal(root, size);
+                    BuildGoal(root, size, data.objectId == null || !data.objectId.StartsWith("10-2_"));
                     break;
                 case StageObjectType.EscortPlayerOnlyFloor:
                     BuildPlayerOnlyFloor(root, size);
@@ -617,7 +626,7 @@ namespace DrawBody.Prototype
             StageEscortController.AddLine(root.transform, new Vector2(size.x * 0.1f, size.y * 0.1f), new Vector2(0f, -size.y * 0.08f), 0.1f, Color.white, 35);
         }
 
-        private static void BuildGoal(GameObject root, Vector2 size)
+        private static void BuildGoal(GameObject root, Vector2 size, bool showLabel)
         {
             BoxCollider2D selection = root.AddComponent<BoxCollider2D>();
             selection.size = size;
@@ -630,8 +639,12 @@ namespace DrawBody.Prototype
             StageEscortController.AddFilledRect(root.transform, "Goal Door", new Vector2(0f, -size.y * 0.23f), new Vector2(size.x * 0.44f, size.y * 0.52f), new Color(0.03f, 0.12f, 0.08f, 1f), 32);
             StageEscortController.AddLine(root.transform, new Vector2(-size.x * 0.62f, size.y * 0.5f), new Vector2(0f, size.y * 0.82f), 0.13f, ink, 33);
             StageEscortController.AddLine(root.transform, new Vector2(0f, size.y * 0.82f), new Vector2(size.x * 0.62f, size.y * 0.5f), 0.13f, ink, 33);
-            TextMesh label = StageEscortController.CreateText(root.transform, "Goal Label", new Vector3(0f, size.y * 1.02f, -0.03f), 42, 0.1f, ink, 34);
-            label.text = LocalizationManager.T("stage_goal_label");
+            if (showLabel)
+            {
+                TextMesh label = StageEscortController.CreateText(root.transform, "Goal Label",
+                    new Vector3(0f, size.y * 1.02f, -0.03f), 42, 0.1f, ink, 34);
+                label.text = LocalizationManager.T("stage_goal_label");
+            }
         }
 
         private static void BuildPlayerOnlyFloor(GameObject root, Vector2 size)
@@ -724,16 +737,22 @@ namespace DrawBody.Prototype
     public sealed class StageEscortFriend : MonoBehaviour
     {
         private const float WalkSpeed = 1.15f;
+        private static readonly string[] SpeechWords = { "GO!", "HELP!", "WAIT!", "YIKES!", "RUN!" };
         private bool authoritative;
         private bool stopped;
         private bool defeated;
         private bool ignorePlayerCollisions;
         private bool defeatOnObstacleCollision;
+        private bool randomSpeechEnabled;
         private float nextPlayerCollisionRefresh;
         private Rigidbody2D body;
         private CircleCollider2D hitbox;
         private Transform visual;
+        private Transform speechBubble;
+        private TextMesh speechText;
         private float walkPhase;
+        private float nextSpeechAt;
+        private float speechRemaining;
 
         public Rigidbody2D Body => body;
         public Collider2D Hitbox => hitbox;
@@ -768,9 +787,11 @@ namespace DrawBody.Prototype
             friend.authoritative = hasAuthority;
             friend.ignorePlayerCollisions = useObstacleCourseRules;
             friend.defeatOnObstacleCollision = useObstacleCourseRules;
+            friend.randomSpeechEnabled = useObstacleCourseRules;
             friend.body = rigidbody;
             friend.hitbox = collider;
             friend.BuildVisual();
+            friend.nextSpeechAt = Time.time + Random.Range(1.8f, 3.8f);
             friend.RefreshIgnoredPlayerCollisions();
             return friend;
         }
@@ -874,9 +895,26 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            if (visual == null || stopped) return;
-            walkPhase += Time.deltaTime * 7f;
-            visual.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(walkPhase) * 2.2f);
+            if (visual != null && !stopped)
+            {
+                walkPhase += Time.deltaTime * 7f;
+                visual.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(walkPhase) * 2.2f);
+            }
+
+            if (speechBubble == null) return;
+            if (speechRemaining > 0f)
+            {
+                speechRemaining -= Time.deltaTime;
+                if (speechRemaining <= 0f) speechBubble.gameObject.SetActive(false);
+            }
+            else if (randomSpeechEnabled && !stopped && Time.time >= nextSpeechAt)
+            {
+                speechText.text = SpeechWords[Random.Range(0, SpeechWords.Length)];
+                speechBubble.gameObject.SetActive(true);
+                speechRemaining = Random.Range(0.85f, 1.25f);
+                nextSpeechAt = Time.time + Random.Range(3.2f, 6.2f);
+                GameSfx.PlayAt(SfxId.EmotePop, transform.position, 0.42f);
+            }
         }
 
         private bool TryGetGroundSupport(out Vector2 normal, out bool sticky, out Rigidbody2D supportBody)
@@ -933,6 +971,20 @@ namespace DrawBody.Prototype
             StageEscortController.AddLine(visual, new Vector2(-0.2f, -0.34f), new Vector2(-0.31f, -0.46f), 0.07f, new Color(0.04f, 0.3f, 0.55f, 1f), 41);
             StageEscortController.AddLine(visual, new Vector2(0.2f, -0.34f), new Vector2(0.34f, -0.46f), 0.07f, new Color(0.04f, 0.3f, 0.55f, 1f), 41);
             NicoDrawBossArt.Apply(visual, "ally-escort", new Vector2(0.92f, 0.92f), 42);
+
+            GameObject bubble = new GameObject("Friend Speech Bubble");
+            bubble.transform.SetParent(transform, false);
+            bubble.transform.localPosition = new Vector3(0f, 1.35f, -0.05f);
+            StageEscortController.AddFilledRect(bubble.transform, "Paper", Vector2.zero,
+                new Vector2(1.65f, 0.72f), new Color(1f, 0.97f, 0.79f, 0.96f), 48);
+            StageEscortController.AddBoxOutline(bubble.transform, Vector2.zero,
+                new Vector2(1.65f, 0.72f), new Color(0.06f, 0.3f, 0.55f), 49);
+            StageEscortController.AddLine(bubble.transform, new Vector2(-0.25f, -0.36f),
+                new Vector2(-0.05f, -0.62f), 0.055f, new Color(0.06f, 0.3f, 0.55f), 49);
+            speechText = StageEscortController.CreateText(bubble.transform, "Word", new Vector3(0f, -0.02f, -0.03f),
+                46, 0.105f, new Color(0.04f, 0.25f, 0.48f), 50);
+            speechBubble = bubble.transform;
+            bubble.SetActive(false);
         }
 
         private static void AddFaceDot(Transform parent, Vector2 position)
@@ -945,6 +997,66 @@ namespace DrawBody.Prototype
             renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = new Color(0.04f, 0.3f, 0.55f, 1f);
             renderer.sortingOrder = 42;
+        }
+    }
+
+    public sealed class StageEscortFriendDefeatEffect : MonoBehaviour
+    {
+        private readonly List<LineRenderer> strokes = new List<LineRenderer>();
+        private readonly List<Vector2> directions = new List<Vector2>();
+        private SpriteRenderer blot;
+        private float age;
+
+        public static void Create(Transform parent, Vector2 position)
+        {
+            GameObject root = new GameObject("Friend Crayon Defeat Burst");
+            root.transform.SetParent(parent, false);
+            root.transform.position = position;
+            StageEscortFriendDefeatEffect effect = root.AddComponent<StageEscortFriendDefeatEffect>();
+
+            GameObject blotObject = new GameObject("Blue Crayon Blot");
+            blotObject.transform.SetParent(root.transform, false);
+            blotObject.transform.localScale = Vector3.one * 0.65f;
+            effect.blot = blotObject.AddComponent<SpriteRenderer>();
+            effect.blot.sprite = DoodleRuntimeAssets.CircleSprite;
+            effect.blot.color = new Color(0.18f, 0.72f, 0.96f, 0.85f);
+            effect.blot.sortingOrder = 58;
+
+            for (int i = 0; i < 12; i++)
+            {
+                float angle = i / 12f * Mathf.PI * 2f + Random.Range(-0.14f, 0.14f);
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                StageEscortController.AddLine(root.transform, direction * 0.22f, direction * 0.58f,
+                    Random.Range(0.055f, 0.105f), new Color(0.05f, 0.38f, 0.72f, 0.95f), 59);
+                LineRenderer line = root.transform.GetChild(root.transform.childCount - 1).GetComponent<LineRenderer>();
+                effect.strokes.Add(line);
+                effect.directions.Add(direction);
+            }
+        }
+
+        private void Update()
+        {
+            age += Time.deltaTime;
+            float progress = Mathf.Clamp01(age / 0.72f);
+            float alpha = 1f - progress;
+            if (blot != null)
+            {
+                blot.transform.localScale = Vector3.one * Mathf.Lerp(0.65f, 1.5f, progress);
+                Color color = blot.color;
+                color.a = 0.85f * alpha;
+                blot.color = color;
+            }
+            for (int i = 0; i < strokes.Count; i++)
+            {
+                LineRenderer line = strokes[i];
+                if (line == null) continue;
+                Vector2 direction = directions[i];
+                line.SetPosition(0, direction * Mathf.Lerp(0.22f, 0.7f, progress));
+                line.SetPosition(1, direction * Mathf.Lerp(0.58f, 1.8f, progress));
+                Color color = new Color(0.05f, 0.38f, 0.72f, 0.95f * alpha);
+                line.startColor = line.endColor = color;
+            }
+            if (age >= 0.72f) Destroy(gameObject);
         }
     }
 }

@@ -170,7 +170,14 @@ namespace DrawBody.Prototype
             float progress = 1f - remaining / Mathf.Max(1f, duration);
             List<PlayerController2D> targets = GetLivingPlayers();
             if (targets.Count == 0) return;
-            int count = Mathf.Clamp(Mathf.Max(targets.Count, 1 + Mathf.FloorToInt(progress * 4.2f)), 1, 8);
+            // The authored volley is the four-player baseline. Reduce the number of
+            // missiles for smaller parties without changing the late-stage ramp.
+            int participantCount = Mathf.Clamp(
+                stageManager != null ? stageManager.GetInkBudgetPlayerCount() : targets.Count,
+                1,
+                4);
+            int fourPlayerCount = Mathf.Clamp(Mathf.Max(4, 1 + Mathf.FloorToInt(progress * 4.2f)), 1, 8);
+            int count = Mathf.Max(1, Mathf.CeilToInt(fourPlayerCount * participantCount / 4f));
             int volleyStart = missileSequence;
             int targetStart = volleyStart % targets.Count;
             for (int i = 0; i < count; i++)
@@ -417,8 +424,8 @@ namespace DrawBody.Prototype
             float[] heights = { -8f, -18f, -28f, -37f };
             for (int y = 0; y < heights.Length; y++)
             {
-                CreateSideMonitor(-8.05f, heights[y]);
-                CreateSideMonitor(8.05f, heights[y]);
+                CreateSideMonitor(-10.65f, heights[y]);
+                CreateSideMonitor(10.65f, heights[y]);
             }
         }
 

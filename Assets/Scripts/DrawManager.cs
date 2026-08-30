@@ -1979,11 +1979,10 @@ namespace DrawBody.Prototype
         private void RefreshAbilityCard(PlayerAbilityController.AbilityProfile profile)
         {
             float progress;
-            float rankProgress;
             float secondaryProgress = 0f;
             string title;
             string effect;
-            string ink;
+            string hint;
             Color accent;
 
             switch (profile.Species)
@@ -1992,110 +1991,88 @@ namespace DrawBody.Prototype
                     progress = Mathf.Clamp01(profile.CatBackLegInk / 120f);
                     secondaryProgress = Mathf.Clamp01(profile.CatFrontLegInk / 120f);
                     title = LocalizationManager.T("ability_card_cat");
-                    effect = LocalizationManager.Format(
-                        "ability_effect_cat",
-                        PlayerController2D.CalculateCatMoveSpeedMultiplier(profile.CatBackLegInk),
-                        PlayerController2D.CalculateCatScratchRangeMultiplier(profile.CatFrontLegInk));
-                    ink = LocalizationManager.Format(
-                        "ability_ink_cat", profile.CatBackLegInk, profile.CatFrontLegInk);
+                    effect = LocalizationManager.T("ability_description_cat");
+                    hint = LocalizationManager.T("ability_control_cat");
                     accent = new Color(0.94f, 0.54f, 0.18f, 1f);
                     break;
                 case Species.Bird:
                     progress = Mathf.Clamp01(profile.WingInk / 350f);
                     title = LocalizationManager.T("ability_card_bird");
-                    effect = LocalizationManager.Format("ability_effect_bird", progress * 100f);
-                    ink = LocalizationManager.Format("ability_ink_bird", profile.WingInk);
+                    effect = LocalizationManager.T("ability_description_bird");
+                    hint = LocalizationManager.T("ability_control_bird");
                     accent = new Color(0.16f, 0.64f, 0.9f, 1f);
                     break;
                 case Species.Turtle:
                     progress = 1f;
                     title = LocalizationManager.T("ability_card_turtle");
-                    effect = LocalizationManager.T("ability_effect_turtle");
-                    ink = LocalizationManager.T("ability_ink_turtle");
+                    effect = LocalizationManager.T("ability_description_turtle");
+                    hint = LocalizationManager.T("ability_control_turtle");
                     accent = new Color(0.24f, 0.62f, 0.34f, 1f);
                     break;
                 case Species.Slime:
                     progress = Mathf.Clamp01(profile.SlimeInk / PlayerController2D.MaximumSlimeAbilityInk);
                     title = LocalizationManager.T("ability_card_slime");
-                    effect = LocalizationManager.Format(
-                        "ability_effect_slime",
-                        PlayerController2D.CalculateSlimeMoveSpeedMultiplier(profile.SlimeInk),
-                        PlayerController2D.CalculateSlimeJumpMultiplier(profile.SlimeInk),
-                        PlayerController2D.CalculateSlimeStickStrength(profile.SlimeInk) * 100f);
-                    ink = LocalizationManager.Format("ability_ink_slime", profile.SlimeInk);
+                    effect = LocalizationManager.T("ability_description_slime");
+                    hint = LocalizationManager.T("ability_control_slime");
                     accent = new Color(0.68f, 0.38f, 0.86f, 1f);
                     break;
                 default:
                     progress = Mathf.Clamp01(profile.LegInk / 80f);
                     secondaryProgress = Mathf.Clamp01(profile.ArmInk / 280f);
                     title = LocalizationManager.T("ability_card_human");
-                    effect = LocalizationManager.Format(
-                        "ability_effect_human_combined",
-                        ArmSwingController.CalculateArmStrengthMultiplier(profile.ArmInk),
-                        PlayerAbilityController.CalculateHumanJumpMultiplier(profile.LegInk));
-                    ink = LocalizationManager.Format("ability_ink_human_combined", profile.ArmInk, profile.LegInk);
+                    effect = LocalizationManager.T("ability_description_human");
+                    hint = LocalizationManager.T("ability_control_human");
                     accent = new Color(0.2f, 0.48f, 0.86f, 1f);
                     break;
             }
 
-            bool human = profile.Species == Species.Human;
-            bool cat = profile.Species == Species.Cat;
-            bool dualGauge = human || cat;
-            rankProgress = dualGauge ? Mathf.Max(progress, secondaryProgress) : progress;
-
-            string rank = rankProgress >= 0.9f ? "S"
-                : rankProgress >= 0.7f ? "A"
-                : rankProgress >= 0.45f ? "B"
-                : rankProgress >= 0.2f ? "C"
-                : "D";
-
-            abilityText.text = profile.Species == Species.Turtle
-                ? LocalizationManager.T("ability_turtle_badge")
-                : profile.Species == Species.Slime
-                    ? LocalizationManager.Format("ability_slime_badge", progress * 100f)
-                    : LocalizationManager.Format("ability_rank", rank);
-            abilityText.gameObject.SetActive(true);
+            abilityText.text = string.Empty;
+            abilityText.gameObject.SetActive(false);
             if (abilityTitleText != null) abilityTitleText.text = title;
             if (abilityEffectText != null) abilityEffectText.text = effect;
-            if (abilityInkText != null) abilityInkText.text = ink;
+            if (abilityInkText != null)
+            {
+                abilityInkText.text = string.Empty;
+                abilityInkText.gameObject.SetActive(false);
+            }
             if (abilityLowText != null)
             {
-                abilityLowText.gameObject.SetActive(!dualGauge);
-                abilityLowText.text = LocalizationManager.T(
-                    profile.Species == Species.Slime ? "ability_slime_gauge_low" : "ability_gauge_low");
+                abilityLowText.gameObject.SetActive(false);
             }
             if (abilityHighText != null)
             {
-                abilityHighText.gameObject.SetActive(!dualGauge);
-                abilityHighText.text = LocalizationManager.T(
-                    profile.Species == Species.Slime ? "ability_slime_gauge_high" : "ability_gauge_high");
+                abilityHighText.gameObject.SetActive(false);
             }
             if (abilityHintText != null)
             {
-                abilityHintText.text = LocalizationManager.T(
-                    profile.Species == Species.Turtle
-                        ? "ability_turtle_hint"
-                        : profile.Species == Species.Slime
-                            ? "ability_slime_hint"
-                            : "ability_growth_hint");
+                abilityHintText.text = hint;
             }
             if (abilityHeaderImage != null) abilityHeaderImage.color = accent;
-            SetDualAbilityGaugeLayout(human, cat);
+            SetAbilityGaugeLayout(profile.Species);
             SetInkGauge(abilityGaugeFill, progress, false);
             if (abilityGaugeFill != null) abilityGaugeFill.color = accent;
             SetInkGauge(humanArmGaugeFill, secondaryProgress, false);
             if (humanArmGaugeFill != null) humanArmGaugeFill.color = new Color(0.94f, 0.42f, 0.2f, 1f);
         }
 
-        private void SetDualAbilityGaugeLayout(bool human, bool cat)
+        private void SetAbilityGaugeLayout(Species species)
         {
+            bool human = species == Species.Human;
+            bool cat = species == Species.Cat;
             bool dual = human || cat;
             if (humanJumpGaugeLabel != null)
             {
-                humanJumpGaugeLabel.gameObject.SetActive(dual);
-                humanJumpGaugeLabel.text = LocalizationManager.T(cat
+                humanJumpGaugeLabel.gameObject.SetActive(true);
+                string primaryGaugeKey = cat
                     ? "ability_cat_back_leg_gauge"
-                    : "ability_human_jump_gauge");
+                    : human
+                        ? "ability_human_jump_gauge"
+                        : species == Species.Bird
+                            ? "ability_bird_gauge"
+                            : species == Species.Turtle
+                                ? "ability_turtle_gauge"
+                                : "ability_slime_gauge";
+                humanJumpGaugeLabel.text = LocalizationManager.T(primaryGaugeKey);
             }
             if (humanArmGaugeLabel != null)
             {
@@ -2115,8 +2092,15 @@ namespace DrawBody.Prototype
             gauge.anchorMin = new Vector2(0f, 1f);
             gauge.anchorMax = new Vector2(0f, 1f);
             gauge.pivot = new Vector2(0f, 1f);
-            gauge.anchoredPosition = dual ? new Vector2(68f, -133f) : new Vector2(18f, -136f);
-            gauge.sizeDelta = dual ? new Vector2(194f, 14f) : new Vector2(244f, 18f);
+            gauge.anchoredPosition = new Vector2(68f, -73f);
+            gauge.sizeDelta = new Vector2(194f, 14f);
+
+            if (humanJumpGaugeLabel != null)
+                humanJumpGaugeLabel.rectTransform.anchoredPosition = new Vector2(12f, -71f);
+            if (humanArmGaugeLabel != null)
+                humanArmGaugeLabel.rectTransform.anchoredPosition = new Vector2(12f, -97f);
+            if (humanArmGaugeFill != null && humanArmGaugeFill.transform.parent is RectTransform secondaryGauge)
+                secondaryGauge.anchoredPosition = new Vector2(68f, -99f);
         }
 
         private static void SetInkGauge(Image fill, float amount, bool over)

@@ -83,6 +83,25 @@
             "linkAction": ""
         },
         {
+            "objectId": "6-3_start_gun",
+            "type": 183,
+            "position": { "x": -19.5, "y": -2.3 },
+            "size": { "x": 0.9, "y": 0.55 },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
             "objectId": "6-3_ring_2x_01",
             "type": 194,
             "position": {
@@ -136,11 +155,11 @@
             "objectId": "6-3_platform_01",
             "type": 0,
             "position": {
-                "x": 12.0,
-                "y": -1.7000000476837159
+                "x": 11.5,
+                "y": -1.600000023841858
             },
             "size": {
-                "x": 10.0,
+                "x": 12.0,
                 "y": 0.800000011920929
             },
             "rotation": 0.0,
@@ -411,8 +430,8 @@
             "objectId": "6-3_spring_03",
             "type": 62,
             "position": {
-                "x": 87.0,
-                "y": 0.0
+                "x": 86.5,
+                "y": -1.5
             },
             "size": {
                 "x": 1.7999999523162842,
@@ -436,14 +455,14 @@
             "objectId": "6-3_platform_03",
             "type": 0,
             "position": {
-                "x": 94.0,
-                "y": 1.5
+                "x": 94.6916732788086,
+                "y": 0.6157608032226563
             },
             "size": {
-                "x": 8.0,
+                "x": 9.5,
                 "y": 0.800000011920929
             },
-            "rotation": 0.0,
+            "rotation": 15.0,
             "pathPoints": [],
             "pathThickness": 0.0,
             "connectedRects": [],
@@ -661,8 +680,8 @@
             "objectId": "6-3_platform_06",
             "type": 0,
             "position": {
-                "x": 166.0,
-                "y": 2.0
+                "x": 164.0,
+                "y": -0.6000000238418579
             },
             "size": {
                 "x": 8.0,
@@ -686,8 +705,8 @@
             "objectId": "6-3_spring_04",
             "type": 62,
             "position": {
-                "x": 171.5,
-                "y": 3.5
+                "x": 169.0,
+                "y": -0.5
             },
             "size": {
                 "x": 1.7999999523162842,
@@ -711,11 +730,11 @@
             "objectId": "6-3_platform_07",
             "type": 0,
             "position": {
-                "x": 179.0,
-                "y": 4.300000190734863
+                "x": 178.76107788085938,
+                "y": 4.443201065063477
             },
             "size": {
-                "x": 9.0,
+                "x": 12.5,
                 "y": 0.800000011920929
             },
             "rotation": -5.0,
@@ -836,8 +855,8 @@
             "objectId": "6-3_platform_08",
             "type": 0,
             "position": {
-                "x": 211.0,
-                "y": 1.2999999523162842
+                "x": 210.5,
+                "y": -1.600000023841858
             },
             "size": {
                 "x": 8.0,
@@ -861,8 +880,8 @@
             "objectId": "6-3_spring_05",
             "type": 62,
             "position": {
-                "x": 205.0,
-                "y": -0.5
+                "x": 203.5,
+                "y": -1.5
             },
             "size": {
                 "x": 1.7999999523162842,
@@ -886,11 +905,11 @@
             "objectId": "6-3_platform_09",
             "type": 0,
             "position": {
-                "x": 222.0,
-                "y": -0.699999988079071
+                "x": 220.75,
+                "y": -1.600000023841858
             },
             "size": {
-                "x": 8.0,
+                "x": 5.5,
                 "y": 0.800000011920929
             },
             "rotation": 0.0,
@@ -911,8 +930,8 @@
             "objectId": "6-3_enemy_walker_02",
             "type": 171,
             "position": {
-                "x": 223.0,
-                "y": 0.44999998807907107
+                "x": 222.5,
+                "y": -0.5
             },
             "size": {
                 "x": 1.2999999523162842,

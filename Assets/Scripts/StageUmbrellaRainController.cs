@@ -13,10 +13,10 @@ namespace DrawBody.Prototype
         private const string EliminatedKind = "umbrella_rain_eliminated";
         private const float StartDelay = 3f;
         private const float StartX = -34f;
-        private const float FriendY = 4.08f;
+        private const float FriendY = 5.28f;
         private const float FinalX = 80f;
         private const float FinalShelterX = 75f;
-        private const float UmbrellaHalfWidth = 3.4f;
+        private const float UmbrellaHalfWidth = 5.1f;
         private const float CanopyOffsetY = 2.42f;
         private const float RainExposureSeconds = 0.32f;
 
@@ -167,7 +167,7 @@ namespace DrawBody.Prototype
             switch (motion)
             {
                 case MotionMode.Stop: friendSpeed = 0f; break;
-                case MotionMode.Backstep: friendSpeed = -1.15f; break;
+                case MotionMode.Backstep: friendSpeed = -3f; break;
                 case MotionMode.Slow: friendSpeed = 0.9f; break;
                 case MotionMode.Fast: friendSpeed = 3.65f; break;
                 default: friendSpeed = 2.15f; break;
@@ -185,7 +185,7 @@ namespace DrawBody.Prototype
                 : choice == 2 ? MotionMode.Slow
                 : MotionMode.Fast;
             motionRemaining = motion == MotionMode.Backstep
-                ? Random.Range(0.55f, 0.85f)
+                ? Random.Range(1.15f, 1.65f)
                 : motion == MotionMode.Stop ? Random.Range(0.65f, 1.05f)
                 : Random.Range(0.9f, 1.35f);
             GameSfx.PlayAt(SfxId.EmotePop, new Vector2(friendX, FriendY), 0.72f);
@@ -203,7 +203,7 @@ namespace DrawBody.Prototype
 
                 bool sheltered = player.transform.position.x >= FinalShelterX && player.transform.position.y <= 0.55f
                     || player.transform.position.y <= FriendY + CanopyOffsetY
-                        && Mathf.Abs(player.transform.position.x - friendX) <= UmbrellaHalfWidth - 0.35f;
+                        && Mathf.Abs(player.transform.position.x - friendX) <= UmbrellaHalfWidth - 0.5f;
                 if (sheltered)
                 {
                     exposure[player] = 0f;
@@ -514,6 +514,9 @@ namespace DrawBody.Prototype
             canopy = new GameObject("Wide Umbrella").transform;
             canopy.SetParent(characterVisual, false);
             bool hasCanopyArtwork = BuildCanopy(canopy, 3.4f, 0.84f);
+            // Widen only the canopy axis. Its height and the handle position stay
+            // in the guide character's hand while the shelter span grows by 1.5x.
+            canopy.localScale = new Vector3(1.5f, 1f, 1f);
             // Anchor the curved handle in the guide's raised right hand. The
             // PNG includes the full long handle, while the fallback uses the
             // shorter line-art handle, so their canopy offsets differ.
@@ -642,7 +645,9 @@ namespace DrawBody.Prototype
         {
             targetCamera = Camera.main;
             Material material = new Material(Shader.Find("Sprites/Default"));
-            for (int i = 0; i < 44; i++)
+            float horizontalExtent = GetHorizontalExtent();
+            float verticalExtent = GetVerticalExtent();
+            for (int i = 0; i < 104; i++)
             {
                 GameObject obj = new GameObject("Rain Streak " + i);
                 obj.transform.SetParent(transform, false);
@@ -657,8 +662,11 @@ namespace DrawBody.Prototype
                 line.startColor = new Color(0.08f, 0.42f, 0.95f, 0.88f);
                 line.endColor = new Color(0.18f, 0.72f, 1f, 0.45f);
                 line.sortingOrder = 38;
-                obj.transform.localPosition = new Vector3(Random.Range(-12f, 12f), Random.Range(-6f, 7f), -0.05f);
-                drops.Add(new Drop { Transform = obj.transform, Speed = Random.Range(8f, 13f), Drift = Random.Range(-0.6f, -0.2f) });
+                obj.transform.localPosition = new Vector3(
+                    Random.Range(-horizontalExtent, horizontalExtent),
+                    Random.Range(-verticalExtent, verticalExtent),
+                    -0.05f);
+                drops.Add(new Drop { Transform = obj.transform, Speed = Random.Range(9.5f, 15.5f), Drift = Random.Range(-0.85f, -0.25f) });
             }
         }
 
@@ -667,6 +675,8 @@ namespace DrawBody.Prototype
             if (targetCamera == null) targetCamera = Camera.main;
             if (targetCamera != null)
                 transform.position = new Vector3(targetCamera.transform.position.x, targetCamera.transform.position.y, 0f);
+            float horizontalExtent = GetHorizontalExtent();
+            float verticalExtent = GetVerticalExtent();
             for (int i = 0; i < drops.Count; i++)
             {
                 Drop drop = drops[i];
@@ -677,13 +687,27 @@ namespace DrawBody.Prototype
                 Vector2 world = (Vector2)transform.position + (Vector2)local;
                 bool struckUmbrella = Mathf.Abs(world.x - umbrellaX) <= halfWidth && world.y <= canopyY;
                 bool struckFinalRoof = world.x >= finalShelterX && world.y <= 0.5f;
-                if (local.y < -6.2f || struckUmbrella || struckFinalRoof)
+                if (local.y < -verticalExtent - 1f || struckUmbrella || struckFinalRoof)
                 {
-                    local.y = Random.Range(5.8f, 7.2f);
-                    local.x = Random.Range(-12f, 12f);
+                    local.y = Random.Range(verticalExtent * 0.72f, verticalExtent + 1.5f);
+                    local.x = Random.Range(-horizontalExtent, horizontalExtent);
                 }
                 drop.Transform.localPosition = local;
             }
+        }
+
+        private float GetHorizontalExtent()
+        {
+            return targetCamera != null && targetCamera.orthographic
+                ? targetCamera.orthographicSize * Mathf.Max(0.1f, targetCamera.aspect) + 2f
+                : 20f;
+        }
+
+        private float GetVerticalExtent()
+        {
+            return targetCamera != null && targetCamera.orthographic
+                ? targetCamera.orthographicSize + 2f
+                : 12f;
         }
     }
 }

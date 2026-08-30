@@ -67,6 +67,7 @@ namespace DrawBody.Prototype
         private float nextMissileAt;
         private int missileSequence;
         private int missileVolleySequence;
+        private int activeMissileTierCount = 2;
         private bool failed;
         private bool started;
         private bool locallyAppliedStart;
@@ -106,6 +107,11 @@ namespace DrawBody.Prototype
                 enabled = false;
                 return;
             }
+            int playerCount = Mathf.Clamp(
+                stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1,
+                1,
+                4);
+            activeMissileTierCount = Mathf.Clamp(Mathf.CeilToInt(6f * playerCount / 4f), 1, 6);
             BuildClocks();
             SetAllPlayerControls(false);
             RefreshClocks();
@@ -223,6 +229,7 @@ namespace DrawBody.Prototype
             int volley = missileVolleySequence++;
             for (int tier = 0; tier < tierY.Length; tier++)
             {
+                if (!IsMissileTierEnabled(tier, tierY.Length)) continue;
                 if (volley % cadence[tier] != 0) continue;
                 for (int shot = 0; shot < shotCount[tier]; shot++)
                 {
@@ -233,6 +240,18 @@ namespace DrawBody.Prototype
                 }
             }
             nextMissileAt = Time.time + 1.25f;
+        }
+
+        private bool IsMissileTierEnabled(int tier, int totalTierCount)
+        {
+            if (activeMissileTierCount >= totalTierCount) return true;
+            if (activeMissileTierCount <= 1) return tier == totalTierCount / 2;
+            for (int i = 0; i < activeMissileTierCount; i++)
+            {
+                int selected = Mathf.RoundToInt(i * (totalTierCount - 1f) / (activeMissileTierCount - 1f));
+                if (tier == selected) return true;
+            }
+            return false;
         }
 
         private void SpawnMissile(float y, int tier, int shot)

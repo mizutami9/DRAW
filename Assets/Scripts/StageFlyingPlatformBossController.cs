@@ -17,6 +17,8 @@ namespace DrawBody.Prototype
         private const string AttackKind = "flying_boss_attack";
         private const string HomingVolleyKind = "flying_boss_homing_volley";
         private const string EliminateKind = "flying_boss_eliminate";
+        private const int PlayerMissileDamage = 1;
+        private const int PlayerBombDamage = 5;
         private const float ArenaHalfWidth = 17f;
         private const float ArenaHalfHeight = 8.5f;
 
@@ -224,11 +226,17 @@ namespace DrawBody.Prototype
             if (IsOnline)
             {
                 OnlinePlayerInfo[] roster = onlineManager?.CurrentLobby?.Players;
-                int room = 0;
                 if (roster != null)
-                    for (int i = 0; i < roster.Length && room < 4; i++)
-                        if (roster[i] != null && !string.IsNullOrEmpty(roster[i].PlayerId)) roomPlayerIds[room++] = roster[i].PlayerId;
-                playerCount = Mathf.Clamp(room, 1, 4);
+                    for (int i = 0; i < roster.Length; i++)
+                    {
+                        if (roster[i] == null || string.IsNullOrEmpty(roster[i].PlayerId)) continue;
+                        int room = PlayerColorPalette.GetLobbyPlayerSlot(onlineManager.CurrentLobby, roster[i].PlayerId);
+                        if (room >= 0 && room < roomPlayerIds.Length) roomPlayerIds[room] = roster[i].PlayerId;
+                    }
+                playerCount = 0;
+                for (int i = 0; i < roomPlayerIds.Length; i++)
+                    if (!string.IsNullOrEmpty(roomPlayerIds[i])) playerCount = i + 1;
+                playerCount = Mathf.Clamp(playerCount, 1, 4);
                 return;
             }
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
@@ -438,7 +446,7 @@ namespace DrawBody.Prototype
             if (Vector2.Distance(position, bossPosition) <= 1.9f)
             {
                 GameSfx.PlayAt(SfxId.MissileImpact, position, 0.9f);
-                DamageBoss(1, position);
+                DamageBoss(PlayerMissileDamage, position);
                 return true;
             }
             for (int room = 0; room < playerCount; room++)
@@ -473,7 +481,7 @@ namespace DrawBody.Prototype
         internal void ResolvePlayerBomb(int ownerRoom, Vector2 position)
         {
             if (!HasAuthority || phase != BattlePhase.Fighting) return;
-            if (Vector2.Distance(position, bossPosition) <= 2.7f) DamageBoss(5, position);
+            if (Vector2.Distance(position, bossPosition) <= 2.7f) DamageBoss(PlayerBombDamage, position);
             for (int room = 0; room < playerCount; room++)
             {
                 // Player weapons never eliminate their owner. Other players remain
@@ -530,13 +538,8 @@ namespace DrawBody.Prototype
 
         private IEnumerator RunPressureHomingVolley(HomingVolleyState state)
         {
-            TextMesh warning = CreateWorldText(
-                state.Origin + Vector2.down * 2.1f,
-                LocalizationManager.T("flying_boss_homing_warning"),
-                new Color(1f, 0.42f, 0.88f));
             GameSfx.PlayAt(SfxId.BossAttackWarning, state.Origin, 0.9f);
             yield return new WaitForSeconds(0.75f);
-            if (warning != null) Destroy(warning.gameObject);
             GameSfx.PlayAt(SfxId.MissileLaunch, state.Origin, 0.95f);
             for (int i = 0; i < playerCount; i++)
             {
@@ -553,12 +556,43 @@ namespace DrawBody.Prototype
             float lane = 0f;
             if (type == AttackType.Dash)
             {
-                bool left = Random.value < 0.5f;
-                lane = Random.Range(-5.8f, 5.8f);
-                origin = new Vector2(left ? -20f : 20f, lane);
-                direction = left ? Vector2.right : Vector2.left;
+                if (Random.value < 0.58f)
+                {
+                    direction = RandomVariedDiagonalDirection();
+                    Vector2 perpendicular = new Vector2(-direction.y, direction.x);
+                    Vector2 center = perpendicular * Random.Range(-2.6f, 2.6f);
+                    origin = center - direction * 21f;
+                    lane = center.y;
+                }
+                else
+                {
+                    bool left = Random.value < 0.5f;
+                    lane = Random.Range(-5.8f, 5.8f);
+                    origin = new Vector2(left ? -20f : 20f, lane);
+                    direction = left ? Vector2.right : Vector2.left;
+                }
             }
-            else if (type == AttackType.Beam || type == AttackType.Suction)
+            else if (type == AttackType.Beam)
+            {
+                if (Random.value < 0.68f)
+                {
+                    direction = RandomVariedDiagonalDirection();
+                    Vector2 perpendicular = new Vector2(-direction.y, direction.x);
+                    Vector2 center = perpendicular * Random.Range(-2.9f, 2.9f);
+                    origin = center - direction * 21f;
+                    lane = center.y;
+                }
+                else
+                {
+                    int side = Random.Range(0, 4);
+                    origin = side == 0 ? new Vector2(-18.5f, 0f) : side == 1 ? new Vector2(18.5f, 0f)
+                        : side == 2 ? new Vector2(0f, 10f) : new Vector2(0f, -10f);
+                    direction = -origin.normalized;
+                    lane = Random.Range(-4.8f, 4.8f);
+                    if (side < 2) origin.y = lane; else origin.x = lane;
+                }
+            }
+            else if (type == AttackType.Suction)
             {
                 int side = Random.Range(0, 4);
                 origin = side == 0 ? new Vector2(-18.5f, 0f) : side == 1 ? new Vector2(18.5f, 0f)
@@ -569,6 +603,17 @@ namespace DrawBody.Prototype
             }
             else origin = bossPosition;
             return new AttackState { Sequence = ++attackSequence, Type = (int)type, TargetRoom = target, Origin = origin, Direction = direction, Lane = lane };
+        }
+
+        private static Vector2 RandomVariedDiagonalDirection()
+        {
+            // Deliberately avoid a mechanical 45-degree diagonal. Both shallow
+            // and steep angles can be selected in every quadrant.
+            float angle = Random.value < 0.5f ? Random.Range(14f, 34f) : Random.Range(56f, 76f);
+            float xSign = Random.value < 0.5f ? -1f : 1f;
+            float ySign = Random.value < 0.5f ? -1f : 1f;
+            float radians = angle * Mathf.Deg2Rad;
+            return new Vector2(Mathf.Cos(radians) * xSign, Mathf.Sin(radians) * ySign).normalized;
         }
 
         private void ApplyAttack(AttackState state)
@@ -594,7 +639,11 @@ namespace DrawBody.Prototype
         private IEnumerator RunDash(AttackState state)
         {
             SetBossMood(new Color(1f, 0.22f, 0.15f), 1.22f);
-            GameObject warning = CreateWarningRect(new Vector2(0f, state.Lane), new Vector2(34f, 2.2f), new Color(1f, 0.16f, 0.1f, 0.3f));
+            Vector2 dashDirection = state.Direction.sqrMagnitude > 0.01f
+                ? state.Direction.normalized
+                : state.Origin.x < 0f ? Vector2.right : Vector2.left;
+            Vector2 warningCenter = state.Origin + dashDirection * 20f;
+            GameObject warning = CreateDirectionalWarning(warningCenter, dashDirection, 40f, 2.2f, new Color(1f, 0.16f, 0.1f, 0.3f));
             GameSfx.PlayAt(SfxId.BossAttackWarning, bossPosition, 1.05f);
             // The idle path can leave the boss nearly an arena-width away from
             // the selected dash side. Give that setup travel enough time, then
@@ -608,9 +657,6 @@ namespace DrawBody.Prototype
             yield return new WaitForSeconds(0.12f);
             if (warning != null) Destroy(warning);
             GameSfx.PlayAt(SfxId.BossDash, bossPosition, 1.15f);
-            Vector2 dashDirection = state.Direction.sqrMagnitude > 0.01f
-                ? state.Direction.normalized
-                : state.Origin.x < 0f ? Vector2.right : Vector2.left;
             Vector2 end = state.Origin + dashDirection * 40f;
             LineRenderer trail = CreateDashTrail(bossPosition, dashDirection);
             float dashEndsAt = Time.time + 1.25f;
@@ -652,13 +698,14 @@ namespace DrawBody.Prototype
         private IEnumerator RunBeam(AttackState state)
         {
             SetBossMood(new Color(1f, 0.38f, 0.08f), 1.12f);
-            bool horizontal = Mathf.Abs(state.Direction.x) > 0.5f;
-            Vector2 center = horizontal ? new Vector2(0f, state.Origin.y) : new Vector2(state.Origin.x, 0f);
-            Vector2 size = horizontal ? new Vector2(34f, 2.5f) : new Vector2(2.5f, 17f);
-            GameObject warning = CreateWarningRect(center, size, new Color(1f, 0.65f, 0.05f, 0.22f));
+            Vector2 direction = state.Direction.sqrMagnitude > 0.01f ? state.Direction.normalized : Vector2.right;
+            Vector2 center = state.Origin + direction * 20f;
+            GameObject warning = CreateDirectionalWarning(center, direction, 40f, 2.5f, new Color(1f, 0.65f, 0.05f, 0.22f));
             GameSfx.PlayAt(SfxId.BossBeamCharge, state.Origin, 1.05f);
             yield return MoveBossForAttackSetup(state.Origin, 1.7f);
             SetWarningColor(warning, new Color(1f, 0.08f, 0.03f, 0.78f));
+            GameObject innerBeam = CreateDirectionalWarning(center, direction, 40f, 1.25f, new Color(1f, 0.2f, 0.04f, 0.98f));
+            GameObject beamCore = CreateDirectionalWarning(center, direction, 40f, 0.38f, new Color(1f, 0.96f, 0.68f, 1f));
             GameSfx.PlayAt(SfxId.BeamFire, state.Origin, 1f);
             float elapsed = 0f;
             while (elapsed < 0.75f)
@@ -666,12 +713,14 @@ namespace DrawBody.Prototype
                 elapsed += Time.deltaTime;
                 if (HasAuthority)
                     for (int i = 0; i < playerCount; i++)
-                        if (!eliminated.Contains(roomPlayerIds[i]) && (horizontal
-                            ? Mathf.Abs(GetRoomHitPosition(i).y - center.y) < 1.25f
-                            : Mathf.Abs(GetRoomHitPosition(i).x - center.x) < 1.25f)) EliminateRoom(i);
+                        if (!eliminated.Contains(roomPlayerIds[i]) &&
+                            DistanceToSegment(GetRoomHitPosition(i), state.Origin, state.Origin + direction * 40f) < 1.25f)
+                            EliminateRoom(i);
                 yield return null;
             }
             Destroy(warning);
+            Destroy(innerBeam);
+            Destroy(beamCore);
             SetBossMood(new Color(0.55f, 0.18f, 0.82f), 1f);
         }
 
@@ -679,10 +728,8 @@ namespace DrawBody.Prototype
         {
             SetBossMood(new Color(0.82f, 0.2f, 0.92f), 1.08f);
             Vector2 launchPoint = new Vector2(0f, 10.2f);
-            TextMesh warning = CreateWorldText(new Vector2(0f, 7.1f), LocalizationManager.T("flying_boss_homing_warning"), new Color(1f, 0.45f, 0.9f));
             GameSfx.PlayAt(SfxId.BossAttackWarning, launchPoint);
             yield return MoveBossForAttackSetup(launchPoint, 1.45f);
-            Destroy(warning.gameObject);
             GameSfx.PlayAt(SfxId.MissileLaunch, bossPosition, 1.05f);
             for (int i = 0; i < playerCount; i++)
                 if (!eliminated.Contains(roomPlayerIds[i])) StageFlyingHomingHazard.Create(transform, this, i, bossPosition, HasAuthority);
@@ -693,11 +740,9 @@ namespace DrawBody.Prototype
         private IEnumerator RunChase(AttackState state)
         {
             int target = Mathf.Clamp(state.TargetRoom, 0, playerCount - 1);
-            TextMesh warning = CreateWorldText(GetRoomHitPosition(target) + Vector2.up * 1.5f, LocalizationManager.T("flying_boss_target_warning"), Color.red);
             SetBossMood(new Color(1f, 0.12f, 0.2f), 1.15f);
             GameSfx.PlayAt(SfxId.BossAttackWarning, GetRoomHitPosition(target), 1.05f);
             yield return new WaitForSeconds(1.35f);
-            Destroy(warning.gameObject);
             float elapsed = 0f;
             while (elapsed < 2.5f)
             {
@@ -724,7 +769,6 @@ namespace DrawBody.Prototype
         {
             SetBossMood(new Color(0.18f, 0.05f, 0.28f), 1.3f);
             GameObject warning = CreateWarningRect(Vector2.zero, new Vector2(34f, 17f), new Color(0.45f, 0.15f, 0.8f, 0.12f));
-            TextMesh text = CreateWorldText(Vector2.zero, LocalizationManager.T("flying_boss_suction_warning"), new Color(0.8f, 0.55f, 1f));
             GameSfx.PlayAt(SfxId.BossAttackWarning, state.Origin, 1.05f);
             yield return MoveBossForAttackSetup(state.Origin, 1.5f);
             GameSfx.PlayAt(SfxId.BossSuction, bossPosition, 1.1f);
@@ -737,7 +781,7 @@ namespace DrawBody.Prototype
                         if (!eliminated.Contains(roomPlayerIds[i])) pads[i].SetPosition(ClampPadPosition(Vector2.MoveTowards(pads[i].Position, bossPosition, 7.8f * Time.deltaTime)));
                 yield return null;
             }
-            Destroy(warning); Destroy(text.gameObject);
+            Destroy(warning);
             SetBossMood(new Color(0.55f, 0.18f, 0.82f), 1f);
         }
 
@@ -855,8 +899,10 @@ namespace DrawBody.Prototype
         {
             if (IsOnline)
             {
-                int room = GetLocalRoom();
-                MountPlayer(stageManager.ActivePlayerTransform != null ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null, room);
+                // Every client mounts every representation to the synchronized
+                // craft. Otherwise remote body interpolation visibly trails the pad.
+                for (int room = 0; room < playerCount; room++)
+                    MountPlayer(ResolvePlayer(roomPlayerIds[room]), room);
                 return;
             }
             for (int i = 0; i < playerCount; i++) MountPlayer(ResolvePlayer(roomPlayerIds[i]), i);
@@ -879,6 +925,12 @@ namespace DrawBody.Prototype
             PlayerController2D player = ResolvePlayer(roomPlayerIds[room]);
             if (player == null || eliminated.Contains(roomPlayerIds[room])) return;
             player.transform.position = new Vector3(pads[room].Position.x, pads[room].Position.y + 0.72f, -0.2f);
+        }
+
+        private void LateUpdate()
+        {
+            if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            for (int room = 0; room < playerCount; room++) SyncMountedPlayer(room);
         }
 
         private void RestorePlayers()
@@ -952,7 +1004,7 @@ namespace DrawBody.Prototype
         private void BroadcastState(bool force)
         {
             if (!IsOnline || !HasAuthority || onlineManager == null || !force && Time.unscaledTime < nextStateAt) return;
-            nextStateAt = Time.unscaledTime + 0.1f;
+            nextStateAt = Time.unscaledTime + 0.05f;
             Vector2[] positions = new Vector2[4];
             for (int i = 0; i < 4; i++) positions[i] = pads[i] != null ? pads[i].Position : StartPositions[i];
             Send(StateKind, new BossState
@@ -982,10 +1034,15 @@ namespace DrawBody.Prototype
                 for (int i = 0; i < Mathf.Min(4, state.PadPositions.Length); i++)
                 {
                     if (pads[i] == null) continue;
-                    Vector2 value = i == localRoom
-                        ? Vector2.Lerp(pads[i].Position, state.PadPositions[i], 0.32f)
-                        : state.PadPositions[i];
-                    pads[i].SetPosition(value);
+                    if (i == localRoom)
+                    {
+                        // The participant predicts their own craft locally. Only
+                        // correct a genuine large divergence; applying every old
+                        // host echo caused a visible tug every snapshot.
+                        if (Vector2.Distance(pads[i].Position, state.PadPositions[i]) > 2.5f)
+                            pads[i].SetPosition(Vector2.Lerp(pads[i].Position, state.PadPositions[i], 0.18f));
+                    }
+                    else pads[i].SetNetworkTarget(state.PadPositions[i]);
                 }
             }
             if (state.EliminatedIds != null) for (int i = 0; i < state.EliminatedIds.Length; i++) ApplyElimination(state.EliminatedIds[i]);
@@ -999,7 +1056,7 @@ namespace DrawBody.Prototype
             {
                 PadMessage pad = JsonUtility.FromJson<PadMessage>(data.Json);
                 int room = FindRoom(data.PlayerId);
-                if (pad != null && room == pad.Room && room >= 0) pads[room].SetPosition(ClampPadPosition(pad.Position));
+                if (pad != null && room == pad.Room && room >= 0) pads[room].SetNetworkTarget(ClampPadPosition(pad.Position));
             }
             else if (data.Kind == ShotRequestKind && HasAuthority)
             {
@@ -1059,18 +1116,28 @@ namespace DrawBody.Prototype
             return root;
         }
 
+        private GameObject CreateDirectionalWarning(Vector2 center, Vector2 direction, float length, float width, Color color)
+        {
+            GameObject warning = CreateWarningRect(center, new Vector2(length, width), color);
+            if (warning != null)
+                warning.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            return warning;
+        }
+
+        private static float DistanceToSegment(Vector2 point, Vector2 start, Vector2 end)
+        {
+            Vector2 segment = end - start;
+            float denominator = segment.sqrMagnitude;
+            if (denominator <= 0.0001f) return Vector2.Distance(point, start);
+            float t = Mathf.Clamp01(Vector2.Dot(point - start, segment) / denominator);
+            return Vector2.Distance(point, start + segment * t);
+        }
+
         private static void SetWarningColor(GameObject warning, Color color)
         {
             if (warning == null) return;
             SpriteRenderer[] renderers = warning.GetComponentsInChildren<SpriteRenderer>();
             for (int i = 0; i < renderers.Length; i++) renderers[i].color = color;
-        }
-
-        private TextMesh CreateWorldText(Vector2 position, string value, Color color)
-        {
-            TextMesh text = StageEscortController.CreateText(transform, "Attack Warning Text", new Vector3(position.x, position.y, -0.3f), 54, 0.13f, color, 190);
-            text.text = value;
-            return text;
         }
 
         private static SpriteRenderer AddDisc(Transform parent, string name, Vector2 position, Vector2 size, Color color, int order)
@@ -1094,6 +1161,11 @@ namespace DrawBody.Prototype
         private Transform playerColorLamp;
         private float craftScaleX;
         private TextMesh label;
+        private bool hasNetworkTarget;
+        private Vector2 networkTarget;
+        private Vector2 networkTargetVelocity;
+        private Vector2 previousNetworkTarget;
+        private float networkTargetReceivedAt = -1f;
         public Vector2 Position => transform.position;
 
         public static StageFlyingPlayerPad Create(Transform parent, int room, Vector2 position, Color color)
@@ -1173,6 +1245,49 @@ namespace DrawBody.Prototype
         }
 
         public void SetPosition(Vector2 position)
+        {
+            hasNetworkTarget = false;
+            ApplyPosition(position);
+        }
+
+        public void SetNetworkTarget(Vector2 position)
+        {
+            float now = Time.unscaledTime;
+            if (hasNetworkTarget && networkTargetReceivedAt >= 0f)
+            {
+                float elapsed = now - networkTargetReceivedAt;
+                if (elapsed >= 0.015f && elapsed <= 0.3f)
+                {
+                    Vector2 measuredVelocity = (position - previousNetworkTarget) / elapsed;
+                    networkTargetVelocity = Vector2.Lerp(networkTargetVelocity, measuredVelocity, 0.65f);
+                }
+            }
+            else
+            {
+                networkTargetVelocity = Vector2.zero;
+            }
+            previousNetworkTarget = position;
+            networkTarget = position;
+            networkTargetReceivedAt = now;
+            hasNetworkTarget = true;
+        }
+
+        private void Update()
+        {
+            if (!hasNetworkTarget) return;
+            float age = Mathf.Max(0f, Time.unscaledTime - networkTargetReceivedAt);
+            Vector2 predicted = networkTarget + Vector2.ClampMagnitude(networkTargetVelocity, 9f) * Mathf.Min(age, 0.075f);
+            Vector2 current = transform.position;
+            if (Vector2.Distance(current, predicted) > 4f)
+            {
+                ApplyPosition(predicted);
+                return;
+            }
+            float blend = 1f - Mathf.Exp(-22f * Time.unscaledDeltaTime);
+            ApplyPosition(Vector2.Lerp(current, predicted, blend));
+        }
+
+        private void ApplyPosition(Vector2 position)
         {
             float horizontalMovement = position.x - transform.position.x;
             if (Mathf.Abs(horizontalMovement) >= 0.025f)

@@ -7,6 +7,7 @@ namespace DrawBody.Prototype
     {
         [SerializeField] private OnlineManager onlineManager;
         [SerializeField] private StageManager stageManager;
+        [SerializeField] private PlayerEmoteController emoteController;
         [SerializeField] private float sendRate = 30f;
         [SerializeField] private float remoteSmoothRate = 18f;
         [SerializeField] private float remotePredictionSeconds = 0.075f;
@@ -25,6 +26,7 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, RemoteTarget> remoteTargets = new Dictionary<string, RemoteTarget>();
         private readonly Dictionary<string, int> lastRemoteSequences = new Dictionary<string, int>();
         private readonly Dictionary<string, float> lastRemoteStateReceivedAt = new Dictionary<string, float>();
+        private readonly Dictionary<string, bool> lastRemoteRespawningStates = new Dictionary<string, bool>();
         private readonly Dictionary<string, OnlineBodyData> pendingRemoteBodyData =
             new Dictionary<string, OnlineBodyData>();
         private readonly Dictionary<string, int> lastRemoteBodyRevisions =
@@ -38,8 +40,11 @@ namespace DrawBody.Prototype
             public Vector2 Velocity;
             public float Rotation;
             public int FacingDirection;
+            public int PlayerSlot;
             public bool Redrawing;
             public bool TurtleShelled;
+            public bool Grounded;
+            public float ReceivedAt;
             public string SlimeAttachedToPlayerId;
         }
 
@@ -54,6 +59,7 @@ namespace DrawBody.Prototype
             {
                 stageManager = FindFirstObjectByType<StageManager>();
             }
+            if (emoteController == null) emoteController = FindFirstObjectByType<PlayerEmoteController>();
         }
 
         private void OnEnable()
@@ -121,17 +127,36 @@ namespace DrawBody.Prototype
             Rigidbody2D body = stageManager.ActivePlayerBody;
             PlayerController2D localPlayer = localTransform.GetComponent<PlayerController2D>();
             PlayerCarryController localCarry = localTransform.GetComponent<PlayerCarryController>();
+            if (emoteController == null) emoteController = FindFirstObjectByType<PlayerEmoteController>();
             onlineManager.SendPlayerState(new OnlinePlayerState
             {
                 PlayerId = onlineManager.LocalPlayerId,
+                DisplayName = PlayerNameSettings.CurrentName,
                 Sequence = ++nextStateSequence,
+                PlayerSlot = PlayerColorPalette.GetLobbyPlayerSlot(
+                    onlineManager.CurrentLobby, onlineManager.LocalPlayerId),
                 Position = localTransform.position,
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
                 Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
                 FacingDirection = localPlayer != null ? localPlayer.FacingDirection : 1,
                 Redrawing = stageManager.IsDrawingMode,
                 Respawning = stageManager.IsPlayerRespawning(localPlayer),
+                Eliminated = stageManager.IsPlayerEliminated(localPlayer),
                 TurtleShelled = localPlayer?.IsTurtleShelled ?? false,
+                Grounded = localPlayer?.IsAnimationGrounded ?? false,
+                WallSticking = localPlayer?.IsWallSticking ?? false,
+                Gliding = localPlayer?.IsGliding ?? false,
+                JumpSequence = localPlayer?.JumpEventSequence ?? 0,
+                LandingSequence = localPlayer?.LandingEventSequence ?? 0,
+                HardLanding = localPlayer?.LastLandingWasHard ?? false,
+                AimingWeapon = localCarry?.IsAimingWeapon ?? false,
+                AimDirection = localCarry?.CurrentOnlineWeaponAimDirection ?? Vector2.right,
+                SpeedBoostMultiplier = localPlayer?.TemporarySpeedBoostMultiplier ?? 1f,
+                SpeedBoostRemaining = localPlayer?.TemporarySpeedBoostRemaining ?? 0f,
+                RespawnGraceRemaining = stageManager.GetPlayerRespawnGraceRemaining(localPlayer),
+                EmoteId = emoteController != null ? emoteController.CurrentLocalEmoteId : -1,
+                EmoteSequence = emoteController != null ? emoteController.CurrentLocalEmoteSequence : 0,
+                EmoteRemaining = emoteController != null ? emoteController.CurrentLocalEmoteRemaining : 0f,
                 SlimeAttachedToPlayerId = localCarry?.SlimeAttachedOnlinePlayerId,
                 CarriedPlayerId = localCarry?.CurrentOnlineCarriedPlayerId,
                 CarryAction = localCarry?.CurrentOnlineCarryAction,
@@ -150,6 +175,7 @@ namespace DrawBody.Prototype
             {
                 return;
             }
+            ApplyRemoteDisplayName(state.PlayerId, state.DisplayName);
             if (state.Sequence > 0
                 && lastRemoteSequences.TryGetValue(state.PlayerId, out int lastSequence)
                 && state.Sequence <= lastSequence
@@ -174,6 +200,27 @@ namespace DrawBody.Prototype
                 state.Redrawing ? Vector2.zero : state.Velocity);
             PlayerController2D remotePlayer = stageManager.GetOnlinePlayerController(state.PlayerId);
             remotePlayer?.ApplyRemoteFacingDirection(state.FacingDirection);
+            remotePlayer?.ApplyRemoteActionState(
+                state.Grounded,
+                state.WallSticking,
+                state.Gliding,
+                state.JumpSequence,
+                state.LandingSequence,
+                state.HardLanding,
+                state.SpeedBoostMultiplier,
+                state.SpeedBoostRemaining,
+                state.RespawnGraceRemaining);
+            remotePlayer?.GetComponent<PlayerCarryController>()?.ApplyRemoteWeaponAim(
+                state.AimingWeapon,
+                state.AimDirection);
+            if (emoteController == null) emoteController = FindFirstObjectByType<PlayerEmoteController>();
+            emoteController?.ApplyRemoteSnapshot(
+                state.PlayerId,
+                state.EmoteId,
+                state.EmoteSequence,
+                state.EmoteRemaining);
+            stageManager.ApplyOnlinePlayerColor(state.PlayerId, state.PlayerSlot);
+            ApplyRemoteRespawnTransition(state);
             if (stageManager.IsOnlineRemotePlayerHeldByLocal(state.PlayerId))
             {
                 remoteTargets.Remove(state.PlayerId);
@@ -186,11 +233,44 @@ namespace DrawBody.Prototype
                 Velocity = state.Velocity,
                 Rotation = state.Rotation,
                 FacingDirection = state.FacingDirection,
+                PlayerSlot = state.PlayerSlot,
                 Redrawing = state.Redrawing,
                 TurtleShelled = !state.Redrawing && state.TurtleShelled,
+                Grounded = !state.Redrawing && state.Grounded,
+                ReceivedAt = Time.unscaledTime,
                 SlimeAttachedToPlayerId = state.Redrawing ? null : state.SlimeAttachedToPlayerId
             };
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
+        }
+
+        private void ApplyRemoteRespawnTransition(OnlinePlayerState state)
+        {
+            bool hadPrevious = lastRemoteRespawningStates.TryGetValue(state.PlayerId, out bool wasRespawning);
+            lastRemoteRespawningStates[state.PlayerId] = state.Respawning;
+
+            if (state.Respawning && (!hadPrevious || !wasRespawning))
+            {
+                stageManager.PlayOnlinePlayerLifeEffect(state.PlayerId, state.Position, false);
+            }
+            else if (!state.Respawning && hadPrevious && wasRespawning)
+            {
+                stageManager.PlayOnlinePlayerLifeEffect(state.PlayerId, state.Position, true);
+            }
+        }
+
+        private void ApplyRemoteDisplayName(string playerId, string displayName)
+        {
+            string sanitized = PlayerNameSettings.Sanitize(displayName);
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null || string.IsNullOrEmpty(playerId) || string.IsNullOrEmpty(sanitized)) return;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] != null && players[i].PlayerId == playerId)
+                {
+                    players[i].DisplayName = sanitized;
+                    break;
+                }
+            }
         }
 
         private void ApplyRemoteTarget()
@@ -208,13 +288,39 @@ namespace DrawBody.Prototype
                     continue;
                 }
                 Transform remoteTransform = stageManager.GetOnlinePlayerTransform(pair.Key);
+                float stateAge = Mathf.Clamp(
+                    Time.unscaledTime - pair.Value.ReceivedAt,
+                    0f,
+                    0.12f);
+                float predictionTime = Mathf.Min(remotePredictionSeconds, 0.04f) + stateAge;
+                Vector2 predictionVelocity = pair.Value.Velocity;
+                // A grounded packet can still contain the last downward physics
+                // velocity. Extrapolating it is what made remote players appear
+                // buried in the floor immediately after landing.
+                if (pair.Value.Grounded && predictionVelocity.y <= 0.5f)
+                    predictionVelocity.y = 0f;
                 Vector2 predictedPosition = pair.Value.Position
-                    + pair.Value.Velocity * Mathf.Clamp(remotePredictionSeconds, 0f, 0.15f);
+                    + predictionVelocity * Mathf.Clamp(predictionTime, 0f, 0.12f);
                 Vector2 position = remoteTransform != null
                     ? Vector2.Distance(remoteTransform.position, predictedPosition) >= remoteSnapDistance
                         ? predictedPosition
                         : Vector2.Lerp(remoteTransform.position, predictedPosition, t)
                     : predictedPosition;
+                if (remoteTransform != null && pair.Value.Grounded)
+                {
+                    float groundedY = pair.Value.Position.y;
+                    float currentY = remoteTransform.position.y;
+                    if (currentY < groundedY - 0.025f)
+                    {
+                        position.y = groundedY;
+                    }
+                    else
+                    {
+                        float groundedT = 1f - Mathf.Exp(-30f * Time.unscaledDeltaTime);
+                        position.y = Mathf.Lerp(currentY, groundedY, groundedT);
+                        if (Mathf.Abs(position.y - groundedY) < 0.012f) position.y = groundedY;
+                    }
+                }
                 float rotation = remoteTransform != null
                     ? Mathf.LerpAngle(remoteTransform.eulerAngles.z, pair.Value.Rotation, t)
                     : pair.Value.Rotation;
@@ -346,6 +452,19 @@ namespace DrawBody.Prototype
 
         private void PruneRemoteTracking(OnlineLobbyInfo lobby, string localPlayerId)
         {
+            if (lobby?.Players == null)
+            {
+                remoteTargets.Clear();
+                lastRemoteSequences.Clear();
+                lastRemoteStateReceivedAt.Clear();
+                lastRemoteRespawningStates.Clear();
+                lastRemoteBodyRevisions.Clear();
+                lastRemoteBodyReceivedAt.Clear();
+                pendingRemoteBodyData.Clear();
+                pendingRosterLobby = null;
+                pendingRosterLocalPlayerId = null;
+                return;
+            }
             HashSet<string> active = new HashSet<string>();
             if (lobby?.Players != null)
             {
@@ -364,6 +483,7 @@ namespace DrawBody.Prototype
                 remoteTargets.Remove(id);
                 lastRemoteSequences.Remove(id);
                 lastRemoteStateReceivedAt.Remove(id);
+                lastRemoteRespawningStates.Remove(id);
                 lastRemoteBodyRevisions.Remove(id);
                 lastRemoteBodyReceivedAt.Remove(id);
                 pendingRemoteBodyData.Remove(id);

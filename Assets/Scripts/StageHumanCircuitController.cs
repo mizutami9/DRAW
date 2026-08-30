@@ -14,7 +14,10 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "13-3";
         private const string StateKind = "human_circuit_state";
+        private const string CompleteRequestKind = "human_circuit_complete_request";
         private const float ContactInterval = 0.085f;
+        private const float BoxPreviewInterval = 0.72f;
+        private const float BoxButtonCooldown = 0.45f;
         private const float TerminalContactDistance = 0.5f;
         private const float PlayerContactDistance = 0.16f;
 
@@ -24,6 +27,14 @@ namespace DrawBody.Prototype
             public int Sequence;
             public int CompletedMask;
             public float RelayProgress;
+            public int BoxPreviewPacked;
+            public int BoxPressedMask;
+        }
+
+        [System.Serializable]
+        private sealed class CompleteRequest
+        {
+            public int RoomIndex;
         }
 
         private sealed class Terminal
@@ -166,6 +177,19 @@ namespace DrawBody.Prototype
             public Bounds Bounds;
         }
 
+        private sealed class BoxStation
+        {
+            public StageBoxDropper Dropper;
+            public Collider2D ButtonCollider;
+            public Transform ButtonCap;
+            public Vector3 ButtonCapScale;
+            public SpriteRenderer PressGlow;
+            public Transform Preview;
+            public int PreviewIndex;
+            public bool Pressed;
+            public float NextDispenseAt;
+        }
+
         private sealed class PlayerElectricVisual
         {
             public GameObject Root;
@@ -210,6 +234,7 @@ namespace DrawBody.Prototype
         private static AudioClip successClip;
 
         private readonly List<RoomCircuit> rooms = new List<RoomCircuit>(5);
+        private readonly List<BoxStation> boxStations = new List<BoxStation>(5);
         private readonly List<PlayerShape> playerShapes = new List<PlayerShape>(4);
         private readonly Dictionary<PlayerController2D, PlayerElectricVisual> playerEffects =
             new Dictionary<PlayerController2D, PlayerElectricVisual>();
@@ -229,6 +254,19 @@ namespace DrawBody.Prototype
         private float motionClock;
         private int stateSequence;
         private int lastStateSequence;
+        private float nextBoxPreviewAt;
+        private float nextCompleteRequestAt;
+        private int boxPreviewStep;
+        private int boxPressedMask;
+
+        private static readonly Vector2[] BoxSizes =
+        {
+            new Vector2(0.9f, 0.9f),
+            new Vector2(1.5f, 1.5f),
+            new Vector2(2.2f, 2.2f),
+            new Vector2(1.1f, 2.7f),
+            new Vector2(2.5f, 0.8f)
+        };
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -286,6 +324,7 @@ namespace DrawBody.Prototype
 
             playerCount = Mathf.Clamp(stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1, 1, 4);
             BuildStageCircuits();
+            BuildBoxStations();
             for (int i = 0; i < rooms.Count; i++) rooms[i].Completed = (completedMask & (1 << i)) != 0;
             BroadcastState(true);
         }
@@ -304,6 +343,7 @@ namespace DrawBody.Prototype
             motionClock += Time.deltaTime;
             UpdateMovingGaps();
             UpdateDoors();
+            UpdateBoxStations();
 
             if (HasAuthority && Time.unscaledTime >= nextContactAt)
             {
@@ -341,6 +381,33 @@ namespace DrawBody.Prototype
                 }
                 CreateRoomSign(i);
             }
+        }
+
+        private void BuildBoxStations()
+        {
+            if (boxStations.Count > 0) return;
+            for (int i = 0; i < 5; i++)
+            {
+                GameObject dropperObject = FindStageObject("13-3_box_generator_" + (i + 1));
+                GameObject buttonObject = FindStageObject("13-3_box_button_" + (i + 1));
+                if (dropperObject == null || buttonObject == null) continue;
+
+                StageBoxDropper dropper = dropperObject.GetComponent<StageBoxDropper>();
+                dropper?.ConfigureManualDispense();
+                Transform cap = buttonObject.transform.Find("Button Cap");
+                BoxStation station = new BoxStation
+                {
+                    Dropper = dropper,
+                    ButtonCollider = buttonObject.GetComponent<Collider2D>(),
+                    ButtonCap = cap,
+                    ButtonCapScale = cap != null ? cap.localScale : Vector3.one,
+                    PreviewIndex = i % BoxSizes.Length
+                };
+                station.PressGlow = CreateButtonGlow(buttonObject.transform);
+                station.Preview = CreateBoxPreview(dropperObject.transform, station.PreviewIndex);
+                boxStations.Add(station);
+            }
+            nextBoxPreviewAt = Time.unscaledTime + BoxPreviewInterval;
         }
 
         private RoomCircuit BuildRoomOne()
@@ -665,6 +732,121 @@ namespace DrawBody.Prototype
             text.text = LocalizationManager.Format("stage_room_number", roomIndex + 1);
         }
 
+        private SpriteRenderer CreateButtonGlow(Transform button)
+        {
+            GameObject glow = new GameObject("Box Button Press Glow");
+            glow.transform.SetParent(button, false);
+            glow.transform.localPosition = new Vector3(0f, 0.03f, 0.08f);
+            glow.transform.localScale = new Vector3(1.05f, 0.42f, 1f);
+            SpriteRenderer renderer = glow.AddComponent<SpriteRenderer>();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+            renderer.color = new Color(0.18f, 0.9f, 0.25f, 0f);
+            renderer.sortingOrder = 31;
+            return renderer;
+        }
+
+        private Transform CreateBoxPreview(Transform dropper, int previewIndex)
+        {
+            GameObject frame = new GameObject("Selected Box Screen");
+            frame.transform.SetParent(dropper, false);
+            frame.transform.localPosition = new Vector3(0f, 0.12f, -0.18f);
+            frame.transform.localScale = new Vector3(0.72f, 0.58f, 1f);
+            SpriteRenderer frameRenderer = frame.AddComponent<SpriteRenderer>();
+            frameRenderer.sprite = DoodleRuntimeAssets.SquareSprite;
+            frameRenderer.color = new Color(0.8f, 0.94f, 0.97f, 0.96f);
+            frameRenderer.sortingOrder = 32;
+
+            GameObject preview = new GameObject("Selected Box Size");
+            preview.transform.SetParent(frame.transform, false);
+            preview.transform.localPosition = new Vector3(0f, -0.02f, -0.02f);
+            SpriteRenderer renderer = preview.AddComponent<SpriteRenderer>();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
+            renderer.color = new Color(0.94f, 0.52f, 0.15f, 0.92f);
+            renderer.sortingOrder = 33;
+            SetBoxPreview(preview.transform, previewIndex);
+            return preview.transform;
+        }
+
+        private static void SetBoxPreview(Transform preview, int previewIndex)
+        {
+            if (preview == null) return;
+            Vector2 size = BoxSizes[Mathf.Clamp(previewIndex, 0, BoxSizes.Length - 1)];
+            float fit = Mathf.Min(0.78f / size.x, 0.78f / size.y);
+            preview.localScale = new Vector3(size.x * fit, size.y * fit, 1f);
+            preview.localRotation = Quaternion.Euler(0f, 0f, previewIndex % 2 == 0 ? -2f : 2f);
+        }
+
+        private void UpdateBoxStations()
+        {
+            if (boxStations.Count == 0) BuildBoxStations();
+            if (boxStations.Count == 0) return;
+
+            if (HasAuthority && Time.unscaledTime >= nextBoxPreviewAt)
+            {
+                nextBoxPreviewAt = Time.unscaledTime + BoxPreviewInterval;
+                boxPreviewStep++;
+                for (int i = 0; i < boxStations.Count; i++)
+                {
+                    BoxStation station = boxStations[i];
+                    station.PreviewIndex = (boxPreviewStep + i) % BoxSizes.Length;
+                    SetBoxPreview(station.Preview, station.PreviewIndex);
+                }
+            }
+
+            int pressedMask = 0;
+            for (int i = 0; i < boxStations.Count; i++)
+            {
+                BoxStation station = boxStations[i];
+                bool pressed = HasAuthority ? IsPlayerPressing(station.ButtonCollider) : (boxPressedMask & (1 << i)) != 0;
+                if (HasAuthority && pressed) pressedMask |= 1 << i;
+                if (HasAuthority && pressed && !station.Pressed && Time.unscaledTime >= station.NextDispenseAt)
+                {
+                    station.NextDispenseAt = Time.unscaledTime + BoxButtonCooldown;
+                    station.Dropper?.DispenseSelectedSize(BoxSizes[station.PreviewIndex]);
+                    GameSfx.PlayAt(SfxId.UiButtonPress, station.ButtonCollider != null
+                        ? station.ButtonCollider.transform.position : transform.position);
+                }
+                station.Pressed = pressed;
+                RefreshBoxButtonVisual(station, pressed);
+            }
+            if (HasAuthority) boxPressedMask = pressedMask;
+        }
+
+        private static bool IsPlayerPressing(Collider2D button)
+        {
+            if (button == null || !button.enabled) return false;
+            Bounds buttonBounds = button.bounds;
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == null || !players[i].gameObject.activeInHierarchy) continue;
+                Collider2D[] colliders = players[i].GetComponentsInChildren<Collider2D>(false);
+                for (int c = 0; c < colliders.Length; c++)
+                {
+                    Collider2D collider = colliders[c];
+                    if (collider != null && collider.enabled && collider.bounds.Intersects(buttonBounds)) return true;
+                }
+            }
+            return false;
+        }
+
+        private static void RefreshBoxButtonVisual(BoxStation station, bool pressed)
+        {
+            if (station.ButtonCap != null)
+            {
+                Vector3 scale = station.ButtonCapScale;
+                scale.y *= pressed ? 0.56f : 1f;
+                station.ButtonCap.localScale = scale;
+            }
+            if (station.PressGlow != null)
+            {
+                station.PressGlow.color = pressed
+                    ? new Color(0.18f, 0.95f, 0.28f, 0.8f)
+                    : new Color(0.95f, 0.16f, 0.1f, 0.18f);
+            }
+        }
+
         private void EvaluateActiveRoom(float deltaTime)
         {
             energizedPlayers.Clear();
@@ -702,7 +884,13 @@ namespace DrawBody.Prototype
             RoomCircuit room = rooms[roomIndex];
             if (roomIndex < 4)
             {
-                for (int i = 0; i < room.Paths.Count; i++) EvaluateSequentialPath(room.Paths[i]);
+                bool allPaths = true;
+                for (int i = 0; i < room.Paths.Count; i++)
+                {
+                    EvaluateSequentialPath(room.Paths[i]);
+                    allPaths &= room.Paths[i].Complete;
+                }
+                if (allPaths) RequestRoomCompletion(roomIndex);
                 return;
             }
 
@@ -722,6 +910,18 @@ namespace DrawBody.Prototype
                 }
                 relay.PoweredPieces = Mathf.Clamp(passed + 1, 1, relay.Pieces.Count);
             }
+        }
+
+        private void RequestRoomCompletion(int roomIndex)
+        {
+            if (!IsOnline || HasAuthority || onlineManager == null || Time.unscaledTime < nextCompleteRequestAt) return;
+            nextCompleteRequestAt = Time.unscaledTime + 0.5f;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = CompleteRequestKind,
+                Json = JsonUtility.ToJson(new CompleteRequest { RoomIndex = roomIndex })
+            });
         }
 
         private void EvaluateSequentialPath(CircuitPath path)
@@ -967,13 +1167,22 @@ namespace DrawBody.Prototype
             for (int i = 0; i < rooms.Count; i++)
             {
                 RoomCircuit room = rooms[i];
+                if (room.Door == null)
+                {
+                    room.Door = FindStageObject("13-3_door_" + (i + 1));
+                    if (room.Door != null)
+                    {
+                        room.DoorBaseScale = room.Door.transform.localScale;
+                        room.DoorColliders = room.Door.GetComponentsInChildren<Collider2D>(true);
+                    }
+                }
                 float target = room.Completed ? 1f : 0f;
                 room.DoorOpen = Mathf.MoveTowards(room.DoorOpen, target, Time.deltaTime * 1.5f);
                 if (room.Door == null) continue;
                 Vector3 scale = room.DoorBaseScale;
                 scale.y *= Mathf.Max(0.02f, 1f - room.DoorOpen);
                 room.Door.transform.localScale = scale;
-                bool solid = room.DoorOpen < 0.72f;
+                bool solid = !room.Completed && room.DoorOpen < 0.72f;
                 if (room.DoorColliders != null)
                     for (int c = 0; c < room.DoorColliders.Length; c++)
                         if (room.DoorColliders[c] != null) room.DoorColliders[c].enabled = solid;
@@ -1084,7 +1293,9 @@ namespace DrawBody.Prototype
             {
                 Sequence = ++stateSequence,
                 CompletedMask = completedMask,
-                RelayProgress = rooms.Count > 4 ? rooms[4].RelayProgress : 0f
+                RelayProgress = rooms.Count > 4 ? rooms[4].RelayProgress : 0f,
+                BoxPreviewPacked = PackBoxPreviews(),
+                BoxPressedMask = boxPressedMask
             };
             onlineManager.SendGimmickData(new OnlineGimmickData
             {
@@ -1096,7 +1307,19 @@ namespace DrawBody.Prototype
 
         private void HandleNetworkData(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId || data.Kind != StateKind || HasAuthority || !IsHostPlayer(data.PlayerId)) return;
+            if (data == null || data.ObjectId != StageId) return;
+            if (data.Kind == CompleteRequestKind)
+            {
+                if (!HasAuthority || !IsOnline) return;
+                CompleteRequest request = JsonUtility.FromJson<CompleteRequest>(data.Json);
+                if (request != null && request.RoomIndex == FirstIncompleteRoom()
+                    && request.RoomIndex >= 0 && request.RoomIndex < rooms.Count)
+                {
+                    CompleteRoom(request.RoomIndex);
+                }
+                return;
+            }
+            if (data.Kind != StateKind || HasAuthority || !IsHostPlayer(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= lastStateSequence) return;
             lastStateSequence = state.Sequence;
@@ -1113,6 +1336,27 @@ namespace DrawBody.Prototype
                 }
             }
             if (rooms.Count > 4) rooms[4].RelayProgress = state.RelayProgress;
+            ApplyBoxPreviews(state.BoxPreviewPacked);
+            boxPressedMask = state.BoxPressedMask;
+        }
+
+        private int PackBoxPreviews()
+        {
+            int packed = 0;
+            for (int i = 0; i < boxStations.Count; i++)
+                packed |= (boxStations[i].PreviewIndex & 0x7) << (i * 3);
+            return packed;
+        }
+
+        private void ApplyBoxPreviews(int packed)
+        {
+            for (int i = 0; i < boxStations.Count; i++)
+            {
+                int previewIndex = (packed >> (i * 3)) & 0x7;
+                previewIndex = Mathf.Clamp(previewIndex, 0, BoxSizes.Length - 1);
+                boxStations[i].PreviewIndex = previewIndex;
+                SetBoxPreview(boxStations[i].Preview, previewIndex);
+            }
         }
 
         private bool IsHostPlayer(string id)

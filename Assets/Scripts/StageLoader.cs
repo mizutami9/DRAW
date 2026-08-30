@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DrawBody.Prototype
@@ -11,8 +12,17 @@ namespace DrawBody.Prototype
 
         private bool hasStageFallBoundary;
         private float stageFallBoundaryY;
+        private Vector3 fallbackSpawnPosition;
+        private bool fallbackSpawnCaptured;
         public StageData CurrentStageData { get; private set; }
         public Transform LoadedStageRoot => stageRoot;
+
+        private void Awake()
+        {
+            if (spawnPoint == null) return;
+            fallbackSpawnPosition = spawnPoint.position;
+            fallbackSpawnCaptured = true;
+        }
 
         public int CountLoadedCollectibles(StageObjectType type)
         {
@@ -59,6 +69,11 @@ namespace DrawBody.Prototype
 
         public void ShowFallbackStage()
         {
+            if (!fallbackSpawnCaptured && spawnPoint != null)
+            {
+                fallbackSpawnPosition = spawnPoint.position;
+                fallbackSpawnCaptured = true;
+            }
             CurrentStageData = null;
             ResetStageFallBoundary();
             ClearStageRoot();
@@ -67,6 +82,78 @@ namespace DrawBody.Prototype
             {
                 fallbackStageRoot.SetActive(true);
             }
+            if (spawnPoint != null && fallbackSpawnCaptured)
+            {
+                spawnPoint.position = fallbackSpawnPosition;
+            }
+        }
+
+        public void ShowTitlePlayground()
+        {
+            EnsureReferences();
+
+            List<StageObjectData> objects = new List<StageObjectData>();
+            // The title and multiplayer controls occupy the bottom of the
+            // screen. Keep the whole playable floor above that UI band.
+            AddTitleObject(objects, StageObjectType.Platform, new Vector2(0f, -0.2f), new Vector2(28f, 0.55f));
+            AddTitleObject(objects, StageObjectType.Platform, new Vector2(0f, 6.75f), new Vector2(28f, 0.55f));
+            AddTitleObject(objects, StageObjectType.Wall, new Vector2(-13.75f, 3.275f), new Vector2(0.55f, 6.95f));
+            AddTitleObject(objects, StageObjectType.Wall, new Vector2(13.75f, 3.275f), new Vector2(0.55f, 6.95f));
+
+            // Keep the middle open for running around, while placing a few simple
+            // shelves and toys around the edges of the room.
+            AddTitleObject(objects, StageObjectType.Platform, new Vector2(-8.7f, 1.5f), new Vector2(5.2f, 0.38f));
+            AddTitleObject(objects, StageObjectType.Platform, new Vector2(8.6f, 2.2f), new Vector2(5.4f, 0.38f));
+            AddTitleObject(objects, StageObjectType.OneWayPlatform, new Vector2(0.2f, 4.65f), new Vector2(5.3f, 0.28f));
+
+            AddTitleObject(objects, StageObjectType.WoodBox, new Vector2(-5.3f, 0.6f), new Vector2(1.05f, 1.05f));
+            AddTitleObject(objects, StageObjectType.WoodBox, new Vector2(-4.15f, 0.6f), new Vector2(1.05f, 1.05f));
+            AddTitleObject(objects, StageObjectType.IronBox, new Vector2(-3f, 0.575f), new Vector2(1f, 1f));
+            AddTitleObject(objects, StageObjectType.RubberBox, new Vector2(5.2f, 0.6f), new Vector2(1.05f, 1.05f));
+            AddTitleObject(objects, StageObjectType.Ball, new Vector2(6.55f, 0.6f), new Vector2(1.05f, 1.05f));
+            AddTitleObject(objects, StageObjectType.TriangleBox, new Vector2(8.95f, 2.965f), new Vector2(1.15f, 1.15f));
+
+            AddTitleObject(objects, StageObjectType.Handgun, new Vector2(-0.95f, 0.375f), new Vector2(1.05f, 0.6f));
+            AddTitleObject(objects, StageObjectType.Bazooka, new Vector2(1.45f, 0.485f), new Vector2(1.65f, 0.82f));
+            AddTitleObject(objects, StageObjectType.JumpPad, new Vector2(10.8f, 0.385f), new Vector2(1.45f, 0.62f), 31f);
+            AddTitleObject(objects, StageObjectType.BulletBreakableWall, new Vector2(11.2f, 4f), new Vector2(0.65f, 3.2f));
+            // Feed occasional moving targets onto the right shelf without
+            // filling the open play space in the middle of the title room.
+            AddTitleObject(objects, StageObjectType.EnemyDropper, new Vector2(8.6f, 5.85f), new Vector2(1.8f, 1.35f), 5.5f);
+
+            StageData titlePlayground = new StageData
+            {
+                id = "title-playground",
+                displayName = "Title Playground",
+                backgroundColorHex = "#EAF8F2FF",
+                objects = objects.ToArray()
+            };
+
+            LoadStage(titlePlayground);
+            if (spawnPoint != null)
+            {
+                // Start on the left shelf. The multiplayer drawer occupies the
+                // lower edge of the screen, so the player remains visible while
+                // waiting for friends.
+                spawnPoint.position = new Vector3(-8.7f, 2.65f, spawnPoint.position.z);
+            }
+        }
+
+        private static void AddTitleObject(
+            List<StageObjectData> objects,
+            StageObjectType type,
+            Vector2 position,
+            Vector2 size,
+            float actionStrength = -1f)
+        {
+            StageObjectData data = StageObjectFactory.CreateDefaultData(type, position);
+            data.objectId = $"title-playground-{objects.Count:D2}-{type}";
+            data.size = size;
+            if (actionStrength >= 0f)
+            {
+                data.actionStrength = actionStrength;
+            }
+            objects.Add(data);
         }
 
         public void HideStages()
@@ -131,10 +218,28 @@ namespace DrawBody.Prototype
 
             objectFactory.FitSeparateBridges(data.objects);
 
+            int playerCount = GetCurrentStagePlayerCount();
+            HashSet<string> enabledBombDroppers = BuildPlayerScaledBombDropperIds(data, playerCount);
+
             for (int i = 0; i < data.objects.Length; i++)
             {
                 StageObjectData obj = data.objects[i];
                 if (obj == null)
+                {
+                    continue;
+                }
+
+                if (data.id == "9-2"
+                    && playerCount < 3
+                    && !string.IsNullOrEmpty(obj.objectId)
+                    && obj.objectId.StartsWith("9-2_coin_extra_"))
+                {
+                    continue;
+                }
+
+                if (enabledBombDroppers != null
+                    && obj.type == StageObjectType.BombDropper
+                    && !enabledBombDroppers.Contains(obj.objectId))
                 {
                     continue;
                 }
@@ -155,6 +260,56 @@ namespace DrawBody.Prototype
             objectFactory.RefreshBridgeConnectionVisuals(data.objects, stageRoot);
 
             ConfigureStageGimmicks(data);
+        }
+
+        private static int GetCurrentStagePlayerCount()
+        {
+            StageManager stageManager = Object.FindFirstObjectByType<StageManager>();
+            return Mathf.Clamp(
+                stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1,
+                1,
+                4);
+        }
+
+        private static HashSet<string> BuildPlayerScaledBombDropperIds(StageData data, int playerCount)
+        {
+            if (data == null || data.id != "11-1" || data.objects == null)
+            {
+                return null;
+            }
+
+            List<StageObjectData> droppers = new List<StageObjectData>();
+            for (int i = 0; i < data.objects.Length; i++)
+            {
+                StageObjectData obj = data.objects[i];
+                if (obj != null && obj.type == StageObjectType.BombDropper)
+                {
+                    droppers.Add(obj);
+                }
+            }
+            if (droppers.Count <= 1)
+            {
+                return null;
+            }
+
+            int enabledCount = Mathf.Clamp(
+                Mathf.CeilToInt(droppers.Count * playerCount / 4f),
+                1,
+                droppers.Count);
+
+            HashSet<string> enabledIds = new HashSet<string>();
+            if (enabledCount == 1)
+            {
+                enabledIds.Add(droppers[droppers.Count / 2].objectId);
+                return enabledIds;
+            }
+
+            for (int i = 0; i < enabledCount; i++)
+            {
+                int sourceIndex = Mathf.RoundToInt(i * (droppers.Count - 1f) / (enabledCount - 1f));
+                enabledIds.Add(droppers[sourceIndex].objectId);
+            }
+            return enabledIds;
         }
 
         private void RefreshStageFallBoundary(StageObjectData[] objects)
@@ -299,6 +454,14 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingGrainCarry);
             }
 
+            // 7-3 owns this timer. The loaded stage root is reused, so leaving
+            // the component attached made its 03:00 display continue in 7-2.
+            StageTimedGoalController existingTimedGoal = stageRoot.GetComponent<StageTimedGoalController>();
+            if (existingTimedGoal != null)
+            {
+                DestroyComponentNow(existingTimedGoal);
+            }
+
             StageTowerDefenseController existingTowerDefense = stageRoot.GetComponent<StageTowerDefenseController>();
             if (existingTowerDefense != null)
             {
@@ -421,6 +584,13 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "7-2")
             {
                 stageRoot.gameObject.AddComponent<StageGrainCarryController>();
+            }
+            if (data != null && data.id == "7-3")
+            {
+                int playerCount = GetCurrentStagePlayerCount();
+                float seconds = playerCount >= 4 ? 120f : playerCount == 3 ? 150f : 180f;
+                StageTimedGoalController timer = stageRoot.gameObject.AddComponent<StageTimedGoalController>();
+                timer.Configure(data.id, seconds);
             }
             if (data != null && data.id == "8-3")
             {

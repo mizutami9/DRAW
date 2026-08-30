@@ -91,15 +91,35 @@ namespace DrawBody.Prototype
         private bool scriptedJumpPressed;
         private bool friendCarried;
         private float weaponRecoilMomentumUntil = -100f;
+        private bool remoteActionStateEnabled;
+        private bool remoteGrounded;
+        private bool remoteWallSticking;
+        private bool remoteGliding;
+        private bool remoteActionSequencesInitialized;
+        private int lastRemoteJumpSequence;
+        private int lastRemoteLandingSequence;
+        private int jumpEventSequence;
+        private int landingEventSequence;
+        private bool lastLandingWasHard;
+        private float remoteRespawnGraceUntil;
 
         public bool IsGrounded { get; private set; }
         public bool ControlsEnabled => controlsEnabled;
         public bool IsFriendCarried => friendCarried;
         public int FacingDirection => facingDirection;
-        public bool IsInvulnerable => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
+        public bool IsInvulnerable => currentSpecies == DrawManager.Species.Turtle && turtleShelled
+            || Time.unscaledTime < remoteRespawnGraceUntil;
         public bool IsTurtleShelled => currentSpecies == DrawManager.Species.Turtle && turtleShelled;
         public bool IsWallSticking => wasWallSticking;
+        public bool IsGliding => wasGliding;
+        public bool IsAnimationGrounded => remoteActionStateEnabled ? remoteGrounded : IsGrounded;
+        public int JumpEventSequence => jumpEventSequence;
+        public int LandingEventSequence => landingEventSequence;
+        public bool LastLandingWasHard => lastLandingWasHard;
+        public float TemporarySpeedBoostMultiplier => temporarySpeedMultiplier;
+        public float TemporarySpeedBoostRemaining => temporarySpeedRemaining;
         public DrawManager.Species CurrentSpecies => currentSpecies;
+        public bool HasWeaponRecoilMomentum => Time.fixedTime < weaponRecoilMomentumUntil;
 
         public void ApplySpeedBoost(float multiplier, float duration)
         {
@@ -172,6 +192,56 @@ namespace DrawBody.Prototype
 
             facingDirection = nextDirection;
             bodyBuilder?.SetFacingDirection(facingDirection);
+        }
+
+        public void ApplyRemoteActionState(
+            bool grounded,
+            bool wallSticking,
+            bool gliding,
+            int jumpSequence,
+            int landingSequence,
+            bool hardLanding,
+            float speedBoostMultiplier,
+            float speedBoostRemaining,
+            float respawnGraceRemaining)
+        {
+            remoteActionStateEnabled = true;
+            remoteGrounded = grounded;
+            remoteWallSticking = wallSticking;
+            remoteGliding = gliding;
+            if (respawnGraceRemaining > 0f)
+            {
+                remoteRespawnGraceUntil = Mathf.Max(
+                    remoteRespawnGraceUntil,
+                    Time.unscaledTime + respawnGraceRemaining);
+            }
+
+            if (!remoteActionSequencesInitialized)
+            {
+                remoteActionSequencesInitialized = true;
+                lastRemoteJumpSequence = jumpSequence;
+                lastRemoteLandingSequence = landingSequence;
+            }
+            else
+            {
+                if (jumpSequence > lastRemoteJumpSequence)
+                {
+                    PlayJumpSound(false);
+                }
+                if (landingSequence > lastRemoteLandingSequence)
+                {
+                    PlayLandingSound(hardLanding, false);
+                }
+                lastRemoteJumpSequence = Mathf.Max(lastRemoteJumpSequence, jumpSequence);
+                lastRemoteLandingSequence = Mathf.Max(lastRemoteLandingSequence, landingSequence);
+            }
+
+            if (speedBoostRemaining > 0.03f && speedBoostMultiplier > 1.01f)
+            {
+                PlayerSpeedBoostEffect effect = GetComponent<PlayerSpeedBoostEffect>();
+                if (effect == null) effect = gameObject.AddComponent<PlayerSpeedBoostEffect>();
+                effect.Activate(speedBoostMultiplier, speedBoostRemaining);
+            }
         }
 
         public void InvalidateBodyColliderCache()
@@ -935,6 +1005,18 @@ namespace DrawBody.Prototype
 
         private void ApplyAirAbility()
         {
+            if (remoteActionStateEnabled && !controlsEnabled)
+            {
+                UpdateBirdGlideAudio(remoteGliding);
+                wasGliding = remoteGliding;
+                if (remoteWallSticking != wasWallSticking)
+                {
+                    GameSfx.PlayAt(remoteWallSticking ? SfxId.SlimeStick : SfxId.SlimeRelease, transform.position);
+                }
+                wasWallSticking = remoteWallSticking;
+                return;
+            }
+
             bool wallJumping = Time.fixedTime < wallJumpMomentumUntil;
             bool reachedOppositeWall = wallJumping
                 && wallJumpSourceSide != 0
@@ -1033,7 +1115,7 @@ namespace DrawBody.Prototype
             wasGliding = false;
         }
 
-        private void PlayJumpSound()
+        private void PlayJumpSound(bool trackEvent = true)
         {
             SfxId id = currentSpecies switch
             {
@@ -1043,6 +1125,7 @@ namespace DrawBody.Prototype
                 _ => SfxId.PlayerJump
             };
             GameSfx.PlayAt(id, transform.position);
+            if (trackEvent) jumpEventSequence++;
         }
 
         private void PlayLandingSound(bool groundedBeforeProbe, float verticalSpeedBeforeProbe)
@@ -1056,11 +1139,28 @@ namespace DrawBody.Prototype
                 ? SfxId.TurtleLand
                 : verticalSpeedBeforeProbe < -11f ? SfxId.PlayerLandHard : SfxId.PlayerLandSoft;
             GameSfx.PlayAt(id, transform.position);
+            lastLandingWasHard = verticalSpeedBeforeProbe < -11f;
+            landingEventSequence++;
+        }
+
+        private void PlayLandingSound(bool hardLanding, bool trackEvent)
+        {
+            SfxId id = currentSpecies == DrawManager.Species.Turtle
+                ? SfxId.TurtleLand
+                : hardLanding ? SfxId.PlayerLandHard : SfxId.PlayerLandSoft;
+            GameSfx.PlayAt(id, transform.position);
+            if (trackEvent)
+            {
+                lastLandingWasHard = hardLanding;
+                landingEventSequence++;
+            }
         }
 
         private void PlayMovementSound()
         {
-            if (!IsGrounded || Mathf.Abs(horizontalInput) < 0.2f || Mathf.Abs(rb.linearVelocity.x) < 0.5f || Time.time < nextFootstepTime)
+            bool grounded = remoteActionStateEnabled && !controlsEnabled ? remoteGrounded : IsGrounded;
+            bool moving = remoteActionStateEnabled && !controlsEnabled || Mathf.Abs(horizontalInput) >= 0.2f;
+            if (!grounded || !moving || Mathf.Abs(rb.linearVelocity.x) < 0.5f || Time.time < nextFootstepTime)
             {
                 return;
             }

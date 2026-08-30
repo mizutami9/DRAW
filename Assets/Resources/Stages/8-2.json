@@ -10,8 +10,14 @@
         {
             "objectId": "ricochet_spawn",
             "type": 2,
-            "position": { "x": 0.0, "y": -8.05 },
-            "size": { "x": 0.7, "y": 0.7 },
+            "position": {
+                "x": 0.0,
+                "y": -8.050000190734864
+            },
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.699999988079071
+            },
             "rotation": 0.0,
             "pathPoints": [],
             "pathThickness": 0.0,
@@ -29,8 +35,14 @@
         {
             "objectId": "ricochet_outer_bottom",
             "type": 0,
-            "position": { "x": 0.0, "y": -9.0 },
-            "size": { "x": 31.7, "y": 0.7 },
+            "position": {
+                "x": 0.0,
+                "y": -9.0
+            },
+            "size": {
+                "x": 31.700000762939454,
+                "y": 0.699999988079071
+            },
             "rotation": 0.0,
             "pathPoints": [],
             "pathThickness": 0.0,

@@ -3,7 +3,7 @@
     "displayName": "Stage 6-2 Hurdle Survival",
     "backgroundColorHex": "#F7F2DE26",
     "ruleMode": 2,
-    "timeLimitSeconds": 60.0,
+    "timeLimitSeconds": 45.0,
     "collectionTarget": 163,
     "requiredCollectionCount": 1,
     "objects": [

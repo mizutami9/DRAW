@@ -364,7 +364,10 @@ namespace DrawBody.Prototype
 
         private void RefreshHorizontalEligibility()
         {
-            float halfWidth = Mathf.Max(0.8f, size.x * 0.6f);
+            // Short bird/turtle drawings can remain below the trigger volume.
+            // Use the visible dispenser width with a little standing room so all
+            // three rooms respond consistently while still requiring the right species.
+            float halfWidth = Mathf.Max(1.8f, size.x * 1.05f);
             foreach (StageGrainCarrier carrier in StageGrainCarrier.All)
             {
                 if (carrier == null) continue;
@@ -508,7 +511,9 @@ namespace DrawBody.Prototype
             playerCount = Mathf.Max(1, playerCount);
             if (!force && playerCount == appliedPlayerCount) return;
             appliedPlayerCount = playerCount;
-            targetGrams = gramsPerPlayer * appliedPlayerCount;
+            targetGrams = ObjectId == "7-2_scale_bird"
+                ? 30f + 15f * (Mathf.Clamp(appliedPlayerCount, 1, 4) - 1)
+                : gramsPerPlayer * appliedPlayerCount;
             ApplyMeasuredGrams(measuredGrams);
         }
 
@@ -599,6 +604,11 @@ namespace DrawBody.Prototype
         private float lastFloorContactAt = -1f;
         private float nextContainmentCheck;
         private bool insideCarrier;
+        private StageGrainCarrier containingCarrier;
+        private bool lockedToCarrier;
+        private CircleCollider2D grainCollider;
+        private Vector3 carrierLocalPosition;
+        private float configuredGravityScale = 0.72f;
         private float grams = 10f;
 
         public float Grams => grams;
@@ -637,51 +647,72 @@ namespace DrawBody.Prototype
             // Ten grains make 100 g. Their mass stays deliberately light so the
             // pile cannot shove the player around or suppress a jump.
             body.mass = Mathf.Clamp(0.00045f + grams * 0.000035f, 0.0005f, 0.0022f);
-            body.gravityScale = Mathf.Max(0.1f, gravityScale);
+            configuredGravityScale = Mathf.Max(0.1f, gravityScale);
+            body.gravityScale = configuredGravityScale;
             body.linearDamping = 0.08f;
             body.angularDamping = 0.15f;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
             body.linearVelocity = initialVelocity;
-            CircleCollider2D collider = gameObject.AddComponent<CircleCollider2D>();
-            collider.radius = 0.46f;
-            collider.sharedMaterial = GetGrainMaterial();
+            grainCollider = gameObject.AddComponent<CircleCollider2D>();
+            grainCollider.radius = 0.46f;
+            grainCollider.sharedMaterial = GetGrainMaterial();
             if (ignoreOneWayPlatforms)
             {
                 PlatformEffector2D[] effectors = Object.FindObjectsByType<PlatformEffector2D>(FindObjectsSortMode.None);
                 for (int i = 0; i < effectors.Length; i++)
                 {
                     Collider2D platform = effectors[i] != null ? effectors[i].GetComponent<Collider2D>() : null;
-                    if (platform != null) Physics2D.IgnoreCollision(collider, platform, true);
+                    if (platform != null) Physics2D.IgnoreCollision(grainCollider, platform, true);
                 }
                 Collider2D[] stageColliders = Object.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
                 for (int i = 0; i < stageColliders.Length; i++)
                 {
                     Collider2D stageCollider = stageColliders[i];
                     if (stageCollider != null && stageCollider.gameObject.name == "Boundary Ceiling")
-                        Physics2D.IgnoreCollision(collider, stageCollider, true);
+                        Physics2D.IgnoreCollision(grainCollider, stageCollider, true);
                 }
             }
         }
 
         private void OnEnable() { ActiveParticles.Add(this); }
-        private void OnDisable() { ActiveParticles.Remove(this); }
+        private void OnDisable()
+        {
+            ActiveParticles.Remove(this);
+            if (lockedToCarrier && containingCarrier != null)
+                containingCarrier.SetParticleCollisionIgnored(grainCollider, false);
+        }
 
         private void Update()
         {
             if (consumed) return;
+            if (insideCarrier && containingCarrier != null) StabilizeOnCarrier(containingCarrier);
             if (Time.unscaledTime >= nextContainmentCheck)
             {
                 nextContainmentCheck = Time.unscaledTime + 0.08f;
-                insideCarrier = false;
+                StageGrainCarrier previousCarrier = containingCarrier;
+                StageGrainCarrier foundCarrier = null;
                 foreach (StageGrainCarrier carrier in StageGrainCarrier.All)
                 {
                     if (!IsOnGround && carrier != null && carrier.ContainsWorldPoint(transform.position))
                     {
-                        insideCarrier = true;
-                        lastInsideHeadAt = Time.time;
+                        foundCarrier = carrier;
                         break;
                     }
+                }
+                insideCarrier = foundCarrier != null;
+                if (foundCarrier != null)
+                {
+                    if (lockedToCarrier && previousCarrier != null && previousCarrier != foundCarrier)
+                        ReleaseCarrierLock(previousCarrier);
+                    containingCarrier = foundCarrier;
+                    lastInsideHeadAt = Time.time;
+                    StabilizeOnCarrier(foundCarrier);
+                }
+                else if (lockedToCarrier)
+                {
+                    ReleaseCarrierLock(previousCarrier);
+                    containingCarrier = null;
                 }
             }
 
@@ -700,9 +731,45 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void StabilizeOnCarrier(StageGrainCarrier carrier)
+        {
+            if (body == null || carrier == null) return;
+            if (!lockedToCarrier)
+            {
+                lockedToCarrier = true;
+                carrierLocalPosition = carrier.transform.InverseTransformPoint(body.position);
+                body.bodyType = RigidbodyType2D.Kinematic;
+                body.gravityScale = 0f;
+                carrier.SetParticleCollisionIgnored(grainCollider, true);
+            }
+
+            Vector2 anchoredPosition = carrier.transform.TransformPoint(carrierLocalPosition);
+            body.position = anchoredPosition;
+            // Thin hand-drawn line colliders can move a long way in one physics
+            // step when their player climbs a ledge. Limit only the grain's
+            // velocity relative to that carrier so a settled pile cannot tunnel
+            // through the drawing and be launched away by the step impulse.
+            Vector2 carrierVelocity = carrier.Velocity;
+            body.linearVelocity = carrierVelocity;
+            body.angularVelocity = 0f;
+        }
+
+        private void ReleaseCarrierLock(StageGrainCarrier previousCarrier)
+        {
+            if (body == null || !lockedToCarrier) return;
+            lockedToCarrier = false;
+            previousCarrier?.SetParticleCollisionIgnored(grainCollider, false);
+            body.bodyType = RigidbodyType2D.Dynamic;
+            body.gravityScale = configuredGravityScale;
+            body.linearVelocity = previousCarrier != null ? previousCarrier.Velocity : Vector2.zero;
+        }
+
         private void OnCollisionStay2D(Collision2D collision)
         {
-            if (collision.collider.GetComponentInParent<PlayerController2D>() != null) return;
+            // Grains resting on a character form a pile and naturally touch one
+            // another. Only contact with actual terrain starts the cleanup timer.
+            if (collision.collider.GetComponentInParent<PlayerController2D>() != null
+                || collision.collider.GetComponentInParent<StageGrainParticle>() != null) return;
             for (int i = 0; i < collision.contactCount; i++)
             {
                 if (collision.GetContact(i).normal.y <= 0.45f) continue;
@@ -731,6 +798,8 @@ namespace DrawBody.Prototype
                 Vector2 velocity = body.linearVelocity;
                 velocity.x = -velocity.x;
                 body.linearVelocity = velocity;
+                if (lockedToCarrier && containingCarrier != null)
+                    carrierLocalPosition = containingCarrier.transform.InverseTransformPoint(position);
             }
             else
             {
@@ -766,6 +835,7 @@ namespace DrawBody.Prototype
 
         public static IEnumerable<StageGrainCarrier> All => ActiveCarriers;
         public PlayerAbilityController Abilities => abilities;
+        public Vector2 Velocity => playerBody != null ? playerBody.linearVelocity : Vector2.zero;
 
         private void OnEnable() { ActiveCarriers.Add(this); }
         private void OnDisable() { ActiveCarriers.Remove(this); }
@@ -784,14 +854,27 @@ namespace DrawBody.Prototype
         public bool ContainsWorldPoint(Vector2 point)
         {
             if (!TryGetCarrierBounds(out Bounds bounds)) return false;
-            // Every drawn body part may be used as a container: a turtle shell,
-            // bird wing, cat body/tail and slime torso all count. Ground contact
-            // is rejected by StageGrainParticle before this spatial test.
+            // Only the upper/head region carries grains. Using the complete body
+            // bounds made falling grains stick to legs, tails and the empty space
+            // inside a large drawing, visually wrapping the whole character.
             const float sidePadding = 0.08f;
+            float headRegionBottom = bounds.min.y + bounds.size.y * 0.62f;
             return point.x >= bounds.min.x - sidePadding
                 && point.x <= bounds.max.x + sidePadding
-                && point.y >= bounds.min.y - 0.08f
+                && point.y >= headRegionBottom
                 && point.y <= bounds.max.y + 0.08f;
+        }
+
+        public void SetParticleCollisionIgnored(Collider2D particleCollider, bool ignored)
+        {
+            if (particleCollider == null) return;
+            RefreshCarrierBounds();
+            for (int i = 0; i < bodyColliders.Count; i++)
+            {
+                Collider2D bodyCollider = bodyColliders[i];
+                if (bodyCollider != null && bodyCollider.enabled)
+                    Physics2D.IgnoreCollision(particleCollider, bodyCollider, ignored);
+            }
         }
 
         public bool TryTakeContainedParticle(out StageGrainParticle result)
@@ -1015,6 +1098,17 @@ namespace DrawBody.Prototype
                 GrainDepositMessage deposit = JsonUtility.FromJson<GrainDepositMessage>(data.Json);
                 if (deposit != null && scales.TryGetValue(deposit.ScaleId, out StageGrainScale scale))
                 {
+                    PlayerController2D sourcePlayer = stageManager != null
+                        ? stageManager.GetOnlinePlayerController(data.PlayerId)
+                        : null;
+                    StageGrainCarrier sourceCarrier = sourcePlayer != null
+                        ? sourcePlayer.GetComponent<StageGrainCarrier>()
+                        : null;
+                    if (sourceCarrier != null
+                        && sourceCarrier.TryTakeContainedParticle(out StageGrainParticle hostParticle))
+                    {
+                        hostParticle.Consume();
+                    }
                     scale.ApplyMeasuredGrams(scale.MeasuredGrams + Mathf.Clamp(deposit.Amount, 0f, 12f));
                     BroadcastScaleState(scale);
                 }

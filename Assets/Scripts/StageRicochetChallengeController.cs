@@ -27,9 +27,11 @@ namespace DrawBody.Prototype
         private readonly HashSet<StageGunBullet> activeBullets = new HashSet<StageGunBullet>();
         private readonly List<Vector2> cellCenters = new List<Vector2>();
         private readonly List<float> cellFloors = new List<float>();
+        private readonly List<Vector2> usedEnemyPositions = new List<Vector2>();
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageObjectFactory factory;
+        private StageGimmickSyncManager syncManager;
         private StageGun activeGun;
         private StageRicochetTarget activeTarget;
         private TextMesh roundText;
@@ -51,6 +53,7 @@ namespace DrawBody.Prototype
         private StageRicochetBulletPassage rightPassage;
         private StageRicochetBulletPassage ceilingPassage;
         private StageRicochetBulletPassage floorPassage;
+        private GameObject routeGuideRoot;
 
         public bool IsRoundActive => state != null && state.Phase == 0;
 
@@ -59,6 +62,7 @@ namespace DrawBody.Prototype
             stageManager = Object.FindFirstObjectByType<StageManager>();
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             factory = Object.FindFirstObjectByType<StageObjectFactory>();
+            syncManager = Object.FindFirstObjectByType<StageGimmickSyncManager>();
             gameCamera = Camera.main;
             cameraFollow = gameCamera != null ? gameCamera.GetComponent<CameraFollow2D>() : null;
         }
@@ -186,17 +190,9 @@ namespace DrawBody.Prototype
             int gunCell = Random.Range(0, occupiedCellCount);
 
             state.GunPosition = RandomPointInCell(gunCell, true);
-            if (playerCount >= 4)
-            {
-                state.EnemyPosition = RandomExternalTargetPoint(gunCell);
-            }
-            else
-            {
-                // Empty rooms are used as target rooms, so the gun never competes
-                // with an enemy in a player's starting room.
-                int enemyCell = Random.Range(occupiedCellCount, cellCenters.Count);
-                state.EnemyPosition = RandomPointInCell(enemyCell, false);
-            }
+            // Targets stay outside every player room. The outer wall passage and
+            // a teammate reflection are both required to reach them.
+            state.EnemyPosition = RandomUnusedExternalTargetPoint(gunCell);
             ApplyRoundState();
             BroadcastState(true);
             RefreshMonitor();
@@ -211,20 +207,57 @@ namespace DrawBody.Prototype
             return new Vector2(x, floor + (gun ? 0.72f : 0.9f));
         }
 
-        private Vector2 RandomExternalTargetPoint(int gunCell)
+        private Vector2 RandomUnusedExternalTargetPoint(int gunCell)
         {
             gunCell = Mathf.Clamp(gunCell, 0, cellCenters.Count - 1);
-            Vector2 roomCenter = cellCenters[gunCell];
-            bool leftColumn = gunCell == 0 || gunCell == 2;
-            bool topRow = gunCell == 0 || gunCell == 1;
-
-            // Always send the shot through at least one other player's room.
-            // This keeps the four-player version a real body-reflection relay.
-            if (Random.value < 0.5f)
+            Vector2 gunCenter = cellCenters[gunCell];
+            Vector2[] allPositions =
             {
-                return new Vector2(leftColumn ? 17.55f : -17.55f, roomCenter.y);
+                new Vector2(-17.55f, 4.3f), new Vector2(17.55f, 4.3f),
+                new Vector2(-17.55f, -4.3f), new Vector2(17.55f, -4.3f),
+                new Vector2(-8f, 9.35f), new Vector2(8f, 9.35f),
+                new Vector2(-8f, -9.35f), new Vector2(8f, -9.35f)
+            };
+
+            List<Vector2> candidates = new List<Vector2>();
+            for (int i = 0; i < allPositions.Length; i++)
+            {
+                Vector2 point = allPositions[i];
+                bool directlyAligned = Mathf.Abs(point.x - gunCenter.x) < 0.1f
+                    || Mathf.Abs(point.y - gunCenter.y) < 0.1f;
+                if (!directlyAligned && !HasUsedEnemyPosition(point))
+                {
+                    candidates.Add(point);
+                }
             }
-            return new Vector2(roomCenter.x, topRow ? -9.35f : 9.35f);
+
+            // Five rounds fit into the eight outer spawn points. This fallback
+            // only matters if the gun-cell alignment filtered every unused point.
+            if (candidates.Count == 0)
+            {
+                for (int i = 0; i < allPositions.Length; i++)
+                {
+                    if (!HasUsedEnemyPosition(allPositions[i])) candidates.Add(allPositions[i]);
+                }
+            }
+            if (candidates.Count == 0)
+            {
+                usedEnemyPositions.Clear();
+                candidates.AddRange(allPositions);
+            }
+
+            Vector2 selected = candidates[Random.Range(0, candidates.Count)];
+            usedEnemyPositions.Add(selected);
+            return selected;
+        }
+
+        private bool HasUsedEnemyPosition(Vector2 position)
+        {
+            for (int i = 0; i < usedEnemyPositions.Count; i++)
+            {
+                if ((usedEnemyPositions[i] - position).sqrMagnitude < 0.04f) return true;
+            }
+            return false;
         }
 
         private void ApplyRoundState()
@@ -239,13 +272,14 @@ namespace DrawBody.Prototype
             gunData.size = new Vector2(0.82f, 0.48f);
             GameObject gunObject = factory != null ? factory.Create(gunData, transform) : null;
             activeGun = gunObject != null ? gunObject.GetComponent<StageGun>() : null;
+            if (gunObject != null) syncManager?.RegisterRuntimeObject(gunObject.transform);
 
             StageObjectType enemyType = state.EnemyPattern == 1
                 ? StageObjectType.EnemyJumper
                 : state.EnemyPattern == 2 ? StageObjectType.EnemyCharger : StageObjectType.EnemyWalker;
             StageObjectData enemyData = StageObjectFactory.CreateDefaultData(enemyType, state.EnemyPosition);
             enemyData.objectId = StageId + "_target_round_" + state.RoundVersion;
-            enemyData.size = Vector2.one * 1.15f;
+            enemyData.size = Vector2.one * 1.8f;
             enemyData.movementSpeed = 0.5f;
             GameObject enemyObject = factory != null ? factory.Create(enemyData, transform) : null;
             if (enemyObject != null)
@@ -256,6 +290,7 @@ namespace DrawBody.Prototype
                 activeTarget.Configure(this, enemy);
                 CreateTargetRing(enemyObject.transform);
             }
+            CreateRouteGuide();
         }
 
         private void RemoveRoundObjects()
@@ -264,6 +299,7 @@ namespace DrawBody.Prototype
             for (int i = 0; i < carries.Length; i++) carries[i]?.ForceDrop();
             if (activeGun != null)
             {
+                syncManager?.UnregisterRuntimeObject(activeGun.transform);
                 activeGun.gameObject.SetActive(false);
                 Destroy(activeGun.gameObject);
                 activeGun = null;
@@ -277,14 +313,19 @@ namespace DrawBody.Prototype
             StageGunBullet[] bullets = Object.FindObjectsByType<StageGunBullet>(FindObjectsSortMode.None);
             for (int i = 0; i < bullets.Length; i++) if (bullets[i] != null) Destroy(bullets[i].gameObject);
             activeBullets.Clear();
+            if (routeGuideRoot != null)
+            {
+                Destroy(routeGuideRoot);
+                routeGuideRoot = null;
+            }
         }
 
         private void BuildArena()
         {
             cellCenters.Clear();
             cellFloors.Clear();
-            verticalPassage = CreateDivider("Center Vertical", Vector2.zero, new Vector2(0.62f, 16.6f));
-            horizontalPassage = CreateDivider("Center Horizontal", Vector2.zero, new Vector2(32.6f, 0.62f));
+            verticalPassage = CreateDivider("Center Vertical", Vector2.zero, new Vector2(1.2f, 16.6f));
+            horizontalPassage = CreateDivider("Center Horizontal", Vector2.zero, new Vector2(32.6f, 1.2f));
             FindOuterPassages();
             AddCell(new Vector2(-8f, 4.3f), 0.31f);
             AddCell(new Vector2(8f, 4.3f), 0.31f);
@@ -340,7 +381,31 @@ namespace DrawBody.Prototype
         private static StageRicochetBulletPassage GetOrAddPassage(GameObject target)
         {
             StageRicochetBulletPassage passage = target.GetComponent<StageRicochetBulletPassage>();
-            return passage != null ? passage : target.AddComponent<StageRicochetBulletPassage>();
+            if (passage == null) passage = target.AddComponent<StageRicochetBulletPassage>();
+            if (target.transform.Find("Bullet Glass") == null)
+            {
+                StageEditorObject marker = target.GetComponent<StageEditorObject>();
+                Vector2 size = marker != null ? marker.size : Vector2.one;
+                StageEscortController.AddFilledRect(target.transform, "Bullet Glass", Vector2.zero, size,
+                    new Color(0.62f, 0.94f, 1f, 0.58f), 24);
+                StageEscortController.AddBoxOutline(target.transform, Vector2.zero, size,
+                    new Color(0.05f, 0.5f, 0.82f, 1f), 25);
+                float length = Mathf.Max(size.x, size.y);
+                bool horizontal = size.x >= size.y;
+                int stripeCount = Mathf.Clamp(Mathf.CeilToInt(length / 1.25f), 2, 28);
+                for (int i = 0; i < stripeCount; i++)
+                {
+                    float t = stripeCount <= 1 ? 0.5f : i / (float)(stripeCount - 1);
+                    float value = Mathf.Lerp(-length * 0.43f, length * 0.43f, t);
+                    Vector2 from = horizontal ? new Vector2(value - 0.32f, -size.y * 0.28f) : new Vector2(-size.x * 0.28f, value - 0.32f);
+                    Vector2 to = horizontal ? new Vector2(value + 0.32f, size.y * 0.28f) : new Vector2(size.x * 0.28f, value + 0.32f);
+                    StageEscortController.AddLine(target.transform, from, to, 0.075f,
+                        new Color(0.08f, 0.62f, 0.95f, 0.86f), 26);
+                    LineRenderer stripe = target.transform.GetChild(target.transform.childCount - 1).GetComponent<LineRenderer>();
+                    if (stripe != null) stripe.gameObject.name = "Bullet Passage Stripe";
+                }
+            }
+            return passage;
         }
 
         private void ConfigureBulletPassages()
@@ -363,11 +428,8 @@ namespace DrawBody.Prototype
             if (stageManager == null || cellCenters.Count == 0) return;
             if (stageManager.IsOnlineStageActive)
             {
-                int index = 0;
-                OnlinePlayerInfo[] roster = onlineManager?.CurrentLobby?.Players;
-                if (roster != null)
-                    for (int i = 0; i < roster.Length; i++)
-                        if (roster[i] != null && roster[i].PlayerId == onlineManager.LocalPlayerId) { index = i; break; }
+                int index = PlayerColorPalette.GetLobbyPlayerSlot(
+                    onlineManager?.CurrentLobby, onlineManager?.LocalPlayerId);
                 PlayerController2D local = stageManager.ActivePlayerTransform != null
                     ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
                 PlacePlayer(local, index);
@@ -465,9 +527,77 @@ namespace DrawBody.Prototype
             for (int i = 0; i <= segments; i++)
             {
                 float angle = i / (float)segments * Mathf.PI * 2f;
-                points[i] = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 0.82f;
+                points[i] = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 1.28f;
             }
             StageGun.AddLine(target, "Round Target Ring", points, 0.075f, new Color(1f, 0.2f, 0.16f, 0.9f), 42);
+        }
+
+        private void CreateRouteGuide()
+        {
+            if (routeGuideRoot != null) Destroy(routeGuideRoot);
+            routeGuideRoot = new GameObject("10-3 Suggested Ricochet Route");
+            routeGuideRoot.transform.SetParent(transform, false);
+
+            int gunCell = 0;
+            float closest = float.PositiveInfinity;
+            for (int i = 0; i < cellCenters.Count; i++)
+            {
+                float distance = ((Vector2)state.GunPosition - cellCenters[i]).sqrMagnitude;
+                if (distance < closest)
+                {
+                    closest = distance;
+                    gunCell = i;
+                }
+            }
+
+            Vector2 roomCenter = cellCenters.Count > 0 ? cellCenters[gunCell] : Vector2.zero;
+            Vector2 reflectionPoint = Vector2.Lerp(state.GunPosition, roomCenter, 0.62f);
+            Vector2 dividerPoint = new Vector2(
+                Mathf.Sign(state.EnemyPosition.x) * 0.85f,
+                Mathf.Sign(state.GunPosition.y) * 0.85f);
+            Vector2 outerApproach = state.EnemyPosition;
+            if (Mathf.Abs(state.EnemyPosition.x) > 16.3f)
+                outerApproach.x = Mathf.Sign(state.EnemyPosition.x) * 14.7f;
+            else
+                outerApproach.y = Mathf.Sign(state.EnemyPosition.y) * 8.2f;
+
+            Vector2[] route =
+            {
+                state.GunPosition,
+                reflectionPoint,
+                dividerPoint,
+                outerApproach,
+                state.EnemyPosition
+            };
+            Color ink = new Color(1f, 0.62f, 0.06f, 0.8f);
+            for (int segment = 0; segment < route.Length - 1; segment++)
+            {
+                Vector2 from = route[segment];
+                Vector2 to = route[segment + 1];
+                float length = Vector2.Distance(from, to);
+                int count = Mathf.Max(1, Mathf.FloorToInt(length / 1.05f));
+                Vector2 direction = (to - from).normalized;
+                Vector2 side = new Vector2(-direction.y, direction.x);
+                for (int i = 0; i < count; i++)
+                {
+                    Vector2 point = Vector2.Lerp(from, to, (i + 0.5f) / count);
+                    Vector2 tip = point + direction * 0.34f;
+                    Vector2 back = point - direction * 0.22f;
+                    StageEscortController.AddLine(routeGuideRoot.transform,
+                        back + side * 0.22f, tip, 0.065f, ink, 18);
+                    StageEscortController.AddLine(routeGuideRoot.transform,
+                        tip, back - side * 0.22f, 0.065f, ink, 18);
+                }
+            }
+
+            GameObject reflection = new GameObject("Reflection Hint");
+            reflection.transform.SetParent(routeGuideRoot.transform, false);
+            reflection.transform.position = new Vector3(reflectionPoint.x, reflectionPoint.y, -0.05f);
+            reflection.transform.localScale = Vector3.one * 0.72f;
+            SpriteRenderer marker = reflection.AddComponent<SpriteRenderer>();
+            marker.sprite = DoodleRuntimeAssets.CircleSprite;
+            marker.color = new Color(1f, 0.82f, 0.12f, 0.34f);
+            marker.sortingOrder = 17;
         }
 
         private void BroadcastState(bool immediate)
@@ -492,6 +622,7 @@ namespace DrawBody.Prototype
             if (incoming == null || incoming.Sequence <= state.Sequence) return;
             state = incoming;
             ApplyRoundState();
+            ConfigureBulletPassages();
             RefreshMonitor();
         }
 
@@ -505,6 +636,20 @@ namespace DrawBody.Prototype
         public void SetAllowsBullet(bool allowsBullet)
         {
             AllowsBullet = allowsBullet;
+            Transform glass = transform.Find("Bullet Glass");
+            SpriteRenderer fill = glass != null ? glass.GetComponent<SpriteRenderer>() : null;
+            if (fill != null) fill.color = allowsBullet
+                ? new Color(0.48f, 0.92f, 1f, 0.5f)
+                : new Color(0.26f, 0.29f, 0.32f, 0.88f);
+            LineRenderer[] lines = GetComponentsInChildren<LineRenderer>(true);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i] == null || lines[i].gameObject.name != "Bullet Passage Stripe") continue;
+                Color color = allowsBullet
+                    ? new Color(0.04f, 0.72f, 1f, 0.95f)
+                    : new Color(0.95f, 0.2f, 0.16f, 0.92f);
+                lines[i].startColor = lines[i].endColor = color;
+            }
         }
     }
 

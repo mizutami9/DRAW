@@ -94,7 +94,7 @@ namespace DrawBody.Prototype
                 StageId = "1-1",
                 MaxPlayers = Mathf.Clamp(maxPlayers, 2, 4),
                 Mode = OnlineLobbyMode.Room,
-                Players = new[] { CreatePlayer(localPlayerId, LocalizationManager.T("online_player_you"), true, false) }
+                Players = new[] { CreatePlayer(localPlayerId, PlayerNameSettings.CurrentName, true, false) }
             };
 
             try
@@ -131,7 +131,7 @@ namespace DrawBody.Prototype
                 client = new TcpClient();
                 client.Connect(parts[0], remotePort);
                 StartReadLoop(client);
-                Send(client, MessageHello, JsonUtility.ToJson(CreatePlayer(localPlayerId, LocalizationManager.T("online_player_you"), false, false)));
+                Send(client, MessageHello, JsonUtility.ToJson(CreatePlayer(localPlayerId, PlayerNameSettings.CurrentName, false, false)));
 
                 CurrentLobby = new OnlineLobbyInfo
                 {
@@ -140,7 +140,7 @@ namespace DrawBody.Prototype
                     StageId = "1-1",
                     MaxPlayers = 4,
                     Mode = OnlineLobbyMode.Room,
-                    Players = new[] { CreatePlayer(localPlayerId, LocalizationManager.T("online_player_you"), false, false) }
+                    Players = new[] { CreatePlayer(localPlayerId, PlayerNameSettings.CurrentName, false, false) }
                 };
                 SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_joining_room"));
             }
@@ -409,6 +409,13 @@ namespace DrawBody.Prototype
             else if (type == MessageState)
             {
                 OnlinePlayerState state = JsonUtility.FromJson<OnlinePlayerState>(payload);
+                string peerPlayerId = GetPeerPlayerId(tcpClient);
+                if (state != null && !string.IsNullOrEmpty(peerPlayerId))
+                {
+                    state.PlayerId = peerPlayerId;
+                    state.PlayerSlot = PlayerColorPalette.GetLobbyPlayerSlot(CurrentLobby, peerPlayerId);
+                    payload = JsonUtility.ToJson(state);
+                }
                 PlayerStateReceived?.Invoke(state);
                 Broadcast(MessageState, payload);
             }

@@ -7,6 +7,7 @@ namespace DrawBody.Prototype
     {
         private const float FireInterval = 0.9f;
         private const float RecoilVelocity = 13.5f;
+        private const float DownwardShotVerticalRecoilMultiplier = 4f;
         private PlayerCarryController holder;
         private StageBazookaSystem system;
         private float nextFireAt;
@@ -97,6 +98,11 @@ namespace DrawBody.Prototype
             if (system == null) system = StageBazookaSystem.Ensure(transform);
             float recoilMultiplier = holder.IsCarriedForWeaponRecoil() ? 5f : 1f;
             Vector2 recoil = -direction * (RecoilVelocity * recoilMultiplier);
+            // A downward shot doubles as a rocket jump. Boost only the upward
+            // component so diagonal shots do not throw the player sideways at
+            // four times the intended speed.
+            if (direction.y < 0f)
+                recoil.y *= DownwardShotVerticalRecoilMultiplier;
             if (system != null && system.IsOnline)
                 system.RequestFire(GetObjectId(), origin, direction, holder.GetWeaponRecoilTargetOnlineId(), recoil);
             else
@@ -118,6 +124,7 @@ namespace DrawBody.Prototype
         private const string SystemId = "stage_bazooka_system";
         private const string FireRequestKind = "bazooka_fire_request";
         private const string FireKind = "bazooka_fire";
+        private const string SnapshotKind = "bazooka_rocket_snapshot";
 
         [System.Serializable]
         private sealed class FireData
@@ -130,10 +137,27 @@ namespace DrawBody.Prototype
             public Vector2 Recoil;
         }
 
+        [System.Serializable]
+        private sealed class RocketState
+        {
+            public int Sequence;
+            public Vector2 Position;
+            public Vector2 Direction;
+        }
+
+        [System.Serializable]
+        private sealed class RocketSnapshot
+        {
+            public RocketState[] Rockets;
+        }
+
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private int sequence;
         private int lastSequence;
+        private float nextSnapshotAt;
+        private readonly System.Collections.Generic.Dictionary<int, StageBazookaRocket> rockets =
+            new System.Collections.Generic.Dictionary<int, StageBazookaRocket>();
 
         public bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -164,6 +188,13 @@ namespace DrawBody.Prototype
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
         }
 
+        private void Update()
+        {
+            if (!IsOnline || !HasAuthority || Time.unscaledTime < nextSnapshotAt) return;
+            nextSnapshotAt = Time.unscaledTime + 0.75f;
+            BroadcastRocketSnapshot();
+        }
+
         public void RequestFire(string weaponId, Vector2 origin, Vector2 direction, string recoilTargetId, Vector2 recoil)
         {
             FireData data = new FireData
@@ -181,7 +212,7 @@ namespace DrawBody.Prototype
         private void ConfirmFire(FireData data)
         {
             data.Sequence = ++sequence;
-            StageBazookaRocket.Create(transform, data.Origin, data.Direction, true);
+            StageBazookaRocket.Create(transform, this, data.Sequence, data.Origin, data.Direction, true);
             ApplyRecoilToLocalPlayer(data.RecoilTargetId, data.Recoil);
             GameSfx.PlayAt(SfxId.CannonFire, data.Origin, 1.15f);
             if (IsOnline) Send(FireKind, data);
@@ -200,10 +231,67 @@ namespace DrawBody.Prototype
                 FireData data = JsonUtility.FromJson<FireData>(message.Json);
                 if (data == null || data.Sequence <= lastSequence) return;
                 lastSequence = data.Sequence;
-                StageBazookaRocket.Create(transform, data.Origin, data.Direction, false);
+                StageBazookaRocket.Create(transform, this, data.Sequence, data.Origin, data.Direction, false);
                 ApplyRecoilToLocalPlayer(data.RecoilTargetId, data.Recoil);
                 GameSfx.PlayAt(SfxId.CannonFire, data.Origin, 1.15f);
             }
+            else if (message.Kind == SnapshotKind && !HasAuthority && IsHost(message.PlayerId))
+            {
+                ApplyRocketSnapshot(JsonUtility.FromJson<RocketSnapshot>(message.Json));
+            }
+        }
+
+        internal void RegisterRocket(int rocketSequence, StageBazookaRocket rocket)
+        {
+            if (rocket != null) rockets[rocketSequence] = rocket;
+        }
+
+        internal void UnregisterRocket(int rocketSequence, StageBazookaRocket rocket)
+        {
+            if (rockets.TryGetValue(rocketSequence, out StageBazookaRocket current) && current == rocket)
+                rockets.Remove(rocketSequence);
+        }
+
+        private void BroadcastRocketSnapshot()
+        {
+            System.Collections.Generic.List<RocketState> states =
+                new System.Collections.Generic.List<RocketState>(rockets.Count);
+            foreach (System.Collections.Generic.KeyValuePair<int, StageBazookaRocket> pair in rockets)
+            {
+                if (pair.Value == null) continue;
+                states.Add(new RocketState
+                {
+                    Sequence = pair.Key,
+                    Position = pair.Value.transform.position,
+                    Direction = pair.Value.Direction
+                });
+            }
+            Send(SnapshotKind, new RocketSnapshot { Rockets = states.ToArray() });
+        }
+
+        private void ApplyRocketSnapshot(RocketSnapshot snapshot)
+        {
+            if (snapshot?.Rockets == null) return;
+            System.Collections.Generic.HashSet<int> active = new System.Collections.Generic.HashSet<int>();
+            for (int i = 0; i < snapshot.Rockets.Length; i++)
+            {
+                RocketState state = snapshot.Rockets[i];
+                if (state == null || state.Sequence <= 0) continue;
+                active.Add(state.Sequence);
+                lastSequence = Mathf.Max(lastSequence, state.Sequence);
+                if (!rockets.TryGetValue(state.Sequence, out StageBazookaRocket rocket) || rocket == null)
+                {
+                    rocket = StageBazookaRocket.Create(
+                        transform, this, state.Sequence, state.Position, state.Direction, false);
+                }
+                rocket?.ApplyNetworkState(state.Position, state.Direction);
+            }
+
+            System.Collections.Generic.List<StageBazookaRocket> stale =
+                new System.Collections.Generic.List<StageBazookaRocket>();
+            foreach (System.Collections.Generic.KeyValuePair<int, StageBazookaRocket> pair in rockets)
+                if (!active.Contains(pair.Key) && pair.Value != null) stale.Add(pair.Value);
+            for (int i = 0; i < stale.Count; i++) Destroy(stale[i].gameObject);
         }
 
         private void ApplyRecoilToLocalPlayer(string playerId, Vector2 recoil)
@@ -214,7 +302,7 @@ namespace DrawBody.Prototype
             local?.GetComponent<PlayerCarryController>()?.ApplyDirectWeaponRecoil(recoil);
         }
 
-        private void Send(string kind, FireData data)
+        private void Send<T>(string kind, T data)
         {
             if (onlineManager == null) return;
             onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = SystemId, Kind = kind, Json = JsonUtility.ToJson(data) });
@@ -236,8 +324,18 @@ namespace DrawBody.Prototype
         private Vector2 direction;
         private bool authoritative;
         private float life;
+        private int sequence;
+        private StageBazookaSystem system;
 
-        public static void Create(Transform parent, Vector2 origin, Vector2 direction, bool authoritative)
+        internal Vector2 Direction => direction;
+
+        public static StageBazookaRocket Create(
+            Transform parent,
+            StageBazookaSystem system,
+            int sequence,
+            Vector2 origin,
+            Vector2 direction,
+            bool authoritative)
         {
             GameObject root = new GameObject("Crayon Bazooka Rocket");
             root.transform.SetParent(parent, false);
@@ -254,8 +352,20 @@ namespace DrawBody.Prototype
             trail.endColor = new Color(1f, 0.15f, 0.05f, 0f);
             trail.sortingOrder = 48;
             StageBazookaRocket rocket = root.AddComponent<StageBazookaRocket>();
+            rocket.system = system;
+            rocket.sequence = sequence;
             rocket.direction = direction.normalized;
             rocket.authoritative = authoritative;
+            system?.RegisterRocket(sequence, rocket);
+            return rocket;
+        }
+
+        internal void ApplyNetworkState(Vector2 position, Vector2 nextDirection)
+        {
+            if (authoritative) return;
+            transform.position = position;
+            if (nextDirection.sqrMagnitude > 0.01f) direction = nextDirection.normalized;
+            transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
 
         private void Update()
@@ -265,6 +375,11 @@ namespace DrawBody.Prototype
             transform.position += (Vector3)(direction * distance);
             life += Time.deltaTime;
             if (life >= 4f) Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            system?.UnregisterRocket(sequence, this);
         }
 
         private bool TryHit(float distance)

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -56,6 +57,9 @@ namespace DrawBody.Prototype
         private Text challengeProgressText;
         private GameObject challengeCountdownOverlay;
         private Text challengeCountdownText;
+        private GameObject gameplayNotice;
+        private Text gameplayNoticeText;
+        private Coroutine gameplayNoticeRoutine;
 
         private void Awake()
         {
@@ -121,6 +125,61 @@ namespace DrawBody.Prototype
                     ? new Color(0.16f, 0.86f, 1f, 1f)
                     : new Color(1f, 0.76f, 0.08f, 1f);
             challengeCountdownOverlay.transform.SetAsLastSibling();
+        }
+
+        public void ShowGameplayNotice(string message, float seconds = 2.4f)
+        {
+            EnsureGameplayNotice();
+            if (gameplayNoticeRoutine != null) StopCoroutine(gameplayNoticeRoutine);
+            gameplayNoticeText.text = message ?? string.Empty;
+            gameplayNotice.SetActive(true);
+            gameplayNotice.transform.SetAsLastSibling();
+            gameplayNoticeRoutine = StartCoroutine(HideGameplayNoticeAfter(Mathf.Max(0.5f, seconds)));
+        }
+
+        private IEnumerator HideGameplayNoticeAfter(float seconds)
+        {
+            yield return new WaitForSecondsRealtime(seconds);
+            if (gameplayNotice != null) gameplayNotice.SetActive(false);
+            gameplayNoticeRoutine = null;
+        }
+
+        private void EnsureGameplayNotice()
+        {
+            if (gameplayNotice != null) return;
+            gameplayNotice = new GameObject("Gameplay Notice", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            gameplayNotice.transform.SetParent(transform, false);
+            RectTransform root = gameplayNotice.GetComponent<RectTransform>();
+            root.anchorMin = root.anchorMax = new Vector2(0.5f, 1f);
+            root.pivot = new Vector2(0.5f, 1f);
+            root.anchoredPosition = new Vector2(0f, -34f);
+            root.sizeDelta = new Vector2(780f, 68f);
+            Image paper = gameplayNotice.GetComponent<Image>();
+            paper.color = new Color(1f, 0.91f, 0.72f, 0.97f);
+            Outline outline = gameplayNotice.AddComponent<Outline>();
+            outline.effectColor = new Color(0.72f, 0.18f, 0.12f, 0.95f);
+            outline.effectDistance = new Vector2(3f, -3f);
+            Shadow shadow = gameplayNotice.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0.1f, 0.08f, 0.05f, 0.22f);
+            shadow.effectDistance = new Vector2(6f, -6f);
+
+            GameObject label = new GameObject("Message", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            label.transform.SetParent(root, false);
+            RectTransform labelRect = label.GetComponent<RectTransform>();
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = new Vector2(22f, 8f);
+            labelRect.offsetMax = new Vector2(-22f, -8f);
+            gameplayNoticeText = label.GetComponent<Text>();
+            gameplayNoticeText.font = statusText != null && statusText.font != null
+                ? statusText.font
+                : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            gameplayNoticeText.fontSize = 25;
+            gameplayNoticeText.fontStyle = FontStyle.Bold;
+            gameplayNoticeText.alignment = TextAnchor.MiddleCenter;
+            gameplayNoticeText.color = new Color(0.25f, 0.12f, 0.08f, 1f);
+            gameplayNoticeText.raycastTarget = false;
+            gameplayNotice.SetActive(false);
         }
 
         private void EnsureChallengeCountdownOverlay()
@@ -883,6 +942,10 @@ namespace DrawBody.Prototype
 
         public void CloseOption()
         {
+            OptionSettingsController settings = optionPanel != null
+                ? optionPanel.GetComponent<OptionSettingsController>()
+                : null;
+            if (settings != null && !settings.CommitPlayerName()) return;
             bool reopenGameplayMenu = optionShowing && optionReturnToGameplayMenu;
             optionReturnToGameplayMenu = false;
             SetOption(false);

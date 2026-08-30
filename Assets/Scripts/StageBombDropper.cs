@@ -100,6 +100,14 @@ namespace DrawBody.Prototype
             launchSpeed = Mathf.Clamp(speed, 5.5f, 18f);
         }
 
+        public bool TryGetLaunchPrediction(out Vector2 position, out Vector2 velocity)
+        {
+            position = (Vector2)transform.position
+                - (Vector2)transform.up * (deviceSize.y * 0.5f + bombSize * 0.62f);
+            velocity = -(Vector2)transform.up * launchSpeed;
+            return factory != null && spawnParent != null;
+        }
+
         private void SpawnBomb()
         {
             StageObjectType type = ResolveNextBombType();

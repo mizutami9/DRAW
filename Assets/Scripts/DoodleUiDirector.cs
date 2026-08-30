@@ -243,7 +243,7 @@ namespace DrawBody.Prototype
                 SetButtonLayout(menu, "TitleDrawButton", new Vector2(0f, 18f), new Vector2(148f, 58f), Yellow, -0.7f);
                 SetButtonLayout(menu, "TitleOptionButton", new Vector2(172f, 18f), new Vector2(148f, 58f), Violet, 0.6f);
                 SetButtonLayout(menu, "TitleExitButton", new Vector2(344f, 18f), new Vector2(148f, 58f), Coral, -0.5f);
-                SetButtonLayout(menu, "TitleDebugButton", new Vector2(516f, 18f), new Vector2(148f, 58f), Cyan, 0.4f);
+                HideIfExists(menu, "TitleDebugButton");
             }
 
             HideIfExists(panel, "TitleTagline");
@@ -367,8 +367,21 @@ namespace DrawBody.Prototype
                 };
                 for (int i = 0; i < sheets.Length; i++)
                 {
-                    LayoutBottomSheet(FindRect(multi, sheets[i]), new Vector2(700f, 520f));
+                    RectTransform sheet = FindRect(multi, sheets[i]);
+                    if (sheet == null)
+                    {
+                        continue;
+                    }
+                    SetImage(sheet, PaperRaised);
+                    EnsureOutline(sheet.gameObject, 3f, 0.78f);
+                    EnsureShadow(sheet.gameObject, new Vector2(7f, -8f), 0.2f);
                 }
+
+                // MultiMenuVisualPolisher owns the final bottom-bar geometry.
+                // Re-apply it after the shared theme so the theme pass cannot
+                // restore the old centered 700 x 520 popup layout.
+                MultiMenuVisualPolisher polisher = multi.GetComponent<MultiMenuVisualPolisher>();
+                polisher?.Polish();
             }
 
             RectTransform option = FindRect("TitleOptionPanel");
@@ -378,7 +391,7 @@ namespace DrawBody.Prototype
                 option.anchorMax = new Vector2(0.5f, 0f);
                 option.pivot = new Vector2(0.5f, 0f);
                 option.anchoredPosition = new Vector2(0f, 16f);
-                option.sizeDelta = new Vector2(720f, 420f);
+                option.sizeDelta = new Vector2(720f, 480f);
                 SetImage(option, Paper);
                 EnsureOutline(option.gameObject, 3f, 0.76f);
                 EnsureShadow(option.gameObject, new Vector2(7f, -8f), 0.2f);
@@ -394,11 +407,11 @@ namespace DrawBody.Prototype
         private void LayoutOptionPanel(RectTransform panel)
         {
             RectTransform title = FindRect(panel, "TitleOptionTitle");
-            PlaceOptionText(title, new Vector2(0f, 374f), new Vector2(640f, 42f), TextAnchor.MiddleCenter, 34, true);
+            PlaceOptionText(title, new Vector2(0f, 434f), new Vector2(640f, 42f), TextAnchor.MiddleCenter, 34, true);
             RectTransform subtitle = FindRect(panel, "TitleOptionSubtitle");
-            PlaceOptionText(subtitle, new Vector2(0f, 338f), new Vector2(640f, 24f), TextAnchor.MiddleCenter, 16, false);
+            if (subtitle != null) subtitle.gameObject.SetActive(false);
 
-            float[] rowY = { 280f, 220f, 160f };
+            float[] rowY = { 340f, 280f, 220f };
             Color[] rowColors =
             {
                 new Color(1f, 0.97f, 0.84f, 0.76f),
@@ -455,6 +468,10 @@ namespace DrawBody.Prototype
                 if (localized == null) localized = backLabel.gameObject.AddComponent<LocalizedText>();
                 localized.SetKey("option_back_esc");
             }
+
+            RectTransform register = FindRect(panel, "OptionPlayerNameRegisterButton");
+            PlaceOptionRect(register, new Vector2(0f, 48f), new Vector2(280f, 62f));
+            ThemeOptionButton(register, Green, 22);
 
             BringOptionControlsForward(panel);
         }
@@ -801,7 +818,8 @@ namespace DrawBody.Prototype
                 "OptionBgmLabel", "OptionBgmSlider", "OptionBgmValue",
                 "OptionSeLabel", "OptionSeSlider", "OptionSeValue",
                 "OptionLanguageLabel", "OptionJapaneseButton", "OptionEnglishButton",
-                "TitleOptionBackButton"
+                "OptionPlayerNameLabel", "OptionPlayerNameInput", "OptionPlayerNameError",
+                "OptionPlayerNameRegisterButton", "TitleOptionBackButton"
             };
             for (int i = 0; i < names.Length; i++)
             {
