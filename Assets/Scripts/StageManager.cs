@@ -1684,6 +1684,8 @@ namespace DrawBody.Prototype
                 ?.EnsureInitializedForPlay();
             Object.FindFirstObjectByType<StageAquariumSealController>()
                 ?.EnsureInitializedForPlay();
+            Object.FindFirstObjectByType<StageTiltBoardController>()
+                ?.EnsureInitializedForPlay();
 
             // A controller removed by StageLoader can finish its OnDisable in
             // the same frame and leave a last transient flash behind. Sweep once
@@ -3327,7 +3329,7 @@ namespace DrawBody.Prototype
             StageDrawnEscortChallengeController drawnEscort = currentStageId == "5-3"
                 ? Object.FindFirstObjectByType<StageDrawnEscortChallengeController>()
                 : null;
-            bool redrawInPlace = currentStageId == "6-3"
+            bool redrawInPlace = currentStageId == "6-3" || currentStageId == "8-3"
                 || currentStageId == "10-3" && challengeRunStarted
                 || drawnEscort != null && drawnEscort.ShouldKeepRedrawInPlace;
             Vector3 preferred = redrawInPlace && hasRedrawReturnPosition && redrawReturnPlayer == redrawPlayer
@@ -3798,6 +3800,14 @@ namespace DrawBody.Prototype
         private void RespawnIfFallen(PlayerController2D targetPlayer)
         {
             if (targetPlayer == null)
+            {
+                return;
+            }
+
+            // 8-3 is a controller-owned top-down magnetic board. Its players
+            // are intentionally allowed below the normal side-view fall line
+            // and are kept inside their assigned lane by that controller.
+            if (currentStageId == "8-3")
             {
                 return;
             }

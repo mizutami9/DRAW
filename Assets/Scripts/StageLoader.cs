@@ -460,6 +460,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingAquariumSeal);
             }
 
+            StageTiltBoardController existingTiltBoard = stageRoot.GetComponent<StageTiltBoardController>();
+            if (existingTiltBoard != null)
+            {
+                DestroyComponentNow(existingTiltBoard);
+            }
+
             StageGrainCarryController existingGrainCarry = stageRoot.GetComponent<StageGrainCarryController>();
             if (existingGrainCarry != null)
             {
@@ -624,8 +630,7 @@ namespace DrawBody.Prototype
             }
             if (data != null && data.id == "8-3")
             {
-                StageTowerDefenseController towerDefense = stageRoot.gameObject.AddComponent<StageTowerDefenseController>();
-                towerDefense.Configure(data.timeLimitSeconds);
+                stageRoot.gameObject.AddComponent<StageTiltBoardController>();
             }
             if (data != null && data.id == "13-1")
             {
