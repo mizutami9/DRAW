@@ -12,7 +12,7 @@ namespace DrawBody.Prototype
         private const float OuterHalfHeight = 9f;
         private const float InnerHalfWidth = 12.35f;
         private const float InnerHalfHeight = 5.7f;
-        private const float BallSpeed = 7.2f;
+        private const float BallSpeed = 3.6f;
         private const float ServeCountdownSeconds = 3f;
 
         private enum Phase { Intro, Serve, Playing, Intermission, Failed, Clear }

@@ -61,7 +61,7 @@ namespace DrawBody.Prototype
             }
 
             StageSelectVisualPolisher polisher = GetComponent<StageSelectVisualPolisher>();
-            polisher?.RefreshWorldCardColors();
+            polisher?.Polish();
 
             if (pageText != null)
             {

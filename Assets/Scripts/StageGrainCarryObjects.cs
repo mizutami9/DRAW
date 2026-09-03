@@ -129,9 +129,43 @@ namespace DrawBody.Prototype
                 bowlAnchor.transform.localPosition = new Vector3(size.x * 0.28f, size.y * 0.42f, 0f);
             }
 
-            BoxCollider2D platform = root.AddComponent<BoxCollider2D>();
-            platform.size = new Vector2(size.x, size.y * 0.16f);
-            platform.offset = new Vector2(0f, size.y * 0.31f);
+            // The scale plate used to be a raised box, so short or heavily
+            // loaded drawings had to jump onto it. Extend both sides into a
+            // gentle pencil-drawn ramp while keeping the center level.
+            float plateY = size.y * 0.39f;
+            float floorY = -size.y * 0.075f;
+            float flatHalfWidth = size.x * 0.31f;
+            float rampOuterX = size.x * 0.92f;
+            float colliderBottomY = -size.y * 0.55f;
+            PolygonCollider2D platform = root.AddComponent<PolygonCollider2D>();
+            platform.points = new[]
+            {
+                new Vector2(-rampOuterX, colliderBottomY),
+                new Vector2(-rampOuterX, floorY),
+                new Vector2(-flatHalfWidth, plateY),
+                new Vector2(flatHalfWidth, plateY),
+                new Vector2(rampOuterX, floorY),
+                new Vector2(rampOuterX, colliderBottomY)
+            };
+            Color rampFill = new Color(0.72f, 0.82f, 0.84f, 0.72f);
+            Color rampOutline = new Color(0.12f, 0.22f, 0.25f, 0.92f);
+            AddSketchLine(root.transform, "Scale Left Gentle Ramp Fill", new[]
+            {
+                new Vector2(-rampOuterX, floorY),
+                new Vector2(-flatHalfWidth, plateY)
+            }, rampFill, 0.22f, 22);
+            AddSketchLine(root.transform, "Scale Right Gentle Ramp Fill", new[]
+            {
+                new Vector2(flatHalfWidth, plateY),
+                new Vector2(rampOuterX, floorY)
+            }, rampFill, 0.22f, 22);
+            AddSketchLine(root.transform, "Scale Gentle Ramp Outline", new[]
+            {
+                new Vector2(-rampOuterX, floorY),
+                new Vector2(-flatHalfWidth, plateY),
+                new Vector2(flatHalfWidth, plateY),
+                new Vector2(rampOuterX, floorY)
+            }, rampOutline, 0.045f, 25);
             BoxCollider2D trigger = root.AddComponent<BoxCollider2D>();
             trigger.isTrigger = true;
             trigger.size = new Vector2(size.x * 0.92f, 2.5f);
@@ -325,11 +359,16 @@ namespace DrawBody.Prototype
 
     public sealed class StageGrainEmitter : MonoBehaviour
     {
+        // Four players can require up to 320 g (32 physical grains). Keep a
+        // small spill allowance, but never let an unattended dispenser create
+        // hundreds of Rigidbody2D objects.
+        private const int MaxActiveParticles = 40;
         private DrawManager.Species requiredSpecies;
         private Vector2 size;
         private float nextSpawnAt;
         private float nextEligibilityScanAt;
         private float lastEligiblePlayerAt = float.NegativeInfinity;
+        private int activeParticleCount;
 
         public void Configure(DrawManager.Species species, Vector2 visualSize)
         {
@@ -351,6 +390,7 @@ namespace DrawBody.Prototype
                 RefreshHorizontalEligibility();
             }
             if (Time.time - lastEligiblePlayerAt > 0.22f || Time.time < nextSpawnAt) return;
+            if (activeParticleCount >= MaxActiveParticles) return;
             // Use fewer, larger grains so their physical pile is readable and
             // grain-to-grain contacts stay inexpensive.
             nextSpawnAt = Time.time + 0.21f;
@@ -359,7 +399,16 @@ namespace DrawBody.Prototype
                 null, "Physical Grain", origin, Random.Range(0.16f, 0.20f),
                 Random.value > 0.35f ? new Color(1f, 0.74f, 0.08f) : new Color(0.94f, 0.43f, 0.05f), 72);
             StageGrainParticle particle = renderer.gameObject.AddComponent<StageGrainParticle>();
-            particle.Configure(requiredSpecies, new Vector2(Random.Range(-0.16f, 0.16f), -0.25f));
+            particle.Configure(
+                requiredSpecies,
+                new Vector2(Random.Range(-0.16f, 0.16f), -0.25f),
+                this);
+            activeParticleCount++;
+        }
+
+        internal void NotifyParticleRemoved()
+        {
+            activeParticleCount = Mathf.Max(0, activeParticleCount - 1);
         }
 
         private void RefreshHorizontalEligibility()
@@ -377,7 +426,10 @@ namespace DrawBody.Prototype
                 // Only horizontal alignment matters. Stages may place the
                 // dispenser far above the playable route, so Y must not prevent
                 // grains from falling when the matching character waits below.
-                if (Mathf.Abs(abilities.transform.position.x - transform.position.x) > halfWidth) continue;
+                // Large or asymmetric drawings can visibly stand below the
+                // outlet while their root pivot remains several units away.
+                // Test the actual generated body bounds, not only its pivot.
+                if (!carrier.OverlapsHorizontalSpan(transform.position.x, halfWidth)) continue;
                 lastEligiblePlayerAt = Time.time;
                 return;
             }
@@ -407,6 +459,8 @@ namespace DrawBody.Prototype
         private int appliedPlayerCount = 1;
         private StageManager stageManager;
         private readonly List<SpriteRenderer> measuredDots = new List<SpriteRenderer>();
+        private readonly Dictionary<PlayerController2D, float> platformContacts =
+            new Dictionary<PlayerController2D, float>();
 
         public string ObjectId => GetComponent<StageEditorObject>()?.objectId ?? gameObject.name;
 
@@ -432,8 +486,8 @@ namespace DrawBody.Prototype
             display = label.AddComponent<TextMesh>();
             display.anchor = TextAnchor.MiddleCenter;
             display.alignment = TextAlignment.Center;
-            display.fontSize = 40;
-            display.characterSize = 0.085f;
+            display.fontSize = 44;
+            display.characterSize = 0.052f;
             display.color = new Color(0.35f, 1f, 0.76f);
             TextMesh reference = null;
             TextMesh[] textMeshes = Object.FindObjectsByType<TextMesh>(FindObjectsSortMode.None);
@@ -469,7 +523,8 @@ namespace DrawBody.Prototype
             PlayerAbilityController abilities = player != null ? player.GetComponent<PlayerAbilityController>() : null;
             StageGrainCarrier carrier = player != null ? player.GetComponent<StageGrainCarrier>() : null;
             if (player == null || abilities == null || carrier == null
-                || abilities.CurrentProfile.Species != requiredSpecies || !player.IsGrounded) return;
+                || abilities.CurrentProfile.Species != requiredSpecies
+                || !IsSupportedByScale(player)) return;
 
             StageGrainCarryController controller = GetComponentInParent<StageGrainCarryController>();
             if (controller != null && !controller.CanControlCarrier(player)) return;
@@ -483,6 +538,23 @@ namespace DrawBody.Prototype
             hasIncompleteVisit = true;
             if (controller != null) controller.Deposit(this, amount);
             else ApplyMeasuredGrams(measuredGrams + amount);
+        }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            PlayerController2D touchingPlayer = collision.collider != null
+                ? collision.collider.GetComponentInParent<PlayerController2D>()
+                : null;
+            if (touchingPlayer != null)
+                platformContacts[touchingPlayer] = Time.time;
+        }
+
+        private bool IsSupportedByScale(PlayerController2D targetPlayer)
+        {
+            if (targetPlayer == null) return false;
+            if (targetPlayer.IsGrounded) return true;
+            return platformContacts.TryGetValue(targetPlayer, out float lastContact)
+                && Time.time - lastContact <= 0.16f;
         }
 
         private void Update()
@@ -545,7 +617,8 @@ namespace DrawBody.Prototype
 
         private void RefreshDisplay()
         {
-            if (display != null) display.text = Mathf.FloorToInt(measuredGrams) + " / " + Mathf.RoundToInt(targetGrams) + " g";
+            if (display != null)
+                display.text = Mathf.FloorToInt(measuredGrams) + "/" + Mathf.RoundToInt(targetGrams) + "g";
             int visible = Mathf.CeilToInt(measuredDots.Count * measuredGrams / Mathf.Max(1f, targetGrams));
             for (int i = 0; i < measuredDots.Count; i++) measuredDots[i].enabled = i < visible;
         }
@@ -605,9 +678,9 @@ namespace DrawBody.Prototype
         private float nextContainmentCheck;
         private bool insideCarrier;
         private StageGrainCarrier containingCarrier;
-        private bool lockedToCarrier;
         private CircleCollider2D grainCollider;
-        private Vector3 carrierLocalPosition;
+        private StageGrainEmitter sourceEmitter;
+        private bool sourceEmitterNotified;
         private float configuredGravityScale = 0.72f;
         private float grams = 10f;
 
@@ -626,6 +699,15 @@ namespace DrawBody.Prototype
         public void Configure(
             DrawManager.Species species,
             Vector2 initialVelocity,
+            StageGrainEmitter emitter)
+        {
+            sourceEmitter = emitter;
+            Configure(species, initialVelocity, 10f, 0.72f, false);
+        }
+
+        public void Configure(
+            DrawManager.Species species,
+            Vector2 initialVelocity,
             float weightGrams,
             float gravityScale,
             bool ignoreOneWayPlatforms)
@@ -636,8 +718,10 @@ namespace DrawBody.Prototype
             if (!grainCollisionConfigured)
             {
                 grainCollisionConfigured = true;
-                // Grain-to-grain collision is essential: the visible pile and
-                // spill-over define how much a hand-drawn head can carry.
+                // Grain stacking is part of the challenge: the drawn head shape
+                // must physically limit how many grains it can carry. Runtime
+                // cost is bounded by the dispenser cap instead of allowing the
+                // grains to pass through one another.
                 Physics2D.IgnoreLayerCollision(31, 31, false);
             }
             bornAt = Time.time;
@@ -651,7 +735,12 @@ namespace DrawBody.Prototype
             body.gravityScale = configuredGravityScale;
             body.linearDamping = 0.08f;
             body.angularDamping = 0.15f;
-            body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            // 7-2 grains move slowly and are capped per dispenser, so Discrete is
+            // substantially cheaper while still retaining a physical pile. The
+            // fast falling grain-rain variant keeps Continuous collision.
+            body.collisionDetectionMode = ignoreOneWayPlatforms
+                ? CollisionDetectionMode2D.Continuous
+                : CollisionDetectionMode2D.Discrete;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
             body.linearVelocity = initialVelocity;
             grainCollider = gameObject.AddComponent<CircleCollider2D>();
@@ -679,18 +768,19 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             ActiveParticles.Remove(this);
-            if (lockedToCarrier && containingCarrier != null)
-                containingCarrier.SetParticleCollisionIgnored(grainCollider, false);
+            if (!sourceEmitterNotified)
+            {
+                sourceEmitterNotified = true;
+                sourceEmitter?.NotifyParticleRemoved();
+            }
         }
 
         private void Update()
         {
             if (consumed) return;
-            if (insideCarrier && containingCarrier != null) StabilizeOnCarrier(containingCarrier);
             if (Time.unscaledTime >= nextContainmentCheck)
             {
                 nextContainmentCheck = Time.unscaledTime + 0.08f;
-                StageGrainCarrier previousCarrier = containingCarrier;
                 StageGrainCarrier foundCarrier = null;
                 foreach (StageGrainCarrier carrier in StageGrainCarrier.All)
                 {
@@ -703,15 +793,11 @@ namespace DrawBody.Prototype
                 insideCarrier = foundCarrier != null;
                 if (foundCarrier != null)
                 {
-                    if (lockedToCarrier && previousCarrier != null && previousCarrier != foundCarrier)
-                        ReleaseCarrierLock(previousCarrier);
                     containingCarrier = foundCarrier;
                     lastInsideHeadAt = Time.time;
-                    StabilizeOnCarrier(foundCarrier);
                 }
-                else if (lockedToCarrier)
+                else
                 {
-                    ReleaseCarrierLock(previousCarrier);
                     containingCarrier = null;
                 }
             }
@@ -729,39 +815,6 @@ namespace DrawBody.Prototype
             {
                 floorContactStartedAt = -1f;
             }
-        }
-
-        private void StabilizeOnCarrier(StageGrainCarrier carrier)
-        {
-            if (body == null || carrier == null) return;
-            if (!lockedToCarrier)
-            {
-                lockedToCarrier = true;
-                carrierLocalPosition = carrier.transform.InverseTransformPoint(body.position);
-                body.bodyType = RigidbodyType2D.Kinematic;
-                body.gravityScale = 0f;
-                carrier.SetParticleCollisionIgnored(grainCollider, true);
-            }
-
-            Vector2 anchoredPosition = carrier.transform.TransformPoint(carrierLocalPosition);
-            body.position = anchoredPosition;
-            // Thin hand-drawn line colliders can move a long way in one physics
-            // step when their player climbs a ledge. Limit only the grain's
-            // velocity relative to that carrier so a settled pile cannot tunnel
-            // through the drawing and be launched away by the step impulse.
-            Vector2 carrierVelocity = carrier.Velocity;
-            body.linearVelocity = carrierVelocity;
-            body.angularVelocity = 0f;
-        }
-
-        private void ReleaseCarrierLock(StageGrainCarrier previousCarrier)
-        {
-            if (body == null || !lockedToCarrier) return;
-            lockedToCarrier = false;
-            previousCarrier?.SetParticleCollisionIgnored(grainCollider, false);
-            body.bodyType = RigidbodyType2D.Dynamic;
-            body.gravityScale = configuredGravityScale;
-            body.linearVelocity = previousCarrier != null ? previousCarrier.Velocity : Vector2.zero;
         }
 
         private void OnCollisionStay2D(Collision2D collision)
@@ -798,8 +851,32 @@ namespace DrawBody.Prototype
                 Vector2 velocity = body.linearVelocity;
                 velocity.x = -velocity.x;
                 body.linearVelocity = velocity;
-                if (lockedToCarrier && containingCarrier != null)
-                    carrierLocalPosition = containingCarrier.transform.InverseTransformPoint(position);
+            }
+            else
+            {
+                transform.position = new Vector3(position.x, position.y, transform.position.z);
+            }
+        }
+
+        public void RotateAround(Vector2 worldPivot, float angleDegrees)
+        {
+            if (consumed || Mathf.Abs(angleDegrees) <= 0.001f) return;
+            float radians = angleDegrees * Mathf.Deg2Rad;
+            float cos = Mathf.Cos(radians);
+            float sin = Mathf.Sin(radians);
+            Vector2 position = body != null ? body.position : (Vector2)transform.position;
+            Vector2 offset = position - worldPivot;
+            Vector2 rotatedOffset = new Vector2(
+                offset.x * cos - offset.y * sin,
+                offset.x * sin + offset.y * cos);
+            position = worldPivot + rotatedOffset;
+            if (body != null)
+            {
+                body.position = position;
+                Vector2 velocity = body.linearVelocity;
+                body.linearVelocity = new Vector2(
+                    velocity.x * cos - velocity.y * sin,
+                    velocity.x * sin + velocity.y * cos);
             }
             else
             {
@@ -854,15 +931,28 @@ namespace DrawBody.Prototype
         public bool ContainsWorldPoint(Vector2 point)
         {
             if (!TryGetCarrierBounds(out Bounds bounds)) return false;
-            // Only the upper/head region carries grains. Using the complete body
-            // bounds made falling grains stick to legs, tails and the empty space
-            // inside a large drawing, visually wrapping the whole character.
-            const float sidePadding = 0.08f;
-            float headRegionBottom = bounds.min.y + bounds.size.y * 0.62f;
+            // Grains can settle inside a U-shaped hand-drawn head, substantially
+            // below its highest line. They stay fully dynamic now, so this wider
+            // region only identifies carried weight and never attaches a grain.
+            const float sidePadding = 0.1f;
+            bool wholeBodyContainer = UsesWholeBodyGrainContainer();
+            // A turtle carries grains inside its shell bowl, which can be close
+            // to its lowest line. A slime's entire outline is likewise its bowl;
+            // limiting it to the upper half loses grains in a large slime.
+            float headRegionBottom = bounds.min.y + bounds.size.y * (wholeBodyContainer ? 0.06f : 0.5f);
             return point.x >= bounds.min.x - sidePadding
                 && point.x <= bounds.max.x + sidePadding
                 && point.y >= headRegionBottom
-                && point.y <= bounds.max.y + 0.08f;
+                && point.y <= bounds.max.y + 0.2f;
+        }
+
+        public bool OverlapsHorizontalSpan(float centerX, float halfWidth)
+        {
+            halfWidth = Mathf.Max(0.05f, halfWidth);
+            if (TryGetCarrierBounds(out Bounds bounds))
+                return bounds.max.x >= centerX - halfWidth
+                    && bounds.min.x <= centerX + halfWidth;
+            return Mathf.Abs(transform.position.x - centerX) <= halfWidth;
         }
 
         public void SetParticleCollisionIgnored(Collider2D particleCollider, bool ignored)
@@ -881,9 +971,11 @@ namespace DrawBody.Prototype
         {
             result = null;
             float bestY = float.PositiveInfinity;
+            bool allowScaleRestingGrain = abilities != null
+                && abilities.CurrentProfile.Species == DrawManager.Species.Turtle;
             foreach (StageGrainParticle particle in StageGrainParticle.All)
             {
-                if (particle == null || particle.IsOnGround
+                if (particle == null || particle.IsOnGround && !allowScaleRestingGrain
                     || !ContainsWorldPoint(particle.transform.position)) continue;
                 Vector2 relativeVelocity = particle.Velocity - (playerBody != null ? playerBody.linearVelocity : Vector2.zero);
                 if (relativeVelocity.sqrMagnitude > 4f) continue;
@@ -896,18 +988,88 @@ namespace DrawBody.Prototype
             return result != null;
         }
 
-        public void MirrorContainedParticles(float worldPivotX)
+        public void MirrorCarriedParticles(float worldPivotX)
         {
-            List<StageGrainParticle> contained = new List<StageGrainParticle>();
+            // A large slime can hold grains all the way down at floor level.
+            // Include those grains in the one-frame mirror, otherwise the body
+            // flips around them and its contents spill out.
+            List<StageGrainParticle> carried = CollectCarriedPile(UsesWholeBodyGrainContainer());
+            for (int i = 0; i < carried.Count; i++)
+                carried[i].MirrorAcross(worldPivotX);
+
+            // The body colliders will be mirrored immediately after this call.
+            // Force a fresh bounds calculation for the next containment check.
+            hasCachedCarrierBounds = false;
+        }
+
+        public void RotateCarriedParticles(Vector2 worldPivot, float angleDegrees)
+        {
+            // Turtle grains can touch the weighing platform through an open shell,
+            // so include grounded seeds for this one-frame pose rotation.
+            List<StageGrainParticle> carried = CollectCarriedPile(true);
+            for (int i = 0; i < carried.Count; i++)
+                carried[i].RotateAround(worldPivot, angleDegrees);
+            hasCachedCarrierBounds = false;
+        }
+
+        private List<StageGrainParticle> CollectCarriedPile(bool includeGroundedSeeds)
+        {
+            List<StageGrainParticle> carried = new List<StageGrainParticle>();
+            if (!TryGetCarrierBounds(out Bounds bounds)) return carried;
+
+            List<StageGrainParticle> candidates = new List<StageGrainParticle>();
+            HashSet<StageGrainParticle> selected = new HashSet<StageGrainParticle>();
+            Vector2 carrierVelocity = Velocity;
+            const float horizontalPadding = 0.38f;
+            bool wholeBodyContainer = UsesWholeBodyGrainContainer();
+            float minimumY = wholeBodyContainer
+                ? bounds.min.y - 0.1f
+                : bounds.min.y + bounds.size.y * 0.5f;
             foreach (StageGrainParticle particle in StageGrainParticle.All)
             {
-                if (particle != null && !particle.IsOnGround && ContainsWorldPoint(particle.transform.position))
-                    contained.Add(particle);
+                if (particle == null || particle.IsOnGround && !includeGroundedSeeds) continue;
+                Vector2 position = particle.transform.position;
+                if (position.x < bounds.min.x - horizontalPadding
+                    || position.x > bounds.max.x + horizontalPadding
+                    || position.y < minimumY
+                    || position.y > bounds.max.y + 4f) continue;
+                float relativeSpeedSquared = (particle.Velocity - carrierVelocity).sqrMagnitude;
+                if (relativeSpeedSquared > 25f) continue;
+                candidates.Add(particle);
+                if (relativeSpeedSquared > 4f || !ContainsWorldPoint(position)) continue;
+                selected.Add(particle);
+                carried.Add(particle);
             }
-            for (int i = 0; i < contained.Count; i++)
-                contained[i].MirrorAcross(worldPivotX);
-            // The cached carrier bounds describe the pre-flip drawing.
-            hasCachedCarrierBounds = false;
+
+            const float touchingDistance = 0.25f;
+            float touchingDistanceSquared = touchingDistance * touchingDistance;
+            for (int carriedIndex = 0; carriedIndex < carried.Count; carriedIndex++)
+            {
+                StageGrainParticle baseParticle = carried[carriedIndex];
+                Vector2 basePosition = baseParticle.transform.position;
+                for (int i = 0; i < candidates.Count; i++)
+                {
+                    StageGrainParticle candidate = candidates[i];
+                    if (selected.Contains(candidate)) continue;
+                    Vector2 delta = (Vector2)candidate.transform.position - basePosition;
+                    if (delta.sqrMagnitude > touchingDistanceSquared) continue;
+                    selected.Add(candidate);
+                    carried.Add(candidate);
+                }
+            }
+            return carried;
+        }
+
+        private bool UsesWholeBodyGrainContainer()
+        {
+            if (abilities == null)
+            {
+                return false;
+            }
+
+            DrawManager.Species species = abilities.CurrentProfile.Species;
+            return species == DrawManager.Species.Turtle
+                || species == DrawManager.Species.Slime;
         }
 
         public void SetGrams(float value)
@@ -979,6 +1141,7 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, float> pendingDeposits = new Dictionary<string, float>();
         private readonly Dictionary<string, float> nextScaleBroadcastAt = new Dictionary<string, float>();
         private float nextDepositSendAt;
+        private float nextFullStateBroadcastAt;
         private OnlineManager onlineManager;
         private StageManager stageManager;
         private StageGimmickSyncManager syncManager;
@@ -1029,6 +1192,13 @@ namespace DrawBody.Prototype
         private void Update()
         {
             FlushPendingDeposits();
+            if (syncManager != null && syncManager.IsOnlineActive && syncManager.IsHost
+                && Time.unscaledTime >= nextFullStateBroadcastAt)
+            {
+                nextFullStateBroadcastAt = Time.unscaledTime + 0.75f;
+                foreach (StageGrainScale scale in scales.Values)
+                    BroadcastScaleState(scale, true);
+            }
             if (Time.unscaledTime < nextPlayerScan) return;
             nextPlayerScan = Time.unscaledTime + 1f;
             EnsurePlayerCarriers(false);

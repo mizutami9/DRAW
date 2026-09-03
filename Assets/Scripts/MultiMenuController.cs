@@ -49,6 +49,8 @@ namespace DrawBody.Prototype
         private void OnEnable()
         {
             EnsureVisualPolisher();
+            LocalizationManager.LanguageChanged -= HandleLanguageChanged;
+            LocalizationManager.LanguageChanged += HandleLanguageChanged;
 
             if (onlineManager == null)
             {
@@ -92,9 +94,40 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             stageManager?.SetTitleTextInputActive(false);
+            LocalizationManager.LanguageChanged -= HandleLanguageChanged;
             if (onlineManager != null)
             {
                 onlineManager.StateChanged -= RefreshOnlineText;
+            }
+        }
+
+        private void HandleLanguageChanged()
+        {
+            EnsureVisualPolisher();
+            RefreshCreateRoomText();
+
+            OnlineLobbyInfo lobby = onlineManager != null ? onlineManager.CurrentLobby : null;
+            string localPlayerId = onlineManager != null ? onlineManager.LocalPlayerId : string.Empty;
+            if (randomScreen != null && randomScreen.activeInHierarchy)
+            {
+                UpdateRandomSearchHeader();
+                if (randomStatusText != null)
+                    randomStatusText.text = FormatRandomMatchStatus(lobby, string.Empty, localPlayerId);
+                RefreshRandomReadyButton(lobby, localPlayerId);
+            }
+
+            if (lobbyScreen != null && lobbyScreen.activeInHierarchy)
+            {
+                ResolveLobbyRosterTexts();
+                if (lobbyRosterHeaderText != null) RefreshLobbyRoster(lobby, localPlayerId);
+                else if (lobbyStatusText != null)
+                {
+                    OnlineBackendMode mode = onlineManager != null
+                        ? onlineManager.EffectiveBackendMode
+                        : OnlineBackendMode.Fake;
+                    lobbyStatusText.text = FormatLobbyStatus(lobby, string.Empty, localPlayerId, mode);
+                }
+                SetLobbyButtonState(lobby != null);
             }
         }
 
@@ -551,7 +584,12 @@ namespace DrawBody.Prototype
 
         private void RefreshLobbyRoster(OnlineLobbyInfo lobby, string localPlayerId)
         {
-            int playerCount = lobby != null && lobby.Players != null ? lobby.Players.Length : 0;
+            int playerCount = 0;
+            if (lobby?.Players != null)
+            {
+                for (int i = 0; i < lobby.Players.Length; i++)
+                    if (lobby.Players[i] != null && !string.IsNullOrEmpty(lobby.Players[i].PlayerId)) playerCount++;
+            }
             int maxPlayers = lobby != null ? lobby.MaxPlayers : 4;
             lobbyRosterHeaderText.text = lobby == null
                 ? LocalizationManager.T("multi_connecting")
@@ -577,9 +615,7 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                OnlinePlayerInfo player = lobby != null && lobby.Players != null && i < lobby.Players.Length
-                    ? lobby.Players[i]
-                    : null;
+                OnlinePlayerInfo player = FindLobbyPlayerInSlot(lobby, i);
                 row.transform.parent.gameObject.SetActive(player != null);
                 if (player == null)
                 {
@@ -629,6 +665,18 @@ namespace DrawBody.Prototype
                     }
                 }
             }
+        }
+
+        private static OnlinePlayerInfo FindLobbyPlayerInSlot(OnlineLobbyInfo lobby, int slot)
+        {
+            if (lobby?.Players == null) return null;
+            for (int i = 0; i < lobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo candidate = lobby.Players[i];
+                if (candidate == null || string.IsNullOrEmpty(candidate.PlayerId)) continue;
+                if (PlayerColorPalette.GetLobbyPlayerSlot(lobby, candidate.PlayerId) == slot) return candidate;
+            }
+            return null;
         }
 
         private void ResolveLobbyInfoTexts()

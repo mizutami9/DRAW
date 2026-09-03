@@ -1,7 +1,7 @@
 {
     "id": "5-1",
     "displayName": "Stage 5-1",
-    "backgroundColorHex": "#CFFBF326",
+    "backgroundColorHex": "#1EFBA726",
     "ruleMode": 0,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,
@@ -578,11 +578,11 @@
             "objectId": "obj_3c27dc6f2b834955",
             "type": 0,
             "position": {
-                "x": 13.500000953674317,
-                "y": -20.25
+                "x": 13.499999046325684,
+                "y": -20.5
             },
             "size": {
-                "x": 36.5,
+                "x": 36.0,
                 "y": 2.0
             },
             "rotation": -90.0,

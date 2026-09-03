@@ -17,6 +17,9 @@ namespace DrawBody.Prototype
         private float flightPhase;
         private Vector2 flightOrigin;
         private float flightStartedAt;
+        private bool hasFlightHorizontalBounds;
+        private float flightHorizontalMin;
+        private float flightHorizontalMax;
         private bool defeated;
         private bool stationaryTarget;
         private Rigidbody2D body;
@@ -76,6 +79,21 @@ namespace DrawBody.Prototype
             flightPhase = Mathf.Abs(ObjectId.GetHashCode() % 1000) * 0.01f;
             flightOrigin = transform.position;
             flightStartedAt = Time.time;
+            if (ObjectId.StartsWith("7-2_enemy_bird_", System.StringComparison.Ordinal))
+            {
+                // Room 2's continuous spike strip spans x=-6.1..8.7. Keep the
+                // whole flying enemy over that hazard instead of letting it roam
+                // into the safe areas beside the room.
+                float halfWidth = enemyCollider != null ? enemyCollider.bounds.extents.x : enemySize.x * 0.5f;
+                hasFlightHorizontalBounds = true;
+                flightHorizontalMin = -6.1f + halfWidth;
+                flightHorizontalMax = 8.7f - halfWidth;
+            }
+            else if (enemyType == StageObjectType.EnemyBomber
+                && ObjectId.StartsWith("6-1_bomber_", System.StringComparison.Ordinal))
+            {
+                ConfigureFlightBoundsFromSpikeStrip();
+            }
             nextAbilityAt = Time.time + InitialAbilityDelay();
 
             if (stationaryTarget && body != null)
@@ -102,6 +120,37 @@ namespace DrawBody.Prototype
                 body.bodyType = RigidbodyType2D.Kinematic;
                 body.gravityScale = 0f;
             }
+        }
+
+        private void ConfigureFlightBoundsFromSpikeStrip()
+        {
+            StageEditorObject[] objects = Object.FindObjectsByType<StageEditorObject>(FindObjectsSortMode.None);
+            Bounds closestBounds = default;
+            float closestDistance = float.PositiveInfinity;
+            bool found = false;
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageEditorObject candidate = objects[i];
+                if (candidate == null || string.IsNullOrEmpty(candidate.objectId)
+                    || !candidate.objectId.StartsWith("6-1_spikes_", System.StringComparison.Ordinal)) continue;
+                Collider2D spikeCollider = candidate.GetComponentInChildren<Collider2D>();
+                Bounds bounds = spikeCollider != null
+                    ? spikeCollider.bounds
+                    : new Bounds(candidate.transform.position, candidate.size);
+                float horizontalDistance = transform.position.x < bounds.min.x
+                    ? bounds.min.x - transform.position.x
+                    : transform.position.x > bounds.max.x ? transform.position.x - bounds.max.x : 0f;
+                if (horizontalDistance >= closestDistance) continue;
+                closestDistance = horizontalDistance;
+                closestBounds = bounds;
+                found = true;
+            }
+            if (!found) return;
+
+            float halfWidth = enemyCollider != null ? enemyCollider.bounds.extents.x : enemySize.x * 0.5f;
+            flightHorizontalMin = closestBounds.min.x + halfWidth;
+            flightHorizontalMax = closestBounds.max.x - halfWidth;
+            hasFlightHorizontalBounds = flightHorizontalMax > flightHorizontalMin;
         }
 
         private void Update()
@@ -161,6 +210,19 @@ namespace DrawBody.Prototype
                 Vector2 target = flightOrigin + new Vector2(Mathf.Sin(time) * 2.6f, Mathf.Sin(time * 2f) * 1.55f);
                 body.linearVelocity = (target - body.position) / Mathf.Max(Time.fixedDeltaTime, 0.001f);
                 return;
+            }
+            if (hasFlightHorizontalBounds)
+            {
+                if (body.position.x <= flightHorizontalMin && direction < 0f)
+                {
+                    body.position = new Vector2(flightHorizontalMin, body.position.y);
+                    direction = 1f;
+                }
+                else if (body.position.x >= flightHorizontalMax && direction > 0f)
+                {
+                    body.position = new Vector2(flightHorizontalMax, body.position.y);
+                    direction = -1f;
+                }
             }
             if (IsWallAhead()) Reverse();
             float vertical = enemyType == StageObjectType.EnemyFlyerZigzag

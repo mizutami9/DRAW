@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -52,6 +53,16 @@ namespace DrawBody.Prototype
         private bool shuttingDown;
         private readonly Dictionary<string, float> confirmedInkByPlayer = new Dictionary<string, float>();
         private string knownHostPlayerId;
+        private LocalRegressionOptions localRegression;
+
+        private sealed class LocalRegressionOptions
+        {
+            public bool IsHost;
+            public int Port = 7777;
+            public int ExpectedPlayers = 2;
+            public string StageId = "1-1";
+            public string PlayerName;
+        }
 
         public event Action<OnlineConnectionState, OnlineLobbyInfo, string> StateChanged;
         public event Action<OnlinePlayerState> PlayerStateReceived;
@@ -62,6 +73,7 @@ namespace DrawBody.Prototype
         public OnlineLobbyInfo CurrentLobby => backend != null ? backend.CurrentLobby : null;
         public string LocalPlayerId => backend != null ? backend.LocalPlayerId : string.Empty;
         public OnlineBackendMode EffectiveBackendMode => effectiveBackendMode;
+        public bool IsLocalRegressionActive => localRegression != null;
 
         public int GetInkBudgetPlayerCount()
         {
@@ -132,6 +144,15 @@ namespace DrawBody.Prototype
             // The host owns the simulation. Window focus must not freeze the
             // network and physics for every participant.
             Application.runInBackground = true;
+            localRegression = ParseLocalRegressionOptions(Environment.GetCommandLineArgs());
+            if (localRegression != null)
+            {
+                backendMode = OnlineBackendMode.DirectTcp;
+                directTcpPort = localRegression.Port;
+                autoLogin = true;
+                if (!string.IsNullOrWhiteSpace(localRegression.PlayerName))
+                    PlayerNameSettings.TrySet(localRegression.PlayerName);
+            }
             effectiveBackendMode = GetEffectiveBackendMode();
             switch (effectiveBackendMode)
             {
@@ -164,6 +185,138 @@ namespace DrawBody.Prototype
             {
                 Login();
             }
+            if (localRegression != null)
+            {
+                StartCoroutine(RunLocalRegression());
+            }
+        }
+
+        private IEnumerator RunLocalRegression()
+        {
+            const float timeoutSeconds = 45f;
+            float deadline = Time.unscaledTime + timeoutSeconds;
+            while (State != OnlineConnectionState.Online && Time.unscaledTime < deadline)
+                yield return null;
+
+            if (State != OnlineConnectionState.Online)
+            {
+                Debug.LogError("[PICO REGRESSION] Online login timed out.");
+                yield break;
+            }
+
+            if (localRegression.IsHost)
+            {
+                CreateRoom("LOCAL REGRESSION", localRegression.ExpectedPlayers, true);
+                while (State != OnlineConnectionState.InLobby && Time.unscaledTime < deadline)
+                    yield return null;
+                if (State != OnlineConnectionState.InLobby)
+                {
+                    Debug.LogError("[PICO REGRESSION] Failed to create the local room.");
+                    yield break;
+                }
+
+                ToggleReady();
+                while (Time.unscaledTime < deadline)
+                {
+                    OnlinePlayerInfo[] players = CurrentLobby?.Players;
+                    if (CountPlayers(players) >= localRegression.ExpectedPlayers && AreAllPlayersReady(players))
+                    {
+                        Debug.Log($"[PICO REGRESSION] Starting {localRegression.StageId} with {players.Length} players.");
+                        StartGame(localRegression.StageId);
+                        // Normal host flow selects the stage locally before/while
+                        // broadcasting the start. Regression mode starts directly
+                        // from the title, so the backend notification only moves
+                        // clients unless we explicitly move the host as well.
+                        StageManager stageManager = FindFirstObjectByType<StageManager>();
+                        if (stageManager != null)
+                        {
+                            stageManager.SelectStage(localRegression.StageId);
+                        }
+                        else
+                        {
+                            Debug.LogError("[PICO REGRESSION] StageManager was not found for the host transition.");
+                        }
+                        yield break;
+                    }
+                    yield return null;
+                }
+                Debug.LogError("[PICO REGRESSION] Timed out waiting for players/READY.");
+                yield break;
+            }
+
+            // The host process may still be opening its listener. Retry locally
+            // instead of requiring a carefully timed manual launch order.
+            while (Time.unscaledTime < deadline)
+            {
+                JoinRoom($"127.0.0.1:{localRegression.Port}");
+                float attemptDeadline = Time.unscaledTime + 1.5f;
+                while (State != OnlineConnectionState.InLobby
+                    && State != OnlineConnectionState.Error
+                    && Time.unscaledTime < attemptDeadline)
+                    yield return null;
+                if (State == OnlineConnectionState.InLobby)
+                {
+                    ToggleReady();
+                    Debug.Log("[PICO REGRESSION] Joined local room and marked READY.");
+                    yield break;
+                }
+                Login();
+                yield return new WaitForSecondsRealtime(0.5f);
+            }
+            Debug.LogError("[PICO REGRESSION] Timed out joining the local room.");
+        }
+
+        private static int CountPlayers(OnlinePlayerInfo[] players)
+        {
+            if (players == null) return 0;
+            int count = 0;
+            for (int i = 0; i < players.Length; i++)
+                if (players[i] != null && !string.IsNullOrEmpty(players[i].PlayerId)) count++;
+            return count;
+        }
+
+        private static bool AreAllPlayersReady(OnlinePlayerInfo[] players)
+        {
+            if (players == null || players.Length == 0) return false;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == null || string.IsNullOrEmpty(players[i].PlayerId) || !players[i].IsReady)
+                    return false;
+            }
+            return true;
+        }
+
+        private static LocalRegressionOptions ParseLocalRegressionOptions(string[] args)
+        {
+            string role = GetCommandLineValue(args, "-pico-regression-role");
+            if (!string.Equals(role, "host", StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(role, "client", StringComparison.OrdinalIgnoreCase))
+                return null;
+
+            LocalRegressionOptions result = new LocalRegressionOptions
+            {
+                IsHost = string.Equals(role, "host", StringComparison.OrdinalIgnoreCase),
+                StageId = GetCommandLineValue(args, "-pico-regression-stage") ?? "1-1",
+                PlayerName = GetCommandLineValue(args, "-pico-regression-name")
+            };
+            if (int.TryParse(GetCommandLineValue(args, "-pico-regression-port"), out int port))
+                result.Port = Mathf.Clamp(port, 1024, 65535);
+            if (int.TryParse(GetCommandLineValue(args, "-pico-regression-players"), out int players))
+                result.ExpectedPlayers = Mathf.Clamp(players, 2, 4);
+            return result;
+        }
+
+        private static string GetCommandLineValue(string[] args, string key)
+        {
+            if (args == null) return null;
+            string prefix = key + "=";
+            for (int i = 0; i < args.Length; i++)
+            {
+                string arg = args[i];
+                if (arg != null && arg.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    return arg.Substring(prefix.Length).Trim('"');
+            }
+            return null;
         }
 
         private void Update()
@@ -350,42 +503,113 @@ namespace DrawBody.Prototype
 
         public void SendInput(OnlineInputData inputData)
         {
-            if (shuttingDown)
+            if (shuttingDown || inputData == null)
             {
                 return;
             }
 
+            StampStageSession(inputData);
             backend?.SendInput(inputData);
         }
 
         public void SendPlayerState(OnlinePlayerState playerState)
         {
-            if (shuttingDown)
+            if (shuttingDown || playerState == null)
             {
                 return;
             }
 
+            StampStageSession(playerState);
             backend?.SendPlayerState(playerState);
         }
 
         public void SendCarryData(OnlineCarryData carryData)
         {
-            if (shuttingDown)
+            if (shuttingDown || carryData == null)
             {
                 return;
             }
 
+            StampStageSession(carryData);
             backend?.SendCarryData(carryData);
         }
 
         public void SendGimmickData(OnlineGimmickData gimmickData)
         {
-            if (shuttingDown)
+            if (shuttingDown || gimmickData == null)
             {
                 return;
             }
 
+            StampStageSession(gimmickData);
             backend?.SendGimmickData(gimmickData);
+        }
+
+        private void StampStageSession(OnlineInputData data)
+        {
+            OnlineLobbyInfo lobby = CurrentLobby;
+            if (lobby == null) return;
+            data.StageId = lobby.StageId;
+            data.StageRevision = lobby.StageRevision;
+            data.RetryRevision = lobby.RetryRevision;
+        }
+
+        private void StampStageSession(OnlinePlayerState data)
+        {
+            OnlineLobbyInfo lobby = CurrentLobby;
+            if (lobby == null) return;
+            data.StageId = lobby.StageId;
+            data.StageRevision = lobby.StageRevision;
+            data.RetryRevision = lobby.RetryRevision;
+        }
+
+        private void StampStageSession(OnlineCarryData data)
+        {
+            OnlineLobbyInfo lobby = CurrentLobby;
+            if (lobby == null) return;
+            data.StageId = lobby.StageId;
+            data.StageRevision = lobby.StageRevision;
+            data.RetryRevision = lobby.RetryRevision;
+        }
+
+        private void StampStageSession(OnlineGimmickData data)
+        {
+            OnlineLobbyInfo lobby = CurrentLobby;
+            if (lobby == null) return;
+            data.StageId = lobby.StageId;
+            data.StageRevision = lobby.StageRevision;
+            data.RetryRevision = lobby.RetryRevision;
+        }
+
+        private bool IsCurrentStageSession(string stageId, int stageRevision, int retryRevision, bool allowRetryAdvance)
+        {
+            OnlineLobbyInfo lobby = CurrentLobby;
+            if (lobby == null || State != OnlineConnectionState.Playing)
+            {
+                return true;
+            }
+
+            // Revision zero is used before the first online stage starts. Once a
+            // revision exists, unscoped/legacy packets must not leak into it.
+            if (stageRevision <= 0)
+            {
+                return lobby.StageRevision <= 0;
+            }
+
+            if (!string.Equals(stageId, lobby.StageId, StringComparison.Ordinal)
+                || stageRevision != lobby.StageRevision)
+            {
+                return false;
+            }
+
+            if (retryRevision == lobby.RetryRevision)
+            {
+                return true;
+            }
+
+            // Backends increment RetryRevision while relaying stage_retry. The
+            // request itself therefore legitimately carries the previous value.
+            return allowRetryAdvance && retryRevision + 1 == lobby.RetryRevision;
         }
 
         private void OnBackendStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
@@ -409,6 +633,11 @@ namespace DrawBody.Prototype
 
         private void OnBackendPlayerStateReceived(OnlinePlayerState playerState)
         {
+            if (playerState == null || !IsCurrentStageSession(
+                    playerState.StageId, playerState.StageRevision, playerState.RetryRevision, false))
+            {
+                return;
+            }
             PlayerStateReceived?.Invoke(playerState);
         }
 
@@ -476,11 +705,22 @@ namespace DrawBody.Prototype
 
         private void OnBackendCarryDataReceived(OnlineCarryData carryData)
         {
+            if (carryData == null || !IsCurrentStageSession(
+                    carryData.StageId, carryData.StageRevision, carryData.RetryRevision, false))
+            {
+                return;
+            }
             CarryDataReceived?.Invoke(carryData);
         }
 
         private void OnBackendGimmickDataReceived(OnlineGimmickData gimmickData)
         {
+            bool isRetry = gimmickData != null && gimmickData.Kind == "stage_retry";
+            if (gimmickData == null || !IsCurrentStageSession(
+                    gimmickData.StageId, gimmickData.StageRevision, gimmickData.RetryRevision, isRetry))
+            {
+                return;
+            }
             GimmickDataReceived?.Invoke(gimmickData);
         }
     }

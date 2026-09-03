@@ -640,7 +640,7 @@ namespace DrawBody.Prototype
                 else status = LocalizationManager.T("survival_start");
             }
             else if (phase == ChallengePhase.Failed)
-                status = LocalizationManager.Format("block_breaker_retry", Mathf.CeilToInt(failedRestartRemaining));
+                status = LocalizationManager.T("game_over");
             else if (phase == ChallengePhase.Clear) status = LocalizationManager.T("clear");
             else status = FormatTime(remainingSeconds);
             SetFittedBoardText(statusText, status, 22.5f, 0.12f);

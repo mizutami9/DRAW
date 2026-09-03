@@ -582,12 +582,12 @@ namespace DrawBody.Prototype
             float progress = Mathf.Clamp01(elapsedSeconds / durationSeconds);
             if (elapsedSeconds >= nextCannonAt)
             {
-                int volley = 1 + Mathf.FloorToInt(progress * 3f);
+                int volley = 1 + Mathf.FloorToInt(progress * 1.8f);
                 for (int i = 0; i < volley; i++)
                 {
                     FireNextCannon();
                 }
-                nextCannonAt = elapsedSeconds + Mathf.Lerp(5.2f, 1.05f, progress);
+                nextCannonAt = elapsedSeconds + Mathf.Lerp(5.8f, 2.2f, progress);
             }
 
             if (!HasAuthority())
@@ -597,7 +597,7 @@ namespace DrawBody.Prototype
 
             if (elapsedSeconds >= nextTopBombAt)
             {
-                int count = 1 + Mathf.FloorToInt(progress * 5f);
+                int count = 1 + Mathf.FloorToInt(progress * 3f);
                 for (int i = 0; i < count; i++)
                 {
                     SpawnBomb(
@@ -605,11 +605,11 @@ namespace DrawBody.Prototype
                         new Vector2(Random.Range(-0.8f, 0.8f), Random.Range(-0.8f, 0f)),
                         Random.Range(2.8f, 4f));
                 }
-                nextTopBombAt = elapsedSeconds + Mathf.Lerp(4.4f, 0.8f, progress);
+                nextTopBombAt = elapsedSeconds + Mathf.Lerp(5f, 1.8f, progress);
             }
             if (elapsedSeconds >= nextSideBombAt)
             {
-                int count = 1 + Mathf.FloorToInt(progress * 3f);
+                int count = 1 + Mathf.FloorToInt(progress * 2f);
                 for (int i = 0; i < count; i++)
                 {
                     bool fromLeft = (bombSequence + i) % 2 == 0;
@@ -617,7 +617,7 @@ namespace DrawBody.Prototype
                     Vector2 velocity = new Vector2(fromLeft ? Random.Range(8f, 12f) : Random.Range(-12f, -8f), Random.Range(0.8f, 4.2f));
                     SpawnBomb(position, velocity, Random.Range(2.4f, 3.5f));
                 }
-                nextSideBombAt = elapsedSeconds + Mathf.Lerp(5.8f, 1.25f, progress);
+                nextSideBombAt = elapsedSeconds + Mathf.Lerp(6.4f, 2.6f, progress);
             }
         }
 
@@ -892,6 +892,12 @@ namespace DrawBody.Prototype
                     LocalizationManager.T("challenge_time_remaining"),
                     Mathf.Max(0f, remainingSeconds));
                 SetMonitorMain(remaining, 0.17f);
+                return;
+            }
+
+            if (phase == SurvivalPhase.Failed)
+            {
+                SetMonitorMain(LocalizationManager.T("game_over"), 0.145f);
                 return;
             }
 

@@ -450,7 +450,7 @@
                     },
                     {
                         "key":  "stage_editor_back",
-                        "value":  "戻る"
+                        "value":  "戻る  ESC"
                     },
                     {
                         "key":  "option_subtitle",
@@ -478,6 +478,10 @@
                     },
                     {
                         "key":  "option_back",
+                        "value":  "戻る  ESC"
+                    },
+                    {
+                        "key":  "ui_back_esc",
                         "value":  "戻る  ESC"
                     },
                     {
@@ -939,6 +943,14 @@
                     {
                         "key":  "stage_editor_status_save_editor_only",
                         "value":  "現在、保存はUnity Editor上でのみ利用できます。"
+                    },
+                    {
+                        "key":  "stage_editor_status_validation_failed",
+                        "value":  "\u4fdd\u5b58\u3067\u304d\u307e\u305b\u3093: \u30a8\u30e9\u30fc{0}\u4ef6\u3002{1}"
+                    },
+                    {
+                        "key":  "stage_editor_status_saved_with_warnings",
+                        "value":  "\u4fdd\u5b58\u3057\u307e\u3057\u305f: {0}\uff08\u8b66\u544a{1}\u4ef6\uff09"
                     },
                     {
                         "key":  "stage_editor_status_factory_missing",
@@ -1675,6 +1687,46 @@
                     {
                         "key":  "online_fake_initialized",
                         "value":  "疑似オンラインを初期化しました。"
+                    },
+                    {
+                        "key":  "sfx_browser_title",
+                        "value":  "SE確認"
+                    },
+                    {
+                        "key":  "sfx_browser_help",
+                        "value":  "行動名やSE IDで検索し、再生ボタンで割り当て音を確認できます。行へカーソルを合わせると音源パスも表示します。"
+                    },
+                    {
+                        "key":  "sfx_browser_play",
+                        "value":  "再生"
+                    },
+                    {
+                        "key":  "sfx_browser_stop",
+                        "value":  "停止"
+                    },
+                    {
+                        "key":  "sfx_browser_reload",
+                        "value":  "再読込"
+                    },
+                    {
+                        "key":  "sfx_browser_no_results",
+                        "value":  "該当するSEがありません。"
+                    },
+                    {
+                        "key":  "sfx_browser_file_missing",
+                        "value":  "SFX_USAGE.mdが見つかりません。"
+                    },
+                    {
+                        "key":  "sfx_browser_uncategorized",
+                        "value":  "未分類"
+                    },
+                    {
+                        "key":  "sfx_browser_muted",
+                        "value":  "無音"
+                    },
+                    {
+                        "key":  "sfx_browser_generated",
+                        "value":  "実行時生成音"
                     }
                 ]
 }

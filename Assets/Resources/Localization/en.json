@@ -450,7 +450,7 @@
                     },
                     {
                         "key":  "stage_editor_back",
-                        "value":  "Back"
+                        "value":  "BACK  ESC"
                     },
                     {
                         "key":  "option_subtitle",
@@ -478,7 +478,11 @@
                     },
                     {
                         "key":  "option_back",
-                        "value":  "Back  ESC"
+                        "value":  "BACK  ESC"
+                    },
+                    {
+                        "key":  "ui_back_esc",
+                        "value":  "BACK  ESC"
                     },
                     {
                         "key":  "locked_stage",
@@ -939,6 +943,14 @@
                     {
                         "key":  "stage_editor_status_save_editor_only",
                         "value":  "Saving is currently available only in the Unity Editor."
+                    },
+                    {
+                        "key":  "stage_editor_status_validation_failed",
+                        "value":  "Cannot save: {0} error(s). {1}"
+                    },
+                    {
+                        "key":  "stage_editor_status_saved_with_warnings",
+                        "value":  "Saved: {0} ({1} warning(s))"
                     },
                     {
                         "key":  "stage_editor_status_factory_missing",
@@ -1675,6 +1687,46 @@
                     {
                         "key":  "online_fake_initialized",
                         "value":  "Fake backend initialized."
+                    },
+                    {
+                        "key":  "sfx_browser_title",
+                        "value":  "SE BROWSER"
+                    },
+                    {
+                        "key":  "sfx_browser_help",
+                        "value":  "Search by action or SE ID, then press Play to preview the assigned sound. Hover a row to see its resource path."
+                    },
+                    {
+                        "key":  "sfx_browser_play",
+                        "value":  "PLAY"
+                    },
+                    {
+                        "key":  "sfx_browser_stop",
+                        "value":  "STOP"
+                    },
+                    {
+                        "key":  "sfx_browser_reload",
+                        "value":  "RELOAD"
+                    },
+                    {
+                        "key":  "sfx_browser_no_results",
+                        "value":  "No matching sound effects."
+                    },
+                    {
+                        "key":  "sfx_browser_file_missing",
+                        "value":  "SFX_USAGE.md was not found."
+                    },
+                    {
+                        "key":  "sfx_browser_uncategorized",
+                        "value":  "Uncategorized"
+                    },
+                    {
+                        "key":  "sfx_browser_muted",
+                        "value":  "MUTED"
+                    },
+                    {
+                        "key":  "sfx_browser_generated",
+                        "value":  "Runtime-generated sound"
                     }
                 ]
 }

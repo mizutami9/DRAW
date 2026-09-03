@@ -6,8 +6,9 @@ namespace DrawBody.Prototype
 {
     public sealed class DrawManager : MonoBehaviour
     {
-        public const float InkAllowancePerPlayer = 350f;
-        public const float IndividualInkLimit = 500f;
+        public const float IndividualInkLimit = 800f;
+        public const float TeamInkBaseLimit = 800f;
+        public const float TeamInkPerAdditionalPlayer = 400f;
         private const float TurtleGameplayCoordinateScale = 3f;
         private const float SlimeGameplayCoordinateScale = 5f;
         public const int BodyCoordinateVersion = 3;
@@ -146,6 +147,12 @@ namespace DrawBody.Prototype
         public BodyPart CurrentPart => currentPart;
         public Species CurrentSpecies => currentSpecies;
         public StageSpeciesMask AllowedSpecies => allowedSpecies;
+
+        public static float CalculateTeamInkLimit(int playerCount)
+        {
+            int participants = Mathf.Clamp(playerCount, 1, 4);
+            return TeamInkBaseLimit + (participants - 1) * TeamInkPerAdditionalPlayer;
+        }
 
         public bool IsSpeciesAllowed(Species species)
         {
@@ -1851,7 +1858,7 @@ namespace DrawBody.Prototype
             float inkCost = pixelLength / pixelsPerInk;
             float currentInk = GetTotalInk();
             float personalRemainingInk = maxInk - currentInk;
-            float teamRemainingInk = ResolveInkBudgetPlayerCount() * InkAllowancePerPlayer
+            float teamRemainingInk = CalculateTeamInkLimit(ResolveInkBudgetPlayerCount())
                 - ResolveOtherConfirmedInk()
                 - currentInk;
             float remainingInk = Mathf.Min(personalRemainingInk, teamRemainingInk);
@@ -1920,7 +1927,7 @@ namespace DrawBody.Prototype
             int playerCount = ResolveInkBudgetPlayerCount();
             float otherConfirmedInk = ResolveOtherConfirmedInk();
             float teamInk = otherConfirmedInk + totalInk;
-            float teamLimit = playerCount * InkAllowancePerPlayer;
+            float teamLimit = CalculateTeamInkLimit(playerCount);
             bool personalOver = totalInk > maxInk;
             bool teamOver = teamInk > teamLimit;
 
@@ -1937,7 +1944,7 @@ namespace DrawBody.Prototype
             }
             if (teamInkLabelText != null)
             {
-                teamInkLabelText.text = LocalizationManager.Format("ink_team_formula", playerCount, InkAllowancePerPlayer);
+                teamInkLabelText.text = LocalizationManager.Format("ink_team_formula", playerCount);
             }
             if (personalInkValueText != null)
             {
@@ -2326,7 +2333,7 @@ namespace DrawBody.Prototype
 
             int playerCount = ResolveInkBudgetPlayerCount();
             float otherConfirmedInk = ResolveOtherConfirmedInk();
-            float teamLimit = playerCount * InkAllowancePerPlayer;
+            float teamLimit = CalculateTeamInkLimit(playerCount);
             float projectedTeamInk = otherConfirmedInk + localInk;
             if (projectedTeamInk > teamLimit + 0.01f)
             {
@@ -3233,23 +3240,25 @@ namespace DrawBody.Prototype
                 SetDefaultPart(BodyPart.Head, new[]
                 {
                     new Vector2(-115f, 0f),
-                    new Vector2(-78f, 36f),
-                    new Vector2(-70f, 74f),
-                    new Vector2(-38f, 50f),
-                    new Vector2(2f, 52f),
-                    new Vector2(32f, 76f),
-                    new Vector2(38f, 40f),
-                    new Vector2(56f, 8f),
-                    new Vector2(38f, -34f),
-                    new Vector2(-34f, -46f),
-                    new Vector2(-80f, -30f),
+                    new Vector2(-95f, 18f),
+                    new Vector2(-72f, 48f),
+                    new Vector2(-55f, 22f),
+                    new Vector2(-12f, 28f),
+                    new Vector2(22f, 24f),
+                    new Vector2(42f, 50f),
+                    new Vector2(52f, 16f),
+                    new Vector2(48f, -6f),
+                    new Vector2(30f, -28f),
+                    new Vector2(-18f, -32f),
+                    new Vector2(-70f, -24f),
+                    new Vector2(-100f, -12f),
                     new Vector2(-115f, 0f)
                 });
                 SetDefaultPart(BodyPart.LeftFrontLeg, new[] { new Vector2(0f, 70f), new Vector2(0f, -58f) });
                 SetDefaultPart(BodyPart.RightFrontLeg, new[] { new Vector2(0f, 70f), new Vector2(0f, -58f) });
                 SetDefaultPart(BodyPart.LeftBackLeg, new[] { new Vector2(0f, 70f), new Vector2(0f, -62f) });
                 SetDefaultPart(BodyPart.RightBackLeg, new[] { new Vector2(0f, 70f), new Vector2(0f, -62f) });
-                SetDefaultPart(BodyPart.Tail, new[] { new Vector2(115f, 0f), new Vector2(35f, 55f), new Vector2(-50f, 25f) });
+                SetDefaultPart(BodyPart.Tail, new[] { new Vector2(115f, 0f), new Vector2(45f, 60f), new Vector2(-55f, 40f), new Vector2(-70f, 15f) });
                 return;
             }
 

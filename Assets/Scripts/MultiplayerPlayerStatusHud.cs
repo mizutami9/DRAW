@@ -31,6 +31,7 @@ namespace DrawBody.Prototype
             public RectTransform StatusIconRect;
             public Image StatusIcon;
             public CanvasGroup StatusCanvas;
+            public Text RespawnCountdown;
             public string PlayerId;
             public int EmoteId = -1;
             public float EmoteUntil;
@@ -41,6 +42,7 @@ namespace DrawBody.Prototype
         private readonly PlayerSlot[] slots = new PlayerSlot[MaximumPlayers];
         private readonly Dictionary<string, bool> remoteRespawning = new Dictionary<string, bool>();
         private readonly Dictionary<string, bool> remoteEliminated = new Dictionary<string, bool>();
+        private readonly Dictionary<string, float> remoteRespawnRemaining = new Dictionary<string, float>();
         private OnlineManager onlineManager;
         private StageManager stageManager;
         private Canvas canvas;
@@ -115,6 +117,7 @@ namespace DrawBody.Prototype
             {
                 remoteRespawning.Clear();
                 remoteEliminated.Clear();
+                remoteRespawnRemaining.Clear();
                 if (canvas != null) canvas.enabled = false;
             }
         }
@@ -124,6 +127,7 @@ namespace DrawBody.Prototype
             if (state == null || string.IsNullOrEmpty(state.PlayerId)) return;
             remoteRespawning[state.PlayerId] = state.Respawning;
             remoteEliminated[state.PlayerId] = state.Eliminated;
+            remoteRespawnRemaining[state.PlayerId] = Mathf.Max(0f, state.RespawnRemaining);
         }
 
         private void HandleEmoteShown(string playerId, int emoteId)
@@ -215,6 +219,11 @@ namespace DrawBody.Prototype
                     ? stageManager.IsPlayerEliminated(player)
                     : remoteEliminated.TryGetValue(slot.PlayerId, out bool eliminatedValue) && eliminatedValue;
                 bool dead = respawning || eliminated || player != null && !player.gameObject.activeInHierarchy;
+                float respawnRemaining = local
+                    ? stageManager.GetPlayerRespawnRemaining(player)
+                    : remoteRespawnRemaining.TryGetValue(slot.PlayerId, out float remoteRemaining)
+                        ? remoteRemaining
+                        : 0f;
                 PlayerRedrawStateController redraw = player != null
                     ? player.GetComponent<PlayerRedrawStateController>()
                     : null;
@@ -243,6 +252,21 @@ namespace DrawBody.Prototype
                     icon = null;
                 }
                 SetStatus(slot, kind, icon);
+                bool showRespawnCountdown = respawning
+                    && stageManager.CurrentStageId == "13-1"
+                    && respawnRemaining > 0.01f;
+                slot.RespawnCountdown.gameObject.SetActive(showRespawnCountdown);
+                if (showRespawnCountdown)
+                {
+                    slot.RespawnCountdown.text = Mathf.Max(1, Mathf.CeilToInt(respawnRemaining)).ToString();
+                    slot.StatusIcon.rectTransform.anchoredPosition = new Vector2(0f, 7f);
+                    slot.StatusIcon.rectTransform.sizeDelta = new Vector2(27f, 27f);
+                }
+                else
+                {
+                    slot.StatusIcon.rectTransform.anchoredPosition = Vector2.zero;
+                    slot.StatusIcon.rectTransform.sizeDelta = new Vector2(34f, 34f);
+                }
                 AnimateStatus(slot);
                 RefreshPortrait(slot, slot.PlayerId);
             }
@@ -341,6 +365,10 @@ namespace DrawBody.Prototype
             statusIcon.preserveAspect = true;
             statusIcon.raycastTarget = false;
             CanvasGroup statusCanvas = statusRect.gameObject.AddComponent<CanvasGroup>();
+            Text respawnCountdown = CreateText("Respawn Countdown", statusPaperRect, string.Empty, 20,
+                new Vector2(0f, -13f), new Vector2(42f, 20f), TextAnchor.MiddleCenter);
+            respawnCountdown.color = new Color(0.72f, 0.12f, 0.08f, 1f);
+            respawnCountdown.gameObject.SetActive(false);
             statusPaperRect.gameObject.SetActive(false);
 
             row.gameObject.SetActive(false);
@@ -352,7 +380,8 @@ namespace DrawBody.Prototype
                 Number = number,
                 StatusIconRect = statusPaperRect,
                 StatusIcon = statusIcon,
-                StatusCanvas = statusCanvas
+                StatusCanvas = statusCanvas,
+                RespawnCountdown = respawnCountdown
             };
         }
 

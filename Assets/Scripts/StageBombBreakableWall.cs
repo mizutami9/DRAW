@@ -299,7 +299,7 @@ namespace DrawBody.Prototype
             SpriteRenderer sourceRenderer = GetComponentInChildren<SpriteRenderer>();
             Color color = sourceRenderer != null ? sourceRenderer.color : new Color(0.72f, 0.68f, 0.58f, 1f);
             Vector2 debrisSize = GetComponent<BoxCollider2D>() != null
-                ? GetComponent<BoxCollider2D>().bounds.size
+                ? (Vector2)GetComponent<BoxCollider2D>().bounds.size
                 : wallSize;
 
             for (int i = 0; i < pieces.Length; i++)

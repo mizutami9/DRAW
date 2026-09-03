@@ -493,7 +493,7 @@ namespace DrawBody.Prototype
             string time = LocalizationManager.Format("value_coin_time", Mathf.CeilToInt(remaining));
             string state = startCountdownActive
                 ? Mathf.CeilToInt(startCountdownRemaining).ToString()
-                : LocalizationManager.T(phase == 1 ? "value_coin_time_up" : phase == 2 ? "value_coin_clear" : "value_coin_hint");
+                : LocalizationManager.T(phase == 1 ? "game_over" : phase == 2 ? "value_coin_clear" : "value_coin_hint");
             for (int i = 0; i < amountTexts.Count; i++) amountTexts[i].text = amount;
             for (int i = 0; i < timeTexts.Count; i++) timeTexts[i].text = time;
             for (int i = 0; i < stateTexts.Count; i++) stateTexts[i].text = state;

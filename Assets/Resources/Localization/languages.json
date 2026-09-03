@@ -1,0 +1,32 @@
+{
+  "entries": [
+    {
+      "code": "ja",
+      "nativeName": "日本語",
+      "fallbackCode": "en",
+      "resourcePaths": [
+        "Localization/ja",
+        "Localization/stage_decorations_ja"
+      ],
+      "fontResourcePath": "",
+      "cultureCode": "ja-JP",
+      "uiTextScale": 1.0,
+      "listSeparator": "・",
+      "rightToLeft": false
+    },
+    {
+      "code": "en",
+      "nativeName": "EN",
+      "fallbackCode": "",
+      "resourcePaths": [
+        "Localization/en",
+        "Localization/stage_decorations_en"
+      ],
+      "fontResourcePath": "",
+      "cultureCode": "en-US",
+      "uiTextScale": 0.75,
+      "listSeparator": " / ",
+      "rightToLeft": false
+    }
+  ]
+}

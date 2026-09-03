@@ -4,6 +4,7 @@ using UnityEngine;
 namespace DrawBody.Prototype
 {
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(100)]
     public sealed class StageRicochetChallengeController : MonoBehaviour
     {
         private const string StageId = "10-3";
@@ -54,6 +55,8 @@ namespace DrawBody.Prototype
         private StageRicochetBulletPassage ceilingPassage;
         private StageRicochetBulletPassage floorPassage;
         private GameObject routeGuideRoot;
+        private readonly List<SpriteRenderer> routeGuideDots = new List<SpriteRenderer>();
+        private readonly List<Vector2> predictedRoute = new List<Vector2>();
 
         public bool IsRoundActive => state != null && state.Phase == 0;
 
@@ -101,7 +104,8 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            if (stageManager == null || stageManager.CurrentStageId != StageId || !HasAuthority()) return;
+            if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            if (!HasAuthority()) return;
 
             activeBullets.RemoveWhere(bullet => bullet == null);
             if (state.Phase == 0 && state.Ammo <= 0 && activeBullets.Count == 0)
@@ -320,6 +324,12 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void LateUpdate()
+        {
+            if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            UpdateAimPrediction();
+        }
+
         private void BuildArena()
         {
             cellCenters.Clear();
@@ -535,69 +545,113 @@ namespace DrawBody.Prototype
         private void CreateRouteGuide()
         {
             if (routeGuideRoot != null) Destroy(routeGuideRoot);
-            routeGuideRoot = new GameObject("10-3 Suggested Ricochet Route");
+            routeGuideDots.Clear();
+            routeGuideRoot = new GameObject("10-3 Live Ricochet Prediction");
             routeGuideRoot.transform.SetParent(transform, false);
-
-            int gunCell = 0;
-            float closest = float.PositiveInfinity;
-            for (int i = 0; i < cellCenters.Count; i++)
+            for (int i = 0; i < 96; i++)
             {
-                float distance = ((Vector2)state.GunPosition - cellCenters[i]).sqrMagnitude;
-                if (distance < closest)
-                {
-                    closest = distance;
-                    gunCell = i;
-                }
+                GameObject dot = new GameObject("Prediction Dot " + i);
+                dot.transform.SetParent(routeGuideRoot.transform, false);
+                SpriteRenderer renderer = dot.AddComponent<SpriteRenderer>();
+                renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+                renderer.color = new Color(1f, 0.56f, 0.04f, i % 5 == 0 ? 0.92f : 0.68f);
+                renderer.sortingOrder = 18;
+                dot.transform.localScale = Vector3.one * (i % 5 == 0 ? 0.14f : 0.09f);
+                dot.SetActive(false);
+                routeGuideDots.Add(renderer);
+            }
+        }
+
+        private void UpdateAimPrediction()
+        {
+            if (routeGuideRoot == null || activeGun == null || activeGun.Holder == null
+                || !activeGun.Holder.IsAimingWeapon || state.Phase != 0)
+            {
+                SetPredictionDotCount(0);
+                return;
             }
 
-            Vector2 roomCenter = cellCenters.Count > 0 ? cellCenters[gunCell] : Vector2.zero;
-            Vector2 reflectionPoint = Vector2.Lerp(state.GunPosition, roomCenter, 0.62f);
-            Vector2 dividerPoint = new Vector2(
-                Mathf.Sign(state.EnemyPosition.x) * 0.85f,
-                Mathf.Sign(state.GunPosition.y) * 0.85f);
-            Vector2 outerApproach = state.EnemyPosition;
-            if (Mathf.Abs(state.EnemyPosition.x) > 16.3f)
-                outerApproach.x = Mathf.Sign(state.EnemyPosition.x) * 14.7f;
-            else
-                outerApproach.y = Mathf.Sign(state.EnemyPosition.y) * 8.2f;
+            if (!activeGun.TryGetCurrentShotRay(out Vector2 origin, out Vector2 direction))
+            {
+                SetPredictionDotCount(0);
+                return;
+            }
 
-            Vector2[] route =
+            predictedRoute.Clear();
+            predictedRoute.Add(origin);
+            PlayerController2D owner = activeGun.Holder.GetComponent<PlayerController2D>();
+            PlayerController2D lastReflectionPlayer = null;
+            float distanceLeft = 72f;
+            for (int reflection = 0; reflection <= 4 && distanceLeft > 0.1f; reflection++)
             {
-                state.GunPosition,
-                reflectionPoint,
-                dividerPoint,
-                outerApproach,
-                state.EnemyPosition
-            };
-            Color ink = new Color(1f, 0.62f, 0.06f, 0.8f);
-            for (int segment = 0; segment < route.Length - 1; segment++)
+                RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, distanceLeft);
+                System.Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
+                RaycastHit2D chosen = default;
+                bool found = false;
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    Collider2D collider = hits[i].collider;
+                    if (collider == null || collider.isTrigger || collider.GetComponentInParent<StageGun>() != null)
+                        continue;
+                    PlayerController2D hitPlayer = collider.GetComponentInParent<PlayerController2D>();
+                    if (hitPlayer == owner || hitPlayer == lastReflectionPlayer) continue;
+                    StageRicochetBulletPassage passage = collider.GetComponentInParent<StageRicochetBulletPassage>();
+                    if (passage != null && passage.AllowsBullet) continue;
+                    PlatformEffector2D oneWay = collider.GetComponentInParent<PlatformEffector2D>();
+                    if (oneWay != null && oneWay.useOneWay) continue;
+                    chosen = hits[i];
+                    found = true;
+                    break;
+                }
+
+                if (!found)
+                {
+                    predictedRoute.Add(origin + direction * distanceLeft);
+                    break;
+                }
+
+                predictedRoute.Add(chosen.point);
+                distanceLeft -= chosen.distance;
+                PlayerController2D reflector = chosen.collider.GetComponentInParent<PlayerController2D>();
+                if (reflector == null) break;
+                Vector2 normal = chosen.normal.sqrMagnitude > 0.2f ? chosen.normal.normalized : -direction;
+                direction = Vector2.Reflect(direction, normal).normalized;
+                origin = chosen.point + direction * 0.12f;
+                lastReflectionPlayer = reflector;
+            }
+
+            DrawPredictedRoute();
+        }
+
+        private void DrawPredictedRoute()
+        {
+            const float spacing = 0.42f;
+            int dotIndex = 0;
+            float carry = 0f;
+            for (int segment = 0; segment < predictedRoute.Count - 1 && dotIndex < routeGuideDots.Count; segment++)
             {
-                Vector2 from = route[segment];
-                Vector2 to = route[segment + 1];
+                Vector2 from = predictedRoute[segment];
+                Vector2 to = predictedRoute[segment + 1];
                 float length = Vector2.Distance(from, to);
-                int count = Mathf.Max(1, Mathf.FloorToInt(length / 1.05f));
-                Vector2 direction = (to - from).normalized;
-                Vector2 side = new Vector2(-direction.y, direction.x);
-                for (int i = 0; i < count; i++)
+                if (length < 0.01f) continue;
+                Vector2 direction = (to - from) / length;
+                for (float distance = segment == 0 ? 0.18f : spacing - carry;
+                     distance <= length && dotIndex < routeGuideDots.Count;
+                     distance += spacing)
                 {
-                    Vector2 point = Vector2.Lerp(from, to, (i + 0.5f) / count);
-                    Vector2 tip = point + direction * 0.34f;
-                    Vector2 back = point - direction * 0.22f;
-                    StageEscortController.AddLine(routeGuideRoot.transform,
-                        back + side * 0.22f, tip, 0.065f, ink, 18);
-                    StageEscortController.AddLine(routeGuideRoot.transform,
-                        tip, back - side * 0.22f, 0.065f, ink, 18);
+                    SpriteRenderer dot = routeGuideDots[dotIndex++];
+                    dot.transform.position = (Vector3)(from + direction * distance) + Vector3.back * 0.05f;
+                    dot.gameObject.SetActive(true);
                 }
+                carry = Mathf.Repeat(length + carry, spacing);
             }
+            SetPredictionDotCount(dotIndex);
+        }
 
-            GameObject reflection = new GameObject("Reflection Hint");
-            reflection.transform.SetParent(routeGuideRoot.transform, false);
-            reflection.transform.position = new Vector3(reflectionPoint.x, reflectionPoint.y, -0.05f);
-            reflection.transform.localScale = Vector3.one * 0.72f;
-            SpriteRenderer marker = reflection.AddComponent<SpriteRenderer>();
-            marker.sprite = DoodleRuntimeAssets.CircleSprite;
-            marker.color = new Color(1f, 0.82f, 0.12f, 0.34f);
-            marker.sortingOrder = 17;
+        private void SetPredictionDotCount(int count)
+        {
+            for (int i = Mathf.Max(0, count); i < routeGuideDots.Count; i++)
+                if (routeGuideDots[i] != null) routeGuideDots[i].gameObject.SetActive(false);
         }
 
         private void BroadcastState(bool immediate)

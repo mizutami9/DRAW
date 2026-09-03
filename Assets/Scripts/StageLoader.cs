@@ -67,6 +67,12 @@ namespace DrawBody.Prototype
             return hasStageFallBoundary;
         }
 
+        public void SetRuntimeSpawnPosition(Vector2 position)
+        {
+            if (spawnPoint == null) return;
+            spawnPoint.position = new Vector3(position.x, position.y, spawnPoint.position.z);
+        }
+
         public void ShowFallbackStage()
         {
             if (!fallbackSpawnCaptured && spawnPoint != null)
@@ -448,6 +454,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingSpikeChase);
             }
 
+            StageAquariumSealController existingAquariumSeal = stageRoot.GetComponent<StageAquariumSealController>();
+            if (existingAquariumSeal != null)
+            {
+                DestroyComponentNow(existingAquariumSeal);
+            }
+
             StageGrainCarryController existingGrainCarry = stageRoot.GetComponent<StageGrainCarryController>();
             if (existingGrainCarry != null)
             {
@@ -566,9 +578,27 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingHumanCircuit);
             }
 
+            StageMovingGauntletController existingMovingGauntlet =
+                stageRoot.GetComponent<StageMovingGauntletController>();
+            if (existingMovingGauntlet != null)
+            {
+                DestroyComponentNow(existingMovingGauntlet);
+            }
+
+            StageDrawnEscortChallengeController existingDrawnEscort =
+                stageRoot.GetComponent<StageDrawnEscortChallengeController>();
+            if (existingDrawnEscort != null)
+            {
+                DestroyComponentNow(existingDrawnEscort);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
-            if (data != null && (data.id == "5-3" || data.id == "10-2"))
+            if (data != null && data.id == "5-3")
+            {
+                stageRoot.gameObject.AddComponent<StageDrawnEscortChallengeController>();
+            }
+            if (data != null && data.id == "10-2")
             {
                 StageEscortController escort = stageRoot.gameObject.AddComponent<StageEscortController>();
                 escort.Configure(data.id);
@@ -579,7 +609,7 @@ namespace DrawBody.Prototype
             }
             if (data != null && data.id == "6-3")
             {
-                stageRoot.gameObject.AddComponent<StageSpikeChaseController>();
+                stageRoot.gameObject.AddComponent<StageAquariumSealController>();
             }
             if (data != null && data.id == "7-2")
             {
@@ -623,6 +653,10 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "10-3")
             {
                 stageRoot.gameObject.AddComponent<StageRicochetChallengeController>();
+            }
+            if (data != null && data.id == "11-1")
+            {
+                stageRoot.gameObject.AddComponent<StageMovingGauntletController>();
             }
             if (data != null && data.id == "12-1")
             {
@@ -673,10 +707,6 @@ namespace DrawBody.Prototype
                 if (data.id == "8-3" || data.id == "9-1" || data.id == "13-1" || data.id == "14-3" || data.id == "15-1" || data.id == "15-2" || data.id == "15-3")
                 {
                     // The stage-specific controller owns its timer, elimination and retry flow.
-                }
-                else if (data.id == "6-3")
-                {
-                    // StageSpikeChaseController owns elimination and retries.
                 }
                 else if (data.id == "4-3")
                 {

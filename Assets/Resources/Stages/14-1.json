@@ -3,7 +3,7 @@
     "displayName": "Stage 14-1 Alternating Wind Dash",
     "backgroundColorHex": "#F7F2DE26",
     "ruleMode": 0,
-    "timeLimitSeconds": 30.0,
+    "timeLimitSeconds": 45.0,
     "collectionTarget": 163,
     "requiredCollectionCount": 1,
     "objects": [

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DrawBody.Prototype
 {
-    public sealed class StageManager : MonoBehaviour
+    public sealed partial class StageManager : MonoBehaviour
     {
         private const string GimmickKindClearRequest = "stage_clear_request";
         private const string GimmickKindClear = "stage_clear";
@@ -126,18 +126,27 @@ namespace DrawBody.Prototype
         private Vector3 secondaryChallengeStartPosition;
         public bool IsTimedCollectionChallenge => stageRuleMode == StageRuleMode.TimedCollection;
         public bool IsSurvivalChallenge => stageRuleMode == StageRuleMode.Survival;
-        private bool UsesEliminationController => IsSurvivalChallenge || currentStageId == "9-2";
+        private bool UsesEliminationController => IsSurvivalChallenge
+            || currentStageId == "9-2"
+            || currentStageId == "11-1";
         public bool IsBlockBreakerChallenge => stageRuleMode == StageRuleMode.BlockBreaker;
         public bool IsDrawingMode => drawing;
         public bool IsGameplayActive => stageStarted && !titleMode && !stageEditing && !drawing && !cleared;
         public float ChallengeRemainingSeconds => challengeRemaining;
         public bool ChallengeTimeUp => challengeFailed;
+        public string ChallengeFailureDisplayText => LocalizationManager.T(
+            currentStageId == "12-1" || currentStageId == "12-2" || currentStageId == "12-3"
+                ? "game_over"
+                : "challenge_time_up");
         public StageObjectType ChallengeCollectionTarget => collectionTarget;
         public int ChallengeCollectedCount => collectedCount;
         public int ChallengeRequiredCollectionCount => requiredCollectionCount;
         public int ChallengeTotalCollectionTargetCount => totalCollectionTargetCount;
         public bool ChallengeStarting => challengeStarting;
         public bool IsChallengeReadyRoomActive => challengeReadyRoom != null && !challengeRunStarted;
+        public bool CanUseGameplayCharacterControls => !stageStarted
+            || !RequiresChallengeReadyRoom()
+            || IsChallengeReadyRoomActive;
         public string CurrentStageId => currentStageId;
         public bool RequiresUniquePlayerSpecies => StageSpeciesRules.RequiresUniqueSpecies(currentStageId);
         public string ChallengeStartCountdownText
@@ -197,6 +206,7 @@ namespace DrawBody.Prototype
             public Vector3 OriginalScale;
             public Rigidbody2D Body;
             public bool BodyWasSimulated;
+            public float RespawnAt;
         }
 
         [System.Serializable]
@@ -930,6 +940,7 @@ namespace DrawBody.Prototype
                 || currentStageId == "9-3"
                 || currentStageId == "10-1"
                 || currentStageId == "10-3"
+                || currentStageId == "11-1"
                 || currentStageId == "12-1"
                 || currentStageId == "12-2"
                 || currentStageId == "12-3"
@@ -947,7 +958,7 @@ namespace DrawBody.Prototype
 
             if (challengeFailed)
             {
-                uiManager?.SetChallengeCountdown(true, LocalizationManager.T("challenge_time_up"));
+                uiManager?.SetChallengeCountdown(true, ChallengeFailureDisplayText);
                 challengeTimeUpReturnRemaining = Mathf.Max(
                     0f,
                     challengeTimeUpReturnRemaining - Time.unscaledDeltaTime);
@@ -1112,7 +1123,7 @@ namespace DrawBody.Prototype
                 CancelDrawingMode();
             }
             SetAllPlayerControls(false);
-            uiManager?.SetChallengeCountdown(true, LocalizationManager.T("challenge_time_up"));
+            uiManager?.SetChallengeCountdown(true, ChallengeFailureDisplayText);
             uiManager?.SetChallengeHud(true, 0f, collectionTarget, collectedCount, requiredCollectionCount, true);
         }
 
@@ -1135,7 +1146,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bool firstPlayerWins = currentStageId == "10-1";
+            bool firstPlayerWins = currentStageId == "10-1" || currentStageId == "11-1";
             if (firstPlayerWins)
             {
                 StageIceSpeedrunController speedrun = Object.FindFirstObjectByType<StageIceSpeedrunController>();
@@ -1325,7 +1336,7 @@ namespace DrawBody.Prototype
                 PlayerGoalState goalState = JsonUtility.FromJson<PlayerGoalState>(data.Json);
                 bool inside = goalState != null && goalState.Inside;
                 SetOnlineGoalState(data.PlayerId, inside);
-                if (currentStageId == "10-1" && inside
+                if ((currentStageId == "10-1" || currentStageId == "11-1") && inside
                     && IsLocalOnlineHost(onlineManager.CurrentLobby))
                 {
                     StageIceSpeedrunController speedrun = Object.FindFirstObjectByType<StageIceSpeedrunController>();
@@ -1450,6 +1461,13 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void RetryCurrentStageAfterElimination()
+        {
+            if (!stageStarted || cleared || string.IsNullOrEmpty(currentStageId)) return;
+            if (IsOnlineInStage() && !IsLocalOnlineHost(onlineManager.CurrentLobby)) return;
+            RestartAfterChallengeTimeUp();
+        }
+
         private void PreparePlayersForFullStageRetry()
         {
             SetAllPlayerControls(false);
@@ -1468,6 +1486,11 @@ namespace DrawBody.Prototype
 
         public void GoToNextStage()
         {
+            if (IsOnlineInStage() && !IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                return;
+            }
+
             string nextStageId = GetNextStageId(currentStageId);
             if (string.IsNullOrEmpty(nextStageId))
             {
@@ -1492,10 +1515,22 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (currentStageId == "5-3")
+            {
+                StageDrawnEscortChallengeController escort =
+                    Object.FindFirstObjectByType<StageDrawnEscortChallengeController>();
+                if (escort != null && !escort.IsPlanningPhase)
+                {
+                    uiManager?.ShowGameplayNotice(LocalizationManager.T("redraw_unavailable_escort_run"));
+                    return;
+                }
+            }
+
             drawing = true;
             drawingOpenedForSpawnCorrection = spawnCorrectionRequired;
             if (player != null)
             {
+                ReleasePlayerFromAllCarriers(player);
                 redrawReturnPlayer = player;
                 redrawReturnPosition = player.transform.position;
                 hasRedrawReturnPosition = true;
@@ -1510,10 +1545,6 @@ namespace DrawBody.Prototype
                     redrawReturnBottomY = redrawBounds.min.y;
                 }
                 player.ResetMotion();
-                if (onlineCarryHeld)
-                {
-                    EndOnlineCarry(Vector2.zero);
-                }
                 SetPlayerRedrawingState(player, true);
             }
 
@@ -1645,6 +1676,15 @@ namespace DrawBody.Prototype
                 }
             }
 
+            // 5-3 replaces its authored course at runtime. Build that arena
+            // before the common RespawnPlayers call below, otherwise the very
+            // first spawn still uses the obsolete JSON marker and can begin
+            // outside the new frame.
+            Object.FindFirstObjectByType<StageDrawnEscortChallengeController>()
+                ?.EnsureInitializedForPlay();
+            Object.FindFirstObjectByType<StageAquariumSealController>()
+                ?.EnsureInitializedForPlay();
+
             // A controller removed by StageLoader can finish its OnDisable in
             // the same frame and leave a last transient flash behind. Sweep once
             // more after the old controller and children have been torn down.
@@ -1686,56 +1726,6 @@ namespace DrawBody.Prototype
             {
                 SendLocalOnlineBodyData();
             }
-        }
-
-        private static void ClearTransientStageVisuals()
-        {
-            BombExplosionVisual[] explosions = Object.FindObjectsByType<BombExplosionVisual>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-            for (int i = 0; i < explosions.Length; i++)
-                if (explosions[i] != null) HideAndDestroyTransient(explosions[i].gameObject);
-            StageBossImpactFlash[] impacts = Object.FindObjectsByType<StageBossImpactFlash>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-            for (int i = 0; i < impacts.Length; i++)
-                if (impacts[i] != null) HideAndDestroyTransient(impacts[i].gameObject);
-            StageBossBeam[] beams = Object.FindObjectsByType<StageBossBeam>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-            for (int i = 0; i < beams.Length; i++)
-                if (beams[i] != null) HideAndDestroyTransient(beams[i].gameObject);
-
-            // Also cover a flash whose owner component was already removed this
-            // frame. This is the plain white disc previously left at screen centre
-            // after leaving 15-3.
-            SpriteRenderer[] sprites = Object.FindObjectsByType<SpriteRenderer>(
-                FindObjectsInactive.Include, FindObjectsSortMode.None);
-            for (int i = 0; i < sprites.Length; i++)
-            {
-                SpriteRenderer sprite = sprites[i];
-                if (sprite == null || sprite.gameObject.name != "Explosion White Flash") continue;
-                sprite.enabled = false;
-                GameObject root = sprite.transform.parent != null
-                    ? sprite.transform.parent.gameObject
-                    : sprite.gameObject;
-                HideAndDestroyTransient(root);
-            }
-        }
-
-        private static IEnumerator ClearTransientStageVisualsAfterTransition()
-        {
-            // Network callbacks and Destroy() complete at frame boundaries. Sweep
-            // after both boundaries so a final 15-3 packet cannot leave its white
-            // explosion disc in the next ready room/stage.
-            yield return null;
-            ClearTransientStageVisuals();
-            yield return null;
-            ClearTransientStageVisuals();
-        }
-
-        private static void HideAndDestroyTransient(GameObject root)
-        {
-            if (root == null) return;
-            Renderer[] renderers = root.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++)
-                if (renderers[i] != null) renderers[i].enabled = false;
-            root.SetActive(false);
-            Object.Destroy(root);
         }
 
         public void OpenStageEditor(string stageId)
@@ -2065,6 +2055,38 @@ namespace DrawBody.Prototype
         public PlayerController2D RemotePlayerController => secondaryPlayer;
         public string RemotePlayerId => remotePlayerId;
 
+        public void GetClearCelebrationPlayers(List<PlayerController2D> results)
+        {
+            if (results == null)
+            {
+                return;
+            }
+
+            results.Clear();
+            AddClearCelebrationPlayer(results, primaryPlayer);
+            if (IsOnlineInStage())
+            {
+                foreach (KeyValuePair<string, PlayerController2D> pair in onlineRemotePlayers)
+                {
+                    AddClearCelebrationPlayer(results, pair.Value);
+                }
+            }
+            else
+            {
+                AddClearCelebrationPlayer(results, secondaryPlayer);
+            }
+        }
+
+        private static void AddClearCelebrationPlayer(
+            List<PlayerController2D> results,
+            PlayerController2D candidate)
+        {
+            if (candidate != null && !results.Contains(candidate))
+            {
+                results.Add(candidate);
+            }
+        }
+
         public Transform GetOnlinePlayerTransform(string playerId)
         {
             PlayerController2D controller = GetOnlinePlayerController(playerId);
@@ -2117,6 +2139,13 @@ namespace DrawBody.Prototype
             return Mathf.Max(0f, until - Time.unscaledTime);
         }
 
+        public float GetPlayerRespawnRemaining(PlayerController2D controller)
+        {
+            if (controller == null
+                || !respawnAnimations.TryGetValue(controller, out RespawnAnimationState state)) return 0f;
+            return Mathf.Max(0f, state.RespawnAt - Time.unscaledTime);
+        }
+
         public void SetOnlineRemotePlayerId(string playerId)
         {
             if (!string.IsNullOrEmpty(playerId))
@@ -2154,7 +2183,7 @@ namespace DrawBody.Prototype
             PlayerController2D remote;
             if (secondaryPlayer == null)
             {
-                AddCharacter();
+                AddCharacterInternal();
                 remote = secondaryPlayer;
             }
             else if (!onlineRemotePlayers.ContainsValue(secondaryPlayer))
@@ -2933,6 +2962,17 @@ namespace DrawBody.Prototype
 
         public void AddCharacter()
         {
+            if (!CanUseGameplayCharacterControls)
+            {
+                ShowReadyRoomOnlyCharacterChangeNotice();
+                return;
+            }
+
+            AddCharacterInternal();
+        }
+
+        private void AddCharacterInternal()
+        {
             if (secondaryPlayer != null || primaryPlayer == null)
             {
                 return;
@@ -2978,6 +3018,11 @@ namespace DrawBody.Prototype
 
         public void DeleteAddedCharacter()
         {
+            if (!CanUseGameplayCharacterControls)
+            {
+                ShowReadyRoomOnlyCharacterChangeNotice();
+                return;
+            }
             if (secondaryPlayer == null)
             {
                 return;
@@ -3056,12 +3101,22 @@ namespace DrawBody.Prototype
 
         public void SwitchCharacter()
         {
+            if (!CanUseGameplayCharacterControls)
+            {
+                ShowReadyRoomOnlyCharacterChangeNotice();
+                return;
+            }
             if (secondaryPlayer == null || primaryPlayer == null)
             {
                 return;
             }
 
             SetActivePlayer(player == secondaryPlayer ? primaryPlayer : secondaryPlayer, true);
+        }
+
+        public void ShowReadyRoomOnlyCharacterChangeNotice()
+        {
+            uiManager?.ShowGameplayNotice(LocalizationManager.T("character_change_ready_room_only"));
         }
 
         private void RestoreRedrawPose(bool returnToStart)
@@ -3185,6 +3240,31 @@ namespace DrawBody.Prototype
             challengeReadyRoom = null;
         }
 
+        internal bool TryResolveChallengeStartPosition(
+            PlayerController2D targetPlayer,
+            Vector3 preferred,
+            out Vector3 safePosition)
+        {
+            safePosition = preferred;
+            if (targetPlayer == null) return true;
+
+            Vector3 original = targetPlayer.transform.position;
+            bool resolved = TryPlaceAtSafeSpawn(targetPlayer, preferred, out safePosition);
+            TeleportPlayerWithoutPhysics(targetPlayer, original);
+            targetPlayer.ResetMotion();
+            Physics2D.SyncTransforms();
+            return resolved;
+        }
+
+        internal void HandleChallengeStartFitRejected(PlayerController2D targetPlayer)
+        {
+            if (targetPlayer == null) return;
+            if (IsOnlineInStage() && targetPlayer.transform != ActivePlayerTransform) return;
+            SetActivePlayer(targetPlayer, false);
+            EnterDrawingMode();
+            drawManager?.ShowStageFitError();
+        }
+
         internal void CancelChallengeReadyRoomReference(StageChallengeReadyRoomController room)
         {
             if (challengeReadyRoom == room)
@@ -3244,7 +3324,12 @@ namespace DrawBody.Prototype
             }
 
             Vector3 hiddenPosition = redrawPlayer.transform.position;
-            bool redrawInPlace = currentStageId == "10-3" && challengeRunStarted;
+            StageDrawnEscortChallengeController drawnEscort = currentStageId == "5-3"
+                ? Object.FindFirstObjectByType<StageDrawnEscortChallengeController>()
+                : null;
+            bool redrawInPlace = currentStageId == "6-3"
+                || currentStageId == "10-3" && challengeRunStarted
+                || drawnEscort != null && drawnEscort.ShouldKeepRedrawInPlace;
             Vector3 preferred = redrawInPlace && hasRedrawReturnPosition && redrawReturnPlayer == redrawPlayer
                 ? redrawReturnPosition
                 : assignedPlayerStartPositions.TryGetValue(redrawPlayer, out Vector3 assigned)
@@ -3296,6 +3381,14 @@ namespace DrawBody.Prototype
             {
                 SetPlayerRedrawingState(redrawPlayer, true);
                 drawManager?.ShowReadyRoomFitError();
+                spawnFitValidationRoutine = null;
+                yield break;
+            }
+
+            if (!challengeReadyRoom.TryValidatePlayerStageFit(redrawPlayer, out _))
+            {
+                SetPlayerRedrawingState(redrawPlayer, true);
+                drawManager?.ShowStageFitError();
                 spawnFitValidationRoutine = null;
                 yield break;
             }
@@ -3390,6 +3483,8 @@ namespace DrawBody.Prototype
                     // room or stage geometry and must never make a body fail the
                     // spawn-size validation.
                     if (other.GetComponentInParent<PlayerController2D>() != null) continue;
+                    PlatformEffector2D oneWay = other.GetComponentInParent<PlatformEffector2D>();
+                    if (oneWay != null && oneWay.useOneWay) continue;
                     if (playerCollider.Distance(other).isOverlapped) return true;
                 }
             }
@@ -3646,6 +3741,23 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void ReleasePlayerFromAllCarriers(PlayerController2D targetPlayer)
+        {
+            if (targetPlayer == null) return;
+            PlayerCarryController[] carriers = Object.FindObjectsByType<PlayerCarryController>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            for (int i = 0; i < carriers.Length; i++)
+            {
+                PlayerCarryController carrier = carriers[i];
+                if (carrier == null) continue;
+                carrier.ReleaseIfHolding(targetPlayer.transform);
+                carrier.ReleaseIfDraggingFriend(targetPlayer.transform);
+            }
+            if (targetPlayer == player && onlineCarryHeld)
+                EndOnlineCarry(Vector2.zero);
+        }
+
         public void RespawnFromHazard(PlayerController2D targetPlayer)
         {
             if (!stageStarted || cleared || targetPlayer == null)
@@ -3752,7 +3864,10 @@ namespace DrawBody.Prototype
             {
                 OriginalScale = targetPlayer.transform.localScale,
                 Body = body,
-                BodyWasSimulated = body == null || body.simulated
+                BodyWasSimulated = body == null || body.simulated,
+                RespawnAt = Time.unscaledTime + (currentStageId == "13-1"
+                    ? 5f
+                    : RespawnCollapseDuration + RespawnPauseDuration)
             };
             respawnAnimations[targetPlayer] = state;
             state.Routine = StartCoroutine(PlayRespawnAnimation(targetPlayer, state));
@@ -3789,7 +3904,8 @@ namespace DrawBody.Prototype
             }
 
             targetPlayer.transform.localScale = Vector3.Scale(state.OriginalScale, new Vector3(0.03f, 0.03f, 1f));
-            yield return new WaitForSecondsRealtime(RespawnPauseDuration);
+            while (Time.unscaledTime < state.RespawnAt)
+                yield return null;
 
             if (targetPlayer == null || !stageStarted || cleared)
             {

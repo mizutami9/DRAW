@@ -36,7 +36,14 @@ namespace DrawBody.Prototype
 
         private void OnEnable()
         {
+            LocalizationManager.LanguageChanged -= UpdateView;
+            LocalizationManager.LanguageChanged += UpdateView;
             UpdateView();
+        }
+
+        private void OnDisable()
+        {
+            LocalizationManager.LanguageChanged -= UpdateView;
         }
 
         private void ToggleEditMode()

@@ -31,6 +31,7 @@ namespace DrawBody.Prototype
         private readonly List<PlayerController2D> hiddenPlayers = new List<PlayerController2D>();
         private StageManager stageManager;
         private OnlineManager onlineManager;
+        private UIManager uiManager;
         private Transform startFloor;
         private Collider2D[] floorColliders;
         private SpriteRenderer[] floorSprites;
@@ -42,12 +43,14 @@ namespace DrawBody.Prototype
         private int lastStateSequence;
         private bool floorGone;
         private bool retrying;
+        private bool gameOverShown;
         private bool restored;
 
         private void Awake()
         {
             stageManager = Object.FindFirstObjectByType<StageManager>();
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            uiManager = Object.FindFirstObjectByType<UIManager>();
         }
 
         private void OnEnable()
@@ -59,6 +62,7 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            uiManager?.SetChallengeCountdown(false, string.Empty);
             RestorePlayers();
         }
 
@@ -108,6 +112,7 @@ namespace DrawBody.Prototype
             }
             if (retrying)
             {
+                ShowGameOver();
                 restartRemaining = Mathf.Max(0f, restartRemaining - Time.deltaTime);
                 if (restartRemaining <= 0f) stageManager.Retry();
             }
@@ -309,9 +314,18 @@ namespace DrawBody.Prototype
             floorRemaining = state.FloorRemaining;
             restartRemaining = state.RestartRemaining;
             retrying = restartRemaining > 0f;
+            if (retrying) ShowGameOver();
             if (state.FloorGone) HideFloor();
             if (state.EliminatedIds != null)
                 for (int i = 0; i < state.EliminatedIds.Length; i++) ApplyElimination(state.EliminatedIds[i]);
+        }
+
+        private void ShowGameOver()
+        {
+            if (gameOverShown) return;
+            gameOverShown = true;
+            if (uiManager == null) uiManager = Object.FindFirstObjectByType<UIManager>();
+            uiManager?.SetChallengeCountdown(true, LocalizationManager.T("game_over"));
         }
 
         private string ResolvePlayerId(PlayerController2D player) => player == null ? null : IsOnline()

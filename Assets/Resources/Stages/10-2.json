@@ -51,6 +51,12 @@
     {"objectId":"10-2_friend_bomb_button_2","type":259,"position":{"x":7.0,"y":-3.93},"size":{"x":1.25,"y":0.55},"rotation":0.0,"linkTargetId":"10-2_bomb_dropper_2","linkAction":"Activate"},
     {"objectId":"10-2_bomb_dropper_2","type":169,"position":{"x":9.3,"y":-1.25},"size":{"x":1.8,"y":1.4},"rotation":0.0,"actionStrength":8.0,"spawnPattern":1,"spawnBoxSize":1.25,"bombFuseSeconds":3.0},
     {"objectId":"10-2_friend_bomb_button_3","type":259,"position":{"x":24.0,"y":-3.93},"size":{"x":1.25,"y":0.55},"rotation":0.0,"linkTargetId":"10-2_bomb_dropper_3","linkAction":"Activate"},
-    {"objectId":"10-2_bomb_dropper_3","type":169,"position":{"x":26.3,"y":-1.25},"size":{"x":1.8,"y":1.4},"rotation":0.0,"actionStrength":8.0,"spawnPattern":1,"spawnBoxSize":1.4,"bombFuseSeconds":2.7}
+    {"objectId":"10-2_bomb_dropper_3","type":169,"position":{"x":26.3,"y":-1.25},"size":{"x":1.8,"y":1.4},"rotation":0.0,"actionStrength":8.0,"spawnPattern":1,"spawnBoxSize":1.4,"bombFuseSeconds":2.7},
+    {"objectId":"10-2_friend_bomb_button_4","type":259,"position":{"x":-17.0,"y":-3.93},"size":{"x":1.25,"y":0.55},"rotation":0.0,"linkTargetId":"10-2_bomb_dropper_4","linkAction":"Activate"},
+    {"objectId":"10-2_bomb_dropper_4","type":169,"position":{"x":-14.7,"y":-1.25},"size":{"x":1.8,"y":1.4},"rotation":0.0,"actionStrength":8.0,"spawnPattern":1,"spawnBoxSize":1.15,"bombFuseSeconds":3.4},
+    {"objectId":"10-2_friend_bomb_button_5","type":259,"position":{"x":-9.5,"y":-3.93},"size":{"x":1.25,"y":0.55},"rotation":0.0,"linkTargetId":"10-2_bomb_dropper_5","linkAction":"Activate"},
+    {"objectId":"10-2_bomb_dropper_5","type":169,"position":{"x":-7.2,"y":-1.25},"size":{"x":1.8,"y":1.4},"rotation":0.0,"actionStrength":8.0,"spawnPattern":1,"spawnBoxSize":1.2,"bombFuseSeconds":3.2},
+    {"objectId":"10-2_friend_bomb_button_6","type":259,"position":{"x":35.0,"y":-3.93},"size":{"x":1.25,"y":0.55},"rotation":0.0,"linkTargetId":"10-2_bomb_dropper_6","linkAction":"Activate"},
+    {"objectId":"10-2_bomb_dropper_6","type":169,"position":{"x":37.3,"y":-1.25},"size":{"x":1.8,"y":1.4},"rotation":0.0,"actionStrength":8.0,"spawnPattern":1,"spawnBoxSize":1.35,"bombFuseSeconds":2.8}
   ]
 }

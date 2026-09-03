@@ -90,7 +90,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            targetGrams = 50f * Mathf.Max(1, stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1);
+            targetGrams = 90f * Mathf.Max(1, stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1);
             EnsureCarriers(true);
             BuildMonitor();
             LockCamera();

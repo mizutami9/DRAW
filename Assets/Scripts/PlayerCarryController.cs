@@ -96,7 +96,9 @@ namespace DrawBody.Prototype
 
         public bool IsHolding => heldTransform != null;
         public bool IsAimingWeapon => heldTransform != null
-            && (heldTransform.GetComponent<StageGun>() != null || heldTransform.GetComponent<StageBazooka>() != null);
+            && (heldTransform.GetComponent<StageGun>() != null
+                || heldTransform.GetComponent<StageBazooka>() != null
+                || heldTransform.GetComponent<StageFlashlight>() != null);
         public Vector2 CurrentOnlineWeaponAimDirection => currentWeaponAimDirection.sqrMagnitude > 0.01f
             ? currentWeaponAimDirection.normalized
             : new Vector2(GetFacingDirection(), 0f);
@@ -396,7 +398,9 @@ namespace DrawBody.Prototype
                 {
                     TryPickup();
                 }
-                else if (heldTransform.GetComponent<StageGun>() != null || heldTransform.GetComponent<StageBazooka>() != null)
+                else if (heldTransform.GetComponent<StageGun>() != null
+                    || heldTransform.GetComponent<StageBazooka>() != null
+                    || heldTransform.GetComponent<StageFlashlight>() != null)
                 {
                     DropHeld(Vector2.zero);
                 }
@@ -502,6 +506,7 @@ namespace DrawBody.Prototype
             heldTransform.position = anchor;
             StageGun gun = heldTransform.GetComponent<StageGun>();
             StageBazooka bazooka = heldTransform.GetComponent<StageBazooka>();
+            StageFlashlight flashlight = heldTransform.GetComponent<StageFlashlight>();
             if (gun != null)
             {
                 Vector2 aim = ResolveHeldWeaponAim(anchor);
@@ -511,6 +516,11 @@ namespace DrawBody.Prototype
             {
                 Vector2 aim = ResolveHeldWeaponAim(anchor);
                 bazooka.UpdateHeldPose(anchor, aim);
+            }
+            else if (flashlight != null)
+            {
+                Vector2 aim = ResolveHeldWeaponAim(anchor);
+                flashlight.UpdateHeldPose(anchor, aim);
             }
             else
             {
@@ -523,7 +533,7 @@ namespace DrawBody.Prototype
             }
 
             bodyBuilder?.SetCarryPose(true, GetFacingDirection(), anchor);
-            if (gun != null || bazooka != null) SetThrowPreviewVisible(false);
+            if (gun != null || bazooka != null || flashlight != null) SetThrowPreviewVisible(false);
             else UpdateThrowPreview(anchor);
         }
 
@@ -552,7 +562,9 @@ namespace DrawBody.Prototype
         {
             if (!IsHuman() || heldTransform == null) return;
             if (Input.GetKeyDown(KeyCode.F)
-                && (heldTransform.GetComponent<StageGun>() != null || heldTransform.GetComponent<StageBazooka>() != null))
+                && (heldTransform.GetComponent<StageGun>() != null
+                    || heldTransform.GetComponent<StageBazooka>() != null
+                    || heldTransform.GetComponent<StageFlashlight>() != null))
             {
                 DropHeld(Vector2.zero);
                 return;
@@ -1291,6 +1303,7 @@ namespace DrawBody.Prototype
             heldTransform.GetComponent<StageBomb>()?.NotifyPickedUp();
             heldTransform.GetComponent<StageGun>()?.SetHolder(this);
             heldTransform.GetComponent<StageBazooka>()?.SetHolder(this);
+            heldTransform.GetComponent<StageFlashlight>()?.SetHolder(this);
             heldOnlinePlayerId = GetHeldOnlinePlayerId(heldPlayerController);
             if (!string.IsNullOrEmpty(heldOnlinePlayerId))
             {
@@ -1436,6 +1449,8 @@ namespace DrawBody.Prototype
             releasedGun?.SetHolder(null);
             StageBazooka releasedBazooka = heldTransform.GetComponent<StageBazooka>();
             releasedBazooka?.SetHolder(null);
+            StageFlashlight releasedFlashlight = heldTransform.GetComponent<StageFlashlight>();
+            releasedFlashlight?.SetHolder(null);
             bodyBuilder?.SetCarryPose(false, GetFacingDirection(), transform.position);
             if (heldObject != null)
             {

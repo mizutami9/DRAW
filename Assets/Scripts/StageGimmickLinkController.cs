@@ -90,6 +90,15 @@ namespace DrawBody.Prototype
                             () => SetHeldButtonStateFromTrigger(source.objectId, true),
                             () => SetHeldButtonStateFromTrigger(source.objectId, false));
                     }
+                    else if (source.type == StageObjectType.EscortFriendButton)
+                    {
+                        // Escort buttons are reusable momentary switches: the
+                        // friend presses them on entry and the cap returns when
+                        // the friend walks off, ready for another activation.
+                        trigger.Configure(
+                            () => SetHeldButtonStateFromTrigger(source.objectId, true),
+                            () => SetHeldButtonStateFromTrigger(source.objectId, false));
+                    }
                     else
                     {
                         trigger.Configure(() => ActivateFromTrigger(source.objectId));
@@ -125,6 +134,7 @@ namespace DrawBody.Prototype
                 if (platform == null
                     || (platform.type != StageObjectType.MovingPlatform
                         && platform.type != StageObjectType.MovingOneWayPlatform)
+                    || platform.GetComponent<StageMovingGauntletPlatform>() != null
                     || linkedTargetIds.Contains(platform.objectId))
                 {
                     continue;
@@ -356,8 +366,19 @@ namespace DrawBody.Prototype
         {
             if (string.IsNullOrEmpty(sourceObjectId)
                 || !linksBySourceId.TryGetValue(sourceObjectId, out LinkRuntime link)
-                || (!link.IsSimultaneousButtonSource && !link.IsHoldButtonSource))
+                || (!link.IsSimultaneousButtonSource
+                    && !link.IsHoldButtonSource
+                    && !link.IsMomentaryButtonSource))
             {
+                return;
+            }
+
+            if (link.IsMomentaryButtonSource)
+            {
+                link.SetPressed(held);
+                ApplyPressedVisual(sourceObjectId, held);
+                if (held) link.Activate();
+                if (broadcast) syncManager?.BroadcastLinkState(sourceObjectId, link.CreateState());
                 return;
             }
 
@@ -494,6 +515,15 @@ namespace DrawBody.Prototype
                 {
                     StageEditorObject stageObject = source != null ? source.GetComponent<StageEditorObject>() : null;
                     return stageObject != null && stageObject.type == StageObjectType.HoldButton;
+                }
+            }
+
+            public bool IsMomentaryButtonSource
+            {
+                get
+                {
+                    StageEditorObject stageObject = source != null ? source.GetComponent<StageEditorObject>() : null;
+                    return stageObject != null && stageObject.type == StageObjectType.EscortFriendButton;
                 }
             }
 

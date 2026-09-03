@@ -10,8 +10,11 @@ namespace DrawBody.Prototype
         private PlayerCarryController holder;
         private StageGunSystem system;
         private float nextFireAt;
+        private Vector2 heldAimWorld;
+        private bool hasHeldAim;
 
         public PlayerCarryController Holder => holder;
+        public Vector2 MuzzleWorldPosition => transform.TransformPoint(new Vector2(0.82f, 0.08f));
 
         public static GameObject CreateObject(StageObjectData data, Transform parent, int pushableLayer)
         {
@@ -65,17 +68,34 @@ namespace DrawBody.Prototype
         public void UpdateHeldPose(Vector3 anchor, Vector2 aimWorld)
         {
             transform.position = anchor;
+            heldAimWorld = aimWorld;
+            hasHeldAim = true;
             Vector2 direction = aimWorld - (Vector2)anchor;
             if (direction.sqrMagnitude < 0.01f) direction = Vector2.right;
             transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         }
 
+        public bool TryGetCurrentShotRay(out Vector2 origin, out Vector2 direction)
+        {
+            origin = MuzzleWorldPosition;
+            direction = hasHeldAim
+                ? heldAimWorld - origin
+                : (Vector2)transform.right;
+            if (direction.sqrMagnitude < 0.01f)
+            {
+                direction = Vector2.zero;
+                return false;
+            }
+            direction.Normalize();
+            return true;
+        }
+
         public void TryFire(Vector2 aimWorld)
         {
             if (holder == null || Time.time < nextFireAt) return;
-            Vector2 origin = transform.TransformPoint(new Vector2(0.82f, 0.08f));
-            Vector2 direction = (aimWorld - origin).normalized;
-            if (direction.sqrMagnitude < 0.1f) return;
+            heldAimWorld = aimWorld;
+            hasHeldAim = true;
+            if (!TryGetCurrentShotRay(out Vector2 origin, out Vector2 direction)) return;
             nextFireAt = Time.time + FireInterval;
             if (system == null) system = StageGunSystem.Ensure(transform);
             system?.RequestFire(GetObjectId(), origin, direction,
@@ -548,12 +568,16 @@ namespace DrawBody.Prototype
         private void Update()
         {
             float distance = Speed * Time.deltaTime;
-            if (authoritative && TryHit(distance))
+            bool reflected = false;
+            if (authoritative && TryHit(distance, out reflected))
             {
                 EndAuthoritative();
                 return;
             }
-            transform.position += (Vector3)(direction * distance);
+            // TryHit already places a reflected bullet just beyond the impact
+            // point. Advancing a second full frame here made it skip the next
+            // thin wall and disagree with the aiming prediction at low FPS.
+            if (!reflected) transform.position += (Vector3)(direction * distance);
             life += Time.deltaTime;
             if (life >= 3f)
             {
@@ -562,14 +586,20 @@ namespace DrawBody.Prototype
             }
         }
 
-        private bool TryHit(float distance)
+        private bool TryHit(float distance, out bool reflected)
         {
+            reflected = false;
             RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, distance + 0.15f);
             System.Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
             for (int i = 0; i < hits.Length; i++)
             {
                 Collider2D collider = hits[i].collider;
-                if (collider == null || collider.isTrigger || collider.GetComponentInParent<StageGun>() != null) continue;
+                StageMovingGauntletGhost gauntletGhost = collider != null
+                    ? collider.GetComponentInParent<StageMovingGauntletGhost>()
+                    : null;
+                if (collider == null
+                    || collider.GetComponentInParent<StageGun>() != null
+                    || collider.isTrigger && gauntletGhost == null) continue;
 
                 PlayerController2D player = collider.GetComponentInParent<PlayerController2D>();
                 if (player != null)
@@ -589,6 +619,7 @@ namespace DrawBody.Prototype
                     lastReflectAt = Time.time;
                     ricochetChallenge.NotifyReflection(hits[i].point);
                     system?.BroadcastReflection(sequence, transform.position, direction);
+                    reflected = true;
                     return false;
                 }
 

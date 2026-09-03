@@ -36,7 +36,11 @@ namespace DrawBody.Prototype
         private Button gameplayLeaveSessionButton;
         private Text editorTestReturnLabel;
         private RectTransform clearStamp;
+        private Image clearStampImage;
+        private Outline clearStampOutline;
         private readonly Image[] clearBurstLines = new Image[16];
+        private readonly RectTransform[] clearPetals = new RectTransform[24];
+        private int clearCelebrationVariant;
         private bool drawing;
         private bool cleared;
         private bool titleShowing;
@@ -60,6 +64,8 @@ namespace DrawBody.Prototype
         private GameObject gameplayNotice;
         private Text gameplayNoticeText;
         private Coroutine gameplayNoticeRoutine;
+        private Coroutine clearCelebrationSfxRoutine;
+        private ClearScreenCharacterParade clearCharacterParade;
 
         private void Awake()
         {
@@ -67,6 +73,11 @@ namespace DrawBody.Prototype
             ResolveGameplayDrawer();
             ResolveMenuDrawer();
             EnsureClearPanel();
+            clearCharacterParade = GetComponent<ClearScreenCharacterParade>();
+            if (clearCharacterParade == null)
+            {
+                clearCharacterParade = gameObject.AddComponent<ClearScreenCharacterParade>();
+            }
             EnsureEditorTestReturnButton();
             RefreshGameplayMenu();
             DoodleUiDirector uiDirector = GetComponent<DoodleUiDirector>();
@@ -117,7 +128,8 @@ namespace DrawBody.Prototype
             }
 
             challengeCountdownText.text = value ?? string.Empty;
-            bool timeUp = string.Equals(value, LocalizationManager.T("challenge_time_up"), System.StringComparison.Ordinal);
+            bool timeUp = string.Equals(value, LocalizationManager.T("challenge_time_up"), System.StringComparison.Ordinal)
+                || string.Equals(value, LocalizationManager.T("game_over"), System.StringComparison.Ordinal);
             bool start = string.Equals(value, LocalizationManager.T("survival_start"), System.StringComparison.Ordinal);
             challengeCountdownText.color = timeUp
                 ? new Color(1f, 0.2f, 0.12f, 1f)
@@ -304,8 +316,8 @@ namespace DrawBody.Prototype
             }
 
             clearAnimTime += Time.unscaledDeltaTime;
-            float pulse = 1f + Mathf.Sin(clearAnimTime * 5.5f) * 0.035f;
-            clearStamp.localScale = Vector3.one * pulse;
+            AnimateClearStamp();
+            AnimateClearPetals();
 
             for (int i = 0; i < clearBurstLines.Length; i++)
             {
@@ -317,6 +329,83 @@ namespace DrawBody.Prototype
 
                 float angle = (360f / clearBurstLines.Length) * i + Mathf.Sin(clearAnimTime * 2f + i) * 4f;
                 line.rectTransform.localRotation = Quaternion.Euler(0f, 0f, angle);
+            }
+        }
+
+        private void AnimateClearStamp()
+        {
+            float restingAngle = clearCelebrationVariant == 1 ? -2.4f : clearCelebrationVariant == 2 ? 1.8f : -0.8f;
+            float scale;
+            float angle;
+            if (clearAnimTime < 0.16f)
+            {
+                float t = 1f - Mathf.Pow(1f - clearAnimTime / 0.16f, 3f);
+                scale = Mathf.Lerp(2.35f, 0.88f, t);
+                angle = Mathf.Lerp(restingAngle - 13f, restingAngle, t);
+            }
+            else if (clearAnimTime < 0.3f)
+            {
+                float t = (clearAnimTime - 0.16f) / 0.14f;
+                scale = Mathf.Lerp(0.88f, 1.08f, t);
+                angle = restingAngle;
+            }
+            else if (clearAnimTime < 0.46f)
+            {
+                float t = (clearAnimTime - 0.3f) / 0.16f;
+                scale = Mathf.Lerp(1.08f, 1f, t);
+                angle = restingAngle;
+            }
+            else
+            {
+                scale = 1f + Mathf.Sin(clearAnimTime * 2.8f) * 0.009f;
+                angle = restingAngle + Mathf.Sin(clearAnimTime * 1.7f) * 0.22f;
+            }
+
+            clearStamp.localScale = Vector3.one * scale;
+            clearStamp.localRotation = Quaternion.Euler(0f, 0f, angle);
+        }
+
+        private void AnimateClearPetals()
+        {
+            for (int i = 0; i < clearPetals.Length; i++)
+            {
+                RectTransform petal = clearPetals[i];
+                if (petal == null) continue;
+
+                float seed = Mathf.Repeat(i * 0.6180339f, 1f);
+                float speed = clearCelebrationVariant == 1 ? 0.075f : clearCelebrationVariant == 2 ? 0.105f : 0.13f;
+                float travel = Mathf.Repeat(clearAnimTime * speed + seed, 1f);
+                float x;
+                float y;
+                if (clearCelebrationVariant == 1)
+                {
+                    x = Mathf.Lerp(-410f, 410f, seed) + Mathf.Sin(clearAnimTime * 1.5f + i) * 42f;
+                    y = Mathf.Lerp(225f, -225f, travel);
+                }
+                else if (clearCelebrationVariant == 2)
+                {
+                    float orbit = clearAnimTime * 1.15f + i * 0.72f;
+                    x = Mathf.Sin(orbit) * Mathf.Lerp(120f, 405f, seed);
+                    y = Mathf.Lerp(220f, -220f, travel) + Mathf.Cos(orbit * 0.7f) * 24f;
+                }
+                else
+                {
+                    float side = i % 2 == 0 ? -1f : 1f;
+                    x = side * Mathf.Lerp(70f, 410f, travel) + Mathf.Sin(i * 2.1f) * 55f;
+                    y = 120f - travel * 340f + Mathf.Sin(travel * Mathf.PI) * 145f;
+                }
+
+                petal.anchoredPosition = new Vector2(x, y);
+                petal.localRotation = Quaternion.Euler(0f, 0f, clearAnimTime * (70f + i % 5 * 19f) + i * 31f);
+                float flutter = 0.68f + Mathf.Sin(clearAnimTime * 5f + i) * 0.25f;
+                petal.localScale = new Vector3(flutter, 1f, 1f);
+                Image image = petal.GetComponent<Image>();
+                if (image != null)
+                {
+                    Color color = image.color;
+                    color.a = Mathf.Clamp01(Mathf.Sin(travel * Mathf.PI) * 0.86f);
+                    image.color = color;
+                }
             }
         }
 
@@ -416,6 +505,7 @@ namespace DrawBody.Prototype
             bool menuOpen = menuDrawer != null
                 ? menuDrawer.IsOpen
                 : menuPanel.activeSelf;
+            GameSfx.Play(menuOpen ? SfxId.UiButtonBack : SfxId.UiTabChange);
             if (menuOpen)
             {
                 HideMenu();
@@ -762,6 +852,7 @@ namespace DrawBody.Prototype
             }
 
             ResolveGameplayDrawer();
+            GameSfx.Play(SfxId.UiTabChange);
             gameplayHudDrawer?.Toggle();
         }
 
@@ -1001,7 +1092,7 @@ namespace DrawBody.Prototype
                 RectTransform backRect = clearBackButton.GetComponent<RectTransform>();
                 if (backRect != null)
                 {
-                    backRect.anchoredPosition = testing ? new Vector2(0f, -130f) : new Vector2(135f, -130f);
+                    backRect.anchoredPosition = testing ? new Vector2(0f, -142f) : new Vector2(155f, -142f);
                 }
             }
 
@@ -1011,6 +1102,7 @@ namespace DrawBody.Prototype
 
         public void SetCleared(bool cleared, string stageId = null, string nextStageId = null)
         {
+            bool wasCleared = this.cleared;
             this.cleared = cleared;
             clearStageId = stageId;
             clearNextStageId = nextStageId;
@@ -1026,13 +1118,44 @@ namespace DrawBody.Prototype
                         editorTestReturnButton.transform.SetAsLastSibling();
                     }
                     clearAnimTime = 0f;
+                    ConfigureClearCelebrationVariant();
                     RefreshClearPanelText();
+                    RefreshClearAuthority();
                     ApplyModernTheme();
+                    RectTransform popup = clearPanel.transform.Find("StageClearResult") as RectTransform;
+                    clearCharacterParade?.Begin(ResolveStageManager(), popup);
+                    if (!wasCleared)
+                    {
+                        if (clearCelebrationSfxRoutine != null) StopCoroutine(clearCelebrationSfxRoutine);
+                        clearCelebrationSfxRoutine = StartCoroutine(PlayClearCelebrationSfx());
+                    }
                 }
+            }
+
+            if (!cleared && clearCelebrationSfxRoutine != null)
+            {
+                StopCoroutine(clearCelebrationSfxRoutine);
+                clearCelebrationSfxRoutine = null;
+            }
+
+            if (!cleared)
+            {
+                clearCharacterParade?.End();
             }
 
             RefreshHudVisibility();
             RefreshText();
+        }
+
+        private IEnumerator PlayClearCelebrationSfx()
+        {
+            yield return new WaitForSecondsRealtime(0.12f);
+            if (!cleared) yield break;
+            GameSfx.Play(SfxId.ClearStampImpact);
+            yield return new WaitForSecondsRealtime(0.17f);
+            if (!cleared) yield break;
+            GameSfx.Play(SfxId.ClearCelebrationChime, clearCelebrationVariant == 3 ? 1.12f : 1f);
+            clearCelebrationSfxRoutine = null;
         }
 
         private void RefreshHudVisibility()
@@ -1097,7 +1220,7 @@ namespace DrawBody.Prototype
             Image dim = clearPanel.GetComponent<Image>();
             if (dim != null)
             {
-                dim.color = new Color(0.035f, 0.055f, 0.09f, 0.78f);
+                dim.color = new Color(0.025f, 0.055f, 0.08f, 0.68f);
             }
 
             Stretch(clearPanel.GetComponent<RectTransform>());
@@ -1113,7 +1236,8 @@ namespace DrawBody.Prototype
                 clearPanel.transform.GetChild(i).gameObject.SetActive(false);
             }
 
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            Font font = GetComponentInChildren<Text>(true)?.font;
+            if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             if (font == null)
             {
                 font = Resources.GetBuiltinResource<Font>("Arial.ttf");
@@ -1126,37 +1250,56 @@ namespace DrawBody.Prototype
             resultRect.anchorMax = new Vector2(0.5f, 0.5f);
             resultRect.pivot = new Vector2(0.5f, 0.5f);
             resultRect.anchoredPosition = Vector2.zero;
-            resultRect.sizeDelta = new Vector2(760f, 430f);
+            resultRect.sizeDelta = new Vector2(820f, 460f);
 
             Image paper = result.AddComponent<Image>();
-            paper.color = new Color(0.985f, 0.975f, 0.925f, 1f);
+            paper.color = new Color(0.99f, 0.975f, 0.89f, 1f);
+            result.AddComponent<SketchPaperTexture>();
             Outline paperOutline = result.AddComponent<Outline>();
-            paperOutline.effectColor = new Color(0.045f, 0.075f, 0.12f, 1f);
-            paperOutline.effectDistance = new Vector2(4f, -4f);
+            paperOutline.effectColor = new Color(0.12f, 0.1f, 0.075f, 0.92f);
+            paperOutline.effectDistance = new Vector2(3f, -3f);
             Shadow paperShadow = result.AddComponent<Shadow>();
-            paperShadow.effectColor = new Color(0f, 0f, 0f, 0.3f);
-            paperShadow.effectDistance = new Vector2(12f, -14f);
+            paperShadow.effectColor = new Color(0f, 0f, 0f, 0.26f);
+            paperShadow.effectDistance = new Vector2(11f, -12f);
 
-            CreateClearBlock("TopAccent", result.transform, new Vector2(0f, 206f), new Vector2(760f, 18f), new Color(1f, 0.78f, 0.12f, 1f));
-            CreateClearBlock("AccentCyan", result.transform, new Vector2(-300f, 165f), new Vector2(72f, 12f), new Color(0.12f, 0.72f, 0.88f, 1f));
-            CreateClearBlock("AccentCoral", result.transform, new Vector2(300f, 165f), new Vector2(72f, 12f), new Color(1f, 0.34f, 0.26f, 1f));
-            CreateClearBlock("Divider", result.transform, new Vector2(0f, -28f), new Vector2(600f, 3f), new Color(0.045f, 0.075f, 0.12f, 0.22f));
+            CreateClearCardFrame(result.transform, resultRect.sizeDelta);
+            CreateClearPaintStroke(result.transform, "ClearStampPaint", new Vector2(0f, 94f),
+                new Vector2(650f, 112f), new Color(1f, 0.76f, 0.08f, 0.28f));
+            CreateDynamicClearPetals(result.transform);
 
-            clearStamp = CreateClearStamp(result.transform);
+            GameObject stageTicket = new GameObject("ClearStageTicket", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            stageTicket.transform.SetParent(result.transform, false);
+            RectTransform ticketRect = stageTicket.GetComponent<RectTransform>();
+            ticketRect.anchorMin = ticketRect.anchorMax = new Vector2(0.5f, 0.5f);
+            ticketRect.pivot = new Vector2(0.5f, 0.5f);
+            ticketRect.anchoredPosition = new Vector2(0f, 92f);
+            ticketRect.sizeDelta = new Vector2(590f, 132f);
+            clearStamp = ticketRect;
+            clearStampImage = stageTicket.GetComponent<Image>();
+            clearStampImage.color = new Color(1f, 0.96f, 0.78f, 0.96f);
+            clearStampOutline = stageTicket.AddComponent<Outline>();
+            clearStampOutline.effectColor = new Color(0.78f, 0.16f, 0.12f, 0.92f);
+            clearStampOutline.effectDistance = new Vector2(4f, -4f);
+            Shadow stampShadow = stageTicket.AddComponent<Shadow>();
+            stampShadow.effectColor = new Color(0f, 0f, 0f, 0.2f);
+            stampShadow.effectDistance = new Vector2(7f, -8f);
 
-            clearTitleText = CreateClearText("ClearTitle", result.transform, font, 54, TextAnchor.MiddleCenter, new Vector2(0f, 62f), new Vector2(650f, 72f));
-            clearTitleText.fontStyle = FontStyle.Bold;
-            clearTitleText.color = new Color(0.035f, 0.065f, 0.11f, 1f);
+            CreateClearBlock("ButtonDivider", result.transform, new Vector2(0f, -43f),
+                new Vector2(650f, 2f), new Color(0.16f, 0.13f, 0.1f, 0.2f));
 
-            clearStageText = CreateClearText("ClearStage", result.transform, font, 25, TextAnchor.MiddleCenter, new Vector2(0f, 10f), new Vector2(620f, 38f));
-            clearStageText.color = new Color(0.18f, 0.22f, 0.27f, 1f);
+            CreateClearStamp(result.transform);
 
-            Button next = CreateClearButton("NextStageButton", result.transform, font, new Vector2(-145f, -122f), new Vector2(240f, 76f), new Color(0.18f, 0.78f, 0.88f, 1f));
+            clearStageText = CreateClearText("ClearStage", stageTicket.transform, font, 39, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(540f, 102f));
+            clearStageText.fontStyle = FontStyle.Bold;
+            clearStageText.color = new Color(0.58f, 0.09f, 0.07f, 1f);
+            clearStageText.lineSpacing = 0.9f;
+
+            Button next = CreateClearButton("NextStageButton", result.transform, font, new Vector2(-155f, -142f), new Vector2(270f, 82f), new Color(0.38f, 0.86f, 0.38f, 1f));
             clearNextButton = next;
             clearNextLabel = next.GetComponentInChildren<Text>();
             next.onClick.AddListener(() => ResolveStageManager()?.GoToNextStage());
 
-            Button back = CreateClearButton("BackToStageSelectButton", result.transform, font, new Vector2(145f, -122f), new Vector2(240f, 76f), new Color(1f, 0.73f, 0.22f, 1f));
+            Button back = CreateClearButton("BackToStageSelectButton", result.transform, font, new Vector2(155f, -142f), new Vector2(270f, 82f), new Color(0.25f, 0.76f, 0.9f, 1f));
             clearBackButton = back;
             clearBackLabel = back.GetComponentInChildren<Text>();
             back.onClick.AddListener(HandleClearBack);
@@ -1176,13 +1319,19 @@ namespace DrawBody.Prototype
 
         private void HandleClearBack()
         {
-            if (editorTestReturnButton != null && editorTestReturnButton.gameObject.activeSelf)
+            StageManager manager = ResolveStageManager();
+            if (manager != null && manager.IsOnlineStageActive && !manager.IsOnlineStageHost)
             {
-                ResolveStageManager()?.ReturnToStageEditor();
                 return;
             }
 
-            ResolveStageManager()?.OpenStageSelect();
+            if (editorTestReturnButton != null && editorTestReturnButton.gameObject.activeSelf)
+            {
+                manager?.ReturnToStageEditor();
+                return;
+            }
+
+            manager?.OpenStageSelect();
         }
 
         private void EnsureEditorTestReturnButton()
@@ -1225,36 +1374,159 @@ namespace DrawBody.Prototype
 
         private RectTransform CreateClearStamp(Transform parent)
         {
-            GameObject stamp = new GameObject("ClearStamp", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            GameObject stamp = new GameObject("ClearCelebrationDoodle", typeof(RectTransform));
             stamp.transform.SetParent(parent, false);
             RectTransform rect = stamp.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(0f, 142f);
-            rect.sizeDelta = new Vector2(68f, 68f);
-            rect.localRotation = Quaternion.Euler(0f, 0f, 45f);
+            rect.anchoredPosition = new Vector2(-338f, 154f);
+            rect.sizeDelta = new Vector2(72f, 72f);
 
-            Image image = stamp.GetComponent<Image>();
-            image.color = new Color(1f, 0.78f, 0.12f, 1f);
-            Outline outline = stamp.AddComponent<Outline>();
-            outline.effectColor = new Color(0.035f, 0.065f, 0.11f, 1f);
-            outline.effectDistance = new Vector2(3f, -3f);
+            Color yellow = new Color(1f, 0.72f, 0.04f, 0.92f);
+            CreateDoodleStar(stamp.transform, Vector2.zero, yellow);
+            CreateBurstLines(rect);
 
-            GameObject checkRoot = new GameObject("ClearCheck", typeof(RectTransform));
-            checkRoot.transform.SetParent(stamp.transform, false);
-            RectTransform checkRect = checkRoot.GetComponent<RectTransform>();
-            checkRect.anchorMin = new Vector2(0.5f, 0.5f);
-            checkRect.anchorMax = new Vector2(0.5f, 0.5f);
-            checkRect.sizeDelta = new Vector2(68f, 68f);
-            checkRect.localRotation = Quaternion.Euler(0f, 0f, -45f);
-
-            Color checkColor = new Color(0.035f, 0.065f, 0.11f, 1f);
-            Image shortStroke = CreateClearBlock("CheckShort", checkRoot.transform, new Vector2(-10f, -3f), new Vector2(9f, 28f), checkColor);
-            shortStroke.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -45f);
-            Image longStroke = CreateClearBlock("CheckLong", checkRoot.transform, new Vector2(10f, 3f), new Vector2(9f, 48f), checkColor);
-            longStroke.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 45f);
+            CreateDoodleStar(parent, new Vector2(340f, 148f), new Color(1f, 0.34f, 0.24f, 0.82f));
+            CreateClearConfetti(parent);
             return rect;
+        }
+
+        private static void CreateClearCardFrame(Transform parent, Vector2 size)
+        {
+            Color graphite = new Color(0.16f, 0.13f, 0.09f, 0.72f);
+            float x = size.x * 0.5f - 10f;
+            float y = size.y * 0.5f - 10f;
+            Image top = CreateClearBlock("PencilFrameTop", parent, new Vector2(0f, y), new Vector2(size.x - 24f, 3f), graphite);
+            top.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -0.35f);
+            Image bottom = CreateClearBlock("PencilFrameBottom", parent, new Vector2(0f, -y), new Vector2(size.x - 24f, 3f), graphite);
+            bottom.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 0.25f);
+            Image left = CreateClearBlock("PencilFrameLeft", parent, new Vector2(-x, 0f), new Vector2(3f, size.y - 24f), graphite);
+            left.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 0.2f);
+            Image right = CreateClearBlock("PencilFrameRight", parent, new Vector2(x, 0f), new Vector2(3f, size.y - 24f), graphite);
+            right.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -0.25f);
+        }
+
+        private static void CreateClearPaintStroke(
+            Transform parent,
+            string name,
+            Vector2 position,
+            Vector2 size,
+            Color color)
+        {
+            GameObject root = new GameObject(name, typeof(RectTransform));
+            root.transform.SetParent(parent, false);
+            RectTransform rootRect = root.GetComponent<RectTransform>();
+            rootRect.anchorMin = rootRect.anchorMax = new Vector2(0.5f, 0.5f);
+            rootRect.pivot = new Vector2(0.5f, 0.5f);
+            rootRect.anchoredPosition = position;
+            rootRect.sizeDelta = size;
+            for (int i = 0; i < 5; i++)
+            {
+                float t = i / 4f;
+                Color stripeColor = new Color(color.r, color.g, color.b, color.a * (0.64f + t * 0.09f));
+                Image stripe = CreateClearBlock("CrayonStripe" + i, root.transform,
+                    new Vector2((i - 2f) * 3f, Mathf.Lerp(-size.y * 0.28f, size.y * 0.28f, t)),
+                    new Vector2(size.x - Mathf.Abs(i - 2f) * 22f, Mathf.Max(7f, size.y * 0.2f)), stripeColor);
+                stripe.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -1.2f + i * 0.55f);
+            }
+        }
+
+        private static void CreateClearConfetti(Transform parent)
+        {
+            Vector2[] positions =
+            {
+                new Vector2(-350f, 76f), new Vector2(-312f, 44f), new Vector2(-365f, -18f),
+                new Vector2(350f, 72f), new Vector2(315f, 42f), new Vector2(365f, -12f)
+            };
+            Color[] colors =
+            {
+                new Color(0.12f, 0.7f, 0.86f, 0.75f),
+                new Color(1f, 0.72f, 0.05f, 0.78f),
+                new Color(1f, 0.32f, 0.25f, 0.72f)
+            };
+            for (int i = 0; i < positions.Length; i++)
+            {
+                Image piece = CreateClearBlock("CrayonConfetti" + i, parent, positions[i],
+                    new Vector2(i % 2 == 0 ? 22f : 14f, 5f), colors[i % colors.Length]);
+                piece.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -38f + i * 17f);
+            }
+        }
+
+        private void CreateDynamicClearPetals(Transform parent)
+        {
+            Color[] colors =
+            {
+                new Color(1f, 0.46f, 0.58f, 0.8f),
+                new Color(1f, 0.72f, 0.14f, 0.8f),
+                new Color(0.18f, 0.72f, 0.88f, 0.8f),
+                new Color(0.48f, 0.82f, 0.34f, 0.8f)
+            };
+
+            for (int i = 0; i < clearPetals.Length; i++)
+            {
+                Image petal = CreateClearBlock("ClearPetal" + i, parent, Vector2.zero,
+                    new Vector2(i % 3 == 0 ? 9f : 7f, i % 3 == 0 ? 22f : 17f), colors[i % colors.Length]);
+                petal.raycastTarget = false;
+                clearPetals[i] = petal.rectTransform;
+            }
+        }
+
+        private void ConfigureClearCelebrationVariant()
+        {
+            clearCelebrationVariant = !string.IsNullOrEmpty(clearStageId) && clearStageId.EndsWith("-1", System.StringComparison.Ordinal)
+                ? 1
+                : !string.IsNullOrEmpty(clearStageId) && clearStageId.EndsWith("-2", System.StringComparison.Ordinal)
+                    ? 2
+                    : 3;
+
+            Color paperColor;
+            Color inkColor;
+            Color[] petalColors;
+            if (clearCelebrationVariant == 1)
+            {
+                paperColor = new Color(1f, 0.94f, 0.92f, 0.97f);
+                inkColor = new Color(0.82f, 0.12f, 0.27f, 0.94f);
+                petalColors = new[]
+                {
+                    new Color(1f, 0.46f, 0.58f, 0.82f),
+                    new Color(1f, 0.68f, 0.76f, 0.78f),
+                    new Color(0.94f, 0.28f, 0.48f, 0.76f)
+                };
+            }
+            else if (clearCelebrationVariant == 2)
+            {
+                paperColor = new Color(0.91f, 0.98f, 1f, 0.97f);
+                inkColor = new Color(0.04f, 0.48f, 0.72f, 0.94f);
+                petalColors = new[]
+                {
+                    new Color(0.12f, 0.72f, 0.88f, 0.82f),
+                    new Color(1f, 0.72f, 0.08f, 0.8f),
+                    new Color(0.42f, 0.82f, 0.34f, 0.78f)
+                };
+            }
+            else
+            {
+                paperColor = new Color(1f, 0.965f, 0.78f, 0.97f);
+                inkColor = new Color(0.88f, 0.31f, 0.08f, 0.95f);
+                petalColors = new[]
+                {
+                    new Color(1f, 0.65f, 0.04f, 0.84f),
+                    new Color(1f, 0.3f, 0.2f, 0.8f),
+                    new Color(0.55f, 0.32f, 0.88f, 0.78f)
+                };
+            }
+
+            if (clearStampImage != null) clearStampImage.color = paperColor;
+            if (clearStampOutline != null) clearStampOutline.effectColor = inkColor;
+            if (clearStageText != null) clearStageText.color = new Color(inkColor.r * 0.72f, inkColor.g * 0.72f, inkColor.b * 0.72f, 1f);
+            for (int i = 0; i < clearPetals.Length; i++)
+            {
+                RectTransform petal = clearPetals[i];
+                if (petal == null) continue;
+                Image image = petal.GetComponent<Image>();
+                if (image != null) image.color = petalColors[i % petalColors.Length];
+            }
         }
 
         private static Image CreateClearBlock(string name, Transform parent, Vector2 position, Vector2 size, Color color)
@@ -1283,10 +1555,10 @@ namespace DrawBody.Prototype
                 rect.anchorMax = new Vector2(0.5f, 0.5f);
                 rect.pivot = new Vector2(0f, 0.5f);
                 rect.anchoredPosition = Vector2.zero;
-                rect.sizeDelta = new Vector2(i % 2 == 0 ? 54f : 36f, 5f);
+                rect.sizeDelta = new Vector2(i % 2 == 0 ? 25f : 17f, 3.5f);
                 rect.localRotation = Quaternion.Euler(0f, 0f, (360f / clearBurstLines.Length) * i);
                 Image image = line.GetComponent<Image>();
-                image.color = i % 3 == 0 ? new Color(0.96f, 0.22f, 0.18f, 0.8f) : new Color(0.12f, 0.47f, 1f, 0.72f);
+                image.color = i % 3 == 0 ? new Color(0.96f, 0.22f, 0.18f, 0.62f) : new Color(0.12f, 0.47f, 1f, 0.54f);
                 clearBurstLines[i] = image;
             }
         }
@@ -1324,8 +1596,11 @@ namespace DrawBody.Prototype
             Image image = buttonObject.GetComponent<Image>();
             image.color = color;
             Outline outline = buttonObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.65f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.88f);
+            outline.effectDistance = new Vector2(3f, -3f);
+            Shadow shadow = buttonObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0f, 0f, 0f, 0.2f);
+            shadow.effectDistance = new Vector2(7f, -7f);
             Button button = buttonObject.GetComponent<Button>();
             ColorBlock colors = button.colors;
             colors.highlightedColor = Color.Lerp(color, Color.white, 0.25f);
@@ -1333,7 +1608,12 @@ namespace DrawBody.Prototype
             colors.disabledColor = new Color(0.65f, 0.63f, 0.56f, 0.55f);
             button.colors = colors;
 
-            Text label = CreateClearText($"{name}Label", buttonObject.transform, font, 24, TextAnchor.MiddleCenter, Vector2.zero, size);
+            CreateClearBlock($"{name}CrayonHighlight", buttonObject.transform,
+                new Vector2(0f, size.y * 0.5f - 8f), new Vector2(size.x - 14f, 5f),
+                new Color(1f, 1f, 1f, 0.22f));
+
+            Text label = CreateClearText($"{name}Label", buttonObject.transform, font, 24, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(size.x - 28f, size.y - 16f));
+            label.fontStyle = FontStyle.Bold;
             label.color = new Color(0.08f, 0.07f, 0.06f, 1f);
             return button;
         }
@@ -1369,9 +1649,16 @@ namespace DrawBody.Prototype
 
             if (clearStageText != null)
             {
-                clearStageText.text = string.IsNullOrEmpty(clearStageId)
+                string body = string.IsNullOrEmpty(clearStageId)
                     ? LocalizationManager.T("stage_clear_body_generic")
                     : LocalizationManager.Format("stage_clear_body", clearStageId);
+                StageManager manager = ResolveStageManager();
+                bool waitingForHost = manager != null
+                    && manager.IsOnlineStageActive
+                    && !manager.IsOnlineStageHost;
+                clearStageText.text = waitingForHost
+                    ? body + "\n" + LocalizationManager.T("multi_host_selecting_stage")
+                    : body;
             }
 
             if (clearNextLabel != null)
@@ -1392,6 +1679,18 @@ namespace DrawBody.Prototype
             {
                 clearNextButton.interactable = !string.IsNullOrEmpty(clearNextStageId);
             }
+
+            RefreshClearAuthority();
+        }
+
+        private void RefreshClearAuthority()
+        {
+            StageManager manager = ResolveStageManager();
+            bool canChooseDestination = manager == null
+                || !manager.IsOnlineStageActive
+                || manager.IsOnlineStageHost;
+            if (clearNextButton != null) clearNextButton.gameObject.SetActive(canChooseDestination);
+            if (clearBackButton != null) clearBackButton.gameObject.SetActive(canChooseDestination);
         }
 
         private static void Stretch(RectTransform rect)

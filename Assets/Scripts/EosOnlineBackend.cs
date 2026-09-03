@@ -1364,6 +1364,9 @@ namespace DrawBody.Prototype
                 GimmickDataReceived?.Invoke(new OnlineGimmickData
                 {
                     PlayerId = peer != null ? peer.ToString() : GetHostPlayerId(),
+                    StageId = CurrentLobby.StageId,
+                    StageRevision = CurrentLobby.StageRevision,
+                    RetryRevision = CurrentLobby.RetryRevision - 1,
                     ObjectId = CurrentLobby.StageId,
                     Kind = "stage_retry",
                     Json = "{}"

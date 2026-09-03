@@ -324,7 +324,7 @@ namespace DrawBody.Prototype
 
             LayoutTopAction(root, "RuntimeEditSaveButton", -302f, new Color(0.68f, 0.88f, 1f, 1f), "F5  " + LocalizationManager.T("stage_editor_save"));
             LayoutTopAction(root, "RuntimeEditTestButton", -166f, new Color(0.62f, 0.94f, 0.58f, 1f), "F6  " + LocalizationManager.T("stage_editor_test"));
-            LayoutTopAction(root, "RuntimeEditCloseButton", -24f, new Color(1f, 0.72f, 0.62f, 1f), "ESC  " + LocalizationManager.T("stage_editor_back"));
+            LayoutTopAction(root, "RuntimeEditCloseButton", -24f, new Color(1f, 0.72f, 0.62f, 1f), LocalizationManager.T("ui_back_esc"));
         }
 
         private static void LayoutTopAction(RectTransform root, string name, float x, Color color, string labelValue)

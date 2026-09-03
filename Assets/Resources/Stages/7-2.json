@@ -111,8 +111,8 @@
             "objectId": "7-2_frame_bottom_spikes",
             "type": 73,
             "position": {
-                "x": 0.0,
-                "y": -5.71999979019165
+                "x": -0.09999847412109375,
+                "y": -5.525000095367432
             },
             "size": {
                 "x": 78.80000305175781,
@@ -290,7 +290,7 @@
                 "y": -3.0
             },
             "size": {
-                "x": 2.09999942779541,
+                "x": 2.0999984741210939,
                 "y": 0.75
             },
             "rotation": 0.0,
@@ -883,173 +883,23 @@
             "linkAction": ""
         },
         {
-            "objectId": "7-2_bomb_turtle_1",
-            "type": 169,
-            "position": {
-                "x": 18.5,
-                "y": 3.5999999046325685
-            },
-            "size": {
-                "x": 1.7000000476837159,
-                "y": 1.2999999523162842
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 4.199999809265137,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 1,
-            "spawnBoxSize": 0.75,
-            "bombFuseSeconds": 6.5,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "7-2_bomb_turtle_2",
-            "type": 169,
-            "position": {
-                "x": 24.5,
-                "y": 3.799999952316284
-            },
-            "size": {
-                "x": 1.7000000476837159,
-                "y": 1.2999999523162842
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 3.5999999046325685,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 1,
-            "spawnBoxSize": 0.8500000238418579,
-            "bombFuseSeconds": 6.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "7-2_bomb_turtle_3",
-            "type": 169,
-            "position": {
-                "x": 30.0,
-                "y": 3.5
-            },
-            "size": {
-                "x": 1.7000000476837159,
-                "y": 1.2999999523162842
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 3.0999999046325685,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 1,
-            "spawnBoxSize": 0.699999988079071,
-            "bombFuseSeconds": 5.5,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "7-2_beam_turtle_1",
-            "type": 167,
-            "position": {
-                "x": 18.0,
-                "y": -2.0
-            },
-            "size": {
-                "x": 1.399999976158142,
-                "y": 0.8999999761581421
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 4.5,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
             "objectId": "7-2_beam_turtle_2",
             "type": 167,
             "position": {
-                "x": 27.0,
-                "y": 1.5
+                "x": 33.0,
+                "y": 0.5
             },
             "size": {
                 "x": 1.399999976158142,
                 "y": 0.8999999761581421
             },
-            "rotation": 180.0,
+            "rotation": -165.0,
             "pathPoints": [],
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
-            "actionStrength": 3.799999952316284,
+            "actionStrength": 3.5,
             "movementAngle": 180.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "7-2_cover_turtle_1",
-            "type": 8,
-            "position": {
-                "x": 22.799999237060548,
-                "y": -0.800000011920929
-            },
-            "size": {
-                "x": 3.200000047683716,
-                "y": 0.3799999952316284
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": true,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "7-2_cover_turtle_2",
-            "type": 8,
-            "position": {
-                "x": 28.700000762939454,
-                "y": 0.25
-            },
-            "size": {
-                "x": 3.0999999046325685,
-                "y": 0.3799999952316284
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": true,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
@@ -1073,7 +923,7 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
-            "actionStrength": 50.0,
+            "actionStrength": 70.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 3,
@@ -1150,6 +1000,81 @@
             "keepSeparate": false,
             "actionStrength": 0.0,
             "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_0a371d906fd14ad4",
+            "type": 167,
+            "position": {
+                "x": 28.5,
+                "y": 7.0
+            },
+            "size": {
+                "x": 2.0,
+                "y": 1.5
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 5.0,
+            "movementAngle": 180.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_823b1bddb44e4849",
+            "type": 167,
+            "position": {
+                "x": 25.0,
+                "y": 7.0
+            },
+            "size": {
+                "x": 2.0,
+                "y": 1.5
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 5.0,
+            "movementAngle": 180.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_f2228b3881744303",
+            "type": 167,
+            "position": {
+                "x": 20.0,
+                "y": 7.0
+            },
+            "size": {
+                "x": 2.0,
+                "y": 1.5
+            },
+            "rotation": -90.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 5.0,
+            "movementAngle": 180.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,

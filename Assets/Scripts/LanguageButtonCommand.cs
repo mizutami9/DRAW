@@ -7,7 +7,8 @@ namespace DrawBody.Prototype
     [RequireComponent(typeof(Button))]
     public sealed class LanguageButtonCommand : MonoBehaviour
     {
-        [SerializeField] private LocalizationManager.Language language;
+        [SerializeField] private string languageCode = "ja";
+        [SerializeField, HideInInspector] private LocalizationManager.Language legacyLanguage;
 
         private void Awake()
         {
@@ -20,7 +21,10 @@ namespace DrawBody.Prototype
 
         private void SelectLanguage()
         {
-            LocalizationManager.SetLanguage(language);
+            if (!LocalizationManager.SetLanguage(languageCode))
+            {
+                LocalizationManager.SetLanguage(legacyLanguage);
+            }
             EventSystem.current?.SetSelectedGameObject(null);
         }
     }

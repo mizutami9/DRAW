@@ -13,7 +13,36 @@ namespace DrawBody.Prototype
     {
         public void Save()
         {
-            StageData data = CreateStageData();
+            TrySave(CreateStageData());
+        }
+
+        private bool TrySave(StageData data)
+        {
+            List<StageValidationIssue> issues = StageDataValidator.Validate(data, stageId);
+            int errors = 0;
+            int warnings = 0;
+            StageValidationIssue firstError = default;
+            for (int i = 0; i < issues.Count; i++)
+            {
+                StageValidationIssue issue = issues[i];
+                if (issue.Severity == StageValidationSeverity.Error)
+                {
+                    if (errors == 0) firstError = issue;
+                    errors++;
+                    Debug.LogError($"Stage '{stageId}': {issue}");
+                }
+                else
+                {
+                    warnings++;
+                    Debug.LogWarning($"Stage '{stageId}': {issue}");
+                }
+            }
+            if (errors > 0)
+            {
+                SetStatus(LocalizationManager.Format(
+                    "stage_editor_status_validation_failed", errors, firstError.Message));
+                return false;
+            }
 #if UNITY_EDITOR
             string folder = Path.Combine(Application.dataPath, "Resources", "Stages");
             Directory.CreateDirectory(folder);
@@ -22,17 +51,22 @@ namespace DrawBody.Prototype
             string assetPath = $"Assets/Resources/Stages/{stageId}.json";
             AssetDatabase.ImportAsset(assetPath);
             AssetDatabase.Refresh();
-            SetStatus(LocalizationManager.Format("stage_editor_status_saved", assetPath));
+            SetStatus(warnings > 0
+                ? LocalizationManager.Format("stage_editor_status_saved_with_warnings", assetPath, warnings)
+                : LocalizationManager.Format("stage_editor_status_saved", assetPath));
+            return true;
 #else
             SetStatus(LocalizationManager.T("stage_editor_status_save_editor_only"));
+            return false;
 #endif
         }
 
         public void TestPlay()
         {
+            StageData data = CreateStageData();
+            if (!TrySave(data)) return;
             StoreEditorCameraStateForTest();
-            Save();
-            stageLoader?.LoadStage(CreateStageData());
+            stageLoader?.LoadStage(data);
             Close();
         }
 

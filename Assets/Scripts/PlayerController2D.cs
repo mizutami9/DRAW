@@ -571,10 +571,22 @@ namespace DrawBody.Prototype
             turtleTurnHeld = active;
             if (rb != null)
             {
-                rb.rotation = active && currentSpecies == DrawManager.Species.Turtle
+                float targetRotation = active && currentSpecies == DrawManager.Species.Turtle
                     ? -90f * facingDirection
                     : 0f;
+                float rotationDelta = Mathf.DeltaAngle(rb.rotation, targetRotation);
+                // F rotates the entire shell instantly. Rotate its physical grain
+                // pile through the same delta once, otherwise the shell moves out
+                // from under the grains and ejects all of them.
+                if (Mathf.Abs(rotationDelta) >= 45f)
+                {
+                    GetComponent<StageGrainCarrier>()?.RotateCarriedParticles(
+                        rb.position,
+                        rotationDelta);
+                }
+                rb.rotation = targetRotation;
                 rb.angularVelocity = 0f;
+                Physics2D.SyncTransforms();
             }
         }
 

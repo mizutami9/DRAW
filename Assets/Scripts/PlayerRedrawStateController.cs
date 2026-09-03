@@ -15,6 +15,10 @@ namespace DrawBody.Prototype
         private PlayerController2D controller;
         private Rigidbody2D body;
         private bool bodyWasSimulated;
+        private RigidbodyType2D bodyTypeBeforeRedraw;
+        private float gravityScaleBeforeRedraw;
+        private bool freezeRotationBeforeRedraw;
+        private bool hasBodyPhysicsSnapshot;
         private bool redrawing;
         private GameObject indicatorRoot;
         private TextMesh indicatorText;
@@ -67,6 +71,10 @@ namespace DrawBody.Prototype
                 if (body != null)
                 {
                     bodyWasSimulated = body.simulated;
+                    bodyTypeBeforeRedraw = body.bodyType;
+                    gravityScaleBeforeRedraw = body.gravityScale;
+                    freezeRotationBeforeRedraw = body.freezeRotation;
+                    hasBodyPhysicsSnapshot = true;
                     body.simulated = false;
                 }
                 CaptureAndDisableColliders();
@@ -78,7 +86,19 @@ namespace DrawBody.Prototype
             {
                 RestoreColliders();
                 RestoreRenderers();
-                if (body != null) body.simulated = bodyWasSimulated;
+                if (body != null)
+                {
+                    if (hasBodyPhysicsSnapshot)
+                    {
+                        body.bodyType = bodyTypeBeforeRedraw;
+                        body.gravityScale = gravityScaleBeforeRedraw;
+                        body.freezeRotation = freezeRotationBeforeRedraw;
+                    }
+                    body.simulated = bodyWasSimulated;
+                    body.linearVelocity = Vector2.zero;
+                    body.angularVelocity = 0f;
+                }
+                hasBodyPhysicsSnapshot = false;
                 if (indicatorRoot != null) indicatorRoot.SetActive(false);
                 Physics2D.SyncTransforms();
             }

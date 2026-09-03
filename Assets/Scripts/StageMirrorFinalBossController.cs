@@ -65,6 +65,7 @@ namespace DrawBody.Prototype
             public float DisabledRemaining;
             public bool Concealed;
             public int FailureReason;
+            public int MonitorCue;
             public Vector2[] RealPositions;
         }
 
@@ -88,13 +89,14 @@ namespace DrawBody.Prototype
         private TextMesh phaseText;
         private TextMesh timerText;
         private TextMesh hintText;
+        private TextMesh monitorSparkText;
+        private Transform monitorRoot;
         private GameObject concealRoot;
         private SpriteRenderer concealInk;
         private readonly List<LineRenderer> concealStrokes = new List<LineRenderer>();
         private readonly List<Transform> concealSplatPieces = new List<Transform>();
         private readonly List<Vector3> concealSplatTargetScales = new List<Vector3>();
         private GameObject eraserVisual;
-        private TextMesh resultText;
         private BattleState battleState = BattleState.Intro;
         private int playerCount = 1;
         private int phase;
@@ -116,6 +118,8 @@ namespace DrawBody.Prototype
         private int networkConcealCompletedPhase = -1;
         private float networkConcealDeadline = -1f;
         private int failureReason;
+        private int monitorCue;
+        private float monitorCueStartedAt;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -225,6 +229,23 @@ namespace DrawBody.Prototype
         private IEnumerator StartPhase(int nextPhase)
         {
             transitionRunning = true;
+            if (nextPhase > 1)
+            {
+                battleState = BattleState.Intermission;
+                SetMonitorCue(1);
+                remaining = 1.6f;
+                BroadcastState(true);
+                GameSfx.Play(SfxId.EmotePop);
+                float cueEnd = Time.unscaledTime + remaining;
+                while (Time.unscaledTime < cueEnd)
+                {
+                    remaining = Mathf.Max(0f, cueEnd - Time.unscaledTime);
+                    RefreshMonitor();
+                    yield return null;
+                }
+                SetMonitorCue(0);
+            }
+
             battleState = nextPhase == 1 ? BattleState.Intro : BattleState.Intermission;
             phase = nextPhase;
             remaining = 3f;
@@ -257,6 +278,7 @@ namespace DrawBody.Prototype
         {
             transitionRunning = true;
             battleState = BattleState.Cleared;
+            SetMonitorCue(2);
             BroadcastState(true);
             GameSfx.Play(SfxId.EmotePop);
             yield return new WaitForSeconds(2.4f);
@@ -267,6 +289,7 @@ namespace DrawBody.Prototype
         {
             transitionRunning = true;
             battleState = BattleState.Failed;
+            SetMonitorCue(0);
             failureReason = timeUp ? 1 : 2;
             ShowFailure(failureReason);
             BroadcastState(true);
@@ -739,7 +762,7 @@ namespace DrawBody.Prototype
         {
             if (objectFactory == null) return;
             StageObjectData data = StageObjectFactory.CreateDefaultData(StageObjectType.JumpPad, new Vector2(x, LowerFloorY + 0.38f));
-            data.objectId = "15-3_layer_jump_" + x.ToString("0"); data.actionStrength = 66f;
+            data.objectId = "15-3_layer_jump_" + x.ToString("0"); data.actionStrength = 22f;
             objectFactory.Create(data, transform);
         }
 
@@ -787,15 +810,22 @@ namespace DrawBody.Prototype
 
         private void BuildMonitor()
         {
-            GameObject monitor = new GameObject("15-3 Battle Monitor"); monitor.transform.SetParent(transform, false); monitor.transform.localPosition = new Vector3(0f, 6.7f, 0.6f);
-            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(15f, 2.25f), -24);
-            phaseText = StageEscortController.CreateText(monitor.transform, "Phase", new Vector3(-4.1f, 0f, -0.03f), 48, 0.11f, new Color(0.04f, 0.43f, 0.58f), -18);
-            timerText = StageEscortController.CreateText(monitor.transform, "Time", new Vector3(4.1f, 0f, -0.03f), 54, 0.13f, new Color(0.78f, 0.39f, 0.06f), -18);
+            GameObject monitor = new GameObject("15-3 Battle Monitor"); monitor.transform.SetParent(transform, false); monitor.transform.localPosition = new Vector3(0f, 6.55f, 0.6f);
+            monitorRoot = monitor.transform;
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(18.5f, 3.05f), -24);
+            phaseText = StageEscortController.CreateText(monitor.transform, "Phase", new Vector3(-5.1f, 0f, -0.03f), 48, 0.105f, new Color(0.04f, 0.43f, 0.58f), -18);
+            timerText = StageEscortController.CreateText(monitor.transform, "Time", new Vector3(5.25f, 0f, -0.03f), 54, 0.125f, new Color(0.78f, 0.39f, 0.06f), -18);
+            monitorSparkText = StageEscortController.CreateText(monitor.transform, "Clear Sparkles", new Vector3(0f, 0.88f, -0.02f), 28, 0.085f, new Color(1f, 0.72f, 0.08f), -17);
+            monitorSparkText.text = "*   *   *   *   *";
+            monitorSparkText.gameObject.SetActive(false);
         }
 
         private void BuildConcealment()
         {
-            concealRoot = new GameObject("15-3 Ink Mix Overlay"); concealRoot.transform.SetParent(transform, false); concealRoot.transform.localPosition = new Vector3(0f, 0.7f, -5f);
+            concealRoot = new GameObject("15-3 Ink Mix Overlay");
+            concealRoot.transform.SetParent(transform, false);
+            concealRoot.transform.localPosition = new Vector3(0f, 0.7f, -5f);
+            StageTransientObject.Register(concealRoot);
             StageEscortController.AddFilledRect(concealRoot.transform, "Ink", Vector2.zero, new Vector2(45f, 23f), new Color(0.035f, 0.02f, 0.055f, 0f), 980);
             Transform ink = concealRoot.transform.Find("Ink"); concealInk = ink != null ? ink.GetComponent<SpriteRenderer>() : null;
             BuildPaintSplat();
@@ -815,10 +845,6 @@ namespace DrawBody.Prototype
             eraserVisual = new GameObject("Eraser Sweep"); eraserVisual.transform.SetParent(concealRoot.transform, false);
             StageEscortController.AddFilledRect(eraserVisual.transform, "Eraser", Vector2.zero, new Vector2(7f, 1.15f), new Color(0.96f, 0.82f, 0.68f), 985);
             StageEscortController.AddBoxOutline(eraserVisual.transform, Vector2.zero, new Vector2(7f, 1.15f), new Color(0.18f, 0.12f, 0.1f), 986); eraserVisual.SetActive(false);
-            GameObject result = new GameObject("Result Banner"); result.transform.SetParent(transform, false); result.transform.localPosition = new Vector3(0f, 0.7f, -6f);
-            StageEscortController.AddFilledRect(result.transform, "Failure Paper", Vector2.zero, new Vector2(16f, 4.2f), new Color(0.2f, 0.025f, 0.04f, 0.96f), 990);
-            resultText = StageEscortController.CreateText(result.transform, "Failure", Vector3.zero, 62, 0.13f, new Color(1f, 0.83f, 0.7f), 991);
-            result.SetActive(false);
         }
 
         private void BuildPaintSplat()
@@ -1007,10 +1033,15 @@ namespace DrawBody.Prototype
 
         private void ShowFailure(int reason)
         {
-            if (resultText == null) return;
-            resultText.text = LocalizationManager.T(reason == 2 ? "mirror_brawl_all_down" : "mirror_brawl_time_up")
-                + "\n" + LocalizationManager.T("mirror_brawl_retry");
-            resultText.transform.parent.gameObject.SetActive(true);
+            failureReason = reason;
+            RefreshMonitor();
+        }
+
+        private void SetMonitorCue(int cue)
+        {
+            if (monitorCue == cue) return;
+            monitorCue = cue;
+            monitorCueStartedAt = Time.unscaledTime;
         }
 
         private void RandomizeLivingCharacters()
@@ -1056,23 +1087,96 @@ namespace DrawBody.Prototype
         private void RefreshMonitor()
         {
             if (phaseText == null) return;
+            bool celebratory = monitorCue > 0 || battleState == BattleState.Cleared;
+            bool failed = battleState == BattleState.Failed;
             if (battleState == BattleState.Cleared)
             {
-                phaseText.text = LocalizationManager.T("mirror_brawl_clear"); timerText.text = ""; if (hintText != null) hintText.text = "";
+                SetMonitorMessage(LocalizationManager.T("mirror_brawl_clear"), new Color(0.08f, 0.62f, 0.3f));
             }
             else if (battleState == BattleState.Failed)
             {
-                phaseText.text = LocalizationManager.T("mirror_brawl_failed"); timerText.text = "0.0"; if (hintText != null) hintText.text = "";
+                SetMonitorMessage(
+                    LocalizationManager.T(failureReason == 2 ? "mirror_brawl_all_down" : "mirror_brawl_time_up"),
+                    new Color(0.82f, 0.12f, 0.14f));
+            }
+            else if (monitorCue == 1)
+            {
+                SetMonitorMessage(LocalizationManager.Format("mirror_brawl_phase_clear", Mathf.Max(1, phase)), new Color(0.08f, 0.62f, 0.3f));
             }
             else if (battleState == BattleState.Intro || battleState == BattleState.Intermission)
             {
-                phaseText.text = LocalizationManager.Format("mirror_brawl_phase_ready", Mathf.Max(1, phase)); timerText.text = Mathf.CeilToInt(remaining).ToString(); if (hintText != null) hintText.text = "";
+                SetMonitorNormalLayout();
+                phaseText.text = LocalizationManager.Format("mirror_brawl_phase_ready", Mathf.Max(1, phase));
+                timerText.text = Mathf.CeilToInt(remaining).ToString();
             }
             else
             {
-                phaseText.text = LocalizationManager.Format("mirror_brawl_phase", phase, CountLivingFakes()); timerText.text = Mathf.Max(0f, remaining).ToString("00.0");
-                if (hintText != null) hintText.text = "";
+                SetMonitorNormalLayout();
+                phaseText.text = LocalizationManager.Format("mirror_brawl_phase", phase, CountLivingFakes());
+                timerText.text = Mathf.Max(0f, remaining).ToString("00.0");
             }
+
+            if (hintText != null) hintText.text = "";
+            AnimateMonitorMessage(celebratory, failed);
+        }
+
+        private void SetMonitorMessage(string message, Color color)
+        {
+            phaseText.transform.localPosition = new Vector3(0f, -0.08f, -0.03f);
+            phaseText.fontSize = 48;
+            phaseText.characterSize = 0.09f;
+            phaseText.anchor = TextAnchor.MiddleCenter;
+            phaseText.alignment = TextAlignment.Center;
+            phaseText.color = color;
+            phaseText.text = message;
+            if (timerText != null) timerText.gameObject.SetActive(false);
+        }
+
+        private void SetMonitorNormalLayout()
+        {
+            phaseText.transform.localPosition = new Vector3(-5.1f, 0f, -0.03f);
+            phaseText.fontSize = 48;
+            phaseText.characterSize = 0.105f;
+            phaseText.anchor = TextAnchor.MiddleCenter;
+            phaseText.alignment = TextAlignment.Center;
+            phaseText.color = new Color(0.04f, 0.43f, 0.58f);
+            phaseText.transform.localScale = Vector3.one;
+            if (timerText != null)
+            {
+                timerText.gameObject.SetActive(true);
+                timerText.transform.localPosition = new Vector3(5.25f, 0f, -0.03f);
+                timerText.color = new Color(0.78f, 0.39f, 0.06f);
+            }
+        }
+
+        private void AnimateMonitorMessage(bool celebratory, bool failed)
+        {
+            float elapsed = Time.unscaledTime - monitorCueStartedAt;
+            if (celebratory)
+            {
+                float pulse = 1f + Mathf.Sin(elapsed * 10f) * 0.075f;
+                phaseText.transform.localScale = Vector3.one * pulse;
+                phaseText.color = Color.Lerp(
+                    new Color(0.05f, 0.58f, 0.27f),
+                    new Color(1f, 0.66f, 0.05f),
+                    Mathf.PingPong(elapsed * 2.8f, 1f));
+                if (monitorSparkText != null)
+                {
+                    monitorSparkText.gameObject.SetActive(true);
+                    monitorSparkText.transform.localScale = Vector3.one * (0.9f + Mathf.PingPong(elapsed * 2.4f, 0.35f));
+                    Color sparkColor = monitorSparkText.color;
+                    sparkColor.a = 0.35f + Mathf.PingPong(elapsed * 4f, 0.65f);
+                    monitorSparkText.color = sparkColor;
+                }
+            }
+            else
+            {
+                phaseText.transform.localScale = failed
+                    ? Vector3.one * (1f + Mathf.Sin(Time.unscaledTime * 6f) * 0.025f)
+                    : Vector3.one;
+                if (monitorSparkText != null) monitorSparkText.gameObject.SetActive(false);
+            }
+            if (monitorRoot != null) monitorRoot.localScale = Vector3.one;
         }
 
         private void BuildRoster()
@@ -1141,7 +1245,7 @@ namespace DrawBody.Prototype
                 RoomPlayerIds = (string[])roomPlayerIds.Clone(), Fakes = null, RealAmmo = GetRealAmmo(), MachineCooldowns = cooldowns,
                 MachineAngles = angles, EliminatedPlayerIds = new List<string>(eliminatedPlayers).ToArray(),
                 DisabledMachine = disabledMachine, DisabledRemaining = Mathf.Max(0f, disabledUntil - Time.time), Concealed = concealed,
-                FailureReason = failureReason, RealPositions = GetRealPositions()
+                FailureReason = failureReason, MonitorCue = monitorCue, RealPositions = GetRealPositions()
             });
             const int fakesPerPacket = 3;
             for (int start = 0; start < fakeStates.Length; start += fakesPerPacket)
@@ -1166,6 +1270,8 @@ namespace DrawBody.Prototype
         {
             if (state == null || state.Sequence <= lastStateSequence) return;
             lastStateSequence = state.Sequence; battleState = (BattleState)Mathf.Clamp(state.State, 0, (int)BattleState.Failed); phase = state.Phase; remaining = state.Remaining;
+            if (monitorCue != state.MonitorCue) SetMonitorCue(state.MonitorCue);
+            failureReason = state.FailureReason;
             if (state.RoomPlayerIds != null) System.Array.Copy(state.RoomPlayerIds, roomPlayerIds, Mathf.Min(4, state.RoomPlayerIds.Length));
             playerCount = Mathf.Clamp(state.PlayerCount, 1, 4);
             if (state.Fakes != null) ApplyFakeStates(state.Fakes, state.Sequence);

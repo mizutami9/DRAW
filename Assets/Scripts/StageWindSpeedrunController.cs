@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace DrawBody.Prototype
 {
@@ -317,7 +316,7 @@ namespace DrawBody.Prototype
         private bool started;
         private bool failed;
         private GameObject canvasObject;
-        private Text timerText;
+        private TextMesh timerText;
 
         private bool HasAuthority => stageManager == null
             || !stageManager.IsOnlineStageActive
@@ -393,44 +392,33 @@ namespace DrawBody.Prototype
 
         private void BuildTimerHud()
         {
-            canvasObject = new GameObject("Timed Goal HUD", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
-            Canvas canvas = canvasObject.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 115;
-            CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
+            canvasObject = new GameObject("7-3 Countdown Monitor");
+            Camera camera = Camera.main;
+            if (camera != null)
+            {
+                canvasObject.transform.SetParent(camera.transform, false);
+                canvasObject.transform.localPosition = new Vector3(
+                    0f,
+                    Mathf.Max(2.8f, camera.orthographicSize - 1.45f),
+                    -camera.transform.position.z);
+            }
+            else
+            {
+                canvasObject.transform.SetParent(transform, false);
+                canvasObject.transform.position = new Vector3(0f, 8f, 0f);
+            }
 
-            GameObject panel = new GameObject("Crayon Timer Panel", typeof(RectTransform), typeof(Image), typeof(Outline));
-            panel.transform.SetParent(canvasObject.transform, false);
-            RectTransform panelRect = panel.GetComponent<RectTransform>();
-            panelRect.anchorMin = new Vector2(0.5f, 1f);
-            panelRect.anchorMax = new Vector2(0.5f, 1f);
-            panelRect.pivot = new Vector2(0.5f, 1f);
-            panelRect.anchoredPosition = new Vector2(0f, -22f);
-            panelRect.sizeDelta = new Vector2(260f, 66f);
-            panel.GetComponent<Image>().color = new Color(1f, 0.96f, 0.75f, 0.94f);
-            Outline outline = panel.GetComponent<Outline>();
-            outline.effectColor = new Color(0.08f, 0.22f, 0.34f, 0.9f);
-            outline.effectDistance = new Vector2(3f, -3f);
-
-            GameObject textObject = new GameObject("Remaining Time", typeof(RectTransform), typeof(Text));
-            textObject.transform.SetParent(panel.transform, false);
-            RectTransform textRect = textObject.GetComponent<RectTransform>();
-            textRect.anchorMin = Vector2.zero;
-            textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = new Vector2(8f, 5f);
-            textRect.offsetMax = new Vector2(-8f, -5f);
-            timerText = textObject.GetComponent<Text>();
-            Text reference = Object.FindFirstObjectByType<Text>();
-            timerText.font = reference != null && reference.font != null
-                ? reference.font
-                : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            timerText.fontSize = 40;
+            DoodleMonitorVisuals.Build(canvasObject.transform, new Vector2(5.4f, 1.55f), -32);
+            timerText = StageEscortController.CreateText(
+                canvasObject.transform,
+                "Remaining Time",
+                new Vector3(0f, 0.02f, -0.03f),
+                72,
+                0.14f,
+                new Color(0.04f, 0.31f, 0.5f, 1f),
+                -28);
             timerText.fontStyle = FontStyle.Bold;
-            timerText.alignment = TextAnchor.MiddleCenter;
-            timerText.color = new Color(0.04f, 0.31f, 0.5f, 1f);
+            DoodleMonitorVisuals.KeepBehindPlayers(canvasObject.transform);
         }
 
         private void RefreshHud()

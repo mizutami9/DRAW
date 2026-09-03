@@ -153,6 +153,7 @@ namespace DrawBody.Prototype
                 AimDirection = localCarry?.CurrentOnlineWeaponAimDirection ?? Vector2.right,
                 SpeedBoostMultiplier = localPlayer?.TemporarySpeedBoostMultiplier ?? 1f,
                 SpeedBoostRemaining = localPlayer?.TemporarySpeedBoostRemaining ?? 0f,
+                RespawnRemaining = stageManager.GetPlayerRespawnRemaining(localPlayer),
                 RespawnGraceRemaining = stageManager.GetPlayerRespawnGraceRemaining(localPlayer),
                 EmoteId = emoteController != null ? emoteController.CurrentLocalEmoteId : -1,
                 EmoteSequence = emoteController != null ? emoteController.CurrentLocalEmoteSequence : 0,

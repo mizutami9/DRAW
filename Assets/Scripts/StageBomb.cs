@@ -571,6 +571,7 @@ namespace DrawBody.Prototype
 
         public void Configure(float blastRadius, bool isMega = false, string sourceStageId = null)
         {
+            StageTransientObject.Register(gameObject);
             originStageId = sourceStageId;
             if (!IsOriginStageCurrent())
             {

@@ -15,6 +15,7 @@ namespace DrawBody.Prototype
         [SerializeField] private Text languageValueText;
         [SerializeField] private Button japaneseButton;
         [SerializeField] private Button englishButton;
+        private Text languageSelectorValueText;
         private InputField playerNameInput;
         private Text playerNameError;
         private Button registerButton;
@@ -41,15 +42,7 @@ namespace DrawBody.Prototype
                 seSlider.onValueChanged.AddListener(SetSe);
             }
 
-            if (japaneseButton != null)
-            {
-                japaneseButton.onClick.AddListener(() => SetLanguage(LocalizationManager.Language.Japanese));
-            }
-
-            if (englishButton != null)
-            {
-                englishButton.onClick.AddListener(() => SetLanguage(LocalizationManager.Language.English));
-            }
+            ConfigureLanguageControls();
 
             LocalizationManager.LanguageChanged += Refresh;
             Refresh();
@@ -216,9 +209,80 @@ namespace DrawBody.Prototype
             Refresh();
         }
 
-        private void SetLanguage(LocalizationManager.Language language)
+        private void ConfigureLanguageControls()
         {
-            LocalizationManager.SetLanguage(language);
+            ConfigureLanguageButton(japaneseButton, "ja");
+            ConfigureLanguageButton(englishButton, "en");
+            if (LocalizationManager.SupportedLanguages.Count <= 2) return;
+
+            japaneseButton?.onClick.RemoveAllListeners();
+            englishButton?.onClick.RemoveAllListeners();
+            japaneseButton?.onClick.AddListener(() => CycleLanguage(-1));
+            englishButton?.onClick.AddListener(() => CycleLanguage(1));
+            SetLanguageButtonLabel(japaneseButton, "<");
+            SetLanguageButtonLabel(englishButton, ">");
+
+            RectTransform panel = transform as RectTransform;
+            Transform existing = panel != null ? panel.Find("OptionLanguageCurrentValue") : null;
+            if (existing == null && panel != null)
+            {
+                Font font = GetComponentInChildren<Text>(true)?.font
+                    ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                GameObject valueObject = new GameObject("OptionLanguageCurrentValue", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+                valueObject.transform.SetParent(panel, false);
+                languageSelectorValueText = valueObject.GetComponent<Text>();
+                languageSelectorValueText.font = font;
+                languageSelectorValueText.fontSize = 17;
+                languageSelectorValueText.fontStyle = FontStyle.Bold;
+                languageSelectorValueText.alignment = TextAnchor.MiddleCenter;
+                languageSelectorValueText.color = new Color(0.08f, 0.08f, 0.07f);
+                Place(valueObject.transform as RectTransform, new Vector2(63f, 220f), new Vector2(118f, 42f));
+            }
+            else
+            {
+                languageSelectorValueText = existing.GetComponent<Text>();
+            }
+        }
+
+        private void ConfigureLanguageButton(Button button, string languageCode)
+        {
+            if (button == null) return;
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => SetLanguageAndPlayTick(languageCode));
+            LocalizationManager.LanguageDefinition definition = LocalizationManager.GetLanguageDefinition(languageCode);
+            SetLanguageButtonLabel(button, definition != null ? definition.nativeName : languageCode.ToUpperInvariant());
+        }
+
+        private static void SetLanguageButtonLabel(Button button, string value)
+        {
+            Text label = button != null ? button.GetComponentInChildren<Text>(true) : null;
+            if (label == null) return;
+            LocalizedText localized = label.GetComponent<LocalizedText>();
+            if (localized != null) localized.enabled = false;
+            label.text = value;
+        }
+
+        private void CycleLanguage(int direction)
+        {
+            System.Collections.Generic.IReadOnlyList<LocalizationManager.LanguageDefinition> languages = LocalizationManager.SupportedLanguages;
+            if (languages.Count == 0) return;
+            int currentIndex = 0;
+            for (int i = 0; i < languages.Count; i++)
+            {
+                if (LocalizationManager.IsCurrentLanguage(languages[i].code))
+                {
+                    currentIndex = i;
+                    break;
+                }
+            }
+
+            int nextIndex = (currentIndex + direction + languages.Count) % languages.Count;
+            SetLanguageAndPlayTick(languages[nextIndex].code);
+        }
+
+        private void SetLanguageAndPlayTick(string languageCode)
+        {
+            LocalizationManager.SetLanguage(languageCode);
             PlayTick(PlayerPrefs.GetFloat(SeKey, GameSfx.DefaultMasterVolume));
             Refresh();
         }
@@ -240,18 +304,21 @@ namespace DrawBody.Prototype
 
             if (languageValueText != null)
             {
-                languageValueText.text = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese
-                    ? LocalizationManager.T("lang_ja")
-                    : LocalizationManager.T("lang_en");
+                languageValueText.text = LocalizationManager.CurrentLanguageDefinition.nativeName;
             }
 
-            bool japanese = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese;
-            SetButtonStateColor(japaneseButton, japanese
+            if (languageSelectorValueText != null)
+            {
+                languageSelectorValueText.text = LocalizationManager.CurrentLanguageDefinition.nativeName;
+            }
+
+            bool selectorMode = LocalizationManager.SupportedLanguages.Count > 2;
+            SetButtonStateColor(japaneseButton, selectorMode || LocalizationManager.IsCurrentLanguage("ja")
                 ? new Color(0.22f, 0.78f, 0.92f, 1f)
                 : new Color(1f, 0.985f, 0.925f, 1f));
-            SetButtonStateColor(englishButton, japanese
-                ? new Color(1f, 0.985f, 0.925f, 1f)
-                : new Color(0.22f, 0.78f, 0.92f, 1f));
+            SetButtonStateColor(englishButton, selectorMode || LocalizationManager.IsCurrentLanguage("en")
+                ? new Color(0.22f, 0.78f, 0.92f, 1f)
+                : new Color(1f, 0.985f, 0.925f, 1f));
         }
 
         private static void SetButtonStateColor(Button button, Color color)

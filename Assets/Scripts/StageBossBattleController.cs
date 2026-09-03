@@ -108,10 +108,6 @@ namespace DrawBody.Prototype
         private readonly List<PlayerController2D> hiddenPlayers = new List<PlayerController2D>();
         private Camera gameCamera;
         private CameraFollow2D cameraFollow;
-        private Vector3 previousCameraPosition;
-        private float previousCameraSize;
-        private bool previousCameraFollowEnabled;
-        private bool cameraLocked;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -147,7 +143,7 @@ namespace DrawBody.Prototype
             }
             BuildBoss();
             BuildMonitor();
-            LockCameraToArena();
+            EnableArenaCameraFollow();
             BuildWaitingRoomGates();
             BuildWaitingRoomGuide();
             CaptureParticipants();
@@ -1144,27 +1140,22 @@ namespace DrawBody.Prototype
             healthFillRenderer = fill.GetComponent<SpriteRenderer>();
         }
 
-        private void LockCameraToArena()
+        private void EnableArenaCameraFollow()
         {
             gameCamera = Camera.main;
             if (gameCamera == null) return;
             cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
-            previousCameraPosition = gameCamera.transform.position;
-            previousCameraSize = gameCamera.orthographicSize;
-            previousCameraFollowEnabled = cameraFollow != null && cameraFollow.enabled;
-            if (cameraFollow != null) cameraFollow.enabled = false;
-            gameCamera.transform.position = new Vector3(8.2f, 4.15f, previousCameraPosition.z);
-            gameCamera.orthographicSize = Mathf.Max(9.2f, 17.5f / Mathf.Max(0.2f, gameCamera.aspect));
-            cameraLocked = true;
+            if (cameraFollow == null) return;
+            Transform localPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            if (localPlayer != null) cameraFollow.SetTarget(localPlayer);
+            cameraFollow.enabled = true;
         }
 
         private void RestoreCamera()
         {
-            if (!cameraLocked || gameCamera == null) return;
-            gameCamera.transform.position = previousCameraPosition;
-            gameCamera.orthographicSize = previousCameraSize;
-            if (cameraFollow != null) cameraFollow.enabled = previousCameraFollowEnabled;
-            cameraLocked = false;
+            // 4-3 now uses the shared gameplay follow camera. StageManager owns
+            // its target and lifecycle, so this controller must not restore a
+            // stale fixed arena pose when the stage is unloaded.
         }
 
         private void BuildWaitingRoomGuide()
@@ -1566,6 +1557,7 @@ namespace DrawBody.Prototype
         {
             GameObject root = new GameObject("Boss Beam");
             root.transform.SetParent(parent, false);
+            StageTransientObject.Register(root);
             StageBossBeam beam = root.AddComponent<StageBossBeam>();
             GameSfx.PlayAt(SfxId.BossBeamCharge, origin, 0.9f);
             beam.origin = origin;
@@ -1627,6 +1619,7 @@ namespace DrawBody.Prototype
         {
             GameObject root = new GameObject("Boss Ricochet Orb");
             root.transform.SetParent(parent, false);
+            StageTransientObject.Register(root);
             root.transform.position = position;
             Rigidbody2D body = root.AddComponent<Rigidbody2D>();
             body.gravityScale = 0f;
@@ -1688,6 +1681,7 @@ namespace DrawBody.Prototype
         {
             GameObject root = new GameObject("Boss Impact");
             root.transform.SetParent(parent, false);
+            StageTransientObject.Register(root);
             root.transform.position = point;
             StageGun.AddLine(root.transform, "Impact Star", new[]
             {

@@ -50,6 +50,7 @@ namespace DrawBody.Prototype
             polished = true;
             RebuildToolLayout();
             StraightenDrawUi();
+            EnsureDrawTitlePaintStroke();
             GameplayHudDrawer.RedrawTurtleIcon(FindRect(transform, "TurtleDrawSpeciesButton"));
             RefreshLabels();
             ApplyTypography();
@@ -257,17 +258,16 @@ namespace DrawBody.Prototype
 
         private void RefreshLabels()
         {
-            bool japanese = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese;
-            SetPlainText("BrushSectionHeader", japanese ? "\u30da\u30f3\u306e\u592a\u3055" : "PEN SIZE");
-            SetPlainText("InkUsageTitle", japanese ? "\u30a4\u30f3\u30af" : "INK");
+            SetPlainText("BrushSectionHeader", LocalizationManager.T("draw_pen_size"));
+            SetPlainText("InkUsageTitle", LocalizationManager.T("draw_ink"));
             SetPlainText("PersonalInkLabel", LocalizationManager.T("ink_personal_cap"));
-            SetPlainText("TeamInkLabel", LocalizationManager.Format("ink_team_formula", 1, DrawManager.InkAllowancePerPlayer));
+            SetPlainText("TeamInkLabel", LocalizationManager.Format("ink_team_formula", 1));
             SetPlainText("HumanJumpGaugeLabel", LocalizationManager.T("ability_human_jump_gauge"));
             SetPlainText("HumanArmGaugeLabel", LocalizationManager.T("ability_human_arm_gauge"));
             SetButtonLabel("PenToolButton", "\u270e  " + LocalizationManager.T("pen"), 18);
             SetButtonLabel("EraserToolButton", "\u25b1  " + LocalizationManager.T("eraser"), 17);
-            SetButtonLabel("ToolClearButton", japanese ? "\u2715  \u30d1\u30fc\u30c4\u6d88\u53bb" : "\u2715  CLEAR PART", 14);
-            SetButtonLabel("ToolUndoButton", japanese ? "\u21b6  1\u3064\u623b\u3059" : "\u21b6  UNDO", 14);
+            SetButtonLabel("ToolClearButton", "\u2715  " + LocalizationManager.T("draw_clear_part"), 14);
+            SetButtonLabel("ToolUndoButton", "\u21b6  " + LocalizationManager.T("draw_undo_once"), 14);
             SetButtonLabel("FullResetButton", "\u25a0  " + LocalizationManager.T("draw_reset_all"), 13);
             SetPlainText("FullResetConfirmTitle", LocalizationManager.T("draw_reset_confirm_title"));
             SetPlainText("FullResetConfirmMessage", LocalizationManager.T("draw_reset_confirm_message"));
@@ -275,8 +275,55 @@ namespace DrawBody.Prototype
             SetButtonLabel("FullResetCancelButton", LocalizationManager.T("draw_reset_confirm_no"), 18);
             RefreshPresetSlotVisuals();
             SetButtonLabel("DecideButton", "\u2713  " + LocalizationManager.T("draw_finish") + "\nENTER", 19);
-            SetButtonLabel("CancelDrawButton", "\u2190  " + LocalizationManager.T("draw_redo") + "\nESC", 16);
+            SetButtonLabel("CancelDrawButton", LocalizationManager.T("ui_back_esc"), 13);
+            Text backLabel = FindRect(transform, "CancelDrawButton")?.GetComponentInChildren<Text>(true);
+            if (backLabel != null)
+            {
+                backLabel.resizeTextForBestFit = false;
+            }
             ApplyTypography();
+        }
+
+        private void EnsureDrawTitlePaintStroke()
+        {
+            RectTransform panel = FindRect(transform, "DrawPanel");
+            RectTransform title = FindRect(transform, "DrawTitle");
+            if (panel == null || title == null) return;
+
+            Transform existing = panel.Find("DrawTitlePaintStroke");
+            GameObject stroke = existing != null ? existing.gameObject : null;
+            if (stroke == null)
+            {
+                stroke = new GameObject("DrawTitlePaintStroke", typeof(RectTransform));
+                stroke.transform.SetParent(panel, false);
+                Color ink = new Color(1f, 0.82f, 0.22f, 1f);
+                for (int i = 0; i < 4; i++)
+                {
+                    GameObject stripe = new GameObject("PaintStripe" + i,
+                        typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                    stripe.transform.SetParent(stroke.transform, false);
+                    RectTransform stripeRect = stripe.GetComponent<RectTransform>();
+                    stripeRect.anchorMin = stripeRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    stripeRect.pivot = new Vector2(0.5f, 0.5f);
+                    stripeRect.anchoredPosition = new Vector2((i - 1.5f) * 3f, (i - 1.5f) * 2.5f);
+                    stripeRect.sizeDelta = new Vector2(180f - i * 10f, 13f + i * 2f);
+                    stripeRect.localRotation = Quaternion.Euler(0f, 0f, -1.8f + i * 1.05f);
+                    Image image = stripe.GetComponent<Image>();
+                    image.color = new Color(ink.r, ink.g, ink.b, 0.2f + i * 0.07f);
+                    image.raycastTarget = false;
+                }
+            }
+
+            RectTransform rect = stroke.GetComponent<RectTransform>();
+            rect.anchorMin = title.anchorMin;
+            rect.anchorMax = title.anchorMax;
+            rect.pivot = title.pivot;
+            rect.anchoredPosition = title.anchoredPosition + new Vector2(0f, -8f);
+            rect.sizeDelta = new Vector2(190f, 48f);
+            rect.localRotation = Quaternion.identity;
+            stroke.SetActive(true);
+            stroke.transform.SetSiblingIndex(Mathf.Max(0, title.GetSiblingIndex()));
+            title.SetAsLastSibling();
         }
 
         private void SetPlainText(string name, string value)

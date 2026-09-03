@@ -1221,7 +1221,15 @@ namespace DrawBody.Prototype
         {
             if (finished) return;
             finished = true;
-            StartCoroutine(DefeatRoutine());
+            bool vanishAfterScream = owner != null && owner.ShouldAllySpeak;
+            if (vanishAfterScream && speech != null)
+            {
+                speech.text = "AAAAAH!";
+                speech.fontSize = 68;
+                speech.color = new Color(0.88f, 0.08f, 0.12f, 1f);
+                hideSpeechAt = 0f;
+            }
+            StartCoroutine(DefeatRoutine(vanishAfterScream));
         }
 
         public void PlayClearFlight()
@@ -1251,16 +1259,41 @@ namespace DrawBody.Prototype
             }
         }
 
-        private IEnumerator DefeatRoutine()
+        private IEnumerator DefeatRoutine(bool vanishAfterScream)
         {
+            if (vanishAfterScream)
+            {
+                float screamElapsed = 0f;
+                while (screamElapsed < 0.42f)
+                {
+                    screamElapsed += Time.deltaTime;
+                    visual.localPosition = new Vector3(
+                        Mathf.Sin(screamElapsed * 58f) * 0.09f,
+                        Mathf.Cos(screamElapsed * 43f) * 0.045f,
+                        0f);
+                    visual.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(screamElapsed * 36f) * 10f);
+                    yield return null;
+                }
+            }
+
             float elapsed = 0f;
-            while (elapsed < 0.55f)
+            float duration = vanishAfterScream ? 0.62f : 0.55f;
+            while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
-                visual.localRotation = Quaternion.Euler(0f, 0f, elapsed * 240f);
-                visual.localScale = Vector3.one * Mathf.Max(0.15f, 1f - elapsed);
+                float progress = Mathf.Clamp01(elapsed / duration);
+                visual.localRotation = Quaternion.Euler(0f, 0f, progress * 300f);
+                visual.localScale = Vector3.one * Mathf.Max(vanishAfterScream ? 0f : 0.15f, 1f - progress);
+                if (speech != null)
+                {
+                    Color color = speech.color;
+                    color.a = 1f - progress;
+                    speech.color = color;
+                    speech.transform.localScale = Vector3.one * (1f + progress * 0.55f);
+                }
                 yield return null;
             }
+            if (vanishAfterScream) Destroy(gameObject);
         }
     }
 }

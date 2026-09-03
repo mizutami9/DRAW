@@ -49,7 +49,7 @@ namespace DrawBody.Prototype
             string value = starting
                 ? stageManager.ChallengeStartCountdownText
                 : timeUp
-                    ? LocalizationManager.T("challenge_time_up")
+                    ? stageManager.ChallengeFailureDisplayText
                     : activeRule ? FormatTime(seconds, showColon) : "--:--.-";
             if (digits != null)
             {

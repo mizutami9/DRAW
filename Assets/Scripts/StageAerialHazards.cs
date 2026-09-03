@@ -28,7 +28,8 @@ namespace DrawBody.Prototype
                 factory,
                 parent,
                 data.actionStrength > 0f ? data.actionStrength : 3.2f,
-                Mathf.Clamp(Mathf.Min(data.size.x, data.size.y) * 0.52f, 0.65f, 1.25f));
+                Mathf.Clamp(Mathf.Min(data.size.x, data.size.y) * 0.52f, 0.65f, 1.25f),
+                data.bombFuseSeconds > 0f ? data.bombFuseSeconds : 4.2f);
             return root;
         }
     }
@@ -99,15 +100,22 @@ namespace DrawBody.Prototype
         private StageGimmickSyncManager syncManager;
         private float interval;
         private float bombSize;
+        private float fuseSeconds = 4.2f;
         private float nextDropAt;
         private int sequence;
 
-        public void Configure(StageObjectFactory targetFactory, Transform targetParent, float seconds, float size)
+        public void Configure(
+            StageObjectFactory targetFactory,
+            Transform targetParent,
+            float seconds,
+            float size,
+            float fuse = 4.2f)
         {
             factory = targetFactory;
             spawnParent = targetParent;
             interval = Mathf.Clamp(seconds, 0.5f, 10f);
             bombSize = Mathf.Clamp(size, 0.5f, 2f);
+            fuseSeconds = Mathf.Clamp(fuse, 1f, 15f);
         }
 
         private void Start()
@@ -140,8 +148,8 @@ namespace DrawBody.Prototype
             Vector2 position = (Vector2)transform.position + Vector2.down * 0.9f;
             Vector2 velocity = new Vector2(GetComponent<Rigidbody2D>() != null ? GetComponent<Rigidbody2D>().linearVelocity.x * 0.35f : 0f, -2.4f);
             GameObject spawned = syncManager != null && syncManager.IsOnlineActive
-                ? syncManager.SpawnDropperBox(objectId, StageObjectType.Bomb, position, bombSize, fuseSeconds: 4.2f, launchVelocity: velocity)
-                : factory.CreateDroppedBox(StageObjectType.Bomb, objectId, position, bombSize, spawnParent, 4.2f);
+                ? syncManager.SpawnDropperBox(objectId, StageObjectType.Bomb, position, bombSize, fuseSeconds: fuseSeconds, launchVelocity: velocity)
+                : factory.CreateDroppedBox(StageObjectType.Bomb, objectId, position, bombSize, spawnParent, fuseSeconds);
             if (spawned == null) return;
             Rigidbody2D body = spawned.GetComponent<Rigidbody2D>();
             if (body != null) body.linearVelocity = velocity;

@@ -72,6 +72,9 @@ namespace DrawBody.Prototype
     public sealed class OnlineInputData
     {
         public string PlayerId;
+        public string StageId;
+        public int StageRevision;
+        public int RetryRevision;
         public float MoveX;
         public bool JumpPressed;
         public bool DrawOpen;
@@ -82,6 +85,9 @@ namespace DrawBody.Prototype
     public sealed class OnlinePlayerState
     {
         public string PlayerId;
+        public string StageId;
+        public int StageRevision;
+        public int RetryRevision;
         public string DisplayName;
         public int Sequence;
         public int PlayerSlot;
@@ -103,6 +109,7 @@ namespace DrawBody.Prototype
         public Vector2 AimDirection;
         public float SpeedBoostMultiplier;
         public float SpeedBoostRemaining;
+        public float RespawnRemaining;
         public float RespawnGraceRemaining;
         public int EmoteId = -1;
         public int EmoteSequence;
@@ -117,6 +124,9 @@ namespace DrawBody.Prototype
     public sealed class OnlineCarryData
     {
         public string CarrierPlayerId;
+        public string StageId;
+        public int StageRevision;
+        public int RetryRevision;
         public string TargetPlayerId;
         public string Action;
         public Vector2 ReleaseVelocity;
@@ -127,6 +137,9 @@ namespace DrawBody.Prototype
     public sealed class OnlineGimmickData
     {
         public string PlayerId;
+        public string StageId;
+        public int StageRevision;
+        public int RetryRevision;
         public string ObjectId;
         public string Kind;
         public string Json;

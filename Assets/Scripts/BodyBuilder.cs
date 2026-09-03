@@ -40,6 +40,7 @@ namespace DrawBody.Prototype
         private bool bodyAnimationWasActive;
         private bool remoteAnimationVelocityEnabled;
         private Vector2 remoteAnimationVelocity;
+        public Transform CelebrationVisualRoot => bodyRoot;
 
         private struct GeneratedSegment
         {
@@ -489,10 +490,11 @@ namespace DrawBody.Prototype
             int nextFacing = direction < 0 ? -1 : 1;
             if (nextFacing != facingDirection && bodyRoot != null)
             {
-                // An asymmetric hand-drawn head moves to the opposite side when
-                // it is mirrored. Move the grains already inside it through the
-                // same reflection so turning does not dump the entire load.
-                GetComponent<StageGrainCarrier>()?.MirrorContainedParticles(bodyRoot.position.x);
+                // Preserve the physical pile when an asymmetric drawing flips.
+                // This mirrors it once at the turn; grains remain dynamic and
+                // continue to obey gravity instead of following the character.
+                GetComponent<StageGrainCarrier>()?.MirrorCarriedParticles(
+                    bodyRoot.position.x);
             }
             facingDirection = nextFacing;
             ApplyFacing();

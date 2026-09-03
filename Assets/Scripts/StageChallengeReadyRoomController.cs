@@ -17,6 +17,7 @@ namespace DrawBody.Prototype
             public bool Ready;
             public bool Launch;
             public string[] ReadyIds;
+            public string FitRejectedId;
         }
 
         private sealed class RoomVisual
@@ -44,6 +45,7 @@ namespace DrawBody.Prototype
         private readonly List<RoomVisual> rooms = new List<RoomVisual>();
         private readonly HashSet<string> readyIds = new HashSet<string>();
         private readonly HashSet<string> buttonArmedIds = new HashSet<string>();
+        private readonly HashSet<string> fitRejectedIds = new HashSet<string>();
         private readonly Dictionary<PlayerController2D, Vector3> returnPositions =
             new Dictionary<PlayerController2D, Vector3>();
 
@@ -54,6 +56,7 @@ namespace DrawBody.Prototype
         private TextMesh statusText;
         private TextMesh recommendationTitleText;
         private TextMesh recommendationNoneText;
+        private TextMesh restrictionNoteText;
         private string stageId;
         private string localId;
         private bool configured;
@@ -66,6 +69,7 @@ namespace DrawBody.Prototype
         private float nextBodyFitScanTime;
         private float nextLocalReadySendTime;
         private float nextSessionStateRequestTime;
+        private float nextRegressionAutoReadyTime;
         private bool hostSessionStateKnown;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
@@ -120,6 +124,20 @@ namespace DrawBody.Prototype
                 ExpandRoomsForCurrentBodies();
             }
 
+            // Each local regression executable owns exactly one controllable
+            // player. Unfocused Unity windows cannot receive keyboard input, so
+            // move that process' player onto its own physical ready button. This
+            // still exercises the regular overlap and host-authoritative ready
+            // flow, while leaving normal online sessions completely manual.
+            if (IsOnline
+                && onlineManager != null
+                && onlineManager.IsLocalRegressionActive
+                && Time.unscaledTime >= nextRegressionAutoReadyTime)
+            {
+                nextRegressionAutoReadyTime = Time.unscaledTime + 0.25f;
+                AutoPlaceLocalPlayerOnReadyButton();
+            }
+
             if (IsOnline)
             {
                 if (HasAuthority)
@@ -130,7 +148,9 @@ namespace DrawBody.Prototype
                 {
                     if (!hostSessionStateKnown && Time.unscaledTime >= nextSessionStateRequestTime)
                         RequestHostSessionState();
-                    bool localReady = IsLocalPlayerOnAssignedButton();
+                    bool localOnButton = IsLocalPlayerOnAssignedButton();
+                    if (!localOnButton) fitRejectedIds.Remove(localId);
+                    bool localReady = localOnButton && !fitRejectedIds.Contains(localId);
                     bool readyChanged = localReady != lastLocalReady;
                     if (readyChanged)
                     {
@@ -295,6 +315,11 @@ namespace DrawBody.Prototype
             statusText = StageEscortController.CreateText(monitor.transform, "Status",
                 new Vector3(0f, -0.72f, -0.03f), 64, 0.145f,
                 new Color(0.04f, 0.43f, 0.58f), 61);
+            restrictionNoteText = StageEscortController.CreateText(monitor.transform, "After Start Restriction Note",
+                new Vector3(descriptionWidth * 0.5f - 0.42f, spaciousDescription ? -1.48f : -1.25f, -0.03f),
+                38, 0.052f, new Color(0.32f, 0.36f, 0.39f), 61);
+            restrictionNoteText.anchor = TextAnchor.LowerRight;
+            restrictionNoteText.alignment = TextAlignment.Right;
 
             if (showRecommendations)
             {
@@ -691,6 +716,43 @@ namespace DrawBody.Prototype
             return local != null && room >= 0 && room < rooms.Count && IsPlayerPressingRoomButton(local, room);
         }
 
+        private void AutoPlaceLocalPlayerOnReadyButton()
+        {
+            PlayerController2D local = stageManager.ActivePlayerTransform != null
+                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
+                : null;
+            int room = expectedIds.IndexOf(localId);
+            if (local == null || room < 0 || room >= rooms.Count
+                || IsPlayerPressingRoomButton(local, room)) return;
+
+            Vector3 destination = rooms[room].ButtonCenter;
+            destination.z = local.transform.position.z;
+            float capTop = rooms[room].ButtonCollider != null
+                ? rooms[room].ButtonCollider.bounds.max.y
+                : rooms[room].ButtonCenter.y + 0.72f;
+            if (TryGetSolidBounds(local, out Bounds bounds))
+            {
+                destination.x += local.transform.position.x - bounds.center.x;
+                destination.y = capTop + 0.04f + local.transform.position.y - bounds.min.y;
+            }
+            else
+            {
+                destination.y = capTop + 0.6f;
+            }
+
+            Rigidbody2D body = local.GetComponent<Rigidbody2D>();
+            if (body != null)
+            {
+                body.simulated = true;
+                body.position = destination;
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+            }
+            local.transform.position = destination;
+            local.ResetMotion();
+            Physics2D.SyncTransforms();
+        }
+
         private void RefreshOfflineReadyState()
         {
             readyIds.Clear();
@@ -699,8 +761,12 @@ namespace DrawBody.Prototype
                 PlayerController2D player = offlinePlayers[i];
                 string id = "offline-" + i;
                 bool overlappingButton = player != null && IsPlayerPressingRoomButton(player, i);
-                if (!overlappingButton) buttonArmedIds.Add(id);
-                if (buttonArmedIds.Contains(id) && overlappingButton) readyIds.Add(id);
+                if (!overlappingButton)
+                {
+                    buttonArmedIds.Add(id);
+                    fitRejectedIds.Remove(id);
+                }
+                if (buttonArmedIds.Contains(id) && overlappingButton && !fitRejectedIds.Contains(id)) readyIds.Add(id);
             }
         }
 
@@ -714,9 +780,11 @@ namespace DrawBody.Prototype
                 bool ready = onlinePlayer != null
                     && i < rooms.Count
                     && IsPlayerPressingRoomButton(onlinePlayer, i);
+                if (!ready) fitRejectedIds.Remove(playerId);
                 if (ready)
                 {
-                    changed |= readyIds.Add(playerId);
+                    if (!fitRejectedIds.Contains(playerId)) changed |= readyIds.Add(playerId);
+                    else changed |= readyIds.Remove(playerId);
                 }
                 else
                 {
@@ -777,6 +845,8 @@ namespace DrawBody.Prototype
         private void SetReady(string playerId, bool ready)
         {
             if (string.IsNullOrEmpty(playerId)) return;
+            if (!ready) fitRejectedIds.Remove(playerId);
+            if (ready && fitRejectedIds.Contains(playerId)) return;
             bool changed = ready ? readyIds.Add(playerId) : readyIds.Remove(playerId);
             if (changed && HasAuthority) BroadcastSnapshot(false);
         }
@@ -846,6 +916,13 @@ namespace DrawBody.Prototype
             {
                 recommendationNoneText.text = LocalizationManager.T("ready_room_recommended_none");
             }
+            if (restrictionNoteText != null)
+            {
+                restrictionNoteText.text = LocalizationManager.T(
+                    stageId == "10-3"
+                        ? "ready_room_restriction_redraw_allowed"
+                        : "ready_room_restriction");
+            }
         }
 
         private string GetGameDescriptionKey()
@@ -866,6 +943,7 @@ namespace DrawBody.Prototype
                 case "14-3":
                     return "ready_room_clear_one_survivor";
                 case "10-1":
+                case "11-1":
                     return "ready_room_clear_one_goal";
                 default:
                     return string.Empty;
@@ -883,7 +961,7 @@ namespace DrawBody.Prototype
             });
         }
 
-        private void BroadcastSnapshot(bool launch)
+        private void BroadcastSnapshot(bool launch, string fitRejectedId = null)
         {
             if (!IsOnline || onlineManager == null) return;
             string[] ids = new string[readyIds.Count];
@@ -892,7 +970,12 @@ namespace DrawBody.Prototype
             {
                 ObjectId = stageId,
                 Kind = NetworkKind,
-                Json = JsonUtility.ToJson(new ReadyMessage { ReadyIds = ids, Launch = launch })
+                Json = JsonUtility.ToJson(new ReadyMessage
+                {
+                    ReadyIds = ids,
+                    Launch = launch,
+                    FitRejectedId = fitRejectedId
+                })
             });
         }
 
@@ -914,13 +997,70 @@ namespace DrawBody.Prototype
                 for (int i = 0; i < message.ReadyIds.Length; i++)
                     if (!string.IsNullOrEmpty(message.ReadyIds[i])) readyIds.Add(message.ReadyIds[i]);
             }
+            if (!string.IsNullOrEmpty(message.FitRejectedId)
+                && message.FitRejectedId == localId)
+            {
+                fitRejectedIds.Add(localId);
+                lastLocalReady = false;
+                PlayerController2D localPlayer = stageManager.ActivePlayerTransform != null
+                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
+                    : null;
+                stageManager.HandleChallengeStartFitRejected(localPlayer);
+            }
             if (message.Launch) Launch();
         }
 
         private void LaunchForEveryone()
         {
+            if (!TryValidateAllStageStarts(out string rejectedId, out PlayerController2D rejectedPlayer))
+            {
+                readyIds.Remove(rejectedId);
+                buttonArmedIds.Remove(rejectedId);
+                fitRejectedIds.Add(rejectedId);
+                BroadcastSnapshot(false, rejectedId);
+                stageManager.HandleChallengeStartFitRejected(rejectedPlayer);
+                RefreshPresentation();
+                return;
+            }
             BroadcastSnapshot(true);
             Launch();
+        }
+
+        internal bool TryValidatePlayerStageFit(PlayerController2D targetPlayer, out Vector3 safePosition)
+        {
+            safePosition = targetPlayer != null ? targetPlayer.transform.position : Vector3.zero;
+            if (targetPlayer == null || !returnPositions.TryGetValue(targetPlayer, out Vector3 preferred)) return true;
+            bool stageWasActive = suspendedStageRoot != null && suspendedStageRoot.gameObject.activeSelf;
+            if (suspendedStageRoot != null && !stageWasActive) suspendedStageRoot.gameObject.SetActive(true);
+            bool fits = stageManager.TryResolveChallengeStartPosition(targetPlayer, preferred, out safePosition);
+            if (suspendedStageRoot != null && !stageWasActive) suspendedStageRoot.gameObject.SetActive(false);
+            if (fits) returnPositions[targetPlayer] = safePosition;
+            return fits;
+        }
+
+        private bool TryValidateAllStageStarts(out string rejectedId, out PlayerController2D rejectedPlayer)
+        {
+            rejectedId = string.Empty;
+            rejectedPlayer = null;
+            List<KeyValuePair<PlayerController2D, Vector3>> entries =
+                new List<KeyValuePair<PlayerController2D, Vector3>>(returnPositions);
+            for (int i = 0; i < entries.Count; i++)
+            {
+                PlayerController2D candidate = entries[i].Key;
+                if (candidate == null) continue;
+                if (TryValidatePlayerStageFit(candidate, out _)) continue;
+                rejectedPlayer = candidate;
+                rejectedId = ResolveReadyId(candidate);
+                return false;
+            }
+            return true;
+        }
+
+        private string ResolveReadyId(PlayerController2D targetPlayer)
+        {
+            if (IsOnline) return stageManager.GetOnlinePlayerId(targetPlayer);
+            int index = offlinePlayers.IndexOf(targetPlayer);
+            return index >= 0 ? "offline-" + index : string.Empty;
         }
 
         private void Launch()
@@ -933,18 +1073,20 @@ namespace DrawBody.Prototype
             {
                 PlayerController2D player = entry.Key;
                 if (player == null || IsOnline && player.transform != stageManager.ActivePlayerTransform) continue;
+                Vector3 destination = entry.Value;
+                stageManager.TryResolveChallengeStartPosition(player, entry.Value, out destination);
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
                 if (body != null)
                 {
                     body.simulated = true;
-                    body.position = entry.Value;
+                    body.position = destination;
                     body.linearVelocity = Vector2.zero;
                     body.angularVelocity = 0f;
                 }
-                player.transform.position = entry.Value;
+                player.transform.position = destination;
                 player.ResetMotion();
                 player.SetControlsEnabled(true);
-                stageManager.RecordAssignedPlayerStart(player, entry.Value);
+                stageManager.RecordAssignedPlayerStart(player, destination);
             }
             Physics2D.SyncTransforms();
             GameSfx.Play(SfxId.StageCountdownGo);

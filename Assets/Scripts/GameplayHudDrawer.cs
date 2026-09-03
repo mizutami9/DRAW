@@ -41,8 +41,50 @@ namespace DrawBody.Prototype
             }
 
             EnsureEscapeButton();
+            ApplyLocalizedLabels();
 
             ApplyImmediate();
+        }
+
+        private void OnEnable()
+        {
+            LocalizationManager.LanguageChanged += ApplyLocalizedLabels;
+        }
+
+        private void Start()
+        {
+            // LocalizationManager may initialize after this component's Awake.
+            ApplyLocalizedLabels();
+        }
+
+        private void OnDisable()
+        {
+            LocalizationManager.LanguageChanged -= ApplyLocalizedLabels;
+        }
+
+        private void ApplyLocalizedLabels()
+        {
+            SetLocalizedButtonLabel("GameplayAddCharacterButton", "+", "character_add");
+            SetLocalizedButtonLabel("GameplaySwitchCharacterButton", "⇄", "character_control_switch");
+            SetLocalizedButtonLabel("GameplayDeleteCharacterButton", "−", "character_delete");
+            SetLocalizedButtonLabel("GameplayRedrawButton", "✎", "redraw");
+        }
+
+        private void SetLocalizedButtonLabel(string objectName, string symbol, string localizationKey)
+        {
+            RectTransform rect = FindRect(objectName);
+            Text label = rect != null ? rect.GetComponentInChildren<Text>(true) : null;
+            if (label == null)
+            {
+                return;
+            }
+
+            label.text = symbol + "  " + LocalizationManager.T(localizationKey);
+            label.resizeTextForBestFit = true;
+            label.resizeTextMinSize = 11;
+            label.resizeTextMaxSize = Mathf.Max(14, label.fontSize);
+            label.horizontalOverflow = HorizontalWrapMode.Wrap;
+            label.verticalOverflow = VerticalWrapMode.Truncate;
         }
 
         private void EnsureEscapeButton()

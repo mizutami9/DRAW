@@ -43,10 +43,33 @@ namespace DrawBody.Prototype
                     break;
                 case SfxId.DrawPenLoop:
                 case SfxId.DrawEraserLoop:
-                    volume = 0.28f;
-                    pitchMin = 0.9f;
-                    pitchMax = 1.1f;
+                    volume = 0.34f;
+                    pitchMin = 0.96f;
+                    pitchMax = 1.05f;
                     cooldown = 0.055f;
+                    break;
+                case SfxId.DrawPenStart:
+                case SfxId.DrawPenEnd:
+                case SfxId.DrawEraseComplete:
+                    volume = 0.5f;
+                    pitchMin = 0.97f;
+                    pitchMax = 1.04f;
+                    cooldown = 0.06f;
+                    break;
+                case SfxId.DrawPartChange:
+                case SfxId.DrawSpeciesChange:
+                case SfxId.DrawConfirm:
+                    volume = 0.58f;
+                    pitchMin = 0.98f;
+                    pitchMax = 1.03f;
+                    cooldown = 0.1f;
+                    break;
+                case SfxId.DrawInkWarning:
+                case SfxId.DrawInkOver:
+                    volume = 0.6f;
+                    pitchMin = 0.99f;
+                    pitchMax = 1.01f;
+                    cooldown = 0.2f;
                     break;
                 case SfxId.EditorObjectMove:
                 case SfxId.EditorObjectResize:
@@ -66,9 +89,13 @@ namespace DrawBody.Prototype
                     cooldown = 0.18f;
                     break;
                 case SfxId.PlayerDeath:
-                case SfxId.DrawInkOver:
+                    volume = 0.72f;
+                    cooldown = 0.2f;
+                    break;
                 case SfxId.BombExplosion:
-                    volume = 0.85f;
+                    volume = 0.78f;
+                    pitchMin = 0.94f;
+                    pitchMax = 1.04f;
                     cooldown = 0.2f;
                     break;
                 case SfxId.BombTick:
@@ -83,9 +110,9 @@ namespace DrawBody.Prototype
                     cooldown = 0.12f;
                     break;
                 case SfxId.DynamiteExplosion:
-                    volume = 1f;
-                    pitchMin = 0.82f;
-                    pitchMax = 0.9f;
+                    volume = 0.88f;
+                    pitchMin = 0.94f;
+                    pitchMax = 1f;
                     cooldown = 0.35f;
                     break;
                 case SfxId.DynamiteTick:
@@ -94,11 +121,16 @@ namespace DrawBody.Prototype
                     break;
                 case SfxId.DynamiteFuseStart:
                 case SfxId.EnemyCharge:
-                case SfxId.EnemyDefeat:
                 case SfxId.EnemyShellBounce:
                 case SfxId.BeamFire:
                 case SfxId.CannonFire:
                     volume = 0.78f;
+                    cooldown = 0.12f;
+                    break;
+                case SfxId.EnemyDefeat:
+                    volume = 0.64f;
+                    pitchMin = 0.96f;
+                    pitchMax = 1.06f;
                     cooldown = 0.12f;
                     break;
                 case SfxId.EnemyShoot:
@@ -132,11 +164,33 @@ namespace DrawBody.Prototype
                     volume = 0.68f;
                     cooldown = 0.06f;
                     break;
-                case SfxId.StageClear:
-                case SfxId.GoalReached:
                 case SfxId.CircuitComplete:
-                    volume = 0.86f;
+                    volume = 0.74f;
                     cooldown = 0.5f;
+                    break;
+                case SfxId.GoalReached:
+                    volume = 0.88f;
+                    pitchMin = 0.99f;
+                    pitchMax = 1.01f;
+                    cooldown = 0.5f;
+                    break;
+                case SfxId.StageClear:
+                    volume = 0.92f;
+                    pitchMin = 0.99f;
+                    pitchMax = 1.01f;
+                    cooldown = 0.7f;
+                    break;
+                case SfxId.ClearStampImpact:
+                    volume = 0.9f;
+                    pitchMin = 0.96f;
+                    pitchMax = 1.03f;
+                    cooldown = 0.45f;
+                    break;
+                case SfxId.ClearCelebrationChime:
+                    volume = 0.66f;
+                    pitchMin = 0.98f;
+                    pitchMax = 1.04f;
+                    cooldown = 0.45f;
                     break;
                 case SfxId.StageFailed:
                     volume = 0.82f;
@@ -161,7 +215,7 @@ namespace DrawBody.Prototype
                     cooldown = 0.1f;
                     break;
                 case SfxId.TurtleShellEnter:
-                    volume = 0.3f;
+                    volume = 0.46f;
                     cooldown = 0.12f;
                     break;
                 case SfxId.TurtleShellExit:
@@ -235,6 +289,10 @@ namespace DrawBody.Prototype
                     return "Audio/SFX/Gameplay/stage_clear";
                 case SfxId.StageFailed:
                     return "Audio/SFX/Gameplay/stage_failed";
+                case SfxId.ClearStampImpact:
+                    return "Audio/SFX/Gameplay/clear_stamp_impact";
+                case SfxId.ClearCelebrationChime:
+                    return "Audio/SFX/Gameplay/clear_celebration_chime";
                 case SfxId.CoinCollect:
                     return "Audio/SFX/Gameplay/coin_collect";
                 case SfxId.CollectibleCollect:

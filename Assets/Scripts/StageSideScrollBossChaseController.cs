@@ -393,7 +393,9 @@ namespace DrawBody.Prototype
         private AttackState BuildAttack(AttackType type)
         {
             PlayerController2D targetPlayer = RandomLivingPlayer();
-            Vector2 target = targetPlayer != null ? targetPlayer.transform.position : new Vector2(scrollX + 2f, FloorY + 1f);
+            Vector2 target = targetPlayer != null
+                ? (Vector2)targetPlayer.transform.position
+                : new Vector2(scrollX + 2f, FloorY + 1f);
             float lane = type == AttackType.Laser
                 ? (Random.value < 0.5f ? FloorY + 1.05f : FloorY + 4.1f)
                 : Random.Range(FloorY + 0.8f, FloorY + 5.5f);

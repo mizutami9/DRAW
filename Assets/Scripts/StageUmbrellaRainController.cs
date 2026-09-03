@@ -44,6 +44,8 @@ namespace DrawBody.Prototype
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private UIManager uiManager;
+        private StageObjectFactory objectFactory;
+        private StageGimmickSyncManager syncManager;
         private StageUmbrellaFriend friend;
         private StageDeadlyRainVisual rainVisual;
         private TextMesh instructionTitle;
@@ -77,6 +79,8 @@ namespace DrawBody.Prototype
             stageManager = Object.FindFirstObjectByType<StageManager>();
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             uiManager = Object.FindFirstObjectByType<UIManager>();
+            objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
+            syncManager = GetComponent<StageGimmickSyncManager>();
         }
 
         private void OnEnable()
@@ -104,12 +108,35 @@ namespace DrawBody.Prototype
                 stageCamera.SetMinimumOrthographicSize(10f);
             }
             friend = StageUmbrellaFriend.Create(transform, new Vector2(friendX, FriendY));
+            CreateSpawnBazooka();
             rainVisual = StageDeadlyRainVisual.Create(transform);
             rainVisual.SetShelter(friendX, FriendY + CanopyOffsetY, UmbrellaHalfWidth, FinalShelterX);
             RefreshPlayers();
             CaptureParticipants();
             SetLocalControls(false);
             RefreshPresentation();
+        }
+
+        private void CreateSpawnBazooka()
+        {
+            if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
+            if (objectFactory == null) return;
+            StageEditorObject[] existing = GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < existing.Length; i++)
+            {
+                if (existing[i] != null && existing[i].objectId == "14-2_spawn_bazooka") return;
+            }
+
+            StageObjectData data = StageObjectFactory.CreateDefaultData(
+                StageObjectType.Bazooka,
+                new Vector2(StartX + 0.5f, -2.35f));
+            data.objectId = "14-2_spawn_bazooka";
+            GameObject bazooka = objectFactory.Create(data, transform);
+            if (bazooka != null)
+            {
+                if (syncManager == null) syncManager = GetComponent<StageGimmickSyncManager>();
+                syncManager?.RegisterRuntimeObject(bazooka.transform);
+            }
         }
 
         private void Update()

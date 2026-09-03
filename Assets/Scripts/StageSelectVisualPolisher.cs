@@ -5,8 +5,6 @@ namespace DrawBody.Prototype
 {
     public sealed class StageSelectVisualPolisher : MonoBehaviour
     {
-        private bool polished;
-
         private void OnEnable()
         {
             LocalizationManager.LanguageChanged -= RefreshLocalizedText;
@@ -22,12 +20,6 @@ namespace DrawBody.Prototype
 
         public void Polish()
         {
-            if (polished)
-            {
-                return;
-            }
-
-            polished = true;
             HideTitle();
             PolishWorldCards();
             PolishButtons();
@@ -87,10 +79,31 @@ namespace DrawBody.Prototype
                 RemoveIfExists(rect, "FoldedCorner");
                 RemoveShadow(rect.gameObject);
                 AddBoldFrame(rect, "WorldBoldFrame", 3.1f, new Color(0.18f, 0.12f, 0.07f, 0.58f));
+                rect.sizeDelta = new Vector2(200f, 330f);
                 rect.localRotation = Quaternion.identity;
+                NormalizeWorldHeading(rect, ParseWorldNumber(rect.name));
                 LayoutStageButtons(rect);
                 BuildSpeciesRow(rect, ParseWorldNumber(rect.name));
             }
+        }
+
+        private static void NormalizeWorldHeading(RectTransform card, int world)
+        {
+            Transform headingTransform = card.Find($"StageGroup{world}Label");
+            Text heading = headingTransform != null ? headingTransform.GetComponent<Text>() : null;
+            if (heading == null) return;
+            RectTransform rect = heading.rectTransform;
+            rect.anchorMin = new Vector2(0f, 1f);
+            rect.anchorMax = new Vector2(1f, 1f);
+            rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(0f, -22f);
+            rect.sizeDelta = new Vector2(-28f, 44f);
+            heading.fontSize = 26;
+            heading.fontStyle = FontStyle.Bold;
+            heading.alignment = TextAnchor.MiddleCenter;
+            heading.resizeTextForBestFit = false;
+            heading.horizontalOverflow = HorizontalWrapMode.Wrap;
+            heading.verticalOverflow = VerticalWrapMode.Truncate;
         }
 
         private static void LayoutStageButtons(RectTransform card)
@@ -104,8 +117,10 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 146f - (variant - 1) * 54f);
-                rect.sizeDelta = new Vector2(rect.sizeDelta.x, 42f);
+                rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0f);
+                rect.pivot = new Vector2(0.5f, 0f);
+                rect.anchoredPosition = new Vector2(0f, 146f - (variant - 1) * 54f);
+                rect.sizeDelta = new Vector2(156f, 42f);
             }
         }
 
@@ -303,8 +318,13 @@ namespace DrawBody.Prototype
 
         private void RefreshLocalizedText()
         {
+            Text title = FindDeep(transform, "ModernStageSelectTitle")?.GetComponent<Text>();
+            if (title != null)
+            {
+                title.text = LocalizationManager.T("stage_select");
+            }
             RefreshSpeciesRowText();
-            RefreshStageCreationLabels();
+            RemoveStageCreationLabels();
         }
 
         private void RefreshSpeciesRowText()
@@ -319,38 +339,22 @@ namespace DrawBody.Prototype
                     texts[i].text = LocalizationManager.Format(
                         "stage_species_available_compact",
                         BuildSpeciesNames(StageSpeciesRules.GetAllowedForWorld(world)));
-                    texts[i].fontSize = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese ? 11 : 8;
+                    texts[i].fontSize = Mathf.Clamp(Mathf.RoundToInt(11f * LocalizationManager.CurrentUiTextScale), 8, 13);
                     texts[i].fontStyle = FontStyle.Bold;
                 }
             }
         }
 
-        private void RefreshStageCreationLabels()
+        private void RemoveStageCreationLabels()
         {
-            StageSelectButtonCommand[] commands = GetComponentsInChildren<StageSelectButtonCommand>(true);
-            for (int i = 0; i < commands.Length; i++)
+            Text[] texts = GetComponentsInChildren<Text>(true);
+            for (int i = 0; i < texts.Length; i++)
             {
-                StageSelectButtonCommand command = commands[i];
-                if (command == null)
+                if (texts[i] != null && texts[i].name == "DebugCreationStatus")
                 {
-                    continue;
+                    texts[i].gameObject.SetActive(false);
+                    Destroy(texts[i].gameObject);
                 }
-
-                Transform statusTransform = command.transform.Find("DebugCreationStatus");
-                Text status = statusTransform != null ? statusTransform.GetComponent<Text>() : null;
-                if (status == null)
-                {
-                    continue;
-                }
-
-                bool created = Resources.Load<TextAsset>($"Stages/{command.StageId}") != null;
-                status.text = LocalizationManager.T(created
-                    ? "stage_select_debug_created"
-                    : "stage_select_debug_not_created");
-                status.color = created
-                    ? new Color(0.08f, 0.48f, 0.22f, 1f)
-                    : new Color(0.68f, 0.18f, 0.12f, 1f);
-                status.fontSize = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese ? 11 : 9;
             }
         }
 
@@ -358,7 +362,7 @@ namespace DrawBody.Prototype
         {
             System.Collections.Generic.IReadOnlyList<DrawManager.Species> species = StageSpeciesRules.GetOrderedSpecies();
             System.Text.StringBuilder value = new System.Text.StringBuilder();
-            string separator = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese ? "\u30fb" : " / ";
+            string separator = LocalizationManager.CurrentListSeparator;
             for (int i = 0; i < species.Count; i++)
             {
                 if (!StageSpeciesRules.IsAllowed(availability, species[i]))
@@ -452,8 +456,8 @@ namespace DrawBody.Prototype
 
                 RemoveIfExists(rect, "MaskingTape");
                 RemoveIfExists(rect, "StickyNoteBoldFrame");
-                RemoveShadow(button.gameObject);
-                AddBoldFrame(rect, "ButtonBoldFrame", 2.7f, new Color(0.2f, 0.14f, 0.08f, 0.52f));
+                AddShadow(button.gameObject, new Vector2(5f, -5f), 0.21f);
+                AddBoldFrame(rect, "ButtonBoldFrame", 3f, new Color(0.12f, 0.09f, 0.06f, 0.86f));
                 rect.localRotation = Quaternion.identity;
 
                 Text label = button.GetComponentInChildren<Text>(true);
@@ -462,58 +466,49 @@ namespace DrawBody.Prototype
                     StageSelectButtonCommand stageCommand = button.GetComponent<StageSelectButtonCommand>();
                     if (stageCommand != null)
                     {
-                        LayoutStageButtonLabel(label.rectTransform);
-                        CreateStageCreationLabel(rect, label.font);
+                        NormalizeStageButton(button, label);
                     }
                     label.transform.SetAsLastSibling();
                 }
             }
         }
 
-        private static void LayoutStageButtonLabel(RectTransform label)
+        private static void NormalizeStageButton(Button button, Text label)
         {
-            label.anchorMin = new Vector2(0f, 1f);
-            label.anchorMax = new Vector2(1f, 1f);
-            label.pivot = new Vector2(0.5f, 1f);
-            label.anchoredPosition = new Vector2(0f, -1f);
-            label.sizeDelta = new Vector2(0f, 25f);
-        }
-
-        private static void CreateStageCreationLabel(RectTransform button, Font font)
-        {
-            Transform existing = button.Find("DebugCreationStatus");
-            if (existing != null)
-            {
-                existing.SetAsLastSibling();
-                return;
-            }
-
-            GameObject statusObject = new GameObject(
-                "DebugCreationStatus",
-                typeof(RectTransform),
-                typeof(CanvasRenderer),
-                typeof(Text));
-            statusObject.transform.SetParent(button, false);
-
-            Text status = statusObject.GetComponent<Text>();
-            status.font = font;
-            status.fontStyle = FontStyle.Bold;
-            status.alignment = TextAnchor.MiddleCenter;
-            status.raycastTarget = false;
-            status.horizontalOverflow = HorizontalWrapMode.Overflow;
-            status.verticalOverflow = VerticalWrapMode.Overflow;
-
-            RectTransform rect = status.rectTransform;
+            RectTransform rect = label.rectTransform;
             rect.anchorMin = new Vector2(0f, 0f);
-            rect.anchorMax = new Vector2(1f, 0f);
-            rect.pivot = new Vector2(0.5f, 0f);
-            rect.anchoredPosition = new Vector2(0f, 1f);
-            rect.sizeDelta = new Vector2(0f, 16f);
+            rect.anchorMax = new Vector2(1f, 1f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = Vector2.zero;
+            rect.sizeDelta = new Vector2(-12f, -4f);
+            label.fontSize = 22;
+            label.fontStyle = FontStyle.Bold;
+            label.alignment = TextAnchor.MiddleCenter;
+            label.resizeTextForBestFit = true;
+            label.resizeTextMinSize = 18;
+            label.resizeTextMaxSize = 22;
+            label.horizontalOverflow = HorizontalWrapMode.Wrap;
+            label.verticalOverflow = VerticalWrapMode.Truncate;
+
+            Image image = button.GetComponent<Image>();
+            if (image != null) image.color = new Color(0.98f, 0.96f, 0.9f, 0.95f);
+            Outline outline = button.GetComponent<Outline>();
+            if (outline == null) outline = button.gameObject.AddComponent<Outline>();
+            outline.effectColor = new Color(0.12f, 0.09f, 0.06f, 0.86f);
+            outline.effectDistance = new Vector2(3f, -3f);
+            outline.useGraphicAlpha = true;
+
+            Transform status = button.transform.Find("DebugCreationStatus");
+            if (status != null)
+            {
+                status.gameObject.SetActive(false);
+                Destroy(status.gameObject);
+            }
         }
 
         private static void AddShadow(GameObject target, Vector2 distance, float alpha)
         {
-            Shadow shadow = target.GetComponent<Shadow>();
+            Shadow shadow = FindPlainShadow(target);
             if (shadow == null)
             {
                 shadow = target.AddComponent<Shadow>();
@@ -525,11 +520,31 @@ namespace DrawBody.Prototype
 
         private static void RemoveShadow(GameObject target)
         {
-            Shadow shadow = target.GetComponent<Shadow>();
-            if (shadow != null)
+            Shadow[] effects = target.GetComponents<Shadow>();
+            for (int i = 0; i < effects.Length; i++)
             {
-                Destroy(shadow);
+                // Outline inherits from Shadow. GetComponent<Shadow>() can
+                // therefore return the card frame and used to delete it when
+                // changing pages. Only remove the plain drop-shadow effect.
+                if (effects[i] != null && effects[i].GetType() == typeof(Shadow))
+                {
+                    Destroy(effects[i]);
+                }
             }
+        }
+
+        private static Shadow FindPlainShadow(GameObject target)
+        {
+            Shadow[] effects = target.GetComponents<Shadow>();
+            for (int i = 0; i < effects.Length; i++)
+            {
+                if (effects[i] != null && effects[i].GetType() == typeof(Shadow))
+                {
+                    return effects[i];
+                }
+            }
+
+            return null;
         }
 
         private static void AddBoldFrame(RectTransform parent, string name, float width, Color color)

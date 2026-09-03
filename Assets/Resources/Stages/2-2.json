@@ -1,7 +1,7 @@
 {
     "id": "2-2",
     "displayName": "Stage 2-2",
-    "backgroundColorHex": "#FBD29C26",
+    "backgroundColorHex": "#0D23FB26",
     "ruleMode": 1,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,
@@ -773,6 +773,206 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": true,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_b67e2115873149ca",
+            "type": 214,
+            "position": {
+                "x": -20.0,
+                "y": 15.0
+            },
+            "size": {
+                "x": 8.880049705505371,
+                "y": 8.880049705505371
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_3c34f5e7690c48f8",
+            "type": 214,
+            "position": {
+                "x": -16.0,
+                "y": -4.0
+            },
+            "size": {
+                "x": 8.880049705505371,
+                "y": 8.880049705505371
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_c0ddcb8d4ef3445c",
+            "type": 214,
+            "position": {
+                "x": 0.5,
+                "y": 17.0
+            },
+            "size": {
+                "x": 8.880049705505371,
+                "y": 8.880049705505371
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_a16d15bf93c04c0a",
+            "type": 214,
+            "position": {
+                "x": 2.5,
+                "y": -1.5
+            },
+            "size": {
+                "x": 8.880049705505371,
+                "y": 8.880049705505371
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_97ec853aa43a444e",
+            "type": 214,
+            "position": {
+                "x": 14.5,
+                "y": 17.0
+            },
+            "size": {
+                "x": 8.880049705505371,
+                "y": 8.880049705505371
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_e19573012dd3447f",
+            "type": 214,
+            "position": {
+                "x": 39.5,
+                "y": 9.5
+            },
+            "size": {
+                "x": 8.880049705505371,
+                "y": 8.880049705505371
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_7de7e20e239b4905",
+            "type": 214,
+            "position": {
+                "x": 32.0,
+                "y": -5.5
+            },
+            "size": {
+                "x": 8.880049705505371,
+                "y": 8.880049705505371
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_42ba3deed0814bea",
+            "type": 214,
+            "position": {
+                "x": 69.5,
+                "y": 0.5
+            },
+            "size": {
+                "x": 8.880049705505371,
+                "y": 8.880049705505371
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
             "actionStrength": 0.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,

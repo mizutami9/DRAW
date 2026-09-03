@@ -18,6 +18,18 @@ namespace DrawBody.Prototype
 
         private void OnEnable()
         {
+            LocalizationManager.LanguageChanged -= HandleLanguageChanged;
+            LocalizationManager.LanguageChanged += HandleLanguageChanged;
+            Polish();
+        }
+
+        private void OnDisable()
+        {
+            LocalizationManager.LanguageChanged -= HandleLanguageChanged;
+        }
+
+        private void HandleLanguageChanged()
+        {
             Polish();
         }
 
@@ -40,14 +52,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            LayoutBottomSheet(random, 230f);
+            LayoutBottomSheet(random, 278f);
             PlaceScreenHeading(
                 random,
                 "MultiRandomScreenTitle",
                 "multi_random_match",
-                new Vector2(0f, 180f),
+                new Vector2(0f, 226f),
                 new Vector2(500f, 42f));
-            EnsureHeadingPaintStroke(random, "MultiRandomHeadingStroke", new Vector2(0f, 176f), new Vector2(520f, 48f), RandomColor);
+            EnsureHeadingPaintStroke(random, "MultiRandomHeadingStroke", new Vector2(0f, 222f), new Vector2(520f, 48f), RandomColor);
             MakeScreenOverlayTransparent(random);
             AddBackgroundDoodles(random);
 
@@ -62,15 +74,15 @@ namespace DrawBody.Prototype
                 status.lineSpacing = 1.1f;
                 status.alignment = TextAnchor.UpperCenter;
                 status.color = new Color(0.05f, 0.045f, 0.04f, 1f);
-                PlaceBottomRect(status.rectTransform, new Vector2(-265f, 20f), new Vector2(470f, 122f));
+                PlaceBottomRect(status.rectTransform, new Vector2(-265f, 16f), new Vector2(470f, 166f));
                 status.horizontalOverflow = HorizontalWrapMode.Wrap;
                 status.verticalOverflow = VerticalWrapMode.Truncate;
                 EnsureTextBackdrop(random, status.rectTransform, "MultiRandomStatusCard", Color.Lerp(RandomColor, Color.white, 0.76f));
             }
 
             EnsureRandomSearchHeader(random, status);
-            PlaceBottomText(random, "MultiRandomSearchingLabel", new Vector2(-285f, 148f), new Vector2(360f, 28f), TextAnchor.MiddleCenter);
-            PlaceBottomText(random, "MultiRandomSearchingDots", new Vector2(-83f, 148f), new Vector2(44f, 28f), TextAnchor.MiddleLeft);
+            PlaceBottomText(random, "MultiRandomSearchingLabel", new Vector2(-285f, 188f), new Vector2(360f, 28f), TextAnchor.MiddleCenter);
+            PlaceBottomText(random, "MultiRandomSearchingDots", new Vector2(-83f, 188f), new Vector2(44f, 28f), TextAnchor.MiddleLeft);
             PolishReadyButton(random, "MultiRandomReadyButton", Vector2.zero);
             PolishSmallBackButton(random, "MultiRandomCancelButton", Vector2.zero);
             PlaceButtonBottom(random, "MultiRandomReadyButton", new Vector2(350f, 105f), new Vector2(320f, 62f));
@@ -87,7 +99,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            LayoutBottomSheet(choice, 118f);
+            LayoutBottomSheet(choice, 178f);
+            PlaceScreenHeading(
+                choice,
+                "MultiChoiceScreenTitle",
+                "multi_play",
+                new Vector2(0f, 132f),
+                new Vector2(500f, 42f));
+            EnsureHeadingPaintStroke(choice, "MultiChoiceHeadingStroke", new Vector2(0f, 128f), new Vector2(520f, 48f), RandomColor);
             AddBackgroundDoodles(choice);
             PolishLargeButton(choice, "MultiRandomButton", RandomColor, RandomHoverColor, Vector2.zero, true);
             PolishLargeButton(choice, "MultiRoomButton", RoomColor, RoomHoverColor, Vector2.zero, false);
@@ -105,7 +124,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            LayoutBottomSheet(room, 118f);
+            LayoutBottomSheet(room, 178f);
+            PlaceScreenHeading(
+                room,
+                "MultiRoomScreenTitle",
+                "multi_room_title",
+                new Vector2(0f, 132f),
+                new Vector2(500f, 42f));
+            EnsureHeadingPaintStroke(room, "MultiRoomHeadingStroke", new Vector2(0f, 128f), new Vector2(520f, 48f), RoomColor);
             PolishLargeButton(room, "MultiCreateRoomNavButton", RoomColor, RoomHoverColor, Vector2.zero, false);
             PolishLargeButton(room, "MultiJoinRoomNavButton", RandomColor, RandomHoverColor, Vector2.zero, true);
             PolishSmallBackButton(room, "MultiRoomBackButton", Vector2.zero);
@@ -308,6 +334,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            title.gameObject.SetActive(true);
             LocalizedText localized = title.GetComponent<LocalizedText>();
             localized?.SetKey(localizationKey);
             title.text = LocalizationManager.T(localizationKey);
@@ -369,6 +396,14 @@ namespace DrawBody.Prototype
             else if (name == "MultiRandomHeadingStroke")
             {
                 title = FindDeep(parent, "MultiRandomScreenTitle");
+            }
+            else if (name == "MultiChoiceHeadingStroke")
+            {
+                title = FindDeep(parent, "MultiChoiceScreenTitle");
+            }
+            else if (name == "MultiRoomHeadingStroke")
+            {
+                title = FindDeep(parent, "MultiRoomScreenTitle");
             }
             if (title != null)
             {
@@ -1086,13 +1121,18 @@ namespace DrawBody.Prototype
             {
                 if (name.IndexOf("Back", System.StringComparison.Ordinal) >= 0)
                 {
-                    label.text = LocalizationManager.T("option_back");
+                    LocalizedText localized = label.GetComponent<LocalizedText>();
+                    if (localized == null) localized = label.gameObject.AddComponent<LocalizedText>();
+                    localized.SetKey("ui_back_esc");
                 }
 
                 label.fontSize = 20;
                 label.fontStyle = FontStyle.Bold;
+                label.resizeTextForBestFit = true;
                 label.resizeTextMinSize = 16;
                 label.resizeTextMaxSize = 20;
+                label.horizontalOverflow = HorizontalWrapMode.Wrap;
+                label.verticalOverflow = VerticalWrapMode.Truncate;
                 label.color = new Color(0.05f, 0.04f, 0.03f, 1f);
             }
 
@@ -1124,8 +1164,11 @@ namespace DrawBody.Prototype
             {
                 label.fontSize = 20;
                 label.fontStyle = FontStyle.Bold;
+                label.resizeTextForBestFit = true;
                 label.resizeTextMinSize = 16;
                 label.resizeTextMaxSize = 20;
+                label.horizontalOverflow = HorizontalWrapMode.Wrap;
+                label.verticalOverflow = VerticalWrapMode.Truncate;
                 label.color = Color.black;
             }
 

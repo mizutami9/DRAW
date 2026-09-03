@@ -64,6 +64,15 @@ namespace DrawBody.Prototype
 
         private void Execute()
         {
+            if (IsCharacterManagementCommand()
+                && stageManager != null
+                && !stageManager.CanUseGameplayCharacterControls)
+            {
+                stageManager.ShowReadyRoomOnlyCharacterChangeNotice();
+                EventSystem.current?.SetSelectedGameObject(null);
+                return;
+            }
+
             if (IsCharacterManagementCommand() && IsOnlineActive())
             {
                 EventSystem.current?.SetSelectedGameObject(null);
@@ -143,15 +152,17 @@ namespace DrawBody.Prototype
             }
 
             bool visible = !IsOnlineActive();
+            bool available = visible
+                && (stageManager == null || stageManager.CanUseGameplayCharacterControls);
             CanvasGroup group = GetComponent<CanvasGroup>();
             if (group == null) group = gameObject.AddComponent<CanvasGroup>();
-            group.alpha = visible ? 1f : 0f;
-            group.interactable = visible;
-            group.blocksRaycasts = visible;
+            group.alpha = visible ? available ? 1f : 0.42f : 0f;
+            group.interactable = available;
+            group.blocksRaycasts = available;
             transform.localScale = initialScale;
             if (button != null)
             {
-                button.interactable = visible;
+                button.interactable = available;
             }
         }
 

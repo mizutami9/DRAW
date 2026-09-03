@@ -8,6 +8,7 @@ namespace DrawBody.Prototype
     public sealed class SpeciesButtonCommand : MonoBehaviour
     {
         [SerializeField] private DrawManager drawManager;
+        [SerializeField] private StageManager stageManager;
         [SerializeField] private DrawManager.Species species;
         [SerializeField] private Color selectedColor = new Color(0.98f, 0.9f, 0.55f, 0.95f);
         [SerializeField] private Color normalColor = new Color(0.98f, 0.96f, 0.9f, 0.82f);
@@ -23,6 +24,10 @@ namespace DrawBody.Prototype
             if (drawManager == null)
             {
                 drawManager = FindFirstObjectByType<DrawManager>();
+            }
+            if (stageManager == null)
+            {
+                stageManager = FindFirstObjectByType<StageManager>();
             }
 
             image = GetComponent<Image>();
@@ -59,6 +64,12 @@ namespace DrawBody.Prototype
 
         private void SelectSpecies()
         {
+            if (stageManager != null && !stageManager.CanUseGameplayCharacterControls)
+            {
+                stageManager.ShowReadyRoomOnlyCharacterChangeNotice();
+                EventSystem.current?.SetSelectedGameObject(null);
+                return;
+            }
             drawManager?.SetSpecies(species);
             EventSystem.current?.SetSelectedGameObject(null);
         }
@@ -80,10 +91,18 @@ namespace DrawBody.Prototype
             RefreshVisual(drawManager != null ? drawManager.CurrentSpecies : species);
         }
 
+        private void Update()
+        {
+            // The ready room is removed without changing species availability,
+            // so refresh when gameplay starts as well as on drawing events.
+            RefreshVisual(drawManager != null ? drawManager.CurrentSpecies : species);
+        }
+
         private void RefreshVisual(DrawManager.Species currentSpecies)
         {
             bool selected = currentSpecies == species;
-            bool allowed = drawManager == null || drawManager.IsSpeciesAllowed(species);
+            bool allowed = (drawManager == null || drawManager.IsSpeciesAllowed(species))
+                && (stageManager == null || stageManager.CanUseGameplayCharacterControls);
             Color targetColor = allowed
                 ? selected ? selectedColor : normalColor
                 : new Color(0.55f, 0.55f, 0.55f, 0.42f);

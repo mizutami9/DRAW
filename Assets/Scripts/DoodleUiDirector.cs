@@ -21,19 +21,23 @@ namespace DrawBody.Prototype
         private static readonly Color Violet = new Color(0.66f, 0.52f, 0.96f, 1f);
 
         private Font fallbackFont;
+        private Font defaultFont;
         private bool themeApplied;
 
         private void Awake()
         {
-            fallbackFont = FindFont();
+            defaultFont = FindFont();
+            fallbackFont = LocalizationManager.LoadCurrentFont(defaultFont);
             LegacyPencilStrokeBatcher.BatchScene();
             ApplyTheme();
         }
 
         private void Start()
         {
-            // UIManager may create these small overlays later in Awake. Refresh only
-            // those targets instead of walking the complete UI tree again.
+            // Other components create some controls (for example the OPTION player-name
+            // controls) during Awake. Apply the same focused layout pass after every
+            // Awake has completed so the initial screen matches a language refresh.
+            ThemeMultiAndOptions();
             ThemeGameplayHud();
             ThemeMenuAndResults();
         }
@@ -57,6 +61,8 @@ namespace DrawBody.Prototype
         {
             ThemeGameplayHud();
             ThemeMenuAndResults();
+            ThemeAllButtons();
+            NormalizeBackButtonLabels();
         }
 
         private void HandleLanguageChanged()
@@ -72,7 +78,8 @@ namespace DrawBody.Prototype
             }
 
             themeApplied = true;
-            fallbackFont = fallbackFont != null ? fallbackFont : FindFont();
+            defaultFont = defaultFont != null ? defaultFont : FindFont();
+            fallbackFont = LocalizationManager.LoadCurrentFont(defaultFont);
             ThemeStageBackgroundDoodles();
             ThemeTitle();
             ThemeStageSelect();
@@ -82,8 +89,20 @@ namespace DrawBody.Prototype
             ThemeStageEditor();
             ThemeMenuAndResults();
             ThemeAllButtons();
+            NormalizeBackButtonLabels();
             ThemeAllText();
+            ConfigureLocalizedTextSafety();
             StraightenAllScreens();
+
+            // The generic button/text passes above intentionally cover every
+            // screen, but stage cards have a stricter shared layout. Reapply
+            // that layout last so the initially visible WORLD 1-5 and pages
+            // shown later use exactly the same type size and frame weight.
+            RectTransform stageSelect = FindRect("StageSelectPanel");
+            StageSelectVisualPolisher stagePolisher = stageSelect != null
+                ? stageSelect.GetComponent<StageSelectVisualPolisher>()
+                : null;
+            stagePolisher?.Polish();
         }
 
         private void ThemeStageBackgroundDoodles()
@@ -261,6 +280,12 @@ namespace DrawBody.Prototype
             SetImage(panel, Paper);
             EnsureBackdrop(panel, "StageMapBackdrop", new Color(0.35f, 0.7f, 0.9f, 0.055f));
             Text heading = EnsureText(panel, "ModernStageSelectTitle", LocalizationManager.T("stage_select"), 38, TextAnchor.MiddleLeft);
+            LocalizedText localizedHeading = heading.GetComponent<LocalizedText>();
+            if (localizedHeading == null)
+            {
+                localizedHeading = heading.gameObject.AddComponent<LocalizedText>();
+            }
+            localizedHeading.SetKey("stage_select");
             heading.fontStyle = FontStyle.Bold;
             heading.color = Ink;
             RectTransform headingRect = heading.rectTransform;
@@ -408,6 +433,7 @@ namespace DrawBody.Prototype
         {
             RectTransform title = FindRect(panel, "TitleOptionTitle");
             PlaceOptionText(title, new Vector2(0f, 434f), new Vector2(640f, 42f), TextAnchor.MiddleCenter, 34, true);
+            EnsureOptionHeadingPaintStroke(panel, title, new Vector2(0f, 430f), new Vector2(440f, 50f), Violet);
             RectTransform subtitle = FindRect(panel, "TitleOptionSubtitle");
             if (subtitle != null) subtitle.gameObject.SetActive(false);
 
@@ -446,11 +472,22 @@ namespace DrawBody.Prototype
             }
             RectTransform japanese = FindRect(panel, "OptionJapaneseButton");
             RectTransform english = FindRect(panel, "OptionEnglishButton");
-            PlaceOptionRect(japanese, new Vector2(-12f, rowY[2]), new Vector2(130f, 42f));
-            PlaceOptionRect(english, new Vector2(138f, rowY[2]), new Vector2(130f, 42f));
-            bool japaneseSelected = LocalizationManager.CurrentLanguage == LocalizationManager.Language.Japanese;
-            ThemeOptionButton(japanese, japaneseSelected ? Cyan : PaperRaised, 18);
-            ThemeOptionButton(english, japaneseSelected ? PaperRaised : Cyan, 18);
+            bool selectorMode = LocalizationManager.SupportedLanguages.Count > 2;
+            if (selectorMode)
+            {
+                PlaceOptionRect(japanese, new Vector2(-22f, rowY[2]), new Vector2(54f, 42f));
+                PlaceOptionRect(FindRect(panel, "OptionLanguageCurrentValue"), new Vector2(63f, rowY[2]), new Vector2(108f, 42f));
+                PlaceOptionRect(english, new Vector2(148f, rowY[2]), new Vector2(54f, 42f));
+                ThemeOptionButton(japanese, Cyan, 18);
+                ThemeOptionButton(english, Cyan, 18);
+            }
+            else
+            {
+                PlaceOptionRect(japanese, new Vector2(-12f, rowY[2]), new Vector2(130f, 42f));
+                PlaceOptionRect(english, new Vector2(138f, rowY[2]), new Vector2(130f, 42f));
+                ThemeOptionButton(japanese, LocalizationManager.IsCurrentLanguage("ja") ? Cyan : PaperRaised, 18);
+                ThemeOptionButton(english, LocalizationManager.IsCurrentLanguage("en") ? Cyan : PaperRaised, 18);
+            }
 
             HideIfExists(panel, "OptionKeysLabel");
             HideIfExists(panel, "OptionKeysValue");
@@ -466,7 +503,7 @@ namespace DrawBody.Prototype
             {
                 LocalizedText localized = backLabel.GetComponent<LocalizedText>();
                 if (localized == null) localized = backLabel.gameObject.AddComponent<LocalizedText>();
-                localized.SetKey("option_back_esc");
+                localized.SetKey("ui_back_esc");
             }
 
             RectTransform register = FindRect(panel, "OptionPlayerNameRegisterButton");
@@ -474,6 +511,42 @@ namespace DrawBody.Prototype
             ThemeOptionButton(register, Green, 22);
 
             BringOptionControlsForward(panel);
+        }
+
+        private static void EnsureOptionHeadingPaintStroke(
+            RectTransform panel,
+            RectTransform title,
+            Vector2 position,
+            Vector2 size,
+            Color color)
+        {
+            if (panel == null || title == null) return;
+            Transform existing = panel.Find("OptionHeadingPaintStroke");
+            GameObject stroke = existing != null ? existing.gameObject : null;
+            if (stroke == null)
+            {
+                stroke = new GameObject("OptionHeadingPaintStroke", typeof(RectTransform));
+                stroke.transform.SetParent(panel, false);
+                for (int i = 0; i < 4; i++)
+                {
+                    GameObject stripe = new GameObject("PaintStripe" + i,
+                        typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                    stripe.transform.SetParent(stroke.transform, false);
+                    RectTransform stripeRect = stripe.GetComponent<RectTransform>();
+                    stripeRect.anchorMin = stripeRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    stripeRect.pivot = new Vector2(0.5f, 0.5f);
+                    stripeRect.anchoredPosition = new Vector2((i - 1.5f) * 4f, (i - 1.5f) * 3f);
+                    stripeRect.sizeDelta = new Vector2(size.x - i * 13f, 13f + i * 2f);
+                    stripeRect.localRotation = Quaternion.Euler(0f, 0f, -1.6f + i * 1.1f);
+                    Image image = stripe.GetComponent<Image>();
+                    image.raycastTarget = false;
+                    image.color = new Color(color.r, color.g, color.b, 0.2f + i * 0.07f);
+                }
+            }
+
+            PlaceOptionRect(stroke.GetComponent<RectTransform>(), position, size);
+            stroke.transform.SetAsFirstSibling();
+            title.SetAsLastSibling();
         }
 
         private void EnsureOptionRow(RectTransform panel, string name, float y, Color color)
@@ -934,8 +1007,8 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                EnsureOutline(button.gameObject, 2.1f, 0.72f);
-                EnsureShadow(button.gameObject, new Vector2(4f, -4f), 0.18f);
+                EnsureOutline(button.gameObject, 2.8f, 0.86f);
+                EnsureShadow(button.gameObject, new Vector2(5f, -5f), 0.21f);
                 Color baseColor = button.targetGraphic != null ? button.targetGraphic.color : PaperRaised;
                 ColorBlock colors = button.colors;
                 colors.normalColor = Color.white;
@@ -962,6 +1035,66 @@ namespace DrawBody.Prototype
                     legacyHover.enabled = false;
                 }
             }
+
+            Dropdown[] dropdowns = GetComponentsInChildren<Dropdown>(true);
+            for (int i = 0; i < dropdowns.Length; i++)
+            {
+                DoodleDropdownSfx feedback = dropdowns[i].GetComponent<DoodleDropdownSfx>();
+                if (feedback == null) feedback = dropdowns[i].gameObject.AddComponent<DoodleDropdownSfx>();
+                feedback.Configure(dropdowns[i]);
+            }
+
+            Toggle[] toggles = GetComponentsInChildren<Toggle>(true);
+            for (int i = 0; i < toggles.Length; i++)
+            {
+                DoodleToggleSfx feedback = toggles[i].GetComponent<DoodleToggleSfx>();
+                if (feedback == null) feedback = toggles[i].gameObject.AddComponent<DoodleToggleSfx>();
+                feedback.Configure(toggles[i]);
+            }
+        }
+
+        private void NormalizeBackButtonLabels()
+        {
+            Button[] buttons = GetComponentsInChildren<Button>(true);
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                Button button = buttons[i];
+                if (button == null || !IsStandardBackButton(button.name)) continue;
+                Text label = button.GetComponentInChildren<Text>(true);
+                if (label == null) continue;
+                LocalizedText localized = label.GetComponent<LocalizedText>();
+                if (localized == null) localized = label.gameObject.AddComponent<LocalizedText>();
+                localized.SetKey("ui_back_esc");
+                label.fontStyle = FontStyle.Bold;
+                if (button.name == "CancelDrawButton")
+                {
+                    label.fontSize = 13;
+                    label.resizeTextForBestFit = false;
+                }
+                else
+                {
+                    label.resizeTextForBestFit = true;
+                    label.resizeTextMinSize = 13;
+                }
+            }
+        }
+
+        private static bool IsStandardBackButton(string buttonName)
+        {
+            switch (buttonName)
+            {
+                case "TitleOptionBackButton":
+                case "StageSelectBackButton":
+                case "MultiBackTitleButton":
+                case "MultiRoomBackButton":
+                case "MultiCreateBackButton":
+                case "MultiJoinBackButton":
+                case "RuntimeEditCloseButton":
+                case "CancelDrawButton":
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private void ThemeAllText()
@@ -984,6 +1117,43 @@ namespace DrawBody.Prototype
                 {
                     text.fontStyle = FontStyle.Bold;
                 }
+            }
+        }
+
+        private void ConfigureLocalizedTextSafety()
+        {
+            Text[] texts = GetComponentsInChildren<Text>(true);
+            for (int i = 0; i < texts.Length; i++)
+            {
+                Text text = texts[i];
+                if (text == null || text.name.Contains("Placeholder")) continue;
+
+                Button ownerButton = text.GetComponentInParent<Button>();
+                if (ownerButton != null)
+                {
+                    // Button captions are one of the first places a translated
+                    // string overflows. Preserve the designed maximum size, but
+                    // allow longer languages to shrink inside the same frame.
+                    int maximum = Mathf.Max(12, text.fontSize);
+                    text.resizeTextForBestFit = true;
+                    text.resizeTextMinSize = Mathf.Clamp(maximum - 9, 11, maximum);
+                    text.resizeTextMaxSize = maximum;
+                    text.horizontalOverflow = HorizontalWrapMode.Wrap;
+                    text.verticalOverflow = VerticalWrapMode.Truncate;
+                    continue;
+                }
+
+                string objectName = text.name;
+                bool isHeading = objectName.IndexOf("Title", System.StringComparison.OrdinalIgnoreCase) >= 0
+                    || objectName.IndexOf("Heading", System.StringComparison.OrdinalIgnoreCase) >= 0;
+                if (!isHeading || text.rectTransform.rect.width < 80f) continue;
+
+                int headingMaximum = Mathf.Max(14, text.fontSize);
+                text.resizeTextForBestFit = true;
+                text.resizeTextMinSize = Mathf.Clamp(headingMaximum - 10, 13, headingMaximum);
+                text.resizeTextMaxSize = headingMaximum;
+                text.horizontalOverflow = HorizontalWrapMode.Wrap;
+                text.verticalOverflow = VerticalWrapMode.Truncate;
             }
         }
 
@@ -1146,6 +1316,8 @@ namespace DrawBody.Prototype
             rect.anchoredPosition = position;
             rect.sizeDelta = size;
             SetImage(rect, color);
+            EnsureOutline(rect.gameObject, 2.8f, 0.86f);
+            EnsureShadow(rect.gameObject, new Vector2(5f, -5f), 0.21f);
         }
 
         private void SetNamedButtonColor(RectTransform parent, string name, Color color)
@@ -1622,14 +1794,21 @@ namespace DrawBody.Prototype
             GameSfx.Play(SfxId.UiButtonHover);
         }
         public void OnPointerExit(PointerEventData eventData) => SetHovered(false);
-        public void OnSelect(BaseEventData eventData) => SetHovered(true);
+        public void OnSelect(BaseEventData eventData)
+        {
+            SetHovered(true);
+            if (eventData is AxisEventData)
+            {
+                GameSfx.Play(SfxId.UiCursorMove);
+            }
+        }
         public void OnDeselect(BaseEventData eventData) => SetHovered(false);
 
         public void OnPointerDown(PointerEventData eventData)
         {
             targetScale = 0.96f;
             targetRotation = restingRotation;
-            GameSfx.Play(SfxId.UiButtonPress);
+            GameSfx.Play(ResolvePressSfx());
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -1646,6 +1825,75 @@ namespace DrawBody.Prototype
         private static float NormalizeAngle(float angle)
         {
             return angle > 180f ? angle - 360f : angle;
+        }
+
+        private SfxId ResolvePressSfx()
+        {
+            string objectName = gameObject.name;
+            if (objectName.IndexOf("Back", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || objectName.IndexOf("Return", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || objectName.IndexOf("Cancel", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || objectName.IndexOf("Close", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || objectName.IndexOf("Exit", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || objectName.IndexOf("Leave", System.StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return SfxId.UiButtonBack;
+            }
+
+            if (objectName.IndexOf("Tab", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || objectName.IndexOf("Page", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || objectName.IndexOf("Species", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || objectName.IndexOf("Part", System.StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return SfxId.UiTabChange;
+            }
+
+            return SfxId.UiButtonPress;
+        }
+    }
+
+    public sealed class DoodleDropdownSfx : MonoBehaviour, IPointerDownHandler
+    {
+        private Dropdown dropdown;
+
+        public void Configure(Dropdown value)
+        {
+            if (dropdown != null) dropdown.onValueChanged.RemoveListener(HandleChanged);
+            dropdown = value;
+            if (dropdown != null) dropdown.onValueChanged.AddListener(HandleChanged);
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (dropdown != null && dropdown.IsInteractable()) GameSfx.Play(SfxId.UiDropdownOpen);
+        }
+
+        private void HandleChanged(int value)
+        {
+            if (dropdown != null && dropdown.IsInteractable() && gameObject.activeInHierarchy)
+            {
+                GameSfx.Play(SfxId.UiDropdownSelect);
+            }
+        }
+    }
+
+    public sealed class DoodleToggleSfx : MonoBehaviour
+    {
+        private Toggle toggle;
+
+        public void Configure(Toggle value)
+        {
+            if (toggle != null) toggle.onValueChanged.RemoveListener(HandleChanged);
+            toggle = value;
+            if (toggle != null) toggle.onValueChanged.AddListener(HandleChanged);
+        }
+
+        private void HandleChanged(bool value)
+        {
+            if (toggle != null && toggle.IsInteractable() && gameObject.activeInHierarchy)
+            {
+                GameSfx.Play(value ? SfxId.UiToggleOn : SfxId.UiToggleOff);
+            }
         }
     }
 }

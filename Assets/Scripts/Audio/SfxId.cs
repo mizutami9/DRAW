@@ -105,6 +105,9 @@ namespace DrawBody.Prototype
         BossAttackWarning,
         BossDash,
         BossBeamCharge,
-        BossSuction
+        BossSuction,
+
+        ClearStampImpact,
+        ClearCelebrationChime
     }
 }

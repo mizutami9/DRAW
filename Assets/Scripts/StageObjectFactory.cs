@@ -498,6 +498,15 @@ namespace DrawBody.Prototype
             GameObject enemyObject = CreateEnemy(data, parent);
             StageEnemyCharacter enemy = enemyObject != null ? enemyObject.GetComponent<StageEnemyCharacter>() : null;
             enemy?.SetSpawnedByDevice();
+            bool movingGauntletGhost = data.objectId.StartsWith(
+                "11-1_ghost_", System.StringComparison.Ordinal);
+            bool phasingGauntletGhost = data.objectId.StartsWith(
+                "11-1_phase_ghost_", System.StringComparison.Ordinal);
+            if (enemyObject != null && (movingGauntletGhost || phasingGauntletGhost))
+            {
+                StageMovingGauntletGhost ghost = enemyObject.AddComponent<StageMovingGauntletGhost>();
+                ghost.Configure(data.movementSpeed, phasingGauntletGhost);
+            }
             return enemyObject;
         }
 
@@ -3696,6 +3705,7 @@ namespace DrawBody.Prototype
             obj.transform.SetParent(parent, false);
             obj.transform.position = data.position;
             obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
+            DoodleMonitorVisuals.KeepBehindPlayers(obj.transform);
 
             Vector2 size = new Vector2(Mathf.Max(1.4f, data.size.x), Mathf.Max(0.65f, data.size.y));
             data.size = size;

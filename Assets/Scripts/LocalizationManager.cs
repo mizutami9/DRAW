@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 namespace DrawBody.Prototype
@@ -25,8 +26,32 @@ namespace DrawBody.Prototype
             public string value;
         }
 
-        private static readonly Dictionary<string, string> ExternalJapanese = new Dictionary<string, string>();
-        private static readonly Dictionary<string, string> ExternalEnglish = new Dictionary<string, string>();
+        [Serializable]
+        public sealed class LanguageDefinition
+        {
+            public string code;
+            public string nativeName;
+            public string fallbackCode;
+            public string[] resourcePaths;
+            public string fontResourcePath;
+            public string cultureCode;
+            public float uiTextScale = 1f;
+            public string listSeparator = " / ";
+            public bool rightToLeft;
+        }
+
+        [Serializable]
+        private sealed class LanguageDefinitionFile
+        {
+            public LanguageDefinition[] entries;
+        }
+
+        private const string DefaultLanguageCode = "ja";
+        private const string FallbackLanguageCode = "en";
+        private static readonly List<LanguageDefinition> languageDefinitions = new List<LanguageDefinition>();
+        private static readonly Dictionary<string, LanguageDefinition> languageDefinitionsByCode = new Dictionary<string, LanguageDefinition>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, Dictionary<string, string>> externalTables = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+        private static bool loadedLanguageDefinitions;
         private static bool loadedExternalTables;
 
         private static readonly Dictionary<string, string> Japanese = new Dictionary<string, string>
@@ -274,16 +299,17 @@ namespace DrawBody.Prototype
             { "title_single", "SINGLE" },
             { "title_multi", "MULTI" },
             { "title_draw", "DRAW" },
-            { "title_option", "OPTION" },
-            { "option_back", "戻る" },
-            { "option_back_esc", "← 戻る  ESC" },
+            { "title_option", "オプション" },
+            { "option_back", "戻る  ESC" },
+            { "option_back_esc", "戻る  ESC" },
+            { "ui_back_esc", "戻る  ESC" },
             { "title_exit", "EXIT" },
             { "title_debug", "DEBUG" },
             { "trailer_debug_title", "トレーラー撮影デバッグ" },
             { "trailer_debug_scenario_01", "① 4人協力・空中リレー" },
             { "trailer_debug_scenario_01_help", "人が鳥を投げ、鳥→猫→スライムへつなぐ演出" },
             { "trailer_debug_start", "演出を開始" },
-            { "trailer_debug_back", "戻る" },
+            { "trailer_debug_back", "戻る  ESC" },
             { "trailer_debug_edit_shapes", "キャラ造形を編集" },
             { "steam_header_debug_button", "Steamヘッダー" },
             { "steam_header_capture", "920×430 PNGを書き出す" },
@@ -291,6 +317,7 @@ namespace DrawBody.Prototype
             { "steam_header_ready", "構図を確認してPNGを書き出してください" },
             { "steam_header_saved", "保存しました: {0}" },
             { "player_redrawing_status", "書き直し中…" },
+            { "character_change_ready_room_only", "キャラ変更は待機小部屋の中でのみ行えます。" },
             { "trailer_debug_capture_help", "R  最初から     H  表示を隠す     ESC  タイトル" },
             { "trailer_tas_title", "トレーラー TAS レコーダー" },
             { "trailer_tas_help", "待機中はキャラをドラッグ配置｜人→鳥→猫→スライムの順に重ね録り｜F9: 録画  F10: 再生  P: 停止  O: 1F" },
@@ -311,14 +338,14 @@ namespace DrawBody.Prototype
             { "menu_continue", "続ける" },
             { "menu_to_title", "タイトルへ" },
             { "language_settings", "言語設定" },
-            { "multi_play", "MULTI PLAY" },
+            { "multi_play", "マルチプレイ" },
             { "multi_random_button", "ランダムマッチ" },
             { "multi_room_button", "プライベート" },
             { "multi_random_match", "ランダムマッチ" },
             { "multi_searching_players", "プレイヤーを探しています" },
             { "multi_searching_slot", "募集中" },
             { "multi_random_status_default", "プレイヤーを探しています...\n\n●□□□\n1 / 4 PLAYERS\n\nP1  あなた    READY?\n✏  募集中\n✏  募集中\n✏  募集中" },
-            { "multi_room_title", "ROOM" },
+            { "multi_room_title", "ルーム" },
             { "multi_create_room", "ルームを作る" },
             { "multi_join_room", "ルームに入る" },
             { "multi_create_room_body", "最大人数\n\n<color=#1F63D8><b>4</b></color>\n\n公開\n\n<color=#0E7A2A><b>公開</b></color>" },
@@ -448,6 +475,8 @@ namespace DrawBody.Prototype
             { "stage_editor_status_debug_start_help", "\u30ad\u30e3\u30e9\u3092\u30c9\u30e9\u30c3\u30b0\u3059\u308b\u3068\u3001\u305d\u306e\u5834\u6240\u304b\u3089\u30c6\u30b9\u30c8\u3092\u958b\u59cb\u3067\u304d\u307e\u3059\u3002\u901a\u5e38\u306e\u30b9\u30bf\u30fc\u30c8\u5730\u70b9\u306f\u5909\u66f4\u3055\u308c\u307e\u305b\u3093\u3002" },
             { "stage_editor_status_debug_start_drag", "\u30c6\u30b9\u30c8\u958b\u59cb\u4f4d\u7f6e\u3092\u79fb\u52d5\u4e2d\u3067\u3059\u3002" },
             { "stage_editor_status_debug_start", "\u30c6\u30b9\u30c8\u958b\u59cb\u4f4d\u7f6e: X {0:0.00} / Y {1:0.00}" },
+            { "stage_editor_status_validation_failed", "\u4fdd\u5b58\u3067\u304d\u307e\u305b\u3093: \u30a8\u30e9\u30fc{0}\u4ef6\u3002{1}" },
+            { "stage_editor_status_saved_with_warnings", "\u4fdd\u5b58\u3057\u307e\u3057\u305f: {0}\uff08\u8b66\u544a{1}\u4ef6\uff09" },
             { "multi_room_status_default", "ルーム作成\nルーム名  [........]\n人数  2 / 3 / 4\n公開 / 非公開\n\nルーム参加\nルームID  [......]" },
             { "stage_editor_help_runtime", "ドラッグで配置 / 選択モードの空白ドラッグ: 範囲選択 / 矢印: 選択物を移動（Alt併用で微調整）\nホイール: 拡大縮小  Shift+ホイール: 回転  Alt併用: 微調整\nX+ホイール: 横  Alt+ホイール: 縦  移動床はM+ホイール: 移動方向" },
             { "stage_editor_selected_multiple", "{0}個のオブジェクトを選択中" },
@@ -515,7 +544,11 @@ namespace DrawBody.Prototype
             { "stage_editor_status_weight_threshold", "\u8a08\u91cf\u5668\u306e1\u4eba\u3042\u305f\u308a\u4f5c\u52d5\u91cd\u91cf\u3092 {0:0} INK \u306b\u8a2d\u5b9a\u3057\u307e\u3057\u305f\u3002" },
             { "stage_editor_status_weight_threshold_invalid", "1\uff5e2000 \u306e\u6570\u5024\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002" },
             { "ink_personal_cap", "\u500b\u4eba\u4e0a\u9650" },
-            { "ink_team_formula", "\u5168\u4f53 {0}\u4eba\u00d7{1:0}" },
+            { "ink_team_formula", "\u5168\u4f53\u4e0a\u9650\uff08{0}\u4eba\uff09" },
+            { "draw_pen_size", "\u30da\u30f3\u306e\u592a\u3055" },
+            { "draw_ink", "\u30a4\u30f3\u30af" },
+            { "draw_clear_part", "\u30d1\u30fc\u30c4\u6d88\u53bb" },
+            { "draw_undo_once", "1\u3064\u623b\u3059" },
             { "draw_reset_all", "\u5168\u30ea\u30bb\u30c3\u30c8" },
             { "draw_reset_confirm_title", "\u5168\u30ea\u30bb\u30c3\u30c8\u3057\u307e\u3059\u304b\uff1f" },
             { "draw_reset_confirm_message", "\u3059\u3079\u3066\u306e\u30d1\u30fc\u30c4\u3092\u6d88\u3057\u3066\u3001\u6700\u521d\u306e\u666e\u901a\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u306b\u623b\u3057\u307e\u3059\u3002" },
@@ -789,7 +822,7 @@ namespace DrawBody.Prototype
             { "survival_mode_title", "11-2  サバイバル" },
             { "survival_goal", "1人でも生き残ればクリア！" },
             { "survival_goal_sub", "光った床へ移動しよう" },
-            { "grain_rain_target", "目標  {0:0}g  (50g × 人数)" },
+            { "grain_rain_target", "目標  {0:0}g  (90g × 人数)" },
             { "grain_rain_ready", "自由に動いて受け止める位置を決めよう" },
             { "grain_rain_catch", "10秒間、頭でレア粒を受け止めよう！" },
             { "grain_rain_measuring", "計測中..." },
@@ -810,11 +843,13 @@ namespace DrawBody.Prototype
             { "ready_room_status", "準備 {0} / {1}" },
             { "ready_room_recommended", "推奨キャラ" },
             { "ready_room_recommended_none", "なし" },
+            { "ready_room_restriction", "※部屋を出ると キャラ変更・書き直し不可" },
+            { "ready_room_restriction_redraw_allowed", "※部屋を出ると キャラ変更不可（書き直し可）" },
             { "ready_room_game_default", "みんなで準備してゲームを始めよう" },
             { "ready_room_game_2_2", "制限時間内に魚を集めよう" },
             { "ready_room_game_4_3", "クレヨンキングを倒そう" },
             { "ready_room_game_6_2", "ハードルをよけて生き残ろう" },
-            { "ready_room_game_6_3", "迫るトゲ壁から逃げよう" },
+            { "ready_room_game_6_3", "水槽の穴を体で全部ふさごう" },
             { "ready_room_game_7_1", "体の形を使って鍵を開けよう" },
             { "ready_room_game_8_1", "落ちてくる柱をよけよう" },
             { "ready_room_game_8_2", "ボールを跳ね返してブロックを壊そう" },
@@ -824,6 +859,7 @@ namespace DrawBody.Prototype
             { "ready_room_game_9_3", "落ちてくる粒を集めて、目標重量を目指そう" },
             { "ready_room_game_10_1", "スピードラン。制限時間内にゴールしよう。" },
             { "ready_room_game_10_3", "銃弾を反射させて敵を倒そう" },
+            { "ready_room_game_11_1", "暗闇を照らして、幽霊から逃げ切ろう" },
             { "ready_room_game_11_2", "最後まで生き残ろう" },
             { "ready_room_game_11_3", "爆弾を投げてブロックを全部壊そう" },
             { "ready_room_game_12_1", "箱を壊して、コインを集めよう" },
@@ -871,6 +907,7 @@ namespace DrawBody.Prototype
             { "mirror_brawl_phase_ready", "PHASE {0}　開始まで" },
             { "mirror_brawl_ready_hint", "同じ姿のCPUチームを倒せ" },
             { "mirror_brawl_phase", "PHASE {0}　残り {1}体" },
+            { "mirror_brawl_phase_clear", "PHASE {0} クリア！" },
             { "mirror_brawl_hint", "赤ボタンで武器を確保　爆弾：Fで投げる　ミサイル：クリック" },
             { "mirror_brawl_missile_ready", "ミサイル準備完了！　マウスで狙ってクリック" },
             { "mirror_brawl_clear", "CPUチーム撃破！" },
@@ -924,11 +961,29 @@ namespace DrawBody.Prototype
             { "escort_friend_active", "味方キャラ  進行中" },
             { "escort_instruction", "箱・足場・自分の体で道をつなごう" },
             { "escort_defense_title", "10-2  \u5473\u65b9\u3092\u5b88\u3063\u3066\u30b4\u30fc\u30eb\u3078" },
+            { "escort_friend_defeat_cry", "AAAH!" },
             { "escort_defense_instruction", "\u5148\u56de\u308a\u3057\u3066\u7f60\u30fb\u7bb1\u30fb\u6575\u3092\u6392\u9664\u3057\u3088\u3046" },
             { "escort_respawning", "再排出まで  {0:0.0}" },
             { "escort_respawn_sub", "落ちた味方を準備中…" },
             { "escort_clear_title", "護送成功！" },
             { "escort_clear_sub", "味方キャラがゴールしました" },
+            { "drawn_escort_monitor", "ラウンド {0}/3    準備 {1:0.0}秒" },
+            { "drawn_escort_plan", "書き直しOK！  体の線で道をつなごう" },
+            { "drawn_escort_running", "発進！  味方をゴールまで運ぼう" },
+            { "drawn_escort_round_running", "ラウンド {0}/3" },
+            { "drawn_escort_round_clear", "ラウンド {0} クリア！" },
+            { "aquarium_seal_monitor", "ラウンド {0}/3    のこり {1:0.0}秒" },
+            { "aquarium_seal_progress", "穴 {0}/{1}    体で全部ふさごう！" },
+            { "aquarium_seal_round_clear", "ラウンド {0} クリア！" },
+            { "aquarium_seal_timeout", "時間切れ！  ラウンド1からやり直します" },
+            { "aquarium_seal_box_hint", "穴を塞げ！" },
+            { "drawn_escort_snack", "最終ラウンド：上のおやつを取ろう！" },
+            { "drawn_escort_final_plan", "上のおやつを通る道を作ろう！\n書き直しOK！  体の線で道をつなごう" },
+            { "drawn_escort_tutorial", "頭や体の線も、味方が歩ける足場になる" },
+            { "drawn_escort_launch", "味方 発進" },
+            { "drawn_escort_failed", "味方が落ちてしまった！" },
+            { "drawn_escort_game_over", "ゲームオーバー" },
+            { "redraw_unavailable_escort_run", "味方の走行中は書き直しできません。" },
             { "ricochet_title", "10-3  反射リレー" },
             { "ricochet_round", "ROUND {0} / {1}" },
             { "ricochet_ammo", "残弾 {0}" },
@@ -995,15 +1050,16 @@ namespace DrawBody.Prototype
             { "title_multi", "MULTI" },
             { "title_draw", "DRAW" },
             { "title_option", "OPTION" },
-            { "option_back", "BACK" },
-            { "option_back_esc", "← BACK  ESC" },
+            { "option_back", "BACK  ESC" },
+            { "option_back_esc", "BACK  ESC" },
+            { "ui_back_esc", "BACK  ESC" },
             { "title_exit", "EXIT" },
             { "title_debug", "DEBUG" },
             { "trailer_debug_title", "TRAILER CAPTURE DEBUG" },
             { "trailer_debug_scenario_01", "① 4-player aerial relay" },
             { "trailer_debug_scenario_01_help", "Human throws Bird, then Bird → Cat → Slime relay" },
             { "trailer_debug_start", "START SEQUENCE" },
-            { "trailer_debug_back", "BACK" },
+            { "trailer_debug_back", "BACK  ESC" },
             { "trailer_debug_edit_shapes", "EDIT CHARACTERS" },
             { "steam_header_debug_button", "STEAM HEADER" },
             { "steam_header_capture", "EXPORT 920×430 PNG" },
@@ -1011,6 +1067,7 @@ namespace DrawBody.Prototype
             { "steam_header_ready", "Check the composition, then export the PNG" },
             { "steam_header_saved", "Saved: {0}" },
             { "player_redrawing_status", "REDRAWING..." },
+            { "character_change_ready_room_only", "CHARACTERS CAN ONLY BE CHANGED IN THE READY ROOM." },
             { "trailer_debug_capture_help", "R  REPLAY     H  HIDE HUD     ESC  TITLE" },
             { "trailer_tas_title", "TRAILER TAS RECORDER" },
             { "trailer_tas_help", "Drag actors while idle | Overdub Human → Bird → Cat → Slime | F9 Record  F10 Play  P Pause  O Step" },
@@ -1174,6 +1231,8 @@ namespace DrawBody.Prototype
             { "stage_editor_status_debug_start_help", "Drag the character to start test play from that position. The saved stage spawn is not changed." },
             { "stage_editor_status_debug_start_drag", "Moving the test-play start position." },
             { "stage_editor_status_debug_start", "Test start: X {0:0.00} / Y {1:0.00}" },
+            { "stage_editor_status_validation_failed", "Cannot save: {0} error(s). {1}" },
+            { "stage_editor_status_saved_with_warnings", "Saved: {0} ({1} warning(s))" },
             { "multi_room_status_default", "Create Room\nRoom Name  [........]\nPlayers  2 / 3 / 4\nPublic / Private\n\nJoin Room\nRoom ID  [......]" },
             { "stage_editor_help_runtime", "Drag to place / Drag empty space in Select mode: box select / Arrows: move selection (hold Alt for fine movement)\nWheel: scale  Shift+Wheel: rotate  +Alt: fine rotate\nX+Wheel: width  Alt+Wheel: height  Moving platform M+Wheel: direction" },
             { "stage_editor_selected_multiple", "{0} objects selected" },
@@ -1241,7 +1300,11 @@ namespace DrawBody.Prototype
             { "stage_editor_status_weight_threshold", "Scale trigger weight set to {0:0} INK per player." },
             { "stage_editor_status_weight_threshold_invalid", "Enter a number from 1 to 2000." },
             { "ink_personal_cap", "PERSONAL CAP" },
-            { "ink_team_formula", "TEAM {0}\u00d7{1:0}" },
+            { "ink_team_formula", "TEAM CAP ({0}P)" },
+            { "draw_pen_size", "PEN SIZE" },
+            { "draw_ink", "INK" },
+            { "draw_clear_part", "CLEAR PART" },
+            { "draw_undo_once", "UNDO" },
             { "draw_reset_all", "RESET ALL" },
             { "draw_reset_confirm_title", "RESET EVERYTHING?" },
             { "draw_reset_confirm_message", "Erase every body part and restore the original character." },
@@ -1515,7 +1578,7 @@ namespace DrawBody.Prototype
             { "survival_mode_title", "11-2  SURVIVAL" },
             { "survival_goal", "ONE SURVIVOR CLEARS!" },
             { "survival_goal_sub", "MOVE TO THE GLOWING FLOOR" },
-            { "grain_rain_target", "TARGET  {0:0}g  (50g x PLAYERS)" },
+            { "grain_rain_target", "TARGET  {0:0}g  (90g x PLAYERS)" },
             { "grain_rain_ready", "MOVE INTO POSITION BEFORE THE RAIN" },
             { "grain_rain_catch", "CATCH RARE GRAINS ON YOUR HEAD FOR 10 SECONDS!" },
             { "grain_rain_measuring", "WEIGHING..." },
@@ -1536,11 +1599,13 @@ namespace DrawBody.Prototype
             { "ready_room_status", "READY {0} / {1}" },
             { "ready_room_recommended", "RECOMMENDED" },
             { "ready_room_recommended_none", "NONE" },
+            { "ready_room_restriction", "NO CHARACTER CHANGE OR REDRAW AFTER LEAVING" },
+            { "ready_room_restriction_redraw_allowed", "NO CHARACTER CHANGE AFTER LEAVING (REDRAW OK)" },
             { "ready_room_game_default", "GET READY TO START THE GAME" },
             { "ready_room_game_2_2", "COLLECT THE FISH BEFORE TIME RUNS OUT" },
             { "ready_room_game_4_3", "DEFEAT THE CRAYON KING" },
             { "ready_room_game_6_2", "DODGE THE HURDLES AND SURVIVE" },
-            { "ready_room_game_6_3", "ESCAPE THE CHASING SPIKE WALL" },
+            { "ready_room_game_6_3", "PLUG EVERY AQUARIUM HOLE WITH YOUR BODIES" },
             { "ready_room_game_7_1", "USE YOUR BODY SHAPE TO UNLOCK THE PATH" },
             { "ready_room_game_8_1", "DODGE THE FALLING PILLARS" },
             { "ready_room_game_8_2", "REFLECT THE BALL AND BREAK EVERY BLOCK" },
@@ -1550,6 +1615,7 @@ namespace DrawBody.Prototype
             { "ready_room_game_9_3", "COLLECT THE FALLING GRAINS AND REACH THE TARGET WEIGHT" },
             { "ready_room_game_10_1", "SPEED RUN. REACH THE GOAL BEFORE TIME RUNS OUT." },
             { "ready_room_game_10_3", "RICOCHET BULLETS TO DEFEAT THE ENEMIES" },
+            { "ready_room_game_11_1", "LIGHT THE DARKNESS AND ESCAPE THE GHOSTS" },
             { "ready_room_game_11_2", "SURVIVE UNTIL TIME RUNS OUT" },
             { "ready_room_game_11_3", "THROW BOMBS TO BREAK EVERY BLOCK" },
             { "ready_room_game_12_1", "BREAK BOXES AND COLLECT COINS" },
@@ -1597,6 +1663,7 @@ namespace DrawBody.Prototype
             { "mirror_brawl_phase_ready", "PHASE {0}  STARTS IN" },
             { "mirror_brawl_ready_hint", "Defeat the CPU team wearing your exact forms." },
             { "mirror_brawl_phase", "PHASE {0}  LEFT: {1}" },
+            { "mirror_brawl_phase_clear", "PHASE {0} CLEAR!" },
             { "mirror_brawl_hint", "Claim weapons with red switches. F: throw bomb  CLICK: missile" },
             { "mirror_brawl_missile_ready", "MISSILE READY!  Aim with the mouse and click." },
             { "mirror_brawl_clear", "CPU TEAM DEFEATED!" },
@@ -1650,11 +1717,29 @@ namespace DrawBody.Prototype
             { "escort_friend_active", "FRIEND MOVING" },
             { "escort_instruction", "BUILD A PATH WITH BOXES, PLATFORMS, AND YOUR BODY" },
             { "escort_defense_title", "10-2  PROTECT THE FRIEND" },
+            { "escort_friend_defeat_cry", "AAAH!" },
             { "escort_defense_instruction", "RUN AHEAD AND CLEAR TRAPS, BOXES, AND ENEMIES" },
             { "escort_respawning", "NEXT FRIEND IN  {0:0.0}" },
             { "escort_respawn_sub", "PREPARING A NEW FRIEND..." },
             { "escort_clear_title", "ESCORT COMPLETE!" },
             { "escort_clear_sub", "THE FRIEND REACHED THE GOAL" },
+            { "drawn_escort_monitor", "ROUND {0}/3    BUILD {1:0.0}s" },
+            { "drawn_escort_plan", "REDRAW OK!  CONNECT A PATH WITH YOUR BODY" },
+            { "drawn_escort_running", "GO!  HELP THE FRIEND REACH THE GOAL" },
+            { "drawn_escort_round_running", "ROUND {0}/3" },
+            { "drawn_escort_round_clear", "ROUND {0} CLEAR!" },
+            { "aquarium_seal_monitor", "ROUND {0}/3    {1:0.0}s LEFT" },
+            { "aquarium_seal_progress", "HOLES {0}/{1}    PLUG THEM ALL WITH YOUR BODIES!" },
+            { "aquarium_seal_round_clear", "ROUND {0} CLEAR!" },
+            { "aquarium_seal_timeout", "TIME UP!  RESTARTING FROM ROUND 1" },
+            { "aquarium_seal_box_hint", "PLUG THE HOLES!" },
+            { "drawn_escort_snack", "FINAL ROUND: REACH THE SNACK ABOVE!" },
+            { "drawn_escort_final_plan", "BUILD A PATH THROUGH THE SNACK ABOVE!\nREDRAW OK!  CONNECT IT WITH YOUR BODY" },
+            { "drawn_escort_tutorial", "THE FRIEND CAN WALK ON YOUR HEAD AND BODY LINES" },
+            { "drawn_escort_launch", "FRIEND START" },
+            { "drawn_escort_failed", "THE FRIEND FELL!" },
+            { "drawn_escort_game_over", "GAME OVER" },
+            { "redraw_unavailable_escort_run", "YOU CANNOT REDRAW WHILE THE FRIEND IS MOVING." },
             { "ricochet_title", "10-3  RICOCHET RELAY" },
             { "ricochet_round", "ROUND {0} / {1}" },
             { "ricochet_ammo", "AMMO {0}" },
@@ -1693,58 +1778,236 @@ namespace DrawBody.Prototype
         };
 
         public static event Action LanguageChanged;
-        public static Language CurrentLanguage { get; private set; } = Language.Japanese;
+        private static string currentLanguageCode = DefaultLanguageCode;
+
+        // Kept for scene and code compatibility while language selection moves to stable locale codes.
+        public static Language CurrentLanguage => string.Equals(currentLanguageCode, DefaultLanguageCode, StringComparison.OrdinalIgnoreCase)
+            ? Language.Japanese
+            : Language.English;
+        public static string CurrentLanguageCode => currentLanguageCode;
+        public static IReadOnlyList<LanguageDefinition> SupportedLanguages
+        {
+            get
+            {
+                LoadLanguageDefinitions();
+                return languageDefinitions;
+            }
+        }
+        public static LanguageDefinition CurrentLanguageDefinition
+        {
+            get
+            {
+                LoadLanguageDefinitions();
+                return languageDefinitionsByCode.TryGetValue(currentLanguageCode, out LanguageDefinition definition)
+                    ? definition
+                    : languageDefinitionsByCode[DefaultLanguageCode];
+            }
+        }
+        public static float CurrentUiTextScale => Mathf.Max(0.5f, CurrentLanguageDefinition.uiTextScale);
+        public static string CurrentListSeparator => string.IsNullOrEmpty(CurrentLanguageDefinition.listSeparator)
+            ? " / "
+            : CurrentLanguageDefinition.listSeparator;
+        public static bool CurrentLanguageIsRightToLeft => CurrentLanguageDefinition.rightToLeft;
+        public static CultureInfo CurrentCulture
+        {
+            get
+            {
+                string cultureCode = CurrentLanguageDefinition.cultureCode;
+                if (string.IsNullOrEmpty(cultureCode)) return CultureInfo.InvariantCulture;
+                try
+                {
+                    return CultureInfo.GetCultureInfo(cultureCode);
+                }
+                catch (CultureNotFoundException)
+                {
+                    return CultureInfo.InvariantCulture;
+                }
+            }
+        }
+
+        public static Font LoadCurrentFont(Font fallback = null)
+        {
+            string resourcePath = CurrentLanguageDefinition.fontResourcePath;
+            return string.IsNullOrEmpty(resourcePath)
+                ? fallback
+                : Resources.Load<Font>(resourcePath) ?? fallback;
+        }
 
         private void Awake()
         {
             LoadExternalTables();
-            string saved = PlayerPrefs.GetString("language", Language.Japanese.ToString());
-            if (Enum.TryParse(saved, out Language language))
-            {
-                SetLanguage(language);
-            }
+            string saved = NormalizeLegacyLanguageCode(PlayerPrefs.GetString("language", DefaultLanguageCode));
+            SetLanguage(saved);
         }
 
         public static void SetLanguage(Language language)
         {
+            SetLanguage(language == Language.Japanese ? DefaultLanguageCode : FallbackLanguageCode);
+        }
+
+        public static bool SetLanguage(string languageCode)
+        {
             LoadExternalTables();
-            CurrentLanguage = language;
-            PlayerPrefs.SetString("language", language.ToString());
+            string normalized = NormalizeLegacyLanguageCode(languageCode);
+            if (!languageDefinitionsByCode.ContainsKey(normalized))
+            {
+                return false;
+            }
+
+            currentLanguageCode = normalized;
+            PlayerPrefs.SetString("language", currentLanguageCode);
             LanguageChanged?.Invoke();
+            return true;
+        }
+
+        public static bool IsCurrentLanguage(string languageCode)
+        {
+            return string.Equals(currentLanguageCode, languageCode, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static LanguageDefinition GetLanguageDefinition(string languageCode)
+        {
+            LoadLanguageDefinitions();
+            string normalized = NormalizeLegacyLanguageCode(languageCode);
+            return languageDefinitionsByCode.TryGetValue(normalized, out LanguageDefinition definition)
+                ? definition
+                : null;
         }
 
         public static string T(string key)
         {
             LoadExternalTables();
-            Dictionary<string, string> external = CurrentLanguage == Language.Japanese ? ExternalJapanese : ExternalEnglish;
-            if (external.TryGetValue(key, out string externalValue))
-            {
-                return externalValue;
-            }
-
-            if (CurrentLanguage == Language.Japanese && TryGetJapaneseOverride(key, out string japanese))
-            {
-                return japanese;
-            }
-
-            if (TryGetGeneratedLocalization(key, out string generated))
-            {
-                return generated;
-            }
-
-            Dictionary<string, string> table = CurrentLanguage == Language.Japanese ? Japanese : English;
-            if (table.TryGetValue(key, out string value))
+            if (TryResolveForLanguage(currentLanguageCode, key, out string value))
             {
                 return value;
             }
 
-            return English.TryGetValue(key, out string fallback) ? fallback : key;
+            HashSet<string> visited = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { currentLanguageCode };
+            string fallbackCode = CurrentLanguageDefinition.fallbackCode;
+            while (!string.IsNullOrEmpty(fallbackCode) && visited.Add(fallbackCode))
+            {
+                if (TryResolveForLanguage(fallbackCode, key, out value))
+                {
+                    return value;
+                }
+
+                LanguageDefinition fallbackDefinition = GetLanguageDefinition(fallbackCode);
+                fallbackCode = fallbackDefinition != null ? fallbackDefinition.fallbackCode : null;
+            }
+
+            if (visited.Add(FallbackLanguageCode) && TryResolveForLanguage(FallbackLanguageCode, key, out value))
+            {
+                return value;
+            }
+
+            return key;
         }
 
-        private static bool TryGetGeneratedLocalization(string key, out string value)
+        private static bool TryResolveForLanguage(string languageCode, string key, out string value)
         {
-            Dictionary<string, string> table = CurrentLanguage == Language.Japanese ? GeneratedJapanese : GeneratedEnglish;
-            return table.TryGetValue(key, out value);
+            if (externalTables.TryGetValue(languageCode, out Dictionary<string, string> external)
+                && external.TryGetValue(key, out value))
+            {
+                return true;
+            }
+
+            if (string.Equals(languageCode, DefaultLanguageCode, StringComparison.OrdinalIgnoreCase)
+                && TryGetJapaneseOverride(key, out value))
+            {
+                return true;
+            }
+
+            Dictionary<string, string> generated = GetGeneratedTable(languageCode);
+            if (generated != null && generated.TryGetValue(key, out value))
+            {
+                return true;
+            }
+
+            Dictionary<string, string> builtIn = GetBuiltInTable(languageCode);
+            if (builtIn != null && builtIn.TryGetValue(key, out value))
+            {
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+        private static Dictionary<string, string> GetGeneratedTable(string languageCode)
+        {
+            if (string.Equals(languageCode, DefaultLanguageCode, StringComparison.OrdinalIgnoreCase)) return GeneratedJapanese;
+            if (string.Equals(languageCode, FallbackLanguageCode, StringComparison.OrdinalIgnoreCase)) return GeneratedEnglish;
+            return null;
+        }
+
+        private static Dictionary<string, string> GetBuiltInTable(string languageCode)
+        {
+            if (string.Equals(languageCode, DefaultLanguageCode, StringComparison.OrdinalIgnoreCase)) return Japanese;
+            if (string.Equals(languageCode, FallbackLanguageCode, StringComparison.OrdinalIgnoreCase)) return English;
+            return null;
+        }
+
+        private static void LoadLanguageDefinitions()
+        {
+            if (loadedLanguageDefinitions) return;
+            loadedLanguageDefinitions = true;
+
+            TextAsset asset = Resources.Load<TextAsset>("Localization/languages");
+            LanguageDefinitionFile file = asset != null
+                ? JsonUtility.FromJson<LanguageDefinitionFile>(asset.text)
+                : null;
+            if (file?.entries != null)
+            {
+                for (int i = 0; i < file.entries.Length; i++)
+                {
+                    RegisterLanguageDefinition(file.entries[i]);
+                }
+            }
+
+            if (!languageDefinitionsByCode.ContainsKey(DefaultLanguageCode))
+            {
+                RegisterLanguageDefinition(CreateDefaultDefinition(DefaultLanguageCode, "\u65e5\u672c\u8a9e", "\u30fb", 1f));
+            }
+            if (!languageDefinitionsByCode.ContainsKey(FallbackLanguageCode))
+            {
+                RegisterLanguageDefinition(CreateDefaultDefinition(FallbackLanguageCode, "EN", " / ", 0.75f));
+            }
+        }
+
+        private static void RegisterLanguageDefinition(LanguageDefinition definition)
+        {
+            if (definition == null || string.IsNullOrWhiteSpace(definition.code)) return;
+            definition.code = definition.code.Trim().ToLowerInvariant();
+            if (languageDefinitionsByCode.ContainsKey(definition.code)) return;
+            if (string.IsNullOrEmpty(definition.nativeName)) definition.nativeName = definition.code.ToUpperInvariant();
+            if (definition.uiTextScale <= 0f) definition.uiTextScale = 1f;
+            if (definition.resourcePaths == null) definition.resourcePaths = Array.Empty<string>();
+            languageDefinitions.Add(definition);
+            languageDefinitionsByCode.Add(definition.code, definition);
+        }
+
+        private static LanguageDefinition CreateDefaultDefinition(string code, string nativeName, string separator, float textScale)
+        {
+            return new LanguageDefinition
+            {
+                code = code,
+                nativeName = nativeName,
+                fallbackCode = code == FallbackLanguageCode ? string.Empty : FallbackLanguageCode,
+                resourcePaths = code == DefaultLanguageCode
+                    ? new[] { "Localization/ja", "Localization/stage_decorations_ja" }
+                    : new[] { "Localization/en", "Localization/stage_decorations_en" },
+                uiTextScale = textScale,
+                listSeparator = separator,
+                cultureCode = code == DefaultLanguageCode ? "ja-JP" : "en-US"
+            };
+        }
+
+        private static string NormalizeLegacyLanguageCode(string languageCode)
+        {
+            if (string.IsNullOrWhiteSpace(languageCode)) return DefaultLanguageCode;
+            if (string.Equals(languageCode, Language.Japanese.ToString(), StringComparison.OrdinalIgnoreCase)) return DefaultLanguageCode;
+            if (string.Equals(languageCode, Language.English.ToString(), StringComparison.OrdinalIgnoreCase)) return FallbackLanguageCode;
+            return languageCode.Trim().ToLowerInvariant();
         }
 
         private static void LoadExternalTables()
@@ -1755,10 +2018,17 @@ namespace DrawBody.Prototype
             }
 
             loadedExternalTables = true;
-            LoadExternalTable("Localization/ja", ExternalJapanese);
-            LoadExternalTable("Localization/en", ExternalEnglish);
-            LoadExternalTable("Localization/stage_decorations_ja", ExternalJapanese);
-            LoadExternalTable("Localization/stage_decorations_en", ExternalEnglish);
+            LoadLanguageDefinitions();
+            for (int i = 0; i < languageDefinitions.Count; i++)
+            {
+                LanguageDefinition definition = languageDefinitions[i];
+                Dictionary<string, string> table = new Dictionary<string, string>();
+                externalTables[definition.code] = table;
+                for (int pathIndex = 0; pathIndex < definition.resourcePaths.Length; pathIndex++)
+                {
+                    LoadExternalTable(definition.resourcePaths[pathIndex], table);
+                }
+            }
         }
 
         private static void LoadExternalTable(string resourcePath, Dictionary<string, string> target)
@@ -1874,7 +2144,27 @@ namespace DrawBody.Prototype
 
         public static string Format(string key, params object[] args)
         {
-            return string.Format(T(key), args);
+            return string.Format(CurrentCulture, T(key), args);
+        }
+
+        public static IReadOnlyList<string> GetMissingTranslationKeys(string languageCode)
+        {
+            LoadExternalTables();
+            string normalized = NormalizeLegacyLanguageCode(languageCode);
+            HashSet<string> referenceKeys = new HashSet<string>(English.Keys);
+            referenceKeys.UnionWith(GeneratedEnglish.Keys);
+            if (externalTables.TryGetValue(FallbackLanguageCode, out Dictionary<string, string> fallbackExternal))
+            {
+                referenceKeys.UnionWith(fallbackExternal.Keys);
+            }
+
+            List<string> missing = new List<string>();
+            foreach (string key in referenceKeys)
+            {
+                if (!TryResolveForLanguage(normalized, key, out _)) missing.Add(key);
+            }
+            missing.Sort(StringComparer.Ordinal);
+            return missing;
         }
 
         public static string GetPartLabel(DrawManager.BodyPart part)

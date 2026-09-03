@@ -154,6 +154,7 @@ namespace DrawBody.Prototype
         private Vector2 monitorSize;
         private TextMesh[] labels = System.Array.Empty<TextMesh>();
         private readonly Dictionary<int, float> preferredSizes = new Dictionary<int, float>();
+        private readonly Dictionary<int, float> lastAppliedSizes = new Dictionary<int, float>();
         private readonly Dictionary<int, TextMesh> glowLabels = new Dictionary<int, TextMesh>();
         private readonly Dictionary<int, string> rawTexts = new Dictionary<int, string>();
         private readonly Dictionary<int, string> wrappedTexts = new Dictionary<int, string>();
@@ -189,6 +190,16 @@ namespace DrawBody.Prototype
                 TextMesh label = labels[i];
                 if (label == null || string.IsNullOrEmpty(label.text)) continue;
                 int id = label.GetInstanceID();
+
+                // Detect external characterSize changes (e.g. RefreshPresentation
+                // overwriting every frame) and treat as the new preferred maximum.
+                float externalSize = label.characterSize;
+                if (lastAppliedSizes.TryGetValue(id, out float lastApplied)
+                    && Mathf.Abs(externalSize - lastApplied) > 0.0005f)
+                {
+                    preferredSizes[id] = externalSize;
+                }
+
                 string current = label.text;
                 if (!wrappedTexts.TryGetValue(id, out string previousWrapped) || current != previousWrapped)
                     rawTexts[id] = current;
@@ -197,9 +208,9 @@ namespace DrawBody.Prototype
                 float preferredSize = preferredSizes.TryGetValue(id, out float savedSize)
                     ? savedSize
                     : label.characterSize;
-                float safeWidth = monitorSize.x * 0.68f;
+                float safeWidth = monitorSize.x * 0.62f;
                 float maximumLineUnits = safeWidth / Mathf.Max(0.025f, preferredSize * 2.7f);
-                string wrapped = WrapText(raw, maximumLineUnits, 2);
+                string wrapped = WrapText(raw, maximumLineUnits, 3);
                 label.text = wrapped;
                 wrappedTexts[id] = wrapped;
 
@@ -208,6 +219,7 @@ namespace DrawBody.Prototype
                 float safeHeight = monitorSize.y * 0.52f;
                 float heightFit = safeHeight / Mathf.Max(3.1f, lineCount * 3.1f);
                 label.characterSize = Mathf.Min(preferredSize, widthFit, heightFit);
+                lastAppliedSizes[id] = label.characterSize;
 
                 if (glowLabels.TryGetValue(id, out TextMesh glow) && glow != null)
                 {
@@ -248,10 +260,37 @@ namespace DrawBody.Prototype
 
         private static string WrapText(string value, float maximumLineUnits, int maximumLines)
         {
-            if (string.IsNullOrEmpty(value) || maximumLines <= 1 || value.IndexOf('\n') >= 0) return value;
-            float totalUnits = MeasureTextUnits(value);
-            if (totalUnits <= maximumLineUnits) return value;
+            if (string.IsNullOrEmpty(value) || maximumLines <= 1) return value;
 
+            string[] existingLines = value.Split('\n');
+            if (existingLines.Length >= maximumLines) return value;
+
+            List<string> result = new List<string>();
+            for (int line = 0; line < existingLines.Length; line++)
+            {
+                if (result.Count >= maximumLines) break;
+                string segment = existingLines[line];
+                float segmentUnits = MeasureTextUnits(segment);
+
+                if (segmentUnits > maximumLineUnits && result.Count + 2 <= maximumLines)
+                {
+                    int bp = FindBreakPoint(segment, maximumLineUnits, segmentUnits);
+                    if (bp > 0 && bp < segment.Length)
+                    {
+                        result.Add(segment.Substring(0, bp).TrimEnd());
+                        result.Add(segment.Substring(bp).TrimStart());
+                        continue;
+                    }
+                }
+
+                result.Add(segment);
+            }
+
+            return string.Join("\n", result.ToArray());
+        }
+
+        private static int FindBreakPoint(string value, float maximumLineUnits, float totalUnits)
+        {
             int bestBreak = -1;
             int whitespaceBreak = -1;
             float units = 0f;
@@ -261,15 +300,13 @@ namespace DrawBody.Prototype
                 units += MeasureCharacter(value[i]);
                 if (char.IsWhiteSpace(value[i])) whitespaceBreak = i;
                 if (units < target) continue;
-                bestBreak = whitespaceBreak > 0 && units - MeasureTextUnits(value.Substring(0, whitespaceBreak)) < 6f
+                bestBreak = whitespaceBreak > 0
+                    && units - MeasureTextUnits(value.Substring(0, whitespaceBreak)) < 6f
                     ? whitespaceBreak
                     : i + 1;
                 break;
             }
-            if (bestBreak <= 0 || bestBreak >= value.Length) return value;
-            string left = value.Substring(0, bestBreak).TrimEnd();
-            string right = value.Substring(bestBreak).TrimStart();
-            return string.IsNullOrEmpty(right) ? value : left + "\n" + right;
+            return bestBreak;
         }
 
         private static void GetTextDimensions(string value, out float longestLineUnits, out int lineCount)

@@ -16,6 +16,9 @@ namespace DrawBody.Prototype
         [SerializeField] private float zoomSpeed = 4.5f;
 
         private Camera controlledCamera;
+        private PlayerController2D[] cachedPlayers = System.Array.Empty<PlayerController2D>();
+        private float nextPlayerCacheRefreshAt;
+        private const float PlayerCacheRefreshInterval = 0.25f;
 
         public float MinimumOrthographicSize => minimumOrthographicSize;
 
@@ -94,20 +97,20 @@ namespace DrawBody.Prototype
                 return false;
             }
 
-            PlayerController2D[] players = FindObjectsByType<PlayerController2D>(
-                FindObjectsInactive.Exclude,
-                FindObjectsSortMode.None);
-            if (players.Length == 0)
+            PlayerController2D[] players = GetCachedPlayers();
+            PlayerController2D firstActive = FindFirstActive(players);
+            if (firstActive == null)
             {
                 return false;
             }
 
             Vector2 localPosition = activeFocus != null
                 ? (Vector2)activeFocus.position
-                : (Vector2)players[0].transform.position;
+                : (Vector2)firstActive.transform.position;
             Vector2 maximumDistance = Vector2.zero;
             for (int i = 0; i < players.Length; i++)
             {
+                if (players[i] == null || !players[i].gameObject.activeInHierarchy) continue;
                 Vector2 position = players[i].transform.position;
                 Vector2 distance = position - localPosition;
                 maximumDistance.x = Mathf.Max(maximumDistance.x, Mathf.Abs(distance.x));
@@ -134,10 +137,9 @@ namespace DrawBody.Prototype
                 return target;
             }
 
-            PlayerController2D[] players = FindObjectsByType<PlayerController2D>(
-                FindObjectsInactive.Exclude,
-                FindObjectsSortMode.None);
-            if (players.Length == 0)
+            PlayerController2D[] players = GetCachedPlayers();
+            PlayerController2D firstActive = FindFirstActive(players);
+            if (firstActive == null)
             {
                 return null;
             }
@@ -148,10 +150,12 @@ namespace DrawBody.Prototype
             Vector2 lastLocalPosition = target != null
                 ? (Vector2)target.position
                 : (Vector2)transform.position;
-            Transform closest = players[0].transform;
+            Transform closest = firstActive.transform;
             float closestDistance = Vector2.SqrMagnitude((Vector2)closest.position - lastLocalPosition);
-            for (int i = 1; i < players.Length; i++)
+            for (int i = 0; i < players.Length; i++)
             {
+                if (players[i] == null || !players[i].gameObject.activeInHierarchy
+                    || players[i] == firstActive) continue;
                 float distance = Vector2.SqrMagnitude((Vector2)players[i].transform.position - lastLocalPosition);
                 if (distance < closestDistance)
                 {
@@ -160,6 +164,29 @@ namespace DrawBody.Prototype
                 }
             }
             return closest;
+        }
+
+        private PlayerController2D[] GetCachedPlayers()
+        {
+            if (cachedPlayers == null || Time.unscaledTime >= nextPlayerCacheRefreshAt)
+            {
+                cachedPlayers = FindObjectsByType<PlayerController2D>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None);
+                nextPlayerCacheRefreshAt = Time.unscaledTime + PlayerCacheRefreshInterval;
+            }
+            return cachedPlayers;
+        }
+
+        private static PlayerController2D FindFirstActive(PlayerController2D[] players)
+        {
+            if (players == null) return null;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] != null && players[i].gameObject.activeInHierarchy)
+                    return players[i];
+            }
+            return null;
         }
 
         public void SetTarget(Transform nextTarget)

@@ -113,6 +113,7 @@ NICO DRAWのゲーム内で使う2Dスプライト。
 - Orbit flyer: teal scribble ball crossed by one crooked loop.
 - Shooter enemy: moss-green knot with a rough cardboard-tube cannon.
 - Bomber enemy: violet winged knot with a hanging charcoal bomb.
+- Ghost enemy: pale violet-blue sheet silhouette with uneven wispy arms and a loose wavy hem; it has no face and uses sparse diagonal colored-pencil hatching so its wall-phasing shape stays readable.
 - Arena boss: one tall purple bean scribble with bent antenna-like horns, stick arms and a blank face area for live expression lines.
 - Flying boss: one rough violet circle with uneven spikes, two wing zigzags and three facial strokes.
 - Chase boss: one wide purple oval with two loop arms, top spikes and three facial strokes.
@@ -134,5 +135,7 @@ NICO DRAWのゲーム内で使う2Dスプライト。
 - In-world monitors: one shared child-drawn blue television silhouette with crooked outlines, sparse pencil strokes, antennae and uneven feet. The pale paper screen is shared by challenge clocks and stage status panels so live text and gauges stay readable; avoid dark digital-device panels.
 - Stage 6-3 chasing wall: pale red pencil-scribbled slab with crooked graphite edges and individually repeated side-facing colored-pencil spike sprites. Movement and the broad trigger remain controller-owned.
 - Collectible pickup feedback: coins, fish and stars arc into the collecting character with a thin bright pencil trail, then produce two fast angular diamond flashes and a sparse burst of sharp directional slashes. Avoid soft expanding discs and large circular glows. Network snapshots hide already-collected items without replaying the effect.
+- Stage 11-1 giant ghost: `enemy-ghost-giant.png` is the invulnerable chase silhouette. Its long faceless violet/blue pencil wisps distinguish it from the ordinary damageable `enemy-ghost.png`.
+- Stage 11-1 lighting: `flashlight.png` is the mouse-aimed carryable light and `guide-lamp.png` is the fixed light used through the climb. Light masks and gameplay ranges remain code-controlled.
 
 Runtime assets live under `Resources/StageObjects/NicoDraw`. Physics, stage IDs and saved data remain separate from the artwork.
