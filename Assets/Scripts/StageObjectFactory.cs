@@ -86,6 +86,8 @@ namespace DrawBody.Prototype
                     return StagePoseKeyFactory.CreateKeyhole(data, parent);
                 case StageObjectType.UpdraftZone:
                     return StagePoseKeyFactory.CreateUpdraft(data, parent);
+                case StageObjectType.RedrawZone:
+                    return StageRedrawZoneFactory.CreateRedrawZone(data, parent);
                 case StageObjectType.SpeedRing2X:
                 case StageObjectType.SpeedRing3X:
                     return StageSpeedBoostRing.CreateObject(data, parent);
@@ -250,6 +252,9 @@ namespace DrawBody.Prototype
                         size = new Vector2(1.6f, 1.9f);
                         break;
                     case StageObjectType.UpdraftZone:
+                        size = new Vector2(20f, 12f);
+                        break;
+                    case StageObjectType.RedrawZone:
                         size = new Vector2(20f, 12f);
                         break;
                     case StageObjectType.SpeedRing2X:
@@ -520,35 +525,57 @@ namespace DrawBody.Prototype
 
             float width = Mathf.Max(4f, data.size.x);
             float height = Mathf.Max(4f, data.size.y);
-            float thickness = Mathf.Clamp(data.pathThickness > 0f ? data.pathThickness : 0.5f, 0.5f, 1.5f);
+            float storedThickness = Mathf.Clamp(
+                data.pathThickness > 0f ? data.pathThickness : 0.5f,
+                0.5f,
+                1.5f);
+            float thickness = GetStageBoundaryThickness(data);
+            float outwardGrowth = thickness - storedThickness;
             Color stroke = new Color(0.16f, 0.17f, 0.2f, 1f);
 
             CreateBoundarySide(
                 "Boundary Ceiling",
-                new Vector2(0f, height * 0.5f - thickness * 0.5f),
-                new Vector2(width, thickness),
+                new Vector2(0f, height * 0.5f - storedThickness + thickness * 0.5f),
+                new Vector2(width + outwardGrowth * 2f, thickness),
                 stroke,
                 root.transform);
 
-            float wallHeight = Mathf.Max(0.35f, height - thickness);
-            float wallCenterY = -thickness * 0.5f;
+            // Preserve every old inner face and the open lower edge. The extra
+            // thickness is placed outside the authored room, never over its contents.
+            float wallHeight = Mathf.Max(0.35f, height - storedThickness);
+            float wallCenterY = -storedThickness * 0.5f;
             CreateBoundarySide(
                 "Boundary Left Wall",
-                new Vector2(-width * 0.5f + thickness * 0.5f, wallCenterY),
+                new Vector2(-width * 0.5f + storedThickness - thickness * 0.5f, wallCenterY),
                 new Vector2(thickness, wallHeight),
                 stroke,
                 root.transform);
             CreateBoundarySide(
                 "Boundary Right Wall",
-                new Vector2(width * 0.5f - thickness * 0.5f, wallCenterY),
+                new Vector2(width * 0.5f - storedThickness + thickness * 0.5f, wallCenterY),
                 new Vector2(thickness, wallHeight),
                 stroke,
                 root.transform);
 
             data.size = new Vector2(width, height);
-            data.pathThickness = thickness;
+            // Keep the authored value stable. GetStageBoundaryThickness applies
+            // the visual/physical 3x scale so rebuilding or saving cannot compound it.
+            data.pathThickness = storedThickness;
             AddEditorMetadata(root, data);
             return root;
+        }
+
+        internal static float GetStageBoundaryThickness(StageObjectData data)
+        {
+            return Mathf.Clamp(GetStageBoundaryInteriorThickness(data) * 3f, 1.5f, 4.5f);
+        }
+
+        internal static float GetStageBoundaryInteriorThickness(StageObjectData data)
+        {
+            return Mathf.Clamp(
+                data != null && data.pathThickness > 0f ? data.pathThickness : 0.5f,
+                0.5f,
+                1.5f);
         }
 
         private GameObject CreateSpike(StageObjectData data, Transform parent)
@@ -839,7 +866,8 @@ namespace DrawBody.Prototype
             return root;
         }
 
-        private static void AddSolidStraightBoxOutline(Transform parent, Vector2 size)
+        private static void AddSolidStraightBoxOutline(
+            Transform parent, Vector2 size, float outlineWidth = 0.055f)
         {
             float x = size.x * 0.5f;
             float y = size.y * 0.5f;
@@ -851,11 +879,12 @@ namespace DrawBody.Prototype
                 new Vector3(-x, y, 0f),
                 new Vector3(-x, -y, 0f)
             };
-            AddDoodleLine("Solid Straight Outline", parent, outline, Color.black, 0.055f, 12);
+            AddDoodleLine("Solid Straight Outline", parent, outline, Color.black, outlineWidth, 12);
             Vector3 accent = new Vector3(0.015f, -0.015f, 0f);
             Vector3[] accentOutline = new Vector3[outline.Length];
             for (int i = 0; i < outline.Length; i++) accentOutline[i] = outline[i] + accent;
-            AddDoodleLine("Solid Straight Accent", parent, accentOutline, new Color(0.1f, 0.48f, 0.95f, 0.42f), 0.026f, 11);
+            AddDoodleLine("Solid Straight Accent", parent, accentOutline,
+                new Color(0.1f, 0.48f, 0.95f, 0.42f), outlineWidth * 0.47f, 11);
         }
 
         private static void AddOneWayPlatformTint(Transform parent, Vector2 size)
@@ -2839,7 +2868,9 @@ namespace DrawBody.Prototype
 
             GameObject textObject = new GameObject("Scale Meter Text");
             textObject.transform.SetParent(obj.transform, false);
-            textObject.transform.localPosition = new Vector3(0f, 0.08f, -0.055f);
+            // TextMesh glyph metrics sit visually above their pivot. Lower the
+            // pivot so the numbers are centered in the illustrated display window.
+            textObject.transform.localPosition = new Vector3(0f, -0.02f, -0.055f);
             float meterScale = Mathf.Max(0.35f, Mathf.Min(
                 Mathf.Max(0.2f, data.size.x) / 3f,
                 Mathf.Max(0.2f, data.size.y) / 0.9f));

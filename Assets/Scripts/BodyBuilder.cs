@@ -675,6 +675,20 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void RestoreBuiltBodyFallbackState()
+        {
+            bool hasGeneratedBody = false;
+            for (int i = 0; i < generatedObjects.Count; i++)
+            {
+                if (generatedObjects[i] == null) continue;
+                hasGeneratedBody = true;
+                break;
+            }
+            if (!hasGeneratedBody) return;
+            if (fallbackCollider != null) fallbackCollider.enabled = false;
+            if (fallbackRenderer != null) fallbackRenderer.enabled = false;
+        }
+
         private Vector2 GetPartAnimationPivot(
             DrawManager.BodyPart part,
             IReadOnlyList<Vector2> drawPoints,

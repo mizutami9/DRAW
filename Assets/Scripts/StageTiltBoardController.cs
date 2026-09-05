@@ -228,11 +228,24 @@ namespace DrawBody.Prototype
             BuildPolygon();
             BuildOuterPolygon();
             CreateRoom();
+            CreateRuntimeRedrawZone();
             CreateBoard();
             CreatePuzzle();
             CreateMonitor();
             ConfigureCamera();
             stageLoader?.SetRuntimeSpawnPosition(GetAssignedLaneCenter(0));
+        }
+
+        private void CreateRuntimeRedrawZone()
+        {
+            Bounds bounds = GetOuterPolygonBounds();
+            StageRedrawZone zone = StageRedrawZoneFactory.CreateRuntimeFloorZone(
+                arenaRoot, "8-3_runtime_redraw_zone_" + round,
+                new Vector2(bounds.center.x, bounds.min.y),
+                bounds.size.x, bounds.size.y);
+            // 8-3 has a polygonal ring instead of a horizontal floor. Its full
+            // redraw treatment is painted into every lane by CreateEdgeLanes.
+            zone?.HideFloorVisual();
         }
 
         private void BuildPolygon()
@@ -320,6 +333,8 @@ namespace DrawBody.Prototype
             {
                 CreateTriangleFill(boardFace);
             }
+            StageEscortController.AddPencilHatchingPolygon(boardFace, "Board Pencil Hatching", polygon,
+                new Color(0.08f, 0.34f, 0.43f, 0.28f), -23, 0.5f);
 
             CreateEdgeLanes();
             CreatePolygonLine(arenaRoot, "Board Inner Frame", polygon, 0.16f,
@@ -330,6 +345,9 @@ namespace DrawBody.Prototype
 
         private void CreateEdgeLanes()
         {
+            StageRedrawZone[] redrawZones = GetComponentsInChildren<StageRedrawZone>(true);
+            for (int i = 0; i < redrawZones.Length; i++) redrawZones[i]?.HideFloorVisual();
+
             Color[] colors =
             {
                 new Color(0.94f, 0.36f, 0.22f, 0.5f),
@@ -345,6 +363,28 @@ namespace DrawBody.Prototype
                 Vector2 outerFrom = outerPolygon[i];
                 CreateFilledQuad(arenaRoot, "Player Lane " + (i + 1),
                     from, to, outerTo, outerFrom, colors[i % colors.Length], 5);
+                Vector2[] lane = { from, to, outerTo, outerFrom };
+                AddRedrawCrayonLane(lane, i);
+            }
+        }
+
+        private void AddRedrawCrayonLane(Vector2[] lane, int laneIndex)
+        {
+            Color[] crayons =
+            {
+                new Color(0.05f, 0.62f, 0.9f, 0.3f),
+                new Color(0.94f, 0.2f, 0.28f, 0.24f),
+                new Color(1f, 0.72f, 0.08f, 0.27f),
+                new Color(0.04f, 0.7f, 0.48f, 0.24f),
+                new Color(0.9f, 0.28f, 0.66f, 0.2f)
+            };
+            float[] spacing = { 0.31f, 0.47f, 0.63f, 0.79f, 0.96f };
+            for (int pass = 0; pass < crayons.Length; pass++)
+            {
+                int colorIndex = (pass + laneIndex * 2) % crayons.Length;
+                StageEscortController.AddPencilHatchingPolygon(arenaRoot,
+                    "Redraw Crayon Scribble " + (laneIndex + 1) + "-" + pass,
+                    lane, crayons[colorIndex], 6, spacing[pass]);
             }
         }
 
@@ -472,6 +512,16 @@ namespace DrawBody.Prototype
             renderer.sprite = DoodleRuntimeAssets.SquareSprite;
             renderer.color = new Color(0.86f, 0.48f, 0.18f, 0.88f);
             renderer.sortingOrder = 12;
+            Vector2 half = size * 0.5f;
+            Vector2[] corners =
+            {
+                new Vector2(-half.x, -half.y), new Vector2(-half.x, half.y),
+                new Vector2(half.x, half.y), new Vector2(half.x, -half.y)
+            };
+            for (int i = 0; i < corners.Length; i++)
+                corners[i] = position + (Vector2)(Quaternion.Euler(0f, 0f, rotation) * corners[i]);
+            StageEscortController.AddPencilHatchingPolygon(arenaRoot, "Maze Wall Pencil Hatching",
+                corners, new Color(0.42f, 0.16f, 0.04f, 0.34f), 13, 0.32f);
         }
 
         private void CreateBall(Vector2 position, int index)

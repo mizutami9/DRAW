@@ -5,6 +5,7 @@ using UnityEngine;
 namespace DrawBody.Prototype
 {
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(10000)]
     public sealed class StageFlyingPlatformBossController : StageEliminationChallengeController
     {
         private const string StageId = "15-1";
@@ -94,6 +95,8 @@ namespace DrawBody.Prototype
         private readonly List<PlayerController2D> mountedPlayers = new List<PlayerController2D>();
         private readonly List<StageFlyingBossShot> shots = new List<StageFlyingBossShot>();
         private readonly List<Transform> bossOrbitShards = new List<Transform>();
+        private readonly Dictionary<PlayerController2D, Dictionary<Renderer, bool>> hiddenPlayerRenderers =
+            new Dictionary<PlayerController2D, Dictionary<Renderer, bool>>();
 
         private StageManager stageManager;
         private OnlineManager onlineManager;
@@ -102,6 +105,7 @@ namespace DrawBody.Prototype
         private Vector3 previousCameraPosition;
         private float previousCameraSize;
         private bool previousFollowEnabled;
+        private bool cameraCaptured;
         private Transform boss;
         private Transform bossFace;
         private SpriteRenderer bossCore;
@@ -130,6 +134,7 @@ namespace DrawBody.Prototype
         private bool retryStarted;
         private int attackCursor;
         private float bossMoodScale = 1f;
+        private bool initialized;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -157,8 +162,15 @@ namespace DrawBody.Prototype
 
         private void Start()
         {
+            EnsureInitializedForPlay();
+        }
+
+        public void EnsureInitializedForPlay()
+        {
+            if (initialized) return;
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing) { enabled = false; return; }
+            initialized = true;
             BuildRoster();
             maximumHealth = 100 * playerCount;
             health = maximumHealth;
@@ -175,6 +187,7 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            MaintainFixedCamera();
             UpdateLocalPadInput();
             shots.RemoveAll(item => item == null);
             if (boss != null)
@@ -911,6 +924,7 @@ namespace DrawBody.Prototype
         private void MountPlayer(PlayerController2D player, int room)
         {
             if (player == null || room < 0 || room >= playerCount) return;
+            player.GetComponent<BodyBuilder>()?.RestoreBuiltBodyFallbackState();
             player.GetComponent<PlayerCarryController>()?.ForceDrop();
             player.SetControlsEnabled(false);
             Rigidbody2D body = player.GetComponent<Rigidbody2D>();
@@ -931,6 +945,7 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
             for (int room = 0; room < playerCount; room++) SyncMountedPlayer(room);
+            MaintainFixedCamera();
         }
 
         private void RestorePlayers()
@@ -946,10 +961,30 @@ namespace DrawBody.Prototype
             mountedPlayers.Clear();
         }
 
-        private static void SetPlayerVisible(PlayerController2D player, bool value)
+        private void SetPlayerVisible(PlayerController2D player, bool visible)
         {
+            if (player == null) return;
             Renderer[] renderers = player.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++) if (renderers[i] != null) renderers[i].enabled = value;
+            if (!visible)
+            {
+                if (!hiddenPlayerRenderers.ContainsKey(player))
+                {
+                    Dictionary<Renderer, bool> states = new Dictionary<Renderer, bool>();
+                    for (int i = 0; i < renderers.Length; i++)
+                        if (renderers[i] != null) states[renderers[i]] = renderers[i].enabled;
+                    hiddenPlayerRenderers[player] = states;
+                }
+                for (int i = 0; i < renderers.Length; i++)
+                    if (renderers[i] != null) renderers[i].enabled = false;
+                return;
+            }
+
+            // Hand-drawn bodies intentionally contain disabled helper/fill
+            // renderers. Restore only the state captured at elimination time.
+            if (!hiddenPlayerRenderers.TryGetValue(player, out Dictionary<Renderer, bool> savedStates)) return;
+            foreach (KeyValuePair<Renderer, bool> state in savedStates)
+                if (state.Key != null) state.Key.enabled = state.Value;
+            hiddenPlayerRenderers.Remove(player);
         }
 
         private void RefreshMonitor()
@@ -1091,19 +1126,33 @@ namespace DrawBody.Prototype
             if (gameCamera == null) gameCamera = Camera.main;
             if (gameCamera == null) return;
             cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
-            previousCameraPosition = gameCamera.transform.position;
-            previousCameraSize = gameCamera.orthographicSize;
-            if (cameraFollow != null) { previousFollowEnabled = cameraFollow.enabled; cameraFollow.enabled = false; }
-            gameCamera.transform.position = new Vector3(0f, 0f, previousCameraPosition.z);
-            gameCamera.orthographicSize = Mathf.Max(10.8f, 19f / Mathf.Max(0.1f, gameCamera.aspect));
+            if (!cameraCaptured)
+            {
+                cameraCaptured = true;
+                previousCameraPosition = gameCamera.transform.position;
+                previousCameraSize = gameCamera.orthographicSize;
+                previousFollowEnabled = cameraFollow != null && cameraFollow.enabled;
+            }
+            MaintainFixedCamera();
+        }
+
+        private void MaintainFixedCamera()
+        {
+            if (gameCamera == null) gameCamera = Camera.main;
+            if (gameCamera == null) return;
+            if (cameraFollow == null) cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
+            if (cameraFollow != null) cameraFollow.enabled = false;
+            gameCamera.transform.position = new Vector3(0f, 1.8f, gameCamera.transform.position.z);
+            gameCamera.orthographicSize = Mathf.Max(10.8f, 21.8f / Mathf.Max(0.1f, gameCamera.aspect));
         }
 
         private void RestoreCamera()
         {
-            if (gameCamera == null) return;
+            if (!cameraCaptured || gameCamera == null) return;
             gameCamera.transform.position = previousCameraPosition;
             gameCamera.orthographicSize = previousCameraSize;
             if (cameraFollow != null) cameraFollow.enabled = previousFollowEnabled;
+            cameraCaptured = false;
         }
 
         private GameObject CreateWarningRect(Vector2 position, Vector2 size, Color color)

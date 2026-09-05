@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -88,6 +89,7 @@ namespace DrawBody.Prototype
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageObjectFactory objectFactory;
+        private StageLoader stageLoader;
         private StageGimmickSyncManager syncManager;
         private CameraFollow2D cameraFollow;
         private TextMesh monitorMain;
@@ -124,6 +126,7 @@ namespace DrawBody.Prototype
             stageManager = Object.FindFirstObjectByType<StageManager>();
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
+            stageLoader = Object.FindFirstObjectByType<StageLoader>();
             syncManager = GetComponent<StageGimmickSyncManager>();
             cameraFollow = Object.FindFirstObjectByType<CameraFollow2D>();
         }
@@ -161,6 +164,8 @@ namespace DrawBody.Prototype
             }
 
             BuildArena();
+            stageLoader?.SetRuntimeSpawnPosition(new Vector2(0f, FloorY + 1.4f));
+            StartCoroutine(PlacePlayersAboveArenaFloor());
             if (cameraFollow != null)
             {
                 previousCameraMinimum = cameraFollow.MinimumOrthographicSize;
@@ -172,6 +177,50 @@ namespace DrawBody.Prototype
             nextTopBombAt = 7f;
             nextSideBombAt = 16f;
             nextCannonAt = 10f;
+        }
+
+        private IEnumerator PlacePlayersAboveArenaFloor()
+        {
+            while (stageManager != null && stageManager.IsChallengeReadyRoomActive)
+                yield return null;
+            yield return new WaitForFixedUpdate();
+            Physics2D.SyncTransforms();
+
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            Transform localOnlinePlayer = stageManager != null && stageManager.IsOnlineStageActive
+                ? stageManager.ActivePlayerTransform
+                : null;
+            float floorTop = FloorY + 0.31f + 0.06f;
+            for (int i = 0; i < players.Length; i++)
+            {
+                PlayerController2D player = players[i];
+                if (player == null || localOnlinePlayer != null && player.transform != localOnlinePlayer) continue;
+
+                Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(true);
+                float bottom = float.PositiveInfinity;
+                for (int colliderIndex = 0; colliderIndex < colliders.Length; colliderIndex++)
+                {
+                    Collider2D collider = colliders[colliderIndex];
+                    if (collider == null || !collider.enabled || collider.isTrigger) continue;
+                    bottom = Mathf.Min(bottom, collider.bounds.min.y);
+                }
+                if (float.IsPositiveInfinity(bottom)) bottom = player.transform.position.y - 0.9f;
+                float lift = floorTop - bottom;
+                if (lift <= 0.01f) continue;
+
+                Rigidbody2D body = player.GetComponent<Rigidbody2D>();
+                Vector2 corrected = (Vector2)player.transform.position + Vector2.up * lift;
+                if (body != null)
+                {
+                    body.position = corrected;
+                    body.linearVelocity = Vector2.zero;
+                    body.angularVelocity = 0f;
+                }
+                player.transform.position = corrected;
+                player.ResetMotion();
+            }
+            Physics2D.SyncTransforms();
         }
 
         private void Update()

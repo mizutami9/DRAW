@@ -15,8 +15,6 @@ namespace DrawBody.Prototype
         private const float BoxCooldownSeconds = 0.55f;
         private const float FloorY = -6.2f;
         private const int MaximumWaterDrops = 90;
-        private static bool waterCollisionConfigured;
-
         private static readonly Vector2[] BoxSizes =
         {
             new Vector2(0.9f, 0.9f),
@@ -474,6 +472,9 @@ namespace DrawBody.Prototype
         private void CreateRoomBoundary()
         {
             CreateSolid("Aquarium Floor", new Vector2(0f, FloorY), new Vector2(roomWidth, 0.75f));
+            StageRedrawZoneFactory.CreateRuntimeFloorZone(arenaRoot,
+                "6-3_runtime_redraw_zone_" + round,
+                new Vector2(0f, FloorY), roomWidth, 13.2f);
             CreateSolid("Aquarium Ceiling", new Vector2(0f, 7.25f), new Vector2(roomWidth, 0.65f));
             CreateSolid("Aquarium Left Glass", new Vector2(-roomWidth * 0.5f, 0.5f), new Vector2(0.65f, 14.2f));
             CreateSolid("Aquarium Right Glass", new Vector2(roomWidth * 0.5f, 0.5f), new Vector2(0.65f, 14.2f));
@@ -826,19 +827,12 @@ namespace DrawBody.Prototype
             float size = Random.Range(0.24f, 0.38f);
             drop.transform.localScale = new Vector3(size * 0.72f, size * 1.45f, 1f);
             drop.layer = 31;
-            if (!waterCollisionConfigured)
-            {
-                waterCollisionConfigured = true;
-                Physics2D.IgnoreLayerCollision(31, 31, false);
-            }
 
             SpriteRenderer renderer = drop.AddComponent<SpriteRenderer>();
             renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.color = new Color(0.12f, 0.7f, 0.96f, Random.Range(0.4f, 0.58f));
             renderer.sortingOrder = 8;
 
-            CircleCollider2D collider = drop.AddComponent<CircleCollider2D>();
-            collider.radius = 0.46f;
             Rigidbody2D body = drop.AddComponent<Rigidbody2D>();
             body.mass = 0.00035f;
             body.gravityScale = 0.38f;
@@ -847,7 +841,12 @@ namespace DrawBody.Prototype
             body.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
             body.linearVelocity = new Vector2(Random.Range(-0.28f, 0.28f), Random.Range(-0.9f, -0.45f));
-            drop.AddComponent<AquariumWaterBlobVisual>().Configure(size);
+            drop.AddComponent<AquariumWaterBlobVisual>().Configure(size, FloorY + 0.42f, this);
+        }
+
+        internal void NotifyWaterDropDestroyed()
+        {
+            waterDropCount = Mathf.Max(0, waterDropCount - 1);
         }
 
         private void RefreshAccumulatedWater()
@@ -1213,9 +1212,30 @@ namespace DrawBody.Prototype
 
     public sealed class AquariumWaterBlobVisual : MonoBehaviour
     {
-        public void Configure(float size)
+        private StageAquariumSealController owner;
+        private SpriteRenderer blobRenderer;
+        private TrailRenderer trail;
+        private Rigidbody2D blobBody;
+        private Color initialBlobColor;
+        private Color initialTrailStart;
+        private Color initialTrailEnd;
+        private float spawnedAt;
+        private float landedAt = -1f;
+        private float landingY;
+        private float lifeAfterLanding;
+        private bool notified;
+
+        public void Configure(float size, float configuredLandingY, StageAquariumSealController configuredOwner)
         {
-            TrailRenderer trail = gameObject.AddComponent<TrailRenderer>();
+            owner = configuredOwner;
+            spawnedAt = Time.unscaledTime;
+            landingY = configuredLandingY;
+            lifeAfterLanding = Random.Range(1.5f, 2.4f);
+            blobRenderer = GetComponent<SpriteRenderer>();
+            blobBody = GetComponent<Rigidbody2D>();
+            if (blobRenderer != null) initialBlobColor = blobRenderer.color;
+
+            trail = gameObject.AddComponent<TrailRenderer>();
             trail.time = 0.32f;
             trail.minVertexDistance = 0.035f;
             trail.startWidth = size * 0.62f;
@@ -1225,7 +1245,62 @@ namespace DrawBody.Prototype
             trail.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             trail.startColor = new Color(0.18f, 0.76f, 0.98f, 0.42f);
             trail.endColor = new Color(0.66f, 0.94f, 1f, 0.08f);
+            initialTrailStart = trail.startColor;
+            initialTrailEnd = trail.endColor;
             trail.sortingOrder = 7;
+        }
+
+        private void Update()
+        {
+            float now = Time.unscaledTime;
+            if (landedAt < 0f)
+            {
+                if (transform.position.y <= landingY)
+                {
+                    Vector3 position = transform.position;
+                    position.y = landingY;
+                    transform.position = position;
+                    if (blobBody != null) blobBody.simulated = false;
+                    landedAt = now;
+                    return;
+                }
+
+                // Also clean up a drop that somehow missed every floor.
+                if (now - spawnedAt >= 8f) RemoveDrop();
+                return;
+            }
+
+            float age = now - landedAt;
+            float fade = Mathf.Clamp01((lifeAfterLanding - age) / 0.65f);
+            if (blobRenderer != null)
+            {
+                Color color = initialBlobColor;
+                color.a *= fade;
+                blobRenderer.color = color;
+            }
+            if (trail != null)
+            {
+                Color start = initialTrailStart;
+                Color end = initialTrailEnd;
+                start.a *= fade;
+                end.a *= fade;
+                trail.startColor = start;
+                trail.endColor = end;
+            }
+            if (fade <= 0f) RemoveDrop();
+        }
+
+        private void RemoveDrop()
+        {
+            if (blobBody != null) blobBody.simulated = false;
+            Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            if (notified) return;
+            notified = true;
+            owner?.NotifyWaterDropDestroyed();
         }
     }
 }

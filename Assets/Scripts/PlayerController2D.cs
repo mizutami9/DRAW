@@ -16,9 +16,9 @@ namespace DrawBody.Prototype
         [SerializeField] private float jumpBufferTime = 0.1f;
         private const float LargestWingGlideFallSpeed = -0.3f;
         private const float SmallestWingGlideFallSpeed = -3f;
-        private const float FullGlideWingInk = 350f;
-        private const float FullSpeedCatLegInk = 120f;
-        public const float MaximumSlimeAbilityInk = 350f;
+        private const float FullGlideWingInk = 700f;
+        private const float FullSpeedCatLegInk = 240f;
+        public const float MaximumSlimeAbilityInk = 700f;
         private const int WallJumpTrajectoryDashCount = 14;
         private const float WallJumpTrajectoryDuration = 0.95f;
         [SerializeField] private float slimeWallJumpHorizontalSpeed = 22f;
@@ -50,8 +50,8 @@ namespace DrawBody.Prototype
         private float jumpVelocityMultiplier = 1f;
         private bool canGlide;
         private float currentGlideFallSpeed;
-        private bool canWallStick;
         private float currentSlimeWallSlideSpeed;
+        private bool canWallStick;
         private DrawManager.Species currentSpecies = DrawManager.Species.Human;
         private bool wasGliding;
         private AudioSource birdGlideAudioSource;
@@ -262,7 +262,8 @@ namespace DrawBody.Prototype
 
         public static float CalculateCatMoveSpeedMultiplier(float legInk)
         {
-            return Mathf.Lerp(1f, 2f, Mathf.Clamp01(Mathf.Max(0f, legInk) / FullSpeedCatLegInk));
+            float ratio = Mathf.Clamp01(Mathf.Max(0f, legInk) / FullSpeedCatLegInk);
+            return Mathf.Lerp(1f, 6f, ratio * ratio);
         }
 
         public static float CalculateCatScratchRangeMultiplier(float frontLegInk)
@@ -274,6 +275,12 @@ namespace DrawBody.Prototype
         {
             float inkRatio = Mathf.Clamp01(Mathf.Max(0f, slimeInk) / MaximumSlimeAbilityInk);
             return Mathf.Lerp(1f, 0.15f, inkRatio);
+        }
+
+        public static float CalculateSlimeSpikeLength(float slimeInk)
+        {
+            float lowInkRatio = 1f - Mathf.Clamp01(Mathf.Max(0f, slimeInk) / MaximumSlimeAbilityInk);
+            return Mathf.Lerp(1.8f, 7f, lowInkRatio * lowInkRatio);
         }
 
         public static float CalculateSlimeMoveSpeedMultiplier(float slimeInk)
@@ -314,7 +321,7 @@ namespace DrawBody.Prototype
             canWallStick = false;
             slimMode = false;
             currentGlideFallSpeed = CalculateBirdGlideFallSpeed(wingInk);
-            currentSlimeWallSlideSpeed = Mathf.Lerp(-2.6f, 0f, CalculateSlimeStickStrength(slimeInk));
+            currentSlimeWallSlideSpeed = -0.35f;
 
             switch (species)
             {
@@ -332,8 +339,8 @@ namespace DrawBody.Prototype
                     break;
                 case DrawManager.Species.Slime:
                     canWallStick = true;
-                    moveSpeedMultiplier = CalculateSlimeMoveSpeedMultiplier(slimeInk);
-                    jumpVelocityMultiplier = CalculateSlimeJumpMultiplier(slimeInk);
+                    moveSpeedMultiplier = 1f;
+                    jumpVelocityMultiplier = 1f;
                     break;
             }
         }

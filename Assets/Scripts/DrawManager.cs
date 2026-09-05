@@ -1995,15 +1995,15 @@ namespace DrawBody.Prototype
             switch (profile.Species)
             {
                 case Species.Cat:
-                    progress = Mathf.Clamp01(profile.CatBackLegInk / 120f);
-                    secondaryProgress = Mathf.Clamp01(profile.CatFrontLegInk / 120f);
+                    progress = Mathf.Clamp01(profile.CatBackLegInk / 240f);
+                    secondaryProgress = Mathf.Clamp01(profile.CatFrontLegInk / 240f);
                     title = LocalizationManager.T("ability_card_cat");
                     effect = LocalizationManager.T("ability_description_cat");
                     hint = LocalizationManager.T("ability_control_cat");
                     accent = new Color(0.94f, 0.54f, 0.18f, 1f);
                     break;
                 case Species.Bird:
-                    progress = Mathf.Clamp01(profile.WingInk / 350f);
+                    progress = Mathf.Clamp01(profile.WingInk / 700f);
                     title = LocalizationManager.T("ability_card_bird");
                     effect = LocalizationManager.T("ability_description_bird");
                     hint = LocalizationManager.T("ability_control_bird");
@@ -2024,7 +2024,7 @@ namespace DrawBody.Prototype
                     accent = new Color(0.68f, 0.38f, 0.86f, 1f);
                     break;
                 default:
-                    progress = Mathf.Clamp01(profile.LegInk / 80f);
+                    progress = Mathf.Clamp01(profile.LegInk / 160f);
                     secondaryProgress = Mathf.Clamp01(profile.ArmInk / 280f);
                     title = LocalizationManager.T("ability_card_human");
                     effect = LocalizationManager.T("ability_description_human");
@@ -2067,9 +2067,10 @@ namespace DrawBody.Prototype
             bool human = species == Species.Human;
             bool cat = species == Species.Cat;
             bool dual = human || cat;
+            bool showPrimaryGauge = true;
             if (humanJumpGaugeLabel != null)
             {
-                humanJumpGaugeLabel.gameObject.SetActive(true);
+                humanJumpGaugeLabel.gameObject.SetActive(showPrimaryGauge);
                 string primaryGaugeKey = cat
                     ? "ability_cat_back_leg_gauge"
                     : human
@@ -2078,7 +2079,7 @@ namespace DrawBody.Prototype
                             ? "ability_bird_gauge"
                             : species == Species.Turtle
                                 ? "ability_turtle_gauge"
-                                : "ability_slime_gauge";
+                                : "ability_slime_ink_gauge";
                 humanJumpGaugeLabel.text = LocalizationManager.T(primaryGaugeKey);
             }
             if (humanArmGaugeLabel != null)
@@ -2095,6 +2096,7 @@ namespace DrawBody.Prototype
             {
                 return;
             }
+            gauge.gameObject.SetActive(showPrimaryGauge);
 
             gauge.anchorMin = new Vector2(0f, 1f);
             gauge.anchorMax = new Vector2(0f, 1f);

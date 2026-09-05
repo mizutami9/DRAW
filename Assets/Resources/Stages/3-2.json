@@ -1806,6 +1806,31 @@
             "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
+        },
+        {
+            "objectId": "obj_2894c0d281174f89",
+            "type": 261,
+            "position": {
+                "x": -4.25,
+                "y": 1.6999998092651368
+            },
+            "size": {
+                "x": 6.5,
+                "y": 4.5
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
         }
     ]
 }

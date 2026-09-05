@@ -43,6 +43,7 @@ namespace DrawBody.Prototype
                 editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             }
             EnsureBackgroundColorButton(root, editor);
+            EnsureLaserRelayLayoutButtons(root, editor);
             RefreshState(editor);
         }
 
@@ -136,6 +137,20 @@ namespace DrawBody.Prototype
 
             StageBackgroundColorButton backgroundColorButton = GetComponentInChildren<StageBackgroundColorButton>(true);
             backgroundColorButton?.RefreshColor(editor.StageBackgroundColor);
+            RectTransform relayPlayers = FindRect(transform, "LaserRelayEditorPlayersButton");
+            RectTransform relayRound = FindRect(transform, "LaserRelayEditorRoundButton");
+            if (relayPlayers != null)
+            {
+                relayPlayers.gameObject.SetActive(editor.IsLaserRelayLayoutEditor);
+                RefreshButtonLabel(transform, "LaserRelayEditorPlayersButton", LocalizationManager.Format(
+                    "laser_relay_editor_players", editor.LaserRelayPreviewPlayers));
+            }
+            if (relayRound != null)
+            {
+                relayRound.gameObject.SetActive(editor.IsLaserRelayLayoutEditor);
+                RefreshButtonLabel(transform, "LaserRelayEditorRoundButton", LocalizationManager.Format(
+                    "laser_relay_editor_round", editor.LaserRelayPreviewRound));
+            }
             Slider thicknessSlider = FindRect(transform, "RuntimeEditThicknessSlider")?.GetComponent<Slider>();
             thicknessSlider?.SetValueWithoutNotify(editor.TerrainPathThickness);
 
@@ -393,6 +408,41 @@ namespace DrawBody.Prototype
                 command = rect.gameObject.AddComponent<StageBackgroundColorButton>();
             }
             command.Configure(editor, ResolveFont(root));
+        }
+
+        private static void EnsureLaserRelayLayoutButtons(RectTransform root, RuntimeStageEditor editor)
+        {
+            EnsureLaserRelayLayoutButton(root, editor, "LaserRelayEditorPlayersButton", 0,
+                new Vector2(318f, -66f), new Color(1f, 0.88f, 0.48f, 1f));
+            EnsureLaserRelayLayoutButton(root, editor, "LaserRelayEditorRoundButton", 1,
+                new Vector2(446f, -66f), new Color(0.62f, 0.9f, 1f, 1f));
+        }
+
+        private static void EnsureLaserRelayLayoutButton(RectTransform root, RuntimeStageEditor editor,
+            string name, int commandId, Vector2 position, Color color)
+        {
+            RectTransform rect = FindRect(root, name);
+            if (rect == null)
+            {
+                GameObject obj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer),
+                    typeof(Image), typeof(Button), typeof(Outline));
+                obj.transform.SetParent(root, false);
+                rect = obj.GetComponent<RectTransform>();
+                GameObject labelObject = new GameObject("Label", typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Text));
+                labelObject.transform.SetParent(rect, false);
+                Text label = labelObject.GetComponent<Text>();
+                label.font = ResolveFont(root);
+                Stretch(label.rectTransform, new Vector2(5f, 3f));
+                StageEditorLaserRelayLayoutButton command = obj.AddComponent<StageEditorLaserRelayLayoutButton>();
+                command.Configure(editor, commandId);
+            }
+            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0f, 1f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = new Vector2(118f, 40f);
+            StyleButton(rect, color, 14);
+            rect.gameObject.SetActive(editor != null && editor.IsLaserRelayLayoutEditor);
+            rect.GetComponent<StageEditorLaserRelayLayoutButton>()?.Configure(editor, commandId);
         }
 
         private static void LayoutToolPanel(RectTransform root, RectTransform tools)
@@ -2040,6 +2090,29 @@ namespace DrawBody.Prototype
         private void Cycle()
         {
             editor?.CycleCopyDirection();
+        }
+    }
+
+    public sealed class StageEditorLaserRelayLayoutButton : MonoBehaviour
+    {
+        private RuntimeStageEditor editor;
+        private int commandId;
+
+        private void Awake()
+        {
+            GetComponent<Button>().onClick.AddListener(Execute);
+        }
+
+        public void Configure(RuntimeStageEditor targetEditor, int targetCommandId)
+        {
+            editor = targetEditor;
+            commandId = targetCommandId;
+        }
+
+        private void Execute()
+        {
+            if (commandId == 0) editor?.CycleLaserRelayPreviewPlayers();
+            else editor?.CycleLaserRelayPreviewRound();
         }
     }
 

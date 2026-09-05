@@ -1,12 +1,80 @@
-{
-  "id":"14-3",
-  "displayName":"Stage 14-3 Linked Shield",
-  "backgroundColorHex":"#EEF9FF26",
-  "ruleMode":2,
-  "timeLimitSeconds":60.0,
-  "collectionTarget":0,
-  "requiredCollectionCount":0,
-  "objects":[
-    {"objectId":"14-3_spawn","type":2,"position":{"x":-7.5,"y":2.0},"size":{"x":0.7,"y":0.7},"rotation":0.0}
-  ]
+﻿{
+    "id":  "14-3",
+    "displayName":  "Stage 14-3 Laser Relay",
+    "backgroundColorHex":  "#EEF1D8",
+    "ruleMode":  0,
+    "timeLimitSeconds":  60.0,
+    "collectionTarget":  0,
+    "requiredCollectionCount":  0,
+    "objects":  [
+                    {
+                        "objectId":  "14-3_preview_boundary",
+                        "type":  151,
+                        "position":  {
+                                         "x":  0.0,
+                                         "y":  0.5
+                                     },
+                        "size":  {
+                                     "x":  37.0,
+                                     "y":  15.0
+                                 },
+                        "rotation":  0.0
+                    },
+                    {
+                        "objectId":  "14-3_preview_floor",
+                        "type":  0,
+                        "position":  {
+                                         "x":  0.0,
+                                         "y":  -6.4
+                                     },
+                        "size":  {
+                                     "x":  36.0,
+                                     "y":  0.8
+                                 },
+                        "rotation":  0.0,
+                        "keepSeparate":  true
+                    },
+                    {
+                        "objectId":  "14-3_preview_spawn",
+                        "type":  2,
+                        "position":  {
+                                         "x":  -9.0,
+                                         "y":  -5.05
+                                     },
+                        "size":  {
+                                     "x":  0.7,
+                                     "y":  0.7
+                                 },
+                        "rotation":  0.0
+                    },
+                    {
+                        "movementAngle":  0,
+                        "position":  {
+                                         "y":  -1.5,
+                                         "x":  -4.5
+                                     },
+                        "linkTargetId":  null,
+                        "pathPoints":  [
+
+                                       ],
+                        "bombFuseSeconds":  0,
+                        "linkAction":  null,
+                        "rotation":  0,
+                        "spawnBoxSize":  0,
+                        "type":  261,
+                        "actionStrength":  0,
+                        "spawnPattern":  0,
+                        "keepSeparate":  false,
+                        "connectedRects":  [
+
+                                           ],
+                        "pathThickness":  0,
+                        "size":  {
+                                     "y":  10,
+                                     "x":  36
+                                 },
+                        "objectId":  "obj_34824a5e5e934baf",
+                        "movementSpeed":  0
+                    }
+                ]
 }

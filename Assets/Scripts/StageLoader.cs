@@ -235,6 +235,14 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
+                if (data.id == "14-3" && !string.IsNullOrEmpty(obj.objectId)
+                    && obj.objectId.StartsWith("14-3-layout-", System.StringComparison.Ordinal))
+                {
+                    // These records are editable layout definitions consumed by
+                    // StageLaserRelayController, not ordinary runtime objects.
+                    continue;
+                }
+
                 if (data.id == "9-2"
                     && playerCount < 3
                     && !string.IsNullOrEmpty(obj.objectId)
@@ -538,6 +546,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingLinkedShield);
             }
 
+            StageLaserRelayController existingLaserRelay = stageRoot.GetComponent<StageLaserRelayController>();
+            if (existingLaserRelay != null)
+            {
+                DestroyComponentNow(existingLaserRelay);
+            }
+
             StageFlyingPlatformBossController existingFlyingBoss =
                 stageRoot.GetComponent<StageFlyingPlatformBossController>();
             if (existingFlyingBoss != null)
@@ -598,8 +612,19 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingDrawnEscort);
             }
 
+            StageBalloonGalleryController existingBalloonGallery =
+                stageRoot.GetComponent<StageBalloonGalleryController>();
+            if (existingBalloonGallery != null)
+            {
+                DestroyComponentNow(existingBalloonGallery);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
+            if (data != null && data.id == "1-2")
+            {
+                stageRoot.gameObject.AddComponent<StageBalloonGalleryController>();
+            }
             if (data != null && data.id == "5-3")
             {
                 stageRoot.gameObject.AddComponent<StageDrawnEscortChallengeController>();
@@ -693,7 +718,7 @@ namespace DrawBody.Prototype
             }
             if (data != null && data.id == "14-3")
             {
-                stageRoot.gameObject.AddComponent<StageLinkedShieldSurvivalController>();
+                stageRoot.gameObject.AddComponent<StageLaserRelayController>();
             }
             if (data != null && data.id == "15-1")
             {

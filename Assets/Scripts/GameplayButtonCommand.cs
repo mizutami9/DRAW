@@ -60,6 +60,25 @@ namespace DrawBody.Prototype
         private void Update()
         {
             RefreshOnlineVisibility();
+            RefreshRedrawState();
+        }
+
+        private void RefreshRedrawState()
+        {
+            if (command != Command.Redraw) return;
+
+            bool available = stageManager != null && stageManager.CanEnterDrawingMode();
+            CanvasGroup group = GetComponent<CanvasGroup>();
+            if (group == null) group = gameObject.AddComponent<CanvasGroup>();
+
+            group.alpha = available ? 1f : 0.42f;
+            group.interactable = available;
+            group.blocksRaycasts = available;
+
+            if (button != null)
+            {
+                button.interactable = available;
+            }
         }
 
         private void Execute()

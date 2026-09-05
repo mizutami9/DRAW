@@ -1,25 +1,66 @@
-{
-  "id": "8-3",
-  "displayName": "Stage 8-3 Tilt Board",
-  "backgroundColorHex": "#F6EAC9",
-  "ruleMode": 0,
-  "timeLimitSeconds": 60.0,
-  "collectionTarget": 0,
-  "requiredCollectionCount": 0,
-  "objects": [
-    {
-      "objectId": "8-3_preview_boundary",
-      "type": 151,
-      "position": { "x": 0.0, "y": 2.0 },
-      "size": { "x": 42.0, "y": 34.0 },
-      "rotation": 0.0
-    },
-    {
-      "objectId": "8-3_preview_spawn",
-      "type": 2,
-      "position": { "x": 0.0, "y": -5.0 },
-      "size": { "x": 0.7, "y": 0.7 },
-      "rotation": 0.0
-    }
-  ]
+﻿{
+    "id":  "8-3",
+    "displayName":  "Stage 8-3 Tilt Board",
+    "backgroundColorHex":  "#F6EAC9",
+    "ruleMode":  0,
+    "timeLimitSeconds":  60.0,
+    "collectionTarget":  0,
+    "requiredCollectionCount":  0,
+    "objects":  [
+                    {
+                        "objectId":  "8-3_preview_boundary",
+                        "type":  151,
+                        "position":  {
+                                         "x":  0.0,
+                                         "y":  2.0
+                                     },
+                        "size":  {
+                                     "x":  42.0,
+                                     "y":  34.0
+                                 },
+                        "rotation":  0.0
+                    },
+                    {
+                        "objectId":  "8-3_preview_spawn",
+                        "type":  2,
+                        "position":  {
+                                         "x":  0.0,
+                                         "y":  -5.0
+                                     },
+                        "size":  {
+                                     "x":  0.7,
+                                     "y":  0.7
+                                 },
+                        "rotation":  0.0
+                    },
+                    {
+                        "movementAngle":  0,
+                        "position":  {
+                                         "y":  -1.5,
+                                         "x":  0
+                                     },
+                        "linkTargetId":  null,
+                        "pathPoints":  [
+
+                                       ],
+                        "bombFuseSeconds":  0,
+                        "linkAction":  null,
+                        "rotation":  0,
+                        "spawnBoxSize":  0,
+                        "type":  261,
+                        "actionStrength":  0,
+                        "spawnPattern":  0,
+                        "keepSeparate":  false,
+                        "connectedRects":  [
+
+                                           ],
+                        "pathThickness":  0,
+                        "size":  {
+                                     "y":  25,
+                                     "x":  40
+                                 },
+                        "objectId":  "obj_1223d880fe664a67",
+                        "movementSpeed":  0
+                    }
+                ]
 }

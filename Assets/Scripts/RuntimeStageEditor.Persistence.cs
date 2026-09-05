@@ -183,6 +183,7 @@ namespace DrawBody.Prototype
 
         private void BuildEditorObjects()
         {
+            EnsureLaserRelayEditorLayouts();
             EnsureUniqueObjectIds();
             ClearEditorObjects();
             EnsureReferences();
@@ -217,6 +218,7 @@ namespace DrawBody.Prototype
             {
                 StageHumanCircuitController.CreateEditorPreview(editorRoot);
             }
+            ApplyLaserRelayLayoutVisibility();
         }
 
         private void CreateEditorObject(StageObjectData data)
@@ -244,6 +246,7 @@ namespace DrawBody.Prototype
                 marker.linkTargetId = data.linkTargetId;
                 marker.linkAction = data.linkAction;
             }
+            RefreshLaserRelayEditorMarkerVisual(obj, data);
         }
 
         private void RefreshBridgeConnectionVisuals()
@@ -346,6 +349,118 @@ namespace DrawBody.Prototype
             }
 
             return clone;
+        }
+    }
+}
+
+namespace DrawBody.Prototype
+{
+    public sealed partial class RuntimeStageEditor
+    {
+        private const string LaserRelayLayoutRootPrefix = "14-3-layout-";
+        private int laserRelayPreviewPlayers = 1;
+        private int laserRelayPreviewRound = 1;
+
+        public bool IsLaserRelayLayoutEditor => active && stageId == "14-3";
+        public int LaserRelayPreviewPlayers => laserRelayPreviewPlayers;
+        public int LaserRelayPreviewRound => laserRelayPreviewRound;
+
+        public void CycleLaserRelayPreviewPlayers()
+        {
+            if (!IsLaserRelayLayoutEditor) return;
+            laserRelayPreviewPlayers = laserRelayPreviewPlayers % 4 + 1;
+            ApplyLaserRelayLayoutVisibility();
+            RefreshListPanel();
+            editorPanel?.GetComponent<StageEditorVisualPolisher>()?.RefreshState(this);
+            SetStatus(LocalizationManager.Format("laser_relay_editor_preview", laserRelayPreviewPlayers, laserRelayPreviewRound));
+        }
+
+        public void CycleLaserRelayPreviewRound()
+        {
+            if (!IsLaserRelayLayoutEditor) return;
+            laserRelayPreviewRound = laserRelayPreviewRound % 3 + 1;
+            ApplyLaserRelayLayoutVisibility();
+            RefreshListPanel();
+            editorPanel?.GetComponent<StageEditorVisualPolisher>()?.RefreshState(this);
+            SetStatus(LocalizationManager.Format("laser_relay_editor_preview", laserRelayPreviewPlayers, laserRelayPreviewRound));
+        }
+
+        private void EnsureLaserRelayEditorLayouts()
+        {
+            if (stageId != "14-3") return;
+            bool hasLayout = objects.Exists(item => item != null && !string.IsNullOrEmpty(item.objectId)
+                && item.objectId.StartsWith(LaserRelayLayoutRootPrefix, System.StringComparison.Ordinal));
+            if (hasLayout) return;
+            for (int players = 1; players <= 4; players++)
+            for (int targetRound = 1; targetRound <= 3; targetRound++)
+                objects.AddRange(StageLaserRelayController.CreateEditorLayoutDefaults(players, targetRound));
+        }
+
+        private bool IsLaserRelayLayoutObject(StageObjectData data)
+        {
+            return data != null && !string.IsNullOrEmpty(data.objectId)
+                && data.objectId.StartsWith(LaserRelayLayoutRootPrefix, System.StringComparison.Ordinal);
+        }
+
+        private bool IsLaserRelayLayoutObjectVisible(StageObjectData data)
+        {
+            if (!IsLaserRelayLayoutObject(data)) return true;
+            return data.objectId.StartsWith(StageLaserRelayController.GetEditorLayoutPrefix(
+                laserRelayPreviewPlayers, laserRelayPreviewRound), System.StringComparison.Ordinal);
+        }
+
+        private void ApplyLaserRelayLayoutVisibility()
+        {
+            if (stageId != "14-3" || editorRoot == null) return;
+            string visiblePrefix = StageLaserRelayController.GetEditorLayoutPrefix(
+                laserRelayPreviewPlayers, laserRelayPreviewRound);
+            StageEditorObject[] markers = editorRoot.GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < markers.Length; i++)
+            {
+                StageEditorObject marker = markers[i];
+                if (marker == null || string.IsNullOrEmpty(marker.objectId)
+                    || !marker.objectId.StartsWith(LaserRelayLayoutRootPrefix, System.StringComparison.Ordinal)) continue;
+                marker.gameObject.SetActive(marker.objectId.StartsWith(visiblePrefix, System.StringComparison.Ordinal));
+            }
+            if (selectedData != null && !IsLaserRelayLayoutObjectVisible(selectedData))
+            {
+                selectedData = null;
+                selectedObject = null;
+                SetSelectionBox(false);
+                RefreshText();
+            }
+        }
+
+        private string CreateDuplicateObjectId(StageObjectData source)
+        {
+            if (stageId == "14-3" && IsLaserRelayLayoutObject(source))
+            {
+                string prefix = StageLaserRelayController.GetEditorLayoutPrefix(
+                    laserRelayPreviewPlayers, laserRelayPreviewRound);
+                string kind = source.objectId.Contains("-wall-") ? "wall" :
+                    source.objectId.Contains("-source-") ? "source" :
+                    source.objectId.Contains("-goal-") ? "goal" : "player";
+                return $"{prefix}{kind}-copy-{System.Guid.NewGuid().ToString("N").Substring(0, 8)}";
+            }
+            return StageObjectId.New();
+        }
+
+        private void RefreshLaserRelayEditorMarkerVisual(GameObject obj, StageObjectData data)
+        {
+            if (obj == null || !IsLaserRelayLayoutObject(data)) return;
+            string resourcePath = null;
+            Vector2 artSize = data.size;
+            if (data.objectId.Contains("-source-"))
+                resourcePath = "StageObjects/NicoDraw/laser-relay-emitter";
+            else if (data.objectId.Contains("-goal-"))
+                resourcePath = "StageObjects/NicoDraw/laser-relay-bulb";
+            if (resourcePath == null) return;
+
+            SpriteRenderer[] oldRenderers = obj.GetComponentsInChildren<SpriteRenderer>(true);
+            for (int i = 0; i < oldRenderers.Length; i++) oldRenderers[i].enabled = false;
+            StageGun.TryCreateResourceSprite(obj.transform, resourcePath,
+                data.objectId.Contains("-source-") ? "Laser Emitter Preview" : "Bulb Preview",
+                artSize, 40);
         }
     }
 }

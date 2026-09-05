@@ -53,7 +53,7 @@ namespace DrawBody.Prototype
                 case 5: return StageSpeciesMask.Human | StageSpeciesMask.Slime;
                 case 6: return StageSpeciesMask.Human | StageSpeciesMask.Cat | StageSpeciesMask.Bird;
                 case 7: return StageSpeciesMask.Human | StageSpeciesMask.Bird | StageSpeciesMask.Turtle;
-                case 8: return StageSpeciesMask.Human | StageSpeciesMask.Cat | StageSpeciesMask.Slime;
+                case 8: return StageSpeciesMask.Human | StageSpeciesMask.Cat | StageSpeciesMask.Turtle;
                 case 9: return StageSpeciesMask.Human | StageSpeciesMask.Bird | StageSpeciesMask.Slime;
                 case 10: return StageSpeciesMask.Human | StageSpeciesMask.Turtle | StageSpeciesMask.Slime;
                 default: return StageSpeciesMask.All;

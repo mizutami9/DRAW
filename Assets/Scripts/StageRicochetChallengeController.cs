@@ -95,11 +95,23 @@ namespace DrawBody.Prototype
             int spawnedPlayers = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None).Length;
             playerCount = Mathf.Clamp(Mathf.Max(reportedPlayers, spawnedPlayers), 1, 4);
             BuildArena();
+            ReplaceAuthoredRedrawZone();
             LockCameraToArena();
             PositionLocalPlayers();
             CreateMonitor();
             if (HasAuthority()) BeginRound(1);
             RefreshMonitor();
+        }
+
+        private void ReplaceAuthoredRedrawZone()
+        {
+            StageRedrawZone[] authoredZones = GetComponentsInChildren<StageRedrawZone>(true);
+            for (int i = 0; i < authoredZones.Length; i++)
+            {
+                if (authoredZones[i] != null) authoredZones[i].gameObject.SetActive(false);
+            }
+            StageRedrawZoneFactory.CreateRuntimeFloorZone(transform,
+                "10-3_runtime_redraw_zone", new Vector2(0f, -8.65f), 34f, 18f);
         }
 
         private void Update()

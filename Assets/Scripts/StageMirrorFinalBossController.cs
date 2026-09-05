@@ -5,6 +5,7 @@ using UnityEngine;
 namespace DrawBody.Prototype
 {
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(10000)]
     public sealed class StageMirrorFinalBossController : StageEliminationChallengeController
     {
         private const string StageId = "15-3";
@@ -77,6 +78,8 @@ namespace DrawBody.Prototype
         private readonly Dictionary<int, int> lastFakeSequenceById = new Dictionary<int, int>();
         private readonly Dictionary<PlayerController2D, Dictionary<Renderer, bool>> hiddenPlayerRenderers =
             new Dictionary<PlayerController2D, Dictionary<Renderer, bool>>();
+        private readonly Dictionary<PlayerController2D, Dictionary<Collider2D, bool>> hiddenPlayerColliders =
+            new Dictionary<PlayerController2D, Dictionary<Collider2D, bool>>();
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageObjectFactory objectFactory;
@@ -86,6 +89,7 @@ namespace DrawBody.Prototype
         private Vector3 previousCameraPosition;
         private float previousCameraSize;
         private bool previousFollowEnabled;
+        private bool cameraCaptured;
         private TextMesh phaseText;
         private TextMesh timerText;
         private TextMesh hintText;
@@ -120,6 +124,7 @@ namespace DrawBody.Prototype
         private int failureReason;
         private int monitorCue;
         private float monitorCueStartedAt;
+        private bool initialized;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -142,6 +147,9 @@ namespace DrawBody.Prototype
         {
             if (onlineManager == null) onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
+            if (initialized && HasAuthority && !transitionRunning
+                && (battleState == BattleState.Intro || battleState == BattleState.Intermission))
+                StartCoroutine(ResumePhaseAfterEnable());
         }
 
         private void OnDisable()
@@ -149,6 +157,9 @@ namespace DrawBody.Prototype
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
             if (networkConcealRoutine != null) StopCoroutine(networkConcealRoutine);
             networkConcealRoutine = null;
+            if (initialized && stageManager != null && stageManager.CurrentStageId == StageId
+                && (battleState == BattleState.Intro || battleState == BattleState.Intermission))
+                transitionRunning = false;
             SetConcealmentImmediate(false);
             if (eraserVisual != null) eraserVisual.SetActive(false);
             BombExplosionVisual[] looseEffects = Object.FindObjectsByType<BombExplosionVisual>(FindObjectsSortMode.None);
@@ -160,6 +171,17 @@ namespace DrawBody.Prototype
                 }
             RestorePlayersForStageExit();
             RestoreCamera();
+        }
+
+        private IEnumerator ResumePhaseAfterEnable()
+        {
+            // The ready room briefly activates the arena for fit checks. Waiting
+            // one frame ensures only the final launch restarts the countdown.
+            yield return null;
+            if (!isActiveAndEnabled || transitionRunning || !HasAuthority
+                || stageManager == null || stageManager.CurrentStageId != StageId) yield break;
+            LockCamera();
+            yield return StartCoroutine(StartPhase(Mathf.Max(1, phase)));
         }
 
         private void RestorePlayersForStageExit()
@@ -176,8 +198,15 @@ namespace DrawBody.Prototype
 
         private void Start()
         {
+            EnsureInitializedForPlay();
+        }
+
+        public void EnsureInitializedForPlay()
+        {
+            if (initialized) return;
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing) { enabled = false; return; }
+            initialized = true;
             BuildRoster();
             BuildArena();
             BuildMachines();
@@ -191,6 +220,7 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            MaintainFixedCamera();
             UpdateClientConcealmentFailsafe();
             fakes.RemoveAll(item => item == null);
             if (HasAuthority && battleState == BattleState.Fighting)
@@ -210,6 +240,12 @@ namespace DrawBody.Prototype
             }
             if (HasAuthority) BroadcastState(false);
             RefreshMonitor();
+        }
+
+        private void LateUpdate()
+        {
+            if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            MaintainFixedCamera();
         }
 
         private void UpdateClientConcealmentFailsafe()
@@ -255,7 +291,7 @@ namespace DrawBody.Prototype
                 remaining = number;
                 RefreshMonitor();
                 GameSfx.Play(SfxId.StageCountdownTick);
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSecondsRealtime(1f);
             }
             yield return StartCoroutine(SetConcealment(true));
             DestroyFakes();
@@ -655,6 +691,7 @@ namespace DrawBody.Prototype
         {
             if (player == null) return;
             Renderer[] renderers = player.GetComponentsInChildren<Renderer>(true);
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(true);
             if (!visible)
             {
                 if (!hiddenPlayerRenderers.ContainsKey(player))
@@ -666,16 +703,33 @@ namespace DrawBody.Prototype
                 }
                 for (int i = 0; i < renderers.Length; i++)
                     if (renderers[i] != null) renderers[i].enabled = false;
+                if (!hiddenPlayerColliders.ContainsKey(player))
+                {
+                    Dictionary<Collider2D, bool> states = new Dictionary<Collider2D, bool>();
+                    for (int i = 0; i < colliders.Length; i++)
+                        if (colliders[i] != null) states[colliders[i]] = colliders[i].enabled;
+                    hiddenPlayerColliders[player] = states;
+                }
+                for (int i = 0; i < colliders.Length; i++)
+                    if (colliders[i] != null) colliders[i].enabled = false;
                 return;
             }
 
             // BodyBuilder intentionally keeps helper/fill renderers disabled.
             // Enabling every child here exposed those shapes as solid blocks and
             // a large white circle on the authority instance after a revive.
-            if (!hiddenPlayerRenderers.TryGetValue(player, out Dictionary<Renderer, bool> savedStates)) return;
-            foreach (KeyValuePair<Renderer, bool> state in savedStates)
-                if (state.Key != null) state.Key.enabled = state.Value;
-            hiddenPlayerRenderers.Remove(player);
+            if (hiddenPlayerRenderers.TryGetValue(player, out Dictionary<Renderer, bool> savedStates))
+            {
+                foreach (KeyValuePair<Renderer, bool> state in savedStates)
+                    if (state.Key != null) state.Key.enabled = state.Value;
+                hiddenPlayerRenderers.Remove(player);
+            }
+            if (hiddenPlayerColliders.TryGetValue(player, out Dictionary<Collider2D, bool> savedColliderStates))
+            {
+                foreach (KeyValuePair<Collider2D, bool> state in savedColliderStates)
+                    if (state.Key != null) state.Key.enabled = state.Value;
+                hiddenPlayerColliders.Remove(player);
+            }
         }
 
         private void UpdatePhaseThreeMachineLock()
@@ -762,7 +816,7 @@ namespace DrawBody.Prototype
         {
             if (objectFactory == null) return;
             StageObjectData data = StageObjectFactory.CreateDefaultData(StageObjectType.JumpPad, new Vector2(x, LowerFloorY + 0.38f));
-            data.objectId = "15-3_layer_jump_" + x.ToString("0"); data.actionStrength = 22f;
+            data.objectId = "15-3_layer_jump_" + x.ToString("0"); data.actionStrength = 44f;
             objectFactory.Create(data, transform);
         }
 
@@ -825,7 +879,6 @@ namespace DrawBody.Prototype
             concealRoot = new GameObject("15-3 Ink Mix Overlay");
             concealRoot.transform.SetParent(transform, false);
             concealRoot.transform.localPosition = new Vector3(0f, 0.7f, -5f);
-            StageTransientObject.Register(concealRoot);
             StageEscortController.AddFilledRect(concealRoot.transform, "Ink", Vector2.zero, new Vector2(45f, 23f), new Color(0.035f, 0.02f, 0.055f, 0f), 980);
             Transform ink = concealRoot.transform.Find("Ink"); concealInk = ink != null ? ink.GetComponent<SpriteRenderer>() : null;
             BuildPaintSplat();
@@ -1220,16 +1273,31 @@ namespace DrawBody.Prototype
         private void LockCamera()
         {
             if (gameCamera == null) gameCamera = Camera.main; if (gameCamera == null) return;
-            cameraFollow = gameCamera.GetComponent<CameraFollow2D>(); previousCameraPosition = gameCamera.transform.position; previousCameraSize = gameCamera.orthographicSize;
-            if (cameraFollow != null) { previousFollowEnabled = cameraFollow.enabled; cameraFollow.enabled = false; }
-            gameCamera.transform.position = new Vector3(0f, 0.7f, previousCameraPosition.z);
-            gameCamera.orthographicSize = Mathf.Max(8.8f, 21.4f / Mathf.Max(0.1f, gameCamera.aspect));
+            cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
+            if (!cameraCaptured)
+            {
+                cameraCaptured = true;
+                previousCameraPosition = gameCamera.transform.position;
+                previousCameraSize = gameCamera.orthographicSize;
+                previousFollowEnabled = cameraFollow != null && cameraFollow.enabled;
+            }
+            MaintainFixedCamera();
+        }
+
+        private void MaintainFixedCamera()
+        {
+            if (gameCamera == null) gameCamera = Camera.main; if (gameCamera == null) return;
+            if (cameraFollow == null) cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
+            if (cameraFollow != null) cameraFollow.enabled = false;
+            gameCamera.transform.position = new Vector3(0f, 1.3f, gameCamera.transform.position.z);
+            gameCamera.orthographicSize = Mathf.Max(7.6f, 21.4f / Mathf.Max(0.1f, gameCamera.aspect));
         }
 
         private void RestoreCamera()
         {
-            if (gameCamera == null) return; gameCamera.transform.position = previousCameraPosition; gameCamera.orthographicSize = previousCameraSize;
+            if (!cameraCaptured || gameCamera == null) return; gameCamera.transform.position = previousCameraPosition; gameCamera.orthographicSize = previousCameraSize;
             if (cameraFollow != null) cameraFollow.enabled = previousFollowEnabled;
+            cameraCaptured = false;
         }
 
         private void BroadcastState(bool force)
@@ -1816,6 +1884,15 @@ namespace DrawBody.Prototype
             {
                 GameObject burst = new GameObject("INK Knockout"); burst.transform.SetParent(transform.parent, true); burst.transform.position = transform.position; burst.AddComponent<BombExplosionVisual>().Configure(0.75f, false, "15-3");
             }
+            if (body != null)
+            {
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+                body.simulated = false;
+            }
+            Collider2D[] colliders = GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < colliders.Length; i++)
+                if (colliders[i] != null) colliders[i].enabled = false;
             GameSfx.PlayAt(SfxId.EnemyDefeat, transform.position, 0.85f); gameObject.SetActive(false);
         }
 

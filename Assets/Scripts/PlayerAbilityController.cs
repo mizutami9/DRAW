@@ -115,7 +115,7 @@ namespace DrawBody.Prototype
                 SlimeInk = slimeInk,
                 TorsoInk = torsoInk,
                 TotalInk = totalInk,
-                Jump = legInk >= 80f ? JumpTier.Triple : legInk >= 50f ? JumpTier.Double : JumpTier.Normal,
+                Jump = legInk >= 160f ? JumpTier.Triple : legInk >= 100f ? JumpTier.Double : JumpTier.Normal,
                 Arm = armInk >= 80f ? ArmTier.FastSwing : armInk >= 50f ? ArmTier.LongReach : ArmTier.NormalReach,
                 Torso = torsoInk >= 80f ? TorsoTier.Heavy : torsoInk >= 50f ? TorsoTier.HeavySwitch : TorsoTier.Normal
             };
@@ -162,9 +162,7 @@ namespace DrawBody.Prototype
                     return LocalizationManager.Format(
                         "ability_slime_status",
                         profile.SlimeInk,
-                        PlayerController2D.CalculateSlimeMoveSpeedMultiplier(profile.SlimeInk),
-                        PlayerController2D.CalculateSlimeJumpMultiplier(profile.SlimeInk),
-                        PlayerController2D.CalculateSlimeStickStrength(profile.SlimeInk) * 100f);
+                        PlayerController2D.CalculateSlimeSpikeLength(profile.SlimeInk));
                 default:
                     return LocalizationManager.Format(
                         "ability_human_status_combined",
@@ -178,7 +176,9 @@ namespace DrawBody.Prototype
         private void ApplyProfile(AbilityProfile profile)
         {
             CurrentProfile = profile;
-            playerController.SetJumpMultiplier(GetJumpMultiplier(profile.Jump));
+            playerController.SetJumpMultiplier(profile.Species == DrawManager.Species.Human
+                ? CalculateHumanJumpMultiplier(profile.LegInk)
+                : 1f);
             playerController.ApplySpeciesMovement(
                 profile.Species,
                 profile.WingInk,
@@ -218,7 +218,8 @@ namespace DrawBody.Prototype
 
         public static float CalculateHumanJumpMultiplier(float legInk)
         {
-            return GetJumpMultiplier(legInk >= 80f ? JumpTier.Triple : legInk >= 50f ? JumpTier.Double : JumpTier.Normal);
+            float ratio = Mathf.Clamp01(Mathf.Max(0f, legInk) / 160f);
+            return Mathf.Lerp(1f, 3f, ratio * ratio);
         }
 
         private float GetMass(TorsoTier tier)

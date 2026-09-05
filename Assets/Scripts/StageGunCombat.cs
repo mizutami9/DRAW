@@ -597,9 +597,16 @@ namespace DrawBody.Prototype
                 StageMovingGauntletGhost gauntletGhost = collider != null
                     ? collider.GetComponentInParent<StageMovingGauntletGhost>()
                     : null;
-                if (collider == null
-                    || collider.GetComponentInParent<StageGun>() != null
-                    || collider.isTrigger && gauntletGhost == null) continue;
+                if (collider == null || collider.GetComponentInParent<StageGun>() != null) continue;
+
+                StageBalloonTarget balloon = collider.GetComponentInParent<StageBalloonTarget>();
+                if (balloon != null)
+                {
+                    balloon.Hit(hits[i].point);
+                    return true;
+                }
+
+                if (collider.isTrigger && gauntletGhost == null) continue;
 
                 PlayerController2D player = collider.GetComponentInParent<PlayerController2D>();
                 if (player != null)
@@ -768,6 +775,442 @@ namespace DrawBody.Prototype
                 points[i] = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
             }
             return points;
+        }
+    }
+}
+
+namespace DrawBody.Prototype
+{
+    [DisallowMultipleComponent]
+    public sealed class StageBalloonGalleryController : MonoBehaviour
+    {
+        private const string StageId = "1-2";
+        private const string StateKind = "balloon_gallery_state";
+        private const string BarrierFloorId = "obj_cd4ea0b0ec634b7d";
+        private const int BalloonsPerPlayer = 5;
+        private const float BalloonVisualScale = 0.55f;
+
+        [System.Serializable]
+        private sealed class GalleryState
+        {
+            public int Sequence;
+            public int BrokenMask;
+        }
+
+        private StageBalloonTarget[] balloons = new StageBalloonTarget[0];
+        private readonly List<GameObject> barrierObjects = new List<GameObject>();
+        private StageManager stageManager;
+        private OnlineManager onlineManager;
+        private int brokenMask;
+        private int sequence;
+        private int appliedSequence = -1;
+        private int balloonCount = BalloonsPerPlayer;
+        private float nextSnapshotAt;
+        private bool barrierClearedApplied;
+
+        private bool HasAuthority => stageManager == null
+            || !stageManager.IsOnlineStageActive
+            || stageManager.IsOnlineStageHost;
+
+        private void Awake()
+        {
+            stageManager = Object.FindFirstObjectByType<StageManager>();
+            onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+        }
+
+        private void OnEnable()
+        {
+            if (onlineManager == null) onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
+        }
+
+        private void OnDisable()
+        {
+            if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+        }
+
+        private void Start()
+        {
+            RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
+            if (editor != null && editor.IsEditing)
+            {
+                enabled = false;
+                return;
+            }
+
+            int playerCount = Mathf.Clamp(
+                stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1,
+                1,
+                4);
+            balloonCount = BalloonsPerPlayer * playerCount;
+            balloons = new StageBalloonTarget[balloonCount];
+            FindBarrierObjects();
+            CreateBalloons();
+            ApplyState();
+            if (HasAuthority) BroadcastState();
+        }
+
+        private void Update()
+        {
+            if (stageManager != null && stageManager.CurrentStageId != StageId) return;
+            if (!HasAuthority || !IsOnline() || Time.unscaledTime < nextSnapshotAt) return;
+            nextSnapshotAt = Time.unscaledTime + 1f;
+            BroadcastState();
+        }
+
+        private void CreateBalloons()
+        {
+            Vector2[] positions =
+            {
+                new Vector2(16f, -29f), new Vector2(29.5f, -37.5f),
+                new Vector2(22f, -33f), new Vector2(28f, -29.5f), new Vector2(18.5f, -38.5f),
+                new Vector2(14.5f, -35.5f), new Vector2(24f, -28f),
+                new Vector2(31f, -32f), new Vector2(20f, -36f), new Vector2(27f, -39f),
+                new Vector2(14f, -32f), new Vector2(22f, -29.5f),
+                new Vector2(31f, -35.5f), new Vector2(25f, -37f), new Vector2(18f, -26.8f),
+                new Vector2(15.5f, -39f), new Vector2(25f, -34.5f),
+                new Vector2(30f, -27f), new Vector2(18.5f, -31.5f), new Vector2(28f, -33.5f)
+            };
+            Color[] colors =
+            {
+                new Color(0.98f, 0.27f, 0.33f, 1f),
+                new Color(1f, 0.72f, 0.12f, 1f),
+                new Color(0.2f, 0.72f, 0.98f, 1f),
+                new Color(0.28f, 0.78f, 0.38f, 1f),
+                new Color(0.72f, 0.35f, 0.92f, 1f)
+            };
+
+            for (int index = 0; index < balloonCount; index++)
+            {
+                int kind = index % BalloonsPerPlayer;
+                int group = index / BalloonsPerPlayer;
+                StageBalloonTarget.Motion motion = kind < 2
+                    ? StageBalloonTarget.Motion.Fixed
+                    : kind < 4 ? StageBalloonTarget.Motion.Oscillate : StageBalloonTarget.Motion.Blink;
+                Vector2 travel = kind == 2
+                    ? new Vector2(1.35f, 0f)
+                    : kind == 3 ? new Vector2(0f, 1.45f)
+                    : kind == 4 ? new Vector2(0.55f, 0.22f) : Vector2.zero;
+                float speed = kind == 2 ? 1.15f : kind == 3 ? 0.92f : kind == 4 ? 0.75f : 0f;
+                Color color = Color.Lerp(colors[kind], Color.white, group * 0.055f);
+                CreateBalloon(index, positions[index], color, motion, travel, speed,
+                    0.4f + group * 0.83f + kind * 0.37f);
+            }
+        }
+
+        private void CreateBalloon(int index, Vector2 position, Color color,
+            StageBalloonTarget.Motion motion, Vector2 travel, float speed, float phase)
+        {
+            GameObject root = new GameObject("1-2 Balloon " + (index + 1));
+            root.transform.SetParent(transform, false);
+            root.transform.position = position;
+            root.transform.localScale = Vector3.one * BalloonVisualScale;
+            balloons[index] = root.AddComponent<StageBalloonTarget>();
+            balloons[index].Configure(this, index, color, motion, travel, speed, phase);
+        }
+
+        private void FindBarrierObjects()
+        {
+            barrierObjects.Clear();
+            StageEditorObject[] markers = GetComponentsInChildren<StageEditorObject>(true);
+            StageEditorObject explicitFloor = null;
+            float spikeMinX = float.PositiveInfinity;
+            float spikeMaxX = float.NegativeInfinity;
+            float spikeY = 0f;
+            int spikeCount = 0;
+
+            for (int i = 0; i < markers.Length; i++)
+            {
+                StageEditorObject marker = markers[i];
+                if (marker == null) continue;
+                if (marker.objectId == BarrierFloorId) explicitFloor = marker;
+                if (marker.type != StageObjectType.Spike) continue;
+                barrierObjects.Add(marker.gameObject);
+                spikeMinX = Mathf.Min(spikeMinX, marker.transform.position.x);
+                spikeMaxX = Mathf.Max(spikeMaxX, marker.transform.position.x);
+                spikeY += marker.transform.position.y;
+                spikeCount++;
+            }
+
+            if (explicitFloor != null)
+            {
+                barrierObjects.Add(explicitFloor.gameObject);
+                return;
+            }
+
+            if (spikeCount == 0) return;
+            spikeY /= spikeCount;
+            StageEditorObject bestFloor = null;
+            float bestScore = float.PositiveInfinity;
+            for (int i = 0; i < markers.Length; i++)
+            {
+                StageEditorObject marker = markers[i];
+                if (marker == null || marker.type != StageObjectType.Platform) continue;
+                float halfWidth = marker.size.x * 0.5f;
+                float left = marker.transform.position.x - halfWidth;
+                float right = marker.transform.position.x + halfWidth;
+                if (right < spikeMaxX - 0.5f || left > spikeMinX + 0.5f) continue;
+                float score = Mathf.Abs(marker.transform.position.y - (spikeY - 1.5f));
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    bestFloor = marker;
+                }
+            }
+            if (bestFloor != null && bestScore < 3f) barrierObjects.Add(bestFloor.gameObject);
+        }
+
+        internal void HitBalloon(int index, Vector2 hitPoint)
+        {
+            if (!HasAuthority || index < 0 || index >= balloonCount) return;
+            int bit = 1 << index;
+            if ((brokenMask & bit) != 0) return;
+            brokenMask |= bit;
+            sequence++;
+            balloons[index]?.Pop(hitPoint);
+            ApplyBarrierState();
+            BroadcastState();
+        }
+
+        private void ApplyState()
+        {
+            for (int i = 0; i < balloons.Length; i++)
+            {
+                if ((brokenMask & (1 << i)) != 0) balloons[i]?.Pop(balloons[i].transform.position);
+            }
+            ApplyBarrierState();
+        }
+
+        private void ApplyBarrierState()
+        {
+            bool cleared = brokenMask == (1 << balloonCount) - 1;
+            for (int i = 0; i < barrierObjects.Count; i++)
+            {
+                if (barrierObjects[i] != null) barrierObjects[i].SetActive(!cleared);
+            }
+            if (cleared && !barrierClearedApplied)
+            {
+                GameSfx.PlayAt(SfxId.BombWallBreak, new Vector2(20f, -43f), 0.82f);
+            }
+            barrierClearedApplied = cleared;
+        }
+
+        private void HandleNetworkData(OnlineGimmickData message)
+        {
+            if (message == null || message.ObjectId != StageId || message.Kind != StateKind
+                || HasAuthority || !IsHost(message.PlayerId)) return;
+            GalleryState state = JsonUtility.FromJson<GalleryState>(message.Json);
+            if (state == null || state.Sequence < appliedSequence) return;
+            appliedSequence = state.Sequence;
+            brokenMask = state.BrokenMask;
+            ApplyState();
+        }
+
+        private void BroadcastState()
+        {
+            if (!IsOnline() || onlineManager == null || !HasAuthority) return;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = StateKind,
+                Json = JsonUtility.ToJson(new GalleryState
+                {
+                    Sequence = sequence,
+                    BrokenMask = brokenMask
+                })
+            });
+        }
+
+        private bool IsOnline()
+        {
+            return stageManager != null && stageManager.IsOnlineStageActive;
+        }
+
+        private bool IsHost(string playerId)
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null) return false;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] != null && players[i].IsHost && players[i].PlayerId == playerId) return true;
+            }
+            return false;
+        }
+    }
+
+    public sealed class StageBalloonTarget : MonoBehaviour
+    {
+        public enum Motion
+        {
+            Fixed,
+            Oscillate,
+            Blink
+        }
+
+        private StageBalloonGalleryController controller;
+        private int index;
+        private Motion motion;
+        private Vector2 origin;
+        private Vector2 travel;
+        private float speed;
+        private float phase;
+        private bool popped;
+        private CircleCollider2D hitbox;
+        private Renderer[] renderers;
+
+        internal void Configure(StageBalloonGalleryController owner, int balloonIndex, Color color,
+            Motion motionMode, Vector2 movement, float movementSpeed, float movementPhase)
+        {
+            controller = owner;
+            index = balloonIndex;
+            motion = motionMode;
+            origin = transform.position;
+            travel = movement;
+            speed = movementSpeed;
+            phase = movementPhase;
+            BuildVisual(color);
+        }
+
+        private void Update()
+        {
+            if (popped) return;
+            float clock = Time.time * Mathf.Max(0.01f, speed) + phase;
+            if (motion == Motion.Oscillate || motion == Motion.Blink)
+            {
+                transform.position = origin + travel * Mathf.Sin(clock);
+            }
+            if (motion != Motion.Blink) return;
+
+            float cycle = Mathf.Repeat(Time.time + phase, 4.2f);
+            float alpha = cycle < 2.55f ? 1f
+                : cycle < 2.9f ? Mathf.InverseLerp(2.9f, 2.55f, cycle)
+                : cycle < 3.65f ? 0f
+                : Mathf.InverseLerp(3.65f, 4.2f, cycle);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] == null) continue;
+                SpriteRenderer spriteRenderer = renderers[i] as SpriteRenderer;
+                if (spriteRenderer != null)
+                {
+                    Color tint = spriteRenderer.color;
+                    tint.a = alpha;
+                    spriteRenderer.color = tint;
+                }
+                else
+                {
+                    renderers[i].enabled = alpha >= 0.5f;
+                }
+            }
+            hitbox.enabled = alpha >= 0.78f;
+        }
+
+        internal void Hit(Vector2 point)
+        {
+            if (!popped) controller?.HitBalloon(index, point);
+        }
+
+        internal void Pop(Vector2 hitPoint)
+        {
+            if (popped) return;
+            popped = true;
+            if (hitbox != null) hitbox.enabled = false;
+            CreatePopFragments(hitPoint);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null) renderers[i].enabled = false;
+            }
+            GameSfx.PlayAt(SfxId.CoinCollect, hitPoint, 0.72f);
+        }
+
+        private void BuildVisual(Color color)
+        {
+            GameObject body = new GameObject("Crayon Balloon Body");
+            body.transform.SetParent(transform, false);
+            body.transform.localScale = new Vector3(1.35f, 1.62f, 1f);
+            SpriteRenderer fill = body.AddComponent<SpriteRenderer>();
+            fill.sprite = DoodleRuntimeAssets.CircleSprite;
+            fill.color = color;
+            fill.sortingOrder = 45;
+
+            Color outline = new Color(Mathf.Max(0f, color.r - 0.34f), Mathf.Max(0f, color.g - 0.34f),
+                Mathf.Max(0f, color.b - 0.34f), 1f);
+            StageGun.AddLine(transform, "Balloon Crayon Outline", CreateEllipsePoints(26, 0.69f, 0.82f),
+                0.075f, outline, 47);
+            StageGun.AddLine(transform, "Balloon Highlight", new[]
+            {
+                new Vector2(-0.3f, 0.46f), new Vector2(-0.42f, 0.2f), new Vector2(-0.44f, -0.02f)
+            }, 0.085f, new Color(1f, 1f, 1f, 0.72f), 48);
+            StageGun.AddLine(transform, "Balloon Knot", new[]
+            {
+                new Vector2(-0.13f, -0.78f), new Vector2(0f, -0.98f), new Vector2(0.14f, -0.78f)
+            }, 0.065f, outline, 47);
+            StageGun.AddLine(transform, "Balloon String", new[]
+            {
+                new Vector2(0f, -0.94f), new Vector2(0.12f, -1.35f), new Vector2(-0.08f, -1.75f)
+            }, 0.035f, new Color(0.22f, 0.2f, 0.18f, 0.86f), 43);
+
+            hitbox = gameObject.AddComponent<CircleCollider2D>();
+            hitbox.radius = 0.72f;
+            hitbox.offset = new Vector2(0f, 0.03f);
+            hitbox.isTrigger = true;
+            renderers = GetComponentsInChildren<Renderer>(true);
+        }
+
+        private void CreatePopFragments(Vector2 hitPoint)
+        {
+            Transform parent = transform.parent;
+            for (int i = 0; i < 9; i++)
+            {
+                float angle = i * Mathf.PI * 2f / 9f + index * 0.31f;
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                StageBalloonPopFragment.Create(parent, hitPoint, direction);
+            }
+        }
+
+        private static Vector2[] CreateEllipsePoints(int count, float radiusX, float radiusY)
+        {
+            Vector2[] points = new Vector2[count + 1];
+            for (int i = 0; i <= count; i++)
+            {
+                float angle = i * Mathf.PI * 2f / count;
+                float wobble = 1f + Mathf.Sin(i * 2.7f) * 0.018f;
+                points[i] = new Vector2(Mathf.Cos(angle) * radiusX * wobble,
+                    Mathf.Sin(angle) * radiusY * wobble);
+            }
+            return points;
+        }
+    }
+
+    internal sealed class StageBalloonPopFragment : MonoBehaviour
+    {
+        private Vector2 velocity;
+        private float life;
+        private SpriteRenderer sprite;
+
+        internal static void Create(Transform parent, Vector2 position, Vector2 direction)
+        {
+            GameObject fragment = new GameObject("Balloon Crayon Pop");
+            fragment.transform.SetParent(parent, false);
+            fragment.transform.position = position;
+            fragment.transform.localScale = Vector3.one * 0.13f;
+            SpriteRenderer renderer = fragment.AddComponent<SpriteRenderer>();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+            renderer.color = new Color(1f, 0.48f + direction.y * 0.12f, 0.16f, 0.9f);
+            renderer.sortingOrder = 50;
+            StageBalloonPopFragment effect = fragment.AddComponent<StageBalloonPopFragment>();
+            effect.velocity = direction * 3.2f + Vector2.up * 0.8f;
+            effect.sprite = renderer;
+        }
+
+        private void Update()
+        {
+            life += Time.deltaTime;
+            transform.position += (Vector3)(velocity * Time.deltaTime);
+            velocity += Vector2.down * (3.5f * Time.deltaTime);
+            Color color = sprite.color;
+            color.a = Mathf.Clamp01(1f - life / 0.55f);
+            sprite.color = color;
+            if (life >= 0.55f) Destroy(gameObject);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace DrawBody.Prototype
 {
@@ -406,7 +407,7 @@ namespace DrawBody.Prototype
 
             PushUndo();
             StageObjectData duplicate = CloneData(selectedData);
-            duplicate.objectId = StageObjectId.New();
+            duplicate.objectId = CreateDuplicateObjectId(selectedData);
             Rect sourceBounds = GetBoundaryFitBounds(selectedData);
             float horizontalOffset = Mathf.Max(0.2f, sourceBounds.width);
             float verticalOffset = Mathf.Max(0.2f, sourceBounds.height);
@@ -446,7 +447,7 @@ namespace DrawBody.Prototype
 
         private void HandleSelectedObjectNudge()
         {
-            if (selectedData == null || selectedObject == null || IsPointerOverEditorUi())
+            if (selectedData == null || selectedObject == null || IsEditorKeyboardInputCaptured())
             {
                 return;
             }
@@ -1960,10 +1961,7 @@ namespace DrawBody.Prototype
 
         private Vector2 SnapBoundaryPositionToTerrain(StageObjectData boundary, Vector2 position)
         {
-            float thickness = Mathf.Clamp(
-                boundary.pathThickness > 0f ? boundary.pathThickness : 0.5f,
-                0.35f,
-                1.5f);
+            float thickness = StageObjectFactory.GetStageBoundaryInteriorThickness(boundary);
             float halfWidth = Mathf.Max(4f, boundary.size.x) * 0.5f;
             float halfHeight = Mathf.Max(4f, boundary.size.y) * 0.5f;
             float snapDistance = Mathf.Max(thickness * 1.5f, gridSize * 2f, 0.75f);
@@ -2033,10 +2031,7 @@ namespace DrawBody.Prototype
             ref Vector2 position,
             ref Rect moving)
         {
-            float thickness = Mathf.Clamp(
-                boundary.pathThickness > 0f ? boundary.pathThickness : 0.5f,
-                0.35f,
-                1.5f);
+            float thickness = StageObjectFactory.GetStageBoundaryInteriorThickness(boundary);
             float halfWidth = Mathf.Max(4f, boundary.size.x) * 0.5f;
             float halfHeight = Mathf.Max(4f, boundary.size.y) * 0.5f;
             float innerLeft = boundary.position.x - halfWidth + thickness;
@@ -2127,10 +2122,7 @@ namespace DrawBody.Prototype
 
                 if (candidate.type == StageObjectType.StageBoundary)
                 {
-                    float thickness = Mathf.Clamp(
-                        candidate.pathThickness > 0f ? candidate.pathThickness : 0.5f,
-                        0.35f,
-                        1.5f);
+                    float thickness = StageObjectFactory.GetStageBoundaryInteriorThickness(candidate);
                     float innerLeft = candidate.position.x - candidate.size.x * 0.5f + thickness;
                     float innerRight = candidate.position.x + candidate.size.x * 0.5f - thickness;
                     if (RangesOverlap(wallRect.xMin, wallRect.xMax, innerLeft, innerRight))
@@ -2308,6 +2300,19 @@ namespace DrawBody.Prototype
         {
             return (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
                 || (uiBlocker != null && RectTransformUtility.RectangleContainsScreenPoint(uiBlocker, Input.mousePosition));
+        }
+
+        private static bool IsEditorKeyboardInputCaptured()
+        {
+            if (EventSystem.current == null || EventSystem.current.currentSelectedGameObject == null)
+            {
+                return false;
+            }
+
+            // Arrow keys must remain available to focused UI controls. Object-list
+            // selection explicitly releases its button focus after choosing an item.
+            GameObject focused = EventSystem.current.currentSelectedGameObject;
+            return focused.GetComponentInParent<Selectable>() != null;
         }
 
         private void UpdateSelectionBox()

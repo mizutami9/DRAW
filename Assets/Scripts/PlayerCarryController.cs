@@ -28,6 +28,7 @@ namespace DrawBody.Prototype
 
         private const float MaxHeldPlayerCarrierHorizontalSpeed = 28f;
         private const float CatScratchCooldown = 0.7f;
+        private const float SlimeSpikeCooldown = 0.55f;
 
         // A hand-drawn body can contain far more than 64 segment colliders.
         // A fixed NonAlloc buffer could fill with the player's own long legs
@@ -90,6 +91,7 @@ namespace DrawBody.Prototype
         private bool scriptedActionEnabled;
         private bool catScratchConsumesHold;
         private float nextCatScratchTime;
+        private float nextSlimeSpikeTime;
         private bool remoteWeaponAimEnabled;
         private Vector2 remoteWeaponAimDirection = Vector2.right;
         private Vector2 currentWeaponAimDirection = Vector2.right;
@@ -230,6 +232,17 @@ namespace DrawBody.Prototype
             bool useRecordedThrowDirection)
         {
             scriptedActionEnabled = true;
+            if (IsSlime())
+            {
+                if (actionPressed && Time.time >= nextSlimeSpikeTime)
+                {
+                    nextSlimeSpikeTime = Time.time + SlimeSpikeCooldown;
+                    PlaySlimeSpikeEffect(true);
+                    HitEnemiesWithSlimeSpike();
+                    HitPlayersWithSlimeSpike(false);
+                }
+                return;
+            }
             if (CanAttachToFriend())
             {
                 SetSlimeAttachmentForScript(actionHeld);
@@ -340,6 +353,20 @@ namespace DrawBody.Prototype
             }
 
             bool ricochetWeaponMode = stageManager != null && stageManager.CurrentStageId == "10-3";
+            if (!ricochetWeaponMode && IsSlime())
+            {
+                DropHeld(Vector2.zero);
+                DetachSlimeFromFriend(false);
+                DetachCatFromObject(false);
+                if (Input.GetKeyDown(KeyCode.F) && Time.time >= nextSlimeSpikeTime)
+                {
+                    nextSlimeSpikeTime = Time.time + SlimeSpikeCooldown;
+                    PlaySlimeSpikeEffect(true);
+                    HitEnemiesWithSlimeSpike();
+                    HitPlayersWithSlimeSpike(false);
+                }
+                return;
+            }
             if (!ricochetWeaponMode && CanAttachToFriend())
             {
                 DropHeld(Vector2.zero);
@@ -349,7 +376,8 @@ namespace DrawBody.Prototype
                     {
                         nextCatScratchTime = Time.time + CatScratchCooldown;
                         PlayCatScratchEffect();
-                        if (TryScratchEnemy())
+                        bool hitPlayer = HitPlayersWithCatScratch(false);
+                        if (TryScratchEnemy() || hitPlayer)
                         {
                             catScratchConsumesHold = true;
                             DetachSlimeFromFriend(false);
@@ -1710,7 +1738,7 @@ namespace DrawBody.Prototype
 
         private bool CanAttachToFriend()
         {
-            return IsSlime() || IsFriendCarrier();
+            return IsFriendCarrier();
         }
 
         private Vector2 GetThrowDirection()
@@ -2053,6 +2081,169 @@ namespace DrawBody.Prototype
             return true;
         }
 
+        private void HitEnemiesWithSlimeSpike()
+        {
+            Bounds slimeBounds = new Bounds(transform.position, Vector3.one);
+            if (!TryGetSolidBounds(playerController, out slimeBounds))
+                slimeBounds = new Bounds(transform.position, Vector3.one);
+            float slimeInk = abilityController != null ? abilityController.CurrentProfile.SlimeInk : 0f;
+            float length = PlayerController2D.CalculateSlimeSpikeLength(slimeInk);
+            float width = Mathf.Max(0.9f, slimeBounds.size.x * 0.82f);
+            Vector2 center = new Vector2(slimeBounds.center.x, slimeBounds.max.y - 0.08f + length * 0.5f);
+            Collider2D[] hits = Physics2D.OverlapBoxAll(center, new Vector2(width, length + 0.16f), 0f);
+            HashSet<StageEnemyCharacter> placedHit = new HashSet<StageEnemyCharacter>();
+            HashSet<StageBlockBreakerEnemy> challengeHit = new HashSet<StageBlockBreakerEnemy>();
+            for (int i = 0; i < hits.Length; i++)
+            {
+                Collider2D hit = hits[i];
+                if (hit == null || hit.transform.IsChildOf(transform)) continue;
+                StageBlockBreakerEnemy challengeEnemy = hit.GetComponentInParent<StageBlockBreakerEnemy>();
+                if (challengeEnemy != null)
+                {
+                    if (challengeHit.Add(challengeEnemy)) challengeEnemy.HitByCatScratch();
+                    continue;
+                }
+                StageEnemyCharacter placedEnemy = hit.GetComponentInParent<StageEnemyCharacter>();
+                if (placedEnemy != null && !placedEnemy.IsDefeated && placedHit.Add(placedEnemy))
+                    placedEnemy.HitByCatScratch();
+            }
+        }
+
+        private bool HitPlayersWithSlimeSpike(bool localPlayerOnly)
+        {
+            Bounds slimeBounds = new Bounds(transform.position, Vector3.one);
+            if (!TryGetSolidBounds(playerController, out slimeBounds))
+                slimeBounds = new Bounds(transform.position, Vector3.one);
+            float slimeInk = abilityController != null ? abilityController.CurrentProfile.SlimeInk : 0f;
+            float length = PlayerController2D.CalculateSlimeSpikeLength(slimeInk);
+            float width = Mathf.Max(0.9f, slimeBounds.size.x * 0.82f);
+            Bounds attackBounds = new Bounds(
+                new Vector3(slimeBounds.center.x, slimeBounds.max.y - 0.08f + length * 0.5f, 0f),
+                new Vector3(width, length + 0.16f, 1f));
+            return HitPlayersInBounds(attackBounds, localPlayerOnly);
+        }
+
+        private bool HitPlayersWithCatScratch(bool localPlayerOnly)
+        {
+            Bounds catBounds = new Bounds(transform.position, Vector3.one);
+            if (!TryGetSolidBounds(playerController, out catBounds))
+                catBounds = new Bounds(transform.position, Vector3.one);
+            float frontLegInk = abilityController != null
+                ? abilityController.CurrentProfile.CatFrontLegInk
+                : 0f;
+            float rangeMultiplier = PlayerController2D.CalculateCatScratchRangeMultiplier(frontLegInk);
+            float reach = Mathf.Max(1.35f, catBounds.extents.x * 0.55f + 0.9f) * rangeMultiplier;
+            float facing = GetFacingDirection();
+            float startX = catBounds.center.x + facing * catBounds.extents.x * 0.35f;
+            Bounds attackBounds = new Bounds(
+                new Vector3(startX + facing * reach * 0.5f, catBounds.center.y + 0.05f, 0f),
+                new Vector3(reach, Mathf.Max(1f, catBounds.size.y * 0.9f), 1f));
+            return HitPlayersInBounds(attackBounds, localPlayerOnly);
+        }
+
+        private bool HitPlayersInBounds(Bounds attackBounds, bool localPlayerOnly)
+        {
+            if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
+            if (stageManager == null) return false;
+            Transform localPlayerTransform = stageManager.ActivePlayerTransform;
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            bool hitAny = false;
+            for (int i = 0; i < players.Length; i++)
+            {
+                PlayerController2D target = players[i];
+                if (target == null || target == playerController || !target.gameObject.activeInHierarchy) continue;
+                if (localPlayerOnly && target.transform != localPlayerTransform) continue;
+                if (stageManager.IsPlayerEliminated(target) || stageManager.IsPlayerRespawning(target)) continue;
+                Bounds targetBounds;
+                if (!TryGetSolidBounds(target, out targetBounds))
+                    targetBounds = new Bounds(target.transform.position, Vector3.one);
+                if (!attackBounds.Intersects(targetBounds)) continue;
+                stageManager.RespawnFromHazard(target);
+                hitAny = true;
+            }
+            return hitAny;
+        }
+
+        internal void PlayRemoteSlimeSpikeEffect()
+        {
+            PlaySlimeSpikeEffect(false);
+            HitPlayersWithSlimeSpike(true);
+        }
+
+        private void PlaySlimeSpikeEffect(bool broadcast)
+        {
+            Bounds slimeBounds = new Bounds(transform.position, Vector3.one);
+            if (!TryGetSolidBounds(playerController, out slimeBounds))
+                slimeBounds = new Bounds(transform.position, Vector3.one);
+            float slimeInk = abilityController != null ? abilityController.CurrentProfile.SlimeInk : 0f;
+            float length = PlayerController2D.CalculateSlimeSpikeLength(slimeInk);
+            float width = Mathf.Max(0.9f, slimeBounds.size.x * 0.82f);
+            float baseY = slimeBounds.max.y - Mathf.Clamp(slimeBounds.size.y * 0.08f, 0.08f, 0.24f);
+            Color color = bodyBuilder != null
+                ? bodyBuilder.PlayerColor
+                : new Color(0.62f, 0.22f, 0.9f, 1f);
+            GameObject root = new GameObject("Slime Upward Spike Burst");
+            root.transform.SetParent(transform, false);
+            float halfBase = Mathf.Clamp(width * 0.23f, 0.2f, 0.65f);
+            Vector3 crown = new Vector3(slimeBounds.center.x, baseY, 0f);
+            Vector3[] finalPoints =
+            {
+                new Vector3(crown.x - halfBase, baseY, 0f),
+                new Vector3(crown.x - halfBase * 0.18f, baseY + length * 0.9f, 0f),
+                new Vector3(crown.x, baseY + length, 0f),
+                new Vector3(crown.x + halfBase * 0.16f, baseY + length * 0.88f, 0f),
+                new Vector3(crown.x + halfBase, baseY, 0f)
+            };
+            crown = root.transform.InverseTransformPoint(crown);
+            for (int i = 0; i < finalPoints.Length; i++)
+                finalPoints[i] = root.transform.InverseTransformPoint(finalPoints[i]);
+            GameObject spikeObject = new GameObject("Body Color Crayon Spike");
+            spikeObject.transform.SetParent(root.transform, false);
+            LineRenderer spike = spikeObject.AddComponent<LineRenderer>();
+            spike.useWorldSpace = false;
+            spike.positionCount = finalPoints.Length;
+            spike.numCapVertices = 7;
+            spike.numCornerVertices = 5;
+            spike.sortingOrder = 250;
+            spike.sharedMaterial = GetPreviewMaterial();
+            spike.startWidth = 0.11f;
+            spike.endWidth = 0.11f;
+            spike.startColor = color;
+            spike.endColor = color;
+            StartCoroutine(AnimateSlimeSpike(root, spike, crown, finalPoints, 0.46f));
+            GameSfx.PlayAt(SfxId.SlimeRelease, new Vector2(slimeBounds.center.x, baseY), 1.2f);
+            if (broadcast) stageManager?.BroadcastLocalAbilityEffect(playerController, "slime_spike");
+        }
+
+        private static IEnumerator AnimateSlimeSpike(
+            GameObject root, LineRenderer spike, Vector3 crown, Vector3[] finalPoints, float duration)
+        {
+            float elapsed = 0f;
+            while (root != null && elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / Mathf.Max(0.01f, duration));
+                float extension;
+                if (t < 0.3f)
+                {
+                    float grow = Mathf.Clamp01(t / 0.3f);
+                    extension = 1f - (1f - grow) * (1f - grow);
+                }
+                else if (t < 0.68f) extension = 1f;
+                else
+                {
+                    float retract = Mathf.InverseLerp(0.68f, 1f, t);
+                    extension = 1f - retract * retract;
+                }
+                if (spike != null)
+                    for (int point = 0; point < finalPoints.Length; point++)
+                        spike.SetPosition(point, Vector3.Lerp(crown, finalPoints[point], extension));
+                yield return null;
+            }
+            if (root != null) Destroy(root);
+        }
+
         private void PlayCatScratchEffect()
         {
             PlayCatScratchEffect(true);
@@ -2061,6 +2252,7 @@ namespace DrawBody.Prototype
         internal void PlayRemoteCatScratchEffect()
         {
             PlayCatScratchEffect(false);
+            HitPlayersWithCatScratch(true);
         }
 
         private void PlayCatScratchEffect(bool broadcast)

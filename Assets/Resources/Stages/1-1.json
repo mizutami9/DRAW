@@ -62,7 +62,7 @@
             "type": 0,
             "position": {
                 "x": -2.75,
-                "y": -2.0
+                "y": -2.299999952316284
             },
             "size": {
                 "x": 12.5,
@@ -87,7 +87,7 @@
             "type": 0,
             "position": {
                 "x": 6.25,
-                "y": -1.0
+                "y": -0.949999988079071
             },
             "size": {
                 "x": 5.5,
@@ -211,8 +211,8 @@
             "objectId": "BackgroundStar",
             "type": 149,
             "position": {
-                "x": -6.0,
-                "y": 3.0
+                "x": -4.5,
+                "y": 4.0
             },
             "size": {
                 "x": 5.595937252044678,
@@ -236,8 +236,8 @@
             "objectId": "BackgroundTree",
             "type": 93,
             "position": {
-                "x": -0.5,
-                "y": 1.5
+                "x": 2.0,
+                "y": 1.0
             },
             "size": {
                 "x": 4.797613143920898,
@@ -261,7 +261,7 @@
             "objectId": "BackgroundGras",
             "type": 94,
             "position": {
-                "x": -3.0,
+                "x": 11.5,
                 "y": 0.0
             },
             "size": {
@@ -461,7 +461,7 @@
             "objectId": "obj_d1cc36728e53484b",
             "type": 0,
             "position": {
-                "x": 23.628570556640626,
+                "x": 23.621429443359376,
                 "y": 11.499317169189454
             },
             "size": {
@@ -662,10 +662,10 @@
             "type": 0,
             "position": {
                 "x": 25.0,
-                "y": 8.249317169189454
+                "y": 7.249317169189453
             },
             "size": {
-                "x": 4.5,
+                "x": 6.5,
                 "y": 2.0
             },
             "rotation": -90.0,
@@ -687,7 +687,7 @@
             "type": 0,
             "position": {
                 "x": 31.0,
-                "y": 7.0
+                "y": 4.999317169189453
             },
             "size": {
                 "x": 10.0,
@@ -712,10 +712,10 @@
             "type": 0,
             "position": {
                 "x": 37.0,
-                "y": 8.149612426757813
+                "y": 7.049907684326172
             },
             "size": {
-                "x": 4.300590515136719,
+                "x": 6.5,
                 "y": 2.0
             },
             "rotation": 90.0,
@@ -1842,6 +1842,56 @@
             "size": {
                 "x": 3.808499336242676,
                 "y": 3.808499336242676
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_e9362f65cd274558",
+            "type": 261,
+            "position": {
+                "x": -2.500000238418579,
+                "y": 3.5
+            },
+            "size": {
+                "x": 10.0,
+                "y": 8.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_7310421c11564244",
+            "type": 261,
+            "position": {
+                "x": 31.0,
+                "y": 9.5
+            },
+            "size": {
+                "x": 10.0,
+                "y": 8.0
             },
             "rotation": 0.0,
             "pathPoints": [],

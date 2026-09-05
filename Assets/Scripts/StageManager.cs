@@ -1320,8 +1320,13 @@ namespace DrawBody.Prototype
                 PlayerController2D source = data.PlayerId == onlineManager?.LocalPlayerId
                     ? null
                     : GetOnlinePlayerController(data.PlayerId);
-                if (effect != null && source != null && effect.Effect == "cat_scratch")
-                    source.GetComponent<PlayerCarryController>()?.PlayRemoteCatScratchEffect();
+                if (effect != null && source != null)
+                {
+                    if (effect.Effect == "cat_scratch")
+                        source.GetComponent<PlayerCarryController>()?.PlayRemoteCatScratchEffect();
+                    else if (effect.Effect == "slime_spike")
+                        source.GetComponent<PlayerCarryController>()?.PlayRemoteSlimeSpikeEffect();
+                }
             }
             else if (data.Kind == GimmickKindClearRequest && IsLocalOnlineHost(onlineManager.CurrentLobby))
             {
@@ -1501,29 +1506,38 @@ namespace DrawBody.Prototype
             SelectStage(nextStageId);
         }
 
-        public void EnterDrawingMode()
+        public bool CanEnterDrawingMode()
         {
             if (!stageStarted || challengeFailed
-                || challengeStarting && !IsChallengeReadyRoomActive && !spawnCorrectionRequired)
+                || (challengeStarting && !IsChallengeReadyRoomActive && !spawnCorrectionRequired))
             {
-                return;
+                return false;
             }
 
-            if (RequiresChallengeReadyRoom() && challengeRunStarted && currentStageId != "10-3")
+            if (StageRedrawZone.HasActiveZones())
             {
-                uiManager?.ShowGameplayNotice(LocalizationManager.T("redraw_unavailable_stage"));
-                return;
+                if (!StageRedrawZone.IsPlayerInZone(player)) return false;
+            }
+            else if (RequiresChallengeReadyRoom() && challengeRunStarted && currentStageId != "10-3")
+            {
+                if (!StageRedrawZone.IsPlayerInZone(player)) return false;
             }
 
             if (currentStageId == "5-3")
             {
                 StageDrawnEscortChallengeController escort =
                     Object.FindFirstObjectByType<StageDrawnEscortChallengeController>();
-                if (escort != null && !escort.IsPlanningPhase)
-                {
-                    uiManager?.ShowGameplayNotice(LocalizationManager.T("redraw_unavailable_escort_run"));
-                    return;
-                }
+                if (escort != null && !escort.IsPlanningPhase) return false;
+            }
+
+            return true;
+        }
+
+        public void EnterDrawingMode()
+        {
+            if (!CanEnterDrawingMode())
+            {
+                return;
             }
 
             drawing = true;
@@ -1686,6 +1700,8 @@ namespace DrawBody.Prototype
                 ?.EnsureInitializedForPlay();
             Object.FindFirstObjectByType<StageTiltBoardController>()
                 ?.EnsureInitializedForPlay();
+            Object.FindFirstObjectByType<StageLaserRelayController>()
+                ?.EnsureInitializedForPlay();
 
             // A controller removed by StageLoader can finish its OnDisable in
             // the same frame and leave a last transient flash behind. Sweep once
@@ -1719,6 +1735,12 @@ namespace DrawBody.Prototype
                 AssignInitialUniqueSpecies();
             }
             RespawnPlayers();
+            // Flying/final boss stages must mount or place players and lock their
+            // arena camera after the common respawn and camera restoration above.
+            Object.FindFirstObjectByType<StageFlyingPlatformBossController>()
+                ?.EnsureInitializedForPlay();
+            Object.FindFirstObjectByType<StageMirrorFinalBossController>()
+                ?.EnsureInitializedForPlay();
             SetActivePlayer(IsOnlineInStage() && primaryPlayer != null
                 ? primaryPlayer
                 : player != null ? player : primaryPlayer, true);
@@ -3329,7 +3351,11 @@ namespace DrawBody.Prototype
             StageDrawnEscortChallengeController drawnEscort = currentStageId == "5-3"
                 ? Object.FindFirstObjectByType<StageDrawnEscortChallengeController>()
                 : null;
-            bool redrawInPlace = currentStageId == "6-3" || currentStageId == "8-3"
+            // RedrawZoneベースのinPlace判定。
+            // 既存のハードコードIDはゾーンをJSONに追加することで置き換え済み。
+            // 後方互換のためハードコードIDも残す。
+            bool redrawInPlace = StageRedrawZone.IsPlayerInZone(redrawPlayer)
+                || currentStageId == "6-3" || currentStageId == "8-3" || currentStageId == "14-3"
                 || currentStageId == "10-3" && challengeRunStarted
                 || drawnEscort != null && drawnEscort.ShouldKeepRedrawInPlace;
             Vector3 preferred = redrawInPlace && hasRedrawReturnPosition && redrawReturnPlayer == redrawPlayer
@@ -3412,7 +3438,9 @@ namespace DrawBody.Prototype
                 return true;
 
             Vector3 original = targetPlayer.transform.position;
-            bool requiresGround = TryFindGroundSurfaceBelow(preferred, out _);
+            // A one-way platform can be entered from below, so it must not make
+            // a large drawing fail the challenge-start fit validation.
+            bool requiresGround = TryFindGroundSurfaceBelow(preferred, out _, false);
             const float step = 0.75f;
             const int searchRings = 12;
             for (int ring = 0; ring <= searchRings; ring++)
@@ -3422,9 +3450,9 @@ namespace DrawBody.Prototype
                 {
                     float direction = side == 0 ? 1f : -1f;
                     Vector3 candidate = preferred + Vector3.right * (ring * step * direction);
-                    if (requiresGround && !TryFindGroundSurfaceBelow(candidate, out _)) continue;
+                    if (requiresGround && !TryFindGroundSurfaceBelow(candidate, out _, false)) continue;
                     TeleportPlayerWithoutPhysics(targetPlayer, candidate);
-                    AlignPlayerBottomToGround(targetPlayer, candidate);
+                    AlignPlayerBottomToGround(targetPlayer, candidate, false);
                     Physics2D.SyncTransforms();
                     if (!HasStageSolidOverlap(targetPlayer))
                     {
@@ -3485,15 +3513,17 @@ namespace DrawBody.Prototype
                     // room or stage geometry and must never make a body fail the
                     // spawn-size validation.
                     if (other.GetComponentInParent<PlayerController2D>() != null) continue;
-                    PlatformEffector2D oneWay = other.GetComponentInParent<PlatformEffector2D>();
-                    if (oneWay != null && oneWay.useOneWay) continue;
+                    if (IsOneWayPassThroughSurface(other)) continue;
                     if (playerCollider.Distance(other).isOverlapped) return true;
                 }
             }
             return false;
         }
 
-        private bool TryFindGroundSurfaceBelow(Vector3 position, out float surfaceY)
+        private bool TryFindGroundSurfaceBelow(
+            Vector3 position,
+            out float surfaceY,
+            bool includeOneWay = true)
         {
             Vector2 origin = new Vector2(position.x, position.y + 0.35f);
             RaycastHit2D[] hits = Physics2D.RaycastAll(origin, Vector2.down, 8f, groundLayer);
@@ -3505,12 +3535,26 @@ namespace DrawBody.Prototype
                 {
                     continue;
                 }
+                if (!includeOneWay && IsOneWayPassThroughSurface(collider)) continue;
 
                 surfaceY = hits[i].point.y;
                 return true;
             }
             surfaceY = 0f;
             return false;
+        }
+
+        private static bool IsOneWayPassThroughSurface(Collider2D collider)
+        {
+            if (collider == null) return false;
+            PlatformEffector2D effector = collider.GetComponentInParent<PlatformEffector2D>();
+            if (effector != null && effector.useOneWay) return true;
+
+            StageEditorObject marker = collider.GetComponentInParent<StageEditorObject>();
+            return marker != null
+                && (marker.type == StageObjectType.OneWayPlatform
+                    || marker.type == StageObjectType.MovingOneWayPlatform
+                    || marker.type == StageObjectType.EscortPlayerOneWayFloor);
         }
 
         private IEnumerator CompleteRedrawRespawn(
@@ -3726,6 +3770,7 @@ namespace DrawBody.Prototype
         {
             if (targetPlayer == null) return;
             if (!targetPlayer.gameObject.activeSelf) targetPlayer.gameObject.SetActive(true);
+            targetPlayer.GetComponent<BodyBuilder>()?.RestoreBuiltBodyFallbackState();
             Rigidbody2D body = targetPlayer.GetComponent<Rigidbody2D>();
             if (body == null) return;
             body.simulated = true;
@@ -4200,11 +4245,14 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void AlignPlayerBottomToGround(PlayerController2D targetPlayer, Vector3 spawnPosition)
+        private void AlignPlayerBottomToGround(
+            PlayerController2D targetPlayer,
+            Vector3 spawnPosition,
+            bool includeOneWay = true)
         {
             if (targetPlayer == null) return;
             Physics2D.SyncTransforms();
-            if (!TryFindGroundSurfaceBelow(spawnPosition, out float surfaceY)
+            if (!TryFindGroundSurfaceBelow(spawnPosition, out float surfaceY, includeOneWay)
                 || !TryGetPlayerSolidBounds(targetPlayer, out Bounds bodyBounds))
             {
                 return;

@@ -283,7 +283,8 @@ namespace DrawBody.Prototype
         GrainScale,
         GrainGate,
         EscortFriendButton,
-        EscortPlayerOneWayFloor
+        EscortPlayerOneWayFloor,
+        RedrawZone
     }
 
     [Serializable]

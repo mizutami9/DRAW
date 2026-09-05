@@ -681,6 +681,7 @@ namespace DrawBody.Prototype
         private CircleCollider2D grainCollider;
         private StageGrainEmitter sourceEmitter;
         private bool sourceEmitterNotified;
+        private bool allowGroundedCarrierContainment;
         private float configuredGravityScale = 0.72f;
         private float grams = 10f;
 
@@ -714,6 +715,10 @@ namespace DrawBody.Prototype
         {
             sourceSpecies = species;
             grams = Mathf.Max(0.1f, weightGrams);
+            // 9-3 grains pass through one-way floors and are measured by whether
+            // they are visibly enclosed by the drawn body. Touching the bottom
+            // floor must not invalidate or clean up such a grain.
+            allowGroundedCarrierContainment = ignoreOneWayPlatforms;
             gameObject.layer = 31;
             if (!grainCollisionConfigured)
             {
@@ -731,7 +736,7 @@ namespace DrawBody.Prototype
             // Ten grains make 100 g. Their mass stays deliberately light so the
             // pile cannot shove the player around or suppress a jump.
             body.mass = Mathf.Clamp(0.00045f + grams * 0.000035f, 0.0005f, 0.0022f);
-            configuredGravityScale = Mathf.Max(0.1f, gravityScale);
+            configuredGravityScale = Mathf.Max(0f, gravityScale);
             body.gravityScale = configuredGravityScale;
             body.linearDamping = 0.08f;
             body.angularDamping = 0.15f;
@@ -784,7 +789,7 @@ namespace DrawBody.Prototype
                 StageGrainCarrier foundCarrier = null;
                 foreach (StageGrainCarrier carrier in StageGrainCarrier.All)
                 {
-                    if (!IsOnGround && carrier != null && carrier.ContainsWorldPoint(transform.position))
+                    if (IsContainedBy(carrier))
                     {
                         foundCarrier = carrier;
                         break;
@@ -803,7 +808,8 @@ namespace DrawBody.Prototype
             }
 
             if (transform.position.y < -15f
-                || (!insideCarrier
+                || (!allowGroundedCarrierContainment
+                    && !insideCarrier
                     && floorContactStartedAt >= 0f
                     && Time.time - lastFloorContactAt <= 0.12f
                     && Time.time - floorContactStartedAt >= 3f))
@@ -815,6 +821,22 @@ namespace DrawBody.Prototype
             {
                 floorContactStartedAt = -1f;
             }
+        }
+
+        public bool IsContainedBy(StageGrainCarrier carrier)
+        {
+            return carrier != null
+                && (allowGroundedCarrierContainment || !IsOnGround)
+                && carrier.ContainsWorldPoint(transform.position, allowGroundedCarrierContainment);
+        }
+
+        public bool IsContainedByForMeasurement(StageGrainCarrier carrier)
+        {
+            if (carrier == null) return false;
+            Bounds particleBounds = grainCollider != null
+                ? grainCollider.bounds
+                : new Bounds(transform.position, Vector3.one * 0.2f);
+            return carrier.OverlapsParticleForMeasurement(particleBounds);
         }
 
         private void OnCollisionStay2D(Collision2D collision)
@@ -928,14 +950,14 @@ namespace DrawBody.Prototype
             RefreshCarrierBounds();
         }
 
-        public bool ContainsWorldPoint(Vector2 point)
+        public bool ContainsWorldPoint(Vector2 point, bool includeWholeBody = false)
         {
             if (!TryGetCarrierBounds(out Bounds bounds)) return false;
             // Grains can settle inside a U-shaped hand-drawn head, substantially
             // below its highest line. They stay fully dynamic now, so this wider
             // region only identifies carried weight and never attaches a grain.
             const float sidePadding = 0.1f;
-            bool wholeBodyContainer = UsesWholeBodyGrainContainer();
+            bool wholeBodyContainer = includeWholeBody || UsesWholeBodyGrainContainer();
             // A turtle carries grains inside its shell bowl, which can be close
             // to its lowest line. A slime's entire outline is likewise its bowl;
             // limiting it to the upper half loses grains in a large slime.
@@ -944,6 +966,23 @@ namespace DrawBody.Prototype
                 && point.x <= bounds.max.x + sidePadding
                 && point.y >= headRegionBottom
                 && point.y <= bounds.max.y + 0.2f;
+        }
+
+        public bool OverlapsParticleForMeasurement(Bounds particleBounds)
+        {
+            if (!TryGetCarrierBounds(out Bounds bounds)) return false;
+
+            // 9-3 is judged from what the player can see at the measuring
+            // moment. Include the grain's visible radius and a small allowance
+            // for the many thin hand-drawn colliders that make up the body.
+            const float sideAllowance = 0.18f;
+            const float verticalAllowance = 0.2f;
+            float bottom = bounds.min.y - verticalAllowance;
+            float top = bounds.max.y + verticalAllowance;
+            return particleBounds.max.x >= bounds.min.x - sideAllowance
+                && particleBounds.min.x <= bounds.max.x + sideAllowance
+                && particleBounds.max.y >= bottom
+                && particleBounds.min.y <= top;
         }
 
         public bool OverlapsHorizontalSpan(float centerX, float halfWidth)

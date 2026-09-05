@@ -396,7 +396,10 @@ namespace DrawBody.Prototype
                 countdownText.font = handwritten;
                 textRenderer.sharedMaterial = handwritten.material;
             }
-            textRenderer.sortingOrder = 230;
+            // Keep the fuse readable above the bomb itself, but below stage
+            // darkness overlays (11-1 uses sorting order 180). Otherwise the
+            // white number floats visibly in areas the flashlight has not lit.
+            textRenderer.sortingOrder = 90;
 
             pulseRenderer = GetComponentInChildren<SpriteRenderer>();
             if (pulseRenderer != null)

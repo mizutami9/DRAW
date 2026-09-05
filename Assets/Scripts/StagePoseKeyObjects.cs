@@ -620,4 +620,867 @@ namespace DrawBody.Prototype
                 && point.y >= bounds.min.y - margin && point.y <= bounds.max.y + margin;
         }
     }
+
+    // ────────────────────────────────────────────────────────
+    // 書き直し可能ゾーン (Redraw Zone)
+    // ────────────────────────────────────────────────────────
+
+    public static class StageRedrawZoneFactory
+    {
+        public static StageRedrawZone CreateRuntimeFloorZone(
+            Transform parent, string objectId, Vector2 floorCenter,
+            float floorWidth, float triggerHeight)
+        {
+            float safeWidth = Mathf.Max(0.5f, floorWidth);
+            float safeHeight = Mathf.Max(0.5f, triggerHeight);
+            StageObjectData data = StageObjectFactory.CreateDefaultData(
+                StageObjectType.RedrawZone,
+                floorCenter + Vector2.up * safeHeight * 0.5f);
+            data.objectId = objectId;
+            data.size = new Vector2(safeWidth, safeHeight);
+            GameObject root = CreateRedrawZone(data, parent);
+            StageRedrawZone zone = root != null ? root.GetComponent<StageRedrawZone>() : null;
+            zone?.AlignToFloor(floorCenter, safeWidth);
+            return zone;
+        }
+
+        public static GameObject CreateRedrawZone(StageObjectData data, Transform parent)
+        {
+            GameObject root = new GameObject(data.objectId) { name = StageObjectType.RedrawZone.ToString() };
+            root.transform.SetParent(parent, false);
+            root.transform.position = data.position;
+            root.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
+            root.transform.localScale = new Vector3(
+                Mathf.Max(0.5f, data.size.x),
+                Mathf.Max(0.5f, data.size.y),
+                1f);
+
+            BoxCollider2D trigger = root.AddComponent<BoxCollider2D>();
+            trigger.size = Vector2.one;
+            trigger.isTrigger = true;
+
+            StageRedrawZone zone = root.AddComponent<StageRedrawZone>();
+            zone.BuildVisuals(data.size);
+
+            StageEditorObject marker = root.AddComponent<StageEditorObject>();
+            marker.objectId = data.objectId;
+            marker.type = data.type;
+            marker.size = data.size;
+            marker.actionStrength = data.actionStrength;
+            marker.movementAngle = data.movementAngle;
+            marker.movementSpeed = data.movementSpeed;
+            marker.spawnPattern = data.spawnPattern;
+            marker.spawnBoxSize = data.spawnBoxSize;
+            marker.bombFuseSeconds = data.bombFuseSeconds;
+            marker.linkTargetId = data.linkTargetId;
+            marker.linkAction = data.linkAction;
+            return root;
+        }
+    }
+
+    /// <summary>
+    /// 書き直し可能ゾーン。
+    /// メモ帳のサイズ＝書き直し判定領域。
+    /// ゆったりと漂う外周OKエフェクト。
+    /// クレヨン画像「D R A W !」の2秒周期ウェーブ跳躍。
+    /// </summary>
+    public sealed class StageRedrawZone : MonoBehaviour
+    {
+        private static readonly System.Collections.Generic.HashSet<StageRedrawZone> ActiveZones
+            = new System.Collections.Generic.HashSet<StageRedrawZone>();
+
+        private Collider2D zoneCollider;
+
+        private Transform badgeTransform;          // 文字群ルート
+        private Transform[] charTransforms;        // 各クレヨン文字(D, R, A, W, !)のTransform
+        private Vector3[] charBaseLocalPositions;  // 各文字の基本位置
+
+        private SpriteRenderer paperRenderer;      // お絵描き風メモ用紙スプライト
+        private SpriteRenderer baseWhitePaperRenderer; // 【白紙保証】100%不透明白ベース紙
+        private SpriteRenderer gridOverlayRenderer; // 超淡い視認性優先の方眼
+
+        private GameObject[] perimeterSparkles;
+        private float[] sparklePhases;
+        private float[] sparkleSpeeds;
+        private SpriteRenderer auraGlowRenderer;
+        private sealed class FloorStroke
+        {
+            public LineRenderer Renderer;
+            public Color BaseColor;
+            public float X;
+        }
+
+        private sealed class FloorParticle
+        {
+            public Transform Transform;
+            public SpriteRenderer Renderer;
+            public Vector3 Start;
+            public float StartedAt;
+            public float Duration;
+            public float Drift;
+        }
+
+        private readonly List<FloorStroke> floorStrokes = new List<FloorStroke>();
+        private readonly List<FloorParticle> floorParticles = new List<FloorParticle>();
+        private Transform floorVisualRoot;
+        private Transform floorDrawMark;
+        private Vector3 floorDrawMarkBasePosition;
+        private float floorVisualWidth;
+        private float nextFloorParticleBurstAt;
+
+        private void OnEnable()  => ActiveZones.Add(this);
+        private void OnDisable() => ActiveZones.Remove(this);
+        private void OnDestroy() => ActiveZones.Remove(this);
+
+        private void Start()
+        {
+            zoneCollider = GetComponent<Collider2D>();
+        }
+
+        // ─── 静的API ───
+
+        public static bool HasActiveZones() => ActiveZones.Count > 0;
+
+        public static bool IsPlayerInZone(PlayerController2D player)
+        {
+            if (player == null) return false;
+            Vector2 pos = player.transform.position;
+            foreach (StageRedrawZone zone in ActiveZones)
+            {
+                if (zone == null || !zone.isActiveAndEnabled) continue;
+                Collider2D col = zone.zoneCollider != null ? zone.zoneCollider : zone.GetComponent<Collider2D>();
+                if (col != null && col.OverlapPoint(pos)) return true;
+
+                Vector3 localPos = zone.transform.InverseTransformPoint(pos);
+                if (Mathf.Abs(localPos.x) <= 0.55f && Mathf.Abs(localPos.y) <= 0.55f) return true;
+            }
+            return false;
+        }
+
+        public void BuildVisuals(Vector2 size)
+        {
+            ClearFloorVisuals();
+            BuildFloorOnlyVisuals(size);
+        }
+
+        /// <summary>
+        /// Keeps the redraw trigger untouched while stretching the recognizable
+        /// crayon treatment across the actual runtime-built floor.
+        /// </summary>
+        public void AlignFloorVisual(Vector2 worldCenter, float worldWidth)
+        {
+            ClearFloorVisuals();
+            BuildFloorOnlyVisualsAtWorld(worldCenter, Mathf.Max(0.5f, worldWidth));
+        }
+
+        public void AlignToFloor(Vector2 worldCenter, float worldWidth)
+        {
+            worldWidth = Mathf.Max(0.5f, worldWidth);
+            Vector3 worldPosition = transform.position;
+            worldPosition.x = worldCenter.x;
+            transform.position = worldPosition;
+
+            float parentScaleX = transform.parent != null
+                ? Mathf.Max(0.001f, Mathf.Abs(transform.parent.lossyScale.x))
+                : 1f;
+            Vector3 localScale = transform.localScale;
+            localScale.x = worldWidth / parentScaleX;
+            transform.localScale = localScale;
+
+            AlignFloorVisual(worldCenter, worldWidth);
+        }
+
+        public void HideFloorVisual()
+        {
+            ClearFloorVisuals();
+        }
+
+        private void ClearFloorVisuals()
+        {
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(transform.GetChild(i).gameObject);
+            }
+            floorStrokes.Clear();
+            floorParticles.Clear();
+            floorVisualRoot = null;
+            floorDrawMark = null;
+            floorVisualWidth = 0f;
+        }
+
+        private void BuildFloorOnlyVisuals(Vector2 size)
+        {
+            float width = Mathf.Max(0.5f, size.x);
+            float height = Mathf.Max(0.5f, size.y);
+            Transform floorRoot = new GameObject("Crayon Redraw Floor").transform;
+            floorRoot.SetParent(transform, false);
+            floorRoot.localPosition = new Vector3(0f, -0.5f, -0.08f);
+            floorRoot.localScale = new Vector3(1f / width, 1f / height, 1f);
+            floorVisualRoot = floorRoot;
+            floorVisualWidth = width;
+            nextFloorParticleBurstAt = Time.unscaledTime + Random.Range(3f, 5f);
+
+            Vector2 floorSize = new Vector2(width + 0.08f, 0.64f);
+            StageEscortController.AddFilledRect(floorRoot, "Uneven Cyan Undercoat",
+                Vector2.zero, floorSize, new Color(0.54f, 0.87f, 0.94f, 0.17f), 37);
+
+            AddCrayonPaintBands(floorRoot, width);
+
+            AddLooseDoodles(floorRoot, width);
+            AddFloorEndCrayon(floorRoot, -width * 0.5f, false);
+            AddFloorEndCrayon(floorRoot, width * 0.5f, true);
+            AddSmallDrawMark(floorRoot, width);
+        }
+
+        private void BuildFloorOnlyVisualsAtWorld(Vector2 worldCenter, float width)
+        {
+            float rootScaleX = Mathf.Max(0.001f, Mathf.Abs(transform.lossyScale.x));
+            float rootScaleY = Mathf.Max(0.001f, Mathf.Abs(transform.lossyScale.y));
+            Transform floorRoot = new GameObject("Crayon Redraw Floor").transform;
+            floorRoot.SetParent(transform, true);
+            floorRoot.position = new Vector3(worldCenter.x, worldCenter.y, transform.position.z - 0.08f);
+            floorRoot.rotation = Quaternion.identity;
+            floorRoot.localScale = new Vector3(1f / rootScaleX, 1f / rootScaleY, 1f);
+            floorVisualRoot = floorRoot;
+            floorVisualWidth = width;
+            nextFloorParticleBurstAt = Time.unscaledTime + Random.Range(3f, 5f);
+
+            StageEscortController.AddFilledRect(floorRoot, "Uneven Cyan Undercoat",
+                Vector2.zero, new Vector2(width + 0.08f, 0.64f),
+                new Color(0.54f, 0.87f, 0.94f, 0.17f), 37);
+            AddCrayonPaintBands(floorRoot, width);
+            AddLooseDoodles(floorRoot, width);
+            AddFloorEndCrayon(floorRoot, -width * 0.5f, false);
+            AddFloorEndCrayon(floorRoot, width * 0.5f, true);
+            AddSmallDrawMark(floorRoot, width);
+        }
+
+        private void AddCrayonPaintBands(Transform parent, float width)
+        {
+            Color[] palette =
+            {
+                new Color(0.06f, 0.61f, 0.9f, 0.7f),
+                new Color(0.94f, 0.22f, 0.28f, 0.67f),
+                new Color(1f, 0.73f, 0.08f, 0.7f),
+                new Color(0.06f, 0.72f, 0.62f, 0.66f),
+                new Color(0.92f, 0.3f, 0.66f, 0.62f)
+            };
+            int patchCount = Mathf.Clamp(Mathf.CeilToInt(width / 1.35f), 4, 24);
+            float patchWidth = width / patchCount;
+            for (int patch = 0; patch < patchCount; patch++)
+            {
+                Color color = palette[patch % palette.Length];
+                float left = -width * 0.5f + patch * patchWidth - 0.12f;
+                float right = left + patchWidth + 0.24f;
+                for (int pass = 0; pass < 6; pass++)
+                {
+                    GameObject strokeObject = new GameObject("Crayon Scrub " + patch + "-" + pass);
+                    strokeObject.transform.SetParent(parent, false);
+                    LineRenderer line = strokeObject.AddComponent<LineRenderer>();
+                    line.useWorldSpace = false;
+                    line.positionCount = 6;
+                    line.startWidth = 0.065f + (pass % 3) * 0.012f;
+                    line.endWidth = line.startWidth * (0.86f + (patch % 2) * 0.1f);
+                    line.numCapVertices = 3;
+                    line.numCornerVertices = 2;
+                    line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+                    line.startColor = color;
+                    line.endColor = new Color(color.r, color.g, color.b, color.a * 0.82f);
+                    line.sortingOrder = 38;
+                    float baseY = -0.27f + pass * 0.105f + Mathf.Sin(patch * 1.7f + pass) * 0.025f;
+                    for (int point = 0; point < 6; point++)
+                    {
+                        float t = point / 5f;
+                        float x = Mathf.Lerp(left, right, t)
+                            + Mathf.Sin(point * 2.9f + pass * 1.3f) * 0.035f;
+                        float y = baseY + Mathf.Sin(point * 3.7f + patch + pass * 0.8f) * 0.045f;
+                        line.SetPosition(point, new Vector3(x, y, 0f));
+                    }
+                    floorStrokes.Add(new FloorStroke
+                    {
+                        Renderer = line,
+                        BaseColor = color,
+                        X = (left + right) * 0.5f
+                    });
+                }
+            }
+        }
+
+        private static void AddFloorEndCrayon(Transform parent, float x, bool flip)
+        {
+            Sprite crayon = Resources.Load<Sprite>("StageDecorations/CrayonSet/crayon");
+            if (crayon == null || crayon.bounds.size.y <= 0f) return;
+            GameObject marker = new GameObject(flip ? "End Crayon Right" : "End Crayon Left");
+            marker.transform.SetParent(parent, false);
+            marker.transform.localPosition = new Vector3(x + (flip ? -0.14f : 0.14f), 0.48f, -0.03f);
+            marker.transform.localRotation = Quaternion.Euler(0f, 0f, -45f + (flip ? -3f : 3f));
+            float scale = 1.18f / crayon.bounds.size.y;
+            marker.transform.localScale = new Vector3(scale, scale, 1f);
+            SpriteRenderer renderer = marker.AddComponent<SpriteRenderer>();
+            renderer.sprite = crayon;
+            renderer.color = new Color(1f, 1f, 1f, 0.94f);
+            renderer.sortingOrder = 41;
+        }
+
+        private static void AddSmallDrawMark(Transform parent, float floorWidth)
+        {
+            string[] paths =
+            {
+                "StageDecorations/CrayonSet/redraw-letter-d",
+                "StageDecorations/CrayonSet/redraw-letter-r",
+                "StageDecorations/CrayonSet/redraw-letter-a",
+                "StageDecorations/CrayonSet/redraw-letter-w",
+                "StageDecorations/CrayonSet/redraw-letter-excl"
+            };
+            float startX = -0.68f;
+            Transform mark = new GameObject("Small Floor DRAW Mark").transform;
+            mark.SetParent(parent, false);
+            mark.localPosition = Vector3.zero;
+            StageRedrawZone owner = parent.GetComponentInParent<StageRedrawZone>();
+            if (owner != null)
+            {
+                owner.floorDrawMark = mark;
+                owner.floorDrawMarkBasePosition = mark.localPosition;
+            }
+            for (int i = 0; i < paths.Length; i++)
+            {
+                Sprite sprite = Resources.Load<Sprite>(paths[i]);
+                if (sprite == null || sprite.bounds.size.x <= 0f || sprite.bounds.size.y <= 0f) continue;
+                GameObject letter = new GameObject("Floor DRAW Letter " + i);
+                letter.transform.SetParent(mark, false);
+                letter.transform.localPosition = new Vector3(startX + i * 0.34f,
+                    0.58f + (i % 2 == 0 ? 0.025f : -0.025f), -0.02f);
+                letter.transform.localRotation = Quaternion.Euler(0f, 0f,
+                    i % 2 == 0 ? -3f : 2.5f);
+                float scale = 0.34f / sprite.bounds.size.y;
+                letter.transform.localScale = new Vector3(scale, scale, 1f);
+                SpriteRenderer renderer = letter.AddComponent<SpriteRenderer>();
+                renderer.sprite = sprite;
+                renderer.sortingOrder = 40;
+            }
+            Color accent = new Color(0.04f, 0.58f, 0.86f, 0.68f);
+            StageEscortController.AddLine(mark, new Vector2(-1.0f, 0.48f),
+                new Vector2(-0.82f, 0.42f), 0.04f, accent, 40);
+            StageEscortController.AddLine(mark, new Vector2(-1.04f, 0.62f),
+                new Vector2(-0.84f, 0.6f), 0.04f, accent, 40);
+            StageEscortController.AddLine(mark, new Vector2(0.83f, 0.42f),
+                new Vector2(1.02f, 0.49f), 0.04f, accent, 40);
+            StageEscortController.AddLine(mark, new Vector2(0.84f, 0.6f),
+                new Vector2(1.04f, 0.63f), 0.04f, accent, 40);
+        }
+
+        private static void AddLooseDoodles(Transform parent, float width)
+        {
+            Color blue = new Color(0.08f, 0.5f, 0.82f, 0.34f);
+            Color yellow = new Color(0.92f, 0.65f, 0.08f, 0.34f);
+            Color red = new Color(0.84f, 0.18f, 0.16f, 0.3f);
+            Color green = new Color(0.08f, 0.56f, 0.28f, 0.3f);
+            float usable = Mathf.Max(1.8f, width - 2.4f);
+            int motifCount = Mathf.Clamp(Mathf.FloorToInt(usable / 1.35f), 3, 12);
+            for (int i = 0; i < motifCount; i++)
+            {
+                float x = Mathf.Lerp(-usable * 0.5f, usable * 0.5f,
+                    motifCount <= 1 ? 0.5f : i / (float)(motifCount - 1));
+                Color color = i % 4 == 0 ? yellow : i % 4 == 1 ? blue : i % 4 == 2 ? red : green;
+                AddTinyDoodle(parent, new Vector2(x, -0.02f + Mathf.Sin(i * 1.8f) * 0.1f),
+                    0.12f + i % 3 * 0.025f, i % 4, color);
+            }
+
+            for (int group = 0; group < Mathf.Clamp(Mathf.CeilToInt(width / 5f), 1, 5); group++)
+            {
+                float center = Mathf.Lerp(-width * 0.34f, width * 0.34f,
+                    group / (float)Mathf.Max(1, Mathf.CeilToInt(width / 5f) - 1));
+                Vector2 previous = new Vector2(center - 0.48f, -0.16f);
+                for (int segment = 1; segment <= 7; segment++)
+                {
+                    Vector2 next = new Vector2(center - 0.48f + segment * 0.14f,
+                        Mathf.Sin(segment * 2.35f + group) * 0.2f);
+                    StageEscortController.AddLine(parent, previous, next, 0.04f,
+                        segment % 3 == 0 ? yellow : blue, 39);
+                    previous = next;
+                }
+            }
+        }
+
+        private static void AddTinyDoodle(
+            Transform parent, Vector2 center, float radius, int kind, Color color)
+        {
+            List<Vector2> points = new List<Vector2>();
+            if (kind == 0)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    float angle = i / 8f * Mathf.PI * 2f;
+                    points.Add(center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius);
+                }
+            }
+            else if (kind == 1)
+            {
+                points.Add(center + new Vector2(0f, radius));
+                points.Add(center + new Vector2(-radius, -radius));
+                points.Add(center + new Vector2(radius, -radius * 0.82f));
+                points.Add(points[0]);
+            }
+            else if (kind == 2)
+            {
+                points.Add(center + new Vector2(-radius, -radius));
+                points.Add(center + new Vector2(-radius * 0.9f, radius));
+                points.Add(center + new Vector2(radius, radius * 0.9f));
+                points.Add(center + new Vector2(radius, -radius));
+                points.Add(points[0]);
+            }
+            else
+            {
+                for (int i = 0; i <= 10; i++)
+                {
+                    float angle = -Mathf.PI * 0.5f + i / 10f * Mathf.PI * 2f;
+                    float r = i % 2 == 0 ? radius : radius * 0.42f;
+                    points.Add(center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * r);
+                }
+            }
+            for (int i = 1; i < points.Count; i++)
+                StageEscortController.AddLine(parent, points[i - 1], points[i], 0.035f, color, 39);
+        }
+
+        private static void AddRepeatedPencilMarks(Transform parent, float width)
+        {
+            Sprite pencil = Resources.Load<Sprite>("StageDecorations/CrayonSet/pencil");
+            if (pencil == null || pencil.bounds.size.y <= 0f) return;
+            int count = Mathf.Clamp(Mathf.FloorToInt(width / 1.25f), 3, 18);
+            for (int i = 0; i < count; i++)
+            {
+                GameObject mark = new GameObject("Faint Pencil Floor Mark " + i);
+                mark.transform.SetParent(parent, false);
+                mark.transform.localPosition = new Vector3(
+                    Mathf.Lerp(-width * 0.42f, width * 0.42f, count <= 1 ? 0.5f : i / (float)(count - 1)),
+                    -0.02f + Mathf.Sin(i * 2.1f) * 0.08f, 0.02f);
+                mark.transform.localRotation = Quaternion.Euler(0f, 0f, 43f + Mathf.Sin(i) * 8f);
+                float scale = (0.2f + i % 3 * 0.025f) / pencil.bounds.size.y;
+                mark.transform.localScale = new Vector3(scale, scale, 1f);
+                SpriteRenderer renderer = mark.AddComponent<SpriteRenderer>();
+                renderer.sprite = pencil;
+                renderer.color = new Color(0.12f, 0.48f, 0.68f, 0.13f);
+                renderer.sortingOrder = 39;
+            }
+        }
+
+        private void Update()
+        {
+            float time = Time.unscaledTime;
+            if (floorDrawMark != null)
+            {
+                floorDrawMark.localPosition = floorDrawMarkBasePosition + new Vector3(
+                    Mathf.Sin(time * 5.1f) * 0.012f,
+                    Mathf.Sin(time * 6.3f + 0.8f) * 0.009f,
+                    0f);
+                floorDrawMark.localRotation = Quaternion.Euler(0f, 0f,
+                    Mathf.Sin(time * 4.4f) * 0.7f);
+            }
+
+            float waveProgress = Mathf.Repeat(time, 2f) * 0.5f;
+            float waveX = Mathf.Lerp(-floorVisualWidth * 0.5f, floorVisualWidth * 0.5f, waveProgress);
+            for (int i = 0; i < floorStrokes.Count; i++)
+            {
+                FloorStroke stroke = floorStrokes[i];
+                if (stroke?.Renderer == null) continue;
+                float strength = Mathf.Clamp01(1f - Mathf.Abs(stroke.X - waveX) / 0.9f);
+                Color color = Color.Lerp(stroke.BaseColor,
+                    new Color(Mathf.Min(1f, stroke.BaseColor.r * 1.3f + 0.08f),
+                        Mathf.Min(1f, stroke.BaseColor.g * 1.3f + 0.08f),
+                        Mathf.Min(1f, stroke.BaseColor.b * 1.3f + 0.08f),
+                        Mathf.Min(0.9f, stroke.BaseColor.a + 0.24f)), strength);
+                stroke.Renderer.startColor = color;
+                stroke.Renderer.endColor = color;
+            }
+
+            if (floorVisualRoot != null && time >= nextFloorParticleBurstAt)
+            {
+                SpawnFloorParticleBurst(time);
+                nextFloorParticleBurstAt = time + Random.Range(3f, 5f);
+            }
+            UpdateFloorParticles(time);
+        }
+
+        private void SpawnFloorParticleBurst(float time)
+        {
+            Color[] colors =
+            {
+                new Color(0.08f, 0.65f, 0.86f), new Color(0.95f, 0.66f, 0.08f),
+                new Color(0.88f, 0.2f, 0.18f), new Color(0.1f, 0.64f, 0.3f)
+            };
+            int count = Random.Range(2, 4);
+            for (int i = 0; i < count; i++)
+            {
+                GameObject particle = new GameObject("Floating Crayon Grain");
+                particle.transform.SetParent(floorVisualRoot, false);
+                Vector3 start = new Vector3(Random.Range(-floorVisualWidth * 0.42f,
+                    floorVisualWidth * 0.42f), Random.Range(0.16f, 0.3f), -0.04f);
+                particle.transform.localPosition = start;
+                float scale = Random.Range(0.07f, 0.13f);
+                particle.transform.localScale = Vector3.one * scale;
+                SpriteRenderer renderer = particle.AddComponent<SpriteRenderer>();
+                renderer.sprite = i % 3 == 2 ? DoodleRuntimeAssets.CircleSprite : DoodleRuntimeAssets.SquareSprite;
+                renderer.color = colors[Random.Range(0, colors.Length)];
+                renderer.sortingOrder = 41;
+                if (i % 3 == 1) particle.transform.localRotation = Quaternion.Euler(0f, 0f, 45f);
+                floorParticles.Add(new FloorParticle
+                {
+                    Transform = particle.transform,
+                    Renderer = renderer,
+                    Start = start,
+                    StartedAt = time,
+                    Duration = Random.Range(0.9f, 1.35f),
+                    Drift = Random.Range(-0.18f, 0.18f)
+                });
+            }
+        }
+
+        private void UpdateFloorParticles(float time)
+        {
+            for (int i = floorParticles.Count - 1; i >= 0; i--)
+            {
+                FloorParticle particle = floorParticles[i];
+                if (particle?.Transform == null || particle.Renderer == null)
+                {
+                    floorParticles.RemoveAt(i);
+                    continue;
+                }
+                float progress = Mathf.Clamp01((time - particle.StartedAt) / particle.Duration);
+                particle.Transform.localPosition = particle.Start + new Vector3(
+                    particle.Drift * progress,
+                    Mathf.Sin(progress * Mathf.PI * 0.5f) * 0.72f,
+                    0f);
+                particle.Transform.localRotation *= Quaternion.Euler(0f, 0f,
+                    Time.unscaledDeltaTime * 42f);
+                Color color = particle.Renderer.color;
+                color.a = Mathf.Clamp01(1f - progress) * 0.72f;
+                particle.Renderer.color = color;
+                if (progress < 1f) continue;
+                Destroy(particle.Transform.gameObject);
+                floorParticles.RemoveAt(i);
+            }
+        }
+
+        private void BuildLegacyVisuals(Vector2 size)
+        {
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(transform.GetChild(i).gameObject);
+            }
+
+            // 1. 【要件】メモ帳のサイズ＝判定領域（スプライトサイズを1.32fに拡大して紙面領域を判定領域に完全フィット）
+            GameObject paperObj = new GameObject("TornNotepadPaper");
+            paperObj.transform.SetParent(transform, false);
+            paperObj.transform.localPosition = new Vector3(0f, 0f, 0.05f);
+            paperObj.transform.localRotation = Quaternion.Euler(0f, 0f, -0.75f);
+            paperObj.transform.localScale = Vector3.one;
+
+            // 白紙ベース
+            GameObject basePaperObj = new GameObject("BaseWhitePaper");
+            basePaperObj.transform.SetParent(paperObj.transform, false);
+            basePaperObj.transform.localPosition = new Vector3(0f, 0f, 0.005f);
+            baseWhitePaperRenderer = basePaperObj.AddComponent<SpriteRenderer>();
+            baseWhitePaperRenderer.sprite = CreateRoundedRectSprite(128, 128, 6);
+            baseWhitePaperRenderer.drawMode = SpriteDrawMode.Sliced;
+            baseWhitePaperRenderer.size = new Vector2(1.24f, 1.24f);
+            baseWhitePaperRenderer.color = new Color(0.98f, 0.98f, 0.95f, 1f);
+            baseWhitePaperRenderer.sortingOrder = -40; // ステージ背景の前、ゲーム要素（床・プレイヤー）の後ろ
+
+            paperRenderer = paperObj.AddComponent<SpriteRenderer>();
+
+            Sprite paperSprite = Resources.Load<Sprite>("StageDecorations/CrayonSet/torn-notepad-paper");
+            if (paperSprite != null)
+            {
+                paperRenderer.sprite = paperSprite;
+                paperRenderer.drawMode = SpriteDrawMode.Sliced;
+                // メモ帳の大きさを判定領域（1.0f）の隅々まで行き渡る1.32fへ拡大
+                paperRenderer.size = new Vector2(1.32f, 1.32f);
+                paperRenderer.color = new Color(1f, 1f, 1f, 1f);
+                paperRenderer.sortingOrder = -39;
+            }
+            else
+            {
+                paperRenderer.sprite = CreateRoundedRectSprite(128, 128, 8);
+                paperRenderer.color = new Color(0.98f, 0.98f, 0.95f, 1f);
+                paperRenderer.sortingOrder = -39;
+            }
+
+            // 超淡い視認性優先の方眼
+            GameObject gridObj = new GameObject("GridOverlay");
+            gridObj.transform.SetParent(paperObj.transform, false);
+            gridObj.transform.localPosition = new Vector3(0f, 0f, -0.005f);
+            gridObj.transform.localScale = new Vector3(1.24f / 2.56f, 1.24f / 2.56f, 1f);
+            gridOverlayRenderer = gridObj.AddComponent<SpriteRenderer>();
+            gridOverlayRenderer.sprite = CreateFaintGridSprite(256, 256);
+            gridOverlayRenderer.color = new Color(0.2f, 0.6f, 0.9f, 0.04f);
+            gridOverlayRenderer.sortingOrder = -38;
+
+            // 2. 超ゆったり漂う外周キラキラエフェクト（水色四角枠オーラはご要望により撤去）
+            int sparkleCount = 10;
+            perimeterSparkles = new GameObject[sparkleCount];
+            sparklePhases = new float[sparkleCount];
+            sparkleSpeeds = new float[sparkleCount];
+
+            Color[] sparkleColors = new Color[]
+            {
+                new Color(1f, 0.85f, 0.2f, 0.9f),
+                new Color(0.3f, 0.85f, 1f, 0.9f),
+                new Color(1f, 0.4f, 0.75f, 0.9f),
+                new Color(0.3f, 0.9f, 0.5f, 0.9f),
+                new Color(0.9f, 0.6f, 1f, 0.9f)
+            };
+
+            for (int s = 0; s < sparkleCount; s++)
+            {
+                GameObject spObj = new GameObject("OKSparkle_" + s);
+                spObj.transform.SetParent(transform, false);
+                spObj.transform.localScale = new Vector3(0.22f, 0.22f, 1f);
+
+                SpriteRenderer sr = spObj.AddComponent<SpriteRenderer>();
+                sr.sprite = CreateRoundedRectSprite(32, 32, 8);
+                sr.color = sparkleColors[s % sparkleColors.Length];
+                sr.sortingOrder = -30; // 背景レイヤー配置（ゲーム要素の背面）
+
+                perimeterSparkles[s] = spObj;
+                sparklePhases[s] = s * (Mathf.PI * 2f / sparkleCount);
+                sparkleSpeeds[s] = 0.8f + (s % 3) * 0.2f;
+            }
+
+            // 3. 本物クレヨン画像「D R A W !」（メモ帳の紙面上部に1.5倍の程よいサイズで配置）
+            GameObject badgeObj = new GameObject("CrayonImageDrawTextGroup");
+            badgeObj.transform.SetParent(transform, false);
+            badgeObj.transform.localPosition = new Vector3(0f, 0.16f, -0.2f);
+            badgeTransform = badgeObj.transform;
+
+            string[] crayonResourcePaths = new string[]
+            {
+                "StageDecorations/CrayonSet/redraw-letter-d",
+                "StageDecorations/CrayonSet/redraw-letter-r",
+                "StageDecorations/CrayonSet/redraw-letter-a",
+                "StageDecorations/CrayonSet/redraw-letter-w",
+                "StageDecorations/CrayonSet/redraw-letter-excl"
+            };
+
+            int count = crayonResourcePaths.Length;
+            charTransforms = new Transform[count];
+            charBaseLocalPositions = new Vector3[count];
+
+            float[] tilts = new float[] { -2.5f, 2.0f, -1.2f, 3.0f, -2.0f };
+            // DRAW! の1.5倍拡大に合わせて文字間隔を広げる
+            float[] customXOffsets = new float[] { -1.38f, -0.69f, 0.00f, 0.75f, 1.41f };
+
+            Font fallbackFont = GetYomogiFont();
+            char[] fallbackChars = new char[] { 'D', 'R', 'A', 'W', '!' };
+
+            for (int i = 0; i < count; i++)
+            {
+                GameObject charGroup = new GameObject("CrayonChar_" + i);
+                charGroup.transform.SetParent(badgeTransform, false);
+
+                float baseX = customXOffsets[i];
+                float baseY = (i % 2 == 0 ? 0.012f : -0.012f);
+                Vector3 basePos = new Vector3(baseX, baseY, -0.06f);
+
+                charGroup.transform.localPosition = basePos;
+                charGroup.transform.localRotation = Quaternion.Euler(0f, 0f, tilts[i]);
+
+                charTransforms[i] = charGroup.transform;
+                charBaseLocalPositions[i] = basePos;
+
+                Sprite letterSprite = Resources.Load<Sprite>(crayonResourcePaths[i]);
+                if (letterSprite != null)
+                {
+                    GameObject spriteObj = new GameObject("CrayonSprite");
+                    spriteObj.transform.SetParent(charGroup.transform, false);
+                    // ご要望により直前の1.5倍サイズ（0.13f）に拡大
+                    spriteObj.transform.localScale = new Vector3(0.13f, 0.13f, 1f);
+
+                    SpriteRenderer sr = spriteObj.AddComponent<SpriteRenderer>();
+                    sr.sprite = letterSprite;
+                    sr.sortingOrder = -20; // メモ用紙の上、ゲーム要素の背面
+                }
+                else
+                {
+                    GameObject textObj = new GameObject("FallbackText");
+                    textObj.transform.SetParent(charGroup.transform, false);
+                    TextMesh mainText = textObj.AddComponent<TextMesh>();
+                    mainText.text = fallbackChars[i].ToString();
+                    mainText.fontSize = 58;
+                    mainText.characterSize = 0.16f;
+                    mainText.alignment = TextAlignment.Center;
+                    mainText.anchor = TextAnchor.MiddleCenter;
+                    mainText.color = new Color(0.18f, 0.65f, 0.95f, 1f);
+                    if (fallbackFont != null)
+                    {
+                        mainText.font = fallbackFont;
+                        textObj.GetComponent<MeshRenderer>().sharedMaterial = fallbackFont.material;
+                    }
+                    textObj.GetComponent<MeshRenderer>().sortingOrder = -20;
+                }
+            }
+        }
+
+        private void UpdateLegacyVisuals()
+        {
+            float t = Time.time;
+
+            // 【超ゆったり優雅に周回する漂うキラキラエフェクト (0.015fスピード)】
+            if (perimeterSparkles != null)
+            {
+                int total = perimeterSparkles.Length;
+                for (int s = 0; s < total; s++)
+                {
+                    if (perimeterSparkles[s] == null) continue;
+                    float progress = (t * 0.015f * sparkleSpeeds[s] + (float)s / total) % 1f;
+                    Vector3 perimeterPos = GetRectPerimeterPoint(progress, 0.62f, 0.62f);
+
+                    perimeterSparkles[s].transform.localPosition = perimeterPos + new Vector3(0f, 0f, -0.05f);
+
+                    float scalePulse = 0.20f + Mathf.Sin(t * 0.8f + s) * 0.04f;
+                    perimeterSparkles[s].transform.localScale = new Vector3(scalePulse, scalePulse, 1f);
+                    perimeterSparkles[s].transform.localRotation = Quaternion.Euler(0f, 0f, t * 6f + s * 45f);
+                }
+            }
+
+            if (badgeTransform != null)
+            {
+                Vector3 parentScale = transform.localScale;
+                float invX = parentScale.x > 0.001f ? 1f / parentScale.x : 1f;
+                float invY = parentScale.y > 0.001f ? 1f / parentScale.y : 1f;
+
+                // メモ帳の紙面上部中央（0.16f）に収まるように位置調整
+                float badgeY = 0.16f - (0.03f * invY);
+                badgeTransform.localPosition = new Vector3(0f, badgeY, -0.2f);
+                badgeTransform.localScale = new Vector3(invX, invY, 1f);
+
+                if (charTransforms != null)
+                {
+                    float cycleDuration = 2.0f;
+                    float bounceDuration = 0.32f;
+                    float charStagger = 0.18f;
+
+                    float cycleTime = (t % cycleDuration);
+
+                    for (int i = 0; i < charTransforms.Length; i++)
+                    {
+                        if (charTransforms[i] == null) continue;
+
+                        float charStartTime = i * charStagger;
+                        float localT = cycleTime - charStartTime;
+                        if (localT < 0f) localT += cycleDuration;
+
+                        float bounceY = 0f;
+                        if (localT >= 0f && localT <= bounceDuration)
+                        {
+                            float norm = localT / bounceDuration;
+                            bounceY = Mathf.Sin(norm * Mathf.PI) * 0.075f;
+                        }
+
+                        Vector3 basePos = charBaseLocalPositions[i];
+                        charTransforms[i].localPosition = new Vector3(basePos.x, basePos.y + bounceY, basePos.z);
+                    }
+                }
+            }
+        }
+
+        private static Vector3 GetRectPerimeterPoint(float progress, float halfW, float halfH)
+        {
+            float perimeter = (halfW * 2f + halfH * 2f) * 2f;
+            float dist = progress * perimeter;
+
+            float w = halfW * 2f;
+            float h = halfH * 2f;
+
+            if (dist < w)
+                return new Vector3(-halfW + dist, halfH, 0f);
+            dist -= w;
+
+            if (dist < h)
+                return new Vector3(halfW, halfH - dist, 0f);
+            dist -= h;
+
+            if (dist < w)
+                return new Vector3(halfW - dist, -halfH, 0f);
+            dist -= w;
+
+            return new Vector3(-halfW, -halfH + dist, 0f);
+        }
+
+        private static Sprite CreateRoundedRectSprite(int width, int height, int cornerRadius)
+        {
+            Texture2D tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            Color[] pixels = new Color[width * height];
+            float r = cornerRadius;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    float dx = 0f, dy = 0f;
+                    if (x < r) dx = r - x;
+                    else if (x >= width - r) dx = x - (width - r - 1);
+
+                    if (y < r) dy = r - y;
+                    else if (y >= height - r) dy = y - (height - r - 1);
+
+                    float distSq = dx * dx + dy * dy;
+                    if (distSq > r * r)
+                    {
+                        pixels[y * width + x] = Color.clear;
+                    }
+                    else if (distSq > (r - 1.5f) * (r - 1.5f))
+                    {
+                        float alpha = Mathf.Clamp01((r - Mathf.Sqrt(distSq)) / 1.5f);
+                        pixels[y * width + x] = new Color(1f, 1f, 1f, alpha);
+                    }
+                    else
+                    {
+                        pixels[y * width + x] = Color.white;
+                    }
+                }
+            }
+
+            tex.SetPixels(pixels);
+            tex.Apply();
+            return Sprite.Create(tex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f), 100f);
+        }
+
+        private static Sprite CreateFaintGridSprite(int width, int height)
+        {
+            Texture2D tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            Color[] pixels = new Color[width * height];
+            int gridStep = 16;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    bool isGrid = (x % gridStep == 0 || y % gridStep == 0);
+                    pixels[y * width + x] = isGrid ? Color.white : Color.clear;
+                }
+            }
+
+            tex.SetPixels(pixels);
+            tex.Apply();
+            return Sprite.Create(tex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f), 100f);
+        }
+
+        private static Font GetYomogiFont()
+        {
+#if UNITY_EDITOR
+            Font editorFont = UnityEditor.AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/Yomogi-Regular.ttf");
+            if (editorFont != null) return editorFont;
+#endif
+            Font[] allFonts = Resources.FindObjectsOfTypeAll<Font>();
+            foreach (Font font in allFonts)
+            {
+                if (font != null && font.name.IndexOf("Yomogi", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    return font;
+            }
+            UnityEngine.UI.Text textObj = Object.FindFirstObjectByType<UnityEngine.UI.Text>();
+            if (textObj != null && textObj.font != null) return textObj.font;
+
+            return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        }
+    }
 }

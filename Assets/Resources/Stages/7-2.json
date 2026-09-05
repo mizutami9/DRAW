@@ -361,8 +361,8 @@
             "objectId": "7-2_human_wood_box",
             "type": 47,
             "position": {
-                "x": -29.700000762939454,
-                "y": -1.7000000476837159
+                "x": -28.0,
+                "y": -0.5
             },
             "size": {
                 "x": 1.149999976158142,
@@ -1075,6 +1075,81 @@
             "keepSeparate": false,
             "actionStrength": 5.0,
             "movementAngle": 180.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_9372fb237c8c448c",
+            "type": 261,
+            "position": {
+                "x": -35.150001525878909,
+                "y": 0.20000000298023225
+            },
+            "size": {
+                "x": 5.5,
+                "y": 5.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_c7cd8f9e152949f3",
+            "type": 261,
+            "position": {
+                "x": -9.649999618530274,
+                "y": -0.4000000059604645
+            },
+            "size": {
+                "x": 5.5,
+                "y": 5.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_eff513e2c0d64b67",
+            "type": 261,
+            "position": {
+                "x": 14.949999809265137,
+                "y": -0.30000001192092898
+            },
+            "size": {
+                "x": 5.5,
+                "y": 5.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,

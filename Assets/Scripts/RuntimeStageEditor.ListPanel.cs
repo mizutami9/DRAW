@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace DrawBody.Prototype
@@ -41,6 +42,11 @@ namespace DrawBody.Prototype
             RefreshText();
             RefreshListPanel();
             SetStatus(LocalizationManager.T("stage_editor_status_selected_from_list"));
+
+            // Do not leave keyboard navigation captured by the list button.
+            // The selected stage object can then be nudged immediately with arrows,
+            // even while the pointer is still over the object list.
+            EventSystem.current?.SetSelectedGameObject(null);
         }
 
         private void EnsureListReferences()
@@ -203,6 +209,11 @@ namespace DrawBody.Prototype
             {
                 StageObjectData data = objects[i];
                 if (data == null)
+                {
+                    continue;
+                }
+
+                if (!IsLaserRelayLayoutObjectVisible(data))
                 {
                     continue;
                 }

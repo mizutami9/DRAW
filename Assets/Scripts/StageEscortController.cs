@@ -489,6 +489,69 @@ namespace DrawBody.Prototype
             AddLine(parent, d, a, 0.055f, color, order);
         }
 
+        internal static void AddPencilHatchingPolygon(
+            Transform parent, string name, IReadOnlyList<Vector2> points,
+            Color color, int order, float spacing = 0.48f)
+        {
+            if (parent == null || points == null || points.Count < 3) return;
+            GameObject hatchRoot = new GameObject(name);
+            hatchRoot.transform.SetParent(parent, false);
+
+            Vector2 direction = new Vector2(1f, 0.42f).normalized;
+            Vector2 normal = new Vector2(-direction.y, direction.x);
+            float minimum = float.PositiveInfinity;
+            float maximum = float.NegativeInfinity;
+            for (int i = 0; i < points.Count; i++)
+            {
+                float projection = Vector2.Dot(points[i], normal);
+                minimum = Mathf.Min(minimum, projection);
+                maximum = Mathf.Max(maximum, projection);
+            }
+
+            List<Vector2> intersections = new List<Vector2>(points.Count);
+            int stroke = 0;
+            for (float offset = minimum + spacing * 0.45f; offset < maximum; offset += spacing)
+            {
+                intersections.Clear();
+                for (int i = 0; i < points.Count; i++)
+                {
+                    Vector2 a = points[i];
+                    Vector2 b = points[(i + 1) % points.Count];
+                    float da = Vector2.Dot(a, normal) - offset;
+                    float db = Vector2.Dot(b, normal) - offset;
+                    if (!((da <= 0f && db > 0f) || (db <= 0f && da > 0f))) continue;
+                    float t = da / (da - db);
+                    intersections.Add(Vector2.Lerp(a, b, t));
+                }
+                if (intersections.Count < 2) continue;
+                intersections.Sort((left, right) =>
+                    Vector2.Dot(left, direction).CompareTo(Vector2.Dot(right, direction)));
+                Vector2 from = intersections[0];
+                Vector2 to = intersections[intersections.Count - 1];
+                float inset = Mathf.Min(0.08f, Vector2.Distance(from, to) * 0.12f);
+                from += direction * inset;
+                to -= direction * inset;
+                Color strokeColor = color;
+                strokeColor.a *= stroke++ % 3 == 1 ? 0.72f : 1f;
+                AddLine(hatchRoot.transform, from, to, 0.035f, strokeColor, order);
+            }
+        }
+
+        internal static void AddPencilHatchingRect(
+            Transform parent, string name, Vector2 center, Vector2 size,
+            Color color, int order, float spacing = 0.48f)
+        {
+            Vector2 half = size * 0.5f;
+            Vector2[] points =
+            {
+                center + new Vector2(-half.x, -half.y),
+                center + new Vector2(-half.x, half.y),
+                center + new Vector2(half.x, half.y),
+                center + new Vector2(half.x, -half.y)
+            };
+            AddPencilHatchingPolygon(parent, name, points, color, order, spacing);
+        }
+
         private static void AddDot(Transform parent, Vector2 position, Color color, int order)
         {
             GameObject obj = new GameObject("Crayon Dot");
@@ -1291,6 +1354,11 @@ namespace DrawBody.Prototype
                     // 5-3 again and sending everyone back to round one.
                     if (remaining <= 0f) BeginRound(round);
                     break;
+
+                case EscortPhase.Complete:
+                    remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
+                    if (remaining <= 0f) stageManager.ClearStage();
+                    break;
             }
 
             BroadcastState();
@@ -1355,6 +1423,8 @@ namespace DrawBody.Prototype
             CreatePlatform("Player Preparation Floor", new Vector2(0f, playerFloorY),
                 new Vector2(playerAreaWidth - preparationWallWidth * 2f, preparationFloorHeight), new Color(1f, 0.88f, 0.52f),
                 new Color(0.88f, 0.42f, 0.04f), false, true);
+            CreateRuntimeRedrawFloor(new Vector2(0f, playerFloorY),
+                playerAreaWidth - preparationWallWidth * 2f, roundIndex);
             float wallX = playerAreaWidth * 0.5f - preparationWallWidth * 0.5f;
             float wallY = playerFloorY + preparationFloorHeight * 0.5f + preparationWallHeight * 0.5f;
             CreatePlayerAreaWall("Player Area Left Wall", -wallX, wallY);
@@ -1362,6 +1432,16 @@ namespace DrawBody.Prototype
 
             if (roundIndex == 1) CreateHeadWalkingExample(playerAreaWidth);
             if (roundIndex == 3) CreateSnack(new Vector2(0f, GetRouteY(3, 0.5f) + 0.55f));
+        }
+
+        private void CreateRuntimeRedrawFloor(Vector2 floorCenter, float width, int roundIndex)
+        {
+            // The authored 5-3 objects are discarded when the procedural round
+            // starts, including its RedrawZone. Recreate the zone with the arena
+            // so both the permission and the crayon floor survive that cleanup.
+            StageRedrawZoneFactory.CreateRuntimeFloorZone(arenaRoot,
+                "5-3_runtime_redraw_zone_" + roundIndex,
+                floorCenter, width, 6.8f);
         }
 
         private float GetRouteY(int roundIndex, float t)
@@ -1477,13 +1557,13 @@ namespace DrawBody.Prototype
 
         private void ClearRound()
         {
-            if (friend != null) friend.StopRolling();
+            if (friend != null) friend.Celebrate();
             GameSfx.PlayAt(SfxId.GoalReached, goalPosition, 0.92f);
             if (round >= 3)
             {
                 phase = EscortPhase.Complete;
+                remaining = 1.35f;
                 BroadcastState(true);
-                stageManager.ClearStage();
                 return;
             }
             phase = EscortPhase.RoundClear;
@@ -1599,6 +1679,8 @@ namespace DrawBody.Prototype
             if (friend != null && cameraFollow != null && phase == EscortPhase.Running && previousPhase != phase)
                 cameraFollow.SetTarget(friend.transform);
             if (friend != null && phase == EscortPhase.Failed) friend.Collapse();
+            if (friend != null && (phase == EscortPhase.RoundClear || phase == EscortPhase.Complete)
+                && previousPhase != phase) friend.Celebrate();
             ApplyPlayerPhase();
             RefreshMonitor();
         }
@@ -1679,6 +1761,8 @@ namespace DrawBody.Prototype
             if (friendOnly) root.AddComponent<StageEscortFriendOnlyFloor>();
             StageEscortController.AddFilledRect(root.transform, "Paper", Vector2.zero, size, fill, 18);
             if (size.x > size.y * 1.5f) AddPlatformPencilHatching(root.transform, size, outline);
+            else StageEscortController.AddPencilHatchingRect(root.transform, "Wall Pencil Hatching",
+                Vector2.zero, size, new Color(outline.r, outline.g, outline.b, 0.34f), 19, 0.3f);
             StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, outline, 20);
             if (friendOnly) AddFriendOnlyPlatformMarks(root.transform, size, outline);
             return root;
@@ -1818,6 +1902,9 @@ namespace DrawBody.Prototype
         private CircleCollider2D hitbox;
         private bool authoritative;
         private bool stopped;
+        private bool celebrating;
+        private float celebrationStartedAt;
+        private Transform visualRoot;
         private GameObject normalFace;
         private GameObject defeatedFace;
 
@@ -1855,10 +1942,34 @@ namespace DrawBody.Prototype
             if (body != null) body.linearVelocity = Vector2.zero;
         }
 
+        public void Celebrate()
+        {
+            stopped = true;
+            celebrating = true;
+            celebrationStartedAt = Time.unscaledTime;
+            if (body != null)
+            {
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+                body.bodyType = RigidbodyType2D.Kinematic;
+            }
+            transform.rotation = Quaternion.identity;
+            transform.localScale = Vector3.one;
+            if (normalFace != null) normalFace.SetActive(true);
+            if (defeatedFace != null) defeatedFace.SetActive(false);
+        }
+
         public void Collapse()
         {
             if (stopped && Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.z, -90f)) < 1f) return;
             stopped = true;
+            celebrating = false;
+            if (visualRoot != null)
+            {
+                visualRoot.localPosition = Vector3.zero;
+                visualRoot.localRotation = Quaternion.identity;
+                visualRoot.localScale = Vector3.one;
+            }
             if (body != null)
             {
                 body.linearVelocity = Vector2.zero;
@@ -1893,6 +2004,19 @@ namespace DrawBody.Prototype
             body.angularVelocity = -210f;
         }
 
+        private void Update()
+        {
+            if (!celebrating || visualRoot == null) return;
+            float elapsed = Time.unscaledTime - celebrationStartedAt;
+            float hop = Mathf.Abs(Mathf.Sin(elapsed * 7.2f));
+            visualRoot.localPosition = Vector3.up * (hop * 0.48f);
+            visualRoot.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(elapsed * 14.4f) * 8f);
+            visualRoot.localScale = new Vector3(
+                1f + (1f - hop) * 0.08f,
+                1f - (1f - hop) * 0.08f,
+                1f);
+        }
+
         private bool TryGetSupport(out Vector2 normal)
         {
             normal = Vector2.up;
@@ -1923,8 +2047,10 @@ namespace DrawBody.Prototype
 
         private void BuildVisual()
         {
+            visualRoot = new GameObject("Celebration Visual").transform;
+            visualRoot.SetParent(transform, false);
             GameObject outline = new GameObject("Round Crayon Outline");
-            outline.transform.SetParent(transform, false);
+            outline.transform.SetParent(visualRoot, false);
             outline.transform.localScale = Vector3.one * 0.98f;
             SpriteRenderer outlineRenderer = outline.AddComponent<SpriteRenderer>();
             outlineRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
@@ -1932,7 +2058,7 @@ namespace DrawBody.Prototype
             outlineRenderer.sortingOrder = 41;
 
             GameObject ball = new GameObject("Round Crayon Friend");
-            ball.transform.SetParent(transform, false);
+            ball.transform.SetParent(visualRoot, false);
             ball.transform.localScale = Vector3.one * 0.88f;
             SpriteRenderer renderer = ball.AddComponent<SpriteRenderer>();
             renderer.sprite = DoodleRuntimeAssets.CircleSprite;

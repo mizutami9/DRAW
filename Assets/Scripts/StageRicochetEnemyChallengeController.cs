@@ -13,6 +13,7 @@ namespace DrawBody.Prototype
         private const float InnerHalfWidth = 12.35f;
         private const float InnerHalfHeight = 5.7f;
         private const float BallSpeed = 3.6f;
+        private const float InitialServeCountdownSeconds = 10f;
         private const float ServeCountdownSeconds = 3f;
 
         private enum Phase { Intro, Serve, Playing, Intermission, Failed, Clear }
@@ -67,6 +68,7 @@ namespace DrawBody.Prototype
         private float nextBallAt;
         private float nextStateAt;
         private Vector2 preparedBallDirection = Vector2.up;
+        private bool initialServeStarted;
         private bool oldCameraEnabled;
         private bool cameraLocked;
         private Vector3 oldCameraPosition;
@@ -281,7 +283,10 @@ namespace DrawBody.Prototype
                 (top ? 1f : -1f) * (InnerHalfHeight - 0.75f));
             preparedBallDirection = top ? Vector2.down : Vector2.up;
             phase = Phase.Serve;
-            phaseRemaining = ServeCountdownSeconds;
+            phaseRemaining = initialServeStarted
+                ? ServeCountdownSeconds
+                : InitialServeCountdownSeconds;
+            initialServeStarted = true;
             ball = StageRicochetBall.Create(transform, this, position, true);
             ballGeneration++;
             ball.PrepareLaunch(preparedBallDirection, BallSpeed, Mathf.CeilToInt(phaseRemaining));

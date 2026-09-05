@@ -56,7 +56,6 @@ namespace DrawBody.Prototype
         private TextMesh statusText;
         private TextMesh recommendationTitleText;
         private TextMesh recommendationNoneText;
-        private TextMesh restrictionNoteText;
         private string stageId;
         private string localId;
         private bool configured;
@@ -262,6 +261,7 @@ namespace DrawBody.Prototype
                 Vector2 center = new Vector2(
                     (column - (columns - 1) * 0.5f) * roomWidth,
                     ((rows - 1) * 0.5f - row) * roomHeight);
+                CreateRedrawSpot(center, i);
                 CreateTerrain("Floor", center + Vector2.down * roomHeight * 0.5f, new Vector2(roomWidth, 0.72f));
                 CreateTerrain("Ceiling", center + Vector2.up * roomHeight * 0.5f, new Vector2(roomWidth, 0.72f));
                 CreateTerrain("Left Wall", center + Vector2.left * roomWidth * 0.5f, new Vector2(0.72f, roomHeight));
@@ -308,22 +308,32 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("Ready Room Game Monitor");
             monitor.transform.SetParent(transform, false);
             monitor.transform.localPosition = new Vector3(descriptionX, monitorY, 0.25f);
-            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(descriptionWidth, spaciousDescription ? 3.8f : 3.3f), 55);
+            DoodleMonitorVisuals.Build(monitor.transform,
+                new Vector2(descriptionWidth, spaciousDescription ? 3.2f : 2.7f), 55);
             descriptionText = StageEscortController.CreateText(monitor.transform, "Game Description",
                 new Vector3(0f, 0.43f, -0.03f), 58, spaciousDescription ? 0.09f : showRecommendations ? 0.105f : 0.12f,
                 new Color(0.04f, 0.34f, 0.5f), 61);
             statusText = StageEscortController.CreateText(monitor.transform, "Status",
-                new Vector3(0f, -0.72f, -0.03f), 64, 0.145f,
+                new Vector3(0f, -0.62f, -0.03f), 64, 0.145f,
                 new Color(0.04f, 0.43f, 0.58f), 61);
-            restrictionNoteText = StageEscortController.CreateText(monitor.transform, "After Start Restriction Note",
-                new Vector3(descriptionWidth * 0.5f - 0.42f, spaciousDescription ? -1.48f : -1.25f, -0.03f),
-                38, 0.052f, new Color(0.32f, 0.36f, 0.39f), 61);
-            restrictionNoteText.anchor = TextAnchor.LowerRight;
-            restrictionNoteText.alignment = TextAlignment.Right;
 
             if (showRecommendations)
             {
                 BuildRecommendationMonitor(new Vector3(6.2f, monitorY, 0.25f), count);
+            }
+        }
+
+        private void CreateRedrawSpot(Vector2 center, int index)
+        {
+            StageObjectData data = StageObjectFactory.CreateDefaultData(
+                StageObjectType.RedrawZone, center);
+            data.objectId = "ready_room_redraw_spot_" + index;
+            data.size = new Vector2(roomWidth, roomHeight);
+            GameObject backdrop = StageRedrawZoneFactory.CreateRedrawZone(data, transform);
+            if (backdrop != null)
+            {
+                backdrop.name = "Ready Room Redraw Spot " + (index + 1);
+                backdrop.transform.localPosition = center;
             }
         }
 
@@ -915,13 +925,6 @@ namespace DrawBody.Prototype
             if (recommendationNoneText != null)
             {
                 recommendationNoneText.text = LocalizationManager.T("ready_room_recommended_none");
-            }
-            if (restrictionNoteText != null)
-            {
-                restrictionNoteText.text = LocalizationManager.T(
-                    stageId == "10-3"
-                        ? "ready_room_restriction_redraw_allowed"
-                        : "ready_room_restriction");
             }
         }
 

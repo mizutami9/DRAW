@@ -1284,9 +1284,6 @@ namespace DrawBody.Prototype
             stampShadow.effectColor = new Color(0f, 0f, 0f, 0.2f);
             stampShadow.effectDistance = new Vector2(7f, -8f);
 
-            CreateClearBlock("ButtonDivider", result.transform, new Vector2(0f, -43f),
-                new Vector2(650f, 2f), new Color(0.16f, 0.13f, 0.1f, 0.2f));
-
             CreateClearStamp(result.transform);
 
             clearStageText = CreateClearText("ClearStage", stageTicket.transform, font, 39, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(540f, 102f));

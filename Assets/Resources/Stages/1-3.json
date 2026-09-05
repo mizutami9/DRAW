@@ -1362,7 +1362,7 @@
             "type": 0,
             "position": {
                 "x": 60.5,
-                "y": -8.5
+                "y": -10.5
             },
             "size": {
                 "x": 4.0,
@@ -1387,7 +1387,7 @@
             "type": 73,
             "position": {
                 "x": 59.0,
-                "y": -7.5
+                "y": -9.5
             },
             "size": {
                 "x": 1.0,
@@ -1412,7 +1412,7 @@
             "type": 73,
             "position": {
                 "x": 60.0,
-                "y": -7.5
+                "y": -9.5
             },
             "size": {
                 "x": 1.0,
@@ -1437,7 +1437,7 @@
             "type": 73,
             "position": {
                 "x": 61.0,
-                "y": -7.500000476837158
+                "y": -9.5
             },
             "size": {
                 "x": 1.0,
@@ -1462,7 +1462,7 @@
             "type": 73,
             "position": {
                 "x": 62.0,
-                "y": -7.500000476837158
+                "y": -9.5
             },
             "size": {
                 "x": 1.0,
@@ -2386,7 +2386,7 @@
             "objectId": "obj_0acdb95997344c34",
             "type": 93,
             "position": {
-                "x": 0.5,
+                "x": 0.0,
                 "y": 1.5
             },
             "size": {
@@ -2742,6 +2742,31 @@
             "size": {
                 "x": 2.0,
                 "y": 1.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_5c002e6834524a65",
+            "type": 261,
+            "position": {
+                "x": -1.25,
+                "y": 4.0
+            },
+            "size": {
+                "x": 8.5,
+                "y": 8.0
             },
             "rotation": 0.0,
             "pathPoints": [],

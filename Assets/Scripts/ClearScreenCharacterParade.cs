@@ -12,28 +12,29 @@ namespace DrawBody.Prototype
     {
         private const float WalkSpeed = 0.12f;
         private const float ArriveDistance = 0.012f;
+        private const float StageFloorTopY = -77f;
 
         private static readonly Vector2[][] Routes =
         {
             new[]
             {
-                new Vector2(0.08f, 0.17f), new Vector2(0.34f, 0.18f),
-                new Vector2(0.66f, 0.17f), new Vector2(0.92f, 0.18f)
+                new Vector2(0.10f, 0f), new Vector2(0.32f, 0f),
+                new Vector2(0.58f, 0f), new Vector2(0.88f, 0f)
             },
             new[]
             {
-                new Vector2(0.89f, 0.54f), new Vector2(0.67f, 0.55f),
-                new Vector2(0.35f, 0.54f), new Vector2(0.11f, 0.55f)
+                new Vector2(0.88f, 0f), new Vector2(0.68f, 0f),
+                new Vector2(0.42f, 0f), new Vector2(0.12f, 0f)
             },
             new[]
             {
-                new Vector2(0.10f, 0.25f), new Vector2(0.11f, 0.45f),
-                new Vector2(0.10f, 0.67f), new Vector2(0.12f, 0.82f)
+                new Vector2(0.18f, 0f), new Vector2(0.38f, 0f),
+                new Vector2(0.64f, 0f), new Vector2(0.82f, 0f)
             },
             new[]
             {
-                new Vector2(0.90f, 0.80f), new Vector2(0.89f, 0.65f),
-                new Vector2(0.90f, 0.43f), new Vector2(0.88f, 0.24f)
+                new Vector2(0.80f, 0f), new Vector2(0.61f, 0f),
+                new Vector2(0.36f, 0f), new Vector2(0.20f, 0f)
             }
         };
 
@@ -77,6 +78,7 @@ namespace DrawBody.Prototype
             layer = layerObject.GetComponent<RectTransform>();
             Stretch(layer);
             layer.SetAsFirstSibling();
+            CreateDanceFloor(layer);
 
             stageManager.GetClearCelebrationPlayers(players);
             int visibleCount = Mathf.Min(4, players.Count);
@@ -221,7 +223,7 @@ namespace DrawBody.Prototype
 
             float width = popup.rect.width;
             float height = popup.rect.height;
-            float characterSize = Mathf.Clamp(Mathf.Min(width * 0.16f, height * 0.29f), 92f, 165f);
+            float characterSize = Mathf.Clamp(Mathf.Min(width * 0.125f, height * 0.22f), 84f, 104f);
             for (int i = 0; i < walkers.Count; i++)
             {
                 Walker walker = walkers[i];
@@ -231,17 +233,75 @@ namespace DrawBody.Prototype
                 }
 
                 walker.Rect.sizeDelta = Vector2.one * characterSize;
-                float bob = walker.PauseRemaining <= 0f
-                    ? Mathf.Sin(walker.WalkPhase * 2f + walker.BobPhase) * 3f
-                    : Mathf.Sin(Time.unscaledTime * 1.8f + walker.BobPhase) * 0.8f;
+                bool walking = walker.PauseRemaining <= 0f;
+                float dancePhase = Time.unscaledTime * 5.4f + walker.BobPhase;
+                float bob = walking
+                    ? Mathf.Abs(Mathf.Sin(walker.WalkPhase * 2f + walker.BobPhase)) * 2.5f
+                    : Mathf.Abs(Mathf.Sin(dancePhase)) * 6f;
                 walker.Rect.anchoredPosition = new Vector2(
                     (walker.Position.x - 0.5f) * width,
-                    (walker.Position.y - 0.5f) * height + bob);
-                float lean = walker.PauseRemaining <= 0f
+                    StageFloorTopY + characterSize * 0.4f + bob);
+                float lean = walking
                     ? Mathf.Sin(walker.WalkPhase) * 1.4f
-                    : 0f;
+                    : Mathf.Sin(dancePhase * 0.5f) * 5f;
                 walker.Rect.localRotation = Quaternion.Euler(0f, 0f, lean);
             }
+        }
+
+        private static void CreateDanceFloor(Transform parent)
+        {
+            GameObject floor = new GameObject(
+                "ClearCharacterDanceFloor",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image));
+            floor.transform.SetParent(parent, false);
+            RectTransform floorRect = floor.GetComponent<RectTransform>();
+            floorRect.anchorMin = floorRect.anchorMax = new Vector2(0.5f, 0.5f);
+            floorRect.pivot = new Vector2(0.5f, 1f);
+            floorRect.anchoredPosition = new Vector2(0f, StageFloorTopY);
+            floorRect.sizeDelta = new Vector2(650f, 20f);
+
+            Image paper = floor.GetComponent<Image>();
+            paper.raycastTarget = false;
+            paper.color = new Color(0.92f, 0.84f, 0.61f, 0.72f);
+            Outline outline = floor.AddComponent<Outline>();
+            outline.effectColor = new Color(0.19f, 0.15f, 0.1f, 0.78f);
+            outline.effectDistance = new Vector2(2f, -2f);
+
+            Color[] crayons =
+            {
+                new Color(0.16f, 0.66f, 0.9f, 0.56f),
+                new Color(0.95f, 0.3f, 0.25f, 0.5f),
+                new Color(1f, 0.72f, 0.12f, 0.54f),
+                new Color(0.15f, 0.66f, 0.38f, 0.48f)
+            };
+            for (int i = 0; i < 13; i++)
+            {
+                float x = -292f + i * 49f + Mathf.Sin(i * 2.17f) * 7f;
+                float y = -5f - Mathf.Abs(Mathf.Sin(i * 1.43f)) * 7f;
+                CreateFloorStroke(floorRect, "Crayon Floor Stroke " + i,
+                    new Vector2(x, y), new Vector2(40f + i % 3 * 8f, 2.5f),
+                    crayons[i % crayons.Length], -3f + i % 5 * 1.6f);
+            }
+            CreateFloorStroke(floorRect, "Hand Drawn Floor Edge", new Vector2(0f, -1f),
+                new Vector2(646f, 3.5f), new Color(0.16f, 0.12f, 0.08f, 0.88f), -0.25f);
+        }
+
+        private static void CreateFloorStroke(
+            Transform parent, string name, Vector2 position, Vector2 size, Color color, float angle)
+        {
+            GameObject stroke = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            stroke.transform.SetParent(parent, false);
+            RectTransform rect = stroke.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 1f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+            rect.localRotation = Quaternion.Euler(0f, 0f, angle);
+            Image image = stroke.GetComponent<Image>();
+            image.raycastTarget = false;
+            image.color = color;
         }
 
         private static void Stretch(RectTransform rect)
