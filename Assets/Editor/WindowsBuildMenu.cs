@@ -55,10 +55,15 @@ namespace DrawBody.EditorTools
                 scenes = new[] { scenePath },
                 locationPathName = Path.Combine(outputDirectory, hardenedRelease ? "NICO DRAW.exe" : "DrawBody.exe"),
                 target = BuildTarget.StandaloneWindows64,
-                options = BuildOptions.None
+                options = BuildOptions.None,
+                extraScriptingDefines = hardenedRelease ? new[] { "NICO_DRAW_DEMO" } : null
             };
 
-            BuildReport report = BuildPipeline.BuildPlayer(options);
+            BuildReport report;
+            using (DemoStageBuildFilter.Enter(hardenedRelease))
+            {
+                report = BuildPipeline.BuildPlayer(options);
+            }
             if (report.summary.result == BuildResult.Succeeded)
             {
                 if (hardenedRelease)

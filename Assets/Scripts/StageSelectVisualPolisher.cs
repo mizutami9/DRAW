@@ -23,6 +23,7 @@ namespace DrawBody.Prototype
             HideTitle();
             PolishWorldCards();
             PolishButtons();
+            DemoAccessPolicy.ApplyStageSelectRestrictions(gameObject);
         }
 
         public void RefreshWorldCardColors()

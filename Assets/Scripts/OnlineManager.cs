@@ -487,7 +487,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            backend?.StartGame(stageId);
+            backend?.StartGame(DemoAccessPolicy.NormalizeStageId(stageId));
         }
 
         public void OpenStageSelect()

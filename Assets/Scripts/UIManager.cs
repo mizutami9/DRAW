@@ -920,6 +920,8 @@ namespace DrawBody.Prototype
             {
                 stageSelectLockedPanel.SetActive(stageSelectLocked && stageSelectPanel.activeInHierarchy);
             }
+
+            DemoAccessPolicy.ApplyStageSelectRestrictions(stageSelectPanel, stageSelectLocked);
         }
 
         private void EnsureStageSelectLockedPanel()
@@ -1006,6 +1008,7 @@ namespace DrawBody.Prototype
         public void SetOption(bool showing)
         {
             optionShowing = showing;
+            ResolveStageManager()?.SetOptionOverlayActive(showing);
             if (optionPanel != null)
             {
                 optionPanel.SetActive(showing);
@@ -1057,6 +1060,7 @@ namespace DrawBody.Prototype
         public bool IsTitleSubmenuShowing =>
             multiShowing && multiPanel != null && multiPanel.activeInHierarchy
             || optionShowing && optionPanel != null && optionPanel.activeInHierarchy;
+        public bool IsOptionShowing => optionShowing && optionPanel != null && optionPanel.activeInHierarchy;
         public bool IsGameplayOverlayShowing => drawing
             || optionShowing
             || menuPanel != null && menuPanel.activeInHierarchy

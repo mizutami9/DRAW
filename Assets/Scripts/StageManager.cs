@@ -54,6 +54,7 @@ namespace DrawBody.Prototype
         private bool onlineStageLoadRequired = true;
         private bool titleMode;
         private bool titleTextInputActive;
+        private bool optionOverlayActive;
         private bool onlineStateSubscribed;
         private string currentStageId = "1-0";
         private string remotePlayerId;
@@ -356,7 +357,8 @@ namespace DrawBody.Prototype
             bool localHost = IsLocalOnlineHost(lobby);
             if (state == OnlineConnectionState.Playing && !localHost)
             {
-                string desiredStage = !string.IsNullOrEmpty(lobby.StageId) ? lobby.StageId : "1-1";
+                string desiredStage = DemoAccessPolicy.NormalizeStageId(
+                    !string.IsNullOrEmpty(lobby.StageId) ? lobby.StageId : "1-1");
                 if (onlineStageLoadRequired || !stageStarted || currentStageId != desiredStage || stageSelectRemoteWaiting)
                 {
                     onlineStageLoadRequired = false;
@@ -496,12 +498,27 @@ namespace DrawBody.Prototype
             {
                 localPlayer.ResetMotion();
             }
-            localPlayer.SetControlsEnabled(!active && stageStarted && !drawing && !cleared && !stageEditing);
+            localPlayer.SetControlsEnabled(!active && !optionOverlayActive
+                && stageStarted && !drawing && !cleared && !stageEditing);
         }
 
         public void OpenOptionMenu()
         {
             uiManager?.OpenOption(stageStarted && !titleMode);
+        }
+
+        public void SetOptionOverlayActive(bool active)
+        {
+            optionOverlayActive = active;
+            PlayerController2D localPlayer = player != null ? player : primaryPlayer;
+            if (localPlayer == null) return;
+            if (active) localPlayer.ResetMotion();
+            localPlayer.SetControlsEnabled(!active
+                && stageStarted
+                && !drawing
+                && !cleared
+                && !stageEditing
+                && !titleTextInputActive);
         }
 
         public void OpenTrailerDebugMenu()
@@ -1621,7 +1638,7 @@ namespace DrawBody.Prototype
             // switches cannot remain stale on another client.
             SendLocalOnlineBodyData();
             RefreshOnlinePlayerCollisionSafety();
-            player?.SetControlsEnabled(!cleared);
+            player?.SetControlsEnabled(!cleared && !optionOverlayActive);
         }
 
         public void CancelDrawingMode()
@@ -1659,6 +1676,7 @@ namespace DrawBody.Prototype
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(true);
             string nextStageId = string.IsNullOrEmpty(stageId) ? "1-0" : stageId;
+            nextStageId = DemoAccessPolicy.NormalizeStageId(nextStageId);
             bool enteringDifferentStage = currentStageId != nextStageId;
             currentStageId = nextStageId;
             GameBgm.PlayForStage(currentStageId);
@@ -1760,6 +1778,7 @@ namespace DrawBody.Prototype
 
         public void OpenStageEditor(string stageId)
         {
+            if (DemoAccessPolicy.IsDemoBuild) return;
             CancelRespawnAnimations();
             if (challengeReadyRoom != null) challengeReadyRoom.Abort();
             challengeReadyRoom = null;
@@ -1804,15 +1823,20 @@ namespace DrawBody.Prototype
             uiManager?.SetChallengeCountdown(false, string.Empty);
         }
 
-        public bool StageSelectEditMode => stageSelectEditMode;
+        public bool StageSelectEditMode => !DemoAccessPolicy.IsDemoBuild && stageSelectEditMode;
 
         public void SetStageSelectEditMode(bool editing)
         {
-            stageSelectEditMode = editing;
+            stageSelectEditMode = !DemoAccessPolicy.IsDemoBuild && editing;
         }
 
         public bool ToggleStageSelectEditMode()
         {
+            if (DemoAccessPolicy.IsDemoBuild)
+            {
+                stageSelectEditMode = false;
+                return false;
+            }
             stageSelectEditMode = !stageSelectEditMode;
             return stageSelectEditMode;
         }
@@ -2049,6 +2073,11 @@ namespace DrawBody.Prototype
 
         private static string GetNextStageId(string stageId)
         {
+            if (DemoAccessPolicy.IsDemoBuild)
+            {
+                return DemoAccessPolicy.GetNextStageId(stageId);
+            }
+
             if (string.IsNullOrEmpty(stageId) || stageId == "title")
             {
                 return "1-1";
@@ -2673,7 +2702,8 @@ namespace DrawBody.Prototype
                 onlineCarryBoundsCenterOffset = carryBounds.center - player.transform.position;
                 onlineCarryBoundsExtents = carryBounds.extents;
             }
-            player.SetControlsEnabled(catGrab && stageStarted && !drawing && !cleared && !stageEditing);
+            player.SetControlsEnabled(catGrab && stageStarted && !drawing && !cleared
+                && !stageEditing && !optionOverlayActive);
             onlineCarryBody = player.GetComponent<Rigidbody2D>();
             if (onlineCarryBody != null)
             {
@@ -2804,7 +2834,8 @@ namespace DrawBody.Prototype
                 onlineCarryBody.angularVelocity = wasCatGrab ? 0f : releaseVelocity.x * -18f;
             }
 
-            player?.SetControlsEnabled(stageStarted && !drawing && !cleared && !stageEditing);
+            player?.SetControlsEnabled(stageStarted && !drawing && !cleared
+                && !stageEditing && !optionOverlayActive);
             onlineCarryBody = null;
             onlineCarrierPlayerId = null;
             onlineCarryBeganAt = 0f;
@@ -4256,7 +4287,8 @@ namespace DrawBody.Prototype
             TeleportPlayerWithoutPhysics(targetPlayer, destination);
             AlignPlayerBottomToGround(targetPlayer, destination);
             targetPlayer.ResetMotion();
-            targetPlayer.SetControlsEnabled(enableControls && stageStarted && !drawing && !cleared && !stageEditing);
+            targetPlayer.SetControlsEnabled(enableControls && stageStarted && !drawing && !cleared
+                && !stageEditing && !optionOverlayActive);
             if (resolveGroundOverlap)
             {
                 LiftPlayerOutOfGround(targetPlayer);
@@ -4411,7 +4443,8 @@ namespace DrawBody.Prototype
             player = nextPlayer;
             ConfigureActivePlayerTargets();
             LoadDrawingState(player);
-            player.SetControlsEnabled(enableControls && stageStarted && !drawing && !cleared && !stageEditing);
+            player.SetControlsEnabled(enableControls && stageStarted && !drawing && !cleared
+                && !stageEditing && !optionOverlayActive);
         }
 
         private void SetAllPlayerControls(bool enabled)

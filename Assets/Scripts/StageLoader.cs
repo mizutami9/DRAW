@@ -181,6 +181,12 @@ namespace DrawBody.Prototype
                 return false;
             }
 
+            if (!DemoAccessPolicy.IsStageAllowed(stageId))
+            {
+                Debug.LogWarning($"Demo build rejected unavailable stage: {stageId}");
+                return false;
+            }
+
             TextAsset asset = Resources.Load<TextAsset>($"Stages/{stageId}");
             if (asset == null)
             {
@@ -208,6 +214,14 @@ namespace DrawBody.Prototype
             }
             if (data == null)
             {
+                return;
+            }
+
+            if (DemoAccessPolicy.IsDemoBuild
+                && data.id != "title-playground"
+                && !DemoAccessPolicy.IsStageAllowed(data.id))
+            {
+                Debug.LogWarning($"Demo build rejected unavailable stage data: {data.id}");
                 return;
             }
 

@@ -24,10 +24,16 @@ namespace DrawBody.Prototype
             navigation.mode = Navigation.Mode.None;
             button.navigation = navigation;
             button.onClick.AddListener(SelectStage);
+            if (DemoAccessPolicy.IsDemoBuild)
+            {
+                button.interactable = DemoAccessPolicy.IsStageAllowed(stageId);
+                if (stageId == "1-0") gameObject.SetActive(false);
+            }
         }
 
         private void SelectStage()
         {
+            if (!DemoAccessPolicy.IsStageAllowed(stageId)) return;
             stageManager?.SelectStage(stageId);
             EventSystem.current?.SetSelectedGameObject(null);
         }
