@@ -116,8 +116,9 @@ namespace DrawBody.Prototype
             if (!HasAuthority) return;
             if (phase == 0)
             {
-                remaining = Mathf.Max(0f, remaining - Time.deltaTime);
-                if (remaining <= 0f)
+                if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                    remaining = Mathf.Max(0f, remaining - Time.deltaTime);
+                if (!LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f)
                 {
                     phase = 1;
                     retryAt = Time.time + 5f;

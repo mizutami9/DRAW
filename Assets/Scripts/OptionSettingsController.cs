@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace DrawBody.Prototype
@@ -16,6 +18,11 @@ namespace DrawBody.Prototype
         [SerializeField] private Button japaneseButton;
         [SerializeField] private Button englishButton;
         private Text languageSelectorValueText;
+        private GameObject languagePopup;
+        private Text languagePopupTitle;
+        private ScrollRect languageScroll;
+        private readonly Dictionary<string, Button> languageButtons = new Dictionary<string, Button>();
+        private readonly Dictionary<string, int> languageButtonIndices = new Dictionary<string, int>();
         private InputField playerNameInput;
         private Text playerNameError;
         private Button registerButton;
@@ -217,31 +224,12 @@ namespace DrawBody.Prototype
 
             japaneseButton?.onClick.RemoveAllListeners();
             englishButton?.onClick.RemoveAllListeners();
-            japaneseButton?.onClick.AddListener(() => CycleLanguage(-1));
-            englishButton?.onClick.AddListener(() => CycleLanguage(1));
-            SetLanguageButtonLabel(japaneseButton, "<");
-            SetLanguageButtonLabel(englishButton, ">");
+            japaneseButton?.onClick.AddListener(OpenLanguagePopup);
+            if (englishButton != null) englishButton.gameObject.SetActive(false);
 
-            RectTransform panel = transform as RectTransform;
-            Transform existing = panel != null ? panel.Find("OptionLanguageCurrentValue") : null;
-            if (existing == null && panel != null)
-            {
-                Font font = GetComponentInChildren<Text>(true)?.font
-                    ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                GameObject valueObject = new GameObject("OptionLanguageCurrentValue", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
-                valueObject.transform.SetParent(panel, false);
-                languageSelectorValueText = valueObject.GetComponent<Text>();
-                languageSelectorValueText.font = font;
-                languageSelectorValueText.fontSize = 17;
-                languageSelectorValueText.fontStyle = FontStyle.Bold;
-                languageSelectorValueText.alignment = TextAnchor.MiddleCenter;
-                languageSelectorValueText.color = new Color(0.08f, 0.08f, 0.07f);
-                Place(valueObject.transform as RectTransform, new Vector2(63f, 220f), new Vector2(118f, 42f));
-            }
-            else
-            {
-                languageSelectorValueText = existing.GetComponent<Text>();
-            }
+            Transform oldValue = transform.Find("OptionLanguageCurrentValue");
+            if (oldValue != null) oldValue.gameObject.SetActive(false);
+            EnsureLanguagePopup();
         }
 
         private void ConfigureLanguageButton(Button button, string languageCode)
@@ -262,22 +250,243 @@ namespace DrawBody.Prototype
             label.text = value;
         }
 
-        private void CycleLanguage(int direction)
+        private void EnsureLanguagePopup()
         {
-            System.Collections.Generic.IReadOnlyList<LocalizationManager.LanguageDefinition> languages = LocalizationManager.SupportedLanguages;
-            if (languages.Count == 0) return;
-            int currentIndex = 0;
+            if (languagePopup != null) return;
+            Font fallback = GetComponentInChildren<Text>(true)?.font
+                ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+
+            languagePopup = new GameObject("OptionLanguagePopup", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            languagePopup.transform.SetParent(transform, false);
+            RectTransform overlay = languagePopup.GetComponent<RectTransform>();
+            overlay.anchorMin = Vector2.zero;
+            overlay.anchorMax = Vector2.one;
+            overlay.offsetMin = Vector2.zero;
+            overlay.offsetMax = Vector2.zero;
+            Image overlayImage = languagePopup.GetComponent<Image>();
+            overlayImage.color = new Color(0.08f, 0.07f, 0.06f, 0.48f);
+            Button overlayButton = languagePopup.GetComponent<Button>();
+            overlayButton.transition = Selectable.Transition.None;
+            overlayButton.onClick.AddListener(CloseLanguagePopup);
+
+            GameObject cardObject = new GameObject("LanguageCard", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Outline));
+            cardObject.transform.SetParent(overlay, false);
+            RectTransform card = cardObject.GetComponent<RectTransform>();
+            card.anchorMin = card.anchorMax = new Vector2(0.5f, 0.5f);
+            card.pivot = new Vector2(0.5f, 0.5f);
+            card.anchoredPosition = Vector2.zero;
+            card.sizeDelta = new Vector2(650f, 424f);
+            cardObject.GetComponent<Image>().color = new Color(1f, 0.975f, 0.88f, 1f);
+            Outline cardOutline = cardObject.GetComponent<Outline>();
+            cardOutline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.92f);
+            cardOutline.effectDistance = new Vector2(4f, -4f);
+
+            GameObject titleObject = new GameObject("Title", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            titleObject.transform.SetParent(card, false);
+            RectTransform titleRect = titleObject.GetComponent<RectTransform>();
+            titleRect.anchorMin = titleRect.anchorMax = new Vector2(0.5f, 1f);
+            titleRect.pivot = new Vector2(0.5f, 1f);
+            titleRect.anchoredPosition = new Vector2(0f, -15f);
+            titleRect.sizeDelta = new Vector2(500f, 45f);
+            languagePopupTitle = titleObject.GetComponent<Text>();
+            languagePopupTitle.font = fallback;
+            languagePopupTitle.fontSize = 27;
+            languagePopupTitle.fontStyle = FontStyle.Bold;
+            languagePopupTitle.alignment = TextAnchor.MiddleCenter;
+            languagePopupTitle.color = new Color(0.12f, 0.1f, 0.08f);
+            titleObject.AddComponent<LocalizedText>().SetKey("language_settings");
+
+            Button closeButton = CreateLanguageButton(card, "Close", new Vector2(286f, -36f), new Vector2(42f, 38f), fallback, "×", 24);
+            closeButton.onClick.AddListener(CloseLanguagePopup);
+
+            GameObject scrollObject = new GameObject("LanguageScroll", typeof(RectTransform), typeof(ScrollRect));
+            scrollObject.transform.SetParent(card, false);
+            RectTransform scrollRectTransform = scrollObject.GetComponent<RectTransform>();
+            scrollRectTransform.anchorMin = scrollRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+            scrollRectTransform.sizeDelta = new Vector2(604f, 342f);
+            scrollRectTransform.anchoredPosition = new Vector2(0f, -27f);
+
+            GameObject viewportObject = new GameObject("Viewport", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Mask));
+            viewportObject.transform.SetParent(scrollRectTransform, false);
+            RectTransform viewport = viewportObject.GetComponent<RectTransform>();
+            viewport.anchorMin = Vector2.zero;
+            viewport.anchorMax = Vector2.one;
+            viewport.offsetMin = Vector2.zero;
+            viewport.offsetMax = new Vector2(-22f, 0f);
+            viewportObject.GetComponent<Image>().color = new Color(0.91f, 0.96f, 0.97f, 0.62f);
+            viewportObject.GetComponent<Mask>().showMaskGraphic = true;
+
+            GameObject contentObject = new GameObject("Content", typeof(RectTransform), typeof(GridLayoutGroup), typeof(ContentSizeFitter));
+            contentObject.transform.SetParent(viewport, false);
+            RectTransform content = contentObject.GetComponent<RectTransform>();
+            content.anchorMin = new Vector2(0f, 1f);
+            content.anchorMax = new Vector2(1f, 1f);
+            content.pivot = new Vector2(0.5f, 1f);
+            content.anchoredPosition = Vector2.zero;
+            content.sizeDelta = Vector2.zero;
+            GridLayoutGroup grid = contentObject.GetComponent<GridLayoutGroup>();
+            grid.padding = new RectOffset(10, 10, 10, 10);
+            grid.cellSize = new Vector2(267f, 43f);
+            grid.spacing = new Vector2(10f, 8f);
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 2;
+            grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+            contentObject.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            Scrollbar scrollbar = CreateLanguageScrollbar(scrollRectTransform);
+            languageScroll = scrollObject.GetComponent<ScrollRect>();
+            languageScroll.viewport = viewport;
+            languageScroll.content = content;
+            languageScroll.horizontal = false;
+            languageScroll.vertical = true;
+            languageScroll.movementType = ScrollRect.MovementType.Clamped;
+            languageScroll.scrollSensitivity = 34f;
+            languageScroll.verticalScrollbar = scrollbar;
+            languageScroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+            languageScroll.verticalScrollbarSpacing = 5f;
+
+            IReadOnlyList<LocalizationManager.LanguageDefinition> languages = LocalizationManager.SupportedLanguages;
             for (int i = 0; i < languages.Count; i++)
             {
-                if (LocalizationManager.IsCurrentLanguage(languages[i].code))
-                {
-                    currentIndex = i;
-                    break;
-                }
+                LocalizationManager.LanguageDefinition definition = languages[i];
+                Font itemFont = LocalizationManager.LoadFontForLanguage(definition.code, fallback);
+                Button button = CreateLanguageButton(content, "Language_" + definition.code, Vector2.zero, grid.cellSize, itemFont, definition.nativeName, 18);
+                string code = definition.code;
+                button.onClick.AddListener(() => SelectLanguageFromPopup(code));
+                languageButtons[code] = button;
+                languageButtonIndices[code] = i;
             }
 
-            int nextIndex = (currentIndex + direction + languages.Count) % languages.Count;
-            SetLanguageAndPlayTick(languages[nextIndex].code);
+            languagePopup.SetActive(false);
+        }
+
+        private static Button CreateLanguageButton(Transform parent, string name, Vector2 position, Vector2 size, Font font, string labelValue, int fontSize)
+        {
+            GameObject buttonObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button), typeof(Outline));
+            buttonObject.transform.SetParent(parent, false);
+            RectTransform rect = buttonObject.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 1f);
+            rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+            buttonObject.GetComponent<Image>().color = new Color(1f, 0.985f, 0.925f, 1f);
+            Outline outline = buttonObject.GetComponent<Outline>();
+            outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.72f);
+            outline.effectDistance = new Vector2(2f, -2f);
+
+            GameObject labelObject = new GameObject("Label", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            labelObject.transform.SetParent(rect, false);
+            RectTransform labelRect = labelObject.GetComponent<RectTransform>();
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = new Vector2(8f, 2f);
+            labelRect.offsetMax = new Vector2(-8f, -2f);
+            Text label = labelObject.GetComponent<Text>();
+            label.font = font;
+            label.fontSize = fontSize;
+            label.resizeTextForBestFit = true;
+            label.resizeTextMinSize = 12;
+            label.resizeTextMaxSize = fontSize;
+            label.alignment = TextAnchor.MiddleCenter;
+            label.color = new Color(0.08f, 0.08f, 0.07f);
+            label.text = labelValue;
+            return buttonObject.GetComponent<Button>();
+        }
+
+        private static Scrollbar CreateLanguageScrollbar(Transform parent)
+        {
+            GameObject scrollbarObject = new GameObject("Scrollbar", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Scrollbar));
+            scrollbarObject.transform.SetParent(parent, false);
+            RectTransform rect = scrollbarObject.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(1f, 0f);
+            rect.anchorMax = Vector2.one;
+            rect.pivot = new Vector2(1f, 1f);
+            rect.offsetMin = new Vector2(-17f, 2f);
+            rect.offsetMax = new Vector2(-1f, -2f);
+            scrollbarObject.GetComponent<Image>().color = new Color(0.18f, 0.16f, 0.13f, 0.14f);
+
+            GameObject slidingObject = new GameObject("Sliding Area", typeof(RectTransform));
+            slidingObject.transform.SetParent(rect, false);
+            RectTransform sliding = slidingObject.GetComponent<RectTransform>();
+            sliding.anchorMin = Vector2.zero;
+            sliding.anchorMax = Vector2.one;
+            sliding.offsetMin = new Vector2(2f, 2f);
+            sliding.offsetMax = new Vector2(-2f, -2f);
+
+            GameObject handleObject = new GameObject("Handle", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            handleObject.transform.SetParent(sliding, false);
+            RectTransform handle = handleObject.GetComponent<RectTransform>();
+            handle.anchorMin = Vector2.zero;
+            handle.anchorMax = Vector2.one;
+            handle.offsetMin = Vector2.zero;
+            handle.offsetMax = Vector2.zero;
+            handleObject.GetComponent<Image>().color = new Color(0.16f, 0.64f, 0.82f, 0.92f);
+
+            Scrollbar scrollbar = scrollbarObject.GetComponent<Scrollbar>();
+            scrollbar.handleRect = handle;
+            scrollbar.direction = Scrollbar.Direction.BottomToTop;
+            return scrollbar;
+        }
+
+        private void OpenLanguagePopup()
+        {
+            EnsureLanguagePopup();
+            languagePopup.transform.SetAsLastSibling();
+            languagePopup.SetActive(true);
+            RefreshLanguagePopupSelection();
+            ScrollCurrentLanguageIntoView();
+            EventSystem.current?.SetSelectedGameObject(languageButtons.TryGetValue(LocalizationManager.CurrentLanguageCode, out Button selected)
+                ? selected.gameObject
+                : null);
+            PlayTick(PlayerPrefs.GetFloat(SeKey, GameSfx.DefaultMasterVolume));
+        }
+
+        private void CloseLanguagePopup()
+        {
+            if (languagePopup == null || !languagePopup.activeSelf) return;
+            languagePopup.SetActive(false);
+            EventSystem.current?.SetSelectedGameObject(japaneseButton != null ? japaneseButton.gameObject : null);
+            PlayTick(PlayerPrefs.GetFloat(SeKey, GameSfx.DefaultMasterVolume));
+        }
+
+        public bool TryCloseLanguagePopup()
+        {
+            if (languagePopup == null || !languagePopup.activeSelf) return false;
+            CloseLanguagePopup();
+            return true;
+        }
+
+        private void SelectLanguageFromPopup(string languageCode)
+        {
+            SetLanguageAndPlayTick(languageCode);
+            if (languagePopup != null) languagePopup.SetActive(false);
+            EventSystem.current?.SetSelectedGameObject(japaneseButton != null ? japaneseButton.gameObject : null);
+        }
+
+        private void RefreshLanguagePopupSelection()
+        {
+            foreach (KeyValuePair<string, Button> entry in languageButtons)
+            {
+                bool selected = LocalizationManager.IsCurrentLanguage(entry.Key);
+                SetButtonStateColor(entry.Value, selected
+                    ? new Color(1f, 0.82f, 0.22f, 1f)
+                    : new Color(1f, 0.985f, 0.925f, 1f));
+            }
+        }
+
+        private void ScrollCurrentLanguageIntoView()
+        {
+            if (languageScroll == null
+                || !languageButtonIndices.TryGetValue(LocalizationManager.CurrentLanguageCode, out int index)) return;
+            Canvas.ForceUpdateCanvases();
+            int totalRows = Mathf.CeilToInt(languageButtons.Count / 2f);
+            const int visibleRows = 6;
+            int maximumTopRow = Mathf.Max(0, totalRows - visibleRows);
+            int selectedRow = index / 2;
+            int topRow = Mathf.Clamp(selectedRow - 2, 0, maximumTopRow);
+            languageScroll.verticalNormalizedPosition = maximumTopRow > 0
+                ? 1f - topRow / (float)maximumTopRow
+                : 1f;
         }
 
         private void SetLanguageAndPlayTick(string languageCode)
@@ -313,6 +522,16 @@ namespace DrawBody.Prototype
             }
 
             bool selectorMode = LocalizationManager.SupportedLanguages.Count > 2;
+            if (selectorMode && japaneseButton != null)
+            {
+                Text triggerLabel = japaneseButton.GetComponentInChildren<Text>(true);
+                if (triggerLabel != null)
+                {
+                    triggerLabel.font = LocalizationManager.LoadCurrentFont(triggerLabel.font);
+                    triggerLabel.text = LocalizationManager.CurrentLanguageDefinition.nativeName + "  ▼";
+                }
+            }
+            RefreshLanguagePopupSelection();
             SetButtonStateColor(japaneseButton, selectorMode || LocalizationManager.IsCurrentLanguage("ja")
                 ? new Color(0.22f, 0.78f, 0.92f, 1f)
                 : new Color(1f, 0.985f, 0.925f, 1f));

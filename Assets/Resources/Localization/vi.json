@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "Tên PLAYER"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter tên"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Mời enter Tên người chơi."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER Tên của bạn ở đây"
+    },
+    {
+      "key": "option_register",
+      "value": "REGISTER"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Nhật Bản"
+    },
+    {
+      "key": "lang_en",
+      "value": "EN"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Trống! Nhấn R để thử lại."
+    },
+    {
+      "key": "draw_title",
+      "value": "Thiết kếTAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: trở lại trò chơi / ENTER: Quyết định / ESC: Thôi"
+    },
+    {
+      "key": "preview",
+      "value": "Xem thử"
+    },
+    {
+      "key": "clear",
+      "value": "Xóa"
+    },
+    {
+      "key": "decide",
+      "value": "Xác nhận"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Ở lại"
+    },
+    {
+      "key": "current",
+      "value": "Hiện tại"
+    },
+    {
+      "key": "part",
+      "value": "Phần"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw phần thân trước."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso là căn cứ. Draw Những phần khác từ kết nối của chúng."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: bắt đầu từ dấu kết nối."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw phần thân trước khi kết nối các bộ phận khác."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} được kết nối."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} chưa bắt đầu tại dấu kết nối."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Torso cần phải quyết định."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} Phải bắt đầu ở điểm kết nối."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Cá nhân  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Đội  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Không thể quyết định: cá nhân ink là {0:0.#}/{1:0}Giảm nó bằng {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Không thể quyết định: nhóm ink là {0:0.#}/{1:0}Giảm nó bằng {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}Bắt đầu từ bộ định vị."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Đầu"
+    },
+    {
+      "key": "torso",
+      "value": "Torso"
+    },
+    {
+      "key": "left_arm",
+      "value": "Tay trái"
+    },
+    {
+      "key": "right_arm",
+      "value": "Tay phải"
+    },
+    {
+      "key": "left_leg",
+      "value": "Chân trái"
+    },
+    {
+      "key": "right_leg",
+      "value": "Chân phải"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Mặt trái"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Phải:"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Trái"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Phải"
+    },
+    {
+      "key": "tail",
+      "value": "Đuôi"
+    },
+    {
+      "key": "left_wing",
+      "value": "Cánh trái"
+    },
+    {
+      "key": "right_wing",
+      "value": "Cánh phải"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Lông đuôi"
+    },
+    {
+      "key": "slime_body",
+      "value": "Slime"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Nhảy chuẩn"
+    },
+    {
+      "key": "jump_double",
+      "value": "Nhảy x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Nhảy x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Đến"
+    },
+    {
+      "key": "arm_long",
+      "value": "Dài"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Name"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Chuẩn"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Name"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Nặng"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Chân {0:0.0}: {1}   Tay {2:0.0}: {3}   Torso {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Cánh {0:0.0} INK / Tốc độ Glide {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "CON NGƯỜI CÓ THỂ\nTay {0:0.0} INK  Công suất{1:0.00}\nChân {2:0.0} INK  Jump ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "SỰ TỈNH THỨC\nChân sau {0:0.0} INK  Tốc độ{1:0.00}\nChân trước {2:0.0} INK  Phạm vi vuốt{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "NHỮNG CÂU CHUYỆN\nCánh {0:0.0} / 700 INK\nTốc độ Glide {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "SỰ TRỞ THÀNH\nGiữ lại SPACE: vỏ bọc vô địch\nGiữ lại F: Quay 90° về hướng đối diện"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "SLIME\nThân {0:0.0} / 700 INK\nChiều dài điểm treo {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "CON NGƯỜI"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "CAT"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "BIRD"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "TURTLE"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SIIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Thêm chân INK tăng năng lượng nhảy\nThêm tay INK tăng năng lượng ném"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Thêm cái chân sau nữa. INK Tăng tốc độ chạy\nThêm chân trước INK tăng phạm vi cào"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Thêm cánh INK tăng độ mạnh lướt"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Bất khả xâm phạm trong khi ẩn trong vỏ"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Bấm F cho một tăng tấn công lên\nGiảm INK làm cho nó dài hơn / Wall jumped"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: THROW"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCRSASASASAS / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "HOLL SPACE: GLUD  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "HOLL SPACE:Sll HOL F: turn 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "FĐứng dậy!"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Công suất{0:0.00}  Jump ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Chạy ×{0:0.00}  Phạm vi vuốt{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Sức mạnh nổi {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACETIẾNG:  F: 90 °C"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Chiều dài gai lên{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Tay {0:0.0}/280 chân {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Lùi {0:0.0}/ 240 Front {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Cánh {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Chỉ hoạt động khi giữ cái nút"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "SẼ ĐỌC"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE và F làm việc trong khi chờ đợi!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Thân {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "Chậm"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "Độ mờ đục"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "THROW"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "Chạy"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "CÂU HỎI"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GLUD"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "CẢNH BÁO"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "SỐ NGƯỜI CÔNG BỐ"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "Xác chết INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "GRIP!"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "SÓT + JUMP"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK 12 {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "FTiến lên! Giảm INK = dài hơn / bật nhảy lên"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw tăng năng lượng!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Anh không thể vẽ lại sau khi giai đoạn này bắt đầu."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Nền tảng cao"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Cái đổi nặng"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Far Lever"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Lỗ hẹp"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "Phòng ngủ"
+    },
+    {
+      "key": "multi_participants",
+      "value": "PLAYRS"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "Phòng ngủ CREATE"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "Phòng ngủ JOIN"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "ID phòng trưng bày"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "TRANG CÀI LINH (INVI)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "BẠN"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "Số 9-1 SLIME CILE"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "Chim cánh cụt! GRAB A CÀI"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "WALL-JUMP VÀ DODGE Xây dựng kỷ lục!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 bảo vệ bạn anh!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "GIAI ĐÃ {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "time {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Bảo vệ bạn bè từ cả hai phía."
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "(TIẾNG CÒI) {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "Bạn bè thôi... TIẾNG TRONG {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Giải tán!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "COIN {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "time {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "NHỮNG CÂU CHUYỆN VÀ NHỮNG CÒI!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "5 phút nữa."
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 COIN trống!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "Bám vào!"
+    },
+    {
+      "key": "title_single",
+      "value": "Một người chơi"
+    },
+    {
+      "key": "title_multi",
+      "value": "Nhiều người chơi"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Cài đặt"
+    },
+    {
+      "key": "option_back",
+      "value": "Lùi  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "Lùi  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "Lùi  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Thoát"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "CHỮNG CÂU CHUYỆN"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "rơle trên không 11 người chơi"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Con người ném chim, sau đó là mèo con."
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "Hoàn thành nhiệm vụ"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "Lùi  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "CÂU CHUYỆN"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "SA - RA - MI"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "EXPORT 92×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "Trở lại đánh giá"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Kiểm tra thành phần, rồi xuất PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Đã lưu: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "RERAWING..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "Người thay đổi chỉ có thể thay đổi trong phòng sẵn sàng."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "(Tiếng Tây Ban Nha)     ESC  TITLE"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "Thợ sửa ống nước"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Kéo các diễn viên trong khi không có người ở đó. F9 Ghi F10 play Tạm dừng O bước"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 Hồ sơ/STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 PLAY Tất cả"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 (TIẾNG)"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "ĐÃ ĐÃ ĐÃ ĐÃ ĐÃ"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "POPEP"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "Comment"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "Tài liệu"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "TẤT CẢ CÂU CHUYỆN"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "mặc định"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} Đã chọn: {1} | {2} khung {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "TIẾNG {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SENPES"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Trong khi ngồi không, kéo ký tự để đặt vị trí bắt đầu của họ"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Tiếp tục"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Tựa"
+    },
+    {
+      "key": "language_settings",
+      "value": "Thiết lập ngôn ngữ"
+    },
+    {
+      "key": "multi_play",
+      "value": "MULTI PLAY"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Khớp ngẫu nhiên"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Riêng"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Khớp ngẫu nhiên"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Tìm người chơi"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Tìm kiếm"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Khớp...\n\nNgười chơi 2 / 4\n\n▪ Bạn\nBộ phát nhạc/ ảnh\n□ Tìm kiếm\n□ Tìm kiếm\n\nĐang đợi"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "Phòng trưng bày"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Tạo Phòng"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Vào phòng"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Tên phòng\n[ Draw Cùng nhau ]\n\nBộ phát tối đa\n< 4 >\n\nTầm nhìn\nDịch bởi Vũ Hạnh, Mai Linh, Nga, Huy Tô, Yuki, Ann, Phương\n\nGiai đoạn\n[Host picks]\n\nLập lại quy tắc\n[Hãy vì mọi người]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Bộ phát tối đa"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Tầm nhìn"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Tầm nhìn"
+    },
+    {
+      "key": "multi_public",
+      "value": "Chung"
+    },
+    {
+      "key": "multi_private",
+      "value": "Riêng"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Bật/ tắt"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Tạo"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter ID bby hiển thị trên màn hình máy.\n\nVới cấu hình EOS, bạn bè có thể tham gia từ xa.\nNếu sử dụng Direct TCP, enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter ID bby"
+    },
+    {
+      "key": "multi_join",
+      "value": "Tham gia"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Cập nhật"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "Phòng trưng bày"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Phòng: Draw Cùng nhau\nID: ABC123\n2 / 4\n\nMột hành lang vui vẻ. space\nChơi với những chiếc hộp, hòn bi, và những cái đệm nhảy trong khi chờ đợi."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "ID sao chép"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Bắt đầu 1- 1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Chọn giai đoạn"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Giai đoạn chọn khóa khi mọi người đang đọc."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Rời khỏi phòng này?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Đi đi"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Thôi"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Chủ nhà đang chọn một sân khấu..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Đi đi"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Khớp..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Chỉ có vật chủ mới có thể bắt đầu."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Không có ID bby để sao chép."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Chứng minh thư của Lobby."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Mã phòng bị khóa."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Chứng minh thư kết nối."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Ngoại tuyến. Không có mã phòng."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Comment"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Bộ mã"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Đang kết nối..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Phòng"
+    },
+    {
+      "key": "multi_players",
+      "value": "Người chơi"
+    },
+    {
+      "key": "multi_local",
+      "value": "Cục bộ"
+    },
+    {
+      "key": "multi_ready",
+      "value": "ĐỌC"
+    },
+    {
+      "key": "multi_wait",
+      "value": "Đợi"
+    },
+    {
+      "key": "multi_host",
+      "value": "HOST"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Cùng nhau"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Phòng bạn"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Ngươi"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "BẠN"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Máy"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Bộ phát {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Trùng khớp ngẫu nhiên đã sẵn sàng."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Khởi tạo hậu phương giả."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Ghi vào..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Trực tuyến như cầu thủ thử nghiệm cục bộ."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Khởi động sân khấu giả."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Phòng riêng được xây dựng."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Phòng công cộng được tạo ra."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Vào phòng giả."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Khởi tạo trực tiếp TCP."
+    },
+    {
+      "key": "online_ready",
+      "value": "Đã sẵn sàng. Chủ nhà hay gia nhập một căn phòng."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Phòng được tạo ra. Hãy chia sẻ ID với bạn anh."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Lỗi máy: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "ID phòng phải là host-p:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Vào phòng..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Lỗi tham gia: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Hành lang trái."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Sẵn sàng thay đổi."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Chấp nhận thất bại."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} Tham gia."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} rời khỏi phiên họp."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Lobby đã cập nhật."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Bắt đầu giai đoạn {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "Khởi tạo EOS. Cấu hình Trình bổ sung EOS trước khi đăng nhập."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "Đăng nhập EOS..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "Giao diện kết nối EOS chưa sẵn sàng."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Lỗi đăng nhập EOS: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "Lỗi tạo hành lang: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "Phòng giam được tạo ra. Hãy chia sẻ ID của Lobby."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter ID EOS bby."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter Một mã phòng."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Lỗi ghi lưu mã phòng: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Việc tìm mã phòng bị lỗi: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Không tìm thấy chỗ cho mã. {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Mã phòng va chạm. Hãy tạo ra lại căn phòng."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Máy mở màn chọn sân khấu."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Máy đóng cửa chọn sân khấu."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "Lỗi tham gia hành lang: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Vào phòng cấp cứu."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Hành lang EOS trái."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Sẵn sàng."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Chưa sẵn sàng."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Việc tạo ra ID thiết bị EOS bị thất bại: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Đang tạo ID thiết bị EOS..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Lỗi đăng nhập chứng minh thiết bị EOS: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "Name {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Các thành viên Lobby đã cập nhật."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS không được đăng nhập. Cấu hình bổ sung EOS và đăng nhập trước."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "Comment"
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "HOÀN THÀNH MÀN!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Hoàn thành màn {0}!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Hoàn thành!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Tiếp theo: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Chọn màn"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Đã hoàn thành tất cả các màn!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Giai đoạn {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "THẾ GIỚI {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "MỘT SỰ CÂU CHUYỆN CÓ THỂ THỂ"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "USE: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "ĐÃ ĐÃ"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "KHÔNG CÓ THỂ"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} không có trên sân khấu này."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Một người chơi khác đang sử dụng {0}Hãy chọn một ký tự sẵn sàng."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "CHARACTER SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} Đang được sử dụng. Nhấn nút hoàn chỉnh để yêu cầu trao đổi."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} Muốn trao đổi {1} Vì {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "GIẢI ĐÁP"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Đang chờ đáp ứng yêu cầu trao đổi..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Các nhân vật trao đổi!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Yêu cầu trao đổi bị từ chối."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Không tìm thấy người chơi khác."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "KAIN GRAIN"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100g SCALE"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "CHÚNG TA SẼ GATE"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "Bạn nhưngTON"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "(Tiếng Tây Ban Nha)"
+    },
+    {
+      "key": "species_human",
+      "value": "Con người"
+    },
+    {
+      "key": "species_cat",
+      "value": "Cat"
+    },
+    {
+      "key": "species_bird",
+      "value": "Chim"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Rùa"
+    },
+    {
+      "key": "species_slime",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Đối tượng"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Liên kết"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Kéo ký tự để bắt đầu kiểm tra từ vị trí đó. Loài sinh sản trên sân khấu không thay đổi."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Di chuyển vị trí bắt đầu kiểm tra."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Đầu thử ra: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Không thể lưu: {0} lỗi. {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Đã lưu: {0} ({1} Cảnh báo"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Tạo Phòng\nTên phòng\nNgười chơi 2 / 3\nChung/ Riêng\n\nVào phòng\nID phòng [...]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "& Xuất ra danh sách WASD để chuyển\nTrang trí: Quay / chuyển động\nCtrl + bánh xe: thu nhỏ toàn bộ sân khấu"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} đối tượng đã chọn"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Các đối tượng được đóng đầy đủ vào hộp sẽ được chọn."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Đã chọn {0} đồ vật. Kéo một đối tượng đã chọn để di chuyển chúng với nhau."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Không có đối tượng nào được đóng kín bởi hộp chọn."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Chuyển {0} Đã chọn các vật thể."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Loại"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Tìm kiếm"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Kiểu"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Từ tìm kiếm"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Danh sách đối tượng"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Danh sách liên kết"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "C-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "H-"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Làm lại"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Chép"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Đối tượng được sao chép."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "Phải"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "Hội nghị địa hạt"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "teppi82"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "(Tiếng Ý)"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Chép hướng: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Bức xạ đối tượng hướng về {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Vị trí: X {0:0.00} / Y {1:0.00} ( Phím cắm)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Chọn"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Khoảng cách"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Tốc độ"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Fuse (sec)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Trễ thanh trượt (sec)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Cần phải nổ"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Tốc độ"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Giao thức thả (sec)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Name"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Kích cỡ Hộp"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Kích cỡ Quả bom"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Kích cỡ Spike"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Di chuyển khoảng cách: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Tốc độ di chuyển: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Thời gian sử dụng: {0:0.0} giây"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Trễ thanh trượt: {0:0.0} giây"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Độ bền của bức tường: {0:0} nổ"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Tốc độ đai: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Thời gian thả: {0:0.0} giây"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Cỡ hộp thả xuống: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Cỡ gai giảm: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Cỡ bom được chế tạo: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Hướng:"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Hướng:"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Hướng điều khiển: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Hộp: □ Bản quyền"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Hộp: Hình vuông"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Hộp: Tròn"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Hộp: tam giác"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Bom: Thay đổi cả hai"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Bom: Fuse on Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Quả bom: khi nhặt lên"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Hộp rơi: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Bom chế tạo: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Chuyển hướng: {0:0}động tác kéo dài"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Mũ phóng: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Phần trăm máy chơi"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Tỷ lệ kích hoạt trọng lượng được đặt thành {0:0} INK Mỗi người chơi."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter một con số từ 1 đến 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "Bộ hồ sơ cá nhân"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "Đài phát thanh TEM{0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "PEN Sification"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "Bữa tiệc trắng"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "Dừng tất cả"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Nhớ mọi thứ chứ?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Xóa mọi phần cơ thể và khôi phục lại nhân vật ban đầu."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "REST"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "PHÁP"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} BIÊN TẬP"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "BIÊN TẬP"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5-CHARACTER"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "CON NGƯỜI ĐÃ ĐÃ ĐÃ ĐÃ ĐÃ TÀI"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "cả năm ký tự"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLOT {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "SAPD"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "signal"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "Save"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "Đặt"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "Bảo vệ tiền bối {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Lưu hiện thời {0} vẽ sẵn {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Ghi đè {0} vẽ sẵn {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "Thiết lập {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Thay thế hiện tại {0} vẽ với định sẵn {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Nền"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Cây"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Cỏ nền"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Hoa"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Nền"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Mây"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Nền"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Mũi tên"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Mặt mèo"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Mặt chó"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Hình cây"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Vui nhộn"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Tim"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Sao"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Trăng"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Mặt trời"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Mưa"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Ánh sáng"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Cầu vồng"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Núi"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Comment"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Mushroom"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Táo"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "chuối"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Bánh rán"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Kem"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Cốc cà phê"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Pizza"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Bánh mì"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Máy bay giấy"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Máy bay"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Rocket"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "UFO"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Ngôi nhà"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Castle"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Kho báu"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Phân tử"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Thấu kính"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Tinh thể"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Khóa:"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Khóa tới lỗ khóa"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Gươm"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Vương miện"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Khiên"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Viên ngọc"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Đồng xu"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Xương"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Bung ánh sáng (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Bánh răng"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Mùa xuân"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Nam châm"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Chất nhuộm"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Bong bóng tiếng nói"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Kiểm tra ký tự"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Câu hỏi Mác (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Dấu ngoặc kép (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Mũi tên Vòng lặp"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "JUMP!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Ném!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Bắt đầu!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "GAL!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Xoay: Shift + bánh xe (1.5 độ chính xác)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Xoay: Shift + bánh xe (15 °), với Alt (1 °)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Xoay: Shift + bánh xe (15 °), với Alt (1 °)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Tỷ lệ: bánh xe chuột"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Hành động"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Hiện"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Ẩn"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Bỏ khoá"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Chuyển"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Nền tảng:"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Chuyển nền tảng lên"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Chuyển sang trái"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Đặt nền"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Hành động liên kết: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Chìa khóa phải nối với lỗ khóa."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Khóa để lỗ khóa liên kết luôn luôn sử dụng bỏ khoá."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Chụp"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Liên kết từ"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Liên kết tới"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Bỏ liên kết"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Thêm: {0} / Snap: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Pos {1:0.0},{2:0.0}  Cỡ {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Bề ngang = Tường phải / Chiều cao = trần (bên trái tường và cạnh dưới cố định)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Khung"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Tạo một khung hình xung quanh các đối tượng được đặt. Chọn nó để điều chỉnh bức tường và trần nhà."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Tường được gắn chính xác giữa sàn nhà và trần nhà."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "GOAL"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "Phòng trưng bày {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "BMB"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MissILE"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "ĐỌC"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "Sếp!"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Nền"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "PLAYRS {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "CAAGE {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "Xem thử 14-3: {0} Người chơi / sân khấu {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Màu nền"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Mặc định"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Đóng"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Độ trong suốt"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Màu nền đã thay đổi. Giữ lại sân khấu để giữ nó."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Thêm chế độ: {0}Kéo lên bản đồ để tạo ra nó."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Thêm chế độ: {0}Nhấn vào bản đồ để đặt nó."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Đã chọn trong danh sách."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Không khớp"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(không có)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Mặt đất"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Chạy/ Vào"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Chuyển đổi"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Cửa/Gate"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Name"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Hành động"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "bẫy"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Gimmick"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Kẻ thù"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Sàn"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Tưởng"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Chạy"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Vào"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Tỷ lệ cân bằng"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Cân nặng"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Đóng"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Nửa tầng"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Sàn một chiều"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Sàn băng"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Trượt"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Tường leo được"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Dây"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Ladder"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Sàn mây"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Sàn nhà"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Sàn di chuyển"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Name"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "CÂU CHUYỆN 8-2 DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Đánh bóng và đập vỡ NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "BLIS {0}  BALLS{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "TIẾNG TRONG {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "Hoàn tất vào {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "HÌNH {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "BALL {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "NEXT TRONG {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 BALLS thất bại! RETRY"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Tất cả đều sạch sẽ!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "NHỮNG NHỮNG NHỮNG NHỮNG NHỮNG NHỮNG {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Súng"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Tường xuyên được"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Hành tinh Spike"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "GenericName"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Comment"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Bazoka"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Phím Pose"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Lỗ khóa Pose"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Updraft"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Tốc độ"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Tốc độ"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Vùng vẽ"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Cần có đạn"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Cần thiết đạn: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Điểm kiểm tra"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Mục nhập siêu tốc"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Thoát khỏi siêu tốc"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Điểm phục hồi"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Giữa"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Hiệu ứng nhắm"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Nút"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Nút nặng"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Nút đồng thời"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Giữ nút"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Hộp tam giác"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Lever"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Bật/ tắt bộ chuyển"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Bộ đếm giờ"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Bộ nhạy"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Đổi màu"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Đổi màu"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Đổi màu"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Đĩa áp suất"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Điều khiển từ xa"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Tỷ lệ"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Cửa"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Cửa khóa"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Cửa chập"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Fence"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Cổng Laser"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Cổng màu"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Cổng một chiều"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Cổng thời gian"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Tường có thể vỡ"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Tưởng ẩn"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Hộp gỗ"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Hộp sắt"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Bóng"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Barrel"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Đá"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Khối băng"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Hộp nổi"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Hộp cao su"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Bom"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Kẻ thù Walker"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Kẻ thù nhảy"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Kẻ thù tấn công"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Kẻ thù đang bay"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Kẻ thù bắn súng"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Kẻ thù Spawner"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Name"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Kích hoạt"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Thiết bị này luôn dùng để kích hoạt"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "& Khởi động"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Cỡ kẻ thù"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Kẻ thù thư sinh: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Cỡ kẻ thù: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Khóa:"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Đồng xu"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Sao"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Pin"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Đôi"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Jump Pad"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Mùa xuân"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Thang máy"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Fan"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Nam châm"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Thắt"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Bộ thả Spike"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Cá"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Đồng xu"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Sao"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Đồng hồ số"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Name"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Chuẩn"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Giới hạn thời gian"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Sống sót"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}s"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "All"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Quy tắc sân khấu: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Thời gian {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "NGÀY NAY"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Nhấn R để thử lại"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 SURVIVAL"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Một trong những trang web này!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "Đi tới ngọn núi cao"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "TARGET  {0:0}g (90g x PLAYRS)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "VÀI ĐIỀU ĐỂ ĐÃ ĐÃ TRONG SỰ TRONG THẾ GIỚI"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Bắt đầu đi!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "Chúc mừng..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "NHỮNG CÂU TRONG CÂU"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Nhanh lên!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Quá gần!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "GRAIN CỦA SÓC  {0:0}g / {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "Ra khỏi phòng!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "HÃY THỬ CÁCH MỘT CHỮNG CÂU CHUYỆN"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "CAAGE {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Bắt đầu từ bên phải!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "Một con chim sẻ sẽ đâm vào những thanh kiếm tuyệt đẹp!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 SPEEDRUN - MỘT CHỮNG CÂU CHUYỆN"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Bắt đầu!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "TIẾNG TRONG {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Chuẩn bị!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Bắt đầu!"
+    },
+    {
+      "key": "game_over",
+      "value": "GAME Over"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Cái xác này không rơi lúc bắt đầu. Làm ơn để nó nhỏ hơn."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Thi thể này có thể ra khỏi phòng. Xin hãy xác định vị trí."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "ĐỌC {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "ĐÃ KỂ LẠI"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "NONE"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "Không có thay đổi đột ngột hay đánh nhau sau khi bắt đầu."
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "Không có thay đổi gì sau khi bắt đầu (REDRAW OK)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Chuẩn bị bắt đầu cuộc chơi"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "HÃY ĐỂ ĐÃ TRỞ NHỮNG MỘT CÂU CHUYỆN"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "GIẢI ĐÃ GIÚP vua Giê - rê - mi"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "NHỮNG CÂU HỎI VÀ SỰ SỐNG"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "NHỮNG NGƯỜI ĐỂ ĐỂ TRONG VỚI CON CỦA BẠN"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Hãy dùng xác của bạn để ngăn chặn máy tính"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "NHỮNG CÂU CHUYỆN"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "HÃY ĐỂ TRONG CÂU CHUYỆN"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "NHỮNG CÂU CHUYỆN VỚI INK MAGNETS VÀ SINK IT"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "NHỮNG NHỮNG CÂU CHUYỆN VÀ SỰ SỐNG"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "NHỮNG CÂU CHUYỆN TRONG KHI TRỞ"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "HÃY ĐỂ NHỮNG CÂU CHUYỆN VÀ THỂ NHỮNG NGƯỜI ĐỂ ĐỂ ĐỂ NHỮNG NGƯỜI"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Chạy trốn. Đánh nhau trước khi thời gian trôi đi."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "NHỮNG CÂU CHUYỆN ĐỂ ĐỂ chuốc lấy các món quà"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "HÃY ĐÃ ĐÃ ĐÃ HIỆN VÀ TRONG NHỮNG MỘT NƠI"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "NHỮNG CÂU CHỪNG THỜI TRONG THỜI GIAN"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "NHỮNG MỘT SỐ NGƯỜI ĐỂ BAO GIỜ"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "NHỮNG CÂU TRONG VÀ CÂU CHUYỆN"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "NHỮNG CÂU CHUYỆN NHỮNG MỘT NGÀY TRƯỚC"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "NHỮNG CÂU CHUYỆN NHỮNG MỘT NGÀY TRƯỚC"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "Bảo vệ bạn bè khỏi các giám thị"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "Khi con cá lớn trở về để ăn thịt con"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "MỘT CÂU CHUYỆN MỘT NĂM TRƯỚC"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "Sử dụng tàu UMBRA để đưa nó ra khỏi khe băng."
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "GIẢI TIẾNG TIẾNG TRONG mọi xác chết"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "CRAYON DEVIL"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "(Tiếng Tây Ban Nha)"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "NHỮNG NGƯỜI TRONG SỰ HIỆN TIN"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "Nếu ít nhất là một lần."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "Khi bất cứ ai dám đụng vào nó."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "SPIKE WALL LAUNCH"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Chờ tín hiệu!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Chạy đi!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "Con dao vẫn thay đổi!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "Trừ INK [TIẾNG TIẾNG]"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "time {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "NGÀY NAY"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Đặt dưới UMBLELA!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "RAIN  hạ gục anh - Hãy đánh nhau"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Mọi người đều ở trong rừng!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14 - 3 LINKES"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Kiểm tra mọi người đi!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "Các cô gái với 1 con cá voi!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "TEM KỂ LẠI"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60-SECOND BOENE giải phóng!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "VÒNG {0}/3    CÒN {1:0.0} giây"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "GOALS {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "ĐIỀU CHỈNH VỊ TRÍ VÀ GÓC ĐỂ PHẢN XẠ TIA LASER!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "HOÀN THÀNH VÒNG {0}!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "HẾT GIỜ! BẮT ĐẦU LẠI VÒNG NÀY"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON DEVIL HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 ĐỌC VỚI LINH"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "Phude:  FBMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "BODDDEDED!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "Tất cả diễn viên tắt"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "Đi ra!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "Tránh xa TEM!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "Tránh ra!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "Đang ghi nhận...  {0}s"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Chạy, nhảy, xoay và dừng lại — hai bên đang học."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "GIAI ĐÃ {0}  - Không. {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Lấp một cái lên sàn phóng, rồi đạp lên cái công tắc đỏ!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Tất cả bọ hung đã bị tấn công!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Không có ông chủ nào khác."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "GIAI ĐÃ {0}  Hoàn tất vào"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Đánh bại đội CPU trong hình dạng của anh."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "GIAI ĐÃ {0}  Bỏ đi: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "GIAI ĐÃ {0} Nhanh lên!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Xác nhận vũ khí với công tắc đỏ. FNém bom CLCK: tên lửa"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Cô bé đã sẵn sàng! Nhắm bằng con chuột và nhấp chuột."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "CPU TEM đã bị phá hủy!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "- Được rồi!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "NGÀY NAY"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Hết giờ!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Mọi người xuống rồi!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Không được! Khởi động lại từ đầu trong 3 giây."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 Chuẩn bị tinh thần"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Chạy bên phải! Dùng khẩu súng!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "TIẾNG BAO GIỜ!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "Mọi người đều là con gái"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Chạy!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Coi chừng cái máy bay!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "Lùi lại! MỘT CÂU"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "SAFE FLOTS {0} / DOP IN {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Đứng trên sườn núi!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "TẤT CẢ CÂU CHUYỆN"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "NHỮNG CÂU CHUYỆN"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "Tìm thấy rồi!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "ĐÃ ĐÃ ĐÃ HÌNH"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8 ăn 8- 3"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "HÃY QUAN BÁO CẢNH BÁO VÀ CÂU HỎI"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "Bắt đầu! Bỏ đi."
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "(Tiếng Tây Ban Nha)"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 CRAYON"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER Phòng tiếp theo"
+    },
+    {
+      "key": "boss_appears",
+      "value": "Cảnh báo!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "ĐÃ ĐÃ ĐÃ ĐÃ ĐỂ ĐÃ ĐÃ ĐÃ ĐÃ ĐÃ TRỞ"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Bảo vệ! Bobby là bất khả xâm phạm."
+    },
+    {
+      "key": "boss_charge",
+      "value": "CHAGE! Tránh đường"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "GIÚP TRONG {0}Đến chỗ những chú chim"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Tuyệt vời! NHỮNG CÂU CHUYỆN"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "BODDDEDED!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Tất cả ra ngoài..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "Phòng chờ  {0} / {1}  Đi nào!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 HURDLE SURVIVAL"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Một trong những trang web này!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "HÃY VỚI NHỮNG CÂU CHUYỆN TỪ VỚI 60 THÁNG 2"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "HÃY xem từ bên phải"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "JUMP!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Nhanh lên!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Nhanh lên!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Tiêu rồi! (Tiếng Tây Ban Nha)"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "TẤT CẢ CÂU CHUYỆN"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "ĐÃ ĐÃ ĐÃ ĐÃ ĐÃ ĐÃ!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "Tìm thấy"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 TIẾNG BẠN"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "Bạn bè MOVING"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "NHỮNG NGƯỜI NHỮNG NGƯỜI NHỮNG NGƯỜI NHỮNG NGƯỜI NHỮNG MỘT NHỮNG NGƯỜI NHỮNG NGƯỜI NHỮNG NGƯỜI"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 Bảo vệ bạn bè"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "Không!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "Chạy trốn, hiếp dâm, đánh đập, đánh đập"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "NEXT người bạn trong  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Mang theo một người bạn mới..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "ESCOTTER!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "MỘT NGƯỜI BẠN ĐÃ ĐÃ TRỞ THÀNH"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "HÌNH {0}/ 3 BULLLLL {1:0.0}s"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "HÃY VỚI NHỮNG NGƯỜI ĐỂ CÓ MỘT CÂU CHUYỆN"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Đi! HÃY GIÚP BẠN ĐỂ TRONG NGƯỜI"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "HÌNH {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "HÌNH {0} Nhanh lên!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "VÒNG {0}/3    CÒN {1:0.0} giây"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "HOLES {0}/{1}    Đem theo tất cả các cháu!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "HOÀN THÀNH VÒNG {0}!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "HẾT GIỜ! BẮT ĐẦU LẠI VÒNG NÀY"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "BỊT CÁC LỖ LẠI!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "HÌNH {0}/3    {1:0.0}Bỏ"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "BALLS {0}/{1}    Đưa họ về nhà!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "Đem chiếc xe đi khắp nơi với chiếc khăn!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "HÌNH {0} Nhanh lên!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Hết giờ! NHỮNG NHỮNG NHỮNG NHỮNG NGƯỜI NHỮNG NHỮNG NHỮNG NHỮNG NHỮNG NHỮNG NHỮNG NHỮNG NHỮNG NÀY"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Đi với vợ anh! Hơn nữa INK Ý nghĩa của từ MAGNETIS"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "Bắt đầu!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "ĐÃ MỘT VÌ TRONG CÒI MỘT NGƯỜI!\nHÃY VỚI NHỮNG NGƯỜI"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "NGƯỜI BẠN CÓ THỂ VỚI CÂU CHUYỆN VÀ GIA ĐÌNH"
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "Bạn bè bắt đầu"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "Anh bạn Bell!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "GAME Over"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Anh không thể đánh nhau trong khi người bạn đang di chuyển."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RACOCY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "HÌNH {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "NHỮNG NGƯỜI ĐỂ ĐỂ ĐỂ ĐÃ TRỞ VỚI BẠN"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Ra khỏi đây! CÂU CHUYỆN"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 Âm thanh!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Bạn Spawner"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Người bạn đích thực"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Nền bạn bè"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Ví dụ cầu đầu"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Seesaw"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Quay được"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Comment"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Spike"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Hỏa."
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Thủy."
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Thuốc độc"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Laser"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Đá rơi"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Máy bấm"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Điện"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Saw"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Bánh răng"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Bánh răng lớn"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Dây ròng rọc"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Con trượt"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Comment"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Pendulum"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Lỗ khóa"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Kết nối Giai đoạn"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Đồng hồ"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Phản hồi"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Chọn giai đoạn"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Rời khỏi phiên chạy"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Khởi động lại giai đoạn"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Rời khỏi phiên trực tuyến?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Rời khỏi đây với tư cách là chủ thể sẽ kết thúc phiên họp này cho tất cả mọi người. Rời đi?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Đi đi"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Liên kết như một cây cầu: cạnh phải được kết nối trong khi nó mở rộng sang trái."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Chia địa hình kết nối thành từng phần được chọn và liên kết."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Chia ra"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Phần riêng biệt là ON. Nó có thể gãy mà không cần hòa nhập và có thể liên kết riêng với nhau."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Phần riêng biệt đã được gỡ bỏ. Địa hình chạm vào có thể hợp nhất."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Kết nối sàn nhà và tường thành như một hình dạng địa hình."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Kéo để đặt một thẳng {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Độ dầy"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Độ dày của sàn và tường: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Thẳng"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Bức tranh trực tiếp là trên."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Hình vẽ đường thẳng bị cắt."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw Chế độ"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw Chế độ"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Chọn chế độ"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw Chế độ: space để đặt đối tượng."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Chọn chế độ: chọn và di chuyển các đối tượng đã có."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} Tự do bằng cách kéo."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Tầng miễn phí và bức vẽ trên tường."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Vị trí hình chữ nhật là trên."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Drew {0} là một đường dẫn được kết nối ({1} điểm)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Trở lại trình soạn thảo"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Trở lại trình soạn thảo  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Đã trở về từ cuộc thi. Tiếp tục chỉnh sửa sân khấu đi."
+    },
+    {
+      "key": "cancel",
+      "value": "Thôi"
+    },
+    {
+      "key": "retry",
+      "value": "Thử lại"
+    },
+    {
+      "key": "menu",
+      "value": "Trình đơn"
+    },
+    {
+      "key": "redraw",
+      "value": "Vẽ lại"
+    },
+    {
+      "key": "pen",
+      "value": "Không bút"
+    },
+    {
+      "key": "eraser",
+      "value": "Xóa"
+    },
+    {
+      "key": "shape_square",
+      "value": "Hộp"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Tròn"
+    },
+    {
+      "key": "shape_line",
+      "value": "Đường"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Xong!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Lùi"
+    },
+    {
+      "key": "brush_size",
+      "value": "Cỡ"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Dùng"
+    },
+    {
+      "key": "undo",
+      "value": "Hủy bước"
+    },
+    {
+      "key": "character_switch",
+      "value": "Đổi ký tự"
+    },
+    {
+      "key": "character_add",
+      "value": "Thêm"
+    },
+    {
+      "key": "character_delete",
+      "value": "Xoá Char"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Bộ màu chuyển đổi"
+    },
+    {
+      "key": "stage_select",
+      "value": "Chọn màn"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 nhóm, mỗi nhóm 3 giai đoạn. Hãy bật lên, rồi chọn một giai đoạn để chỉnh sửa."
+    },
+    {
+      "key": "debug_stage",
+      "value": "Trình gỡ lỗi 1-0"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Sửa 1- 1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Sửa: Off"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Sửa:"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "NEW"
+    },
+    {
+      "key": "stage_clear",
+      "value": "Giải phóng"
+    },
+    {
+      "key": "stage_locked",
+      "value": "ĐƯỢC"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Chế độ gỡ lỗi: mọi thế giới đều không được mở khóa. Chọn một sân khấu để chơi, hoặc xoay ON để chỉnh sửa nó."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2:Wall để tạo khối\n3: Bắt đầu 4: Goal 5:Scale 6:ight\nA/D/W/S: di chuyển máy ảnh Quay\nF5Cứu  F6:Test  EscQuay lại"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Tỷ lệ"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Cỡ"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Lưới"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Xoá"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Lưu"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Thử"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "Lùi  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Thiết lập trò chơi"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "Phím"
+    },
+    {
+      "key": "option_language",
+      "value": "Ngôn ngữ"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Chưa đâu."
+    },
+    {
+      "key": "locked_stage",
+      "value": "Những giai đoạn không có JSON quay lại giai đoạn gỡ lỗi."
+    },
+    {
+      "key": "human",
+      "value": "Con người"
+    },
+    {
+      "key": "cat",
+      "value": "Cat"
+    },
+    {
+      "key": "bird",
+      "value": "Chim"
+    },
+    {
+      "key": "turtle",
+      "value": "Rùa"
+    },
+    {
+      "key": "slime",
+      "value": "Slime"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 Bóng"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "Bữa tiệc nhanh"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "NHỮNG SỰ ĐỂ HIỆN"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Chọn một phần, sau đó nhấn hoặc kéo trên bản đồ để đặt nó."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Snap: {0} / {1:0.##} Lưới đơn vị"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Chọn một đối tượng trước."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Nó đã thay đổi. Bạn cũng có thể sử dụng Shift+ Quay."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Chiều cao thay đổi. Bạn cũng có thể sử dụng Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Kích cỡ thay đổi. Dùng bánh xe để co dãn cả hai trục."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Kéo một khu vực lớn hơn để đặt phần này."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Đã đặt {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Đã đặt {0} vào {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Đã chọn. Kéo để di chuyển và dùng bánh xe để thay đổi kích cỡ."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Không có gì để hủy bỏ."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Không chỉnh sửa lần cuối."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Không có gì để làm lại."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Làm lại bản chỉnh sửa."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Chọn một công tắc, nút, phím hoặc lỗ khóa để dùng làm nguồn liên kết."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Chọn một công tắc, nút, phím hoặc lỗ khóa làm nguồn liên kết."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Nguồn liên kết: {0}Chọn mục tiêu, rồi nhấn Link."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Đặt mã nguồn liên kết trước."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Chọn một đối tượng cần dùng làm mục tiêu liên kết."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Nguồn liên kết và mục tiêu phải là các đối tượng khác nhau."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Liên kết {0} phải {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Chọn một đối tượng đã liên kết trước."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Xóa liên kết."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Đã lưu: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Hiện nay chỉ có trong bộ biên tập Hợp nhất."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Nhà máy sản xuất vật thể bị mất tích."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Comment"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 BLLLLT"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Name"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Bố già! Tất cả NICO DRAW Nhanh lên!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} Rời khỏi nhà"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "ĐÃ... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE BROWSER"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Tìm kiếm bằng hành động hay ID SE, rồi bấm nút Chơi để xem thử âm thanh đã gán. Qua một hàng để xem đường dẫn tài nguyên của nó."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "PLAY"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "Dừng lại"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "CÒA"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Không có hiệu ứng âm thanh khớp."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "Không tìm thấy SFX USAGE.md."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Chưa phân loại"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "ĐÃ"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Âm thanh tạo ra thời gian chạy"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "& In"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Cá"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Tinh thể tuyết"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Snowman"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Bluzzard"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Lông vũ"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Tổ chim"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Đường gió"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Ống"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Bolt"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Xích"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Steam"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Rùa"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Hourglass"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Padlock"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Bong bóng"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Tiểu Điệp"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "lip"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Skeeleton"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Dơi"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Nhện"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Lantern"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Chọn"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Trophy"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Huân chương"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Huýt sáo"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Bóng bay"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Confetti"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Pháo hoa"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Hoa Name"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Hình tròn"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Cầu nối"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Crayon"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Bút chì"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Xóa"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Sổ tay"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Bảng đen"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Bảng màu"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Chổi vẽ"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Canvas"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Đồng hồ bấm giờ"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Đèn sân khấu"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Microphone"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Pho mát"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Hộp ngạc nhiên"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Hộp quà"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Hành tinh"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Alien"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Sao chổi"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Name"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Bong bóng xà phòng"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Mos"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Gốc cây"
+    }
+  ]
+}

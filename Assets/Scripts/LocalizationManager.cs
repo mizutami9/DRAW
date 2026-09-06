@@ -34,6 +34,7 @@ namespace DrawBody.Prototype
             public string fallbackCode;
             public string[] resourcePaths;
             public string fontResourcePath;
+            public string[] systemFontNames;
             public string cultureCode;
             public float uiTextScale = 1f;
             public string listSeparator = " / ";
@@ -51,6 +52,7 @@ namespace DrawBody.Prototype
         private static readonly List<LanguageDefinition> languageDefinitions = new List<LanguageDefinition>();
         private static readonly Dictionary<string, LanguageDefinition> languageDefinitionsByCode = new Dictionary<string, LanguageDefinition>(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, Dictionary<string, string>> externalTables = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, Font> dynamicFonts = new Dictionary<string, Font>(StringComparer.OrdinalIgnoreCase);
         private static bool loadedLanguageDefinitions;
         private static bool loadedExternalTables;
 
@@ -903,7 +905,7 @@ namespace DrawBody.Prototype
             { "laser_relay_progress", "ゴール {0}/{1}" },
             { "laser_relay_hint", "身体の輪郭の角度が、そのままレーザーの反射角になる" },
             { "laser_relay_round_clear", "ラウンド {0} クリア！" },
-            { "laser_relay_timeout", "時間切れ！  ラウンド1からやり直します" },
+            { "laser_relay_timeout", "時間切れ！  このラウンドをやり直します" },
             { "flying_boss_hp", "クレヨンデビル  HP  {0} / {1}" },
             { "flying_boss_ready", "3・2・1  発進準備" },
             { "flying_boss_controls", "移動キー：床移動　マウス：照準　クリック：ミサイル　F：爆弾" },
@@ -989,7 +991,7 @@ namespace DrawBody.Prototype
             { "aquarium_seal_monitor", "ラウンド {0}/3    のこり {1:0.0}秒" },
             { "aquarium_seal_progress", "穴 {0}/{1}    体で全部ふさごう！" },
             { "aquarium_seal_round_clear", "ラウンド {0} クリア！" },
-            { "aquarium_seal_timeout", "時間切れ！  ラウンド1からやり直します" },
+            { "aquarium_seal_timeout", "時間切れ！  このラウンドをやり直します" },
             { "aquarium_seal_box_hint", "穴を塞げ！" },
             { "tilt_board_monitor", "ラウンド {0}/3    のこり {1:0.0}秒" },
             { "tilt_board_progress", "ボール {0}/{1}    穴に入れよう！" },
@@ -1677,7 +1679,7 @@ namespace DrawBody.Prototype
             { "laser_relay_progress", "GOALS {0}/{1}" },
             { "laser_relay_hint", "YOUR BODY OUTLINE ANGLE BECOMES THE LASER REFLECTION ANGLE" },
             { "laser_relay_round_clear", "ROUND {0} CLEAR!" },
-            { "laser_relay_timeout", "TIME UP!  RESTARTING FROM ROUND 1" },
+            { "laser_relay_timeout", "TIME UP!  RESTARTING THIS ROUND" },
             { "flying_boss_hp", "CRAYON DEVIL  HP  {0} / {1}" },
             { "flying_boss_ready", "3 - 2 - 1  READY TO LAUNCH" },
             { "flying_boss_controls", "MOVE: PLATFORM  CLICK: MISSILE  F: BOMB" },
@@ -1763,7 +1765,7 @@ namespace DrawBody.Prototype
             { "aquarium_seal_monitor", "ROUND {0}/3    {1:0.0}s LEFT" },
             { "aquarium_seal_progress", "HOLES {0}/{1}    PLUG THEM ALL WITH YOUR BODIES!" },
             { "aquarium_seal_round_clear", "ROUND {0} CLEAR!" },
-            { "aquarium_seal_timeout", "TIME UP!  RESTARTING FROM ROUND 1" },
+            { "aquarium_seal_timeout", "TIME UP!  RESTARTING THIS ROUND" },
             { "aquarium_seal_box_hint", "PLUG THE HOLES!" },
             { "tilt_board_monitor", "ROUND {0}/3    {1:0.0}s LEFT" },
             { "tilt_board_progress", "BALLS {0}/{1}    ROLL THEM INTO THE HOLES!" },
@@ -1865,10 +1867,29 @@ namespace DrawBody.Prototype
 
         public static Font LoadCurrentFont(Font fallback = null)
         {
-            string resourcePath = CurrentLanguageDefinition.fontResourcePath;
-            return string.IsNullOrEmpty(resourcePath)
-                ? fallback
-                : Resources.Load<Font>(resourcePath) ?? fallback;
+            return LoadFontForLanguage(currentLanguageCode, fallback);
+        }
+
+        public static Font LoadFontForLanguage(string languageCode, Font fallback = null)
+        {
+            LanguageDefinition definition = GetLanguageDefinition(languageCode);
+            if (definition == null) return fallback;
+            string resourcePath = definition.fontResourcePath;
+            Font resourceFont = string.IsNullOrEmpty(resourcePath)
+                ? null
+                : Resources.Load<Font>(resourcePath);
+            if (resourceFont != null) return resourceFont;
+
+            if (definition.systemFontNames != null && definition.systemFontNames.Length > 0)
+            {
+                if (!dynamicFonts.TryGetValue(definition.code, out Font dynamicFont) || dynamicFont == null)
+                {
+                    dynamicFont = Font.CreateDynamicFontFromOSFont(definition.systemFontNames, 32);
+                    if (dynamicFont != null) dynamicFonts[definition.code] = dynamicFont;
+                }
+                if (dynamicFont != null) return dynamicFont;
+            }
+            return fallback;
         }
 
         private void Awake()
@@ -2020,6 +2041,7 @@ namespace DrawBody.Prototype
             if (string.IsNullOrEmpty(definition.nativeName)) definition.nativeName = definition.code.ToUpperInvariant();
             if (definition.uiTextScale <= 0f) definition.uiTextScale = 1f;
             if (definition.resourcePaths == null) definition.resourcePaths = Array.Empty<string>();
+            if (definition.systemFontNames == null) definition.systemFontNames = Array.Empty<string>();
             languageDefinitions.Add(definition);
             languageDefinitionsByCode.Add(definition.code, definition);
         }

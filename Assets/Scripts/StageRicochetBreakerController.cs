@@ -133,7 +133,8 @@ namespace DrawBody.Prototype
             if (IsOnline() && !HasAuthority())
             {
                 phaseRemaining = Mathf.Max(0f, phaseRemaining - Time.deltaTime);
-                if (phase == Phase.Playing) remaining = Mathf.Max(0f, remaining - Time.deltaTime);
+                if (phase == Phase.Playing && !LocalMultiplayerDebugMode.NoTimeLimit)
+                    remaining = Mathf.Max(0f, remaining - Time.deltaTime);
                 if (ball != null) ball.SetReplicaTarget(replicaBallPosition, replicaBallVelocity);
                 RefreshDisplay();
                 return;
@@ -174,7 +175,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            remaining = Mathf.Max(0f, remaining - Time.deltaTime);
+            if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                remaining = Mathf.Max(0f, remaining - Time.deltaTime);
             if (ball != null) ball.SetCruiseSpeed(GetCurrentBallSpeed());
             if (ball != null && (Mathf.Abs(ball.transform.position.y) > OuterHalfHeight + 3f
                 || Mathf.Abs(ball.transform.position.x) > OuterHalfWidth + 3f))
@@ -188,7 +190,7 @@ namespace DrawBody.Prototype
                 PrepareNextBall();
                 BroadcastState(true);
             }
-            if (remaining <= 0f)
+            if (!LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f)
             {
                 BeginFailure();
             }

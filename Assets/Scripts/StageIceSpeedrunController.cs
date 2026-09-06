@@ -145,9 +145,10 @@ namespace DrawBody.Prototype
                 else if (!failed)
                 {
                     startFlashRemaining = Mathf.Max(0f, startFlashRemaining - Time.deltaTime);
-                    remaining = Mathf.Max(0f, remaining - Time.deltaTime);
+                    if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                        remaining = Mathf.Max(0f, remaining - Time.deltaTime);
                     if (Time.time >= nextMissileAt) FireMissileVolley();
-                    if (remaining <= 0f)
+                    if (!LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f)
                     {
                         failed = true;
                         retryRemaining = RetryDelay;

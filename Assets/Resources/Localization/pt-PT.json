@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "NOME DO JOGADOR"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter seu nome"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Por favor. enter Um nome de jogador."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER Seu nome aqui"
+    },
+    {
+      "key": "option_register",
+      "value": "REGISTO"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Japonês"
+    },
+    {
+      "key": "lang_en",
+      "value": "PT"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Limpo! Pressione R para tentar novamente."
+    },
+    {
+      "key": "draw_title",
+      "value": "Desenho (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: De volta ao jogo / ENTER: Decidir / ESC: Cancelar"
+    },
+    {
+      "key": "preview",
+      "value": "Antevisão"
+    },
+    {
+      "key": "clear",
+      "value": "Apagar"
+    },
+    {
+      "key": "decide",
+      "value": "Confirmar"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Restante"
+    },
+    {
+      "key": "current",
+      "value": "Atual"
+    },
+    {
+      "key": "part",
+      "value": "Parte"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw Primeiro o tronco."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso é a base. Draw Outras partes do marcador de ligação."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: comece a partir do marcador de conexão."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw O tronco antes de ligar outras partes."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} está ligado."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} não começou no marcador de conexão."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Torso é necessário antes de decidir."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} deve começar pelo marcador de ligação."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Pessoal  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Equipa  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Não é possível decidir: pessoal ink é {0:0.#}/{1:0}. Reduzi-lo por {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Não é possível decidir: equipe ink é {0:0.#}/{1:0}. Reduzi-lo por {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}: começar a partir do marcador."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Cabeçalho"
+    },
+    {
+      "key": "torso",
+      "value": "Torso"
+    },
+    {
+      "key": "left_arm",
+      "value": "Braço esquerdo"
+    },
+    {
+      "key": "right_arm",
+      "value": "Braço direito"
+    },
+    {
+      "key": "left_leg",
+      "value": "Perna esquerda"
+    },
+    {
+      "key": "right_leg",
+      "value": "Perna Direita"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Frente Esquerda"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Frente Direita"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Esquerda Recuar"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Recuar Direita"
+    },
+    {
+      "key": "tail",
+      "value": "Cauda"
+    },
+    {
+      "key": "left_wing",
+      "value": "Asa esquerda"
+    },
+    {
+      "key": "right_wing",
+      "value": "Asa Direita"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Pena de cauda"
+    },
+    {
+      "key": "slime_body",
+      "value": "Lixo"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Salto Normal"
+    },
+    {
+      "key": "jump_double",
+      "value": "Saltar x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Saltar x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Alcance Normal"
+    },
+    {
+      "key": "arm_long",
+      "value": "Longo Alcance"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Balanço Rápido"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Normal"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Interruptor pesado"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Pesado"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Perna {0:0.0}: {1}   Braço {2:0.0}: {3}   Torso {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Asas {0:0.0} INK / Velocidade de deslizamento {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "HABILIDADE HUMANA\nBraços {0:0.0} INK  Potência ×{1:0.00}\nPernas {2:0.0} INK  Salto ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "HABILIDADE DAS CATA\nPernas traseiras {0:0.0} INK  Velocidade ×{1:0.00}\nPernas dianteiras {2:0.0} INK  Gama de garras ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "HABILIDADE DO BIRD\nAsas {0:0.0} / 700 INK\nVelocidade de deslizamento {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "HABILIDADE DA TURTA\nEsperar SPACE: concha invencível\nEsperar F: vire 90° para a direção de frente"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "HABILIDADE DE SLIME\nCorpo {0:0.0} / 700 INK\nComprimento do espigão para cima {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "HUMANO"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "CAT"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "BIRD"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "TURTLE"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Mais pernas INK aumenta a potência de salto\nMais braço INK aumenta a potência de lançamento"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Mais pernas traseiras INK aumenta a velocidade de execução\nMais perna dianteira INK aumenta o intervalo de riscos"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Mais asa INK aumenta a potência de deslizamento"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Invencível enquanto escondido na concha"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Pressione F para um pico de ataque ascendente\nMenos INK torna mais longo / Salto de parede ativado"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: JOGO"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "FSCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "CONSERVAR SPACE: GLIDE  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "CONSERVAR SPACECONSELHO F: VOLTA 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: ATAQUE AO ESPIQUE"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Potência ×{0:0.00}  Salto ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Executar ×{0:0.00}  Gama de garras ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Potência flutuante {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACECHEFE  F: 90° TURN"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Comprimento do espigão para cima ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Braços {0:0.0}/280 Pernas {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Voltar {0:0.0}/240 Frente {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Asas {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Ativo somente enquanto o botão é mantido"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "Shell pronto"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE e F trabalhar enquanto segurava!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Corpo {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "BAIXO"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "ALTO"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "JOGAR"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "Correr"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "SCRATCH"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GLIDE"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "DEFESA"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "MOBILIDADE"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "CORPO INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "LUZ: GRIP up"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "VELOCIDADE + JUMP UP"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK DIMENSÃO {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "FLevanta-te! Menos INK = maior / Salto de parede ativado"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Mais para ligar!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Você não pode redesenhar depois que esta fase começou."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Plataforma Alta"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Interruptor pesado"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Extrema alavanca"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Buraco estreito"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "CASA DE QUARTO"
+    },
+    {
+      "key": "multi_participants",
+      "value": "JOGOS"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "QUARTO DE CRIAÇÃO"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "SALA DE CONJUNTOS"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "ID DO QUARTO"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "ENSAIO LOCAL (INVIDA OFF)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "VOCÊ"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "CÂVA MISSILA DE SLIME 9-1"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "O chão desaparece! ATACAR UMA Muralha"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "Erros de salto e salto!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 protege o teu amigo!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "FASE {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "TEMPO {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Defenda seu amigo de ambos os lados"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "AIRSTRIKE IN {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "Amigo abatido... ENTRAR {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Defensa livre!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "COIN {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "TEMPO {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "Quebrar caixas e recolher moedas!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "TEMPO EM 5"
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 moedas limpas!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "Força!"
+    },
+    {
+      "key": "title_single",
+      "value": "Um jogador"
+    },
+    {
+      "key": "title_multi",
+      "value": "Multijogador"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Opções"
+    },
+    {
+      "key": "option_back",
+      "value": "VOLTAR  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "VOLTAR  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "VOLTAR  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Sair"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "DEBATE DE CAPTURA DE TRAILER"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 relé aéreo de 4 jogadores"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Humano lança pássaro, em seguida, pássaro → gato → relé de lime"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "INÍCIO DA SEQUÊNCIA"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "VOLTAR  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "CARACTERÍSTICAS DO EDIT"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "Cabeçalho de aço"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "EXPORTAÇÃO 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "VOLTAR AO TÍTULO"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Verifique a composição e, em seguida, exporte o PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Salvo: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "A refazer..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "Os personagens só podem ser mudados na sala de estar."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY H HID HID     ESC  TÍTULO"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "TRAILER TAS RECORDER"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Arraste os atores enquanto estiver ociosos □ Overdub Humano → Pássaro → Gato → Slime F9 Gravar F10 Play P Pausa O Passo"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 RECORD/STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 TODOS"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 RESET TOMAR"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "CLEAR SELECTED"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "P PAUSA"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O PASSO"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "REGISTO"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "TODOS OS CAMINHOS"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "PAUSADO"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} □ Seleccionado: {1} | {2} Quadros {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "PRESET {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SAVE SHAPES"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Enquanto inactivo, arraste os caracteres para definir as suas posições iniciais"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Continuar"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Título"
+    },
+    {
+      "key": "language_settings",
+      "value": "Configuração da Língua"
+    },
+    {
+      "key": "multi_play",
+      "value": "MULTI JOGAR"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Correspondência Aleatória"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Privado"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Correspondência Aleatória"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "À procura de jogadores"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Pesquisando"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Combinando...\n\nJogadores 2 / 4\n\nVocê\nJogador 2\n□ Pesquisa\n□ Pesquisa\n\nÀ espera de..."
+    },
+    {
+      "key": "multi_room_title",
+      "value": "QUARTO"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Criar espaço"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Junte-se à sala"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Nome do Quarto\n[ Draw Juntos ]\n\nMax Jogadores\n< 4 >\n\nVisibilidade\n[Publico] [Privado]\n\nEtapa\n[Seleciona]\n\nRegra do Redraw\n[Pausa a todos]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Max Jogadores"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Visibilidade"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Visibilidade"
+    },
+    {
+      "key": "multi_public",
+      "value": "Público"
+    },
+    {
+      "key": "multi_private",
+      "value": "Privado"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Alternar"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Criar"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter o ID do lobby mostrado na tela da máquina.\n\nCom o EOS configurado, os amigos podem se juntar remotamente.\nSe utilizar o TCP Direct, enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter ID do lobby"
+    },
+    {
+      "key": "multi_join",
+      "value": "Entrar"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Atualizar"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "QUARTO LOBBY"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Sala: Draw Juntos\nID: ABC123\n2 / 4\n\nUm lobby jogável space\nJogue com caixas, bolas, e saltar almofadas enquanto espera."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Copiar ID"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Iniciar 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Seleccionar o Estágio"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "O palco seleciona desbloqueia quando todos estiverem prontos."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Deixar este quarto?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Sair"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Cancelar"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "O anfitrião está a escolher um palco..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Sair"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Combinando..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Só o anfitrião pode começar."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Sem identificação do lobby para copiar."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Identificação do lobby."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Código de quarto copiado."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Identificação de ligação copiada."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Desligado. Nenhum código de quarto está disponível."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Desligado"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Código"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Conectando..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Quarto"
+    },
+    {
+      "key": "multi_players",
+      "value": "Jogadores"
+    },
+    {
+      "key": "multi_local",
+      "value": "Local"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Prontos"
+    },
+    {
+      "key": "multi_wait",
+      "value": "Espera."
+    },
+    {
+      "key": "multi_host",
+      "value": "HOST"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Juntos"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Quarto Amigo"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Você"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "VOCÊ"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Máquina"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Jogador {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Falso jogo aleatório pronto."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Infra- estrutura falsa inicializada."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "A iniciar sessão..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Online como jogador de teste local."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Começar uma fase falsa."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Quarto privado criado."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Sala pública criada."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Entrou num quarto falso."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "TCP directo inicializado."
+    },
+    {
+      "key": "online_ready",
+      "value": "Online pronto. Anfitrião ou junte-se a um quarto."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Espaço criado. Compartilhe a identidade com seu amigo."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Não foi possível gravar: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "ID do quarto deve ser host-ip:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Sala de reunião..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Não foi possível entrar: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Na entrada esquerda."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Pronto mudado."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "A aceitação falhou."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} unido."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} deixou a sessão."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "O lobby está actualizado."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Fase inicial {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS inicializado. Configurar o Plugin EOS antes do login."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "EOS login..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "A interface EOS Connect não está pronta."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Falha na autenticação do EOS: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "Falha na criação do lobby pelo EOS: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "Quarto EOS criado. Partilha esta identificação do lobby."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter Uma identificação EOS Lobby."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter Um código de quarto."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Não foi possível registar o código da sala: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Falha na pesquisa do código da sala: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Nenhum espaço encontrado para o código {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "O código da sala colidiu. Por favor, crie o quarto novamente."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "A máquina abriu a selecção do palco."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "A máquina fechou o palco seleccionado."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "O lobby de adesão da EOS falhou: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Entrou na sala da EOS."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Saiu da entrada da EOS."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Pronto."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Não estou pronto."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Falha na criação do ID do dispositivo EOS: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Criando ID do dispositivo EOS..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Falha na autenticação do ID do dispositivo EOS: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS online como {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Membros do lobby atualizados."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "O EOS não está ligado. Configure primeiro o plug-in EOS e o login."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "O EOS está desativado."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "NÍVEL CONCLUÍDO!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Nível {0} concluído!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Concluído!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Seguinte: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Seleção de nível"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Todos os níveis concluídos!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Etapa {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "MUNDO {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "CARACTERÍSTICAS DISPONÍVEIS"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "USE: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "CRIADOS"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "NÃO CRIADO"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} não está disponível nesta fase."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Outro jogador já está usando {0}. Escolha um caracter disponível."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "SWAP DE CARACTER"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} está em uso. Pressione COMPLETE para solicitar um swap."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} quer trocar o seu {1} em vez {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "DECLINE"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "À espera de uma resposta ao pedido de swap..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Personagens trocados!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "O pedido de swap foi recusado."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "O outro jogador não pôde ser encontrado."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "DISPENSADOR DE CÉU"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100g SCALE"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "PORTA DE PESO"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "BUTTO DE AMIGOS"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "JOGADOR ÚNICO FLOOR"
+    },
+    {
+      "key": "species_human",
+      "value": "Humano"
+    },
+    {
+      "key": "species_cat",
+      "value": "Gato"
+    },
+    {
+      "key": "species_bird",
+      "value": "Pássaro"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Tartaruga"
+    },
+    {
+      "key": "species_slime",
+      "value": "Lixo"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Objetos"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Ligações"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Arraste o personagem para iniciar o jogo de teste a partir dessa posição. A desova do estágio salvo não é alterada."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "A mover a posição de início do teste."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Início do teste: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Não foi possível salvar: {0} erro( s). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Salvo: {0} ({1} aviso(s)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Criar espaço\nNome do quarto\nO que é isso?\nPúblico / Privado\n\nJunte-se à sala\nID do quarto [...]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Arraste para o local / Clique para selecionar / WASD para mover\nDecoração: Roda para escala / Shift + roda para girar\nCtrl + roda: ampliar todo o estágio"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} objetos selecionados"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Os objetos totalmente fechados pela caixa serão selecionados."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Seleccionado {0} objectos. Arraste um objeto selecionado para movê- los juntos."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Nenhum objeto é totalmente fechado pela caixa de seleção."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Movido {0} os objetos selecionados juntos."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Categoria"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Pesquisar"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Tipo"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Procurar palavra"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Lista de Objectos"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Lista de Links"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "W..."
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "H..."
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Refazer"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Copiar"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Objeto copiado."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ Direita"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ Down"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← ESQUECIDO"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ UP"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Copiar direção: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Objeto copiado flush toward {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Posição: X {0:0.00} / Y {1:0.00} (setas-chaves)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Potência de lançamento"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Mover a Distância"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Velocidade de movimento"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Fusível (seg)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Atraso do Crumble (seg)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Explosões necessárias"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Velocidade do cinto"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Intervalo de Queda (seg)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Intervalo de feixes (seg)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Tamanho da Caixa"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Tamanho da Bomba"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Tamanho do Spike"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Distância de movimento: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Velocidade de movimento: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Fuse time: {0:0.0} seg"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Atraso na curva: {0:0.0} seg"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "durabilidade da parede: {0:0} explosões"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Velocidade do cinto: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Intervalo de largada: {0:0.0} seg"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Tamanho da caixa largada: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Tamanho do pico caído: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Tamanho da bomba fabricada: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Direção: ← Esquerda"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Direção: Direita →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Direcção do transportador: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Caixas:"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Caixas: Quadrado"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Caixas: Redonda"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Caixas: Triângulo"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Bombas: Alternar ambas"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Bomba: Fusível em Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Bomba: Fusível na coleta"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Caixas largadas: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Bombas: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Mover direção: {0:0}° (Shift + roda)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Potência de lançamento: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Por Jogador"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Escala de peso de desencadeamento definido para {0:0} INK por jogador."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter um número de 1 a 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "CAPA PESSOAL"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "PAC DAS EQUIPES ({0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "DIMENSÃO DA PEN"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "PARTE CLARA"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "RESETIR TODOS"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Reencontrar tudo?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Apagar cada parte do corpo e restaurar o personagem original."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "RESET"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "CÂNCEL"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} PRESETOS"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "PRESETOS"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "APRESENTAÇÕES DE 5 CARACTER"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "VIDA DE GATO HUMANO"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "todos os cinco caracteres"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLOT {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "SAVED"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "EMPRESA"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SAVE"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "SET"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "SAVE PARA APRESENTAR {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Gravar o actual {0} desenho para predefinido {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Sobrescrever o {0} desenho em predefinido {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "SET PRESET {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Substituir o actual {0} desenho com predefinido {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Contexto"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Árvore"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Grama de fundo"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Flor"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Fundo Bush"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Nuvem"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Em segundo plano"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Seta"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Cara de Gato"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Cara de Cão"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Figura de Vara"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Sorridente"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Coração"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Estrela"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Lua"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Sol"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Chuva"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Raios"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Arco- íris"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Montanha"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Clover de quatro folhas"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Cogumelos"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Maçã"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Banana"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Melancia"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Donut"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Sorvete"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Copo de café"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Pizza"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Pão"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Avião de Papel"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Avião"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Rocket"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "UFO"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Balão de ar quente"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Casa"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Castelo"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Peito de tesouro"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Toupeira"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Fóssil"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Cristal"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Pot antigo"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Chave"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Chave para o Keyhole"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Espada"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Coroa"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Escudo"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Gem"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Moeda"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Osso"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Lâmpada de luz (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Artes"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Primavera"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Ímã"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Dados"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Bubble de Fala"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Marca de verificação ("
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Pergunta Marcos (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Marcos de Exclamação (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Seta de Ciclo"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "Salta!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Atira!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Comecem!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "Gol!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Rodar: Shift + roda (precisão de 0,5 graus)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Rodar: Shift + roda (15°), com Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Rodar: Shift + roda (15°), com Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Escala: roda do rato"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Acção"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Aparecer"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Desaparecer"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Desbloquear"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Mover"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Mover a Plataforma para a Direita"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Mover a Plataforma para cima"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Mover a Plataforma para a Esquerda"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Descer a Plataforma"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Acção de ligação: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Uma chave deve ligar-se a uma fechadura."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Chave para links de fechadura sempre usar Desbloquear."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Snap"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Ligação De"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Ligação Para"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Desvincular"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Adicionar: {0} / Snap: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Pos {1:0.0},{2:0.0}  Tamanho {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Largura = parede direita / Altura = teto (parede esquerda e borda inferior ficar fixo)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Frame"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Criou uma moldura em torno dos objetos colocados. Selecione-o para ajustar a parede direita e teto."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Parede montada exatamente entre o chão e o teto."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "OBJETIVO"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "QUARTO {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "BOMB"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MISSILE"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Prontos"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Contexto"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "JOGOS {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "FASE {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 antevisão: {0} jogador( s) / estágio {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Cor de Fundo"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Padrão"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Fechar"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Opacidade"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "A cor de fundo mudou. Guarde o palco para mantê-lo."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Modo de adição: {0}. Arraste no mapa para criá-lo."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Modo de adição: {0}. Clique no mapa para colocá-lo."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Seleccionado da lista."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Sem correspondência"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(nenhuma)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Terreno"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Início/objectivo"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Mudar"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Porta/Portão"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Movable"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Acção"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Armadilha"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Gimmick"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Inimigos"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Piso"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Parede"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Iniciar"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Objetivo"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Escala de equilíbrio"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Peso"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Limite máximo"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Meio andar"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Andar de sentido único"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Piso de Gelo"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Deslize"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Parede Escalada"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Corda"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Escada"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Piso em Nuvem"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Piso Quebrável"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Andar de Queda"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Andar em Movimento"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Andar pegajoso em movimento"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 REFLECT DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Atirar a bola com o corpo e quebrar NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "BLOCOS {0}  BALAS ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "TEMPO ATRÁS {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "Iniciar {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "ROUND {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "BALA {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "Próxima ronda {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "Três bolas perdidas! RETRY"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Afastem-se todos!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "INIMIGOS ESQUECIDOS {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Arma"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Parede quebrável por bala"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Planeta Spike"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag Flyer"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Orbit Flyer"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Bazuca"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Bombardeio Flyer"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Mover Bola Spike"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Pose Key"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Pose Keyhole"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Reboque"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Marca de Velocidade"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Marca de velocidade (forte)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Redraw Zone"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Balas necessárias"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Balas necessárias: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Andar rotativo"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Ponto de controlo"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Entrada de Dobra"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Saída de Warp"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Ponto de Respawn"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Objetivo Médio"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Efeito Objetivo"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Botão"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Botão de Peso"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Botão simultâneo"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Manter o Botão"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Caixa Triângulo"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Alavanca"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Alternar a Mudança"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Interruptor de tempo"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Sensor"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Mudança Vermelha"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Interruptor Azul"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Interruptor Verde"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Interruptor Amarelo"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Placa de pressão"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Controle Remoto"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Escala"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Porta"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Porta Tranca"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Shutter"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Cerca"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Portão Laser"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Porta de Cores"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Portão de sentido único"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Portão Temporizado"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Parede Quebrável"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Parede Oculta"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Caixa de Madeira"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Caixa de Ferro"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Bola"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Barril"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Rock"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Bloco de Gelo"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Caixa Flutuante"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Caixa de Borracha"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Bomba"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Bomba (Início do Fuso na Captura)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Criador de bombas"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Dinamite"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Inimigo Walker"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Inimigo Jumper"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Inimigo do Carregador"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Inimigo Voador"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Inimigo do atirador"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Spawner Inimigo"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Lançador de mísseis"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Activar"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Este dispositivo usa sempre o Ativar"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Intervalo de Lançamento"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Tamanho Inimigo"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Inimigo espaçado: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Tamanho inimigo: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Chave"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Moeda"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Estrela"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Bateria"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Balde"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Pular Pad"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Primavera"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Transportador Esquerda"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Transportador Direita"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Elevador"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Ventilador"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Ímã"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Cinto"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Descartador de Caixas"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Spike Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Peixes"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Moeda"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Estrela"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Relógio Digital"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Emissor de feixes"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Normal"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Prazo"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Sobrevivência"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}s"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "TODOS"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Regra da fase: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Tempo {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "TEMPO"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Pressione R para tentar novamente"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11- 2 SOBREVIVAÇÃO"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Um sobrevivente está limpo!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "Mova-se para o chão resplandecente"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "TARGET  {0:0}g (90g x JOGADORES)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "MULHER PARA A POSIÇÃO ANTES DA chuva"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Apanha o grão!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "PESO..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "REMOVER GRANDES NO FLOOR"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Afastem-se!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Tão perto!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "Grãos nas cabeças  {0:0}g / {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "RARE GRAIN TARGET ALCANCEU!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "Tente uma melhor forma de cabeça"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "FASE {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Apanha o crânio a explodir pela direita!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "O grão rápido atingirá os pontos marcados, um por jogador!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 ICE SPEEDRUN - UM JOGADOR ENCERRA"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Comecem!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "TEMPO ATRÁS {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Preparem-se!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Comecem!"
+    },
+    {
+      "key": "game_over",
+      "value": "Fim do Jogo"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Este corpo não se encaixa no início. Por favor, remodele-o mais pequeno."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Este corpo pode sair da sala. Por favor, ajusta o seu tamanho."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Prontos {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "RECOMENDADO"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "Nenhuma"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "NÃO MUDANÇAS DE CARACTERÍSTICAS OU REDUZIÇÕES APÓS DEVIDAS"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "NÃO MUDANÇAS DE CARACTERÍSTICAS APÓS DEVIDAS (REDAR OK)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Prepare-se para começar o jogo"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "RECOLHE O PEIXES ANTES DO TEMPO"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "DEFESA DO REI DE CRAÇÃO"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "DODGE OS FURTOS E SOBREVIVER"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "Encha cada buraco de aquário com seus corpos"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Use sua forma corporal para abrir o caminho"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "DODGE OS PILARES CAIDORES"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "Reflectir a bola e quebrar cada bloco"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "Puxe a bola com INK MAGNETS E SINK-LO"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "DODGE OS MISILES E SOBREVIVER"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "COLECÇÃO DE MOEDAS EM QUEDA"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "RECOLHE OS GRANDES DA QUEDA E AtingE O PESO ALVO"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Corre. Alcance o objetivo antes que o tempo acabe."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "RICÓCHETOS QUE LEVARAM A DEFESA DOS INIMIGOS"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "Ilumine a escuridão e escape dos fantasmas"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "Sobreviver até o tempo acabar"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "Bombas para quebrar cada bloco"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "CAIXAS DE RISCO E MOEDAS DE COLECÇÃO"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "COLETAR MOEDAS ANTES DO TEMPO"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "COLETAR MOEDAS ANTES DO TEMPO"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "DEFESA SEU AMIGO DOS INIMIGOS"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "CONSULTA A BOLA PARA DEFESA DOS INIMIGOS"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "ALCANCE O OBJECTIVO ANTES DO TEMPO"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "Use o UMBRELLA para ficar fora da chuva"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "DEIXE A LASER ATRAVÉS DE TODOS OS CORPOS PARA O GOLO"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "DEFESA DO DEVILO DE CRAYON"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "DEFESA DE CRAYON STALKER"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "DEFESA DOS INIMIGOS"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "Claro que pelo menos um jogador sobrevive."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "Afastem-se quando alguém chegar ao objectivo."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "LANÇAMENTO DE ESPIQUE"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Espera pelo sinal!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Corre para o golo!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "O vento continua a mudar!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "MENOS INK = Vento mais forte"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "TEMPO {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "TEMPO"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Fica debaixo do Umbrella!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "A chuva bate-te."
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Todos foram apanhados na chuva!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 LINKED SHIELDS"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Verifiquem cada botão!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "Erros de bloqueio com saltos de 1 segundo!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "RESTABELECIMENTO"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60 segundos de defesa livre!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "RONDA {0}/3    RESTAM {1:0.0} s"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "OBJECTIVOS {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "AJUSTEM AS POSIÇÕES E OS ÂNGULOS PARA REFLETIR O LASER!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "RONDA {0} CONCLUÍDA!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "TEMPO ESGOTADO! A REINICIAR ESTA RONDA"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "DEVILO DE CRAYON HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 Pronto para o lançamento"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "MISSILE  F: BOMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "Chefe defenido!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "Todas as plataformas para baixo"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "Desapareçam!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "O alvo é deixar a equipa!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "SUCTION - Mexam-se!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "A gravar o movimento...  {0}s"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Corra, pule, vire e pare — seu duplo está aprendendo."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "FASE {0}  Dúvidas à esquerda: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Atraia um no chão de lançamento, e depois pise no interruptor vermelho!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Todas as duplas derrotadas!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Nunca houve outro chefe."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "FASE {0}  INÍCIO"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Derrote a equipe de CPU usando seus formulários exatos."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "FASE {0}  Esquerda: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "FASE {0} Afastem-se!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Reivindicar armas com interruptores vermelhos. FBomba de lançamento CLICK: míssil"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Míssil pronto! Apontar com o mouse e clique."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "Equipa de CPU desactivada!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "BATALHA FINAL LIVRE!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "TEMPO"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Tempo!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Todos para baixo!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Falhado! Recomeçando do início em 3 segundos."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 PREPARAR"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Corre para a direita! Usem as armas verdes!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "A perseguição foi decretada!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "Todos foram apanhados."
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Corre!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Cuidado com o chão resplandecente!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "Sobreviver! TEMPO ESQUECIDO"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "FLOORES SEGUROS {0} / DROP IN {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Fiquem no chão seguro!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "TODOS OS JOGOS FORA"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "RESTARTAR EM SÓ"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "Survivor encontrado!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "LIVRE SOBREVIVAÇÃO"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "Sobrevivência de 8- 1 PILARES"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "ASSISTA À AVISO E AO DODGE DOS PILARES"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "A entrar! DEIXE A ZONA GLOBAL"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "PILLAR SOBREVIVAÇÃO LIVRE!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 RAYON REI"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER O QUARTO PRÓXIMO"
+    },
+    {
+      "key": "boss_appears",
+      "value": "Atenção, chefe!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "FOGO PARA ATACAR / TURTILHAR FICHA PARA FICAR"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Guarda! O BOSS É INVULNERÁVEL"
+    },
+    {
+      "key": "boss_charge",
+      "value": "Atacar! Sai da frente."
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "TRANSPOSIÇÃO {0}Vão para os andares altos."
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Ataque especial! DODGE OS RICOCHETS"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "Chefe defenido!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Todos os jogadores fora..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "Sala de espera  {0} / {1}  Juntem-se!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 SOBREVIVAÇÃO HURRIDA"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Um sobrevivente está limpo!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "Saltar à direita por 60 segundos"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "OBSERVAÇÕES À DIRETA"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "Salta!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Saltar as entranhas!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Devagar... pega na respiração!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Rápido! SPRINT FINAL!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "TODOS OS JOGOS FORA"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "Sobrevivência difícil limpa!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "ENCONTRADO O SOBREVIVIDO"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 ESCORTE O AMIGO"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "MUDANÇA DE AMIGOS"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "Construiu um caminho com caixas, plataformas e seu corpo"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 PROTEJA O AMIGO"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "AAAH!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "EQUIPAMENTOS, CAIXAS E INIMIGOS"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "Próximo AMIGO EM  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Preparando um novo amigo..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "ESCORTE COMPLETA!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "O AMIGO ACONTECEU O OBJETIVO"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "ROUND {0}/3 CONSTRUÇÃO {1:0.0}s"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "Conecte um caminho com o seu corpo"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Vai! AJUDA AO AMIGO A TOMAR O OBJETIVO"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "ROUND {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "ROUND {0} Afastem-se!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "RONDA {0}/3    RESTAM {1:0.0} s"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "HOLES {0}/{1}    Encham-nos com os vossos corpos!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "RONDA {0} CONCLUÍDA!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "TEMPO ESGOTADO! A REINICIAR ESTA RONDA"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "TAPEM OS BURACOS!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "ROUND {0}/3    {1:0.0}s ESQUERDA"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "BOLAS {0}/{1}    Leva-os para os buracos!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "Puxar a bola através do maze com magnetismo!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "ROUND {0} Afastem-se!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Tempo! RETIRANDO ESTA VOLTA"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Mexe-te na tua terra! MAIS INK Significa MAGNETISMO MAIS FORTE"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "VOLTA FINAL: Atinga a cobra acima!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "Construiu um caminho através da fenda acima!\nCONECTAR COM O SEU CORPO"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "O amigo pode andar na sua cabeça e no seu corpo."
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "INÍCIO DE AMIGOS"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "O amigo caiu!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "Fim do Jogo"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Não podes voltar atrás enquanto o amigo se move."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET RELAY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "ROUND {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOCHET BULLÉM AMIGOS PARA O ALVO"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Fora de AMMO! RESTARTING"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 round limpo!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Amigo Spawner"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Objetivo Amigo"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Friend-Pass Floor"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Exemplo da ponte principal"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Seesaw"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Mesa giratória"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Canhão"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Catapulta"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Spike"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Fogo"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Água"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Veneno"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Laser"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Rocha Caindo"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Máquina de Imprensa"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Eletricidade"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Serra"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Buraco Negro"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Artes"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Big Gear"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Polia de corda"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Barra deslizante"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Barra rotativa"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Pêndulo"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Chaveiro"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Limite do Estágio"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Relógio"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Contador"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Seleccionar o Estágio"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Deixar a Sessão"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Reiniciar a Etapa"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Deixar a sessão online?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Sair como anfitrião irá terminar esta sessão para todos. Sair?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Sair"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Ligado como uma ponte: a borda direita permanece conectada enquanto se estende para a esquerda."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Dividir o terreno conectado em peças individualmente selecionáveis e interligadas."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Separar"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "A parte separada está ligada. Ele pode se encaixar sem mesclar e pode ser ligado individualmente."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "A parte separada está desligada. O terreno sensível pode fundir-se."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Conectou o chão e a parede como uma forma de terreno."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Arraste para colocar uma reta {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Espessura"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Espessura do piso e da parede: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Direita"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "O desenho em linha reta está ligado."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "O desenho em linha reta está desligado."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw modo"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw modo"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Modo de seleção"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw modo: arrastar ao vazio space para colocar objetos."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Modo de seleção: selecione e mova os objetos existentes."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} livremente arrastando."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "O chão livre e o desenho da parede estão ligados."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "A colocação do retângulo está ligada."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Drew {0} como um caminho conectado ({1} pontos)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Voltar ao editor"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Voltar ao editor  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Regressado do jogo de teste. Continua a editar o teu palco."
+    },
+    {
+      "key": "cancel",
+      "value": "Cancelar"
+    },
+    {
+      "key": "retry",
+      "value": "Tentar novamente"
+    },
+    {
+      "key": "menu",
+      "value": "Menu"
+    },
+    {
+      "key": "redraw",
+      "value": "Redesenhar"
+    },
+    {
+      "key": "pen",
+      "value": "Caneta"
+    },
+    {
+      "key": "eraser",
+      "value": "Borracha"
+    },
+    {
+      "key": "shape_square",
+      "value": "Caixa"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Círculo"
+    },
+    {
+      "key": "shape_line",
+      "value": "Linha"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Feito!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Voltar"
+    },
+    {
+      "key": "brush_size",
+      "value": "Tamanho"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Usado"
+    },
+    {
+      "key": "undo",
+      "value": "Desfazer"
+    },
+    {
+      "key": "character_switch",
+      "value": "Mudança de Caracteres"
+    },
+    {
+      "key": "character_add",
+      "value": "Adicionar Caracter"
+    },
+    {
+      "key": "character_delete",
+      "value": "Apagar o Caracter"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Mudar o Caracter"
+    },
+    {
+      "key": "stage_select",
+      "value": "Seleção de nível"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 grupos, 3 estágios cada. Activar Editar Ligar e depois escolher um palco para o editar."
+    },
+    {
+      "key": "debug_stage",
+      "value": "Depurar 1- 0"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Editar 1- 1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Editar: OFF"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Editar: ON"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "NOVO"
+    },
+    {
+      "key": "stage_clear",
+      "value": "LIVRE"
+    },
+    {
+      "key": "stage_locked",
+      "value": "BLOQUEADO"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Modo de depuração: todos os mundos estão desbloqueados. Escolha um palco para reproduzir ou ligue Editar para editá-lo."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2:Wall arrastar para criar blocos\n3: Começar 4: Objetivo 5: Escala 6: Peso\nA/D/W/S: mover a câmara Roda: zoom\nF5:Salvar  F6:Teste  Esc:Voltar"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Escala"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Tamanho"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Grelha"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Apagar"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Gravar"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Ensaio"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "VOLTAR  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Configuração do Jogo"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "Chaves"
+    },
+    {
+      "key": "option_language",
+      "value": "Língua"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Ainda não."
+    },
+    {
+      "key": "locked_stage",
+      "value": "Etapas sem JSON voltar para o estágio de depuração."
+    },
+    {
+      "key": "human",
+      "value": "Humano"
+    },
+    {
+      "key": "cat",
+      "value": "Gato"
+    },
+    {
+      "key": "bird",
+      "value": "Pássaro"
+    },
+    {
+      "key": "turtle",
+      "value": "Tartaruga"
+    },
+    {
+      "key": "slime",
+      "value": "Lixo"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 Bola atingida"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "PARTES RÁPIDAS"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "SELECÇÃO"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Escolha uma parte e clique ou arraste no mapa para colocá-la."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Snap: {0} / {1:0.##} grelha unitária"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Selecione um objeto primeiro."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "A largura mudou. Você também pode usar Shift+ Roda."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "A altura mudou. Você também pode usar Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "O tamanho mudou. Use a roda para escalar ambos os eixos."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Arraste uma área maior para colocar esta parte."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Colocado {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Colocado {0} em {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Seleccionado. Arraste para mover e use a roda para redimensionar."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Não há nada para desfazer."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Desfazer a última edição."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Não há nada para refazer."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Redid a edição."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Selecione um interruptor, botão, chave ou buraco de chave para usar como origem do link."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Escolha um interruptor, botão, chave ou buraco de chave como a origem do link."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Origem da ligação: {0}. Selecione seu alvo e, em seguida, pressione Link To."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Defina uma origem de ligação primeiro."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Selecione um objeto para usar como alvo do link."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "A origem do link e o alvo devem ser objetos diferentes."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Ligado {0} para {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Selecione um objeto vinculado primeiro."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Limpei a ligação."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Salvo: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "A gravação está actualmente disponível apenas no Editor Unity."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Falta a fábrica de objectos de palco."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Luz de trânsito"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 BLOCK CRASH"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Quebrador de Blocos"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Atirem bombas! RENDER TODOS NICO DRAW Bloqueios!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} BLOCOS ESQUECIDOS"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "Falhado... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE BROWSER"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Pesquisa por ação ou ID SE, em seguida, pressione Play para visualizar o som atribuído. Passe uma linha para ver o seu caminho de recursos."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "JOGAR"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "PARE"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "RELOADE"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Sem efeitos sonoros correspondentes."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE. md não foi encontrado."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Sem categoria"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "MUTADOS"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Som gerado em tempo de execução"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Paw Print"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Peixes"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Bola de Fio"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Cristal de Neve"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Icículo"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Snowman"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Blizzard"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Pena"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Ninho de pássaro"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Linhas de Vento"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Tubo"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Bolt"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Cadeia"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Vapor"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Tartaruga"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Ampulheta"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Cadeado"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Lixo"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Bolhas"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Borboleta"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Joaninha"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Girassol"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Tulipa"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Esqueleto"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Bat"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Teia de aranha"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Estalactite"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Lanterna"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Minecart"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Pickaxe"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Troféu"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Medalha"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Assobio"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Balão"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Confete"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Fogos de artifício"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Torre"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Binóculos"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Ponte"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Crayon"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Lápis"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Borracha"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Notebook"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Blackboard"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Paleta"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Pincel"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Tela"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Stopwatch"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Destaque"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Microfone"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Queijo"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Caixa surpresa"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Caixa de presentes"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Planeta"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Alienígena"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Cometa"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Buraco Negro"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Bubble de Sabão"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Musgo"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Raiz da Árvore"
+    }
+  ]
+}

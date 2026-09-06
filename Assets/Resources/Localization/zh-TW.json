@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "劇名"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter 名稱"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "請 enter 玩家名稱。"
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER 你的名字在這裡"
+    },
+    {
+      "key": "option_register",
+      "value": "檢索"
+    },
+    {
+      "key": "lang_ja",
+      "value": "日本語"
+    },
+    {
+      "key": "lang_en",
+      "value": "EN 環境"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "讓開! 按 R 重試 。"
+    },
+    {
+      "key": "draw_title",
+      "value": "設計TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: 回到遊戲 / ENTER: 決定/ ESC: 取消"
+    },
+    {
+      "key": "preview",
+      "value": "預覽"
+    },
+    {
+      "key": "clear",
+      "value": "清除"
+    },
+    {
+      "key": "decide",
+      "value": "確認"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "剩餘"
+    },
+    {
+      "key": "current",
+      "value": "當前"
+    },
+    {
+      "key": "part",
+      "value": "編"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw 先用軀幹"
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "托爾索是基地. Draw 其他部分從他們的連接標記。"
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}:從連接標記開始。"
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw 在連接其他部件之前先使用軀幹。"
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} 已連接。"
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} 未從連接標記開始 。"
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "在決定前需要托爾索."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} 必須從連接標記開始。"
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "個人  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "團隊  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "無法決定: 個人 ink 實值 {0:0.#}/{1:0}。將其減少 {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "無法決定: 團隊 ink 實值 {0:0.#}/{1:0}。將其減少 {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}:從標記開始。"
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "頭"
+    },
+    {
+      "key": "torso",
+      "value": "托爾索"
+    },
+    {
+      "key": "left_arm",
+      "value": "左臂"
+    },
+    {
+      "key": "right_arm",
+      "value": "右臂"
+    },
+    {
+      "key": "left_leg",
+      "value": "左腳"
+    },
+    {
+      "key": "right_leg",
+      "value": "右腳"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "左前邊"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "右前衛"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "左邊"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "右後邊"
+    },
+    {
+      "key": "tail",
+      "value": "尾礦"
+    },
+    {
+      "key": "left_wing",
+      "value": "左轉"
+    },
+    {
+      "key": "right_wing",
+      "value": "右轉"
+    },
+    {
+      "key": "tail_feather",
+      "value": "尾發"
+    },
+    {
+      "key": "slime_body",
+      "value": "輕而易舉"
+    },
+    {
+      "key": "jump_normal",
+      "value": "普通跳躍"
+    },
+    {
+      "key": "jump_double",
+      "value": "跳轉 x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "跳轉 x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "正常範圍"
+    },
+    {
+      "key": "arm_long",
+      "value": "長距離"
+    },
+    {
+      "key": "arm_fast",
+      "value": "快速搖擺"
+    },
+    {
+      "key": "torso_normal",
+      "value": "常規"
+    },
+    {
+      "key": "torso_switch",
+      "value": "重開關"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "重型"
+    },
+    {
+      "key": "ability_summary",
+      "value": "腳 {0:0.0}: {1}   武裝 {2:0.0}: {3}   托爾索 {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "翅膀 {0:0.0} INK / 滑動速度 {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "人 的 責任\n軍火 {0:0.0} INK  動力×{1:0.00}\n腳 {2:0.0} INK  跳動×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "《禁止酷刑公約》的責任\n後腳 {0:0.0} INK  速度×{1:0.00}\n前腳 {2:0.0} INK  膝蓋範圍×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "布隆迪\n翅膀 {0:0.0} / 700 INK\n滑動速度 {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "轉動能力\n別動 SPACE: 無敵外殼\n別動 F:向正向方向轉90°"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "靈活性\n體質 {0:0.0} / 700 INK\n向上斜拉長 {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "人力資源"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "《禁止酷刑和其他殘忍、不人道或有辱人格的待遇或處罰公約》(CAT)"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "百慕大"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "土耳其"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "蘇里南"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "再來一條腿 INK 增加跳動功率\n再來一臂 INK 增加拋出功率"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "再來個後腿 INK 增加運行速度\n更多前腳 INK 增加抓取範圍"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "增加機翼 INK 增加滑翔動力"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "隱藏在外殼中不可戰勝"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "新聞 F 向上猛烈攻擊\n減 INK 使其更長 / 牆跳啟用"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F(THROW) (輕聲)"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCRATCH / GRAB (英語)."
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "持有 SPACE光線  F頁:1"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "持有 SPACE貝殼握住 F: TURN 90° (中文(簡體) )."
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F上面的斯皮克攻擊"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "動力×{0:0.00}  跳動×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "運行×{0:0.00}  膝蓋範圍×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "浮力 {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: 殼/  F: 90°TURN (中文(簡體) )."
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "向上斜拉長×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "軍火 {0:0.0}280個腿 {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "回來 {0:0.0}/240 前線 {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "翅膀 {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "僅在按住按鈕時激活"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "貝殼準備"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE 財務報告和審定財務報表 F 工作時被扣留!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "體質 {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "蘭克 {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "低聲"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "高級"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP 預覽"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "鳴叫"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "運行"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "尖叫聲"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "光線"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "國防"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "流動"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "機構 INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "燈光:"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "重:被設定 + Jump up"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK 錫茲 {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "F- 斯派克起來! 減 INK = 更長 / 牆跳啟用"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw 更多電力!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "在此階段開始後, 您無法重畫 。"
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1個高平臺"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2個重開關"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3遠"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4個窄洞"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "房間結構"
+    },
+    {
+      "key": "multi_participants",
+      "value": "玩家們"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "會議室"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "聯 合 室"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "房間代號"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "當地測試(關閉)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "你們"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9 -1 SLIME 導彈"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "佛羅爾・瓦尼斯通! 打開一圈"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "摔跤和DODGE派克導彈!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8 -3保護你的朋友!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "密碼 {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "時間 {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "保護好你的朋友"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "阿爾斯特里克英寸 {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "朋友下來... 進退兩難 {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "防禦完畢!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "科寧語Name {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "時間 {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "裂口和冰塊!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "時間到了..."
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100克林安全區!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "快點!"
+    },
+    {
+      "key": "title_single",
+      "value": "單人遊戲"
+    },
+    {
+      "key": "title_multi",
+      "value": "多人遊戲"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "設定"
+    },
+    {
+      "key": "option_back",
+      "value": "回來  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "回來  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "回來  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "離開"
+    },
+    {
+      "key": "title_debug",
+      "value": "吉布提"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "拖車電源"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1個4個玩家空中中繼器"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "人會扔鳥,然後是鳥會 貓會接力"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "開始安全性"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "回來  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "詞條"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "鋼鐵頭"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "出口 920x430 巴布亞新幾內亞"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "回到線上"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "檢查組成, 然後導出 PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "已保存 : {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "重寫..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "只有準備好的房間才能改變"
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "回答 隱蔽地     ESC  標 題"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "拖車塔斯記錄器"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "在閒暇時拖住演員 —— Overdub Human —— Bird —— Cat —— Slime —— F9 記錄 F10 播放暫停 O 步"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 記錄/STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 遊戲全部"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 回來"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "已選定"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "巴拉圭"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "步驟"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "標識"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "記錄"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "彈出所有的曲子"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "獲得通過"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} 選中 : {1} | {2} 幀QQ 速度 {3:0.##}頁:1"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "鋪設 {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "拯救薩菲斯"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "在閒置時, 拖動字符設置起始位置"
+    },
+    {
+      "key": "menu_continue",
+      "value": "繼續"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "標題"
+    },
+    {
+      "key": "language_settings",
+      "value": "語言設置"
+    },
+    {
+      "key": "multi_play",
+      "value": "穆萊蒂花樣遊戲"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "隨機匹配"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "私營"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "隨機匹配"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "尋找玩家"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "搜索中"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "正在匹配...\n\n玩家 2 / 4 個\n\n你\n○ 玩家2\n• 搜索\n• 搜索\n\n等著[READY]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "房間"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "創建房間"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "加入房間"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "房間名稱\n[ Draw 一起來\n\n最大玩家數\n< 4 >\n\n可見度\n[公 [私\n\n階段\n[熱量選擇]\n\n重排規則\n[暫停每個人]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "最大玩家數"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "可見度"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "可見度"
+    },
+    {
+      "key": "multi_public",
+      "value": "公開"
+    },
+    {
+      "key": "multi_private",
+      "value": "私營"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "切換"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "創建"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter 顯示在主機屏幕上的大廳ID。\n\n隨著EOS的配置,朋友可以遠程加入.\n如果使用直接 TCP, enter IP:7777 (英語)."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter 大廳代號"
+    },
+    {
+      "key": "multi_join",
+      "value": "聯合"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "刷新"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "辦公室"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "房間: Draw 一起來\n身份證:ABC123\n2,4 (簡體中文).\n\n一個可玩的大廳 space\n在等待時用盒子,球和跳墊來玩."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "複製標識"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "開始 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "階段選擇"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "當每個人都準備好時, 舞臺會選擇解鎖 。"
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "離開這個房間?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "離開"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "取消"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "主機正在選擇一個舞臺..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "離開"
+    },
+    {
+      "key": "multi_matching",
+      "value": "正在匹配..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "只有主機才能啟動."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "沒有大廳ID可以複製。"
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "複製前廳身份證"
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "密碼"
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "複製連接ID。"
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "離線 沒有房間代碼。"
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "離線"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "代碼"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "正在連接..."
+    },
+    {
+      "key": "multi_room",
+      "value": "會議室"
+    },
+    {
+      "key": "multi_players",
+      "value": "玩家"
+    },
+    {
+      "key": "multi_local",
+      "value": "當地"
+    },
+    {
+      "key": "multi_ready",
+      "value": "準備"
+    },
+    {
+      "key": "multi_wait",
+      "value": "等著"
+    },
+    {
+      "key": "multi_host",
+      "value": "危險"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw 一起來"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "朋友房間"
+    },
+    {
+      "key": "online_player_you",
+      "value": "你個"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "你們"
+    },
+    {
+      "key": "online_player_host",
+      "value": "東道主"
+    },
+    {
+      "key": "online_player_number",
+      "value": "玩家 {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "假隨機相接就緒."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "假後端初始化."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "正在登錄..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "作為本地測試玩家在線."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "假相相相相起起相相相相相相相相."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "創建了私人房間."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "創建了公共房間."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "入假相間."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "TCP直接初始化."
+    },
+    {
+      "key": "online_ready",
+      "value": "在線準備 接待或加入一個房間。"
+    },
+    {
+      "key": "online_room_created",
+      "value": "創建了房間。 和你的朋友分享身份證明"
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "主機失敗 : {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "房間ID必須是主機-ip:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "進入房間..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "加入失敗 : {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "左廳."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "準備改變。"
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "接受失敗 。"
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} 已經加入。"
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} 離開會話。"
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "大廳更新。"
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "開始階段 {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS初始化. 登錄前配置 EOS 插件 。"
+    },
+    {
+      "key": "online_eos_login",
+      "value": "EOS 登錄..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "EOS連接接口尚未準備好 。"
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "EOS 登錄失敗 : {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "EOS 創建大廳失敗 : {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "EOS室創建. 共享大廳的ID。"
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter 一個EOS大廳ID。"
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter 一個房間代碼。"
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "登記房間代碼失敗 : {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "房間代碼搜索失敗 : {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "找不到密碼的房間 {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "房間代碼相撞了 請再創建房間。"
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "主機打開階段選擇 。"
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "主機關閉階段選擇 。"
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS 加入大堂失敗 : {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "進入EOS室."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "左EOS大廳."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "準備好了"
+    },
+    {
+      "key": "online_ready_off",
+      "value": "還沒準備好"
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "EOS 設備標識創建失敗 : {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "正在創建 EOS 設備 ID..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "EOS 設備 ID 登錄失敗 : {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS 在線 {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "遊說團成員的最新情況。"
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS沒有登錄. 首先配置 EOS 插件並登錄 。"
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS已禁用."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "關卡完成！"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "關卡 {0} 完成！"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "完成！"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "下一關：{0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "關卡選擇"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "所有關卡已完成！"
+    },
+    {
+      "key": "stage_label",
+      "value": "階段 {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "世界 {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "易懂的術語"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "使用: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "撕毀"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "未刪除"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} 目前尚不具備。"
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "另一個玩家已經使用 {0}。選擇可用的字符。"
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "全系統方案"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} 正在使用中。 按 COMPLETE 請求互換 。"
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} 想和你交換 {1} 頁:1 {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "全部門辦法"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "DECLLINE 主題"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "等待對交換請求的回應..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "字符交換了!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "互換請求被拒絕."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "找不到另一個玩家 。"
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "嚴重損失"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100克短鏈氯化石蠟"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "韋克特・蓋特"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "朋友布頓"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "單向單向演奏"
+    },
+    {
+      "key": "species_human",
+      "value": "人類"
+    },
+    {
+      "key": "species_cat",
+      "value": "貓"
+    },
+    {
+      "key": "species_bird",
+      "value": "鳥"
+    },
+    {
+      "key": "species_turtle",
+      "value": "烏龜"
+    },
+    {
+      "key": "species_slime",
+      "value": "輕而易舉"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "對象"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "鏈接"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "拖曳字符從該位置開始測試播放 。 被保存的舞臺產卵沒有改變."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "移動試玩開始位置."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "測試開始: X {0:0.00} / Y 類型 {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "無法保存 : {0} 錯誤。 {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "已保存 : {0} ({1} 警告(s)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "創建房間\n房間名稱 [.\n玩家 2 / 3 / 4\n公營/私營\n\n加入房間\n房間編號 [...]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "拖放/ 單擊以選擇 / WASD 移動\n裝飾: 輪到縮放 / Shift + 輪到旋轉\nCtrl + 輪: 放大整個相機"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} 選中對象"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "框內完全封閉的物體將被選中。"
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "選中 {0} 對象。 拖動選定的對象將其移動在一起。"
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "選擇框中沒有完全封閉對象 。"
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "移動 {0} 將選定的對象合併。"
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "類別"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "搜索"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "類型"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "搜索單詞"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "對象列表"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "鏈接列表"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "維 -"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "風向+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "漢 -"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+ 語句"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "重做( R)"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "複製"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "對象已複製 。"
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "對"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "下來"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "左轉"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "起來"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "複製方向 : {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "對象複製到 {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "職位:X {0:0.00} / Y 類型 {1:0.00} (窄鍵)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "發射動力"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "移動距離"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "移動速度"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "引信( 秒)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Crumble 延遲( 秒)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "需要進行爆炸"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "帶狀速度"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "間斷( 秒)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "束相間( 秒)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "框大小"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "炸彈大小"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "斯派克大小"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "移動距離 : {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "移動速度 : {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "引信時間 : {0:0.0} 秒"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "曲折延遲 : {0:0.0} 秒"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "牆壁耐久性: {0:0} 爆炸"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "帶速 : {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "丟棄間隔 : {0:0.0} 秒"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "已丟棄的框大小 : {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "丟棄的懸崖大小 : {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "製造炸彈大小: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "方向:左轉"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "方向:對 →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "嚮導 : {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "專欄:"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "框:平方塊"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "框:圓形"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "方框:三角形"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "炸彈:備用炸彈"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "炸彈:噴出火花"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "炸彈:撿起炸彈"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "已丟棄的框 : {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "製造炸彈: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "移動方向 : {0:0}° (Shift + 輪子)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "發射功率: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "每個玩家"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "縮放觸發重量設定為 {0:0} INK 每個玩家。"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter 1至2000年的數字。"
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "人事管制"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "工作隊{0}頁:1"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "筆會"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "清除部分"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "聯發辦"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "全部收起來"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "保持一切嗎?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "切除身體的每一部分,恢復原作的性格."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "續"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "比利時"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} 筆記"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "筆記"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5個插圖"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "人類細胞結構"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "所有五個字符"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "皮膚 {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "救贖"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "緊急"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "拯救"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "標準"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "保存到鋪設 {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "保存當前 {0} 繪製到預設 {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "覆蓋 {0} 在預設中繪圖 {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "選題 {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "替換當前 {0} 預設繪圖 {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "背景情況"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "樹"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "背景草類"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "花開"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "背景情況"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "雲頭"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "背景介紹"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "箭頭"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "貓臉"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "狗臉"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "插圖"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "笑臉"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "心臟"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "星號"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "月亮"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "太陽"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "雨聲"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "閃電"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "彩虹"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "山區"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "四葉克羅弗"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "蘑菇"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "蘋果公司"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "香蕉"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "西瓜"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "甜甜圈"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "冰塊"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "咖啡杯"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "披薩"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "麵包"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "飛機"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "飛機"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "火箭"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "不明飛行物"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "熱氣球"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "房屋"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "城堡"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "寶藏胸"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "分子"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "化石"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "晶體"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "古詩"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "鍵"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "密鑰孔"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "劍"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "皇家"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "盾牌"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "寶石"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "銅"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "骨頭"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "輕活( Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "齒輪"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "春節"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "磁鐵"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "齒"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "語音泡泡"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "檢查馬克(%)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "問馬克(?"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "感嘆馬克(!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "循環箭頭"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "彈!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "擲出!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "開火!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "目標!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "旋轉: Shift + 輪( 0. 5度精度)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "旋轉: Shift + 輪( 15°), 有 Alt(1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "旋轉: Shift + 輪( 15°), 有 Alt(1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "縮放: 鼠標輪"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "行動"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "外觀"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "失蹤"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "解鎖"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "移動"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "將平臺向右移動"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "向上移動平臺"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "向左移動平臺"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "向下移動平臺"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "鏈接動作 : {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "鑰匙必須連接到鑰匙孔。"
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "密鑰孔鏈接的密鑰總是使用\"解鎖\"."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "座標"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "鏈接從"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "鏈接到"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "取消鏈接"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "添加: {0} / 抓取 : {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  假設 {1:0.0},{2:0.0}  大小 {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Width = 右牆 / 高 = 天花板(左牆和下邊緣保持不變)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "框架"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "圍繞放置對象創建了框架 。 選擇它來調整右邊的牆和天花板。"
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "牆完全安裝在地板和天花板之間。"
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "目標"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "房間 {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "炸彈"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "導彈"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "準備"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "帳篷"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "背景情況"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "玩家們 {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "階段 {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 預覽 : {0} 播放器/ 舞臺 {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "背景顏色"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "默認"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "關閉"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "不透明度"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "背景顏色已改變 。 省下臺來保住."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "添加模式 : {0}。拖動地圖創建它。"
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "添加模式 : {0}。單擊地圖將其放置。"
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "從列表中選擇 。"
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "無匹配"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(無)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "地形"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "開始/目標"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "切換"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "門/門"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "可移動"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "行動"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "陷阱"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "吉米克語Name"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "敵人"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "樓層"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "牆"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "開始"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "目標"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "餘額比額表"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "重量"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "上限"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "半樓"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "單行樓"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "冰層"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "滑動斜坡"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "可攀登的牆壁"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "繩子"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "梯子"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "雲層"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "可斷層"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "墜樓"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "移動平面"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "粘相移動一瓦樓"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 重試 DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "用你的身體彈出球並打破 NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "塊 {0}  球隊×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "時間調整在 {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "開始 {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "羅馬 {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "鈴聲 {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "下一個回合 {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3個球輸了! 厄立特里亞"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "所有 Rounds 安全了! (英語)"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "左邊的敵人 {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "槍"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "可拆彈牆"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "斯派克星球"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag 飛行器"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "軌道飛行器"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "巴藏岡"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "轟炸飛行器"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "移動 Spike 球"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Pose 鍵"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Pose 鍵孔"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "草稿"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "速度標記"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "速度標記( Strong)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "重新繪製區域"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "需要的項目"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "需要的項目數 : {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "旋轉平面"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "檢查站"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "轉動入口"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "扭曲退出"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "重生點"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "中期目標"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "目標效果"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "按鈕"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "重量按鈕"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "同時按鍵"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "按住按鈕"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "三角框"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "愛"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "切換切換"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "計時器切換"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "傳感器"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "紅色開關"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "藍色切換"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "綠色切換"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "黃色切換"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "壓力板"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "遠程控制"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink 縮放"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "門"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "已鎖定的門"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "關卡"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "柵欄"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "激光門"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "彩色門"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "單向門"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "計時門"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "可拆牆"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "隱藏牆"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "木盒"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "鐵盒"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "球頭"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "槍管"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "搖滾"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "冰塊"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "浮動框"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "橡膠盒"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "炸彈"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "炸彈( 開始拾取)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "炸彈製造者"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "火藥"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Walker 敵人"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "跳躍敵人"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "充電敵人"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "飛行敵人"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "射擊敵人"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "敵人Spawner"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "導彈發射器"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "激活"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "此設備總是使用激活"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "發射間隔"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "敵人大小"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "外生敵人: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "敵人大小 : {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "鍵"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "銅"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "星號"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "電池"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "彈匣"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "跳動紙"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "春節"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "左轉"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "向右轉"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "電梯"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "風扇"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "磁鐵"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "帶"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "盒式滴水器"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "斯派克滴水管"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "魚"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "銅"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "星號"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "數字時鐘"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "光束噴射器"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "常規"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "時間限制"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "生存"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}編號"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "頁:1{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "所有人"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "階段規則 : {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "時間 {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "時間"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "按 R 重試"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 倖存者"
+    },
+    {
+      "key": "survival_goal",
+      "value": "一個倖存者的清晰!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "移動到發花花"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "目標  {0:0}g (90克×玩家)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "行動起來,在雨前"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "抓住槍!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "歡呼..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "在油門上噴出槍聲"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "清空 清空 清空 清空 清空"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "這麼近!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "頭部的槍聲  {0:0}(單位:千美元) {1:0}頁:1"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "紅髮巨頭成功!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "嘗試更好的頭部"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "階段 {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "從右側追上大發雷霆!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "快速Grains會打 市場球員 - 一個人的玩家!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 IC SEEEDUN - 一個玩家完成"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "開火!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "時間調整在 {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "準備!"
+    },
+    {
+      "key": "survival_start",
+      "value": "開火!"
+    },
+    {
+      "key": "game_over",
+      "value": "遊戲結束"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "這傢伙在開始的時候並不合適。 請重排它小。"
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "屍體可能從房間出來。 請調整它的尺寸。"
+    },
+    {
+      "key": "ready_room_status",
+      "value": "準備 {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "建議"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "無"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "無變換或後退"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "可以在起始房間內重新繪製。"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "準備開始比賽"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "在出道前把魚收起來"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "脫衣舞女"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "做傷害和生存"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "所有與你身體的組合"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "利用你的身體的痛恨 關閉路徑"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "做飛起的平地"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "重擊球和打 每一個塊"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "舉起球來 INK 磁網和吸入它"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "完成導彈和生存"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "捲起的冰塊"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "拼接倒壁並實現目標"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "設定運行。 實現目標之前,時間退出。"
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "RICOCHET大呼小叫 使敵人"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "照亮黑暗 並避開幽靈"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "生存直到時間流出"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "扔出炸彈來打破 每一個塊"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "裂口和凝膠"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "解凍前的結晶"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "解凍前的結晶"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "保護你的朋友遠離敵人"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "彈出球回 給敵人"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "在離開前實現目標"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "利用UMBRELA 留下來的雷恩"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "通過每個機構 將拉塞爾聯繫到目標"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "德菲特·克賴恩·德維爾"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "德菲特·克賴恩·斯塔克"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "使敵人"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "清除是否至少一個玩家倖存者。"
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "當任何玩家 實現目標。"
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "斯皮克·沃爾朗克"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "等待標誌!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "跑到目標!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "風景變了!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "減 INK 更堅硬的風向"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "時間 {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "時間"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "呆在UMBRELLA下面! !"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "連鎖你出來 連鎖店"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "每個人都被騙了!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14至3個連鎖狙擊手"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "檢查每一個Button林克!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "裝有一兩發狙擊槍的彈殼導彈!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "團隊下來 - 重整"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60秒防守完畢!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "第 {0}/3 回合    剩餘 {1:0.0} 秒"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "目標 {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "調整位置和角度來反射雷射！"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "第 {0} 回合完成！"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "時間到！重新開始本回合"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "克雷揚·德維爾  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 準備發射"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "移動: PLATFORM CLICK:導彈  F編號: BOMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "頭部關閉!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "所有普拉特塊"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "發射導彈"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "目標 -離開隊伍!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "繼續走!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "記錄移動...  {0}編號"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "跑,跳,轉和停下來——你的替身在學習."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "密碼 {0}  道布斯左邊: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "升到發射層 然後踩上紅色開關!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "所有醫生都防守了!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "從來沒有另一個老闆。"
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "密碼 {0}  開始"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "打敗帶著你準確表格的CPU團隊."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "密碼 {0}  左邊: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "密碼 {0} 清空 清空 清空 清空 清空"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "裝有紅色開關的武器 F投出炸彈 CLICK:導彈"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "導彈準備! 用鼠標瞄準並點擊。"
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "CPU Team 關閉!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "終於安全了!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "時間"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "時間到了!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "所有人都下來了!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "失敗了! 3秒後重新開始"
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "克雷昂·斯泰克爾 {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 準備"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "右轉! 使用綠色武器!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "防守目標!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "每個人都是錯的"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "運行!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "看著閃閃發光的花!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "活著! 離開時間"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "安全裝置 {0} / 打開 {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "呆在保險櫃上!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "所有玩家出來"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "即刻重現"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "倖存者發現!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "倖存者清理"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 PILLAR 倖存者"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "注意警示 並做針鋒相對"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "來了! 離開歡快的天空"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "皮拉生還清理完畢!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4 -3 克雷揚國王"
+    },
+    {
+      "key": "boss_health",
+      "value": "漢字  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER 下一個房間"
+    },
+    {
+      "key": "boss_appears",
+      "value": "警告,頭!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "擊打/轉殼去護衛"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "警衛! 老闆是無助的"
+    },
+    {
+      "key": "boss_charge",
+      "value": "謝克! 讓開"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "參與 {0}快到高處去"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "特別攻擊! 做雞尾酒"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "頭部關閉!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "所有玩家出來..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "等候房間  {0} / {1}  起來!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6 - 2 重壓"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "一個倖存者的清晰!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "右轉60秒"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "從右邊看傷害"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "彈!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "跳起來!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "慢點..."
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "準備! 最後一槍!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "所有玩家出來"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "大型救生車安全了!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "倖存者發現"
+    },
+    {
+      "key": "escort_title",
+      "value": "5至3個朋友"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "朋友移動"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "用瓶子、相片和你的軀體"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "保護朋友"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "擺!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "奔跑和清障 瓶裝和彈藥"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "下一個朋友在  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "準備一個新的朋友..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "ESORT 完整! (英語)"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "朋友實現了目標"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "羅馬 {0}3布隆迪語 {1:0.0}編號"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "與你的身體連接一條路"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "快點! 幫助朋友實現目標"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "羅馬 {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "羅馬 {0} 清空 清空 清空 清空 清空"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "第 {0}/3 回合    剩餘 {1:0.0} 秒"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "大廳 {0}/{1}    把他們都用你的身體!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "第 {0} 回合完成！"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "時間到！重新開始本回合"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "堵住所有破洞！"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "羅馬 {0}/3    {1:0.0}左側"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "槍聲 {0}/{1}    把他們拖入大屋!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "用磁磁場把圓柱拉出來!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "羅馬 {0} 清空 清空 清空 清空 清空"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "時間到了! 重新打開這所房子"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "移動與你的燈! 更多 INK 意味著更堅固的磁性"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "最後一個路: 開到前面去!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "路過一個角落!\n與你的身體連接"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "朋友可以走 在你的頭和身體線"
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "朋友開始"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "朋友飛了!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "遊戲結束"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "你不能在朋友在動的時候 重來。"
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 裡克謝特·雷萊"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "羅馬 {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO (英語). {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOCHET吹出朋友 擊中目標"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "離開AMMO! 重訂"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5號 Round Clear!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "朋友斯波納"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "朋友目標"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "朋友層"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "橋頭示例"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "鋸子"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "轉盤"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "大炮"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "彈道"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "斯派克 斯派克"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "開火"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "水費"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "毒性"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "激光"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "倒地搖滾"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "按鍵機"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "電力"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "鋸子"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "黑洞區"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "齒輪"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "大齒輪"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "繩子"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "幻燈片"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "旋轉欄"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "筆鼓"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "鍵孔"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "階段邊界"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "時鐘"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "計數器"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "階段選擇"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "離開會話"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "重新開始階段"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "離開在線會話?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "以東道主身份離開將結束本屆會議。 離開?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "離開"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "作為橋樑鏈接:右邊緣在向左延伸時保持連接."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "將相接的地形分割成可單獨選擇和可連接的部分."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "分開"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "分開的部分是O。 它可以不合並而斷裂,並且可以單獨連接."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "分開的部分關閉。 觸地能並."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "將地上和牆壁連接成一個地形形狀."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "拖放直線 {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "厚度"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "地平和壁厚度: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "直線"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "直線畫在上"
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "直線繪圖關閉 。"
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw 模式"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw 模式"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "選擇模式"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw 模式: 拖動到空 space 以放置對象。"
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "選擇模式:選擇和移動已存在的對象。"
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} 自由拖動。"
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "免費地板和牆上畫畫"
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "矩形佈局開始"
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "德魯 {0} 作為連接的路徑( E) :{1} 積分)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "返回編輯器"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "返回編輯器  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "從試玩返回. 繼續編輯你的舞臺。"
+    },
+    {
+      "key": "cancel",
+      "value": "取消"
+    },
+    {
+      "key": "retry",
+      "value": "重試"
+    },
+    {
+      "key": "menu",
+      "value": "菜單"
+    },
+    {
+      "key": "redraw",
+      "value": "重畫"
+    },
+    {
+      "key": "pen",
+      "value": "筆"
+    },
+    {
+      "key": "eraser",
+      "value": "擦除器"
+    },
+    {
+      "key": "shape_square",
+      "value": "方框"
+    },
+    {
+      "key": "shape_circle",
+      "value": "圓形"
+    },
+    {
+      "key": "shape_line",
+      "value": "線條"
+    },
+    {
+      "key": "draw_finish",
+      "value": "結束了!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "回來"
+    },
+    {
+      "key": "brush_size",
+      "value": "大小"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink 已使用"
+    },
+    {
+      "key": "undo",
+      "value": "撤銷"
+    },
+    {
+      "key": "character_switch",
+      "value": "字符切換"
+    },
+    {
+      "key": "character_add",
+      "value": "添加字符"
+    },
+    {
+      "key": "character_delete",
+      "value": "刪除字符"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "切換字符"
+    },
+    {
+      "key": "stage_select",
+      "value": "關卡選擇"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15個組,每組3個階段. 打開編輯器,然後選擇一個舞臺進行編輯。"
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0調試"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "編輯 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "編輯: 關閉"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "編輯: ON"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "新建"
+    },
+    {
+      "key": "stage_clear",
+      "value": "清點"
+    },
+    {
+      "key": "stage_locked",
+      "value": "已鎖定"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "調試模式:所有的世界都解鎖. 選擇要播放的舞臺, 或者打開編輯來編輯它 。"
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1: 浮點2: 拖動以創建塊\n3:開始4:目標5:規模6:重量\nA/D/W/S:移動相機 輪子:縮放\nF5: 保存  F6測試  Esc縮放 :"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "縮放"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "大小"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "網格"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "刪除"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "保存"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "測試"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "回來  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "遊戲設置"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM 遊戲"
+    },
+    {
+      "key": "option_se",
+      "value": "性別"
+    },
+    {
+      "key": "option_keys",
+      "value": "密鑰"
+    },
+    {
+      "key": "option_language",
+      "value": "語言"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "還沒有"
+    },
+    {
+      "key": "locked_stage",
+      "value": "沒有JSON的舞臺會倒回調試舞臺."
+    },
+    {
+      "key": "human",
+      "value": "人類"
+    },
+    {
+      "key": "cat",
+      "value": "貓"
+    },
+    {
+      "key": "bird",
+      "value": "鳥"
+    },
+    {
+      "key": "turtle",
+      "value": "烏龜"
+    },
+    {
+      "key": "slime",
+      "value": "輕而易舉"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5個球命中"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "快速組件"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "選舉"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "選擇一個部分,然後單擊或拖動地圖將其放置。"
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "座標 : {0} / {1:0.##} 單位網格"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "先選擇一個對象。"
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "寬度改變。 也可以使用 Shift+ 軟件 輪."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "高度改變。 也可以使用Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "大小已改變。 以相輪相為兩軸相."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "拖動一個更大的區域來放置此部分 。"
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "已放置 {0} ({1:0.0} 頁:1 {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "已放置 {0} 時間 {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "選入. 拖動並使用輪子來調整大小."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "沒有什麼可以彌補的。"
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "撤消上次編輯 。"
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "沒有什麼可以重做。"
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "重編編輯."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "選擇用於鏈接源的開關、按鈕、密鑰或密鑰孔。"
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "選擇開關、按鈕、密鑰或密鑰孔作為鏈接源。"
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "鏈接源 : {0}。選擇目標,然後按 Link To。"
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "先設置鏈接源 。"
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "選擇要用作鏈接目標的對象。"
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "鏈接源和目標必須是不同的對象."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "鏈接 {0} 改為 {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "首先選擇一個鏈接對象。"
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "清除鏈接。"
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "已保存 : {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "保存目前只在Unity編輯器中可用 。"
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "舞臺物體工廠不見了."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "交通燈"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11至3塊"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "斷塊器"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "砰! 砰! 砰! 砰! 砰! 砰! 砰! 砰! 砰! 砰! 打開所有 NICO DRAW 塊!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} 左側塊塊"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "失敗了... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "性成長"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "通過動作或SE ID來搜索,然後按 Play 預覽指定的聲音. 繞一行看它的資源路徑."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "遊戲"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "停下來"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "雷達"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "沒有匹配的音效 。"
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "找不到 SFQXUSAGE. md 。"
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "未分類"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "已刪除"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "運行時生成的聲音"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Paw 打印"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "魚"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "雅倫球"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "雪晶體"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "冰塊"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "雪人 雪人 雪人"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "閃光燈"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "羽毛"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "鳥巢"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "風線"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "管道"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "博爾特"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "鏈條"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "蒸氣"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "烏龜"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "小時鏡"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "緩存"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "輕而易舉"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "煙泡"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "蝴蝶"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "麗貝卡"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "向日葵"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "鬱金香"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "斯凱勒通"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "蝙蝠"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "蜘蛛網"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "石灰質"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "燈手"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "礦車"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "皮克賽"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "熱帶"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "勳章"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "口哨聲"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "氣球"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "孔費蒂"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "煙花"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "塔樓"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "望遠鏡"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "橋"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "蠟筆"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "筆會"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "擦除器"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "筆記本"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "黑板"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "調色板"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "畫筆"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "帆布"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "停止監視"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "焦點"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "麥克風"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "奶酪"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "驚喜盒"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "禮品盒"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "行星"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "異形"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "彗星"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "黑洞區"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "肥皂泡泡"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "摩斯語Name"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "樹根"
+    }
+  ]
+}

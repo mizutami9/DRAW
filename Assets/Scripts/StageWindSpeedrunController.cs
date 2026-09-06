@@ -91,7 +91,8 @@ namespace DrawBody.Prototype
                 return;
             }
             elapsed += Time.deltaTime;
-            if (HasAuthority && elapsed >= StartDelay + TimeLimitSeconds) BeginFailure();
+            if (HasAuthority && !LocalMultiplayerDebugMode.NoTimeLimit
+                && elapsed >= StartDelay + TimeLimitSeconds) BeginFailure();
             RefreshPresentation();
             if (HasAuthority) BroadcastState();
         }
@@ -377,9 +378,9 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (!stageManager.IsDrawingMode)
+            if (!stageManager.IsDrawingMode && !LocalMultiplayerDebugMode.NoTimeLimit)
                 remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
-            if (HasAuthority && remaining <= 0f)
+            if (HasAuthority && !LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f)
             {
                 failed = true;
                 retryRemaining = RetryDelay;

@@ -9,7 +9,9 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "6-3";
         private const string StateKind = "aquarium_seal_state";
-        private const float RoundSeconds = 120f;
+        private const float RoundOneSeconds = 90f;
+        private const float RoundTwoSeconds = 120f;
+        private const float RoundThreeSeconds = 150f;
         private const float ClearHoldSeconds = 0.65f;
         private const float BoxPreviewSeconds = 1.35f;
         private const float BoxCooldownSeconds = 0.55f;
@@ -37,6 +39,7 @@ namespace DrawBody.Prototype
         {
             public int Sequence;
             public int Round;
+            public int Attempt;
             public int Phase;
             public float Remaining;
             public int SealedMask;
@@ -87,6 +90,7 @@ namespace DrawBody.Prototype
         private float nextPreviewAt;
         private float nextBoxAt;
         private int round = 1;
+        private int roundAttempt;
         private int sequence;
         private int receivedSequence;
         private int sealedMask;
@@ -161,7 +165,8 @@ namespace DrawBody.Prototype
             {
                 if (phase == SealPhase.Active)
                 {
-                    remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
+                    if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                        remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
                     EmitLeakingWater();
                 }
                 RefreshMonitor();
@@ -171,10 +176,11 @@ namespace DrawBody.Prototype
             switch (phase)
             {
                 case SealPhase.Active:
-                    remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
+                    if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                        remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
                     UpdateBoxStation();
                     EvaluateHoles();
-                    if (remaining <= 0f) FailRound();
+                    if (!LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f) FailRound();
                     break;
                 case SealPhase.RoundClear:
                     transitionRemaining -= Time.unscaledDeltaTime;
@@ -182,7 +188,7 @@ namespace DrawBody.Prototype
                     break;
                 case SealPhase.Failed:
                     transitionRemaining -= Time.unscaledDeltaTime;
-                    if (transitionRemaining <= 0f) BeginRound(1);
+                    if (transitionRemaining <= 0f) BeginRound(round);
                     break;
             }
 
@@ -190,11 +196,14 @@ namespace DrawBody.Prototype
             RefreshMonitor();
         }
 
-        private void BeginRound(int nextRound)
+        private void BeginRound(int nextRound, int synchronizedAttempt = -1)
         {
             round = Mathf.Clamp(nextRound, 1, 3);
+            roundAttempt = synchronizedAttempt >= 0
+                ? synchronizedAttempt
+                : roundAttempt + 1;
             phase = SealPhase.Active;
-            remaining = RoundSeconds;
+            remaining = GetRoundSeconds(round);
             transitionRemaining = 0f;
             allSealedTime = 0f;
             accumulatedWaterDepth = 0f;
@@ -212,8 +221,21 @@ namespace DrawBody.Prototype
             RefreshMonitor();
         }
 
+        private static float GetRoundSeconds(int targetRound)
+        {
+            switch (targetRound)
+            {
+                case 2: return RoundTwoSeconds;
+                case 3: return RoundThreeSeconds;
+                default: return RoundOneSeconds;
+            }
+        }
+
         private void BuildArena()
         {
+            // Online dropper boxes live under the sync manager rather than the
+            // arena, so explicitly remove them before rebuilding this attempt.
+            boxDropper?.ClearSpawnedBoxes();
             if (arenaRoot != null)
             {
                 arenaRoot.gameObject.SetActive(false);
@@ -1060,6 +1082,7 @@ namespace DrawBody.Prototype
             {
                 Sequence = ++sequence,
                 Round = round,
+                Attempt = roundAttempt,
                 Phase = (int)phase,
                 Remaining = remaining,
                 SealedMask = sealedMask,
@@ -1082,10 +1105,9 @@ namespace DrawBody.Prototype
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= receivedSequence) return;
             receivedSequence = state.Sequence;
-            SealPhase previous = phase;
             SealPhase incoming = (SealPhase)state.Phase;
-            if (state.Round != round || previous == SealPhase.Failed && incoming == SealPhase.Active)
-                BeginRound(state.Round);
+            if (state.Round != round || state.Attempt != roundAttempt)
+                BeginRound(state.Round, state.Attempt);
             phase = incoming;
             remaining = state.Remaining;
             sealedMask = state.SealedMask;

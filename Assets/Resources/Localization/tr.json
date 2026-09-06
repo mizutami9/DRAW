@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "PLAYER NAME"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter Senin adın"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Lütfen Lütfen Lütfen enter Bir oyuncu adı."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER NAME BURADA"
+    },
+    {
+      "key": "option_register",
+      "value": "REG"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Japon Japonca"
+    },
+    {
+      "key": "lang_en",
+      "value": "EN"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Clear! Basın R yeniden denemesi için."
+    },
+    {
+      "key": "draw_title",
+      "value": "Tasarım (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TABOyuna geri dön / ENTERKarar / Karar : ESC: Cancel :"
+    },
+    {
+      "key": "preview",
+      "value": "Öfke"
+    },
+    {
+      "key": "clear",
+      "value": "Sil"
+    },
+    {
+      "key": "decide",
+      "value": "Onayla"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Kalanlar"
+    },
+    {
+      "key": "current",
+      "value": "Şimdiki akım"
+    },
+    {
+      "key": "part",
+      "value": "Bölüm"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw Torso ilk olarak."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso temeldir. Draw Bağlantı işaretleyicilerinden başka parçalar."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: Bağlantı işaretleyicisinden başlayın."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw Torso diğer kısımları bağlamadan önce."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} bağlıdır."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} Bağlantı işaretleyicisinde başlamadı."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Torso karar vermeden önce gereklidir."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} Bağlantı işaretleyicisinde başlamalıdır."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Kişisel Kişi  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Takım Ekibi  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Onaylanamıyor: kişisel INK {0:0.#}/{1:0}. {2:0} azaltın."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Onaylanamıyor: takım INK {0:0.#}/{1:0}. {2:0} azaltın."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}: işaretleyiciden başlayın."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Head Head Head"
+    },
+    {
+      "key": "torso",
+      "value": "Torso"
+    },
+    {
+      "key": "left_arm",
+      "value": "Sol Arm"
+    },
+    {
+      "key": "right_arm",
+      "value": "Doğru Ordu"
+    },
+    {
+      "key": "left_leg",
+      "value": "Sol bacak"
+    },
+    {
+      "key": "right_leg",
+      "value": "Doğru Yasa"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Sol Cephe"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Doğru Cephe"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Sol Geri Döndü"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Doğru Geri Döndü"
+    },
+    {
+      "key": "tail",
+      "value": "Tail"
+    },
+    {
+      "key": "left_wing",
+      "value": "Left Wing"
+    },
+    {
+      "key": "right_wing",
+      "value": "Doğru Wing"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Tail"
+    },
+    {
+      "key": "slime_body",
+      "value": "Slime"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Normal Jump Normal Jump"
+    },
+    {
+      "key": "jump_double",
+      "value": "Jump x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Jump x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Normal erişim Normal"
+    },
+    {
+      "key": "arm_long",
+      "value": "Long Reach"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Hızlı Swing"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Normal Normal Normal Normal"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Ağır Anahtar"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Ağır Ağır"
+    },
+    {
+      "key": "ability_summary",
+      "value": "bacak {0:0.0}: {1}   Arm Arm Arm {2:0.0}: {3}   Torso {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Kanatlar Kanatlar {0:0.0} INK / Glide hız {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "HUMAN ABILITY\nSilahlar {0:0.0} INK  Güç ×{1:0.00}\nBacaklar {2:0.0} INK  Jump ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "CAT ABILITY\nArka bacaklar {0:0.0} INK  Hız ×{1:0.00}\nFront bacaklar {2:0.0} INK  Claw range ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "BIRD ABILITY\nKanatlar Kanatlar {0:0.0} / 700 INK\nGlide hız {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "TURTLE ABILITY\nKeep Keep Keep SPACE: yenilmez kabuk\nKeep Keep Keep F: 90° yönle karşı karşıya"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "SLIME ABILITY\nVücut Bedeni {0:0.0} / 700 INK\nUpward Base uzunluğu {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "HUMAN"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "CAT"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "BIRD"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "TURTLE"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Daha fazla bacak INK Artan güç\nDaha Fazla Kol INK Artan at gücü"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "More back-leg INK Artan hızlar\nMore front-leg INK Yükseliş aralığı"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Daha fazla kanat INK Artan glide güç"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Invincible, kabukta saklı iken"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Press Press F A upward saldırgan için\nDaha az INK Daha uzun yapar / Wall atlama etkinleştirdi"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: THROW"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "FSCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "TUTD SPACE: GloIDE  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "TUTD SPACE: SHELL F: TURN 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "FUPWARD SPIKE ATTACK"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Güç ×{0:0.00}  Jump ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Run ×{0:0.00}  Claw range ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Yüz güç {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: SHELL /  F90° TURN"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Upward Livingston uzunluğu ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Silahlar {0:0.0}/280 Legs {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Geri dön {0:0.0}/240 Front Front Front {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Kanatlar Kanatlar {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Active sadece düğme yapıldığında"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "SHELL OKY"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE ve F İş yaparken!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Vücut Bedeni {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "LOW"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "Yüksek derecede yüksek"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "THROW"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "RUN RUN"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "SCR"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GloIDE"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "DEF"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "MOBILITY"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "BODY INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "LIGHT: GRIP UP"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "HEAVY: SPEED + JUMP UP"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK SIZE {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "F: Spike up! Daha az INK = daha uzun / Duvar atlama etkinleştirdi"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Daha fazla güç için!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Bu aşamadan sonra kırmızı çizemezsiniz."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 High Platform"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Heavy Switch"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Far Lever"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Narrow Hole"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "ROOM SETUP"
+    },
+    {
+      "key": "multi_participants",
+      "value": "PLAYERS"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "CREATE"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "JOIN ROOM"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "ROOM ID"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "SELAM (INVITES OFF)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "SİZİN"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 SLIME MISSILE CAVE"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "FLOOR VANISHING! GRAB A WALL"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "WALL-JUMP AND DODGE PIERCING MISSILES!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 PROTECT YOU FRIEND!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "PHASE {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "Saat {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Arkadaşını her iki taraftan da savunmak"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "AIRSTRIKE IN {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "FRIEND DOWN... RETRY IN {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "DEF CLEAR!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "COIN COIN {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "Saat {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "BREAK BOXES AND COLLECT COINS!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "UP... 5"
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 COIN CLEAR!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "!"
+    },
+    {
+      "key": "title_single",
+      "value": "Tek oyuncu"
+    },
+    {
+      "key": "title_multi",
+      "value": "Çok oyunculu"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Ayarlar"
+    },
+    {
+      "key": "option_back",
+      "value": "BACK  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "BACK  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "BACK  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Çıkış"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "TRAILER CAPTURE DEBUG"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4-player hava r"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "İnsan kuş atar, sonra kuş → Kedi → Slime r"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "YouTube SEQUENCE"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "BACK  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "EDIT CHARACTERS"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "STEAM HEADER"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "EXPORT 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "BACK TO TITLE"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "kompozisyonu kontrol edin, sonra PNG'u ihraç edin"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Kurtarın: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "REDRAWING..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "CHARACTERS, ODALI'da CHANGED CHANGED CHANGED."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY HIDE HUD     ESC  TITLE"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "TRAILER TAS RECORDER"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Başlarken Drag aktörler | Overdub Human → Bird → Cat → Slime | F9 Record F10 Play P Pause O Step"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 RECORD/STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 PLAY ALL"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 RESET TAKE"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "CLEAR SEED"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "P PAUSE"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "RECORDING"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "PLAYING ALL TRACKS"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "PAUSED"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} | Seçilen: {1} | {2} çerçeveler | Hız {3:0.##}x x x x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "PRESET {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SHAPES"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "idle olsa da, başlangıç pozisyonlarını ayarlamak için karakterleri sürükleyin"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Devam etmeye devam et"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Başlık:"
+    },
+    {
+      "key": "language_settings",
+      "value": "Dil Ayarları"
+    },
+    {
+      "key": "multi_play",
+      "value": "MULTI PLAY"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Random Match"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Özel Özel Özel Özel Özel Özel Özel Özel"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Random Match"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Oyuncular için arama"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Arama"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Matching...\n\nOyuncular 2 / 4\n\nYou\n○ Player2\nsearch\nsearch\n\nRE"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "ROOM"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Create Room"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Join Room"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Oda Adı\n[ Draw Birlikte ]\n\nMax Oyuncular\n< 4 >\n\nViability\n[Özel]\n\nAşama Aşama Aşama\n[Host Selects]\n\nRedraw Rule\n[Herkesi Kullanın]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Max Oyuncular"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Viability"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Viability"
+    },
+    {
+      "key": "multi_public",
+      "value": "Public Public Public"
+    },
+    {
+      "key": "multi_private",
+      "value": "Özel Özel Özel Özel Özel Özel Özel Özel"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Toggle Toggle"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Create Create Create Create Create Create"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter Ev sahibi ekranda gösterilen Lobi ID.\n\nyapılandırılmış olan, arkadaşlar uzaktan katılabilirler.\nDoğrudan TCP kullanıyorsanız, enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter Lobi ID"
+    },
+    {
+      "key": "multi_join",
+      "value": "Katıl"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Yenileme"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "ROOM LOBBY"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Oda: Birlikte Çiz\nID: ABC123\n2 / 4\n\nOynanabilir lobi alanı\nBeklerken kutular, toplar ve zıplama rampalarıyla oynayın."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Kopya ID"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Başlangıç 1-1-1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Aşama Select Select"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Aşama seçin herkes OKT olduğunda kilidini açar."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Bu odayı bırak?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Leave Leave Leave Leave Leave"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Cancel Cancel Cancel Cancel"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Host bir sahne seçiyor..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Leave Leave Leave Leave Leave"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Matching..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Sadece ev sahibi başlayabilir."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Hiçbir Lobi ID kopyalamak için."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Copied Lobby ID."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Copied oda kodu."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Copied bağlantı ID."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Offline. Oda kodu mevcut değildir."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Offline Offline"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Kod Kodu"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Connecting..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Oda Odası"
+    },
+    {
+      "key": "multi_players",
+      "value": "Oyuncular Oyuncular"
+    },
+    {
+      "key": "multi_local",
+      "value": "Yerel Yerel Yerel Yerel"
+    },
+    {
+      "key": "multi_ready",
+      "value": "DİN"
+    },
+    {
+      "key": "multi_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "multi_host",
+      "value": "HOST"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Birlikte Çiz"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Friend Room"
+    },
+    {
+      "key": "online_player_you",
+      "value": "You You You You You"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "SİZİN"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Host Host Host"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Oyuncu Oyuncu {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Sahte rastgele maç hazır."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Sahte geri dönüş başlangıçlı."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Logging in..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Yerel test oyuncusu olarak Online."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Sahte aşama başlar."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Özel oda oluşturuldu."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Public room created."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Sahte odaya katılın."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Doğrudan TCP başlangıçlı."
+    },
+    {
+      "key": "online_ready",
+      "value": "Online hazır. Host veya bir odaya katılmak."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Oda oluşturuldu. ID'yi arkadaşınızla paylaşın."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Ev sahibi olmak için başarısız oldu: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "Oda kimliği host-ip olmalıdır:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Odaya katılın..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Katılmak için başarısız oldu: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Sol lobi."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Hazır değişti."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Kabul başarısız oldu."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} katıldı."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} Oturumu bıraktı."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Lobi güncellendi."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Sahneye başlayın {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "İlke, E-posta. Giriş yapmadan önce Eklentiyi yapılandırın."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "Giriş..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "Connect arayüzü hazır değildir."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Giriş başarısız oldu: EVET {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "Artırılmış lobi başarısız oldu: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "Retina odası yarattı. Share this Lobi ID."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter Bir Lobi Ethan ID."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter Bir oda kodu."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Oda kodu kaydı başarısız oldu: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Oda kodu arama başarısız oldu: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Kod için bulunan hiçbir oda bulunamadı {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Oda kodu çarpıştı. Lütfen odayı tekrar oluşturun."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Host açılan sahne seçin."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Host kapalı sahne seçin."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "Tanıtım lobisi başarısız oldu: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Joined room Ethan odasına katılın."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Sol lobisi."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Hazır."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Hazır değil."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Cihaz ID oluşturma başarısız oldu: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Cihaz Emisyon ID oluşturmak..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Device ID login başarısız oldu: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "online olarak {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Lobi üyeleri güncellendi."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "E-posta girişi değildir. Eklentiyi yapılandırın ve ilk önce giriş yapın."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "Retinal."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "BÖLÜM TAMAMLANDI!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Bölüm {0} tamamlandı!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Tamamlandı!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Sonraki: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Bölüm seçimi"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Tüm bölümler tamamlandı!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Aşama Aşama Aşama {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "DÜNYA DÜNYA DÜNYA {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "AVAILABLE CHARACTERS"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "USE: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "CREATED"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "CREATED"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} Bu aşamada mevcut değildir."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Başka bir oyuncu zaten kullanıyor {0}Mevcut bir karakter seçin."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "CHARACTER SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} kullanımdadır. Bir takas talep etmek için basın COMPLETE."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} Ticaret etmek ister {1} Çünkü {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "DECLINE"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Değişim talebine bir cevap için bekleyin..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Karakterler takas etti!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Değişim talebi azaldı."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Diğer oyuncu bulunamadı."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "GRAIN DISPENSER"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100g SCALE"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "WeIGHT GATE"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "FRIEND BUTTON"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "PLAYER-ONLY ONE-WAY FLOOR"
+    },
+    {
+      "key": "species_human",
+      "value": "İnsan"
+    },
+    {
+      "key": "species_cat",
+      "value": "Cat Cat"
+    },
+    {
+      "key": "species_bird",
+      "value": "kuş kuş"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Kaplumbağa"
+    },
+    {
+      "key": "species_slime",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Objects Objects"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Linkler Linkler"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Karakteri bu pozisyondan test oyunu başlatmak için sürükleyin. Kurtarılan sahne spawn değişmedi."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Test-play başlangıç pozisyonuna taşınır."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Test başlar: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Cannot save: {0} Hata(s) {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Kurtarın: {0} ({1} Uyarı (s)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Create Room\nOda Adı [.....]\nOyuncular 2 / 3 / 4\nPublic / Private\n\nJoin Room\nOda ID [...]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Yere kaydırın / seçmek için tıklayın / WASD Harekete geçmek\nDekorasyon: Wheel to scale / Shift + tekerlek döndürmek için\nCtrl + tekerlek: Tüm aşamayı yakınlaştırıyor"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} Seçilen nesneler seçilmiş nesneler"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Kutu tarafından tamamen kapalı olan nesneler seçilir."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Seçilmiş seçilmiş {0} nesneler. Onları birlikte hareket etmek için seçilmiş bir nesne sürükleyin."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Hiçbir nesne seçim kutusu tarafından tamamen kapalı değildir."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Moved {0} Birlikte seçilmiş nesneler."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Kategori Kategori"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Arama Arama"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Tipi Tipi Tipi Tipi"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Arama kelimesi"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Object List"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Link Listesi"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "W- W- W- W-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "H-"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Redo"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Kopya kopya"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Object kopyaladı."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "DO DOWN"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← LEFT"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ UP"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Kopyalama yönü: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Object kopyaladı {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Pozisyon: X {0:0.00} / Y {1:0.00} (Arrow keys)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Power Start Power"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Move Distance"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Move Speed"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Fuse (sec)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Crumble Gecikme (sec)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Patlamalar Gerekli"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Kemer Hız"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Drop Interval (sec)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Beam Interval (sec)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Kutu Boyutu"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Bomba Boyutu"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Spike Boyut"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Uzaklığı: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Hız Hareket: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Fuse time: {0:0.0} Gizli"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Crumble gecikme: {0:0.0} Gizli"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Duvar: dayanıklılık: {0:0} Patlamalar"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Kuş hızı: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Çıkış aralığı: {0:0.0} Gizli"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Dropped box büyüklüğü: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Ayaklanma büyüklüğü: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Üretilmiş bomba büyüklüğü: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Yön: ← Left"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Yön: Doğru →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Sağlam yön: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Kutu: □○△"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Kutu: Square"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Kutu: Round"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Kutu: Üçgen"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Bombalar: Her ikisi de"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Bomb: Spawn'da Fuse"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Bomb: Pickup"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Kutular: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Üretilen bombalar: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Move yön: {0:0}° (Shift + tekerlek)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Başlangıç Gücü: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Oyuncu"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Scale trigger ağırlık set tolere {0:0} INK oyuncu başına."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter 1 ila 2000 arasında bir sayı."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "PERSONAL CAP"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "TEAM CAP (İngilizce){0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "PEN SIZE"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "CLEAR"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "RESET ALL ALL"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "RESET EVERYTHING?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Her vücut parçası ve orijinal karakteri geri yükleyin."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "RESET"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "CANCEL"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} PRESETS"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "PRESETS"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5-CHARACTER PRESETS"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "HUMAN CAT BIRD TURTLE SLIME"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "Tüm beş karakter"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLOT {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "D"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "EMPTY"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SAVE"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "SET"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "TO PRESET {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Mevcut durumu kurtarın {0} Preset {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Overwrite the {0} Preset {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "SET PRESET {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Mevcut değişikliği değiştir {0} Preset ile çizim {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Arka arka plan arka plan"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Ağaç"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Arka plan"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Çiçek Çiçek"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Arka plan Bush"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Bulut Bulut"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Arka plan"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Ok"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Cat Face Face"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Köpek Face Face"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Stick Şekil"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Smiley"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Kalp Kalp Kalp"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Star Star"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Moon Moon"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Güneş Güneş"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Rain Rain"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Lightning Lightning Lightning"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Rainbow"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Dağ Dağı"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Four-leaf Clover"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Mushroom"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Apple Apple Apple"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Banana"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Sumelon"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Donut Donut"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Dondurma"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Kahve Kupası"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Pizza Pizza Pizza"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Ekmek"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Paper Airplaneplane"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Uçak"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Rocket Rocket Rocket"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "UFO UFO"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Hot-air Balon"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "House House"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Castle Castle Castle"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Hazine"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Mole"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Fossil"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Kristal Kristal Kristal"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Antik Pot"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Anahtar Anahtar Anahtar Anahtar"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Keyhole"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Kılıç"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Crown Crown"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Shield"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Gem"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Coin Coin"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Kemik kemiği"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Light Bulb (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Gear Gear"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Bahar Bahar Bahar"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Magnet Magnet Magnet"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Dice"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Konuşma Dili"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Mark'ı kontrol edin (ol)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Soru Mark (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Exclamation Mark (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Ring Arrow"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "JUMP!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Git!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "YouTube!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "GOAL!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Rotate: Shift + tekerlek (0.5 derece hassas)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Rotate: Shift + tekerlek (15°), Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Rotate: Shift + tekerlek (15°), Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Scale: fare tekerleği"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Eylem"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Görünüşe göre görünür"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Disappear"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Unlock"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Move Move Move Move"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Move Platform Right"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Move Platform Up"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Move Platform Left"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Move Platform Down"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Link eylemi: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Bir anahtar bir delikle bağlantı kurması gerekir."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Anahtar delik bağlantıları her zaman Unlock kullanır."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Snap Snap Snap"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Link From Link From Link From Link"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Bağlantı hedefi"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Unlink"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Add: Add: {0} / Snap: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Pos {1:0.0},{2:0.0}  Boyut Boyutu {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Genişlik = doğru duvar / yükseklik = tavan (sol duvarı ve daha düşük kenar sabit kalır)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Frame Frame"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "yerleştirilen nesneler etrafında bir çerçeve oluşturun. Doğru duvarı ve tavanı ayarlamak için seçin."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Duvar tam olarak zemin ve tavan arasında donatılmıştır."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "GOAL"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "ROOM {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "BOMB"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MISSILE"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "DİN"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT TNT"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Arka arka plan arka plan"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "PLAYERS {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "STAGE {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 önizleme: {0} oyuncu(s) / sahne {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Arka renkli renk"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Varsayılan olarak"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Close Close Close Close Close"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Opakity"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Arka renk değişti. Onu tutmak için sahneyi kurtar."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Ekle modu: {0}. Drag onu oluşturmak için haritada."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Ekle modu: {0}Bunu yerine getirmek için haritayı tıklayın."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Listeden seçilmiş."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Hiç maç yok"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(none)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Terrain"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Start /Goal"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Anahtar anahtarı"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Kapı/Gate"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Movable"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Eylem"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Tuzağı"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Gimmick"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Enemies"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Kat"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Duvar duvarı"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Start Start Start Start Start"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Goal"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Balance Scale Scale"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Ağırlık"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Tavan"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Yarı Kat"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "One-way Floor"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Buz Zemini"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Terpery Slope"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Dağılabilir Duvar"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Amaç"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Merdiven Merdiveni"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Bulut Zemin"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Breakable Floor"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Falling Floor"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Move Floor"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Sticky Move One-Water Floor"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 REFLECT DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "topu vücudunuzla kırın ve kırın NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "BLOCKS {0}  BALLS{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "UP RETRY IN IN {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "YouTube {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "ROUND {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "BALL {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "NEXT {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 BALLS LOST! ZERY"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "TÜM ÜLS CLEAR!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "ENEMIES LEFT {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Gun Gun Gun"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Kurşun-Breakable Wall"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Spike Planet"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag Flyer"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Orbit Flyer"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Bazooka"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Bombing Flyer"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Moving Spike Ball"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Pose Key"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Pose Key delik"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Updraft"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Hız Mark"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Hız Mark (Strong)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Redraw Bölgesi"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Bültenler Gerekli"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Bültenler Gerekli: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Rotating Floor"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Checkpoint"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Warp Entrance"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Warp Exit"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Respawn Point"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Mid Goal"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Goal Etkisi"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Düğme"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Kilo Düğmesi"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Simultane Düğme"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Takip Et"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Üçgen kutusu"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "kaldıraç"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Toggle Switch"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Timer Switch"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Sensör"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Red Switch"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Blue Switch"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Yeşil Anahtar"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Sarı Anahtar"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Basınç Plakları"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Uzaktan Kontrol"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Scale"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Kapı"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Locked Door"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Shutter"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Tel"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Lazer Kapısı"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Renk Kapısı"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "One-way Gate"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Timed Gate"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Breakable Wall"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Hidden Wall"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Wood Box"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Iron Box"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Ball Ball Ball"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Kovan"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Rock Rock"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Buz Bloku"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Yüzing Box"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Kauçuk Box"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Bomba Bomba Bombası"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Bomb (Fuse Starts on Pickup)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Bomb Maker"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Dynamite"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Walker düşman"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Jumper düşman"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Şarj düşmanlığı"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Uçan Düşman"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Hiter düşman"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "düşman İspanyol"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Füze Füzesi"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Activate"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Bu cihaz her zaman Activate kullanır"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Interval"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Düşman Boyutu"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Spawned düşman: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Düşman büyüklüğü: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Anahtar Anahtar Anahtar Anahtar"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Coin Coin"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Star Star"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Battery Battery"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Shell"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Jump Pad"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Bahar Bahar Bahar"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Sol Sol Sol"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Doğru"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Asansör"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Fan Fan Fan Fan"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Magnet Magnet Magnet"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Kuş kuşu"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Box Dropper"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Spike Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Balık Balık Balık"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Coin Coin"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Star Star"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Dijital Saat"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Beam Emitter"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Normal Normal Normal Normal"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Zaman Sınırı"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Survival"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}s"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x x x x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "TÜM"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Aşama kuralı: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Kalan süre: {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "UP TIME UP"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Press R yenidentry"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 SURVIVAL"
+    },
+    {
+      "key": "survival_goal",
+      "value": "BİR SURVIVOR CLEARS!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "DÖRÜŞÜŞÜŞÜŞÜNÜ"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "TARGET  {0:0}(90g x PLAYERS)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "MOVE INTO POSITION BEFORE THE RAIN"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "CATCH THE GRAINS!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "WeIGHING..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "FL  ON  ON"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "CLEAR!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "SO CLOSE!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "GRAINS ON HEADS  {0:0}g / {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "RARE GRAIN TARGET REACHED!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "A BETTER HEAD SHAPE"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "STAGE {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "CİN BLIZZARD BLOWING IN IN THE HAYIR!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "GER GRAINS, MARKED SPOTS'i –ONE PER PLAYER!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 ICE SPEEDRUN - BİR PLAYER FINISHES"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "YouTube!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "UP RETRY IN IN {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "GET OKUYU!"
+    },
+    {
+      "key": "survival_start",
+      "value": "YouTube!"
+    },
+    {
+      "key": "game_over",
+      "value": "WhatsApp'ı artırıyor"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Bu BODY DOES, YouTube'da FIT değil. PLEASE REDRAW IT SMALLER."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Bu BODY May STICK OUT OF THE ROOM. PLEASE ADJUST ITS SIZE."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "DİN {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "RECOMMENDED"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "NONE"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "NO CHARACTER CHANGE OR REDRAW AFTER LEAVING"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "NO CHARACTER CHANGE AFTER LEAVING (REDRAW Tamam)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "GET DY TOMI"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "COLLECT THE FISH BEFORE TIME RUNS OUT"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "DEFLER"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "DODGE THE HURDLES AND SURVIVE"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "PLUG EVERY AQUARIUM KURAN"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "USE YOU BODY SHAPE TO UNLOCK THE PATH"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "DODGE THE FALLING PILLARS"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "BALL AND BREAK EVERY BLOCK"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "BALL'ı INK MAGNETS AND SINK IT"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "DODGE THE MISSILES AND SURVIVE"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "COLLECT COINS WHILE FALLING"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "COLLECT THE FALLING GRAINS AND REACH THE TARGET"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "SPEED RUN. BÜTÜNÜ BÜYÜ BÜYÜ BÜYÜ BÜTÜNÜ BÜTÜNÜ BÜTÜNÜ"
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "RICOCHET BULLETS TO DEFLER"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "DARKNESS AND ESCAPE THE GHOSTS"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "SURVIVE UNTIL TIME RUNS OUT"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "BREAK EVERY BLOCK"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "BREAK BOXES AND COLLECT COINS"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "COLLECT COINS BEFORE TIME RUNS OUT"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "COLLECT COINS BEFORE TIME RUNS OUT"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "DEFEND YOU FRIEND FOR THE THE THE THE THE THE THE THE THE THE THE ERAIES"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "BALL BACK TO DEFLER"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "BÜTÜNÜ BÜYÜ BÜYÜ"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "UMBRELLA TO STAY OUT OF THE RAIN"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "Âdem'e yemin ederim ki"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "DEFLE CRAYON DEVIL"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "DEF CRAYON STALKER"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "DEFLER"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "CLEAR IF AT LEAST ONE PLAYER SURVIVES."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "CLEAR WHEN ANY ONE PLAYER REACHES THE GOAL."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "SPIKE WALL LAUNCH"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "SIGN  FOR  FOR  FOR"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Ey Âdem!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "Selâm!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "LESS INK = STRONGER WIND"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "Saat {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "UP TIME UP"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "STAY UNDER THE UMBRELLA!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "RAIN KNOCKS OUT - REACH SHELTER"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "EVERYONE WAS CAUGHT IN RAIN!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 LINKED SHIELDS"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "RA EACH BUTTON LINK!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "BLOCK MISSILES WITH 1-SECOND SHIELDS!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "TEAM DOWN - RESTARTING"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60-SECOND DEFENSE CLEAR!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "TUR {0}/3    {1:0.0} sn KALDI"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "GOALS {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "LAZERİ YANSITMAK İÇİN KONUMLARI VE AÇILARI AYARLAYIN!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "TUR {0} TAMAMLANDI!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "SÜRE DOLDU! BU TUR YENİDEN BAŞLIYOR"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON DEVIL HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 LAUNCH"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "D: PLATFORM CLICK: MISSILE  F: BOMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "BOSS DEFLER!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "TÜM PLATFORMS DOWN"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "HOMING MISSILES - SPREAD OUT!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "TARGETED - TEAM'ı ÖLÜM!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "SUCTION - MOVE AWAY!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "RECORDING MOVEMENT...  {0}s"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Run, Jump, turn and stop – çiftiniz öğreniyor."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "PHASE {0}  DOUBLES LEFT: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Lure one on a start floor, then step on its red switch!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "TÜM DOUBLES DEFLER!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Hiçbir zaman başka bir patron yoktu."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "PHASE {0}  YouTube"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "CPU ekibi tam formlarınızı giyiyor."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "PHASE {0}  LEFT: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "PHASE {0} CLEAR!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Kırmızı anahtarlarla silah talep edin. FBomba K: Füze:"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "MISSILE DY! Fare ile aim ve tıklayın."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "CPU TEAM DEFEATED!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "FINAL BATTLE CLEARED!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "UP TIME UP"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "UP!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "EVERYONE IS DOWN!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "FAILED! Başlangıçtan 3 saniye içinde yeniden başlamak."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 GET OKY"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "RUN HAYIR! USE THE GREEN WEAPONS!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "PURSUER DEFEATED!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "EVERYONE WAS CAUGHT"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "W  FL  FL"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "SURVIVE! LEFT"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "SAFE FLOERS {0} / DROP IN IN {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "STAY ON THE SAFE FLOOR!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Tüm PLAYERS OUT"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "RESTARTING SOON"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "SURVIVOR FOUND!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "SURVIVAL CLEARED"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 PILLAR SURVIVALVAL"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "İZMİR VE ÖĞRETİM"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "INCOMING! ÖĞRETİM ZONE"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "PILLAR SURVIVAL CLEARED!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 CRAYON KING"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER AMA"
+    },
+    {
+      "key": "boss_appears",
+      "value": "WARNING... BOSS!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "SHOOT TO ATTACK / TURTLE SHELL TO GUARD"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "GUARD! BOSS IS INVULNERABLE"
+    },
+    {
+      "key": "boss_charge",
+      "value": "CHARGE! GET OUT OF THE WAY"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "CHARGE IN IN IN {0}G"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "ÖZEL ATTACK! DODGE THE RICOCHETS"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "BOSS DEFLER!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Tüm PLAYERS OUT... RETRYING"
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "ROOM  {0} / {1}  GARAN UP!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "SURVIVAL"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "BİR SURVIVOR CLEARS!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "60 SECONDS"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "BATCH FOR HURDLES OF THE AND"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "JUMP!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "JUMP THE HURDLES!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "SLOW... CATCH YOU BREATH!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "SPEED UP! FINAL SPRINT!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Tüm PLAYERS OUT"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "HURDLE SURVIVAL CLEARED!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "SURVIVOR FOUND"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 FRIEND"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "FRIEND MOVING"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "BUILD A PATH WITH BOXES, PLATFORMS, AND YOU BODY"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 PROTECT THE FRIEND"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "AAAH!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "RUN AHEAD AND CLEAR TRAPS, BOXES, AND ENEMIES"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "NEXT FRIEND IN  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "PREPARING A NEW FRIEND..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "ESCORT COMPLETE!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "THE  THE"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "ROUND {0}/3 BUILD {1:0.0}s"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "► A PATH WITH YOU BODY"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Hayır!  THE  THE"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "ROUND {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "ROUND {0} CLEAR!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "TUR {0}/3    {1:0.0} sn KALDI"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "Örtün {0}/{1}    PLUG THEM ALL WITH YOU BODIES!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "TUR {0} TAMAMLANDI!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "SÜRE DOLDU! BU TUR YENİDEN BAŞLIYOR"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "DELİKLERİ KAPATIN!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "ROUND {0}/3    {1:0.0}s LEFT"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "BALLS {0}/{1}    ROLL THEM INTO THETE!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "PULL THE BALL THROUGH THE MAZE WITH MAGNETISM!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "ROUND {0} CLEAR!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "UP! Yemin ederim ki,"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "MOVE WITHIN LANE! DAHA FAZLA OKU INK MEANS STRONGER MAGNETISM"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "FİNANS: SNACK ABOVE!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "BUILD A PATH THROUGH THE SNACK ABOVE!\nCONNECT"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "CIEND, HEAD ve BODY LINES'inizi desteklemektedir."
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "FRIEND"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "CIEND FELL!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "WhatsApp'ı artırıyor"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "REDRAW WHILE THE FRIEND IS MOVING."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET RELAY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "ROUND {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOCHET BULLETS OFF FRIENDS TO HIT THE TARGET"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "OUT OF AMMO! RESTARTING"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 CLEAR!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Friend Spawner"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Arkadaş Goal"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Friend-Pass Floor"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Head Bridge Örnek"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Seesaw"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Turntable"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Cannon"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Kedi"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Spike"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Yangın Ateşi"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Su Su Su Su Su Su"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Zehir"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Lazer Lazer Lazer"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Rock"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Press Machine"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Elektrik Elektrik Elektrik"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Maske"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Black Hole"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Gear Gear"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Big Gear"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Pulley"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Slider"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Rotating Bar"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Pendulum"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Key delik"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Aşama Boundary"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Saat Saat Saat Saat"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Okunma Sayısı"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Aşama Select Select"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Leave"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Restart Stage"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Online seansı bırakın?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Ev sahibi olarak ayrılmak bu seansı herkes için bitirecektir. Leave?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Leave Leave Leave Leave Leave"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Bir köprü olarak bağlantı kurdu: sağ kenar soluna uzanırken bağlı kalır."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Bağlantılı araziyi bireysel olarak seçilmiş ve bağlantılı parçalara ayırın."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Ayrı ayrı ayrı ayrı ayrı ayrı ayrı ayrı ayrı ayrı ayrı ayrı"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Ayrı bir bölüm ON. Şişman olmadan çırpılabilir ve bireysel olarak bağlanabilir."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Ayrı bir bölüm OFF. Araziye dokunmak birleşebilir."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Zemini ve duvarı bir arazi şekli olarak bağlayın."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Drag to place a straight {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Kalınlık"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Kat ve duvar kalınlığı: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Doğru"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Düz-line çizimi ON."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Düz-line çizimi bir OFF."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw modu modu modu"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw modu modu modu"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Select mod"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw mod: Boşluğa sürüklen space nesneleri yerine getirmek."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "modu seçin ve mevcut nesneleri hareket edin."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} özgürce sürüklenerek."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Freehand zemin ve duvar çizimi ON."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Rect Fukushima yerleştirmesi ON."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Drew {0} Bir bağlantılı yol olarak ({1} puanlar)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Editöre dön"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Editöre dön  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Test oyunundan geri döndü. Sahnenizi düzenlemeye devam edin."
+    },
+    {
+      "key": "cancel",
+      "value": "Cancel Cancel Cancel Cancel"
+    },
+    {
+      "key": "retry",
+      "value": "Tekrar dene"
+    },
+    {
+      "key": "menu",
+      "value": "Menü Menü"
+    },
+    {
+      "key": "redraw",
+      "value": "Redraw"
+    },
+    {
+      "key": "pen",
+      "value": "Pen Pen Pen"
+    },
+    {
+      "key": "eraser",
+      "value": "Eraser"
+    },
+    {
+      "key": "shape_square",
+      "value": "Box Box"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Circle Circle Circle"
+    },
+    {
+      "key": "shape_line",
+      "value": "Line Line Line"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Done!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Geri dön"
+    },
+    {
+      "key": "brush_size",
+      "value": "Boyut Boyutu"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Kullanılmış kullanılır"
+    },
+    {
+      "key": "undo",
+      "value": "Undo"
+    },
+    {
+      "key": "character_switch",
+      "value": "Karakter Anahtar Anahtarı"
+    },
+    {
+      "key": "character_add",
+      "value": "Char Add Char Add"
+    },
+    {
+      "key": "character_delete",
+      "value": "Delete Char"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Char Switch Char"
+    },
+    {
+      "key": "stage_select",
+      "value": "Bölüm seçimi"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 grup, her biri 3 aşama. Turn Edit ON, sonra onu düzenlemek için bir sahne seçin."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0 Debug"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Edit 1-1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Edit: OFF"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Edit: ON"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "YENİ YENİ YENİ YENİ YENİ"
+    },
+    {
+      "key": "stage_clear",
+      "value": "CLEARAR"
+    },
+    {
+      "key": "stage_locked",
+      "value": "LOCKED"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Debug modu: tüm dünyalar açılıyor. Oynamak için bir sahne seçin veya onu düzenlemek için Edit ON'ı açın."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2:Wall blokları oluşturmak için sürükleniyor\n3:Start 4:Goal 5:Scale 6:Weight\nA/D/W/S: hareketli kamera Wheel: zoom\nF5Kaydet:  F6:Test:  Esc:Back"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Scale"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Boyut Boyutu"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Grid"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Delete"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Kaydet Kaydet Kaydet"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Test Testi"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "BACK  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Oyun Ayarları"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "Anahtarlar"
+    },
+    {
+      "key": "option_language",
+      "value": "Dil Dili"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Henüz değil"
+    },
+    {
+      "key": "locked_stage",
+      "value": "JSON olmadan sahneler debug aşamasına geri döndü."
+    },
+    {
+      "key": "human",
+      "value": "İnsan"
+    },
+    {
+      "key": "cat",
+      "value": "Cat Cat"
+    },
+    {
+      "key": "bird",
+      "value": "kuş kuş"
+    },
+    {
+      "key": "turtle",
+      "value": "Kaplumbağa"
+    },
+    {
+      "key": "slime",
+      "value": "Slime"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 Ball Hit"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "QUICK PARTS"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "SEION"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Bir bölüm seçin, sonra onu yerine getirmek için haritaya tıklayın veya sürükleyin."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Snap: {0} / {1:0.##} Birim"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Önce bir nesne seçin."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Genişlik değişti. Ayrıca Shift+ kullanabilirsiniz Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Yükseklik değişti. Ayrıca Alt+Wheel kullanabilirsiniz."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Boyut değişti. Her iki eksenleri ölçeklendirmek için tekerleği kullanın."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Bu bölümü yerine getirmek için daha büyük bir alan sürükleyin."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Placed {0} ({1:0.0} x x x x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "{0}, ({1:0.0}, {2:0.0}) konumuna yerleştirildi."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Seçilmiş. Harekete geçmek ve tekerleği tekrarlamak için kullanın."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Tamamlanması gereken bir şey yok."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Son düzenlemeyi kabul etmedi."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Redo için hiçbir şey yok."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Redid the edit."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Bağlantı kaynağı olarak kullanmak için bir anahtar veya anahtar delik seçin."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Bir geçiş seçin, düğme, anahtar veya anahtar delik bağlantı kaynağı olarak."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Link kaynağı: {0}Hedefini seçin, sonra Link To."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "İlk önce bir bağlantı kaynağı ayarlayın."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Bağlantı hedefi olarak kullanmak için bir nesne seçin."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Bağlantı kaynağı ve hedefi farklı nesneler olmalıdır."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Linked {0} toklanmak için {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "İlk önce bağlantılı bir nesne seçin."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Bağlantıyı temizledi."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Kurtarın: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Tasarruf şu anda sadece Unity Editor'de mevcuttur."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Sahne nesne fabrikası eksik."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Trafik Işığı"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 BLOCK CRASH"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Block Breaker"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "THROW BOMBS! BREAK ALL NICO DRAW BLOCKS!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} BLOCKS LEFT"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "FAILED... RESTART IN IN IN {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE BROWSER"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Eylem veya SE ID'ye göre, o zaman atanan sesi önizlemeye basın. Hover a row to see its resource road."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "PLAY"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "STOP"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "RELOAD"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Uyumlu ses efektleri yok."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE.md bulunamadı."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Uncategorized"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "MUTED"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Runtime-rated sound"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Paw Print"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Balık Balık Balık"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Push Ball"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Snow Crystal"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Icicle"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Snowman"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Blizzard"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Tüy"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Bird Nest"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Rüzgar Hatları"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Pipe"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Bolt Bolt"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Zincir Zinciri"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Buhar Steam"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Kaplumbağa"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Saatler"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Padlock"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Bubbles"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Kelebek"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Ladybug"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Sunflower"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Tulip Tulip"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Skeleton"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Bat Bat Bat Bat"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Spiderweb"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Stalactite"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Mandal"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Minecart"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Pickaxe"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Norveç"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Madalyası Madalyası"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Tartışma"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Balon Balon"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Confetti"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Fireworks"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Tower Tower Tower Tower"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Binoküler"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Bridge Bridge"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Crayon"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Kalem"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Eraser"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Defter Defteri"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Blackboard"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Yakıt"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Paintbrush"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Blood"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Stopwatch"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Spotlight"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Microphone"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Peynir Peynirli Peynir"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Sürpriz Kutu"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Hediye kutusu"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Gezegen Gezegen Gezegeni"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Alien Alien"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Gelt"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Black Hole"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Soap Bubble"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Moss Moss"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Ağaç Kökü"
+    }
+  ]
+}

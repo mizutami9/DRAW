@@ -155,7 +155,8 @@ namespace DrawBody.Prototype
 
             if (!HasAuthority)
             {
-                if (phase == BoardPhase.Active) remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
+                if (phase == BoardPhase.Active && !LocalMultiplayerDebugMode.NoTimeLimit)
+                    remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
                 RefreshMonitor();
                 return;
             }
@@ -163,11 +164,12 @@ namespace DrawBody.Prototype
             switch (phase)
             {
                 case BoardPhase.Active:
-                    remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
+                    if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                        remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
                     CalculateMagneticField();
                     SimulateBalls(Time.deltaTime);
                     if (AllBallsSunk()) ClearRound();
-                    else if (remaining <= 0f) FailRound();
+                    else if (!LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f) FailRound();
                     break;
                 case BoardPhase.RoundClear:
                     transitionRemaining -= Time.unscaledDeltaTime;

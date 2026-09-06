@@ -738,6 +738,11 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            // 14-3 is driven from the active camera itself. Its large custom
+            // layout editor can outlive/deactivate the regular editor input
+            // object while its UI remains visible.
+            if (IsLaserRelayLayoutEditor) return;
+
             Vector3 move = Vector3.zero;
             if (Input.GetKey(KeyCode.A) || (selectedData == null && Input.GetKey(KeyCode.LeftArrow)))
             {
@@ -770,8 +775,58 @@ namespace DrawBody.Prototype
             bool control = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
             if (Mathf.Abs(wheel) > 0.01f && (control || selectedData == null))
             {
-                worldCamera.orthographicSize = Mathf.Clamp(worldCamera.orthographicSize - wheel * 0.65f, minCameraSize, maxCameraSize);
+                ApplyEditorCameraZoom(wheel);
             }
+        }
+
+        private int cameraZoomHandledFrame = -1;
+
+        private void ApplyEditorCameraZoom(float wheel)
+        {
+            if (worldCamera == null || Mathf.Abs(wheel) <= 0.001f) return;
+
+            // 14-3 contains a wide room plus several player/round layouts.
+            // A proportional step remains noticeable even when zoomed far out.
+            float editorMaximumSize = IsLaserRelayLayoutEditor
+                ? Mathf.Max(maxCameraSize, 80f)
+                : maxCameraSize;
+            float zoomFactor = Mathf.Pow(1.12f, -wheel);
+            worldCamera.orthographicSize = Mathf.Clamp(
+                worldCamera.orthographicSize * zoomFactor,
+                minCameraSize,
+                editorMaximumSize);
+            cameraZoomHandledFrame = Time.frameCount;
+        }
+
+        internal void DriveLaserRelayEditorCamera(Camera targetCamera)
+        {
+            if (!IsLaserRelayLayoutEditor || targetCamera == null) return;
+
+            Vector3 move = Vector3.zero;
+            if (Input.GetKey(KeyCode.A)) move.x -= 1f;
+            if (Input.GetKey(KeyCode.D)) move.x += 1f;
+            if (Input.GetKey(KeyCode.W)) move.y += 1f;
+            if (Input.GetKey(KeyCode.S)) move.y -= 1f;
+            if (move.sqrMagnitude > 0.01f)
+            {
+                float effectiveSpeed = cameraMoveSpeed * targetCamera.orthographicSize;
+                targetCamera.transform.position += move.normalized * effectiveSpeed * Time.unscaledDeltaTime;
+            }
+
+            bool control = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+            float wheel = Input.mouseScrollDelta.y;
+            if (control && Mathf.Abs(wheel) > 0.01f)
+            {
+                DriveLaserRelayEditorScroll(targetCamera, wheel);
+            }
+        }
+
+        internal void DriveLaserRelayEditorScroll(Camera targetCamera, float wheel)
+        {
+            if (!IsLaserRelayLayoutEditor || targetCamera == null
+                || cameraZoomHandledFrame == Time.frameCount || Mathf.Abs(wheel) <= 0.001f) return;
+            worldCamera = targetCamera;
+            ApplyEditorCameraZoom(wheel);
         }
 
         private void HandleSelectedObjectWheel()
@@ -914,6 +969,7 @@ namespace DrawBody.Prototype
         {
             PushUndo();
             StageObjectData data = StageObjectFactory.CreateDefaultData(addType, center);
+            AssignLaserRelayLayoutObjectId(data);
             data.size = new Vector2(Mathf.Max(0.2f, size.x), Mathf.Max(0.2f, size.y));
             data.keepSeparate = terrainKeepSeparate;
             data.position = SnapJoinPosition(data, data.position);
@@ -1406,6 +1462,7 @@ namespace DrawBody.Prototype
             }
 
             StageObjectData data = StageObjectFactory.CreateDefaultData(addType, center);
+            AssignLaserRelayLayoutObjectId(data);
             data.keepSeparate = terrainKeepSeparate;
             if (terrainStraightLine && !terrainStrokeForcePath && terrainStrokePoints.Count >= 2)
             {
@@ -1493,6 +1550,7 @@ namespace DrawBody.Prototype
 
             PushUndo();
             StageObjectData data = StageObjectFactory.CreateDefaultData(addType, position);
+            AssignLaserRelayLayoutObjectId(data);
             data.position = SnapJoinPosition(data, data.position);
             data.position = SnapMountedObjectToSurface(data, data.position);
             objects.Add(data);

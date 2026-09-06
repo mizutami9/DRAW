@@ -89,6 +89,26 @@ namespace DrawBody.Prototype
             return SpawnBox(selectedSize);
         }
 
+        public void ClearSpawnedBoxes()
+        {
+            while (spawnedBoxes.Count > 0)
+            {
+                GameObject spawned = spawnedBoxes.Dequeue();
+                if (spawned == null) continue;
+
+                StageEditorObject spawnedMarker = spawned.GetComponent<StageEditorObject>();
+                if (syncManager != null && syncManager.IsOnlineActive && spawnedMarker != null)
+                {
+                    if (syncManager.IsHost)
+                        syncManager.RemoveDropperBox(spawnedMarker.objectId);
+                }
+                else
+                {
+                    Destroy(spawned);
+                }
+            }
+        }
+
         private bool SpawnBox(Vector2 selectedSize)
         {
             StageObjectType type = ResolveNextBoxType();

@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "Имя игрока"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter твое имя"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Пожалуйста. enter Имя игрока."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER Ваше имя здесь"
+    },
+    {
+      "key": "option_register",
+      "value": "Регистратор"
+    },
+    {
+      "key": "lang_ja",
+      "value": "японский"
+    },
+    {
+      "key": "lang_en",
+      "value": "EN"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Чисто! Нажмите R, чтобы повторить."
+    },
+    {
+      "key": "draw_title",
+      "value": "ДизайнTAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TABВернуться в игру / ENTER: Решать / ESCОтменить"
+    },
+    {
+      "key": "preview",
+      "value": "Предварительный просмотр"
+    },
+    {
+      "key": "clear",
+      "value": "Очистить"
+    },
+    {
+      "key": "decide",
+      "value": "Подтвердить"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "оставаться"
+    },
+    {
+      "key": "current",
+      "value": "текущий"
+    },
+    {
+      "key": "part",
+      "value": "часть"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw Сначала туловище."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Торсо - это база. Draw другие части от их маркера соединения."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}Начните с маркера подключения."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw перед соединением других частей."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} Он подключен."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} Он не начинался с маркера соединения."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Торсо требуется до принятия решения."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} Он должен начинаться с маркера соединения."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Личный  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Команда  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Не могу решить: личное ink это {0:0.#}/{1:0}Уменьшите его {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Не могу решить: команда ink это {0:0.#}/{1:0}Уменьшите его {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}Начнем с маркера."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Голова"
+    },
+    {
+      "key": "torso",
+      "value": "Торсо"
+    },
+    {
+      "key": "left_arm",
+      "value": "Левая рука"
+    },
+    {
+      "key": "right_arm",
+      "value": "Правая рука"
+    },
+    {
+      "key": "left_leg",
+      "value": "Левая нога"
+    },
+    {
+      "key": "right_leg",
+      "value": "Правая нога"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Левый фронт"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Правый фронт"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Налево"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Назад назад."
+    },
+    {
+      "key": "tail",
+      "value": "хвост"
+    },
+    {
+      "key": "left_wing",
+      "value": "Левое крыло"
+    },
+    {
+      "key": "right_wing",
+      "value": "Правое крыло"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Хвостовое перо"
+    },
+    {
+      "key": "slime_body",
+      "value": "Слизь"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Обычный прыжок"
+    },
+    {
+      "key": "jump_double",
+      "value": "Прыжок x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Прыжок x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Нормальный охват"
+    },
+    {
+      "key": "arm_long",
+      "value": "Длинный путь"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Быстрый размах"
+    },
+    {
+      "key": "torso_normal",
+      "value": "нормальный"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Тяжелый коммутатор"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "тяжелый"
+    },
+    {
+      "key": "ability_summary",
+      "value": "нога {0:0.0}: {1}   Армия {2:0.0}: {3}   Торсо {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Крылья {0:0.0} INK / Скорость скольжения {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "Человеческая способность\nРуки {0:0.0} INK  Мощность ×{1:0.00}\nНоги {2:0.0} INK  Прыжок ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "Кошачий иммунитет\nЗадние ноги {0:0.0} INK  Скорость ×{1:0.00}\nПередние ноги {2:0.0} INK  Когтевой диапазон ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "ПТИЧЕСКАЯ БЕЗОПАСНОСТЬ\nКрылья {0:0.0} / 700 INK\nСкорость скольжения {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "ПРАВИЛЬНОСТЬ\nДержать SPACEНепобедимый снаряд\nДержать FПовернуть на 90° в сторону, обращенную в сторону"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "Небольшая мощность\nтело {0:0.0} / 700 INK\nДлина шипа вверх {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "человек"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "КПП"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "Птица"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "Письмо"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "Слайм"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Больше ног INK Увеличение мощности прыжка\nБольше рук INK Увеличить силу бросков"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Больше задней ноги INK Увеличение скорости бега\nБольше передней ноги INK увеличение диапазона царапин"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Больше крыла INK Увеличивает мощность скольжения"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Непобедимый, спрятанный в раковине"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Пресса F для восходящего ударного скачка\nменьше INK Позволяет сделать прыжок через стену / Wall jump enabled"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F:Выход"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "Деревянный SPACE: ГЛАЙД  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "Деревянный SPACESHELL HOLD FПоворот на 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "FОригинальное название: UPWARDPIKE ATTACK"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Мощность ×{0:0.00}  Прыжок ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Беги ×{0:0.00}  Когтевой диапазон ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Поплавковая мощность {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: Шелл /  F90° поворот"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Вверх длина шипа ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Руки {0:0.0}280 ног {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Назад {0:0.0}240 Фронт {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Крылья {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Активен только тогда, когда кнопка удерживается"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "Шелл готов"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE и F Работать пока держится!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "тело {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "РАНК {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "Низкий"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "высоко"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "прыжок"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "брось"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "Бегите"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "СКРАТКА"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "ГЛАЙД"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "Защита"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "Мобильность"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "тело INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "Альбом: GRIP UP"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "Альбом: Speed + JUMP UP"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK Размер {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "FПодпрыгивай! меньше INK = длиннее / Wall jump enabled"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Больше энергии!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Нельзя переделывать после того, как этот этап начался."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Высокая платформа"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Тяжелый коммутатор"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Дальний рычаг"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Узкая дыра"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "ROOM SETUP"
+    },
+    {
+      "key": "multi_participants",
+      "value": "Игроки"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "Создать комнату"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "Присоединяйся."
+    },
+    {
+      "key": "multi_room_id",
+      "value": "Идентификатор комнаты"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "Локальный тест (INVITES OFF)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "Ты"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 Маленькая служебная пещера"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "ВАНИШИНГ ФЛОУРА! Взять стену"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "ВАЛЬ-ДЖУМП И ДОДЖИНЫ, ПРОВОДЯЩИЕ МИССИЛЫ!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 Защити своего друга!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "фаза {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "Время {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Защитите своего друга с обеих сторон"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "Авианосец в {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "Друг упал... Проверить {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Защита чиста!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "монета {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "Время {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "Взять коробки и коллекционные монеты!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "ВРЕМЯ ВПЕРЕД... ПРИМЕЧАНИЕ В 5"
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 монет ясно!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "Власть включена!"
+    },
+    {
+      "key": "title_single",
+      "value": "Один игрок"
+    },
+    {
+      "key": "title_multi",
+      "value": "Мультиплеер"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Настройки"
+    },
+    {
+      "key": "option_back",
+      "value": "Вернуться  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "Вернуться  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "Вернуться  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Выход"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "ДЕБУГ КАПТУРЫ ТРЕЙЛЕРОВ"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4-пользовательская воздушная реле"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Человек бросает Птицу, затем Птицу → Кот → Эстафета Слизи"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "Последовательность начала"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "Вернуться  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "ИЗДЕЛИТЬ ЧАРАКТЕРЫ"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "Руководитель команды"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "ЭКСПОРТ 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "Вернуться к заголовку"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Проверьте состав, затем экспортируйте PNG."
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Спасены: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "Реставрация..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "Чарактеры могут быть изменены только в готовой комнате."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "Заменить прятки     ESC  Название"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "ТРЕЙЛЕР ТАС РЕКОРДЕР"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Скачать игру Overdub Human → Bird → Cat → Slime F9 Запись F10 Play P Pause O Step"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 Рекорд/стоп"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 Играть все"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 Возвращение"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "Ясно выделено"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "P-PAUSE"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "О шаг"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "ПРИЗНАНИЕ"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "Играть все треки"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "выдохся"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} Выбрано: {1} | {2} Кадры | Скорость {3:0.##}х"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "ПРЕСТ {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "Спасите шпильки"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Пока они простаивают, перетаскивайте персонажей, чтобы установить их стартовые позиции."
+    },
+    {
+      "key": "menu_continue",
+      "value": "Продолжать"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Название"
+    },
+    {
+      "key": "language_settings",
+      "value": "Языковые настройки"
+    },
+    {
+      "key": "multi_play",
+      "value": "Мульти-игры"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Случайный матч"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "частный"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Случайный матч"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Поиск игроков"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Поиск"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Соответствие...\n\nИгроки 2 / 4\n\n○ Вы\nИгрок 2\n□ Поиск\n□ Поиск\n\nЖдать (готово)"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "комната"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Создайте комнату"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Присоединяйтесь к комнате"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Название комнаты\n[править] Draw Вместе ]\n\nИгроки Max\n< 4 >\n\nвидимость\n[Публичный] [Частный]\n\nэтап\n[Выбор хоста]\n\nИзменить правила\n[Пауза для всех]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Игроки Max"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "видимость"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "видимость"
+    },
+    {
+      "key": "multi_public",
+      "value": "Публикация"
+    },
+    {
+      "key": "multi_private",
+      "value": "частный"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "переключаться"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "создавать"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter идентификатор лобби, отображаемый на экране хоста.\n\nС настройкой EOS друзья могут подключаться удаленно.\nПри использовании Direct TCP enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter Лобби ID"
+    },
+    {
+      "key": "multi_join",
+      "value": "Присоединяйся"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "освежить"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "Рум Любби"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Комната: Draw Вместе\nИсточник: ABC123\n2/4\n\nИгровое лобби space\nИграйте с коробками, мячами и прыжками во время ожидания."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Копии документов"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Начало 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Выберите этап"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Выберите этап разблокировки, когда все готовы."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Оставить эту комнату?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Оставить"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "отменить"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Ведущий выбирает этап..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Оставить"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Соответствие..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Начинать может только ведущий."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Идентификатор лобби не копирует."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Копировал удостоверение лобби."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Код комнаты."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Копирован идентификатор соединения."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Оффлайн. Код номера не доступен."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Оффлайн"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Код"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Подключение..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Комната"
+    },
+    {
+      "key": "multi_players",
+      "value": "Игроки"
+    },
+    {
+      "key": "multi_local",
+      "value": "местный"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Готовый"
+    },
+    {
+      "key": "multi_wait",
+      "value": "Ждать"
+    },
+    {
+      "key": "multi_host",
+      "value": "ведущий"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Вместе"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Комната друзей"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Ты"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "Ты"
+    },
+    {
+      "key": "online_player_host",
+      "value": "ведущий"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Игрок {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Поддельный случайный матч готов."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Фальшивый бэкэнд инициализировался."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Войти в..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Онлайн как локальный тест-плеер."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Фальшивый старт."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Создана частная комната."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Создана общественная комната."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "В поддельную комнату."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Прямая инициализация TCP."
+    },
+    {
+      "key": "online_ready",
+      "value": "Онлайн готов. Хост или присоединиться к комнате."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Комната создана. Поделитесь удостоверением с вашим другом."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Не удалось провести: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "Идентификатор номера должен быть host-ip:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Присоединиться к комнате..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Не удалось присоединиться: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Левое лобби."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Готовы к переменам."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Принять не удалось."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} Присоединился."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} покинул сессию."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Обновлено лобби."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Начало этапа {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "ЭОС инициализировалась. Настройка плагина EOS перед входом."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "Логин EOS..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "Интерфейс EOS Connect не готов."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Логин EOS не работает: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "EOS создала лобби, которое провалилось: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "Создана комната EOS. Поделитесь этим идентификатором лобби."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter Идентификатор лобби EOS."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter Код комнаты."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Не удалось зарегистрировать номерной код: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Поиск кода номера не удался: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Нет места для кода {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Код номера столкнулся. Пожалуйста, создайте новую комнату."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Ведущий открыл сценический выбор."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Выберите закрытую сцену."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS присоединилась к лобби: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Присоединился к EOS."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Левое лобби EOS."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Готов."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Не готов."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Создание EOS Device ID не удалось: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Создание EOS Device ID"
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Логин EOS Device ID не работает: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "Онлайн как {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Члены лобби обновились."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS не регистрируется. Сначала настройте плагин EOS и логин."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS отключен."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "ЭТАП ПРОЙДЕН!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Этап {0} пройден!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Пройдено!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Далее: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Выбор этапа"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Все этапы пройдены!"
+    },
+    {
+      "key": "stage_label",
+      "value": "этап {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "мир {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "Доступные шаблоны"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "Используйте: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "созданный"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "не созданный"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} недоступна на данном этапе."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Игрок уже использует {0}Выберите доступный персонаж."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "Чарактерный швап"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} используется. Нажмите COMPLETE, чтобы запросить своп."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} Хотите торговать своей {1} для {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "СВАП"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "ДЕКЛАЙН"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "В ожидании ответа на запрос о свопе..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Персонажи поменялись!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Запрос на своп был отклонен."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Другого игрока найти не удалось."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "ЗЕРНОЙ ДИСПЕНсер"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100 граммовый SCALE"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "Ворота"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "Друг Баттон"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "Игрок - только один путь"
+    },
+    {
+      "key": "species_human",
+      "value": "человек"
+    },
+    {
+      "key": "species_cat",
+      "value": "Кошка"
+    },
+    {
+      "key": "species_bird",
+      "value": "Птица"
+    },
+    {
+      "key": "species_turtle",
+      "value": "черепаха"
+    },
+    {
+      "key": "species_slime",
+      "value": "Слизь"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Объекты"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Ссылки"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Перетащите персонажа, чтобы начать тестовую игру с этой позиции. Сохранившийся этап нереста не меняется."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Перемещение стартовой позиции тестовой игры."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Тестовый старт: X {0:0.00} / Y/ {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Не может спасти: {0} Ошибка (ошибки). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Спасены: {0} ({1} Предупреждение(ы)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Создайте комнату\nНазвание комнаты (...)\nИгроки 2 / 3 / 4\nПубличный / Private\n\nПрисоединяйтесь к комнате\nИдентификатор номера (...)"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Перетащите на место / Нажмите, чтобы выбрать / WASD перемещаться\nДекорация: колесо для масштабирования / Сдвиг + колесо для вращения\nCtrl + колесо: масштабирование всей сцены"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} выбранные объекты"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Будут выбраны объекты, полностью закрытые коробкой."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "выбранный {0} объекты. Перетащите выбранный объект, чтобы сдвинуть их вместе."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Никакие объекты полностью не закрыты коробкой выбора."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "перенесенный {0} Отобранные объекты вместе."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Категория"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Поиск"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Тип"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Поисковое слово"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Список объектов"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Список ссылок"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "В."
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "Х-"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Реда"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Копия"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Объект копировался."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "Правильно"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "Вниз"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← Левый"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ UP"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Направление копирования: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Объект скопирован в сторону {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Должность: X {0:0.00} / Y/ {1:0.00} (стрелочные ключи)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Запуск Power"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Переместить расстояние"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Скорость движения"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Запал (сек)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Crumble Delay (альбом)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Требуются взрывы"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Скорость пояса"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Drop Interval (альбом)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Интервал луча (сек)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Размер коробки"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Размер бомбы"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Размеры Spike"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Расстояние движения: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Скорость движения: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Время взрыва: {0:0.0} секунда"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Задержка Crumble: {0:0.0} секунда"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Долговечность стен: {0:0} взрывы"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Скорость пояса: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Интервал падения: {0:0.0} секунда"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Размер коробки: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Сброшенный размер шипа: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Размер изготовленной бомбы: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Источник: ← Left"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Оригинальное название: Right"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Направление грузоотправителя: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Коробки: □□"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Коробки: площадь"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Коробки: Круглый"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Коробки: Треугольник"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Оригинальное название: Alternate Both"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Оригинальное название: Fuse on Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Оригинальное название: Fuse on Pickup"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Сброшенные коробки: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Изготовленные бомбы: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Направление движения: {0:0}Сдвиг + колесо"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Сила запуска: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "За одного игрока"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Спусковой вес, установленный {0:0} INK На одного игрока."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter Число от 1 до 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "ЛИЧНЫЙ КАП"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "ТЕАМ КАП ({0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "ПЕН СИЗЕ"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "Ясная часть"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "ООН"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "Возвращайся"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Сбросить все?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Стереть каждую часть тела и восстановить первоначальный характер."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "Возрождение"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "Канцелярия"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} ПРЕЗИДЕНТЫ"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "ПРЕЗИДЕНТЫ"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5-ХАРАКТЕРНЫЕ ПРЕЗИТЫ"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "Человеческий КОТ ПЕРВОЙ ТУРТЛЕВЫЙ СЛАЙМ"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "Все пять персонажей"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "шлюха {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "спасенный"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "быстро"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "спасать"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "СТАТЬ"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "Спасти, чтобы сохранить {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Сохранить текущий {0} Настроить Preset {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Переписать {0} рисовать заранее {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "Садись. {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Заменить текущее {0} Рисунок с предустановленным {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Предыстория"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "дерево"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Справочная трава"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Цветок"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Предыстория Буш"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "облако"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Справочная информация PUSH"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Стрела"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Лицо кошки"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Лицо собаки"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Фигура палки"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Смайли"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Сердце"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Звезда"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Луна"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Солнце"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "дождь"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Молния"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Радуга"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Гора"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Четырехлистный клевер"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Гриб"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Apple"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "банан"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "арбуз"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "пончик"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Мороженое"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Кофейная чашка"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "пицца"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Хлеб"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Бумажный самолет"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Самолет"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Ракета"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "НЛО"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Воздушный шар"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Дом"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Замок"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Сундук сокровищ"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "крот"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "окаменелость"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Кристаллический"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Древний Пот"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Ключ"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Ключ от замочной скважины"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Меч"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "корона"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Щит"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "драгоценный камень"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Монета"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "косточка"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Light Bulb (альбом)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Гир"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Весна"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "магнит"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "рис"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Речевой пузырь"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Проверить Марк (✓)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Вопросительный знак (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Восклицательный знак (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Луп Стрела"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "Прыгай!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Бросай!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Начни!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "Хорошо!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Вращение: смещение + колесо (точность 0,5 градуса)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Вращение: Сдвиг + колесо (15°), с Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Вращение: Сдвиг + колесо (15°), с Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Масштаб: колесо мыши"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Меры"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Появляется"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "исчезнуть"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Разблокировать"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Двигаться"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Переместите платформу правильно"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Переместить платформу вверх"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Переместить платформу влево"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Переместить платформу вниз"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Ссылочное действие: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Ключ должен быть связан с замочкой."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Ключ к замочной скважине всегда использует Unlock."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Щелчок"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Ссылка из"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Ссылка на"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Ссылка"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Добавить: {0} / Снэп: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Поз {1:0.0},{2:0.0}  Размер {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Ширина = правая стена / высота = потолок (левая стена и нижний край остаются фиксированными)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "каркас"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Создан каркас вокруг размещенных объектов. Выберите его для настройки правильной стены и потолка."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Стена установлена точно между полом и потолком."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "Цель"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "комната {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "Бомб"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "Ошибка"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Готовый"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "ТНТ"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Предыстория"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "Игроки {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "Стейдж {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 превью: {0} Игрок(ы)/сцена {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Цвет фона"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "по умолчанию"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Закрыть"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "открытость"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Изменился фоновый цвет. Сохраните сцену, чтобы сохранить ее."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Добавить режим: {0}Перетащите на карту, чтобы создать его."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Добавить режим: {0}Нажмите на карту, чтобы разместить его."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Выбрано из списка."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Нет совпадений"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(нет)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "территория"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Старт/цель"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "переключатель"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Дверь/Врата"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "подвижный"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Меры"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Ловушка"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Гиммик"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Враги"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "пол"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "стена"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Начинать"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Цель"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Шкала баланса"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "вес"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Потолок"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Половина этажа"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "односторонний пол"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Ледяной пол"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Скользкая шляпа"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Подъемная стена"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "веревка"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "лестница"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Облачный пол"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Сломанный пол"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Падающий пол"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Движущийся пол"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Липкий движущийся однонаправленный пол"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 Предупреждение DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Отскакивайте мяч своим телом и ломайте NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "Блоки {0}  шары ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "Время в пути {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "Начать с {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "рычать {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "шар {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "Следующий раунд {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 мяча потеряны! ПРИМЕЧАНИЕ"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Все улицы чистые!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "Энемий слева {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "пистолет"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Пуленепробиваемая стена"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Планета Спайка"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Зигзаг Флайер"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Орбитальный летчик"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Базука"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Летающий бомбардировщик"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Скачать Spike Ball"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Ключ от позы"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Замочная скважина"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "подъем"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Скоростной знак"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Speed Mark (сильная)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Обратная зона"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Пули необходимы"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Пули требуются: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Вращающийся пол"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Контрольная точка"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Варп вход"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Выход Warp"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Пойнт Респаун"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Средняя цель"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Эффект цели"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Кнопка"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Кнопка веса"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Одновременная кнопка"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Держите Баттон"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Треугольный ящик"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "рычаг"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Переключатель Toggle"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Таймерный переключатель"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Сенсор"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Красный коммутатор"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Синий коммутатор"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Зеленый коммутатор"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Желтый коммутатор"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Тарелка давления"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Дистанционный контроль"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink масштаб"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Дверь"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Запертая дверь"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Затвор"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "ограда"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Лазерные ворота"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Цветные ворота"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Односторонние ворота"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Врата времени"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Сломанная стена"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Скрытая стена"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Деревянная коробка"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Железный ящик"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "мяч"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Баррель"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "рок"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Ледяной блок"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Плавающий ящик"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Резиновая коробка"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "бомба"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Бомба (запуск взрывателя)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Изготовитель бомб"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Динамит"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Враг Уокера"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Враг Джампера"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Враг зарядного устройства"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Летающий враг"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Стрелок Враг"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Враг Спаунер"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Ракетная установка"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "активировать"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Это устройство всегда использует активацию."
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Запуск Interval"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Размер врага"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Пойманный враг: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Размер врага: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Ключ"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Монета"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Звезда"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "батарея"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "ведро"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Прыжок Пад"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Весна"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Конвейер слева"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Конвейер справа"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "лифт"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "фанат"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "магнит"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Пояс"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Бокс дроппер"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Спайк Дроппер"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Рыба"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Монета"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Звезда"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Цифровые часы"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Луч Эмиттер"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "нормальный"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "предельный срок"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "выживание"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}s"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "х{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "ВСЕ"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Правило этапа: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Время {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "Время вышло"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Нажмите R, чтобы повторить"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 Выживание"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Один спаситель ясен!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "Двигайтесь к светящемуся полу"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "ТАРГЕТ  {0:0}g (90 г x игроков)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "Перейти к позиции перед дождем"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Поймай зерна!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "Вау..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "Удаление зол на пол"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Ясно!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Так близко!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "Слезы на плечах  {0:0}g) {1:0}г"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "Редкий дождевой наконечник готов!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "Попробуйте лучшую форму головы"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "Стейдж {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Поймайте кровавый ливень, падающий с правой стороны!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "Быстрые дожди ударят по разбитым позициям - один игрок!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 Ледяной СПЕДРУН - ОДИН ПЛАЙЕР ФИНИШЕС"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Начни!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "Время в пути {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Готовься!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Начни!"
+    },
+    {
+      "key": "game_over",
+      "value": "Игра окончена"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Этот человек не спит с самого начала. Пожалуйста, снимите поменьше."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Это тело может выскользнуть из комнаты. Пожалуйста, поставьте точку."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Готовый {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "РЕКОМЕНДУЕТСЯ"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "Никто"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "Никаких изменений в расписании или редрау после ухода"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "Никаких изменений после увольнения."
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Готовьтесь начать игру"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "Соберите рыбу перед тем, как время закончится"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "Победить короля Крайона"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "Уничтожить препятствия и выжить"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "Включайте каждую акварель в свои тела"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Используйте свое тело, чтобы пропустить паф."
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "Убийца падающих пилларсов"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "Откажитесь от шара и разрежьте каждый блок"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "Заполните бал INK МАГНЕТЫ И СИНИТЕ ЭТО"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "Уничтожьте остатки и выживите"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "Коллективные монеты при падении"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "Соберите падающие зерна и наберите высоту"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Беги быстрее. Добейтесь цели до того, как время закончится."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "Рикошет Буллз, чтобы победить врагов"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "Свежий тьма и прочь от призраков"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "Выжить, пока время не закончится"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "Бросить бомбы, чтобы разбить каждый блок"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "Взять коробки и коллекционные монеты"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "Коллекционные монеты перед тем, как время уходит"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "Коллекционные монеты перед тем, как время уходит"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "Защити своего друга от врагов"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "Назад, чтобы победить врагов"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "Успокойся перед тем, как закончится время"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "Используйте Умбреллу, чтобы держаться подальше от дождя"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "Положите лазера на каждое тело к цели"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "Победи Крейона Дэвила"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "Победитель Крейон Сталкер"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "Победить врагов"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "Ясно, если хотя бы один игрок выживет."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "Ясно, когда любой игрок достигает цели."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "Шпикская стена"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Жди знамения!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Беги к цели!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "Ветер меняется!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "меньше INK Сильнее ветра"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "Время {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "Время вышло"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Оставайтесь под Умбреллой!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "RAIN KNOCKS YOU OUT - RACH SHELTER смотреть онлайн"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Все были в дожде!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 Ограниченные щиты"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Проверь каждую трубку!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "БЛОК-МИССИЛЫ С 1 Вторыми Щитами!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "TEAM DOWN - РЕСТАНЦИЯ"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60-секундная защита."
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "РАУНД {0}/3    ОСТАЛОСЬ {1:0.0} с"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "Цели {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "МЕНЯЙТЕ ПОЗИЦИИ И УГЛЫ, ЧТОБЫ ОТРАЖАТЬ ЛАЗЕР!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "РАУНД {0} ПРОЙДЕН!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "ВРЕМЯ ВЫШЛО! ЭТОТ РАУНД НАЧИНАЕТСЯ ЗАНОВО"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "Крейон Дэвил HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 Готовы к открытию"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "ПЛАТФОРМНЫЙ КЛИК: МИССИЯ  F: БОМБ"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "Босс погиб!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "Все плоскости опущены"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "Домашние Миссилии - Уходите!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "ТАРГЕТ - Оставьте команду!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "SUCTION - Двигайтесь!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "Пересмотр движения...  {0}s"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Беги, прыгай, поворачивайся и останавливайся — твой двойник учится."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "фаза {0}  Двойные слева: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Заманите одну на стартовую площадку, затем нажмите на ее красный выключатель!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Все двойники уничтожены!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Больше начальника никогда не было."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "фаза {0}  Начало"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Победите команду CPU, надев ваши точные формы."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "фаза {0}  Слева: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "фаза {0} Ясно!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Оружие с красными выключателями. FБомба CLICK: ракета"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Миссис готов! Цельтесь мышкой и щелкните."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "Команда процессора уничтожена!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "Окончательная битва раскрыта!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "Время вышло"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Время вышло!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Все опустились!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Провалил! Перезапуск с самого начала через 3 секунды."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "Крейон Сталкер HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 Будьте готовы"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Беги правильно! Используйте ЗЕЛЕННЫЕ ВОЙНЫ!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "Убийца убит!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "Все были ранены."
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Беги!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Посмотрите на цветущий пол!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "Выживи! Время вышло"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "Безопасные цветы {0} /Прыгать {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Оставайтесь на безопасном месте!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Все игроки выходят"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "Восстановление"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "Найдено спасение!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "Очищенное выживание"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 PILLAR SURVIVAL"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "Смотрите предупреждение и положите трубы"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "Входите! Оставьте цветущую зону"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "ПИЛЛАР СЕРВИВАЛ ОЧИТАЕТСЯ!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 Крейон Кинг"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER Следующая комната"
+    },
+    {
+      "key": "boss_appears",
+      "value": "Предупреждение: босс!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "Стреляй, чтобы напасть / Прямая коробка, чтобы охранять"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Гард! Босс непобедим."
+    },
+    {
+      "key": "boss_charge",
+      "value": "Шарж! Убирайся с дороги"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "Пошли. {0}Пошли на высокие этажи."
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Специальный удар! Уничтожить крокодилов"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "Босс погиб!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Все игроки выходят..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "В ожидании комнаты  {0} / {1}  Собирайтесь!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 УБИЙСТВО ЧЕРЕЗ"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Один спаситель ясен!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "ДЖУМП ОБРАЩАЕТСЯ С ПРАВОЙ В течение 60 секунд"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "Смотреть на часы с правой стороны"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "Прыгай!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Прыгай в часы!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Тормози, хватай дыхание!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Быстрее! Наконец-то!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Все игроки выходят"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "Ужасное выживание раскрыто!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "Найден спаситель"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 ОБЯЗАТЕЛЬНЫЙ ДРУЗЬ"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "Друг двигается"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "Постройте пятно с коробками, планшетами и вашим телом"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 Защитить друга"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "АААХ!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "Беги, беги, беги, беги, беги."
+    },
+    {
+      "key": "escort_respawning",
+      "value": "Следующий друг в  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Представляем нового друга..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "Эскорт комплет!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "Друг достиг цели"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "рычать {0}3 Строительство {1:0.0}s"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "Соедините пятно с вашим телом"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Иди! Помогите другу достичь цели"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "рычать {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "рычать {0} Ясно!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "РАУНД {0}/3    ОСТАЛОСЬ {1:0.0} с"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "Занавески {0}/{1}    Включите их всех в свои тела!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "РАУНД {0} ПРОЙДЕН!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "ВРЕМЯ ВЫШЛО! ЭТОТ РАУНД НАЧИНАЕТСЯ ЗАНОВО"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "ЗАКРОЙТЕ ОТВЕРСТИЯ!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "рычать {0}/3    {1:0.0}Слева"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "шары {0}/{1}    Убейте их в холмы!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "Поймайте мяч с магнетизмом!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "рычать {0} Ясно!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Время вышло! Проверяем эту зону"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Двигайся по своей земле! Больше INK ЗАМЕЧАЕТ СТРОЙНЫЙ МАГНЕТИЗМ"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "Оригинальное название: REACH THE SNACK ABOVE!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "Постройте пятно над снеком!\nСвяжитесь с вашим телом"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "Друг может ходить по твоей голове и линиям тела"
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "Дружеский старт"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "Друг пропадет!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "Игра окончена"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Ты не можешь отвлечься, пока друг движется."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 Рикошет Релей"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "рычать {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "АММО {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "РИКОШЕТНЫЕ БОЛЛЕТЫ ДРУЗЕЙ, КОТОРЫЕ ДЕЛАЮТ ТАРГЕТ"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Из Аммо! восстановление"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 ГОРЯЧИЙ КЛИР!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Друг Спаунер"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Цель друга"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Дружеский пол"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Пример головного моста"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Пила"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "поворотный"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "пушка"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "катапульта"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Спайк"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Огонь"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "вода"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "яд"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "лазер"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Падающая скала"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Пресс-машина"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Электричество"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Пила"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Черная дыра"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Гир"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Большой Груша"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Роп Пулли"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Слайдер"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Вращающийся бар"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "маятник"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Замок"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Сценическая граница"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Часы"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "счетчик"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Выберите этап"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Оставить сеанс"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Перезапустить этап"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Оставить онлайн-сессию?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Уход в качестве хозяина завершит эту сессию для всех. Уйти?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Оставить"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Связанный как мост: правый край остается связанным, в то время как он простирается налево."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Разделите связанную местность на индивидуально выбираемые и связанные части."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "отдельно"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Отдельная часть включена. Он может сломаться без слияния и может быть связан индивидуально."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Отдельная часть отсутствует. Прикосновение к местности может слиться."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Соединял пол и стену как одну форму местности."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Посадить на прямой {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Толщина"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Толщина пола и стенки: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Прямой"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Прямолинейный рисунок включен."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Прямолинейный рисунок отключен."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw режим"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw режим"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Выберите режим"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw Режим: drag on empty space размещать объекты."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Выберите режим: выберите и переместите существующие объекты."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} свободно перетаскивая."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Свободный напольный и настенный рисунок включен."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Прямоугольное размещение включено."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Дрю {0} как один соединенный путь ({1} пункты)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Вернуться в Редактор"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Вернуться в Редактор  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Вернулся из тестовой игры. Продолжайте редактировать свою сцену."
+    },
+    {
+      "key": "cancel",
+      "value": "отменить"
+    },
+    {
+      "key": "retry",
+      "value": "Повторить"
+    },
+    {
+      "key": "menu",
+      "value": "Меню"
+    },
+    {
+      "key": "redraw",
+      "value": "Рид"
+    },
+    {
+      "key": "pen",
+      "value": "Пенни"
+    },
+    {
+      "key": "eraser",
+      "value": "Эразер"
+    },
+    {
+      "key": "shape_square",
+      "value": "Коробка"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Круг"
+    },
+    {
+      "key": "shape_line",
+      "value": "линия"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Готово!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Назад"
+    },
+    {
+      "key": "brush_size",
+      "value": "Размер"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink использованный"
+    },
+    {
+      "key": "undo",
+      "value": "Снять"
+    },
+    {
+      "key": "character_switch",
+      "value": "Переключатель персонажей"
+    },
+    {
+      "key": "character_add",
+      "value": "Добавить Char"
+    },
+    {
+      "key": "character_delete",
+      "value": "Удалить Чара"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Коммутатор Char"
+    },
+    {
+      "key": "stage_select",
+      "value": "Выбор этапа"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 групп, по 3 этапа. Включите редактирование, затем выберите этап для редактирования."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0 Debug"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Редактировать 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Исполнитель: OFF"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Редактировать: ON"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "НОВОСТИ"
+    },
+    {
+      "key": "stage_clear",
+      "value": "Ясно"
+    },
+    {
+      "key": "stage_locked",
+      "value": "Закрытый"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Режим отладки: все миры разблокированы. Выберите сцену для игры или поверните Edit ON, чтобы отредактировать ее."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1: Пол 2: Стена перетаскивает для создания блоков\n3: Старт 4: Цель 5:Масштаб 6: Вес\nA/D/W/S: движущаяся камера Колесо: зум\nF5Сохранить  F6: Тест  Esc:Back"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "масштаб"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Размер"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "сетка"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Исключить"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Спасти"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Тест"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "Вернуться  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Игровые настройки"
+    },
+    {
+      "key": "option_bgm",
+      "value": "БГМ"
+    },
+    {
+      "key": "option_se",
+      "value": "Шеф."
+    },
+    {
+      "key": "option_keys",
+      "value": "Ключи"
+    },
+    {
+      "key": "option_language",
+      "value": "Язык языка"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Пока нет."
+    },
+    {
+      "key": "locked_stage",
+      "value": "Этапы без JSON возвращаются к стадии отладки."
+    },
+    {
+      "key": "human",
+      "value": "человек"
+    },
+    {
+      "key": "cat",
+      "value": "Кошка"
+    },
+    {
+      "key": "bird",
+      "value": "Птица"
+    },
+    {
+      "key": "turtle",
+      "value": "черепаха"
+    },
+    {
+      "key": "slime",
+      "value": "Слизь"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 Ball Hit"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "ВЕДУЩИЕ ЧАСТИ"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "Выбор"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Выберите часть, затем нажмите или перетащите на карту, чтобы разместить ее."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Снэп: {0} / {1:0.##} единичная сеть"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Сначала выберите объект."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Видт изменился. Вы также можете использовать Shift+ Колесо."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Высота изменилась. Также можно использовать Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Размер изменился. Используйте колесо для масштабирования обеих осей."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Перетащите большую площадь, чтобы разместить эту часть."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "размещенный {0} ({1:0.0} х {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "размещенный {0} в {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Выбрано. Перетащите колесо и используйте его для изменения размера."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Нечего делать."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Последний редактировал."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Нечего переделывать."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Редактировать."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Выберите переключатель, кнопку, ключ или замочную скважину для использования в качестве источника ссылки."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Выберите переключатель, кнопку, ключ или замочную скважину в качестве источника ссылки."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Источник ссылки: {0}Выберите цель, затем нажмите Link To."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Сначала установите источник ссылок."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Выберите объект для использования в качестве цели ссылки."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Источник и цель ссылки должны быть разными объектами."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "связанный {0} то {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Сначала выберите связанный объект."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Очистил связь."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Спасены: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Экономия в настоящее время доступна только в редакторе Unity."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Фабрика сценических объектов отсутствует."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Светофор"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 БЛОК КРАШ"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Блок-брейкер"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Сбрось бомбы! Вздохни. NICO DRAW Блоки!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} Блок слева"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "Неудачный... старт {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "Се Браузер"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Поиск по действию или SE ID, затем нажмите Play для предварительного просмотра назначенного звука. Наведите ряд, чтобы увидеть его ресурсный путь."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "играть"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "Хватит."
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "читать"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Никаких звуковых эффектов."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE.md не найден."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "некатегоризированный"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "мутировавший"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Сгенерированный во время выполнения звук"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Печать лапы"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Рыба"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Ярн Болл"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Снежный кристалл"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Цикл"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Снежный человек"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Blizzard"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "перо"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Птичье гнездо"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Ветровые линии"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "труба"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Болт"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "цепь"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Парень"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "черепаха"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Хургласс"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Падлок"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Слизь"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Пузыри"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "бабочка"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Леди Баг"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Подсолнечник"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "тюльпан"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Скелет"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Бэт"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "паутина"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Сталактит"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Фонарь"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Минекарт"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Пикакс"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Трофей"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Медаль"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "свисток"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Воздух"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "конфетти"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Фейерверк"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Башня"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "бинокль"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Мост"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "карандаш"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Карандаш"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Эразер"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Записная книжка"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Блэкборд"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Палетта"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "кисть"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "холст"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Стоп-час"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "В центре внимания"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "микрофон"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Сыр"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Коробка сюрпризов"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Подарочная коробка"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Планета"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Чужой"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "комета"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Черная дыра"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Мыльный пузырь"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Мох"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Корень дерева"
+    }
+  ]
+}

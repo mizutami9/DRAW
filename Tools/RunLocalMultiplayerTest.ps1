@@ -12,7 +12,8 @@ $resolvedExe = (Resolve-Path -LiteralPath $GameExe -ErrorAction Stop).Path
 $common = @(
     "-pico-regression-port=$Port",
     "-pico-regression-players=$Players",
-    "-pico-regression-stage=$Stage"
+    "-pico-regression-stage=$Stage",
+    "-pico-debug-no-time-limit"
 )
 
 Start-Process -FilePath $resolvedExe -ArgumentList ($common + @(

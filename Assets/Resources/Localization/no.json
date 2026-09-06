@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "PLAYER NAMN"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter Ditt navn"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Vær så snill enter Et spillernavn."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER Ditt navn her"
+    },
+    {
+      "key": "option_register",
+      "value": "Register"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Japansk"
+    },
+    {
+      "key": "lang_en",
+      "value": "EN"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Klart! Trykk R for å prøve igjen."
+    },
+    {
+      "key": "draw_title",
+      "value": "Design (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TABTilbake til spillet ENTERAvgjørelse / ESC: Avbryt"
+    },
+    {
+      "key": "preview",
+      "value": "Forhåndsvisning"
+    },
+    {
+      "key": "clear",
+      "value": "Slett"
+    },
+    {
+      "key": "decide",
+      "value": "Bekreft"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Resterende"
+    },
+    {
+      "key": "current",
+      "value": "Nåværende"
+    },
+    {
+      "key": "part",
+      "value": "Del"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw Torsoen først."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso er basen. Draw Andre deler fra tilkoblingsmerket."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}Start fra tilkoblingsmerket."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw torso før du kobler andre deler."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} er forbundet."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} Startet ikke på forbindelsesmerket."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Torso kreves før det bestemmes."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} må starte ved tilkoblingsmerket."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Personlig  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Team  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Kan ikke bestemme: personlig ink er {0:0.#}/{1:0}Reduser den ved {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Kan ikke bestemme: team ink er {0:0.#}/{1:0}Reduser den ved {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}Start fra markøren."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Hoved"
+    },
+    {
+      "key": "torso",
+      "value": "Torso"
+    },
+    {
+      "key": "left_arm",
+      "value": "venstre arm"
+    },
+    {
+      "key": "right_arm",
+      "value": "høyre arm"
+    },
+    {
+      "key": "left_leg",
+      "value": "Venstre ben"
+    },
+    {
+      "key": "right_leg",
+      "value": "Høyre ben"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Venstre foran"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Høyre front"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Venstre bak"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Rett bak"
+    },
+    {
+      "key": "tail",
+      "value": "Tail"
+    },
+    {
+      "key": "left_wing",
+      "value": "Venstre Wing"
+    },
+    {
+      "key": "right_wing",
+      "value": "Høyrevinge"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Tail Feather"
+    },
+    {
+      "key": "slime_body",
+      "value": "Slime"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Normal hopp"
+    },
+    {
+      "key": "jump_double",
+      "value": "Hopp x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Hopp X3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Normal rekkevidde"
+    },
+    {
+      "key": "arm_long",
+      "value": "Lang rekkevidde"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Fast Swing"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Normal"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Tung bryter"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Tung"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Ben {0:0.0}: {1}   Arm {2:0.0}: {3}   Torso {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Wings {0:0.0} INK / Glidehastighet {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "MENNESKE ABILITY\nArmer {0:0.0} INK  Strøm ×{1:0.00}\nBen {2:0.0} INK  Hopp ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "KAT ABILITY\nBakben {0:0.0} INK  Hastighet ×{1:0.00}\nFrontben {2:0.0} INK  Kloområde ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "BIRD ABILITY\nWings {0:0.0} / 700 INK\nGlidehastighet {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "TURTLE ABILITY\nHold SPACE: uovervinnelig skall\nHold F: vri 90° mot retning"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "SLIME ABILITY\nKropp {0:0.0} / 700 INK\nOppover pigglengde {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "MENNESKE"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "CAT"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "BIRD"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "TURTLE"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Mer ben INK Økt hoppkraft\nMer arm INK øker kastekraft"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Mer back-leg INK Økt kjørehastighet\nMer front-leg INK Øker ripeområdet"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Mer vinge INK øker glidekraften"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Uovervinnelig mens skjult i skallet"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Presse F for en oppadgående angrep pigg\nMindre INK gjør det lengre / Wall hopp aktivert"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: THOW"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "HOLD SPACE: GLIDE  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "HOLD SPACE: SHELL HOLD F: TURN 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: UPWARD Spike Attack"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Strøm ×{0:0.00}  Hopp ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Kjør ×{0:0.00}  Kloområde ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Flow power {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: SHELL /  F: 90° TURN"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Oppover pigglengde ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Armer {0:0.0}/280 Ben {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Tilbake {0:0.0}/240 Front {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Wings {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Bare aktiv mens knappen holdes"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "SHELL LESY"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE og F Arbeid mens det holdes!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Kropp {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "LOW"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "Høy"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "THROW"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "RUN"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "SCRATCH"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GLIDE"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "DEFENSE"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "MOBILITET"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "BOD INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "LIGHT: GRIP UP"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "HEAVY: SPEED + JUMP UP"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK STORLEK {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "FSpike opp! Mindre INK = lengre / Wall hopp aktivert"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Mer til makt!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Du kan ikke trekke deg tilbake etter dette trinnet har begynt."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 høy plattform"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Tung bryter"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Far Lever"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Narrow Hole"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "ROOM SETUP"
+    },
+    {
+      "key": "multi_participants",
+      "value": "PLAYERS"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "CREATE ROOM"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "ROOM"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "ROOM ID"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "LOKALTEST"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "Du"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 SLIME MISSILE CAVE"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "FLOOR VANISING! GRAB A WALL"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "WALL-JUMP OG DODGE PIERCING MISSILES!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 Protect din friend!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "PHASE {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "TID {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Forsvar din venn fra begge sider"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "AIRSTRIKE IN {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "FRIEND DOWN... RETRY IN {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Defense CLEAR!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "COIN {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "TID {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "BOKER OG KOLLEKTKONNER!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "TIME UP... RETRY I 5"
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 COIN CLEAR!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "POWER on!"
+    },
+    {
+      "key": "title_single",
+      "value": "Én spiller"
+    },
+    {
+      "key": "title_multi",
+      "value": "Flerspiller"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Innstillinger"
+    },
+    {
+      "key": "option_back",
+      "value": "Tilbake  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "Tilbake  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "Tilbake  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Avslutt"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "TRAILER CAPTURE DEBUG"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4-spillers luft relé"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Mennesket kaster fugl, så fugl → Katt → Slim stafett"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "START SEQUENCE"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "Tilbake  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "EDIT CHARAKTERS"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "STEAM HEADER"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "EXPORT 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "Tilbake til TITTEL"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Sjekk sammensetningen og eksporter deretter PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Lagret: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "REDRAWING..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "KAMPORER kan bare endres i det lekre rommet."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY HIDE HUD     ESC  TITTEL"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "TRAILER TAS RECORDER"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Dra skuespillere mens du er inaktiv | Overdub menneske → Fugl → Katt → Slime | F9 Record F10 Spill P pause O trinn"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 REKORD/STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 Slay alle"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 RESET TA"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "CLEAR  jämt"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "P PAUSE"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O STEP"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "Recording"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "Å legge alle trekk"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "PAUSED"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} Valgt: {1} | {2} bilder | Hastighet {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "PRESET {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SAVE SHAPES"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Mens inaktiv, dra tegn for å sette sine startposisjoner"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Fortsett"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Tittel"
+    },
+    {
+      "key": "language_settings",
+      "value": "Språkinnstillinger"
+    },
+    {
+      "key": "multi_play",
+      "value": "MULTI PLAY"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Tilfeldig match"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Privat"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Tilfeldig match"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Søker etter spillere"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Søker"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Matching...\n\nSpillere 2 / 4\n\n○ Du\n○ Player2\n□ Søker\n□ Søker\n\nVenter på [READY]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "ROOM"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Lag rom"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Bli med i rommet"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Romnavn\n[ Draw Sammen ]\n\nMax spillere\n< 4 >\n\nSynlighet\n[Privat]\n\nStage\n[Vertsvalg]\n\nRedraw Rule\n[Paus alle]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Max spillere"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Synlighet"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Synlighet"
+    },
+    {
+      "key": "multi_public",
+      "value": "Offentlig"
+    },
+    {
+      "key": "multi_private",
+      "value": "Privat"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Bytt"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Lag"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter Lobby ID vises på vertsskjermen.\n\nMed EOS konfigurert kan venner bli med eksternt.\nHvis du bruker Direct TCP, enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter Lobby ID"
+    },
+    {
+      "key": "multi_join",
+      "value": "Bli med"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Oppdater"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "ROOM LOBBY"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Rom: Draw Sammen\nID: ABC123\n2 / 4\n\nEn lekbar lobby space\nSpill med bokser, baller og hoppe pads mens du venter."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Kopier ID"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Start 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Stage Velg"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Scene velger låser når alle er lesne."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "La dette rommet være?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Leave"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Avbryt"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Værten velger en scene..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Leave"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Matching..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Bare verten kan begynne."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Ingen Lobby ID å kopiere."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Kopiert Lobby ID."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Kopiert romkode."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Kopiert tilkoblings-ID."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Frakoblet. Ingen romkode er tilgjengelig."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Frakoblet"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Kode"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Koble til..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Rom"
+    },
+    {
+      "key": "multi_players",
+      "value": "Spillere"
+    },
+    {
+      "key": "multi_local",
+      "value": "Lokal"
+    },
+    {
+      "key": "multi_ready",
+      "value": "READY"
+    },
+    {
+      "key": "multi_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "multi_host",
+      "value": "HOST"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Sammen"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Vennlig rom"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Du"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "Du"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Vært"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Spiller {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Falsk tilfeldig match klar."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Falsk backend startet."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Logger inn..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Online som lokal testspiller."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Falske scenen starter."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Privat rom opprettet."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Offentlig rom opprettet."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Bli med i falske rom."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Direkte TCP initiert."
+    },
+    {
+      "key": "online_ready",
+      "value": "Online klar. Vær vert eller bli med i et rom."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Rom laget. Del ID med din venn."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Klarte ikke å være vert: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "Rom-ID må være host-ip:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Oppdaterer listen..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Klarte ikke å bli med: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Venstre lobby."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Klart endret."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Godta feil."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} ble med."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} fra sesjonen."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Lobby oppdatert."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Startfase {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS startet. Konfigurer EOS- plugin før innlogging."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "EOS-innlogging..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "EOS Connect-grensesnitt er ikke klart."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "EOS- innlogging mislyktes: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "EOS opprette lobby mislyktes: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "EOS rom opprettet. Del denne Lobby ID."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter EOS Lobby ID."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter En romkode."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Klarte ikke å registrere romkode: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Søking av romkode mislyktes: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Ingen rom funnet for kode {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Romskoden kolliderte. Vennligst lag rommet igjen."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Verten åpnet scenevalg."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Verten lukket scenevalg."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS- lobbyen mislyktes: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Jeg ble med i EOS rom."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Venstre EOS lobby."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Klar."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Ikke klar."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Oppretting av EOS- enhets- ID mislykkedes: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Oppretter EOS- enhets-ID..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "EOS- enhets-ID-innlogging mislyktes: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS online som {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Lobby medlemmer oppdatert."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS er ikke logget på. Konfigurere EOS-plugin og logg inn først."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS er deaktivert."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "BANEN FULLFØRT!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Bane {0} fullført!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Fullført!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Neste: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Velg bane"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Alle baner fullført!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Stage {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "verden {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "TILGJENGELIGE KARAKTERER"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "BRUK: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "CREATED"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "Ikke kremert"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} er ikke tilgjengelig i dette stadiet."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "En annen spiller bruker allerede {0}Velg et tilgjengelig tegn."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "CHARACTER SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} er i bruk. Trykk på COMPLETE for å be om en swap."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} Ønsker å handle din {1} for {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "DECLINE"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Venter på et svar på swap-forespørselen..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Tegn byttet!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Swapforespørselen ble avslått."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Den andre spilleren ble ikke funnet."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "GRAIN DISPENSER"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100g SCALE"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "Vekt GATE"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "FRIEND BUTTON"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "PLAYER-ONLY Enveis FLOOR"
+    },
+    {
+      "key": "species_human",
+      "value": "Menneske"
+    },
+    {
+      "key": "species_cat",
+      "value": "Katt"
+    },
+    {
+      "key": "species_bird",
+      "value": "Bird"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Turtle"
+    },
+    {
+      "key": "species_slime",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Objekter"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Links"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Dra figuren for å begynne testspill fra den posisjonen. Den redde fase gyte er ikke endret."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Å flytte startposisjonen for testspill."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Teststart: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Kan ikke lagre: {0} feil(er). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Lagret: {0} ({1} advarsel(er)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Lag rom\nRomnavn [......]\nSpillere 2/3 / 4\nOffentlig / privat\n\nBli med i rommet\nRom ID [...]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Dra for å plassere / Klikk for å velge / WASD å flytte\nDekorasjon: Hjul til skala / Shift + hjul til å rotere\nCtrl + hjul: zoom hele scenen"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} objekter valgt"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Objekter som er fullt innesluttet av boksen vil bli valgt."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Valgt {0} objekter. Dra et valgt objekt for å flytte dem sammen."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Ingen objekter er fullt innesluttet av utvalgboksen."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Flyttet {0} Velg objekter sammen."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Kategori"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Søk"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Type"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Søkeord"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Objektliste"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Linkliste"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "W-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "H-"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Gjenopprett"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Kopier"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Objekt kopiert."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ Rett"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ DOWN"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← LEFT"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ UP"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Kopier retning: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Objekt kopiert flush mot {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Posisjon: X {0:0.00} / Y {1:0.00} (pilenøkler)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Launch Power"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Flytt avstand"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Flyttehastighet"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Fuse (sec)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Crumble forsinkelse (sek)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Eksplosjoner som kreves"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Beltehastighet"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Drop interval (sek)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Beam intervall (sek)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Boksstørrelse"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Bombestørrelse"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Spikestørrelse"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Flytteavstand: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Flyttehastighet: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Fuse tid: {0:0.0} sek"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Crumble forsinkelse: {0:0.0} sek"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Vegg holdbarhet: {0:0} eksplosjoner"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Beltehastighet: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Dropintervall: {0:0.0} sek"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Droped boksstørrelse: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Droped pigge størrelse: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Produsert bombestørrelse: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Retning: ← Venstre"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Retning: Rett →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Bevegelsesretning: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Bokser: □△△"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Bokser: Square"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Bokser: Rund"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Bokser: Trekant"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Bomber: Alternative begge"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Bomb: Fuse on Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Bomb: Fuse på pickup"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Nedlagte bokser: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Produsert bomber: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Flytt retning: {0:0}° (Shift + hjul)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Starteffekt: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Per spiller"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Skaler utløservekt satt til {0:0} INK per spiller."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter Antall fra 1 til 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "PERSONEL CAP"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "TEAM CAP ({0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "PEN STORLEK"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "CLEAR PART"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "Rest alt"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Rest alt?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Slett alle kroppsdeler og gjenopprett den opprinnelige figuren."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "RESET"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "CANCEL"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} PRESETER"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "PRESETER"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5-KARAKTER PRESETER"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "MENNESKE CAT BIRD TURTLE SLIME"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "Alle fem tegnene"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLOT {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "SAVED"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "EMPTY"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SAVE"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "SET"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "Save to PRESET {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Lagre gjeldende {0} tegne til forhåndsinnstilling {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Overskriv {0} tegning i forhåndsinnstilling {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "SET PRESET {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Bytt ut gjeldende {0} tegning med forhåndsinnstilling {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Bakgrunn"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Tre"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Bakgrunnsgras"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Blomster"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Bakgrunn Bush"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Sky"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Bakgrunnsbilde"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Pil"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Cat Face"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Hundeansikt"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Stikkfigur"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Smiley"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "hjerte"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "stjerne"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Månen"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Sun"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Regn"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Lightning"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Rainbow"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Fjell"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Four-leaf Clover"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Mushroom"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Apple"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Banan"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Vannmelon"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Donut"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Iskrem"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Kaffekopp"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Pizza"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Brød"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Papirfly"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Fly"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Rocket"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "UFO"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Hot-air Balloon"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Hus"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Castle"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Skattkasse"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Mole"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Fossil"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "krystall"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Gamle Pott"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Nøkkel"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Nøkkelen til nøkkelhull"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Sverd"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Crown"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Skjold"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Gem"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Coin"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Bone"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Lys Bulb (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Gear"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "våren"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Magnet"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Dice"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Tale Bubble"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Sjekk Mark (✓)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Spørsmålstegn (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Merke (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Loop- pil"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "Jump!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Kast!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Stutt!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "GOAL!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Roter: Skift + hjul (0,5 graders presisjon)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Roter: Skift + hjul (15°), med Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Roter: Skift + hjul (15°), med Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Skala: musehjul"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Handling"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Synes"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Bortfall"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Lås opp"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Flytt"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Flytt plattform til høyre"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Flytt plattformen opp"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Flytt plattformen til venstre"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Flytt plattformen ned"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Lenkehandling: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Nøkkelen må knyttes til et nøkkelhull."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Nøkkelen til nøkkelhullkoblinger bruker alltid Lås opp."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Snap"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Link fra"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Link til"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Unlink"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Legg til: {0} / Snap: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Pos {1:0.0},{2:0.0}  Størrelse {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Bredde = høyre vegg / Høyde = tak (venstre vegg og nedre kant holde fast)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Ramme"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Laget en ramme rundt de plasserte objektene. Velg den for å justere høyre vegg og tak."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Vegg montert nøyaktig mellom gulvet og taket."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "GOAL"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "ROOM {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "BOMB"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MISSILE"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "READY"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Bakgrunn"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "PLAYERS {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "STAGE {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 forhåndsvisning: {0} spiller(er) / scene {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Bakgrunnsfarge"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Standard"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Lukk"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Dekkevne"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Bakgrunnsfarge endret. Spar scenen for å beholde den."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Legg til modus: {0}Dra på kartet for å lage det."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Legg til modus: {0}Klikk på kartet for å plassere det."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Velg fra listen."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Ingen kamp"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(ingen)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Terrain"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Start/mål"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Bytt"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Dør/gate"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Movable"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Handling"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Trap"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Gimmick"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Fiendene"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Gulv"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "vegg"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Start"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Mål"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Balanseskala"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Vekt"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Ceiling"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Halv etasje"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Enveis gulv"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "isgulv"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Slippery Slope"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Climbable Wall"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Rope"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Stige"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Skygulv"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Breakable Floor"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Fallende gulv"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Flytte gulv"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Klebrig bevegelig enveis gulv"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 REFLECT DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Bounce ballen med kroppen din og pause NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "BLOCKS {0}  BALLS ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "TID Opp RETRY IN {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "START IN {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "ROUND {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "BALL {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "NEXT ROUND IN {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 BALLS LOST! RETRY"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Alle runder cLEAR!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "ENEMIER LIFT {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Gun"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Kulebrytbar vegg"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Spike Planet"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag Flyer"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Orbit Flyer"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Bazooka"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Bombing Flyer"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Flytting Spike Ball"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Pose Key"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Pose Keyhole"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Updragt"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Speed Mark"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Speed Mark (Strong)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Redraw Zone"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Kuler kreves"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Kuler kreves: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Rotasjonsgulv"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Sjekkpunkt"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Warp Entré"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Warp Exit"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Respawn Point"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Midtmål"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Måleffekt"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Button"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Vektknapp"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Simultan knapp"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Hold-knappen"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Triangle Box"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Lever"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Slå av/på bryter"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Timerbryter"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Sensor"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Rød bryter"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Blå bryter"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Grønn bryter"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "gul bryter"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Trykkplate"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Fjernkontroll"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Skaler"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Dør"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Låst dør"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Shutter"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Fence"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Laser Gate"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Fargeporten"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Enveis gate"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Timed Gate"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Breakable vegg"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Skjult vegg"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Treboks"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Jernboks"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Ball"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Barrel"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Rock"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Isblokk"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Flytende boks"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Gummiboks"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Bomben"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Bombe (Fuse starter på pickup)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Bomb Maker"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Dynamitt"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Walker Enemy"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Jumper Enemy"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Charger Enemy"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Flying Enemy"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Skyting Enemy"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Enemy Spawner"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Missile Launcher"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Aktiver"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Denne enheten bruker alltid Aktiver"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Startintervall"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Enemy Størrelse"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Spadet fiende: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Fiendtlig størrelse: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Nøkkel"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Coin"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "stjerne"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Batteri"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Bucket"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Hopp Pad"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "våren"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Conveyor venstre"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Conveyor Høyre"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Heis"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Fan"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Magnet"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Belte"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Box Dropper"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Spike Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Fisk"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Coin"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "stjerne"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "digital klokke"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Beam Emitter"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Normal"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Tidsgrense"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Overlevelse"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}s"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "Alle"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Trinnregel: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Tid {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "TID UP"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Trykk R for å prøve på nytt"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 SURVIVAL"
+    },
+    {
+      "key": "survival_goal",
+      "value": "En survivor CLEARS!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "MOVE TIL GLOWing FLOOR"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "TARGET  {0:0}g (90g x PLAYERS)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "MOVE INTO POSISJON Før RAIN"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "KATH GRAINS!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "WEIGHING..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "REMOVING GRAINS PÅ FLOOREN"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "CLEAR!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Så close!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "GRAINS PÅ HØJER  {0:0}g/ {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "RARE GRAIN GRAIN REACHED!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "TRY A BETTER HEAD SHAPE"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "STAGE {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "KATH GRAIN BLIZZARD BLOWING fra høyre!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "FAST GRAINS vil ha det MARKED SPOTS - En PER PLAYER!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 ICE SPEDRUN - En player finishes"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Stutt!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "TID Opp RETRY IN {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Bli lesbar!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Stutt!"
+    },
+    {
+      "key": "game_over",
+      "value": "GAMME Over"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Denne mannen sitter ikke i stredet. REDRAW det enklere."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Denne mannen kan komme seg ut av rommet. PLASSE ADJUST ITS STORLEK."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "READY {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "FORSLAGT"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "NONE"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "Ingen CHARACTER endring eller REDRAW etter LEAVING"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "Ingen CHARACTER endring etter LEAVING (REDRAW OK)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Bli less for å starte spillet"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "Kjøp fisken før tiden renn ut"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "Defeat The Crayon Kong"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "DODGE HURDLER OG SURVIVE"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "PLUG ALLE AQUARIUM HOLE med dine bodier"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Bruke din mann til å isolere banen"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "DODGE FALLING PILLARS"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "RELEKTE BALL OG BREAK ALLE BLOCK"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "Pull the bull med INK MAGNETER OG SINK IT"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "DODGE MISSILER OG SURVIVE"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "COOLECT COINS WHILE FALLING"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "KOLLE FALLING GRAINS OG REACH TARGET VEKT"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Speed RUN. REACH GOAL Før tiden renn ut."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "RICOCHET BULLET TIL DEFEAT ENEMIER"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "LØG DARKESSEN OG EKSEMPEL GHOSTER"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "SURVIVE UNTIL TID RUNS Out"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "THROW BOMBS TIL BREAK ALLE BLOCKK"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "BOKER OG KOLLEKTKONNER"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "COOLECT COINS FØR TID RUNS UT"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "COOLECT COINS FØR TID RUNS UT"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "Defender din friend fra fiendene"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "KJØP BALLEN Tilbake for å dempe rommene"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "REACH GOAL FØR TIDEN RUNS UT"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "Bruk UMBRELLA til å stay ut av RAIN"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "LESEN TALER ALLE TIL GOAL"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "Defeat Crayon Devil"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "DEFEAT Crayon STALKER"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "Defeat Enemies"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "CLEAR IF LEAST EN PLAYER SURVIVES."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "KLAR NÅ EN EN PLAYER REACHER GOAL."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "SPIKE WALL LUNCH"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "WAIT TIL SIGNALEN!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "REN TIL GOAL!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "WINDS KANGER!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "LESS INK = STRONGER WIND"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "TID {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "TID UP"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Stå under UMBRELLA!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "RAIN KNOKS DU UT - REACH SHELTER"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Alle var i røynda!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 LINKED SKIELDER"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "CHECK EACH BUTTON LINK!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "LOKK MISSILER MED 1-SEKOND SKIELDER!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "TEAM DOWN - RESTARTING"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60-SEKOND DEFENSE CLEAR!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "RUNDE {0}/3    {1:0.0} s IGJEN"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "GOALS {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "JUSTER POSISJONER OG VINKLER FOR Å REFLEKTERE LASEREN!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "RUNDE {0} FULLFØRT!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "TIDEN ER UTE! DENNE RUNDEN STARTER PÅ NYTT"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "Crayon Devil HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 LESET TIL LAUNCH"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "MOVE: PLATFORM KLICK: MISSILE  F: BOMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "Boss defeated!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "ALLE PLATFORMER DOWN"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "HJEMME MISSILES - Spread Out!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "TJENESTE - LEV DETTE!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "SUCTION - MOVE Away!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "Oppdagelse av...  {0}s"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Løp, hopp, snu og stopp - din dobbel er å lære."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "PHASE {0}  DOBLES LIFT: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Lør en på en lansering gulv, deretter steg på sin røde bryter!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Alle dubler!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Det var aldri en annen sjef."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "PHASE {0}  STARTS IN"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Beseire CPU-teamet med dine nøyaktige former."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "PHASE {0}  LEFT: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "PHASE {0} CLEAR!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Skade våpen med røde brytere. F: kaste bombe CLICK: missil"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "MISSILE READY! Prøv med musen og klikk."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "CPU TEAM defeated!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "Nå er det slutt!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "TID UP"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Tid opp!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Alle er drept!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "FALT! Starter om fra starten på 3 sekunder."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 GJENNE"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "REN RIG! Bruk de store våpnene!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "Forsvarlig!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "ALLE VAR KAUGHT"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "VÆR GLOWING FLOOR!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "SURVIVE! TIME LEFT"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "Safe FLOORS {0} / DROPS IN {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Stå på den trygge floren!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Alle spillere ut"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "RESTARTING SOON"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "SURVIVER FUND!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "SURVIVAL KLEARET"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 PILLAR SURVIVAL"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "VÆR VARSEL OG FØR PILLAREN"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "Kom igjen! LÆR GLOWING ZONE"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "PILLAR SURVIVAL KLEART!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 CRAYON KING"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER NEXT ROOM"
+    },
+    {
+      "key": "boss_appears",
+      "value": "Varsle..."
+    },
+    {
+      "key": "boss_fight",
+      "value": "SHOOT Å Attack / TURTLE SHELL TIL GUARD"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Guard! BOSS er INVULNERABLE"
+    },
+    {
+      "key": "boss_charge",
+      "value": "CHARGE! Gå ut av veien"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "CHARGE IN {0}Få til de høye blomsterne"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Spesialt åtak! DODGE RICOCHETS"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "Boss defeated!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Alle spillere ut..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "WAITING ROOM  {0} / {1}  Opp!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 HURDLE SURVIVAL"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "En survivor CLEARS!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "JUMP Over HURDLER fra rettigheten for 60 SØK"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "WATCH FOR HURDLES fra høyre"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "Jump!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Jump HURDEN!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "SLOW... KATH din Breath!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Opp! Sprint!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Alle spillere ut"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "HURDLE SURVIVAL KLEARED!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "SURVIVER FOUND"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 Komforten"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "FRIEND MOVING"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "BUILD A PATH MED BOXER, PLATFORMER, OG DIN BLEY"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 Forsøk på friden"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "AAAH!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "RUN AHEAD OG CLEAR TRAPS, BOXER, OG ENEMIER"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "NEXT FRIEND IN  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "En ny friend..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "Komfort!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "FRIENDEN REACHED GOAL"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "ROUND {0}/3 BUILD {1:0.0}s"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "Koble til et sted med din mann"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Gå! Help friend REACH GOAL"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "ROUND {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "ROUND {0} CLEAR!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "RUNDE {0}/3    {1:0.0} s IGJEN"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "HOLES {0}/{1}    Skyt dem alle med dine bodier!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "RUNDE {0} FULLFØRT!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "TIDEN ER UTE! DENNE RUNDEN STARTER PÅ NYTT"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "TETT HULLENE!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "ROUND {0}/3    {1:0.0}S LEFT"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "BALLS {0}/{1}    ROLLE dem i helsa!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "PULL BALL THOUGH MAZE MED MAGNETISM!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "ROUND {0} CLEAR!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Tid opp! RETTERINGER DETTE ROUND"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "MOVE MED I LANEN! Mer INK MEANS STRONGER MAGNETISM"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "REACH SNACK ABOVE!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "BUILD A PATH THOUGH SNACK ABOVE!\nKonnekter det med din mann"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "Frynsen kan strømme på din hov og dine linjer"
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "FRIEND START"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "Friend Fell!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "GAMME Over"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Du kan ikke redraw WHILE Frenden elsker."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET RELAY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "ROUND {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOCHET-BULLETS AV FRIENDER TIL HIT TARGET"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Ut av AMMO! RESTARTING"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 Rundt!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Venn Spawner"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Vennsmål"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Venn-Pass gulv"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Hovedbro Eksempel"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Seesaw"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Turntable"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Cannon"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Catapult"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Spike"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Brann"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Vann"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Poison"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Laser"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Falling Rock"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Trykkmaskin"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Elektrisitet"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Så"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Svart hull"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Gear"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Big Gear"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Rope Pulley"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Slider"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Roting Bar"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Pendulum"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Keyhole"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Scenegrenser"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Klokke"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Counter"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Stage Velg"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Forlat sesjonen"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Start scenen på nytt"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Leave the online sesjon?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Å forlate som vert vil avslutte denne sesjonen for alle. Gå?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Leave"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Koblet som en bro: høyre kant forblir tilkoblet mens den strekker seg til venstre."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Del det tilkoblede terrenget i enkeltvis utvalgbare og sammenkoblingsbare deler."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Separat"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "En separat del er på. Den kan snaps uten å slå sammen og kan kobles individuelt."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "En separat del er OFF. Touching terreng kan slås sammen."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Koblet gulvet og veggen som en terrengform."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Dra for å plassere en rett {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Tykkhet"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Gulv og vegg tykkelse: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Rett"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Straight-line tegning er på."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Straight-line tegning er OFF."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw modus"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw modus"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Velg modus"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw modus: dra tom space å plassere objekter."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Velg modus: velg og flytt eksisterende objekter."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} fritt ved å dra."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Freehand gulv og vegg tegning er på."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Rektangulær plassering er på."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Drew {0} som en tilkoblet bane ({1} poeng)"
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Gå tilbake til redaktør"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Gå tilbake til redaktør  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Tilbake fra testspillet. Fortsett å redigere scenen din."
+    },
+    {
+      "key": "cancel",
+      "value": "Avbryt"
+    },
+    {
+      "key": "retry",
+      "value": "Prøv igjen"
+    },
+    {
+      "key": "menu",
+      "value": "Menu"
+    },
+    {
+      "key": "redraw",
+      "value": "Redraw"
+    },
+    {
+      "key": "pen",
+      "value": "Penn"
+    },
+    {
+      "key": "eraser",
+      "value": "Sletter"
+    },
+    {
+      "key": "shape_square",
+      "value": "Boks"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Sirkel"
+    },
+    {
+      "key": "shape_line",
+      "value": "Line"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Ferdig!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Tilbake"
+    },
+    {
+      "key": "brush_size",
+      "value": "Størrelse"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Brukt"
+    },
+    {
+      "key": "undo",
+      "value": "Angre"
+    },
+    {
+      "key": "character_switch",
+      "value": "Teiknbryter"
+    },
+    {
+      "key": "character_add",
+      "value": "Legg til Char"
+    },
+    {
+      "key": "character_delete",
+      "value": "Slett Char"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Switch Char"
+    },
+    {
+      "key": "stage_select",
+      "value": "Velg bane"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 grupper, 3 trinn hver. Slå på Rediger på, og velg et trinn for å redigere det."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0 Feilsøk"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Rediger 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Rediger: OFF"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Rediger: ON"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "Ny"
+    },
+    {
+      "key": "stage_clear",
+      "value": "CLEAR"
+    },
+    {
+      "key": "stage_locked",
+      "value": "LOKKED"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Feilsøkingsmodus: alle verdener er låst. Velg et stadium å spille, eller slå på Rediger på for å redigere det."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2:Wall dra for å opprette blokker\n3: Start 4: Mål 5: Skaler 6: Vekt\nA/D/W/S: flytte kamera Hjul: zoom\nF5:Spara  F6:Test  Esc: Tilbake"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Skaler"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Størrelse"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Grid"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Slett"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Lagre"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Test"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "Tilbake  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Spillinnstillinger"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "Nøkkel"
+    },
+    {
+      "key": "option_language",
+      "value": "Språk"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Ikke enda"
+    },
+    {
+      "key": "locked_stage",
+      "value": "Stage uten JSON faller tilbake til feilsøkingsstadiet."
+    },
+    {
+      "key": "human",
+      "value": "Menneske"
+    },
+    {
+      "key": "cat",
+      "value": "Katt"
+    },
+    {
+      "key": "bird",
+      "value": "Bird"
+    },
+    {
+      "key": "turtle",
+      "value": "Turtle"
+    },
+    {
+      "key": "slime",
+      "value": "Slime"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 ball hit"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "QUICK-deler"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "SELEKTION"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Velg en del, klikk eller dra på kartet for å plassere det."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Snap: {0} / {1:0.##} enhetsnett"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Velg først et objekt."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Bredde endret. Du kan også bruke Shift+ Hjul."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Høyde endret. Du kan også bruke Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Størrelse endret. Bruk hjulet til å skalere begge aksene."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Dra et større område for å plassere denne delen."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Stedet {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Stedet {0} på {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Valgt. Dra for å flytte og bruke hjulet til å endre størrelse."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Det er ingenting å angre."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Uavgjort siste redigering."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Det er ingenting å redo."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Reduser redigeringen."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Velg en bryter, knapp, taste eller nøkkelhull som skal brukes som lenkekilde."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Velg en bryter, knapp, taste eller nøkkelhull som lenkekilden."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Linkkilde: {0}Velg målet og trykk deretter på Link til."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Sett først en lenkekilde."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Velg et objekt som skal brukes som lenkemål."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Linkkilden og målet må være forskjellige objekter."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Linked {0} til {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Velg først et koblet objekt."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Fjernet linken."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Lagret: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Sparing er for tiden kun tilgjengelig i Unity Editor."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Sceneobjektfabrikken mangler."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Trafikklys"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 BLOCK CRASH"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Block Breaker"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "THROW BOMBS! Alle NICO DRAW LOKKS!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} BLOCKS LEFT"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "FARGET... RESTART I {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE BROWSER"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Søk etter handling eller SE-ID og trykk deretter Spill for å forhåndsvise den tildelte lyden. Over en rad for å se ressursveien."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "PLAY"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "STOP"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "RELOAD"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Ingen matchende lydeffekter."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE.md ble ikke funnet."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Ukategorisert"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "MUTED"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Runtime-generert lyd"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Paw Print"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Fisk"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Garn Ball"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Snøkrystall"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Icicle"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Snowman"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Blizzard"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Fjær"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Bird Nest"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Vindlinjer"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Pipe"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Bolt"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Kjede"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Steam"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Turtle"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Hourglass"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Padlock"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Bubler"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Butterfly"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Ladybug"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Sunflower"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Tulip"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Skeleton"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Bat"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Spiderweb"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Stalakitt"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Lantern"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Minecart"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Pickaxe"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Trophy"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Medaljen"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Whistle"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Balloon"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Confetti"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Fireworks"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Tower"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Binoculars"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Bridge"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Crayon"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Blyant"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Sletter"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Notebook"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Blackboard"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Palett"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Paintbrush"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Canvas"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Stopwatch"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Spotlight"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Mikrofon"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Ost"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Overraskningsboks"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Gaveboks"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Planet"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Alien"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Comet"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Svart hull"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Soap Bubble"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Moss"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Trerot"
+    }
+  ]
+}

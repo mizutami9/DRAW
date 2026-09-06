@@ -1,32 +1,34 @@
 {
   "entries": [
-    {
-      "code": "ja",
-      "nativeName": "日本語",
-      "fallbackCode": "en",
-      "resourcePaths": [
-        "Localization/ja",
-        "Localization/stage_decorations_ja"
-      ],
-      "fontResourcePath": "",
-      "cultureCode": "ja-JP",
-      "uiTextScale": 1.0,
-      "listSeparator": "・",
-      "rightToLeft": false
-    },
-    {
-      "code": "en",
-      "nativeName": "EN",
-      "fallbackCode": "",
-      "resourcePaths": [
-        "Localization/en",
-        "Localization/stage_decorations_en"
-      ],
-      "fontResourcePath": "",
-      "cultureCode": "en-US",
-      "uiTextScale": 0.75,
-      "listSeparator": " / ",
-      "rightToLeft": false
-    }
+    { "code": "ja", "nativeName": "日本語", "fallbackCode": "en", "resourcePaths": ["Localization/ja", "Localization/stage_decorations_ja"], "fontResourcePath": "", "systemFontNames": [], "cultureCode": "ja-JP", "uiTextScale": 1.0, "listSeparator": "・", "rightToLeft": false },
+    { "code": "en", "nativeName": "English", "fallbackCode": "", "resourcePaths": ["Localization/en", "Localization/stage_decorations_en"], "fontResourcePath": "", "systemFontNames": [], "cultureCode": "en-US", "uiTextScale": 0.75, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "fr", "nativeName": "Français", "fallbackCode": "en", "resourcePaths": ["Localization/fr"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "fr-FR", "uiTextScale": 0.70, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "it", "nativeName": "Italiano", "fallbackCode": "en", "resourcePaths": ["Localization/it"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "it-IT", "uiTextScale": 0.70, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "de", "nativeName": "Deutsch", "fallbackCode": "en", "resourcePaths": ["Localization/de"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "de-DE", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "es", "nativeName": "Español", "fallbackCode": "en", "resourcePaths": ["Localization/es"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "es-ES", "uiTextScale": 0.70, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "es-419", "nativeName": "Español (Latinoamérica)", "fallbackCode": "es", "resourcePaths": ["Localization/es-419"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "es-MX", "uiTextScale": 0.66, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "pt-BR", "nativeName": "Português (Brasil)", "fallbackCode": "en", "resourcePaths": ["Localization/pt-BR"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "pt-BR", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "pt-PT", "nativeName": "Português (Portugal)", "fallbackCode": "en", "resourcePaths": ["Localization/pt-PT"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "pt-PT", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "ru", "nativeName": "Русский", "fallbackCode": "en", "resourcePaths": ["Localization/ru"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "ru-RU", "uiTextScale": 0.67, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "zh-CN", "nativeName": "简体中文", "fallbackCode": "en", "resourcePaths": ["Localization/zh-CN"], "fontResourcePath": "", "systemFontNames": ["Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC"], "cultureCode": "zh-CN", "uiTextScale": 0.82, "listSeparator": "／", "rightToLeft": false },
+    { "code": "zh-TW", "nativeName": "繁體中文", "fallbackCode": "en", "resourcePaths": ["Localization/zh-TW"], "fontResourcePath": "", "systemFontNames": ["Microsoft JhengHei UI", "Microsoft JhengHei", "Noto Sans CJK TC"], "cultureCode": "zh-TW", "uiTextScale": 0.82, "listSeparator": "／", "rightToLeft": false },
+    { "code": "ko", "nativeName": "한국어", "fallbackCode": "en", "resourcePaths": ["Localization/ko"], "fontResourcePath": "", "systemFontNames": ["Malgun Gothic", "Noto Sans CJK KR", "Arial Unicode MS"], "cultureCode": "ko-KR", "uiTextScale": 0.78, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "ar", "nativeName": "العربية", "fallbackCode": "en", "resourcePaths": ["Localization/ar"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans Arabic"], "cultureCode": "ar-SA", "uiTextScale": 0.72, "listSeparator": " / ", "rightToLeft": true },
+    { "code": "id", "nativeName": "Bahasa Indonesia", "fallbackCode": "en", "resourcePaths": ["Localization/id"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "id-ID", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "uk", "nativeName": "Українська", "fallbackCode": "en", "resourcePaths": ["Localization/uk"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "uk-UA", "uiTextScale": 0.67, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "nl", "nativeName": "Nederlands", "fallbackCode": "en", "resourcePaths": ["Localization/nl"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "nl-NL", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "el", "nativeName": "Ελληνικά", "fallbackCode": "en", "resourcePaths": ["Localization/el"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "el-GR", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "sv", "nativeName": "Svenska", "fallbackCode": "en", "resourcePaths": ["Localization/sv"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "sv-SE", "uiTextScale": 0.72, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "th", "nativeName": "ไทย", "fallbackCode": "en", "resourcePaths": ["Localization/th"], "fontResourcePath": "", "systemFontNames": ["Leelawadee UI", "Tahoma", "Noto Sans Thai"], "cultureCode": "th-TH", "uiTextScale": 0.76, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "cs", "nativeName": "Čeština", "fallbackCode": "en", "resourcePaths": ["Localization/cs"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "cs-CZ", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "da", "nativeName": "Dansk", "fallbackCode": "en", "resourcePaths": ["Localization/da"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "da-DK", "uiTextScale": 0.72, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "tr", "nativeName": "Türkçe", "fallbackCode": "en", "resourcePaths": ["Localization/tr"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "tr-TR", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "no", "nativeName": "Norsk", "fallbackCode": "en", "resourcePaths": ["Localization/no"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "nb-NO", "uiTextScale": 0.72, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "hu", "nativeName": "Magyar", "fallbackCode": "en", "resourcePaths": ["Localization/hu"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "hu-HU", "uiTextScale": 0.67, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "fi", "nativeName": "Suomi", "fallbackCode": "en", "resourcePaths": ["Localization/fi"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "fi-FI", "uiTextScale": 0.70, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "bg", "nativeName": "Български", "fallbackCode": "en", "resourcePaths": ["Localization/bg"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "bg-BG", "uiTextScale": 0.67, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "vi", "nativeName": "Tiếng Việt", "fallbackCode": "en", "resourcePaths": ["Localization/vi"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "vi-VN", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "pl", "nativeName": "Polski", "fallbackCode": "en", "resourcePaths": ["Localization/pl"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "pl-PL", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false },
+    { "code": "ro", "nativeName": "Română", "fallbackCode": "en", "resourcePaths": ["Localization/ro"], "fontResourcePath": "", "systemFontNames": ["Segoe UI", "Arial", "Noto Sans"], "cultureCode": "ro-RO", "uiTextScale": 0.68, "listSeparator": " / ", "rightToLeft": false }
   ]
 }

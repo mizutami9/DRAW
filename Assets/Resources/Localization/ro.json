@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "NUMELE PLAYER"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter Numele dumneavoastră"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Te rog. enter un nume de jucător."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER Numele tău aici"
+    },
+    {
+      "key": "option_register",
+      "value": "REGISTRUL"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Japoneză"
+    },
+    {
+      "key": "lang_en",
+      "value": "RO"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Liber! Apăsați R pentru a încerca din nou."
+    },
+    {
+      "key": "draw_title",
+      "value": "Proiectare (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: Înapoi la joc / ENTER: Decide / ESC: Anulează"
+    },
+    {
+      "key": "preview",
+      "value": "Previzualizare"
+    },
+    {
+      "key": "clear",
+      "value": "Șterge"
+    },
+    {
+      "key": "decide",
+      "value": "Confirmă"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Rămâne"
+    },
+    {
+      "key": "current",
+      "value": "Curent"
+    },
+    {
+      "key": "part",
+      "value": "Parte"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw Trunchiul mai întâi."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso este baza. Draw alte părți ale markerului lor de conectare."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: începe de la markerul de conectare."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw trunchiul înainte de conectarea altor părți."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} este conectat."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} nu a pornit de la indicatorul de conectare."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Torso este necesar înainte de a decide."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} trebuie să înceapă de la indicatorul de conectare."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Personal  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Echipa  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Nu se poate decide: personal ink este {0:0.#}/{1:0}Reduceți-l cu {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Nu pot decide: echipa ink este {0:0.#}/{1:0}Reduceți-l cu {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}: începe de la marker."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Cap"
+    },
+    {
+      "key": "torso",
+      "value": "Torso"
+    },
+    {
+      "key": "left_arm",
+      "value": "Braţul stâng"
+    },
+    {
+      "key": "right_arm",
+      "value": "Braţul drept."
+    },
+    {
+      "key": "left_leg",
+      "value": "Piciorul stâng"
+    },
+    {
+      "key": "right_leg",
+      "value": "Picior drept"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Frontul stâng"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Frontul drept"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Stânga înapoi"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Înapoi"
+    },
+    {
+      "key": "tail",
+      "value": "Coadă"
+    },
+    {
+      "key": "left_wing",
+      "value": "Aripa stângă"
+    },
+    {
+      "key": "right_wing",
+      "value": "Aripa dreaptă"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Pană"
+    },
+    {
+      "key": "slime_body",
+      "value": "Slime"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Salt normal"
+    },
+    {
+      "key": "jump_double",
+      "value": "Sari x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Sari x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Întindere normală"
+    },
+    {
+      "key": "arm_long",
+      "value": "Întindere lungă"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Swing rapid"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Normal"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Comutare grea"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Greu"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Picior {0:0.0}: {1}   Braţ {2:0.0}: {3}   Torso {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Aripi {0:0.0} INK / Viteză plană {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "AABILITATEA UMANĂ\nArme {0:0.0} INK  Putere ×{1:0.00}\nPicioare {2:0.0} INK  Sari ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "CAPACITATEA CAT\nPicioare din spate {0:0.0} INK  Viteza ×{1:0.00}\nPicioare din față {2:0.0} INK  Gama de gheare ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "CAPACITATEA PĂSĂRILOR\nAripi {0:0.0} / 700 INK\nViteza de alunecare {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "AABILITATEA TURTLEI\nStai. SPACE: coajă invincibilă\nStai. F: rândul său, 90° spre direcția spre față"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "AABILITATEA SLIME\nCorp {0:0.0} / 700 INK\nLungimea vârfului ascendent {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "OM"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "CAT"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "BIRD"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "TURTLE"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Mai mult picior INK creşte puterea de salt\nMai mult braț INK creşte puterea arunca"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Mai mult spate-picior INK creşte viteza de rulare\nMai mult faţă-picior INK creşte intervalul de zgârieturi"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Mai mult aripa INK creşte puterea de alunecare"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Invincibil în timp ce ascuns în coajă"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Apăsați F pentru un vârf de atac în sus\nMai puţin. INK face mai lung / Salt de perete activat"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: TROW"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "HOLD SPACE: GLIDE  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "HOLD SPACESHELL HOLD F: TURN 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: Attack Spike Upward"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Putere ×{0:0.00}  Sari ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Rulează ×{0:0.00}  Gama de gheare ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Puterea mobilă {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACESHELL /  F: 90° TURN"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Lungimea vârfului în sus ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Arme {0:0.0}/280 picioare {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Înapoi {0:0.0}/240 Front {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Aripi {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Activ numai în timp ce butonul este ținut"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "SHELL GATA"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE şi F munca în timp ce a avut loc!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Corp {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "LOW"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "Înalt"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "Arrow"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "RUN"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "SCRATCH"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GLIDE"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "Apărare"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "MOBILITATE"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "ORGANISM INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "LUMINA:"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "HEAVY: viteza + sari în sus"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK DIMENSIUNEA {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "FSpike sus! Mai puţin. INK = mai mult / Salt de perete activat"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Mai multă putere!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Nu poţi să te refaci după ce a început această etapă."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Platformă înaltă"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Comutare grea"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Far Lever"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Groapă îngustă"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "Setarea camerei"
+    },
+    {
+      "key": "multi_participants",
+      "value": "JUCĂTORI"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "CREAŢI CAMERA"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "JOC"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "ID-ul camerei"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "TEST LOCAL (INVITE OFF)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "Tu"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 SLIME MIJLOACA CAVRU"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "La podea! Apucă un perete"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "WALL-JUMP SI DODGE PIERCING Missiles!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 protejează-ţi prietenul!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "FAZĂ {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "TIMP {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Apără-ţi prietenul din ambele părţi."
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "AERIAN {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "Prietenul jos... RETRAGEREA ÎN {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Apără-te!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "COIN {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "TIMP {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "CUTII DE BREAK SI COLECTE!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "PERIOADA DE TIMP..."
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 de monede clare!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "Porneşte curentul!"
+    },
+    {
+      "key": "title_single",
+      "value": "Un jucător"
+    },
+    {
+      "key": "title_multi",
+      "value": "Multiplayer"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Setări"
+    },
+    {
+      "key": "option_back",
+      "value": "ÎNAPOI  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "ÎNAPOI  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "ÎNAPOI  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Ieșire"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "DEBUG DE CAPTURĂ TRAILER"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4-player releu aerian"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Omul aruncă Bird, apoi Bird → Cat → Slime releu"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "ÎNCEPEŢI SECVENŢA"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "ÎNAPOI  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "CARACTERISTICI DE EDIŢIE"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "Constellation name (optional)"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "Export 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "ÎNAPOI LA TITLUL"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Verificați compoziția, apoi exportați PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Salvat: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "Retragere..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "Personajele pot fi schimbate doar în camera pregătită."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY HIDE HUD     ESC  TITLUL"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "ÎNREGISTRAREA TRAINERULUI"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Glisați actorii în timp ce lenevesc F9 Înregistrează F10 Play Pauza O Pas"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 Înregistrare/STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 JOC ALL"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 REZERVĂ"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "SELECTARE CLEARĂ"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "PAUSE"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O PAS"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "Înregistrare"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "PLAYING TOATE TRACKS"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "PAUZAT"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} Selectați: {1} | {2} cadre {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "PREŞET {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SAVE SHAPES"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "În timp ce inactiv, trageți caractere pentru a seta pozițiile lor de pornire"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Continuă"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Titlu"
+    },
+    {
+      "key": "language_settings",
+      "value": "Configurări lingvistice"
+    },
+    {
+      "key": "multi_play",
+      "value": "MULTI PLAY"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Potrivire aleatoare"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Privat"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Potrivire aleatoare"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Căutare de jucători"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Căutare"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Potrivire...\n\nJucătorii 2 / 4\n\nTu\n\n□ Căutarea\n□ Căutarea\n\nAșteptare pentru [READY]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "CAMERA"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Creează cameră"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Alăturaţi-vă camerei"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Numele camerei\n[ Draw Împreună ]\n\nMax Players\n< 4 >\n\nVizibilitate\n[Public] [privat]\n\nEtapa\n[Host Selects]\n\nRegulă Redraw\n[Pauză toată lumea]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Max Players"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Vizibilitate"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Vizibilitate"
+    },
+    {
+      "key": "multi_public",
+      "value": "Public"
+    },
+    {
+      "key": "multi_private",
+      "value": "Privat"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Comută"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Creează"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter ID-ul holului afișat pe ecranul gazdei.\n\nCu EOS configurat, prietenii se pot alătura de la distanță.\nDacă se utilizează Direct TCP, enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter ID-ul holului"
+    },
+    {
+      "key": "multi_join",
+      "value": "Alătură-te"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Reîmprospătează"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "Camera LOBBY"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Camera: Draw Împreună\nCarte de identitate: ABC123\n1 / 4\n\nUn hol redat space\nJoacă-te cu cutii, mingi şi sari în timp ce aştepţi."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Copiază ID"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Începe 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Selectați etapa"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Scena selectați deblocari atunci când toată lumea este gata."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Părăsi această cameră?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Pleacă."
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Renunță"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Gazda alege o scenă..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Pleacă."
+    },
+    {
+      "key": "multi_matching",
+      "value": "Potrivire..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Numai gazda poate începe."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Nici un ID Lobby pentru a copia."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Am copiat ID-ul holului."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Cod de cameră copiat."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Copiat ID conexiune."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Offline. Nu este disponibil nici un cod de cameră."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Offline"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Cod"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Conectare..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Camera"
+    },
+    {
+      "key": "multi_players",
+      "value": "Jucători"
+    },
+    {
+      "key": "multi_local",
+      "value": "Local"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Gata."
+    },
+    {
+      "key": "multi_wait",
+      "value": "Aşteaptă."
+    },
+    {
+      "key": "multi_host",
+      "value": "HOST"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Împreună"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Camera Prietenilor"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Tu"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "Tu"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Gazdă"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Jucător {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Fals meci aleatoriu gata."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Fals suport inițializat."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Înregistrez..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Online ca jucător de test local."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Un început fals."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Camera privată creată."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Camera publică creată."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "S-a alăturat camerei false."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "TCP direct iniţializat."
+    },
+    {
+      "key": "online_ready",
+      "value": "Online gata. Gazdă sau alătură-te unei camere."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Camera creată. Împărtășește ID-ul cu prietenul tău."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "A eșuat găzduirea: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "ID-ul camerei trebuie să fie gazdă IP:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "În camera alăturată..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Nu s-a putut alătura: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Holul din stânga."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Gata schimbat."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Acceptul a eşuat."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} Alăturat."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} Am părăsit şedinţa."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Lobby actualizat."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Etapa de pornire {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS inițializat. Configurează modulul EOS înainte de autentificare."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "Autentificare EOS..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "Interfața EOS Connect nu este gata."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Autentificare EOS a eșuat: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "EOS creează lobby eșuat: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "Camera EOS creată. Împărtășește acest ID hol."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter un ID EOS Lobby."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter un cod de cameră."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Eșec la înregistrarea codului camerei: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Căutarea codului camerei a eșuat: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Nu am găsit loc pentru cod. {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Codul camerei s-a ciocnit. Vă rugăm să creați camera din nou."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Gazda a deschis scena selecta."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Gazda a fost închisă."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS se alăture lobby-ului eșuat: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "S-a alăturat camerei EOS."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Holul EOS stânga."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Gata."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Nu sunt gata."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Crearea dispozitivului EOS a eșuat: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Crearea dispozitivului EOS..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Autentificare dispozitiv EOS: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS online ca {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Membrii lobby actualizat."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS nu este conectat. Configurează modulul EOS și autentifică mai întâi."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS este dezactivat."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "NIVEL TERMINAT!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Nivelul {0} a fost terminat!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Terminat!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Următorul: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Selectare nivel"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Toate nivelurile au fost terminate!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Etapa {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "LUMEA {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "CARACTERISTICI DIVABILE"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "UTILIZAREA: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "CREATE"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "NECREAT"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} nu este disponibil în această etapă."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Un alt jucător este deja folosind {0}Alege un personaj disponibil."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "CARACTER SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} este în uz. Apăsați complet pentru a solicita un swap."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} vrea să-ţi schimbe {1} pentru {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "DECLINĂ"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Aştept un răspuns la cererea de schimb..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Personaje schimbate!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Cererea de schimb a fost respinsă."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Celălalt jucător nu a putut fi găsit."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "DISPENSOR DE GRAIN"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100 g SCALE"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "GREUTATE GATE"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "PRIETEN BUTON"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "PLAYER-ONLY FLOOR ONE-way"
+    },
+    {
+      "key": "species_human",
+      "value": "Om"
+    },
+    {
+      "key": "species_cat",
+      "value": "Pisică"
+    },
+    {
+      "key": "species_bird",
+      "value": "Păsări"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Ţestoasă"
+    },
+    {
+      "key": "species_slime",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Obiecte"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Legături"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Trageți personajul pentru a începe jocul de testare din acea poziție. Proba de etapă salvată nu este schimbată."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Mutarea poziției de start test-play."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Pornirea încercării: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Nu pot salva: {0} eroare (s). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Salvat: {0} ({1} avertizare (avertizare)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Creează cameră\nNumele camerei [.........]\nSă - i ajutăm pe oameni să - şi facă datoria?\nPublic / Privat\n\nAlăturaţi-vă camerei\nID-ul camerei [...]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Trageți la locul / Faceți clic pentru a selecta / WASD Pentru a muta\nDecorare: Roată la scară / Shift + roată pentru rotire\nCtrl + roată: zoom întreaga etapă"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} obiecte selectate"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Obiectele complet închise de cutie vor fi selectate."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Selectat {0} Obiecte. Trageți un obiect selectat pentru a le muta împreună."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Niciun obiect nu este complet inclus în cutia de selecţie."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Mutat {0} obiecte selectate împreună."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Categorie"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Caută"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Tip"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Căutare cuvânt"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Lista obiectelor"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Lista de legături"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "W-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "H-"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Refă"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Copiază"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Obiect copiat."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ DREPTATE"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ JOS"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← Stânga"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ UP"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Copiază direcția: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Obiect copiat culoare spre {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Poziția: X {0:0.00} / Y {1:0.00} (Chei săgeată)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Puterea de lansare"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Mută distanța"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Mută viteza"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Fuse (sec)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Întârziere (sec)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Explozii necesare"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Viteza centurii"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Interval de scădere (sec)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Interval Beam (sec)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Mărime cutie"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Dimensiunea bombei"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Dimensiune Spike"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Mută distanța: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Mută viteza: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Timp de utilizare: {0:0.0} sec"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Întârziere: {0:0.0} sec"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Durabilitatea pereților: {0:0} explozii"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Viteza centurii: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Intervalul de scădere: {0:0.0} sec"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Mărimea cutiei căzute: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Dimensiunea vârfului scăzut: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Dimensiunea bombei fabricate: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Direcţie: ← stânga"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Direcţie: dreapta →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Direcţia convoiului: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Casete:"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Cutii: pătrat"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Cutii: rotunde"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Cutii: Triunghi"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Alternează ambele bombe"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Bombă: Fuse on Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Bombă: Fuse on Pickup"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Cutii aruncate: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Bombe fabricate: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Mută direcția: {0:0}° (Shift + roată)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Puterea de lansare: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Per jucător"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Scalează greutatea declanșatorului setat la {0:0} INK pe jucător."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter un număr de la 1 la 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "CAP PERSONAL"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "CAPATUL ECHIPA ({0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "DIMENSIUNEA PEN"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "PARTEA CLEAR"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "RESTAUREAZĂ TOATE"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Resetaţi totul?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Şterge fiecare parte a corpului şi restaurează personajul original."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "REZERVĂ"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "CANCEL"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} PRESETE"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "PRESETE"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5-CHARACTER PRESETS"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "UMAN CAT TURTLE SLIME"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "toate cele cinci caractere"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLOT {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "SALVAT"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "EMPTY"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SALVARE"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "SET"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "Salvați pentru a prezice {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Salvează curentul {0} desen pentru presetat {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Suprascrie {0} desen în preset {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "PRESET SET {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Înlocuiește curentul {0} desen cu preset {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Context"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Copac"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Iarbă de fundal"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Flori"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Contextul Bush"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Nor"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Fundal PUSH"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Săgeată"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Față de pisică"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Dog Face"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Figura Stick"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Smiley."
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Inimă"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Stea"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Luna"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Soare"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Ploaie"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Fulger"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Curcubeu"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Munte"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Clover cu patru foi"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Ciuperci"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Măr"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Banană"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Pepene verde"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Dovleac"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Înghețată"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Cupa de cafea"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Pizza"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Pâine"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Avion de hârtie"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Avion"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Rachetă"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "OZN"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Balon cu aer cald"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Casa"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Castel"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Pieptul comorii"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Cârtiță"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Fosile"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Cristal"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Oală antică"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Cheie"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Cheia cheii"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Sabie"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Coroană"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Scut"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Gem"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Monedă"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Os"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Lumină (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Unelte"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Primăvară"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Magnet"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Zmeură"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Bubble vorbire"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Marcă de verificare"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Mark întrebarea (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Semnul exclamării!"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Arrow Loop"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "Sari!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Aruncă!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Start!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "Gol!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Rotire: Shift + roată (0,5 grade precizie)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Rotire: Shift + roată (15°), cu Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Rotire: Shift + roată (15°), cu Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Scala: roata mouse-ului"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Acțiune"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Apare"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Dispari"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Deblochează"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Mişcă."
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Mută platforma la dreapta"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Mută platforma în sus"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Mută platforma la stânga"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Mută platforma în jos"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Acțiune de legătură: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "O cheie trebuie să se lege de o gaură de cheie."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Cheia de la legăturile cu gaura cheii este întotdeauna deblocată."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Snap"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Legătură din"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Link către"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Deconectează"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Adaugă: {0} / Snap: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Pos {1:0.0},{2:0.0}  Dimensiune {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Lățime = perete dreapta / înălțime = tavan (peretele stâng și șederea marginii inferioare fixe)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Cadru"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Creat un cadru în jurul obiectelor plasate. Selectaţi-l pentru a ajusta peretele şi tavanul din dreapta."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Perete montat exact între podea și tavan."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "SCOP"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "CAMERA {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "BOMBA"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MIJLOACE"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Gata."
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Context"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "JUCĂTORI {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "Stage {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 previzualizare: {0} player (s) /stage {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Culoare fundal"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Implicit"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Închide"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Opacitate"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Culoarea fundalului s-a schimbat. Păstrează scena ca s-o păstrezi."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Adaugă modul: {0}Trageți pe hartă pentru a o crea."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Adaugă modul: {0}Faceți clic pe hartă pentru a-l plasa."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Selectat din listă."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Nicio potrivire."
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(niciuna)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Teren"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Start/Gol"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Comută"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Uşă/Porţi"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Mobil"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Acțiune"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Capcană"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Gimmick"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Inamici"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Etaj"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Perete"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Start"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Gol"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Scala soldului"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Greutate"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Plafon"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Half Floor"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Etaj cu sens unic"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Ice Floor"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Pantă alunecoasă"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Zid căţărat"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Frânghie"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Scară"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Cloud Floor"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Etaj fisurabil"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Falling Floor"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Etaj în mișcare"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Lipic în mișcare etaj one-Way"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 REFLECT DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Sări mingea cu corpul tău şi rupe NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "BLOCĂRI {0}  BALLS ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "TIMPUL DE RETRAS {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "ÎNCEPE {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "ROUND {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "BALL {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "Următoarea rundă în {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 mingi pierdute! RETRY"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Liber!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "FEMEII Stânga {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Armă"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Perete care poate fi spart cu un glonţ"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Planeta Spike"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag Flyer"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Orbit Flyer"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Bazooka"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Bombay Flyer"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Mutare Spike Ball"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Cheie Pose"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Pozează gaura cheii"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Actualizează"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Marcaj de viteză"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Marcaj de viteză (Strong)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Zonă de cale ferată"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Gloanţe necesare"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Gloanţele necesare: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Etaj rotativ"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Punct de control"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Intrare warp"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Exit warp"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Punct de amanetare"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Mid Goal"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Efectul golului"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Buton"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Buton greutate"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Buton simultan"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Țineți butonul"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Cutie triunghi"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Liver"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Comută comutatorul"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Comutare cronometru"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Senzor"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Comutare roșie"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Comutare albastră"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Comutare verde"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Comutare galbenă"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Placă de presiune"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Control la distanță"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Scala"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Uşă"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Uşă încuiată"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Shutter"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Gard"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Poarta laser"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Poartă culoare"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Poarta cu sens unic"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Poarta temporizată"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Perete spart"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Zid ascuns"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Cutie de lemn"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Cutie de fier"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Minge"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Butoaie"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Rock"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Ice Block"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Cutie plutitoare"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Cutie de cauciuc"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Bombă"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Bombă (Fuse Starts on Pickup)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Bomb Maker"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Dinamită"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Walker Enemy"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Jumper Enemy"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Încărcător inamic"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Inamicul zburător"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Shooter Enemy"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Inamicul amator"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Lansator de rachete"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Activează"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Acest dispozitiv folosește întotdeauna Activare"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Interval de lansare"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Dimensiune inamică"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Inamicul amator: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Dimensiunea inamicului: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Cheie"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Monedă"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Stea"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Baterie"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Găleată"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Sari Pad"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Primăvară"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Conveyor Stânga"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Către dreapta"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Liftul"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Ventilator"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Magnet"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Centură"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Box Dropper"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Spike Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Pește"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Monedă"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Stea"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Ceasul digital"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Beam Emitter"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Normal"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Limita de timp"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Supravieţuire"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}s"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "TOATE"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Regula etapei: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Timp {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "Timpul a expirat."
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Apăsați R pentru a încerca din nou"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 SURVIVAL"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Un supravieţuitor e liber!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "Mişcaţi-vă la etajul luminos."
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "ŢINTĂ  {0:0}g (90g x PLAYERS)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "Mutare în poziție înainte de ploaie"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Prindeţi grinzile!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "Ciudat..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "RETRAGEREA GRAINELOR PE FLOOR"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Liber!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Atât de aproape!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "GRATIS PE CAP  {0:0}g / {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "Ţinta Grain Rare a ajuns!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "Încearcă o formă mai bună a capului."
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "Stage {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Prindeţi grenadele care intră din dreapta!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "Grainile rapide vor lovi spaţiul marcat pe jucător!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 ICE SPEEDRUN - un jucător termină"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Start!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "TIMPUL DE RETRAS {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Pregătiţi-vă!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Start!"
+    },
+    {
+      "key": "game_over",
+      "value": "Jocul s-a terminat."
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Corpul ăsta nu se potriveşte la început. Te rog să-l retragi mai mic."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Acest cadavru poate ieşi din cameră. Adăugaţi-i mărimea."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Gata. {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "RECOMANDAT"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "NONE"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "Nici o schimbare de caracter sau de retragere după plecare"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "Nicio schimbare de caracter după plecare (retragere OK)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Pregătiţi-vă să începeţi jocul."
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "COLECTEAZĂ FISH ÎNAINTE DE A RUNDE TIMPUL"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "Învinge Regele Raiului"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "DODGE HURDLE ȘI supraviețuitoare"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "PLUG Every Aquarium Hole with your Organisms"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Foloseşte-ţi corpul să deblochezi patul."
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "DODGE Pillars Falling"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "REFLECTA BALA SI BREAK TOATE BLOCELE"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "Trage mingea cu INK MAGNETS SI SINK IT"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "DODGE MIJLOACE ȘI supraviețui"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "Colectează monede în timp ce cad"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "COLECTEAZĂ grânele de apel și AJUNGE LA GREUTATEA ŢINTĂ"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Fugi. Ajunge la gol înainte de expirarea timpului."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "BULLETE RICOCHET pentru a învinge inamicii"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "Aprinde întunericul şi scapă de fantome."
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "Supravieţuieşte până se termină timpul."
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "Arunca bombe pentru a sparge fiecare bloc"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "CUTII DE BREACK ȘI COINS COLECTE"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "Colectează monede înainte de expirarea timpului"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "Colectează monede înainte de expirarea timpului"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "Depărtează-ţi prietenul de inamici."
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "Aruncă mingea înapoi pentru a învinge inamicii."
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "Ajunge la gol înainte de expirarea timpului"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "Utilizaţi Umbrela pentru a sta afară din ploaie"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "RELAY LASER prin fiecare corp la gol"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "DEFEAT CRAYON DEVIL"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "DEFEAT CRAYON STALKER"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "Învinge inamicii"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "Clar dacă cel puţin un jucător supravieţuieşte."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "E clar când cineva ajunge la gol."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "SPIKE WALL LANCH"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Aşteaptă semnalul!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Fugi la gol!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "Vântul continuă să se schimbe!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "Mai puțin INK = vânt mai puternic"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "TIMP {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "Timpul a expirat."
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Rămâi sub umbrelă!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "Ploaia te bate - ajunge la adăpost"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Toată lumea a fost prinsă în ploaie!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 LINKED SHIELDS"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Verifică fiecare nasture!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "Rachete cu 1-Shield!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "ECHIPA DE RESTAURARE"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60-Second Defense clar!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "RUNDA {0}/3    AU RĂMAS {1:0.0} s"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "SCOPURI {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "REGLAȚI POZIȚIILE ȘI UNGHIURILE PENTRU A REFLECTA LASERUL!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "RUNDA {0} TERMINATĂ!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "TIMPUL A EXPIRAT! RUNDA REÎNCEPE"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON DEVIL HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 Gata de lansare"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "CLICK PLATFORM:  F: BOMBA"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "Şefu' a învins!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "TOATE PLATFORMELE ÎN JOS"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "Rachete de vânătoare!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "- Lasă echipa!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "- Mişcă-te!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "Înregistrez mutarea...  {0}s"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Fugi, sari, intoarce-te si opreste-te."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "FAZĂ {0}  DOUBLE Stânga: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Atrage unul pe un etaj de lansare, apoi pas pe comutatorul roșu!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Toate dublurile au învins!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Nu a fost niciodată un alt șef."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "FAZĂ {0}  Incepe in"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Învinge echipa de procesor purtând formularele voastre exacte."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "FAZĂ {0}  Stânga: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "FAZĂ {0} Liber!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Reclamă arme cu întrerupătoare roşii. F: arunca bomba CLICK: racheta"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Missiley e gata! Ţintiţi cu mouse-ul şi faceţi clic."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "Echipa CPU a învins!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "Bătălia finală liberă!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "Timpul a expirat."
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Timpul a expirat!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Toată lumea e la pământ!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "A eşuat! Repornesc de la început în 3 secunde."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 GET READY"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Fugi la dreapta! Folosiţi armele verzi!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "Învins!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "Toată lumea a fost prinsă."
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Fugi!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Ai grijă la podea!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "Survive! Timp rămas"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "PERIOADA DE SIGURANŢĂ {0} / DROP IN {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Stai pe podea în condiții de siguranță!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Toţi jucătorii afară."
+    },
+    {
+      "key": "survival_retrying",
+      "value": "RESTAURAREA ÎN CURÂND"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "Supravieţuitor găsit!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "Supravieţuitorul este eliberat."
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 PILLAR Survival"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "Aveţi grijă la avertisment şi la pillare."
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "În curând! LĂSAŢI ZONA GLOBALĂ"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "Pillar supravieţuieşte!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 CRAYON REGELE"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER Următoarea cameră."
+    },
+    {
+      "key": "boss_appears",
+      "value": "Avertisment... şefule!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "Trage la atac / Turtle Shell la paznic"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Gardian! Şeful e invulnerabil."
+    },
+    {
+      "key": "boss_charge",
+      "value": "Încărcaţi! Dă-te la o parte."
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "ÎNCARCAREA {0}Du-te la etajele înalte."
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Atac special! DODGE RICOCHETS"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "Şefu' a învins!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "TOŢI JOCĂTORII..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "Sala de aşteptare.  {0} / {1}  GARHER UP!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 HURDLE Survival"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Un supravieţuitor e liber!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "Sari peste hurdles din dreapta timp de 60 de secunde"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "Uită-te după hohote din dreapta."
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "Sari!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Săriţi Hurdles!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Încet... prinde-ţi respiraţia!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Repede! SPRINT FINAL!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Toţi jucătorii afară."
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "Survivalul s-a eliberat!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "Supravieţuitorul găsit"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 SCORT Prietenul"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "PRIETEN MOVING"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "Construit un pat cu cutii, platforme, și corpul tău"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 PROTEJEAZĂ PRIETENUL"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "Aaah!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "FUGIŢI - VÂNZĂRI ŞI CAPACE, CUTII ŞI duşmani"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "Următorul prieten în  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Pregătesc un nou prieten..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "ECORT complet!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "Prietenul a ajuns la gol"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "ROUND {0}/3 BUILD {1:0.0}s"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "CONNECTA O PATIE CU TRUPUL TAU"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Hai! Ajutor prietenului ajunge la gol"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "ROUND {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "ROUND {0} Liber!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "RUNDA {0}/3    AU RĂMAS {1:0.0} s"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "HOLES {0}/{1}    Puneţi-le pe toate cu trupurile voastre!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "RUNDA {0} TERMINATĂ!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "TIMPUL A EXPIRAT! RUNDA REÎNCEPE"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "ASTUPAȚI GĂURILE!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "ROUND {0}/3    {1:0.0}Stânga"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "BALLS {0}/{1}    Du-i în holuri!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "Trage mingea prin labirint cu magism!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "ROUND {0} Liber!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Timpul a expirat! RĂSPUNSUL ASTA"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Mişcă-te în lana ta! MAI MULT INK MAGNETISMUL MAI PUTERNIC"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "Ultima runda: ajunge la snack deasupra!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "Construit o pata prin snack deasupra!\nConectează-te cu corpul tău."
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "Prietenul poate merge pe capul și liniile corpului"
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "PRIETEN ÎNCEPE"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "Prietenul Fell!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "Jocul s-a terminat."
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Nu poţi să te retragi în timp ce prietenul se mişcă."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET RELAY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "ROUND {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOCHET BULLETS OFF prietenii pentru a lovi ținta"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "DIN AMMO! RESTAURAREA"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "Liber!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Prietenul Spawner"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Gol prietenesc"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Partajare prieten-pass"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Exemplu pod cap"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Ferăstrău"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Tablă turnantă"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Tun"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Catapultă"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Spike"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Foc."
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Apă"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Otravă"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Laser"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Falling Rock"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Apăsați mașină"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Energie electrică"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Fierăstrău"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Gaură neagră"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Unelte"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Gear mare"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Frânghie Pulley"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Slider"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Bară rotativă"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Pendulum"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Gaura cheii"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Limitele etapei"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Ceas"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Counter"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Selectați etapa"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Părăsește sesiunea"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Repornire etapă"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Părăsi sesiunea on-line?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Plecarea ca gazdă va încheia această sesiune pentru toată lumea. Să plec?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Pleacă."
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Legat ca un pod: marginea dreaptă rămâne conectată în timp ce se extinde la stânga."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Împărțiți terenul conectat în piese selectabile și conectate individual."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Separat"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Partea separată e pornită. Se poate rupe fără fuziune și poate fi conectat individual."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Partea separată este oprit. Atingerea terenului poate fuziona."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Conectat podea și perete ca o singură formă teren."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Trageți pentru a plasa un drept {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Grosimea"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Grosimea podelei și a peretelui: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Drept"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Desenul drept e pornit."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Desenul drept este oprit."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw mod"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw mod"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Alegeți modul"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw modul: trageți pe gol space pentru a plasa obiecte."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Alegeți modul: selectați și mutați obiectele existente."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} Liber prin târâre."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Podeaua şi desenul pe perete sunt pornite."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Plasarea rectangle este pe."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Drew. {0} ca o singură cale conectată ({1} puncte)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Înapoi la editor"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Înapoi la editor  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "S-a întors de la test. Continuă să editezi scena."
+    },
+    {
+      "key": "cancel",
+      "value": "Renunță"
+    },
+    {
+      "key": "retry",
+      "value": "Reîncearcă"
+    },
+    {
+      "key": "menu",
+      "value": "Meniu"
+    },
+    {
+      "key": "redraw",
+      "value": "Redraw"
+    },
+    {
+      "key": "pen",
+      "value": "Pen"
+    },
+    {
+      "key": "eraser",
+      "value": "Stergere"
+    },
+    {
+      "key": "shape_square",
+      "value": "Box"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Cerc"
+    },
+    {
+      "key": "shape_line",
+      "value": "Linie"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Gata!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Înapoi"
+    },
+    {
+      "key": "brush_size",
+      "value": "Dimensiune"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Utilizat"
+    },
+    {
+      "key": "undo",
+      "value": "Desfă"
+    },
+    {
+      "key": "character_switch",
+      "value": "Comutare caracter"
+    },
+    {
+      "key": "character_add",
+      "value": "Adaugă Char"
+    },
+    {
+      "key": "character_delete",
+      "value": "Șterge Char"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Comută Char"
+    },
+    {
+      "key": "stage_select",
+      "value": "Selectare nivel"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 grupuri, 3 etape fiecare. Turn Editare ON, apoi alege o etapă pentru a o edita."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0 Depanare"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Editează 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Editare: OFF"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Editare: ON"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "NOU"
+    },
+    {
+      "key": "stage_clear",
+      "value": "Clar"
+    },
+    {
+      "key": "stage_locked",
+      "value": "ÎNCHIS"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Modul de depanare: toate lumile sunt deblocate. Alegeți o etapă pentru a juca sau rotiți Editare ON pentru a o edita."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2:Wall trageți pentru a crea blocuri\n3:Incepe 4:Gol 5:Scala 6:Inaltime\nA/D/W/S: mișcă camera Roată: zoom\nF5:Salvare  F6:Test  Esc:Înapoi"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Scala"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Dimensiune"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Grilă"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Șterge"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Salvează"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Test"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "ÎNAPOI  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Configurări joc"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "Chei"
+    },
+    {
+      "key": "option_language",
+      "value": "Limba"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Nu încă."
+    },
+    {
+      "key": "locked_stage",
+      "value": "Etapele fără JSON cad înapoi pe scenă."
+    },
+    {
+      "key": "human",
+      "value": "Om"
+    },
+    {
+      "key": "cat",
+      "value": "Pisică"
+    },
+    {
+      "key": "bird",
+      "value": "Păsări"
+    },
+    {
+      "key": "turtle",
+      "value": "Ţestoasă"
+    },
+    {
+      "key": "slime",
+      "value": "Slime"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 bile lovit"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "PĂRȚI rapide"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "SELECȚIE"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Alegeți o parte, apoi faceți clic sau trageți pe hartă pentru a o plasa."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Snap: {0} / {1:0.##} grilă unitară"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Alege un obiect mai întâi."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Lăţimea s-a schimbat. De asemenea, puteţi folosi Shift+ Roata."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Înălţimea s-a schimbat. Puteți utiliza, de asemenea, Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Mărimea s-a schimbat. Utilizați roata pentru a scala ambele axe."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Trageți o zonă mai mare pentru a plasa această parte."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Plasat {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Plasat {0} la {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Selectat. Trageți pentru a muta și de a folosi roata pentru a redimensiona."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Nu e nimic de desfăcut."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Anulat ultima editare."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Nu e nimic de refăcut."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Readid editarea."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Selectaţi un comutator, buton, cheie, sau gaura de cheie pentru a utiliza ca sursă link."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Alegeți un comutator, buton, cheie, sau gaura cheii ca sursă de link."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Sursă legătură: {0}Selectaţi ţinta, apoi apăsaţi Link To."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Setează o sursă de legătură mai întâi."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Alegeți un obiect de utilizat ca țintă de legătură."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Sursa de legătură și ținta trebuie să fie obiecte diferite."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Legat {0} la {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Selectaţi mai întâi un obiect legat."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Am eliberat legătura."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Salvat: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Salvarea este în prezent disponibilă doar în Editorul Unity."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Fabrica de obiecte de scenă lipseşte."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Lumina traficului"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 BLOCK CRASH"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Bloc Breaker"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Aruncaţi bombe! BREAK TOATE NICO DRAW BLOCAŢI!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} BLOCĂRI LA STÂNGE"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "A eşuat... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE Browser"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Căutare prin acțiune sau ID SE, apoi apăsați Play pentru a previzualiza sunetul atribuit. Plimbă un rând pentru a vedea calea de resurse."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "PLAY"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "STOP"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "RELOAD"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Nici un efect de sunet de potrivire."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE.md nu a fost găsit."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Necategorizate"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "MUTAT"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Sunet generat pe timp de rulare"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Tipărește laba"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Pește"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Mingea din fir"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Cristal de zăpadă"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Icicle"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Omul de zăpadă"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Blizzard"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Pene"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Cuibul păsărilor"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Linii eoliene"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Conductă"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Bolț"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Lanț"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Abur"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Ţestoasă"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Clepsidră"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Lacăt"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Bubbles"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Fluture"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Buburuza"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Floarea-soarelui"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Lalea"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Schelet"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Liliac"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Spiderweb"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Stalactită"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Lanternă"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Cărucior de mine"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Pickaxe"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Trofeu"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Medalie"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Fluier"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Balon"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Confetti"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Artificii"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Turn"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Binocluri"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Puntea"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Creion"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Creion"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Stergere"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Notebook"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Tablă"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Paleta"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Pensule"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Canvas"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Opronwatch"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Luminat"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Microfon"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Brânză"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Box surpriză"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Cutie cadou"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Planet"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Extraterestru"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Comet"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Gaură neagră"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Bubble săpun"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Moss"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Rădăcină de copac"
+    }
+  ]
+}

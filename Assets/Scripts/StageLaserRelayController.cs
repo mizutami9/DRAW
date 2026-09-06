@@ -9,10 +9,18 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "14-3";
         private const string StateKind = "laser_relay_state";
-        private const float RoundSeconds = 60f;
+        private const float RoundOneSeconds = 60f;
+        private const float RoundTwoSeconds = 120f;
+        private const float RoundThreeSeconds = 180f;
         private const float FloorY = -6.4f;
         private const float RoomHalfWidth = 18f;
+        private const float BoxRoomRightX = 24f;
+        private const float BoxRoomCeilingY = 0.4f;
         private const float RayDistance = 80f;
+        private const float LaserGlowWidth = 0.84f;
+        private const float LaserCoreWidth = 0.255f;
+        private const float LaserReflectionAssistRadius = 0.42f;
+        private const float GoalReceiveRadius = 1f;
         private const float BoxPreviewSeconds = 1.35f;
         private const float BoxCooldownSeconds = 0.55f;
         private const float GoalChargeSeconds = 1.2f;
@@ -31,6 +39,7 @@ namespace DrawBody.Prototype
         {
             public int Sequence;
             public int Round;
+            public int Attempt;
             public int Phase;
             public float Remaining;
             public int GoalMask;
@@ -44,6 +53,7 @@ namespace DrawBody.Prototype
             public int Index;
             public Vector2 Origin;
             public Vector2 Direction;
+            public Color PairColor;
             public GameObject Source;
             public LineRenderer Glow;
             public LineRenderer Core;
@@ -89,6 +99,8 @@ namespace DrawBody.Prototype
         private readonly List<Vector2> authoredBeamOrigins = new List<Vector2>(3);
         private readonly List<Vector2> authoredGoalPositions = new List<Vector2>(3);
         private readonly List<StageObjectData> authoredWalls = new List<StageObjectData>();
+        private readonly List<StageObjectData> authoredPassThroughFloors = new List<StageObjectData>();
+        private readonly List<StageObjectData> authoredJumpPads = new List<StageObjectData>();
         private Vector2 beamSourceAnchor;
         private Vector2 beamGoalAnchor;
         private float remaining;
@@ -98,6 +110,7 @@ namespace DrawBody.Prototype
         private float nextBoxAt;
         private float roundReadyAt;
         private int round = 1;
+        private int roundAttempt;
         private int goalMask;
         private int previewIndex;
         private int sequence;
@@ -171,7 +184,8 @@ namespace DrawBody.Prototype
 
             if (!HasAuthority)
             {
-                if (phase == RelayPhase.Active) remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
+                if (phase == RelayPhase.Active && !LocalMultiplayerDebugMode.NoTimeLimit)
+                    remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
                 RefreshMonitor();
                 return;
             }
@@ -179,11 +193,12 @@ namespace DrawBody.Prototype
             switch (phase)
             {
                 case RelayPhase.Active:
-                    remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
+                    if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                        remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
                     UpdateBoxStation();
                     UpdateGoalCharging();
                     if (AllGoalsReached()) ClearRound();
-                    else if (remaining <= 0f) FailRound();
+                    else if (!LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f) FailRound();
                     break;
                 case RelayPhase.RoundClear:
                     transitionRemaining -= Time.unscaledDeltaTime;
@@ -191,18 +206,21 @@ namespace DrawBody.Prototype
                     break;
                 case RelayPhase.Failed:
                     transitionRemaining -= Time.unscaledDeltaTime;
-                    if (transitionRemaining <= 0f) BeginRound(1);
+                    if (transitionRemaining <= 0f) BeginRound(round);
                     break;
             }
             BroadcastState();
             RefreshMonitor();
         }
 
-        private void BeginRound(int nextRound)
+        private void BeginRound(int nextRound, int synchronizedAttempt = -1)
         {
             round = Mathf.Clamp(nextRound, 1, 3);
+            roundAttempt = synchronizedAttempt >= 0
+                ? synchronizedAttempt
+                : roundAttempt + 1;
             phase = RelayPhase.Active;
-            remaining = RoundSeconds;
+            remaining = GetRoundSeconds(round);
             transitionRemaining = 0f;
             goalMask = 0;
             roundReadyAt = Time.unscaledTime + 0.45f;
@@ -217,8 +235,21 @@ namespace DrawBody.Prototype
             RefreshMonitor();
         }
 
+        private static float GetRoundSeconds(int targetRound)
+        {
+            switch (targetRound)
+            {
+                case 2: return RoundTwoSeconds;
+                case 3: return RoundThreeSeconds;
+                default: return RoundOneSeconds;
+            }
+        }
+
         private void BuildArena()
         {
+            // Dropper boxes are parented to the network sync manager online,
+            // so destroying only the arena would leave them in the next try.
+            boxDropper?.ClearSpawnedBoxes();
             if (arenaRoot != null)
             {
                 arenaRoot.gameObject.SetActive(false);
@@ -232,8 +263,15 @@ namespace DrawBody.Prototype
             authoredBeamOrigins.Clear();
             authoredGoalPositions.Clear();
             authoredWalls.Clear();
+            authoredPassThroughFloors.Clear();
+            authoredJumpPads.Clear();
             boxDropper = null;
             boxButton = null;
+            buttonCap = null;
+            buttonGlow = null;
+            boxPreview = null;
+            monitorMain = null;
+            monitorSub = null;
 
             GameObject arena = new GameObject("14-3 Laser Relay Round " + round);
             arena.transform.SetParent(transform, false);
@@ -262,14 +300,32 @@ namespace DrawBody.Prototype
             StageEscortController.AddFilledRect(arenaRoot, "Laser Relay Room", new Vector2(0f, 0.3f),
                 new Vector2(RoomHalfWidth * 2f, 15f), new Color(0.91f, 0.94f, 0.83f, 0.38f), -60);
             CreateSolid("Laser Relay Floor", new Vector2(0f, FloorY), new Vector2(innerWidth, floorThickness));
+            float boxRoomWidth = BoxRoomRightX - RoomHalfWidth + wallThickness;
+            float boxRoomCenterX = RoomHalfWidth - wallThickness * 0.5f + boxRoomWidth * 0.5f;
+            StageEscortController.AddFilledRect(arenaRoot, "Box Workshop Room",
+                new Vector2(boxRoomCenterX, (FloorY + BoxRoomCeilingY) * 0.5f),
+                new Vector2(boxRoomWidth, BoxRoomCeilingY - FloorY),
+                new Color(0.95f, 0.88f, 0.72f, 0.42f), -59);
+            CreateSolid("Box Workshop Floor", new Vector2(boxRoomCenterX, FloorY),
+                new Vector2(boxRoomWidth, floorThickness));
+            CreateSolid("Box Workshop Ceiling", new Vector2(boxRoomCenterX, BoxRoomCeilingY),
+                new Vector2(boxRoomWidth, ceilingThickness));
+            float boxRoomWallHeight = BoxRoomCeilingY - ceilingThickness * 0.5f - floorTop;
+            CreateSolid("Box Workshop Right Wall",
+                new Vector2(BoxRoomRightX, floorTop + boxRoomWallHeight * 0.5f),
+                new Vector2(wallThickness, boxRoomWallHeight));
             StageRedrawZoneFactory.CreateRuntimeFloorZone(arenaRoot,
                 "14-3_runtime_redraw_zone_" + round,
-                new Vector2(0f, FloorY), innerWidth, ceilingY - FloorY);
+                new Vector2((BoxRoomRightX - RoomHalfWidth) * 0.5f, FloorY),
+                BoxRoomRightX + RoomHalfWidth - wallThickness, ceilingY - FloorY);
             CreateSolid("Laser Relay Ceiling", new Vector2(0f, ceilingY), new Vector2(innerWidth, ceilingThickness));
             CreateSolid("Laser Relay Left Wall", new Vector2(-RoomHalfWidth, wallCenterY),
                 new Vector2(wallThickness, wallHeight));
-            CreateSolid("Laser Relay Right Wall", new Vector2(RoomHalfWidth, wallCenterY),
-                new Vector2(wallThickness, wallHeight));
+            float upperRightWallBottom = BoxRoomCeilingY + ceilingThickness * 0.5f;
+            float upperRightWallHeight = ceilingBottom - upperRightWallBottom;
+            CreateSolid("Laser Relay Right Upper Wall",
+                new Vector2(RoomHalfWidth, upperRightWallBottom + upperRightWallHeight * 0.5f),
+                new Vector2(wallThickness, upperRightWallHeight));
         }
 
         private void CreateSolid(string name, Vector2 position, Vector2 size)
@@ -317,13 +373,25 @@ namespace DrawBody.Prototype
 
         private void CreatePlayerCountBaffles()
         {
-            if (authoredWalls.Count > 0 && relaySpawnPositions.Count > 0
+            if (relaySpawnPositions.Count > 0
                 && authoredBeamOrigins.Count >= round && authoredGoalPositions.Count >= round)
             {
                 for (int i = 0; i < authoredWalls.Count; i++)
                 {
                     StageObjectData wall = authoredWalls[i];
                     CreateSolid("Authored Relay Wall " + (i + 1), wall.position, wall.size, wall.rotation);
+                }
+                for (int i = 0; i < authoredPassThroughFloors.Count; i++)
+                {
+                    // Player-only floors are gameplay platforms, but never
+                    // laser blockers.
+                    factory?.Create(authoredPassThroughFloors[i], arenaRoot);
+                }
+                for (int i = 0; i < authoredJumpPads.Count; i++)
+                {
+                    // Keep the editor-authored gimmick type and action strength.
+                    // It is a physical jump pad, but intentionally not a laser blocker.
+                    factory?.Create(authoredJumpPads[i], arenaRoot);
                 }
                 beamSourceAnchor = authoredBeamOrigins[0];
                 beamGoalAnchor = authoredGoalPositions[0];
@@ -540,7 +608,12 @@ namespace DrawBody.Prototype
             for (int i = 0; i < matching.Count; i++)
             {
                 StageObjectData item = matching[i];
-                if (item.objectId.Contains("-wall-")) authoredWalls.Add(item);
+                // Older editor saves named custom jump pads "wall" because the
+                // relay layout originally only understood walls. The serialized
+                // type is authoritative, so restore the real gimmick from it.
+                if (item.type == StageObjectType.JumpPad) authoredJumpPads.Add(item);
+                else if (item.objectId.Contains("-wall-")) authoredWalls.Add(item);
+                else if (item.objectId.Contains("-passfloor-")) authoredPassThroughFloors.Add(item);
                 else if (item.objectId.Contains("-source-")) authoredBeamOrigins.Add(item.position);
                 else if (item.objectId.Contains("-goal-")) authoredGoalPositions.Add(item.position);
                 else if (item.objectId.Contains("-player-")) relaySpawnPositions.Add(item.position);
@@ -585,7 +658,13 @@ namespace DrawBody.Prototype
 
             for (int i = 0; i < origins.Length; i++)
             {
-                BeamState beam = new BeamState { Index = i, Origin = origins[i], Direction = directions[i].normalized };
+                BeamState beam = new BeamState
+                {
+                    Index = i,
+                    Origin = origins[i],
+                    Direction = directions[i].normalized,
+                    PairColor = colors[i]
+                };
                 CreateSource(beam, colors[i]);
                 CreateBeamRenderers(beam, colors[i]);
                 beams.Add(beam);
@@ -613,13 +692,20 @@ namespace DrawBody.Prototype
                     new Vector2(2.2f, 1.05f) * artScale, new Color(0.1f, 0.12f, 0.13f), 28);
             }
 
+            // A broad crayon swatch makes the emitter's pairing readable even
+            // before following the beam across the room.
+            StageEscortController.AddFilledRect(source.transform, "Emitter Pair Color",
+                new Vector2(-0.3f, 0.02f) * artScale,
+                new Vector2(0.86f, 0.24f) * artScale,
+                new Color(color.r, color.g, color.b, 0.78f), 30);
+
             GameObject lens = new GameObject("Emitter Lens");
             lens.transform.SetParent(source.transform, false);
             lens.transform.localPosition = new Vector3(1.14f * artScale, 0f, 0f);
             lens.transform.localScale = new Vector3(0.22f, 0.5f, 1f) * artScale;
             SpriteRenderer lensRenderer = lens.AddComponent<SpriteRenderer>();
             lensRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
-            lensRenderer.color = new Color(1f, 0.95f, 0.72f, 0.98f);
+            lensRenderer.color = new Color(color.r, color.g, color.b, 0.98f);
             lensRenderer.sortingOrder = 29;
             for (int i = 0; i < 3; i++)
             {
@@ -648,7 +734,7 @@ namespace DrawBody.Prototype
             ringObject.transform.localScale = new Vector3(1.72f, 1.9f, 1f);
             state.Ring = ringObject.AddComponent<SpriteRenderer>();
             state.Ring.sprite = DoodleRuntimeAssets.CircleSprite;
-            state.Ring.color = new Color(color.r, color.g, color.b, 0.04f);
+            state.Ring.color = new Color(color.r, color.g, color.b, 0.22f);
             state.Ring.sortingOrder = 18;
 
             GameObject coreObject = new GameObject("Bulb Warm Glass");
@@ -657,7 +743,7 @@ namespace DrawBody.Prototype
             coreObject.transform.localScale = new Vector3(1.05f, 1.15f, 1f);
             state.Core = coreObject.AddComponent<SpriteRenderer>();
             state.Core.sprite = DoodleRuntimeAssets.CircleSprite;
-            state.Core.color = new Color(0.72f, 0.86f, 1f, 0.06f);
+            state.Core.color = new Color(color.r, color.g, color.b, 0.24f);
             state.Core.sortingOrder = 20;
 
             if (!StageGun.TryCreateResourceSprite(goal.transform,
@@ -671,16 +757,16 @@ namespace DrawBody.Prototype
             GameObject chargeObject = new GameObject("Bulb Charge");
             chargeObject.transform.SetParent(goal.transform, false);
             chargeObject.transform.localPosition = new Vector3(0f, 0.12f, 0f);
-            chargeObject.transform.localScale = Vector3.one * 0.12f;
+            chargeObject.transform.localScale = Vector3.one * 0.35f;
             state.ChargeCore = chargeObject.AddComponent<SpriteRenderer>();
             state.ChargeCore.sprite = DoodleRuntimeAssets.CircleSprite;
-            state.ChargeCore.color = new Color(color.r, color.g, color.b, 0.18f);
+            state.ChargeCore.color = new Color(color.r, color.g, color.b, 0.48f);
             state.ChargeCore.sortingOrder = 23;
 
             GameObject pairMarker = new GameObject("Bulb Pair Marker");
             pairMarker.transform.SetParent(goal.transform, false);
             pairMarker.transform.localPosition = new Vector3(0f, -0.72f, 0f);
-            pairMarker.transform.localScale = new Vector3(0.34f, 0.17f, 1f);
+            pairMarker.transform.localScale = new Vector3(0.72f, 0.22f, 1f);
             SpriteRenderer pairRenderer = pairMarker.AddComponent<SpriteRenderer>();
             pairRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
             pairRenderer.color = new Color(color.r, color.g, color.b, 0.88f);
@@ -703,10 +789,10 @@ namespace DrawBody.Prototype
         {
             GameObject root = new GameObject("Continuous Safe Laser " + (beam.Index + 1));
             root.transform.SetParent(arenaRoot, false);
-            beam.Glow = CreateLaserLine(root.transform, "Laser Glow", 0.28f,
+            beam.Glow = CreateLaserLine(root.transform, "Laser Glow", LaserGlowWidth,
                 new Color(color.r, color.g, color.b, 0.22f), 16);
-            beam.Core = CreateLaserLine(root.transform, "Laser Core", 0.085f,
-                new Color(1f, 0.94f, 0.7f, 0.96f), 17);
+            beam.Core = CreateLaserLine(root.transform, "Laser Core", LaserCoreWidth,
+                new Color(color.r, color.g, color.b, 0.98f), 17);
             for (int i = 0; i < 4; i++)
             {
                 GameObject mark = new GameObject("Reflection Flash " + i);
@@ -764,7 +850,7 @@ namespace DrawBody.Prototype
                     out RaycastHit2D playerHit, out PlayerController2D hitPlayer);
                 TryFindNearestBlockerHit(origin, direction, remainingDistance, out RaycastHit2D blockerHit);
                 GoalState pairedGoal = goals[beam.Index];
-                bool goalHit = TryRayCircle(origin, direction, pairedGoal.Position, 0.7f,
+                bool goalHit = TryRayCircle(origin, direction, pairedGoal.Position, GoalReceiveRadius,
                     remainingDistance, out float goalDistance);
                 float playerDistance = hitPlayer != null ? playerHit.distance : float.PositiveInfinity;
                 float blockerDistance = blockerHit.collider != null
@@ -823,7 +909,11 @@ namespace DrawBody.Prototype
         {
             chosen = default;
             player = null;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, distance);
+            // The visible beam is deliberately broad in 14-3. Use the same
+            // radius for reflection so a line grazing a drawn body still hits
+            // instead of requiring pixel-perfect aiming at its collider.
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(
+                origin, LaserReflectionAssistRadius, direction, distance);
             System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
             for (int i = 0; i < hits.Length; i++)
             {
@@ -884,16 +974,15 @@ namespace DrawBody.Prototype
             }
             bool reached = beam.ReachedGoalIndex >= 0;
             bool latched = (goalMask & (1 << beam.Index)) != 0;
-            Color glowColor = reached || latched
-                ? new Color(0.2f, 1f, 0.42f, 0.42f)
-                : beam.RouteValid
-                    ? new Color(1f, 0.38f, 0.08f, 0.3f)
-                    : new Color(1f, 0.08f, 0.06f, 0.2f);
+            float glowAlpha = reached || latched ? 0.58f : beam.RouteValid ? 0.38f : 0.22f;
+            Color glowColor = new Color(
+                beam.PairColor.r, beam.PairColor.g, beam.PairColor.b, glowAlpha);
             beam.Glow.startColor = glowColor;
             beam.Glow.endColor = glowColor;
-            beam.Core.startColor = reached || latched
-                ? new Color(0.76f, 1f, 0.76f, 0.98f)
-                : new Color(1f, 0.92f, 0.62f, 0.96f);
+            Color brightPairColor = Color.Lerp(
+                beam.PairColor, Color.white, reached || latched ? 0.28f : 0.08f);
+            brightPairColor.a = 0.98f;
+            beam.Core.startColor = brightPairColor;
             beam.Core.endColor = beam.Core.startColor;
         }
 
@@ -958,14 +1047,16 @@ namespace DrawBody.Prototype
                 float glowPulse = 1f + Mathf.Sin(Time.unscaledTime * (5f + charge * 7f) + i) * 0.08f;
                 goal.Ring.transform.localScale = new Vector3(1.72f, 1.9f, 1f) * glowPulse;
                 goal.Ring.color = new Color(goal.PairColor.r, goal.PairColor.g, goal.PairColor.b,
-                    Mathf.Lerp(0.035f, 0.56f, charge));
-                goal.Core.color = Color.Lerp(
-                    new Color(0.72f, 0.86f, 1f, 0.06f),
-                    new Color(1f, 0.92f, 0.28f, 0.82f), charge);
-                goal.ChargeCore.transform.localScale = Vector3.one * Mathf.Lerp(0.12f, 0.82f, charge);
-                goal.ChargeCore.color = Color.Lerp(
-                    new Color(goal.PairColor.r, goal.PairColor.g, goal.PairColor.b, 0.16f),
-                    new Color(1f, 0.92f, 0.3f, 0.96f), charge);
+                    Mathf.Lerp(0.22f, 0.64f, charge));
+                Color unlitPair = new Color(
+                    goal.PairColor.r, goal.PairColor.g, goal.PairColor.b, 0.24f);
+                Color litPair = Color.Lerp(goal.PairColor, Color.white, 0.25f);
+                litPair.a = 0.9f;
+                goal.Core.color = Color.Lerp(unlitPair, litPair, charge);
+                goal.ChargeCore.transform.localScale = Vector3.one * Mathf.Lerp(0.35f, 0.82f, charge);
+                Color chargeColor = Color.Lerp(goal.PairColor, Color.white, charge * 0.2f);
+                chargeColor.a = Mathf.Lerp(0.48f, 0.98f, charge);
+                goal.ChargeCore.color = chargeColor;
                 goal.RaysRoot.gameObject.SetActive(charge > 0.08f);
                 goal.RaysRoot.localScale = Vector3.one * Mathf.Lerp(0.72f, 1.08f, charge) * glowPulse;
             }
@@ -993,7 +1084,7 @@ namespace DrawBody.Prototype
         {
             if (factory == null) factory = Object.FindFirstObjectByType<StageObjectFactory>();
             if (factory == null) return;
-            Vector2 dropperPosition = new Vector2(15f, 5.2f);
+            Vector2 dropperPosition = new Vector2(22.1f, -1.05f);
             StageObjectData dropperData = StageObjectFactory.CreateDefaultData(StageObjectType.BoxDropper, dropperPosition);
             dropperData.objectId = "14-3_box_generator_round_" + round;
             dropperData.size = new Vector2(2.6f, 1.8f);
@@ -1005,7 +1096,7 @@ namespace DrawBody.Prototype
             boxDropper?.ConfigureManualDispense();
 
             StageObjectData buttonData = StageObjectFactory.CreateDefaultData(StageObjectType.Button,
-                new Vector2(14.5f, FloorY + 0.52f));
+                new Vector2(19.7f, FloorY + 0.52f));
             buttonData.objectId = "14-3_box_button_round_" + round;
             buttonData.size = new Vector2(1.7f, 0.8f);
             GameObject buttonObject = factory.Create(buttonData, arenaRoot);
@@ -1087,7 +1178,7 @@ namespace DrawBody.Prototype
         {
             GameObject monitor = new GameObject("14-3 Laser Relay Monitor");
             monitor.transform.SetParent(arenaRoot, false);
-            monitor.transform.position = new Vector3(0f, 6.1f, 0f);
+            monitor.transform.position = new Vector3(0f, 9.05f, 0f);
             DoodleMonitorVisuals.Build(monitor.transform, new Vector2(13.5f, 1.9f), 40);
             monitorMain = StageEscortController.CreateText(monitor.transform, "Main",
                 new Vector3(0f, 0.3f, -0.03f), 54, 0.11f, new Color(0.42f, 0.12f, 0.04f), 44);
@@ -1102,8 +1193,7 @@ namespace DrawBody.Prototype
             {
                 case RelayPhase.Active:
                     monitorMain.text = LocalizationManager.Format("laser_relay_monitor", round, remaining);
-                    monitorSub.text = LocalizationManager.Format("laser_relay_progress",
-                        CountBits(goalMask), goals.Count);
+                    monitorSub.text = CountBits(goalMask) + "/" + goals.Count;
                     break;
                 case RelayPhase.RoundClear:
                     monitorMain.text = LocalizationManager.Format("laser_relay_round_clear", round);
@@ -1157,10 +1247,14 @@ namespace DrawBody.Prototype
             if (!cameraCaptured) CaptureCamera();
             if (gameCamera == null) return;
             if (cameraFollow != null) cameraFollow.enabled = false;
-            gameCamera.transform.position = new Vector3(0f, 0.45f, -10f);
+            float viewLeft = -RoomHalfWidth - 0.5f;
+            float viewRight = BoxRoomRightX + 0.5f;
+            float viewCenterX = (viewLeft + viewRight) * 0.5f;
+            float requiredHalfWidth = (viewRight - viewLeft) * 0.5f;
+            gameCamera.transform.position = new Vector3(viewCenterX, 1.15f, -10f);
             gameCamera.orthographicSize = Mathf.Max(
-                8.4f,
-                (RoomHalfWidth + 0.5f) / Mathf.Max(0.1f, gameCamera.aspect));
+                10.25f,
+                requiredHalfWidth / Mathf.Max(0.1f, gameCamera.aspect));
         }
 
         private void RestoreCamera()
@@ -1179,7 +1273,7 @@ namespace DrawBody.Prototype
             nextBroadcastAt = Time.unscaledTime + 0.1f;
             NetworkState state = new NetworkState
             {
-                Sequence = ++sequence, Round = round, Phase = (int)phase,
+                Sequence = ++sequence, Round = round, Attempt = roundAttempt, Phase = (int)phase,
                 Remaining = remaining, GoalMask = goalMask,
                 GoalCharges = GetGoalCharges(),
                 PreviewIndex = previewIndex, ButtonPressed = buttonPressed
@@ -1197,7 +1291,8 @@ namespace DrawBody.Prototype
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= receivedSequence) return;
             receivedSequence = state.Sequence;
-            if (state.Round != round) BeginRound(state.Round);
+            if (state.Round != round || state.Attempt != roundAttempt)
+                BeginRound(state.Round, state.Attempt);
             phase = (RelayPhase)state.Phase;
             remaining = state.Remaining;
             goalMask = state.GoalMask;

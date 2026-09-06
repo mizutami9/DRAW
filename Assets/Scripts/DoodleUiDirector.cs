@@ -294,7 +294,7 @@ namespace DrawBody.Prototype
             headingRect.pivot = new Vector2(0f, 1f);
             headingRect.anchoredPosition = new Vector2(42f, -24f);
             headingRect.sizeDelta = new Vector2(430f, 58f);
-            EnsureHighlight(headingRect, Yellow);
+            EnsurePaintStrokeHighlight(headingRect, Cyan);
 
             for (int i = 1; i <= 15; i++)
             {
@@ -475,11 +475,10 @@ namespace DrawBody.Prototype
             bool selectorMode = LocalizationManager.SupportedLanguages.Count > 2;
             if (selectorMode)
             {
-                PlaceOptionRect(japanese, new Vector2(-22f, rowY[2]), new Vector2(54f, 42f));
-                PlaceOptionRect(FindRect(panel, "OptionLanguageCurrentValue"), new Vector2(63f, rowY[2]), new Vector2(108f, 42f));
-                PlaceOptionRect(english, new Vector2(148f, rowY[2]), new Vector2(54f, 42f));
+                PlaceOptionRect(japanese, new Vector2(70f, rowY[2]), new Vector2(330f, 44f));
+                HideIfExists(panel, "OptionLanguageCurrentValue");
+                HideIfExists(panel, "OptionEnglishButton");
                 ThemeOptionButton(japanese, Cyan, 18);
-                ThemeOptionButton(english, Cyan, 18);
             }
             else
             {
@@ -892,7 +891,7 @@ namespace DrawBody.Prototype
                 "OptionSeLabel", "OptionSeSlider", "OptionSeValue",
                 "OptionLanguageLabel", "OptionJapaneseButton", "OptionEnglishButton",
                 "OptionPlayerNameLabel", "OptionPlayerNameInput", "OptionPlayerNameError",
-                "OptionPlayerNameRegisterButton", "TitleOptionBackButton"
+                "OptionPlayerNameRegisterButton", "TitleOptionBackButton", "OptionLanguagePopup"
             };
             for (int i = 0; i < names.Length; i++)
             {
@@ -1450,6 +1449,66 @@ namespace DrawBody.Prototype
             Image image = marker.GetComponent<Image>();
             image.color = new Color(color.r, color.g, color.b, 0.52f);
             image.raycastTarget = false;
+        }
+
+        private static void EnsurePaintStrokeHighlight(RectTransform textRect, Color color)
+        {
+            if (textRect == null || textRect.parent == null) return;
+
+            string markerName = textRect.name + "MarkerHighlight";
+            Transform existing = textRect.parent.Find(markerName);
+            RectTransform marker;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject(markerName, typeof(RectTransform));
+                obj.transform.SetParent(textRect.parent, false);
+                marker = obj.GetComponent<RectTransform>();
+            }
+            else
+            {
+                marker = existing as RectTransform;
+            }
+            if (marker == null) return;
+
+            Image oldFlatHighlight = marker.GetComponent<Image>();
+            if (oldFlatHighlight != null) oldFlatHighlight.enabled = false;
+            marker.gameObject.SetActive(true);
+            marker.anchorMin = textRect.anchorMin;
+            marker.anchorMax = textRect.anchorMax;
+            marker.pivot = textRect.pivot;
+            marker.anchoredPosition = textRect.anchoredPosition + new Vector2(0f, -4f);
+            marker.sizeDelta = new Vector2(textRect.sizeDelta.x * 0.98f, 50f);
+            marker.localRotation = Quaternion.identity;
+
+            for (int i = 0; i < 4; i++)
+            {
+                string stripeName = "InkStroke" + i;
+                Transform found = marker.Find(stripeName);
+                RectTransform stripe;
+                if (found == null)
+                {
+                    GameObject obj = new GameObject(stripeName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                    obj.transform.SetParent(marker, false);
+                    stripe = obj.GetComponent<RectTransform>();
+                }
+                else
+                {
+                    stripe = found as RectTransform;
+                }
+                if (stripe == null) continue;
+
+                stripe.anchorMin = stripe.anchorMax = new Vector2(0.5f, 0.5f);
+                stripe.pivot = new Vector2(0.5f, 0.5f);
+                stripe.anchoredPosition = new Vector2((i - 1.5f) * 4f, (i - 1.5f) * 3f);
+                stripe.sizeDelta = new Vector2(marker.sizeDelta.x - i * 14f, 13f + i * 2f);
+                stripe.localRotation = Quaternion.Euler(0f, 0f, -1.6f + i * 1.1f);
+                Image image = stripe.GetComponent<Image>();
+                image.color = new Color(color.r, color.g, color.b, 0.2f + i * 0.07f);
+                image.raycastTarget = false;
+            }
+
+            marker.SetSiblingIndex(Mathf.Max(0, textRect.GetSiblingIndex()));
+            textRect.SetAsLastSibling();
         }
 
         private void EnsureTape(RectTransform parent, Vector2 position, float rotation, Color color)

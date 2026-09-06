@@ -150,7 +150,8 @@ namespace DrawBody.Prototype
             if (IsOnlineActive() && !HasAuthority())
             {
                 phaseRemaining = Mathf.Max(0f, phaseRemaining - Time.deltaTime);
-                if (phase == ChallengePhase.Playing) remainingSeconds = Mathf.Max(0f, remainingSeconds - Time.deltaTime);
+                if (phase == ChallengePhase.Playing && !LocalMultiplayerDebugMode.NoTimeLimit)
+                    remainingSeconds = Mathf.Max(0f, remainingSeconds - Time.deltaTime);
                 CheckFalls();
                 RefreshDisplay();
                 return;
@@ -188,9 +189,11 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            remainingSeconds = Mathf.Max(0f, remainingSeconds - Time.deltaTime);
+            if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                remainingSeconds = Mathf.Max(0f, remainingSeconds - Time.deltaTime);
             UpdateAttackDirector();
-            if (AreAllPlayersEliminated() || remainingSeconds <= 0f)
+            if (AreAllPlayersEliminated()
+                || !LocalMultiplayerDebugMode.NoTimeLimit && remainingSeconds <= 0f)
             {
                 BeginFailure();
                 return;

@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "Όνομα παίκτη"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter το όνομά σας"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Σε παρακαλώ. enter όνομα παίκτη."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER ΤΟ ΟΝΟΜΑ ΣΑΣ ΕΔΩ"
+    },
+    {
+      "key": "option_register",
+      "value": "ΜΗΤΡΩΟ"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Ιαπωνικά"
+    },
+    {
+      "key": "lang_en",
+      "value": "ΕΛ"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Ελεύθερα! Πατήστε R για να ξαναπροσπαθήσετε."
+    },
+    {
+      "key": "draw_title",
+      "value": "Σχεδιασμός (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: Επιστροφή στο παιχνίδι / ENTER: Αποφασίστε / ESC: Ακύρωση"
+    },
+    {
+      "key": "preview",
+      "value": "Προεπισκόπηση"
+    },
+    {
+      "key": "clear",
+      "value": "Διαγραφή"
+    },
+    {
+      "key": "decide",
+      "value": "Επιβεβαίωση"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Υπόλοιπο"
+    },
+    {
+      "key": "current",
+      "value": "Τρέχων"
+    },
+    {
+      "key": "part",
+      "value": "Μέρος"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw ο κορμός πρώτα."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Ο Τόρσο είναι η βάση. Draw άλλα μέρη από τον δείκτη σύνδεσης τους."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: έναρξη από τον δείκτη σύνδεσης."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw τον κορμό πριν από τη σύνδεση άλλων μερών."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} συνδέεται."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} δεν ξεκίνησε από τον δείκτη σύνδεσης."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Το Torso απαιτείται πριν αποφασίσει."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} Πρέπει να ξεκινήσει από τον δείκτη σύνδεσης."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Προσωπικό  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Ομάδα  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Δεν μπορώ να αποφασίσω: προσωπικά ink λέ {0:0.#}/{1:0}- Μείωσε το. {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Δεν μπορώ να αποφασίσω: ομάδα ink λέ {0:0.#}/{1:0}- Μείωσε το. {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}: αρχή από τον δείκτη."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Υπεύθυνος"
+    },
+    {
+      "key": "torso",
+      "value": "Τόρσο"
+    },
+    {
+      "key": "left_arm",
+      "value": "Αριστερό χέρι"
+    },
+    {
+      "key": "right_arm",
+      "value": "Δεξί χέρι"
+    },
+    {
+      "key": "left_leg",
+      "value": "Αριστερό πόδι"
+    },
+    {
+      "key": "right_leg",
+      "value": "Δεξί πόδι"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Αριστερό μέτωπο"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Δεξιά όψη"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Αριστερά πίσω"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Ακριβώς πίσω."
+    },
+    {
+      "key": "tail",
+      "value": "Ουρά"
+    },
+    {
+      "key": "left_wing",
+      "value": "Αριστερή πτέρυγα"
+    },
+    {
+      "key": "right_wing",
+      "value": "Δεξιά πτέρυγα"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Φτερό ουράς"
+    },
+    {
+      "key": "slime_body",
+      "value": "Γλοιώδης"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Κανονικό άλμα"
+    },
+    {
+      "key": "jump_double",
+      "value": "Άλμα x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Άλμα x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Κανονική επαφή"
+    },
+    {
+      "key": "arm_long",
+      "value": "Μακροχρόνια Άκτιση"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Γρήγορη ταλάντευση"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Κανονικό"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Βαρύς διακόπτης"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Βαρύ"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Πόδι {0:0.0}: {1}   Χέρι {2:0.0}: {3}   Τόρσο {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Φτερά {0:0.0} INK / Ταχύτητα αλίευσης {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "ΑΝΘΡΩΠΙΝΗ ΙΣΧΥΟΣ\nΧέρια {0:0.0} INK  Ενέργεια ×{1:0.00}\nΠόδια {2:0.0} INK  Άλμα ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "ΙΣΧΥΟΣ ΚΑΤ\nΠίσω πόδια {0:0.0} INK  Ταχύτητα ×{1:0.00}\nΜπροστινά πόδια {2:0.0} INK  Εύρος νύχι ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "ΠΙΣΤΟΠΟΙΗΤΙΚΟ\nΦτερά {0:0.0} / 700 INK\nΤαχύτητα ολίσθησης {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "ΔΥΝΑΤΟΤΗΤΑ\nΠερίμενε. SPACE: ανίκητο κέλυφος\nΠερίμενε. F: στρίψτε 90° προς την κατεύθυνση που βλέπει"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "ΙΣΧΥΟΣ ΤΟΥ ΚΛΙΜΑΤΟΣ\nΣώμα {0:0.0} / 700 INK\nΠρος τα πάνω μήκος ακίδας {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "ΑΝΘΡΩΠΙΝΟ"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "ΚΑΤ"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "ΠΑΙΔΙΚΗ"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "ΤΡΙΤΗ"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "ΚΛΙΜΑ"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Κι άλλο πόδι INK αυξάνει την ισχύ άλματος\nΠερισσότερο χέρι INK αύξηση της δύναμης throwψης"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Περισσότερο πίσω πόδι INK αυξάνει την ταχύτητα εκτέλεσης\nΚι άλλο μπροστινό πόδι INK αυξάνει το εύρος ξυστό"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Περισσότερη πτέρυγα INK αυξάνει την ισχύ ολίσθησης"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Αήττητος ενώ είναι κρυμμένος στο κέλυφος"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Τύπος F για ανοδική ακίδα επίθεσης\nΛιγότερο INK καθιστά το μακρύτερο / άλμα τοίχου ενεργοποιημένο"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: THROW"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "ΚΙΝΔΥΝΟΣ SPACE: ΓΥΛΙ  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "ΚΙΝΔΥΝΟΣ SPACE: ΚΕΝΤΡΟ F: ΤΟΥNΝ 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: UPWARD SPIKE ΕΠΙΘΕΣΗ"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Ενέργεια ×{0:0.00}  Άλμα ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Εκτέλεση ×{0:0.00}  Εύρος νύχι ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Ισχύς επίπλευσης {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE- Ναι.  F: 90° ΤΟΥURΝ"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Μήκος ακίδας προς τα πάνω ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Χέρια {0:0.0}/280 Πόδια {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Πίσω {0:0.0}/240 Εμπρός {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Φτερά {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Ενεργό μόνο ενώ το κουμπί κρατιέται"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "ΑΝΑΓΝΩΡΙΣΗ ΤΟΥ ΚΕΛΙΟΥ"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE και F Εργασία όσο διαρκεί!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Σώμα {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "ΡΑΝΚ {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "ΧΑΜΗΛΗ"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "ΥΨΗΛΗ"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "ΠΑΙΧΝΙΔΙΑ"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "ΣΤΑΘΜΟΣ"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "ΚΙΝΗΣΗ"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "ΣΤΑΘΜΟΣ"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "ΓΥΑΛΙ"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "ΑΜΥΝΑ"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "ΚΙΝΗΤΗΡΑ"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "ΣΩΜΑ INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "ΦΩΣ: ΣΤΑΘΜΙΣΤΕ"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "Σπιντ + πήδημα επάνω"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK ΜΕΓΕΘΟΣ {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "FΣηκωθείτε! Λιγότερο INK = μακρύτερο / Πήδημα τοίχου ενεργοποιημένο"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Περισσότερα για να δυναμώσει!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Δεν μπορείτε να ξανασχεδιάσετε μετά την έναρξη αυτού του σταδίου."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Υψηλή πλατφόρμα"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Βαρύς διακόπτης"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Μακριά Λεβιές"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Στενή τρύπα"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "ΚΑΘΗΚΟΝΤΑ ΔΩΜΑΤΙΟΥ"
+    },
+    {
+      "key": "multi_participants",
+      "value": "Παίκτες"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "ΔΩΜΑΤΙΟ ΔΗΜΙΟΥΡΓΙΑΣ"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "Δωμάτιο join"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "Ταυτότητα δωματίου"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "ΤΟΠΙΚΗ ΔΟΚΙΜΗ"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "Εσύ"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 ΣΙΔΗΡΟΔΡΟΜΙΚΟ ΣΙΔΗΡΟΔΡΟΜΟ"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "ΑΡΧΗΓΕΙΟ! ΦΥΛΑΞΤΕ ΕΝΑ ΤΥΧΟ"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "ΓΟΥΟΛ-ΤΖΑΜΠ ΚΑΙ DODGE PIERCING missiles!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 ΠΡΟΣΤΑΣΙΑ ΤΟΥ ΦΙΛΟΥ ΣΟΥ!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "ΦΑΣΗ {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "ΧΡΟΝΟΣ {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Υπερασπίσου τον φίλο σου και από τις δύο πλευρές."
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "ΑΕΡΟΠΟΡΙΚΟ {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "Φίλος κάτω... ΕΠΑΝΕΞΕΛΙΞΤΕ {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "ΑΝΤΑΠΟΚΡΙΤΗ!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "ΚΙΝΔΥΝΟΣ {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "ΧΡΟΝΟΣ {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "Σπάστε τα κουτιά και συλλαμβάνετε τα νομίσματα!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "Χρόνος μέχρι..."
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 κιλά καθαρά!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "ΔΥΝΑΜΕ!"
+    },
+    {
+      "key": "title_single",
+      "value": "Ένας παίκτης"
+    },
+    {
+      "key": "title_multi",
+      "value": "Πολλοί παίκτες"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Ρυθμίσεις"
+    },
+    {
+      "key": "option_back",
+      "value": "ΠΙΣΩ  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "ΠΙΣΩ  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "ΠΙΣΩ  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Έξοδος"
+    },
+    {
+      "key": "title_debug",
+      "value": "Αποσφαλμάτωση"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "ΑΠΟΚΛΕΙΣΤΙΚΗ ΚΑΤΑΣΤΑΣΗ ΤΡΑΙΝΩΝ"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4-player εναέριο ρελέ"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "→ Cat → Slime ρελέ"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "ΕΝΑ STARTΞΗ ΑΠΑΙΤΗΣΗΣ"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "ΠΙΣΩ  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "ΧΑΡΑΚΤΗΡΕΣ ΕΚΔΟΣΗΣ"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "ΚΕΦΑΛΗ ΤΟΥ ΑΤΜΙΟΥ"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "ΕΞΑΓΩΓΗ 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΤΙΤΛΟ"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Ελέγξτε τη σύνθεση και στη συνέχεια εξαγάγετε το PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Σώθηκε: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "REDRAWING..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "Οι χαρακτήρες μπορούν να αλλάξουν μόνο στο δωμάτιο προετοιμασίας."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY HID HID     ESC  ΤΙΤΛΟΣ"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "ΑΝΑΚΟΙΝΩΣΗ ΤΟΥ TRAILER TAS"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Σύρετε ηθοποιούς ενώ αδρανής F9 Εγγραφή F10 Play P Παύση O Βήμα"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 RECORD/STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 ΠΑΙΞΤΕ ΟΛΑ"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 ΠΑΙΧΝΙΔΙΑ"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "ΕΚΚΑΘΑΡΙΣΗ"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "ΠΑΥΣΗ"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "Ο ΒΗΜΑ"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "ΚΑΤΑΓΡΑΦΗ"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "Παίζοντας όλα τα ίχνη"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "ΚΤΗΝΙΑΤΡΙΚΗ"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} Επιλεγμένα: {1} | {2} Πλαίσιο {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "PRESET {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "ΣΑΒΕΣ"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Ενώ είναι σε αδράνεια, σύρετε χαρακτήρες για να ορίσετε τις θέσεις εκκίνησης τους"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Συνέχεια"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Τίτλος"
+    },
+    {
+      "key": "language_settings",
+      "value": "Settings γλώσσας"
+    },
+    {
+      "key": "multi_play",
+      "value": "ΠΟΛΥ"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Τυχαία ταίριασμα"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Ιδιωτικό"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Τυχαία ταίριασμα"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Αναζήτηση παικτών"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Αναζήτηση"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Ταιριάζουν...\n\nΠαίκτες 2 / 4\n\n○ Εσύ\n○ Παίκτης2\n□ Αναζήτηση\n□ Αναζήτηση\n\nΑναμονή για [READY]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "ΔΩΜΑΤΙΟ"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Δημιουργία δωματίου"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Εγγραφή στο δωμάτιο"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Όνομα δωματίου\n[ Draw Μαζί\n\nΜέγιστοι παίκτες\n< 4 >\n\nΟρατότητα\n[Δημόσιο] [Ιδιωτικό]\n\nΣτάδιο\n[Επιλογές Host]\n\nΚανόνας Redraw\n[Παύση Όλοι]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Μέγιστοι παίκτες"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Ορατότητα"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Ορατότητα"
+    },
+    {
+      "key": "multi_public",
+      "value": "Δημόσιο"
+    },
+    {
+      "key": "multi_private",
+      "value": "Ιδιωτικό"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Εναλλαγή"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Δημιουργία"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter την ταυτότητα λόμπι που εμφανίζεται στην οθόνη του υπολογιστή.\n\nΜε το EOS ρυθμισμένο, οι φίλοι μπορούν να ενταχθούν απομακρυσμένα.\nΕάν χρησιμοποιείτε Direct TCP, enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter Ταυτότητα λόμπι"
+    },
+    {
+      "key": "multi_join",
+      "value": "Συμμετοχή"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Ανανέωση"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "ΔΩΜΑΤΙΟ Lobby"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Δωμάτιο: Draw Μαζί\nΗμερομηνία γέννησης:\n2 / 4\n\nΈνα playable λόμπι space\nΠαίξτε με κουτιά, μπάλες, και jump pads ενώ περιμένετε."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Αντιγραφή ID"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Έναρξη 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Επιλογή σταδίου"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Η επιλογή σκηνής ξεκλειδώνει όταν όλοι είναι έτοιμοι."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Να φύγω από αυτό το δωμάτιο;"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Φύγε."
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Ακύρωση"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Ο ξενιστής επιλέγει μια σκηνή..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Φύγε."
+    },
+    {
+      "key": "multi_matching",
+      "value": "Ταιριάζουν..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Μόνο ο ξενιστής μπορεί να ξεκινήσει."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Δεν υπάρχει ταυτότητα για αντιγραφή."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Αντιγραφή ταυτότητας λόμπι."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Αντιγραφή κωδικού δωματίου."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Αντιγραφή ταυτότητας σύνδεσης."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Εκτός σύνδεσης. Δεν υπάρχει διαθέσιμος κωδικός δωματίου."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Εκτός σύνδεσης"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Κωδικός"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Σύνδεση..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Δωμάτιο"
+    },
+    {
+      "key": "multi_players",
+      "value": "Παίκτες"
+    },
+    {
+      "key": "multi_local",
+      "value": "Τοπικό"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Ετοιμοι"
+    },
+    {
+      "key": "multi_wait",
+      "value": "Περίμενε."
+    },
+    {
+      "key": "multi_host",
+      "value": "ΧΟΡΟΣ"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Μαζί"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Δωμάτιο φίλων"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Εσύ"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "Εσύ"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Υπολογιστής"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Παίκτης {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Ψεύτικος τυχαίος αγώνας έτοιμος."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Το ψεύτικο σύστημα υποστήριξης ξεκίνησε."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Σύνδεση..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Σε απευθείας σύνδεση ως τοπικός δοκιμαστής."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Ψεύτικη αρχή."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Ιδιωτικό δωμάτιο δημιουργήθηκε."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Δημιούργησε δημόσιο δωμάτιο."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Εντάχθηκε σε ψεύτικο δωμάτιο."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Απευθείας αρχικοποίηση TCP."
+    },
+    {
+      "key": "online_ready",
+      "value": "Συνδεδεμένοι έτοιμοι. Φιλοξενία ή να ενταχθούν σε ένα δωμάτιο."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Το δωμάτιο δημιουργήθηκε. Μοιραστείτε την ταυτότητα με το φίλο σας."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Αποτυχία υποδοχής: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "Η ταυτότητα του δωματίου πρέπει να είναι θύρα υποδοχής."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Στο δωμάτιο..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Αποτυχία εγγραφής: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Αριστερή είσοδο."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Έτοιμο άλλαξε."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Η αποδοχή απέτυχε."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} Εντάχθηκε."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} άφησε τη συνεδρία."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Το λόμπι ενημερώθηκε."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Στάδιο εκκίνησης {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "Το EOS ξεκίνησε. Configure πρόσθετου EOS πριν τη σύνδεση."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "Σύνδεση EOS..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "Η διεπαφή EOS Connect δεν είναι έτοιμη."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Η σύνδεση EOS απέτυχε: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "Αποτυχία δημιουργίας λόμπι EOS: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "Το δωμάτιο του EOS δημιουργήθηκε. Μοιραστείτε αυτή την ταυτότητα λόμπι."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter Αναγνώριση λόμπι."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter κωδικός δωματίου."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Αποτυχία εγγραφής στον κωδικό δωματίου: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Αποτυχία αναζήτησης κωδικού δωματίου: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Δεν βρέθηκε δωμάτιο για κωδικό {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Ο κωδικός του δωματίου συγκρούστηκε. Παρακαλώ δημιουργήστε το δωμάτιο ξανά."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Ο υπολογιστής άνοιξε την επιλογή σκηνής."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Επιλογή κλειστού σταδίου υποδοχής."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "Το EOS συμμετέχει στο λόμπι απέτυχε: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Έγινε μέλος του EOS."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Αριστερό λόμπι EOS."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Έτοιμοι."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Δεν είμαι έτοιμος."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Αποτυχία δημιουργίας ID συσκευής EOS: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Δημιουργία ταυτότητας συσκευής EOS..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Η σύνδεση ταυτότητας συσκευής EOS απέτυχε: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS σε απευθείας σύνδεση ως {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Τα μέλη του λόμπι ενημερώθηκαν."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "Το EOS δεν είναι συνδεδεμένο. Configure του πρόσθετου EOS και σύνδεση πρώτα."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "Το EOS είναι απενεργοποιημένο."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "Η ΠΙΣΤΑ ΟΛΟΚΛΗΡΩΘΗΚΕ!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Η πίστα {0} ολοκληρώθηκε!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Ολοκληρώθηκε!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Επόμενη: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Επιλογή πίστας"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Όλες οι πίστες ολοκληρώθηκαν!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Στάδιο {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "ΚΟΣΜΟΣ {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "ΔΙΑΘΕΣΙΜΟΙ ΧΑΡΑΚΤΗΡΕΣ"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "Χρήση: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "ΣΥΣΤΑΣΗ"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "ΔΕΝ ΧREΕΙΑΖΕΤΑΙ"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} δεν είναι διαθέσιμο σε αυτό το στάδιο."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Ένας άλλος παίκτης χρησιμοποιεί ήδη {0}. Επιλέξτε έναν διαθέσιμο χαρακτήρα."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "ΧΑΡΑΚΤΗΡΑ"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} χρησιμοποιείται. Πατήστε ΠΛΗΡΩΜΗ για να ζητήσετε μια ανταλλαγή."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} Θέλει να ανταλλάξει σας {1} για {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "ΣΚΑΦΗ"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "ΔΕΚΛΗΝΑ"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Περιμένω απάντηση στο αίτημα ανταλλαγής..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Οι χαρακτήρες άλλαξαν!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Το αίτημα ανταλλαγής απορρίφθηκε."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Δεν βρέθηκε ο άλλος παίκτης."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "ΔΙΑΣΤΑΣΗ ΚΙΝΔΥΝΟΥ"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100g ΣΚΑΛΗ"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "ΖΩΝΗ ΒΑΡΟΣ"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "ΚΟΥΤΙ ΦΙΛΟΥ"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "ΠΑΙΧΝΙΔΙΑ-ONLY one-way FLOOR"
+    },
+    {
+      "key": "species_human",
+      "value": "Ανθρώπινος"
+    },
+    {
+      "key": "species_cat",
+      "value": "Γάτα"
+    },
+    {
+      "key": "species_bird",
+      "value": "Πουλιά"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Χελώνα"
+    },
+    {
+      "key": "species_slime",
+      "value": "Γλοιώδης"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Αντικείμενα"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Σύνδεσμοι"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Σύρετε το χαρακτήρα για να ξεκινήσετε δοκιμαστικό παιχνίδι από αυτή τη θέση. Ο σωζόμενος σπόρος δεν έχει αλλάξει."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Μετακίνηση της θέσης εκκίνησης του δοκιμαστικού παιχνιδιού."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Έναρξη δοκιμής: X {0:0.00} / Υ {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Αδυναμία αποθήκευσης: {0} σφάλμα(-τα). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Σώθηκε: {0} ({1} προειδοποίηση(-εις)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Δημιουργία δωματίου\nΌνομα δωματίου [......]\nΠαίκτες 2 / 3 / 4\nΔημόσιο / Ιδιωτικό\n\nΕγγραφή στο δωμάτιο\nΤαυτότητα δωματίου [...]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Σύρετε στη θέση / Κάντε κλικ για να επιλέξετε / WASD για μετακίνηση\nΔιακόσμηση: Τροχός προς κλίμακα / Shift + τροχός προς περιστροφή\nCtrl + τροχός: μεγέθυνση όλου του σταδίου"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} επιλεγμένα αντικείμενα"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Τα αντικείμενα που περικλείονται πλήρως από το πλαίσιο θα επιλεγούν."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Επιλεγμένα {0} αντικείμενα. Σύρετε ένα επιλεγμένο αντικείμενο για να τα μετακινήσετε μαζί."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Κανένα αντικείμενο δεν περικλείεται πλήρως από το πλαίσιο επιλογής."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Μετακινήθηκε {0} επιλεγμένα αντικείμενα μαζί."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Κατηγορία"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Αναζήτηση"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Τύπος"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Αναζήτηση λέξης"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Λίστα αντικειμένων"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Λίστα δεσμού"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "Γ-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "Χ-"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "Η+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Επαναφορά"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Αντιγραφή"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Αντιγραφή αντικειμένου."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ Δεξιά"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ ΚΑΤΩ"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← ΑΡΙΣΤΕΡΑ"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Αντιγραφή κατεύθυνσης: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Αντικείμενο αντιγραμμένο φλος προς {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Θέση: X {0:0.00} / Υ {1:0.00} (Κλειδιά)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Ισχύς εκκίνησης"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Απόσταση μετακίνησης"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Ταχύτητα κίνησης"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Ασφάλειες (sec)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Καθυστέρηση crumble (sec)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Απαιτούνται εκρήξεις"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Ταχύτητα ζώνης"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Διάστημα πτώσης (sec)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Διάστημα δέσμης (sec)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Μέγεθος κουτιού"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Μέγεθος βόμβας"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Μέγεθος ακίδων"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Απόσταση κίνησης: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Ταχύτητα κίνησης: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Χρόνος ροής: {0:0.0} δευτ"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Καθυστέρηση crumble: {0:0.0} δευτ"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Αντοχή τοίχων: {0:0} εκρήξεις"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Ταχύτητα ζώνης: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Διάστημα πτώσης: {0:0.0} δευτ"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Μέγεθος κουτιού: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Μέγεθος αιχμής: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Κατασκευασμένο μέγεθος βόμβας: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Κατεύθυνση: ← Αριστερά"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Κατεύθυνση: Δεξιά →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Διεύθυνση μεταφορέα: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Κουτιά: □○△"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Κουτιά: Τετράγωνο"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Κουτιά: Γύρος"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Κουτιά: Τρίγωνο"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Βόμβες: Εναλλακτική και οι δύο"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Βόμβα: Fuse on Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Βόμβα: Fuse on pickup"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Πεταμένα κουτιά: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Κατασκευασμένες βόμβες: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Μετακίνηση κατεύθυνσης: {0:0}° (Shift + τροχός)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Ισχύς εκκίνησης: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Ανά παίκτη"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Κλιμάκωση του βάρους ενεργοποίησης {0:0} INK ανά παίκτη."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter αριθμός από 1 έως 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "ΠΡΟΣΩΠΙΚΗ ΚΓΠ"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "ΟΜΑΔΑ ΚΓΠ ({0}Ρ)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "ΜΕΓΕΘΟΣ ΠΕΝΑΣ"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "ΚΑΘΑΡΟ ΜΕΡΟΣ"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "ΟΛΟΙ ΟΙ ΧΩΡΕΣ"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Να τα χωνέψω όλα;"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Σβήστε κάθε μέρος του σώματος και επαναφέρετε τον αρχικό χαρακτήρα."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "ΑΠΟΘΕΜΑ"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "ΑΚΥΡΩΣΗ"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} ΠΡΟΫΠΟΘΕΣΕΙΣ"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "ΠΡΟΫΠΟΘΕΣΕΙΣ"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "ΠΡΑΞΕΙΣ 5-ΚΑΡΑΚΤΗΡΑ"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "ΑΝΘΡΩΠΙΝΟ ΑΓΡΟΤΡΟΔΙΟ ΚΛΙΜΑ"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "και οι πέντε χαρακτήρες"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "ΣΛΟΤ {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "ΣΩΘΗΚΕ"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "ΑΠΑΣΧΟΛΗΣΗ"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SAVE"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "ΚΩΔΙΚΟΣ"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "ΣΩΛΗΝΑ ΓΙΑ ΤΗΝ ΠΑΡΟΥΣΙΑ {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Αποθήκευση του τρέχοντος {0} σχέδιο για προεπιλογή {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Αντικατάσταση του {0} Σχεδίαση σε προεπιλογή {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "ΑΝΤΑΓΩΝΙΣΜΟΣ {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Αντικατάσταση του τρέχοντος {0} σχέδιο με προεπιλογή {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Ιστορικό"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Δέντρο"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Γρασίδι φόντου"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Άνθος"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Bush φόντου"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Σύννεφο"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "ΣΤΑΘΜΟΣ φόντου"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Βέλος"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Πρόσωπο γάτας"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Πρόσωπο σκύλου"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Σχήμα ραβδιού"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Χαμογελαστή"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Καρδιά"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Αστέρι"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Σελήνη"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Ήλιος"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Βροχή"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Αστραπή"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Ουράνιο τόξο"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Βουνό"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Κλόβερ τεσσάρων φύλλων"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Μανιτάρι"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Μήλα"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Μπανάνα"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Καρπούζια"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Ντόνατ"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Παγωτό"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Καφές Κύπελλο"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Πίτσα"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Ψωμί"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Χαρτί αεροπλάνο"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Αεροπλάνο"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Ρόκα"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "ΑΤΙΑ"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Μπαλόνι θερμού αέρα"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Σπίτι"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Κάστρο"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Θησαυρός στο στήθος"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Μορίο"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Απολιθώματα"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Κρύσταλλος"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Αρχαίο Ποτό"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Κλειδί"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Κλειδί για το Keyhole"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Ξίφος"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Στέμμα"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Ασπίδα"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Τζεμ"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Κέρματα"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Οστό"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Βολβοί φωτός (Ιδέα)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Εργαλεία"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Άνοιξη"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Μαγνήτης"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Ζάρια"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Φούσκα ομιλίας"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Σήμα ελέγχου (✓)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Ερώτημα Mark (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Αναμνηστικό Σημάδι (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Βέλος loop"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "Πήδημα!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Πέτα!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Ξεκίνα!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "Γκολ!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Περιστροφή: Shift + τροχός (0,5 βαθμό ακρίβεια)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Περιστροφή: Shift + τροχός (15°), με Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Περιστροφή: Shift + τροχός (15°), με Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Κλίμακα: τροχός ποντικιού"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Δράση"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Εμφάνιση"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Εξαφανίσου."
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Ξεκλείδωμα"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Κουνήσου."
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Μετακίνηση πλατφόρμας δεξιά"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Μετακίνηση πλατφόρμας πάνω"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Μετακίνηση πλατφόρμας αριστερά"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Μετακίνηση πλατφόρμας κάτω"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Ενέργεια δεσμού: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Ένα κλειδί πρέπει να συνδέεται με μια κλειδαρότρυπα."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Το κλειδί για τις συνδέσεις κλειδαρότρυπας χρησιμοποιεί πάντα Ξεκλείδωμα."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Προσαρμογή"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Δεσμός από"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Δεσμός με"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Αποσύνδεση"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Προσθήκη: {0} / Στιγμή: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Πόζα {1:0.0},{2:0.0}  Μέγεθος {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Πλάτος = δεξιός τοίχος / Ύψος = οροφή (αριστερός τοίχος και κάτω άκρη παραμένουν σταθερή)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Πλαίσιο"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Δημιουργήθηκε ένα πλαίσιο γύρω από τα τοποθετημένα αντικείμενα. Επιλέξτε το για να ρυθμίσετε το δεξί τοίχο και το ταβάνι."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Τοίχος τοποθετημένο ακριβώς ανάμεσα στο πάτωμα και το ταβάνι."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "Στόχος"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "ΔΩΜΑΤΙΟ {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "ΒΟΜΒ"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "ΠΟΡΤΟΓΑΛΙΑ"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Ετοιμοι"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "ΤΝΤ"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Ιστορικό"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "Παίκτες {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "ΣΤΑΔΙΟ {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 προεπισκόπηση: {0} player(s) / στάδιο {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Χρώμα φόντου"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Προκαθορισμένο"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Κλείσιμο"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Αδιαφάνεια"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Το χρώμα φόντου άλλαξε. Κράτα τη σκηνή για να την κρατήσεις."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Προσθήκη λειτουργίας: {0}Σύρετε στο χάρτη για να το δημιουργήσετε."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Προσθήκη λειτουργίας: {0}. Κάντε κλικ στο χάρτη για να το τοποθετήσετε."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Επιλέχθηκε από τη λίστα."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Κανένα ταίριασμα"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(Δεν υπάρχει)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Έδαφος"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Έναρξη/ Στόχος"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Εναλλαγή"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Πόρτα/Πύλη"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Κινητό"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Δράση"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Παγίδα"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Επιχείρημα"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Εχθροί"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Όροφος"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Τείχος"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Έναρξη"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Στόχος"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Κλίμακα ισοζυγίου"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Βάρος"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Ανώτατο όριο"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Μισός όροφος"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Μονόδρομος"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Παγωμένος όροφος"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Γλιστερό σφουγγάρι"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Αναρρίχηση τοίχου"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Σχοινί"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Σκάλα"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Cloud Floor"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Σπάσιμο δαπέδου"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Πέφτοντας όροφος"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Μετακινούμενο δάπεδο"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Κολλημένος κινούμενος ένας όροφος"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 ΕΠΙΣΤΡΟΦΗ DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Πήδα την μπάλα με το σώμα σου και σπάστε. NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "ΒΛΑΧΕΣ {0}  ΠΤΥΧΕΣ ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "Ο ΧΡΟΝΟΣ ΕΠΕΝΔΥΣΕ {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "ΕΝΑ STARTΞΗ {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "ΟΔΟΙ {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "ΜΠΟΛ {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "Επόμενος γύρος {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 μπάλες χάθηκαν! ΕΠΙΣΤΡΟΦΗ"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Όλοι οι δρόμοι καθαροί!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "ΕΘΝΟΙ ΑΦΗΣΑΝ {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Όπλο"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Τείχος που μπορεί να σπάσει σφαίρα"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Πλανήτης Σπάικ"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Flyer Zigzag"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Αεροπλάνο Orbit"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Μπαζούκα"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Βομβαρδιστικό Flyer"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Κινούμενη μπάλα Σπάικ"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Πλήκτρο ποζαρίσματος"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Κλειδί ποζαρίσματος"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Προσχέδιο"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Σήμα ταχύτητας"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Σήμα ταχύτητας (strong)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Ζώνη Redraw"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Απαιτούμενες σφαίρες"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Απαιτούμενες σφαίρες: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Περιστρεφόμενος όροφος"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Σημείο ελέγχου"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Είσοδος δίνης"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Έξοδος δίνης"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Σημείο Respawn"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Μεσαίος στόχος"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Επίδραση στόχου"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Κουμπί"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Κουμπί βάρους"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Ταυτόχρονο Κουμπί"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Κρατήστε το κουμπί"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Πλαίσιο τριγώνου"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Μόλυβδος"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Εναλλαγή εναλλαγής"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Εναλλαγή χρονομέτρου"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Αισθητήρας"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Κόκκινος διακόπτης"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Μπλε διακόπτης"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Πράσινος διακόπτης"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Κίτρινος διακόπτης"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Πίεση πλάκας"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Τηλεχειριστήριο"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Κλίμακα"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Πόρτα"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Κλειδωμένη πόρτα"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Κλείσιμο"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Φράγματα"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Πύλη λέιζερ"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Πύλη χρώματος"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Πύλη μονής κατεύθυνσης"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Χρονική πύλη"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Σπάσιμο τοίχου"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Κρυμμένο τείχος"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Ξύλινο κουτί"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Σιδερένιο κουτί"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Μπάλα"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Βαρέλι"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Πέτρα"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Μπλοκ πάγου"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Κυμαινόμενο κουτί"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Κουτί από καουτσούκ"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Βόμβα"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Βόμβα (Fuse ξεκινά στο Pickup)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Κατασκευαστής βομβών"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Δυναμίτης"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Εχθρός Walker"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Εχθρός Jumper"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Εχθρός φορτιστή"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Ιπτάμενος Εχθρός"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Εχθρός σκοπευτών"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Εχθρός Spawner"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Εκτοξευτής πυραύλων"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Ενεργοποίηση"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Αυτή η συσκευή χρησιμοποιεί πάντα Ενεργοποίηση"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Διάστημα έναρξης"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Εχθρικό μέγεθος"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Χωρισμένος εχθρός: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Μέγεθος εχθρού: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Κλειδί"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Κέρματα"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Αστέρι"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Μπαταρία"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Κουβάς"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Πάσο άλματος"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Άνοιξη"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Μεταφορέας αριστερά"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Μεταφορέας δεξιά"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Ανελκυστήρας"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Φανός"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Μαγνήτης"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Ζώνη"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Σταγονομετρητής κουτιού"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Σταγονόμετρο"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Ψάρια"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Κέρματα"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Αστέρι"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Ψηφιακό ρολόι"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Εκπομπή δέσμης"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Κανονικό"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Όριο χρόνου"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Επιβίωση"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}α"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "ΟΛΟΙ"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Κανόνας σταδίου: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Χρόνος {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "Τέλος χρόνου"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Πατήστε R για επανάληψη"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 ΕΠΙΤΡΟΠΗ"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Ένας επιτηρητής καθαρίζει!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "Μετακινηθείτε προς την αστραφτερή οροφή"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "ΣΤΟΧΟΣ  {0:0}g (90g x παίκτες)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "ΜΕΤΑΚΙΝΗΣΗ ΣΤΗ ΘΕΣΗ ΠΡΙΝ ΤΗΝ ΚΙΝΗΣΗ"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Πιάσε τα σκαλιά!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "Γελάμε..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "ΜΕΤΑΦΡΑΣΗ ΣΤΑ ΠΛΑΙΣΙΑ"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Καθαρά!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Τόσο κοντά!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "ΣΚΗΝΗ ΣΕ ΚΕΝΤΡΑ  {0:0}g / {1:0}ζ"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "Φτάνουμε στο στόχο!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "Δοκιμάστε μια καλύτερη κίνηση του κεφαλιού"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "ΣΤΑΔΙΟ {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Πιάσε τον αναβατήρα να φυσάει από τα δεξιά!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "Οι FAST GRAINS θα χτυπήσουν τα μαρκαδόρους—ένας ανά παίκτη!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 ICE ΣΠΕΔΡΟΥΝ - ένας παίκτης τελειώνει"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Ξεκίνα!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "Ο ΧΡΟΝΟΣ ΕΠΕΝΔΥΣΕ {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Ετοιμαστείτε!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Ξεκίνα!"
+    },
+    {
+      "key": "game_over",
+      "value": "Τέλος παιχνιδιού"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Αυτό το σώμα δεν χτυπάει στην αρχή. Σε παρακαλώ, βγάλε το πιο μικρό."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Αυτό το πτώμα μπορεί να βγει από το δωμάτιο. Παρακαλώ προσθέστε το μέγεθος του."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Ετοιμοι {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "ΣΥΣΤΑΣΗ"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "ΜΗΝ"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "Καμία αλλαγή ΧΑΡΑΚΤΗΡΑ Ή REDRAW μετά την αναχώρηση"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "Καμία αλλαγή ΧΑΡΑΚΤΗΡΑ μετά την αναχώρηση (REDRAW OK)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Ετοίμασε το παιχνίδι."
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "ΣΥΛΛΟΓΗ ΤΟΥ ΨΑΡΟΥ ΠΡΙΝ ΑΠΟΤΕΛΕΙ ΤΟ ΧΡΟΝΟ"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "ΑΝΤΑΠΟΚΡΙΝΕΤΕ ΤΟΝ ΚΡΑΓΙΟΝ ΒΑΣΙΛΕΥΣ"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "ΘΑΥΜΑΤΕ ΤΟΥΣ ΘΛΙΒΟΥΣ ΚΑΙ ΤΟΥΣ ΕΠΙΖΗΤΟΥΣ"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "PLUG ALLE AQUARIUM HOLE ΜΕ ΤΑ ΟΡΓΑΝΑ ΣΑΣ"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Χρησιμοποιήστε το σώμα σας shape για να ξεκλειδώσετε το path"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "ΘΑΥΜΑΤΕ ΤΑ ΠΙΛΑΡΙΑ ΠΟΥ ΨΕΥΤΟΥΝ"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "ΑΠΑΓΟΡΕΥΤΕ ΤΗΝ ΑΝΑΣΤΑΣΗ ΚΑΙ ΑΝΑΚΑΤΑΣΤΑΣΤΕ ΚΑΘΕ ΑΝΑΣΤΑΣΗ"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "Τραβήξτε το μπαλάκι με INK ΜΑΓΝΗΤΑ ΚΑΙ ΜΕΛΕΤΗ"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "ΘΑΥΜΑΤΕ ΤΙΣ ΑΠΑΙΤΗΣΕΙΣ ΚΑΙ ΕΠΙΖΗΤΗΣΗ"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "ΣΥΛΛΟΓΗ ΚΟΙΝΩΝ ΟΤΑΝ ΥΦΑΝΙΖΕΤΑΙ"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "ΣΥΛΛΟΓΗ ΤΩΝ ΠΙΣΤΟΠΟΙΗΣΕΩΝ ΚΑΙ ΠΡΟΣΦΥΓΗ ΤΟΥ ΒΑΡΟΥ ΣΤΟΧΟΥ"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Γρήγορο τρέξιμο. Φώναξε τον στόχο πριν τελειώσει ο χρόνος."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "Ο ΡΙΚΟΧΕΤΟΣ ΔΕΛΤΙΟ ΓΙΑ ΝΑ ΑΝΤΑΠΟΚΡΙΝΕΙ ΤΟΥΣ ΕΝΕΡΓΟΥΣ"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "ΦΩΣ Η ΘΑΛΑΣΣΙΑ ΚΑΙ ΑΠΟΚΛΕΙΣΤΕ ΤΑ ΦΑΝΤΑΣΜΑΤΑ"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "ΕΠΙΒΕΒΑΙΩΣ ΕΩΣ ΤΟ ΧΡΟΝΟ ΕΞΕΡΓΑΖΕΤΑΙ"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "ΠΥΡΗΝΙΚΗ ΒΟΗΘΕΙΑ ΓΙΑ ΝΑ ΑΝΑΚΑΛΥΨΟΥΝ ΟΛΑ ΤΑ ΒΟΗΘΗΜΑΤΑ"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "ΠΛΑΙΣΙΑ ΚΑΙ ΣΥΛΛΟΓΕΣ ΣΥΛΛΟΓΗΣ"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "ΣΥΛΛΟΓΗ ΚΟΙΝΩΝ ΠΡΙΝ ΑΠΟΤΕΛΕΙ ΤΟ ΧΡΟΝΟ"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "ΣΥΛΛΟΓΗ ΚΟΙΝΩΝ ΠΡΙΝ ΑΠΟΤΕΛΕΙ ΤΟ ΧΡΟΝΟ"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "Υπερασπίσου τον φίλο σου από τους εχθρούς"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "ΕΠΙΣΤΡΟΦΗ ΤΟΥ ΛΟΓΟΥ ΓΙΑ ΝΑ ΑΦΗΣΟΥΝ ΤΟΥΣ Εχθρούς"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "ΦΥΛΑΞΤΕ ΤΟ ΣΤΟΧΟ ΠΡΙΝ ΑΠΟΤΕΛΕΙ ΤΟ ΧΡΟΝΟ"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "Χρησιμοποιήστε την ουμπρέλλα για να μείνετε έξω από τη ράχη"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "RELAY Η LASER μέσω κάθε σώμα στο στόχο"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "ΑΜΦΙΛΑΚΟ ΚΡΕΪΟΝ"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "ΑΝΤΑΠΟΚΡΙΤΗ ΚΡΕΪΟΝ"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "ΑΜΛΕΨΤΕ ΤΟΥΣ ΕΝΕΡΓΟΥΣ"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "Καθαρίστε αν τουλάχιστον ένας παίκτης επιζήσει."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "Να είστε ξεκάθαρος όταν κάποιος παίκτης φτάσει στο στόχο."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "ΠΛΑΙΣΙΟ ΓΟΥΟΛ"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Περιμένετε το σήμα!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Τρέξτε στο στόχο!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "Ο άνεμος αλλάζει συνεχώς!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "ΛΙΓΟ INK = ΔΥΝΑΜΗ ΑΝΤΛΙΑ"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "ΧΡΟΝΟΣ {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "Τέλος χρόνου"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Μείνε κάτω από την ουμπρέλα!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "Η Ρέιν σε χτυπάει έξω."
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Όλοι ήταν στο έδαφος!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 ΛΙΝΤ ΣΙΕΛΣ"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Ελέγξτε κάθε κουμπί LINK!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "Αιμοδιψείς με 1SECONDSHIELDS!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "ΔΙΔΑΣΚΑΛΗ - ΑΝΑΘΕΩΡΗΣΗ"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60-SECOND DEFENSE σαφές!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "ΓΥΡΟΣ {0}/3    ΑΠΟΜΕΝΟΥΝ {1:0.0} δ"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "ΣΤΟΧΟΙ {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "ΡΥΘΜΙΣΤΕ ΘΕΣΕΙΣ ΚΑΙ ΓΩΝΙΕΣ ΓΙΑ ΝΑ ΑΝΑΚΛΑΣΕΤΕ ΤΟ ΛΕΪΖΕΡ!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "Ο ΓΥΡΟΣ {0} ΟΛΟΚΛΗΡΩΘΗΚΕ!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "ΤΕΛΟΣ ΧΡΟΝΟΥ! Ο ΓΥΡΟΣ ΞΕΚΙΝΑ ΞΑΝΑ"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "ΚΡΑΓΙΟΝ ΘΕΒΙΛ  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 ΕΤΟΙΜΟΙ ΓΙΑ ΠΡΟΣΑAUΜΟΓΗ"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "ΚΛΙΚ ΠΑΤΦΟΡΜ:  F: ΒΟΜΒ"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "Το αφεντικό εξουδετερώθηκε!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "ΟΛΕΣ ΟΙ ΠΛΑΤΦΟΡΜΕΣ ΚΑΤΩ"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "ΑΚΡΟΑΓΕΣ!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "ΣΤΟΧΕΥΜΕΝΟ - ΑΦΗΣΤΕ ΤΗΝ ΟΜΑΔΑ!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "ΣΥΓΚΡΙΣΗ - Φύγε!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "ΑΝΑΓΡΑΦΗ ΚΥΚΛΟΦΟΡΙΑΣ...  {0}α"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Τρέξτε, πηδήξτε, γυρίστε και σταματήστε — ο σωσίας σας μαθαίνει."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "ΦΑΣΗ {0}  Τα διπλά αριστερά: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Ανεβάστε ένα σε ένα πάτωμα εκτόξευσης και μετά πατήστε το κόκκινο διακόπτη του!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "ΟΛΟΙ ΟΙ ΔΙΠΛΟΙ ΑΝΕΡΓΗΘΗΚΑΝ!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Δεν υπήρχε ποτέ άλλο αφεντικό."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "ΦΑΣΗ {0}  ΕΝΑ STARTΞΗ"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Νικήστε την ομάδα CPU φορώντας τις ακριβείς φόρμες σας."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "ΦΑΣΗ {0}  Αριστερά: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "ΦΑΣΗ {0} Καθαρά!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Διεκδίκησε όπλα με κόκκινους διακόπτες. F: ρίχνουν βόμβα ΚΛΙΚ: πύραυλος"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Ετοίμασε την Missile! Στόχος με το ποντίκι και κάντε κλικ."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "Η CPU απέτυχε!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "ΤΕΛΕΥΤΑΙΑ ΣΚΑΦΗ!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "Τέλος χρόνου"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Τέλος χρόνου!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Όλοι είναι κάτω!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Αποτύχαμε! Επανεκκίνηση από την αρχή σε 3 δευτερόλεπτα."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "ΣΤΑΛΚΕΡ Χ HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 Ετοιμαστείτε"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Τρέξτε δεξιά! Χρησιμοποιήστε τα πράσινα όπλα!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "Ο PURSUER εξουδετερώθηκε!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "ΟΛΟΙ τους είχαν πιάσει"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Τρέξτε!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Πρόσεχε το γυαλιστερό πάτωμα!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "Επιβίωση! Ο χρόνος που απομένει"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "ΑΣΦΑΛΕΙΣ ΠΤΥΧΕΣ {0} / DROP IN {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Μείνε στο ασφαλές πάτωμα!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Όλοι οι παίκτες έξω"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "ΑΝΑΘΕΩΡΗΣΗ ΣΚΟΠΟΥ"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "Ο επιτηρητής βρέθηκε!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "ΕΚΚΑΘΑΡΙΣΙΣ"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 ΕΠΙΣΚΕΥΗ ΠΙΛΛΑR"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "Παρακολουθήστε την προειδοποίηση και να dodge τα pillars"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "Έρχεται! ΑΦΗΣΤΕ ΤΗ ΖΩΝΗ ΠΟΥ ΑΝΑΦΕΡΕΤΑΙ"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "Ο Πιλάρ είναι ελεύθερος!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 ΓΡΑΓΙΟΝ ΒΑΣΙΛΕΥΣ"
+    },
+    {
+      "key": "boss_health",
+      "value": "Η HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER Το επόμενο δωμάτιο"
+    },
+    {
+      "key": "boss_appears",
+      "value": "ΠΡΟΕΙΔΟΠΟΙΗΣΗ... αφεντικό!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "ΦΥΛΑΞΤΕ ΝΑ ΕΠΙΤΥΧΗΣΕΤΕ / ΦΥΣΙΓΓΑ"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Φρουρέ! ΤΟ ΑΒΟΥΣ ΕΙΝΑΙ ΑΝΟΙΚΤΟ"
+    },
+    {
+      "key": "boss_charge",
+      "value": "Φορτίστε! Φύγε από τη μέση."
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "ΧΡΗΜΑΤΟΔΟΤΗΣΗ {0}Φτάσε στα ψηλά ύψη."
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Ειδική επίθεση! ΘΑΥΜΑΤΕ ΤΟΥΣ ΡΙΚΟΤΣΕΣ"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "Το αφεντικό εξουδετερώθηκε!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Όλοι οι παίκτες έξω..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "ΧΩΡΟ ΑΝΑΜΟΝΗΣ  {0} / {1}  Έλα!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 ΕΠΙΤΡΟΠΗ ΘΕΡΜΩΝ"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Ένας επιτηρητής καθαρίζει!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "Πήδα πάνω από τις πληγές από το δικαίωμα για 60 δευτερόλεπτα"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "ΦΥΛΑΞΤΕ ΓΙΑ ΤΑ ΘΑΥΜΑΤΑ ΑΠΟ ΤΑ ΔΙΚΑ"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "Πήδημα!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Πήδηξε τις πληγές!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Σιγά... πιάσε την αναπνοή σου!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Επιτάχυνε! Τελική έξαρση!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Όλοι οι παίκτες έξω"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "Ο ΘΑΝΑΤΟΣ ΕΠΙΒΕΒΑΙΩΣΕ!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "ΒΡΕΘΗΚΕ ΕΠΙΤΡΟΠΗ"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 ΕΚΛΟΓΗ ΤΟΥ ΦΙΛΟΥ"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "ΦΙΛΙΚΗ ΜΕΤΑΚΙΝΗΣΗ"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "ΟΙΚΟΔΟΜΗΣΤΕ ΕΝΑ ΧΟΡΟ ΜΕ ΠΕΤΟΡΜΣ ΚΑΙ ΤΟ ΣΩΜΑ ΣΟΥ"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 ΠΡΟΣΤΑΣΙΑ ΤΟΥ ΦΙΛΟΥ"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "ΑΑΑΑ!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "ΟΔΗΓΗΣΗ ΚΑΙ ΚΑΘΑΡΙΣΤΕΣ ΜΕΤΑΦΟΡΕΣ, ΠΛΑΙΣΙΑ ΚΑΙ ΕΝΕΡΓΕΙΑ"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "Επόμενος φίλος σε  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Προετοίμαζα έναν νέο φίλο..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "Ολοκληρώθηκε η εκκένωση!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "Ο ΦΙΛΟΣ ΠΡΟΣΦΥΓΕ ΤΟΝ ΣΤΟΧΟ"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "ΟΔΟΙ {0}/3 ΚΤΙΡΙΟ {1:0.0}α"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "ΣΥΓΚΕΝΤΡΩΣΕ ΕΝΑ ΧΡΟΝΟ ΜΕ ΤΟ ΣΩΜΑ ΣΟΥ"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Πάμε! ΒΟΗΘΗΣΤΕ ΤΟΝ ΦΙΛΟ ΝΑ ΦΕΡΕΙ ΤΟΝ ΣΤΟΧΟ"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "ΟΔΟΙ {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "ΟΔΟΙ {0} Καθαρά!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "ΓΥΡΟΣ {0}/3    ΑΠΟΜΕΝΟΥΝ {1:0.0} δ"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "ΧΩΡΕΣ {0}/{1}    Πλούκαρέ τους όλους με τα αγόρια σου!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "Ο ΓΥΡΟΣ {0} ΟΛΟΚΛΗΡΩΘΗΚΕ!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "ΤΕΛΟΣ ΧΡΟΝΟΥ! Ο ΓΥΡΟΣ ΞΕΚΙΝΑ ΞΑΝΑ"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "ΚΛΕΙΣΤΕ ΤΙΣ ΤΡΥΠΕΣ!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "ΟΔΟΙ {0}/3    {1:0.0}ςδ"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "ΜΠΟΛΣ {0}/{1}    Ρίξ' τους στις τρύπες!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "Τράβα το μπαλάκι μέσα από το μάγο με τον μελανισμό!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "ΟΔΟΙ {0} Καθαρά!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Τέλος χρόνου! ΑΝΑΓΝΩΡΙΖΟΝΤΑΣ ΑΥΤΟ ΤΟ ΔΡΟΜΟ"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Κουνήσου στη θέση σου! ΠΕΡΙΣΣΟΤΕΡΑ INK ΜΕΣΑ ΙΣΧΥΟΤΕΡΗΣ ΜΑΓΝΗΤΙΣΜΟΥ"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "ΤΕΛΕΥΤΑΙΟ ΡΟΔΟΣ:"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "ΟΙΚΟΔΟΜΗΣΤΕ ΕΝΑ ΧΡΟΝΟ ΜΕΣΑ ΣΤΟ ΣΚΙΝΚ!\nΣυνδέσου με το σώμα σου."
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "Ο φίλος μπορεί να περπατάει στο κεφάλι και στο σώμα σας."
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "ΕΝΑ STARTΞΗ ΦΙΛΟΥ"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "Ο φίλος Fell!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "Τέλος παιχνιδιού"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Δεν μπορείς να το κάνεις όσο ο φίλος κινείται."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 ΡΙΚΟΧΕΤ RELAY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "ΟΔΟΙ {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "Ο ΡΙΚΟΧΕΤΟΣ ΔΕΛΦΕΙ ΤΟΥΣ ΦΙΛΟΥΣ ΓΙΑ ΝΑ Κτυπήσουν ΤΟ ΣΤΟΧΟ"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Έξω απ' το Αμμο! ΑΝΑΘΕΩΡΗΣΗ"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 ROUND CLEAR!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Φίλος Σπάουνερ"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Φίλος Στόχος"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Όροφος Friend-Pass"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Παράδειγμα γέφυρας κεφαλής"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Βλ. πριόνι"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Στρόβιλος"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Κανόνι"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Καταπέλτης"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Σπάικ"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Πυρ"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Νερό"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Δηλητήριο"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Λέιζερ"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Πέφτοντας Βράχος"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Μηχανή τύπου"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Ηλεκτρισμός"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Πριόνι"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Μαύρη τρύπα"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Εργαλεία"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Μεγάλο εργαλείο"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Τροχαίο σχοινί"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Σλάιντερ"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Περιστρεφόμενη γραμμή"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Πεντούλουμο"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Κλειδί"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Όρια σταδίου"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Ρολόι"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Μετρητής"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Επιλογή σταδίου"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Έξοδος συνεδρίας"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Επανεκκίνηση σταδίου"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Να αφήσω τη συνεδρία στο ίντερνετ;"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Φεύγοντας ως οικοδεσπότης θα τελειώσει αυτή η συνεδρία για όλους. Να φύγω;"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Φύγε."
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Συνδέεται ως γέφυρα: η δεξιά άκρη παραμένει συνδεδεμένη ενώ εκτείνεται προς τα αριστερά."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Χωρίστε το συνδεδεμένο έδαφος σε μεμονωμένα επιλεγμένα και συνδεδεμένα μέρη."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Διαχωρισμός"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Ξεχωριστό μέρος είναι ON. Μπορεί να σπάσει χωρίς συγχώνευση και μπορεί να συνδεθεί μεμονωμένα."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Ξεχωριστό μέρος είναι OFF. Το αγγιγμένο έδαφος μπορεί να συγχωνευτεί."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Συνέδεσε το πάτωμα και τον τοίχο ως ένα σχήμα εδάφους."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Σύρετε για να τοποθετήσετε μια ευθεία {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Πάχος"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Πάχος δαπέδου και τοίχου: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Ευθεία"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Το σχέδιο είναι έτοιμο."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Το σχέδιο είναι κλειστό."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw λειτουργία"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw λειτουργία"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Επιλογή λειτουργίας"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw λειτουργία: σύρετε στο κενό space για να τοποθετήσετε αντικείμενα."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Επιλογή λειτουργίας: επιλέξτε και μετακινήστε τα υπάρχοντα αντικείμενα."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} ελεύθερα σύροντας."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Ελεύθερο πάτωμα και σχέδιο τοίχου είναι ON."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Η τοποθέτηση του ορθογωνίου είναι έτοιμη."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Ντρου. {0} ως μία συνδεδεμένη διαδρομή ({1} σημεία)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Επιστροφή στον επεξεργαστή"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Επιστροφή στον επεξεργαστή  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Επέστρεψε από το δοκιμαστικό παιχνίδι. Συνέχισε να επεξεργάζεσαι τη σκηνή σου."
+    },
+    {
+      "key": "cancel",
+      "value": "Ακύρωση"
+    },
+    {
+      "key": "retry",
+      "value": "Ξανά"
+    },
+    {
+      "key": "menu",
+      "value": "Μενού"
+    },
+    {
+      "key": "redraw",
+      "value": "Κόκκινο"
+    },
+    {
+      "key": "pen",
+      "value": "Στυλό"
+    },
+    {
+      "key": "eraser",
+      "value": "Σβητής"
+    },
+    {
+      "key": "shape_square",
+      "value": "Πλαίσιο"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Κύκλος"
+    },
+    {
+      "key": "shape_line",
+      "value": "Γραμμή"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Έγινε!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Πίσω"
+    },
+    {
+      "key": "brush_size",
+      "value": "Μέγεθος"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Χρήση"
+    },
+    {
+      "key": "undo",
+      "value": "Αναίρεση"
+    },
+    {
+      "key": "character_switch",
+      "value": "Εναλλαγή χαρακτήρων"
+    },
+    {
+      "key": "character_add",
+      "value": "Προσθήκη χαρακτήρων"
+    },
+    {
+      "key": "character_delete",
+      "value": "Διαγραφή Char"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Εναλλαγή Char"
+    },
+    {
+      "key": "stage_select",
+      "value": "Επιλογή πίστας"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 ομάδες, 3 στάδια ο καθένας. Ενεργοποιήστε το Επεξεργασία ON, στη συνέχεια, επιλέξτε ένα στάδιο για την επεξεργασία του."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0 Αποσφαλμάτωση"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Επεξεργασία 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Επεξεργασία: OFF"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Επεξεργασία:"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "ΝΕΑ"
+    },
+    {
+      "key": "stage_clear",
+      "value": "ΕΚΚΑΘΑΡΙΣΗ"
+    },
+    {
+      "key": "stage_locked",
+      "value": "ΚΛΕΙΣΤΟ"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Λειτουργία αποσφαλμάτωσης: όλοι οι κόσμοι είναι ξεκλείδωτοι. Επιλέξτε ένα στάδιο για να παίξετε ή ενεργοποιήστε το Επεξεργασία για να το επεξεργαστείτε."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2:Wall σύρετε για να δημιουργήσετε μπλοκ\n3:Εκκίνηση 4: Στόχος 5: Σκάλα 6:Βάρος\nA/D/W/S: κάμερα κίνησης Τροχός: ζουμ\nF5:Αποθήκευση  F6:Δοκιμή  EscΠίσω"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Κλίμακα"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Μέγεθος"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Πλέγμα"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Διαγραφή"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Αποθήκευση"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Δοκιμή"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "ΠΙΣΩ  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Settings παιχνιδιού"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "ΝΑ"
+    },
+    {
+      "key": "option_keys",
+      "value": "Κλειδιά"
+    },
+    {
+      "key": "option_language",
+      "value": "Γλώσσα"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Όχι ακόμα."
+    },
+    {
+      "key": "locked_stage",
+      "value": "Σκηνές χωρίς JSON πέφτουν πίσω στο στάδιο αποσφαλμάτωσης."
+    },
+    {
+      "key": "human",
+      "value": "Ανθρώπινος"
+    },
+    {
+      "key": "cat",
+      "value": "Γάτα"
+    },
+    {
+      "key": "bird",
+      "value": "Πουλιά"
+    },
+    {
+      "key": "turtle",
+      "value": "Χελώνα"
+    },
+    {
+      "key": "slime",
+      "value": "Γλοιώδης"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 χτύπημα μπάλα"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "Γρήγορα μέρη"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "ΕΠΙΛΟΓΗ"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Επιλέξτε ένα μέρος, τότε κάντε κλικ ή σύρετε στο χάρτη για να το τοποθετήσετε."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Στιγμιότυπο: {0} / {1:0.##} δίκτυο μονάδας"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Επιλέξτε ένα αντικείμενο πρώτα."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Το πλάτος άλλαξε. Μπορείτε επίσης να χρησιμοποιήσετε το Shift+ Τροχός."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Το ύψος άλλαξε. Μπορείτε επίσης να χρησιμοποιήσετε το Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Το μέγεθος άλλαξε. Χρησιμοποιήστε τον τροχό για να κλιμακώσετε και τους δύο άξονες."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Σύρετε μια μεγαλύτερη περιοχή για να τοποθετήσετε αυτό το μέρος."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Τόπος {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Τόπος {0} σε {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Επιλέχθηκε. Σύρετε για να μετακινήσετε και να χρησιμοποιήσετε το τιμόνι για να αλλάξετε το μέγεθος."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Δεν υπάρχει τίποτα να αναιρέσετε."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Ανέλυσε την τελευταία επεξεργασία."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Δεν υπάρχει τίποτα να ξαναφτιάξουμε."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Επανάληψη της επεξεργασίας."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Επιλέξτε ένα διακόπτη, κουμπί, κλειδί, ή κλειδότρυπα για να χρησιμοποιήσετε ως πηγή σύνδεσης."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Επιλέξτε ένα διακόπτη, κουμπί, κλειδί, ή κλειδότρυπα ως πηγή σύνδεσης."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Πηγή δεσμού: {0}. Επιλέξτε το στόχο του, στη συνέχεια, πατήστε Link To."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Ορίστε μια πηγή link πρώτα."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Επιλέξτε ένα αντικείμενο που θα χρησιμοποιηθεί ως στόχος σύνδεσης."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Η πηγή σύνδεσης και ο στόχος πρέπει να είναι διαφορετικά αντικείμενα."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Σύνδεση {0} σε {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Επιλέξτε πρώτα ένα συνδεδεμένο αντικείμενο."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Καθάρισα τον σύνδεσμο."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Σώθηκε: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Η αποθήκευση είναι διαθέσιμη μόνο στον επεξεργαστή Unity."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Το εργοστάσιο αντικειμένων της σκηνής λείπει."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Φως κίνησης"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 ΘΑΛΑΣΣΙΑ ΚΥΚΛΟΦΟΡΙΑ"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Διακόπτης φραγμών"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Πέτα το! ΑΝΑΚΛΗΣΗ ΟΛΩΝ NICO DRAW Βλακείες!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} ΑΠΑΓΟΡΕΥΕΤΑΙ ΤΟ ΠΛΑΙΣΙΟ"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "Αποτυχημένος... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "ΝΑ ΜΠΡΟΥΖΕΡ"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Αναζήτηση με ενέργεια ή SE ID, στη συνέχεια, πατήστε Play για προεπισκόπηση του καθορισμένου ήχου. Κάντε μια σειρά για να δείτε τη διαδρομή των πόρων της."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "ΠΑΙΧΝΙΔΙ"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "Σταμάτα."
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "ΑΝΑΛΩΣΗ"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Δεν ταιριάζουν ηχητικά εφέ."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "Το SFX USAGE.md δεν βρέθηκε."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Χωρίς κατηγοριοποίηση"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "ΧΟΡΗΓΗΣΗ"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Ήχος που δημιουργείται από το runtime"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Εκτύπωση Paw"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Ψάρια"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Μπάλα νήματος"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Κρύσταλλος χιονιού"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Ιστιαίο"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Χιονάνθρωπος"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Βλάχος"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Φτερό"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Φωλιά πουλιών"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Γραμμές ανέμου"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Σωλήνας"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Μπολτ"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Αλυσίδα"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Ατμός"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Χελώνα"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Ωρογραφία"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Πάνλοκ"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Γλοιώδης"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Φυσαλίδες"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Πεταλούδα"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Πασχαλίτσα"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Ηλίανθος"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Τούλιπ"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Σκελετός"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Νυχτερίδα"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Ιστός αράχνης"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Σταλακτίτης"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Φανός"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Μινεκάρτη"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Επίλεκτος"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Τρόπαιο"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Μετάλλιο"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Σφυρίχτρα"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Μπαλόνι"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Κομφετί"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Πυροτεχνήματα"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Πύργος"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Κυάλια"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Γέφυρα"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Κραγιόν"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Μολύβι"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Σβητής"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Σημείωση"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Πίνακας"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Παλέτα"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Βούρτσα"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Κανβάς"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Χρονόμετρο"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Προβολέας"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Μικρόφωνο"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Τυριά"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Κουτί έκπληξης"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Κουτί δώρου"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Πλανήτης"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Αλλοδαπός"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Κομήτης"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Μαύρη τρύπα"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Φούσκα σαπουνιού"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Μος"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Ρίζα δέντρου"
+    }
+  ]
+}

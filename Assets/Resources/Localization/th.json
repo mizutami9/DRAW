@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "ชื่อผู้เล่น"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter ชื่อของคุณ"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "เชิญ enter ชื่อผู้เล่น"
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER ชื่อของคุณที่นี่"
+    },
+    {
+      "key": "option_register",
+      "value": "แก้ไข"
+    },
+    {
+      "key": "lang_ja",
+      "value": "ญี่ปุ่น"
+    },
+    {
+      "key": "lang_en",
+      "value": "เอ็น"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "เคลียร์! กด R เพื่อลองใหม่"
+    },
+    {
+      "key": "draw_title",
+      "value": "ออกแบบ (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TABกลับมาที่เกม / ENTERการตัดสินใจ / ESC& ยกเลิก"
+    },
+    {
+      "key": "preview",
+      "value": "แสดงตัวอย่าง"
+    },
+    {
+      "key": "clear",
+      "value": "ลบ"
+    },
+    {
+      "key": "decide",
+      "value": "ยืนยัน"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "ยังคงอยู่"
+    },
+    {
+      "key": "current",
+      "value": "ปัจจุบัน"
+    },
+    {
+      "key": "part",
+      "value": "ตอน"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw ศพก่อน"
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "ทอร์โซคือฐาน Draw ส่วนอื่น ๆ จากเครื่องหมายการเชื่อมต่อของพวกเขา"
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}เริ่มจากการเชื่อมต่อ"
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw ลําตัวก่อนที่จะเชื่อมต่อส่วนอื่น"
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} เชื่อมต่อแล้ว"
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} ยังไม่ได้เริ่มที่ตัวบ่งชี้การเชื่อมต่อ"
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "ต้อง ใช้ ทอร์ โซ ก่อน จะ ตัดสิน ใจ."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} ต้องเริ่มที่ตัวบ่งชี้การเชื่อมต่อ"
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "ส่วนตัว  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "ทีม  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "ไม่สามารถตัดสินใจได้: ส่วนตัว ink คือ {0:0.#}/{1:0}ลดลงโดย {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "ไม่สามารถตัดสินใจได้: ทีม ink คือ {0:0.#}/{1:0}ลดลงโดย {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}เริ่มจากเครื่องหมาย"
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "หัว"
+    },
+    {
+      "key": "torso",
+      "value": "ทอร์โซ"
+    },
+    {
+      "key": "left_arm",
+      "value": "แขนซ้าย"
+    },
+    {
+      "key": "right_arm",
+      "value": "แขนขวา"
+    },
+    {
+      "key": "left_leg",
+      "value": "ขาซ้าย"
+    },
+    {
+      "key": "right_leg",
+      "value": "ขาขวา"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "ด้านซ้าย"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "ด้านหน้าขวา"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "ด้านหลังซ้าย"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "ทางด้านขวา"
+    },
+    {
+      "key": "tail",
+      "value": "หาง"
+    },
+    {
+      "key": "left_wing",
+      "value": "ปีกซ้าย"
+    },
+    {
+      "key": "right_wing",
+      "value": "ปีกขวา"
+    },
+    {
+      "key": "tail_feather",
+      "value": "ขนหาง"
+    },
+    {
+      "key": "slime_body",
+      "value": "สลิม"
+    },
+    {
+      "key": "jump_normal",
+      "value": "กระโดดแบบธรรมดา"
+    },
+    {
+      "key": "jump_double",
+      "value": "กระโดด x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "กระโดด x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "พิมพ์แบบธรรมดา"
+    },
+    {
+      "key": "arm_long",
+      "value": "ไกล"
+    },
+    {
+      "key": "arm_fast",
+      "value": "สวิงเร็ว"
+    },
+    {
+      "key": "torso_normal",
+      "value": "ปกติ"
+    },
+    {
+      "key": "torso_switch",
+      "value": "สลับแบบหนา"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "หนัก"
+    },
+    {
+      "key": "ability_summary",
+      "value": "ขา {0:0.0}: {1}   แขน {2:0.0}: {3}   ทอร์โซ {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "ปีก {0:0.0} INK ความเร็ว: {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "มนุษย์\nแขน {0:0.0} INK  ยกกําลัง x{1:0.00}\nขา {2:0.0} INK  กระโดด x{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "ความ สุข แท้\nขาหลัง {0:0.0} INK  ความเร็ว{1:0.00}\nขาหน้า {2:0.0} INK  ช่วงของกรงเล็บ{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "ความ สุข\nปีก {0:0.0} / 700 INK\nความเร็ว: {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "ความ เจริญ รุ่งเรือง\nหยุด SPACEเชลล์ที่เอาชนะไม่ได้\nหยุด Fหันหน้าเข้าหาทิศทาง"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "ความ สุข\nร่างกาย {0:0.0} / 700 INK\nความยาวแบบเยื้องขึ้น {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "มนุษย์"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "CAT"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "ขนาด BIRD"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "นก เค้า แมว"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "เพิ่มขา INK เพิ่มพลังงานกระโดด\nเพิ่มแขน INK เพิ่มพลังโยน"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "ด้านหลังมากขึ้น INK เพิ่มความเร็วในการประมวลผล\nเพิ่มแกนหน้า INK เพิ่มระยะการเยื้อง"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "เพิ่มปีก INK เพิ่มพลังงานการร่อน"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "ไม่สามารถป้องกันขณะที่ซ่อนอยู่ในเปลือก"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "กด F สําหรับยอดระเบิด\nน้อย INK ทําให้สามารถกระโดดได้นานกว่า / กระโดดข้ามกําแพง"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "Fวันพฤหัสบดี"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "FSCRATCH / GraAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "โฮลด์ SPACE(หัวเราะ)  FGRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "โฮลด์ SPACE- ฮอลล์ F90)"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "Fอัพเพอร์เค แอตแทค"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "ยกกําลัง x{0:0.00}  กระโดด x{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "ประมวลผล x{0:0.00}  ช่วงของกรงเล็บ{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "พลังที่เพิ่มขึ้น {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACEเชลล์ /  F90 (พ.ศ."
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "ความยาวทศนิยม{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "แขน {0:0.0}280 ขา {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "กลับ {0:0.0}/ 240 หน้า {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "ปีก {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "เปิดใช้งานเมื่อกดปุ่มค้างไว้เท่านั้น"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "เธอพร้อมนะ"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE และ F ทํางานในขณะที่จัดขึ้น!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "ร่างกาย {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "นก แก้ว {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "เบาเสียง"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "แก้ไขโครงการหลัก..."
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JAMM"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "หน้า"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "RUN"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "ขนาด SCRATCH"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "เลนส์"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "ความปลอดภัย"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "ความ สุข"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "ร่างกาย INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "แสง: ตื่น ขึ้น"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "(หัวเราะ)"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK ค่า {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "Fสไปค์ขึ้น! น้อย INK ปรับให้ยาวขึ้น/ สร้างกําแพง"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw เพิ่มพลังงานขึ้น!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "คุณไม่สามารถวาดใหม่หลังจากเวทีนี้เริ่มต้น"
+    },
+    {
+      "key": "label_high_platform",
+      "value": "แพลตฟอร์มสูง 1"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 สลับตัวหนัก"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 เลเวอร์"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 หลุม ลึก"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "ห้อง พัก"
+    },
+    {
+      "key": "multi_participants",
+      "value": "ผู้เล่น"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "ห้อง บริสุทธิ์"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "จู อิน รูม"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "หมายเลขห้อง"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "LOICAL TEST (INVATE ปิด)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "คุณ"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 MissIME CEVE"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "โหดร้าย! นก แก้ว"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "Wall-JUML และ Didget Pircles!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 ป้องกันเพื่อนของคุณ!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "ภาพ {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "เวลา {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "ปกป้องเพื่อนของคุณจากทั้งสองฝ่าย"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "AIRSTRIE ใน {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "เพื่อนลง... จง เอา ใจ ใส่ {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "เคลียร์!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "ซีโน {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "เวลา {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "เลือดและเลือด!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "มี เวลา มาก ขึ้น..."
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 CON ชัดเจน!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "ปัง!"
+    },
+    {
+      "key": "title_single",
+      "value": "ผู้เล่นคนเดียว"
+    },
+    {
+      "key": "title_multi",
+      "value": "หลายผู้เล่น"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "ตั้งค่า"
+    },
+    {
+      "key": "option_back",
+      "value": "ย้อนกลับ  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "ย้อนกลับ  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "ย้อนกลับ  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "ออก"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBA"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "ส่งสัญญาณทางอากาศ 1 ลํา"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "มนุษย์ โยน นก แล้ว ก็ นก"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "เริ่ม ความ ขัด แย้ง"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "ย้อนกลับ  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "บท เรียน"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "ส เต น เอ อร์"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "Export 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "กลับ ไป ใช้ อีก"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "ตรวจสอบองค์ประกอบ จากนั้นส่งออก PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "บันทึก: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "กําลังสั่น..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "นักแสดงสามารถเปลี่ยนแปลงได้เพียงในห้องพร้อม"
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "โร เบิร์ต     ESC  ปากกา"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "ผู้ บันทึก ข่าว"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "ลากนักแสดงขณะว่าง | overdub Human bird → Cat skelphe | F9 Reptember F10 Play P stop O step"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 บันทึก/ TOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "เล่น F10 ทั้งหมด"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 Reset รับ"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "ลบช่องว่าง"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "ป. ค."
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O point"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "การบันทึก"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "การ เล่น เกม ทุก อย่าง"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "หมดอายุแล้ว"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} ○ เลือก: {1} | {2} กรอบ ○ ความเร็ว {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "ISET {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "ชา เวา"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "ขณะที่ไม่มีการใช้ตัวอักษร ให้ลากเพื่อกําหนดตําแหน่งเริ่มต้น"
+    },
+    {
+      "key": "menu_continue",
+      "value": "ทําต่อไป"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "ชื่อ"
+    },
+    {
+      "key": "language_settings",
+      "value": "ตั้งค่าภาษา"
+    },
+    {
+      "key": "multi_play",
+      "value": "เล่น MUTI"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "สุ่มเข้าคู่"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "ส่วนตัว"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "สุ่มเข้าคู่"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "กําลังค้นหาผู้เล่น"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "ค้นหา"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "จับคู่...\n\nผู้ เล่น 2 / 4\n\n○ คุณ\n○ ผู้ เล่น 2\n□ ค้น หา\n□ ค้น หา\n\nรอคอย [อีกครั้ง]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "ห้อง"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "สร้างห้อง"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "เข้าร่วมห้อง"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "ชื่อห้อง\n[ Draw ด้วยกัน)\n\nผู้เล่นสูงสุด\n< 4 >\n\nความไวแสง\n[พั่\n\nเวที\n[เลือกสุด]\n\nดึงข้อมูลกฏ\n[ส่งทุกคน]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "ผู้เล่นสูงสุด"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "ความไวแสง"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "ความไวแสง"
+    },
+    {
+      "key": "multi_public",
+      "value": "สาธารณะ"
+    },
+    {
+      "key": "multi_private",
+      "value": "ส่วนตัว"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "เปิด/ ปิด"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "สร้าง"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter ID ของ Labby ปรากฏบนหน้าจอโฮสต์\n\nด้วยการกําหนด EOS เพื่อนสามารถเข้าร่วมระยะไกล\nถ้าใช้ TCP โดยตรง enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter หมายเลข Lbby"
+    },
+    {
+      "key": "multi_join",
+      "value": "เข้าร่วม"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "ปรับปรุงใหม่"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "ลอบี้"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "ห้อง: Draw ด้วยกัน\nหมายเลข: ABC123\n2 / 4\n\nล็อบบี้ที่เล่นได้ space\nเล่นกับกล่องลูกและกระโดดแผ่นในขณะที่รอ"
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "คัดลอกหมายเลข"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "เริ่ม 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "เลือกเวที"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "เวทีเลือกปลดล็อคเมื่อทุกคนพร้อม"
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "ออกไปจากห้องนี้?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "ออกไป"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "ยกเลิก"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "โฮสต์เลือกเวที"
+    },
+    {
+      "key": "multi_leave",
+      "value": "ออกไป"
+    },
+    {
+      "key": "multi_matching",
+      "value": "จับคู่..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "เฉพาะเจ้าภาพเท่านั้นที่สามารถเริ่มได้"
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "ไม่มีหมายเลขลอบบี้ที่จะคัดลอก"
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "รับทราบ ลอบบี้"
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "รหัสห้อง"
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "รหัสเชื่อมต่อ"
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "ออฟไลน์ ไม่มีรหัสห้อง"
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "ออฟไลน์"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "รหัส"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "กําลังเชื่อมต่อ..."
+    },
+    {
+      "key": "multi_room",
+      "value": "ห้อง"
+    },
+    {
+      "key": "multi_players",
+      "value": "ผู้เล่น"
+    },
+    {
+      "key": "multi_local",
+      "value": "ภายใน"
+    },
+    {
+      "key": "multi_ready",
+      "value": "พร้อม"
+    },
+    {
+      "key": "multi_wait",
+      "value": "รอ"
+    },
+    {
+      "key": "multi_host",
+      "value": "HOST"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw ด้วยกัน"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "ห้องเพื่อน"
+    },
+    {
+      "key": "online_player_you",
+      "value": "คุณ"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "คุณ"
+    },
+    {
+      "key": "online_player_host",
+      "value": "เครื่อง"
+    },
+    {
+      "key": "online_player_number",
+      "value": "ผู้เล่น {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "จับคู่ปลอมพร้อม"
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "เริ่มงานแบ็คเอนต์เทียมแล้ว"
+    },
+    {
+      "key": "online_logging_in",
+      "value": "กําลังเข้า..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "ออนไลน์เป็นตัวทดสอบท้องถิ่น"
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "เวทีปลอมเริ่มแล้ว"
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "ห้องส่วนตัวสร้างขึ้น"
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "ห้องสาธารณะสร้างขึ้น"
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "ร่วมกับห้องปลอม"
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "เปิดใช้งาน TCP"
+    },
+    {
+      "key": "online_ready",
+      "value": "ออนไลน์พร้อม โฮสต์หรือร่วมห้อง"
+    },
+    {
+      "key": "online_room_created",
+      "value": "ห้องนี้สร้างขึ้น แชร์บัตรประชาชนกับเพื่อน"
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "ล้มเหลวในการโฮสต์: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "ID ของห้องต้องเป็นเครื่องโฮสต์: พอร์ท"
+    },
+    {
+      "key": "online_joining_room",
+      "value": "อยู่ในห้อง..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "ล้มเหลวในการเข้าร่วม: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "ล็อบบี้ซ้าย"
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "พร้อมเปลี่ยน"
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "การยอมรับล้มเหลว"
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} เข้าร่วม"
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} ออกจากการประชุม"
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "ลอบบี้อัพเดต"
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "กําลังเริ่มขั้นตอน {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "ESOS เปิดใช้งาน ปรับแต่งส่วนเสริม OS ก่อนทําการล็อกอิน"
+    },
+    {
+      "key": "online_eos_login",
+      "value": "ล็อกอิน OS..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "ส่วนเชื่อมต่อ OS ยังทํางานอยู่"
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "การล็อกอินของ OS ล้มเหลว: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "ESOS สร้างล็อบบี้ไม่สําเร็จ: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "ห้องนี้สร้างขึ้น แชร์บัตรนี้"
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter ID OS ลอบบี้"
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter รหัสห้อง"
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "การลงทะเบียนห้องล้มเหลว: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "ล้มเหลวในการค้นหารหัสห้อง: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "ไม่มีห้องสําหรับรหัส {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "รหัสห้องชนกัน กรุณาสร้างห้องอีกครั้ง"
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "โฮสต์เปิดเวทีเลือก"
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "เครื่องปิดระยะการเลือก"
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "การรวมข้อมูล ESOS ล้มเหลว: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "ร่วมกับห้อง OS"
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "ล็อบบี้ซ้าย"
+    },
+    {
+      "key": "online_ready_on",
+      "value": "พร้อม"
+    },
+    {
+      "key": "online_ready_off",
+      "value": "ยังไม่พร้อม"
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "การสร้างหมายเลขประจําตัวของอุปกรณ์ OS ล้มเหลว: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "กําลังสร้างหมายเลขอุปกรณ์ OS..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "ล้มเหลวในการล็อกอินอุปกรณ์ OS: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "OS ออนไลน์เป็น {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "ลอบบี้อัพเดต"
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "OS ไม่ได้ล็อคเข้าไป ปรับแต่งส่วนเสริม OS และล็อกอินก่อน"
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "OS ถูกปิด"
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "ผ่านด่านแล้ว!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "ผ่านด่าน {0} แล้ว!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "ผ่านแล้ว!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "ถัดไป: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "เลือกด่าน"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "ผ่านครบทุกด่านแล้ว!"
+    },
+    {
+      "key": "stage_label",
+      "value": "เวที {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "โลก {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "บท เรียน ที่ น่า พอ ใจ"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "วิธีใช้: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "สร้างใหม่"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "ไม่รวม"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} ไม่มีอยู่บนเวทีนี้"
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "ผู้เล่นอีกคนใช้อยู่แล้ว {0}. เลือกตัวละครที่มีอยู่"
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "CHARACTER SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} กําลังใช้อยู่ กดปุ่มสลับที่"
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} ต้องการที่จะแลกเปลี่ยน {1} สําหรับ {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "เส้นพริ้วไหว"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "รอการตอบรับคําขอแลกเปลี่ยน..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "เปลี่ยนตัวละคร!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "คําร้องขอแลกเปลี่ยนถูกปฏิเสธ"
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "ไม่พบผู้เล่นอีกคน"
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "เกรน ดี เซน เซอร์"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100 ก. ค."
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "ฤดู หนาว"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "เพื่อน"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "เล่นแบบเดี่ยว"
+    },
+    {
+      "key": "species_human",
+      "value": "มนุษย์"
+    },
+    {
+      "key": "species_cat",
+      "value": "แมว"
+    },
+    {
+      "key": "species_bird",
+      "value": "นก"
+    },
+    {
+      "key": "species_turtle",
+      "value": "เต่า"
+    },
+    {
+      "key": "species_slime",
+      "value": "สลิม"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "วัตถุ"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "เชื่อมโยง"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "ลากตัวละครมาทดสอบ จากตําแหน่งนั้น ไข่บนเวทีที่บันทึกไว้ไม่ได้เปลี่ยนแปลง"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "กําลังเริ่มการทดสอบ"
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "เริ่มการทดสอบ: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "ไม่สามารถบันทึก: {0} มีข้อผิดพลาด {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "บันทึก: {0} ({1} แจ้งเตือน"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "สร้างห้อง\nชื่อห้อง\nผู้ เล่น 2 / 3\nสาธารณะ / ส่วนตัว\n\nเข้าร่วมห้อง\nหมายเลขห้อง [... ]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "ลากไปยังตําแหน่ง / คลิกเพื่อเลือก / WASD ย้าย\nตกแต่ง: ล้อต่อสเกล / Shift + ล้อที่จะหมุน\nCtrl + ล้อ: ขยายทั้งเวที"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} วัตถุที่เลือก"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "วัตถุที่แนบมาด้วยกล่องจะถูกเลือก"
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "เลือก {0} วัตถุ ลากวัตถุที่เลือกไว้เพื่อย้ายพวกมันมารวมกัน"
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "ไม่มีวัตถุใดถูกห่อด้วยกล่องการเลือก"
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "ย้าย {0} วัตถุที่เลือกด้วยกัน"
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "ประเภท"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "ค้นหา"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "ชนิด"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "ค้นหาคํา"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "รายการวัตถุ"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "รายการที่อยู่เชื่อมโยง"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "อ..."
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "เอช"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "ทําซ้ํา"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "คัดลอก"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "วัตถุเลียนแบบ"
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "○ ขวา"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "○ ลง ไป"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "○ เลอา"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "○ ขึ้น"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "ทิศทางการคัดลอก: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "วัตถุที่คัดลอกไปยัง {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "ตําแหน่ง: X {0:0.00} / Y {1:0.00} (กุญแจเหล็ก)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "ปล่อยพลังงาน"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "ย้ายระยะห่าง"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "เลื่อนความเร็ว"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "ประมวลผล (วินาที)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "หน่วงเวลา Crumble (วินาที)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "ต้องการการระเบิด"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "ความเร็วของเบลต์"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "ช่วงการลากลง (วินาที)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "ระยะต่อเนื่องของบีม (วินาที)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "ขนาดกล่อง"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "ขนาดของระเบิด"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "ขนาดเส้นทแยง"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "ระยะห่าง: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "เลื่อนความเร็ว: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "เวลาใช้: {0:0.0} วินาที"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "หน่วง: {0:0.0} วินาที"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "ความหนาแน่นของกําแพง: {0:0} ระเบิด"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "ความเร็วของเบลต์: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "ช่วงเวลาการข้าม: {0:0.0} วินาที"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "ขนาดกล่องที่ถูกลดลง: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "หมุน & 90 {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "ขนาดระเบิดที่ขยายได้: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "ทิศทาง: ○ ซ้าย"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "คํา แนะ นํา: ขวา"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "ทิศทางที่ต่อเนื่อง: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "□ □ □ ○"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "กล่อง: สี่เหลี่ยมจัตุรัส"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "กล่อง: รอบ"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "กล่อง: สามเหลี่ยม"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "ระเบิด: ระเบิดทั้งคู่"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "ระเบิด: Fuse on Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "บอมบ์: เล่นเมื่อหยิบขึ้นมา"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "กล่องที่ถูกวาง: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "ระเบิดที่ระเบิดได้: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "ย้ายทิศทาง: {0:0}องศาฟาเรนไฮต์ + ล้อ"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "พลังในการเรียกใช้: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "ตัวเล่นต่อ"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "ตั้งค่าน้ําหนักตัวจุดชนวน {0:0} INK ต่อผู้เล่น"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter 1 ถึง 2000"
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "แคปแบบส่วนตัว"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "แคปป์ (TEAM CAP){0}พ)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "ผู้ รับ บัพ ติ สมา"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "ส่วนประกอบที่ชัดเจน"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "ทั้งหมด"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "ทุกอย่างเรียบร้อยไหม"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "ลบทุกส่วนของร่างกาย แล้วเรียกคืนตัวอักษรเดิม"
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "RESSET"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "ซิงเกิล"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} คํานําหน้า"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "คํานําหน้า"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "2551. ราชกิจจานุเบกษา พ.ศ."
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "นก กระจอก เทศ"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "อักขระทั้งห้า"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLT {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "ป้องกัน"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "EMPTY"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "ป้องกัน"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "ตั้งค่า"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "การ ปก ป้อง ผู้ อื่น {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "บันทึกปัจจุบัน {0} วาดไปยังชุดสําเร็จ {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "เขียนทับ {0} วาดในชุดสําเร็จ {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "ตั้งค่าโครงการ {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "แทนที่ปัจจุบัน {0} วาดด้วยชุดสําเร็จ {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "พื้นหลัง"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "ต้นไม้"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "พื้นหลัง"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "ดอกไม้"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "พื้นหลัง"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "เมฆ"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "พื้นหลัง PUSH"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "ลูกศร"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "หน้าแมว"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "หน้าสุนัข"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "รูปหลายเหลี่ยม"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "ยิ้ม"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "หัวใจ"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "ดาว"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "จันทร์"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "อาทิตย์"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "ฝน"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "ฟ้าแลบ"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "รุ้ง"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "ภูเขา"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "เครื่องมือเลือกสี"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "เห็ด"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "แอปเปิล"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "กล้วย"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "แตงโม"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "โดนัท"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "ไอศกรีม"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "ถ้วยกาแฟ"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "พิซซ่า"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "ขนมปัง"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "เครื่อง บิน ไอ น้ํา กระดาษ"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "เครื่อง บิน"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "ร็อคเก็ต"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "UFO"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "บอลลูนร้อน"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "บ้าน"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "ปราสาท"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "ความ ล้ํา ค่า"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "โมล"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "ฟอสซิล"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "คริสตัล"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "หม้อ โบราณ"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "คีย์"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "กุญแจสําหรับรูกุญแจ"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "ดาบ"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "มงกุฎ"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "โล่"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "เจม"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "เหรียญ"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "กระดูก"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "แปรงทาสี"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "ตัวเลข"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "ฤดูใบไม้ผลิ"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "แมกนีเซียม"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "ไดซ์"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "ฟองคําพูด"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Checkmark (✓)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "คํา ถาม ที่ มาระ โก (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "เครื่องหมาย Exclamation (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "ลูกศรวน"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "เจ๊บ!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "โยน!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "เริ่มได้!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "กอล!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "หมุน: Shift+ล้อ (0.5 องศา)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "หมุน: Shift + ล้อ (15) ด้วย Alt (1/6)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "หมุน: Shift + ล้อ (15) ด้วย Alt (1/6)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "ค่า:"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "การกระทํา"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "ปรากฏ"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "หายไป"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "ปลดล็อค"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "ย้าย"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "ย้ายแพลตฟอร์มไปทางขวา"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "เลื่อนแพลตฟอร์มขึ้น"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "ย้ายแพลตฟอร์มด้านซ้าย"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "ย้ายแพลตฟอร์มลง"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "การกระทําเชื่อมโยง: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "กุญแจต้องเชื่อมต่อกับรูกุญแจ"
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "กุญแจสําหรับที่อยู่เชื่อมโยงที่สําคัญ มักจะใช้ปลดล็อคเสมอ"
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "จับ"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "เชื่อมโยงจาก"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "เชื่อมโยงไปยัง"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "ยกเลิกการเชื่อมโยง"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "เพิ่ม: {0} / สแนป: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  โพ {1:0.0},{2:0.0}  ขนาด {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "ความกว้าง =ผนังด้านขวา / ความสูง = เพดาน (ผนังด้านซ้ายและขอบล่างคงที่)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "กรอบ"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "สร้างกรอบรอบวัตถุ เลือกมันเพื่อปรับผนังและเพดานด้านขวา"
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "กําแพงตั้งอยู่ระหว่างพื้นกับเพดาน"
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "กอล"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "ห้อง {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "บอมบ์"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "มิสเซิล"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "พร้อม"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "พื้นหลัง"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "ผู้เล่น {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "จุด {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "ตัวอย่าง 14-3: {0} ผู้เล่น / เวที {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "สีพื้นหลัง"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "ค่าปริยาย"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "ปิด"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "ความทึบแสง"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "สีพื้นหลังมีการเปลี่ยนแปลง เก็บเวทีไว้เถอะ"
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "โหมดการเพิ่ม: {0}ลากในแผนที่ที่จะสร้างมัน"
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "โหมดการเพิ่ม: {0}คลิกแผนที่เพื่อวาง"
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "เลือกจากรายการ"
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "ไม่เข้าคู่"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(ไม่มี)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "เทอริน"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "เริ่ม/ ทําเนียบ"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "สลับ"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "ประตู/ เกต"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "ย้ายได้"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "การกระทํา"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "กับดัก"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "กิมมิค"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "ศัตรู"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "พื้น"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "กําแพง"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "เริ่ม"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "เป้าหมาย"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "ค่าสมดุล"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "น้ําหนัก"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "การ เก็บ รักษา"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "ครึ่งชั้น"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "พื้น 1 ทาง"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "พื้นน้ําแข็ง"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "ลื่นไถล"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "กําแพง ที่ ปีน ได้"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "หมุน & 90"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "แปรงทาสี"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "พื้นเมฆ"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "พื้นที่แตกได้"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "ตกพื้น"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "การย้ายพื้นกระดาษ"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "การย้ายแผ่นเดียว"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "เด้งลูกบอลด้วยร่างกายของคุณและทําลาย NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "บล็อก {0}  ลูกบอล{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "มี เวลา มาก ขึ้น {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "เริ่มใน {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "เสียง {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "ลูกบอล {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "ต่อไปเสียงใน {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 ลูก บอล หาย ไป! รีเฟรช"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "ทุกเสียงชัดเจน!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "ระยะ ทาง ไกล {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "ปืน"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "กําแพงที่ฝังกระสุนได้"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "เลเยอร์"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "เครื่องบินซิกแซก"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "ตัวบินออร์บิท"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "บาซูก้า"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "เครื่อง บิน ทิ้ง ระเบิด"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "กําลังย้ายลูกบอล"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "กุญแจปักหมุด"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "รูกุญแจพอส"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "อัพเดรฟท์"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "ทําเครื่องหมายแบบเร็ว"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "เครื่องหมายความเร็ว (trong)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "สร้างพื้นที่ใหม่"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "ต้องการกระสุน"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "ต้องการกระสุน: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "กําลังหมุนพื้น"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Checkpoint"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "ข้อ ตก ลง ของ วอร์ป"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "ออกแบบ Warp"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "จุดรับบท"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "เป้าหมายกลาง"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "ลูกเล่นของประตู"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "ปุ่ม"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "ปุ่มปรับน้ําหนัก"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "ปุ่มปรับเสียง"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "ปุ่มยึด"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "กล่องสามเหลี่ยม"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "เลเวอร์"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "เปิด/ ปิด สลับ"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "สลับตัวจับเวลา"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "ตัวตรวจจับ"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "สลับสีแดง"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "สลับสีน้ําเงิน"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "สลับสีเขียว"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "สลับสีเหลือง"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "ความ กดดัน"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "ควบคุมระยะไกล"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink ค่า"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "ประตู"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "ประตูที่ล็อค"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "ตัวปิด"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Fine"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "ประตูเลเซอร์"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "ประตูสี"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "ประตูเดี่ยว"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "ประตูเวลา"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "กําแพงแตกได้"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "กําแพงที่ซ่อนอยู่"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "กล่องไม้"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "กล่องเหล็ก"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "บอล"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "บาเรล"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "หิน"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "บล็อกน้ําแข็ง"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "กล่องลอย"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "กล่องกระดาษ"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "ระเบิด"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "บอมบ์ (เริ่มใช้งาน Fuse Offup)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "ผู้สร้างระเบิด"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "ไดนาไมต์"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "ศัตรูของวอล์คเกอร์"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "ศัตรูนักกระโดด"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "ศัตรูของชาร์จ"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "ศัตรู ของ การ บิน"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "ศัตรูนักยิง"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "ศัตรู"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "ตัวเรียกใช้งานขีปนาวุธName"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "เรียกทํางาน"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "อุปกรณ์นี้จะเปิดใช้งานเสมอ"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "ช่วงเวลาการเรียกใช้"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "ขนาดของศัตรู"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "ศัตรูที่ล่า: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "ขนาดของศัตรู: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "คีย์"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "เหรียญ"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "ดาว"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "แบตเตอรี่"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "บัคเก็ต"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "กระโดดแผ่น"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "ฤดูใบไม้ผลิ"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "ตัวเอียงด้านซ้าย"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "ตัวเชื่อมด้านขวา"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "ลิฟท์"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "แฟน"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "แมกนีเซียม"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "เบลต์"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "กล่องวาง"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "ตัววางสเกต"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "ปลา"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "เหรียญ"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "ดาว"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "นาฬิกาดิจิทัล"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "เครื่องกระตุ้นเสียง"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "ปกติ"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "จํากัดเวลา"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "รอด"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}วินาที"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "ทั้งหมด"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "กฎเวที: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "เวลา {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "เวลาขึ้น"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "กด R เพื่อลองใหม่"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 ประเทศไทย พ.ศ."
+    },
+    {
+      "key": "survival_goal",
+      "value": "เซอวิชัน หนึ่ง เคลียร์!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "การ เดิน ทาง ไป ยัง ที่ ราบ สูง"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "ตาร์กี  {0:0}g (90g x players)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "เข้า สู่ การ เปลี่ยน แปลง ก่อน ที่ จะ เกิด รอย แยก"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "จัดการพวกมัน!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "เรา..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "การ หยั่ง รู้ ค่า พระ ยะ โฮ วา"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "เคลียร์!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "เกือบไปแล้ว!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "ภาพ บน หัว  {0:0}จี / {1:0}ก"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "ราช อาณาจักร มา ซี ฮา"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "ลอง ใช้ หัว ที่ ดี กว่า"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "จุด {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "จับ แว่นตา"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "FAR GRAS GRAVER จะยิงสปอร์ตแบบมีเครื่องหมาย -- อยู่คนเดียวให้เล่น!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 IEEEESTEDRUN / 1 Finader Finishs"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "เริ่มได้!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "มี เวลา มาก ขึ้น {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "เตรียมพร้อม!"
+    },
+    {
+      "key": "survival_start",
+      "value": "เริ่มได้!"
+    },
+    {
+      "key": "game_over",
+      "value": "เกมจบ"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "แต่ครั้งนี้ไม่เกิดขึ้นในตอนแรก ช่วยทําให้มันเล็กลงหน่อย"
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "คดีนี้อาจออกมาจากห้อง กรุณากรุณา Adugust Its Science."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "พร้อม {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "ผู้ รับ บัพ ติ สมา"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "None"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "ห้ามเปลี่ยนเครื่องราชอิสริยาภรณ์"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "ไม่มี CHARACTER เปลี่ยนแปลงหลังจากที่การชุมนุม (GERAW OK)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "เตรียม เริ่ม เกม"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "จง กําจัด วิญญาณ ออก ไป"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "ป้องกัน กษัตริย์ แห่ง อํา โมน"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "จง ดู แล ลูก แกะ และ สัตว์ เลี้ยง"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "ยัดเหล้าทุกร้านที่มีหน้าอก"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "ใช้ศพของคุณทําลายเส้นทาง"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "จง จัด เตรียม เครื่อง ดื่ม ที่ มี แอลกอฮอล์"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "เก็บบอลและตัดกลอนทุกลูก"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "โยนลูกบอลด้วย INK กาว และ กาว"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "ช่วย ดู แล ลูก น้อย และ รอด ชีวิต"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "คอ เลส เท อรอล"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "จง รักษา ความ ซื่อ สัตย์ มั่นคง"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "ฝนตก ไปตีกอล์ฟก่อนที่เวลาจะผ่านไป"
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "การ ป้องกัน"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "แสง สว่าง และ ทํา ให้ ดวง ดาว ต่าง ๆ มืด ไป"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "ไม่เกินเวลา"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "รถ สาม ล้อ เพื่อ ควบคุม ทุก ๆ บล็อก"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "กระดูก และ คอ"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "ของเหลวก่อนที่เวลาจะละลาย"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "ของเหลวก่อนที่เวลาจะละลาย"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "จง ปก ป้อง เพื่อน ของ คุณ จาก พวก เขา"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "ลูกบอลกลับมาเพื่อลดความซับซ้อน"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "จง สอน ลูก ให้ รู้ จัก พ่อ ก่อน ที่ ลูก จะ ออก ไป"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "ใช้แอมเบรียลเพื่อออกจากกรง"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "ส่งปืนผ่านทุก ๆ คนไปที่ทางเดิน"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "ภูฏาน"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "เมือง ครีต"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "ป้องกัน อันตราย"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "เคลียว่าในนัดที่ 1"
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "เมื่อคนเล่นใด ๆ สอนกอล"
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "สตี ค วอ ลล์ ลอนช์"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "รอสัญญาณก่อน!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "จง วิ่ง ไป ที่ หมู่ บ้าน!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "นก แก้ว ยัง คง บิน ต่อ ไป!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "ไม่มี INK (เพลง)"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "เวลา {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "เวลาขึ้น"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "จง อยู่ ใต้ ร่ม!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "นําคุณออก - สอนเชลเตอร์"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "ทุกคนถูกจับคาหนังคาเขา"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 เครื่องราชอิสริยาภรณ์"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "ดูที่กระดูกหักสิ!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "โบว์ล็อค MissIles กับหนึ่ง scheles!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "ลง มา - การ ประชุม"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "มาตรา 60 เคลียร์!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "รอบ {0}/3    เหลือ {1:0.0} วินาที"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "กอริลลา {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "ปรับตำแหน่งและมุมเพื่อสะท้อนเลเซอร์!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "ผ่านรอบ {0} แล้ว!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "หมดเวลา! เริ่มรอบนี้ใหม่"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "Crayon Devil HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 พร้อม"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "PLATHFM Click: MissILE  FBOMB:"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "เสียชีวิต!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "ส่งข้อมูลทั้งหมดลง"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "- เริ่มได้!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "ออกเดินทาง!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "การ บรรลุ เป้า หมาย!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "กําลังประมวลผล...  {0}วินาที"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "วิ่ง, กระโดด, หมุน และ หยุด — คู่ ของ คุณ กําลัง เรียน รู้."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "ภาพ {0}  ความ หวัง: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "ลากหนึ่งลงพื้นเปิดตัว แล้วเหยียบสวิตช์สีแดง!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "การ ป้องกัน ทุก อย่าง ถูก แก้!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "ไม่มีเจ้านายอีกแล้ว"
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "ภาพ {0}  เริ่มใน"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "เอาชนะทีม CPU ที่สวมฟอร์มที่แน่นอน"
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "ภาพ {0}  ด้านซ้าย: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "ภาพ {0} เคลียร์!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "อ้างอาวุธที่มีสวิทช์สีแดง Fขีปนาวุธ"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "MissILE พร้อม! เล็งเมาส์แล้วคลิก"
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "CPU ถอดรหัส!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "ร้านอาหารใสสะอาด!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "เวลาขึ้น"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "เวลาขึ้น!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "ทุกคนหมอบลง!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "ล้ม! เริ่มตั้งแต่เริ่มต้นใน 3 วินาที"
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON StaleKer HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 พร้อม"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "เลี้ยวขวา! ใช้อาวุธของเกรน"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "ผู้ ประกาศ ราช อาณาจักร รายงาน"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "ทุกคนถูกจับ"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "วิ่ง!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "ดูดอกไม้ไฟสิ!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "ซูฟ! เวลาที่เหลือ"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "ฟลอเรส {0} - เครื่องใน {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "จง เฝ้า ระวัง อยู่ เสมอ!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "ผู้เล่นทั้งหมดออกเล่น"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "อีก ไม่ นาน"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "ค้นพบ!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "ความ ปลอด ภัย"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 นกกระสา"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "จง เฝ้า ระวัง และ ทํา ตาม คํา สั่ง"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "มา! ทิ้ง ความ เงียบ สงัด"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "เซอวิชัน!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 พระบาทสมเด็จพระเจ้าอยู่หัว"
+    },
+    {
+      "key": "boss_health",
+      "value": "ขนาด HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER ห้อง ถัด ไป"
+    },
+    {
+      "key": "boss_appears",
+      "value": "ระวัง..."
+    },
+    {
+      "key": "boss_fight",
+      "value": "การ เดิน ทาง ไป แอต เท ก / ตุรกี"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "การ์ด! ไม่ มี ใคร รอด ชีวิต"
+    },
+    {
+      "key": "boss_charge",
+      "value": "CHARE! หลีกทางไป"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "คํา แนะ นํา ใน {0}ไปที่ฟลอร์"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "ATTACK พิเศษ! ทํา อาหาร"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "เสียชีวิต!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "ผู้ เล่น ทุก คน..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "การ รอ อยู่ ใน ห้อง  {0} / {1}  ลุกขึ้น!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 ยูโรวิชัน"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "เซอวิชัน หนึ่ง เคลียร์!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "จากขวาไป 60 วินาที"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "มอง จาก ขวา"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "เจ๊บ!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "เฮลิคอปเตอร์!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "เบาๆ..."
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "ลุกขึ้น! หมัด!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "ผู้เล่นทั้งหมดออกเล่น"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "การ เปลี่ยน แปลง ครั้ง ใหญ่!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "ผู้เข้าชมพบ"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 ปลดปล่อยเพื่อน"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "การ หา เพื่อน"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "มีทางเดินที่มีรองเท้า, และร่างกาย"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 ป้องกันเพื่อน"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "อ้า!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "จง รักษา ความ ซื่อ สัตย์ มั่นคง"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "เพื่อนคนอื่นใน  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "หาเพื่อนใหม่..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "เอสคอร์ทรัมเลต!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "เพื่อน สอน ลูก ค้า"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "เสียง {0}/ 3 ไบลด์ {1:0.0}วินาที"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "หาเส้นทางกับศพของคุณ"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "ไป! จง ช่วย เพื่อน ฝึก สอน ลูก"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "เสียง {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "เสียง {0} เคลียร์!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "รอบ {0}/3    เหลือ {1:0.0} วินาที"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "โฮลส์ {0}/{1}    ยัดเข้าไปให้หมด"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "ผ่านรอบ {0} แล้ว!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "หมดเวลา! เริ่มรอบนี้ใหม่"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "อุดรูให้หมด!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "เสียง {0}/3    {1:0.0}ด้านซ้าย"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "ลูกบอล {0}/{1}    ลากมันเข้าไปในห้องโถง!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "โยนบอลข้ามมาสเซด้วยแม็กเน็ตซิส!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "เสียง {0} เคลียร์!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "เวลาขึ้น! จง เล่า เรื่อง นี้"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "ไปกับเลนของคุณ! มาก INK ม."
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "สอนสแน็กอวอร์ด!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "ลัดผ่านกองขยะ\nใส่มันเข้ากับศพของคุณ"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "เพื่อน สามารถ เดิน บน ศีรษะ และ ขา ของ คุณ"
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "เพื่อนเริ่ม"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "เพื่อนของเรา!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "เกมจบ"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "คุณไม่สามารถตัดสินระหว่างที่เพื่อนกําลังเคลื่อนไหว"
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET RELY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "เสียง {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOET Bullets off Friends to tit the Target"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "ออกไป! การ ประกาศ"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 ชัดเจน!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "สปอนเดอร์เพื่อน"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "เป้า หมาย ของ เพื่อน"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "พื้นกระดาษเพื่อน"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "ตัวอย่างสะพานหัวกระดาษ"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "เลื่อย"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "ปรับเทียบสี"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "ปืนใหญ่"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "หมวดหมู่"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "สเกต"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "ยิง"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "น้ํา"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "พิษ"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "เลเซอร์"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "การล้มของก้อนหิน"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "กดเครื่อง"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "ไฟฟ้า"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "เห็น"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "หลุม ดํา"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "ตัวเลข"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "เกียร์ใหญ่"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "รอกเชือก"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "ภาพนิ่ง"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "แถบหมุน"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "ลูกตุ้ม"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "รูกุญแจ"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "ขอบเขตเวที"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "นาฬิกา"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "ข้าม"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "เลือกเวที"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "ออกจากวาระงาน"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "เริ่มระบบใหม่"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "ออกจากการประชุมออนไลน์?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "การจากไปเป็นเจ้าภาพ จะยุติการประชุมนี้สําหรับทุกคน ออกไปเหรอ?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "ออกไป"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "เชื่อมโยงเป็นสะพาน ขอบขวายังคงเชื่อมต่อ ในขณะที่ขยายออกไปทางซ้าย"
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "แยกพื้นที่เชื่อมต่อ ให้เป็นส่วนที่เลือกได้และเชื่อมโยงได้"
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "แยก"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "การแยกส่วนเกิดขึ้น มันสามารถแตกได้โดยไม่ต้องรวมเข้าด้วยกัน และสามารถเชื่อมโยงกันได้"
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "การแยกส่วนกันเป็นโมฆะ ภูมิประเทศที่สัมผัสสามารถรวมกัน"
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "เชื่อมต่อพื้นและผนังเป็นหนึ่งภูมิประเทศ"
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "ลากไปวางตรง {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "ความหนา:"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "พื้นและผนังหนา: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "ตรง"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "การวาดเส้นตรงอยู่บน"
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "การวาดแบบเส้นตรงยกเลิก"
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw โหมด"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw โหมด"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "เลือกโหมด"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw โหมด: space เพื่อวางวัตถุ"
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "เลือกโหมด: เลือกและย้ายวัตถุที่มีอยู่"
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} เป็นอิสระโดยลาก"
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "พื้นฟรีแฮนด์กับรูปวาดผนังเปิดอยู่"
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "การวางสี่เหลี่ยมเป็นไป"
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "ดรูว์ {0} พาธที่เชื่อมต่ออยู่{1} จุด)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "กลับไปยังเครื่องมือแก้ไข"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "กลับไปยังเครื่องมือแก้ไข  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "กลับมาจากบททดสอบ ให้แก้ไขเวทีของคุณ"
+    },
+    {
+      "key": "cancel",
+      "value": "ยกเลิก"
+    },
+    {
+      "key": "retry",
+      "value": "ลองอีกครั้ง"
+    },
+    {
+      "key": "menu",
+      "value": "เมนู"
+    },
+    {
+      "key": "redraw",
+      "value": "วาดใหม่"
+    },
+    {
+      "key": "pen",
+      "value": "ปากกา"
+    },
+    {
+      "key": "eraser",
+      "value": "ลบ"
+    },
+    {
+      "key": "shape_square",
+      "value": "กล่อง"
+    },
+    {
+      "key": "shape_circle",
+      "value": "วงกลม"
+    },
+    {
+      "key": "shape_line",
+      "value": "เส้น"
+    },
+    {
+      "key": "draw_finish",
+      "value": "เรียบร้อย!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "กลับ"
+    },
+    {
+      "key": "brush_size",
+      "value": "ขนาด"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink ใช้แล้ว"
+    },
+    {
+      "key": "undo",
+      "value": "เลิกทํา"
+    },
+    {
+      "key": "character_switch",
+      "value": "สลับอักขระ"
+    },
+    {
+      "key": "character_add",
+      "value": "เพิ่มสี"
+    },
+    {
+      "key": "character_delete",
+      "value": "ลบอักขระ"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "เปลี่ยนสี"
+    },
+    {
+      "key": "stage_select",
+      "value": "เลือกด่าน"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 กลุ่ม 3 ขั้นตอน เปิดการแก้ไขบน จากนั้นเลือกเวทีเพื่อแก้ไข"
+    },
+    {
+      "key": "debug_stage",
+      "value": "ดีบั๊ก 1-0"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "แก้ไข 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "แก้ไขเมื่อ: เลิก"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "แก้ไขเมื่อ:"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "ใหม่"
+    },
+    {
+      "key": "stage_clear",
+      "value": "ล้าง"
+    },
+    {
+      "key": "stage_locked",
+      "value": "ล็อค"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "โหมดดีบั๊ก: ทุกโลกไม่ได้ล็อค เลือก เวที ที่ จะ เล่น หรือ เปิด แก้ไข เพื่อ แก้ไข."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1: Floor 2: will danging to build\n3: Street 4: Goal 5: Scale 6: Vight\nขนาด A/D/W/S: ย้ายกล้อง ความเร็ว:\nF5บันทึก  F6Test  Escแปรงทาสี"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "ค่า"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "ขนาด"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "ตาราง"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "ลบ"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "บันทึก"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "ทดสอบ"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "ย้อนกลับ  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "ตั้งค่าเกม"
+    },
+    {
+      "key": "option_bgm",
+      "value": "ขนาด BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "กุญแจ"
+    },
+    {
+      "key": "option_language",
+      "value": "ภาษา"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "ยังก่อน"
+    },
+    {
+      "key": "locked_stage",
+      "value": "ขั้น ตอน ต่าง ๆ ที่ ไม่ มี เจ สัน ถอย กลับ สู่ ขั้น ที่ ดี เยี่ยม."
+    },
+    {
+      "key": "human",
+      "value": "มนุษย์"
+    },
+    {
+      "key": "cat",
+      "value": "แมว"
+    },
+    {
+      "key": "bird",
+      "value": "นก"
+    },
+    {
+      "key": "turtle",
+      "value": "เต่า"
+    },
+    {
+      "key": "slime",
+      "value": "สลิม"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "ตี 5"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "บาง ส่วน"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "อนุภาพ"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "เลือกส่วน จากนั้นคลิกหรือลากบนแผนที่เพื่อวาง"
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "จับ: {0} / {1:0.##} เส้นกริดหน่วย"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "เลือกวัตถุก่อน"
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "บิดเปลี่ยน คุณสามารถใช้ Shift+ ล้อ"
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "ความสูงเปลี่ยนไป คุณสามารถใช้ Alt+Wheel ได้ด้วย"
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "ขนาดมีการเปลี่ยนแปลง ใช้ล้อเพื่อขยายแกนทั้งสอง"
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "ลากพื้นที่ที่กว้างขึ้นเพื่อวางส่วนนี้"
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "ที่อยู่ {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "ที่อยู่ {0} ที่ {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "เลือกแล้ว ลากเพื่อย้ายและใช้ล้อในการปรับขนาด"
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "ไม่มีอะไรให้ยกเลิก"
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "ยกเลิกการแก้ไขล่าสุด"
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "ไม่มีอะไรให้แก้ไข"
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "แก้ไขใหม่"
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "เลือกสวิทช์, ปุ่ม, คีย์, หรือ รูกุญแจ เพื่อใช้เป็นแหล่งเชื่อมโยง"
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "เลือกสวิทช์, ปุ่ม, คีย์, หรือ รูกุญแจเป็นแหล่งเชื่อมโยง"
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "แหล่งเชื่อมโยง: {0}เลือกเป้าหมาย จากนั้นกดลิงก์"
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "ตั้งค่าแหล่งเชื่อมโยงก่อน"
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "เลือกวัตถุที่จะใช้เป็นเป้าหมายเชื่อมโยง"
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "แหล่งเชื่อมโยงและเป้าหมายต้องเป็นวัตถุที่แตกต่างกัน"
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "เชื่อมโยง {0} ถึง {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "เลือกวัตถุที่เชื่อมโยงก่อน"
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "เคลียร์การเชื่อมต่อแล้ว"
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "บันทึก: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "การบันทึกใช้ได้เฉพาะในเครื่องมือแก้ไขความเป็นเอกภาพเท่านั้น"
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "โรงงานวัตถุบนเวทีหายไป"
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "ไฟจราจร"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 บล็อก Crash"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "ตัวแยกบล็อค"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "ปัง! ลบทั้งหมด NICO DRAW โบว์ล็อค!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} บล็อกด้านซ้าย"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "หวาดกลัว... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "บรา เด อร์ ซี."
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "สืบค้นโดยการกระทําหรือหมายเลข SE จากนั้นกดPlay เพื่อแสดงตัวอย่างเสียงที่ได้รับมอบหมาย ข้ามแถวเพื่อดูเส้นทางของทรัพยากร"
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "เล่น"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "หยุด"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "ปฏิเสธ"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "ไม่มีสัญญาณที่ตรงกับเสียง"
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "ไม่พบ SFX USage.md"
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "ยังไม่กําหนดค่า"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "เมกะไบต์"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "เสียงที่ประมวลผลได้"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "พิมพ์แบบ Paw"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "ปลา"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "ลูกบอล"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "คริสตัลหิมะ"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "หมึก"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "มนุษย์หิมะ"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "บลิสซาร์ด"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "ขน"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "รังนก"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "เส้นลม"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "ท่อ"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "โบลท์"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "เหล็ก"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "สเตม"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "เต่า"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "นาฬิกาทราย"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "แพดล็อค"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "สลิม"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "ฟอง"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "ผีเสื้อ"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "เต่าทอง"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "ดอก ทานตะวัน"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "ทิวลิป"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "สกาเลต ตัน"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "แบท"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "แมงมุม"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "เส้นต่อเนื่อง"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "แลนเดอร์"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "เหมือง"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "พิกาซีน"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "โครโมโซม"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "เหรียญ"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "นกหวีด"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "บอลลูน"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Confetti"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "พลุไฟ"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "ตึก"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "เส้นพริ้วไหว"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "สะพาน"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "วงกลม"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "ดินสอ"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "ลบ"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "สมุดบันทึก"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "กระดานดํา"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "จานสี"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "แปรงทาสี"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "คาวา"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "นาฬิกาจับเวลา"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "จุด"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "ไมโครโฟน"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "ชีส"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "กล่องเซอร์ไพรส์"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "กล่องของขวัญ"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "ดาว เคราะห์"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "เอเลี่ยน"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "ดาวหาง"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "หลุม ดํา"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "ฟองสบู่"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "มอสส์"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "รากต้นไม้"
+    }
+  ]
+}

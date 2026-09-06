@@ -388,6 +388,15 @@ namespace DrawBody.Prototype
         private void EnsureLaserRelayEditorLayouts()
         {
             if (stageId != "14-3") return;
+            for (int i = 0; i < objects.Count; i++)
+            {
+                StageObjectData item = objects[i];
+                if (item != null && item.type == StageObjectType.EscortPlayerOneWayFloor
+                    && !IsLaserRelayLayoutObject(item))
+                {
+                    AssignLaserRelayLayoutObjectId(item);
+                }
+            }
             bool hasLayout = objects.Exists(item => item != null && !string.IsNullOrEmpty(item.objectId)
                 && item.objectId.StartsWith(LaserRelayLayoutRootPrefix, System.StringComparison.Ordinal));
             if (hasLayout) return;
@@ -437,12 +446,39 @@ namespace DrawBody.Prototype
             {
                 string prefix = StageLaserRelayController.GetEditorLayoutPrefix(
                     laserRelayPreviewPlayers, laserRelayPreviewRound);
-                string kind = source.objectId.Contains("-wall-") ? "wall" :
-                    source.objectId.Contains("-source-") ? "source" :
-                    source.objectId.Contains("-goal-") ? "goal" : "player";
+                string kind = GetLaserRelayLayoutKind(source);
                 return $"{prefix}{kind}-copy-{System.Guid.NewGuid().ToString("N").Substring(0, 8)}";
             }
             return StageObjectId.New();
+        }
+
+        private void AssignLaserRelayLayoutObjectId(StageObjectData data)
+        {
+            if (!IsLaserRelayLayoutEditor || data == null) return;
+            string prefix = StageLaserRelayController.GetEditorLayoutPrefix(
+                laserRelayPreviewPlayers, laserRelayPreviewRound);
+            data.objectId = $"{prefix}{GetLaserRelayLayoutKind(data)}-custom-" +
+                System.Guid.NewGuid().ToString("N").Substring(0, 8);
+            data.keepSeparate = true;
+        }
+
+        private static string GetLaserRelayLayoutKind(StageObjectData data)
+        {
+            if (data != null && !string.IsNullOrEmpty(data.objectId))
+            {
+                if (data.objectId.Contains("-source-")) return "source";
+                if (data.objectId.Contains("-goal-")) return "goal";
+                if (data.objectId.Contains("-player-")) return "player";
+                if (data.objectId.Contains("-passfloor-")) return "passfloor";
+            }
+            if (data != null && (data.type == StageObjectType.OneWayPlatform
+                || data.type == StageObjectType.MovingOneWayPlatform
+                || data.type == StageObjectType.EscortPlayerOneWayFloor)) return "passfloor";
+            if (data != null && data.type == StageObjectType.JumpPad) return "jumppad";
+            if (data != null && data.type == StageObjectType.BackgroundArrow) return "source";
+            if (data != null && data.type == StageObjectType.BackgroundLightBulb) return "goal";
+            if (data != null && data.type == StageObjectType.BackgroundStickFigure) return "player";
+            return "wall";
         }
 
         private void RefreshLaserRelayEditorMarkerVisual(GameObject obj, StageObjectData data)

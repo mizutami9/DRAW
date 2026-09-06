@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "SOITJAN NIMI"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter nimesi"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Ole kiltti. enter Pelaajan nimi."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER Nimesi tässä."
+    },
+    {
+      "key": "option_register",
+      "value": "REKISTE"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Japani"
+    },
+    {
+      "key": "lang_en",
+      "value": "FI"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Irti! Paina R yrittääksesi uudelleen."
+    },
+    {
+      "key": "draw_title",
+      "value": "Suunnittelu (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: Takaisin peliin / ENTER: Päätä / ESCPeruuta"
+    },
+    {
+      "key": "preview",
+      "value": "Esikatselu"
+    },
+    {
+      "key": "clear",
+      "value": "Pyyhi"
+    },
+    {
+      "key": "decide",
+      "value": "Vahvista"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Muut"
+    },
+    {
+      "key": "current",
+      "value": "Kuluva"
+    },
+    {
+      "key": "part",
+      "value": "Osa"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw ylävartalo ensin."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso on tukikohta. Draw muut osat niiden liitosmerkistä."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: aloitetaan kytkentämerkistä."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw ylävartaloon ennen muiden osien liittämistä."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} on yhdistetty."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} ei aloittanut kytkentämerkistä."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Vartaloa tarvitaan ennen päätöksen tekemistä."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} on aloitettava kytkentämerkistä."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Henkilökohtainen  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Tiimi  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Henkilökohtainen ink on {0:0.#}/{1:0}. Vähennä sitä {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Ei voi päättää: tiimi ink on {0:0.#}/{1:0}. Vähennä sitä {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}: aloitetaan merkistä."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Pää"
+    },
+    {
+      "key": "torso",
+      "value": "Ylävartalo"
+    },
+    {
+      "key": "left_arm",
+      "value": "Vasen käsivarsi"
+    },
+    {
+      "key": "right_arm",
+      "value": "Oikea käsi"
+    },
+    {
+      "key": "left_leg",
+      "value": "Vasen jalka"
+    },
+    {
+      "key": "right_leg",
+      "value": "Oikea jalka"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Vasen eteen"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Oikea eteen"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Vasen taakse"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Takaisin"
+    },
+    {
+      "key": "tail",
+      "value": "Pyrstö"
+    },
+    {
+      "key": "left_wing",
+      "value": "Vasen siivi"
+    },
+    {
+      "key": "right_wing",
+      "value": "Oikea siivi"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Perän sulka"
+    },
+    {
+      "key": "slime_body",
+      "value": "Lima"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Tavallinen hyppy"
+    },
+    {
+      "key": "jump_double",
+      "value": "Hyppy x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Hyppy x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Normaali"
+    },
+    {
+      "key": "arm_long",
+      "value": "Pitkä"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Nopea keinu"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Normaali"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Heavy Switch"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Raskas"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Jalka {0:0.0}: {1}   Käsivarsi {2:0.0}: {3}   Ylävartalo {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Siivet {0:0.0} INK / Liitu nopeus {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "IHMISKYVYYS\nAseet {0:0.0} INK  Teho ×{1:0.00}\nJalat {2:0.0} INK  Hyppy ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "CAT-KYVYYS\nTakajalat {0:0.0} INK  Nopeus ×{1:0.00}\nEtujalat {2:0.0} INK  Kynsialue ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "LIIKKUVUUTTA\nSiivet {0:0.0} / 700 INK\nKiiltonopeus {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "KESTÄVYYS\nOdota SPACE: voittamaton kuori\nOdota F: Käänny 90° suuntaan päin"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "LIIMITYYPPI\nKeho {0:0.0} / 700 INK\nYläpiikin pituus {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "IHMIS"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "CAT"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "BIRD"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "TURTLE"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Enemmän jalkaa INK lisää hypyn tehoa\nLisää käsivartta INK lisää heittovoimaa"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Lisää takajalkaa INK lisää ajonopeutta\nLisää etujalkaa INK lisää naarmuja"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Lisää siipeä INK lisää liukuvoimaa"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Voittamaton piilotettuna kuoreen"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Lehdistö F Hyökkäyspiikki ylöspäin\nVähemmän INK pidentää / Seinähyppy käytössä"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "FTHROW"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "HOLD SPACE: GLIDE  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "HOLD SPACE: SHELL HOLD F: TURN 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: YLEMPI SPIKE-hyökkäys"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Teho ×{0:0.00}  Hyppy ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Aja ×{0:0.00}  Kynsialue ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Kelluva voima {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACESHELL /  F: 90° TURN"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Yläpiikkipituus ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Aseet {0:0.0}/280 Jalat {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Takaisin {0:0.0}/240 Etu {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Siivet {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Aktiivinen vain nappia pidettäessä"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "Hiljaa."
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE sekä F Tehkää töitä pidellessänne!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Keho {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "VÄHÄ"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "KORKEA"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "KASVI"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "Juokse"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "SCRATCH"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GLIDE"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "DEFENSE"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "LIIKKUVUUS"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "Ruumis INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "VALO: LÄHETTY"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "Nopeus + hyppy"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK KOKO {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "FSpike! Vähemmän INK = pidempi / Seinähyppy käytössä"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Enemmän virtaa!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Et voi ryhdistäytyä tämän jälkeen."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Korkea foorumi"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Heavy Switch"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Far Lever"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Kapea reikä"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "Huone"
+    },
+    {
+      "key": "multi_participants",
+      "value": "PLATIERS"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "CREATE ROOM"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "YHDISTYSHUONE"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "Huonetunnus"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "PAIKALLINEN TESTI"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "Sinä."
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 MISSILE CAVE"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "Floor vanishing! CRAB A WALL"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "Wall-hyppää ja Dodge Piercing MISSILES!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 suojele ystävääsi!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "VAIHE {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "AIKA {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Puolusta ystävääsi molemmilta puolilta"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "LENTOASEMA {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "Ystävä... KUOLEMA {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Defense selvä!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "KIINA {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "AIKA {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "Murtakaa laatikot ja kolikkokolikot!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "Aikalisä..."
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 taalaa selvä!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "Valta päälle!"
+    },
+    {
+      "key": "title_single",
+      "value": "Yksinpeli"
+    },
+    {
+      "key": "title_multi",
+      "value": "Moninpeli"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Asetukset"
+    },
+    {
+      "key": "option_back",
+      "value": "Back  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "Back  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "Back  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Lopeta"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "TRAILER CAPTURE DEBUG"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4-soittimen ilmarele"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Ihmisen heittää Lintu, sitten Lintu → Kissa → Lima rele"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "TÄRKEÄÄ"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "Back  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "EDIT CHARACTERS"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "STEAM-otsikko"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "VIENTI 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "Takaisin TITLE"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Tarkista koostumus ja vie PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Tallennettu: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "Perun..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "Vain huoneessa voi vaihtaa kirjoja."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY HIDE HUD     ESC  OSASTO"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "TRAILER TAS RECORDER"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Vedä näyttelijöitä, kun olet joutokäynnillä. F9 Tauko F10"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 RECORD/Stop"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 Soita kaikki"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 RESIDENTIN OTTO"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "VALITTU"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "P PAUSE"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O VAIHE"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "KIRJAAMINEN"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "-Ei."
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "PAUSED"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} Valittu: {1} | {2} kehys {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "ENNAKKO {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SAVE SHAPES"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Vaikka joutokäynnissä, vedä merkkejä asettaa lähtöasentoja"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Jatka"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Nimi"
+    },
+    {
+      "key": "language_settings",
+      "value": "Kieliasetukset"
+    },
+    {
+      "key": "multi_play",
+      "value": "MONIKÄYTTÖ"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Satunnainen ottelu"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Yksityiset"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Satunnainen ottelu"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Etsitään pelaajia"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Etsitään"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Sopiva...\n\nPelaajat 2 / 4\n\nSinä.\nPelaaja2\nD Etsiminen\nD Etsiminen\n\nOdotan..."
+    },
+    {
+      "key": "multi_room_title",
+      "value": "Huone"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Luo huone"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Liity huoneeseen"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Huoneen nimi\n[ Draw Yhdessä!\n\nMax-pelaajat\n< 4 >\n\nNäkyvyys\n[Julkinen] [yksityishenkilö]\n\nVaihe\n[Host selects]\n\nRedraw-sääntö\n[Tauko kaikille]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Max-pelaajat"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Näkyvyys"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Näkyvyys"
+    },
+    {
+      "key": "multi_public",
+      "value": "Julkinen"
+    },
+    {
+      "key": "multi_private",
+      "value": "Yksityiset"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Vaihda"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Luo"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter isäntänäytöllä näkyvä lobby-tunnus.\n\nKun EOS on asetettu, ystävät voivat liittyä etänä.\nJos käytetään suoraa TCP:tä enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter Aulatunniste"
+    },
+    {
+      "key": "multi_join",
+      "value": "Liity"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Päivitä"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "Huone"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Huone: Draw Yhdessä\nHenkilötodistuksen numero: ABC123\n2 / 4\n\nSoitettava aula space\nPelata laatikot, pallot, ja hypätä tyynyt odotellessa."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Kopioi tunniste"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Aloita 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Vaihe valittu"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Stage valitse avautuu, kun kaikki ovat valmiita."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Lähteä tästä huoneesta?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Poistu"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Peruuta"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Isäntä valitsee lavan..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Poistu"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Sopiva..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Vain isäntä voi aloittaa."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Ei aulatunnistetta."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Kopioitu lobbyn henkilökortti."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Kopioi huoneen koodi."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Kopioitu yhteystunniste."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Pois päältä. Huonekoodia ei ole saatavilla."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Offline"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Koodi"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Yhdistetään..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Huone"
+    },
+    {
+      "key": "multi_players",
+      "value": "Pelaajat"
+    },
+    {
+      "key": "multi_local",
+      "value": "Paikallinen"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Valmis"
+    },
+    {
+      "key": "multi_wait",
+      "value": "Odota"
+    },
+    {
+      "key": "multi_host",
+      "value": "HOST"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Yhdessä"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Ystävähuone"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Sinä"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "Sinä."
+    },
+    {
+      "key": "online_player_host",
+      "value": "Palvelin"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Pelaaja {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Väärä sattumanvarainen ottelu valmiina."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Väärä taustaosa alustettu."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Kirjautuminen sisään..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Online kuin paikallinen testipelaaja."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Valevaihe alkaa."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Yksityishuone luotu."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Yleisö on luotu."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Liityin valehuoneeseen."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Suora TCP alustettu."
+    },
+    {
+      "key": "online_ready",
+      "value": "Valmiina. Isännöi tai liity huoneeseen."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Huone luotu. Kerro henkkarit ystävällesi."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Isäntä epäonnistui: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "Huoneen henkilötunnuksen on oltava isäntä:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Liittyvä huone..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Liittyminen epäonnistui: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Vasen aula."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Valmiina."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Hyväksyminen epäonnistui."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} Liittyi."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} Lähti istunnosta."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Aula päivitetty."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Alkuvaihe {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS alustettu. Määrittele EOS-liitännäinen ennen kirjautumista."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "EOS- kirjautuminen..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "EOS Connect -käyttöliittymä ei ole valmis."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "EOS-kirjautuminen epäonnistui: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "EOS-luo aula epäonnistui: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "EOS-huone luotu. Jaa tämä aulahenkilökortti."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter EOS-aulan tunnus."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter Huonekoodi."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Huoneen koodia ei voitu rekisteröidä: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Huoneen koodin haku epäonnistui: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Koodille ei löytynyt tilaa {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Huonekoodi törmäsi. Luo huone uudelleen."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Avattu."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Isäntä suljettu."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS-yhteys aulaan epäonnistui: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Liittyi EOS-huoneeseen."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Lähti EOS-aulasta."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Valmiina."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "En ole valmis."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "EOS-laitteen tunnisteen luominen epäonnistui: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Luodaan EOS- laitteen tunniste..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "EOS-laitteen tunnistus epäonnistui: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS verkossa {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Aulajäsenet päivitetty."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS ei ole kirjautunut sisään. Aseta EOS-liitännäinen ja kirjaudu sisään ensin."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS on pois päältä."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "KENTTÄ LÄPÄISTY!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Kenttä {0} läpäisty!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Läpäisty!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Seuraava: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Kentän valinta"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Kaikki kentät läpäisty!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Vaihe {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "MAAILMA {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "KÄYTETTÄVISSÄ OLEVAT CHARACTERS"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "USE {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "CREATED"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "EI LUONNETTU"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} ei ole käytettävissä tässä vaiheessa."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Toinen pelaaja käyttää jo {0}. Valitse käytettävissä oleva merkki."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "CHARACTER SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} on käytössä. Paina Täysi pyytääksesi swap."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} haluaa vaihtaa {1} B. {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "DECLINE"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Odotan vastausta vaihtopyyntöön..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Hahmot vaihtuivat!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Vaihtopyyntö hylättiin."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Toista pelaajaa ei löytynyt."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "GRAIN DSPENSER"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100g SCALE"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "PAINOGATE"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "Ystävä BUTTON"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "PELAAJA-ONNINEN"
+    },
+    {
+      "key": "species_human",
+      "value": "Ihmiset"
+    },
+    {
+      "key": "species_cat",
+      "value": "Kissa"
+    },
+    {
+      "key": "species_bird",
+      "value": "Lintu"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Kilpikonna"
+    },
+    {
+      "key": "species_slime",
+      "value": "Lima"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Esineet"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Linkit"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Vedä merkki aloittaa testin pelata tästä paikasta. Säästetty lava ei ole muuttunut."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Siirretään testin aloitusasentoa."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Testin aloitus: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Ei voitu tallentaa: {0} virhe [s]. {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Tallennettu: {0} ({1} varoitus [s])"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Luo huone\nHuoneen nimi [.....]\nPelaajat 2 / 3 / 4\nJulkinen / yksityinen\n\nLiity huoneeseen\nHuoneen tunnus [....]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Vedä paikkaan / Valitse / WASD siirtää\nKoriste: Pyörä mittakaavaan / Siirry + pyörä pyöriä\nCtrl + pyörä: zoomaa koko vaihe"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} valitut kohteet"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Laatikon kokonaan sulkemat kohteet valitaan."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Valittu {0} Esineitä. Vedä valittu objekti siirtää ne yhteen."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Mikään kohde ei ole täysin suljettu valintaruutuun."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Siirretty {0} valitut kohteet yhdessä."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Luokka"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Etsi"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Tyyppi"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Hakusana"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Esineluettelo"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Linkkiluettelo"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "W-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "H..."
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Tee uudelleen"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Kopioi"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Esine kopioitu."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ Oikea"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← LEFT"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ UP"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Kopioi suunta: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Esine kopioitu väri kohti {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Sijainti: X {0:0.00} / Y {1:0.00} (kapeat avaimet)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Käynnistä virta"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Siirrä etäisyys"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Siirrä nopeutta"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Fuse (sec)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Viive (sek)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Vaaditut räjähdykset"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Vyön nopeus"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Pudota väli (sek)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Beam Interval (sec)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Laatikon koko"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Pommin koko"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Piikkikoko"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Liikeetäisyys: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Liikkumisnopeus: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Sulatusaika: {0:0.0} s"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Viive: {0:0.0} s"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Seinän kestävyys: {0:0} räjähdykset"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Vyön nopeus: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Pudotusväli: {0:0.0} s"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Laatikon koko: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Pudotetun piikin koko: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Valmistetun pommin koko: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Suunta: ← vasen"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Suunta: Oikea →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Kuljettimen suunta: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Laatikot:"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Laatikot: Neliö"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Laatikot: pyöreä"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Laatikot: Kolmio"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Pommit: Vaihtoehtoiset molemmat"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Pommi: Fuse on Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Pommi: Sytytä nouto"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Pudotetut laatikot: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Valmistetut pommit: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Siirrä suuntaa: {0:0}° (Shift + pyörä)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Laukaisuteho: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Pelaaja"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Skaalaa liipaisinpaino asetettu {0:0} INK pelaajaa kohti."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter numero 1-2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "HENKILÖKOHTAINEN CAP"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "TEAM CAP ({0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "KYNÄNKOKO"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "HYVÄKSYTTY OSA"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "KAIKKI"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Oletko valmis?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Poista jokainen ruumiinosa ja palauttaa alkuperäinen merkki."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "RESET"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "CANCEL"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} ESTEET"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "ESTEET"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5 CHARACTER PRESESETS"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "IHMISKAT"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "kaikki viisi merkkiä"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLOT {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "SAVED"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "Tyhjä"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SAVE"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "SET"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "ENNAKKO {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Tallenna nykyinen {0} piirustus esiasetettavaksi {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Korvaa {0} piirustus valmiiksi {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "SET-PRESIDENTTI {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Korvaa nykyinen {0} piirustus esiasetuksella {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Tausta"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Puu"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Tausta Nurmikko"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Kukka"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Tausta"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Pilvi"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Tausta"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Nuoli"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Kissan kasvot"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Koiran kasvot"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Tarttumakuva"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Hymiö"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Sydän"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Tähti"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Kuu"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Su"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Sade"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Salama"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Sateenkaari"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Vuori"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Nelilehtinen Clover"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Sienet"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Omena"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Banaani"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Vesimeloni"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Donitsi"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Jäätelö"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Kahvikuppi"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Pizza"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Leipä"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Paperilentokone"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Lentokone"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Rocket"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "UFO"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Kuumailmapallo"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Talo"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Castle"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Aarrekehä"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Myyrä"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Fossiili"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Kristalli"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Muinainen pot"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Avain"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Avaimenreikä"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Miekka"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Kruunu"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Suoja"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Gem"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Kolikko"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Luu"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Valolamppu (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Pyydys"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Kevät"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Magneetti"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Noppa"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Puhe"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Tarkista merkki (...)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Kysymys Mark (?"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Huutomerkki (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Nuoli"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "Hyppää!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Heitä!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Aloittakaa!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "Goal!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Kierrä: Siirry + pyörä (0,5 asteen tarkkuus)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Kierrä: Siirry + pyörä (15°), Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Kierrä: Siirry + pyörä (15°), Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Mittakaava: hiiren pyörä"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Toiminto"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Näytä"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Katoa"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Avaa lukitus"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Siirrä"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Siirrä alusta oikealle"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Siirrä alustaa ylös"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Siirrä alustaa vasemmalle"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Siirrä alustaa alas"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Linkin toiminto: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Avaimen on oltava yhteydessä avaimenreikään."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Avain avaimenreikälinkkeihin käyttää aina Avaa."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Napsauta"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Linkki osoitteesta"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Linkki"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Avaa yhteys"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Lisätään: {0} / Snap: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Pos {1:0.0},{2:0.0}  Koko {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Leveys = oikea seinä / Korkeus = katto (vasen seinä ja alareuna pysyvät kiinteinä)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Kehys"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Luotiin kehys sijoitettujen esineiden ympärille. Valitse se säätää oikea seinä ja katto."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Seinä on juuri lattian ja katon välissä."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "TAVOITE"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "Huone {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "BOMB"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MISSALIE"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Valmis"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Tausta"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "PLATIERS {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "VAIHE {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 esikatselu: {0} soitin(s) / vaihe {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Taustan väri"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Oletus"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Sulje"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Läpinäkyvyys"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Taustan väri muuttui. Säästä näyttämö pitääksesi sen."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Lisää tila: {0}Vedä kartalle luodaksesi sen."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Lisää tila: {0}. Klikkaa karttaa sijoittaa sen."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Valittu luettelosta."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Ei täsmää"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(none)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Maalaus"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Aloitus/tavoite"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Vaihda"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Ovi/portti"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Siirrettävä"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Toiminto"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Ansa"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Gimmick"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Viholliset"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Lattia"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Seinä"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Alku"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Tavoite"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Tasapainovaaka"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Paino"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Enimmäismäärä"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Puolikerros"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Yksisuuntainen kerros"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Jääkerros"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Liukas liukumäki"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Kiipeävä seinä"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Köysi"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Tikkaat"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Pilvikerros"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Rikkoutuva lattia"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Putoava lattia"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Liikkuva lattia"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Sticky Moving One-Way Floor"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 HELPOTTAA DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Pomputa palloa kehollasi ja riko NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "BLOCKS {0}  BALLIT ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "AIKAA MYÖHEMMIN {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "Aloita {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "-Ei. {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "BALL {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "SEURAAVA KESKUS {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "Kolme palloa kadonnut! RETRY"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Kaikki selvää!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "VAIHEET {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Ase"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Bullet-Breakeable Wall"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Spike Planet"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag Flyer"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Orbit Flyer"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Basso"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Pommituslentäjä"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Siirretään Spike-palloa"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Aseta avain"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Aseta avaimenreikä"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Luota"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Nopeusmerkki"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Nopeusmerkki"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Redraw-alue"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Tarvittavat luodit"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Tarvittavat luodit: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Pyörivä lattia"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Tarkastuspiste"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Poimuajo"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Poimupoistuma"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Palautuspiste"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Tavoite"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Tavoitevaikutus"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Nappi"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Painonappi"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Samanaikainen painike"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Pidä painiketta"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Kolmiolaatikko"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Lever"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Vaihda kytkintä"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Ajastinkytkin"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Anturi"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Punainen kytkin"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Sininen kytkin"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Vihreä kytkin"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Keltainen kytkin"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Painelevy"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Kaukosäädin"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Mittakaava"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Ovi"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Lukittu ovi"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Suljin"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Aita"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Laserportti"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Väriportti"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Yksisuuntainen portti"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Ajallinen portti"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Murtuva seinä"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Piilotettu seinä"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Puulaatikko"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Rautalaatikko"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Pallo"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Tuulilasi"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Rock"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Jäälohko"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Kelluva laatikko"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Kumilaatikko"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Pommi"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Pommi (Fuse alkaa nouto)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Pommintekijä"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Dynamiitti"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Walker Venemy"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Kirppuvihollinen"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Laturivihollinen"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Lentävä vihollinen"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Ampujan vihollinen"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Vihollinen Spawner"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Ohjuksen laukaisulaite"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Aktivoi"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Tämä laite käyttää aina Aktivoi"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Käynnistä väli"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Vihollisen koko"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Syrjäinen vihollinen: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Vihollisen koko: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Avain"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Kolikko"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Tähti"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Akku"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Ämpäri"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Hyppytyyny"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Kevät"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Kuljetin vasemmalle"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Kuljeta oikealle"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Hissi"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Tuuletin"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Magneetti"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Vyö"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Box Dropper"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Spike Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Kalat"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Kolikko"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Tähti"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Digitaalinen kello"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Säteen jäljitin"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Normaali"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Aikarajoitus"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Elossaolo"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}tilu"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "Kaikki"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Vaihesääntö: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Aika {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "KATSAUS"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Paina R yrittääksesi uudelleen"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 SERVIVAALI"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Yksi selviytyjä selvisi!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "Siirry GLOWING FLOORIIN"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "TARGET  {0:0}g (90g x PLAIERS)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "Siirrä asentoon ENNEN RAINIA"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Tarkkailkaa Graineja!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "Hienoa."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "KUOLEVAT KUOLEMAA"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Selvä!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Niin lähellä!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "PÄÄT  {0:0}g / {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "-Ei."
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "Kokeile parempaa päätä."
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "VAIHE {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Nähdään oikealla."
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "Fast Greenit lyödään merkkien päälle."
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 ICE SPEEDRUN - ONE PELASTAA"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Aloittakaa!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "AIKAA MYÖHEMMIN {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Valmiina!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Aloittakaa!"
+    },
+    {
+      "key": "game_over",
+      "value": "Peli ohi"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Tämä ruumis ei syö aluksi. Perukaa se pienemmäksi."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Tämä ruumis voi jäädä pois huoneesta. -Ei."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Valmis {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "SUOSITETTU"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "EI"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "EI VAIHTOEHTOA TAI PERUUTTAA JÄLJENNÖN JÄLKEEN"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "EI CHARACTERIN MUUTOSTA JÄLJEMPÄNÄ"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Valmistaudu aloittamaan peli"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "KALA KERÄÄ ENNEN AIKAA"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "KUOLE CRAYON KING"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "DODGE the HURDLES and SERVIVE"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "KUOLEEMAA ELINTEN KANSSA"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Käytä kehoasi puhaltaaksesi polkua."
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "DODGE FALLING PILLARS"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "Hylkää pallo ja murskaa kaikki."
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "-Ei. INK MAGNETIT JA SINKIT"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "PALVELE AIKUISIA JA KESTÄVÄÄ"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "COLECT COINS kun FALLING"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "KOKOONTUVAT RUOKAT JA TAVOITE PAINONA"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Nopeusjuoksu. -Ennen kuin aika loppuu."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "RICOCHET BULLETIT VAIHEEEHTOEHTOISILLE ENEMIILLE"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "Pimeyden valaiseminen ja aaveiden pakeneminen"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "PALVELEEEESSÄ AIKAA MYÖHEMMIN"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "Heittäkää pummit murtamaan kaikki."
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "LAATIKKOJEN JA COLLECT COINS"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "COLLECT COINS ENNEN AIKAA"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "COLLECT COINS ENNEN AIKAA"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "-Ei."
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "-En tiedä."
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "ENNEN KUIN TAPAHTUA"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "UMBRELLAA KÄYTETTÄVÄNÄ PYSYÄ RAINOSTA"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "-Ei."
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "DEFEAT CRAYON DEVIL"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "CRAYON STALKER"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "VAIHEEET"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "Jos edes yksi pelaaja selviää."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "Kun joku pelaaja löytää maalin."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "SPIKE WALL LAUNCH"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Odottakaa merkkiä!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Juokse maaliin!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "Tuuli muuttuu!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "Vähemmän INK = STRONGER WIND"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "AIKA {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "KATSAUS"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Pysy Umbrellan alla!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "RAIN KUOLEE - REACH SHELTER"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Kaikki jäivät kiinni."
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 LINKITUT KIINTIÖT"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Tarkistakaa jokainen Button LINK!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "-Ei."
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "TEAM PALAUTUS"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60 sekuntia."
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "KIERROS {0}/3    {1:0.0} s JÄLJELLÄ"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "TAVOITTEET {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "SÄÄTÄKÄÄ SIJAINTEJA JA KULMIA HEIJASTAAKSENNE LASERIN!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "KIERROS {0} LÄPÄISTY!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "AIKA LOPPUI! TÄMÄ KIERROS ALKAA UUDELLEEN"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON DEVIL HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 Valmiina LAUNCH"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "MOVE: PLATIFORM CLICK: Missible  FBOMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "Pomo hävisi!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "KAIKKI LATFORMIT ALALLA"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "Häipykää!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "Jättäkää tiimi!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "Pois tieltä!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "LIIKKUVUUS...  {0}tilu"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Juokse, hyppää, käännä ja lopeta ... Tupla on oppimista."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "VAIHE {0}  -Ei. {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Houkuttele yksi laukaisukerrokseen ja astu sen punaiselle kytkimelle!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Kaikki tuplat voitettu!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Ei ollut toista pomoa."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "VAIHE {0}  ALOITTAA"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Häviää CPU-tiimin papereillasi."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "VAIHE {0}  Vasemmalle: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "VAIHE {0} Selvä!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Ottakaa aseet, joilla on punaiset kytkimet. F: heittää pommi CLICK: ohjus"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Neiti valmiina! Tähtää hiirellä ja napsauta."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "Keskusyksikkö hävisi!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "Viimeinen taistelu selvä!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "KATSAUS"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Aikalisä!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Kaikki ovat maassa!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Hylätty! Aloitamme alusta 3 sekunnissa."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3-2-1 valmiina"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Juokse oikealle! Käyttäkää vihreitä aseita!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "-Ei."
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "Kaikki söivät."
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Juokse!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Katsokaa Glowing Flooria!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "Selviä! KUUKAUSI"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "TURVALAUTAJAT {0} / {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Pysykää turvassa!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Kaikki pelaajat ulos"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "VAROITUS"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "SERVIVOR Löytyi!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "PALVELIN HYVÄKSYTTY"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 PILLAR SERVIVOL"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "Tarkkailkaa VAROITUSTA ja PILLOJA"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "Tulossa! Jättäkää GLOWING ZONE"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "Pillar-tulos selvä!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 CRAYON KING"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER SEURAAVAHUONE"
+    },
+    {
+      "key": "boss_appears",
+      "value": "VAROITUS, POMO!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "Ampumahaava / Turtle Shell vartijoille"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Vartija! Pomo on vaativa."
+    },
+    {
+      "key": "boss_charge",
+      "value": "Syyte! Pois tieltä."
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "MAKSU {0}!"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Erikoishyökkäys! RIKOSET"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "Pomo hävisi!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Kaikki pelaajat ulos..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "VANKILA  {0} / {1}  Kerääntykää!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 HUOMAUTUS"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Yksi selviytyjä selvisi!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "Hyppää kyytiin oikealta 60 sekunnin ajan."
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "Tarkkaile oikealta."
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "Hyppää!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Hyppää kyytiin!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Hidasta."
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Hidasta! Final Sprint!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Kaikki pelaajat ulos"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "-Ei hätää."
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "SERVIVOR Found"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 PALAUTTAA YSTÄVÄN"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "Ystävän muutto"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "Rakensit polun laatikoilla, papereilla ja kehollasi."
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 YSTÄVÄN SUOJAAMINEN"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "AAH!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "Juokse eteenpäin ja selvitä ansat, laatikot ja viholliset"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "SEURAAVA YSTÄVÄ  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Valmistan uutta ystävää..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "Pakene!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "Ystäväsi pääsi maaliin."
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "-Ei. {0}/3 RAKENNUS {1:0.0}tilu"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "YHTEYTTÄ KEHOLLE"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Mene! AUTAN YSTÄVÄÄ REACH TAVOITE"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "-Ei. {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "-Ei. {0} Selvä!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "KIERROS {0}/3    {1:0.0} s JÄLJELLÄ"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "HOOLES {0}/{1}    Hae heidät kaikki ruumiillasi!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "KIERROS {0} LÄPÄISTY!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "AIKA LOPPUI! TÄMÄ KIERROS ALKAA UUDELLEEN"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "TUKKIKAA REIÄT!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "-Ei. {0}/3    {1:0.0}Vasemmalle"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "KULUT {0}/{1}    Kääntäkää heidät reikiin!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "Vedä pallo läpi maze MAGNETISM!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "-Ei. {0} Selvä!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Aikalisä! KESKUSTELU"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Liikkukaa Lanessanne! LISÄÄ INK MAGNETISM"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "LOPPUKYSYMYS:"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "Rakensit polun takaluukun läpi!\nKEHITTÄÄ KEHOLLAsi"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "Ystävä voi kävellä päänne päällä ja ruumiinlaseilla."
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "Ystävä aloittaa"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "Ystäväni..."
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "Peli ohi"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Et voi perääntyä, kun ystävä on liikkeellä."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET RELAY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "-Ei. {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOCHET BULLETS OIKEUDET YSTÄVÄT TAVOITTEESEEN"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Ulos AMMOsta! JÄLJEMPÄNÄ"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "Viisi kierros selvä!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Ystävä Spawner"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Ystävän tavoite"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Ystävä-passilattia"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Esimerkki pääsillasta"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Saha"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Levylevy"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Tykki"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Katapultti"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Spike"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Tulta"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Vesi"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Myrkky"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Laser"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Putoava kivi"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Painokone"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Sähkö"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Saha"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Musta aukko"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Pyydys"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Iso vaihde"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Köysi Pulley"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Liukulaite"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Pyörivä palkki"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Heiluri"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Avaimenreikä"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Vaiheen raja"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Kello"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Laskuri"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Vaihe valittu"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Jätä istunto"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Aloitusvaihe"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Jätä nettiistunto?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Isännäksi jättäminen päättää istunnon kaikille. Lähteä?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Poistu"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Yhdistettynä sillaksi: oikea reuna pysyy yhteydessä, kun se ulottuu vasemmalle."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Jaa yhdistetty maasto erikseen valittavissa oleviin ja linkitettävissä oleviin osiin."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Erillinen"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Erillinen osa on päällä. Se voi napsahtaa ilman sulautumista ja voidaan yhdistää yksilöllisesti."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Erillinen osa on poissa. Koskettava maasto voi yhdistyä."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Yhdisti lattian ja seinän yhtenä maaston muotona."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Vedä asettaa suora {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Paksuus"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Lattian ja seinämän paksuus: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Suora"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Suora viiva on päällä."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Suora viivapiirustus on pois päältä."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw tila"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw tila"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Valitse tila"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw tila: vedä tyhjää space sijoittaa esineitä."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Valitse tila: valitse ja liikuta olemassa olevia esineitä."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} vapaasti raahaamalla."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Vapaakätinen lattia- ja seinäpiirustus on päällä."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Suorakulmio on päällä."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Drew {0} Yhtenä kytkettynä poluna ({1} pisteet)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Palaa muokkaimeen"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Palaa muokkaimeen  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Palasi testistä. Jatka näyttämösi muokkaamista."
+    },
+    {
+      "key": "cancel",
+      "value": "Peruuta"
+    },
+    {
+      "key": "retry",
+      "value": "Yritä uudelleen"
+    },
+    {
+      "key": "menu",
+      "value": "Valikko"
+    },
+    {
+      "key": "redraw",
+      "value": "Punahai"
+    },
+    {
+      "key": "pen",
+      "value": "Kynä"
+    },
+    {
+      "key": "eraser",
+      "value": "Pyyhkijä"
+    },
+    {
+      "key": "shape_square",
+      "value": "Laatikko"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Ympyrä"
+    },
+    {
+      "key": "shape_line",
+      "value": "Rivi"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Valmis!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Takaisin"
+    },
+    {
+      "key": "brush_size",
+      "value": "Koko"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Käytetty"
+    },
+    {
+      "key": "undo",
+      "value": "Peru"
+    },
+    {
+      "key": "character_switch",
+      "value": "Merkkikytkin"
+    },
+    {
+      "key": "character_add",
+      "value": "Lisää merkki"
+    },
+    {
+      "key": "character_delete",
+      "value": "Poista char"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Vaihda merkkiä"
+    },
+    {
+      "key": "stage_select",
+      "value": "Kentän valinta"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 ryhmää, kolme vaihetta. Käännä Muokkaa päälle ja valitse sitten vaihe muokata sitä."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0 Debug"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Muokkaa 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Muokkaa: OFF"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Muokkaa: ON"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "UUSI"
+    },
+    {
+      "key": "stage_clear",
+      "value": "TARKASTUS"
+    },
+    {
+      "key": "stage_locked",
+      "value": "Lukossa."
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Vianetsintätila: kaikki maailmat ovat auki. Valitse soitettava vaihe tai käännä Muokkaa sitä muokataksesi."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2:Wall vedä luoda lohkoja\n3:Aloitus 4: Tavoite 5:Skaala 6:Paino\nA/D/W/S: siirtokamera Pyörä: zoom\nF5Tallenna  F6Testi  EscTakaisin"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Mittakaava"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Koko"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Ruudukko"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Poista"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Tallenna"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Testi"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "Back  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Peliasetukset"
+    },
+    {
+      "key": "option_bgm",
+      "value": "MGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "Avaimet"
+    },
+    {
+      "key": "option_language",
+      "value": "Kieli"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Ei vielä"
+    },
+    {
+      "key": "locked_stage",
+      "value": "Esiintymisvaiheet ilman Jsonia."
+    },
+    {
+      "key": "human",
+      "value": "Ihmiset"
+    },
+    {
+      "key": "cat",
+      "value": "Kissa"
+    },
+    {
+      "key": "bird",
+      "value": "Lintu"
+    },
+    {
+      "key": "turtle",
+      "value": "Kilpikonna"
+    },
+    {
+      "key": "slime",
+      "value": "Lima"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 Pallo osuma"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "NYKYISET OSAT"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "VALINTA"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Valitse osa, sitten napsauta tai vedä kartalle sijoittaa sen."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Napsauta: {0} / {1:0.##} yksikköverkko"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Valitse kohde ensin."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Leveys muuttui. Voit myös käyttää Shift+ Pyörä."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Pituus vaihtui. Voit myös käyttää Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Koko muuttui. Käytä pyörää skaalata molemmat akselit."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Vedä isompi alue sijoittaaksesi tämän osan."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Paikka {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Paikka {0} klo {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Valittu. Vedä siirtää ja käyttää pyörän muuttaa kokoa."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Ei ole mitään peruttavaa."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Peruin viimeisen muokkauksen."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Ei ole mitään uutta."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Tee se uudelleen."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Valitse linkkilähteenä käytettävä kytkin, painike, avain tai avaimenreikä."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Valitse linkkilähteenä kytkin, painike, avain tai avaimenreikä."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Linkkilähde: {0}. Valitse sen kohde ja paina linkkiä."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Aseta linkkilähde ensin."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Valitse linkkikohteena käytettävä kohde."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Linkki lähde ja kohde on eri esineitä."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Yhdistetty {0} - {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Valitse ensin linkitetty objekti."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Tyhjensin linkin."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Tallennettu: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Tallennus on tällä hetkellä saatavilla vain Unity Editor."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Lavan esinetehdas puuttuu."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Liikennevalo"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 BLOCK CRASH"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Block Breaker"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Heitä pommeja! TAKAISIN NICO DRAW Helvetti!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} Vasemmalle"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "-Ei... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE BROWSER"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Etsi toimesta tai SE-tunnuksella, paina Pelaa esikatselemaan määrättyä ääntä. Pyöritä riviä nähdäksesi sen resurssipolku."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "Soita"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "Lopeta"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "RELOAD"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Ei vastaavia ääniefektejä."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE.md:ää ei löytynyt."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Luokittelematon"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "MUUTTUNUT"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Runtimegeneroitu ääni"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Tassun tulostus"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Kalat"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Lankapallo"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Lumikristalli"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Jää"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Lumiukko"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Blizzard"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Feather"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Lintupesä"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Tuulilinjat"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Putki"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Salama"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Ketju"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Höyry"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Kilpikonna"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Tuulilasi"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Lukko"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Lima"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Kuplat"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Perhonen"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Ladybug"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Auringonkukka"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Tulip"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Luuranko"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Bat"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Spiderweb"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Stalaktiitti"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Lyhty"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Minecart"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Hakku"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Trophy"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Mitali"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Viheltää"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Ilmapallo"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Confetti"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Ilotulitusvälineet"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Torni"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Kiikarit"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Komentosilta"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Liitu"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Kynä"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Pyyhkijä"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Muistikirja"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Blackboard"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Paletti"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Maalausharja"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Kangas"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Sekuntikello"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Valokeila"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Mikrofoni"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Juusto"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Yllätyslaatikko"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Lahjalaatikko"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Planeetta"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Muukalainen"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Comet"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Musta aukko"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Saippuakupla"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Sammakko"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Puujuuri"
+    }
+  ]
+}

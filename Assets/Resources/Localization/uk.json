@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "ПЛАЙЕР НАМ"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter Ім'я"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Про нас enter ім'я гравця."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER ЗДОРОВ'Я"
+    },
+    {
+      "key": "option_register",
+      "value": "РЕЄСТРАЦІЯ"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Японська"
+    },
+    {
+      "key": "lang_en",
+      "value": "Афіша"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Очистити! Прес R до ретри."
+    },
+    {
+      "key": "draw_title",
+      "value": "ДизайнTAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: Задня гра / ENTER: Децид / ESC: Скасування"
+    },
+    {
+      "key": "preview",
+      "value": "Огляд"
+    },
+    {
+      "key": "clear",
+      "value": "Очистити"
+    },
+    {
+      "key": "decide",
+      "value": "Підтвердити"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "current",
+      "value": "Головна"
+    },
+    {
+      "key": "part",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw торсо first."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Торсо - основа. Draw інші частини від їх розмітки з'єднання."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: початок від розмітки з'єднання."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw перед підключенням інших частин."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} підключено."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} не стартував при розмітці з'єднання."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Торсо обов'язкове перед викиданням."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} необхідно починати при розмітці з'єднання."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Особистий кабінет  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Про компанію  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Не вирішується: ink Про нас {0:0.#}/{1:0}. Зменшити його {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Не вирішується: ink Про нас {0:0.#}/{1:0}. Зменшити його {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}: початок від маркера."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Головна"
+    },
+    {
+      "key": "torso",
+      "value": "Торсо"
+    },
+    {
+      "key": "left_arm",
+      "value": "Ліва рука"
+    },
+    {
+      "key": "right_arm",
+      "value": "Права"
+    },
+    {
+      "key": "left_leg",
+      "value": "Ліворуч"
+    },
+    {
+      "key": "right_leg",
+      "value": "Право"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Лівий фронт"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Правий фронт"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Ліворуч"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Право"
+    },
+    {
+      "key": "tail",
+      "value": "В'язниця"
+    },
+    {
+      "key": "left_wing",
+      "value": "Ліворуч"
+    },
+    {
+      "key": "right_wing",
+      "value": "Правові справи"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Тейл Феатер"
+    },
+    {
+      "key": "slime_body",
+      "value": "Твитнуть"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Нормальний стрибок"
+    },
+    {
+      "key": "jump_double",
+      "value": "Перемикач x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Перемикач x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Нормальний Рейк"
+    },
+    {
+      "key": "arm_long",
+      "value": "Довгий Рейк"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Швидке висівання"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Нормативно"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Важкий перемикач"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Важкий"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Ніжки {0:0.0}: {1}   Рушники {2:0.0}: {3}   Торсо {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Вінгс {0:0.0} INK / Швидкість Glide {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "ХУМАН АБІЛЬНІСТЬ\nРуки {0:0.0} INK  Потужність ×{1:0.00}\nНоги {2:0.0} INK  Завантажити{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "КАТ АБІЛЬНІСТЬ\nНазад ноги {0:0.0} INK  Швидкість ×{1:0.00}\nпередні ноги {2:0.0} INK  Claw діапазон ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "БІРД АБІЛЬНІСТЬ\nВінгс {0:0.0} / 700 INK\nШвидкість Glide {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "ТУРТЛЕНА ОБІЛЬНІСТЬ\nПрованс SPACE: незбірна оболонка\nПрованс F: поворот 90° в напрямку облицювання"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "БЕЗПЕКА\nТіло {0:0.0} / 700 INK\nДовгий шик довжина {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "ХУМАН"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "КАТ"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "БІЛЬШЕ"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "ТУРТЛ"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "СЛІМ"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Більше ніжок INK збільшує потужність стрибків\nБільше рук INK збільшує потужність кидання"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Поза «69» INK збільшує швидкість запуску\nДетальніше передній INK збільшує діапазон подряпин"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Більше крило INK збільшує потужність ковзання"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Неймовірно прихована в оболонці"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Новини F для нападу вгору\nУроки INK робить його довше / Увімкнути стрибок"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "FГоловна"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: СКРАТЧ / ГРАБ"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "ХОЛД SPACE: ГЛІД  F: ГРАБ"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "ХОЛД SPACEМодель: SHELL HOLD F: ТУРН 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: ПІДТРИМКА ПАКЕТИ"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Потужність ×{0:0.00}  Завантажити{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Зареєструватися{0:0.00}  Claw діапазон ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Потужність флоат {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: СХЕЛЛ /  F90° ТУРН"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Довжина щуки ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Руки {0:0.0}/280 Ноги {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Зареєструватися {0:0.0}/ 240 Передня {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Вінгс {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Активний тільки під час роботи кнопки"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "ЗАГАЛЬНІ ЧАСТИНИ"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE і F робота при проведенні!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Тіло {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "РАНК {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "ЗАРАЗ"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "ВИЗНАЧЕННЯ"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "ДЖУМП"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "РАН"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "СКРАТЧ"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "ГЛІД"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "ДЕФЕНС"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "МОБІЛЬНІСТЬ"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "БОДИ INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "ЦЕНА ЗА ЧАС:"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "ВАЖЛИВО: ПІДТРИМКА + ДЖУМП"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK ПІСЛЯ {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "F: Почати! Уроки INK = Довший / Увімкнути стрибок"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw більше до влади!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Ви не можете переробити після цього етапу."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Висока платформа"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Важкий перемикач"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Далекий Лавер"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Вузький отвір"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "Полулюкс"
+    },
+    {
+      "key": "multi_participants",
+      "value": "ПЛАНЕРИ"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "Полулюкс"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "Полулюкс"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "Полулюкс"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "ЛОКАЛЬНИЙ ТЕСТ (ІНВІТЕТ OFF)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "ВАМ"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 СЛІМ МІССІЛЬНИЙ КАВ"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "ФЛООР ВАНШИНГ! ГРАБ ВАЛ"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "ВАЛ-ДЖУМП ТА ДОДГОВІ ПІРУРГІЇ!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 Визначте свою згоду!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "ФАЗ {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "ЧАС {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Визначте свого друга з обох сторін"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "АІРСТРАЙК В {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "ЗАГАЛЬНІ ЗАРАЗ ... ВАЖЛИВО {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "ЗБЕРІГАННЯ КУРСУ!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "Колін {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "ЧАС {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "BREAK BOXES AND COLLECT COINS!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "ЧАС ДОБАВЛЯЄТЬСЯ В 5"
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 КОІН КЛІЄНТ"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "ВАЖЛИВО!"
+    },
+    {
+      "key": "title_single",
+      "value": "Один гравець"
+    },
+    {
+      "key": "title_multi",
+      "value": "Багатокористувацька гра"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Налаштування"
+    },
+    {
+      "key": "option_back",
+      "value": "ЗАМОВИТИ  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "ЗАМОВИТИ  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "ЗАМОВИТИ  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Вихід"
+    },
+    {
+      "key": "title_debug",
+      "value": "БУГ"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "ТРЕЙЛІРНА КАПТУРА ДЕБУГ"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4-плеєрний аеродинамічний реле"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Людина кидає птах, потім птах → Кіт → Тендітна реле"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "СТАРТ СЕРКУ"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "ЗАМОВИТИ  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "ХАРАКТИВНІ ХАРАКТЕРИСТИКИ"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "КОМПАНІЯ"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "Експорт 920×430 ПГ"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "ЗВ'ЯЗОК НА ТІТЛ"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Перевірити склад, потім експортувати PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Збережено: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "REDRAWING ..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "ХАРАКТЕРИ, ЩО БУДУТЬСЯ В РЕЖИМУ."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY HIDE HUD     ESC  ТИТЛЕ"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "ЗАМОВИТИ ТАКОЖ"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Перетягніть актори в той час як idle Overdub Людини → Птахи → Тендітно F9 Запис F10 Грати P Pause O Крок"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 РЕКОРД/СТОП"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 ПЛАТА ВСІ"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 ВАЖКО СКАЗАТИ"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "ЗБЕРІГАННЯ"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "ПАУС"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "КРОК"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "ІПН"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "ПЛАТУВАННЯ ВСІХ ТРАНСПОРТІВ"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "ПАУШД"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} Вибрано: {1} | {2} рамки Speed {3:0.##}до"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "ПРЕСЕТ {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "ШАПИ СВОЇ"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "В той час як свічка, перетягніть символи, щоб встановити свої початкові позиції"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Продовжити"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Головна"
+    },
+    {
+      "key": "language_settings",
+      "value": "Параметри мови"
+    },
+    {
+      "key": "multi_play",
+      "value": "МУЛЬТИ"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Випадковий матч"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Приват"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Випадковий матч"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Пошук гравців"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Пошук"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Зйомки...\n\nГравці 2 / 4\n\n○ Ви\n○ Гравець2\n□ Пошук\n□ Пошук\n\nОчікується [READY]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "Полулюкс"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Створити номер"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Вхід"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Назва номеру\nПро нас Draw Разом ]\n\nМакс Гравці\n< 4 >\n\nМожливість\n[Публічний] [Приват]\n\nЕтапи\n[Обрати вибір]\n\nЧервона Ручка\n[Замовити всі]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Макс Гравці"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Можливість"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Можливість"
+    },
+    {
+      "key": "multi_public",
+      "value": "Громадські"
+    },
+    {
+      "key": "multi_private",
+      "value": "Приват"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Виброхвост"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter Ідентифікатор Лобі відображається на екрані хост.\n\nЗ EOS налаштовані друзі можуть приєднатися віддалено.\nПри використанні Direct TCP, enter ІП:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter Лобі ID"
+    },
+    {
+      "key": "multi_join",
+      "value": "Увійти"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Реверс"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "Полулюкс"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Номер: Draw Разом\nЛот No: ABC123\n2 / 4\n\nГрайливий лобі space\nГрайте з коробками, кульками та стрибками під час очікування."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Статус на сервери"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Початок 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Вибір етапу"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Етап вибрати розблокування, коли кожен знайдеться."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Залиште цей номер?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Хост вибирає стадію..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Зйомки..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Тільки хост може початися."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Ні Лобі ID для копіювання."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Copied Лобі ID."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Скопіювати номерний код."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Код з'єднання з'єднання."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Оффлайн. Немає коду в наявності."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Оффлайн"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Коди"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "З'єднання"
+    },
+    {
+      "key": "multi_room",
+      "value": "Полулюкс"
+    },
+    {
+      "key": "multi_players",
+      "value": "Гравці"
+    },
+    {
+      "key": "multi_local",
+      "value": "Головна"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Редакція"
+    },
+    {
+      "key": "multi_wait",
+      "value": "СКЛАД"
+    },
+    {
+      "key": "multi_host",
+      "value": "ХОСТ"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Разом"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Полулюкс"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Ви"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "ВАМ"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Проживання"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Гравці {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Fake випадковий матч готовий."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Фіксований бекенд ініціалізований."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Відправлення в ..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Онлайн як локальний тест-плеєр."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Початок фази"
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Приватний номер створений."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Створено публічний номер."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Приєднався до підробленого номера."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Дистанційне ТПК."
+    },
+    {
+      "key": "online_ready",
+      "value": "Онлайн готовий. Зайдіть або приєднуйтеся до кімнати."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Номер створений. Поділіться ідентифікатором з друзями."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Не вдалося дістатися: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "Ідентифікатор номера повинен бути ведучий:порт."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Приєднатися до кімнати..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Приєднатися: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Лівий лобі."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Читання змінено."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Не вдалося."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} Увійти"
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} пішов з сеансу."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Лобі оновлено."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Початок етапу {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "Ініціалізація EOS. Налаштування EOS плагіна перед логіном."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "Логін EOS"
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "Інтерфейс EOS Connect не готовий."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Логін EOS не вдалося: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "EOS не вдалося створити лобі: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "EOS номер створений. Поділитися цим ідентифікатором Лобі."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter EOS Лобі ID."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter номерний код."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Зареєструвати номерний код: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Пошук номерів не вдалося: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Не знайдено номер для коду {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Номерний код, зібраний. Будь ласка, створіть номер знову."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Відкрита сцена."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Вибір замкненого етапу."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS не вдалося досягти успіху: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Приєднався до номера EOS."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Лівий лобі EOS."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Готовий."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Не готовий."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Створення ідентифікатора пристрою EOS не вдалося: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Створення ідентифікатора пристрою EOS ..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Не вдалося увійти до системи EOS Device ID: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "ЕОС онлайн як {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Оновлені члени Лобі."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS не входить до системи. Налаштуйте EOS Plugin і ввійти в систему."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS вимкнено."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "ЕТАП ПРОЙДЕНО!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Етап {0} пройдено!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Пройдено!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Далі: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Вибір етапу"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Усі етапи пройдено!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Етапи {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "Світ {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "ДОСЛІДЖЕННЯ ХАРАКТОРІВ"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "ВИКОРИСТАННЯ: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "СКЛАД"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "НЕ ЗДОРОВ'Я"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} не доступний на даному етапі."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Ще один гравець вже використовує {0}. Виберіть доступний характер."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "ХАРАКТЕР ХАРАКТЕР"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} у використанні. Натисніть, щоб запитати ковпачок."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} Хочу торгувати {1} для {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "СКАЧАТИ"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "Деклін"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Очікується відповідь на запит..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Символи змащені!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Відхилено запит лепа."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Не знайдено іншого гравця."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "ЗАГАЛЬНІ ДИСКЕНЕР"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100г СКАЛЕ"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "ЦЕНА ЗА ЧАС:"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "ФРИЕНД БУТОН"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "ПЛАНЕР-ОНЛИЙ ОДОН-ШЛЯХНИЙ ФЛООР"
+    },
+    {
+      "key": "species_human",
+      "value": "Людина"
+    },
+    {
+      "key": "species_cat",
+      "value": "Про нас"
+    },
+    {
+      "key": "species_bird",
+      "value": "Птахи"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Кошик"
+    },
+    {
+      "key": "species_slime",
+      "value": "Твитнуть"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Об'єкти"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Посилання"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Перетягніть символ, щоб почати тестову гру з цієї позиції. Збережений етап не змінюється."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Переміщення позиції запуску тесту."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Почати тест: X {0:0.00} / Я {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Не можна зберегти: {0} помилка(s). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Збережено: {0} ({1} Повідомлення(и)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Створити номер\nНазва номеру [.....]\nГравці 2 / 3 / 4\nГромадський / Приватний\n\nВхід\nНомер ID [...]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Перетягніть на місце / Натисніть, щоб вибрати / WASD перемістити\nПрикраса: Колесо до ваги / Shift + колесо до повороту\nCtrl + колесо: збільшувати весь етап"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} об'єкти вибрані"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Об'єкти повністю закривається коробкою."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Вибрані {0} об'єкти. Перетягніть вибраний об'єкт для переміщення їх разом."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Немає об'єктів повністю закривається підбірною коробкою."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Мовед {0} вибрані об'єкти разом."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Категорії"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Пошук"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Тип"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Пошук"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Список об'єктів"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Посилання"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "В-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "В+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "Х-"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "Х+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Червоний"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Об'єкт скопійований."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ ПРАВО"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ ЗАРАЗ"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← ЛІВИЙ"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ Вгору"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Статус на сервери {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Об'єкт скопійований флуш до {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Посада: X {0:0.00} / Я {1:0.00} (головні ключі)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Запуск живлення"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Відстань від Move"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Швидкість переміщення"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Запобіжник (сек)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Crumble Delay (сек)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Обов'язкові витрати"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Швидкість поясу"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Падіння Interval (sec)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Беам Інтервал (сек)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Розмір коробки"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Розмір бомби"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Розмір щуки"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Переміщення відстані: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Швидкість переміщення: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Час використання: {0:0.0} й"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Затримка сперми: {0:0.0} й"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Надійність стін: {0:0} вибухи"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Швидкість ременя: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "інтервал падіння: {0:0.0} й"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Розмір коробки: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Розмір патрона: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Виготовлений розмір бомби: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Напрямок: ← Ліворуч"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Напрямок: Право →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Конвеєрний напрямок: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Коробки: □○△"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Коробки: Площа"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Коробки: круглі"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Коробки: трикутник"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Бомби: Альтернативні Обидва"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Бомби: Запобіжник на Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "бомба: запобіжник на пікап"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Краплі коробки: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Виготовлені бомби: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Перемістити напрямок: {0:0}° (Шифт + колесо)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Вихідна потужність: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "За гравця"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Ваги тригерні ваги встановлюються до {0:0} INK за гравця."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter від 1 до 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "ПЕРСОНАЛ КАП"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "КОМПАНІЯ КОМПАНІЇ{0}П)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "ПЕН РОЗМІР"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "ЧАСТИНА"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "ВСІ"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "ЗАГАЛЬНА ВИСТАВКА?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Змащувати кожну частину тіла і відновити оригінальний характер."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "СКЛАД"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "КАНАЛ"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} ПРЕМ'ЄРИ"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "ПРЕМ'ЄРИ"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5-CHARACTER ПРЕЗИЦІЇ"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "HUMAN CAT BIRD TURTLE SLIME"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "5 символів"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "СКАЧАТИ {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "САВЕД"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "ЕМПТИ"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "САВИ"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "СЕТ"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "ПРОДАЖ {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Збережіть струм {0} малюнок на заміщення {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Записати {0} малюнок в попередньому вигляді {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "ПРЕМ'ЄНТ {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Заміна струму {0} малюнок з попередньою {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Підземелля"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Дерево"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Підземні грамоти"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Квітка"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Підземний кущ"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Хмар"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Підземний ПУШ"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Абрикос"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Обличчя"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Обличчя собаки"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Наклейка фігури"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Посмішка"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Головна"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Зірки"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Місяці"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Сонце"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Дощ"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Освітлення"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Молоденька"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Гора"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Чотири-листовий Clover"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Гриби"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Яблука"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Банан"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Кавун"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Про нас"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Морозиво"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Кубок кави"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Піца"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Хліб"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Паперовий літак"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Літак"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Рокет"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "УФО"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Гаряча повітряна куля"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Будинок"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Замки"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Кошик"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Моль"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Фоссил"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Кристал"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Стародавній горщик"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Головна"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Ключ до Keyhole"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Слова"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Корони"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Навігація"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Плеймейт"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Монети"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Бон"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Світло лампи (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Шнур"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Весняна"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Магніт"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Дії"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Мова Bubble"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Перевірити Марк (✓)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Питання Марка (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Викривлення Марка (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Логін"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "КУРС"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Позбутися!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "Про нас"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Rotate: Shift + колесо (0.5 градусів точності)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Rotate: Shift + колесо (15°), з Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Rotate: Shift + колесо (15°), з Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Шкала: колесо миші"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Дія"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Прозорість"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Розблокувати"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Мов"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Мов Платформа Право"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Перемістити платформу"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Мовна платформа"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Переміщення платформи вниз"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Посилання: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Ключ повинен зв'язатися з брелоком."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Клавіатура завжди використовується Unlock."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Навігація"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Посилання"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Посилання"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Додати: {0} / Снап: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Позування {1:0.0},{2:0.0}  Розмір {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Ширина = права стіна / Висота = стеля (ліва стіна і нижній край фіксуються)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Кошик"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Створено кадр навколо об'єктів, що розміщені. Виберіть його для регулювання правильної стіни і стелі."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Стіна, встановлена точно між підлогою і стельою."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "Полулюкс {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "БОМБ"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "МІССІЛЬ"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Редакція"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "Українська"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Підземелля"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "ПЛАНЕРИ {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "СКЛАД {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 перегляд: {0} гравця(и) / етап {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Колір фону"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Закрити"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Можливість"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Зміна кольору фону. Заощаджуйте стадію, щоб зберегти її."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Додати режим: {0}. Перетягніть на карті, щоб створити його."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Додати режим: {0}. Натисніть на карту, щоб розмістити його."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Вибрані зі списку."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Немає матчу"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(без)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Територія"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Початок/Головна"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Перемикач"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Двері/Гат"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Довгий"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Дія"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Трап"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Гімік"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Енемі"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Підлога"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Стіна"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Почати"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Проживання"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Ваги балансу"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Вага"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Плеймейт"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Підлога"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Одностороння підлога"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Підлога льоду"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Slippery слайд"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Climbable стіни"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Надія"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Ладдер"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Хмарний підлогу"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Незламний підлогу"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Падіння підлоги"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Переміщення підлоги"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Sticky Переміщення One-Way Підлога"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 ЗВІТ DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Вимкніть м'яч з тілом і поломіть NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "БЛОКИ {0}  БОЛЬС ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "ПОТРІБНІ ЧАСТИНИ {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "СТАРТ У {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "РУК {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "БЮЛЕ {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "НЕКСТ РУК В {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 КОШИКИ ЗАМОВИТИ"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "ВСІ РОКИ КЛІЄНТ!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "СЕРЕДОВИЩА ЛІВКА {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Зброя"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Булет-Бреагована стіна"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Планування Планета"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Зігзаг Flyer"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Орбіт Flyer"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Базокука"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Бомби літаючі"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Переміщення Spike Ball"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Pose ключ"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Поза Keyhole"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Нафта"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Швидке позначення"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Speed Mark (Strong)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Червона зона"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Кульки обов'язкові"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Кульки повинні: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Обертання підлоги"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Редакція"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Вхід Warp"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Warp Exit"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Зворотній зв'язок"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Мідний Мета"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Мета"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Логін"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Маса кнопки"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Симулятивна кнопка"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Стати кнопку"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Коробка трикутника"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Леся"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Перемикач запалювання"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "перемикач таймера"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Страхування"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Червоний перемикач"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Синій перемикач"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Зелений перемикач"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Жовтий перемикач"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Плитка тиску"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "дистанційне керування"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Ваги"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Двері"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Locked Двері"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Шпилька"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Фентезі"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Лазерні ворота"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Кольори"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Односторонні ворота"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Часті ворота"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Вимкнені стіни"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Прихована стіна"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Дерев'яна коробка"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Залізна коробка"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Яйця"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Барель"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Роки"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Блок льоду"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Floating Box"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Гумова коробка"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Бомби"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Бомба (Fuse Starts on Pickup)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Бомби"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Динаміт"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Вуайкер"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Штепсель енемі"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "зарядний пристрій Enemy"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Flying Енемі"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Стрілка Enemy"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Спавінгер"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Місільний стартер"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Активувати"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Цей пристрій завжди використовує Activate"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Запуск Інтервал"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Розмір Enemy"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Спробувати ворога: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Розмір: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Головна"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Монети"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Зірки"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Акумулятори"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Кошик"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Напляскване"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Весняна"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Зберегти"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Конвеєр Право"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Ліфти"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Вентилятор"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Магніт"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Ремкомплект"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Коробочка Dropper"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Скидання Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Риби"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Монети"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Зірки"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "цифровий годинник"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Бом Еміттер"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Нормативно"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Часовий ліміт"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Виживання"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}й"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "до{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "Всі"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Правило етапу: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "час {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "ПОТРІБНО"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Прес R до ретри"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 СУРВАЛ"
+    },
+    {
+      "key": "survival_goal",
+      "value": "ОДИННІ СУЧАСНІ КЛІТИНИ!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "ЗАМОВИТИ ДО СКЛАДУ"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "ТАРГЕТ  {0:0}г (90г х ПЛАНЕРИ)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "ПЕРЕГЛЯНУТИ КОМПЛЕКС"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "ЗБЕРІГАЙТЕ ВЕЛИЦІ!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "ЗДОРОВ'Я"
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "ЗАГАЛЬНІ ЗЕМЛІ НА ФОРУМ"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "ТАКОЖ!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "ЗАГАЛЬНІ НАДАННЯ  {0:0}й {1:0}р"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "ЗАГАЛЬНА ЗАГАЛЬНА ЧАСТИНА!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "ТРІ БЕТТЕР ЗДОРОВ'Я"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "СКЛАД {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "ЗБЕРІГАЙТЕ З ПРАВОГО БІЗНЕСУ"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "ЗДОРОВ'Я ЗДОРОВ'Я ЗДОРОВ'Я ЗДОРОВ'Я ЗДОРОВ'Я"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 ICE SPEEDRUN - ONE ПЛАЙЕР ФІНШИКИ"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "ПОТРІБНІ ЧАСТИНИ {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "survival_start",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "game_over",
+      "value": "GAME OVER"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "ЦЬОГО ОДЯГУ НЕ БУТИ НА СТАРТ. ПЛІЗА REDRAW IT SMALLER."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "ЦЕ ОДЯГНЕ МОЖЛИВО ЗАМОВИТИ ЗАМОВЛЕННЯ. ПЛІЗА ДОСЛІДЖЕННЯ ЙОГО РОЗМІРИ."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Редакція {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "Навігація"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "НЕ ХАРАКТЕРНЕ ЗАБЕЗПЕЧЕННЯ OR REDRAW AFTER"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "НЕ ХАРАКТЕР ЗМІНАЙТЕ ЛІВИНГ (REDRAW OK)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "ЗБЕРІГАТИСЯ НА ЧАС"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "ЗБЕРІГАЙТЕ ФІЛЬШЕ ЧАСТИНО"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "ЗДОРОВ'Я КРАЇОНУ"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "ЗДОРОВ'Я ТА СУРВИТИ"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "ПЛУГІЯ ВСІХ КАРІУМІВ З ВАШИМИ БОДАМИ"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "ВИКОРИСТОВУЙТЕ ОДЯГУ, ЩО ВИКОРИСТОВУЄТЬСЯ ВАШУ БОДІЙСЬКОГО СХОДУ ДО ЗАБЕЗПЕЧЕННЯ"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "ЗДОРОВ'Я ПАЛЯРІВ"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "ЗБЕРІГАЙТЕ БЛОК ВСІХ БЛОКІВ"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "ПУБЛІЧНИЙ БУЛО З INK МАГНІТ ТА СИНКА"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "ЗДОРОВ'Я ТА СУРВИТИ"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "COLLECT COINS ВИСТАВКА"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "ЗВ'ЯЗОК ЗВ'ЯЗКИ ТА ЗДОРОВ'Я"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "ПЕЧОВА РУН. ЗДОРОВ'Я ЗДОРОВ'Я."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "РИКОЧЕЦЬКІ БУЛІТИ ДЛЯ ЗДОРОВ’Я"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "ПРАВО ДАРКНИКИ ТА ЗАСТОСУВАННЯ ГОСТІВ"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "КУРВАЛЬНІ ЧАСТИНИ"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "ДРУГИЙ БОМБС ДО БРЕАК ВСЕ БЛОК"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "БРЕАК БОКСИ ТА КОЛЕКТНІ КОСИ"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "COLLECT COINS BEFORE TIME RUNS OUT"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "COLLECT COINS BEFORE TIME RUNS OUT"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "ЗБЕРІГАЙТЕ ВАШУ ЗДОРОВ’Я"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "ЗБЕРІГАЙТЕ НАЗАД ДО ЗДОРОВ’Я"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "ЗДОРОВ'Я ЗДОРОВ'Я"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "ВИКОРИСТАННЯ UMBRELLA ДЛЯ СТАЙ ПРАВИЛА"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "ЗБЕРІГАЙТЕ ЗДОРОВ'Я ДО ЗДОРОВ'Я"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "КРАЇОН ДЕВІЛ"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "КРАЇОН СТАЛОКЕР"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "ОЦІНКА ПІДПРИЄМСТВ"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "ЗБЕРІГАЙТЕ ЯК ДОСТУПНІ ПЛАЄРНІ СУЧАСТИНИ."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "ЗБЕРІГАЙТЕ БУДЬ-ЯКОГО ОДЯГУ, ЩО ЗДОРОВ’Я."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "СПАЙК ВАЛ РАДА"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "ВАЖЛИВО!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "ЗДОРОВ'Я"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "ВІНД КЕПИ ЗМІНУЮТЬСЯ!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "ЛЕС INK = ТРОНГЕР ВІНД"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "ЧАС {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "ПОТРІБНО"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "СТАЙ ПІД UMBRELLA!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "ЗНАЙМОВІ ЗНАЙТИ - ЗАБЕЗПЕЧЕННЯ"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "ВЕЛИКОВЕ ВАС КАУГТ У ЖІНЦІ!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 ЛІНКОВАНІ СЛОВА"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "ЧЕЦК ЕАХ АЛЕТОН ЛІНК!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "БЛОКОВІ МАСИНИ З 1-SECOND SHIELDS!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "КОМАНДА ЗАРАЗ"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60-SECOND DEFENSE CLEAR!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "РАУНД {0}/3    ЗАЛИШИЛОСЯ {1:0.0} с"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "ЗАМОВИТИ {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "ЗМІНЮЙТЕ ПОЗИЦІЇ ТА КУТИ, ЩОБ ВІДБИВАТИ ЛАЗЕР!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "РАУНД {0} ПРОЙДЕНО!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "ЧАС ВИЙШОВ! ЦЕЙ РАУНД ПОЧИНАЄТЬСЯ ЗНОВУ"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON DEVIL HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 ДОПОМОГА ДО РАДА"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "MOVE: ПЛАТФОРМ КЛІК: МІССІЛЬ  FБОМБ"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "БОСС ВІДДІЛЕННЯ!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "Всі ПЛАТФОРМИ ЗАРАЗ"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "ХОМІНГОВІ МАСІЛИ - ПРОПОЗИЦІЯ!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "УВАГА!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "ВИСТАВКА - МОВЕ АВА!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "РЕКОРИСТУВАННЯ КОМПЛЕКЦІЇ ...  {0}й"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Запуск, стрибок, поворот і зупинка - ваш подвійний - навчання."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "ФАЗ {0}  ДОБЛІ ЛІВ: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Зайдіть на пускову підлогу, після чого крок на її червоному перемикачі!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "ВСІ РОБОТИ ВІДДІЛЕННЯ!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Не був ще один бос."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "ФАЗ {0}  СТАРТИ В"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Поразка команди процесора, що надягає ваші точну форму."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "ФАЗ {0}  ЛІФТ: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "ФАЗ {0} ЗАМОВИТИ"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Клейм зброї з червоними вимикачами. F: кинути бомбу CLICK: ракета"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "MISSILE READY! Анім з мишею і натисніть кнопку."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "Процесор TEAM DEFEATED!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "ФІНАЛЬНІ БАТАЛЕ ЗБЕРЕЖЕННЯ!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "ПОТРІБНО"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "ЗАМОВИТИ!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Про нас Перезавантаження з початку 3 секунд."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 ДОКУМЕНТИ"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "ПРАВО! ВИКОРИСТАННЯ ВЕЛИКОГО ТИПОНУ!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "КУРСУЄР ДЕФАТИ!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "ВЕЛИКИЙ КАУГТ"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "РАН!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "ЗДОРОВ'Я ЗДОРОВ'Я!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "КУРВИТИ! ЧАС ЛІВИЙ"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "САФ ФЛАНД {0} / DROP В {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "СТАЙ НА БЕЗПЕКИ!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Всі ПЛАНЕРИ"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "ЗАГАЛЬНА ПРОГРАМА"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "СУРВІВОР ФОНГ!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "КУРВІВАЛЬНИЙ КЛІЄНТ"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 СУРВАЛ"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "ЗДОРОВ'Я ТА ЗДОРОВ'Я ПЛІАРІВ"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "УВАГА! ЗОНИ ЗОНИМ"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "ПЛІАРНИЙ СУРВАЛЬНИЙ КЛІЄНТ!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 КРАЇОН КІНГ"
+    },
+    {
+      "key": "boss_health",
+      "value": "Пилки  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER Полулюкс"
+    },
+    {
+      "key": "boss_appears",
+      "value": "ВАЖЛИВО!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "ВАЖКО СКАЗАТИ / TURTLE SHELL TO GUARD"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "ЗАМОВИТИ БОСС ІНВУЛЬНЕР"
+    },
+    {
+      "key": "boss_charge",
+      "value": "ЧЕРЕЗ! ОТРИМАЙТЕ ВАС"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "ХАРДЖИ В {0}! ЗБЕРІГАЙТЕ НА ВИСОКОЇ ПОЛЬЩІ"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "СПЕЦІАЛЬНА АКТИКА ЗДОРОВ'Я RICOCHETS"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "БОСС ВІДДІЛЕННЯ!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "ВСІ ПЛАНЕРИ OUT ... ЗБЕРІГАННЯ"
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "Полулюкс  {0} / {1}  ЗАМОВИТИ!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 ХУРДЛЕ СУРВАЛ"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "ОДИННІ СУЧАСНІ КЛІТИНИ!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "ПРАВО ЗАБЕЗПЕЧЕННЯ З ПРАВО ДЛЯ 60 БЕЗПЕКИ"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "ХАРЧ ДЛЯ ПРАВИЛЬНОСТІ"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "КУРС"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "ЛЮДИНИ!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "СКАЧАТИ ВАШЕ БІЛЬШЕ!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "ЗАМОВИТИ! ФІНАЛ СПИНТ!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Всі ПЛАНЕРИ"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "ХУРДЛЕ СУРВАЛЬНИЙ КЛІЄНТ!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "СУРВІВОР ФОНГ"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 ЕСКОРТ ФАРЕНДА"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "ЗАМОВИТИ ЗАМОВЛЕННЯ"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "БУДЕ ПЛАТУВАННЯ З БОКСАМИ, ПЛАТФОРМАМИ, І ВАШИМ БОДИМИ"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 ПРЕДМЕТ ЧАСУ"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "ААХ!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "RUN AHEAD ТА КЛІЧНІ ТРАНСПОРТи, BOXES, ЕНЕМІЇ"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "НЕКСТ ВИСТАВКИ  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "ПІДГОТОВКА НОВОГО ФАРЕНДА ..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "КОМПЛЕКТ АСКОРТ"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "ЗАПИТАЙТЕ ЗДОРОВ'Я"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "РУК {0}/3 БІЛД {1:0.0}й"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "ЗВ'ЯЗИТИ ПЛАТ"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "ЗАМОВИТИ ЗДОРОВ'Я ЗДОРОВ'Я"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "РУК {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "РУК {0} ЗАМОВИТИ"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "РАУНД {0}/3    ЗАЛИШИЛОСЯ {1:0.0} с"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "ХОЛОДИ {0}/{1}    ВСІХ ОДЯГІВ!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "РАУНД {0} ПРОЙДЕНО!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "ЧАС ВИЙШОВ! ЦЕЙ РАУНД ПОЧИНАЄТЬСЯ ЗНОВУ"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "ЗАКРИЙТЕ ОТВОРИ!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "РУК {0}/3    {1:0.0}s лівий"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "БОЛЬНИКИ {0}/{1}    РОСЛОВУЙТЕ БУЛО!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "ЗАГНІЗМАЛЬНІШЕ МАЗИНКИ З МАНЕТОМ!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "РУК {0} ЗАМОВИТИ"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "ЗАМОВИТИ ЗБЕРІГАЙТЕ ЦЕ РІЗНО"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "ЗВ'ЯЗИТИ ВАШЕ ПРАВО! БІЛЬШЕ INK MEANS СТОНЕР MAGNETISM"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "FINAL ROUND: ЗБЕРІГАЙТЕ НАЗАД!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "БУДУТЬ ПЛАТ, БУЛІЗУЙТЕ НАЗАД!\nВАЖКО СКАЗАТИ З ВАШИМ БОДІ"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "ЗБЕРІГАЙТЕ НА ВАШОМУ ЗДОРОВ’Я ТА ЗДОРОВ’Я"
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "ФРІЕНД СТАРТ"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "ФРІЕНД ФІЛЬЛ!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "GAME OVER"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "ВИ МОЖЕТЕ ЗДОРОВ'Я, ЩО ВИСТАВКА ЗДОРОВ'Я."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET РЕЛАЙ"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "РУК {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "АММО {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "РИКОЧЕЦЬКІ БУЛІТИ З ПИТАНЬ ЧАСТИНИ"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "ЗАМОВЛЕННЯ! Зареєструватися"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 РОБОЧА ЧАСТИНА"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Friend Спавнер"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Friend Цілі"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Friend-Pass Підлога"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Приклад головного мосту"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Мапа"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Увімкнути"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Канон"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Кошик"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Почати"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Пожежний"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Вода"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Позі"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Лазерний"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Падіння рок"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Прес-машина"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Електроенергія"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Сила"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Чорна дірка"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Шнур"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Великий Gear"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Плеймейт"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Розсилка"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Обертання Бар"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Панчохи"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Панчохи"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Етап Бунарний"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Годинники"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Лічильник"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Вибір етапу"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Залишити заявку"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Резиденція"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Залишити заявку"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Отримуючи, як хост закінчить цю сесія для всіх. Залишити коментар"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Підключається як міст: правий край залишається підключеним, поки він поширюється наліво."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Розділіть з'єднану місцевості в індивідуальні вибіркові та з'єднувані частини."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Відправити"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Окрема частина ОН. Затишати без злиття і може бути пов'язаний окремо."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Окрема частина OFF. Сенсорний рельєф може об'єднатися."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Підключається підлога і стіна як одна форма місцевості."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Перетягніть, щоб розмістити прямо {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Товщина"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Товщина підлоги і стін: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Головна"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Прямі креслення ОН."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Прямокутний малюнок OFF."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw режим"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw режим"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Виберіть режим"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw режим: перетягніть на порожній space розмістити об'єкти."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Виберіть режим: виберіть і перемістіть існуючі об'єкти."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} вільно перетягуванням."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Затишна підлога і настінний малюнок ОН."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Розміщення прямокутника ОН."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Дроб {0} як один підключений шлях{1} точки)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Повернення редактора"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Повернення редактора  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Повернення з тестової гри. Збережіть свій етап."
+    },
+    {
+      "key": "cancel",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "retry",
+      "value": "Спробувати ще раз"
+    },
+    {
+      "key": "menu",
+      "value": "Почати"
+    },
+    {
+      "key": "redraw",
+      "value": "Ретро"
+    },
+    {
+      "key": "pen",
+      "value": "Рушники"
+    },
+    {
+      "key": "eraser",
+      "value": "Еразмус"
+    },
+    {
+      "key": "shape_square",
+      "value": "Кошик"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Виброхвост"
+    },
+    {
+      "key": "shape_line",
+      "value": "Лінія"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Дядько!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Зареєструватися"
+    },
+    {
+      "key": "brush_size",
+      "value": "Розмір"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Використовується"
+    },
+    {
+      "key": "undo",
+      "value": "Недо"
+    },
+    {
+      "key": "character_switch",
+      "value": "Символ перемикач"
+    },
+    {
+      "key": "character_add",
+      "value": "Додати символи"
+    },
+    {
+      "key": "character_delete",
+      "value": "Видалити Шар"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Перемикач Шар"
+    },
+    {
+      "key": "stage_select",
+      "value": "Вибір етапу"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 груп, 3 етапи кожного. Ввімкніть редагування, після чого виберіть етап для редагування."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0 Дебюг"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Редагування 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Редагування: Від"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Редагування: НА"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "Головна"
+    },
+    {
+      "key": "stage_clear",
+      "value": "КЛІЄНТ"
+    },
+    {
+      "key": "stage_locked",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Режим Debug: всі світи розблокуються. Виберіть етап для відтворення, або перетворюйте редагування на редагування."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2:Весь перетягування для створення блоків\n3:Start 4:Goal 5:Scale 6:Перевага\nA/D/W/S: камера переміщення Колесо: зум\nF5:Зберегти  F6Головна  Esc:Бак"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Ваги"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Розмір"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Сітка"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Делет"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Зберегти"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Тести"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "ЗАМОВИТИ  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Налаштування ігор"
+    },
+    {
+      "key": "option_bgm",
+      "value": "БГМ"
+    },
+    {
+      "key": "option_se",
+      "value": "Про нас"
+    },
+    {
+      "key": "option_keys",
+      "value": "Головна"
+    },
+    {
+      "key": "option_language",
+      "value": "Українська"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Не всі"
+    },
+    {
+      "key": "locked_stage",
+      "value": "Етапи без JSON падають на дебюговий етап."
+    },
+    {
+      "key": "human",
+      "value": "Людина"
+    },
+    {
+      "key": "cat",
+      "value": "Про нас"
+    },
+    {
+      "key": "bird",
+      "value": "Птахи"
+    },
+    {
+      "key": "turtle",
+      "value": "Кошик"
+    },
+    {
+      "key": "slime",
+      "value": "Твитнуть"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 Бал хіт"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "ПАРТНЕРСТВО"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "СЕЛЕКЦІЯ"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Виберіть частину, потім натисніть або перетягніть на карті, щоб розмістити його."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Снап: {0} / {1:0.##} блок сітки"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Виберіть об'єкт першим."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Ширина змінилася. Ви також можете використовувати Shift+ Колесо."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Висота зміниться. Ви також можете використовувати Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Зміна розміру. Використовуйте колесо для масштабування обох осей."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Перетягніть більшу площу, щоб розмістити цю частину."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Почати {0} ({1:0.0} до {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Почати {0} на {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Вибрані. Перетягніть, щоб перемістити і використовувати колесо для зміни розміру."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Немає нічого, щоб скасувати."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Попри те, що останні редагування."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Немає нічого червоного."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Помітити редагування."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Виберіть перемикач, кнопка, ключ, або ключ, щоб використовувати як джерело посилання."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Виберіть перемикач, кнопка, ключ, або ключ як джерело посилання."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Джерело посилання: {0}. Виберіть свою ціль, потім натисніть посилання на посилання."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Встановіть джерело посилань першим."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Виберіть об'єкт для використання функції посилання."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Джерело посилання та мета повинні бути різними об'єктами."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Посилання {0} до {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Виберіть пов'язаний об'єкт першим."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Очистити посилання."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Збережено: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Збереження в даний час доступна тільки в редакторі Unity."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Завод об'єкта етапу відсутній."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "світло трафіку"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 БЛОК КРАШ"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Блок Breaker"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "ЗАМОВИТИ БОМБС! БРЕАК ВСІ NICO DRAW БЛОКИ!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} БЛОКИ ЛЕФ"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "ФІЛЬШЕ ... РЕСТАР В {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "СКЛАД"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Пошук по дії або SE ID, потім натисніть кнопку Грати для попереднього перегляду призначеного звуку. Перебуваючи ряд, щоб побачити його ресурсний шлях."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "ПЛАТА"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "СТОП"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Немає відповідних ефектів звуку."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE.md не знайдено."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Без категорії"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "ЗАМОВИТИ"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Звукозаписи"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Paw Друк"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Риби"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Яйця Бала"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "сніг кристал"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Ікула"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Сніговик"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Бліззард"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Плеймейт"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Пташиний гнізд"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Вітрові лінії"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Про компанію"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Болгарія"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Логін"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Пари"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Кошик"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Годинники"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Напильник"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Твитнуть"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Кульки"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Метелик"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Латинки"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Соняшник"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Тюльпан"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Селетон"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Пакети"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Веб-сайт"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Сталактит"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Лампи"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Мінекарт"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Виброхвост"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Трофі"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Медаль"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Вішалка"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Повітряна куля"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Конфети"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Феєрверк"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Приват"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Бінокулярні"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Міста"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Крайон"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "трафарет"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Еразмус"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Довідник"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Чорний"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Палітра"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Малярка"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Полотно"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Смоктати"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Мапа"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Мікрофони"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Сирий"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Сюрприз Box"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Подарункова коробка"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Планування"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Чужий"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Приват"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Чорна дірка"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Соап Бубл"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Кошик"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Дерево Корінь"
+    }
+  ]
+}

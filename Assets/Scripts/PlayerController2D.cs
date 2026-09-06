@@ -575,26 +575,87 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            bool previousTurnHeld = turtleTurnHeld;
             turtleTurnHeld = active;
             if (rb != null)
             {
+                Bounds beforeRotationBounds = default;
+                bool preserveGroundContact = IsGrounded && TryGetBodyBounds(out beforeRotationBounds);
+                float previousRotation = rb.rotation;
+                Vector2 previousPosition = rb.position;
                 float targetRotation = active && currentSpecies == DrawManager.Species.Turtle
                     ? -90f * facingDirection
                     : 0f;
                 float rotationDelta = Mathf.DeltaAngle(rb.rotation, targetRotation);
-                // F rotates the entire shell instantly. Rotate its physical grain
-                // pile through the same delta once, otherwise the shell moves out
-                // from under the grains and ejects all of them.
+                rb.rotation = targetRotation;
+                rb.angularVelocity = 0f;
+                Physics2D.SyncTransforms();
+                if (preserveGroundContact && TryGetBodyBounds(out Bounds afterRotationBounds))
+                {
+                    // F turns the complete drawing. With a long head, rotating
+                    // around the player's origin can otherwise put the new lowest
+                    // point deep below the floor. Preserve the pre-turn contact
+                    // height so the head rests on the floor instead of entering it.
+                    float bottomCorrection = beforeRotationBounds.min.y - afterRotationBounds.min.y;
+                    if (Mathf.Abs(bottomCorrection) > 0.0001f)
+                    {
+                        rb.position += Vector2.up * bottomCorrection;
+                        transform.position = rb.position;
+                        Physics2D.SyncTransforms();
+                    }
+                }
+                if (Mathf.Abs(rotationDelta) > 0.01f && HasDeepTurtleRotationOverlap())
+                {
+                    // There is no valid way to turn a long neck inside a gap that
+                    // is shorter than the rotated drawing. Reject the turn instead
+                    // of letting the physics solver tunnel it through the ceiling.
+                    rb.rotation = previousRotation;
+                    rb.position = previousPosition;
+                    transform.position = previousPosition;
+                    rb.angularVelocity = 0f;
+                    turtleTurnHeld = previousTurnHeld;
+                    Physics2D.SyncTransforms();
+                    return;
+                }
+                // Rotate carried grains only after the new pose has been accepted.
                 if (Mathf.Abs(rotationDelta) >= 45f)
                 {
                     GetComponent<StageGrainCarrier>()?.RotateCarriedParticles(
                         rb.position,
                         rotationDelta);
                 }
-                rb.rotation = targetRotation;
-                rb.angularVelocity = 0f;
-                Physics2D.SyncTransforms();
             }
+        }
+
+        private bool HasDeepTurtleRotationOverlap()
+        {
+            Collider2D[] bodyColliders = GetComponentsInChildren<Collider2D>(true);
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.SetLayerMask(groundLayer);
+            filter.useTriggers = false;
+            List<Collider2D> overlaps = new List<Collider2D>();
+            for (int i = 0; i < bodyColliders.Length; i++)
+            {
+                Collider2D bodyCollider = bodyColliders[i];
+                if (bodyCollider == null || !bodyCollider.enabled || bodyCollider.isTrigger) continue;
+                overlaps.Clear();
+                bodyCollider.Overlap(filter, overlaps);
+                for (int hitIndex = 0; hitIndex < overlaps.Count; hitIndex++)
+                {
+                    Collider2D hit = overlaps[hitIndex];
+                    if (hit == null || hit.isTrigger || hit.transform.IsChildOf(transform)) continue;
+                    if (hit.GetComponentInParent<PlayerController2D>() != null) continue;
+                    PlatformEffector2D effector = hit.GetComponentInParent<PlatformEffector2D>();
+                    if (effector != null && effector.useOneWay) continue;
+                    StageEditorObject marker = hit.GetComponentInParent<StageEditorObject>();
+                    if (marker != null && (marker.type == StageObjectType.OneWayPlatform
+                        || marker.type == StageObjectType.MovingOneWayPlatform
+                        || marker.type == StageObjectType.EscortPlayerOneWayFloor)) continue;
+                    ColliderDistance2D distance = bodyCollider.Distance(hit);
+                    if (distance.isOverlapped && distance.distance < -0.04f) return true;
+                }
+            }
+            return false;
         }
 
         private void UpdateGrounded()

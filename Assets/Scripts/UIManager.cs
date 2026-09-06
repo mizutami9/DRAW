@@ -1046,6 +1046,14 @@ namespace DrawBody.Prototype
             }
         }
 
+        public bool TryCloseOptionPopup()
+        {
+            OptionSettingsController settings = optionPanel != null
+                ? optionPanel.GetComponent<OptionSettingsController>()
+                : null;
+            return settings != null && settings.TryCloseLanguagePopup();
+        }
+
         public bool IsTitleSubmenuShowing =>
             multiShowing && multiPanel != null && multiPanel.activeInHierarchy
             || optionShowing && optionPanel != null && optionPanel.activeInHierarchy;

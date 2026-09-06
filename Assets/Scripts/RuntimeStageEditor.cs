@@ -441,10 +441,28 @@ namespace DrawBody.Prototype
             redoStack.Clear();
             stageLoader?.HideStages();
 
+            if (stageId == "14-3")
+            {
+                // HideStages clears children, but this gameplay controller is
+                // attached to the persistent StageRoot and otherwise keeps
+                // restoring its fixed gameplay camera every frame.
+                StageLaserRelayController relayController =
+                    Object.FindFirstObjectByType<StageLaserRelayController>(FindObjectsInactive.Include);
+                if (relayController != null) relayController.enabled = false;
+            }
+
             // 別ステージを開いたとき、前のステージのカメラ座標を引き継がないようにリセット
             EnsureReferences();
             if (worldCamera != null)
             {
+                RuntimeStageEditorCameraInputDriver inputDriver =
+                    worldCamera.GetComponent<RuntimeStageEditorCameraInputDriver>();
+                if (inputDriver == null)
+                {
+                    inputDriver = worldCamera.gameObject.AddComponent<RuntimeStageEditorCameraInputDriver>();
+                }
+                inputDriver.Configure(this, worldCamera);
+
                 Vector3 camPos = worldCamera.transform.position;
                 camPos.x = 0f;
                 camPos.y = 0f;
@@ -554,6 +572,52 @@ namespace DrawBody.Prototype
             {
                 worldCamera = Camera.main;
             }
+        }
+    }
+
+    [DisallowMultipleComponent]
+    [DefaultExecutionOrder(10000)]
+    public sealed class RuntimeStageEditorCameraInputDriver : MonoBehaviour
+    {
+        private RuntimeStageEditor editor;
+        private Camera targetCamera;
+
+        public void Configure(RuntimeStageEditor targetEditor, Camera camera)
+        {
+            editor = targetEditor;
+            targetCamera = camera;
+        }
+
+        private void LateUpdate()
+        {
+            ResolveReferences();
+            if (editor == null || targetCamera == null || !editor.IsLaserRelayLayoutEditor) return;
+
+            // Arena gameplay cameras and group framing normally write their
+            // position/size late in the frame. Editing must own the camera.
+            CameraFollow2D follow = targetCamera.GetComponent<CameraFollow2D>();
+            if (follow != null && follow.enabled) follow.enabled = false;
+            StageLaserRelayController relayController =
+                Object.FindFirstObjectByType<StageLaserRelayController>(FindObjectsInactive.Include);
+            if (relayController != null && relayController.enabled) relayController.enabled = false;
+            editor.DriveLaserRelayEditorCamera(targetCamera);
+        }
+
+        private void OnGUI()
+        {
+            ResolveReferences();
+            if (editor == null || targetCamera == null || !editor.IsLaserRelayLayoutEditor) return;
+
+            Event current = Event.current;
+            if (current == null || current.type != EventType.ScrollWheel || !current.control) return;
+            editor.DriveLaserRelayEditorScroll(targetCamera, -current.delta.y);
+            current.Use();
+        }
+
+        private void ResolveReferences()
+        {
+            if (targetCamera == null) targetCamera = GetComponent<Camera>();
+            if (editor == null) editor = Object.FindFirstObjectByType<RuntimeStageEditor>(FindObjectsInactive.Include);
         }
     }
 }

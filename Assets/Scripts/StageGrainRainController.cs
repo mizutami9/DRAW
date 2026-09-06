@@ -139,18 +139,26 @@ namespace DrawBody.Prototype
                 }
                 else if (state == RoundState.Rain)
                 {
-                    remaining = Mathf.Max(0f, remaining - Time.deltaTime);
+                    if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                        remaining = Mathf.Max(0f, remaining - Time.deltaTime);
                     if (round == 3) UpdateForecastRain();
                     else
                     {
                         float interval = round == 2 ? BlizzardSpawnInterval : SpawnInterval;
-                        while (remaining > 0f && Time.time >= nextSpawnAt)
+                        while ((LocalMultiplayerDebugMode.NoTimeLimit || remaining > 0f)
+                            && Time.time >= nextSpawnAt)
                         {
                             authoritativeSpawnSequence++;
                             nextSpawnAt += interval;
                         }
                     }
-                    if (remaining <= 0f)
+                    if (LocalMultiplayerDebugMode.NoTimeLimit && GetCurrentlyCarriedGrams() >= targetGrams)
+                    {
+                        ClearForecastMarkers();
+                        state = RoundState.Settle;
+                        remaining = SettleSeconds;
+                    }
+                    else if (!LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f)
                     {
                         ClearForecastMarkers();
                         state = RoundState.Settle;
@@ -375,7 +383,16 @@ namespace DrawBody.Prototype
 
         private void MeasureRound()
         {
-            measuredGrams = 0f;
+            measuredGrams = Mathf.Round(GetCurrentlyCarriedGrams());
+            success = measuredGrams >= targetGrams;
+            state = RoundState.Result;
+            resultRemaining = success ? 3.2f : 5f;
+            BroadcastState(true);
+        }
+
+        private static float GetCurrentlyCarriedGrams()
+        {
+            float grams = 0f;
             foreach (StageGrainParticle particle in StageGrainParticle.All)
             {
                 if (particle == null) continue;
@@ -388,14 +405,9 @@ namespace DrawBody.Prototype
                         break;
                     }
                 }
-                if (carried) measuredGrams += particle.Grams;
+                if (carried) grams += particle.Grams;
             }
-
-            measuredGrams = Mathf.Round(measuredGrams);
-            success = measuredGrams >= targetGrams;
-            state = RoundState.Result;
-            resultRemaining = success ? 3.2f : 5f;
-            BroadcastState(true);
+            return grams;
         }
 
         private void HandleNetworkData(OnlineGimmickData data)
@@ -470,7 +482,9 @@ namespace DrawBody.Prototype
             }
             else if (state == RoundState.Rain)
             {
-                timerText.text = roundLabel + "   " + Mathf.CeilToInt(remaining).ToString("00") + ".0";
+                timerText.text = roundLabel + "   " + (LocalMultiplayerDebugMode.NoTimeLimit
+                    ? "\u221e"
+                    : Mathf.CeilToInt(remaining).ToString("00") + ".0");
                 scoreText.text = LocalizationManager.Format("grain_rain_target", targetGrams);
             }
             else if (state == RoundState.Settle)

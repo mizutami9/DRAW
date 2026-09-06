@@ -225,9 +225,10 @@ namespace DrawBody.Prototype
             fakes.RemoveAll(item => item == null);
             if (HasAuthority && battleState == BattleState.Fighting)
             {
-                remaining -= Time.deltaTime;
-                if ((remaining <= 0f || AreAllRealPlayersEliminated()) && !transitionRunning)
-                    StartCoroutine(FailBattle(remaining <= 0f));
+                if (!LocalMultiplayerDebugMode.NoTimeLimit) remaining -= Time.deltaTime;
+                bool timedOut = !LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f;
+                if ((timedOut || AreAllRealPlayersEliminated()) && !transitionRunning)
+                    StartCoroutine(FailBattle(timedOut));
                 else
                 {
                     if (phase == 3) UpdatePhaseThreeMachineLock();

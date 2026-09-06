@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "PLAYER 이름"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter 당신의 이름"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "기타 enter 플레이어 이름."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER 당신의 이름"
+    },
+    {
+      "key": "option_register",
+      "value": "계정 관리"
+    },
+    {
+      "key": "lang_ja",
+      "value": "한국어"
+    },
+    {
+      "key": "lang_en",
+      "value": "제품 정보"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "뚱 베어 R을 retry에 누릅니다."
+    },
+    {
+      "key": "draw_title",
+      "value": "디자인 (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: 게임으로 돌아가기 / ENTER: 결정 / ESC: 취소"
+    },
+    {
+      "key": "preview",
+      "value": "다운로드"
+    },
+    {
+      "key": "clear",
+      "value": "지우기"
+    },
+    {
+      "key": "decide",
+      "value": "확인"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "이름 *"
+    },
+    {
+      "key": "current",
+      "value": "현재 위치"
+    },
+    {
+      "key": "part",
+      "value": "제품정보"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw torso 첫째."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso는 기초입니다. Draw 연결 감적의 다른 부분."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: 연결 마커에서 시작합니다."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw 다른 부품을 연결하기 전에 torso."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} 연결됩니다."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} 연결 감적에서 시작하지 않았다."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Torso는 결정하기 전에 필요합니다."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} 연결 감적에서 시작해야 합니다."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "이름 *  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "회사연혁  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "결정할 수 없습니다: 개인 ink · {0:0.#}/{1:0}. 그것에 의하여 감소시키십시오 {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "결정할 수 없습니다: 팀 ink · {0:0.#}/{1:0}. 그것에 의하여 감소시키십시오 {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}: 마커에서 시작합니다."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "제품정보"
+    },
+    {
+      "key": "torso",
+      "value": "토르소"
+    },
+    {
+      "key": "left_arm",
+      "value": "왼쪽 팔"
+    },
+    {
+      "key": "right_arm",
+      "value": "오른쪽 팔"
+    },
+    {
+      "key": "left_leg",
+      "value": "왼쪽 다리"
+    },
+    {
+      "key": "right_leg",
+      "value": "오른쪽 다리"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "왼쪽 앞"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "오른쪽 앞"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "왼쪽 뒤"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "맨 위로"
+    },
+    {
+      "key": "tail",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "left_wing",
+      "value": "왼쪽 윙"
+    },
+    {
+      "key": "right_wing",
+      "value": "오른쪽 윙"
+    },
+    {
+      "key": "tail_feather",
+      "value": "꼬리 깃털"
+    },
+    {
+      "key": "slime_body",
+      "value": "인기 카테고리"
+    },
+    {
+      "key": "jump_normal",
+      "value": "일반 점프"
+    },
+    {
+      "key": "jump_double",
+      "value": "점프 x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "점프 x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "일반 도달"
+    },
+    {
+      "key": "arm_long",
+      "value": "긴 도달"
+    },
+    {
+      "key": "arm_fast",
+      "value": "빠른 스윙"
+    },
+    {
+      "key": "torso_normal",
+      "value": "·"
+    },
+    {
+      "key": "torso_switch",
+      "value": "무거운 스위치"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "사이트맵"
+    },
+    {
+      "key": "ability_summary",
+      "value": "이름 * {0:0.0}: {1}   사이트맵 {2:0.0}: {3}   토르소 {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "윙스 {0:0.0} INK / Glide 속도 {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "휴먼 ABILITY\n사이트맵 {0:0.0} INK  힘 ×{1:0.00}\n한국어 {2:0.0} INK  공지사항{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "카테고리\n뒤 다리 {0:0.0} INK  속도 ×{1:0.00}\n앞 다리 {2:0.0} INK  Claw 범위 ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "BIRD 책임\n윙스 {0:0.0} / 700 INK\nGlide 속도 {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "치료 능력\n기타 SPACE: invincible 포탄\n기타 F: 방향으로 90 ° 회전"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "SLIME 능력\n이름 * {0:0.0} / 700 INK\n위쪽 스파이크 길이 {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "채용 정보"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "사이트맵"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "프로젝트"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "한국어"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "사이트맵"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "더 많은 다리 INK 증가 점프 힘\n팔 더 INK 증가 던지기 힘"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "더 많은 뒤 다리 INK 증가 런 속도\n더 프론트-leg INK 증가 찰상 범위"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "더 윙 INK glide 힘 증가"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Invincible 동안 숨겨진 쉘"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "제품정보 F 위쪽 공격 스파이크\n뚱 베어 INK 더 긴 / 벽 점프 활성화"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: 삼림"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCRATCH / GRAB의 특징"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "전체장편 SPACE: 글라이드  F: 그라브"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "전체장편 SPACE: 셀홀드 F: TURN 90 °"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: UPWARD 스파이크"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "힘 ×{0:0.00}  공지사항{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "다운로드{0:0.00}  Claw 범위 ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "공급 능력 {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: 셀 /  F: 90° 트렁크"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "위쪽 스파이크 길이 ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "사이트맵 {0:0.0}/280 다리 {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "이름 * {0:0.0}/240 정면 {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "윙스 {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "버튼이 개최되는 동안만 Active"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "쉘 READY"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE 그리고 F 일하면서 개최!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "이름 * {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "사이트맵 {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "칫"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "주요 특징"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "주 메뉴"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "사이트맵"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "런"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "채용정보"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "글 탐색"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "디펜스"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "모빌리티"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "뚱 베어 INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "빛: 위로 GRIP"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "HEAVY: 스피드 + JUMP UP"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK 크기 (mm) {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "F: 스파이크 업! 뚱 베어 INK = 더 긴 / 벽 점프 활성화"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw 힘에 더!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "이 단계가 시작된 후 다시 인출할 수 없습니다."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 높은 플랫폼"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 무거운 스위치"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3개의 먼 레버"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 좁은 구멍"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "객실 설정"
+    },
+    {
+      "key": "multi_participants",
+      "value": "공지사항"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "객실 선택"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "오시는 길"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "객실 ID"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "LOCAL TEST (내선)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "이름 *"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 슬림 모이스처"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "한국어 GRAB의 벽"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "WALL-JUMP 및 DODGE PIERCING MISSILES!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 당신의 친구를 보호!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "사이트맵 {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "시간 : {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "양쪽에서 친구를 방어"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "AIRSTRIKE 소개 {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "패스워드 관련 상품 {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "DEFENSE 클렌징!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "COIN 코인 {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "시간 : {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "BREAK 상자와 COLLECT COINS!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "시간 ... 5에서 추천"
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 코인 레버!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "힘에!"
+    },
+    {
+      "key": "title_single",
+      "value": "싱글 플레이"
+    },
+    {
+      "key": "title_multi",
+      "value": "멀티플레이"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "설정"
+    },
+    {
+      "key": "option_back",
+      "value": "이름 *  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "이름 *  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "이름 *  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "나가기"
+    },
+    {
+      "key": "title_debug",
+      "value": "사이트맵"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "TRAILER 모자 DEBUG"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4-player 공중 릴레이"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "인간은 새를 던지고, 새 → 고양이 → 슬림 릴레이"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "시작 SEQUENCE"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "이름 *  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "EDIT 특성"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "스팀 히터"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "수출 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "본문 바로가기"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "구성을 확인하고 PNG를 내보내기"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "저장 : {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "사이트 맵"
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "CHARACTERS는 READY ROOM에서 변경 될 수 있습니다."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R 리플레이 H HIDE HUD     ESC  공지사항"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "TRAILER TAS 등록"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "장난꾸러기 배우| Overdub Human → Bird → Cat → Slime | F9 기록 F10 재생 P 일시 O 단계"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 RECORD/스톱"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 플레이 모두"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 공지사항"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "CLEAR 선택"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "P 사용"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O 단계"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "이름 *"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "공지사항"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "모든 트랙 재생"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "특허증"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} | 선택: {1} | {2} 프레임 | 속도 {3:0.##}₢ 킹"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "제품정보 {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "채용 정보"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "idle을 사용하면 시작 위치를 설정할 수 있습니다."
+    },
+    {
+      "key": "menu_continue",
+      "value": "계속하기"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "이름 *"
+    },
+    {
+      "key": "language_settings",
+      "value": "언어 설정"
+    },
+    {
+      "key": "multi_play",
+      "value": "MULTI 재생"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "무작위 일치"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "한국어"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "무작위 일치"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "선수 찾기"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "관련 기사"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "매칭 ...\n\n플레이어 2 / 4\n\n○ 너\n○ 플레이어2\n□ 검색\n□ 검색\n\n[읽기]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "객실안내"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "객실 찾기"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "본문 바로가기"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "객실 이름\n[특징] Draw 함께 ]\n\n최대 선수\n< 4 >\n\n제품정보\n[공유] [개인]\n\n기본 정보\n[Host 선택]\n\n인출 규칙\n[자세한 사항]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "최대 선수"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "제품정보"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "제품정보"
+    },
+    {
+      "key": "multi_public",
+      "value": "한국어"
+    },
+    {
+      "key": "multi_private",
+      "value": "한국어"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "제품정보"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "이름 *"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter 호스트 화면에 표시된 로비 ID.\n\nEOS를 구성하여, 친구가 원격으로 참여할 수 있습니다.\n직접 TCP를 사용하는 경우, enter IP: 7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter 로비 ID"
+    },
+    {
+      "key": "multi_join",
+      "value": "이름 *"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "지원하다"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "객실 위치"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "방: Draw 으로\n신분증: ABC123\n2 / 4개\n\n놀이 공간 space\n상자, 공, 점프 패드와 함께 재생을 기다리고 있습니다."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "복사 ID"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "시작 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "단계 선택"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "모든 사람이 READY 때 단계 선택 잠금 해제."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "이 방을 남겨주세요?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "이름 *"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "이름 *"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "호스트는 단계 선택..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "이름 *"
+    },
+    {
+      "key": "multi_matching",
+      "value": "매칭 ..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "호스트 만 시작할 수 있습니다."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "비밀번호 찾기"
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "비밀번호"
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Copied 방 부호."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "복사 연결 ID."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "연락처 룸 코드는 없습니다."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "옵션 정보"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "* 이름"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "연결 ..."
+    },
+    {
+      "key": "multi_room",
+      "value": "호텔소개"
+    },
+    {
+      "key": "multi_players",
+      "value": "계정 관리"
+    },
+    {
+      "key": "multi_local",
+      "value": "- 한국어"
+    },
+    {
+      "key": "multi_ready",
+      "value": "읽기"
+    },
+    {
+      "key": "multi_wait",
+      "value": "기타"
+    },
+    {
+      "key": "multi_host",
+      "value": "계정 만들기"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw 으로"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "룸 서비스"
+    },
+    {
+      "key": "online_player_you",
+      "value": "이름 *"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "이름 *"
+    },
+    {
+      "key": "online_player_host",
+      "value": "이름 *"
+    },
+    {
+      "key": "online_player_number",
+      "value": "지원하다 {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Fake 임의 일치 준비."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Fake backend 초기화."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "로깅 ..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "로컬 테스트 플레이어로 온라인."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "가짜 단계 시작."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "개인 실 생성."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "공용공간"
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "가짜 방에 가입."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "TCP 초기화."
+    },
+    {
+      "key": "online_ready",
+      "value": "온라인 준비. 호스트 또는 룸에 가입."
+    },
+    {
+      "key": "online_room_created",
+      "value": "객실 만들기. 친구와 ID를 공유합니다."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "호스트에 실패: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "Room ID는 host-ip:port이어야 합니다."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "회의실 ..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "참여에 실패: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "왼쪽 로비."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "자주 묻는 질문"
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "실패합니다."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} 참여하기"
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} 세션 왼쪽."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "로비 업데이트."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "시작 단계 {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS 초기화. 로그인하기 전에 EOS 플러그인 구성."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "EOS 로그인 ..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "EOS Connect 인터페이스가 준비되어 있지 않습니다."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "EOS 로그인 실패: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "EOS 생성 로비 실패: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "EOS 룸 생성. 이 로비 ID를 공유합니다."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter EOS 로비 ID."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter 룸 코드."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "룸 코드를 등록 실패: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "객실 코드 검색 실패: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "코드 찾기 {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "룸 코드가 콜드. 방을 다시 만듭니다."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "호스트 오픈 스테이지 선택."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "호스트 닫기 단계 선택."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS는 로비가 실패했습니다: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "EOS 룸 가입"
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "왼쪽 EOS 로비."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "지원하다"
+    },
+    {
+      "key": "online_ready_off",
+      "value": "견적 요청"
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "EOS 장치 ID 생성 실패: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "EOS 장치 ID 생성..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "EOS Device ID 로그인 실패: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS 온라인 {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "로비 회원 업데이트."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS는 로그인하지 않습니다. EOS 플러그인 및 로그인 구성."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS는 비활성화됩니다."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "스테이지 클리어!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "스테이지 {0} 클리어!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "클리어!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "다음: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "스테이지 선택"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "모든 스테이지 클리어!"
+    },
+    {
+      "key": "stage_label",
+      "value": "기본 정보 {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "주요사업 {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "AVAILABLE 특성"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "사용 : {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "관련 상품"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "제품 정보"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} 이 단계에서는 사용할 수 없습니다."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "다른 플레이어는 이미 사용 {0}. 사용 가능한 문자를 선택하십시오."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "충전기 SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} 이용안내 COMPLETE를 눌러 스왑을 요청합니다."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} 거래하기 {1} 제품정보 {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "RSS 피드"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "계정 관리"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "스왑 요청에 대한 응답을 기다리고 ..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "캐릭터 스왑!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "교환 요청이 거절되었습니다."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "다른 플레이어는 찾을 수 없습니다."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "GRAIN 디스펜서"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100g 칼"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "연락처"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "친구 단추"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "PLAYER-ONLY ONE-WAY 팬"
+    },
+    {
+      "key": "species_human",
+      "value": "한국어"
+    },
+    {
+      "key": "species_cat",
+      "value": "사이트맵"
+    },
+    {
+      "key": "species_bird",
+      "value": "한국어"
+    },
+    {
+      "key": "species_turtle",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "species_slime",
+      "value": "인기 카테고리"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "기타"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "(주)"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "문자를 드래그하여 그 위치에서 테스트 재생을 시작합니다. 저장된 단계 스페인은 변경되지 않습니다."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "test-play 시작 위치 이동."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "시험 시작: X {0:0.00} ₢ 킹 {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "저장할 수 없습니다: {0} 오류(s). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "저장 : {0} ({1} 경고 (s)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "객실 찾기\n객실 이름 [.....]\n플레이어 2 / 3 / 4\n공공 / 개인\n\n본문 바로가기\n방 ID [...]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "장소 / 선택 클릭 / WASD 이동하기\n훈장: 가늠자/교정 + 자전하는 바퀴에 바퀴\nCtrl + 휠: 전체 단계를 확대"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} 선택된 개체"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "상자가 완전히 둘러싸인 개체는 선택됩니다."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "제품정보 {0} 기타 제품 선택한 객체를 드래그하여 함께 이동하십시오."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "물체는 선택 상자에 완전히 동봉되지 않습니다."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "지원하다 {0} 선택된 개체를 함께합니다."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "(주)"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "검색어"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "개체 목록"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "링크 목록"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "레드오"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "관련 기사"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "객체 복사."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ 권리"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ 문"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← 왼쪽"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ 위로"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "복사 방향: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "객관적인 플러시 {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "위치: X {0:0.00} ₢ 킹 {1:0.00} (가로 키)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "시작 힘"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "이동 거리"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "이동 속도"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "신관 (sec)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Crumble 지연 (sec)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "폭발"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "벨트 속도"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "하락 간격 (sec)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "광속 간격 (sec)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "상자 크기"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "폭탄 크기"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Spike 크기"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "이동 거리: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "이동 속도: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "신관 시간: {0:0.0} 사이트맵"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Crumble 지연: {0:0.0} 사이트맵"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "벽 내구성: {0:0} 폭발"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "벨트 속도: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "하락 간격: {0:0.0} 사이트맵"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Dropped 상자 크기: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "떨어지는 스파이크 크기: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "제조된 폭탄 크기: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "방향: ← 왼쪽"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "방향: 권리 →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "컨베이어 방향: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "박스: □○△"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "상자: 사각"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "상자: 둥근"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "상자: 삼각형"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "폭탄: 둘 다 Alternate"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "폭탄: Spawn에 신관"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "폭탄: 픽업에 신관"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "공급 능력: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "제조된 폭탄: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "이동 방향: {0:0}° (시프트 + 휠)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "시작 힘: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "플레이어"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "가늠자 방아쇠 무게 세트 {0:0} INK 플레이어당."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter 1에서 2000까지의 숫자."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "공급 능력"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "TEAM 모자{0}·"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "PEN 크기"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "CLEAR 부품"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "한국어"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "모든 상품"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "모두 설정?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "모든 신체 부위를 제거하고 원본 문자를 복원합니다."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "제품정보"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "주요 특징"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} 상품정보"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "상품정보"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5 충전기 PRESETS"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "HUMAN CAT BIRD 트러틀 슬래시"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "모든 5 문자"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "사이트맵 {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "지원하다"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "EMPTY는"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "제품 정보"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "세트"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "구매하기 {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "현재 저장 {0} preset에 그림 {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "더 읽기 {0} preset에서 그림 {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "세트 PRESET {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "현재를 대체 {0} preset로 그림 {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "기타"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "·"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "배경 잔디"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "꽃에 대 한"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "배경 부시"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "클라우드"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "배경 PUSH"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "고양이 얼굴"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "개 얼굴"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "스틱 그림"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "인기 카테고리"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "(주)"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "연락처"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "언어 선택"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "4 잎 클로버"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "메뉴 닫기"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "애플 아이폰"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "스낵 바"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "워터멜론"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "한국어"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "아이스크림"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "커피 컵"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "스낵 바"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "빵집"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "종이 비행기"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "비행기"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Rocket의 특징"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "핫 에어 풍선"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "집 »"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "보물 가슴"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "카테고리"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "제품 정보"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "고대 냄비"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Keyhole에 열쇠"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "한국어"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "가격대비"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "전구 (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "봄 봄"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "자석"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "음성 버블"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "체크 마크 (✓)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "질문표 (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "흥분 표 (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "루프 화살표"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "쥬프!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "한국어"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "시작!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "공지사항"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "자전: 이동 + 바퀴 (0.5 정도 정밀도)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "회전 : Shift + 휠 (15°), Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "회전 : Shift + 휠 (15°), Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "가늠자: 쥐 바퀴"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "(주)"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "계정 관리"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "기타 제품"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "다운로드"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "기타"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "이동 플랫폼 권리"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "플랫폼 이동"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "플랫폼 왼쪽 이동"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "플랫폼 이동"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "연결 활동: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "키홀에 연결해야 합니다."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "key to keyhole link 항상 사용 잠금 해제."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "기본 정보"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "링크에서"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "링크하기"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "관련 상품"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "추가 : {0} / 스냅: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  지원하다 {1:0.0},{2:0.0}  크기 (mm) {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "너비 = 오른쪽 벽 / 높이 = 천장 (왼쪽 벽과 낮은 가장자리가 고정)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "제품 정보"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "배치 된 개체 주위에 프레임을 만들었습니다. 오른쪽 벽과 천장을 조정할 수 있습니다."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "바닥과 천장 사이에 정확히 장착 된 벽."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "오시는길"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "객실안내 {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "읽기"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT 배송"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "기타"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "공지사항 {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "사이트맵 {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 미리보기: {0} 플레이어 / 무대 {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "배경 색깔"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "기본 정보"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "오파시티"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "배경 색상 변경. 그것을 지키는 단계를 저장하십시오."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "모드 추가: {0}. 맵에 드래그하여 만들 수 있습니다."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "모드 추가: {0}. 지도를 클릭하시면 됩니다."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "목록에서 선택."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "아니 일치"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(없음)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "정보 수집"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "시작/Goal"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "기타 제품"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "문/금"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "기타 제품"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "(주)"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "층별"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "벽 벽"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "지원하다"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "인기 있는"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "균형 가늠자"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "무게:"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "반 층"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "원웨이 플로어"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "아이스 플로어"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "슬리퍼 Slope"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "공급 업체"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "로프"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "채용 정보"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "클라우드 층"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "휴식 공간"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "연락처"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "이동층"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Sticky 이동 한 층"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 보충 DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "당신의 몸과 틈을 가진 공을 되튐 NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "공지사항 {0}  공지사항{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "결제 시간 {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "시작하기 {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "로드 중 {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "팟캐스트 {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "다음 ROUND IN {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 공! 제품정보"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "모든 ROUNDS CLEAR!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "ENEMIES 왼쪽 {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "·"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "방탄성 벽"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "스파이크 행성"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag 플라이어"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Orbit 플라이어"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "스낵 바"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "폭파 플라이어"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "이동 스파이크 공"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Pose 열쇠"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Pose 키홀"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "채용 정보"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "속도 표"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "스피드 마크 (Strong)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "철회 영역"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "자주 묻는 질문"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "필요한 탄알: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "연락처"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "자주 묻는 질문"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "전쟁 입구"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "전쟁 출구"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Respawn 포인트"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "연락처"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Goal 효력"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "기타 제품"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "무게 단추"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "동시 단추"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "단추를 붙이십시오"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "삼각형 상자"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "전환 스위치"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "타이머 스위치"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "레드 스위치"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "파란 스위치"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "녹색 스위치"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "황색 스위치"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "압력 판"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "원격 제어"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink 제품정보"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "제품 정보"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "잠그는 문"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "체크 아웃"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "제품 정보"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "레이저 문"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "색깔 문"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "1방향 게이트"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "연락처"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "파손 벽"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "숨겨진 벽"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "목재 상자"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "철 상자"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "·"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "제품 소개"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "얼음 구획"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "공급 업체"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "고무 상자"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "폭탄"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "폭탄 (환승 시작)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "폭탄 제작자"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "채용정보"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "워커 Enemy"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "점퍼 Enemy"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "충전기 Enemy"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "비행 Enemy"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "슈터 Enemy"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "리뷰 쓰기"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "미사일런"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "지원하다"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "이 장치는 항상 활성화합니다"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Interval 출시"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Enemy 크기"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "수염: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Enemy 크기: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "가격대비"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "배터리"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "기타 제품"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "점프 패드"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "봄 봄"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "컨베이어 왼쪽"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "컨베이어 권리"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "회사 소개"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "ღ♥ღ"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "자석"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "벨트 벨트"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "상자 Dropper"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "스파이크 Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "·"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "가격대비"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "디지털 시계"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "광속 방출"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "·"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "시간 제한"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "서바이벌"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}₢ 킹"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "₢ 킹{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "모든 제품"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "단계 규칙: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "(주) {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "영업시간"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "R을 retry에 눌러"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 수유"
+    },
+    {
+      "key": "survival_goal",
+      "value": "1개의 구멍 끝!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "GLOWING FLOOR로 이동"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "타블렛  {0:0}g (90g x 플레이어)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "RAIN의 운동"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "기차를 운전!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "우리..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "자주 묻는 질문"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "구매하기"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "안녕하세요!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "HEADS에 훈련  {0:0}₢ 킹 {1:0}₢ 킹"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "RARE GRAIN TARGET에 도달!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "TRY A BETTER 헤드 샤프트"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "사이트맵 {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "GRAIN BLIZZARD가 오른쪽에서 내려!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "FAST GRAINS MARKED SPOTS - 플레이당 하나!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 아이스 스피드런 - ONE PLAYER FINISHES"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "시작!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "결제 시간 {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "자세히 보기"
+    },
+    {
+      "key": "survival_start",
+      "value": "시작!"
+    },
+    {
+      "key": "game_over",
+      "value": "게임 OVER"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "이 몸은 시작에 실패하지 않습니다. REDRAW IT 슬라이더"
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "이 BODY MAY STICK 방 밖으로. 장바구니에 담기"
+    },
+    {
+      "key": "ready_room_status",
+      "value": "읽기 {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "관련 상품"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "이름 *"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "CHARACTER CHANGE 또는 REDRAW는 후에 지도합니다"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "CHARACTER 교환 후 (REDRAW OK)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "GAME 시작하기"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "시간 런닝이 끝나는 시간"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "CRAYON KING의 특징"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "위험과 위험"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "당신의 BODIES를 가진 모든 아쿠아리움 홀"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "패드를 막기 위하여 당신의 몸 갱구를 사용하십시오"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "파열 파이프"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "공과 BREAK를 완전히 막으십시오"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "함께 공을 밀어 INK 자석 및 탱크 IT"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "MISSILES 및 SURVIVE를 수행"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "COLLECT COINS 바퀴 공"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "FALLING GRAINS와 TARGET 중량에 도달"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "속도 RUN. GOAL BEFORE TIME RUNS OUT에 도달하십시오."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "RICOCHET에 대한 팁"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "벼룩과 벼룩"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "일시 정지"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "BREAK에 THROW BOMBS는 모든 구획을 막습니다"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "BREAK 상자와 COLLECT COINS"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "COLLECT COINS BEFORE 시간 실행"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "COLLECT COINS BEFORE 시간 실행"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "ENEMIES에서 당신의 친구를 초대하십시오"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "공을 떼어 내고"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "GOAL BEFORE TIME RUNS OUT에 도달"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "UMBRELLA를 사용하세요."
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "LASER THROUGH를 통해 GOAL에 대해"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "DEFEAT CRAYON 디빌"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "DEFEAT 커피"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "열 절연제"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "1명의 선수 SURVIVES를 지도하는 경우에 CLEAR."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "한 명의 선수가 GOAL에 도달합니다."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "SPIKE 벽"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "서명에 대한 경고!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "GOAL에 도전!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "WIND KEEPS 변경!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "사이트맵 INK 다운로드"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "시간 : {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "영업시간"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "UMBRELLA를 사용하지 마십시오!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "RAIN KNOCKS YOU OUT - 도달 시트"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "RAIN의 모든 WAS 캐비티!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 링크드 인"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "CHECK EACH 단추 링크!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "1-SECOND SHIELDS를 가진 BLOCK MISSILES!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "팀 문 - RESTARTING"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60-SECOND DEFENSE CLEAR!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "라운드 {0}/3    남은 시간 {1:0.0}초"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "공지사항 {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "위치와 각도를 조절해 레이저를 반사하라!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "라운드 {0} 클리어!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "시간 초과! 이 라운드를 다시 시작합니다"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON 델타  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 읽기"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "MOVE: 플랫폼 클립: MISSILE  F: BOMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "BOSS 거래!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "모든 플랫폼 DOWN"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "자주 묻는 질문"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "TARGETED - 팀의 리더!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "SUCTION - 이동 방법!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "관련 동영상  {0}₢ 킹"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Run, jump, turn and stop - 두 배는 학습입니다."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "사이트맵 {0}  두 배 다리: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "발사 층에 루어, 그 빨간색 스위치에 단계!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "모든 더블!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "다른 보스가 없었다."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "사이트맵 {0}  시작 시간"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "정확한 형태를 착용하는 CPU 팀을 Defeat."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "사이트맵 {0}  왼쪽: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "사이트맵 {0} 구매하기"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "적색 스위치가있는 클레임 무기. F: 폭탄 클립 : 미사일"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "읽기! 마우스와 클릭."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "CPU 종료!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "개인정보 보호정책"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "영업시간"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "시간!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "모두는 DOWN입니다!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "인기 있는 시작 3 초."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON 대리점 HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 읽기"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "런 권리! GREEN WEAPONS 사용!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "PURSUER 보험!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "모든 상품"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "런!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "자주 묻는 질문"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "사이트 맵 시간 왼쪽"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "SAFE 소개 {0} / DROP에서 {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "SAFE FLOOR에 도착!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "모든 선수"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "공지사항"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "비밀번호"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "비밀번호"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 PILLAR 수레바"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "경고를 경고하고 보상을 두십시오."
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "구매하기 슬라이딩 존"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "PILLAR SURVIVAL 클렌징!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 클린 킹"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP의  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER 다음 방"
+    },
+    {
+      "key": "boss_appears",
+      "value": "경고 ... BOSS!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "ATTACK / TURTLE SHELL로 이동"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "계정 정보 BOSS는 제한적입니다"
+    },
+    {
+      "key": "boss_charge",
+      "value": "한국어 오시는 길"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "CHARGE에서 {0}! 높은 FLOORS에 도착"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "특별 할인! RICOCHETS의 장점"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "BOSS 거래!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "ALL PLAYERS 아웃 ... 추천"
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "회의실  {0} / {1}  기타!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 허브 수유"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "1개의 구멍 끝!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "60 SECONDS를 위한 맞은편에 JUMP"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "오른쪽에서 HURDLES에 대한 경고"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "쥬프!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "JUMP의 허브!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "자주 묻는 질문"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "고속! FINAL 포인트!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "모든 선수"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "개인정보 보호정책"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "SURVIVOR 폼"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 떼"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "FRIEND 운동"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "BOXES, PLATFORMS 및 BODY와 함께 포장"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 프린트"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "한국어"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "RUN AHEAD 및 CLEAR TRAPS, 상자 및 ENEMIES"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "다음 친구에서  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "새로운 친구를 초대 ..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "ESCORT 완료!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "FRIEND는 GOAL에 도달"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "로드 중 {0}/3 건물 {1:0.0}₢ 킹"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "당신의 몸에 PATH를 연결하십시오"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "공지사항 그는 GOAL에 도달"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "로드 중 {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "로드 중 {0} 구매하기"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "라운드 {0}/3    남은 시간 {1:0.0}초"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "한국어 {0}/{1}    당신의 BODIES로 모든 것을 해결하십시오!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "라운드 {0} 클리어!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "시간 초과! 이 라운드를 다시 시작합니다"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "구멍을 막아라!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "로드 중 {0}/3    {1:0.0}s 왼쪽"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "공지사항 {0}/{1}    홀에서 그들!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "MAGNETISM과 함께 공을 밀어!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "로드 중 {0} 구매하기"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "시간! 이 여정"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "LANE로 이동! 더 보기 INK MEANS STRONGER 자석"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "FINAL ROUND : SNACK ABOVE에 도달하십시오!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "BUILD THE SNACK ABOVE!\n당신의 몸에 IT를 연결하십시오"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "친구는 당신의 머리와 몸 선에 WALK 할 수 있습니다"
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "공지사항"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "FRIEND 셀!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "게임 OVER"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "당신은 REDRAW WHILE THE FRIEND는 운동입니다."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET 릴레이"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "로드 중 {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "사이트맵 {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOCHET BULLETS OFF는 TARGET을 유지"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "AMMO 밖으로! 공지사항"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5라운드 CLEAR!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "스파워너"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "친구 Goal"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "비밀번호"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "헤드 브리지 예제"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "사이트 맵"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "연락처"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "스낵 바"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "스파이크"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "제품 정보"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "제품 정보"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "가을 바위"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "프레스 기계"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "전기"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "·"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "블랙 홀"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "큰 장치"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "밧줄 폴리"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "회사 소개"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "회전 바"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "홍보센터"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "키홀"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "무대 경계"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "시계"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "계정 관리"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "단계 선택"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "자주 묻는 질문"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "나머지 단계"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "온라인 세션을 남겨주세요?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "호스트로 떠나는 것은 이 세션을 모두 끝낼 것입니다. 자주 묻는 질문"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "이름 *"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "다리로 연결 : 오른쪽 가장자리가 왼쪽으로 확장하면서 연결됩니다."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "연결된 지형을 개별적으로 선택 가능하고 연결 가능한 부품으로 분할하십시오."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "분리형"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "별도의 부분은 ON입니다. 그것은 merging 없이 스냅 할 수 있고 개별적으로 연결될 수 있습니다."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "별도의 부분이 OFF. Touching terrain은 합병할 수 있습니다."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "1개의 지형 모양으로 지면과 벽을 연결했습니다."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "스트레이트를 {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "제품 정보"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "지면과 벽 간격: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "똑바른 선 그림은 위에 입니다."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "똑바른 선 그림은 떨어져 있습니다."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw 지원하다"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw 지원하다"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "모드 선택"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw 모드: 빈에 드래그 space 객체를 배치합니다."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "모드 선택: 기존 개체를 선택하고 이동."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} 드래그하여 자유롭게."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Freehand 지면과 벽 그림은 위에 입니다."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "장방형 배치는 위에 입니다."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "닥터우 {0} 1개의 연결 경로로 ({1} 이름 *"
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "본문 바로가기"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "본문 바로가기  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "테스트 재생에서 반환. 당신의 단계를 편집하십시오."
+    },
+    {
+      "key": "cancel",
+      "value": "이름 *"
+    },
+    {
+      "key": "retry",
+      "value": "다시 시도"
+    },
+    {
+      "key": "menu",
+      "value": "(주)"
+    },
+    {
+      "key": "redraw",
+      "value": "공지사항"
+    },
+    {
+      "key": "pen",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "eraser",
+      "value": "에라스"
+    },
+    {
+      "key": "shape_square",
+      "value": "제품 정보"
+    },
+    {
+      "key": "shape_circle",
+      "value": "한국어"
+    },
+    {
+      "key": "shape_line",
+      "value": "제품정보"
+    },
+    {
+      "key": "draw_finish",
+      "value": "한국어"
+    },
+    {
+      "key": "draw_redo",
+      "value": "이름 *"
+    },
+    {
+      "key": "brush_size",
+      "value": "크기 (mm)"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink 제품 정보"
+    },
+    {
+      "key": "undo",
+      "value": "이름 *"
+    },
+    {
+      "key": "character_switch",
+      "value": "문자 스위치"
+    },
+    {
+      "key": "character_add",
+      "value": "추가 Char"
+    },
+    {
+      "key": "character_delete",
+      "value": "삭제 Char"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "스위치 숯"
+    },
+    {
+      "key": "stage_select",
+      "value": "스테이지 선택"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 그룹, 각 3 단계. 편집을 켜면 편집 단계를 선택합니다."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0 디버그"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "편집 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "편집 : OFF"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "편집: 에"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "₢ 킹"
+    },
+    {
+      "key": "stage_clear",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_locked",
+      "value": "기타 제품"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "디버그 모드: 모든 세계가 잠금 해제됩니다. 무대를 선택하고 편집하려면 편집을 켜십시오."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2: 구획을 창조하는 벽 끌기\n3:시작 4:Goal 5:Scale 6:무게\nA/D/W/S: 이동 사진기 바퀴: 급상승\nF5: 저장  F6: 시험  Esc: 뒤로"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "크기 (mm)"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "기타 제품"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "제품 정보"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "이름 *  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "게임 설정"
+    },
+    {
+      "key": "option_bgm",
+      "value": "사이트맵"
+    },
+    {
+      "key": "option_se",
+      "value": "사이트맵"
+    },
+    {
+      "key": "option_keys",
+      "value": "이름 *"
+    },
+    {
+      "key": "option_language",
+      "value": "* 이름"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "아직 없음"
+    },
+    {
+      "key": "locked_stage",
+      "value": "JSON없이 단계는 디버그 단계로 돌아갑니다."
+    },
+    {
+      "key": "human",
+      "value": "한국어"
+    },
+    {
+      "key": "cat",
+      "value": "사이트맵"
+    },
+    {
+      "key": "bird",
+      "value": "한국어"
+    },
+    {
+      "key": "turtle",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "slime",
+      "value": "인기 카테고리"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 공 히트"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "QUICK 부품"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "제품정보"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "부분을 선택, 다음을 클릭하거나지도에 드래그하여 배치합니다."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "스냅: {0} / {1:0.##} 단위 격자"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "먼저 객체를 선택합니다."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "폭 변경. Shift+를 사용할 수도 있습니다. 바퀴."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "높이 변경. Alt+Wheel도 사용할 수 있습니다."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "크기 변경. 바퀴를 사용하여 axes 모두 스케일링합니다."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "이 부분을 배치하는 더 큰 영역을 드래그."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "이름 * {0} ({1:0.0} ₢ 킹 {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "이름 * {0} 으로 {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "선택사항 움직이고 크기를 높이는 휠을 사용합니다."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "아무것도 없다."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "마지막 편집을 취소."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "다시도 아무것도 없다."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Redid 편집."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "스위치, 버튼, 키, 키홀을 선택하여 링크 소스로 사용합니다."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "링크 소스로 스위치, 버튼, 키 또는 키홀을 선택하십시오."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "링크 소스: {0}. 그 표적을 선정하고, Link To를 누르십시오."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "링크 소스를 먼저 설정합니다."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "링크 대상으로 사용할 객체를 선택합니다."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "링크 소스 및 대상은 다른 개체이어야한다."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "링크드 인 {0} 으로 {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "연결된 객체를 먼저 선택합니다."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "링크가 삭제되었습니다."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "저장 : {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "저축은 현재 Unity Editor에서만 가능합니다."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "단계 목표 공장은 누락됩니다."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "교통 빛"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 구획 CRASH"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "구획 차단기"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "THROW BOMBS! 모든 것 NICO DRAW 공지사항"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} 블록 왼쪽"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "FAILED ...에서 RESTART {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE 팔찌"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "행동 또는 SE ID로 검색 한 다음 지정된 소리를 미리 볼 수 있습니다. 자원 경로를 볼 수 있는 행 이상."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "공지사항"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "공지사항"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "일치하는 소리 효력 없음."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE.md는 찾을 수 없습니다."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "분류되지 않음"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "사이트맵"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Runtime-generated 사운드"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Paw 인쇄"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "·"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "털실 공"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "눈 결정"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "아이카"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "스노우맨"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "블리자드"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "새 둥지"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "연락처"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "파이프"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "볼트 볼트"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "회사 소개"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "시간 유리"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "관련 링크"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "인기 카테고리"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "버블"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "스낵 바"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "레이디버그"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "해바라기"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "스켈레톤"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "배틀그라운드"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "스파이더웹"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "채용정보"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "주 메뉴"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "스낵 바"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "스낵 바"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "불꽃놀이"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "공지사항"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "비뇨기과"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "지도 보기"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "스낵 바"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "에라스"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "블랙 보드"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "패스워드"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "회사 소개"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "인기 카테고리"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "다운로드"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "스포트라이트"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "마이크"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "치즈"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "놀람 상자"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "선물 상자"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "팟캐스트"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "한국어"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "뚱 베어"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "블랙 홀"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "비누 거품"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "사이트맵"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "트리 루트"
+    }
+  ]
+}

@@ -5,6 +5,26 @@ using UnityEngine;
 
 namespace DrawBody.Prototype
 {
+    public static class LocalMultiplayerDebugMode
+    {
+        private static readonly bool noTimeLimit = DetectLocalRegressionLaunch();
+
+        public static bool NoTimeLimit => noTimeLimit;
+
+        private static bool DetectLocalRegressionLaunch()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            if (args == null) return false;
+            for (int i = 0; i < args.Length; i++)
+            {
+                string arg = args[i];
+                if (string.Equals(
+                    arg, "-pico-debug-no-time-limit", StringComparison.OrdinalIgnoreCase)) return true;
+            }
+            return false;
+        }
+    }
+
     public enum OnlineBackendMode
     {
         Fake,

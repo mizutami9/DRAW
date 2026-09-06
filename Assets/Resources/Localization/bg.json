@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "Име на играча"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter Вашето име"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Моля те. enter име на играч."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER Вашето име тук"
+    },
+    {
+      "key": "option_register",
+      "value": "РЕГИСТЪР"
+    },
+    {
+      "key": "lang_ja",
+      "value": "ЯпонскиName"
+    },
+    {
+      "key": "lang_en",
+      "value": "EN"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Чисто! Натиснете R да се опита отново."
+    },
+    {
+      "key": "draw_title",
+      "value": "Проектиране (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: Обратно към играта / ENTER: Решаване / ESC: Отказ"
+    },
+    {
+      "key": "preview",
+      "value": "Преглед"
+    },
+    {
+      "key": "clear",
+      "value": "Изтрий"
+    },
+    {
+      "key": "decide",
+      "value": "Потвърди"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Остава"
+    },
+    {
+      "key": "current",
+      "value": "Текущ"
+    },
+    {
+      "key": "part",
+      "value": "Част"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw Първо торса."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Торсо е основата. Draw други части от техния маркер за свързване."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: започнете от маркера за свързване."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw торса преди свързването на други части."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} е свързан."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} не е започнало от маркера за свързване."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Торсо е необходим преди да реши."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} трябва да започнете от маркера за свързване."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Лично  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Екип  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Грешка при вземане на решение: личен ink е {0:0.#}/{1:0}. Намалете го чрез {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Не може да се реши: екип ink е {0:0.#}/{1:0}. Намалете го чрез {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}Започни от маркера."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Глава"
+    },
+    {
+      "key": "torso",
+      "value": "Торсо"
+    },
+    {
+      "key": "left_arm",
+      "value": "Лява ръка"
+    },
+    {
+      "key": "right_arm",
+      "value": "Дясна ръка"
+    },
+    {
+      "key": "left_leg",
+      "value": "Ляв крак"
+    },
+    {
+      "key": "right_leg",
+      "value": "Десен крак"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Ляв фронт"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Десен фронт"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Ляво назад"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Назад"
+    },
+    {
+      "key": "tail",
+      "value": "Опашка"
+    },
+    {
+      "key": "left_wing",
+      "value": "Ляво крило"
+    },
+    {
+      "key": "right_wing",
+      "value": "Дясно крило"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Опашка Пера"
+    },
+    {
+      "key": "slime_body",
+      "value": "Шлим"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Нормален скок"
+    },
+    {
+      "key": "jump_double",
+      "value": "Скачай x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Скачай x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Нормален достъп"
+    },
+    {
+      "key": "arm_long",
+      "value": "Дълго разстояние"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Бързо завъртане"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Нормално"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Тежък превключвател"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Тежко"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Крак {0:0.0}: {1}   Ръка {2:0.0}: {3}   Торсо {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Крила {0:0.0} INK / Скорост на плъзгане {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "ЧОВЕШКА МОНТНОСТ\nРъце {0:0.0} INK  Мощност ×{1:0.00}\nКрака {2:0.0} INK  Скачане ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "Капацитет на котката\nЗадни крака {0:0.0} INK  Скорост ×{1:0.00}\nПредни крака {2:0.0} INK  Диапазон на ноктите ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "СТАБИЛНОСТ НА BIRD\nКрила {0:0.0} / 700 INK\nСкорост на плъзгане {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "СТАБИЛНОСТ НА ТУРТА\nЗадръж. SPACE: непобедима черупка\nЗадръж. F: завъртете 90° към посока с лице към"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "СЛИМОВОСТ\nТяло {0:0.0} / 700 INK\nДължина нагоре {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "ЧОВЕШКИ"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "Категория"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "BIRD"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "ТУРТЪЛ"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Още крак INK увеличава мощността на скока\nПовече ръка INK увеличава силата на хвърляне"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "По-назад. INK увеличаване на скоростта на движение\nОще предни крака INK увеличава обхвата на надраскване"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Още крила INK увеличава плъзгащата сила"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Непобедим, докато е скрит в черупката"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Преса F за повишение на атаката\nПо-малко INK прави го по-дълъг / Wall скок включен"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: THOW"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCCATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "ХОЛД SPACE: GLIDE  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "ХОЛД SPACEШЕЛ ХОЛД F: Turn 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: Upward Spike Attack"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Мощност ×{0:0.00}  Скачане ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Run ×{0:0.00}  Диапазон на ноктите ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Мощност на плуване {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: Шел /  F: 90° Turn"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Дължина на върха ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Ръце {0:0.0}/280 Крака {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Назад {0:0.0}/240 Front {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Крила {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Активирайте само докато бутонът се държи"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "Готова."
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE както и F Работете, докато чакате!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Тяло {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "ЗЛАТНО"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "ВИСОКОЛОГИЯ"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "РЪЧКА"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "Бягай!"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "СКРАТ"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GLIDE"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "Предпазливост"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "МОБИЛНОСТ"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "ТЯЛО INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "Светлина:"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "\"Спейд + скачай нагоре\""
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK СЪДЪРЖАНИЕ {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "FСпайк! По-малко INK = longer / Wall jump активиран"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Повече за захранване!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Не можеш да се преначертаеш след като този етап е започнал."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Висока платформа"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Тежък превключвател"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Far Lever"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Тесен отвор"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "Constellation name (optional)"
+    },
+    {
+      "key": "multi_participants",
+      "value": "PLAERS"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "СТАЯ НА КРИТЕТА"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "ОБЩА СТАЯ"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "СТАЯ ID"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "ИЗПИТВАНЕ НА МЕСТОПОЛОЖЕНИЕТО (ВЪПРОС)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "Ти"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 СЛИМ МИСИЛЕН КЕЙВ"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "Да се махаме! Вземи една стена."
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "Уол-Джъмп и Додж Пиърсинг Мисилс!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 защити приятеля си!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "ФАЗА {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "Време {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Защитавай приятеля си от двете страни"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "AIRSTRIKE IN {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "Приятелят надолу... Ретри в {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Защитата е чиста!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "COIN {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "Време {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "Счупени кутии и колекционерски монети!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "Времето изтича след 5 минути."
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 монети чист!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "Включете захранването!"
+    },
+    {
+      "key": "title_single",
+      "value": "Един играч"
+    },
+    {
+      "key": "title_multi",
+      "value": "Мултиплейър"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Настройки"
+    },
+    {
+      "key": "option_back",
+      "value": "Обратно  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "Обратно  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "Обратно  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Изход"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "Constellation name (optional)"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4-плеър въздушно реле"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Човек хвърля птица, а след това птица → Котка → Сламено реле"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "НАЧАЛЕНИЕ"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "Обратно  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "EDIT characters"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "Constellation name (optional)"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "Export 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "Обратно към ДЯЛа"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Проверете състава, след това експортирайте PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Запис: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "Преначертаване..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "Чарактрите могат да бъдат променяни само в стаята."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY H Скрийте HUD     ESC  ДЯЛ"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "Трайлър TAS запис"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Влачете актьорите, докато не се захващате с Overdub Human → Bird → Cat → Slime  гол F9 Запис F10 Play P Пауза O Стъпка"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 РЕЗОРД/СТОП"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 PLAY ALL"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 RESET TEAM"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "Чисто избрано"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "ПАУЗ"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "СТЪПКА"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "ЗАПИТВАНЕ"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "Играе всички следи"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "Павла"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} Избрани: {1} | {2} кадър . {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "ПРЕСЕТ {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SAVE SHAPES"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Докато са празни, плъзнете символите, за да зададете техните начални позиции"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Продължение"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Заглавие"
+    },
+    {
+      "key": "language_settings",
+      "value": "Настройки на езика"
+    },
+    {
+      "key": "multi_play",
+      "value": "MULTI PLAY"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Случайно съвпадение"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Частен"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Случайно съвпадение"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Търсене на играчи"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Търсене"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Съвпадение...\n\n1 / 4\n\nТи\nPlayer2\n□ Търсене\n□ Търсене\n\nЧакам за [READY]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "СТАЯ"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Създаване на стая"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Присъедини се към стаята."
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Име на стаята\n[ Draw Заедно ]\n\nМакс плеъри\n< 4 >\n\nВидимост\n[Public] [Частен]\n\nЕтап\n[Host Selects]\n\nПреначертаване на правило\n."
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Макс плеъри"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Видимост"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Видимост"
+    },
+    {
+      "key": "multi_public",
+      "value": "Публично"
+    },
+    {
+      "key": "multi_private",
+      "value": "Частен"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Превключване"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Създаване"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter идентификацията на лобито, показана на екрана на приемника.\n\nС конфигурирана EOS, приятелите могат да се присъединят дистанционно.\nАко използвате Direct TCP, enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter Идентификационен номер на лобито"
+    },
+    {
+      "key": "multi_join",
+      "value": "Присъединяване"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Обновяване"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "Constellation name (optional)"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Стая: Draw Заедно\nЛична карта: ABC123\n1 / 4\n\nЛоби за игра. space\nИграйте с кутии, топки и подплънки, докато чакате."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Копиране на ID"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Начало 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Избор на етап"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Сцената избира отключва, когато всички са готови."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Да напусна тази стая?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Напусни."
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Отмяна"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Домакинът избира сцена..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Напусни."
+    },
+    {
+      "key": "multi_matching",
+      "value": "Съвпадение..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Само домакинът може да започне."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Няма документ за самоличност."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Копирах документите на лобито."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Код на стаята."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Копирана идентификация на връзката."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Офлайн. Няма код за стая."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Офлайн"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Код"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Свързване..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Стая"
+    },
+    {
+      "key": "multi_players",
+      "value": "Играчи"
+    },
+    {
+      "key": "multi_local",
+      "value": "Местен"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Готово."
+    },
+    {
+      "key": "multi_wait",
+      "value": "Чакай."
+    },
+    {
+      "key": "multi_host",
+      "value": "ХОСТ"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Заедно"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Приятелска стая."
+    },
+    {
+      "key": "online_player_you",
+      "value": "Ти..."
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "Ти"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Хост"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Играч {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Фалшивата случайна среща е готова."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Фалшив бекенд инициализиран."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Влизане..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Онлайн като местен тестов играч."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Фалшив старт."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Частната стая е създадена."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Стаята е създадена."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Влезе в фалшива стая."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Директно TCP инициализиран."
+    },
+    {
+      "key": "online_ready",
+      "value": "Онлайн готов. Хост или се присъедини към стаята."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Стаята е създадена. Сподели документите с приятеля си."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Неуспешно приемане: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "Стаята ID трябва да бъде Host-ip:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "В приемната..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Грешка при включване: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Ляво лоби."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Готови сме."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Приемането се провали."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} Присъедини се."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} Напуснах сесията."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Лобито е обновено."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Начална фаза {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS инициализирана. Настройване на приставка EOS преди влизане."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "EOS вход..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "EOS Connect интерфейсът не е готов."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Грешка при влизане в EOS: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "Грешка при създаване на лоби: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "Стаята EOS е създадена. Сподели тази личната карта."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter документ за самоличност на ЕОС."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter код за стая."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Грешка при регистриране на кода на стаята: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Търсенето на рум код е неуспешно: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Няма място за код. {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Кодът на стаята се е сблъскал. Моля, създайте стаята отново."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Домакинът отвори сцената."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Хост затворен етап изберете."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS не успя да се присъедини към лобито: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Присъединих се към EOS стаята."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Наляво от лобито на EOS."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Готови."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Не съм готов."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Грешка при създаване на идентификатор на EOS устройство: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Създаване на EOS устройство..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Грешка при въвеждане на EOS устройство: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS онлайн като {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Членовете на лобито са обновени."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS не е влязла. Настройване на EOS приставката и влизането първо."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS е извън строя."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "НИВОТО Е ЗАВЪРШЕНО!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Ниво {0} е завършено!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Завършено!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Следващо: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Избор на ниво"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Всички нива са завършени!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Етап {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "СВЕТА {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "КАПАЦИТЕТ"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "УПОТРЕБА: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "СЕКЮРИТИЗАЦИЯ"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "НЕ СЪБИТИЯ"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} не е на разположение на този етап."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Друг играч вече използва {0}. Изберете наличен характер."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "Character SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} е в употреба. Натиснете COMPLETE, за да поискате замяна."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} иска да размените вашия {1} вместо {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "DECLINE"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Чакам отговор на искането за замяна..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Символите се размениха!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Искането за замяна беше отхвърлено."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Другият играч не може да бъде намерен."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "GRAIN DISPENSER"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100g scale"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "Тегло GATE"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "Приятел Бътън"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "Играй си на еднопосочен етаж."
+    },
+    {
+      "key": "species_human",
+      "value": "Човек"
+    },
+    {
+      "key": "species_cat",
+      "value": "Котка"
+    },
+    {
+      "key": "species_bird",
+      "value": "Птица"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Костенурка"
+    },
+    {
+      "key": "species_slime",
+      "value": "Шлим"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Обекти"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Връзки"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Плъзнете героя, за да започнете тест игра от тази позиция. Спасеният етап не се променя."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Преместете стартовата позиция."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Начало на изпитването: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Грешка при запис: {0} грешка(s). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Запис: {0} ({1} предупреждение(s))"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Създаване на стая\nИме на стаята [........]\n1 / 3\nПублично / частно\n\nПрисъедини се към стаята.\nИдентификация на стаята [......]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Плъзнете на място / Кликнете, за да изберете / WASD да се движат\nДекорация: Колело до мащаб / Shift + колело за завъртане\nCtrl + колело: увеличение на целия етап"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} Избрани обекти"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Ще бъдат избрани обекти, напълно затворени в полето."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Избран {0} Обекти. Плъзнете избран обект, за да ги преместите заедно."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Няма напълно затворени обекти в полето за избор."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Преместване {0} Избрани обекти заедно."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Категория"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Търсене"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Тип"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Търсене на дума"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Списък с обекти"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Списък с връзки"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "К-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "Х..."
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Възстановяване"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Копиране"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Обектът е копиран."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ Право"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ Down"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← Ляво"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ UP"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Копиране на посоката: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Обектът е копиран. {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Длъжност: X {0:0.00} / Y {1:0.00} (телефонни ключове)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Изстрелване на мощност"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Преместване на разстояние"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Преместване на скоростта"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Предпазител (сек)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Crumble Date (сек)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Необходими експлозии"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Скорост на колана"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Капка интервал (сек)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Бийм Интервал (сек)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Размер на кутията"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Размер на бомбата"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Размер на спайка"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Преместване на разстояние: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Скорост на движение: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Време за задействане: {0:0.0} сек"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Забавяне: {0:0.0} сек"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Устойчивост на стената: {0:0} експлозии"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Скорост на колана: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Интервал на падане: {0:0.0} сек"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Размер на свалената кутия: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Размер на наклона: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Размер на произведената бомба: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Посока: ← Ляво"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Посока: Дясно →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Посока на транспортьора: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Кутии:"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Кутии: квадрат"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Кутии: кръгла"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Кутии: Триъгълник"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Бомби: Алтернативни и двете"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Bomb: Fuse on Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Бомба: предпазител на пикап"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Изхвърлени кутии: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Производство на бомби: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Преместване на посоката: {0:0}° (Шифт + колело)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Мощност на изстрелване: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Пер плеър"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Мащабно задействащо тегло {0:0} INK на играч."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter число от 1 до 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "ЛИЧНИ КАПА"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "CAP TEAM ({0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "КОЛИЧЕСТВО В ЕДНА ОПАКОВКА"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "clear Party"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "УНДО"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "РЕСЕТ ВСИЧКИ"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Да възстановя всичко?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Изтрий всяка част от тялото и възстанови оригиналния характер."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "RESET"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "CANCEL"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} ПРЕДЛОЖЕНИЯ"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "ПРЕДЛОЖЕНИЯ"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5-каракетни престилки"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "ЧОВЕШКА КОТКА ТЪРТЪЛ СЛИМ"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "и петте символа"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLOT {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "ПЛАЩАНИЯ"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "ЕМИТ"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SAVE"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "Сет"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "СПАСИ ЗА ПРЕДСЕДАТЕЛ {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Запис на текущия {0} чертеж за предварителна настройка {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Презапис {0} чертеж в предварително настройка {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "Сет Пресет {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Замяна на тока {0} чертеж с предварително настройка {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Фон"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Дърво"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Фонова трева"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Цвят"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Фон Буш"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Облак"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Фонова пуш"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Стрелка"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Лице на котка"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Кучешко лице"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Стик фигура"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Smiley"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Сърце"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Звезда"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Луна"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Слънце"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Дъжд"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Светкавица"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Дъга"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Планина"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Четирилистна детелина"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Гъба"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Ябълка"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Банан"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Диня"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Поничка"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Сладолед"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Кафе чаша"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Пица"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Хляб"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Хартиен самолет"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Самолет"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Ракета"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "НЛО"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Балон с горещ въздух"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Къща"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Замък"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Съкровищница"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Мол"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Fossil"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Кристал"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Древна трева"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Ключ"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Ключ към ключалката"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Меч"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Краун"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Щит"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Гем"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Монети"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Кост"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Лампа (Идея)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Съоръжение"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Пролет"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Магнит"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Зарове"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Реч Балон"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Проверка на марката"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Въпрос Марк (?"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Изумителен белег!"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Стрелка на примката"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "Скачай!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Хвърляй!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Начало!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "Гол!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Завъртане: Shift + колело (0,5 градуса точност)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Завъртане: Shift + wheel (15°), с Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Завъртане: Shift + wheel (15°), с Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Мащабиране: колело на мишката"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Действие"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Появяване"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Изчезване"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Отключване"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Движение."
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Преместване надясно"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Преместване на платформа нагоре"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Преместване наляво"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Преместване на платформа надолу"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Действие на връзката: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Ключът трябва да е свързан с ключалка."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Ключът към връзките с ключалките винаги използвайте Отключване."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Snap"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Връзка от"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Връзка към"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Отваряне"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Добавяне: {0} / Щрак: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Pos {1:0.0},{2:0.0}  Размер {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Ширина = дясна стена / Височина = таван (лява стена и долният край остават фиксирани)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Рамка"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Създаване на рамка около поставените обекти. Изберете го, за да настроите дясната стена и таван."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Стената е поставена точно между пода и тавана."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "GOAL"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "СТАЯ {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "BOMB"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MISSILE"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Готово."
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Фон"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "PLAERS {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "СТАЖ {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 Preview: {0} играч(s) / етап {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Цвят на фона"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "По подразбиране"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Затваряне"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Непрозрачност"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Цветът на фона е променен. Запази сцената за нея."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Добавяне на режим: {0}Плъзнете се на картата, за да я създадете."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Добавяне на режим: {0}Кликнете върху картата, за да я поставите."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Избран от списъка."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Няма съвпадение."
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(няма)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Терен"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Начало/цел"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Превключване"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Врата"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Задвижване"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Действие"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Капан"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Gimmick"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Врагове"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Под"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Стена"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Начало"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Цел"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Скала на баланса"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Тегло"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Таван"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Половин етаж"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Еднопосочен етаж"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Леден под"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Slippery Slope"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Катеребна стена"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Въже"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Стълба"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Облачен под"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Счупващ се под"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Падащ под"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Преместване на етаж"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Лепкав движещ се етаж"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 REFLECT DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Прескочи топката с тялото си и счупи NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "БЛОКС {0}  BALLS ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "Времето изтича. {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "Начало {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "round {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "БОЛ {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "Следващият. {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 топки изгубени! RERY"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Чисто е!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "Враговете си тръгнаха. {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Пистолет"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Стената на куршума"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Планетата Спайк"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag Flyer"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Orbit Flyer"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Базука"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Експлоатационни полети"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Преместване на топката Spike"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Ключ за позаName"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Дупка за ключ"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Обновяване"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Маркиране на скоростта"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Маркиране на скоростта (Stong)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Зона за повторно изтегляне"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Необходими куршуми"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Необходими куршуми: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Ротационен етаж"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Контролен пункт"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Вход на свръхсветлинна"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Светлинен изход"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Точка на повторно залагане"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Среден гол"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Ефект на целта"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Копче"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Тегло бутон"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Съответен бутон"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Дръжте бутона."
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Триъгълна кутия"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Lever"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Превключване"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Превключвател"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Сензор"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Червен превключвател"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Син превключвател"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Зелен превключвател"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Жълт превключвател"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Пластмаса на налягането"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Дистанционно управление"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Скала"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Врата"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Заключена врата"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Шлюзер"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Ограда"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Лазерна врата"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Цвят"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Еднопосочна врата"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Времева врата"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Сгъваема стена"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Скрита стена"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Дървена кутия"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Желязна кутия"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Топка"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Барел"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Rock"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Ледов блок"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Плаваща кутия"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Гумена кутия"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Бомба"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Бомба (Fuse Starts on Pickup)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Bomb Maker"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Динамит"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Walker Enemy"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Враг скачач"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Враг на зарядното"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Летящ враг"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Стрелец враг"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Вражески заложник"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Ракетно изстрелване"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Активиране"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Това устройство винаги използва Активирайте"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Интервал за стартиране"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Размер на врага"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Изроден враг: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Размер на врага: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Ключ"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Монети"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Звезда"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Батерия"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Кофа"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Скачай!"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Пролет"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Ляв транспортьор"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Вдясно на транспортьора"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Асансьор"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Вентилатор"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Магнит"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Колан"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Капкомер за кутия"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Spike Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Риба"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Монети"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Звезда"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Цифров часовник"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Бийм емитер"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Нормално"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Времеви лимит"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Оцеляване"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}ре"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "ВСИЧКИ"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Правило на етапа: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Време {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "Време до"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Натиснете R да се опита отново"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 SURVIVAL"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Един оцелял е чист!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "Преместете се към пламтящия етаж"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "ЦЕЛ  {0:0}g (90g x PLAERS)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "Преместете се в позиция преди дъжда"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Хванете зрънцата!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "Вегетарианство..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "ОТКРИВАНЕ НА ГРАНИЦИТЕ НА ФЛОРА"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Чисто!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Толкова близо!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "ГРАЖДАНИ НА heads  {0:0}g / {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "Рар Граин Таб достигна!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "Опитай с по-добра форма на главата"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "СТАЖ {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Хванете гранатата Близард от дясно!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "Бързите гранати ще ударят белязания шпагат!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 ICE SPEEDRUN - One Player Finishes"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Начало!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "Времето изтича. {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Пригответе се!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Начало!"
+    },
+    {
+      "key": "game_over",
+      "value": "Играта свърши."
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Това тяло не пасва в началото. Моля те, нарисувай го по-малко."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Това тяло може да излезе от стаята. Моля те, просто си помисли."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Готово. {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "ПРЕПОРЪЧВАНО"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "Нищо."
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "Няма промяна или промяна в програмата след напускане"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "Няма промяна след напускането."
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Пригответе се да започнете играта"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "Колекционирайте рибата преди да изтече времето"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "УБИЕЦ НА КРАЛЯ"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "МЪРТВИТЕ И ОЦЕЛЕНИ"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "Изсипете всяка акварийна дупка с вашите органи"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Използвай тялото си, за да отключиш пътя."
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "Dodge The Funding Pillars"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "Превключи топката и счупи всеки блок"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "Завърти топката с INK Магнети и синини"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "ИЗВЪРШИ МИСИЛА И ОЦЕЛЯВАЙТЕ"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "Колекционерски монети, докато се въртят"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "Колекциониране на потапящите грайфери и постигане на целта тегло"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Бягай. Да стигнем до целта преди времето да изтече."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "Куршуми от РИКОШЕТ, за да погубят враговете."
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "Светлини тъмнината и изплъзване на духовете"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "Оцеляване докато изтече времето"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "Пусни бомбите да счупят всеки блок."
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "БАЗОВИ КУТИЯ И КОЛЕКТИВНИ МОНИ"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "Колекторни монети преди да изтече времето"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "Колекторни монети преди да изтече времето"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "Защитавай приятеля си от враговете."
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "Върнете топката обратно, за да унищожите враговете."
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "ТЪРСЕТЕ ГОРАТА ПРЕДИ ДА ИЗТЕГЛЕЕ времето"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "Използвайте UMBRELLA, за да стоите извън дъжда"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "Превъртете лазера през всеки човек до целта"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "ДЕФЕТ КРАЙОН ДЕЙВИЛ"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "DEFEAT CRAYON STALKER"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "ЗАБРАНА НА ВЕХИТЕ"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "Ако поне един играч оцелее."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "Ясно, когато някой играч достигне целта."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "Спайк Уол Лаунч"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Чакай сигнала!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Бягай към целта!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "Уинд продължава да се клати!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "ПО-КЪСНО INK = STRONGER WIND"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "Време {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "Време до"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Остани под UMBRELLA!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "Издигането на дъжда те побърква."
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Всички бяха хванати в дъжда!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 LINKED SHIELDS"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Провери всеки бутон!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "Мишели с 1-секундни шила!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "ОТЯВЛЕНИЕ"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60-секундна защита!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "РУНД {0}/3    ОСТАВАТ {1:0.0} сек"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "ЗЪРНЕНИ КУЛТУРИ {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "НАГЛАСЕТЕ ПОЗИЦИИТЕ И ЪГЛИТЕ, ЗА ДА ОТРАЗИТЕ ЛАЗЕРА!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "РУНД {0} ЗАВЪРШЕН!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "ВРЕМЕТО ИЗТЕЧЕ! ТОЗИ РУНД ЗАПОЧВА ОТНОВО"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON DEVIL HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 Готови за полет"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "MOVE: ПЛАТФОРМА  F: BOMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "Шефът е предопределен!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "ВСИЧКИ ПЛАТФОРМИ"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "Разпръснете се!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "Насочете се към целта - оставете екипа!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "Успех - отдръпни се!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "Записване на движение...  {0}ре"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Бягайте, скачайте, завъртете се и спрете!"
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "ФАЗА {0}  Двойките останаха: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Примами един на стартов под и стъпи на червения бутон!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Всички двойници са победени!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Никога не е имало друг шеф."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "ФАЗА {0}  Начало в"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Победи екипа на процесора с точните си формуляри."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "ФАЗА {0}  Ляво: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "ФАЗА {0} Чисто!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Оръжия с червени ключове. F: хвърляне на бомба: ракета"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Мисил е готов! Цел с мишката и кликнете."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "Отборът на процесора е предопределен!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "Последната битка е чиста!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "Време до"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Време е!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Всички са долу!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Провалих се! Започваме от началото след 3 секунди."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "Crayon STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 Пригответе се"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Бягай надясно! Използвай зелените оръжия!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "ПО-ДОБРЕ!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "Всички бяха хванати."
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Бягай!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Внимавай с цвета на пода!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "Оцелявам! Оставащото време"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "СВЕТЛИНИ {0} / drop In {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Стой на безопасно място!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Всички играчи навън"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "Скоро ще си тръгнем."
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "Оцелял е!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "ОСИГУРЕН"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 ПИЛАР СЪРВАЛ"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "Внимавай с предупреждението и МОДЖИТЕ ПИЛАРИТЕ"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "Идвам! Остави блещукащия Зон"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "Чисто е!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 CRAYON KING"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER Следващата стая"
+    },
+    {
+      "key": "boss_appears",
+      "value": "Внимание, шефе!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "Стрелба за атака / турска шел за охрана"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Пазач! Шефът е неуязвим."
+    },
+    {
+      "key": "boss_charge",
+      "value": "Зареди! Махни се от пътя!"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "Тръгваме. {0}Отиди до високите етажи."
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Специална атака! ДОДЖ РИКОШИТЕ"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "Шефът е предопределен!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Всички играчи..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "Стая за чакане  {0} / {1}  Ставай!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 УБИЙСТВО НА УБИЙСТВОТО"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Един оцелял е чист!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "Скочи от дясната страна за 60 секунди."
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "Внимавай за рани отдясно."
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "Скачай!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Скачайте!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Бавно... поеми дъх!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "По-бързо! Последна точка!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Всички играчи навън"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "Чисто е!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "Намерихме оцелял."
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 ЕСОРТ Приятелят"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "Приятел, движещ се."
+    },
+    {
+      "key": "escort_instruction",
+      "value": "Построих пат с кутии, карти и тялото ти."
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 Защитете приятеля"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "Ааа!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "Да бягаме, да чистим кашони и врагове."
+    },
+    {
+      "key": "escort_respawning",
+      "value": "Следващият приятел в  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Подготвяйки нов приятел..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "ESCRT Complete!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "Приятелят достигнал целта"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "round {0}/3 СГРАДИ {1:0.0}ре"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "Свържи се с тялото си."
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Давай! Помогнете на приятеля да достигне целта"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "round {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "round {0} Чисто!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "РУНД {0}/3    ОСТАВАТ {1:0.0} сек"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "СОЛИ {0}/{1}    Изсипете ги всичките с вашите тела!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "РУНД {0} ЗАВЪРШЕН!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "ВРЕМЕТО ИЗТЕЧЕ! ТОЗИ РУНД ЗАПОЧВА ОТНОВО"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "ЗАПУШЕТЕ ДУПКИТЕ!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "round {0}/3    {1:0.0}ТВЪРДА"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "БОЛОВЕ {0}/{1}    Вкарайте ги в дупките!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "Пусни топката през маската с магнетизъм!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "round {0} Чисто!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Време е! ОТКРИВАЙ СЕ ОТ ТОЗИ round"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Премести се в Лейн! Повече INK ЗНАЧЕНИЕ НА ПО-РАНО МАГНЕТИСМ"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "Достигни снека!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "Построих си път през снека!\nСвържи го с тялото си."
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "Приятелят може да върви по главата ти и тялото ти да се изправи."
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "Приятел старт"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "Приятелят Фел!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "Играта свърши."
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Не можеш да рисуваш докато приятелят се движи."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 РИКОШЕТ РЕЛИ"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "round {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "РИКОШЕ БУЛЕТА ОТ ПРИЯТЕЛИТЕ НА РИКОШЕТИТЕ, ЗА ДА УБИЕШ ТАЗИ"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Вън от АММО! ПРЕСТРУКТУРИРАНЕ"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 round clear!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Приятелски заложник"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Приятелска цел"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Friend-Pass Floor"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Пример за главен мостик"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Seesaw"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Завиване"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Оръдие"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Катапулт"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Спайк"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Огън!"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Вода"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Отрова"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Лазер"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Падаща скала"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Прес машина"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Електричество"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Трион"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Черна дупка"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Съоръжение"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Голяма предавка"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Въже Пули"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Плъзгач"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Ротационен бар"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Пендулум"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Ключалка"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Сцена граница"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Часовник"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Брояч"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Избор на етап"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Напускане на сесията"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Рестартиране на етап"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Да напусна онлайн сесията?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Напускането като домакин ще сложи край на тази сесия за всички. Да напусна?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Напусни."
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Свързан като мост: десният край остава свързан, докато се простира наляво."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Разделете свързания терен на индивидуално избрани и свързани части."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Разделени"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Отделната част е включена. Тя може да щракне без сливане и може да бъде свързана индивидуално."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Отделното е изключено. Докосването може да се слее."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Свързва пода и стената като една терена форма."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Плъзнете към мястото на прав {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Дебелина"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Дебелина на пода и стената: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Направо"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Рисунката е на права линия."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Чертежът на права линия е изключен."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw режим"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw режим"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Избор на режим"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw режим: плъзгане на празен space да постави предмети."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Избор на режим: изберете и преместете съществуващите обекти."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} свободно чрез влачене."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Свободно под и стенна рисунка е ON."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Правоъгълното поставяне е включено."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Дрю. {0} като един свързан път ({1} точки)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Връщане към редактора"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Връщане към редактора  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Върна се от пробната игра. Продължавай да редактираш сцената."
+    },
+    {
+      "key": "cancel",
+      "value": "Отмяна"
+    },
+    {
+      "key": "retry",
+      "value": "Опитай отново"
+    },
+    {
+      "key": "menu",
+      "value": "Меню"
+    },
+    {
+      "key": "redraw",
+      "value": "Redraw"
+    },
+    {
+      "key": "pen",
+      "value": "Писалка"
+    },
+    {
+      "key": "eraser",
+      "value": "Изтриване"
+    },
+    {
+      "key": "shape_square",
+      "value": "Кутия"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Кръг"
+    },
+    {
+      "key": "shape_line",
+      "value": "Ред"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Готово!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Назад"
+    },
+    {
+      "key": "brush_size",
+      "value": "Размер"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Използване"
+    },
+    {
+      "key": "undo",
+      "value": "Отмяна"
+    },
+    {
+      "key": "character_switch",
+      "value": "Превключване на символи"
+    },
+    {
+      "key": "character_add",
+      "value": "Добавяне на Char"
+    },
+    {
+      "key": "character_delete",
+      "value": "Изтриване на Char"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Превключване"
+    },
+    {
+      "key": "stage_select",
+      "value": "Избор на ниво"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 групи, 3 етапа всяка. Включване на редактиране, след това изберете етап, за да го редактирате."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1- 0 Дебъг"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Редактиране 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Редактиране: изключено"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Редактиране: ON"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "НОВО"
+    },
+    {
+      "key": "stage_clear",
+      "value": "Чисто"
+    },
+    {
+      "key": "stage_locked",
+      "value": "ЗАБРАНЕНО"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Режим Debug: всички светове са отключени. Изберете етап, за да играете, или за да го редактирате."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2: Wall плъзнете, за да създадете блокове\n3:Започвам 4:Цел 5:Шел 6:Тегло\nA/D/W/S: подвижна камера Колело: увеличение\nF5:Save  F6:Test  EscНазад"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Скала"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Размер"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Мрежа"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Изтриване"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Запис"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Изпитване"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "Обратно  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Настройки на играта"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "Ключове"
+    },
+    {
+      "key": "option_language",
+      "value": "Език"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Още не."
+    },
+    {
+      "key": "locked_stage",
+      "value": "Сцените без JSON се връщат на сцената."
+    },
+    {
+      "key": "human",
+      "value": "Човек"
+    },
+    {
+      "key": "cat",
+      "value": "Котка"
+    },
+    {
+      "key": "bird",
+      "value": "Птица"
+    },
+    {
+      "key": "turtle",
+      "value": "Костенурка"
+    },
+    {
+      "key": "slime",
+      "value": "Шлим"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 Удар с топка"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "ПЪРВА ЧАСТ"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "ИЗБОР"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Изберете част, след което кликнете или плъзнете на картата, за да я поставите."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Snap: {0} / {1:0.##} Единична координатна мрежа"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Първо изберете обект."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Ширината се промени. Можете също така да използвате Shift+ Колело."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Височината се промени. Можете също да използвате Alt+Wheel."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Размерът е променен. Използвайте колелото за мащабиране на двете оси."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Плъзнете по-голяма площ, за да поставите тази част."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Място {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Място {0} в {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Избран. Влачете, за да се движат и използвайте колелото, за да се преоразмери."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Няма нищо за оправяне."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Отмени последната редакция."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Няма нищо за преправяне."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Редактирай редактирането."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Изберете превключвател, бутон, ключ или ключ, за да използвате като източник на връзка."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Изберете превключвател, бутон, ключ или ключ като източник на връзка."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Източник на връзка: {0}. Изберете си цел, след това натиснете Линк към."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Настрой първо източник на връзка."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Изберете обект, който да използвате като цел на връзката."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Източникът на връзката и целта трябва да са различни обекти."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Свързани {0} до {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Първо изберете свързан обект."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Изчистих връзката."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Запис: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Спестяването е достъпно само в редактора на Единството."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Фабриката за сценични обекти липсва."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Светлина за движение"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 БЛОК БРАШ"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Blockbreaker"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Хвърли бомбите! ЗАБРАНЕ НА ВСИЧКИ NICO DRAW БЛОКС!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} БЛОКСИ ОТДАВАНИ"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "Провалих се... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE browser"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Търсене по действия или SE ID, след това натиснете Play, за да прегледате зададения звук. Заобиколете един ред, за да видите пътя си ресурс."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "Играй!"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "Спри!"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "РЕЛОАД"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Никакви звукови ефекти."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE.md не беше открит."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Без категория"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "ИЗМАМЕНА"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Звук, генериран от времето"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Печат на лапата"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Риба"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Прежди"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Снежен кристал"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Висулка"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Снежен човек"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Близард"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Пера"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Птиче гнездо"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Вятърни линии"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Тръби"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Болт"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Вериги"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Пара"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Костенурка"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Пясъчен часовник"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Седалка"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Шлим"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Балони"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Пеперуда"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Калинка"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Слънчоглед"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Лале"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Скелетон"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Прилеп"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Spiderweb"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Сталактит"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Фенер"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Минна количка"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Кирка"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Трофей"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Медал"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Свиркане"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Балон"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Конфети"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Фойерверки"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Кула"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Бинокли"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Мост"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Пастел"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Молив"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Изтриване"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Ноутбук"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Черна дъска"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Палет"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Четка за рисуване"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Canvas"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Хронометър"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Прожектор"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Микрофон"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Сирена"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Кутия изненада"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Кутия за подаръци"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Планета"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Извънземен"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Комета"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Черна дупка"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Сапунен балон"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Мъх"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Дървесен корен"
+    }
+  ]
+}

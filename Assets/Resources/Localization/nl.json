@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "NAAM VAN DE SPEELERS"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter uw naam"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Alsjeblieft. enter een spelernaam."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER UW NAAM HIER"
+    },
+    {
+      "key": "option_register",
+      "value": "REGISTER"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Japans"
+    },
+    {
+      "key": "lang_en",
+      "value": "NL"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Veilig. Druk op R om het opnieuw te proberen."
+    },
+    {
+      "key": "draw_title",
+      "value": "Ontwerp (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: Terug naar spel / ENTER: Besluit / ESC: Annuleren"
+    },
+    {
+      "key": "preview",
+      "value": "Voorbeeld"
+    },
+    {
+      "key": "clear",
+      "value": "Wissen"
+    },
+    {
+      "key": "decide",
+      "value": "Bevestigen"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Resterend"
+    },
+    {
+      "key": "current",
+      "value": "Lopend"
+    },
+    {
+      "key": "part",
+      "value": "Deel"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw Eerst de romp."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso is de basis. Draw andere delen van hun verbindingsmarkering."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: start bij de verbindingsmarkering."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw de romp alvorens andere delen te verbinden."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} is verbonden."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} is niet gestart bij de verbindingsmarkering."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Torso is vereist alvorens te beslissen."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} moet beginnen bij de verbindingsmarkering."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Persoonlijk  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Team  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Kan niet beslissen: persoonlijk ink is {0:0.#}/{1:0}- Verminderen door {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Kan niet beslissen: team ink is {0:0.#}/{1:0}- Verminderen door {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}: start bij de markeerder."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Hoofd"
+    },
+    {
+      "key": "torso",
+      "value": "Torso"
+    },
+    {
+      "key": "left_arm",
+      "value": "Linkerarm"
+    },
+    {
+      "key": "right_arm",
+      "value": "Rechterarm"
+    },
+    {
+      "key": "left_leg",
+      "value": "Linkerbeen"
+    },
+    {
+      "key": "right_leg",
+      "value": "Rechterbeen"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Linkerkant"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Rechtervoorkant"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Linksachter"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Rechtsachter"
+    },
+    {
+      "key": "tail",
+      "value": "Staart"
+    },
+    {
+      "key": "left_wing",
+      "value": "Linkervleugel"
+    },
+    {
+      "key": "right_wing",
+      "value": "Rechtervleugel"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Staartveer"
+    },
+    {
+      "key": "slime_body",
+      "value": "Slijm"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Normaal springen"
+    },
+    {
+      "key": "jump_double",
+      "value": "Spring x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Spring x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Normaal bereik"
+    },
+    {
+      "key": "arm_long",
+      "value": "Lange reikwijdte"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Snelle Swing"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Normaal"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Zware schakelaar"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Zwaar"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Been {0:0.0}: {1}   Arm {2:0.0}: {3}   Torso {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Vleugels {0:0.0} INK / Glijsnelheid {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "MENSENBAARHEID\nWapens {0:0.0} INK  Vermogen ×{1:0.00}\nBenen {2:0.0} INK  Spring ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "VANGSTBAARHEID\nAchterpoten {0:0.0} INK  Snelheid ×{1:0.00}\nVoorpoten {2:0.0} INK  Klauwbereik ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "BRANDBAARHEID\nVleugels {0:0.0} / 700 INK\nGlijsnelheid {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "TURTELBAARHEID\nVasthouden SPACE: onoverwinnelijke schelp\nVasthouden F: draai 90° naar de richting naar voren"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "SLIME BILITEIT\nLichaam {0:0.0} / 700 INK\nOpwaartse pieklengte {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "MENSELIJK"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "CAT"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "BIRD"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "TURTLE"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Meer been INK verhoogt het springvermogen\nMeer arm INK verhoogt werpvermogen"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Meer ruggenpoot INK verhoogt de runsnelheid\nMeer voorpoot INK verhoogt het krasbereik"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Meer vleugel INK verhoogt glijvermogen"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Onoverwinnelijk terwijl verborgen in de schelp"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Drukken F voor een opwaartse aanval piek\nMinder INK maakt het langer / Wandsprong ingeschakeld"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: GROEI"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "BEDRAG SPACE: GLIDE  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "BEDRAG SPACE: Shell Hold F: TURN 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: UPWARD Spike Attack"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Vermogen ×{0:0.00}  Spring ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Uitvoeren ×{0:0.00}  Klauwbereik ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Zwevend vermogen {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: Shell /  F: 90° TORN"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Opwaartse pieklengte ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Wapens {0:0.0}/280 Benen {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Terug {0:0.0}/240 front {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Vleugels {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Alleen actief zolang de knop wordt vastgehouden"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "Klaar?"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE en F Werk terwijl je vasthoudt!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Lichaam {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "LAAG"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "HOOG"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "WEG"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "REN"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "SCRATCH"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GLIDE"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "DEFENSE"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "MOBILITEIT"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "BODIE INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "LICHT: GRIPT OP"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "HEAVY: SPEED + Jump up"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK MAAT {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "FSpike up! Minder INK = langer / Wandsprong ingeschakeld"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Meer kracht!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Je kunt niet hertekenen nadat deze etappe is begonnen."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Hoog platform"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 zware schakelaar"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Far Lever"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Narrow Hole"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "STEEKPROEF"
+    },
+    {
+      "key": "multi_participants",
+      "value": "PLAYERS"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "KAMER"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "JOIN ROOM"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "KAMER-ID"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "LOKALE TEST (AFGEGEVEN INVILLEN)"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "JIJ"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 SLIME MISSILE CAVE"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "VLOOR VANISHING! GRAB A WALL"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "Wall-jump en Dodge piercing missiles!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 Bescherm je vriend!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "FASE {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "TIJD {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Verdedig je vriend van beide kanten."
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "VLIEGTUIG IN {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "Vriend beneden... RETRY IN {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Defense veilig!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "COIN {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "TIJD {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "Breek dozen en verzamel munten!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "Time up... Retry in 5"
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 munt vrij!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "Kracht aan!"
+    },
+    {
+      "key": "title_single",
+      "value": "Eén speler"
+    },
+    {
+      "key": "title_multi",
+      "value": "Multiplayer"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Opties"
+    },
+    {
+      "key": "option_back",
+      "value": "Terug  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "Terug  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "Terug  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Afsluiten"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "DEBUG VAN DE TRAILERS"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "1 4 spelers luchtrelais"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Menselijke gooit Vogel, dan Vogel → Kat → Slijm relais"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "STEEKPROEF"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "Terug  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "Editcharacters"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "STEAM-HEADER"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "UITVOER 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "Terug naar de titel"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Controleer de samenstelling en exporteer de PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Opgeslagen: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "Herstellen..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "Characters kunnen alleen veranderd worden in de ready room."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY HID HUD     ESC  TITEL"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "TRAILER TAS RecORDER"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Sleep acteurs terwijl inactief F9 Record F10 Play P Pause O Stap"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 RECORD/STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 SPEEL ALLES"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 RESET NEEMT"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "GOEDGEKEURD"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "PAUSE"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O STAP"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "CONTROLE"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "Alle tracks spelen"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "Gepauzeerd"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} Geselecteerd: {1} | {2} frames snelheid {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "VOORBEREIDING {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SAVE SHAPES"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Tijdens inactief slepen tekens om hun startposities in te stellen"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Doorgaan"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Titel"
+    },
+    {
+      "key": "language_settings",
+      "value": "Taalinstellingen"
+    },
+    {
+      "key": "multi_play",
+      "value": "MULTIPLAY"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Willekeurige overeenkomst"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Privé"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Willekeurige overeenkomst"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Zoeken naar spelers"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Zoeken"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Bijpassend...\n\nSpelers 2 / 4\n\nJij\nPlayer2\nD Zoeken\nD Zoeken\n\nWachten op [READY]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "KAMER"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Ruimte aanmaken"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Kamer binnengaan"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Naam ruimte\n[ Draw Samen ]\n\nMax Spelers\n< 4 >\n\nZichtbaarheid\n[Public] [Privé]\n\nFase\n[Host Selects]\n\nRegel hertekenen\n[Pauze iedereen]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Max Spelers"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Zichtbaarheid"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Zichtbaarheid"
+    },
+    {
+      "key": "multi_public",
+      "value": "Openbaar"
+    },
+    {
+      "key": "multi_private",
+      "value": "Privé"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Schakel"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Aanmaken"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter de Lobby ID getoond op het host scherm.\n\nMet EOS geconfigureerd kunnen vrienden zich op afstand aansluiten.\nAls u Direct TCP gebruikt, enter IP:7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter Lobby-ID"
+    },
+    {
+      "key": "multi_join",
+      "value": "Sluiten"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Verversen"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "KAMERLOBBY"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Kamer: Draw Samen\nID: ABC123\n2 / 4\n\nEen speelbare lobby space\nSpeel met dozen, ballen, en sprong pads tijdens het wachten."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "ID kopiëren"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Start 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Fase selecteren"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Podium selecteren ontgrendelt wanneer iedereen klaar is."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Deze kamer verlaten?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Vertrek"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Annuleren"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Host kiest een podium..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Vertrek"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Bijpassend..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Alleen de gastheer kan beginnen."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Geen Lobby ID om te kopiëren."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Ik heb Lobby ID gekopieerd."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Gekopieerde kamercode."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Kopieerde verbinding ID."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Offline. Er is geen kamercode beschikbaar."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Offline"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Rubriek"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Verbinden..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Ruimte"
+    },
+    {
+      "key": "multi_players",
+      "value": "Spelers"
+    },
+    {
+      "key": "multi_local",
+      "value": "Lokale"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Klaar"
+    },
+    {
+      "key": "multi_wait",
+      "value": "Wacht."
+    },
+    {
+      "key": "multi_host",
+      "value": "HOST"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Samen"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Vriendenkamer"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Jij"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "JIJ"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Host"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Speler {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Valse willekeurige match klaar."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Nep backend geïnitialiseerd."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Aanmelden..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Online als lokale testspeler."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Neppodiumstart."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Privé kamer gecreëerd."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Openbare ruimte gecreëerd."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "In de nepkamer."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Direct TCP geïnitialiseerd."
+    },
+    {
+      "key": "online_ready",
+      "value": "Online klaar. Gast of kom in een kamer."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Kamer gecreëerd. Deel het ID met je vriend."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Host mislukt: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "Room ID moet host-ip:port zijn."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "In de kamer..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Kon niet meedoen: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Linkse lobby."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Klaar veranderd."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Accepteren mislukt."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} Samen."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} Ik heb de sessie verlaten."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Lobby bijgewerkt."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Beginfase {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS geïnitialiseerd. EOS-plugin instellen voordat u zich aanmeldt."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "EOS-aanmelding..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "EOS Connect interface is nog niet klaar."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "EOS-aanmelding mislukt: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "EOS aanmaken lobby mislukt: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "EOS kamer gemaakt. Deel dit Lobby ID."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter een EOS Lobby ID."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter een kamercode."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Kon kamercode niet registreren: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Zoeken naar ruimtecode is mislukt: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Geen ruimte gevonden voor code {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "De kamercode botste. Alstublieft maak de kamer opnieuw."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Host geopend podium selecteren."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Host gesloten stadium selecteren."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS join lobby mislukt: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "In de EOS kamer."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Linkse EOS lobby."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Klaar."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Niet klaar."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Aanmaken van EOS-apparaat-ID mislukt: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "EOS-apparaat-ID wordt aangemaakt..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "EOS-apparaat ID-aanmelding mislukt: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS online als {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Lobbyleden bijgewerkt."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS is niet aangemeld. EOS-plugin instellen en eerst aanmelden."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS is uitgeschakeld."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "LEVEL VOLTOOID!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Level {0} voltooid!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Voltooid!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Volgende: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Level kiezen"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Alle levels voltooid!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Fase {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "WERELD {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "BESCHIKBARE CHARACTERS"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "USE: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "GERICHT"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "NIET GERICHT"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} is niet beschikbaar in deze fase."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Een andere speler gebruikt al {0}. Kies een beschikbaar karakter."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "CHARACTER SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} is in gebruik. Druk op VOLLE om een ruil aan te vragen."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} wil uw {1} voor {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "DECLINE"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Wachten op een antwoord op het verzoek tot ruil..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Tekens verwisseld!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Het verzoek tot ruil werd afgewezen."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "De andere speler kon niet gevonden worden."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "GRAANDISPENSER"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100 g SCHAAL"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "GEWICHTGAAT"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "Vriend BUTTON"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "Player-only eenrichtingsvloer"
+    },
+    {
+      "key": "species_human",
+      "value": "Menselijk"
+    },
+    {
+      "key": "species_cat",
+      "value": "Kat"
+    },
+    {
+      "key": "species_bird",
+      "value": "Vogel"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Schildpad"
+    },
+    {
+      "key": "species_slime",
+      "value": "Slijm"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Objecten"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Links"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Sleep het personage om te testen vanaf die positie. Het opgeslagen podiumgebroed wordt niet gewijzigd."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Bewegen van de startpositie."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Teststart: X {0:0.00} # Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Kan niet opslaan: {0} fout(s). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Opgeslagen: {0} ({1} waarschuwing(s)"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Ruimte aanmaken\nKamernaam [......]\nSpelers 2 / 3 / 4\nOpenbaar / Privé\n\nKamer binnengaan\nKamer-ID [.....]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Sleep naar plaats / Klik om te selecteren / WASD verplaatsen\nDecoratie: Wiel naar schaal / Shift + wiel te draaien\nCtrl + wiel: Zoom het hele stadium in"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} objecten geselecteerd"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Objecten die volledig ingesloten zijn door de doos worden geselecteerd."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Geselecteerd {0} objecten. Sleep een geselecteerd object om ze samen te verplaatsen."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Geen objecten zijn volledig ingesloten door het selectievakje."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Verplaatst {0} geselecteerde objecten samen."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Categorie"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Zoeken"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Type"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Zoekwoord"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Objectlijst"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Linklijst"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "W-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "H-"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Opnieuw"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Kopiëren"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Object gekopieerd."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ RECHTS"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ beneden"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← LINKS"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ omhoog"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Kopierichting: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Object naar boven gekopieerd {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Positie: X {0:0.00} # Y {1:0.00} (pijltjestoetsen)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Startkracht"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Afstand verplaatsen"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Snelheid verplaatsen"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Fuse (sec)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Vertraging bij kruisen (sec)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Explosies vereist"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Riemsnelheid"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Drop Interval (sec)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Beam Interval (sec)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Kadergrootte"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Bomgrootte"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Spike-grootte"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Verplaatsafstand: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Verplaatssnelheid: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Fuse tijd: {0:0.0} sec"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Vertraging: {0:0.0} sec"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Duurzaamheid van de wand: {0:0} explosies"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Riemsnelheid: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Drop-interval: {0:0.0} sec"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Afgelopen doosgrootte: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Vervallen spike grootte: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Vervaardigde bomgrootte: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Richting: ← Links"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Richting: Rechts →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Conveyorrichting: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Dozen:"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Dozen: vierkant"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Dozen: rond"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Dozen: Driehoek"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Bommen: Plaats beide"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Bom: Fuse on Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Bom: Fuse op ophalen"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Dropped boxes: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Vervaardiging van bommen: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Richting verplaatsen: {0:0}° (Shift + wiel)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Startvermogen: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Per speler"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Schaal triggergewicht ingesteld op {0:0} INK per speler."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter een getal van 1 tot 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "PERSOONLIJK GLB"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "CAP TEAM ({0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "PEN-MAAT"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "CLEAR DEEL"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "RESET ALLEN"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Alles behouden?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Wis elk lichaamsdeel en herstel het originele karakter."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "RESET"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "Annuleren"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} PRESETS"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "PRESETS"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5-CHARACTERPRESET"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "MENSENCAT BIRD TURTLE SLIME"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "alle vijf tekens"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLOT {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "SAVED"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "EMPTIE"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SAVE"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "SET"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "SAVE TO PRESET {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Huidige opslaan {0} Tekening op voorinstelling {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Overschrijven {0} tekenen in voorinstelling {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "Set preset {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Huidige vervangen {0} tekening met voorinstelling {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Achtergrond"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Boom"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Achtergrondgras"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Bloem"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Achtergrond Bush"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Wolk"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Achtergrond"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Pijl"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Kattenkop"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Hondenkop"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Stick-figuur"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Smiley"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Hart"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Ster"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Maan"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Zon"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Regen"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Bliksem"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Regenboog"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Berg"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Klaver met vier bladen"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Paddestoelen"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Appelen"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Bananen"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Watermeloen"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Donut"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "IJs"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Koffiebeker"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Pizza"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Brood"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Papieren vliegtuig"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Vliegtuig"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Raketsla"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "UFO"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Luchtballon"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Huis"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Kasteel"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Schatkist"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Mol"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Fossiel"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Kristal"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Oude pot"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Sleutel"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Sleutel tot sleutelgat"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Zwaard"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Kroon"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Schild"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Gem"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Munt"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Bot"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Lichte bol (Idee)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Vistuig"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Lente"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Magneet"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Dobbelstenen"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Spraakbel"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Controleteken (gespeend)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Vraag Mark (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Uitroepteken (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Pijl lus"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "Jump!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Gooi!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Start!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "GOAL!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Draaien: Shift + wiel (0,5 graden precisie)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Draaien: Shift + wiel (15°), met Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Draaien: Shift + wiel (15°), met Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Schaal: muiswiel"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Actie"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Uiterlijk"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Verdwijnen"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Ontgrendelen"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Verplaatsen"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Platform naar rechts verplaatsen"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Platform omhoog verplaatsen"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Platform naar links verplaatsen"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Platform omlaag verplaatsen"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Linkactie: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Een sleutel moet naar een sleutelgat."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Sleutel tot sleutelgat links altijd gebruiken Unlock."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Knap"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Koppeling van"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Verwijzing naar"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Verbinding verbreken"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Toevoegen: {0} Snap: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Pos {1:0.0},{2:0.0}  Grootte {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Breedte = rechterwand / Hoogte = plafond (linkerwand en onderrand blijven vast)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Frame"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Maakte een frame rond de geplaatste objecten. Selecteer het om de rechter muur en het plafond aan te passen."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Muur precies tussen de vloer en het plafond."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "GOAL"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "KAMER {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "BOMB"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MISSILE"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Klaar"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Achtergrond"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "PLAYERS {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "FASE {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 voorbeeld: {0} player(s) / podium {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Achtergrondkleur"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Standaard"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Sluiten"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Doorzichtigheid"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Achtergrondkleur is veranderd. Bewaar het podium om het te houden."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Modus toevoegen: {0}. Sleep op de kaart om het te maken."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Modus toevoegen: {0}. Klik op de kaart om het te plaatsen."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Geselecteerd uit lijst."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Geen overeenkomst"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(geen)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Terrein"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Start/doel"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Omschakelen"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Deur/Poort"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Verplaatsbaar"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Actie"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Val"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Gimmick"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Vijanden"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Verdieping"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Muur"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Begin"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Doel"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Balansschaal"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Gewicht"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Maximum"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Halve verdieping"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Eenrichtingsvloer"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "IJsvloer"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Gladde helling"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Klimmuur"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Touw"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Ladder"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Wolkvloer"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Breekbare vloer"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Vallende vloer"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Bewegende vloer"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Sticky Moving One-Way Floor"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 REFLECT DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Stuw de bal met je lichaam en breek NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "BLOCKS {0}  BALLEN ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "TIME UP RETRY IN {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "Begin maar. {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "TOER {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "BALL {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "Volgende ronde in {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "Drie ballen verloren! RETRY"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Alles veilig."
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "VROUWEN LINKS {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Wapen"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Kogelbare muur"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Spike Planet"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag Flyer"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Orbit Flyer"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Bazooka"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Bomvlieger"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Bewegende Spike Bal"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Poseersleutel"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Pose Keyhole"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Opzet"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Snelheidsmarkering"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Snelheidsmarkering (sterk)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Redraw Zone"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Kogels vereist"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Kogels vereist: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Draaivloer"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Controlepunt"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Warp ingang"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Afsluiten van warp"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Herplaatst punt"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Middendoel"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Doeleffect"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Knop"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Gewichtsknop"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Gelijktijdige knop"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Knop vasthouden"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Driehoek Box"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Lever"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Schakelen"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Timerschakelaar"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Sensor"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Rode schakelaar"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Blauwe schakelaar"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Groene schakelaar"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Gele schakelaar"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Drukplaat"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Afstandsbediening"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Schaal"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Deur"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Gesloten deur"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Shutter"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Hek"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Laserpoort"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Kleurenpoort"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Eenrichtingspoort"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Getimede poort"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Breekbare muur"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Verborgen Muur"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Houten doos"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "IJzeren Doos"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Bal"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Barrel"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Rock"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "IJsblok"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Drijvende doos"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Rubber Box"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Bom"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Bom (Fuse start bij ophalen)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Bommaker"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Dynamiet"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Walker vijand"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Jumpervijand"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Oplader vijand"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Vliegende vijand"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Shooter vijand"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Enemy Spawner"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Raketlanceerder"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Activeer"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Dit apparaat gebruikt altijd Activeer"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Interval starten"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Vijandelijke grootte"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Gebroede vijand: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Vijandelijke grootte: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Sleutel"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Munt"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Ster"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Batterij"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Emmer"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Springpad"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Lente"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Transporteur links"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Transporter rechts"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Lift"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Ventilator"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Magneet"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Gordel"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Box Dropper"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Spike Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Vis"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Munt"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Ster"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Digitale klok"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Straal Emitter"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Normaal"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Termijn"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Overleving"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}s"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "ALLE"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Faseregel: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Tijd {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "TIME UP"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Druk op R om opnieuw te proberen"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 OVERLEG"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Eén overlevende is veilig."
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "GEVONDEN AAN DE GLOWING FLOOR"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "TARGET  {0:0}g (90g x PLAYERS)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "In positie vóór de regen"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Vang het gras!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "Weigering..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "GRAAN OP DE VLOER VERWIJDEREN"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Veilig."
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Zo dicht!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "GRAAN OP HOOFDEN  {0:0}g / {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "Rare grenen doel bereikt!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "Probeer een betere hoofdvorm"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "FASE {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Vang de Grain Blizard die van rechts inbloeit!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "Snelle grains zullen de gemarkeerde pootjes per speler raken!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 IJSspeedrun - 1 speler eindigt"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Start!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "TIME UP RETRY IN {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Klaar!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Start!"
+    },
+    {
+      "key": "game_over",
+      "value": "SPEL OVER"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Dit lichaam past niet bij het begin. Doe het alsjeblieft wat kleiner."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Dit lichaam kan uit de kamer komen. Alsjeblieft pas zijn maat aan."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Klaar {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "AANVAARD"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "Geen"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "GEEN CHARACTER VERANDERING OF HERDRAGEN NA HET VERLIES"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "GEEN CHARACTER VERANDERING NA HET VERTREK (REDRAW OK)"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Klaar om het spel te beginnen"
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "VERZAMELING VAN DE VIS VOORDAT DE TIME RUNS OUT"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "VERVAL DE CRAYON KING"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "Dodge the Hurdles and survive"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "Plug elke aquarium hole met uw organen"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Gebruik je lichaam om het pad te openen."
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "Dodge the falling pillars"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "BEKIJK DE BALL EN Breek elke brok"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "PELL DE BALL MET INK Magneten en zie het"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "DODGE DE MISSILES EN ENQUEVIE"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "VERZAMELING VAN COINS WHILE FALLING"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "VERZAMELING VAN DE GRANEN EN BETREFT HET DOELGEWICHT"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Speelde rennen. Bereik het doel voordat de tijd om is."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "RICOCHET BULLETTEN OM DE VIJFEN TE VOELEN"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "LICHT DE DARKENHEID EN DE GEHEUGDEN"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "ENQUEVE TOT DE TIME RUNS OUT"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "Gooi bommen om elk blok te breken."
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "DOOSEN EN VERZAMELINGEN"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "VERZAMELEN VAN COINS VOORDAT DE TIJD UITBRENGT"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "VERZAMELEN VAN COINS VOORDAT DE TIJD UITBRENGT"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "UW VRIEND VAN DE VENNOOTSCHAPPEN"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "BOUNCE THE BALL Back to deveat the anemies"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "Bereiken voordat de tijd verstrijkt."
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "DE UMBRELLA gebruiken om uit de regen te blijven"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "Related the laser through every body to the goal"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "DEFEAT CRAYON DEVIL"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "DEFEAT CRAYON STALKER"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "DE VRAAGSTUKKEN"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "Als er tenminste één speler overleeft."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "Duidelijk wanneer iemand het doel bereikt."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "Spikewall-launch"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Wacht op het teken!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Ren naar het doel!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "Het raam blijft veranderen!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "MINDER INK = STRONGER WIND"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "TIJD {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "TIME UP"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Blijf onder de Umbrella!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "Rain knocks you out - Reach Shelter"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Iedereen werd in de regen gepakt!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 LINKSE SHIELDS"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Controleer elke knokkel!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "BLOCK MISSILES MET 1-SECOND SHIELDS!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "TEAM DOWN - RESTARTING"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60 Second Defense veilig!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "RONDE {0}/3    NOG {1:0.0} s"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "GOALS {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "PAS POSITIES EN HOEKEN AAN OM DE LASER TE WEERKAATSEN!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "RONDE {0} VOLTOOID!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "TIJD VOORBIJ! DEZE RONDE START OPNIEUW"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON DEVIL HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 Klaar om te lunchen"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "MILJOEN  F: BOMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "BOSS VERHAALD!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "ALLE PLATFORMEN"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "Homing Missiles - Spreid uit!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "Gericht - Laat het team!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "Ga weg."
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "RECORDENING VAN VERKEER...  {0}s"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Rennen, springen, draaien en stoppen. Je dubbelganger is aan het leren."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "FASE {0}  DOUBLES LINKS: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Lok er een op een lanceervloer en stap dan op de rode schakelaar!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Alle doubles ontaarden!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Er was nooit een andere baas."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "FASE {0}  Begint in"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Versla het CPU-team met jouw formulieren."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "FASE {0}  Left: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "FASE {0} Veilig."
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Zeg wapens op met rode schakelaars. F: Gooi bom KLIK: raket"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Misselijke Klaar! Richt met de muis en klik."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "CPU TEAM VERHAALD!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "Laatste slag."
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "TIME UP"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Time up!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Iedereen is neer!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Failed! Herstarten vanaf het begin in 3 seconden."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 Klaar"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Rennen. Gebruik de groene wapens!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "ONTVANGEN!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "Iedereen werd gepakt."
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Rennen!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Let op de stralende vloer!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "Overleven! TERMIJN"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "VRIJE VLOEREN {0} DROP IN {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Blijf op de veilige vloer!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "ALL SPEELT UIT"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "GELEID DOOR DE STRIJD"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "Overlever gevonden!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "OVERLEG GOEDGEKEURD"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 PILLER SURVIVAL"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "BEWIJS DE WAARSCHUWING EN DODGE DE PillerS"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "Ik kom eraan. Laat de stralende zone."
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "Pillar survival goedgekeurd!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 CRAYON KING"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER De volgende kamer"
+    },
+    {
+      "key": "boss_appears",
+      "value": "Waarschuwing..."
+    },
+    {
+      "key": "boss_fight",
+      "value": "Schiet om / tortelhel naar garde aan te vallen"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Guard! De baas is onkwetsbaar."
+    },
+    {
+      "key": "boss_charge",
+      "value": "Charge! Ga uit de weg."
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "LEES IN {0}Ga naar de hoge verdiepingen."
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Speciale aanval! DODGE DE Ricochets"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "BOSS VERHAALD!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Alle spelers..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "Wachtkamer  {0} / {1}  Opstaan."
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 HURDLE OVERDRACHT"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Eén overlevende is veilig."
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "Spring 60 seconden rechts over Hurdles."
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "BEKIJKEN VOOR HURDLEN VAN RECHTS"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "Jump!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Spring de Hurdles!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Sla je adem in."
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Spaced up! De laatste sprint."
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "ALL SPEELT UIT"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "Hardle survival goedgekeurd!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "SURVIVER FOUND"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 ESCORT DE VRIEND"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "Vriend Moving"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "Een pad bouwen met dozen, lapmiddelen en je lichaam."
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 BESCHERM DE VRIEND"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "AAAH!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "Ren vooraan en ontruimt vallen, dozen en vijanden"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "Volgende vriend in  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Een nieuwe vriend voorbereiden..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "ESCORT Voltooien!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "De vriend bereikte het doel"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "TOER {0}/3 BUILD {1:0.0}s"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "Verbind een pad met je lichaam"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Ga! Help de vriend bij het doel."
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "TOER {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "TOER {0} Veilig."
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "RONDE {0}/3    NOG {1:0.0} s"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "HOLLEN {0}/{1}    Plak ze allemaal met je organen!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "RONDE {0} VOLTOOID!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "TIJD VOORBIJ! DEZE RONDE START OPNIEUW"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "DICHT DE GATEN!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "TOER {0}/3    {1:0.0}LINKS"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "BALLEN {0}/{1}    Rol ze in de holen!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "Trek de bal door de mazzel met Magnetism!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "TOER {0} Veilig."
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Time up! Dit rondje terugtrekken"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Schiet op. MEER INK HET STRONGER MAGNETISME"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "Eindrond: kom bij de Snack Above!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "Bouw een pad door de slang heen!\nVerbind het met je lichaam."
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "De vriend kan op je hoofd en lichaam lopen."
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "Vriend begint"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "De vriend viel."
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "SPEL OVER"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Je kunt niet herladen als de vriend verhuist."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET RELAY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "TOER {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOCHET BULLETTS OFF VRIENDEN OM HET DOEL TE stoten"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Geen ammo meer. BEVESTIGING"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 Round veilig!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Vriend Spawner"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Vriendendoel"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Vriendin Pass Floor"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Voorbeeld van hoofdbrug"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Zag"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Draaitafel"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Kanon"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Catapultus"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Spike"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Vuur"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Water"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Gif"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Laser"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Vallende Rots"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Persmachine"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Elektriciteit"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Zag"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Zwarte gat"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Vistuig"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Groot vistuig"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Touwtrekker"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Slider"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Draaibalk"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Pendulum"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Sleutelgat"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Stadiumgrens"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Klok"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Teller"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Fase selecteren"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Sessie verlaten"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Fase herstarten"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "De online sessie verlaten?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Vertrekken als gastheer zal deze sessie voor iedereen beëindigen. Weggaan?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Vertrek"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Gekoppeld als brug: de rechterrand blijft verbonden terwijl deze zich naar links uitstrekt."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Splits het verbonden terrein in individueel selecteerbare en koppelbare onderdelen."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Gescheiden"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Apart deel is ON. Het kan knippen zonder te mergen en kan individueel worden gekoppeld."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Apart deel is UIT. Aanrakend terrein kan samensmelten."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Verbind de vloer en muur als één terreinvorm."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Sleep om een rechte plaats {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Dikte"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Vloer- en wanddikte: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Recht"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "De rechte lijn is aan."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Straight-line tekening is uitgeschakeld."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw modus"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw modus"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Selecteer modus"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw modus: slepen bij leeg space om objecten te plaatsen."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Selecteer modus: selecteer en verplaats bestaande objecten."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} Vrij door te slepen."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Vrije vloer en muurtekening is ON."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Rechthoekige plaatsing is aan."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Drew {0} als één verbonden pad ({1} punten)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Terug naar editor"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Terug naar editor  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Teruggekomen van de test. Blijf je podium bewerken."
+    },
+    {
+      "key": "cancel",
+      "value": "Annuleren"
+    },
+    {
+      "key": "retry",
+      "value": "Opnieuw proberen"
+    },
+    {
+      "key": "menu",
+      "value": "Menu"
+    },
+    {
+      "key": "redraw",
+      "value": "Hertekenen"
+    },
+    {
+      "key": "pen",
+      "value": "Pen"
+    },
+    {
+      "key": "eraser",
+      "value": "Gum"
+    },
+    {
+      "key": "shape_square",
+      "value": "Kader"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Cirkel"
+    },
+    {
+      "key": "shape_line",
+      "value": "Regel"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Klaar!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Terug"
+    },
+    {
+      "key": "brush_size",
+      "value": "Grootte"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Gebruikt"
+    },
+    {
+      "key": "undo",
+      "value": "Ongedaan maken"
+    },
+    {
+      "key": "character_switch",
+      "value": "Tekenschakelaar"
+    },
+    {
+      "key": "character_add",
+      "value": "Char toevoegen"
+    },
+    {
+      "key": "character_delete",
+      "value": "Char verwijderen"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Char wisselen"
+    },
+    {
+      "key": "stage_select",
+      "value": "Level kiezen"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 groepen, elk 3 fasen. Schakel Bewerken AAN in en kies vervolgens een podium om het te bewerken."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0 Debug"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "Bewerken 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Bewerken: UIT"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Bewerken: AAN"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "NIEUW"
+    },
+    {
+      "key": "stage_clear",
+      "value": "CLEAR"
+    },
+    {
+      "key": "stage_locked",
+      "value": "Gesloten"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Debugmodus: alle werelden zijn ontgrendeld. Kies een podium om te spelen, of zet Bewerken AAN om het te bewerken."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Floor 2:Wall drag to create blocks\n3:Start 4:Doel 5: Schaal 6:Gewicht\nA/D/W/S: camera verplaatsen Wiel: zoom\nF5:Opslaan  F6:Test  EscTerug"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Schaal"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Grootte"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Raster"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Verwijderen"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Opslaan"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Test"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "Terug  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Spelinstellingen"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "Sleutels"
+    },
+    {
+      "key": "option_language",
+      "value": "Taal"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Nog niet"
+    },
+    {
+      "key": "locked_stage",
+      "value": "Stages zonder JSON vallen terug naar de debug podium."
+    },
+    {
+      "key": "human",
+      "value": "Menselijk"
+    },
+    {
+      "key": "cat",
+      "value": "Kat"
+    },
+    {
+      "key": "bird",
+      "value": "Vogel"
+    },
+    {
+      "key": "turtle",
+      "value": "Schildpad"
+    },
+    {
+      "key": "slime",
+      "value": "Slijm"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 bal geraakt"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "Sneldelen"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "SELECTIE"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Kies een onderdeel, klik of sleep op de kaart om het te plaatsen."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Knap: {0} / {1:0.##} eenheidsraster"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Selecteer eerst een object."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Breedte is veranderd. U kunt ook Shift+ gebruiken Wiel."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Hoogte is veranderd. U kunt ook Alt+Wheel gebruiken."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "De grootte is veranderd. Gebruik het wiel om beide assen te schalen."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Sleep een groter gebied om dit deel te plaatsen."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Plaatsing {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Plaatsing {0} op {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Geselecteerd. Sleep om te bewegen en gebruik het wiel om de grootte te wijzigen."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Er valt niets ongedaan te maken."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "De laatste bewerking ongedaan gemaakt."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Er valt niets over te doen."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Red de bewerking."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Selecteer een schakelaar, knop, sleutel of sleutelgat te gebruiken als de link bron."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Kies een schakelaar, knop, sleutel of sleutelgat als linkbron."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Linkbron: {0}. Selecteer het doel en druk vervolgens op Link Aan."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Stel eerst een linkbron in."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Selecteer een object dat gebruikt moet worden als het doel van de koppeling."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "De linkbron en het doel moeten verschillende objecten zijn."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Gekoppeld {0} tot {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Selecteer eerst een gekoppeld object."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Ontruimde de link."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Opgeslagen: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Opslaan is momenteel alleen beschikbaar in de Unity Editor."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "De fabriek ontbreekt."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Verkeerslicht"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 BLOCK CRASH"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Blokbreker"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Gooi bommen! Breek alles. NICO DRAW BLOCKS!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} BLOCKS LINKS"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "NIET VERVOLGEN... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE BROWSER"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Zoeken op actie of SE ID, druk vervolgens op Afspelen om het toegewezen geluid te bekijken. Hou een rij om de bron te zien."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "SPEEL"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "STOP"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "OPNIEUW"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Geen overeenkomende geluidseffecten."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX USAGE.md is niet gevonden."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Niet-gecategoriseerd"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "MUTED"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Runtime gegenereerd geluid"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Paw Print"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Vis"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Garenskogel"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Sneeuwkristal"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "IJs"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Snowman"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Blizzard"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Veren"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Vogelnest"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Windlijnen"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Pijp"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Bolt"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Ketting"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Stoom"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Schildpad"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Uurglas"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "hangslot"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Slijm"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Bubbels"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Vlinder"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Lieveheersbeestje"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Zonnebloem"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Tulip"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Skeleton"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Vleermuis"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Spinnenweb"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Stalactiet"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Lantaarn"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Minecart"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Pickaxe"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Trophy"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Medaille"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Whistle"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Ballon"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Confetti"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Vuurwerk"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Toren"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "verrekijkers"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Brug"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Crayon"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Potlood"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Gum"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Notitieboek"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Schoolbord"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Palet"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Penseel"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Canvas"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Stopwatch"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Spotlight"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Microfoon"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Kaas"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Verrassingsdoos"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Cadeaudoos"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Planeet"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Alien"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Komeet"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Zwarte gat"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Zeepbel"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Mos"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Boomwortel"
+    }
+  ]
+}

@@ -1,0 +1,4260 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "Játékos neve"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter az Ön neve"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Kérlek. enter Egy játékos neve."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER A neved itt"
+    },
+    {
+      "key": "option_register",
+      "value": "NYILVÁNTARTÓ"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Japán"
+    },
+    {
+      "key": "lang_en",
+      "value": "HU"
+    },
+    {
+      "key": "status_play",
+      "value": ""
+    },
+    {
+      "key": "status_draw",
+      "value": ""
+    },
+    {
+      "key": "status_clear",
+      "value": "Tiszta! Nyomja meg az R-t az újraindításhoz."
+    },
+    {
+      "key": "draw_title",
+      "value": "Tervezés (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: Vissza a játékhoz / ENTER: Döntés / ESC: Törlés"
+    },
+    {
+      "key": "preview",
+      "value": "Előnézet"
+    },
+    {
+      "key": "clear",
+      "value": "Törlés"
+    },
+    {
+      "key": "decide",
+      "value": "Megerősítés"
+    },
+    {
+      "key": "ink",
+      "value": "Ink"
+    },
+    {
+      "key": "remaining",
+      "value": "Maradék"
+    },
+    {
+      "key": "current",
+      "value": "Jelenleg"
+    },
+    {
+      "key": "part",
+      "value": "rész"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Draw Először a törzset."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso a bázis. Draw a csatlakozásjelző egyéb részei."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: a kapcsolat jelölőjétől indul."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Draw a törzs, mielőtt más alkatrészeket kötnek össze."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} Kapcsolatban áll."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} nem a csatlakozásjelzőnél kezdődött."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Torsóra van szükség, mielőtt döntenénk."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} a csatlakozásjelzőnél kell kezdeni."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Személyes  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Csapat  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Nem sikerült eldönteni: személyes ink ed {0:0.#}/{1:0}Csökkentse {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Nem sikerült eldönteni: csapat ink ed {0:0.#}/{1:0}Csökkentse {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}Kezdje a jelölővel."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Draw {0}."
+    },
+    {
+      "key": "head",
+      "value": "Fej"
+    },
+    {
+      "key": "torso",
+      "value": "Torso"
+    },
+    {
+      "key": "left_arm",
+      "value": "Bal kar"
+    },
+    {
+      "key": "right_arm",
+      "value": "Jobb kar"
+    },
+    {
+      "key": "left_leg",
+      "value": "Bal láb"
+    },
+    {
+      "key": "right_leg",
+      "value": "Jobb láb"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Bal elülső"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Jobbra"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Bal hátsó"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Vissza"
+    },
+    {
+      "key": "tail",
+      "value": "Farok"
+    },
+    {
+      "key": "left_wing",
+      "value": "Bal szárny"
+    },
+    {
+      "key": "right_wing",
+      "value": "Jobb szárny"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Tengelyfogó"
+    },
+    {
+      "key": "slime_body",
+      "value": "Slime"
+    },
+    {
+      "key": "jump_normal",
+      "value": "Normál ugrás"
+    },
+    {
+      "key": "jump_double",
+      "value": "Ugrás x2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Ugrás x3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Normál elérés"
+    },
+    {
+      "key": "arm_long",
+      "value": "Hosszú nyúlás"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Gyors Swing"
+    },
+    {
+      "key": "torso_normal",
+      "value": "Normál"
+    },
+    {
+      "key": "torso_switch",
+      "value": "Erős kapcsoló"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Nehéz"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Lábak {0:0.0}: {1}   Karok {2:0.0}: {3}   Torso {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Szárnyak {0:0.0} INK / Fénysebesség {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "EMBERI HATÁS\nKarok {0:0.0} INK  Teljesítmény ×{1:0.00}\nLábak {2:0.0} INK  Ugrás x{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "LAKOSSÁG\nHátsó lábak {0:0.0} INK  Sebesség{1:0.00}\nElső lábak {2:0.0} INK  Karom tartomány ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "KÖTELEZETTSÉGVÁLLALÁS\nSzárnyak {0:0.0} / 700 INK\nFénysebesség {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "A TARTÁLY HATÁLYA\nTartsa. SPACE: legyőzhetetlen héj\nTartsa. F90 ° -os fordulat az ellenkező irányba"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "SLIME ABILITÁS\nTest {0:0.0} / 700 INK\nFelfelé irányuló tüske hossza {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "EMBEREK"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "CAT"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "Bird"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "Turtle"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLIME"
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Több láb INK növeli az ugróerőt\nTöbb kar INK növeli a dobóerőt"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Több hátsó láb INK növeli a futási sebességet\nTöbb elülső láb INK növeli a karcolási tartományt"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Több szárny INK növeli a sikló teljesítményét"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Legyőzhetetlen, miközben elrejtve a héj"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Sajtó F egy felfelé támadó tüske\nKevesebb INK hosszabb / Fal ugrás engedélyezve"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: THROW"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: SCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "HOLD SPACEGLIDE  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "HOLD SPACE: SHELL HOLD F: 90 ° turn"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: UPWARD SPIKE ATTACK"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Teljesítmény ×{0:0.00}  Ugrás x{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Fuss!{0:0.00}  Karom tartomány ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Lebegőteljesítmény {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: SHELL /  F: 90 ° turn"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Magasabb tüske hossz ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Karok {0:0.0}/ 280 láb {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Vissza {0:0.0}/ 240 Elöl {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Szárnyak {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Csak a gomb megtartása közben aktív"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "TŰZELEM"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE és F Munka közben!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Test {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "LOW"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "NAGY"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "JUMP"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "HÁROM"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "RUN"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "SCRATCH"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GLIDE"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "VÉDELEM"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "MOBILITÁS"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "TEST INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "FÉNY: FELÜLVIZSGÁLAT"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "HEEED + JUMP UP"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK SIZE {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "F- Fel a fejjel! Kevesebb INK = hosszabb / falugrás engedélyezve"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Draw Még több energiát!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Nem lehet újra rajzolni, miután ez a szakasz elkezdődött."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Magas platform"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 nehéz kapcsoló"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Far Lever"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Keskeny lyuk"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "Szobaszerviz"
+    },
+    {
+      "key": "multi_participants",
+      "value": "JÁTÉKOK"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "KREATE SZOBA"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "BELÉPÉSI SZOBA"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "Szobaazonosító"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "HELYI VIZSGÁLAT"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "TE"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 SLIME MISSILE CAVE"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "FLOOR VANISING! GRAB A WALL"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "Wall-Jump és Dodge kisasszony!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 védd meg a barátodat!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "PHASE {0} / {1}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "Idő {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Védd meg a barátod mindkét oldalról."
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "AIRSTRIKE IN {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "BARÁTOK... BELÉPÉS {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Vigyázz!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "Érme {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "Idő {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "Breakk boxes and collect coins!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "IDŐPONT... RETRY IN 5"
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 Cein Clear!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "Gyerünk!"
+    },
+    {
+      "key": "title_single",
+      "value": "Egy játékos"
+    },
+    {
+      "key": "title_multi",
+      "value": "Többjátékos"
+    },
+    {
+      "key": "title_draw",
+      "value": "DRAW"
+    },
+    {
+      "key": "title_option",
+      "value": "Beállítások"
+    },
+    {
+      "key": "option_back",
+      "value": "Vissza  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "Vissza  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "Vissza  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Kilépés"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG"
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "VASÚTI KAPUMENTUM"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "4- lejátszó antennarelé"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Humán dob Bird, majd Bird → Cat → Slime relé"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "KEZDET"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "Vissza  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "ADATSZOLGÁLTATÓK"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "FÉNYSZÓRÓ"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "Export 920 × 430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "VISSZATÉRÍTÉS A CÍM RÉSZÉRE"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Ellenőrizze az összetételét, majd exportálja a PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Mentett: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "Visszavonom..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "A dolgozókat csak a készenléti szobában lehet megváltoztatni."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "R REPLAY H HIDE HUD     ESC  CÍM"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "TRAINER TAS RECORDER"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Drag színészek while reduve - 124; Overdub Human → Bird → Cat → Slime - 124; F9 rekord F10 Play P szünet O lépés"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 RECORD / STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 PLAY ALL"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 RESET SZEDÉS"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "KIVÁLASZTOTT"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "P PAUSE"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O LÉPÉS"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "IDLE"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "NYOMON KÖVETÉS"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "AZ ALÁÍRÁS"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "SZÁRMAZÁS"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} A \"Donyecki Népköztársaság\" úgynevezett \"miniszterelnöke\". {1} | {2} Keret 124; Sebesség {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "KISZERELÉS {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SVÁJC"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Míg tétlen, húzza karakterek beállítani a kiindulási pozíciókat"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Folytatás"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Cím"
+    },
+    {
+      "key": "language_settings",
+      "value": "Nyelvi beállítások"
+    },
+    {
+      "key": "multi_play",
+      "value": "TÖBBSZÖVETSÉG"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Véletlenszerű egyezés"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Privát"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Véletlenszerű egyezés"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Játékosok keresése"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Keresés"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Egyezik...\n\nJátékosok 2 / 4\n\n- Te...\n2.\n- Keresés\n- Keresés\n\nVárakozás [készség]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "SZOBA"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Szoba létrehozása"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Csatlakozó szoba"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Szobanév\n[ Draw Együtt]\n\nMax játékosok\n< 4 >\n\nLáthatóság\n[Nyilvános] [Private]\n\nFokozat\n[Host Selects]\n\nVörös szabály\n[Szünet mindenki]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Max játékosok"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Láthatóság"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Láthatóság"
+    },
+    {
+      "key": "multi_public",
+      "value": "Nyilvános"
+    },
+    {
+      "key": "multi_private",
+      "value": "Privát"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Kikapcsolás"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Létrehozás"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter a host képernyőn látható lobby azonosító.\n\nAz EOS beállításával a barátok távolról csatlakozhatnak.\nHa közvetlen TCP-t használ, enter IP: 7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter Lobby ID"
+    },
+    {
+      "key": "multi_join",
+      "value": "Csatlakozás"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Frissítés"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "SZOBA"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Szoba: Draw Együtt\nSzemélyazonosító igazolvány száma: ABC123\n2 / 4\n\nLejátszható lobby space\nJátssz dobozokkal, golyókkal és ugróbetétekkel várakozás közben."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Azonosító másolata"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "11- kezdés"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "A szakasz kiválasztása"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Válassza ki a színpadot, amikor mindenki készen áll."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Elhagyni ezt a szobát?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Távozz!"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Törlés"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "A házigazda egy színpadot választ..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Távozz!"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Egyezik..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Csak a házigazda kezdheti."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Nincs Lobby azonosító."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Lemásolt Lobby azonosító."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Másolt szobakód."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Másolt kapcsolat azonosító."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Offline. Nincs szobakód."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "Offline"
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Kód"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Kapcsolódás..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Szoba"
+    },
+    {
+      "key": "multi_players",
+      "value": "Játékosok"
+    },
+    {
+      "key": "multi_local",
+      "value": "Helyi"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Kész"
+    },
+    {
+      "key": "multi_wait",
+      "value": "Várj!"
+    },
+    {
+      "key": "multi_host",
+      "value": "HOST"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Draw Együtt"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Barát Szoba"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Te!"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "TE"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Host"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Játékos {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Hamis egyezés kész."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Hamis háttér inicializálva."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Bejelentkezés..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Online mint helyi tesztjátékos."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Hamis színpad indul."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Létrehozták a privát szobát."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Nyilvános szoba létrehozva."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Kamu szoba."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "Közvetlen TCP inicializálva."
+    },
+    {
+      "key": "online_ready",
+      "value": "Online kész. A vendéglátó vagy a szoba."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Létrehozták a szobát. Ossza meg az igazolványát a barátjával."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Nem sikerült betölteni: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "A szoba azonosítója legyen host- ip: port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Csatlakozó szoba..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Nem sikerült csatlakozni: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Bal előcsarnok."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Kész vagyok."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Nem sikerült elfogadni."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} Csatlakozott."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} Elhagyta az ülést."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Lobby frissítve."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Kiindulási szakasz {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS inicializálva. Az EOS bővítmény beállítása a bejelentkezés előtt."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "EOS bejelentkezés..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "Az EOS Connect interfész nincs kész."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Az EOS bejelentkezés nem sikerült: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "Az EOS lobby létrehozása nem sikerült: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "Az EOS terem létrehozva. Ossza meg ezt a Lobby azonosítót."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter EOS Lobby azonosító."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter Szobakód."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Nem sikerült regisztrálni a szoba kódját: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "A szobakód keresése sikertelen: {0}"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Nincs hely kódolásra {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "A szoba kódja összeütközött. Kérlek, készítsd el újra a szobát."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "A host megnyitotta a színpad kiválasztását."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "A zárt szakasz kiválasztása."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "Az EOS lobby csatlakozása nem sikerült: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Csatlakozott az EOS-hoz."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Elhagyta az EOS lobbit."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "Kész."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Nem vagyok kész."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Az EOS eszközazonosító létrehozása sikertelen: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "EOS eszköz létrehozása..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Az EOS eszközazonosító bejelentkezés nem sikerült: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS online {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Lobby tagok frissítve."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "Az EOS nincs bejelentkezve. Először állítsa be az EOS bővítményt és a bejelentkezést."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "Az EOS ki van kapcsolva."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "PÁLYA TELJESÍTVE!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "A(z) {0}. pálya teljesítve!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Teljesítve!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Következő: {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Pályaválasztás"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Minden pálya teljesítve!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Fokozat {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "VILÁG {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "ÜZEMELTETHETŐ GYÁRTÓK"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "USE: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "HITELESÍTETT"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "NEM HITELESÍTETT"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} jelenleg nem elérhető."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Egy másik játékos már használja {0}. Válasszon egy elérhető karaktert."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "SVÁJC"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} Használatban van. Nyomja meg a COMPLETE-t a swap kéréséhez."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} El akarja cserélni a {1} MELLÉKLET {2}."
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "SWAP"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "DECLINE"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Várom a választ a swap kérésre..."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Karakterek cserélve!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "A swap kérelmet elutasították."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "A másik játékos nem található."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "GRAIN DISPENSER"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100 g SCALE"
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "SÚLYOS GATE"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "BUTTON BARÁTOK"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "PLAYER- CSAK EGY ÚT FLOOR"
+    },
+    {
+      "key": "species_human",
+      "value": "Ember"
+    },
+    {
+      "key": "species_cat",
+      "value": "Macska"
+    },
+    {
+      "key": "species_bird",
+      "value": "Madár"
+    },
+    {
+      "key": "species_turtle",
+      "value": "Teknős"
+    },
+    {
+      "key": "species_slime",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Tárgyak"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Linkek"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Húzza a karaktert, hogy elkezdje a teszt játék ebből a pozícióból. A mentett színpad ivadéka nem változik."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "A teszt indul."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Vizsgálat kezdete: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Nem sikerült menteni: {0} hiba (ok). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Mentett: {0} ({1} figyelmeztetés (ok))"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Szoba létrehozása\nSzobanév [...]\nJátékosok 2 / 3 / 4\nÁllami / magán\n\nCsatlakozó szoba\nSzobaazonosító [......]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Húzza a hely / Kattintson a kiválasztott / WASD mozgatni\nDekoráció: Forgatandó kerék / váltókerék\nCtrl + kerék: zoom az egész szakasz"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} a kiválasztott objektumok"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "A dobozba teljesen bekerített objektumok kerülnek kiválasztásra."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Kiválasztott {0} tárgyak. Húzzon egy kijelölt objektumot, hogy együtt mozgathassuk őket."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "A kiválasztó doboz semmilyen objektumot nem zárt be teljesen."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Áthelyezve {0} kijelölt objektumok együtt."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Kategória"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Keresés"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Típus"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Keresés"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Objektumlista"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Link lista"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "Mi..."
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W +"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "H..."
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H +"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "Módosítás"
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "Másolás"
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "A tárgy másolva."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ Jobbra"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ Down"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "KÉSŐBB"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ UP"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Másolás: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Object másolt flush felé {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Helyzet: X {0:0.00} / Y {1:0.00} (nyilak)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Indítás"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Távolság mozgatása"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Sebesség"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Gyufa (sec)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Crumble Delay (sec)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Szükséges robbanások"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Övsebesség"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Drop Interval (sec)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Beam Interval (sec)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Dobozméret"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Bomba mérete"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Tükör mérete"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Távolság: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Mozgatási sebesség: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Olvadásidő: {0:0.0} s"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Törékeny késleltetés: {0:0.0} s"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Fal tartóssága: {0:0} robbanás"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Övsebesség: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Ejtőidő: {0:0.0} s"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Dobozméret: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Leesett tüske mérete: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "A gyártott bomba mérete: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Balra"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Irány: jobb →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Szállítási irány: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Dobozok:"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Dobozok: Négyzet"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Doboz: kerek"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Dobozok: háromszög"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Bombák: Alternatív mindkettő"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Bomba: Gyufa a Spawn-on"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Bomba: gyújtózsinórban"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Dobozok: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Készült bombák: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Mozgó irány: {0:0}° (Shift + kerék)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Indítóerő: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Játékosonként"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Méretkijátszó tömeg beállított {0:0} INK játékosonként."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter egy szám 1-től 2000-ig."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "SZEMÉLYES KAP"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "TEAM CAP ({0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "PEN-EGYSÉG"
+    },
+    {
+      "key": "draw_ink",
+      "value": "INK"
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "Világos rész"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "UNDO"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "RESET ALL"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Megmenteni mindent?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Törölje minden testrészt, és állítsa vissza az eredeti karaktert."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "RESET"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "CANCEL"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} MEGJEGYZÉS"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "MEGJEGYZÉS"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "5 - FELSZERELÉS"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "HUMAN CAT BIRD TURTLE SLIME"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "mind az öt karakter"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "SLot {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "MENTES"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "EMPTY"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SAVE"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "SET"
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "MEGJELÖLÉS {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Az aktuális mentése {0} rajzolás előre {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Felülírja a {0} rajzolás előre {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "SET PÉLDA {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Az áram cseréje {0} rajzolással {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Háttér"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Fa"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Háttér füve"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Virág"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Háttér Bush"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Felhő"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "Háttér PUSH"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Nyíl"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Macskaarc"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Kutyaarc"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Dátum"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "Mosolygó"
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Szív"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Csillag"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Hold"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Nap"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Eső"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Villám"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Szivárvány"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Hegy"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Négylevelű lóhere"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Gomba"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "Alma"
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Banán"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Görögdinnye"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "Fahéj"
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Jégkrém"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "Kávéscsésze"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "Pizza"
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Kenyér"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Papírrepülőgép"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Repülőgép"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Borsmustár"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "UFO"
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Hot-air léggömb"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Ház"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Castle"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Kincsesláda"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Mole"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Foszfidok"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "Crystal"
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Ősi pot"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Kulcs"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Kulcslyuk"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Kard"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Korona"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Pajzs"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "Gem"
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Érme"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Csont"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Világítóberendezés (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Fogaskerék"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Tavasz"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "Magnet"
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "Kacsa"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Beszédbuborék"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Jelölje be a jelölést."
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Kérdőjel (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Felkiáltójel!"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "Hurok nyíl"
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "JUMP!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Dobd!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Kezdjétek!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "GUAL!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Forgatás: Shift + kerék (0,5 fokos pontosság)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Forgatás: Shift + kerék (15 °), Alttal (1 °)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Forgatás: Shift + kerék (15 °), Alttal (1 °)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Méret: egérkerék"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Intézkedés"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Megjelenés"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Eltüntetés"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Nyisd ki!"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Mozgás!"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "A platform jobb mozgatása"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Felfelé"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Bal oldali platform mozgatása"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "A platform lefelé mozgatása"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Kapcsolódási művelet: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "A kulcsnak kulcslyukhoz kell kapcsolódnia."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Kulcs a kulcslyuk linkek mindig használja Unlock."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "Snap"
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Link"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Kapcsolat"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Kapcsolat eltávolítása"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Hozzáadás: {0} / Snap: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Poss {1:0.0},{2:0.0}  Méret {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Szélesség = jobb fal / magasság = mennyezet (bal fal és alsó széle állandó)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Keret"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Létrehoztam egy keretet a elhelyezett tárgyak köré. Válassza ki a jobb fal és a mennyezet beállításához."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "A fal pontosan a padló és a mennyezet között van."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "GÖRÖG"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "SZOBA {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "BOMB"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MISSILE"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Kész"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT"
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Háttér"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "JÁTÉKOK {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "STAGE {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 előnézet: {0} játékos (k) / színpad {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Háttér színe"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "Alapértelmezés"
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Bezárás"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Átláthatóság"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "A háttér színe megváltozott. Tartsd meg a színpadot."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Mód hozzáadása: {0}. Húzza a térképen, hogy létrehozza."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Mód hozzáadása: {0}. Kattintson a térképen elhelyezni."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Kiválasztva a listáról."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Nincs egyezés"
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(nincs)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Terasz"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Kezdés / cél"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Váltás"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Ajtó / kapu"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Mozgatható"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Intézkedés"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Csapda"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "Gimmick"
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Ellenségek"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Padló"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Fal"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Kezdés"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Cél"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Mérleg"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Testtömeg"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "mennyezet"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Félszint"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Egyirányú padló"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Jégpadló"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Slippery Slope"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Felmászható fal"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Kötél"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Létra"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Felhőszint"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Megszakítható padló"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Esőpadló"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Mozgó padló"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Sticky Move One-Way Floor"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8- 2 REFLECT DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Ugrás a labdát a tested és törés NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "LÁBOK {0}  BALLS ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "IDŐPONT {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "BEVEZETÉS {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "KÖLTSÉG {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "BALL {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "Következő kör {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "3 BALLS LOST! RETRON"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Minden tiszta!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "VESZÉLYEK LETT {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Fegyver"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Golyóálló fal"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Spike Planet"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Zigzag komp"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "Orbit komp"
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "Bazooka"
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "Bombázó komp"
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Mozgó Spike Ball"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Pózkulcs"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Pose kulcslyuk"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Frissítés"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Sebességjelzés"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Sebességjelzés (erős)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Övezet"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Szükséges töltények"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "A szükséges töltények: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Forgópadló"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Ellenőrzési pont"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Warp belépő"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Warp Kilépés"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Helyreállító pont"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Középső cél"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Célhatás"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "Gomb"
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Súly gomb"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Egyidejű gomb"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Fogd meg a gombot."
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Háromszög doboz"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Lever"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Váltás"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Időkapcsoló"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "Érzékelő"
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Piros kapcsoló"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Kék kapcsoló"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Zöld kapcsoló"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Sárga kapcsoló"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Nyomáslemez"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Távirányítás"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Méret"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Ajtó"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Zárt ajtó"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Zár"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Kerítés"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "Lézerkapu"
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Színkapu"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Egyirányú kapu"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Időzített kapu"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Törhető fal"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Rejtett fal"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Fahéj"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Vas doboz"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Labda"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Barrel"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Rock"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Jégtömb"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Úszó doboz"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Gumidoboz"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Bomba"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Bomba (Gyufa indul a Pickup)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Bomba készítő"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Dinamit"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Walker Ellenség"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Ugró ellenség"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Charger Ellenség"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Repülő ellenség"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Shooter Ellenség"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Ellenséges Spawner"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Rakétaindító"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Aktiválás"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Ez az eszköz mindig Aktiválást használ"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Indítási szakasz"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Ellenség mérete"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Ellenség: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Ellenséges méret: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Kulcs"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Érme"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Csillag"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Akkumulátor"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Vödör"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "Ugrás"
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Tavasz"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Szállító balra"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Szállítási jog"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Lift"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "Fan"
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "Magnet"
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "Öv"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Doboz"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "Spike Dropper"
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Hal"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Érme"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Csillag"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Digitális óra"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "Beam emitter"
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "Normál"
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Határidő"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Túlélés"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}sz"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "MINDEN"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Szakaszszabály: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Idő {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "IDŐPONT"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Nyomja meg az R-t az újraindításhoz"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 SurVIVAL"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Egy Survivor takarít!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "A GLOWING FLOOR-BAN"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "TARGET  {0:0}g (90g x PLAYERS)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "A SZÁRMAZÁS ELŐTT LÉPÉS"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Kapd el a Grainst!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "SIGHING..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "A GRAINS MEGMENTÉSE A SZÉLEN"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Tisztán!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "Olyan közel!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "FÖLDRAJZOK  {0:0}g / {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "RARE GRAIN CÉL MEGERŐSÍTVE!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "Próbálj meg egy jobb fej shape"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "STAGE {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Kapjátok el a GRAIN BLIZZARD-ot, amint jobbra fúj!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "A gyors grainek megütik a jeles pókokat."
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 FEEDRUN - EGY JÁTÉK FINISHES"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Kezdjétek!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "IDŐPONT {0}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Készülj!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Kezdjétek!"
+    },
+    {
+      "key": "game_over",
+      "value": "Játék vége"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Ez a test nem illik a kezdéshez. Kérem, vegye vissza."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Ez a test kiosonhat a szobából. Kérem, hagyja abba."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Kész {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "AJÁNLVA"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "NONE"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "A KIBOCSÁTÁS UTÁN NEM MEGVÁLTOZOTT VAGY VISSZAVONT"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "MEGVÁLTOZÁS A KIBOCSÁTÁS UTÁN"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Készülj fel a játékra."
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "A HALAK GYŰJTÉSE AZ IDŐPONT ELŐTT"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "DEFEATE THE CRAYON KING"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "A HURDLES ÉS A FELÜLVIZSGÁLAT"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "TŰZELJ MEG MINDEN AQUARIUM-TARTOMÁT A SZERVEIVEL"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Használd a tested, hogy kiszabadítsd a páthát."
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "A PILLAROKNAK"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "REFLEKEDJE A BALL ÉS BREAK MINDEN BLOCK"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "PULL A BALL INK Mágnetes and SINK it"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "AZ ELNÖKSÉGEKET ÉS A FELVÉTEL"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "COLLECT COINS WHILE FALLING"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "A GRAINOK ELFOGÁSA ÉS A CÉLSÚLYOK MEGFELELÉSE"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "Speed Run. RÖVID MEG AZ IDŐT."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "RIKOCHET BULLETEK AZ ELLENSÉGEK ELLENÁLLÁSÁRA"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "A Sötétség FÉNYE ÉS A GHÓTOK ESETÉBEN"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "A FELDOLGOZÁS IDŐPONTJA"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "HÁROM BOMBA, MINDEN BOLDOG BOLDOG"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "BREAK BOXES ÉS COLLECT INEK"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "KOLLECT ÜZEMEK AZ IDŐPONT ELŐTT"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "KOLLECT ÜZEMEK AZ IDŐPONT ELŐTT"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "Védd meg a barátodat az ellenségektől."
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "A BALL VISSZA, HOGY MEGÖLJÜK AZ ELLENSÉGET"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "AZ IDŐPONT MEGERŐSÍTÉSE"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "AZ UMBRELLA HASZNÁLATA A SZÁRAZON KÍVÜL"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "A LÁZER MEGERŐSÍTÉSE MINDEN SZERVEL A GÖRÖGBEN"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "DEFEAT CRAYON DEVIL"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "DEFEAT CRAYON STALKER"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "DEFEATE THE ENEMIES"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "Tisztán, ha legalább egy játékos túléli."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "Tisztán kell látni, ha egy játékos eléri a célpontot."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "SPANYOLORSZÁG"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Várj a jelre!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Futás!"
+    },
+    {
+      "key": "wind_speedrun_title",
+      "value": "A szél átváltozik!"
+    },
+    {
+      "key": "wind_speedrun_hint",
+      "value": "ELTÉRÉS INK = STRONGER WIND"
+    },
+    {
+      "key": "wind_speedrun_timer",
+      "value": "Idő {0:0.0}"
+    },
+    {
+      "key": "wind_speedrun_time_up",
+      "value": "IDŐPONT"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Maradj az UMBRELLA alatt!"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "Az eső kiismer - REACH SHELTER"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Mindenkit elkaptak az esőben!"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 LINKED HAJÓK"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Nézzétek meg a botton linket!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "Block Missiles 1 másodperces hajókkal!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "TÁBLÁZAT"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "60 másodperc."
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "KÖR {0}/3    {1:0.0} mp MARADT"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "GÖRÖG {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "ÁLLÍTSÁTOK BE A HELYZETET ÉS A SZÖGET A LÉZER VISSZAVERÉSÉHEZ!"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "A(Z) {0}. KÖR TELJESÍTVE!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "LEJÁRT AZ IDŐ! EZ A KÖR ÚJRAINDUL"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON DEVIL HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 AZ ÜLÉSRE VONATKOZÓAN"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "MOVE: PLATFORM CLICK: MISSILE  F: BOMB"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "Főnök!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "MINDEN TELJESÍTMÉNY"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "Szobalányok!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "Célzott - hagyja el a csapatot!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "Menj innen!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "NYOMON KÖVETÉS...  {0}sz"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Fuss, ugorj, fordulj és állj - a hasonmásod tanul."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "PHASE {0}  - Igen. {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Az egyiket a kilövő padlóra csaljuk, aztán a piros kapcsolóra lépünk!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Minden tökfilkó eldőlt!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Soha nem volt másik főnök."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "PHASE {0}  BELÉPÉS"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Győzd le a CPU csapatot a pontos nyomtatványaiddal."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "PHASE {0}  Bal oldal: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "PHASE {0} Tisztán!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Állítsanak fegyvereket piros kapcsolóval. F: throw bomba CLICK: rakéta"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Kisasszony, készen áll! Célozz az egérrel és kattints."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "A CPU csapat felkészült!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "VÉGZŐ BATTLE MEGNYITVA!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "IDŐPONT"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Idő!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Mindenki a földre!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Eltévedt! Visszaállítás az elejéről 3 másodperc múlva."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Fuss jobbra! Használd a zöldet!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "A célszemély megmenekült!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "MINDENT ELÉRTÉK"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Futás!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Figyeljétek a fényes földet!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "Survive! MÁSODIK RÉSZ"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "BIZTONSÁGOS FLOROK {0} / DROP IN {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Maradj a biztonságos földön!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Minden játékos kifelé"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "A SZÁLLÍTÁS MOST"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "Survivor talált!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "FELÜLVIZSGÁLAT"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8- 1 PILLAR FELÜLVIZSGÁLAT"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "FIGYELEM A JELZÉST ÉS ADAGOLJUK A PILLART"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "Jövök! A GLOWING ZONE ELADÁSA"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "A pillér túlélője tiszta!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 CRAYON KING"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER A következő szoba."
+    },
+    {
+      "key": "boss_appears",
+      "value": "Figyelem, főnök!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "A TILOS / TURLY PÉLDÁNYÁHOZ"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "Őrség! A BOSS ELÉRHETŐ"
+    },
+    {
+      "key": "boss_charge",
+      "value": "Charge! El az útból!"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "BEJELENTÉS {0}Menj a magasba!"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Különleges támadás! A RICOCHETS ADATAI"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "Főnök!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Minden játékos kifelé..."
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "Várakozó szoba  {0} / {1}  Gyerünk!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 HURDLE SurVIVAL"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Egy Survivor takarít!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "60 másodpercen át jobbról a hurkok felett"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "A jobboldali hurkok megfigyelése"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "JUMP!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "JUMP THE HURDLES!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Lassabban... fogd a lélegzeted!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Gyerünk! Záró SPRINT!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Minden játékos kifelé"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "HURDLE Survival tiszta!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "A FELÜLVIZSGÁLAT ALATT"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 ESCORT A BARÁTOK"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "MOZGÁS"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "Építs egy tetőt dobozokkal, platformokkal és a testeddel."
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10- 2 VÉDD A BARÁTOT"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "AAH!"
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "FÜGGELÉK ÉS ÜZEMELTETŐ TRAPOK, SZERVEK ÉS ELLENSÉGEK"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "Következő barát  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Egy új barátot készíteni..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "ESCORT Complete!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "A BARÁTOK ELÉRTÉK A GOALT"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "KÖLTSÉG {0}/ 3 BUILD {1:0.0}sz"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "Kapcsolj a testeddel!"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Menj! Segíts a barátodnak, hogy elérje a célt."
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "KÖLTSÉG {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "KÖLTSÉG {0} Tisztán!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "KÖR {0}/3    {1:0.0} mp MARADT"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "HOLES {0}/{1}    Szedjétek össze őket!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "A(Z) {0}. KÖR TELJESÍTVE!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "LEJÁRT AZ IDŐ! EZ A KÖR ÚJRAINDUL"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "TÖMJÉTEK BE A LYUKAKAT!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "KÖLTSÉG {0}/3    {1:0.0}LEFT"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "PALLS {0}/{1}    Roll őket a lyukba!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "PULL A BALL Through the maze with magnetism!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "KÖLTSÉG {0} Tisztán!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "Idő! E KÖLTSÉG VISSZAVONÁSA"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Menj a földbe! Több INK STRONGER MAGNETISM"
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "Záró kör: REACH THE SACK ABOVE!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "Építs egy járgányt a padláson át!\nCsatlakozz a testedhez."
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "A barát a fejeden és a testvonaladon sétálhat."
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "BARÁTOK KEZDETE"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "A BARÁTOK!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "Játék vége"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Nem térhetsz vissza, amíg a barát mozog."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET RELAY"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "KÖLTSÉG {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMMO {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RIKOCHET BULLETES A BARÁTOKKAL A CÉLHOZ"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Kifelé az AMMO-ból! VISSZAVONÁS"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "Öt kör tiszta!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Barát Spawner"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Gól barát"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Friend- Pass Floor"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Híd Példa"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "Seesaw"
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Turntable"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "Ágyú"
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "Katapult"
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "Spike"
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Tűz"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Víz"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Méreg"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "Lézer"
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Falling Rock"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Sajtógép"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Villamos energia"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Fűrész"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Fekete lyuk"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Fogaskerék"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "Nagy halászeszköz"
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "Kötélcsiga"
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "Slider"
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Forgatósáv"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "Pendulum"
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Kulcslyuk"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Szakaszhatár"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Óra"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Számoló"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "A szakasz kiválasztása"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "A munkamenet elhagyása"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Újraindítási szakasz"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Elhagyni az online foglalkozást?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "A házigazda távozása mindenkinek véget vet. Elmenni?"
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Távozz!"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Hídként összekapcsolva: a jobb széle összekapcsolva marad, míg balra terjed."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "A csatlakoztatott terepet külön-külön válogatható és illusztrálható részekre kell osztani."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Külön"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "A külön rész be van kapcsolva. Egyesülés nélkül is összeomolhat, és egyénileg összekapcsolható."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Külön rész kikapcsolva. Az érintőfelület összeolvad."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Csatlakozott a padló és a fal, mint egy terepforma."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Húzza egyenesen {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Vastagság"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Padló- és falvastagság: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Egyenes"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "A egyenes vonal rajza be van kapcsolva."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "A egyenes vonalas rajz ki van kapcsolva."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Draw mód"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Draw mód"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Válassza ki a módot"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Draw üzemmód: üresen húzza space tárgyak elhelyezésére."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Válassza ki a módot: válassza ki és mozgatja a meglévő objektumokat."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Draw {0} Szabadon húzással."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Szabadkézi padló és falrajz bekapcsolva."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "A téglalap elhelyezése be van kapcsolva."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Drew {0} egy csatlakoztatott útvonalként ({1} pont)."
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Vissza a szerkesztőhöz"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Vissza a szerkesztőhöz  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Visszatért a próbatételből. Vágd tovább a színpadod."
+    },
+    {
+      "key": "cancel",
+      "value": "Törlés"
+    },
+    {
+      "key": "retry",
+      "value": "Újra"
+    },
+    {
+      "key": "menu",
+      "value": "Menü"
+    },
+    {
+      "key": "redraw",
+      "value": "Vörös nyersen"
+    },
+    {
+      "key": "pen",
+      "value": "toll"
+    },
+    {
+      "key": "eraser",
+      "value": "Törlő"
+    },
+    {
+      "key": "shape_square",
+      "value": "Doboz"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Kör"
+    },
+    {
+      "key": "shape_line",
+      "value": "Vonal"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Kész!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Vissza"
+    },
+    {
+      "key": "brush_size",
+      "value": "Méret"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Használt"
+    },
+    {
+      "key": "undo",
+      "value": "Visszavonás"
+    },
+    {
+      "key": "character_switch",
+      "value": "Karakter kapcsoló"
+    },
+    {
+      "key": "character_add",
+      "value": "Char hozzáadása"
+    },
+    {
+      "key": "character_delete",
+      "value": "Törlés"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Váltás Char"
+    },
+    {
+      "key": "stage_select",
+      "value": "Pályaválasztás"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 csoport, 3 szakasz egyenként. A Szerkesztés bekapcsolása, majd a szerkesztéshez válasszon egy színpadot."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1- 0 hibakeresés"
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "11- Szerkesztés"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Szerkesztés: Off"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "Szerkesztés:"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "ÚJ"
+    },
+    {
+      "key": "stage_clear",
+      "value": "Tisztaság"
+    },
+    {
+      "key": "stage_locked",
+      "value": "SZÁLLÍTÁS"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Debug mód: minden világ nyitva van. Válasszon egy színpadot a játékhoz, vagy kapcsolja be a Szerkesztést a szerkesztéshez."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1: 2. szint: A fal húzása blokkok létrehozásához\n3: Start 4: Cél 5: skála 6: súly\nA / D / W / S: mozgó kamera Kerék: zoom\nF5: Mentés  F6: Vizsgálat  Esc: Vissza"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Méret"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Méret"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "Grid"
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Törlés"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Mentés"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Vizsgálat"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "Vissza  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Játék beállítások"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "SE"
+    },
+    {
+      "key": "option_keys",
+      "value": "Kulcsok"
+    },
+    {
+      "key": "option_language",
+      "value": "Nyelv"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Még nem."
+    },
+    {
+      "key": "locked_stage",
+      "value": "A JSON nélküli szakaszok visszatérnek a debug fázisba."
+    },
+    {
+      "key": "human",
+      "value": "Ember"
+    },
+    {
+      "key": "cat",
+      "value": "Macska"
+    },
+    {
+      "key": "bird",
+      "value": "Madár"
+    },
+    {
+      "key": "turtle",
+      "value": "Teknős"
+    },
+    {
+      "key": "slime",
+      "value": "Slime"
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 golyó találat"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "GYAKORLATI RÉSZEK"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "KIVÁLASZTÁS"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Válasszon egy részt, majd kattintson vagy húzza a térképen elhelyezni."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Snap: {0} / {1:0.##} Egységhálózat"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Először válasszon egy objektumot."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "A szélesség megváltozott. A Shift + -t is használhatja Kerék."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "A magasság megváltozott. Az Alt + Wheelt is használhatja."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "A méret megváltozott. Használd a kereket mindkét tengely méretezéséhez."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Húzzon egy nagyobb területet, hogy ezt a részt."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Helyezett {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Helyezett {0} a {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Kiválasztott. Húzza mozgatni, és használja a kerék újratöltéséhez."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Nincs mit visszacsinálni."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Kihúztam az utolsó szerkesztést."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Nincs mit újra csinálni."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Újraszerkesztettem."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Válasszon ki egy kapcsolót, gombot, kulcsot vagy kulcslyukat a kapcsolat forrásaként."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Válasszon ki egy kapcsolót, gombot, kulcsot vagy kulcslyukat a kapcsolat forrásaként."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Link forrás: {0}. Válassza ki a cél, majd nyomja meg a Link To."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Először állítsa be a kapcsolat forrását."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Válassza ki a linkcélként használandó objektumot."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "A kapcsolat forrásának és céljának különböző objektumoknak kell lennie."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Kapcsolt {0} - {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Válassza ki először a kapcsolódó objektumot."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Megtisztítottam a kapcsolatot."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Mentett: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "A megtakarítás jelenleg csak az Egységszerkesztőben érhető el."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "A színpadi objektum gyár eltűnt."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Forgalmi világítás"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "1133 BLOCK CRASH"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Block Breaker"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Dobj! BREAK ALL NICO DRAW Blokkok!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} FEKETE LEFT"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "Eltévedt... {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE BROWSER"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Keresés akció vagy SE ID, majd nyomja meg a Play megtekintéséhez a kijelölt hang. Egy sor, hogy lássa az erőforrás utat."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "PLAY"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "Stop"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "FELADAT"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Nincs egyező hangeffektus."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX _ USAGE.md nem található."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Nem kategorizált"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "MUTED"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Futásidő-generált hang"
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Nyomtatás"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Hal"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Fonal golyó"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Hókristály"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Icicle"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "Hóember"
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Blizzard"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "Toll"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Madárfészek"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Szélvonalak"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Cső"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "Bolt"
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Lánc"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Gőz"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "Teknős"
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Óraüveg"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Padlock"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "Slime"
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Buborékok"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Pillangó"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "Ladybug"
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Napraforgó"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "Tulipán"
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Csontváz"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Denevér"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Pókháló"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Stalactite"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Lámpás"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Minecart"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "Csipkebogyó"
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Trófia"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Érme"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Fütyülök"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Léggömb"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "Confetti"
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Tűzijáték"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Torony"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Távcső"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Híd"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "Crayon"
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Ceruza"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Törlő"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Jegyzetfüzet"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Fekete tábla"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Paletta"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Festőkefe"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Canvas"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "Stopwatch"
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Spotlight"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Mikrofon"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Sajt"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Meglepetés doboz"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Ajándék doboz"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "Planet"
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Idegen"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Üstökös"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Fekete lyuk"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Szappan buborék"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Moha"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Fa gyökere"
+    }
+  ]
+}

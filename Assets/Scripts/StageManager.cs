@@ -682,7 +682,10 @@ namespace DrawBody.Prototype
                 }
                 else if (uiManager != null && uiManager.IsTitleSubmenuShowing)
                 {
-                    CloseTitleSubmenu();
+                    if (!uiManager.TryCloseOptionPopup())
+                    {
+                        CloseTitleSubmenu();
+                    }
                 }
                 else if (drawing)
                 {
@@ -1002,7 +1005,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            challengeRemaining = Mathf.Max(0f, challengeRemaining - Time.unscaledDeltaTime);
+            if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                challengeRemaining = Mathf.Max(0f, challengeRemaining - Time.unscaledDeltaTime);
             uiManager?.SetChallengeHud(true, challengeRemaining, collectionTarget, collectedCount, requiredCollectionCount, false);
             if (IsOnlineInStage() && IsLocalOnlineHost(onlineManager.CurrentLobby)
                 && Time.unscaledTime >= nextChallengeSyncAt)
@@ -1010,7 +1014,9 @@ namespace DrawBody.Prototype
                 nextChallengeSyncAt = Time.unscaledTime + 1f;
                 BroadcastCollectionSnapshot();
             }
-            if (challengeRemaining > 0f || (IsOnlineInStage() && !IsLocalOnlineHost(onlineManager.CurrentLobby)))
+            if (LocalMultiplayerDebugMode.NoTimeLimit
+                || challengeRemaining > 0f
+                || (IsOnlineInStage() && !IsLocalOnlineHost(onlineManager.CurrentLobby)))
             {
                 return;
             }
@@ -3204,7 +3210,8 @@ namespace DrawBody.Prototype
                 redrawPlayer,
                 returnPosition,
                 alignRebuiltBottom,
-                desiredBottomY));
+                desiredBottomY,
+                returnToStart));
         }
 
         public void RecordAssignedPlayerStart(PlayerController2D targetPlayer, Vector3 position)
@@ -3561,7 +3568,8 @@ namespace DrawBody.Prototype
             PlayerController2D redrawPlayer,
             Vector3 returnPosition,
             bool alignRebuiltBottom,
-            float desiredBottomY)
+            float desiredBottomY,
+            bool resolveSpawnOverlap)
         {
             // BodyBuilder destroys the old hand-drawn colliders at end of frame.
             // Wait until they are gone before testing the rebuilt body against
@@ -3587,7 +3595,10 @@ namespace DrawBody.Prototype
                         Physics2D.SyncTransforms();
                     }
                 }
-                LiftPlayerOutOfGround(redrawPlayer);
+                // An in-place redraw was already validated at its exact return
+                // position. Running the generic spawn lift again can choose the
+                // far side of a nearby ceiling and eject the body above the room.
+                if (resolveSpawnOverlap) LiftPlayerOutOfGround(redrawPlayer);
                 Physics2D.SyncTransforms();
                 redrawPlayer.SetControlsEnabled(
                     stageStarted && !drawing && !cleared && !stageEditing);
@@ -3649,6 +3660,17 @@ namespace DrawBody.Prototype
                     {
                         Collider2D hit = hits[hitIndex];
                         if (hit == null || hit.isTrigger)
+                        {
+                            continue;
+                        }
+
+                        // Redraw completion must obey the same collision rules as
+                        // the fit validator. In particular, 14-3's blue player-only
+                        // platforms are intentionally pass-through; treating one as
+                        // solid here pushed a rebuilt character onto its upper side.
+                        if (hit.transform.IsChildOf(targetPlayer.transform)
+                            || hit.GetComponentInParent<PlayerController2D>() != null
+                            || IsOneWayPassThroughSurface(hit))
                         {
                             continue;
                         }
