@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: PICO
-  productName: DrawBody Prototype
+  productName: NICO DRAW
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.12941177, g: 0.12941177, b: 0.12941177, a: 1}
@@ -73,7 +73,7 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: DrawBodyPrototype
+  metroPackageName: NICODRAW
   metroPackageVersion: 
   applicationIdentifier: {}
   buildNumber: {}
@@ -349,7 +349,7 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   cloudProjectId: 
-  projectName: DrawBody Prototype
+  projectName: NICO DRAW
   organizationId: 
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

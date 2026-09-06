@@ -74,6 +74,7 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, float> confirmedInkByPlayer = new Dictionary<string, float>();
         private string knownHostPlayerId;
         private LocalRegressionOptions localRegression;
+        private bool integrityErrorReported;
 
         private sealed class LocalRegressionOptions
         {
@@ -403,7 +404,7 @@ namespace DrawBody.Prototype
 
         public void Login()
         {
-            if (shuttingDown)
+            if (shuttingDown || !CanUseOnline())
             {
                 return;
             }
@@ -413,7 +414,7 @@ namespace DrawBody.Prototype
 
         public void StartRandomMatch()
         {
-            if (shuttingDown)
+            if (shuttingDown || !CanUseOnline())
             {
                 return;
             }
@@ -423,7 +424,7 @@ namespace DrawBody.Prototype
 
         public void CreateRoom(string roomName, int maxPlayers, bool isPrivate)
         {
-            if (shuttingDown)
+            if (shuttingDown || !CanUseOnline())
             {
                 return;
             }
@@ -433,7 +434,7 @@ namespace DrawBody.Prototype
 
         public void JoinRoom(string roomId)
         {
-            if (shuttingDown)
+            if (shuttingDown || !CanUseOnline())
             {
                 return;
             }
@@ -481,7 +482,7 @@ namespace DrawBody.Prototype
 
         public void StartGame(string stageId)
         {
-            if (shuttingDown)
+            if (shuttingDown || !CanUseOnline())
             {
                 return;
             }
@@ -517,6 +518,7 @@ namespace DrawBody.Prototype
             }
 
             bodyData.PlayerId = string.IsNullOrEmpty(LocalPlayerId) ? "local" : LocalPlayerId;
+            bodyData.ContentFingerprint = ContentIntegrityVerifier.Fingerprint;
             CacheConfirmedInk(bodyData);
             backend?.SendBodyData(bodyData);
         }
@@ -567,6 +569,7 @@ namespace DrawBody.Prototype
 
         private void StampStageSession(OnlineInputData data)
         {
+            data.ContentFingerprint = ContentIntegrityVerifier.Fingerprint;
             OnlineLobbyInfo lobby = CurrentLobby;
             if (lobby == null) return;
             data.StageId = lobby.StageId;
@@ -576,6 +579,7 @@ namespace DrawBody.Prototype
 
         private void StampStageSession(OnlinePlayerState data)
         {
+            data.ContentFingerprint = ContentIntegrityVerifier.Fingerprint;
             OnlineLobbyInfo lobby = CurrentLobby;
             if (lobby == null) return;
             data.StageId = lobby.StageId;
@@ -585,6 +589,7 @@ namespace DrawBody.Prototype
 
         private void StampStageSession(OnlineCarryData data)
         {
+            data.ContentFingerprint = ContentIntegrityVerifier.Fingerprint;
             OnlineLobbyInfo lobby = CurrentLobby;
             if (lobby == null) return;
             data.StageId = lobby.StageId;
@@ -594,6 +599,7 @@ namespace DrawBody.Prototype
 
         private void StampStageSession(OnlineGimmickData data)
         {
+            data.ContentFingerprint = ContentIntegrityVerifier.Fingerprint;
             OnlineLobbyInfo lobby = CurrentLobby;
             if (lobby == null) return;
             data.StageId = lobby.StageId;
@@ -653,7 +659,8 @@ namespace DrawBody.Prototype
 
         private void OnBackendPlayerStateReceived(OnlinePlayerState playerState)
         {
-            if (playerState == null || !IsCurrentStageSession(
+            if (playerState == null || !AcceptRemoteContent(playerState.ContentFingerprint)
+                || !IsSanePlayerState(playerState) || !IsCurrentStageSession(
                     playerState.StageId, playerState.StageRevision, playerState.RetryRevision, false))
             {
                 return;
@@ -663,6 +670,10 @@ namespace DrawBody.Prototype
 
         private void OnBackendBodyDataReceived(OnlineBodyData bodyData)
         {
+            if (bodyData == null || !AcceptRemoteContent(bodyData.ContentFingerprint) || !IsSaneBodyData(bodyData))
+            {
+                return;
+            }
             CacheConfirmedInk(bodyData);
             BodyDataReceived?.Invoke(bodyData);
         }
@@ -725,7 +736,9 @@ namespace DrawBody.Prototype
 
         private void OnBackendCarryDataReceived(OnlineCarryData carryData)
         {
-            if (carryData == null || !IsCurrentStageSession(
+            if (carryData == null || !AcceptRemoteContent(carryData.ContentFingerprint)
+                || !IsSaneVector(carryData.ReleaseVelocity, 1000f) || !IsSaneVector(carryData.LocalOffset, 100f)
+                || !IsCurrentStageSession(
                     carryData.StageId, carryData.StageRevision, carryData.RetryRevision, false))
             {
                 return;
@@ -736,12 +749,98 @@ namespace DrawBody.Prototype
         private void OnBackendGimmickDataReceived(OnlineGimmickData gimmickData)
         {
             bool isRetry = gimmickData != null && gimmickData.Kind == "stage_retry";
-            if (gimmickData == null || !IsCurrentStageSession(
+            if (gimmickData == null || !AcceptRemoteContent(gimmickData.ContentFingerprint)
+                || (gimmickData.Json != null && gimmickData.Json.Length > 1024 * 1024)
+                || !IsCurrentStageSession(
                     gimmickData.StageId, gimmickData.StageRevision, gimmickData.RetryRevision, isRetry))
             {
                 return;
             }
             GimmickDataReceived?.Invoke(gimmickData);
+        }
+
+        private bool CanUseOnline()
+        {
+            if (ContentIntegrityVerifier.IsTrusted) return true;
+            ReportIntegrityError();
+            return false;
+        }
+
+        private bool AcceptRemoteContent(string remoteFingerprint)
+        {
+            if (!ContentIntegrityVerifier.IsTrusted)
+            {
+                ReportIntegrityError();
+                return false;
+            }
+
+            if (string.Equals(remoteFingerprint, ContentIntegrityVerifier.Fingerprint, StringComparison.Ordinal))
+                return true;
+
+            ReportIntegrityError();
+            return false;
+        }
+
+        private void ReportIntegrityError()
+        {
+            if (integrityErrorReported) return;
+            integrityErrorReported = true;
+            string message = LocalizationManager.T("online_content_mismatch");
+            Debug.LogError(message + " " + ContentIntegrityVerifier.FailureReason);
+            StateChanged?.Invoke(OnlineConnectionState.Error, CurrentLobby, message);
+        }
+
+        private static bool IsSanePlayerState(OnlinePlayerState state)
+        {
+            return IsSaneVector(state.Position, 10000f)
+                && IsSaneVector(state.Velocity, 1000f)
+                && IsFinite(state.Rotation) && Mathf.Abs(state.Rotation) <= 100000f
+                && IsSaneVector(state.AimDirection, 10f)
+                && IsSaneVector(state.CarryOffset, 100f)
+                && IsFinite(state.SpeedBoostMultiplier) && state.SpeedBoostMultiplier >= 0f && state.SpeedBoostMultiplier <= 100f
+                && IsFinite(state.SpeedBoostRemaining) && state.SpeedBoostRemaining >= 0f && state.SpeedBoostRemaining <= 3600f
+                && IsFinite(state.RespawnRemaining) && state.RespawnRemaining >= 0f && state.RespawnRemaining <= 3600f
+                && IsFinite(state.RespawnGraceRemaining) && state.RespawnGraceRemaining >= 0f && state.RespawnGraceRemaining <= 3600f;
+        }
+
+        private static bool IsSaneBodyData(OnlineBodyData data)
+        {
+            if (string.IsNullOrEmpty(data.PlayerId) || string.IsNullOrEmpty(data.Json)
+                || data.PlayerId.Length > 256 || data.Json.Length > 4 * 1024 * 1024)
+                return false;
+            try
+            {
+                SerializableBodyDrawing body = JsonUtility.FromJson<SerializableBodyDrawing>(data.Json);
+                if (body == null || body.Parts == null || body.Parts.Length > 64) return false;
+                float totalInk = 0f;
+                for (int i = 0; i < body.Parts.Length; i++)
+                {
+                    SerializableBodyPartDrawing part = body.Parts[i];
+                    if (part == null || !IsFinite(part.Ink) || part.Ink < 0f || part.Ink > 500f
+                        || part.Points == null || part.Points.Length > 20000)
+                        return false;
+                    totalInk += part.Ink;
+                    if (totalInk > 500.01f) return false;
+                    for (int pointIndex = 0; pointIndex < part.Points.Length; pointIndex++)
+                        if (!IsSaneVector(part.Points[pointIndex], 10000f)) return false;
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private static bool IsSaneVector(Vector2 value, float maximumAbsoluteValue)
+        {
+            return IsFinite(value.x) && IsFinite(value.y)
+                && Mathf.Abs(value.x) <= maximumAbsoluteValue && Mathf.Abs(value.y) <= maximumAbsoluteValue;
+        }
+
+        private static bool IsFinite(float value)
+        {
+            return !float.IsNaN(value) && !float.IsInfinity(value);
         }
     }
 

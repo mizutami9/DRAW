@@ -32,6 +32,7 @@ namespace DrawBody.Prototype
 
         private void Awake()
         {
+            HideLegacyOptionControls();
             EnsurePlayerNameControls();
             if (bgmSlider != null)
             {
@@ -53,6 +54,30 @@ namespace DrawBody.Prototype
 
             LocalizationManager.LanguageChanged += Refresh;
             Refresh();
+        }
+
+        private void HideLegacyOptionControls()
+        {
+            string[] legacyNames =
+            {
+                "TitleOptionSubtitle",
+                "OptionKeysLabel",
+                "OptionKeysValue",
+                "OptionVibrationLabel",
+                "OptionVibrationButton",
+                "OptionLanguageValue",
+                "OptionLanguageCurrentValue"
+            };
+            for (int i = 0; i < legacyNames.Length; i++)
+            {
+                Transform legacy = transform.Find(legacyNames[i]);
+                if (legacy != null) legacy.gameObject.SetActive(false);
+            }
+
+            if (LocalizationManager.SupportedLanguages.Count > 2 && englishButton != null)
+            {
+                englishButton.gameObject.SetActive(false);
+            }
         }
 
         private void EnsurePlayerNameControls()

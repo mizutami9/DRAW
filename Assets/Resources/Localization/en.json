@@ -1689,6 +1689,14 @@
                         "value":  "Fake backend initialized."
                     },
                     {
+                        "key":  "online_content_mismatch",
+                        "value":  "Online play is unavailable because the game data or version does not match. Verify the game files in Steam."
+                    },
+                    {
+                        "key":  "online_host_disconnected",
+                        "value":  "The host disconnected, so the room was closed."
+                    },
+                    {
                         "key":  "sfx_browser_title",
                         "value":  "SE BROWSER"
                     },

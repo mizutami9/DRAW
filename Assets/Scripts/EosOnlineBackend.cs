@@ -23,7 +23,9 @@ namespace DrawBody.Prototype
         private const string MessageStageSelect = "stage_select";
         private const string MessageSessionSync = "session_sync";
         private const string MessageGimmick = "gimmick";
-        private const string RoomCodeAttributeKey = "roomCode";
+        private const string MessageJoinProof = "join_proof";
+        private const string RoomCodeAttributeKey = "roomCodeHash";
+        private const string BuildFingerprintAttributeKey = "buildFingerprint";
         private const string RandomMatchAttributeKey = "matchType";
         private const string RandomMatchAttributeValue = "drawbody-random-v1";
         private const string RoomCodeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -46,6 +48,7 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, bool> readyByPlayerId = new Dictionary<string, bool>();
         private readonly Dictionary<string, float> lastPeerPacketAt = new Dictionary<string, float>();
         private readonly Dictionary<string, BodyChunkAssembly> bodyChunkAssemblies = new Dictionary<string, BodyChunkAssembly>();
+        private readonly HashSet<string> verifiedPrivatePeers = new HashSet<string>(StringComparer.Ordinal);
         private int nextBodyTransferId;
 
         private sealed class BodyChunkAssembly
@@ -71,6 +74,9 @@ namespace DrawBody.Prototype
         private bool isHost;
         private bool triedCreateDeviceId;
         private bool shuttingDown;
+        private bool roomRequiresProof;
+        private bool hadRemoteHost;
+        private string hostRoomCode;
         private ulong lobbyMemberStatusNotificationId;
         private ulong lobbyUpdateNotificationId;
         private ulong p2pConnectionRequestNotificationId;
@@ -263,6 +269,25 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            AttributeData buildParameter = new AttributeData
+            {
+                Key = BuildFingerprintAttributeKey,
+                Value = ContentIntegrityVerifier.Fingerprint
+            };
+            LobbySearchSetParameterOptions buildParameterOptions = new LobbySearchSetParameterOptions
+            {
+                Parameter = buildParameter,
+                ComparisonOp = ComparisonOp.Equal
+            };
+            Result buildParameterResult = search.SetParameter(ref buildParameterOptions);
+            if (buildParameterResult != Result.Success)
+            {
+                search.Release();
+                SetState(OnlineConnectionState.Error, null,
+                    LocalizationManager.Format("online_eos_room_code_search_failed", buildParameterResult));
+                return;
+            }
+
             LobbySearchFindOptions findOptions = new LobbySearchFindOptions { LocalUserId = localUserId };
             search.Find(ref findOptions, null, (ref LobbySearchFindCallbackInfo data) =>
             {
@@ -419,8 +444,9 @@ namespace DrawBody.Prototype
                         CreatePlayer(LocalPlayerId, PlayerNameSettings.CurrentName, true, false)
                     };
                     SetState(OnlineConnectionState.Matching, CurrentLobby, LocalizationManager.T("multi_searching_players"));
-                    AddLobbyAttribute(lobbyId, RandomMatchAttributeKey, RandomMatchAttributeValue,
-                        () => RefreshLobbyMembers(LocalizationManager.T("multi_searching_players")));
+                    AddLobbyAttribute(lobbyId, BuildFingerprintAttributeKey, ContentIntegrityVerifier.Fingerprint,
+                        () => AddLobbyAttribute(lobbyId, RandomMatchAttributeKey, RandomMatchAttributeValue,
+                            () => RefreshLobbyMembers(LocalizationManager.T("multi_searching_players"))));
                 });
             });
         }
@@ -434,6 +460,10 @@ namespace DrawBody.Prototype
             readyByPlayerId.Clear();
             lastPeerPacketAt.Clear();
             bodyChunkAssemblies.Clear();
+            verifiedPrivatePeers.Clear();
+            roomRequiresProof = false;
+            hadRemoteHost = false;
+            hostRoomCode = string.Empty;
             lobbyId = null;
             CurrentLobby = null;
             ResetSessionTracking();
@@ -455,6 +485,10 @@ namespace DrawBody.Prototype
             readyByPlayerId.Clear();
             lastPeerPacketAt.Clear();
             bodyChunkAssemblies.Clear();
+            verifiedPrivatePeers.Clear();
+            roomRequiresProof = false;
+            hadRemoteHost = false;
+            hostRoomCode = string.Empty;
             ResetSessionTracking();
             TryCreateRoomWithUniqueCode(roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts);
         }
@@ -508,9 +542,13 @@ namespace DrawBody.Prototype
                         }
 
                         lobbyId = createdLobbyId;
+                        roomRequiresProof = isPrivate;
+                        hostRoomCode = roomCode;
                         CurrentLobby = CreateLobbyInfo(lobbyId, string.IsNullOrEmpty(roomName) ? LocalizationManager.T("multi_default_room_name") : roomName, Mathf.Clamp(maxPlayers, 2, 4), roomCode);
                         CurrentLobby.Players = new[] { CreatePlayer(LocalPlayerId, PlayerNameSettings.CurrentName, true, false) };
-                        AddRoomCodeAttribute(lobbyId, roomCode, () => RefreshLobbyMembers(LocalizationManager.T("online_eos_room_created")));
+                        AddLobbyAttribute(lobbyId, BuildFingerprintAttributeKey, ContentIntegrityVerifier.Fingerprint,
+                            () => AddRoomCodeAttribute(lobbyId, roomCode,
+                                () => RefreshLobbyMembers(LocalizationManager.T("online_eos_room_created"))));
                     });
                 });
             });
@@ -567,6 +605,7 @@ namespace DrawBody.Prototype
                     lobbyId = joinedLobbyId;
                     CurrentLobby = CreateLobbyInfo(lobbyId, LocalizationManager.T("multi_friend_room_name"), 4, roomCode);
                     RefreshLobbyMembers(LocalizationManager.T("online_eos_joined_room"));
+                    SendToHost(MessageJoinProof, CreateRoomProof(roomCode, joinedLobbyId));
                     SendToHost(MessageReady, "0");
                 });
             });
@@ -589,6 +628,10 @@ namespace DrawBody.Prototype
             readyByPlayerId.Clear();
             lastPeerPacketAt.Clear();
             bodyChunkAssemblies.Clear();
+            verifiedPrivatePeers.Clear();
+            roomRequiresProof = false;
+            hadRemoteHost = false;
+            hostRoomCode = string.Empty;
             lobbyId = null;
             hostPeer = null;
             CurrentLobby = null;
@@ -805,7 +848,8 @@ namespace DrawBody.Prototype
             };
             UserLoginInfo userLoginInfo = new UserLoginInfo
             {
-                DisplayName = SystemInfo.deviceName
+                // Never transmit the Windows device/computer name as player data.
+                DisplayName = PlayerNameSettings.CurrentName
             };
             LoginOptions options = new LoginOptions
             {
@@ -840,7 +884,11 @@ namespace DrawBody.Prototype
 
         private void AddRoomCodeAttribute(string targetLobbyId, string roomCode, Action onComplete)
         {
-            AddLobbyAttribute(targetLobbyId, RoomCodeAttributeKey, roomCode, onComplete);
+            // The actual six-letter code is a bearer secret. Only publish its
+            // one-way lookup hash; private rooms additionally prove knowledge
+            // of the original code over P2P before the host accepts gameplay.
+            AddLobbyAttribute(targetLobbyId, RoomCodeAttributeKey,
+                ContentIntegrityVerifier.HashString(roomCode), onComplete);
         }
 
         private void AddLobbyAttribute(string targetLobbyId, string key, string value, Action onComplete)
@@ -928,7 +976,7 @@ namespace DrawBody.Prototype
             AttributeData parameter = new AttributeData
             {
                 Key = RoomCodeAttributeKey,
-                Value = roomCode
+                Value = ContentIntegrityVerifier.HashString(roomCode)
             };
             LobbySearchSetParameterOptions parameterOptions = new LobbySearchSetParameterOptions
             {
@@ -941,6 +989,24 @@ namespace DrawBody.Prototype
             {
                 search.Release();
                 completed?.Invoke(parameterResult, string.Empty);
+                return;
+            }
+
+            AttributeData buildParameter = new AttributeData
+            {
+                Key = BuildFingerprintAttributeKey,
+                Value = ContentIntegrityVerifier.Fingerprint
+            };
+            LobbySearchSetParameterOptions buildOptions = new LobbySearchSetParameterOptions
+            {
+                Parameter = buildParameter,
+                ComparisonOp = ComparisonOp.Equal
+            };
+            Result buildResult = search.SetParameter(ref buildOptions);
+            if (buildResult != Result.Success)
+            {
+                search.Release();
+                completed?.Invoke(buildResult, string.Empty);
                 return;
             }
 
@@ -1026,7 +1092,16 @@ namespace DrawBody.Prototype
                 AddNotifyLobbyMemberStatusReceivedOptions memberOptions = new AddNotifyLobbyMemberStatusReceivedOptions();
                 lobbyMemberStatusNotificationId = lobbyInterface.AddNotifyLobbyMemberStatusReceived(ref memberOptions, null, (ref LobbyMemberStatusReceivedCallbackInfo data) =>
                 {
-                    Enqueue(() => RefreshLobbyMembers(LocalizationManager.T("online_lobby_members_updated")));
+                    string targetId = data.TargetUserId != null ? data.TargetUserId.ToString() : string.Empty;
+                    LobbyMemberStatus status = data.CurrentStatus;
+                    Enqueue(() =>
+                    {
+                        bool hostWasLost = !isHost && hostPeer != null && targetId == hostPeer.ToString()
+                            && (status == LobbyMemberStatus.Left || status == LobbyMemberStatus.Disconnected
+                                || status == LobbyMemberStatus.Closed);
+                        if (hostWasLost) HandleHostDisconnected();
+                        else RefreshLobbyMembers(LocalizationManager.T("online_lobby_members_updated"));
+                    });
                 });
 
                 AddNotifyLobbyUpdateReceivedOptions updateOptions = new AddNotifyLobbyUpdateReceivedOptions();
@@ -1166,11 +1241,17 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                bool local = member.ToString() == LocalPlayerId;
-                bool host = !string.IsNullOrEmpty(ownerId) ? member.ToString() == ownerId : i == 0;
+                string memberId = member.ToString();
+                bool local = memberId == LocalPlayerId;
+                bool host = !string.IsNullOrEmpty(ownerId) ? memberId == ownerId : i == 0;
                 if (host && !local)
                 {
                     hostPeer = member;
+                }
+                if (isHost && roomRequiresProof && !local && !verifiedPrivatePeers.Contains(memberId))
+                {
+                    AcceptPeer(member);
+                    continue;
                 }
                 if (!local)
                 {
@@ -1178,7 +1259,6 @@ namespace DrawBody.Prototype
                     AcceptPeer(member);
                 }
 
-                string memberId = member.ToString();
                 bool ready = readyByPlayerId.TryGetValue(memberId, out bool rememberedReady)
                     && rememberedReady;
                 string displayName = local ? PlayerNameSettings.CurrentName : null;
@@ -1201,6 +1281,7 @@ namespace DrawBody.Prototype
                     ProductUserId previousPeer = previousPeers[i];
                     string previousId = previousPeer != null ? previousPeer.ToString() : string.Empty;
                     if (string.IsNullOrEmpty(previousId)
+                        || (roomRequiresProof && !verifiedPrivatePeers.Contains(previousId))
                         || !lastPeerPacketAt.TryGetValue(previousId, out float heardAt)
                         || Time.unscaledTime - heardAt > 4f)
                     {
@@ -1240,6 +1321,16 @@ namespace DrawBody.Prototype
             }
 
             CurrentLobby.Players = players.ToArray();
+            if (!isHost)
+            {
+                if (hostPeer != null) hadRemoteHost = true;
+                else if (hadRemoteHost)
+                {
+                    details.Release();
+                    HandleHostDisconnected();
+                    return;
+                }
+            }
             OnlineConnectionState refreshedState = sessionMode == SessionModePlaying
                 ? OnlineConnectionState.Playing
                 : State == OnlineConnectionState.Matching
@@ -1453,6 +1544,12 @@ namespace DrawBody.Prototype
 
             string type = line.Substring(0, split);
             string payload = line.Substring(split + 1);
+            if (isHost && roomRequiresProof && peer != null
+                && !verifiedPrivatePeers.Contains(peer.ToString()))
+            {
+                if (type == MessageJoinProof) VerifyPrivateRoomPeer(peer, payload);
+                return;
+            }
             if (type == MessageReady)
             {
                 string[] parts = payload.Split('|');
@@ -1548,6 +1645,53 @@ namespace DrawBody.Prototype
                     }
                 }
             }
+        }
+
+        private void VerifyPrivateRoomPeer(ProductUserId peer, string suppliedProof)
+        {
+            if (peer == null) return;
+            string expected = CreateRoomProof(hostRoomCode, lobbyId);
+            if (!FixedTimeEquals(expected, suppliedProof))
+            {
+                KickLobbyMember(peer);
+                return;
+            }
+
+            verifiedPrivatePeers.Add(peer.ToString());
+            EnsureSessionPeer(peer);
+            RefreshLobbyMembers(LocalizationManager.T("online_lobby_members_updated"));
+        }
+
+        private void KickLobbyMember(ProductUserId peer)
+        {
+            if (lobbyInterface == null || localUserId == null || peer == null || string.IsNullOrEmpty(lobbyId)) return;
+            KickMemberOptions options = new KickMemberOptions
+            {
+                LobbyId = lobbyId,
+                LocalUserId = localUserId,
+                TargetUserId = peer
+            };
+            lobbyInterface.KickMember(ref options, null, (ref KickMemberCallbackInfo data) => { });
+        }
+
+        private static string CreateRoomProof(string roomCode, string targetLobbyId)
+        {
+            if (string.IsNullOrEmpty(roomCode) || string.IsNullOrEmpty(targetLobbyId)) return string.Empty;
+            return ContentIntegrityVerifier.HashString(roomCode + "|" + targetLobbyId);
+        }
+
+        private static bool FixedTimeEquals(string expected, string actual)
+        {
+            if (expected == null || actual == null || expected.Length != actual.Length) return false;
+            int difference = 0;
+            for (int i = 0; i < expected.Length; i++) difference |= expected[i] ^ actual[i];
+            return difference == 0;
+        }
+
+        private void HandleHostDisconnected()
+        {
+            LeaveLobby();
+            SetState(OnlineConnectionState.Error, null, LocalizationManager.T("online_host_disconnected"));
         }
 
         private void Broadcast(string type, string payload, ProductUserId except = null)

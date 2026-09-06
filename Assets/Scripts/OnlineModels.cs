@@ -48,6 +48,7 @@ namespace DrawBody.Prototype
     public sealed class OnlineBodyData
     {
         public string PlayerId;
+        public string ContentFingerprint;
         public int Revision;
         public string Json;
     }
@@ -72,6 +73,7 @@ namespace DrawBody.Prototype
     public sealed class OnlineInputData
     {
         public string PlayerId;
+        public string ContentFingerprint;
         public string StageId;
         public int StageRevision;
         public int RetryRevision;
@@ -85,6 +87,7 @@ namespace DrawBody.Prototype
     public sealed class OnlinePlayerState
     {
         public string PlayerId;
+        public string ContentFingerprint;
         public string StageId;
         public int StageRevision;
         public int RetryRevision;
@@ -124,6 +127,7 @@ namespace DrawBody.Prototype
     public sealed class OnlineCarryData
     {
         public string CarrierPlayerId;
+        public string ContentFingerprint;
         public string StageId;
         public int StageRevision;
         public int RetryRevision;
@@ -137,6 +141,7 @@ namespace DrawBody.Prototype
     public sealed class OnlineGimmickData
     {
         public string PlayerId;
+        public string ContentFingerprint;
         public string StageId;
         public int StageRevision;
         public int RetryRevision;

@@ -1689,6 +1689,14 @@
                         "value":  "疑似オンラインを初期化しました。"
                     },
                     {
+                        "key":  "online_content_mismatch",
+                        "value":  "ゲームデータまたはバージョンが一致しないため、オンラインプレイを開始できません。Steamでファイルの整合性を確認してください。"
+                    },
+                    {
+                        "key":  "online_host_disconnected",
+                        "value":  "ホストが切断したため、ルームを終了しました。"
+                    },
+                    {
                         "key":  "sfx_browser_title",
                         "value":  "SE確認"
                     },
