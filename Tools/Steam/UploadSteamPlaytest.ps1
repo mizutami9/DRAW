@@ -42,6 +42,7 @@ $depotVdf = @"
     "FileExclusion" "*.pdb"
     "FileExclusion" "steam_appid.txt"
     "FileExclusion" "*_BurstDebugInformation_DoNotShip*"
+    "FileExclusion" "*_BackUpThisFolder_ButDontShipItWithYourGame*"
 }
 "@
 

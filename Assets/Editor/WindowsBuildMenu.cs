@@ -61,7 +61,11 @@ namespace DrawBody.EditorTools
             BuildReport report = BuildPipeline.BuildPlayer(options);
             if (report.summary.result == BuildResult.Succeeded)
             {
-                if (hardenedRelease) ValidateHardenedBuild(outputDirectory);
+                if (hardenedRelease)
+                {
+                    RemoveIl2CppBackupArtifacts(outputDirectory);
+                    ValidateHardenedBuild(outputDirectory);
+                }
                 string kind = hardenedRelease ? "Hardened Steam release (IL2CPP + signed content)" : "Windows test build";
                 UnityEngine.Debug.Log(kind + " created: " + options.locationPathName);
             }
@@ -120,6 +124,17 @@ namespace DrawBody.EditorTools
                 throw new BuildFailedException("Steam release validation failed: a replaceable Mono gameplay assembly was found.");
             if (File.Exists(Path.Combine(outputDirectory, "steam_appid.txt")))
                 throw new BuildFailedException("Steam release validation failed: steam_appid.txt must not be uploaded to the depot.");
+        }
+
+        private static void RemoveIl2CppBackupArtifacts(string outputDirectory)
+        {
+            string executableName = "NICO DRAW";
+            string backupDirectory = Path.Combine(outputDirectory,
+                executableName + "_BackUpThisFolder_ButDontShipItWithYourGame");
+            if (!Directory.Exists(backupDirectory)) return;
+
+            Directory.Delete(backupDirectory, true);
+            UnityEngine.Debug.Log("Removed Unity IL2CPP backup artifacts from the Steam distribution folder.");
         }
     }
 }

@@ -24,6 +24,10 @@ if (Test-Path -LiteralPath (Join-Path $dataPath "Managed\Assembly-CSharp.dll") -
 if (Test-Path -LiteralPath (Join-Path $expectedRoot "steam_appid.txt") -PathType Leaf) {
     $failures.Add("steam_appid.txt must not be included in a Steam depot.")
 }
+$il2CppBackup = Join-Path $expectedRoot "NICO DRAW_BackUpThisFolder_ButDontShipItWithYourGame"
+if (Test-Path -LiteralPath $il2CppBackup -PathType Container) {
+    $failures.Add("Unity IL2CPP backup artifacts are present; do not upload the BackUpThisFolder directory.")
+}
 
 $secretFiles = @(Get-ChildItem -LiteralPath $expectedRoot -Recurse -File -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -match "(?i)(private.*key|signing.*key|content-signing-private|\.pem$|\.pfx$)" })
