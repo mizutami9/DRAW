@@ -2240,6 +2240,28 @@ namespace DrawBody.Prototype
                 : CreateWeight(data, parent);
         }
 
+        internal Transform CreateDroppedBoxPreview(
+            StageObjectType boxType,
+            Transform parent,
+            int sortingOrder = 33)
+        {
+            if (parent == null) return null;
+            if (boxType != StageObjectType.WoodBox
+                && boxType != StageObjectType.Ball
+                && boxType != StageObjectType.TriangleBox)
+            {
+                boxType = StageObjectType.WoodBox;
+            }
+
+            GameObject preview = new GameObject("Next " + boxType + " Preview");
+            preview.transform.SetParent(parent, false);
+            DrawMovableObject(preview.transform, boxType);
+            UnityEngine.Rendering.SortingGroup group = preview.AddComponent<UnityEngine.Rendering.SortingGroup>();
+            group.sortingOrder = sortingOrder;
+            group.sortAtRoot = true;
+            return preview.transform;
+        }
+
         private GameObject CreateDroppedSpike(StageObjectData data, Transform parent)
         {
             GameObject spike = CreateSpike(data, parent);

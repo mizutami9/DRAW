@@ -9,6 +9,7 @@ namespace DrawBody.Prototype
         private const string NetworkKind = "challenge_ready_room";
         private const float MinimumRoomWidth = 5.4f;
         private const float MinimumRoomHeight = 4.6f;
+        private const float RoomFrameThickness = 0.72f;
         private const float ReadyStateResendInterval = 0.5f;
 
         [System.Serializable]
@@ -262,10 +263,15 @@ namespace DrawBody.Prototype
                     (column - (columns - 1) * 0.5f) * roomWidth,
                     ((rows - 1) * 0.5f - row) * roomHeight);
                 CreateRedrawSpot(center, i);
-                CreateTerrain("Floor", center + Vector2.down * roomHeight * 0.5f, new Vector2(roomWidth, 0.72f));
-                CreateTerrain("Ceiling", center + Vector2.up * roomHeight * 0.5f, new Vector2(roomWidth, 0.72f));
-                CreateTerrain("Left Wall", center + Vector2.left * roomWidth * 0.5f, new Vector2(0.72f, roomHeight));
-                CreateTerrain("Right Wall", center + Vector2.right * roomWidth * 0.5f, new Vector2(0.72f, roomHeight));
+                CreateTerrain("Floor", center + Vector2.down * roomHeight * 0.5f,
+                    new Vector2(roomWidth + RoomFrameThickness, RoomFrameThickness));
+                CreateTerrain("Ceiling", center + Vector2.up * roomHeight * 0.5f,
+                    new Vector2(roomWidth + RoomFrameThickness, RoomFrameThickness));
+                CreateTerrain("Left Wall", center + Vector2.left * roomWidth * 0.5f,
+                    new Vector2(RoomFrameThickness, roomHeight + RoomFrameThickness));
+                CreateTerrain("Right Wall", center + Vector2.right * roomWidth * 0.5f,
+                    new Vector2(RoomFrameThickness, roomHeight + RoomFrameThickness));
+                CreateReadyRoomPresentation(center, i);
 
                 GameObject button = new GameObject("Ready Button P" + (i + 1));
                 button.transform.SetParent(transform, false);
@@ -303,13 +309,21 @@ namespace DrawBody.Prototype
             bool showRecommendations = ShouldShowRecommendationMonitor();
             float monitorY = rows * roomHeight * 0.5f + 2.35f;
             bool spaciousDescription = stageId == "14-3";
+            bool tallSurvivalDescription = stageId == "11-2";
+            float descriptionHeight = spaciousDescription ? 3.2f : tallSurvivalDescription ? 3.3f : 2.7f;
+            if (tallSurvivalDescription)
+            {
+                // Keep the monitor's top edge where the fixed camera expects it,
+                // and extend the LCD downward into the existing gap above the room.
+                monitorY -= (descriptionHeight - 2.7f) * 0.5f;
+            }
             float descriptionWidth = showRecommendations ? 12f : spaciousDescription ? 18.5f : 16.5f;
             float descriptionX = showRecommendations ? -2.8f : 0f;
             GameObject monitor = new GameObject("Ready Room Game Monitor");
             monitor.transform.SetParent(transform, false);
             monitor.transform.localPosition = new Vector3(descriptionX, monitorY, 0.25f);
             DoodleMonitorVisuals.Build(monitor.transform,
-                new Vector2(descriptionWidth, spaciousDescription ? 3.2f : 2.7f), 55);
+                new Vector2(descriptionWidth, descriptionHeight), 55);
             descriptionText = StageEscortController.CreateText(monitor.transform, "Game Description",
                 new Vector3(0f, 0.43f, -0.03f), 58, spaciousDescription ? 0.09f : showRecommendations ? 0.105f : 0.12f,
                 new Color(0.04f, 0.34f, 0.5f), 61);
@@ -566,8 +580,104 @@ namespace DrawBody.Prototype
             terrain.AddComponent<BoxCollider2D>().size = size;
             StageEscortController.AddFilledRect(terrain.transform, "Paper", Vector2.zero, size,
                 new Color(0.96f, 0.95f, 0.87f), 34);
-            StageEscortController.AddBoxOutline(terrain.transform, Vector2.zero, size,
-                new Color(0.2f, 0.24f, 0.27f), 36);
+        }
+
+        private void CreateReadyRoomPresentation(Vector2 center, int roomIndex)
+        {
+            GameObject frameRoot = new GameObject("Ready Room Crayon Booth " + (roomIndex + 1));
+            frameRoot.transform.SetParent(transform, false);
+            frameRoot.transform.localPosition = center;
+
+            float halfWidth = roomWidth * 0.5f;
+            float halfHeight = roomHeight * 0.5f;
+            Color graphite = new Color(0.2f, 0.24f, 0.27f, 0.96f);
+
+            // One shared outer and inner outline keeps all four corners exact.
+            StageEscortController.AddBoxOutline(frameRoot.transform, Vector2.zero,
+                new Vector2(roomWidth + RoomFrameThickness, roomHeight + RoomFrameThickness), graphite, 38);
+            StageEscortController.AddBoxOutline(frameRoot.transform, Vector2.zero,
+                new Vector2(roomWidth - RoomFrameThickness, roomHeight - RoomFrameThickness), graphite, 38);
+
+            Color[] crayons =
+            {
+                new Color(0.12f, 0.68f, 0.92f, 0.48f),
+                new Color(1f, 0.32f, 0.28f, 0.46f),
+                new Color(1f, 0.76f, 0.12f, 0.46f),
+                new Color(0.18f, 0.72f, 0.4f, 0.46f),
+                new Color(0.78f, 0.3f, 0.86f, 0.44f)
+            };
+
+            // Uneven colored strokes make the frame read as a handmade booth,
+            // while staying entirely inside the non-playable wall surfaces.
+            int verticalStrokeCount = Mathf.Max(4, Mathf.FloorToInt(roomHeight / 0.8f));
+            for (int stroke = 0; stroke < verticalStrokeCount; stroke++)
+            {
+                float t = (stroke + 0.5f) / verticalStrokeCount;
+                float y = Mathf.Lerp(-halfHeight + 0.45f, halfHeight - 0.45f, t);
+                Color color = crayons[(stroke + roomIndex) % crayons.Length];
+                StageEscortController.AddLine(frameRoot.transform,
+                    new Vector2(-halfWidth - 0.22f, y - 0.16f),
+                    new Vector2(-halfWidth + 0.22f, y + 0.16f), 0.075f, color, 36);
+                StageEscortController.AddLine(frameRoot.transform,
+                    new Vector2(halfWidth - 0.22f, y - 0.16f),
+                    new Vector2(halfWidth + 0.22f, y + 0.16f), 0.075f,
+                    crayons[(stroke + roomIndex + 2) % crayons.Length], 36);
+            }
+
+            int topStrokeCount = Mathf.Max(5, Mathf.FloorToInt(roomWidth / 0.75f));
+            for (int stroke = 0; stroke < topStrokeCount; stroke++)
+            {
+                float t = (stroke + 0.5f) / topStrokeCount;
+                float x = Mathf.Lerp(-halfWidth + 0.42f, halfWidth - 0.42f, t);
+                StageEscortController.AddLine(frameRoot.transform,
+                    new Vector2(x - 0.18f, halfHeight - 0.2f),
+                    new Vector2(x + 0.18f, halfHeight + 0.2f), 0.075f,
+                    crayons[(stroke + roomIndex + 1) % crayons.Length], 36);
+            }
+
+            AddReadyRoomPennants(frameRoot.transform, halfWidth, halfHeight, crayons, roomIndex);
+            AddReadyRoomSpark(frameRoot.transform,
+                new Vector2(-halfWidth + 0.78f, halfHeight - 0.78f), crayons[(roomIndex + 2) % crayons.Length]);
+            AddReadyRoomSpark(frameRoot.transform,
+                new Vector2(halfWidth - 0.78f, halfHeight - 0.78f), crayons[(roomIndex + 4) % crayons.Length]);
+        }
+
+        private static void AddReadyRoomPennants(Transform parent, float halfWidth, float halfHeight,
+            Color[] crayons, int roomIndex)
+        {
+            float left = -halfWidth + 1.25f;
+            float right = halfWidth - 1.25f;
+            float top = halfHeight - 0.52f;
+            StageEscortController.AddLine(parent, new Vector2(left, top), new Vector2(0f, top - 0.12f),
+                0.032f, new Color(0.22f, 0.2f, 0.17f, 0.62f), 8);
+            StageEscortController.AddLine(parent, new Vector2(0f, top - 0.12f), new Vector2(right, top),
+                0.032f, new Color(0.22f, 0.2f, 0.17f, 0.62f), 8);
+
+            const int flagCount = 5;
+            for (int flag = 0; flag < flagCount; flag++)
+            {
+                float t = (flag + 0.5f) / flagCount;
+                float x = Mathf.Lerp(left, right, t);
+                float lineY = top - Mathf.Sin(t * Mathf.PI) * 0.12f;
+                Vector2 a = new Vector2(x - 0.18f, lineY);
+                Vector2 b = new Vector2(x + 0.18f, lineY);
+                Vector2 tip = new Vector2(x + Mathf.Sin(flag * 1.7f) * 0.025f, lineY - 0.42f);
+                Color color = crayons[(flag + roomIndex) % crayons.Length];
+                StageEscortController.AddLine(parent, a, b, 0.055f, color, 8);
+                StageEscortController.AddLine(parent, b, tip, 0.055f, color, 8);
+                StageEscortController.AddLine(parent, tip, a, 0.055f, color, 8);
+            }
+        }
+
+        private static void AddReadyRoomSpark(Transform parent, Vector2 center, Color color)
+        {
+            for (int ray = 0; ray < 4; ray++)
+            {
+                float angle = ray * Mathf.PI * 0.5f + 0.18f;
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                StageEscortController.AddLine(parent, center + direction * 0.09f,
+                    center + direction * 0.25f, 0.045f, color, 8);
+            }
         }
 
         private void PositionPlayersInRooms()

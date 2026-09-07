@@ -9,6 +9,8 @@ namespace DrawBody.Prototype
         {
             LocalizationManager.LanguageChanged -= RefreshLocalizedText;
             LocalizationManager.LanguageChanged += RefreshLocalizedText;
+            StageProgressStore.Changed -= RefreshCompletionMarks;
+            StageProgressStore.Changed += RefreshCompletionMarks;
             Polish();
             RefreshLocalizedText();
         }
@@ -16,6 +18,20 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             LocalizationManager.LanguageChanged -= RefreshLocalizedText;
+            StageProgressStore.Changed -= RefreshCompletionMarks;
+        }
+
+        public void RefreshCompletionMarks()
+        {
+            Button[] buttons = GetComponentsInChildren<Button>(true);
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                StageSelectButtonCommand command = buttons[i] != null
+                    ? buttons[i].GetComponent<StageSelectButtonCommand>()
+                    : null;
+                Text label = buttons[i] != null ? buttons[i].GetComponentInChildren<Text>(true) : null;
+                if (command != null && label != null) NormalizeStageButton(buttons[i], label);
+            }
         }
 
         public void Polish()
@@ -476,6 +492,12 @@ namespace DrawBody.Prototype
 
         private static void NormalizeStageButton(Button button, Text label)
         {
+            StageSelectButtonCommand command = button.GetComponent<StageSelectButtonCommand>();
+            if (command != null)
+            {
+                label.text = command.StageId + "    "
+                    + (StageProgressStore.IsCleared(command.StageId) ? "✓" : "□");
+            }
             RectTransform rect = label.rectTransform;
             rect.anchorMin = new Vector2(0f, 0f);
             rect.anchorMax = new Vector2(1f, 1f);

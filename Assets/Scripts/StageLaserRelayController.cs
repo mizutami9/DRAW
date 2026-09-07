@@ -80,6 +80,8 @@ namespace DrawBody.Prototype
         private StageLoader stageLoader;
         private StageObjectFactory factory;
         private OnlineManager onlineManager;
+        private UIManager uiManager;
+        private StageCountdownPresenter countdownPresenter;
         private CameraFollow2D cameraFollow;
         private Camera gameCamera;
         private Transform arenaRoot;
@@ -133,6 +135,8 @@ namespace DrawBody.Prototype
             stageLoader = Object.FindFirstObjectByType<StageLoader>();
             factory = Object.FindFirstObjectByType<StageObjectFactory>();
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            uiManager = Object.FindFirstObjectByType<UIManager>();
+            countdownPresenter = new StageCountdownPresenter(uiManager);
             cameraFollow = Object.FindFirstObjectByType<CameraFollow2D>();
             gameCamera = Camera.main;
         }
@@ -146,6 +150,7 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkState;
+            countdownPresenter?.Hide();
             RestoreCamera();
         }
 
@@ -181,6 +186,16 @@ namespace DrawBody.Prototype
             RefreshPlayerOrder();
             TraceAllBeams();
             AnimateBeamEffects();
+
+            float countdownRemaining = roundReadyAt - Time.unscaledTime;
+            ApplyCountdownControls(countdownRemaining <= 0f);
+            if (phase == RelayPhase.Active && countdownRemaining > 0f)
+            {
+                countdownPresenter?.Show(countdownRemaining);
+                RefreshMonitor();
+                return;
+            }
+            countdownPresenter?.Hide();
 
             if (!HasAuthority)
             {
@@ -223,7 +238,7 @@ namespace DrawBody.Prototype
             remaining = GetRoundSeconds(round);
             transitionRemaining = 0f;
             goalMask = 0;
-            roundReadyAt = Time.unscaledTime + 0.45f;
+            roundReadyAt = Time.unscaledTime + 4f;
             previewIndex = (round - 1) % BoxSizes.Length;
             buttonPressed = false;
             nextPreviewAt = Time.unscaledTime + BoxPreviewSeconds;
@@ -1110,13 +1125,8 @@ namespace DrawBody.Prototype
             buttonGlow = glow.AddComponent<SpriteRenderer>();
             buttonGlow.sprite = DoodleRuntimeAssets.CircleSprite;
             buttonGlow.sortingOrder = 26;
-            GameObject preview = new GameObject("Next Box Preview");
-            preview.transform.SetParent(dropperObject.transform, false);
-            SpriteRenderer previewRenderer = preview.AddComponent<SpriteRenderer>();
-            previewRenderer.sprite = DoodleRuntimeAssets.SquareSprite;
-            previewRenderer.color = new Color(0.94f, 0.52f, 0.15f, 0.92f);
-            previewRenderer.sortingOrder = 33;
-            boxPreview = preview.transform;
+            boxPreview = factory.CreateDroppedBoxPreview(
+                StageObjectType.WoodBox, dropperObject.transform, 33);
             RefreshBoxStationVisual();
         }
 
@@ -1264,6 +1274,17 @@ namespace DrawBody.Prototype
             gameCamera.orthographicSize = previousCameraSize;
             if (cameraFollow != null) cameraFollow.enabled = previousCameraFollowEnabled;
             cameraCaptured = false;
+        }
+
+        private void ApplyCountdownControls(bool enabled)
+        {
+            if (stageManager == null) return;
+            PlayerController2D local = stageManager.ActivePlayerTransform != null
+                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
+                : null;
+            local?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
+            if (!IsOnline)
+                stageManager.RemotePlayerController?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
         }
 
         private void BroadcastState(bool force = false)

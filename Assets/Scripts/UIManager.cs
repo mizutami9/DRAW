@@ -1054,7 +1054,7 @@ namespace DrawBody.Prototype
             OptionSettingsController settings = optionPanel != null
                 ? optionPanel.GetComponent<OptionSettingsController>()
                 : null;
-            return settings != null && settings.TryCloseLanguagePopup();
+            return settings != null && settings.TryClosePopup();
         }
 
         public bool IsTitleSubmenuShowing =>

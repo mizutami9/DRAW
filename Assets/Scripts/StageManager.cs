@@ -1294,6 +1294,10 @@ namespace DrawBody.Prototype
             }
 
             cleared = true;
+            if (!testingEditedStage)
+            {
+                StageProgressStore.MarkCleared(currentStageId);
+            }
             GameSfx.Play(SfxId.StageClear);
             ExitDrawingMode();
             SetAllPlayerControls(false);

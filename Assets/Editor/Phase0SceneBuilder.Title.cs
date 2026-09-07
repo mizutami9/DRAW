@@ -48,7 +48,7 @@ namespace DrawBody.EditorTools
             AddTitleMenuButton("TitleMultiButton", bar.transform, font, "title_multi", new Vector2(-168f, 18f), stageManager, TitleButtonCommand.Command.Multi, new Color(0.78f, 0.92f, 1f, 0.96f), 1.5f);
             AddTitleMenuButton("TitleDrawButton", bar.transform, font, "title_draw", new Vector2(0f, 15f), stageManager, TitleButtonCommand.Command.Draw, new Color(0.82f, 0.96f, 0.72f, 0.96f), -1.2f);
             AddTitleMenuButton("TitleOptionButton", bar.transform, font, "title_option", new Vector2(168f, 18f), stageManager, TitleButtonCommand.Command.Option, new Color(0.98f, 0.84f, 0.72f, 0.96f), 2f);
-            AddTitleMenuButton("TitleExitButton", bar.transform, font, "title_exit", new Vector2(336f, 16f), stageManager, TitleButtonCommand.Command.Exit, new Color(0.94f, 0.9f, 0.98f, 0.96f), -1.8f);
+            AddTitleMenuButton("TitleExitButton", bar.transform, font, "title_exit", new Vector2(336f, 16f), stageManager, TitleButtonCommand.Command.Exit, new Color(1f, 0.45f, 0.34f, 1f), -1.8f);
 
             return panel;
         }

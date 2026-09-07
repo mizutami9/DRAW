@@ -215,6 +215,30 @@ namespace DrawBody.Prototype
             return hasBounds;
         }
 
+        internal bool CoversWorldPoint(Vector2 worldPoint, float tolerance)
+        {
+            float allowedDistance = Mathf.Max(0f, tolerance);
+            for (int i = 0; i < generatedSegments.Count; i++)
+            {
+                CapsuleCollider2D collider = generatedSegments[i].Collider;
+                if (collider == null || !collider.enabled) continue;
+
+                // Human arms intentionally use trigger colliders so a long arm
+                // cannot push the whole player through a wall while turning.
+                // They are still part of the drawn silhouette for stage puzzles.
+                if (Vector2.Distance(collider.ClosestPoint(worldPoint), worldPoint)
+                    <= allowedDistance)
+                {
+                    return true;
+                }
+            }
+
+            return fallbackCollider != null
+                && fallbackCollider.enabled
+                && Vector2.Distance(fallbackCollider.ClosestPoint(worldPoint), worldPoint)
+                    <= allowedDistance;
+        }
+
         private struct RuntimeBodySegment
         {
             public Vector2 Start;

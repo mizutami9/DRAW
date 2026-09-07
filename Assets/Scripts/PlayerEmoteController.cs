@@ -68,6 +68,7 @@ namespace DrawBody.Prototype
         private bool paletteOpen;
         private Font handwrittenFont;
         private static Sprite[] emoteIcons;
+        private static Sprite[,] playerSpeciesIcons;
         private int localEmoteId = -1;
         private int localEmoteSequence;
         private float localEmoteUntil;
@@ -452,6 +453,35 @@ namespace DrawBody.Prototype
             sprite.hideFlags = HideFlags.HideAndDontSave;
             emoteIcons[id] = sprite;
             return sprite;
+        }
+
+        internal static Sprite GetPlayerSpeciesIcon(DrawManager.Species species, int colorIndex)
+        {
+            const int speciesCount = 5;
+            const int colorCount = 4;
+            playerSpeciesIcons ??= new Sprite[speciesCount, colorCount];
+            int speciesIndex = Mathf.Clamp((int)species, 0, speciesCount - 1);
+            int paletteIndex = Mathf.Clamp(colorIndex, 0, colorCount - 1);
+            Sprite cached = playerSpeciesIcons[speciesIndex, paletteIndex];
+            if (cached != null) return cached;
+
+            const int size = 96;
+            Color32[] pixels = new Color32[size * size];
+            DrawSpeciesIcon(pixels, size, speciesIndex + 4, PlayerColorPalette.GetColor(paletteIndex));
+            Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                name = $"Player {paletteIndex + 1} Species {speciesIndex + 1}",
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            cached = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), size);
+            cached.name = texture.name;
+            cached.hideFlags = HideFlags.HideAndDontSave;
+            playerSpeciesIcons[speciesIndex, paletteIndex] = cached;
+            return cached;
         }
 
         private static void DrawArrowIcon(Color32[] pixels, int size, int id, Color32 color)

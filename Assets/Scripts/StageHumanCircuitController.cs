@@ -750,28 +750,29 @@ namespace DrawBody.Prototype
             GameObject frame = new GameObject("Selected Box Screen");
             frame.transform.SetParent(dropper, false);
             frame.transform.localPosition = new Vector3(0f, 0.12f, -0.18f);
-            frame.transform.localScale = new Vector3(0.72f, 0.58f, 1f);
-            SpriteRenderer frameRenderer = frame.AddComponent<SpriteRenderer>();
+            GameObject screen = new GameObject("Selected Box Screen Paper");
+            screen.transform.SetParent(frame.transform, false);
+            screen.transform.localScale = new Vector3(0.72f, 0.58f, 1f);
+            SpriteRenderer frameRenderer = screen.AddComponent<SpriteRenderer>();
             frameRenderer.sprite = DoodleRuntimeAssets.SquareSprite;
             frameRenderer.color = new Color(0.8f, 0.94f, 0.97f, 0.96f);
             frameRenderer.sortingOrder = 32;
 
-            GameObject preview = new GameObject("Selected Box Size");
-            preview.transform.SetParent(frame.transform, false);
-            preview.transform.localPosition = new Vector3(0f, -0.02f, -0.02f);
-            SpriteRenderer renderer = preview.AddComponent<SpriteRenderer>();
-            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
-            renderer.color = new Color(0.94f, 0.52f, 0.15f, 0.92f);
-            renderer.sortingOrder = 33;
-            SetBoxPreview(preview.transform, previewIndex);
-            return preview.transform;
+            StageObjectFactory previewFactory = Object.FindFirstObjectByType<StageObjectFactory>();
+            Transform preview = previewFactory != null
+                ? previewFactory.CreateDroppedBoxPreview(StageObjectType.WoodBox, frame.transform, 33)
+                : null;
+            if (preview == null) return null;
+            preview.localPosition = new Vector3(0f, -0.02f, -0.02f);
+            SetBoxPreview(preview, previewIndex);
+            return preview;
         }
 
         private static void SetBoxPreview(Transform preview, int previewIndex)
         {
             if (preview == null) return;
             Vector2 size = BoxSizes[Mathf.Clamp(previewIndex, 0, BoxSizes.Length - 1)];
-            float fit = Mathf.Min(0.78f / size.x, 0.78f / size.y);
+            float fit = Mathf.Min(0.56f / size.x, 0.42f / size.y);
             preview.localScale = new Vector3(size.x * fit, size.y * fit, 1f);
             preview.localRotation = Quaternion.Euler(0f, 0f, previewIndex % 2 == 0 ? -2f : 2f);
         }

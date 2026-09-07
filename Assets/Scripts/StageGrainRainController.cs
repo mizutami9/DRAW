@@ -42,6 +42,8 @@ namespace DrawBody.Prototype
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageGimmickSyncManager syncManager;
+        private UIManager uiManager;
+        private StageCountdownPresenter countdownPresenter;
         private TextMesh timerText;
         private TextMesh statusText;
         private TextMesh scoreText;
@@ -77,6 +79,8 @@ namespace DrawBody.Prototype
             stageManager = Object.FindFirstObjectByType<StageManager>();
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             syncManager = GetComponent<StageGimmickSyncManager>();
+            uiManager = Object.FindFirstObjectByType<UIManager>();
+            countdownPresenter = new StageCountdownPresenter(uiManager);
         }
 
         private void OnEnable()
@@ -88,6 +92,7 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            countdownPresenter?.Hide();
             RestoreCamera();
             ClearParticles();
             StageGrainCarrier[] carriers = Object.FindObjectsByType<StageGrainCarrier>(FindObjectsSortMode.None);
@@ -122,6 +127,8 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
             EnsureCarriers(false);
+            if (state == RoundState.Intro) countdownPresenter?.Show(remaining);
+            else countdownPresenter?.Hide();
 
             if (HasAuthority)
             {
@@ -200,7 +207,7 @@ namespace DrawBody.Prototype
         {
             round = Mathf.Clamp(nextRound, 1, TotalRounds);
             state = RoundState.Intro;
-            remaining = round == 1 ? IntroSeconds : 3.5f;
+            remaining = 4f;
             resultRemaining = 0f;
             measuredGrams = 0f;
             success = false;

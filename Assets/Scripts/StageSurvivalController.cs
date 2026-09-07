@@ -92,6 +92,8 @@ namespace DrawBody.Prototype
         private StageLoader stageLoader;
         private StageGimmickSyncManager syncManager;
         private CameraFollow2D cameraFollow;
+        private UIManager uiManager;
+        private StageCountdownPresenter countdownPresenter;
         private TextMesh monitorMain;
         private SurvivalPhase phase = SurvivalPhase.Intro;
         private float durationSeconds = 60f;
@@ -129,6 +131,8 @@ namespace DrawBody.Prototype
             stageLoader = Object.FindFirstObjectByType<StageLoader>();
             syncManager = GetComponent<StageGimmickSyncManager>();
             cameraFollow = Object.FindFirstObjectByType<CameraFollow2D>();
+            uiManager = Object.FindFirstObjectByType<UIManager>();
+            countdownPresenter = new StageCountdownPresenter(uiManager);
         }
 
         private void OnEnable()
@@ -153,6 +157,7 @@ namespace DrawBody.Prototype
             {
                 cameraFollow.SetMinimumOrthographicSize(previousCameraMinimum);
             }
+            countdownPresenter?.Hide();
             RestoreHiddenPlayers();
         }
 
@@ -230,6 +235,9 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (phase == SurvivalPhase.StartCountdown) countdownPresenter?.Show(phaseRemaining);
+            else countdownPresenter?.Hide();
+
             if (IsOnlineActive() && !HasAuthority())
             {
                 UpdateNetworkReplica();
@@ -263,7 +271,6 @@ namespace DrawBody.Prototype
                 {
                     phase = SurvivalPhase.StartCountdown;
                     phaseRemaining = StartCountdownDuration;
-                    GameSfx.Play(SfxId.StageCountdownTick);
                 }
                 RefreshMonitor();
                 return;

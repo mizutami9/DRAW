@@ -158,6 +158,8 @@ namespace DrawBody.Prototype
         private readonly Dictionary<int, TextMesh> glowLabels = new Dictionary<int, TextMesh>();
         private readonly Dictionary<int, string> rawTexts = new Dictionary<int, string>();
         private readonly Dictionary<int, string> wrappedTexts = new Dictionary<int, string>();
+        private readonly Dictionary<int, Vector3> authoredLocalPositions = new Dictionary<int, Vector3>();
+        private readonly Dictionary<int, Vector3> lastAppliedLocalPositions = new Dictionary<int, Vector3>();
         private int knownChildCount = -1;
 
         internal void Configure(Vector2 size)
@@ -179,6 +181,8 @@ namespace DrawBody.Prototype
                     sourceLabels.Add(candidate);
                     int id = candidate.GetInstanceID();
                     if (!preferredSizes.ContainsKey(id)) preferredSizes[id] = candidate.characterSize;
+                    if (!authoredLocalPositions.ContainsKey(id))
+                        authoredLocalPositions[id] = candidate.transform.localPosition;
                     EnsureGlow(candidate);
                 }
                 labels = sourceLabels.ToArray();
@@ -190,6 +194,19 @@ namespace DrawBody.Prototype
                 TextMesh label = labels[i];
                 if (label == null || string.IsNullOrEmpty(label.text)) continue;
                 int id = label.GetInstanceID();
+
+                // Always fit from the authored position. The old implementation
+                // added a correction onto the previous frame's correction, which
+                // made renderer-bound rounding show up as a vertical vibration.
+                Vector3 currentPosition = label.transform.localPosition;
+                if (lastAppliedLocalPositions.TryGetValue(id, out Vector3 lastPosition)
+                    && (currentPosition - lastPosition).sqrMagnitude > 0.000001f)
+                {
+                    // Preserve deliberate controller-side movement.
+                    authoredLocalPositions[id] = currentPosition;
+                }
+                if (authoredLocalPositions.TryGetValue(id, out Vector3 authoredPosition))
+                    label.transform.localPosition = authoredPosition;
 
                 // Detect external characterSize changes (e.g. RefreshPresentation
                 // overwriting every frame) and treat as the new preferred maximum.
@@ -220,7 +237,15 @@ namespace DrawBody.Prototype
                 float heightFit = safeHeight / Mathf.Max(3.1f, lineCount * 3.1f);
                 label.characterSize = Mathf.Min(preferredSize, widthFit, heightFit);
                 lastAppliedSizes[id] = label.characterSize;
+            }
 
+            FitAllLabelsInsideScreen();
+
+            for (int i = 0; i < labels.Length; i++)
+            {
+                TextMesh label = labels[i];
+                if (label == null || string.IsNullOrEmpty(label.text)) continue;
+                int id = label.GetInstanceID();
                 if (glowLabels.TryGetValue(id, out TextMesh glow) && glow != null)
                 {
                     glow.text = label.text;
@@ -235,7 +260,88 @@ namespace DrawBody.Prototype
                     glow.transform.localRotation = label.transform.localRotation;
                     glow.transform.localScale = label.transform.localScale;
                 }
+                lastAppliedLocalPositions[id] = label.transform.localPosition;
             }
+        }
+
+        private void FitAllLabelsInsideScreen()
+        {
+            if (!TryGetCombinedLabelBounds(out Bounds combined)) return;
+
+            float scale = Mathf.Max(0.35f, Mathf.Min(monitorSize.x / 3.2f, monitorSize.y / 1.25f));
+            Vector2 screenSize = new Vector2(
+                Mathf.Max(0.5f, monitorSize.x - 0.34f * scale),
+                Mathf.Max(0.3f, monitorSize.y * 0.7f));
+            Vector2 screenCenter = new Vector2(0f, -monitorSize.y * 0.045f);
+            Vector2 safeHalfSize = screenSize * 0.45f;
+
+            Vector3 cornerA = transform.TransformPoint(new Vector3(
+                screenCenter.x - safeHalfSize.x, screenCenter.y - safeHalfSize.y, 0f));
+            Vector3 cornerB = transform.TransformPoint(new Vector3(
+                screenCenter.x + safeHalfSize.x, screenCenter.y + safeHalfSize.y, 0f));
+            float left = Mathf.Min(cornerA.x, cornerB.x);
+            float right = Mathf.Max(cornerA.x, cornerB.x);
+            float bottom = Mathf.Min(cornerA.y, cornerB.y);
+            float top = Mathf.Max(cornerA.y, cornerB.y);
+            float safeWidth = Mathf.Max(0.01f, right - left);
+            float safeHeight = Mathf.Max(0.01f, top - bottom);
+
+            float fit = Mathf.Min(1f,
+                safeWidth / Mathf.Max(0.01f, combined.size.x),
+                safeHeight / Mathf.Max(0.01f, combined.size.y));
+            if (fit < 0.999f)
+            {
+                for (int i = 0; i < labels.Length; i++)
+                {
+                    TextMesh label = labels[i];
+                    if (label == null || string.IsNullOrEmpty(label.text)) continue;
+                    label.characterSize *= fit;
+                    lastAppliedSizes[label.GetInstanceID()] = label.characterSize;
+                }
+                if (!TryGetCombinedLabelBounds(out combined)) return;
+            }
+
+            Vector3 correction = Vector3.zero;
+            if (combined.min.x < left) correction.x = left - combined.min.x;
+            else if (combined.max.x > right) correction.x = right - combined.max.x;
+            if (combined.min.y < bottom) correction.y = bottom - combined.min.y;
+            else if (combined.max.y > top) correction.y = top - combined.max.y;
+            if (correction.sqrMagnitude <= 0.000001f) return;
+
+            for (int i = 0; i < labels.Length; i++)
+            {
+                TextMesh label = labels[i];
+                if (label == null || string.IsNullOrEmpty(label.text) || label.transform.parent == null) continue;
+                int id = label.GetInstanceID();
+                Vector3 origin = authoredLocalPositions.TryGetValue(id, out Vector3 authored)
+                    ? authored
+                    : label.transform.localPosition;
+                label.transform.localPosition = origin
+                    + label.transform.parent.InverseTransformVector(correction);
+            }
+        }
+
+        private bool TryGetCombinedLabelBounds(out Bounds combined)
+        {
+            combined = default;
+            bool found = false;
+            for (int i = 0; i < labels.Length; i++)
+            {
+                TextMesh label = labels[i];
+                if (label == null || string.IsNullOrEmpty(label.text)) continue;
+                MeshRenderer renderer = label.GetComponent<MeshRenderer>();
+                if (renderer == null || !renderer.enabled) continue;
+                if (!found)
+                {
+                    combined = renderer.bounds;
+                    found = true;
+                }
+                else
+                {
+                    combined.Encapsulate(renderer.bounds);
+                }
+            }
+            return found;
         }
 
         private void EnsureGlow(TextMesh label)

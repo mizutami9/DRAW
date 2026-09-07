@@ -14,7 +14,7 @@ namespace DrawBody.Prototype
         private const float InnerHalfHeight = 5.7f;
         private const float BallSpeed = 6.4f;
         private const float IntroSeconds = 12f;
-        private const float CountdownSeconds = 3f;
+        private const float CountdownSeconds = 4f;
 
         private enum Phase { Intro, Countdown, Playing, Clear, Failed }
 
@@ -50,6 +50,8 @@ namespace DrawBody.Prototype
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageObjectFactory factory;
+        private UIManager uiManager;
+        private StageCountdownPresenter countdownPresenter;
         private CameraFollow2D cameraFollow;
         private Camera gameCamera;
         private StageRicochetBall ball;
@@ -91,6 +93,8 @@ namespace DrawBody.Prototype
             factory = Object.FindFirstObjectByType<StageObjectFactory>();
             cameraFollow = Object.FindFirstObjectByType<CameraFollow2D>();
             gameCamera = cameraFollow != null ? cameraFollow.GetComponent<Camera>() : Camera.main;
+            uiManager = Object.FindFirstObjectByType<UIManager>();
+            countdownPresenter = new StageCountdownPresenter(uiManager);
         }
 
         private void OnEnable()
@@ -102,6 +106,7 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            countdownPresenter?.Hide();
             if (cameraStateCaptured)
             {
                 if (cameraFollow != null) cameraFollow.enabled = cameraWasEnabled;
@@ -130,6 +135,9 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
 
+            if (phase == Phase.Countdown) countdownPresenter?.Show(phaseRemaining);
+            else countdownPresenter?.Hide();
+
             if (IsOnline() && !HasAuthority())
             {
                 phaseRemaining = Mathf.Max(0f, phaseRemaining - Time.deltaTime);
@@ -154,7 +162,7 @@ namespace DrawBody.Prototype
             {
                 phaseRemaining -= Time.deltaTime;
                 if (phase == Phase.Countdown && ball != null)
-                    ball.UpdateLaunchCountdown(Mathf.CeilToInt(phaseRemaining));
+                    ball.UpdateLaunchCountdown(StageCountdownPresenter.GetNumber(phaseRemaining));
                 if (phaseRemaining <= 0f)
                 {
                     if (phase == Phase.Intro)

@@ -62,6 +62,7 @@ namespace DrawBody.Prototype
         private StageObjectFactory factory;
         private OnlineManager onlineManager;
         private UIManager uiManager;
+        private StageCountdownPresenter countdownPresenter;
         private CameraFollow2D cameraFollow;
         private Transform arenaRoot;
         private readonly List<HoleVisual> holes = new List<HoleVisual>(12);
@@ -82,6 +83,7 @@ namespace DrawBody.Prototype
         private bool cameraCaptured;
         private float roomWidth;
         private float remaining;
+        private float roundReadyAt;
         private float accumulatedWaterDepth;
         private float nextWaterDropAt;
         private float allSealedTime;
@@ -111,6 +113,7 @@ namespace DrawBody.Prototype
             factory = Object.FindFirstObjectByType<StageObjectFactory>();
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             uiManager = Object.FindFirstObjectByType<UIManager>();
+            countdownPresenter = new StageCountdownPresenter(uiManager);
             cameraFollow = Object.FindFirstObjectByType<CameraFollow2D>();
             gameCamera = Camera.main;
         }
@@ -124,6 +127,7 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkState;
+            countdownPresenter?.Hide();
             RestoreCamera();
         }
 
@@ -161,6 +165,14 @@ namespace DrawBody.Prototype
             AnimateAquarium();
             ConfigureAquariumCamera();
             ApplyControls();
+            float countdownRemaining = roundReadyAt - Time.unscaledTime;
+            if (phase == SealPhase.Active && countdownRemaining > 0f)
+            {
+                countdownPresenter?.Show(countdownRemaining);
+                RefreshMonitor();
+                return;
+            }
+            countdownPresenter?.Hide();
             if (!HasAuthority)
             {
                 if (phase == SealPhase.Active)
@@ -204,6 +216,7 @@ namespace DrawBody.Prototype
                 : roundAttempt + 1;
             phase = SealPhase.Active;
             remaining = GetRoundSeconds(round);
+            roundReadyAt = Time.unscaledTime + 4f;
             transitionRemaining = 0f;
             allSealedTime = 0f;
             accumulatedWaterDepth = 0f;
@@ -675,14 +688,10 @@ namespace DrawBody.Prototype
             buttonGlow.sprite = DoodleRuntimeAssets.CircleSprite;
             buttonGlow.sortingOrder = 26;
 
-            GameObject previewObject = new GameObject("Next Box Preview");
-            previewObject.transform.SetParent(dropperObject.transform, false);
-            previewObject.transform.localPosition = new Vector3(0f, -0.02f, -0.03f);
-            SpriteRenderer previewRenderer = previewObject.AddComponent<SpriteRenderer>();
-            previewRenderer.sprite = DoodleRuntimeAssets.SquareSprite;
-            previewRenderer.color = new Color(0.94f, 0.52f, 0.15f, 0.92f);
-            previewRenderer.sortingOrder = 33;
-            boxPreview = previewObject.transform;
+            boxPreview = factory.CreateDroppedBoxPreview(
+                StageObjectType.WoodBox, dropperObject.transform, 33);
+            if (boxPreview != null)
+                boxPreview.localPosition = new Vector3(0f, -0.02f, -0.03f);
             RefreshBoxStationVisual();
         }
 
@@ -777,6 +786,14 @@ namespace DrawBody.Prototype
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             for (int i = 0; i < players.Length; i++)
             {
+                BodyBuilder body = players[i].GetComponent<BodyBuilder>();
+                if (body != null)
+                {
+                    if (body.CoversWorldPoint(center, 0.1f)) return true;
+                    continue;
+                }
+
+                // Compatibility fallback for a player prefab without BodyBuilder.
                 Collider2D[] colliders = players[i].GetComponentsInChildren<Collider2D>(false);
                 for (int c = 0; c < colliders.Length; c++)
                 {
@@ -958,7 +975,9 @@ namespace DrawBody.Prototype
 
         private void ApplyControls()
         {
-            bool enabled = phase == SealPhase.Active && !stageManager.IsDrawingMode;
+            bool enabled = phase == SealPhase.Active
+                && Time.unscaledTime >= roundReadyAt
+                && !stageManager.IsDrawingMode;
             PlayerController2D local = stageManager.ActivePlayerTransform != null
                 ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
                 : null;

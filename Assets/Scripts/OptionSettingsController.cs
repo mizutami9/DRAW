@@ -27,6 +27,8 @@ namespace DrawBody.Prototype
         private Text playerNameError;
         private Button registerButton;
         private Button backButton;
+        private Button dataResetButton;
+        private GameObject dataResetPopup;
 
         private float nextTickTime;
 
@@ -34,6 +36,7 @@ namespace DrawBody.Prototype
         {
             HideLegacyOptionControls();
             EnsurePlayerNameControls();
+            EnsureDataResetControls();
             if (bgmSlider != null)
             {
                 bgmSlider.minValue = 0f;
@@ -166,7 +169,152 @@ namespace DrawBody.Prototype
             Place(panel.Find("OptionPlayerNameLabel") as RectTransform, new Vector2(-185f, 142f), new Vector2(190f, 40f));
             Place(playerNameInput != null ? playerNameInput.transform as RectTransform : null, new Vector2(72f, 142f), new Vector2(350f, 46f));
             Place(playerNameError != null ? playerNameError.transform as RectTransform : null, new Vector2(72f, 108f), new Vector2(350f, 22f));
-            Place(registerButton != null ? registerButton.transform as RectTransform : null, new Vector2(0f, 48f), new Vector2(280f, 62f));
+            Place(registerButton != null ? registerButton.transform as RectTransform : null, new Vector2(135f, 48f), new Vector2(280f, 62f));
+        }
+
+        private void EnsureDataResetControls()
+        {
+            RectTransform panel = transform as RectTransform;
+            if (panel == null) return;
+            Font font = GetComponentInChildren<Text>(true)?.font
+                ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+
+            Transform existing = panel.Find("OptionDataResetButton");
+            if (existing == null)
+            {
+                GameObject buttonObject = new GameObject("OptionDataResetButton",
+                    typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button), typeof(Outline));
+                buttonObject.transform.SetParent(panel, false);
+                buttonObject.GetComponent<Image>().color = new Color(1f, 0.45f, 0.34f, 1f);
+                Outline outline = buttonObject.GetComponent<Outline>();
+                outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.9f);
+                outline.effectDistance = new Vector2(3f, -3f);
+                Text label = CreateInputText(buttonObject.transform, "Label", font,
+                    new Color(0.16f, 0.06f, 0.04f), TextAnchor.MiddleCenter);
+                label.fontSize = 18;
+                label.fontStyle = FontStyle.Bold;
+                label.gameObject.AddComponent<LocalizedText>().SetKey("option_reset_progress");
+                existing = buttonObject.transform;
+            }
+
+            dataResetButton = existing.GetComponent<Button>();
+            dataResetButton.onClick.RemoveListener(OpenDataResetPopup);
+            dataResetButton.onClick.AddListener(OpenDataResetPopup);
+            Place(existing as RectTransform, new Vector2(-220f, 48f), new Vector2(190f, 58f));
+            EnsureDataResetPopup(panel, font);
+        }
+
+        private void EnsureDataResetPopup(RectTransform panel, Font font)
+        {
+            if (dataResetPopup != null) return;
+            dataResetPopup = new GameObject("OptionDataResetPopup",
+                typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            dataResetPopup.transform.SetParent(panel, false);
+            RectTransform overlay = dataResetPopup.GetComponent<RectTransform>();
+            overlay.anchorMin = Vector2.zero;
+            overlay.anchorMax = Vector2.one;
+            overlay.offsetMin = Vector2.zero;
+            overlay.offsetMax = Vector2.zero;
+            dataResetPopup.GetComponent<Image>().color = new Color(0.08f, 0.07f, 0.06f, 0.55f);
+            Button overlayButton = dataResetPopup.GetComponent<Button>();
+            overlayButton.transition = Selectable.Transition.None;
+            overlayButton.onClick.AddListener(CloseDataResetPopup);
+
+            GameObject cardObject = new GameObject("ResetCard",
+                typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Outline));
+            cardObject.transform.SetParent(overlay, false);
+            RectTransform card = cardObject.GetComponent<RectTransform>();
+            card.anchorMin = card.anchorMax = new Vector2(0.5f, 0.5f);
+            card.pivot = new Vector2(0.5f, 0.5f);
+            card.anchoredPosition = Vector2.zero;
+            card.sizeDelta = new Vector2(580f, 270f);
+            cardObject.GetComponent<Image>().color = new Color(1f, 0.975f, 0.88f, 1f);
+            Outline cardOutline = cardObject.GetComponent<Outline>();
+            cardOutline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.95f);
+            cardOutline.effectDistance = new Vector2(4f, -4f);
+
+            CreatePopupText(card, "Title", font, "option_reset_progress_title", 27,
+                new Vector2(0f, 92f), new Vector2(520f, 42f), FontStyle.Bold);
+            CreatePopupText(card, "Message", font, "option_reset_progress_confirm", 19,
+                new Vector2(0f, 24f), new Vector2(510f, 90f), FontStyle.Normal);
+
+            Button cancel = CreatePopupButton(card, "Cancel", font, "option_reset_cancel",
+                new Vector2(-135f, -88f), new Color(0.35f, 0.78f, 0.92f, 1f));
+            cancel.onClick.AddListener(CloseDataResetPopup);
+            Button confirm = CreatePopupButton(card, "Confirm", font, "option_reset_confirm",
+                new Vector2(135f, -88f), new Color(1f, 0.45f, 0.34f, 1f));
+            confirm.onClick.AddListener(ConfirmDataReset);
+            dataResetPopup.SetActive(false);
+        }
+
+        private static Text CreatePopupText(RectTransform parent, string name, Font font,
+            string localizationKey, int fontSize, Vector2 position, Vector2 size, FontStyle style)
+        {
+            GameObject obj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            obj.transform.SetParent(parent, false);
+            RectTransform rect = obj.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+            Text text = obj.GetComponent<Text>();
+            text.font = font;
+            text.fontSize = fontSize;
+            text.fontStyle = style;
+            text.alignment = TextAnchor.MiddleCenter;
+            text.color = new Color(0.12f, 0.1f, 0.08f, 1f);
+            text.resizeTextForBestFit = true;
+            text.resizeTextMinSize = 12;
+            text.resizeTextMaxSize = fontSize;
+            obj.AddComponent<LocalizedText>().SetKey(localizationKey);
+            return text;
+        }
+
+        private static Button CreatePopupButton(RectTransform parent, string name, Font font,
+            string localizationKey, Vector2 position, Color color)
+        {
+            GameObject obj = new GameObject(name,
+                typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button), typeof(Outline));
+            obj.transform.SetParent(parent, false);
+            RectTransform rect = obj.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = new Vector2(210f, 56f);
+            obj.GetComponent<Image>().color = color;
+            Outline outline = obj.GetComponent<Outline>();
+            outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.9f);
+            outline.effectDistance = new Vector2(3f, -3f);
+            Text label = CreateInputText(obj.transform, "Label", font,
+                new Color(0.12f, 0.08f, 0.06f), TextAnchor.MiddleCenter);
+            label.fontSize = 20;
+            label.fontStyle = FontStyle.Bold;
+            label.gameObject.AddComponent<LocalizedText>().SetKey(localizationKey);
+            return obj.GetComponent<Button>();
+        }
+
+        private void OpenDataResetPopup()
+        {
+            if (dataResetPopup == null) return;
+            dataResetPopup.transform.SetAsLastSibling();
+            dataResetPopup.SetActive(true);
+            GameSfx.Play(SfxId.UiButtonPress);
+        }
+
+        private void CloseDataResetPopup()
+        {
+            if (dataResetPopup == null || !dataResetPopup.activeSelf) return;
+            dataResetPopup.SetActive(false);
+            EventSystem.current?.SetSelectedGameObject(dataResetButton != null ? dataResetButton.gameObject : null);
+            GameSfx.Play(SfxId.UiButtonBack);
+        }
+
+        private void ConfirmDataReset()
+        {
+            StageProgressStore.ResetClearRecords();
+            if (dataResetPopup != null) dataResetPopup.SetActive(false);
+            EventSystem.current?.SetSelectedGameObject(dataResetButton != null ? dataResetButton.gameObject : null);
+            GameSfx.Play(SfxId.UiToggleOff);
         }
 
         private static void Place(RectTransform rect, Vector2 position, Vector2 size)
@@ -479,6 +627,16 @@ namespace DrawBody.Prototype
             if (languagePopup == null || !languagePopup.activeSelf) return false;
             CloseLanguagePopup();
             return true;
+        }
+
+        public bool TryClosePopup()
+        {
+            if (dataResetPopup != null && dataResetPopup.activeSelf)
+            {
+                CloseDataResetPopup();
+                return true;
+            }
+            return TryCloseLanguagePopup();
         }
 
         private void SelectLanguageFromPopup(string languageCode)

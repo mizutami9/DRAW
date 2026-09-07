@@ -40,6 +40,7 @@ namespace DrawBody.Prototype
         private readonly List<bool> heldColliderTriggerStates = new List<bool>();
         private readonly List<Collider2D> heldPlayerColliderScratch = new List<Collider2D>();
         private readonly List<Collider2D> carrierColliderScratch = new List<Collider2D>();
+        private readonly List<RaycastHit2D> carriedFriendCastHits = new List<RaycastHit2D>(32);
         private readonly List<Renderer> heldRenderers = new List<Renderer>();
         private readonly List<int> heldRendererSortingOrders = new List<int>();
         private readonly List<bool> heldRendererEnabledStates = new List<bool>();
@@ -945,6 +946,7 @@ namespace DrawBody.Prototype
             if (IsFriendCarrier())
             {
                 Vector3 targetAnchor = transform.position + transform.TransformVector(slimeAttachLocalOffset);
+                targetAnchor = ConstrainCarriedFriendToSolidGeometry(targetAnchor);
                 targetAnchor = ConstrainCarriedFriendToStageBoundary(targetAnchor);
                 slimeAttachedPlayer.transform.position = targetAnchor;
                 slimeAttachedBody.position = targetAnchor;
@@ -967,6 +969,63 @@ namespace DrawBody.Prototype
             }
 
             UpdateFriendAttachmentVisual(slimeAttachedPlayer, true);
+        }
+
+        private Vector3 ConstrainCarriedFriendToSolidGeometry(Vector3 targetAnchor)
+        {
+            if (slimeAttachedPlayer == null) return targetAnchor;
+
+            Vector2 currentPosition = slimeAttachedPlayer.transform.position;
+            Vector2 movement = (Vector2)targetAnchor - currentPosition;
+            float distance = movement.magnitude;
+            if (distance <= 0.0001f) return targetAnchor;
+
+            Vector2 direction = movement / distance;
+            float allowedDistance = distance;
+            ContactFilter2D filter = new ContactFilter2D
+            {
+                useTriggers = false,
+                useLayerMask = false
+            };
+
+            // The carried player's rigidbody is kinematic and follows the cat by
+            // direct positioning. Cast every body segment first so neither a thin
+            // hand-drawn wall nor a facing-direction flip can teleport it outside.
+            for (int i = 0; i < slimeTargetColliders.Length; i++)
+            {
+                Collider2D carriedCollider = slimeTargetColliders[i];
+                if (carriedCollider == null || !carriedCollider.enabled || carriedCollider.isTrigger) continue;
+
+                carriedFriendCastHits.Clear();
+                carriedCollider.Cast(direction, filter, carriedFriendCastHits, distance);
+                for (int hitIndex = 0; hitIndex < carriedFriendCastHits.Count; hitIndex++)
+                {
+                    RaycastHit2D hit = carriedFriendCastHits[hitIndex];
+                    Collider2D hitCollider = hit.collider;
+                    if (hitCollider == null || hitCollider.isTrigger) continue;
+                    if (hitCollider.transform.IsChildOf(slimeAttachedPlayer.transform)) continue;
+                    if (hitCollider.GetComponentInParent<PlayerController2D>() != null) continue;
+                    if (Vector2.Dot(direction, hit.normal) >= -0.01f) continue;
+
+                    allowedDistance = Mathf.Min(allowedDistance, Mathf.Max(0f, hit.distance - 0.035f));
+                }
+            }
+
+            if (allowedDistance >= distance - 0.0001f) return targetAnchor;
+
+            Vector3 constrainedAnchor = currentPosition + direction * allowedDistance;
+            constrainedAnchor.z = targetAnchor.z;
+            Vector3 correction = constrainedAnchor - targetAnchor;
+            transform.position += correction;
+            if (playerBody != null)
+            {
+                playerBody.position += (Vector2)correction;
+                Vector2 velocity = playerBody.linearVelocity;
+                if (Mathf.Abs(correction.x) > 0.001f) velocity.x = 0f;
+                if (Mathf.Abs(correction.y) > 0.001f) velocity.y = 0f;
+                playerBody.linearVelocity = velocity;
+            }
+            return constrainedAnchor;
         }
 
         private Vector3 ConstrainCarriedFriendToStageBoundary(Vector3 targetAnchor)

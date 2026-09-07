@@ -372,9 +372,7 @@ namespace DrawBody.Prototype
             GameObject board = new GameObject("13-2 Status Board");
             board.transform.SetParent(parent, false);
             board.transform.position = new Vector3(0f, 10.15f, 0.2f);
-            DoodleMonitorVisuals.KeepBehindPlayers(board.transform);
-            StageEscortController.AddFilledRect(board.transform, "Frame", Vector2.zero,
-                new Vector2(19f, 1.9f), new Color(0.04f, 0.07f, 0.08f, 0.92f), 24);
+            DoodleMonitorVisuals.Build(board.transform, new Vector2(19f, 2.5f), 24);
             roundText = StageEscortController.CreateText(board.transform, "Round",
                 new Vector3(-5.5f, 0.25f, -0.03f), 48, 0.09f, new Color(0.4f, 0.9f, 1f), 27);
             ballText = StageEscortController.CreateText(board.transform, "Balls",

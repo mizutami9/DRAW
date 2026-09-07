@@ -495,7 +495,7 @@ namespace DrawBody.Prototype
             HideIfExists(panel, "OptionLanguageValue");
 
             RectTransform back = FindRect(panel, "TitleOptionBackButton");
-            PlaceOptionRect(back, new Vector2(0f, 48f), new Vector2(260f, 58f));
+            PlaceOptionRect(back, new Vector2(135f, 48f), new Vector2(260f, 58f));
             ThemeOptionButton(back, Coral, 21);
             Text backLabel = back != null ? back.GetComponentInChildren<Text>(true) : null;
             if (backLabel != null)
@@ -506,8 +506,12 @@ namespace DrawBody.Prototype
             }
 
             RectTransform register = FindRect(panel, "OptionPlayerNameRegisterButton");
-            PlaceOptionRect(register, new Vector2(0f, 48f), new Vector2(280f, 62f));
+            PlaceOptionRect(register, new Vector2(135f, 48f), new Vector2(280f, 62f));
             ThemeOptionButton(register, Green, 22);
+
+            RectTransform reset = FindRect(panel, "OptionDataResetButton");
+            PlaceOptionRect(reset, new Vector2(-220f, 48f), new Vector2(190f, 58f));
+            ThemeOptionButton(reset, Coral, 17);
 
             BringOptionControlsForward(panel);
         }
@@ -891,7 +895,8 @@ namespace DrawBody.Prototype
                 "OptionSeLabel", "OptionSeSlider", "OptionSeValue",
                 "OptionLanguageLabel", "OptionJapaneseButton", "OptionEnglishButton",
                 "OptionPlayerNameLabel", "OptionPlayerNameInput", "OptionPlayerNameError",
-                "OptionPlayerNameRegisterButton", "TitleOptionBackButton", "OptionLanguagePopup"
+                "OptionDataResetButton", "OptionPlayerNameRegisterButton", "TitleOptionBackButton",
+                "OptionLanguagePopup", "OptionDataResetPopup"
             };
             for (int i = 0; i < names.Length; i++)
             {
@@ -1298,7 +1303,7 @@ namespace DrawBody.Prototype
             Text label = rect.GetComponentInChildren<Text>(true);
             if (label != null)
             {
-                label.fontSize = name == "TitleExitButton" ? 20 : 23;
+                label.fontSize = 23;
                 label.fontStyle = FontStyle.Bold;
                 label.color = Ink;
             }

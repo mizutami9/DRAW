@@ -186,20 +186,18 @@ namespace DrawBody.Prototype
                 slot.Number.color = playerColor;
                 slot.PortraitBackground.color = Color.Lerp(playerColor, Color.white, 0.72f);
                 slot.Portrait.color = Color.white;
-                RefreshPortrait(slot, player.PlayerId);
+                RefreshPortrait(slot, player.PlayerId, colorIndex);
             }
         }
 
-        private void RefreshPortrait(PlayerSlot slot, string playerId)
+        private void RefreshPortrait(PlayerSlot slot, string playerId, int colorIndex)
         {
             PlayerController2D player = stageManager != null ? stageManager.GetOnlinePlayerController(playerId) : null;
             PlayerAbilityController ability = player != null ? player.GetComponent<PlayerAbilityController>() : null;
-            int speciesIcon = 4;
-            if (ability != null)
-            {
-                speciesIcon += Mathf.Clamp((int)ability.CurrentProfile.Species, 0, 4);
-            }
-            slot.Portrait.sprite = PlayerEmoteController.GetEmoteIcon(speciesIcon);
+            DrawManager.Species species = ability != null
+                ? ability.CurrentProfile.Species
+                : DrawManager.Species.Human;
+            slot.Portrait.sprite = PlayerEmoteController.GetPlayerSpeciesIcon(species, colorIndex);
             slot.Portrait.preserveAspect = true;
         }
 
@@ -268,7 +266,8 @@ namespace DrawBody.Prototype
                     slot.StatusIcon.rectTransform.sizeDelta = new Vector2(34f, 34f);
                 }
                 AnimateStatus(slot);
-                RefreshPortrait(slot, slot.PlayerId);
+                int colorIndex = PlayerColorPalette.GetLobbyColorIndex(lobby, slot.PlayerId, i);
+                RefreshPortrait(slot, slot.PlayerId, colorIndex);
             }
         }
 
