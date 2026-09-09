@@ -33,6 +33,14 @@ namespace DrawBody.Prototype
             new Dictionary<string, int>();
         private readonly Dictionary<string, float> lastRemoteBodyReceivedAt =
             new Dictionary<string, float>();
+        private readonly Dictionary<string, string> lastRemoteBodyJson =
+            new Dictionary<string, string>();
+        private readonly Dictionary<string, PendingRemoteThrow> pendingRemoteThrows =
+            new Dictionary<string, PendingRemoteThrow>();
+        private readonly Dictionary<string, RemoteThrowStamp> lastPredictedRemoteThrows =
+            new Dictionary<string, RemoteThrowStamp>();
+        private string lastAppliedLocalThrowCarrierId;
+        private int lastAppliedLocalThrowSequence;
 
         private sealed class RemoteTarget
         {
@@ -46,6 +54,21 @@ namespace DrawBody.Prototype
             public bool Grounded;
             public float ReceivedAt;
             public string SlimeAttachedToPlayerId;
+        }
+
+        private sealed class PendingRemoteThrow
+        {
+            public string CarrierPlayerId;
+            public int EventSequence;
+            public float ExpiresAt;
+        }
+
+        private sealed class RemoteThrowStamp
+        {
+            public string CarrierPlayerId;
+            public int EventSequence;
+            public int StageRevision;
+            public int RetryRevision;
         }
 
         private void Awake()
@@ -112,7 +135,12 @@ namespace DrawBody.Prototype
             DetectLocalSpeciesChange();
             FlushPendingBodyResync();
 
-            if (Time.unscaledTime < nextSendTime)
+            SendLocalState(false);
+        }
+
+        private void SendLocalState(bool immediate)
+        {
+            if (!immediate && Time.unscaledTime < nextSendTime)
             {
                 return;
             }
@@ -161,7 +189,9 @@ namespace DrawBody.Prototype
                 SlimeAttachedToPlayerId = localCarry?.SlimeAttachedOnlinePlayerId,
                 CarriedPlayerId = localCarry?.CurrentOnlineCarriedPlayerId,
                 CarryAction = localCarry?.CurrentOnlineCarryAction,
-                CarryOffset = localCarry != null ? localCarry.CurrentOnlineCarryOffset : Vector2.zero
+                CarryOffset = localCarry != null ? localCarry.CurrentOnlineCarryOffset : Vector2.zero,
+                LastAppliedThrowCarrierId = lastAppliedLocalThrowCarrierId,
+                LastAppliedThrowSequence = lastAppliedLocalThrowSequence
             });
         }
 
@@ -191,6 +221,24 @@ namespace DrawBody.Prototype
                 lastRemoteSequences[state.PlayerId] = state.Sequence;
             }
             lastRemoteStateReceivedAt[state.PlayerId] = Time.unscaledTime;
+
+            if (pendingRemoteThrows.TryGetValue(state.PlayerId, out PendingRemoteThrow pendingThrow))
+            {
+                bool throwAcknowledged = state.LastAppliedThrowCarrierId == pendingThrow.CarrierPlayerId
+                    && state.LastAppliedThrowSequence >= pendingThrow.EventSequence;
+                if (throwAcknowledged || Time.unscaledTime >= pendingThrow.ExpiresAt)
+                {
+                    pendingRemoteThrows.Remove(state.PlayerId);
+                }
+                else
+                {
+                    // This snapshot was sent before the carried owner received the
+                    // throw event. Applying it would visibly pull the predicted
+                    // character back into the carrier for one or two frames.
+                    return;
+                }
+            }
+
             stageManager.ApplyOnlineRemoteRedrawing(state.PlayerId, state.Redrawing);
             stageManager.ReconcileOnlineCarryState(
                 state.PlayerId,
@@ -348,6 +396,27 @@ namespace DrawBody.Prototype
 
             if (bodyData.PlayerId == onlineManager.LocalPlayerId)
             {
+                if (LocalMultiplayerDebugMode.Enabled)
+                    Debug.Log($"[PICO BODY] IGNORE SELF id={bodyData.PlayerId} rev={bodyData.Revision}");
+                return;
+            }
+
+            if (lastRemoteBodyJson.TryGetValue(bodyData.PlayerId, out string appliedJson)
+                && string.Equals(appliedJson, bodyData.Json, System.StringComparison.Ordinal))
+            {
+                // Redraw confirmation deliberately resends the finalized body.
+                // Advance the revision without rebuilding identical colliders.
+                if (bodyData.Revision > 0)
+                {
+                    lastRemoteBodyRevisions[bodyData.PlayerId] = Mathf.Max(
+                        lastRemoteBodyRevisions.TryGetValue(bodyData.PlayerId, out int knownRevision)
+                            ? knownRevision
+                            : 0,
+                        bodyData.Revision);
+                }
+                lastRemoteBodyReceivedAt[bodyData.PlayerId] = Time.unscaledTime;
+                if (LocalMultiplayerDebugMode.Enabled)
+                    Debug.Log($"[PICO BODY] DEDUPE id={bodyData.PlayerId} rev={bodyData.Revision}");
                 return;
             }
 
@@ -374,14 +443,28 @@ namespace DrawBody.Prototype
                 {
                     pendingRemoteBodyData[bodyData.PlayerId] = bodyData;
                 }
+                if (LocalMultiplayerDebugMode.Enabled)
+                    Debug.Log($"[PICO BODY] DEFER id={bodyData.PlayerId} rev={bodyData.Revision} localDraw={stageManager.IsDrawingMode} carryBlock={stageManager.IsOnlineBodyRebuildBlocked(bodyData.PlayerId)}");
                 return;
             }
 
-            stageManager.ApplyOnlineRemoteBodyData(bodyData);
+            if (!stageManager.ApplyOnlineRemoteBodyData(bodyData))
+            {
+                pendingRemoteBodyData[bodyData.PlayerId] = bodyData;
+                return;
+            }
             if (bodyData.Revision > 0)
                 lastRemoteBodyRevisions[bodyData.PlayerId] = bodyData.Revision;
             lastRemoteBodyReceivedAt[bodyData.PlayerId] = Time.unscaledTime;
+            lastRemoteBodyJson[bodyData.PlayerId] = bodyData.Json;
+            if (LocalMultiplayerDebugMode.Enabled)
+                Debug.Log($"[PICO BODY] APPLIED id={bodyData.PlayerId} rev={bodyData.Revision} bytes={bodyData.Json.Length}");
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
+        }
+
+        public void RequestLocalBodyResync(int attempts = 3)
+        {
+            RequestBodyResync(Mathf.Clamp(attempts, 1, 5));
         }
 
         private void FlushPendingRemoteBodyData()
@@ -416,7 +499,96 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            bool targetsLocalPlayer = carryData.TargetPlayerId == onlineManager.LocalPlayerId;
+            bool isThrow = carryData.Action == "throw";
+            if (isThrow && !targetsLocalPlayer)
+            {
+                PredictRemoteThrow(carryData);
+            }
+
             stageManager.ApplyOnlineCarryData(carryData, onlineManager.LocalPlayerId);
+            if (isThrow && targetsLocalPlayer)
+            {
+                lastAppliedLocalThrowCarrierId = carryData.CarrierPlayerId;
+                lastAppliedLocalThrowSequence = carryData.EventSequence;
+                // Do not wait up to one normal 30 Hz interval before telling the
+                // other peers that the carried owner has started its flight.
+                SendLocalState(true);
+            }
+        }
+
+        private void PredictRemoteThrow(OnlineCarryData carryData)
+        {
+            if (string.IsNullOrEmpty(carryData.TargetPlayerId))
+            {
+                return;
+            }
+
+            if (carryData.EventSequence > 0
+                && lastPredictedRemoteThrows.TryGetValue(carryData.TargetPlayerId, out RemoteThrowStamp lastThrow)
+                && lastThrow.CarrierPlayerId == carryData.CarrierPlayerId
+                && lastThrow.StageRevision == carryData.StageRevision
+                && lastThrow.RetryRevision == carryData.RetryRevision
+                && lastThrow.EventSequence >= carryData.EventSequence)
+            {
+                // The sender applies its event locally and may receive the same
+                // reliable event back from the backend. Never restart prediction
+                // from the release point when that echo arrives.
+                return;
+            }
+
+            Transform remoteTransform = stageManager.GetOnlinePlayerTransform(carryData.TargetPlayerId);
+            if (remoteTransform == null)
+            {
+                return;
+            }
+
+            RemoteTarget previous = remoteTargets.TryGetValue(carryData.TargetPlayerId, out RemoteTarget known)
+                ? known
+                : null;
+            float rotation = previous != null ? previous.Rotation : remoteTransform.eulerAngles.z;
+            int facing = previous != null ? previous.FacingDirection : 1;
+            int slot = previous != null ? previous.PlayerSlot : 0;
+            remoteTargets[carryData.TargetPlayerId] = new RemoteTarget
+            {
+                Position = carryData.ReleasePosition,
+                Velocity = carryData.ReleaseVelocity,
+                Rotation = rotation,
+                FacingDirection = facing,
+                PlayerSlot = slot,
+                Redrawing = false,
+                TurtleShelled = false,
+                Grounded = false,
+                ReceivedAt = Time.unscaledTime,
+                SlimeAttachedToPlayerId = null
+            };
+            stageManager.ApplyOnlineRemoteState(
+                carryData.TargetPlayerId,
+                carryData.ReleasePosition,
+                carryData.ReleaseVelocity,
+                rotation);
+
+            if (carryData.EventSequence > 0)
+            {
+                lastPredictedRemoteThrows[carryData.TargetPlayerId] = new RemoteThrowStamp
+                {
+                    CarrierPlayerId = carryData.CarrierPlayerId,
+                    EventSequence = carryData.EventSequence,
+                    StageRevision = carryData.StageRevision,
+                    RetryRevision = carryData.RetryRevision
+                };
+                if (!pendingRemoteThrows.TryGetValue(carryData.TargetPlayerId, out PendingRemoteThrow pending)
+                    || pending.CarrierPlayerId != carryData.CarrierPlayerId
+                    || pending.EventSequence < carryData.EventSequence)
+                {
+                    pendingRemoteThrows[carryData.TargetPlayerId] = new PendingRemoteThrow
+                    {
+                        CarrierPlayerId = carryData.CarrierPlayerId,
+                        EventSequence = carryData.EventSequence,
+                        ExpiresAt = Time.unscaledTime + 0.4f
+                    };
+                }
+            }
         }
 
         private void HandleOnlineStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
@@ -461,7 +633,10 @@ namespace DrawBody.Prototype
                 lastRemoteRespawningStates.Clear();
                 lastRemoteBodyRevisions.Clear();
                 lastRemoteBodyReceivedAt.Clear();
+                lastRemoteBodyJson.Clear();
                 pendingRemoteBodyData.Clear();
+                pendingRemoteThrows.Clear();
+                lastPredictedRemoteThrows.Clear();
                 pendingRosterLobby = null;
                 pendingRosterLocalPlayerId = null;
                 return;
@@ -487,7 +662,10 @@ namespace DrawBody.Prototype
                 lastRemoteRespawningStates.Remove(id);
                 lastRemoteBodyRevisions.Remove(id);
                 lastRemoteBodyReceivedAt.Remove(id);
+                lastRemoteBodyJson.Remove(id);
                 pendingRemoteBodyData.Remove(id);
+                pendingRemoteThrows.Remove(id);
+                lastPredictedRemoteThrows.Remove(id);
             }
         }
 

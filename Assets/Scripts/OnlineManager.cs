@@ -10,6 +10,7 @@ namespace DrawBody.Prototype
         private static readonly bool noTimeLimit = DetectLocalRegressionLaunch();
 
         public static bool NoTimeLimit => noTimeLimit;
+        public static bool Enabled => noTimeLimit;
 
         private static bool DetectLocalRegressionLaunch()
         {
@@ -90,6 +91,7 @@ namespace DrawBody.Prototype
         public event Action<OnlineBodyData> BodyDataReceived;
         public event Action<OnlineCarryData> CarryDataReceived;
         public event Action<OnlineGimmickData> GimmickDataReceived;
+        private static int nextLocalBodyRevision;
         public OnlineConnectionState State => backend != null ? backend.State : OnlineConnectionState.Offline;
         public OnlineLobbyInfo CurrentLobby => backend != null ? backend.CurrentLobby : null;
         public string LocalPlayerId => backend != null ? backend.LocalPlayerId : string.Empty;
@@ -518,7 +520,22 @@ namespace DrawBody.Prototype
             }
 
             bodyData.PlayerId = string.IsNullOrEmpty(LocalPlayerId) ? "local" : LocalPlayerId;
+            // DrawManager can be recreated or reinitialized while OnlineManager and
+            // the lobby stay alive. Keep the revision monotonic for the whole
+            // connection so a redraw is never mistaken for an older body.
+            if (bodyData.Revision <= nextLocalBodyRevision)
+            {
+                bodyData.Revision = ++nextLocalBodyRevision;
+            }
+            else
+            {
+                nextLocalBodyRevision = bodyData.Revision;
+            }
             bodyData.ContentFingerprint = ContentIntegrityVerifier.Fingerprint;
+            if (LocalMultiplayerDebugMode.Enabled)
+            {
+                Debug.Log($"[PICO BODY] SEND id={bodyData.PlayerId} rev={bodyData.Revision} bytes={bodyData.Json?.Length ?? 0}");
+            }
             CacheConfirmedInk(bodyData);
             backend?.SendBodyData(bodyData);
         }
@@ -553,6 +570,11 @@ namespace DrawBody.Prototype
             }
 
             StampStageSession(carryData);
+            carryData.CarrierPlayerId = LocalPlayerId;
+            // Apply carry prediction on the sender immediately as well. Some
+            // backends echo messages while the local TCP host does not, so relying
+            // on a round trip makes throw responsiveness depend on who is hosting.
+            CarryDataReceived?.Invoke(carryData);
             backend?.SendCarryData(carryData);
         }
 
@@ -670,7 +692,13 @@ namespace DrawBody.Prototype
 
         private void OnBackendBodyDataReceived(OnlineBodyData bodyData)
         {
-            if (bodyData == null || !AcceptRemoteContent(bodyData.ContentFingerprint) || !IsSaneBodyData(bodyData))
+            bool contentAccepted = bodyData != null && AcceptRemoteContent(bodyData.ContentFingerprint);
+            bool sane = bodyData != null && IsSaneBodyData(bodyData);
+            if (LocalMultiplayerDebugMode.Enabled)
+            {
+                Debug.Log($"[PICO BODY] RECEIVE id={bodyData?.PlayerId ?? "<null>"} rev={bodyData?.Revision ?? 0} bytes={bodyData?.Json?.Length ?? 0} content={contentAccepted} sane={sane}");
+            }
+            if (bodyData == null || !contentAccepted || !sane)
             {
                 return;
             }
@@ -737,7 +765,9 @@ namespace DrawBody.Prototype
         private void OnBackendCarryDataReceived(OnlineCarryData carryData)
         {
             if (carryData == null || !AcceptRemoteContent(carryData.ContentFingerprint)
-                || !IsSaneVector(carryData.ReleaseVelocity, 1000f) || !IsSaneVector(carryData.LocalOffset, 100f)
+                || !IsSaneVector(carryData.ReleaseVelocity, 1000f)
+                || !IsSaneVector(carryData.ReleasePosition, 10000f)
+                || !IsSaneVector(carryData.LocalOffset, 100f)
                 || !IsCurrentStageSession(
                     carryData.StageId, carryData.StageRevision, carryData.RetryRevision, false))
             {
@@ -816,13 +846,25 @@ namespace DrawBody.Prototype
                 for (int i = 0; i < body.Parts.Length; i++)
                 {
                     SerializableBodyPartDrawing part = body.Parts[i];
-                    if (part == null || !IsFinite(part.Ink) || part.Ink < 0f || part.Ink > 500f
+                    if (part == null || !IsFinite(part.Ink) || part.Ink < 0f
+                        || part.Ink > DrawManager.IndividualInkLimit + 0.01f
                         || part.Points == null || part.Points.Length > 20000)
                         return false;
                     totalInk += part.Ink;
-                    if (totalInk > 500.01f) return false;
+                    if (totalInk > DrawManager.IndividualInkLimit + 0.01f) return false;
                     for (int pointIndex = 0; pointIndex < part.Points.Length; pointIndex++)
-                        if (!IsSaneVector(part.Points[pointIndex], 10000f)) return false;
+                    {
+                        Vector2 point = part.Points[pointIndex];
+                        if (DrawManager.IsBreakPoint(point))
+                        {
+                            // DrawManager stores a deliberate (NaN, NaN) marker
+                            // between separate strokes of the same body part.
+                            // It is data structure syntax, not a gameplay position.
+                            if (!float.IsNaN(point.x) || !float.IsNaN(point.y)) return false;
+                            continue;
+                        }
+                        if (!IsSaneVector(point, 10000f)) return false;
+                    }
                 }
                 return true;
             }

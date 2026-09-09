@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -73,6 +74,12 @@ namespace DrawBody.Prototype
             public bool HasReleasePose;
             public Vector2 ReleasePosition;
             public float ReleaseRotation;
+        }
+
+        private sealed class IgnoredCollisionPair
+        {
+            public Collider2D First;
+            public Collider2D Second;
         }
 
         [System.Serializable]
@@ -239,14 +246,19 @@ namespace DrawBody.Prototype
                 ownersByObjectId.TryGetValue(pair.Key, out string ownerId);
                 bool remotelyOwned = !string.IsNullOrEmpty(ownerId)
                     && ownerId != onlineManager.LocalPlayerId;
+                bool waitingForLocalReleaseConfirmation = pendingLocalReleases.ContainsKey(pair.Key);
                 // On a participant machine every unheld rigidbody is driven by
                 // the host. Letting the local physics simulation run between
                 // snapshots made balls, boxes and launchers visibly snap or
                 // occasionally settle in a different place from the host.
                 bool hostDrivenReplica = ShouldAskHost
                     && entry != null
-                    && !locallyHeldObjectIds.Contains(pair.Key);
-                if (entry == null || !entry.HasNetworkTarget || (!remotelyOwned && !hostDrivenReplica))
+                    && !locallyHeldObjectIds.Contains(pair.Key)
+                    && !waitingForLocalReleaseConfirmation;
+                if (entry == null
+                    || waitingForLocalReleaseConfirmation
+                    || !entry.HasNetworkTarget
+                    || (!remotelyOwned && !hostDrivenReplica))
                 {
                     continue;
                 }
@@ -1004,6 +1016,10 @@ namespace DrawBody.Prototype
                     OwnershipState release = JsonUtility.FromJson<OwnershipState>(data.Json);
                     if (ownersByObjectId.TryGetValue(data.ObjectId, out string ownerId) && ownerId == data.PlayerId)
                     {
+                        // The sender id validated by the host is authoritative.
+                        // Do not trust a player id copied from the JSON payload.
+                        if (release == null) release = new OwnershipState();
+                        release.OwnerPlayerId = data.PlayerId;
                         ReleaseOwnership(data.ObjectId, release);
                     }
                 }
@@ -1099,6 +1115,7 @@ namespace DrawBody.Prototype
 
             if (transformEntries.TryGetValue(objectId, out SyncTransformEntry entry) && entry != null)
             {
+                IgnoreReleaseCollisionWithThrower(entry, release.OwnerPlayerId);
                 ApplyReleasePose(entry, release);
                 entry.EndRemoteOwnership(release.ReleaseVelocity);
             }
@@ -1111,6 +1128,83 @@ namespace DrawBody.Prototype
                 release.HasReleasePose,
                 release.ReleasePosition,
                 release.ReleaseRotation);
+        }
+
+        private void IgnoreReleaseCollisionWithThrower(SyncTransformEntry entry, string throwerPlayerId)
+        {
+            if (entry?.Transform == null || stageManager == null || string.IsNullOrEmpty(throwerPlayerId))
+            {
+                return;
+            }
+
+            PlayerController2D thrower = stageManager.GetOnlinePlayerController(throwerPlayerId);
+            if (thrower == null) return;
+
+            Collider2D[] objectColliders = entry.Transform.GetComponentsInChildren<Collider2D>(true);
+            Collider2D[] throwerColliders = thrower.GetComponentsInChildren<Collider2D>(true);
+            List<IgnoredCollisionPair> changedPairs = new List<IgnoredCollisionPair>();
+            for (int i = 0; i < objectColliders.Length; i++)
+            {
+                Collider2D item = objectColliders[i];
+                if (item == null || item.isTrigger) continue;
+                for (int j = 0; j < throwerColliders.Length; j++)
+                {
+                    Collider2D playerCollider = throwerColliders[j];
+                    if (playerCollider == null || playerCollider.isTrigger
+                        || Physics2D.GetIgnoreCollision(item, playerCollider))
+                    {
+                        continue;
+                    }
+
+                    Physics2D.IgnoreCollision(item, playerCollider, true);
+                    changedPairs.Add(new IgnoredCollisionPair
+                    {
+                        First = item,
+                        Second = playerCollider
+                    });
+                }
+            }
+
+            if (changedPairs.Count > 0)
+            {
+                StartCoroutine(RestoreReleaseCollisionPairs(changedPairs));
+            }
+        }
+
+        private static IEnumerator RestoreReleaseCollisionPairs(List<IgnoredCollisionPair> pairs)
+        {
+            float minimumRestoreAt = Time.time + 0.22f;
+            float restoreDeadline = Time.time + 1.2f;
+            while (Time.time < minimumRestoreAt
+                || Time.time < restoreDeadline && AnyReleaseCollisionPairOverlaps(pairs))
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            for (int i = 0; i < pairs.Count; i++)
+            {
+                IgnoredCollisionPair pair = pairs[i];
+                if (pair?.First != null && pair.Second != null)
+                {
+                    Physics2D.IgnoreCollision(pair.First, pair.Second, false);
+                }
+            }
+        }
+
+        private static bool AnyReleaseCollisionPairOverlaps(List<IgnoredCollisionPair> pairs)
+        {
+            for (int i = 0; i < pairs.Count; i++)
+            {
+                IgnoredCollisionPair pair = pairs[i];
+                if (pair?.First == null || pair.Second == null
+                    || !pair.First.enabled || !pair.Second.enabled)
+                {
+                    continue;
+                }
+
+                if (pair.First.Distance(pair.Second).isOverlapped) return true;
+            }
+            return false;
         }
 
         private static void ApplyReleasePose(SyncTransformEntry entry, OwnershipState release)

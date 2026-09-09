@@ -3173,7 +3173,7 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
-            "actionStrength": 300.0,
+            "actionStrength": 500.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,
@@ -3211,11 +3211,11 @@
             "objectId": "obj_1f64e9d0a29e4be7",
             "type": 0,
             "position": {
-                "x": 9.25,
+                "x": 10.25,
                 "y": -20.0
             },
             "size": {
-                "x": 11.5,
+                "x": 9.5,
                 "y": 2.0
             },
             "rotation": 0.0,
@@ -3623,7 +3623,7 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
-            "actionStrength": 300.0,
+            "actionStrength": 500.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,
@@ -3804,7 +3804,7 @@
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
             "bombFuseSeconds": 0.0,
-            "linkTargetId": "obj_38f43954e5574898",
+            "linkTargetId": "obj_6c359aab88d74d6f",
             "linkAction": "Unlock"
         },
         {
@@ -3848,7 +3848,7 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
-            "actionStrength": 27.0,
+            "actionStrength": 81.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,

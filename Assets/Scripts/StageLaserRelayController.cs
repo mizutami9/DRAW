@@ -1088,9 +1088,16 @@ namespace DrawBody.Prototype
                 Vector2 position = i < relaySpawnPositions.Count
                     ? relaySpawnPositions[i]
                     : new Vector2(0f, FloorY + 1.35f);
+                if (stageManager != null
+                    && stageManager.TryResolveChallengeStartPosition(
+                        player, position, out Vector3 safePosition))
+                {
+                    position = safePosition;
+                }
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
                 if (body != null) { body.position = position; body.linearVelocity = Vector2.zero; }
                 else player.transform.position = position;
+                stageManager?.RecordAssignedPlayerStart(player, position);
             }
             Physics2D.SyncTransforms();
         }

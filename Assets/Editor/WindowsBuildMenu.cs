@@ -10,6 +10,11 @@ namespace DrawBody.EditorTools
         [MenuItem("PICO/Build Windows EXE")]
         public static void BuildWindowsExe()
         {
+            // The Steam release command switches the Standalone target to IL2CPP.
+            // Explicitly restore Mono for the local multiplayer build; otherwise
+            // Unity refuses to overwrite an existing Mono build directory and the
+            // stale executable remains runnable after the failed build.
+            PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
             BuildWindows("Builds/DrawBodyOnline", false);
         }
 

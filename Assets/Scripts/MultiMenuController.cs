@@ -493,7 +493,16 @@ namespace DrawBody.Prototype
             if (state == OnlineConnectionState.Playing && !stageStartedFromOnline)
             {
                 stageStartedFromOnline = true;
-                stageManager?.SelectStage(lobby != null && !string.IsNullOrEmpty(lobby.StageId) ? lobby.StageId : "1-1");
+                // The host already owns the explicit SelectStage call that sent
+                // StartGame. Loading again from its own state callback makes a
+                // late Playing notification reopen the stage while backing out
+                // of stage select. Only participants follow the host this way.
+                if (!IsLocalHost(lobby))
+                {
+                    stageManager?.SelectStage(lobby != null && !string.IsNullOrEmpty(lobby.StageId)
+                        ? lobby.StageId
+                        : "1-1");
+                }
                 return;
             }
 

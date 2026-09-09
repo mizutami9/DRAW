@@ -128,7 +128,7 @@ namespace DrawBody.Prototype
 
             try
             {
-                client = new TcpClient();
+                client = new TcpClient { NoDelay = true };
                 client.Connect(parts[0], remotePort);
                 StartReadLoop(client);
                 Send(client, MessageHello, JsonUtility.ToJson(CreatePlayer(localPlayerId, PlayerNameSettings.CurrentName, false, false)));
@@ -308,6 +308,7 @@ namespace DrawBody.Prototype
                 try
                 {
                     TcpClient accepted = listener.AcceptTcpClient();
+                    accepted.NoDelay = true;
                     lock (peers)
                     {
                         peers.Add(new ClientPeer { Client = accepted });

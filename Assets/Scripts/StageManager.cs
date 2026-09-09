@@ -72,6 +72,7 @@ namespace DrawBody.Prototype
         private Vector2 onlineCarryLocalOffset;
         private readonly List<Collider2D> onlineCarryColliders = new List<Collider2D>();
         private readonly List<bool> onlineCarryColliderEnabledStates = new List<bool>();
+        private readonly List<RaycastHit2D> onlineCarrySweepHits = new List<RaycastHit2D>(32);
         private bool onlineCarryHasBounds;
         private Vector2 onlineCarryBoundsCenterOffset;
         private Vector2 onlineCarryBoundsExtents;
@@ -1526,7 +1527,8 @@ namespace DrawBody.Prototype
             string nextStageId = GetNextStageId(currentStageId);
             if (string.IsNullOrEmpty(nextStageId))
             {
-                OpenStageSelect();
+                if (IsOnlineInStage()) OpenStageSelectFromMultiLobby();
+                else OpenStageSelect();
                 return;
             }
 
@@ -1641,6 +1643,10 @@ namespace DrawBody.Prototype
             // again after the active player's state has been saved, so species
             // switches cannot remain stale on another client.
             SendLocalOnlineBodyData();
+            // A same-species redraw is not detected by OnlinePlayerSync's species
+            // watcher. Repeat the finalized body after DRAW has fully closed so
+            // peers that were temporarily rebuilding/carrying still receive it.
+            FindFirstObjectByType<OnlinePlayerSync>()?.RequestLocalBodyResync(3);
             RefreshOnlinePlayerCollisionSafety();
             player?.SetControlsEnabled(!cleared && !optionOverlayActive);
         }
@@ -2553,6 +2559,19 @@ namespace DrawBody.Prototype
             }
             else if (carryData.Action == "throw")
             {
+                if (carryData.EventSequence > 0 && player != null)
+                {
+                    // Start the authoritative owner from the exact release point
+                    // used by the thrower's prediction. The carried owner follows
+                    // an interpolated remote carrier and can otherwise be a frame
+                    // or two behind before the same velocity is applied.
+                    player.transform.position = carryData.ReleasePosition;
+                    if (onlineCarryBody != null)
+                    {
+                        onlineCarryBody.position = carryData.ReleasePosition;
+                    }
+                    Physics2D.SyncTransforms();
+                }
                 EndOnlineCarry(carryData.ReleaseVelocity);
             }
             else if (carryData.Action == "drop")
@@ -2755,6 +2774,7 @@ namespace DrawBody.Prototype
                 remoteBuilder.SetCarryPose(true, carrier.FacingDirection, anchor);
             }
 
+            anchor = ConstrainOnlineCarriedPlayerToSolidGeometry(anchor, carrier);
             anchor = ConstrainOnlineCarriedPlayerToStageBoundary(anchor);
 
             player.transform.position = anchor;
@@ -2770,6 +2790,63 @@ namespace DrawBody.Prototype
             }
         }
 
+        private Vector3 ConstrainOnlineCarriedPlayerToSolidGeometry(
+            Vector3 targetAnchor,
+            PlayerController2D carrier)
+        {
+            if (!onlineCarryHasBounds || player == null) return targetAnchor;
+
+            Vector2 currentPosition = player.transform.position;
+            Vector2 movement = (Vector2)targetAnchor - currentPosition;
+            float distance = movement.magnitude;
+            if (distance <= 0.0001f) return targetAnchor;
+
+            Vector2 direction = movement / distance;
+            Vector2 castCenter = currentPosition + onlineCarryBoundsCenterOffset;
+            Vector2 castSize = new Vector2(
+                Mathf.Max(0.05f, onlineCarryBoundsExtents.x * 2f),
+                Mathf.Max(0.05f, onlineCarryBoundsExtents.y * 2f));
+            ContactFilter2D filter = new ContactFilter2D
+            {
+                useTriggers = false,
+                useLayerMask = false
+            };
+
+            // The locally owned body has its colliders disabled while another
+            // online player carries it. Sweep its cached full-body bounds so a
+            // jumping carrier cannot move it across a thin wall in one frame.
+            onlineCarrySweepHits.Clear();
+            Physics2D.BoxCast(
+                castCenter,
+                castSize,
+                0f,
+                direction,
+                filter,
+                onlineCarrySweepHits,
+                distance);
+
+            float allowedDistance = distance;
+            for (int i = 0; i < onlineCarrySweepHits.Count; i++)
+            {
+                RaycastHit2D hit = onlineCarrySweepHits[i];
+                Collider2D hitCollider = hit.collider;
+                if (hitCollider == null || hitCollider.isTrigger) continue;
+                PlayerController2D hitPlayer = hitCollider.GetComponentInParent<PlayerController2D>();
+                if (hitPlayer == player || hitPlayer == carrier || hitPlayer != null) continue;
+                if (Vector2.Dot(direction, hit.normal) >= -0.01f) continue;
+
+                allowedDistance = Mathf.Min(
+                    allowedDistance,
+                    Mathf.Max(0f, hit.distance - 0.06f));
+            }
+
+            if (allowedDistance >= distance - 0.0001f) return targetAnchor;
+
+            Vector3 constrainedAnchor = currentPosition + direction * allowedDistance;
+            constrainedAnchor.z = targetAnchor.z;
+            return constrainedAnchor;
+        }
+
         private Vector3 ConstrainOnlineCarriedPlayerToStageBoundary(Vector3 anchor)
         {
             if (!onlineCarryHasBounds) return anchor;
@@ -2781,9 +2858,14 @@ namespace DrawBody.Prototype
                 StageEditorObject boundary = stageObjects[i];
                 if (boundary == null || boundary.type != StageObjectType.StageBoundary) continue;
                 const float margin = 0.10f;
-                float left = boundary.transform.position.x - boundary.size.x * 0.5f + margin;
-                float right = boundary.transform.position.x + boundary.size.x * 0.5f - margin;
-                float top = boundary.transform.position.y + boundary.size.y * 0.5f - margin;
+                if (!StageObjectFactory.TryGetStageBoundaryInnerEdges(
+                        boundary, out float left, out float right, out float top))
+                {
+                    continue;
+                }
+                left += margin;
+                right -= margin;
+                top -= margin;
                 Vector2 center = (Vector2)anchor + onlineCarryBoundsCenterOffset;
                 if (center.x - onlineCarryBoundsExtents.x < left)
                     anchor.x += left - (center.x - onlineCarryBoundsExtents.x);
@@ -2956,17 +3038,17 @@ namespace DrawBody.Prototype
             }
         }
 
-        public void ApplyOnlineRemoteBodyData(OnlineBodyData bodyData)
+        public bool ApplyOnlineRemoteBodyData(OnlineBodyData bodyData)
         {
             if (bodyData == null || drawManager == null || string.IsNullOrEmpty(bodyData.Json))
             {
-                return;
+                return false;
             }
 
             PlayerController2D remotePlayer = EnsureOnlineRemotePlayer(bodyData.PlayerId);
             if (remotePlayer == null)
             {
-                return;
+                return false;
             }
 
             if (IsOnlineBodyRebuildBlocked(bodyData.PlayerId))
@@ -2975,13 +3057,13 @@ namespace DrawBody.Prototype
                 // live carry merely to rebuild the remote player's drawing: that
                 // races with continuous carry state and can leave the carried
                 // player's Rigidbody kinematic or its colliders disabled.
-                return;
+                return false;
             }
 
             DrawManager.DrawingState remoteState = drawManager.CreateStateFromBodyJson(bodyData.Json);
             if (remoteState == null)
             {
-                return;
+                return false;
             }
 
             SaveDrawingState(player);
@@ -3000,6 +3082,7 @@ namespace DrawBody.Prototype
             // replaced the remote player's confirmed species. Refresh again after
             // the authoritative state is applied so a resolved warning disappears.
             drawManager.RefreshUniqueSpeciesAvailability();
+            return true;
         }
 
         public void SendLocalOnlineBodyData()
@@ -3520,16 +3603,19 @@ namespace DrawBody.Prototype
                 {
                     StageEditorObject boundary = stageObjects[i];
                     if (boundary == null || boundary.type != StageObjectType.StageBoundary) continue;
-                    float halfWidth = boundary.size.x * 0.5f;
-                    float halfHeight = boundary.size.y * 0.5f;
                     // StageBoundary intentionally has no bottom. Validate the
                     // entire drawing against its ceiling and side walls because
                     // a sparse, oversized body can sit completely beyond a thin
                     // wall without any individual line collider overlapping it.
                     const float insideMargin = 0.08f;
-                    float left = boundary.transform.position.x - halfWidth + insideMargin;
-                    float right = boundary.transform.position.x + halfWidth - insideMargin;
-                    float top = boundary.transform.position.y + halfHeight - insideMargin;
+                    if (!StageObjectFactory.TryGetStageBoundaryInnerEdges(
+                            boundary, out float left, out float right, out float top))
+                    {
+                        continue;
+                    }
+                    left += insideMargin;
+                    right -= insideMargin;
+                    top -= insideMargin;
                     if (bodyBounds.min.x < left || bodyBounds.max.x > right || bodyBounds.max.y > top)
                         return true;
                 }

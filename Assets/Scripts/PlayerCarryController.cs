@@ -36,6 +36,7 @@ namespace DrawBody.Prototype
         private readonly List<Collider2D> pickupHits = new List<Collider2D>(128);
         private readonly List<Collider2D> heldColliders = new List<Collider2D>();
         private readonly HashSet<Collider2D> heldColliderSet = new HashSet<Collider2D>();
+        private readonly HashSet<Collider2D> heldCarrierColliderSet = new HashSet<Collider2D>();
         private readonly List<bool> heldColliderEnabledStates = new List<bool>();
         private readonly List<bool> heldColliderTriggerStates = new List<bool>();
         private readonly List<Collider2D> heldPlayerColliderScratch = new List<Collider2D>();
@@ -56,7 +57,6 @@ namespace DrawBody.Prototype
         private LineRenderer throwPreviewHeadA;
         private LineRenderer throwPreviewHeadB;
         private Vector2 displayedThrowDirection = Vector2.up;
-        private int displayedThrowFacingDirection = 1;
         private bool hasDisplayedThrowDirection;
         private Material previewMaterial;
         private string heldOnlinePlayerId;
@@ -75,7 +75,7 @@ namespace DrawBody.Prototype
         private PlayerController2D remoteSlimeVisualTarget;
         private LineRenderer slimeAttachBridge;
         private LineRenderer slimeAttachRing;
-        private readonly LineRenderer[] catClawLines = new LineRenderer[3];
+        private readonly LineRenderer[] catClawLines = new LineRenderer[5];
         private readonly LineRenderer[] birdBeakLines = new LineRenderer[2];
         private CarryableObject catClawedObject;
         private Rigidbody2D catClawedBody;
@@ -93,9 +93,11 @@ namespace DrawBody.Prototype
         private bool catScratchConsumesHold;
         private float nextCatScratchTime;
         private float nextSlimeSpikeTime;
+        private float birdPeckStartedAt = -100f;
         private bool remoteWeaponAimEnabled;
         private Vector2 remoteWeaponAimDirection = Vector2.right;
         private Vector2 currentWeaponAimDirection = Vector2.right;
+        private int nextCarryEventSequence;
 
         public bool IsHolding => heldTransform != null;
         public bool IsAimingWeapon => heldTransform != null
@@ -373,12 +375,24 @@ namespace DrawBody.Prototype
                 DropHeld(Vector2.zero);
                 if (IsCat())
                 {
+                    bool catGrabHeld = scriptedSlimeAttachment
+                        ? scriptedSlimeAttachmentHeld
+                        : Input.GetKey(KeyCode.F);
+                    if (catGrabHeld
+                        && slimeAttachedPlayer == null
+                        && catClawedObject == null
+                        && TryAttachSlimeToFriend())
+                    {
+                        // An ally in grabbing range always wins over the scratch.
+                        // F is therefore safe to use as a co-op carry action.
+                        catScratchConsumesHold = false;
+                        return;
+                    }
                     if (Input.GetKeyDown(KeyCode.F) && Time.time >= nextCatScratchTime)
                     {
                         nextCatScratchTime = Time.time + CatScratchCooldown;
                         PlayCatScratchEffect();
-                        bool hitPlayer = HitPlayersWithCatScratch(false);
-                        if (TryScratchEnemy() || hitPlayer)
+                        if (TryScratchEnemy())
                         {
                             catScratchConsumesHold = true;
                             DetachSlimeFromFriend(false);
@@ -651,7 +665,7 @@ namespace DrawBody.Prototype
             return null;
         }
 
-        private void TryAttachSlimeToFriend()
+        private bool TryAttachSlimeToFriend()
         {
             PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
             Collider2D[] ownColliders = GetComponentsInChildren<Collider2D>(false);
@@ -684,7 +698,9 @@ namespace DrawBody.Prototype
                 Collider2D[] candidateColliders = candidate.GetComponentsInChildren<Collider2D>(false);
                 float distance = GetClosestColliderDistance(ownColliders, candidateColliders);
                 float attachReach = IsFriendCarrier() ? Mathf.Max(0.75f, slimeFriendAttachReach) : slimeFriendAttachReach;
-                if (distance <= attachReach && distance < bestDistance)
+                if (distance <= attachReach
+                    && distance < bestDistance
+                    && !HasSolidRoomBarrier(transform.position, candidate.transform.position, transform, candidate.transform))
                 {
                     bestDistance = distance;
                     bestPlayer = candidate;
@@ -694,7 +710,7 @@ namespace DrawBody.Prototype
 
             if (bestPlayer == null || bestBody == null || playerBody == null)
             {
-                return;
+                return false;
             }
 
             slimeAttachedPlayer = bestPlayer;
@@ -735,7 +751,10 @@ namespace DrawBody.Prototype
             slimeTargetColliders = bestPlayer.GetComponentsInChildren<Collider2D>(false);
             SetCollisionIgnored(slimeOwnColliders, slimeTargetColliders, true);
             FollowSlimeAttachedFriend();
+            if (IsCat()) PlayCatGrabBurst(bestPlayer);
+            else if (IsBird()) PlayBirdPeckBurst(bestPlayer);
             GameSfx.PlayAt(GetFriendAttachSfx(), transform.position, 1.1f);
+            return true;
         }
 
         private Vector3 CalculateBirdCarryOffset(PlayerController2D target)
@@ -855,7 +874,11 @@ namespace DrawBody.Prototype
             catClawedBody.angularVelocity = 0f;
             UpdateCatClawedObjectPose();
             ResolveGimmickSyncManager()?.BeginLocalObjectCarry(catClawedObject.transform);
-            if (IsBird()) UpdateBirdObjectAttachmentVisual();
+            if (IsBird())
+            {
+                UpdateBirdObjectAttachmentVisual();
+                PlayBirdPeckBurst(catClawedObject.gameObject);
+            }
             else UpdateCatObjectAttachmentVisual();
             GameSfx.PlayAt(GetFriendAttachSfx(), contact, 1.1f);
         }
@@ -945,13 +968,25 @@ namespace DrawBody.Prototype
 
             if (IsFriendCarrier())
             {
-                Vector3 targetAnchor = transform.position + transform.TransformVector(slimeAttachLocalOffset);
+                Vector3 desiredAnchor = transform.position + transform.TransformVector(slimeAttachLocalOffset);
+                Vector3 targetAnchor = desiredAnchor;
                 targetAnchor = ConstrainCarriedFriendToSolidGeometry(targetAnchor);
                 targetAnchor = ConstrainCarriedFriendToStageBoundary(targetAnchor);
                 slimeAttachedPlayer.transform.position = targetAnchor;
                 slimeAttachedBody.position = targetAnchor;
                 slimeAttachedBody.linearVelocity = playerBody != null ? playerBody.linearVelocity : Vector2.zero;
                 slimeAttachedBody.angularVelocity = 0f;
+
+                // A bird carries its ally above its head. In a narrow passage the
+                // desired pair pose may not fit between the floor and ceiling.
+                // Never teleport the carrier through the opposite wall to preserve
+                // that pose; release the grip if the safe target position separates
+                // too far from the requested attachment point.
+                if (((Vector2)(targetAnchor - desiredAnchor)).sqrMagnitude > 0.2025f)
+                {
+                    DetachSlimeFromFriend(true);
+                    return;
+                }
             }
             else
             {
@@ -988,16 +1023,41 @@ namespace DrawBody.Prototype
                 useLayerMask = false
             };
 
-            // The carried player's rigidbody is kinematic and follows the cat by
-            // direct positioning. Cast every body segment first so neither a thin
-            // hand-drawn wall nor a facing-direction flip can teleport it outside.
-            for (int i = 0; i < slimeTargetColliders.Length; i++)
+            // Cast the carried Rigidbody as one body. Besides being much cheaper
+            // for filled drawings, this keeps all of its irregular segments on
+            // the same physics snapshot when checking a thin wall.
+            Physics2D.SyncTransforms();
+            carriedFriendCastHits.Clear();
+            slimeAttachedBody.Cast(direction, filter, carriedFriendCastHits, distance);
+            for (int hitIndex = 0; hitIndex < carriedFriendCastHits.Count; hitIndex++)
             {
-                Collider2D carriedCollider = slimeTargetColliders[i];
-                if (carriedCollider == null || !carriedCollider.enabled || carriedCollider.isTrigger) continue;
+                RaycastHit2D hit = carriedFriendCastHits[hitIndex];
+                Collider2D hitCollider = hit.collider;
+                if (hitCollider == null || hitCollider.isTrigger) continue;
+                if (hitCollider.transform.IsChildOf(slimeAttachedPlayer.transform)) continue;
+                if (hitCollider.GetComponentInParent<PlayerController2D>() != null) continue;
+                if (Vector2.Dot(direction, hit.normal) >= -0.01f) continue;
 
+                allowedDistance = Mathf.Min(allowedDistance, Mathf.Max(0f, hit.distance - 0.06f));
+            }
+
+            // Rigidbody2D.Cast normally covers every body segment, but an online
+            // redraw can briefly leave some child colliders outside that body's
+            // cast set. Sweep the complete visible collider bounds as a second,
+            // conservative guard against jumping through a wall while grabbing.
+            if (TryGetSolidBounds(slimeAttachedPlayer, out Bounds carriedBounds))
+            {
                 carriedFriendCastHits.Clear();
-                carriedCollider.Cast(direction, filter, carriedFriendCastHits, distance);
+                Physics2D.BoxCast(
+                    carriedBounds.center,
+                    new Vector2(
+                        Mathf.Max(0.05f, carriedBounds.size.x),
+                        Mathf.Max(0.05f, carriedBounds.size.y)),
+                    0f,
+                    direction,
+                    filter,
+                    carriedFriendCastHits,
+                    distance);
                 for (int hitIndex = 0; hitIndex < carriedFriendCastHits.Count; hitIndex++)
                 {
                     RaycastHit2D hit = carriedFriendCastHits[hitIndex];
@@ -1007,7 +1067,9 @@ namespace DrawBody.Prototype
                     if (hitCollider.GetComponentInParent<PlayerController2D>() != null) continue;
                     if (Vector2.Dot(direction, hit.normal) >= -0.01f) continue;
 
-                    allowedDistance = Mathf.Min(allowedDistance, Mathf.Max(0f, hit.distance - 0.035f));
+                    allowedDistance = Mathf.Min(
+                        allowedDistance,
+                        Mathf.Max(0f, hit.distance - 0.06f));
                 }
             }
 
@@ -1016,10 +1078,8 @@ namespace DrawBody.Prototype
             Vector3 constrainedAnchor = currentPosition + direction * allowedDistance;
             constrainedAnchor.z = targetAnchor.z;
             Vector3 correction = constrainedAnchor - targetAnchor;
-            transform.position += correction;
             if (playerBody != null)
             {
-                playerBody.position += (Vector2)correction;
                 Vector2 velocity = playerBody.linearVelocity;
                 if (Mathf.Abs(correction.x) > 0.001f) velocity.x = 0f;
                 if (Mathf.Abs(correction.y) > 0.001f) velocity.y = 0f;
@@ -1043,9 +1103,14 @@ namespace DrawBody.Prototype
                 if (boundary == null || boundary.type != StageObjectType.StageBoundary) continue;
 
                 const float margin = 0.10f;
-                float left = boundary.transform.position.x - boundary.size.x * 0.5f + margin;
-                float right = boundary.transform.position.x + boundary.size.x * 0.5f - margin;
-                float top = boundary.transform.position.y + boundary.size.y * 0.5f - margin;
+                if (!StageObjectFactory.TryGetStageBoundaryInnerEdges(
+                        boundary, out float left, out float right, out float top))
+                {
+                    continue;
+                }
+                left += margin;
+                right -= margin;
+                top -= margin;
                 Vector3 boundsCenterOffset = carriedBounds.center - slimeAttachedPlayer.transform.position;
                 Vector3 proposedCenter = targetAnchor + boundsCenterOffset;
                 Vector3 correction = Vector3.zero;
@@ -1060,10 +1125,8 @@ namespace DrawBody.Prototype
                 if (correction.sqrMagnitude > 0.000001f)
                 {
                     targetAnchor += correction;
-                    transform.position += correction;
                     if (playerBody != null)
                     {
-                        playerBody.position += (Vector2)correction;
                         Vector2 velocity = playerBody.linearVelocity;
                         if (correction.y < 0f && velocity.y > 0f) velocity.y = 0f;
                         if (Mathf.Abs(correction.x) > 0.001f) velocity.x = 0f;
@@ -1226,6 +1289,8 @@ namespace DrawBody.Prototype
             remoteSlimeVisualTarget = target;
             if (target != null)
             {
+                if (IsCat()) PlayCatGrabBurst(target);
+                else if (IsBird()) PlayBirdPeckBurst(target);
                 GameSfx.PlayAt(GetFriendAttachSfx(), transform.position, 0.9f);
             }
             else if (wasAttached)
@@ -1336,6 +1401,7 @@ namespace DrawBody.Prototype
 
             heldColliders.Clear();
             heldColliderSet.Clear();
+            heldCarrierColliderSet.Clear();
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             heldTransform.GetComponentsInChildren(heldColliders);
@@ -1379,7 +1445,14 @@ namespace DrawBody.Prototype
 
             if (bestPlayer != null)
             {
-                SetCollisionIgnored(heldColliders.ToArray(), playerColliders, true);
+                for (int i = 0; i < playerColliders.Length; i++)
+                {
+                    if (playerColliders[i] != null)
+                    {
+                        heldCarrierColliderSet.Add(playerColliders[i]);
+                    }
+                }
+                SetCollisionIgnored(heldColliders, playerColliders, true);
             }
 
             BringHeldObjectToFront();
@@ -1492,9 +1565,7 @@ namespace DrawBody.Prototype
                 // Keep puzzle keys controllable and on screen.
                 currentThrowSpeed = Mathf.Clamp(currentThrowSpeed * 0.45f, 8f, 14f);
             }
-            int currentFacingDirection = GetFacingDirection();
             Vector2 throwDirection = hasDisplayedThrowDirection
-                && displayedThrowFacingDirection == currentFacingDirection
                 ? displayedThrowDirection
                 : GetThrowDirection();
             Vector2 throwVelocity = throwDirection.normalized * currentThrowSpeed * multiplier;
@@ -1591,6 +1662,7 @@ namespace DrawBody.Prototype
             hasDisplayedThrowDirection = false;
             heldColliders.Clear();
             heldColliderSet.Clear();
+            heldCarrierColliderSet.Clear();
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             SetThrowPreviewVisible(false);
@@ -1622,6 +1694,7 @@ namespace DrawBody.Prototype
             hasDisplayedThrowDirection = false;
             heldColliders.Clear();
             heldColliderSet.Clear();
+            heldCarrierColliderSet.Clear();
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             SetThrowPreviewVisible(false);
@@ -1917,6 +1990,7 @@ namespace DrawBody.Prototype
                 ? targetBounds.center + Vector3.up * targetBounds.extents.y
                 : targetBounds.ClosestPoint(beakBase);
             DrawBirdBeak(beakBase, contact, facing);
+            DrawBirdPeckContact(contact);
         }
 
         private void UpdateBirdObjectAttachmentVisual()
@@ -1941,7 +2015,9 @@ namespace DrawBody.Prototype
                 birdBounds.center.y + birdBounds.extents.y * 0.28f,
                 transform.position.z);
             Bounds objectBounds = GetSolidBounds(catClawedObject.gameObject);
-            DrawBirdBeak(beakBase, objectBounds.ClosestPoint(beakBase), facing);
+            Vector3 contact = objectBounds.ClosestPoint(beakBase);
+            DrawBirdBeak(beakBase, contact, facing);
+            DrawBirdPeckContact(contact);
         }
 
         private void DrawBirdBeak(Vector3 beakBase, Vector3 contact, float facing)
@@ -1950,23 +2026,137 @@ namespace DrawBody.Prototype
             if (forward.sqrMagnitude < 0.001f) forward = Vector3.right * facing;
             Vector3 normal = new Vector3(-forward.y, forward.x, 0f);
             Color beakColor = new Color(1f, 0.65f, 0.12f, 0.96f);
-            float pinch = 0.035f + Mathf.Sin(Time.unscaledTime * 8f) * 0.012f;
+            float peckAge = Time.unscaledTime - birdPeckStartedAt;
+            bool pecking = peckAge >= 0f && peckAge < 0.42f;
+            float strike = 1f;
+            float jawSpread;
+            if (pecking)
+            {
+                // Two quick handwritten jabs: open on the pull-back and snap
+                // shut as the beak reaches the contact point.
+                float cycle = Mathf.Repeat(peckAge / 0.21f, 1f);
+                strike = Mathf.Sin(cycle * Mathf.PI);
+                strike = 1f - Mathf.Pow(1f - strike, 3f);
+                jawSpread = Mathf.Lerp(0.17f, 0.025f, strike);
+            }
+            else
+            {
+                strike = 1f;
+                jawSpread = 0.035f + Mathf.Sin(Time.unscaledTime * 9f) * 0.012f;
+            }
+            Vector3 animatedContact = Vector3.Lerp(
+                beakBase + forward * Mathf.Min(0.24f, Vector3.Distance(beakBase, contact) * 0.35f),
+                contact,
+                pecking ? Mathf.Lerp(0.48f, 1f, strike) : 1f);
             for (int i = 0; i < birdBeakLines.Length; i++)
             {
                 LineRenderer beak = birdBeakLines[i];
                 if (beak == null) continue;
                 float side = i == 0 ? 1f : -1f;
-                Vector3 jaw = beakBase + normal * side * 0.11f;
-                Vector3 tip = contact + normal * side * pinch;
+                Vector3 jaw = beakBase + forward * 0.08f + normal * side * jawSpread;
+                Vector3 tip = animatedContact + normal * side * Mathf.Min(0.028f, jawSpread * 0.4f);
                 beak.enabled = true;
-                beak.startWidth = 0.075f;
-                beak.endWidth = 0.035f;
+                beak.startWidth = pecking ? 0.095f : 0.075f;
+                beak.endWidth = pecking ? 0.045f : 0.035f;
                 beak.startColor = beakColor;
                 beak.endColor = beakColor;
                 beak.SetPosition(0, beakBase);
                 beak.SetPosition(1, jaw);
                 beak.SetPosition(2, tip);
             }
+        }
+
+        private void DrawBirdPeckContact(Vector3 contact)
+        {
+            if (slimeAttachRing == null) return;
+            float age = Time.unscaledTime - birdPeckStartedAt;
+            if (age < 0f || age >= 0.48f)
+            {
+                slimeAttachRing.enabled = false;
+                return;
+            }
+
+            float progress = Mathf.Clamp01(age / 0.48f);
+            float pulse = Mathf.Sin(progress * Mathf.PI);
+            Color color = new Color(1f, 0.72f, 0.12f, (1f - progress) * 0.9f);
+            slimeAttachRing.enabled = true;
+            slimeAttachRing.startWidth = Mathf.Lerp(0.10f, 0.035f, progress);
+            slimeAttachRing.endWidth = slimeAttachRing.startWidth;
+            slimeAttachRing.startColor = color;
+            slimeAttachRing.endColor = color;
+            float radius = Mathf.Lerp(0.10f, 0.48f, progress) * (0.82f + pulse * 0.18f);
+            for (int i = 0; i < slimeAttachRing.positionCount; i++)
+            {
+                float angle = i / (float)slimeAttachRing.positionCount * Mathf.PI * 2f;
+                float wobble = 1f + Mathf.Sin(angle * 5f + birdPeckStartedAt * 7f) * 0.08f;
+                slimeAttachRing.SetPosition(i, contact
+                    + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius * wobble);
+            }
+        }
+
+        private void PlayBirdPeckBurst(PlayerController2D target)
+        {
+            if (target == null) return;
+            Vector3 birdCenter = transform.position;
+            if (TryGetSolidBounds(playerController, out Bounds birdBounds)) birdCenter = birdBounds.center;
+            Bounds targetBounds = new Bounds(target.transform.position, Vector3.one * 0.5f);
+            if (TryGetSolidBounds(target, out Bounds measuredTargetBounds)) targetBounds = measuredTargetBounds;
+            PlayBirdPeckBurstAt(targetBounds.ClosestPoint(birdCenter));
+        }
+
+        private void PlayBirdPeckBurst(GameObject target)
+        {
+            if (target == null) return;
+            Vector3 birdCenter = transform.position;
+            if (TryGetSolidBounds(playerController, out Bounds birdBounds)) birdCenter = birdBounds.center;
+            PlayBirdPeckBurstAt(GetSolidBounds(target).ClosestPoint(birdCenter));
+        }
+
+        private void PlayBirdPeckBurstAt(Vector3 contact)
+        {
+            birdPeckStartedAt = Time.unscaledTime;
+            Vector3 birdCenter = transform.position;
+            if (TryGetSolidBounds(playerController, out Bounds birdBounds)) birdCenter = birdBounds.center;
+            Vector3 towardTarget = contact - birdCenter;
+            if (towardTarget.sqrMagnitude < 0.001f) towardTarget = Vector3.right * GetFacingDirection();
+            towardTarget.Normalize();
+            Vector3 perpendicular = new Vector3(-towardTarget.y, towardTarget.x, 0f);
+
+            Color birdColor = bodyBuilder != null
+                ? bodyBuilder.PlayerColor
+                : new Color(0.2f, 0.65f, 1f, 1f);
+            GameObject root = new GameObject("Bird Peck Burst");
+            root.transform.SetParent(transform, true);
+            LineRenderer[] strokes = new LineRenderer[9];
+            for (int i = 0; i < strokes.Length; i++)
+            {
+                float lane = i - (strokes.Length - 1) * 0.5f;
+                float spread = lane * 0.16f;
+                Vector3 direction = (towardTarget * 0.45f + perpendicular * spread).normalized;
+                float length = 0.30f + 0.07f * (i % 3);
+                GameObject strokeObject = new GameObject("Crayon Peck Feather " + (i + 1));
+                strokeObject.transform.SetParent(root.transform, false);
+                LineRenderer stroke = strokeObject.AddComponent<LineRenderer>();
+                stroke.useWorldSpace = true;
+                stroke.positionCount = 3;
+                stroke.numCapVertices = 5;
+                stroke.numCornerVertices = 4;
+                stroke.sortingOrder = 236 + i;
+                stroke.sharedMaterial = GetPreviewMaterial();
+                stroke.startWidth = i % 2 == 0 ? 0.085f : 0.06f;
+                stroke.endWidth = 0.018f;
+                stroke.startColor = Color.Lerp(new Color(1f, 0.7f, 0.1f, 1f), birdColor, 0.28f);
+                stroke.endColor = Color.Lerp(birdColor, Color.white, 0.35f);
+                Vector3 start = contact - towardTarget * 0.05f + perpendicular * spread * 0.18f;
+                stroke.SetPosition(0, start);
+                stroke.SetPosition(1, start + direction * length * 0.58f
+                    + perpendicular * (i % 2 == 0 ? 0.04f : -0.04f));
+                stroke.SetPosition(2, start + direction * length);
+                strokes[i] = stroke;
+            }
+
+            Destroy(root, 0.48f);
+            StartCoroutine(FadeCatScratch(strokes, 0.44f));
         }
 
         private void UpdateCatAttachmentVisual(PlayerController2D target, bool useAttachedAnchor)
@@ -1976,8 +2166,6 @@ namespace DrawBody.Prototype
                 SetSlimeAttachmentVisualVisible(false);
                 return;
             }
-            if (slimeAttachBridge != null) slimeAttachBridge.enabled = false;
-            if (slimeAttachRing != null) slimeAttachRing.enabled = false;
             for (int i = 0; i < birdBeakLines.Length; i++)
             {
                 if (birdBeakLines[i] != null) birdBeakLines[i].enabled = false;
@@ -1992,9 +2180,8 @@ namespace DrawBody.Prototype
                 targetBounds = measuredBounds;
                 targetCenter = measuredBounds.center;
             }
-            Vector3 contact = useAttachedAnchor
-                ? target.transform.position + target.transform.TransformVector(slimeAttachLocalOffset) * 0.42f
-                : targetBounds.ClosestPoint(catCenter);
+            Vector3 contact = targetBounds.ClosestPoint(catCenter);
+            DrawCatGripAura(catCenter, contact);
             DrawCatClaws(catCenter, contact);
         }
 
@@ -2033,13 +2220,16 @@ namespace DrawBody.Prototype
             {
                 LineRenderer claw = catClawLines[i];
                 if (claw == null) continue;
-                float lane = i - 1f;
-                Vector3 start = catCenter + perpendicular * lane * 0.11f;
-                Vector3 knuckle = Vector3.Lerp(start, contact, 0.58f) + perpendicular * lane * 0.06f;
-                Vector3 tip = contact + perpendicular * lane * 0.14f - direction * 0.03f;
-                Vector3 hook = tip - direction * Mathf.Lerp(0.1f, 0.16f, pulse) - perpendicular * lane * 0.025f;
+                float lane = i - (catClawLines.Length - 1) * 0.5f;
+                float laneScale = lane / Mathf.Max(1f, (catClawLines.Length - 1) * 0.5f);
+                Vector3 start = catCenter + perpendicular * laneScale * 0.24f;
+                Vector3 knuckle = Vector3.Lerp(start, contact, 0.5f)
+                    + perpendicular * laneScale * Mathf.Lerp(0.08f, 0.15f, pulse);
+                Vector3 tip = contact + perpendicular * laneScale * 0.22f - direction * 0.02f;
+                Vector3 hook = tip - direction * Mathf.Lerp(0.12f, 0.21f, pulse)
+                    - perpendicular * laneScale * 0.05f;
                 claw.enabled = true;
-                claw.startWidth = 0.065f;
+                claw.startWidth = Mathf.Lerp(0.075f, 0.105f, pulse);
                 claw.endWidth = 0.045f;
                 claw.startColor = clawColor;
                 claw.endColor = clawColor;
@@ -2048,6 +2238,84 @@ namespace DrawBody.Prototype
                 claw.SetPosition(2, tip);
                 claw.SetPosition(3, hook);
             }
+        }
+
+        private void DrawCatGripAura(Vector3 catCenter, Vector3 contact)
+        {
+            Color catColor = bodyBuilder != null
+                ? bodyBuilder.PlayerColor
+                : new Color(1f, 0.48f, 0.12f, 1f);
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 9f);
+            Vector3 delta = contact - catCenter;
+            Vector3 perpendicular = delta.sqrMagnitude > 0.001f
+                ? new Vector3(-delta.y, delta.x, 0f).normalized
+                : Vector3.up;
+
+            if (slimeAttachBridge != null)
+            {
+                slimeAttachBridge.enabled = true;
+                slimeAttachBridge.startWidth = Mathf.Lerp(0.06f, 0.1f, pulse);
+                slimeAttachBridge.endWidth = Mathf.Lerp(0.1f, 0.15f, pulse);
+                slimeAttachBridge.startColor = Color.Lerp(catColor, Color.white, 0.18f);
+                slimeAttachBridge.endColor = new Color(1f, 0.78f, 0.18f, 0.95f);
+                slimeAttachBridge.SetPosition(0, catCenter);
+                slimeAttachBridge.SetPosition(1, Vector3.Lerp(catCenter, contact, 0.58f)
+                    + perpendicular * Mathf.Lerp(-0.08f, 0.1f, pulse));
+                slimeAttachBridge.SetPosition(2, contact);
+            }
+
+            if (slimeAttachRing == null) return;
+            slimeAttachRing.enabled = true;
+            slimeAttachRing.startWidth = Mathf.Lerp(0.06f, 0.095f, pulse);
+            slimeAttachRing.endWidth = slimeAttachRing.startWidth;
+            slimeAttachRing.startColor = Color.Lerp(catColor, new Color(1f, 0.82f, 0.2f, 1f), 0.45f);
+            slimeAttachRing.endColor = slimeAttachRing.startColor;
+            float radius = Mathf.Lerp(0.25f, 0.34f, pulse);
+            for (int i = 0; i < slimeAttachRing.positionCount; i++)
+            {
+                float angle = i / (float)slimeAttachRing.positionCount * Mathf.PI * 2f;
+                float clawBurst = 1f + Mathf.Max(0f, Mathf.Sin(angle * 5f + Time.unscaledTime * 7f)) * 0.22f;
+                slimeAttachRing.SetPosition(i, contact
+                    + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius * clawBurst);
+            }
+        }
+
+        private void PlayCatGrabBurst(PlayerController2D target)
+        {
+            if (target == null) return;
+            Vector3 catCenter = transform.position;
+            if (TryGetSolidBounds(playerController, out Bounds catBounds)) catCenter = catBounds.center;
+            Bounds targetBounds = new Bounds(target.transform.position, Vector3.one * 0.5f);
+            if (TryGetSolidBounds(target, out Bounds measuredTargetBounds)) targetBounds = measuredTargetBounds;
+            Vector3 contact = targetBounds.ClosestPoint(catCenter);
+            Color catColor = bodyBuilder != null ? bodyBuilder.PlayerColor : new Color(1f, 0.48f, 0.12f, 1f);
+            GameObject root = new GameObject("Cat Grab Burst");
+            root.transform.SetParent(transform, true);
+            LineRenderer[] rays = new LineRenderer[8];
+            for (int i = 0; i < rays.Length; i++)
+            {
+                float angle = i / (float)rays.Length * Mathf.PI * 2f + 0.18f;
+                Vector3 radial = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
+                GameObject rayObject = new GameObject("Crayon Grip Spark " + (i + 1));
+                rayObject.transform.SetParent(root.transform, false);
+                LineRenderer ray = rayObject.AddComponent<LineRenderer>();
+                ray.useWorldSpace = true;
+                ray.positionCount = 3;
+                ray.numCapVertices = 5;
+                ray.sortingOrder = 232 + i;
+                ray.sharedMaterial = GetPreviewMaterial();
+                ray.startWidth = 0.09f;
+                ray.endWidth = 0.025f;
+                ray.startColor = Color.Lerp(catColor, Color.white, 0.28f);
+                ray.endColor = new Color(1f, 0.82f, 0.2f, 0.95f);
+                ray.SetPosition(0, contact + radial * 0.18f);
+                ray.SetPosition(1, contact + radial * 0.38f
+                    + new Vector3(-radial.y, radial.x, 0f) * 0.04f);
+                ray.SetPosition(2, contact + radial * 0.62f);
+                rays[i] = ray;
+            }
+            Destroy(root, 0.38f);
+            StartCoroutine(FadeCatScratch(rays, 0.34f));
         }
 
         private bool TryScratchEnemy()
@@ -2182,24 +2450,6 @@ namespace DrawBody.Prototype
             return HitPlayersInBounds(attackBounds, localPlayerOnly);
         }
 
-        private bool HitPlayersWithCatScratch(bool localPlayerOnly)
-        {
-            Bounds catBounds = new Bounds(transform.position, Vector3.one);
-            if (!TryGetSolidBounds(playerController, out catBounds))
-                catBounds = new Bounds(transform.position, Vector3.one);
-            float frontLegInk = abilityController != null
-                ? abilityController.CurrentProfile.CatFrontLegInk
-                : 0f;
-            float rangeMultiplier = PlayerController2D.CalculateCatScratchRangeMultiplier(frontLegInk);
-            float reach = Mathf.Max(1.35f, catBounds.extents.x * 0.55f + 0.9f) * rangeMultiplier;
-            float facing = GetFacingDirection();
-            float startX = catBounds.center.x + facing * catBounds.extents.x * 0.35f;
-            Bounds attackBounds = new Bounds(
-                new Vector3(startX + facing * reach * 0.5f, catBounds.center.y + 0.05f, 0f),
-                new Vector3(reach, Mathf.Max(1f, catBounds.size.y * 0.9f), 1f));
-            return HitPlayersInBounds(attackBounds, localPlayerOnly);
-        }
-
         private bool HitPlayersInBounds(Bounds attackBounds, bool localPlayerOnly)
         {
             if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
@@ -2311,7 +2561,6 @@ namespace DrawBody.Prototype
         internal void PlayRemoteCatScratchEffect()
         {
             PlayCatScratchEffect(false);
-            HitPlayersWithCatScratch(true);
         }
 
         private void PlayCatScratchEffect(bool broadcast)
@@ -2568,7 +2817,6 @@ namespace DrawBody.Prototype
 
             Vector2 direction = GetThrowDirection();
             displayedThrowDirection = direction;
-            displayedThrowFacingDirection = GetFacingDirection();
             hasDisplayedThrowDirection = true;
             Vector3 start = anchor + Vector3.up * 0.1f;
             float previewScale = Mathf.Clamp(GetCurrentThrowSpeed() / Mathf.Max(throwSpeed, 0.1f), 1f, 1.5f);
@@ -2717,9 +2965,38 @@ namespace DrawBody.Prototype
                 heldColliderEnabledStates.Add(current.enabled);
                 heldColliderTriggerStates.Add(current.isTrigger);
                 current.enabled = true;
+
+                // Existing pairs were ignored once when pickup started. A filled
+                // drawing can have hundreds of segment colliders, so repeating
+                // every pair every frame causes an O(n*m) physics spike. Only a
+                // collider created by a redraw/body rebuild needs new pairs.
+                for (int carrierIndex = 0; carrierIndex < carrierColliderScratch.Count; carrierIndex++)
+                {
+                    Collider2D carrierCollider = carrierColliderScratch[carrierIndex];
+                    if (carrierCollider != null && carrierCollider != current)
+                    {
+                        Physics2D.IgnoreCollision(current, carrierCollider, true);
+                    }
+                }
             }
 
-            SetCollisionIgnored(heldPlayerColliderScratch, carrierColliderScratch, true);
+            for (int i = 0; i < carrierColliderScratch.Count; i++)
+            {
+                Collider2D current = carrierColliderScratch[i];
+                if (current == null || !heldCarrierColliderSet.Add(current))
+                {
+                    continue;
+                }
+
+                for (int heldIndex = 0; heldIndex < heldPlayerColliderScratch.Count; heldIndex++)
+                {
+                    Collider2D heldCollider = heldPlayerColliderScratch[heldIndex];
+                    if (heldCollider != null && heldCollider != current)
+                    {
+                        Physics2D.IgnoreCollision(current, heldCollider, true);
+                    }
+                }
+            }
         }
 
         private void RefreshFriendAttachmentCollisionIgnores()
@@ -2751,15 +3028,10 @@ namespace DrawBody.Prototype
             if (previous == null || current.Count != previous.Length) return false;
             for (int i = 0; i < current.Count; i++)
             {
-                Collider2D collider = current[i];
-                bool found = false;
-                for (int j = 0; j < previous.Length; j++)
-                {
-                    if (previous[j] != collider) continue;
-                    found = true;
-                    break;
-                }
-                if (!found) return false;
+                // GetComponentsInChildren returns hierarchy order consistently.
+                // Comparing the same slots keeps this check linear for dense
+                // drawings instead of scanning the full previous array per item.
+                if (current[i] != previous[i]) return false;
             }
             return true;
         }
@@ -2840,7 +3112,9 @@ namespace DrawBody.Prototype
             {
                 TargetPlayerId = heldOnlinePlayerId,
                 Action = action,
-                ReleaseVelocity = releaseVelocity
+                ReleaseVelocity = releaseVelocity,
+                ReleasePosition = heldTransform != null ? (Vector2)heldTransform.position : (Vector2)transform.position,
+                EventSequence = ++nextCarryEventSequence
             });
         }
 
@@ -2852,7 +3126,11 @@ namespace DrawBody.Prototype
                 TargetPlayerId = targetPlayerId,
                 Action = action,
                 ReleaseVelocity = releaseVelocity,
-                LocalOffset = slimeAttachLocalOffset
+                ReleasePosition = slimeAttachedPlayer != null
+                    ? (Vector2)slimeAttachedPlayer.transform.position
+                    : (Vector2)transform.position,
+                LocalOffset = slimeAttachLocalOffset,
+                EventSequence = ++nextCarryEventSequence
             });
         }
 

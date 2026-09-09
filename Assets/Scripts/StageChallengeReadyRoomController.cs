@@ -71,6 +71,7 @@ namespace DrawBody.Prototype
         private float nextSessionStateRequestTime;
         private float nextRegressionAutoReadyTime;
         private bool hostSessionStateKnown;
+        private int decorationSeed;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -82,6 +83,7 @@ namespace DrawBody.Prototype
             stageId = manager != null ? manager.CurrentStageId : string.Empty;
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             localId = onlineManager != null ? onlineManager.LocalPlayerId : string.Empty;
+            decorationSeed = CreateDecorationSeed();
 
             CaptureRosterAndReturnPositions();
             BuildRooms();
@@ -582,9 +584,39 @@ namespace DrawBody.Prototype
                 new Color(0.96f, 0.95f, 0.87f), 34);
         }
 
+        private int CreateDecorationSeed()
+        {
+            if (!IsOnline) return Random.Range(0, int.MaxValue);
+            OnlineLobbyInfo lobby = onlineManager != null ? onlineManager.CurrentLobby : null;
+            string source = (lobby != null ? lobby.LobbyId : string.Empty)
+                + "|" + stageId
+                + "|" + (lobby != null ? lobby.StageRevision : 0)
+                + "|" + (lobby != null ? lobby.RetryRevision : 0);
+            unchecked
+            {
+                uint hash = 2166136261u;
+                for (int i = 0; i < source.Length; i++)
+                {
+                    hash ^= source[i];
+                    hash *= 16777619u;
+                }
+                return (int)(hash & 0x7fffffffu);
+            }
+        }
+
+        private int GetDecorationTheme(int roomIndex)
+        {
+            int[] coprimeSteps = { 1, 3, 7, 9 };
+            int first = decorationSeed % 10;
+            int step = coprimeSteps[(decorationSeed / 10) % coprimeSteps.Length];
+            return (first + Mathf.Max(0, roomIndex) * step) % 10;
+        }
+
         private void CreateReadyRoomPresentation(Vector2 center, int roomIndex)
         {
-            GameObject frameRoot = new GameObject("Ready Room Crayon Booth " + (roomIndex + 1));
+            int theme = GetDecorationTheme(roomIndex);
+            GameObject frameRoot = new GameObject(
+                "Ready Room Crayon Booth " + (roomIndex + 1) + " Theme " + (theme + 1));
             frameRoot.transform.SetParent(transform, false);
             frameRoot.transform.localPosition = center;
 
@@ -614,14 +646,14 @@ namespace DrawBody.Prototype
             {
                 float t = (stroke + 0.5f) / verticalStrokeCount;
                 float y = Mathf.Lerp(-halfHeight + 0.45f, halfHeight - 0.45f, t);
-                Color color = crayons[(stroke + roomIndex) % crayons.Length];
+                Color color = crayons[(stroke + roomIndex + theme) % crayons.Length];
                 StageEscortController.AddLine(frameRoot.transform,
                     new Vector2(-halfWidth - 0.22f, y - 0.16f),
                     new Vector2(-halfWidth + 0.22f, y + 0.16f), 0.075f, color, 36);
                 StageEscortController.AddLine(frameRoot.transform,
                     new Vector2(halfWidth - 0.22f, y - 0.16f),
                     new Vector2(halfWidth + 0.22f, y + 0.16f), 0.075f,
-                    crayons[(stroke + roomIndex + 2) % crayons.Length], 36);
+                    crayons[(stroke + roomIndex + theme + 2) % crayons.Length], 36);
             }
 
             int topStrokeCount = Mathf.Max(5, Mathf.FloorToInt(roomWidth / 0.75f));
@@ -632,14 +664,10 @@ namespace DrawBody.Prototype
                 StageEscortController.AddLine(frameRoot.transform,
                     new Vector2(x - 0.18f, halfHeight - 0.2f),
                     new Vector2(x + 0.18f, halfHeight + 0.2f), 0.075f,
-                    crayons[(stroke + roomIndex + 1) % crayons.Length], 36);
+                    crayons[(stroke + roomIndex + theme + 1) % crayons.Length], 36);
             }
 
-            AddReadyRoomPennants(frameRoot.transform, halfWidth, halfHeight, crayons, roomIndex);
-            AddReadyRoomSpark(frameRoot.transform,
-                new Vector2(-halfWidth + 0.78f, halfHeight - 0.78f), crayons[(roomIndex + 2) % crayons.Length]);
-            AddReadyRoomSpark(frameRoot.transform,
-                new Vector2(halfWidth - 0.78f, halfHeight - 0.78f), crayons[(roomIndex + 4) % crayons.Length]);
+            AddReadyRoomTheme(frameRoot.transform, halfWidth, halfHeight, crayons, roomIndex, theme);
         }
 
         private static void AddReadyRoomPennants(Transform parent, float halfWidth, float halfHeight,
@@ -678,6 +706,300 @@ namespace DrawBody.Prototype
                 StageEscortController.AddLine(parent, center + direction * 0.09f,
                     center + direction * 0.25f, 0.045f, color, 8);
             }
+        }
+
+        private static void AddReadyRoomTheme(
+            Transform parent,
+            float halfWidth,
+            float halfHeight,
+            Color[] crayons,
+            int roomIndex,
+            int theme)
+        {
+            Color a = crayons[(roomIndex + theme) % crayons.Length];
+            Color b = crayons[(roomIndex + theme + 2) % crayons.Length];
+            Color c = crayons[(roomIndex + theme + 4) % crayons.Length];
+            float left = -halfWidth + 0.85f;
+            float right = halfWidth - 0.85f;
+            float top = halfHeight - 0.78f;
+
+            switch (theme)
+            {
+                case 0: // Party pennants
+                    AddReadyRoomPennants(parent, halfWidth, halfHeight, crayons, roomIndex);
+                    AddReadyRoomSpark(parent, new Vector2(left, top), a);
+                    AddReadyRoomSpark(parent, new Vector2(right, top), c);
+                    break;
+                case 1: // Balloons and confetti
+                    AddThemeBalloon(parent, new Vector2(left, top - 0.05f), a, -0.22f);
+                    AddThemeBalloon(parent, new Vector2(right, top + 0.08f), b, 0.2f);
+                    AddReadyRoomSpark(parent, new Vector2(0f, top + 0.08f), c);
+                    AddThemeConfetti(parent, halfWidth, top - 0.15f, crayons, roomIndex);
+                    break;
+                case 2: // Starry night
+                    AddThemeStar(parent, new Vector2(left, top), 0.3f, a);
+                    AddThemeStar(parent, new Vector2(0f, top + 0.16f), 0.38f, b);
+                    AddThemeStar(parent, new Vector2(right, top - 0.06f), 0.26f, c);
+                    AddThemeCrescent(parent, new Vector2(-halfWidth + 0.82f, 0.25f), a);
+                    break;
+                case 3: // Rainbow and clouds
+                    AddThemeRainbow(parent, new Vector2(0f, top - 0.22f), crayons);
+                    AddThemeCloud(parent, new Vector2(left, top - 0.05f), a);
+                    AddThemeCloud(parent, new Vector2(right, top - 0.1f), b);
+                    break;
+                case 4: // Aquarium
+                    AddThemeFish(parent, new Vector2(left + 0.18f, top), 0.38f, a, false);
+                    AddThemeFish(parent, new Vector2(right - 0.2f, top - 0.16f), 0.32f, b, true);
+                    for (int i = 0; i < 5; i++)
+                        AddThemeCircle(parent,
+                            new Vector2(Mathf.Lerp(-halfWidth + 0.55f, halfWidth - 0.55f, i / 4f), top + (i % 2) * 0.18f),
+                            0.08f + (i % 3) * 0.025f, crayons[(i + roomIndex) % crayons.Length], false);
+                    break;
+                case 5: // Flower garden
+                    AddThemeFlower(parent, new Vector2(left, top - 0.02f), 0.28f, a, b);
+                    AddThemeFlower(parent, new Vector2(0f, top + 0.08f), 0.32f, b, c);
+                    AddThemeFlower(parent, new Vector2(right, top - 0.04f), 0.27f, c, a);
+                    StageEscortController.AddLine(parent, new Vector2(-halfWidth + 0.45f, top - 0.5f),
+                        new Vector2(halfWidth - 0.45f, top - 0.42f), 0.04f,
+                        new Color(0.15f, 0.58f, 0.25f, 0.5f), 8);
+                    break;
+                case 6: // Music
+                    AddThemeMusicNote(parent, new Vector2(left, top), 0.42f, a, false);
+                    AddThemeMusicNote(parent, new Vector2(0f, top + 0.1f), 0.48f, b, true);
+                    AddThemeMusicNote(parent, new Vector2(right, top - 0.08f), 0.38f, c, false);
+                    break;
+                case 7: // Space
+                    AddThemePlanet(parent, new Vector2(left, top), 0.28f, a, b);
+                    AddThemeComet(parent, new Vector2(right, top + 0.05f), c);
+                    AddThemeStar(parent, new Vector2(0f, top + 0.14f), 0.22f, b);
+                    AddReadyRoomSpark(parent, new Vector2(halfWidth - 0.62f, 0.2f), a);
+                    break;
+                case 8: // Lightning arcade
+                    AddThemeLightning(parent, new Vector2(left, top), 0.55f, a);
+                    AddThemeCrown(parent, new Vector2(0f, top + 0.02f), 0.62f, b);
+                    AddThemeLightning(parent, new Vector2(right, top), 0.55f, c);
+                    break;
+                default: // Art desk doodles
+                    AddThemeCrayon(parent, new Vector2(left, top - 0.02f), 0.58f, a, 12f);
+                    AddThemeCrayon(parent, new Vector2(right, top - 0.02f), 0.58f, b, -12f);
+                    AddThemeStar(parent, new Vector2(-0.52f, top + 0.08f), 0.22f, c);
+                    AddThemeCircle(parent, new Vector2(0.05f, top + 0.08f), 0.18f, a, false);
+                    AddThemeTriangle(parent, new Vector2(0.62f, top + 0.08f), 0.23f, b);
+                    break;
+            }
+        }
+
+        private static void AddThemeBalloon(Transform parent, Vector2 center, Color color, float stringLean)
+        {
+            AddThemeCircle(parent, center, 0.3f, color, true);
+            StageEscortController.AddLine(parent, center + Vector2.down * 0.3f,
+                center + new Vector2(stringLean, -0.82f), 0.035f, color, 8);
+        }
+
+        private static void AddThemeConfetti(Transform parent, float halfWidth, float y, Color[] colors, int offset)
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                float x = Mathf.Lerp(-halfWidth + 1.35f, halfWidth - 1.35f, i / 6f);
+                Vector2 from = new Vector2(x, y + Mathf.Sin(i * 1.7f) * 0.13f);
+                StageEscortController.AddLine(parent, from, from + new Vector2(0.12f, -0.18f),
+                    0.055f, colors[(i + offset) % colors.Length], 8);
+            }
+        }
+
+        private static void AddThemeStar(Transform parent, Vector2 center, float radius, Color color)
+        {
+            Vector2[] points = new Vector2[11];
+            for (int i = 0; i <= 10; i++)
+            {
+                float angle = Mathf.PI * 0.5f + i * Mathf.PI * 0.8f;
+                float r = i % 2 == 0 ? radius : radius * 0.42f;
+                points[i] = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * r;
+            }
+            AddThemePolyline(parent, points, 0.045f, color);
+        }
+
+        private static void AddThemeCrescent(Transform parent, Vector2 center, Color color)
+        {
+            AddThemeArc(parent, center, 0.34f, -75f, 235f, color, 0.055f);
+            AddThemeArc(parent, center + new Vector2(0.13f, 0.03f), 0.27f, -92f, 198f, color, 0.04f);
+        }
+
+        private static void AddThemeRainbow(Transform parent, Vector2 center, Color[] colors)
+        {
+            for (int i = 0; i < 4; i++)
+                AddThemeArc(parent, center + Vector2.down * i * 0.04f, 0.92f - i * 0.13f,
+                    15f, 165f, colors[i % colors.Length], 0.075f);
+        }
+
+        private static void AddThemeCloud(Transform parent, Vector2 center, Color color)
+        {
+            AddThemeCircle(parent, center + new Vector2(-0.2f, 0f), 0.19f, color, true);
+            AddThemeCircle(parent, center + new Vector2(0.02f, 0.08f), 0.24f, color, true);
+            AddThemeCircle(parent, center + new Vector2(0.25f, -0.01f), 0.17f, color, true);
+        }
+
+        private static void AddThemeFish(Transform parent, Vector2 center, float size, Color color, bool faceLeft)
+        {
+            AddThemeCircle(parent, center, size, color, false, new Vector2(1.25f, 0.7f));
+            float direction = faceLeft ? -1f : 1f;
+            Vector2 tailBase = center - Vector2.right * direction * size * 0.58f;
+            AddThemePolyline(parent, new[]
+            {
+                tailBase,
+                tailBase - Vector2.right * direction * size * 0.55f + Vector2.up * size * 0.42f,
+                tailBase - Vector2.right * direction * size * 0.55f - Vector2.up * size * 0.42f,
+                tailBase
+            }, 0.045f, color);
+            AddThemeCircle(parent, center + Vector2.right * direction * size * 0.32f + Vector2.up * size * 0.08f,
+                size * 0.075f, color, true);
+        }
+
+        private static void AddThemeFlower(Transform parent, Vector2 center, float radius, Color petal, Color middle)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                float angle = i * Mathf.PI * 0.4f;
+                AddThemeCircle(parent, center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius * 0.58f,
+                    radius * 0.38f, petal, true);
+            }
+            AddThemeCircle(parent, center, radius * 0.3f, middle, true);
+        }
+
+        private static void AddThemeMusicNote(Transform parent, Vector2 center, float size, Color color, bool doubleNote)
+        {
+            AddThemeCircle(parent, center + new Vector2(-size * 0.2f, -size * 0.25f), size * 0.17f, color, true);
+            StageEscortController.AddLine(parent, center + new Vector2(-size * 0.05f, -size * 0.22f),
+                center + new Vector2(-size * 0.05f, size * 0.48f), 0.055f, color, 8);
+            if (!doubleNote) return;
+            AddThemeCircle(parent, center + new Vector2(size * 0.42f, -size * 0.18f), size * 0.17f, color, true);
+            StageEscortController.AddLine(parent, center + new Vector2(size * 0.56f, -size * 0.15f),
+                center + new Vector2(size * 0.56f, size * 0.4f), 0.055f, color, 8);
+            StageEscortController.AddLine(parent, center + new Vector2(-size * 0.05f, size * 0.48f),
+                center + new Vector2(size * 0.56f, size * 0.4f), 0.055f, color, 8);
+        }
+
+        private static void AddThemePlanet(Transform parent, Vector2 center, float radius, Color planet, Color ring)
+        {
+            AddThemeCircle(parent, center, radius, planet, true);
+            AddThemeArc(parent, center, radius * 1.55f, 195f, 345f, ring, 0.055f, 0.38f);
+            AddThemeArc(parent, center, radius * 1.55f, 15f, 165f, ring, 0.055f, 0.38f);
+        }
+
+        private static void AddThemeComet(Transform parent, Vector2 center, Color color)
+        {
+            AddThemeCircle(parent, center, 0.2f, color, true);
+            StageEscortController.AddLine(parent, center + new Vector2(-0.18f, -0.02f),
+                center + new Vector2(-0.72f, 0.22f), 0.07f, color, 8);
+            StageEscortController.AddLine(parent, center + new Vector2(-0.18f, -0.08f),
+                center + new Vector2(-0.62f, -0.22f), 0.04f, color, 8);
+        }
+
+        private static void AddThemeLightning(Transform parent, Vector2 center, float size, Color color)
+        {
+            AddThemePolyline(parent, new[]
+            {
+                center + new Vector2(-0.12f, size * 0.5f),
+                center + new Vector2(0.14f, size * 0.12f),
+                center + new Vector2(-0.02f, size * 0.08f),
+                center + new Vector2(0.12f, -size * 0.5f),
+                center + new Vector2(-0.2f, -size * 0.02f),
+                center + new Vector2(-0.04f, size * 0.02f)
+            }, 0.075f, color);
+        }
+
+        private static void AddThemeCrown(Transform parent, Vector2 center, float size, Color color)
+        {
+            AddThemePolyline(parent, new[]
+            {
+                center + new Vector2(-size * 0.5f, -size * 0.25f),
+                center + new Vector2(-size * 0.42f, size * 0.35f),
+                center + new Vector2(-size * 0.12f, size * 0.02f),
+                center + new Vector2(0f, size * 0.42f),
+                center + new Vector2(size * 0.14f, size * 0.02f),
+                center + new Vector2(size * 0.44f, size * 0.35f),
+                center + new Vector2(size * 0.5f, -size * 0.25f),
+                center + new Vector2(-size * 0.5f, -size * 0.25f)
+            }, 0.06f, color);
+        }
+
+        private static void AddThemeCrayon(Transform parent, Vector2 center, float height, Color color, float angle)
+        {
+            Transform root = new GameObject("Ready Room Crayon Decoration").transform;
+            root.SetParent(parent, false);
+            root.localPosition = center;
+            root.localRotation = Quaternion.Euler(0f, 0f, angle);
+            AddThemePolyline(root, new[]
+            {
+                new Vector2(-0.12f, -height * 0.5f), new Vector2(-0.12f, height * 0.25f),
+                new Vector2(0f, height * 0.5f), new Vector2(0.12f, height * 0.25f),
+                new Vector2(0.12f, -height * 0.5f), new Vector2(-0.12f, -height * 0.5f)
+            }, 0.045f, color);
+        }
+
+        private static void AddThemeTriangle(Transform parent, Vector2 center, float size, Color color)
+        {
+            AddThemePolyline(parent, new[]
+            {
+                center + Vector2.up * size,
+                center + new Vector2(size, -size * 0.72f),
+                center + new Vector2(-size, -size * 0.72f),
+                center + Vector2.up * size
+            }, 0.045f, color);
+        }
+
+        private static void AddThemeCircle(
+            Transform parent,
+            Vector2 center,
+            float radius,
+            Color color,
+            bool filled,
+            Vector2 aspect = default)
+        {
+            Transform root = new GameObject("Ready Room Doodle Circle").transform;
+            root.SetParent(parent, false);
+            root.localPosition = center;
+            Vector2 shape = aspect == default ? Vector2.one : aspect;
+            if (filled)
+                AddButtonOval(root, "Crayon Fill", Vector2.zero,
+                    new Vector2(radius * 2f * shape.x, radius * 2f * shape.y), color, 8);
+            const int segments = 18;
+            Vector2 previous = new Vector2(radius * shape.x, 0f);
+            for (int i = 1; i <= segments; i++)
+            {
+                float angle = i / (float)segments * Mathf.PI * 2f;
+                Vector2 next = new Vector2(Mathf.Cos(angle) * radius * shape.x,
+                    Mathf.Sin(angle) * radius * shape.y);
+                StageEscortController.AddLine(root, previous, next, 0.035f, color, 9);
+                previous = next;
+            }
+        }
+
+        private static void AddThemeArc(
+            Transform parent,
+            Vector2 center,
+            float radius,
+            float fromDegrees,
+            float toDegrees,
+            Color color,
+            float width,
+            float aspectY = 1f)
+        {
+            const int segments = 12;
+            Vector2[] points = new Vector2[segments + 1];
+            for (int i = 0; i <= segments; i++)
+            {
+                float angle = Mathf.Lerp(fromDegrees, toDegrees, i / (float)segments) * Mathf.Deg2Rad;
+                points[i] = center + new Vector2(Mathf.Cos(angle) * radius,
+                    Mathf.Sin(angle) * radius * aspectY);
+            }
+            AddThemePolyline(parent, points, width, color);
+        }
+
+        private static void AddThemePolyline(Transform parent, Vector2[] points, float width, Color color)
+        {
+            for (int i = 1; i < points.Length; i++)
+                StageEscortController.AddLine(parent, points[i - 1], points[i], width, color, 8);
         }
 
         private void PositionPlayersInRooms()

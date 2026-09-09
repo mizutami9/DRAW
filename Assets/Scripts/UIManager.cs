@@ -851,6 +851,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            ResolveMenuDrawer();
+            bool menuShowing = menuPanel != null
+                && (menuPanel.activeSelf || menuDrawer != null && menuDrawer.IsOpen);
+            if (menuShowing)
+            {
+                return;
+            }
+
             ResolveGameplayDrawer();
             GameSfx.Play(SfxId.UiTabChange);
             gameplayHudDrawer?.Toggle();
@@ -1340,7 +1348,10 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            manager?.OpenStageSelect();
+            if (manager != null && manager.IsOnlineStageActive)
+                manager.OpenStageSelectFromMultiLobby();
+            else
+                manager?.OpenStageSelect();
         }
 
         private void EnsureEditorTestReturnButton()

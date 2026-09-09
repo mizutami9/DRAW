@@ -121,6 +121,8 @@ namespace DrawBody.Prototype
         public string CarriedPlayerId;
         public string CarryAction;
         public Vector2 CarryOffset;
+        public string LastAppliedThrowCarrierId;
+        public int LastAppliedThrowSequence;
     }
 
     [Serializable]
@@ -134,7 +136,9 @@ namespace DrawBody.Prototype
         public string TargetPlayerId;
         public string Action;
         public Vector2 ReleaseVelocity;
+        public Vector2 ReleasePosition;
         public Vector2 LocalOffset;
+        public int EventSequence;
     }
 
     [Serializable]

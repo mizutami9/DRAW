@@ -578,6 +578,50 @@ namespace DrawBody.Prototype
                 1.5f);
         }
 
+        internal static bool TryGetStageBoundaryInnerEdges(
+            StageEditorObject boundary,
+            out float left,
+            out float right,
+            out float top)
+        {
+            left = 0f;
+            right = 0f;
+            top = 0f;
+            if (boundary == null || boundary.type != StageObjectType.StageBoundary)
+            {
+                return false;
+            }
+
+            bool foundLeft = false;
+            bool foundRight = false;
+            bool foundTop = false;
+            Collider2D[] colliders = boundary.GetComponentsInChildren<Collider2D>(false);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger) continue;
+
+                string sideName = collider.gameObject.name;
+                if (sideName == "Boundary Left Wall")
+                {
+                    left = collider.bounds.max.x;
+                    foundLeft = true;
+                }
+                else if (sideName == "Boundary Right Wall")
+                {
+                    right = collider.bounds.min.x;
+                    foundRight = true;
+                }
+                else if (sideName == "Boundary Ceiling")
+                {
+                    top = collider.bounds.min.y;
+                    foundTop = true;
+                }
+            }
+
+            return foundLeft && foundRight && foundTop;
+        }
+
         private GameObject CreateSpike(StageObjectData data, Transform parent)
         {
             GameObject root = new GameObject(data.objectId);
