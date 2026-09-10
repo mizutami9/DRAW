@@ -17,6 +17,8 @@ namespace DrawBody.Prototype
         private const float BoxCooldownSeconds = 0.55f;
         private const float FloorY = -6.2f;
         private const int MaximumWaterDrops = 90;
+        private const float MinimumGroupedHoleDistance = 0.78f;
+        private const float MaximumGroupedHoleDistance = 1.08f;
         private static readonly Vector2[] BoxSizes =
         {
             new Vector2(0.9f, 0.9f),
@@ -287,16 +289,16 @@ namespace DrawBody.Prototype
         {
             Vector2 waterSize = new Vector2(roomWidth - 1.2f, 12.8f);
             StageEscortController.AddFilledRect(arenaRoot, "Aquarium Water", new Vector2(0f, 0.45f), waterSize,
-                new Color(0.2f, 0.72f, 0.88f, 0.18f), -58);
+                new Color(0.48f, 0.82f, 0.91f, 0.105f), -58);
 
             // Layered translucent bands and moving-looking pencil caustics keep
             // the tank readable as water instead of one flat blue rectangle.
             Color[] depthColors =
             {
-                new Color(0.2f, 0.72f, 0.9f, 0.11f),
-                new Color(0.1f, 0.62f, 0.84f, 0.12f),
-                new Color(0.06f, 0.48f, 0.72f, 0.14f),
-                new Color(0.04f, 0.34f, 0.58f, 0.16f)
+                new Color(0.58f, 0.86f, 0.94f, 0.045f),
+                new Color(0.45f, 0.8f, 0.91f, 0.055f),
+                new Color(0.34f, 0.73f, 0.87f, 0.065f),
+                new Color(0.25f, 0.64f, 0.81f, 0.075f)
             };
             float bandHeight = waterSize.y / depthColors.Length;
             for (int i = 0; i < depthColors.Length; i++)
@@ -328,7 +330,7 @@ namespace DrawBody.Prototype
             accumulatedWaterSurface.sortingOrder = -33;
             RefreshAccumulatedWater();
 
-            Color waterLine = new Color(0.08f, 0.52f, 0.72f, 0.34f);
+            Color waterLine = new Color(0.2f, 0.6f, 0.76f, 0.22f);
             for (int i = 0; i < 11; i++)
             {
                 float y = -5.25f + i * 1.08f;
@@ -551,54 +553,120 @@ namespace DrawBody.Prototype
         private void CreateHoles(int playerCount)
         {
             float usableWidth = roomWidth - 10f;
-            Vector2[] layout = GetFixedHoleLayout(playerCount);
-            int holeCount = Mathf.Min(layout.Length, playerCount * round);
-            for (int i = 0; i < holeCount; i++)
+            Vector2[] clusterCenters = GetHoleClusterCenters(playerCount, round);
+            int holesPerPlayer = Mathf.Clamp(round, 1, 3);
+            for (int cluster = 0; cluster < clusterCenters.Length; cluster++)
             {
-                Vector2 normalized = layout[i];
-                CreateHole(new Vector2(normalized.x * usableWidth, normalized.y), holes.Count);
+                Vector2 normalizedCenter = clusterCenters[cluster];
+                Vector2 center = new Vector2(normalizedCenter.x * usableWidth, normalizedCenter.y);
+                Vector2[] offsets = GetGroupedHoleOffsets(playerCount, round, cluster, holesPerPlayer);
+                for (int member = 0; member < offsets.Length; member++)
+                {
+                    CreateHole(center + offsets[member], holes.Count);
+                }
             }
         }
 
-        private static Vector2[] GetFixedHoleLayout(int playerCount)
+        private static Vector2[] GetHoleClusterCenters(int playerCount, int targetRound)
         {
-            // Entries are ordered by round: the first N are round one, the
-            // next N round two, and the final N are lateral partners rather
-            // than another row above. Every roster size gets its own pattern.
+            // One cluster is assigned to each player. Later rounds add holes
+            // inside the cluster instead of adding distant holes that would
+            // require one body to occupy several unrelated parts of the tank.
+            Vector2[] centers;
             switch (Mathf.Clamp(playerCount, 1, 4))
             {
                 case 1:
-                    return new[]
-                    {
-                        new Vector2(0f, -3.05f),
-                        new Vector2(-0.07f, -1.2f),
-                        new Vector2(0.01f, -1.2f)
-                    };
+                    centers = new[] { new Vector2(0f, -2.1f) };
+                    break;
                 case 2:
-                    return new[]
+                    centers = new[]
                     {
-                        new Vector2(-0.23f, -3.15f), new Vector2(0.2f, -1.85f),
-                        new Vector2(-0.06f, 0.15f), new Vector2(0.34f, -3.65f),
-                        new Vector2(0.02f, 0.15f), new Vector2(0.42f, -3.65f)
+                        new Vector2(-0.23f, -2.75f), new Vector2(0.23f, -1.25f)
                     };
+                    break;
                 case 3:
-                    return new[]
+                    centers = new[]
                     {
-                        new Vector2(-0.33f, -3.0f), new Vector2(0f, -1.15f), new Vector2(0.3f, -3.55f),
-                        new Vector2(-0.19f, 0.75f), new Vector2(0.13f, -3.2f), new Vector2(0.38f, -0.35f),
-                        new Vector2(-0.11f, 0.75f), new Vector2(0.21f, -3.2f), new Vector2(0.46f, -0.35f)
+                        new Vector2(-0.32f, -2.65f), new Vector2(0f, -0.65f),
+                        new Vector2(0.31f, -3.05f)
                     };
+                    break;
                 default:
-                    return new[]
+                    centers = new[]
                     {
-                        new Vector2(-0.36f, -2.85f), new Vector2(-0.13f, -0.65f),
-                        new Vector2(0.14f, -3.45f), new Vector2(0.35f, -1.45f),
-                        new Vector2(-0.43f, 1.05f), new Vector2(-0.25f, -3.75f),
-                        new Vector2(0.02f, 1.65f), new Vector2(0.28f, -0.05f),
-                        new Vector2(-0.31f, -2.85f), new Vector2(-0.08f, -0.65f),
-                        new Vector2(0.19f, -3.45f), new Vector2(0.4f, -1.45f)
+                        new Vector2(-0.36f, -2.55f), new Vector2(-0.12f, -0.55f),
+                        new Vector2(0.13f, -3.15f), new Vector2(0.35f, -1.25f)
                     };
+                    break;
             }
+
+            // Keep the lateral lanes readable, but shuffle which height belongs
+            // to each lane every round so the left-to-right height order does
+            // not repeat throughout the challenge. This is deterministic for
+            // online clients and independent of UnityEngine.Random state.
+            System.Random heightRandom = new System.Random(
+                6353 + playerCount * 431 + Mathf.Clamp(targetRound, 1, 3) * 1879);
+            float[] heights = new float[centers.Length];
+            for (int i = 0; i < centers.Length; i++) heights[i] = centers[i].y;
+            for (int i = heights.Length - 1; i > 0; i--)
+            {
+                int other = heightRandom.Next(i + 1);
+                float swap = heights[i];
+                heights[i] = heights[other];
+                heights[other] = swap;
+            }
+            for (int i = 0; i < centers.Length; i++) centers[i].y = heights[i];
+            return centers;
+        }
+
+        private static Vector2[] GetGroupedHoleOffsets(
+            int playerCount, int targetRound, int cluster, int count)
+        {
+            if (count <= 1) return new[] { Vector2.zero };
+
+            // Use a local deterministic generator so all online clients build
+            // the same arena. Each cluster still gets a varied horizontal,
+            // vertical, or diagonal arrangement. The farthest two holes stay
+            // inside the round-specific maximum while not overlapping.
+            int seed = 6300 + playerCount * 101 + targetRound * 1009 + cluster * 7919;
+            System.Random random = new System.Random(seed);
+            float maximumDistance = targetRound == 2
+                ? MaximumGroupedHoleDistance * 2f
+                : MaximumGroupedHoleDistance;
+            float distance = Mathf.Lerp(
+                MinimumGroupedHoleDistance,
+                maximumDistance,
+                (float)random.NextDouble());
+            float angle = (float)random.NextDouble() * Mathf.PI * 2f;
+
+            if (count == 2)
+            {
+                Vector2 halfOffset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * (distance * 0.5f);
+                return new[] { -halfOffset, halfOffset };
+            }
+
+            int pattern = random.Next(4);
+            if (pattern <= 2)
+            {
+                // Straight rows are deliberately snapped to horizontal,
+                // vertical, or diagonal rather than always forming a triangle.
+                float lineAngle = pattern == 0
+                    ? 0f
+                    : pattern == 1
+                        ? Mathf.PI * 0.5f
+                        : (random.Next(2) == 0 ? Mathf.PI * 0.25f : -Mathf.PI * 0.25f);
+                Vector2 halfOffset = new Vector2(Mathf.Cos(lineAngle), Mathf.Sin(lineAngle)) * (distance * 0.5f);
+                return new[] { -halfOffset, Vector2.zero, halfOffset };
+            }
+
+            float radius = distance / Mathf.Sqrt(3f);
+            Vector2[] offsets = new Vector2[3];
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                float memberAngle = angle + i * Mathf.PI * 2f / 3f;
+                offsets[i] = new Vector2(Mathf.Cos(memberAngle), Mathf.Sin(memberAngle)) * radius;
+            }
+            return offsets;
         }
 
         private void CreateHole(Vector2 center, int index)

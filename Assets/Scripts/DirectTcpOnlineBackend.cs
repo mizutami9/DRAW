@@ -460,7 +460,14 @@ namespace DrawBody.Prototype
             {
                 CurrentLobby = JsonUtility.FromJson<OnlineLobbyInfo>(payload);
                 if (CurrentLobby != null) stageRevision = Mathf.Max(stageRevision, CurrentLobby.StageRevision);
-                SetState(OnlineConnectionState.InLobby, CurrentLobby, LocalizationManager.T("online_lobby_updated"));
+                // Ready/member updates can arrive while a stage is already in
+                // progress (notably when several local test clients join or one
+                // disconnects).  They update the roster, but must not demote the
+                // client out of Playing: gameplay HUDs key off that state.
+                OnlineConnectionState nextState = State == OnlineConnectionState.Playing
+                    ? OnlineConnectionState.Playing
+                    : OnlineConnectionState.InLobby;
+                SetState(nextState, CurrentLobby, LocalizationManager.T("online_lobby_updated"));
             }
             else if (type == MessageStart)
             {
@@ -509,7 +516,10 @@ namespace DrawBody.Prototype
         private void BroadcastLobby(string message)
         {
             Broadcast(MessageLobby, JsonUtility.ToJson(CurrentLobby));
-            SetState(OnlineConnectionState.InLobby, CurrentLobby, message);
+            OnlineConnectionState nextState = State == OnlineConnectionState.Playing
+                ? OnlineConnectionState.Playing
+                : OnlineConnectionState.InLobby;
+            SetState(nextState, CurrentLobby, message);
         }
 
         private void Broadcast(string type, string payload)

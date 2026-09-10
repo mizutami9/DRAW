@@ -4702,6 +4702,31 @@
             "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
+        },
+        {
+            "objectId": "obj_a0198684086e4379",
+            "type": 99,
+            "position": {
+                "x": 26.0,
+                "y": -51.0
+            },
+            "size": {
+                "x": 15.218850135803223,
+                "y": 15.218850135803223
+            },
+            "rotation": -180.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
         }
     ]
 }

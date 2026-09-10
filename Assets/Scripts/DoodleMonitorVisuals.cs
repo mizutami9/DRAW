@@ -227,7 +227,8 @@ namespace DrawBody.Prototype
                     : label.characterSize;
                 float safeWidth = monitorSize.x * 0.62f;
                 float maximumLineUnits = safeWidth / Mathf.Max(0.025f, preferredSize * 2.7f);
-                string wrapped = WrapText(raw, maximumLineUnits, 3);
+                int maximumLines = label.name == "Game Description" ? 2 : 3;
+                string wrapped = WrapText(raw, maximumLineUnits, maximumLines);
                 label.text = wrapped;
                 wrappedTexts[id] = wrapped;
 

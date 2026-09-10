@@ -1465,6 +1465,56 @@
             "bombFuseSeconds": 0.0,
             "linkTargetId": "",
             "linkAction": ""
+        },
+        {
+            "objectId": "obj_98786d8148714890",
+            "type": 47,
+            "position": {
+                "x": 8.0,
+                "y": -36.5
+            },
+            "size": {
+                "x": 0.8999999761581421,
+                "y": 0.8999999761581421
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_f55f80b595674d34",
+            "type": 47,
+            "position": {
+                "x": 8.0,
+                "y": -37.5
+            },
+            "size": {
+                "x": 0.8999999761581421,
+                "y": 0.8999999761581421
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
         }
     ]
 }

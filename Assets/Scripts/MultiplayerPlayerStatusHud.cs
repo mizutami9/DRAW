@@ -180,7 +180,12 @@ namespace DrawBody.Prototype
                     slot.Status = StatusKind.None;
                     slot.StatusIconRect.gameObject.SetActive(false);
                 }
-                slot.Number.text = (i + 1) + "P";
+                string displayName = string.IsNullOrWhiteSpace(player.DisplayName)
+                    ? string.Empty
+                    : PlayerNameSettings.Sanitize(player.DisplayName);
+                slot.Number.text = string.IsNullOrEmpty(displayName)
+                    ? (i + 1) + "P"
+                    : (i + 1) + "P  " + displayName;
                 int colorIndex = PlayerColorPalette.GetLobbyColorIndex(lobby, player.PlayerId, i);
                 Color playerColor = PlayerColorPalette.GetColor(colorIndex);
                 slot.Number.color = playerColor;
@@ -306,7 +311,7 @@ namespace DrawBody.Prototype
             scaler.matchWidthOrHeight = 0.5f;
 
             panel = CreateRect("Player Status List", canvasObject.transform as RectTransform,
-                new Vector2(1f, 1f), new Vector2(-22f, -22f), new Vector2(248f, 276f));
+                new Vector2(1f, 1f), new Vector2(-22f, -22f), new Vector2(346f, 276f));
             panel.pivot = new Vector2(1f, 1f);
             for (int i = 0; i < slots.Length; i++) slots[i] = BuildSlot(i);
             canvas.enabled = false;
@@ -315,7 +320,7 @@ namespace DrawBody.Prototype
         private PlayerSlot BuildSlot(int index)
         {
             RectTransform row = CreateRect("Player " + (index + 1) + " Status", panel,
-                new Vector2(1f, 1f), new Vector2(0f, -index * 66f), new Vector2(238f, 58f));
+                new Vector2(1f, 1f), new Vector2(0f, -index * 66f), new Vector2(336f, 58f));
             row.pivot = new Vector2(1f, 1f);
             Image paper = row.gameObject.AddComponent<Image>();
             paper.color = index % 2 == 0
@@ -340,9 +345,12 @@ namespace DrawBody.Prototype
             portrait.raycastTarget = false;
 
             Text number = CreateText("Player Number", row, (index + 1) + "P", 27,
-                new Vector2(66f, 0f), new Vector2(82f, 44f), TextAnchor.MiddleLeft);
+                new Vector2(66f, 0f), new Vector2(180f, 44f), TextAnchor.MiddleLeft);
             number.rectTransform.anchorMin = number.rectTransform.anchorMax = new Vector2(0f, 0.5f);
             number.rectTransform.pivot = new Vector2(0f, 0.5f);
+            number.resizeTextForBestFit = true;
+            number.resizeTextMinSize = 15;
+            number.resizeTextMaxSize = 27;
 
             RectTransform viewport = CreateRect("Status Pop Window", row,
                 new Vector2(1f, 0.5f), new Vector2(-7f, 0f), new Vector2(58f, 48f));

@@ -633,11 +633,22 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingBalloonGallery);
             }
 
+            StageBalloonCourseController existingBalloonCourse =
+                stageRoot.GetComponent<StageBalloonCourseController>();
+            if (existingBalloonCourse != null)
+            {
+                DestroyComponentNow(existingBalloonCourse);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.id == "1-2")
             {
                 stageRoot.gameObject.AddComponent<StageBalloonGalleryController>();
+            }
+            if (data != null && data.id == "3-2")
+            {
+                stageRoot.gameObject.AddComponent<StageBalloonCourseController>();
             }
             if (data != null && data.id == "5-3")
             {

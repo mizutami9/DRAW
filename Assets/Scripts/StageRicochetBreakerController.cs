@@ -13,6 +13,9 @@ namespace DrawBody.Prototype
         private const float InnerHalfWidth = 12.35f;
         private const float InnerHalfHeight = 5.7f;
         private const float BallSpeed = 6.4f;
+        private const float InitialBallSpeedMultiplier = 0.35f;
+        private const float BallAccelerationPerSecond = 0.018f;
+        private const float MaximumBallSpeedMultiplier = 1.22f;
         private const float IntroSeconds = 12f;
         private const float CountdownSeconds = 4f;
 
@@ -25,6 +28,7 @@ namespace DrawBody.Prototype
             public int PhaseValue;
             public float Remaining;
             public float PhaseRemaining;
+            public float PlayingElapsed;
             public Vector2 BallPosition;
             public Vector2 BallVelocity;
             public Vector2 BallDirection;
@@ -62,6 +66,7 @@ namespace DrawBody.Prototype
         private float duration = 60f;
         private float remaining;
         private float phaseRemaining = IntroSeconds;
+        private float playingElapsed;
         private float retryRemaining;
         private float nextStateAt;
         private int stateSequence;
@@ -141,8 +146,12 @@ namespace DrawBody.Prototype
             if (IsOnline() && !HasAuthority())
             {
                 phaseRemaining = Mathf.Max(0f, phaseRemaining - Time.deltaTime);
-                if (phase == Phase.Playing && !LocalMultiplayerDebugMode.NoTimeLimit)
-                    remaining = Mathf.Max(0f, remaining - Time.deltaTime);
+                if (phase == Phase.Playing)
+                {
+                    playingElapsed += Time.deltaTime;
+                    if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                        remaining = Mathf.Max(0f, remaining - Time.deltaTime);
+                }
                 if (ball != null) ball.SetReplicaTarget(replicaBallPosition, replicaBallVelocity);
                 RefreshDisplay();
                 return;
@@ -183,6 +192,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            playingElapsed += Time.deltaTime;
             if (!LocalMultiplayerDebugMode.NoTimeLimit)
                 remaining = Mathf.Max(0f, remaining - Time.deltaTime);
             if (ball != null) ball.SetCruiseSpeed(GetCurrentBallSpeed());
@@ -256,6 +266,7 @@ namespace DrawBody.Prototype
         private void PrepareNextBall()
         {
             if (!HasAuthority() || ball != null || ballsLaunched >= 3) return;
+            playingElapsed = 0f;
             int corner = Random.Range(0, 4);
             if (corner == lastSpawnCorner) corner = (corner + Random.Range(1, 4)) % 4;
             lastSpawnCorner = corner;
@@ -285,8 +296,10 @@ namespace DrawBody.Prototype
 
         private float GetCurrentBallSpeed()
         {
-            float progress = Mathf.Clamp01((duration - remaining) / Mathf.Max(1f, duration));
-            return BallSpeed * Mathf.Lerp(0.35f, 1.5f, progress);
+            return Mathf.Min(
+                BallSpeed * MaximumBallSpeedMultiplier,
+                BallSpeed * InitialBallSpeedMultiplier
+                    + playingElapsed * BallAccelerationPerSecond);
         }
 
         private void BeginFailure()
@@ -544,6 +557,7 @@ namespace DrawBody.Prototype
             phase = (Phase)Mathf.Clamp(state.PhaseValue, 0, (int)Phase.Failed);
             remaining = state.Remaining;
             phaseRemaining = state.PhaseRemaining;
+            playingElapsed = Mathf.Max(0f, state.PlayingElapsed);
             retryRemaining = state.RetryRemaining;
             replicaBallPosition = state.BallPosition;
             replicaBallVelocity = state.BallVelocity;
@@ -603,6 +617,7 @@ namespace DrawBody.Prototype
                     PhaseValue = (int)phase,
                     Remaining = remaining,
                     PhaseRemaining = phaseRemaining,
+                    PlayingElapsed = playingElapsed,
                     BallPosition = ball != null ? (Vector2)ball.transform.position : Vector2.zero,
                     BallVelocity = ballBody != null ? ballBody.linearVelocity : Vector2.zero,
                     BallDirection = preparedBallDirection,

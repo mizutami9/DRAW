@@ -240,9 +240,10 @@ namespace DrawBody.Prototype
                 if (actionPressed && Time.time >= nextSlimeSpikeTime)
                 {
                     nextSlimeSpikeTime = Time.time + SlimeSpikeCooldown;
-                    PlaySlimeSpikeEffect(true);
-                    HitEnemiesWithSlimeSpike();
-                    HitPlayersWithSlimeSpike(false);
+                    Vector2 direction = useRecordedThrowDirection
+                        ? recordedThrowDirection
+                        : GetSlimeSpikeDirection();
+                    UseSlimeSpike(direction, true);
                 }
                 return;
             }
@@ -364,9 +365,7 @@ namespace DrawBody.Prototype
                 if (Input.GetKeyDown(KeyCode.F) && Time.time >= nextSlimeSpikeTime)
                 {
                     nextSlimeSpikeTime = Time.time + SlimeSpikeCooldown;
-                    PlaySlimeSpikeEffect(true);
-                    HitEnemiesWithSlimeSpike();
-                    HitPlayersWithSlimeSpike(false);
+                    UseSlimeSpike(GetSlimeSpikeDirection(), true);
                 }
                 return;
             }
@@ -743,6 +742,7 @@ namespace DrawBody.Prototype
             if (IsFriendCarrier())
             {
                 bestPlayer.SetFriendCarried(true);
+                bestPlayer.SetHumanCarryStruggling(false);
                 friendAttachedOnlinePlayerId = GetHeldOnlinePlayerId(bestPlayer);
                 SendFriendAttachEvent("friend_grab", friendAttachedOnlinePlayerId, Vector2.zero);
             }
@@ -1386,6 +1386,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            ResolveGimmickSyncManager()?.PrepareLocalObjectPickup(bestTransform);
             heldTransform = bestTransform;
             heldObject = bestCarryable;
             heldPlayerController = bestPlayer;
@@ -1460,6 +1461,7 @@ namespace DrawBody.Prototype
                 && heldPlayerController.ControlsEnabled;
             heldPlayerController?.SetControlsEnabled(false);
             heldPlayerController?.SetFriendCarried(true);
+            heldPlayerController?.SetHumanCarryStruggling(IsHuman());
             heldTransform.GetComponent<StageBomb>()?.NotifyPickedUp();
             heldTransform.GetComponent<StageGun>()?.SetHolder(this);
             heldTransform.GetComponent<StageBazooka>()?.SetHolder(this);
@@ -1637,6 +1639,7 @@ namespace DrawBody.Prototype
             SetCollisionIgnored(releasedColliders, carrierColliders, true);
 
             heldPlayerController?.SetFriendCarried(false);
+            heldPlayerController?.SetHumanCarryStruggling(false);
             heldPlayerController?.ResetMotion();
             heldPlayerController?.SetControlsEnabled(heldPlayerPreviousControlsEnabled);
             if (heldBody != null)
@@ -1675,6 +1678,7 @@ namespace DrawBody.Prototype
             RestoreHeldObjectRendering();
 
             heldPlayerController?.SetFriendCarried(false);
+            heldPlayerController?.SetHumanCarryStruggling(false);
             heldPlayerController?.ResetMotion();
             heldPlayerController?.SetControlsEnabled(heldPlayerPreviousControlsEnabled);
             if (heldBody != null)
@@ -2408,18 +2412,70 @@ namespace DrawBody.Prototype
             return true;
         }
 
-        private void HitEnemiesWithSlimeSpike()
+        private void UseSlimeSpike(Vector2 direction, bool broadcast)
         {
+            direction = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.up;
+            PlaySlimeSpikeEffect(direction, broadcast);
+            HitEnemiesWithSlimeSpike(direction);
+            HitPlayersWithSlimeSpike(direction, false);
+        }
+
+        private Vector2 GetSlimeSpikeDirection()
+        {
+            Vector2 origin = transform.position;
             Bounds slimeBounds = new Bounds(transform.position, Vector3.one);
+            if (TryGetSolidBounds(playerController, out slimeBounds)) origin = slimeBounds.center;
+
+            Camera gameCamera = Camera.main;
+            if (gameCamera == null) return Vector2.up;
+            Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 direction = (Vector2)mouseWorld - origin;
+            return direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.up;
+        }
+
+        private void GetSlimeSpikeGeometry(
+            Vector2 direction,
+            out Bounds slimeBounds,
+            out Vector2 basePoint,
+            out Vector2 attackCenter,
+            out Vector2 attackSize,
+            out float attackAngle)
+        {
+            slimeBounds = new Bounds(transform.position, Vector3.one);
             if (!TryGetSolidBounds(playerController, out slimeBounds))
                 slimeBounds = new Bounds(transform.position, Vector3.one);
+
+            direction = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.up;
             float slimeInk = abilityController != null ? abilityController.CurrentProfile.SlimeInk : 0f;
             float length = PlayerController2D.CalculateSlimeSpikeLength(slimeInk);
-            float width = Mathf.Max(0.9f, slimeBounds.size.x * 0.82f);
-            Vector2 center = new Vector2(slimeBounds.center.x, slimeBounds.max.y - 0.08f + length * 0.5f);
-            Collider2D[] hits = Physics2D.OverlapBoxAll(center, new Vector2(width, length + 0.16f), 0f);
+            Vector2 half = slimeBounds.extents;
+            Vector2 perpendicular = new Vector2(-direction.y, direction.x);
+            float bodyWidthAcrossAttack = 2f * (Mathf.Abs(perpendicular.x) * half.x
+                + Mathf.Abs(perpendicular.y) * half.y);
+            float width = Mathf.Max(0.9f, bodyWidthAcrossAttack * 0.82f);
+            float xDistance = Mathf.Abs(direction.x) > 0.001f
+                ? half.x / Mathf.Abs(direction.x)
+                : float.PositiveInfinity;
+            float yDistance = Mathf.Abs(direction.y) > 0.001f
+                ? half.y / Mathf.Abs(direction.y)
+                : float.PositiveInfinity;
+            float surfaceDistance = Mathf.Min(xDistance, yDistance);
+            basePoint = (Vector2)slimeBounds.center
+                + direction * Mathf.Max(0f, surfaceDistance - Mathf.Clamp(Mathf.Min(half.x, half.y) * 0.08f, 0.08f, 0.24f));
+            attackCenter = basePoint + direction * (length * 0.5f);
+            attackSize = new Vector2(width, length + 0.16f);
+            attackAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        }
+
+        private void HitEnemiesWithSlimeSpike(Vector2 direction)
+        {
+            GetSlimeSpikeGeometry(direction, out _, out _, out Vector2 center, out Vector2 size, out float angle);
+            Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, angle);
             HashSet<StageEnemyCharacter> placedHit = new HashSet<StageEnemyCharacter>();
             HashSet<StageBlockBreakerEnemy> challengeHit = new HashSet<StageBlockBreakerEnemy>();
+            HashSet<StageValueCrate> crateHit = new HashSet<StageValueCrate>();
+            HashSet<StageBalloonTarget> balloonHit = new HashSet<StageBalloonTarget>();
+            HashSet<CarryableObject> boxHit = new HashSet<CarryableObject>();
             for (int i = 0; i < hits.Length; i++)
             {
                 Collider2D hit = hits[i];
@@ -2432,77 +2488,81 @@ namespace DrawBody.Prototype
                 }
                 StageEnemyCharacter placedEnemy = hit.GetComponentInParent<StageEnemyCharacter>();
                 if (placedEnemy != null && !placedEnemy.IsDefeated && placedHit.Add(placedEnemy))
+                {
                     placedEnemy.HitByCatScratch();
+                    continue;
+                }
+                StageValueCrate crate = hit.GetComponentInParent<StageValueCrate>();
+                if (crate != null && !crate.IsBroken && crateHit.Add(crate))
+                {
+                    crate.Hit(hit.ClosestPoint(center));
+                    continue;
+                }
+                StageBalloonTarget balloon = hit.GetComponentInParent<StageBalloonTarget>();
+                if (balloon != null && balloonHit.Add(balloon))
+                {
+                    balloon.Hit(hit.ClosestPoint(center));
+                    continue;
+                }
+                CarryableObject box = hit.GetComponentInParent<CarryableObject>();
+                if (box != null && boxHit.Add(box))
+                    stageManager?.RequestSlimeBoxBreak(box.transform, hit.ClosestPoint(center));
             }
         }
 
-        private bool HitPlayersWithSlimeSpike(bool localPlayerOnly)
+        private bool HitPlayersWithSlimeSpike(Vector2 direction, bool localPlayerOnly)
         {
-            Bounds slimeBounds = new Bounds(transform.position, Vector3.one);
-            if (!TryGetSolidBounds(playerController, out slimeBounds))
-                slimeBounds = new Bounds(transform.position, Vector3.one);
-            float slimeInk = abilityController != null ? abilityController.CurrentProfile.SlimeInk : 0f;
-            float length = PlayerController2D.CalculateSlimeSpikeLength(slimeInk);
-            float width = Mathf.Max(0.9f, slimeBounds.size.x * 0.82f);
-            Bounds attackBounds = new Bounds(
-                new Vector3(slimeBounds.center.x, slimeBounds.max.y - 0.08f + length * 0.5f, 0f),
-                new Vector3(width, length + 0.16f, 1f));
-            return HitPlayersInBounds(attackBounds, localPlayerOnly);
-        }
-
-        private bool HitPlayersInBounds(Bounds attackBounds, bool localPlayerOnly)
-        {
+            GetSlimeSpikeGeometry(direction, out _, out _, out Vector2 center, out Vector2 size, out float angle);
             if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
             if (stageManager == null) return false;
             Transform localPlayerTransform = stageManager.ActivePlayerTransform;
-            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, angle);
+            HashSet<PlayerController2D> players = new HashSet<PlayerController2D>();
             bool hitAny = false;
-            for (int i = 0; i < players.Length; i++)
+            for (int i = 0; i < hits.Length; i++)
             {
-                PlayerController2D target = players[i];
+                Collider2D hit = hits[i];
+                if (hit == null || hit.transform.IsChildOf(transform)) continue;
+                PlayerController2D target = hit.GetComponentInParent<PlayerController2D>();
                 if (target == null || target == playerController || !target.gameObject.activeInHierarchy) continue;
+                if (!players.Add(target)) continue;
                 if (localPlayerOnly && target.transform != localPlayerTransform) continue;
                 if (stageManager.IsPlayerEliminated(target) || stageManager.IsPlayerRespawning(target)) continue;
-                Bounds targetBounds;
-                if (!TryGetSolidBounds(target, out targetBounds))
-                    targetBounds = new Bounds(target.transform.position, Vector3.one);
-                if (!attackBounds.Intersects(targetBounds)) continue;
                 stageManager.RespawnFromHazard(target);
                 hitAny = true;
             }
             return hitAny;
         }
 
-        internal void PlayRemoteSlimeSpikeEffect()
+        internal void PlayRemoteSlimeSpikeEffect(Vector2 direction)
         {
-            PlaySlimeSpikeEffect(false);
-            HitPlayersWithSlimeSpike(true);
+            direction = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.up;
+            PlaySlimeSpikeEffect(direction, false);
+            HitPlayersWithSlimeSpike(direction, true);
         }
 
-        private void PlaySlimeSpikeEffect(bool broadcast)
+        private void PlaySlimeSpikeEffect(Vector2 direction, bool broadcast)
         {
-            Bounds slimeBounds = new Bounds(transform.position, Vector3.one);
-            if (!TryGetSolidBounds(playerController, out slimeBounds))
-                slimeBounds = new Bounds(transform.position, Vector3.one);
+            direction = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.up;
+            GetSlimeSpikeGeometry(direction, out _, out Vector2 basePoint, out _, out Vector2 attackSize, out _);
             float slimeInk = abilityController != null ? abilityController.CurrentProfile.SlimeInk : 0f;
             float length = PlayerController2D.CalculateSlimeSpikeLength(slimeInk);
-            float width = Mathf.Max(0.9f, slimeBounds.size.x * 0.82f);
-            float baseY = slimeBounds.max.y - Mathf.Clamp(slimeBounds.size.y * 0.08f, 0.08f, 0.24f);
+            float width = attackSize.x;
             Color color = bodyBuilder != null
                 ? bodyBuilder.PlayerColor
                 : new Color(0.62f, 0.22f, 0.9f, 1f);
-            GameObject root = new GameObject("Slime Upward Spike Burst");
+            GameObject root = new GameObject("Slime Aimed Spike Burst");
             root.transform.SetParent(transform, false);
             float halfBase = Mathf.Clamp(width * 0.23f, 0.2f, 0.65f);
-            Vector3 crown = new Vector3(slimeBounds.center.x, baseY, 0f);
+            Vector2 perpendicular = new Vector2(-direction.y, direction.x);
+            Vector3 crown = basePoint;
             Vector3[] finalPoints =
             {
-                new Vector3(crown.x - halfBase, baseY, 0f),
-                new Vector3(crown.x - halfBase * 0.18f, baseY + length * 0.9f, 0f),
-                new Vector3(crown.x, baseY + length, 0f),
-                new Vector3(crown.x + halfBase * 0.16f, baseY + length * 0.88f, 0f),
-                new Vector3(crown.x + halfBase, baseY, 0f)
+                (Vector3)(basePoint - perpendicular * halfBase),
+                (Vector3)(basePoint + direction * (length * 0.9f) - perpendicular * (halfBase * 0.18f)),
+                (Vector3)(basePoint + direction * length),
+                (Vector3)(basePoint + direction * (length * 0.88f) + perpendicular * (halfBase * 0.16f)),
+                (Vector3)(basePoint + perpendicular * halfBase)
             };
             crown = root.transform.InverseTransformPoint(crown);
             for (int i = 0; i < finalPoints.Length; i++)
@@ -2521,8 +2581,8 @@ namespace DrawBody.Prototype
             spike.startColor = color;
             spike.endColor = color;
             StartCoroutine(AnimateSlimeSpike(root, spike, crown, finalPoints, 0.46f));
-            GameSfx.PlayAt(SfxId.SlimeRelease, new Vector2(slimeBounds.center.x, baseY), 1.2f);
-            if (broadcast) stageManager?.BroadcastLocalAbilityEffect(playerController, "slime_spike");
+            GameSfx.PlayAt(SfxId.SlimeRelease, basePoint, 1.2f);
+            if (broadcast) stageManager?.BroadcastLocalAbilityEffect(playerController, "slime_spike", direction);
         }
 
         private static IEnumerator AnimateSlimeSpike(

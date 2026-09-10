@@ -527,7 +527,7 @@ namespace DrawBody.Prototype
         private bool ending;
         private float life;
         private int sequence;
-        private int reflectionCount;
+        private readonly HashSet<string> reflectedPlayerIds = new HashSet<string>();
         private string ownerPlayerId;
         private StageManager stageManager;
         private PlayerController2D lastReflectPlayer;
@@ -621,7 +621,7 @@ namespace DrawBody.Prototype
                     direction = Vector2.Reflect(direction, normal).normalized;
                     transform.position = hits[i].point + direction * 0.12f;
                     transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-                    reflectionCount++;
+                    if (!string.IsNullOrEmpty(playerId)) reflectedPlayerIds.Add(playerId);
                     lastReflectPlayer = player;
                     lastReflectAt = Time.time;
                     ricochetChallenge.NotifyReflection(hits[i].point);
@@ -639,7 +639,9 @@ namespace DrawBody.Prototype
                 StageRicochetTarget ricochetTarget = collider.GetComponentInParent<StageRicochetTarget>();
                 if (ricochetTarget != null)
                 {
-                    ricochetTarget.Hit(reflectionCount, hits[i].point);
+                    // Count distinct teammates, not repeated bounces between the
+                    // same one or two players.
+                    ricochetTarget.Hit(reflectedPlayerIds.Count, hits[i].point);
                     return true;
                 }
                 StageValueCrate valueCrate = collider.GetComponentInParent<StageValueCrate>();
@@ -906,7 +908,7 @@ namespace DrawBody.Prototype
             root.transform.position = position;
             root.transform.localScale = Vector3.one * BalloonVisualScale;
             balloons[index] = root.AddComponent<StageBalloonTarget>();
-            balloons[index].Configure(this, index, color, motion, travel, speed, phase);
+            balloons[index].Configure(HitBalloon, index, color, motion, travel, speed, phase);
         }
 
         private void FindBarrierObjects()
@@ -1047,7 +1049,7 @@ namespace DrawBody.Prototype
             Blink
         }
 
-        private StageBalloonGalleryController controller;
+        private System.Action<int, Vector2> hitHandler;
         private int index;
         private Motion motion;
         private Vector2 origin;
@@ -1058,10 +1060,10 @@ namespace DrawBody.Prototype
         private CircleCollider2D hitbox;
         private Renderer[] renderers;
 
-        internal void Configure(StageBalloonGalleryController owner, int balloonIndex, Color color,
+        internal void Configure(System.Action<int, Vector2> onHit, int balloonIndex, Color color,
             Motion motionMode, Vector2 movement, float movementSpeed, float movementPhase)
         {
-            controller = owner;
+            hitHandler = onHit;
             index = balloonIndex;
             motion = motionMode;
             origin = transform.position;
@@ -1106,7 +1108,7 @@ namespace DrawBody.Prototype
 
         internal void Hit(Vector2 point)
         {
-            if (!popped) controller?.HitBalloon(index, point);
+            if (!popped) hitHandler?.Invoke(index, point);
         }
 
         internal void Pop(Vector2 hitPoint)

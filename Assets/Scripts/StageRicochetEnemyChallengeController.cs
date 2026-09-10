@@ -13,6 +13,8 @@ namespace DrawBody.Prototype
         private const float InnerHalfWidth = 12.35f;
         private const float InnerHalfHeight = 5.7f;
         private const float BallSpeed = 3.6f;
+        private const float BallAccelerationPerSecond = 0.01f;
+        private const float MaximumBallSpeedMultiplier = 1.22f;
         private const float InitialServeCountdownSeconds = 10f;
         private const float ServeCountdownSeconds = 3f;
 
@@ -39,6 +41,7 @@ namespace DrawBody.Prototype
             public int Round;
             public int BallsLost;
             public float PhaseRemaining;
+            public float PlayingElapsed;
             public Vector2 BallPosition;
             public Vector2 BallVelocity;
             public Vector2 BallDirection;
@@ -65,6 +68,7 @@ namespace DrawBody.Prototype
         private int sequence;
         private int lastSequence;
         private float phaseRemaining = 3f;
+        private float playingElapsed;
         private float nextBallAt;
         private float nextStateAt;
         private Vector2 preparedBallDirection = Vector2.up;
@@ -125,6 +129,10 @@ namespace DrawBody.Prototype
                     phaseRemaining = Mathf.Max(0f, phaseRemaining - Time.deltaTime);
                     ball?.UpdateLaunchCountdown(Mathf.CeilToInt(phaseRemaining));
                 }
+                else if (phase == Phase.Playing)
+                {
+                    playingElapsed += Time.deltaTime;
+                }
                 RefreshDisplay();
                 return;
             }
@@ -162,6 +170,8 @@ namespace DrawBody.Prototype
             }
             else if (phase == Phase.Playing)
             {
+                playingElapsed += Time.deltaTime;
+                ball?.SetCruiseSpeed(GetCurrentBallSpeed());
                 if (ball != null && (Mathf.Abs(ball.transform.position.x) > OuterHalfWidth + 3f
                     || Mathf.Abs(ball.transform.position.y) > OuterHalfHeight + 3f))
                 {
@@ -276,6 +286,7 @@ namespace DrawBody.Prototype
         private void BeginServe()
         {
             if (!HasAuthority || ball != null) return;
+            playingElapsed = 0f;
             int corner = Random.Range(0, 4);
             bool top = corner >= 2;
             bool right = (corner & 1) == 1;
@@ -289,8 +300,15 @@ namespace DrawBody.Prototype
             initialServeStarted = true;
             ball = StageRicochetBall.Create(transform, this, position, true);
             ballGeneration++;
-            ball.PrepareLaunch(preparedBallDirection, BallSpeed, Mathf.CeilToInt(phaseRemaining));
+            ball.PrepareLaunch(preparedBallDirection, GetCurrentBallSpeed(), Mathf.CeilToInt(phaseRemaining));
             BroadcastState(true);
+        }
+
+        private float GetCurrentBallSpeed()
+        {
+            return Mathf.Min(
+                BallSpeed * MaximumBallSpeedMultiplier,
+                BallSpeed + playingElapsed * BallAccelerationPerSecond);
         }
 
         private void DestroyBall()
@@ -428,6 +446,7 @@ namespace DrawBody.Prototype
                     Round = round,
                     BallsLost = ballsLost,
                     PhaseRemaining = phaseRemaining,
+                    PlayingElapsed = playingElapsed,
                     BallPosition = ball != null ? (Vector2)ball.transform.position : Vector2.zero,
                     BallVelocity = body != null ? body.linearVelocity : Vector2.zero,
                     BallDirection = preparedBallDirection,
@@ -448,6 +467,7 @@ namespace DrawBody.Prototype
             round = state.Round;
             ballsLost = state.BallsLost;
             phaseRemaining = state.PhaseRemaining;
+            playingElapsed = Mathf.Max(0f, state.PlayingElapsed);
             preparedBallDirection = state.BallDirection.sqrMagnitude > 0.01f
                 ? state.BallDirection.normalized
                 : Vector2.up;
@@ -460,7 +480,7 @@ namespace DrawBody.Prototype
                     ballGeneration = state.BallGeneration;
                 }
                 if (phase == Phase.Serve)
-                    ball.PrepareLaunch(preparedBallDirection, BallSpeed, Mathf.CeilToInt(phaseRemaining));
+                    ball.PrepareLaunch(preparedBallDirection, GetCurrentBallSpeed(), Mathf.CeilToInt(phaseRemaining));
                 else ball.HideLaunchPreview();
                 ball.SetReplicaTarget(state.BallPosition, state.BallVelocity);
             }

@@ -25,6 +25,9 @@ namespace DrawBody.Prototype
         private const int RuntimeOrientationBins = 8;
         private const int MaxRuntimePointsPerStroke = 512;
         private const int MaxRuntimeSegmentsPerPart = 32;
+        private const int GrainCatcherLayer = 30;
+        private const int GrainLayer = 31;
+        private static bool grainCatcherCollisionConfigured;
         private Material lineMaterial;
         private static PhysicsMaterial2D playerContactMaterial;
         private Rigidbody2D rb;
@@ -908,6 +911,10 @@ namespace DrawBody.Prototype
                 // Arms are animated and mirrored independently from the locomotion body.
                 // Keeping them solid can teleport a long asymmetric arm into a wall on turn.
                 collider.isTrigger = IsHumanArm(part);
+                if (collider.isTrigger)
+                {
+                    CreateHumanArmGrainCatcher(segment.transform, collider.size);
+                }
             }
 
             generatedObjects.Add(segment);
@@ -924,6 +931,28 @@ namespace DrawBody.Prototype
                 PivotLocal = pivot,
                 BaseLength = length
             });
+        }
+
+        private static void CreateHumanArmGrainCatcher(Transform segment, Vector2 size)
+        {
+            if (segment == null) return;
+            if (!grainCatcherCollisionConfigured)
+            {
+                grainCatcherCollisionConfigured = true;
+                for (int layer = 0; layer < 32; layer++)
+                    Physics2D.IgnoreLayerCollision(GrainCatcherLayer, layer, layer != GrainLayer);
+            }
+
+            // This collider shares the player's Rigidbody2D but lives on a
+            // collision layer that only touches grain particles. Human arms
+            // therefore catch grains without becoming solid against terrain.
+            GameObject catcher = new GameObject("HumanArmGrainCatcher");
+            catcher.layer = GrainCatcherLayer;
+            catcher.transform.SetParent(segment, false);
+            CapsuleCollider2D grainCollider = catcher.AddComponent<CapsuleCollider2D>();
+            grainCollider.direction = CapsuleDirection2D.Horizontal;
+            grainCollider.size = new Vector2(size.x, Mathf.Max(size.y, 0.22f));
+            grainCollider.sharedMaterial = GetPlayerContactMaterial();
         }
 
         private void ApplyPlayerContactMaterial()
@@ -967,7 +996,8 @@ namespace DrawBody.Prototype
             bool moving = speed > 0.12f;
             float moveBlend = moving && (playerController == null || playerController.IsAnimationGrounded) ? Mathf.Clamp01(speed / 4f) : 0f;
             bool armSwinging = armSwingController != null && armSwingController.IsSwinging;
-            bool animationActive = moveBlend > 0.001f || carryingPose || armSwinging;
+            bool humanCarryStruggling = playerController != null && playerController.IsHumanCarryStruggling;
+            bool animationActive = moveBlend > 0.001f || carryingPose || armSwinging || humanCarryStruggling;
             if (!animationActive)
             {
                 if (bodyAnimationWasActive)
@@ -1002,6 +1032,28 @@ namespace DrawBody.Prototype
                 float angle = 0f;
                 float scaleX = 1f;
                 float scaleY = 1f;
+                if (humanCarryStruggling && segment.Line != null)
+                {
+                    float offsetX = 0f;
+                    GetHumanCarryStruggleMotion(
+                        species,
+                        segment.Part,
+                        phase,
+                        ref angle,
+                        ref offsetX,
+                        ref offsetY,
+                        ref scaleX,
+                        ref scaleY);
+                    Quaternion struggleRotation = Quaternion.Euler(0f, 0f, angle);
+                    segment.Transform.localPosition = RotateAroundPivot(
+                        segment.BaseLocalPosition,
+                        segment.PivotLocal,
+                        struggleRotation) + new Vector3(offsetX, offsetY, 0f);
+                    segment.Transform.localRotation = struggleRotation * segment.BaseLocalRotation;
+                    segment.Transform.localScale = new Vector3(scaleX, scaleY, 1f);
+                    continue;
+                }
+
                 if (armSwinging && IsHumanArm(segment.Part))
                 {
                     continue;
@@ -1513,6 +1565,73 @@ namespace DrawBody.Prototype
             scaleX = 1f + squash;
             scaleY = 1f - squash * 0.75f;
             offsetY = Mathf.Abs(Mathf.Sin(phase * 1.2f)) * walkBobAmount * 0.8f * blend;
+        }
+
+        private static void GetHumanCarryStruggleMotion(
+            DrawManager.Species species,
+            DrawManager.BodyPart part,
+            float phase,
+            ref float angle,
+            ref float offsetX,
+            ref float offsetY,
+            ref float scaleX,
+            ref float scaleY)
+        {
+            float fast = Mathf.Sin(phase * 1.7f);
+            float opposite = Mathf.Sin(phase * 1.7f + Mathf.PI);
+            switch (species)
+            {
+                case DrawManager.Species.Cat:
+                    if (part == DrawManager.BodyPart.LeftFrontLeg
+                        || part == DrawManager.BodyPart.RightBackLeg)
+                    {
+                        angle = fast * 34f;
+                        offsetY = Mathf.Abs(fast) * 0.035f;
+                    }
+                    else if (part == DrawManager.BodyPart.RightFrontLeg
+                        || part == DrawManager.BodyPart.LeftBackLeg)
+                    {
+                        angle = opposite * 34f;
+                        offsetY = Mathf.Abs(opposite) * 0.035f;
+                    }
+                    break;
+                case DrawManager.Species.Bird:
+                    if (part == DrawManager.BodyPart.LeftWing)
+                    {
+                        angle = fast * 42f;
+                    }
+                    else if (part == DrawManager.BodyPart.RightWing)
+                    {
+                        angle = opposite * 42f;
+                    }
+                    break;
+                case DrawManager.Species.Turtle:
+                    if (part == DrawManager.BodyPart.Head)
+                    {
+                        angle = fast * 20f;
+                        offsetX = fast * 0.055f;
+                    }
+                    break;
+                case DrawManager.Species.Slime:
+                    if (part == DrawManager.BodyPart.SlimeBody)
+                    {
+                        offsetX = fast * 0.035f;
+                        offsetY = opposite * 0.018f;
+                        scaleX = 1f + fast * 0.025f;
+                        scaleY = 1f - fast * 0.018f;
+                    }
+                    break;
+                default:
+                    if (part == DrawManager.BodyPart.LeftLeg)
+                    {
+                        angle = fast * 32f;
+                    }
+                    else if (part == DrawManager.BodyPart.RightLeg)
+                    {
+                        angle = opposite * 32f;
+                    }
+                    break;
+            }
         }
 
         private static void DestroyUnityObject(Object target)

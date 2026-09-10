@@ -613,7 +613,10 @@ namespace DrawBody.Prototype
         {
             if (IsBroken) return;
             IsBroken = true;
-            GameSfx.PlayAt(SfxId.CrateBreak, point, 0.72f);
+            StageEditorObject marker = GetComponent<StageEditorObject>();
+            SlimeBoxBreakFeedback.Play(transform, point,
+                marker != null ? marker.type : StageObjectType.WoodBox);
+            GameSfx.Play(SfxId.CrateBreak, 1.5f);
             gameObject.SetActive(false);
             Destroy(gameObject);
         }

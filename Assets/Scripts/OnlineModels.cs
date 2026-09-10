@@ -121,6 +121,7 @@ namespace DrawBody.Prototype
         public string CarriedPlayerId;
         public string CarryAction;
         public Vector2 CarryOffset;
+        public bool HumanCarryStruggling;
         public string LastAppliedThrowCarrierId;
         public int LastAppliedThrowSequence;
     }

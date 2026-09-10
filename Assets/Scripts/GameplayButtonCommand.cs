@@ -104,8 +104,8 @@ namespace DrawBody.Prototype
                     stageManager?.EnterDrawingMode();
                     break;
                 case Command.Retry:
-                    uiManager?.HideMenu();
-                    stageManager?.Retry();
+                    if (uiManager != null) uiManager.ShowGameplayActionConfirm(Command.Retry);
+                    else stageManager?.Retry();
                     break;
                 case Command.Menu:
                     uiManager?.ToggleMenu();
@@ -132,17 +132,10 @@ namespace DrawBody.Prototype
                     stageManager?.CancelDrawingMode();
                     break;
                 case Command.StageSelect:
-                    if (stageManager != null && stageManager.IsOnlineStageActive)
-                    {
-                        if (stageManager.IsOnlineStageHost)
-                        {
-                            stageManager.OpenStageSelectFromMultiLobby();
-                        }
-                    }
-                    else
-                    {
-                        stageManager?.OpenStageSelect();
-                    }
+                    if (uiManager != null) uiManager.ShowGameplayActionConfirm(Command.StageSelect);
+                    else if (stageManager != null && stageManager.IsOnlineStageActive)
+                        stageManager.OpenStageSelectFromMultiLobby();
+                    else stageManager?.OpenStageSelect();
                     break;
                 case Command.AddCharacter:
                     stageManager?.AddCharacter();

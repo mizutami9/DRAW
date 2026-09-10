@@ -560,6 +560,27 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void PrepareLocalObjectPickup(Transform target)
+        {
+            if (!IsOnlineActive || !ShouldAskHost || !TryGetSyncId(target, out string objectId)
+                || !transformEntries.TryGetValue(objectId, out SyncTransformEntry entry)
+                || entry == null)
+            {
+                return;
+            }
+
+            ownersByObjectId.TryGetValue(objectId, out string ownerId);
+            if (!string.IsNullOrEmpty(ownerId) && ownerId != onlineManager.LocalPlayerId)
+            {
+                return;
+            }
+
+            // The unowned object was a kinematic host-driven replica. Restore its
+            // authored body type before PlayerCarryController snapshots the state,
+            // so dropping it later restores Dynamic rather than Kinematic.
+            entry.EndRemoteOwnership(Vector2.zero);
+        }
+
         public void RegisterRuntimeObject(Transform target)
         {
             StageEditorObject marker = target != null ? target.GetComponentInParent<StageEditorObject>() : null;
@@ -1394,7 +1415,10 @@ namespace DrawBody.Prototype
                 // currently controlled by this participant. Switch its body to
                 // a kinematic display proxy and interpolate instead of applying
                 // teleport corrections to a second local physics simulation.
-                entry.BeginRemoteOwnership();
+                // An unowned weapon must keep its collider so this participant's
+                // pickup query can find it. Colliders are disabled only after an
+                // actual remote owner has been confirmed.
+                entry.BeginRemoteOwnership(false);
                 entry.SetNetworkTarget(state);
                 return;
             }
@@ -2022,6 +2046,7 @@ namespace DrawBody.Prototype
             private float networkAngularVelocity;
             private float networkReceivedAt;
             private bool remoteOwnershipActive;
+            private bool remoteWeaponCollidersDisabled;
             private RigidbodyType2D bodyTypeBeforeRemoteOwnership;
             private float gravityBeforeRemoteOwnership;
             private bool freezeRotationBeforeRemoteOwnership;
@@ -2052,29 +2077,36 @@ namespace DrawBody.Prototype
                 HasNetworkTarget = true;
             }
 
-            public void BeginRemoteOwnership()
+            public void BeginRemoteOwnership(bool disableWeaponColliders = true)
             {
-                if (remoteOwnershipActive || Body == null)
+                if (Body == null)
                 {
                     return;
                 }
 
-                remoteOwnershipActive = true;
-                bodyTypeBeforeRemoteOwnership = Body.bodyType;
-                gravityBeforeRemoteOwnership = Body.gravityScale;
-                freezeRotationBeforeRemoteOwnership = Body.freezeRotation;
-                Body.bodyType = RigidbodyType2D.Kinematic;
-                Body.gravityScale = 0f;
-                Body.linearVelocity = Vector2.zero;
-                Body.angularVelocity = 0f;
+                if (!remoteOwnershipActive)
+                {
+                    remoteOwnershipActive = true;
+                    bodyTypeBeforeRemoteOwnership = Body.bodyType;
+                    gravityBeforeRemoteOwnership = Body.gravityScale;
+                    freezeRotationBeforeRemoteOwnership = Body.freezeRotation;
+                    Body.bodyType = RigidbodyType2D.Kinematic;
+                    Body.gravityScale = 0f;
+                    Body.linearVelocity = Vector2.zero;
+                    Body.angularVelocity = 0f;
+                }
                 // The owning client disables a held weapon's colliders. Mirror
                 // that state on every replica; a kinematic bazooka collider can
                 // otherwise push the carrier chain or strike the jump pad first.
-                for (int i = 0; i < remoteWeaponColliders.Length; i++)
+                if (disableWeaponColliders && !remoteWeaponCollidersDisabled)
                 {
-                    Collider2D collider = remoteWeaponColliders[i];
-                    remoteWeaponColliderStates[i] = collider != null && collider.enabled;
-                    if (collider != null) collider.enabled = false;
+                    for (int i = 0; i < remoteWeaponColliders.Length; i++)
+                    {
+                        Collider2D collider = remoteWeaponColliders[i];
+                        remoteWeaponColliderStates[i] = collider != null && collider.enabled;
+                        if (collider != null) collider.enabled = false;
+                    }
+                    remoteWeaponCollidersDisabled = true;
                 }
             }
 
@@ -2091,9 +2123,13 @@ namespace DrawBody.Prototype
                     Body.bodyType = bodyTypeBeforeRemoteOwnership;
                     Body.gravityScale = gravityBeforeRemoteOwnership;
                     Body.freezeRotation = freezeRotationBeforeRemoteOwnership;
-                    for (int i = 0; i < remoteWeaponColliders.Length; i++)
-                        if (remoteWeaponColliders[i] != null)
-                            remoteWeaponColliders[i].enabled = remoteWeaponColliderStates[i];
+                    if (remoteWeaponCollidersDisabled)
+                    {
+                        for (int i = 0; i < remoteWeaponColliders.Length; i++)
+                            if (remoteWeaponColliders[i] != null)
+                                remoteWeaponColliders[i].enabled = remoteWeaponColliderStates[i];
+                        remoteWeaponCollidersDisabled = false;
+                    }
                     remoteOwnershipActive = false;
                 }
                 Body.linearVelocity = releaseVelocity;

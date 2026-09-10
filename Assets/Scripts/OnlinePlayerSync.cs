@@ -190,6 +190,7 @@ namespace DrawBody.Prototype
                 CarriedPlayerId = localCarry?.CurrentOnlineCarriedPlayerId,
                 CarryAction = localCarry?.CurrentOnlineCarryAction,
                 CarryOffset = localCarry != null ? localCarry.CurrentOnlineCarryOffset : Vector2.zero,
+                HumanCarryStruggling = localPlayer?.IsHumanCarryStruggling ?? false,
                 LastAppliedThrowCarrierId = lastAppliedLocalThrowCarrierId,
                 LastAppliedThrowSequence = lastAppliedLocalThrowSequence
             });
@@ -249,6 +250,10 @@ namespace DrawBody.Prototype
                 state.Redrawing ? Vector2.zero : state.Velocity);
             PlayerController2D remotePlayer = stageManager.GetOnlinePlayerController(state.PlayerId);
             remotePlayer?.ApplyRemoteFacingDirection(state.FacingDirection);
+            if (remotePlayer != null && !stageManager.IsOnlineRemotePlayerHeldByLocal(state.PlayerId))
+            {
+                remotePlayer.SetHumanCarryStruggling(!state.Redrawing && state.HumanCarryStruggling);
+            }
             remotePlayer?.ApplyRemoteActionState(
                 state.Grounded,
                 state.WallSticking,

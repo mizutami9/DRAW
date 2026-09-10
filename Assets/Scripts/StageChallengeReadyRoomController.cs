@@ -311,14 +311,11 @@ namespace DrawBody.Prototype
             bool showRecommendations = ShouldShowRecommendationMonitor();
             float monitorY = rows * roomHeight * 0.5f + 2.35f;
             bool spaciousDescription = stageId == "14-3";
-            bool tallSurvivalDescription = stageId == "11-2";
-            float descriptionHeight = spaciousDescription ? 3.2f : tallSurvivalDescription ? 3.3f : 2.7f;
-            if (tallSurvivalDescription)
-            {
-                // Keep the monitor's top edge where the fixed camera expects it,
-                // and extend the LCD downward into the existing gap above the room.
-                monitorY -= (descriptionHeight - 2.7f) * 0.5f;
-            }
+            const float originalDescriptionHeight = 2.7f;
+            const float descriptionHeight = 3.6f;
+            // Keep the top edge at the established camera-safe height and use
+            // the free gap below it for a true two-line description area.
+            monitorY -= (descriptionHeight - originalDescriptionHeight) * 0.5f;
             float descriptionWidth = showRecommendations ? 12f : spaciousDescription ? 18.5f : 16.5f;
             float descriptionX = showRecommendations ? -2.8f : 0f;
             GameObject monitor = new GameObject("Ready Room Game Monitor");
@@ -327,10 +324,10 @@ namespace DrawBody.Prototype
             DoodleMonitorVisuals.Build(monitor.transform,
                 new Vector2(descriptionWidth, descriptionHeight), 55);
             descriptionText = StageEscortController.CreateText(monitor.transform, "Game Description",
-                new Vector3(0f, 0.43f, -0.03f), 58, spaciousDescription ? 0.09f : showRecommendations ? 0.105f : 0.12f,
+                new Vector3(0f, 0.5f, -0.03f), 58, spaciousDescription ? 0.09f : showRecommendations ? 0.105f : 0.12f,
                 new Color(0.04f, 0.34f, 0.5f), 61);
             statusText = StageEscortController.CreateText(monitor.transform, "Status",
-                new Vector3(0f, -0.62f, -0.03f), 64, 0.145f,
+                new Vector3(0f, -0.82f, -0.03f), 64, 0.145f,
                 new Color(0.04f, 0.43f, 0.58f), 61);
 
             if (showRecommendations)
@@ -367,7 +364,7 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("Ready Room Recommendation Monitor");
             monitor.transform.SetParent(transform, false);
             monitor.transform.localPosition = position;
-            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(5.2f, 3.3f), 55);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(5.2f, 3.6f), 55);
             recommendationTitleText = StageEscortController.CreateText(monitor.transform, "Recommendation Title",
                 new Vector3(0f, 0.78f, -0.03f), 48, 0.085f,
                 new Color(0.04f, 0.34f, 0.5f), 61);
@@ -1340,12 +1337,12 @@ namespace DrawBody.Prototype
                 if (!string.IsNullOrEmpty(clearConditionKey))
                 {
                     description += "\n" + LocalizationManager.T(clearConditionKey);
-                    descriptionText.transform.localPosition = new Vector3(0f, 0.52f, -0.03f);
+                    descriptionText.transform.localPosition = new Vector3(0f, 0.54f, -0.03f);
                     descriptionText.characterSize = stageId == "14-3" ? 0.088f : ShouldShowRecommendationMonitor() ? 0.09f : 0.105f;
                 }
                 else
                 {
-                    descriptionText.transform.localPosition = new Vector3(0f, 0.43f, -0.03f);
+                    descriptionText.transform.localPosition = new Vector3(0f, 0.42f, -0.03f);
                     descriptionText.characterSize = ShouldShowRecommendationMonitor() ? 0.105f : 0.12f;
                 }
                 descriptionText.text = description;

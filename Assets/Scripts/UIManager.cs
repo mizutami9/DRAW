@@ -26,10 +26,13 @@ namespace DrawBody.Prototype
         private Text clearBackLabel;
         private GameObject stageSelectLockedPanel;
         private GameObject leaveSessionConfirmPanel;
+        private GameObject gameplayActionConfirmPanel;
+        private GameplayButtonCommand.Command pendingGameplayAction;
         private GameObject speciesSwapConfirmPanel;
         private string speciesSwapRequesterName;
         private DrawManager.Species speciesSwapRequestedSpecies;
         private DrawManager.Species speciesSwapOfferedSpecies;
+        private bool speciesSwapWaitingForResponse;
         private Button clearNextButton;
         private Button clearBackButton;
         private Button editorTestReturnButton;
@@ -147,6 +150,16 @@ namespace DrawBody.Prototype
             gameplayNotice.SetActive(true);
             gameplayNotice.transform.SetAsLastSibling();
             gameplayNoticeRoutine = StartCoroutine(HideGameplayNoticeAfter(Mathf.Max(0.5f, seconds)));
+        }
+
+        public void HideGameplayNotice()
+        {
+            if (gameplayNoticeRoutine != null)
+            {
+                StopCoroutine(gameplayNoticeRoutine);
+                gameplayNoticeRoutine = null;
+            }
+            if (gameplayNotice != null) gameplayNotice.SetActive(false);
         }
 
         private IEnumerator HideGameplayNoticeAfter(float seconds)
@@ -641,6 +654,109 @@ namespace DrawBody.Prototype
             leaveSessionConfirmPanel.transform.SetAsLastSibling();
         }
 
+        public void ShowGameplayActionConfirm(GameplayButtonCommand.Command command)
+        {
+            if (command != GameplayButtonCommand.Command.Retry
+                && command != GameplayButtonCommand.Command.StageSelect) return;
+            EnsureGameplayActionConfirmPanel();
+            if (gameplayActionConfirmPanel == null) return;
+            pendingGameplayAction = command;
+            RefreshGameplayActionConfirmText();
+            gameplayActionConfirmPanel.SetActive(true);
+            gameplayActionConfirmPanel.transform.SetAsLastSibling();
+            GameSfx.Play(SfxId.UiButtonPress);
+        }
+
+        public void HideGameplayActionConfirm()
+        {
+            if (gameplayActionConfirmPanel != null)
+                gameplayActionConfirmPanel.SetActive(false);
+        }
+
+        private void ConfirmGameplayAction()
+        {
+            GameplayButtonCommand.Command action = pendingGameplayAction;
+            HideGameplayActionConfirm();
+            StageManager manager = ResolveStageManager();
+            if (manager == null) return;
+            HideMenu();
+            if (action == GameplayButtonCommand.Command.Retry)
+            {
+                manager.Retry();
+            }
+            else if (action == GameplayButtonCommand.Command.StageSelect)
+            {
+                if (manager.IsOnlineStageActive) manager.OpenStageSelectFromMultiLobby();
+                else manager.OpenStageSelect();
+            }
+        }
+
+        private void EnsureGameplayActionConfirmPanel()
+        {
+            if (gameplayActionConfirmPanel != null) return;
+            Font font = statusText != null && statusText.font != null
+                ? statusText.font
+                : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            gameplayActionConfirmPanel = new GameObject(
+                "GameplayActionConfirmPanel", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            gameplayActionConfirmPanel.transform.SetParent(transform, false);
+            RectTransform rect = gameplayActionConfirmPanel.GetComponent<RectTransform>();
+            Stretch(rect);
+            Image blocker = gameplayActionConfirmPanel.GetComponent<Image>();
+            blocker.color = new Color(0.04f, 0.07f, 0.11f, 0.34f);
+
+            GameObject card = new GameObject(
+                "GameplayActionConfirmCard", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            card.transform.SetParent(gameplayActionConfirmPanel.transform, false);
+            RectTransform cardRect = card.GetComponent<RectTransform>();
+            cardRect.anchorMin = cardRect.anchorMax = cardRect.pivot = new Vector2(0.5f, 0.5f);
+            cardRect.sizeDelta = new Vector2(540f, 260f);
+            Image paper = card.GetComponent<Image>();
+            paper.color = new Color(1f, 0.965f, 0.78f, 1f);
+            Outline outline = card.AddComponent<Outline>();
+            outline.effectColor = new Color(0.04f, 0.07f, 0.11f, 1f);
+            outline.effectDistance = new Vector2(4f, -4f);
+
+            Text message = CreateClearText(
+                "GameplayActionConfirmMessage", card.transform, font, 26,
+                TextAnchor.MiddleCenter, new Vector2(0f, 52f), new Vector2(470f, 100f));
+            message.color = new Color(0.04f, 0.07f, 0.11f, 1f);
+            message.fontStyle = FontStyle.Bold;
+
+            Button confirm = CreateClearButton(
+                "GameplayActionConfirmButton", card.transform, font,
+                new Vector2(-125f, -70f), new Vector2(220f, 66f),
+                new Color(1f, 0.58f, 0.28f, 1f));
+            confirm.onClick.AddListener(ConfirmGameplayAction);
+
+            Button cancel = CreateClearButton(
+                "GameplayActionCancelButton", card.transform, font,
+                new Vector2(125f, -70f), new Vector2(190f, 66f),
+                new Color(0.72f, 0.88f, 0.96f, 1f));
+            cancel.onClick.AddListener(HideGameplayActionConfirm);
+            gameplayActionConfirmPanel.SetActive(false);
+        }
+
+        private void RefreshGameplayActionConfirmText()
+        {
+            if (gameplayActionConfirmPanel == null) return;
+            bool retry = pendingGameplayAction == GameplayButtonCommand.Command.Retry;
+            Transform card = gameplayActionConfirmPanel.transform.Find("GameplayActionConfirmCard");
+            if (card == null) return;
+            Text message = card.Find("GameplayActionConfirmMessage")?.GetComponent<Text>();
+            if (message != null)
+                message.text = LocalizationManager.T(retry
+                    ? "menu_retry_confirm_message"
+                    : "menu_stage_select_confirm_message");
+            Text confirm = card.Find("GameplayActionConfirmButton")?.GetComponentInChildren<Text>(true);
+            if (confirm != null)
+                confirm.text = LocalizationManager.T(retry
+                    ? "menu_retry_confirm_yes"
+                    : "menu_stage_select_confirm_yes");
+            Text cancel = card.Find("GameplayActionCancelButton")?.GetComponentInChildren<Text>(true);
+            if (cancel != null) cancel.text = LocalizationManager.T("cancel");
+        }
+
         public void ShowSpeciesSwapConfirm(
             string requesterName,
             DrawManager.Species requestedSpecies,
@@ -655,6 +771,27 @@ namespace DrawBody.Prototype
             speciesSwapRequesterName = requesterName;
             speciesSwapRequestedSpecies = requestedSpecies;
             speciesSwapOfferedSpecies = offeredSpecies;
+            speciesSwapWaitingForResponse = false;
+            RefreshSpeciesSwapText();
+            speciesSwapConfirmPanel.SetActive(true);
+            speciesSwapConfirmPanel.transform.SetAsLastSibling();
+        }
+
+        public void ShowSpeciesSwapPending(
+            string targetName,
+            DrawManager.Species requestedSpecies,
+            DrawManager.Species offeredSpecies)
+        {
+            EnsureSpeciesSwapConfirmPanel();
+            if (speciesSwapConfirmPanel == null)
+            {
+                return;
+            }
+
+            speciesSwapRequesterName = targetName;
+            speciesSwapRequestedSpecies = requestedSpecies;
+            speciesSwapOfferedSpecies = offeredSpecies;
+            speciesSwapWaitingForResponse = true;
             RefreshSpeciesSwapText();
             speciesSwapConfirmPanel.SetActive(true);
             speciesSwapConfirmPanel.transform.SetAsLastSibling();
@@ -705,6 +842,7 @@ namespace DrawBody.Prototype
                 new Vector2(540f, 48f));
             title.text = LocalizationManager.T("draw_species_swap_title");
             title.fontStyle = FontStyle.Bold;
+            title.color = new Color(0.12f, 0.16f, 0.2f, 1f);
 
             Text message = CreateClearText(
                 "SpeciesSwapMessage",
@@ -746,19 +884,32 @@ namespace DrawBody.Prototype
             }
 
             Text title = speciesSwapConfirmPanel.transform.Find("SpeciesSwapTitle")?.GetComponent<Text>();
-            if (title != null) title.text = LocalizationManager.T("draw_species_swap_title");
+            if (title != null)
+            {
+                title.text = LocalizationManager.T(speciesSwapWaitingForResponse
+                    ? "draw_species_swap_pending_title"
+                    : "draw_species_swap_title");
+                title.color = new Color(0.12f, 0.16f, 0.2f, 1f);
+            }
             Text message = speciesSwapConfirmPanel.transform.Find("SpeciesSwapMessage")?.GetComponent<Text>();
             if (message != null)
             {
                 message.text = LocalizationManager.Format(
-                    "draw_species_swap_request",
+                    speciesSwapWaitingForResponse
+                        ? "draw_species_swap_pending_detail"
+                        : "draw_species_swap_request",
                     speciesSwapRequesterName,
                     LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(speciesSwapRequestedSpecies)),
                     LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(speciesSwapOfferedSpecies)));
+                message.color = new Color(0.04f, 0.07f, 0.11f, 1f);
             }
-            Text accept = speciesSwapConfirmPanel.transform.Find("SpeciesSwapAcceptButton/SpeciesSwapAcceptButtonLabel")?.GetComponent<Text>();
+            Transform acceptButton = speciesSwapConfirmPanel.transform.Find("SpeciesSwapAcceptButton");
+            Transform rejectButton = speciesSwapConfirmPanel.transform.Find("SpeciesSwapRejectButton");
+            if (acceptButton != null) acceptButton.gameObject.SetActive(!speciesSwapWaitingForResponse);
+            if (rejectButton != null) rejectButton.gameObject.SetActive(!speciesSwapWaitingForResponse);
+            Text accept = acceptButton?.Find("SpeciesSwapAcceptButtonLabel")?.GetComponent<Text>();
             if (accept != null) accept.text = LocalizationManager.T("draw_species_swap_accept");
-            Text reject = speciesSwapConfirmPanel.transform.Find("SpeciesSwapRejectButton/SpeciesSwapRejectButtonLabel")?.GetComponent<Text>();
+            Text reject = rejectButton?.Find("SpeciesSwapRejectButtonLabel")?.GetComponent<Text>();
             if (reject != null) reject.text = LocalizationManager.T("draw_species_swap_reject");
         }
 
@@ -828,6 +979,7 @@ namespace DrawBody.Prototype
 
         public void HideMenu()
         {
+            HideGameplayActionConfirm();
             if (menuPanel != null)
             {
                 ResolveMenuDrawer();
@@ -972,6 +1124,17 @@ namespace DrawBody.Prototype
         public void SetTitle(bool showing)
         {
             titleShowing = showing;
+            // Every route back to the title (including a remote host ending the
+            // session) must discard the gameplay drawer state.  Otherwise the
+            // drawer survives beside the title UI because it lives on the same
+            // persistent canvas.
+            if (showing)
+            {
+                HideMenu();
+                HideLeaveSessionConfirm();
+                HideGameplayActionConfirm();
+                HideSpeciesSwapConfirm();
+            }
             if (titlePanel != null)
             {
                 titlePanel.SetActive(showing);
@@ -1729,6 +1892,7 @@ namespace DrawBody.Prototype
         private void RefreshText()
         {
             RefreshGameplayMenu();
+            RefreshGameplayActionConfirmText();
             RefreshSpeciesSwapText();
             if (editorTestReturnLabel != null)
             {

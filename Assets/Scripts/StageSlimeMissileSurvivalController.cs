@@ -422,10 +422,14 @@ namespace DrawBody.Prototype
         private void BuildSideMonitors()
         {
             float[] heights = { -8f, -18f, -28f, -37f };
+            // The authored boundary's thickened outer faces reach roughly x=±10.8.
+            // Keep the complete 2.35-wide monitor beyond those faces, including
+            // its loose crayon outline and a small visual gap.
+            const float outsideMonitorX = 12.25f;
             for (int y = 0; y < heights.Length; y++)
             {
-                CreateSideMonitor(-10.65f, heights[y]);
-                CreateSideMonitor(10.65f, heights[y]);
+                CreateSideMonitor(-outsideMonitorX, heights[y]);
+                CreateSideMonitor(outsideMonitorX, heights[y]);
             }
         }
 

@@ -90,6 +90,7 @@ namespace DrawBody.Prototype
         private bool scriptedJumpHeld;
         private bool scriptedJumpPressed;
         private bool friendCarried;
+        private bool humanCarryStruggling;
         private float weaponRecoilMomentumUntil = -100f;
         private bool remoteActionStateEnabled;
         private bool remoteGrounded;
@@ -106,6 +107,7 @@ namespace DrawBody.Prototype
         public bool IsGrounded { get; private set; }
         public bool ControlsEnabled => controlsEnabled;
         public bool IsFriendCarried => friendCarried;
+        public bool IsHumanCarryStruggling => humanCarryStruggling;
         public int FacingDirection => facingDirection;
         public bool IsInvulnerable => currentSpecies == DrawManager.Species.Turtle && turtleShelled
             || Time.unscaledTime < remoteRespawnGraceUntil;
@@ -327,7 +329,7 @@ namespace DrawBody.Prototype
             {
                 case DrawManager.Species.Cat:
                     moveSpeedMultiplier = CalculateCatMoveSpeedMultiplier(catLegInk);
-                    jumpVelocityMultiplier = 0.9f;
+                    jumpVelocityMultiplier = 1.8f;
                     break;
                 case DrawManager.Species.Bird:
                     canGlide = true;
@@ -504,6 +506,7 @@ namespace DrawBody.Prototype
             friendCarried = carried;
             if (!carried)
             {
+                humanCarryStruggling = false;
                 return;
             }
 
@@ -513,6 +516,11 @@ namespace DrawBody.Prototype
             wallJumpControlLockUntil = -100f;
             wallJumpMomentumUntil = -100f;
             StopBirdGlideAudio();
+        }
+
+        public void SetHumanCarryStruggling(bool active)
+        {
+            humanCarryStruggling = active;
         }
 
         public void ResetMotion()

@@ -925,6 +925,7 @@ namespace DrawBody.Prototype
     {
         private static readonly HashSet<StageGrainCarrier> ActiveCarriers = new HashSet<StageGrainCarrier>();
         private readonly List<Collider2D> bodyColliders = new List<Collider2D>();
+        private readonly List<Collider2D> armGrainCatchers = new List<Collider2D>();
         private float nextColliderRefresh;
         private float nextBoundsRefresh;
         private Bounds cachedCarrierBounds;
@@ -970,7 +971,20 @@ namespace DrawBody.Prototype
 
         public bool OverlapsParticleForMeasurement(Bounds particleBounds)
         {
-            if (!TryGetCarrierBounds(out Bounds bounds)) return false;
+            RefreshCarrierBoundsIfNeeded();
+            for (int i = armGrainCatchers.Count - 1; i >= 0; i--)
+            {
+                Collider2D catcher = armGrainCatchers[i];
+                if (catcher == null)
+                {
+                    armGrainCatchers.RemoveAt(i);
+                    continue;
+                }
+                if (catcher.enabled && catcher.bounds.Intersects(particleBounds)) return true;
+            }
+
+            if (!hasCachedCarrierBounds) return false;
+            Bounds bounds = cachedCarrierBounds;
 
             // 9-3 is judged from what the player can see at the measuring
             // moment. Include the grain's visible radius and a small allowance
@@ -1012,10 +1026,13 @@ namespace DrawBody.Prototype
             float bestY = float.PositiveInfinity;
             bool allowScaleRestingGrain = abilities != null
                 && abilities.CurrentProfile.Species == DrawManager.Species.Turtle;
+            // Use the same full-body overlap rule as 9-3. Limiting this to the
+            // old upper-half container made grains on cat legs, bird lower
+            // parts, and human arms impossible to deposit in 7-2.
             foreach (StageGrainParticle particle in StageGrainParticle.All)
             {
                 if (particle == null || particle.IsOnGround && !allowScaleRestingGrain
-                    || !ContainsWorldPoint(particle.transform.position)) continue;
+                    || !particle.IsContainedByForMeasurement(this)) continue;
                 Vector2 relativeVelocity = particle.Velocity - (playerBody != null ? playerBody.linearVelocity : Vector2.zero);
                 if (relativeVelocity.sqrMagnitude > 4f) continue;
                 if (particle.transform.position.y < bestY)
@@ -1116,16 +1133,21 @@ namespace DrawBody.Prototype
             if (value > 0f) return;
             List<StageGrainParticle> remove = new List<StageGrainParticle>();
             foreach (StageGrainParticle particle in StageGrainParticle.All)
-                if (particle != null && ContainsWorldPoint(particle.transform.position)) remove.Add(particle);
+                if (particle != null && particle.IsContainedByForMeasurement(this)) remove.Add(particle);
             for (int i = 0; i < remove.Count; i++) remove[i].Consume();
         }
 
         private bool TryGetCarrierBounds(out Bounds bounds)
         {
-            if (!hasCachedCarrierBounds || Time.unscaledTime >= nextBoundsRefresh)
-                RefreshCarrierBounds();
+            RefreshCarrierBoundsIfNeeded();
             bounds = cachedCarrierBounds;
             return hasCachedCarrierBounds;
+        }
+
+        private void RefreshCarrierBoundsIfNeeded()
+        {
+            if (!hasCachedCarrierBounds || Time.unscaledTime >= nextBoundsRefresh)
+                RefreshCarrierBounds();
         }
 
         private void RefreshCarrierBounds()
@@ -1136,12 +1158,18 @@ namespace DrawBody.Prototype
             {
                 nextColliderRefresh = Time.unscaledTime + 0.35f;
                 bodyColliders.Clear();
+                armGrainCatchers.Clear();
                 Collider2D[] colliders = GetComponentsInChildren<Collider2D>(true);
                 for (int i = 0; i < colliders.Length; i++)
                 {
                     Collider2D collider = colliders[i];
-                    if (collider == null || collider.isTrigger) continue;
-                    if (collider.gameObject.name.EndsWith("Segment", System.StringComparison.Ordinal))
+                    if (collider == null) continue;
+                    if (collider.gameObject.name == "HumanArmGrainCatcher")
+                    {
+                        if (!collider.isTrigger) armGrainCatchers.Add(collider);
+                    }
+                    else if (!collider.isTrigger
+                        && collider.gameObject.name.EndsWith("Segment", System.StringComparison.Ordinal))
                     {
                         bodyColliders.Add(collider);
                     }

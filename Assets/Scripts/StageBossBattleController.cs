@@ -15,6 +15,7 @@ namespace DrawBody.Prototype
         private const int MaximumHealth = 100;
         private const float WaitingRoomLeftX = -8.0f;
         private const float WaitingRoomRightX = -3.0f;
+        private const float WaitingRoomGateWidth = 2.0f;
         private const float LeftArenaX = -1.4f;
         private const float RightArenaX = 24.4f;
         private const float FloorY = -2.45f;
@@ -789,9 +790,10 @@ namespace DrawBody.Prototype
 
             if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
             StageObjectData gateData = StageObjectFactory.CreateDefaultData(
-                StageObjectType.Wall, new Vector2(WaitingRoomLeftX, 4.25f));
+                StageObjectType.Wall,
+                new Vector2(WaitingRoomLeftX - (WaitingRoomGateWidth - 0.7f) * 0.5f, 4.25f));
             gateData.objectId = "4-3_waiting_room_left_gate";
-            gateData.size = new Vector2(0.7f, 13.8f);
+            gateData.size = new Vector2(WaitingRoomGateWidth, 13.8f);
             gateData.keepSeparate = true;
             waitingRoomLeftGate = objectFactory?.Create(gateData, transform);
             if (waitingRoomLeftGate != null) waitingRoomLeftGate.name = "Waiting Room Left Gate";
@@ -1124,7 +1126,7 @@ namespace DrawBody.Prototype
         {
             GameObject board = new GameObject("4-3 Boss HP Monitor");
             board.transform.SetParent(transform, false);
-            board.transform.position = new Vector3(11.5f, 9.75f, 0f);
+            board.transform.position = new Vector3(10.8f, -5.15f, 0f);
             DoodleMonitorVisuals.Build(board.transform, new Vector2(18f, 2.45f), 3);
             monitorTitle = CreateText(board.transform, new Vector3(-7.75f, 0.45f, -0.04f), 0.064f,
                 new Color(0.08f, 0.25f, 0.48f, 1f), 9, TextAnchor.MiddleLeft);

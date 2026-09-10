@@ -171,7 +171,9 @@ namespace DrawBody.Prototype
         public bool HandleTargetHit(StageRicochetTarget target, int reflectionCount, Vector2 hitPoint)
         {
             if (!HasAuthority() || !IsRoundActive || target == null || target != activeTarget) return true;
-            int requiredReflections = playerCount > 1 ? 1 : 0;
+            // The shooter occupies one room. Every other participant must touch
+            // the shot once before the target can be defeated (4P => 3 people).
+            int requiredReflections = Mathf.Max(0, playerCount - 1);
             if (reflectionCount < requiredReflections)
             {
                 GameSfx.PlayAt(SfxId.Ricochet, hitPoint, 0.7f);

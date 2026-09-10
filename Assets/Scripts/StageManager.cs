@@ -20,6 +20,8 @@ namespace DrawBody.Prototype
         private const string GimmickKindChallengeSessionRequest = "challenge_session_request";
         private const string GimmickKindChallengeSessionState = "challenge_session_state";
         private const string GimmickKindPlayerAbilityEffect = "player_ability_effect";
+        private const string GimmickKindSlimeBoxBreakRequest = "slime_box_break_request";
+        private const string GimmickKindSlimeBoxBreakState = "slime_box_break_state";
         private const float LowestStageObjectFallMargin = 8f;
         private const float ChallengeStartCountdownDuration = 4f;
         private const float ChallengeTimeUpReturnDelay = 5f;
@@ -56,6 +58,7 @@ namespace DrawBody.Prototype
         private bool titleTextInputActive;
         private bool optionOverlayActive;
         private bool onlineStateSubscribed;
+        private bool onlineSessionEnding;
         private string currentStageId = "1-0";
         private string remotePlayerId;
         private string onlineCarrierPlayerId;
@@ -102,6 +105,7 @@ namespace DrawBody.Prototype
         private readonly HashSet<PlayerController2D> localPlayersAtGoal = new HashSet<PlayerController2D>();
         private readonly HashSet<string> onlinePlayerIdsAtGoal = new HashSet<string>();
         private readonly HashSet<string> collectedObjectIds = new HashSet<string>();
+        private readonly HashSet<string> slimeBrokenObjectIds = new HashSet<string>();
         private StageRuleMode stageRuleMode;
         private StageObjectType collectionTarget = StageObjectType.CollectibleFish;
         private int requiredCollectionCount;
@@ -110,6 +114,7 @@ namespace DrawBody.Prototype
         private float challengeRemaining;
         private bool challengeFailed;
         private float nextChallengeSyncAt;
+        private float nextSlimeBreakSyncAt;
         private bool challengeStarting;
         private float challengeStartCountdownRemaining;
         private float challengeTimeUpReturnRemaining;
@@ -146,9 +151,15 @@ namespace DrawBody.Prototype
         public int ChallengeTotalCollectionTargetCount => totalCollectionTargetCount;
         public bool ChallengeStarting => challengeStarting;
         public bool IsChallengeReadyRoomActive => challengeReadyRoom != null && !challengeRunStarted;
-        public bool CanUseGameplayCharacterControls => !stageStarted
-            || !RequiresChallengeReadyRoom()
-            || IsChallengeReadyRoomActive;
+        public bool CanUseGameplayCharacterControls
+        {
+            get
+            {
+                if (!stageStarted || drawing) return true;
+                if (RequiresChallengeReadyRoom() && !IsChallengeReadyRoomActive) return false;
+                return StageRedrawZone.IsPlayerInZone(player);
+            }
+        }
         public string CurrentStageId => currentStageId;
         public bool RequiresUniquePlayerSpecies => StageSpeciesRules.RequiresUniqueSpecies(currentStageId);
         public string ChallengeStartCountdownText
@@ -194,6 +205,15 @@ namespace DrawBody.Prototype
         private sealed class PlayerAbilityEffectMessage
         {
             public string Effect;
+            public Vector2 Direction;
+        }
+
+        [System.Serializable]
+        private sealed class SlimeBoxBreakMessage
+        {
+            public string StageId;
+            public string ObjectId;
+            public Vector2 HitPoint;
         }
 
         [System.Serializable]
@@ -338,6 +358,7 @@ namespace DrawBody.Prototype
 
             if (onlineSessionLobbyId != lobby.LobbyId)
             {
+                onlineSessionEnding = false;
                 knownOnlineLobbyPlayers.Clear();
                 onlineSessionLobbyId = lobby.LobbyId;
                 onlineStageLoadRequired = true;
@@ -407,7 +428,7 @@ namespace DrawBody.Prototype
                 currentIds.Add(member.PlayerId);
             }
 
-            if (knownOnlineLobbyPlayers.Count > 0)
+            if (!onlineSessionEnding && knownOnlineLobbyPlayers.Count > 0)
             {
                 foreach (KeyValuePair<string, string> previous in knownOnlineLobbyPlayers)
                 {
@@ -644,6 +665,10 @@ namespace DrawBody.Prototype
         {
             if (IsOnlineInStage() && IsLocalOnlineHost(onlineManager.CurrentLobby))
             {
+                // Clients leave as soon as they receive the shutdown message.
+                // Suppress those resulting roster removals on the host: they
+                // are part of closing the room, not individual player exits.
+                onlineSessionEnding = true;
                 onlineManager.SendGimmickData(new OnlineGimmickData
                 {
                     ObjectId = currentStageId,
@@ -665,8 +690,10 @@ namespace DrawBody.Prototype
 
         private void CompleteLeaveSession()
         {
+            onlineSessionEnding = true;
             onlineManager?.LeaveLobby();
             uiManager?.HideLeaveSessionConfirm();
+            uiManager?.HideGameplayNotice();
             EnterTitle();
         }
 
@@ -685,6 +712,7 @@ namespace DrawBody.Prototype
             }
 
             UpdateSpeciesSwapTimeouts();
+            BroadcastSlimeBreakStatesIfNeeded();
 
             if (stageEditing)
             {
@@ -1295,10 +1323,7 @@ namespace DrawBody.Prototype
             }
 
             cleared = true;
-            if (!testingEditedStage)
-            {
-                StageProgressStore.MarkCleared(currentStageId);
-            }
+            RecordStageClearProgress(currentStageId);
             GameSfx.Play(SfxId.StageClear);
             ExitDrawingMode();
             SetAllPlayerControls(false);
@@ -1353,15 +1378,21 @@ namespace DrawBody.Prototype
                     if (effect.Effect == "cat_scratch")
                         source.GetComponent<PlayerCarryController>()?.PlayRemoteCatScratchEffect();
                     else if (effect.Effect == "slime_spike")
-                        source.GetComponent<PlayerCarryController>()?.PlayRemoteSlimeSpikeEffect();
+                        source.GetComponent<PlayerCarryController>()?.PlayRemoteSlimeSpikeEffect(effect.Direction);
                 }
             }
             else if (data.Kind == GimmickKindClearRequest && IsLocalOnlineHost(onlineManager.CurrentLobby))
             {
                 ClearStage();
             }
-            else if (data.Kind == GimmickKindClear && IsOnlineHostPlayer(data.PlayerId))
+            else if (data.Kind == GimmickKindClear
+                && data.ObjectId == currentStageId
+                && IsOnlineHostPlayer(data.PlayerId))
             {
+                // Persist the participant's own local clear record as soon as the
+                // authoritative host notification arrives. This is intentionally
+                // shared with single-player progress.
+                RecordStageClearProgress(data.ObjectId);
                 ApplyClearStage();
             }
             else if (data.Kind == GimmickKindGoalState && data.ObjectId == currentStageId)
@@ -1401,9 +1432,30 @@ namespace DrawBody.Prototype
             }
             else if (data.Kind == GimmickKindSessionEnded && IsOnlineHostPlayer(data.PlayerId))
             {
+                onlineSessionEnding = true;
+                string notice = LocalizationManager.T("online_host_disconnected");
                 onlineManager.LeaveLobby();
                 uiManager?.HideLeaveSessionConfirm();
+                uiManager?.HideGameplayNotice();
                 EnterTitle();
+                uiManager?.ShowGameplayNotice(notice, 4f);
+            }
+            else if (data.Kind == GimmickKindSlimeBoxBreakRequest
+                && IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                SlimeBoxBreakMessage request = JsonUtility.FromJson<SlimeBoxBreakMessage>(data.Json);
+                if (request != null && request.StageId == currentStageId
+                    && ApplySlimeBoxBreak(request.ObjectId, request.HitPoint))
+                {
+                    BroadcastSlimeBoxBreak(request.ObjectId, request.HitPoint);
+                }
+            }
+            else if (data.Kind == GimmickKindSlimeBoxBreakState
+                && IsOnlineHostPlayer(data.PlayerId))
+            {
+                SlimeBoxBreakMessage state = JsonUtility.FromJson<SlimeBoxBreakMessage>(data.Json);
+                if (state != null && state.StageId == currentStageId)
+                    ApplySlimeBoxBreak(state.ObjectId, state.HitPoint);
             }
             else if (data.Kind == GimmickKindSpeciesSwapRequest && data.ObjectId == currentStageId)
             {
@@ -1433,6 +1485,7 @@ namespace DrawBody.Prototype
                     pendingOutgoingSpeciesSwap = null;
                     pendingOutgoingSpeciesSwapExpiresAt = 0f;
                     pendingSpeciesSwapDrawingState = null;
+                    uiManager?.HideSpeciesSwapConfirm();
                     drawManager?.ShowSpeciesSwapResult(false);
                 }
                 else if (response.Accepted && IsLocalOnlineHost(onlineManager.CurrentLobby))
@@ -1446,6 +1499,14 @@ namespace DrawBody.Prototype
             {
                 SpeciesSwapMessage applied = JsonUtility.FromJson<SpeciesSwapMessage>(data.Json);
                 ApplySpeciesSwap(applied);
+            }
+        }
+
+        private void RecordStageClearProgress(string stageId)
+        {
+            if (!testingEditedStage)
+            {
+                StageProgressStore.MarkCleared(stageId);
             }
         }
 
@@ -1682,6 +1743,8 @@ namespace DrawBody.Prototype
             challengeReadyRoom = null;
             challengeRunStarted = false;
             assignedPlayerStartPositions.Clear();
+            slimeBrokenObjectIds.Clear();
+            nextSlimeBreakSyncAt = Time.unscaledTime + 1.5f;
             ResetSpeciesSwapState();
             SetEditedStageTestMode(false);
             NotebookBackgroundDoodles.SetWorldVisible(true);
@@ -2719,6 +2782,7 @@ namespace DrawBody.Prototype
             onlineCarryLastConfirmedAt = Time.unscaledTime;
             onlineCarryIsCatGrab = catGrab;
             onlineCarryLocalOffset = localOffset;
+            player.SetHumanCarryStruggling(!catGrab);
             onlineCarryHasBounds = TryGetPlayerSolidBounds(player, out Bounds carryBounds);
             if (onlineCarryHasBounds)
             {
@@ -2922,6 +2986,7 @@ namespace DrawBody.Prototype
 
             player?.SetControlsEnabled(stageStarted && !drawing && !cleared
                 && !stageEditing && !optionOverlayActive);
+            player?.SetHumanCarryStruggling(false);
             onlineCarryBody = null;
             onlineCarrierPlayerId = null;
             onlineCarryBeganAt = 0f;
@@ -3254,6 +3319,11 @@ namespace DrawBody.Prototype
                 ShowReadyRoomOnlyCharacterChangeNotice();
                 return;
             }
+            if (StageRedrawZone.HasActiveZones() && !StageRedrawZone.IsPlayerInZone(player))
+            {
+                uiManager?.ShowGameplayNotice(LocalizationManager.T("character_switch_redraw_zone_only"));
+                return;
+            }
             if (secondaryPlayer == null || primaryPlayer == null)
             {
                 return;
@@ -3264,7 +3334,12 @@ namespace DrawBody.Prototype
 
         public void ShowReadyRoomOnlyCharacterChangeNotice()
         {
-            uiManager?.ShowGameplayNotice(LocalizationManager.T("character_change_ready_room_only"));
+            string key = stageStarted && !drawing
+                && (!RequiresChallengeReadyRoom() || IsChallengeReadyRoomActive)
+                && !StageRedrawZone.IsPlayerInZone(player)
+                    ? "character_switch_redraw_zone_only"
+                    : "character_change_ready_room_only";
+            uiManager?.ShowGameplayNotice(LocalizationManager.T(key));
         }
 
         private void RestoreRedrawPose(bool returnToStart)
@@ -4123,7 +4198,12 @@ namespace DrawBody.Prototype
             Vector3 respawnDestination = spawnPoint != null
                 ? spawnPoint.position + respawnOffset
                 : targetPlayer.transform.position;
-            RespawnPlayer(targetPlayer, respawnOffset, false, false);
+            RespawnPlayer(
+                targetPlayer,
+                respawnOffset,
+                false,
+                resolveGroundOverlap: false,
+                ensurePhysicsSimulation: false);
             targetPlayer.transform.localScale = Vector3.Scale(
                 state.OriginalScale,
                 new Vector3(0.03f, 0.03f, 1f));
@@ -4166,7 +4246,115 @@ namespace DrawBody.Prototype
             respawnAnimations.Remove(targetPlayer);
         }
 
-        internal void BroadcastLocalAbilityEffect(PlayerController2D source, string effect)
+        internal void RequestSlimeBoxBreak(Transform target, Vector2 hitPoint)
+        {
+            StageEditorObject marker = target != null
+                ? target.GetComponentInParent<StageEditorObject>()
+                : null;
+            if (marker == null || string.IsNullOrEmpty(marker.objectId)
+                || !IsSlimeBreakableBox(marker.type)) return;
+
+            if (!IsOnlineInStage())
+            {
+                ApplySlimeBoxBreak(marker.objectId, hitPoint);
+                return;
+            }
+
+            SlimeBoxBreakMessage message = new SlimeBoxBreakMessage
+            {
+                StageId = currentStageId,
+                ObjectId = marker.objectId,
+                HitPoint = hitPoint
+            };
+            if (IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                if (ApplySlimeBoxBreak(message.ObjectId, hitPoint))
+                    BroadcastSlimeBoxBreak(message.ObjectId, hitPoint);
+                return;
+            }
+
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = currentStageId,
+                Kind = GimmickKindSlimeBoxBreakRequest,
+                Json = JsonUtility.ToJson(message)
+            });
+        }
+
+        private bool ApplySlimeBoxBreak(string objectId, Vector2 hitPoint)
+        {
+            if (string.IsNullOrEmpty(objectId) || slimeBrokenObjectIds.Contains(objectId)) return false;
+            StageEditorObject[] objects = Object.FindObjectsByType<StageEditorObject>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+            StageEditorObject target = null;
+            for (int i = 0; i < objects.Length; i++)
+            {
+                if (objects[i] != null && objects[i].objectId == objectId
+                    && IsSlimeBreakableBox(objects[i].type))
+                {
+                    target = objects[i];
+                    break;
+                }
+            }
+            if (target == null) return false;
+            if (hitPoint == Vector2.zero) hitPoint = target.transform.position;
+
+            PlayerCarryController[] carriers = Object.FindObjectsByType<PlayerCarryController>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < carriers.Length; i++)
+                carriers[i]?.ReleaseIfHolding(target.transform);
+            Object.FindFirstObjectByType<StageGimmickSyncManager>()
+                ?.UnregisterRuntimeObject(target.transform);
+            slimeBrokenObjectIds.Add(objectId);
+            SlimeBoxBreakFeedback.Play(target.transform, hitPoint, target.type);
+            // UI/game cameras sit well away from the 2D world on Z, so a spatial
+            // source can become almost inaudible. Box breaking is important
+            // feedback and should be heard consistently by the local player.
+            GameSfx.Play(SfxId.CrateBreak, 1.5f);
+            target.gameObject.SetActive(false);
+            return true;
+        }
+
+        private static bool IsSlimeBreakableBox(StageObjectType type)
+        {
+            return type == StageObjectType.WoodBox
+                || type == StageObjectType.IronBox
+                || type == StageObjectType.TriangleBox
+                || type == StageObjectType.FloatingBox
+                || type == StageObjectType.RubberBox;
+        }
+
+        private void BroadcastSlimeBoxBreak(string objectId, Vector2 hitPoint)
+        {
+            if (!IsOnlineInStage() || onlineManager == null
+                || !IsLocalOnlineHost(onlineManager.CurrentLobby)) return;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = currentStageId,
+                Kind = GimmickKindSlimeBoxBreakState,
+                Json = JsonUtility.ToJson(new SlimeBoxBreakMessage
+                {
+                    StageId = currentStageId,
+                    ObjectId = objectId,
+                    HitPoint = hitPoint
+                })
+            });
+        }
+
+        private void BroadcastSlimeBreakStatesIfNeeded()
+        {
+            if (slimeBrokenObjectIds.Count == 0 || Time.unscaledTime < nextSlimeBreakSyncAt
+                || !IsOnlineInStage() || onlineManager == null
+                || !IsLocalOnlineHost(onlineManager.CurrentLobby)) return;
+            nextSlimeBreakSyncAt = Time.unscaledTime + 1.5f;
+            foreach (string objectId in slimeBrokenObjectIds)
+                BroadcastSlimeBoxBreak(objectId, Vector2.zero);
+        }
+
+        internal void BroadcastLocalAbilityEffect(
+            PlayerController2D source,
+            string effect,
+            Vector2 direction = default)
         {
             if (source == null || source != primaryPlayer || !IsOnlineInStage()
                 || onlineManager == null || string.IsNullOrEmpty(effect)) return;
@@ -4174,7 +4362,11 @@ namespace DrawBody.Prototype
             {
                 ObjectId = currentStageId,
                 Kind = GimmickKindPlayerAbilityEffect,
-                Json = JsonUtility.ToJson(new PlayerAbilityEffectMessage { Effect = effect })
+                Json = JsonUtility.ToJson(new PlayerAbilityEffectMessage
+                {
+                    Effect = effect,
+                    Direction = direction
+                })
             });
         }
 
@@ -4356,7 +4548,8 @@ namespace DrawBody.Prototype
             PlayerController2D targetPlayer,
             Vector3 offset,
             bool enableControls,
-            bool resolveGroundOverlap = true)
+            bool resolveGroundOverlap = true,
+            bool ensurePhysicsSimulation = true)
         {
             if (targetPlayer == null || spawnPoint == null)
             {
@@ -4372,7 +4565,7 @@ namespace DrawBody.Prototype
             // object, so physics must be restored before the safe teleport or
             // the disabled state leaks into every subsequently selected stage.
             Rigidbody2D respawnBody = targetPlayer.GetComponent<Rigidbody2D>();
-            if (respawnBody != null) respawnBody.simulated = true;
+            if (respawnBody != null && ensurePhysicsSimulation) respawnBody.simulated = true;
             Vector3 destination = spawnPoint.position + offset;
             TeleportPlayerWithoutPhysics(targetPlayer, destination);
             AlignPlayerBottomToGround(targetPlayer, destination);
@@ -4477,9 +4670,21 @@ namespace DrawBody.Prototype
                 // A number of stages deliberately put the marker close to the
                 // left edge of a small starting platform. Fit the whole group into
                 // that platform instead of blindly spreading around the marker.
+                // Use the actual drawing bounds as well: at four players the first
+                // slot in 2-1 is close to the wall/platform seam, and a body wider
+                // than the old fixed margin can miss the floor and respawn forever.
                 const float edgeMargin = 0.75f;
-                float allowedMin = surfaceLeft + edgeMargin - spawnPoint.position.x;
-                float allowedMax = surfaceRight - edgeMargin - spawnPoint.position.x;
+                float leftInset = edgeMargin;
+                float rightInset = edgeMargin;
+                if (TryGetPlayerSolidBounds(targetPlayer, out Bounds playerBounds))
+                {
+                    float boundsLeftFromRoot = playerBounds.min.x - targetPlayer.transform.position.x;
+                    float boundsRightFromRoot = playerBounds.max.x - targetPlayer.transform.position.x;
+                    leftInset = Mathf.Max(edgeMargin, -boundsLeftFromRoot + groundSeparation);
+                    rightInset = Mathf.Max(edgeMargin, boundsRightFromRoot + groundSeparation);
+                }
+                float allowedMin = surfaceLeft + leftInset - spawnPoint.position.x;
+                float allowedMax = surfaceRight - rightInset - spawnPoint.position.x;
                 float availableWidth = Mathf.Max(0f, allowedMax - allowedMin);
                 spacing = Mathf.Min(preferredSpacing, availableWidth / (playerCount - 1));
                 float groupWidth = spacing * (playerCount - 1);
@@ -4686,7 +4891,16 @@ namespace DrawBody.Prototype
             if (pendingOutgoingSpeciesSwap != null)
             {
                 drawManager?.ShowSpeciesSwapPending();
+                uiManager?.ShowSpeciesSwapPending(
+                    GetPlayerDisplayName(pendingOutgoingSpeciesSwap.TargetId),
+                    (DrawManager.Species)pendingOutgoingSpeciesSwap.TargetSpecies,
+                    (DrawManager.Species)pendingOutgoingSpeciesSwap.RequesterSpecies);
                 return true;
+            }
+
+            if (pendingIncomingSpeciesSwap != null)
+            {
+                return false;
             }
 
             PlayerController2D target = FindPlayerUsingSpecies(requestedSpecies, player);
@@ -4735,6 +4949,10 @@ namespace DrawBody.Prototype
                 Json = JsonUtility.ToJson(request)
             });
             drawManager?.ShowSpeciesSwapPending();
+            uiManager?.ShowSpeciesSwapPending(
+                GetPlayerDisplayName(targetId),
+                requestedSpecies,
+                currentSpecies);
             return true;
         }
 
@@ -4796,8 +5014,25 @@ namespace DrawBody.Prototype
 
         private void ShowIncomingSpeciesSwap(SpeciesSwapMessage request)
         {
-            if (request == null || pendingIncomingSpeciesSwap != null)
+            if (request == null)
             {
+                return;
+            }
+
+            if (pendingIncomingSpeciesSwap != null)
+            {
+                if (pendingIncomingSpeciesSwap.RequestId != request.RequestId)
+                {
+                    DeclineSpeciesSwapAsBusy(request);
+                }
+                return;
+            }
+
+            // Do not replace a request this player is already waiting on with a
+            // second negotiation. The sender receives an immediate decline.
+            if (pendingOutgoingSpeciesSwap != null)
+            {
+                DeclineSpeciesSwapAsBusy(request);
                 return;
             }
 
@@ -4807,6 +5042,22 @@ namespace DrawBody.Prototype
                 GetPlayerDisplayName(request.RequesterId),
                 (DrawManager.Species)request.TargetSpecies,
                 (DrawManager.Species)request.RequesterSpecies);
+        }
+
+        private void DeclineSpeciesSwapAsBusy(SpeciesSwapMessage request)
+        {
+            if (request == null || onlineManager == null)
+            {
+                return;
+            }
+
+            request.Accepted = false;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = currentStageId,
+                Kind = GimmickKindSpeciesSwapResponse,
+                Json = JsonUtility.ToJson(request)
+            });
         }
 
         private void TryApplyAndBroadcastSpeciesSwap(SpeciesSwapMessage request)
@@ -4878,6 +5129,7 @@ namespace DrawBody.Prototype
                 pendingOutgoingSpeciesSwap = null;
                 pendingOutgoingSpeciesSwapExpiresAt = 0f;
                 pendingSpeciesSwapDrawingState = null;
+                uiManager?.HideSpeciesSwapConfirm();
                 drawManager?.ShowSpeciesSwapResult(true);
                 if (drawing)
                 {
@@ -4907,6 +5159,7 @@ namespace DrawBody.Prototype
                 pendingOutgoingSpeciesSwap = null;
                 pendingOutgoingSpeciesSwapExpiresAt = 0f;
                 pendingSpeciesSwapDrawingState = null;
+                uiManager?.HideSpeciesSwapConfirm();
                 drawManager?.ShowSpeciesSwapResult(false);
             }
         }

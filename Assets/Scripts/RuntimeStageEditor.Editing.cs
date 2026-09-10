@@ -370,6 +370,41 @@ namespace DrawBody.Prototype
 
         public void DeleteSelected()
         {
+            if (rangeSelectedObjects.Count > 1)
+            {
+                PushUndo();
+                bool deletedLinkSource = false;
+                for (int i = rangeSelectedObjects.Count - 1; i >= 0; i--)
+                {
+                    StageObjectData data = rangeSelectedObjects[i];
+                    if (data == null)
+                    {
+                        continue;
+                    }
+
+                    if (data == linkSourceData)
+                    {
+                        deletedLinkSource = true;
+                    }
+                    objects.Remove(data);
+                    RemoveEditorObjectById(data.objectId);
+                }
+
+                if (deletedLinkSource)
+                {
+                    linkSourceData = null;
+                }
+                selectedData = null;
+                selectedObject = null;
+                ClearRangeSelection();
+                SetSelectionBox(false);
+                RefreshBridgeConnectionVisuals();
+                RefreshText();
+                RefreshListPanel();
+                GameSfx.Play(SfxId.EditorObjectDelete);
+                return;
+            }
+
             if (selectedData == null)
             {
                 return;
