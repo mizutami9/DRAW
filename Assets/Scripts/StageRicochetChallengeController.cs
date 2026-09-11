@@ -48,15 +48,17 @@ namespace DrawBody.Prototype
         private float previousCameraSize;
         private bool cameraFollowWasEnabled;
         private bool cameraLocked;
-        private StageRicochetBulletPassage verticalPassage;
-        private StageRicochetBulletPassage horizontalPassage;
-        private StageRicochetBulletPassage leftPassage;
-        private StageRicochetBulletPassage rightPassage;
-        private StageRicochetBulletPassage ceilingPassage;
-        private StageRicochetBulletPassage floorPassage;
+        // Cell indices are TL, TR, BL, BR. Each divider and outer wall is split
+        // per room so a round can expose one exact relay route instead of opening
+        // an entire row or column.
+        private readonly StageRicochetBulletPassage[] internalPassages = new StageRicochetBulletPassage[4];
+        private readonly StageRicochetBulletPassage[] outerPassages = new StageRicochetBulletPassage[8];
         private GameObject routeGuideRoot;
         private readonly List<SpriteRenderer> routeGuideDots = new List<SpriteRenderer>();
         private readonly List<Vector2> predictedRoute = new List<Vector2>();
+        private const int PredictionDotCount = 208;
+        private const int MaximumPredictedReflections = 32;
+        private const float PredictionDotSpacing = 0.36f;
 
         public bool IsRoundActive => state != null && state.Phase == 0;
 
@@ -208,8 +210,9 @@ namespace DrawBody.Prototype
             int gunCell = Random.Range(0, occupiedCellCount);
 
             state.GunPosition = RandomPointInCell(gunCell, true);
-            // Targets stay outside every player room. The outer wall passage and
-            // a teammate reflection are both required to reach them.
+            // In 4P the target room is adjacent to the gun room. The direct edge
+            // stays closed; the other three internal edges form the long route
+            // through all three teammates before the target passage opens.
             state.EnemyPosition = RandomUnusedExternalTargetPoint(gunCell);
             ApplyRoundState();
             BroadcastState(true);
@@ -228,7 +231,6 @@ namespace DrawBody.Prototype
         private Vector2 RandomUnusedExternalTargetPoint(int gunCell)
         {
             gunCell = Mathf.Clamp(gunCell, 0, cellCenters.Count - 1);
-            Vector2 gunCenter = cellCenters[gunCell];
             Vector2[] allPositions =
             {
                 new Vector2(-17.55f, 4.3f), new Vector2(17.55f, 4.3f),
@@ -241,21 +243,21 @@ namespace DrawBody.Prototype
             for (int i = 0; i < allPositions.Length; i++)
             {
                 Vector2 point = allPositions[i];
-                bool directlyAligned = Mathf.Abs(point.x - gunCenter.x) < 0.1f
-                    || Mathf.Abs(point.y - gunCenter.y) < 0.1f;
-                if (!directlyAligned && !HasUsedEnemyPosition(point))
+                bool validFourPlayerEndpoint = playerCount < 4 || IsValidFourPlayerTarget(gunCell, point);
+                if (validFourPlayerEndpoint && !HasUsedEnemyPosition(point))
                 {
                     candidates.Add(point);
                 }
             }
 
-            // Five rounds fit into the eight outer spawn points. This fallback
-            // only matters if the gun-cell alignment filtered every unused point.
+            // If all valid points were used in earlier rounds, allow a repeat but
+            // keep the 4P endpoint constraint intact.
             if (candidates.Count == 0)
             {
                 for (int i = 0; i < allPositions.Length; i++)
                 {
-                    if (!HasUsedEnemyPosition(allPositions[i])) candidates.Add(allPositions[i]);
+                    if (playerCount < 4 || IsValidFourPlayerTarget(gunCell, allPositions[i]))
+                        candidates.Add(allPositions[i]);
                 }
             }
             if (candidates.Count == 0)
@@ -348,9 +350,11 @@ namespace DrawBody.Prototype
         {
             cellCenters.Clear();
             cellFloors.Clear();
-            verticalPassage = CreateDivider("Center Vertical", Vector2.zero, new Vector2(1.2f, 16.6f));
-            horizontalPassage = CreateDivider("Center Horizontal", Vector2.zero, new Vector2(32.6f, 1.2f));
-            FindOuterPassages();
+            internalPassages[0] = CreateDivider("Center Top", new Vector2(0f, 4.15f), new Vector2(1.2f, 8.3f));
+            internalPassages[1] = CreateDivider("Center Bottom", new Vector2(0f, -4.15f), new Vector2(1.2f, 8.3f));
+            internalPassages[2] = CreateDivider("Center Left", new Vector2(-8.15f, 0f), new Vector2(16.3f, 1.2f));
+            internalPassages[3] = CreateDivider("Center Right", new Vector2(8.15f, 0f), new Vector2(16.3f, 1.2f));
+            CreateOuterPassages();
             AddCell(new Vector2(-8f, 4.3f), 0.31f);
             AddCell(new Vector2(8f, 4.3f), 0.31f);
             AddCell(new Vector2(-8f, -4.3f), -8.3f);
@@ -381,11 +385,13 @@ namespace DrawBody.Prototype
                 Vector2 from = horizontal ? new Vector2(value - 0.28f, 0f) : new Vector2(0f, value - 0.28f);
                 Vector2 to = horizontal ? new Vector2(value + 0.28f, 0f) : new Vector2(0f, value + 0.28f);
                 StageEscortController.AddLine(root.transform, from, to, 0.085f, new Color(0.1f, 0.6f, 0.95f, 0.75f), 14);
+                Transform stripe = root.transform.GetChild(root.transform.childCount - 1);
+                if (stripe != null) stripe.gameObject.name = "Bullet Passage Stripe";
             }
             return passage;
         }
 
-        private void FindOuterPassages()
+        private void CreateOuterPassages()
         {
             StageEditorObject[] objects = Object.FindObjectsByType<StageEditorObject>(FindObjectsSortMode.None);
             for (int i = 0; i < objects.Length; i++)
@@ -394,52 +400,127 @@ namespace DrawBody.Prototype
                 if (editorObject == null) continue;
                 switch (editorObject.objectId)
                 {
-                    case "10-3_left_wall": leftPassage = GetOrAddPassage(editorObject.gameObject); break;
-                    case "10-3_right_wall": rightPassage = GetOrAddPassage(editorObject.gameObject); break;
-                    case "10-3_ceiling": ceilingPassage = GetOrAddPassage(editorObject.gameObject); break;
-                    case "10-3_floor": floorPassage = GetOrAddPassage(editorObject.gameObject); break;
+                    case "10-3_left_wall":
+                    case "10-3_right_wall":
+                    case "10-3_ceiling":
+                    case "10-3_floor":
+                        Collider2D[] colliders = editorObject.GetComponentsInChildren<Collider2D>(true);
+                        for (int c = 0; c < colliders.Length; c++) colliders[c].enabled = false;
+                        break;
                 }
             }
-        }
 
-        private static StageRicochetBulletPassage GetOrAddPassage(GameObject target)
-        {
-            StageRicochetBulletPassage passage = target.GetComponent<StageRicochetBulletPassage>();
-            if (passage == null) passage = target.AddComponent<StageRicochetBulletPassage>();
-            if (target.transform.Find("Bullet Glass") == null)
-            {
-                StageEditorObject marker = target.GetComponent<StageEditorObject>();
-                Vector2 size = marker != null ? marker.size : Vector2.one;
-                StageEscortController.AddFilledRect(target.transform, "Bullet Glass", Vector2.zero, size,
-                    new Color(0.62f, 0.94f, 1f, 0.58f), 24);
-                StageEscortController.AddBoxOutline(target.transform, Vector2.zero, size,
-                    new Color(0.05f, 0.5f, 0.82f, 1f), 25);
-                float length = Mathf.Max(size.x, size.y);
-                bool horizontal = size.x >= size.y;
-                int stripeCount = Mathf.Clamp(Mathf.CeilToInt(length / 1.25f), 2, 28);
-                for (int i = 0; i < stripeCount; i++)
-                {
-                    float t = stripeCount <= 1 ? 0.5f : i / (float)(stripeCount - 1);
-                    float value = Mathf.Lerp(-length * 0.43f, length * 0.43f, t);
-                    Vector2 from = horizontal ? new Vector2(value - 0.32f, -size.y * 0.28f) : new Vector2(-size.x * 0.28f, value - 0.32f);
-                    Vector2 to = horizontal ? new Vector2(value + 0.32f, size.y * 0.28f) : new Vector2(size.x * 0.28f, value + 0.32f);
-                    StageEscortController.AddLine(target.transform, from, to, 0.075f,
-                        new Color(0.08f, 0.62f, 0.95f, 0.86f), 26);
-                    LineRenderer stripe = target.transform.GetChild(target.transform.childCount - 1).GetComponent<LineRenderer>();
-                    if (stripe != null) stripe.gameObject.name = "Bullet Passage Stripe";
-                }
-            }
-            return passage;
+            outerPassages[0] = CreateDivider("Left Top", new Vector2(-16.65f, 4.5f), new Vector2(0.7f, 9f));
+            outerPassages[1] = CreateDivider("Right Top", new Vector2(16.65f, 4.5f), new Vector2(0.7f, 9f));
+            outerPassages[2] = CreateDivider("Left Bottom", new Vector2(-16.65f, -4.5f), new Vector2(0.7f, 9f));
+            outerPassages[3] = CreateDivider("Right Bottom", new Vector2(16.65f, -4.5f), new Vector2(0.7f, 9f));
+            outerPassages[4] = CreateDivider("Ceiling Left", new Vector2(-8.5f, 8.65f), new Vector2(17f, 0.7f));
+            outerPassages[5] = CreateDivider("Ceiling Right", new Vector2(8.5f, 8.65f), new Vector2(17f, 0.7f));
+            outerPassages[6] = CreateDivider("Floor Left", new Vector2(-8.5f, -8.65f), new Vector2(17f, 0.7f));
+            outerPassages[7] = CreateDivider("Floor Right", new Vector2(8.5f, -8.65f), new Vector2(17f, 0.7f));
         }
 
         private void ConfigureBulletPassages()
         {
-            SetPassage(verticalPassage, Mathf.Sign(state.GunPosition.x) != Mathf.Sign(state.EnemyPosition.x));
-            SetPassage(horizontalPassage, Mathf.Sign(state.GunPosition.y) != Mathf.Sign(state.EnemyPosition.y));
-            SetPassage(leftPassage, state.EnemyPosition.x < -16.3f);
-            SetPassage(rightPassage, state.EnemyPosition.x > 16.3f);
-            SetPassage(ceilingPassage, state.EnemyPosition.y > 8.3f);
-            SetPassage(floorPassage, state.EnemyPosition.y < -8.3f);
+            for (int i = 0; i < internalPassages.Length; i++) SetPassage(internalPassages[i], false);
+            for (int i = 0; i < outerPassages.Length; i++) SetPassage(outerPassages[i], false);
+
+            int gunCell = GetCell(state.GunPosition);
+            int targetCell = GetOuterTargetCell(state.EnemyPosition);
+            if (playerCount >= 4 && AreAdjacentCells(gunCell, targetCell))
+            {
+                // The 2x2 rooms form a cycle. Closing the direct gun-to-target
+                // edge leaves the unique three-edge route through both other rooms.
+                int[] cycle = { 0, 1, 3, 2 };
+                for (int i = 0; i < cycle.Length; i++)
+                {
+                    int a = cycle[i];
+                    int b = cycle[(i + 1) % cycle.Length];
+                    if ((a == gunCell && b == targetCell) || (a == targetCell && b == gunCell)) continue;
+                    SetPassage(GetInternalPassage(a, b), true);
+                }
+            }
+            else
+            {
+                // Keep the less restrictive original routing for 1-3 players.
+                bool crossesColumns = Mathf.Sign(state.GunPosition.x) != Mathf.Sign(state.EnemyPosition.x);
+                bool crossesRows = Mathf.Sign(state.GunPosition.y) != Mathf.Sign(state.EnemyPosition.y);
+                SetPassage(internalPassages[0], crossesColumns);
+                SetPassage(internalPassages[1], crossesColumns);
+                SetPassage(internalPassages[2], crossesRows);
+                SetPassage(internalPassages[3], crossesRows);
+            }
+            SetPassage(GetOuterPassage(state.EnemyPosition), true);
+        }
+
+        private static int GetCell(Vector2 point)
+        {
+            if (point.y >= 0f) return point.x < 0f ? 0 : 1;
+            return point.x < 0f ? 2 : 3;
+        }
+
+        private static int GetOuterTargetCell(Vector2 point) => GetCell(point);
+
+        private static bool AreAdjacentCells(int a, int b)
+        {
+            int rowA = a / 2;
+            int rowB = b / 2;
+            int columnA = a % 2;
+            int columnB = b % 2;
+            return Mathf.Abs(rowA - rowB) + Mathf.Abs(columnA - columnB) == 1;
+        }
+
+        private static bool IsValidFourPlayerTarget(int gunCell, Vector2 targetPoint)
+        {
+            int targetCell = GetOuterTargetCell(targetPoint);
+            if (!AreAdjacentCells(gunCell, targetCell)) return false;
+
+            // The direct gun-target edge is closed, so the relay reaches the
+            // target cell from its other neighbour on the 2x2 cycle. Put the
+            // enemy on the perpendicular outer side: the last player must turn
+            // the shot instead of allowing it to continue straight outside.
+            int[] cycle = { 0, 1, 3, 2 };
+            int targetIndex = System.Array.IndexOf(cycle, targetCell);
+            int previous = cycle[(targetIndex + cycle.Length - 1) % cycle.Length];
+            int next = cycle[(targetIndex + 1) % cycle.Length];
+            int incomingCell = previous == gunCell ? next : previous;
+            Vector2 incoming = GetCellGridPosition(targetCell) - GetCellGridPosition(incomingCell);
+            Vector2 outward = GetOuterDirection(targetPoint);
+            return Mathf.Abs(Vector2.Dot(incoming.normalized, outward)) < 0.1f;
+        }
+
+        private static Vector2 GetCellGridPosition(int cell)
+        {
+            return new Vector2(cell % 2, -(cell / 2));
+        }
+
+        private static Vector2 GetOuterDirection(Vector2 point)
+        {
+            if (point.x < -16.3f) return Vector2.left;
+            if (point.x > 16.3f) return Vector2.right;
+            if (point.y > 8.3f) return Vector2.up;
+            if (point.y < -8.3f) return Vector2.down;
+            return Vector2.zero;
+        }
+
+        private StageRicochetBulletPassage GetInternalPassage(int a, int b)
+        {
+            int low = Mathf.Min(a, b);
+            int high = Mathf.Max(a, b);
+            if (low == 0 && high == 1) return internalPassages[0]; // center top
+            if (low == 2 && high == 3) return internalPassages[1]; // center bottom
+            if (low == 0 && high == 2) return internalPassages[2]; // center left
+            if (low == 1 && high == 3) return internalPassages[3]; // center right
+            return null;
+        }
+
+        private StageRicochetBulletPassage GetOuterPassage(Vector2 point)
+        {
+            if (point.x < -16.3f) return point.y >= 0f ? outerPassages[0] : outerPassages[2];
+            if (point.x > 16.3f) return point.y >= 0f ? outerPassages[1] : outerPassages[3];
+            if (point.y > 8.3f) return point.x < 0f ? outerPassages[4] : outerPassages[5];
+            if (point.y < -8.3f) return point.x < 0f ? outerPassages[6] : outerPassages[7];
+            return null;
         }
 
         private static void SetPassage(StageRicochetBulletPassage passage, bool allowsBullet)
@@ -562,7 +643,7 @@ namespace DrawBody.Prototype
             routeGuideDots.Clear();
             routeGuideRoot = new GameObject("10-3 Live Ricochet Prediction");
             routeGuideRoot.transform.SetParent(transform, false);
-            for (int i = 0; i < 96; i++)
+            for (int i = 0; i < PredictionDotCount; i++)
             {
                 GameObject dot = new GameObject("Prediction Dot " + i);
                 dot.transform.SetParent(routeGuideRoot.transform, false);
@@ -595,9 +676,16 @@ namespace DrawBody.Prototype
             predictedRoute.Add(origin);
             PlayerController2D owner = activeGun.Holder.GetComponent<PlayerController2D>();
             PlayerController2D lastReflectionPlayer = null;
-            float distanceLeft = 72f;
-            for (int reflection = 0; reflection <= 4 && distanceLeft > 0.1f; reflection++)
+            // Use the bullet's own travel budget and reflection clearance so the
+            // guide describes the same geometric path the fired shot will use.
+            float distanceLeft = StageGunBullet.MaximumTravelDistance;
+            for (int reflection = 0;
+                 reflection < MaximumPredictedReflections && distanceLeft > 0.1f;
+                 reflection++)
             {
+                bool hasClosedPassage = TryGetClosedPassageHit(
+                    origin, direction, distanceLeft,
+                    out Vector2 closedPassagePoint, out float closedPassageDistance);
                 RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, distanceLeft);
                 System.Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
                 RaycastHit2D chosen = default;
@@ -618,6 +706,16 @@ namespace DrawBody.Prototype
                     break;
                 }
 
+                // The coloured passage geometry is authoritative for this
+                // challenge. This explicit check also catches a Physics2D query
+                // that momentarily misses a newly-created or just-moved divider.
+                if (hasClosedPassage
+                    && (!found || closedPassageDistance <= chosen.distance + 0.001f))
+                {
+                    predictedRoute.Add(closedPassagePoint);
+                    break;
+                }
+
                 if (!found)
                 {
                     predictedRoute.Add(origin + direction * distanceLeft);
@@ -630,16 +728,46 @@ namespace DrawBody.Prototype
                 if (reflector == null) break;
                 Vector2 normal = chosen.normal.sqrMagnitude > 0.2f ? chosen.normal.normalized : -direction;
                 direction = Vector2.Reflect(direction, normal).normalized;
-                origin = chosen.point + direction * 0.12f;
+                origin = chosen.point + direction * StageGunBullet.ReflectionClearance;
                 lastReflectionPlayer = reflector;
             }
 
             DrawPredictedRoute();
         }
 
+        internal bool TryGetClosedPassageHit(
+            Vector2 origin, Vector2 direction, float maxDistance,
+            out Vector2 point, out float distance)
+        {
+            point = default;
+            distance = float.PositiveInfinity;
+            bool found = false;
+            for (int i = 0; i < internalPassages.Length; i++)
+                CheckClosedPassage(internalPassages[i], origin, direction, maxDistance,
+                    ref found, ref point, ref distance);
+            for (int i = 0; i < outerPassages.Length; i++)
+                CheckClosedPassage(outerPassages[i], origin, direction, maxDistance,
+                    ref found, ref point, ref distance);
+            return found;
+        }
+
+        private static void CheckClosedPassage(
+            StageRicochetBulletPassage passage,
+            Vector2 origin, Vector2 direction, float maxDistance,
+            ref bool found, ref Vector2 point, ref float distance)
+        {
+            if (passage == null || passage.AllowsBullet
+                || !passage.TryGetRayEntryDistance(origin, direction, maxDistance, out float hitDistance)
+                || hitDistance >= distance)
+                return;
+            found = true;
+            distance = hitDistance;
+            point = origin + direction * hitDistance;
+        }
+
         private void DrawPredictedRoute()
         {
-            const float spacing = 0.42f;
+            const float spacing = PredictionDotSpacing;
             int dotIndex = 0;
             float carry = 0f;
             for (int segment = 0; segment < predictedRoute.Count - 1 && dotIndex < routeGuideDots.Count; segment++)
@@ -700,6 +828,7 @@ namespace DrawBody.Prototype
     public sealed class StageRicochetBulletPassage : MonoBehaviour
     {
         public bool AllowsBullet { get; private set; }
+        private Collider2D[] passageColliders;
 
         public void SetAllowsBullet(bool allowsBullet)
         {
@@ -718,6 +847,52 @@ namespace DrawBody.Prototype
                     : new Color(0.95f, 0.2f, 0.16f, 0.92f);
                 lines[i].startColor = lines[i].endColor = color;
             }
+        }
+
+        internal bool TryGetRayEntryDistance(
+            Vector2 origin, Vector2 direction, float maxDistance, out float distance)
+        {
+            distance = float.PositiveInfinity;
+            if (passageColliders == null) passageColliders = GetComponentsInChildren<Collider2D>(true);
+            bool found = false;
+            for (int i = 0; i < passageColliders.Length; i++)
+            {
+                Collider2D collider = passageColliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger) continue;
+                Bounds bounds = collider.bounds;
+                if (!TryIntersectAxis(origin.x, direction.x, bounds.min.x, bounds.max.x,
+                        maxDistance, out float minX, out float maxX)
+                    || !TryIntersectAxis(origin.y, direction.y, bounds.min.y, bounds.max.y,
+                        maxDistance, out float minY, out float maxY))
+                    continue;
+                float entry = Mathf.Max(0f, Mathf.Max(minX, minY));
+                float exit = Mathf.Min(maxX, maxY);
+                if (entry > exit || entry > maxDistance || entry >= distance) continue;
+                distance = entry;
+                found = true;
+            }
+            return found;
+        }
+
+        private static bool TryIntersectAxis(
+            float origin, float direction, float minimum, float maximum,
+            float maxDistance, out float entry, out float exit)
+        {
+            if (Mathf.Abs(direction) < 0.00001f)
+            {
+                entry = 0f;
+                exit = maxDistance;
+                return origin >= minimum && origin <= maximum;
+            }
+            entry = (minimum - origin) / direction;
+            exit = (maximum - origin) / direction;
+            if (entry > exit)
+            {
+                float swap = entry;
+                entry = exit;
+                exit = swap;
+            }
+            return exit >= 0f && entry <= maxDistance;
         }
     }
 

@@ -135,7 +135,8 @@ namespace DrawBody.Prototype
         public bool IsSurvivalChallenge => stageRuleMode == StageRuleMode.Survival;
         private bool UsesEliminationController => IsSurvivalChallenge
             || currentStageId == "9-2"
-            || currentStageId == "11-1";
+            || currentStageId == "11-1"
+            || currentStageId == "2-3";
         public bool IsBlockBreakerChallenge => stageRuleMode == StageRuleMode.BlockBreaker;
         public bool IsDrawingMode => drawing;
         public bool IsGameplayActive => stageStarted && !titleMode && !stageEditing && !drawing && !cleared;
@@ -156,7 +157,9 @@ namespace DrawBody.Prototype
             get
             {
                 if (!stageStarted || drawing) return true;
-                if (RequiresChallengeReadyRoom() && !IsChallengeReadyRoomActive) return false;
+                // A redraw floor is the shared safe place for both redrawing and
+                // offline character management, including after a challenge has
+                // left its ready room.
                 return StageRedrawZone.IsPlayerInZone(player);
             }
         }
@@ -984,6 +987,7 @@ namespace DrawBody.Prototype
             return stageRuleMode == StageRuleMode.Survival
                 || stageRuleMode == StageRuleMode.BlockBreaker
                 || currentStageId == "2-2"
+                || currentStageId == "2-3"
                 || currentStageId == "7-1"
                 || currentStageId == "9-2"
                 || currentStageId == "9-3"

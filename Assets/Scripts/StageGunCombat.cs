@@ -519,7 +519,10 @@ namespace DrawBody.Prototype
 
     public sealed class StageGunBullet : MonoBehaviour
     {
-        private const float Speed = 23f;
+        internal const float TravelSpeed = 23f;
+        internal const float LifetimeSeconds = 3f;
+        internal const float ReflectionClearance = 0.12f;
+        internal const float MaximumTravelDistance = TravelSpeed * LifetimeSeconds;
         private StageGunSystem system;
         private StageRicochetChallengeController ricochetChallenge;
         private Vector2 direction;
@@ -531,7 +534,6 @@ namespace DrawBody.Prototype
         private string ownerPlayerId;
         private StageManager stageManager;
         private PlayerController2D lastReflectPlayer;
-        private float lastReflectAt;
 
         internal Vector2 Direction => direction;
         internal string OwnerPlayerId => ownerPlayerId;
@@ -567,7 +569,7 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            float distance = Speed * Time.deltaTime;
+            float distance = TravelSpeed * Time.deltaTime;
             bool reflected = false;
             if (authoritative && TryHit(distance, out reflected))
             {
@@ -579,7 +581,7 @@ namespace DrawBody.Prototype
             // thin wall and disagree with the aiming prediction at low FPS.
             if (!reflected) transform.position += (Vector3)(direction * distance);
             life += Time.deltaTime;
-            if (life >= 3f)
+            if (life >= LifetimeSeconds)
             {
                 if (authoritative) EndAuthoritative();
                 else ApplyNetworkEnd();
@@ -589,10 +591,18 @@ namespace DrawBody.Prototype
         private bool TryHit(float distance, out bool reflected)
         {
             reflected = false;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, distance + 0.15f);
+            float queryDistance = distance + 0.15f;
+            float closedPassageDistance = float.PositiveInfinity;
+            bool hasClosedPassage = ricochetChallenge != null
+                && ricochetChallenge.TryGetClosedPassageHit(
+                    transform.position, direction, queryDistance,
+                    out _, out closedPassageDistance);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, queryDistance);
             System.Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
             for (int i = 0; i < hits.Length; i++)
             {
+                if (hasClosedPassage && closedPassageDistance < hits[i].distance - 0.001f)
+                    return true;
                 Collider2D collider = hits[i].collider;
                 StageMovingGauntletGhost gauntletGhost = collider != null
                     ? collider.GetComponentInParent<StageMovingGauntletGhost>()
@@ -616,14 +626,17 @@ namespace DrawBody.Prototype
                         ? stageManager.GetOnlinePlayerId(player)
                         : "local_" + player.GetInstanceID();
                     if (!string.IsNullOrEmpty(ownerPlayerId) && playerId == ownerPlayerId) continue;
-                    if (player == lastReflectPlayer && Time.time - lastReflectAt < 0.08f) continue;
+                    // Match the aiming guide: after reflecting, ignore every
+                    // collider belonging to that same body until another player
+                    // is hit. A time-based release could make a long/concave body
+                    // bend the live shot along a route the guide never predicted.
+                    if (player == lastReflectPlayer) continue;
                     Vector2 normal = hits[i].normal.sqrMagnitude > 0.2f ? hits[i].normal.normalized : -direction;
                     direction = Vector2.Reflect(direction, normal).normalized;
-                    transform.position = hits[i].point + direction * 0.12f;
+                    transform.position = hits[i].point + direction * ReflectionClearance;
                     transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                     if (!string.IsNullOrEmpty(playerId)) reflectedPlayerIds.Add(playerId);
                     lastReflectPlayer = player;
-                    lastReflectAt = Time.time;
                     ricochetChallenge.NotifyReflection(hits[i].point);
                     system?.BroadcastReflection(sequence, transform.position, direction);
                     reflected = true;
@@ -679,7 +692,7 @@ namespace DrawBody.Prototype
                 }
                 return true;
             }
-            return false;
+            return hasClosedPassage;
         }
 
         public void ApplyNetworkReflection(Vector2 position, Vector2 reflectedDirection)

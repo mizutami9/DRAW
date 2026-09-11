@@ -392,6 +392,8 @@ namespace DrawBody.Prototype
             int count = Mathf.Clamp(playerCount, 1, 4);
             switch (stageId)
             {
+                case "2-3":
+                    return Recommendations((DrawManager.Species.Cat, count));
                 case "2-2":
                 case "8-1":
                     if (count == 1) return Recommendations((DrawManager.Species.Human, 1));

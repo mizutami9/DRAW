@@ -2327,6 +2327,7 @@ namespace DrawBody.Prototype
             StageBlockBreakerEnemy[] enemies = Object.FindObjectsByType<StageBlockBreakerEnemy>(FindObjectsSortMode.None);
             StageEnemyCharacter[] placedEnemies = Object.FindObjectsByType<StageEnemyCharacter>(FindObjectsSortMode.None);
             StageValueCrate[] valueCrates = Object.FindObjectsByType<StageValueCrate>(FindObjectsSortMode.None);
+            StageCatEscapeScratchTarget[] escapeTargets = Object.FindObjectsByType<StageCatEscapeScratchTarget>(FindObjectsSortMode.None);
             StageMirrorFinalBossController mirrorBattle = Object.FindFirstObjectByType<StageMirrorFinalBossController>();
             if (mirrorBattle != null)
             {
@@ -2336,7 +2337,8 @@ namespace DrawBody.Prototype
                 float mirrorRange = PlayerController2D.CalculateCatScratchRangeMultiplier(mirrorFrontLegInk);
                 if (mirrorBattle.TryPlayerCatScratch(playerController, mirrorRange)) return true;
             }
-            if (enemies.Length == 0 && placedEnemies.Length == 0 && valueCrates.Length == 0) return false;
+            if (enemies.Length == 0 && placedEnemies.Length == 0
+                && valueCrates.Length == 0 && escapeTargets.Length == 0) return false;
 
             Bounds catBounds = new Bounds(transform.position, Vector3.one);
             if (!TryGetSolidBounds(playerController, out catBounds))
@@ -2348,6 +2350,7 @@ namespace DrawBody.Prototype
             StageBlockBreakerEnemy closestEnemy = null;
             StageEnemyCharacter closestPlacedEnemy = null;
             StageValueCrate closestValueCrate = null;
+            StageCatEscapeScratchTarget closestEscapeTarget = null;
             float closestDistance = float.PositiveInfinity;
             float frontLegInk = abilityController != null
                 ? abilityController.CurrentProfile.CatFrontLegInk
@@ -2369,6 +2372,7 @@ namespace DrawBody.Prototype
                     closestEnemy = enemy;
                     closestPlacedEnemy = null;
                     closestValueCrate = null;
+                    closestEscapeTarget = null;
                 }
             }
             for (int i = 0; i < placedEnemies.Length; i++)
@@ -2386,6 +2390,7 @@ namespace DrawBody.Prototype
                     closestEnemy = null;
                     closestPlacedEnemy = enemy;
                     closestValueCrate = null;
+                    closestEscapeTarget = null;
                 }
             }
             for (int i = 0; i < valueCrates.Length; i++)
@@ -2403,12 +2408,33 @@ namespace DrawBody.Prototype
                     closestEnemy = null;
                     closestPlacedEnemy = null;
                     closestValueCrate = crate;
+                    closestEscapeTarget = null;
                 }
             }
-            if (closestEnemy == null && closestPlacedEnemy == null && closestValueCrate == null) return false;
+            for (int i = 0; i < escapeTargets.Length; i++)
+            {
+                StageCatEscapeScratchTarget target = escapeTargets[i];
+                if (target == null || target.IsBroken || !target.gameObject.activeInHierarchy) continue;
+                Collider2D targetCollider = target.GetComponentInChildren<Collider2D>();
+                if (targetCollider == null) continue;
+                Vector2 towardTarget = (Vector2)targetCollider.bounds.center - (Vector2)catBounds.center;
+                if (towardTarget.x * facing < -0.2f) continue;
+                float distance = GetClosestColliderDistance(ownColliders, targetCollider);
+                if (distance <= scratchReach && distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = null;
+                    closestPlacedEnemy = null;
+                    closestValueCrate = null;
+                    closestEscapeTarget = target;
+                }
+            }
+            if (closestEnemy == null && closestPlacedEnemy == null
+                && closestValueCrate == null && closestEscapeTarget == null) return false;
             if (closestEnemy != null) closestEnemy.HitByCatScratch();
             else if (closestPlacedEnemy != null) closestPlacedEnemy.HitByCatScratch();
-            else closestValueCrate.Hit(closestValueCrate.transform.position);
+            else if (closestValueCrate != null) closestValueCrate.Hit(closestValueCrate.transform.position);
+            else closestEscapeTarget.HitByCatScratch(playerController);
             return true;
         }
 

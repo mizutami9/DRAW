@@ -640,6 +640,13 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingBalloonCourse);
             }
 
+            StageCatEscapeController existingCatEscape =
+                stageRoot.GetComponent<StageCatEscapeController>();
+            if (existingCatEscape != null)
+            {
+                DestroyComponentNow(existingCatEscape);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.id == "1-2")
@@ -649,6 +656,10 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "3-2")
             {
                 stageRoot.gameObject.AddComponent<StageBalloonCourseController>();
+            }
+            if (data != null && data.id == "2-3")
+            {
+                stageRoot.gameObject.AddComponent<StageCatEscapeController>();
             }
             if (data != null && data.id == "5-3")
             {

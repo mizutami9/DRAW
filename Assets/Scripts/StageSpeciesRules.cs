@@ -28,6 +28,8 @@ namespace DrawBody.Prototype
 
         public static StageSpeciesMask GetAllowedForStage(string stageId)
         {
+            if (string.Equals(stageId, "2-3", StringComparison.OrdinalIgnoreCase))
+                return StageSpeciesMask.Cat;
             return GetAllowedForWorld(GetWorldNumber(stageId));
         }
 
