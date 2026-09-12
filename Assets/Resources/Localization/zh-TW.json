@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "樹根"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "快跑！"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "{0}秒後開始"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "等待 {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  逃離巨貓！"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "合力抓撓  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "只有站在重畫地板上才能切換角色。"
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "返回"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "正在等待{0}的回應。\n要求交換：用{1}交換{2}。"
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "交換要求已送出"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "要從頭重新開始本關嗎？"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "重試"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "要結束目前關卡並返回關卡選擇嗎？"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "關卡選擇"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "遊戲資料或版本不一致，無法進行線上遊戲。請在Steam中驗證遊戲檔案完整性。"
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "主機已中斷連線，房間已關閉。"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "取消"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "重設"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "重設進度"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "要重設所有關卡的通關紀錄嗎？\n音量、語言、玩家名稱和繪圖資料將會保留。"
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "關卡通關紀錄已重設。"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "重設進度"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "快跑。"
     }
   ]
 }

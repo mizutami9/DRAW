@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Kořen stromu"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "UTÍKEJ!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "START ZA {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ČEKÁNÍ {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  UTEČ OBŘÍ KOČCE!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "TÝMOVÉ ŠKRÁBANCE  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Postavu lze změnit pouze na podlaze pro překreslení."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "ZPĚT"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Čeká se na odpověď hráče {0}.\nPožadovaná výměna: {1} za {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "ŽÁDOST O VÝMĚNU ODESLÁNA"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Restartovat tuto úroveň od začátku?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ZNOVU"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Ukončit aktuální úroveň a vrátit se k výběru úrovně?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "VÝBĚR ÚROVNĚ"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Online hra není dostupná, protože herní data nebo verze nesouhlasí. Ověřte soubory hry ve službě Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Hostitel se odpojil, místnost byla uzavřena."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ZRUŠIT"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "RESETOVAT"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "RESETOVAT POSTUP"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Resetovat záznamy o dokončení všech úrovní?\nHlasitost, jazyk, jméno hráče a kresby zůstanou zachovány."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Postup úrovněmi byl resetován."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "RESETOVAT POSTUP"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "UTÍKEJ."
     }
   ]
 }

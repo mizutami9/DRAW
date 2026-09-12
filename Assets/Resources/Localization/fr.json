@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Racine d'arbre"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "COURS !"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "DÉPART DANS {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ATTENTE {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  ÉCHAPPEZ AU CHAT GÉANT !"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "GRIFFURES EN ÉQUIPE  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Vous ne pouvez changer de personnage que sur un sol de redessin."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "RETOUR"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "En attente de la réponse de {0}.\nÉchange demandé : {1} contre {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "DEMANDE D'ÉCHANGE ENVOYÉE"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Recommencer ce niveau depuis le début ?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "RÉESSAYER"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Quitter le niveau actuel et revenir à la sélection des niveaux ?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "SÉLECTION DES NIVEAUX"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Le jeu en ligne est indisponible car les données ou la version du jeu ne correspondent pas. Vérifiez les fichiers du jeu dans Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "L'hôte s'est déconnecté ; le salon a été fermé."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ANNULER"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "RÉINITIALISER"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "RÉINITIALISER LES PROGRÈS"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Réinitialiser tous les niveaux terminés ?\nLe volume, la langue, le nom du joueur et les dessins seront conservés."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Les niveaux terminés ont été réinitialisés."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "RÉINITIALISER LES PROGRÈS"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "COURS."
     }
   ]
 }

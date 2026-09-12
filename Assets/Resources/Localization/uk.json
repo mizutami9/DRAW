@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Дерево Корінь"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "БІЖИ!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "СТАРТ ЧЕРЕЗ {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ОЧІКУВАННЯ {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  ВТЕЧИ ВІД ВЕЛЕТЕНСЬКОГО КОТА!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "КОМАНДНІ ПОДРЯПИНИ  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Змінити персонажа можна лише на підлозі перемальовування."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "НАЗАД"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Очікування відповіді від {0}.\nЗапитаний обмін: {1} на {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "ЗАПИТ НА ОБМІН НАДІСЛАНО"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Почати цей рівень спочатку?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ЩЕ РАЗ"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Завершити поточний рівень і повернутися до вибору рівня?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "ВИБІР РІВНЯ"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Онлайн-гра недоступна, оскільки дані або версія гри не збігаються. Перевірте файли гри у Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Хост відключився, тому кімнату закрито."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "СКАСУВАТИ"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "СКИНУТИ"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "СКИНУТИ ПРОГРЕС"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Скинути проходження всіх рівнів?\nГучність, мова, ім'я гравця та малюнки буде збережено."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Прогрес рівнів скинуто."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "СКИНУТИ ПРОГРЕС"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "БІЖИ."
     }
   ]
 }

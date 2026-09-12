@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Trærod"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "LØB!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "STARTER OM {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "VENTER {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  FLYGT FRA KÆMPEKATTEN!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "HOLDRIDS  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Du kan kun skifte figur på et gentegningsgulv."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "TILBAGE"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Venter på svar fra {0}.\nAnmodet bytte: {1} for {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "BYTTEANMODNING SENDT"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Starte denne bane forfra?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "PRØV IGEN"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Afslutte den aktuelle bane og vende tilbage til banevalg?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "BANEVALG"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Onlinespil er ikke tilgængeligt, fordi spildata eller version ikke stemmer overens. Kontrollér spilfilerne i Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Værten afbrød forbindelsen, så rummet blev lukket."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ANNULLER"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "NULSTIL"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "NULSTIL FREMSKRIDT"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Nulstil alle gennemførte baner?\nLydstyrke, sprog, spillernavn og tegninger bevares."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Banefremskridtet blev nulstillet."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "NULSTIL FREMSKRIDT"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "LØB."
     }
   ]
 }

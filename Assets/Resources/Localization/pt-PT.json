@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Raiz da Árvore"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "CORRE!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "COMEÇA EM {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "À ESPERA {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  FOGE DO GATO GIGANTE!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "ARRANHÕES DA EQUIPA  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Só podes mudar de personagem sobre um chão de redesenho."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "VOLTAR"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "À espera da resposta de {0}.\nTroca pedida: {1} por {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "PEDIDO DE TROCA ENVIADO"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Recomeçar este nível desde o início?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "TENTAR NOVAMENTE"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Sair do nível atual e voltar à seleção de níveis?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "SELEÇÃO DE NÍVEIS"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "O jogo online não está disponível porque os dados ou a versão do jogo não correspondem. Verifica os ficheiros do jogo no Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "O anfitrião desligou-se, por isso a sala foi fechada."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "CANCELAR"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "REPOR"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "REPOR PROGRESSO"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Repor o progresso de todos os níveis?\nO volume, idioma, nome do jogador e desenhos serão mantidos."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "O progresso dos níveis foi reposto."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "REPOR PROGRESSO"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "CORRE."
     }
   ]
 }

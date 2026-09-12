@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Fa gyökere"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "FUSS!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "KEZDÉS {0} MÚLVA"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "VÁRAKOZÁS {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  MENEKÜLJ AZ ÓRIÁSMACSKA ELŐL!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "CSAPATKARMOLÁS  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Karaktert csak újrarajzoló padlón válthatsz."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "VISSZA"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Várakozás {0} válaszára.\nKért csere: {1} erre: {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "CSEREKÉRELEM ELKÜLDVE"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Újrakezded ezt a pályát az elejéről?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ÚJRA"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Kilépsz a jelenlegi pályáról és visszatérsz a pályaválasztóhoz?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "PÁLYAVÁLASZTÁS"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Az online játék nem érhető el, mert a játékadatok vagy a verzió nem egyezik. Ellenőrizd a játékfájlokat a Steamben."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "A házigazda lecsatlakozott, ezért a szoba bezárult."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "MÉGSE"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "VISSZAÁLLÍTÁS"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "HALADÁS VISSZAÁLLÍTÁSA"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Visszaállítod az összes teljesített pályát?\nA hangerő, a nyelv, a játékosnév és a rajzok megmaradnak."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "A pályahaladás visszaállítva."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "HALADÁS VISSZAÁLLÍTÁSA"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "FUSS."
     }
   ]
 }

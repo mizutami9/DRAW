@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Baumwurzel"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "LAUF!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "START IN {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "WARTEN {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  ENTKOMM DER RIESENKATZE!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "TEAM-KRATZER  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Du kannst die Figur nur auf einem Neuzeichnen-Boden wechseln."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "ZURÜCK"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Warten auf die Antwort von {0}.\nAngefragter Tausch: {1} gegen {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "TAUSCHANFRAGE GESENDET"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Dieses Level von vorne beginnen?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "WIEDERHOLEN"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Das aktuelle Level beenden und zur Levelauswahl zurückkehren?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "LEVELAUSWAHL"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Online-Spiel ist nicht verfügbar, da Spieldaten oder Version nicht übereinstimmen. Überprüfe die Spieldateien in Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Der Host hat die Verbindung getrennt. Der Raum wurde geschlossen."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ABBRECHEN"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "ZURÜCKSETZEN"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "FORTSCHRITT ZURÜCKSETZEN"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Alle Levelabschlüsse zurücksetzen?\nLautstärke, Sprache, Spielername und Zeichnungen bleiben erhalten."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Die Levelabschlüsse wurden zurückgesetzt."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "FORTSCHRITT ZURÜCKSETZEN"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "LAUF."
     }
   ]
 }

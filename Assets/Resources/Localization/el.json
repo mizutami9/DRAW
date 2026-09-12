@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Ρίζα δέντρου"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "ΤΡΕΞΕ!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "ΕΝΑΡΞΗ ΣΕ {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ΑΝΑΜΟΝΗ {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  ΞΕΦΥΓΕ ΑΠΟ ΤΗ ΓΙΓΑΝΤΙΑ ΓΑΤΑ!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "ΟΜΑΔΙΚΕΣ ΓΡΑΤΖΟΥΝΙΕΣ  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Μπορείς να αλλάξεις χαρακτήρα μόνο σε δάπεδο επανασχεδίασης."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "ΠΙΣΩ"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Αναμονή απάντησης από {0}.\nΖητήθηκε ανταλλαγή: {1} με {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "ΤΟ ΑΙΤΗΜΑ ΑΝΤΑΛΛΑΓΗΣ ΣΤΑΛΘΗΚΕ"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Επανεκκίνηση αυτού του επιπέδου από την αρχή;"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ΞΑΝΑ"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Τερματισμός του τρέχοντος επιπέδου και επιστροφή στην επιλογή επιπέδου;"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "ΕΠΙΛΟΓΗ ΕΠΙΠΕΔΟΥ"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Το διαδικτυακό παιχνίδι δεν είναι διαθέσιμο επειδή τα δεδομένα ή η έκδοση του παιχνιδιού δεν ταιριάζουν. Επαλήθευσε τα αρχεία παιχνιδιού στο Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Ο οικοδεσπότης αποσυνδέθηκε και το δωμάτιο έκλεισε."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ΑΚΥΡΩΣΗ"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "ΕΠΑΝΑΦΟΡΑ"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "ΕΠΑΝΑΦΟΡΑ ΠΡΟΟΔΟΥ"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Επαναφορά όλων των ολοκληρωμένων επιπέδων;\nΗ ένταση, η γλώσσα, το όνομα παίκτη και τα σχέδια θα διατηρηθούν."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Η πρόοδος των επιπέδων επαναφέρθηκε."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "ΕΠΑΝΑΦΟΡΑ ΠΡΟΟΔΟΥ"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "ΤΡΕΞΕ."
     }
   ]
 }

@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "تري رووت"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "اركض!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "البدء خلال {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "انتظار {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  اهرب من القط العملاق!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "خدوش الفريق  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "لا يمكنك تبديل الشخصية إلا فوق أرضية إعادة الرسم."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "رجوع"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "بانتظار رد {0}.\nالتبديل المطلوب: {1} مقابل {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "تم إرسال طلب التبديل"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "هل تريد إعادة هذه المرحلة من البداية؟"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "إعادة المحاولة"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "هل تريد إنهاء المرحلة الحالية والعودة إلى اختيار المراحل؟"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "اختيار المراحل"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "اللعب عبر الإنترنت غير متاح لأن بيانات اللعبة أو الإصدار غير متطابقين. تحقق من ملفات اللعبة في Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "انقطع اتصال المضيف، لذا أُغلقت الغرفة."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "إلغاء"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "إعادة ضبط"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "إعادة ضبط التقدم"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "هل تريد إعادة ضبط سجلات إكمال جميع المراحل؟\nسيتم الاحتفاظ بمستوى الصوت واللغة واسم اللاعب والرسومات."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "تمت إعادة ضبط سجلات إكمال المراحل."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "إعادة ضبط التقدم"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "اركض."
     }
   ]
 }

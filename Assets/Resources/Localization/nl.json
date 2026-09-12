@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Boomwortel"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "REN!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "START OVER {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "WACHTEN {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  ONTSNAP AAN DE REUZENKAT!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "TEAMKRABBEN  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Je kunt alleen van personage wisselen op een hertekenvloer."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "TERUG"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Wachten op antwoord van {0}.\nAangevraagde ruil: {1} voor {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "RUILVERZOEK VERZONDEN"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Dit level opnieuw beginnen?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "OPNIEUW"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Het huidige level verlaten en terugkeren naar de levelselectie?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "LEVELSELECTIE"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Online spelen is niet beschikbaar omdat de spelgegevens of versie niet overeenkomen. Controleer de spelbestanden in Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "De host heeft de verbinding verbroken; de kamer is gesloten."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ANNULEREN"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "RESETTEN"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "VOORTGANG RESETTEN"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Alle voltooide levels resetten?\nVolume, taal, spelersnaam en tekeningen blijven behouden."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "De levelvoortgang is gereset."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "VOORTGANG RESETTEN"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "REN."
     }
   ]
 }

@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Дървесен корен"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "БЯГАЙ!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "СТАРТ СЛЕД {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ИЗЧАКВАНЕ {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  ИЗБЯГАЙ ОТ ГИГАНТСКАТА КОТКА!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "ОТБОРНИ ДРАСКОТИНИ  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Можете да сменяте героя само върху под за прерисуване."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "НАЗАД"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Изчакване на отговор от {0}.\nЗаявена размяна: {1} за {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "ЗАЯВКАТА ЗА РАЗМЯНА Е ИЗПРАТЕНА"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Да започнете ли нивото отначало?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ОПИТАЙ ПАК"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Да прекратите ли текущото ниво и да се върнете към избора на ниво?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "ИЗБОР НА НИВО"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Онлайн играта не е достъпна, защото данните или версията на играта не съвпадат. Проверете файловете на играта в Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Хостът прекъсна връзката и стаята беше затворена."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ОТКАЗ"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "НУЛИРАНЕ"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "НУЛИРАНЕ НА НАПРЕДЪКА"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Да се нулират ли всички завършени нива?\nСилата на звука, езикът, името на играча и рисунките ще се запазят."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Напредъкът на нивата беше нулиран."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "НУЛИРАНЕ НА НАПРЕДЪКА"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "БЯГАЙ."
     }
   ]
 }

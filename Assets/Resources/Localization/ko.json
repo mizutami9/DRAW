@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "트리 루트"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "달려!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "{0}초 후 시작"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "대기 {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  거대 고양이에게서 도망쳐!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "함께 할퀴기  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "캐릭터 변경은 다시 그리기 바닥 위에서만 할 수 있습니다."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "뒤로"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "{0}님의 응답을 기다리는 중입니다.\n요청한 교환: {1} ↔ {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "교환 요청 전송됨"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "이 스테이지를 처음부터 다시 시작할까요?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "재시도"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "현재 스테이지를 끝내고 스테이지 선택으로 돌아갈까요?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "스테이지 선택"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "게임 데이터 또는 버전이 일치하지 않아 온라인 플레이를 시작할 수 없습니다. Steam에서 게임 파일 무결성을 확인하세요."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "호스트의 연결이 끊겨 방이 종료되었습니다."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "취소"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "초기화"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "진행 상황 초기화"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "모든 스테이지 클리어 기록을 초기화할까요?\n음량, 언어, 플레이어 이름, 그림 데이터는 유지됩니다."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "스테이지 클리어 기록을 초기화했습니다."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "진행 상황 초기화"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "달려."
     }
   ]
 }

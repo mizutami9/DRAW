@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Gốc cây"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "CHẠY!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "BẮT ĐẦU SAU {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "CHỜ {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  CHẠY TRỐN MÈO KHỔNG LỒ!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "CẢ ĐỘI CÀO  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Bạn chỉ có thể đổi nhân vật trên sàn vẽ lại."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "QUAY LẠI"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Đang chờ {0} phản hồi.\nYêu cầu đổi: {1} lấy {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "ĐÃ GỬI YÊU CẦU ĐỔI"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Chơi lại màn này từ đầu?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "THỬ LẠI"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Kết thúc màn hiện tại và quay lại chọn màn?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "CHỌN MÀN"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Không thể chơi trực tuyến vì dữ liệu hoặc phiên bản trò chơi không khớp. Hãy xác minh tệp trò chơi trên Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Máy chủ đã ngắt kết nối nên phòng đã đóng."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "HỦY"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "ĐẶT LẠI"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "ĐẶT LẠI TIẾN TRÌNH"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Đặt lại toàn bộ thành tích qua màn?\nÂm lượng, ngôn ngữ, tên người chơi và hình vẽ sẽ được giữ lại."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Đã đặt lại tiến trình qua màn."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "ĐẶT LẠI TIẾN TRÌNH"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "CHẠY."
     }
   ]
 }

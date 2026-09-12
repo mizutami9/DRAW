@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Tree Root"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "¡CORRE!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "EMPIEZA EN {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ESPERA {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  ¡ESCAPA DEL GATO GIGANTE!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "ARAÑAZOS EN EQUIPO  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Solo puedes cambiar de personaje sobre un suelo de redibujo."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "VOLVER"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Esperando la respuesta de {0}.\nIntercambio solicitado: {1} por {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "SOLICITUD DE INTERCAMBIO ENVIADA"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "¿Reiniciar este nivel desde el principio?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "REINTENTAR"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "¿Salir del nivel actual y volver a la selección de niveles?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "SELECCIÓN DE NIVELES"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "El juego en línea no está disponible porque los datos o la versión del juego no coinciden. Verifica los archivos del juego en Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "El anfitrión se desconectó y la sala se cerró."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "CANCELAR"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "RESTABLECER"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "RESTABLECER PROGRESO"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "¿Restablecer todos los niveles completados?\nSe conservarán el volumen, el idioma, el nombre del jugador y los dibujos."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Se restableció el progreso de los niveles."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "RESTABLECER PROGRESO"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "CORRE."
     }
   ]
 }

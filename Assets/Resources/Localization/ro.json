@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Rădăcină de copac"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "FUGI!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "ÎNCEPE ÎN {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "AȘTEPTARE {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  SCAPĂ DE PISICA URIAȘĂ!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "ZGÂRIETURI DE ECHIPĂ  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Poți schimba personajul doar pe o podea de redesenare."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "ÎNAPOI"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Se așteaptă răspunsul lui {0}.\nSchimb solicitat: {1} pentru {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "CERERE DE SCHIMB TRIMISĂ"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Repornești acest nivel de la început?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "REÎNCEARCĂ"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Închei nivelul curent și revii la selectarea nivelului?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "SELECTARE NIVEL"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Jocul online nu este disponibil deoarece datele sau versiunea jocului nu corespund. Verifică fișierele jocului în Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Gazda s-a deconectat, iar camera a fost închisă."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ANULEAZĂ"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "RESETEAZĂ"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "RESETEAZĂ PROGRESUL"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Resetezi toate nivelurile terminate?\nVolumul, limba, numele jucătorului și desenele vor fi păstrate."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Progresul nivelurilor a fost resetat."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "RESETEAZĂ PROGRESUL"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "FUGI."
     }
   ]
 }

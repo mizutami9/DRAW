@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Raiz da Árvore"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "CORRA!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "COMEÇA EM {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "AGUARDANDO {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  FUJA DO GATO GIGANTE!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "ARRANHÕES DA EQUIPE  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Você só pode trocar de personagem sobre um piso de redesenho."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "VOLTAR"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Aguardando a resposta de {0}.\nTroca solicitada: {1} por {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "SOLICITAÇÃO DE TROCA ENVIADA"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Reiniciar esta fase desde o começo?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "TENTAR DE NOVO"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Sair da fase atual e voltar à seleção de fases?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "SELEÇÃO DE FASES"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "O jogo online não está disponível porque os dados ou a versão do jogo não correspondem. Verifique os arquivos do jogo na Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "O anfitrião se desconectou, então a sala foi fechada."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "CANCELAR"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "REDEFINIR"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "REDEFINIR PROGRESSO"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Redefinir o progresso de todas as fases?\nVolume, idioma, nome do jogador e desenhos serão mantidos."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "O progresso das fases foi redefinido."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "REDEFINIR PROGRESSO"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "CORRA."
     }
   ]
 }

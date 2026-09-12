@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Korzeń drzewa"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "BIEGNIJ!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "START ZA {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "OCZEKIWANIE {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  UCIEKAJ PRZED WIELKIM KOTEM!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "DRAPANIE DRUŻYNY  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Postać można zmienić tylko na podłodze do przerysowania."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "WRÓĆ"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Oczekiwanie na odpowiedź gracza {0}.\nŻądana zamiana: {1} za {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "WYSŁANO PROŚBĘ O ZAMIANĘ"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Rozpocząć ten poziom od początku?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "PONÓW"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Zakończyć bieżący poziom i wrócić do wyboru poziomu?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "WYBÓR POZIOMU"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Gra online jest niedostępna, ponieważ dane lub wersja gry nie są zgodne. Zweryfikuj pliki gry na Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Host rozłączył się, więc pokój został zamknięty."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ANULUJ"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "RESETUJ"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "RESETUJ POSTĘP"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Zresetować ukończenie wszystkich poziomów?\nGłośność, język, nazwa gracza i rysunki zostaną zachowane."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Postęp poziomów został zresetowany."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "RESETUJ POSTĘP"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "BIEGNIJ."
     }
   ]
 }

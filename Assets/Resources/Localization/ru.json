@@ -4255,6 +4255,102 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Корень дерева"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "БЕГИ!"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "СТАРТ ЧЕРЕЗ {0}"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ОЖИДАНИЕ {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  УБЕГИ ОТ ГИГАНТСКОГО КОТА!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "КОМАНДНЫЕ ЦАРАПИНЫ  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Сменить персонажа можно только на полу перерисовки."
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "НАЗАД"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Ожидание ответа от {0}.\nЗапрошенный обмен: {1} на {2}."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "ЗАПРОС НА ОБМЕН ОТПРАВЛЕН"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Начать этот уровень заново?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ЕЩЁ РАЗ"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Завершить текущий уровень и вернуться к выбору уровня?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "ВЫБОР УРОВНЯ"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Сетевая игра недоступна: игровые данные или версия не совпадают. Проверьте целостность файлов игры в Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Хост отключился, поэтому комната была закрыта."
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ОТМЕНА"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "СБРОС"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "СБРОСИТЬ ПРОГРЕСС"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Сбросить прохождение всех уровней?\nГромкость, язык, имя игрока и рисунки будут сохранены."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Прогресс уровней сброшен."
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "СБРОСИТЬ ПРОГРЕСС"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "БЕГИ."
     }
   ]
 }
