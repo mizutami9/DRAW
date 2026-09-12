@@ -85,7 +85,7 @@ namespace DrawBody.Prototype
         {
             if (IsCharacterManagementCommand()
                 && stageManager != null
-                && !stageManager.CanUseGameplayCharacterControls)
+                && !CanUseCharacterCommand())
             {
                 stageManager.ShowReadyRoomOnlyCharacterChangeNotice();
                 EventSystem.current?.SetSelectedGameObject(null);
@@ -165,7 +165,7 @@ namespace DrawBody.Prototype
 
             bool visible = !IsOnlineActive();
             bool available = visible
-                && (stageManager == null || stageManager.CanUseGameplayCharacterControls);
+                && CanUseCharacterCommand();
             CanvasGroup group = GetComponent<CanvasGroup>();
             if (group == null) group = gameObject.AddComponent<CanvasGroup>();
             group.alpha = visible ? available ? 1f : 0.42f : 0f;
@@ -183,6 +183,14 @@ namespace DrawBody.Prototype
             return command == Command.AddCharacter
                 || command == Command.DeleteCharacter
                 || command == Command.SwitchCharacter;
+        }
+
+        private bool CanUseCharacterCommand()
+        {
+            if (stageManager == null) return true;
+            return command == Command.SwitchCharacter
+                ? stageManager.CanSwitchGameplayCharacter
+                : stageManager.CanUseGameplayCharacterControls;
         }
 
         private bool IsOnlineActive()

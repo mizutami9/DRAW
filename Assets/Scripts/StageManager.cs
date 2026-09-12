@@ -85,6 +85,7 @@ namespace DrawBody.Prototype
             new Dictionary<PlayerController2D, DrawManager.DrawingState>();
         private readonly Dictionary<PlayerController2D, RespawnAnimationState> respawnAnimations =
             new Dictionary<PlayerController2D, RespawnAnimationState>();
+        private bool fullStageRetryScheduled;
         private readonly Dictionary<PlayerController2D, float> respawnGraceUntil =
             new Dictionary<PlayerController2D, float>();
         private readonly HashSet<PlayerController2D> eliminatedPlayers = new HashSet<PlayerController2D>();
@@ -163,6 +164,11 @@ namespace DrawBody.Prototype
                 return StageRedrawZone.IsPlayerInZone(player);
             }
         }
+        // Switching which already-created offline character is controlled does
+        // not mutate stage layout or player count, so it is safe during normal
+        // play on every stage. Adding/deleting still requires a safe zone.
+        public bool CanSwitchGameplayCharacter => CanUseGameplayCharacterControls
+            || (stageStarted && !drawing && !cleared && !stageEditing);
         public string CurrentStageId => currentStageId;
         public bool RequiresUniquePlayerSpecies => StageSpeciesRules.RequiresUniqueSpecies(currentStageId);
         public string ChallengeStartCountdownText
@@ -1539,6 +1545,20 @@ namespace DrawBody.Prototype
             }
 
             ApplyFullStageRetry();
+        }
+
+        internal void ScheduleFullStageRetry()
+        {
+            if (fullStageRetryScheduled) return;
+            fullStageRetryScheduled = true;
+            StartCoroutine(ApplyFullStageRetryNextFrame());
+        }
+
+        private IEnumerator ApplyFullStageRetryNextFrame()
+        {
+            yield return null;
+            fullStageRetryScheduled = false;
+            Retry();
         }
 
         private void ApplyFullStageRetry()
@@ -3063,6 +3083,12 @@ namespace DrawBody.Prototype
             }
         }
 
+        internal void SetOfflinePlayerCollisionIgnored(bool ignored)
+        {
+            if (IsOnlineInStage() || primaryPlayer == null || secondaryPlayer == null) return;
+            SetPlayerPairCollisionIgnored(primaryPlayer, secondaryPlayer, ignored);
+        }
+
         private static bool OnlineCarryCollidersOverlap(Collider2D[] released, Collider2D[] carrier)
         {
             for (int i = 0; i < released.Length; i++)
@@ -3318,14 +3344,9 @@ namespace DrawBody.Prototype
 
         public void SwitchCharacter()
         {
-            if (!CanUseGameplayCharacterControls)
+            if (!CanSwitchGameplayCharacter)
             {
                 ShowReadyRoomOnlyCharacterChangeNotice();
-                return;
-            }
-            if (StageRedrawZone.HasActiveZones() && !StageRedrawZone.IsPlayerInZone(player))
-            {
-                uiManager?.ShowGameplayNotice(LocalizationManager.T("character_switch_redraw_zone_only"));
                 return;
             }
             if (secondaryPlayer == null || primaryPlayer == null)
@@ -4034,10 +4055,15 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (UsesEliminationController && survivalController != null)
+            if (UsesEliminationController)
             {
-                survivalController.RequestElimination(targetPlayer);
-                return;
+                if (survivalController == null)
+                    survivalController = Object.FindFirstObjectByType<StageEliminationChallengeController>();
+                if (survivalController != null)
+                {
+                    survivalController.RequestElimination(targetPlayer);
+                    return;
+                }
             }
             if (IsBlockBreakerChallenge && blockBreakerController != null)
             {

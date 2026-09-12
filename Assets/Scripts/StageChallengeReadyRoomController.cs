@@ -120,6 +120,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (!IsOnline) RefreshOfflineRoster();
+
             if (Time.unscaledTime >= nextBodyFitScanTime)
             {
                 nextBodyFitScanTime = Time.unscaledTime + 0.25f;
@@ -250,6 +252,56 @@ namespace DrawBody.Prototype
             {
                 if (players[i] != null) offlinePlayers.Add(players[i]);
             }
+        }
+
+        private void RefreshOfflineRoster()
+        {
+            PlayerController2D[] current = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+            bool changed = current.Length != offlinePlayers.Count;
+            if (!changed)
+            {
+                for (int i = 0; i < current.Length; i++)
+                    if (!offlinePlayers.Contains(current[i])) { changed = true; break; }
+            }
+            if (!changed) return;
+
+            List<PlayerController2D> previous = new List<PlayerController2D>(offlinePlayers);
+            offlinePlayers.Clear();
+            for (int i = 0; i < current.Length && offlinePlayers.Count < 4; i++)
+            {
+                PlayerController2D player = current[i];
+                if (player == null) continue;
+                offlinePlayers.Add(player);
+                if (returnPositions.ContainsKey(player)) continue;
+                Vector3 stagePosition = player.transform.position;
+                if (previous.Count > 0 && previous[0] != null
+                    && returnPositions.TryGetValue(previous[0], out Vector3 firstStart))
+                    stagePosition = firstStart + Vector3.right * (offlinePlayers.Count - 1) * 1.55f;
+                returnPositions[player] = stagePosition;
+            }
+
+            List<PlayerController2D> known = new List<PlayerController2D>(returnPositions.Keys);
+            for (int i = 0; i < known.Count; i++)
+                if (known[i] == null || !offlinePlayers.Contains(known[i])) returnPositions.Remove(known[i]);
+
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                GameObject child = transform.GetChild(i).gameObject;
+                child.SetActive(false);
+                Destroy(child);
+            }
+            rooms.Clear();
+            descriptionText = null;
+            statusText = null;
+            recommendationTitleText = null;
+            recommendationNoneText = null;
+            readyIds.Clear();
+            buttonArmedIds.Clear();
+            lastLocalReady = false;
+            BuildRooms();
+            PositionPlayersInRooms();
+            RefreshPresentation();
         }
 
         private void BuildRooms()
@@ -1145,7 +1197,9 @@ namespace DrawBody.Prototype
                 player.transform.position = destination;
             }
             player.ResetMotion();
-            player.SetControlsEnabled(true);
+            bool isControlledPlayer = stageManager != null
+                && player.transform == stageManager.ActivePlayerTransform;
+            player.SetControlsEnabled(isControlledPlayer);
             Physics2D.SyncTransforms();
         }
 
@@ -1519,7 +1573,9 @@ namespace DrawBody.Prototype
                 }
                 player.transform.position = destination;
                 player.ResetMotion();
-                player.SetControlsEnabled(true);
+                bool isControlledPlayer = stageManager != null
+                    && player.transform == stageManager.ActivePlayerTransform;
+                player.SetControlsEnabled(isControlledPlayer);
                 stageManager.RecordAssignedPlayerStart(player, destination);
             }
             Physics2D.SyncTransforms();

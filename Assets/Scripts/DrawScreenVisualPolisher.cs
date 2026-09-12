@@ -617,16 +617,31 @@ namespace DrawBody.Prototype
                     SetTopRect(row, new Vector2(10f, -43f - speciesIndex * 90f), new Vector2(274f, 82f), new Vector2(0f, 1f));
                     RestyleCard(row, new Color(1f, 0.99f, 0.93f, 0.96f));
                     Text speciesLabel = EnsureLabel(row, "SpeciesLabel", string.Empty, 15, TextAnchor.MiddleLeft);
-                    SetTopRect(speciesLabel.rectTransform, new Vector2(9f, -4f), new Vector2(132f, 24f), new Vector2(0f, 1f));
+                    SetTopRect(speciesLabel.rectTransform, new Vector2(72f, -4f), new Vector2(98f, 24f), new Vector2(0f, 1f));
                     speciesLabel.fontStyle = FontStyle.Bold;
                     Text status = EnsureLabel(row, "StatusLabel", string.Empty, 11, TextAnchor.MiddleRight);
-                    SetTopRect(status.rectTransform, new Vector2(144f, -4f), new Vector2(120f, 24f), new Vector2(0f, 1f));
+                    SetTopRect(status.rectTransform, new Vector2(172f, -4f), new Vector2(92f, 24f), new Vector2(0f, 1f));
+                    RectTransform previewRect = FindRect(row, "PresetDrawingPreview");
+                    if (previewRect == null)
+                    {
+                        GameObject previewObject = new GameObject(
+                            "PresetDrawingPreview",
+                            typeof(RectTransform),
+                            typeof(CanvasRenderer),
+                            typeof(DrawingPresetPreviewGraphic));
+                        previewObject.transform.SetParent(row, false);
+                        previewRect = previewObject.GetComponent<RectTransform>();
+                    }
+                    SetTopRect(previewRect, new Vector2(8f, -7f), new Vector2(56f, 68f), new Vector2(0f, 1f));
+                    DrawingPresetPreviewGraphic preview = previewRect.GetComponent<DrawingPresetPreviewGraphic>();
+                    preview.raycastTarget = false;
+                    preview.color = new Color(0.08f, 0.34f, 0.52f, 0.95f);
                     Button save = EnsureDialogButton(row, "PresetSaveButton", new Color(1f, 0.65f, 0.16f, 1f));
-                    SetDockRect(save.GetComponent<RectTransform>(), new Vector2(8f, 7f), new Vector2(122f, 42f));
+                    SetDockRect(save.GetComponent<RectTransform>(), new Vector2(70f, 7f), new Vector2(94f, 42f));
                     save.onClick.RemoveAllListeners();
                     save.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, species, PresetAction.Save));
                     Button load = EnsureDialogButton(row, "PresetLoadButton", new Color(0.22f, 0.68f, 0.9f, 1f));
-                    SetDockRect(load.GetComponent<RectTransform>(), new Vector2(144f, 7f), new Vector2(122f, 42f));
+                    SetDockRect(load.GetComponent<RectTransform>(), new Vector2(172f, 7f), new Vector2(94f, 42f));
                     load.onClick.RemoveAllListeners();
                     load.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, species, PresetAction.Load));
                 }
@@ -759,7 +774,7 @@ namespace DrawBody.Prototype
             SetButtonText(FindRect(transform, "DrawingPresetOpenButton")?.GetComponent<Button>(),
                 LocalizationManager.T("draw_preset_button"), 17);
             SetButtonText(FindRect(transform, "DrawingPresetCloseButton")?.GetComponent<Button>(),
-                LocalizationManager.T("draw_reset_confirm_no"), 16);
+                LocalizationManager.T("draw_preset_back"), 16);
             for (int i = 0; i < CharacterDrawingPresetStore.SlotCount; i++)
             {
                 RectTransform slot = FindRect(transform, "DrawingPresetSlot" + (i + 1));
@@ -789,6 +804,11 @@ namespace DrawBody.Prototype
                     }
                     Button save = row.Find("PresetSaveButton")?.GetComponent<Button>();
                     Button load = row.Find("PresetLoadButton")?.GetComponent<Button>();
+                    DrawingPresetPreviewGraphic preview = row.Find("PresetDrawingPreview")
+                        ?.GetComponent<DrawingPresetPreviewGraphic>();
+                    preview?.SetDrawing(
+                        exists ? CharacterDrawingPresetStore.Load(species, i) : null,
+                        species);
                     SetButtonText(save, LocalizationManager.T("draw_preset_register"), 12);
                     SetButtonText(load, LocalizationManager.T("draw_preset_apply"), 12);
                     if (load != null) load.interactable = exists;

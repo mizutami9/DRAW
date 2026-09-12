@@ -27,8 +27,10 @@ namespace DrawBody.Prototype
         [SerializeField] private float slimeFriendAttachReach = 0.45f;
 
         private const float MaxHeldPlayerCarrierHorizontalSpeed = 28f;
+        private const float MaxFriendCarrierUpwardSpeed = 18f;
         private const float CatScratchCooldown = 0.7f;
         private const float SlimeSpikeCooldown = 0.55f;
+        private const int CarryProxyColliderThreshold = 32;
 
         // A hand-drawn body can contain far more than 64 segment colliders.
         // A fixed NonAlloc buffer could fill with the player's own long legs
@@ -39,6 +41,8 @@ namespace DrawBody.Prototype
         private readonly HashSet<Collider2D> heldCarrierColliderSet = new HashSet<Collider2D>();
         private readonly List<bool> heldColliderEnabledStates = new List<bool>();
         private readonly List<bool> heldColliderTriggerStates = new List<bool>();
+        private Collider2D heldPlayerCarryProxy;
+        private float nextHeldProxyRefreshAt;
         private readonly List<Collider2D> heldPlayerColliderScratch = new List<Collider2D>();
         private readonly List<Collider2D> carrierColliderScratch = new List<Collider2D>();
         private readonly List<RaycastHit2D> carriedFriendCastHits = new List<RaycastHit2D>(32);
@@ -66,12 +70,22 @@ namespace DrawBody.Prototype
         private Rigidbody2D slimeAttachedBody;
         private Vector3 slimeAttachLocalOffset;
         private RigidbodyType2D slimePreviousBodyType;
+        private bool slimePreviousSimulated;
         private float slimePreviousGravityScale;
         private bool slimePreviousFreezeRotation;
         private bool slimeAttachedTargetPreviousControlsEnabled;
         private string friendAttachedOnlinePlayerId;
         private Collider2D[] slimeOwnColliders = new Collider2D[0];
         private Collider2D[] slimeTargetColliders = new Collider2D[0];
+        private Collider2D friendCarryProxy;
+        private readonly List<Collider2D> friendCarryOriginalColliders = new List<Collider2D>();
+        private readonly HashSet<Collider2D> friendCarryOriginalColliderSet = new HashSet<Collider2D>();
+        private readonly List<bool> friendCarryOriginalEnabledStates = new List<bool>();
+        private readonly List<bool> friendCarryOriginalTriggerStates = new List<bool>();
+        private float nextFriendProxyRefreshAt;
+        private bool hasFriendCarrierBoundsCache;
+        private Vector3 friendCarrierBoundsLocalCenter;
+        private Vector3 friendCarrierBoundsLocalSize;
         private PlayerController2D remoteSlimeVisualTarget;
         private LineRenderer slimeAttachBridge;
         private LineRenderer slimeAttachRing;
@@ -89,6 +103,7 @@ namespace DrawBody.Prototype
         private readonly List<bool> catClawedColliderTriggerStates = new List<bool>();
         private bool scriptedSlimeAttachment;
         private bool scriptedSlimeAttachmentHeld;
+        private bool friendGrabRequiresRelease;
         private bool scriptedActionEnabled;
         private bool catScratchConsumesHold;
         private float nextCatScratchTime;
@@ -372,12 +387,17 @@ namespace DrawBody.Prototype
             if (!ricochetWeaponMode && CanAttachToFriend())
             {
                 DropHeld(Vector2.zero);
+                bool attachHeld = scriptedSlimeAttachment
+                    ? scriptedSlimeAttachmentHeld
+                    : Input.GetKey(KeyCode.F);
+                if (!attachHeld)
+                {
+                    friendGrabRequiresRelease = false;
+                }
                 if (IsCat())
                 {
-                    bool catGrabHeld = scriptedSlimeAttachment
-                        ? scriptedSlimeAttachmentHeld
-                        : Input.GetKey(KeyCode.F);
-                    if (catGrabHeld
+                    if (attachHeld
+                        && !friendGrabRequiresRelease
                         && slimeAttachedPlayer == null
                         && catClawedObject == null
                         && TryAttachSlimeToFriend())
@@ -404,12 +424,11 @@ namespace DrawBody.Prototype
                         return;
                     }
                 }
-                bool attachHeld = scriptedSlimeAttachment
-                    ? scriptedSlimeAttachmentHeld
-                    : Input.GetKey(KeyCode.F);
                 if (attachHeld)
                 {
-                    if (slimeAttachedPlayer == null && catClawedObject == null)
+                    if (!friendGrabRequiresRelease
+                        && slimeAttachedPlayer == null
+                        && catClawedObject == null)
                     {
                         TryAttachSlimeToFriend();
                         if (slimeAttachedPlayer == null)
@@ -469,8 +488,12 @@ namespace DrawBody.Prototype
         private void FixedUpdate()
         {
             bool draggingFriend = slimeAttachedPlayer != null && IsFriendCarrier();
-            if (draggingFriend)
+            if (draggingFriend
+                && (friendCarryProxy == null
+                    || (!string.IsNullOrEmpty(friendAttachedOnlinePlayerId)
+                        && Time.unscaledTime >= nextFriendProxyRefreshAt)))
             {
+                nextFriendProxyRefreshAt = Time.unscaledTime + 0.2f;
                 RefreshFriendAttachmentCollisionIgnores();
             }
 
@@ -498,6 +521,15 @@ namespace DrawBody.Prototype
                     velocity.x,
                     -MaxHeldPlayerCarrierHorizontalSpeed,
                     MaxHeldPlayerCarrierHorizontalSpeed);
+                playerBody.linearVelocity = velocity;
+            }
+
+            // A dense carried drawing must never become a repeated upward
+            // impulse source. Normal jumps and slime wall jumps stay below this
+            // ceiling, while runaway carry feedback is cut immediately.
+            if (draggingFriend && velocity.y > MaxFriendCarrierUpwardSpeed)
+            {
+                velocity.y = MaxFriendCarrierUpwardSpeed;
                 playerBody.linearVelocity = velocity;
             }
 
@@ -542,7 +574,13 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            RefreshHeldPlayerCollisionIgnores();
+            if (heldPlayerCarryProxy == null
+                || (!string.IsNullOrEmpty(heldOnlinePlayerId)
+                    && Time.unscaledTime >= nextHeldProxyRefreshAt))
+            {
+                nextHeldProxyRefreshAt = Time.unscaledTime + 0.2f;
+                RefreshHeldPlayerCollisionIgnores();
+            }
 
             Vector3 anchor = GetHoldPosition();
             heldTransform.position = anchor;
@@ -722,6 +760,10 @@ namespace DrawBody.Prototype
             {
                 slimeAttachLocalOffset = CalculateBirdCarryOffset(bestPlayer);
             }
+            else if (IsCat())
+            {
+                slimeAttachLocalOffset = CalculateCatCarryOffset(bestPlayer);
+            }
             if (slimeAttachLocalOffset.sqrMagnitude < 0.12f)
             {
                 slimeAttachLocalOffset = IsFriendCarrier()
@@ -731,6 +773,7 @@ namespace DrawBody.Prototype
 
             Rigidbody2D bodyToSuspend = IsFriendCarrier() ? slimeAttachedBody : playerBody;
             slimePreviousBodyType = bodyToSuspend.bodyType;
+            slimePreviousSimulated = bodyToSuspend.simulated;
             slimePreviousGravityScale = bodyToSuspend.gravityScale;
             slimePreviousFreezeRotation = bodyToSuspend.freezeRotation;
             bodyToSuspend.bodyType = RigidbodyType2D.Kinematic;
@@ -738,6 +781,12 @@ namespace DrawBody.Prototype
             bodyToSuspend.freezeRotation = true;
             bodyToSuspend.linearVelocity = Vector2.zero;
             bodyToSuspend.angularVelocity = 0f;
+            if (IsFriendCarrier())
+            {
+                // Suspend a dense drawing as one body. This avoids maintaining
+                // thousands of child collider proxies while it follows us.
+                bodyToSuspend.simulated = false;
+            }
             slimeAttachedTargetPreviousControlsEnabled = bestPlayer.ControlsEnabled;
             if (IsFriendCarrier())
             {
@@ -748,9 +797,46 @@ namespace DrawBody.Prototype
             }
 
             slimeOwnColliders = GetComponentsInChildren<Collider2D>(false);
-            slimeTargetColliders = bestPlayer.GetComponentsInChildren<Collider2D>(false);
-            SetCollisionIgnored(slimeOwnColliders, slimeTargetColliders, true);
+            if (TryGetColliderBounds(slimeOwnColliders, out Bounds carrierBounds))
+            {
+                Vector3 scale = transform.lossyScale;
+                friendCarrierBoundsLocalCenter = transform.InverseTransformPoint(carrierBounds.center);
+                friendCarrierBoundsLocalSize = new Vector3(
+                    carrierBounds.size.x / Mathf.Max(0.0001f, Mathf.Abs(scale.x)),
+                    carrierBounds.size.y / Mathf.Max(0.0001f, Mathf.Abs(scale.y)),
+                    carrierBounds.size.z);
+                hasFriendCarrierBoundsCache = true;
+            }
+            else
+            {
+                hasFriendCarrierBoundsCache = false;
+            }
+            Collider2D[] targetColliders = bestPlayer.GetComponentsInChildren<Collider2D>(false);
+            friendCarryProxy = CreateCarryProxy(
+                bestPlayer,
+                targetColliders,
+                friendCarryOriginalColliders,
+                friendCarryOriginalEnabledStates,
+                friendCarryOriginalTriggerStates,
+                slimeOwnColliders.Length > CarryProxyColliderThreshold,
+                false);
+            friendCarryOriginalColliderSet.Clear();
+            for (int i = 0; i < friendCarryOriginalColliders.Count; i++)
+            {
+                friendCarryOriginalColliderSet.Add(friendCarryOriginalColliders[i]);
+            }
+            slimeTargetColliders = friendCarryProxy != null
+                ? new[] { friendCarryProxy }
+                : targetColliders;
+            if (friendCarryProxy == null)
+            {
+                SetCollisionIgnored(slimeOwnColliders, slimeTargetColliders, true);
+            }
             FollowSlimeAttachedFriend();
+            if (slimeAttachedPlayer == null)
+            {
+                return false;
+            }
             if (IsCat()) PlayCatGrabBurst(bestPlayer);
             else if (IsBird()) PlayBirdPeckBurst(bestPlayer);
             GameSfx.PlayAt(GetFriendAttachSfx(), transform.position, 1.1f);
@@ -778,6 +864,36 @@ namespace DrawBody.Prototype
                 desiredCenterX - carriedBounds.center.x,
                 ownBounds.max.y + verticalGap - carriedBounds.min.y,
                 0f);
+            return transform.InverseTransformVector(desiredRoot - transform.position);
+        }
+
+        private Vector3 CalculateCatCarryOffset(PlayerController2D target)
+        {
+            Collider2D[] own = GetComponentsInChildren<Collider2D>(false);
+            Collider2D[] carried = target != null
+                ? target.GetComponentsInChildren<Collider2D>(false)
+                : null;
+            if (target == null
+                || !TryGetColliderBounds(own, out Bounds ownBounds)
+                || !TryGetColliderBounds(carried, out Bounds carriedBounds))
+            {
+                return new Vector3(GetFacingDirection() * 0.78f, 0.34f, 0f);
+            }
+
+            // Two cats normally meet with both sets of feet on the floor. If
+            // that exact height is preserved, the carried cat's long hand-drawn
+            // feet repeatedly sweep the ground and make horizontal motion judder.
+            // Keep the natural side grip, but lift the carried feet clear.
+            const float footClearance = 0.34f;
+            float desiredRootX = target.transform.position.x;
+            float horizontalOffset = desiredRootX - transform.position.x;
+            if (Mathf.Abs(horizontalOffset) < 0.48f)
+            {
+                desiredRootX = transform.position.x + GetFacingDirection() * 0.72f;
+            }
+            float desiredRootY = target.transform.position.y
+                + ownBounds.min.y + footClearance - carriedBounds.min.y;
+            Vector3 desiredRoot = new Vector3(desiredRootX, desiredRootY, target.transform.position.z);
             return transform.InverseTransformVector(desiredRoot - transform.position);
         }
 
@@ -984,6 +1100,10 @@ namespace DrawBody.Prototype
                 // too far from the requested attachment point.
                 if (((Vector2)(targetAnchor - desiredAnchor)).sqrMagnitude > 0.2025f)
                 {
+                    // F is a hold input. Without this latch, a wall-forced
+                    // release reconnects on the very next frame and repeats
+                    // forever until the key is released.
+                    friendGrabRequiresRelease = true;
                     DetachSlimeFromFriend(true);
                     return;
                 }
@@ -1020,31 +1140,12 @@ namespace DrawBody.Prototype
             ContactFilter2D filter = new ContactFilter2D
             {
                 useTriggers = false,
-                useLayerMask = false
+                useLayerMask = true,
+                layerMask = 1 << 6
             };
 
-            // Cast the carried Rigidbody as one body. Besides being much cheaper
-            // for filled drawings, this keeps all of its irregular segments on
-            // the same physics snapshot when checking a thin wall.
-            Physics2D.SyncTransforms();
-            carriedFriendCastHits.Clear();
-            slimeAttachedBody.Cast(direction, filter, carriedFriendCastHits, distance);
-            for (int hitIndex = 0; hitIndex < carriedFriendCastHits.Count; hitIndex++)
-            {
-                RaycastHit2D hit = carriedFriendCastHits[hitIndex];
-                Collider2D hitCollider = hit.collider;
-                if (hitCollider == null || hitCollider.isTrigger) continue;
-                if (hitCollider.transform.IsChildOf(slimeAttachedPlayer.transform)) continue;
-                if (hitCollider.GetComponentInParent<PlayerController2D>() != null) continue;
-                if (Vector2.Dot(direction, hit.normal) >= -0.01f) continue;
-
-                allowedDistance = Mathf.Min(allowedDistance, Mathf.Max(0f, hit.distance - 0.06f));
-            }
-
-            // Rigidbody2D.Cast normally covers every body segment, but an online
-            // redraw can briefly leave some child colliders outside that body's
-            // cast set. Sweep the complete visible collider bounds as a second,
-            // conservative guard against jumping through a wall while grabbing.
+            // Sweep one aggregate shape against terrain only. Character line
+            // colliders never enter this query, regardless of drawing density.
             if (TryGetSolidBounds(slimeAttachedPlayer, out Bounds carriedBounds))
             {
                 carriedFriendCastHits.Clear();
@@ -1153,6 +1254,10 @@ namespace DrawBody.Prototype
                 : slimeAttachedBody != null ? slimeAttachedBody.linearVelocity : Vector2.zero;
             Collider2D[] releasedOwnColliders = slimeOwnColliders;
             Collider2D[] releasedTargetColliders = slimeTargetColliders;
+            Collider2D releasedProxy = friendCarryProxy;
+            Collider2D[] releasedOriginalColliders = friendCarryOriginalColliders.ToArray();
+            bool[] releasedOriginalEnabledStates = friendCarryOriginalEnabledStates.ToArray();
+            bool[] releasedOriginalTriggerStates = friendCarryOriginalTriggerStates.ToArray();
             bool separatedFromTarget = !friendDragging && SeparateFromAttachmentTarget(
                 releasedTarget, releasedOwnColliders, releasedTargetColliders);
             if (friendDragging)
@@ -1164,12 +1269,19 @@ namespace DrawBody.Prototype
             friendAttachedOnlinePlayerId = null;
             slimeOwnColliders = new Collider2D[0];
             slimeTargetColliders = new Collider2D[0];
+            friendCarryProxy = null;
+            friendCarryOriginalColliders.Clear();
+            friendCarryOriginalColliderSet.Clear();
+            friendCarryOriginalEnabledStates.Clear();
+            friendCarryOriginalTriggerStates.Clear();
+            hasFriendCarrierBoundsCache = false;
             SetSlimeAttachmentVisualVisible(false);
 
             Rigidbody2D bodyToRestore = friendDragging ? releasedTarget.GetComponent<Rigidbody2D>() : playerBody;
             if (bodyToRestore != null)
             {
                 bodyToRestore.bodyType = slimePreviousBodyType;
+                bodyToRestore.simulated = slimePreviousSimulated;
                 bodyToRestore.gravityScale = slimePreviousGravityScale;
                 bodyToRestore.freezeRotation = slimePreviousFreezeRotation;
                 bodyToRestore.rotation = 0f;
@@ -1182,7 +1294,16 @@ namespace DrawBody.Prototype
                 releasedTarget.SetControlsEnabled(slimeAttachedTargetPreviousControlsEnabled);
             }
 
-            if (releasedOwnColliders.Length > 0 && releasedTargetColliders.Length > 0)
+            if (releasedProxy != null)
+            {
+                RestoreCarryProxySafely(
+                    releasedProxy,
+                    releasedOriginalColliders,
+                    releasedOriginalEnabledStates,
+                    releasedOriginalTriggerStates,
+                    releasedOwnColliders);
+            }
+            else if (releasedOwnColliders.Length > 0 && releasedTargetColliders.Length > 0)
             {
                 if (separatedFromTarget)
                 {
@@ -1362,7 +1483,9 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                float distance = GetClosestColliderDistance(playerColliders, hit);
+                float distance = playerColliders.Length > 96
+                    ? GetBoundsDistance(playerBounds, hit.bounds)
+                    : GetClosestColliderDistance(playerColliders, hit);
                 if (distance > pickupReach)
                 {
                     continue;
@@ -1406,6 +1529,15 @@ namespace DrawBody.Prototype
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             heldTransform.GetComponentsInChildren(heldColliders);
+            heldPlayerCarryProxy = bestPlayer != null
+                ? CreateCarryProxy(
+                    bestPlayer,
+                    heldColliders,
+                    null,
+                    null,
+                    null,
+                    playerColliders.Length > CarryProxyColliderThreshold)
+                : null;
             bool holdingKey = IsHeldGameplayKey();
             for (int i = 0; i < heldColliders.Count; i++)
             {
@@ -1432,11 +1564,13 @@ namespace DrawBody.Prototype
                 }
                 else if (holdingPlayer)
                 {
-                    // A carried player remains a real support surface so teammates
-                    // already standing on them travel with the throw as in gameplay.
                     heldCollider.isTrigger = i < heldColliderTriggerStates.Count
                         && heldColliderTriggerStates[i];
-                    heldCollider.enabled = true;
+                    // Dense drawings can contain hundreds of line colliders. While
+                    // carried, one approximate body prevents collider-pair spikes
+                    // and feedback impulses without discarding the drawing itself.
+                    heldCollider.enabled = heldPlayerCarryProxy == null
+                        || heldCollider.isTrigger;
                 }
                 else
                 {
@@ -1453,7 +1587,10 @@ namespace DrawBody.Prototype
                         heldCarrierColliderSet.Add(playerColliders[i]);
                     }
                 }
-                SetCollisionIgnored(heldColliders, playerColliders, true);
+                if (heldPlayerCarryProxy == null)
+                {
+                    SetCollisionIgnored(heldColliders, playerColliders, true);
+                }
             }
 
             BringHeldObjectToFront();
@@ -1501,20 +1638,24 @@ namespace DrawBody.Prototype
             Vector2 delta = to - from;
             float distance = delta.magnitude;
             if (distance <= 0.01f) return false;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(from, delta / distance, distance);
-            for (int i = 0; i < hits.Length; i++)
-            {
-                Collider2D blocker = hits[i].collider;
-                if (blocker == null || blocker.isTrigger
-                    || blocker.transform.IsChildOf(carrier)
-                    || blocker.transform.IsChildOf(candidate)) continue;
-                if (blocker.gameObject.layer == 6 || blocker.CompareTag("Ground")) return true;
-            }
-            return false;
+            // Query terrain directly. RaycastAll previously collected every line
+            // collider in both dense cats and could stall on the F-key frame.
+            RaycastHit2D hit = Physics2D.Raycast(from, delta / distance, distance, 1 << 6);
+            return hit.collider != null && !hit.collider.isTrigger;
         }
 
         private static float GetClosestColliderDistance(Collider2D[] first, Collider2D[] second)
         {
+            // Dense drawings can contain hundreds or thousands of line
+            // colliders. An exact all-pairs query on the F-key frame scales as
+            // n*m and can stall the game before the carry proxy even exists.
+            if ((long)first.Length * second.Length > 1024
+                && TryGetColliderBounds(first, out Bounds firstBounds)
+                && TryGetColliderBounds(second, out Bounds secondBounds))
+            {
+                return GetBoundsDistance(firstBounds, secondBounds);
+            }
+
             float bestDistance = float.PositiveInfinity;
             for (int i = 0; i < first.Length; i++)
             {
@@ -1538,6 +1679,17 @@ namespace DrawBody.Prototype
             }
 
             return bestDistance;
+        }
+
+        private static float GetBoundsDistance(Bounds first, Bounds second)
+        {
+            float horizontal = Mathf.Max(
+                0f,
+                Mathf.Max(first.min.x - second.max.x, second.min.x - first.max.x));
+            float vertical = Mathf.Max(
+                0f,
+                Mathf.Max(first.min.y - second.max.y, second.min.y - first.max.y));
+            return Mathf.Sqrt(horizontal * horizontal + vertical * vertical);
         }
 
         private void ThrowHeld()
@@ -1617,6 +1769,9 @@ namespace DrawBody.Prototype
                 ResolveGimmickSyncManager()?.EndLocalObjectCarry(heldTransform, releaseVelocity);
             }
             Collider2D[] releasedColliders = heldColliders.ToArray();
+            Collider2D releasedProxy = heldPlayerCarryProxy;
+            bool[] releasedEnabledStates = heldColliderEnabledStates.ToArray();
+            bool[] releasedTriggerStates = heldColliderTriggerStates.ToArray();
             // OnDisable can run after the player GameObject has already become
             // inactive. Include inactive body colliders so ignored collision
             // pairs are still fully restored for the next retry/respawn.
@@ -1630,13 +1785,19 @@ namespace DrawBody.Prototype
                     {
                         releasedColliders[i].isTrigger = heldColliderTriggerStates[i];
                     }
-                    releasedColliders[i].enabled = i < heldColliderEnabledStates.Count
-                        ? heldColliderEnabledStates[i]
-                        : true;
+                    if (releasedProxy == null || releasedColliders[i].isTrigger)
+                    {
+                        releasedColliders[i].enabled = i < heldColliderEnabledStates.Count
+                            ? heldColliderEnabledStates[i]
+                            : true;
+                    }
                 }
             }
             RestoreHeldObjectRendering();
-            SetCollisionIgnored(releasedColliders, carrierColliders, true);
+            if (releasedProxy == null)
+            {
+                SetCollisionIgnored(releasedColliders, carrierColliders, true);
+            }
 
             heldPlayerController?.SetFriendCarried(false);
             heldPlayerController?.SetHumanCarryStruggling(false);
@@ -1662,6 +1823,7 @@ namespace DrawBody.Prototype
             heldPlayerPreviousControlsEnabled = false;
             heldBody = null;
             heldOnlinePlayerId = null;
+            heldPlayerCarryProxy = null;
             hasDisplayedThrowDirection = false;
             heldColliders.Clear();
             heldColliderSet.Clear();
@@ -1669,7 +1831,19 @@ namespace DrawBody.Prototype
             heldColliderEnabledStates.Clear();
             heldColliderTriggerStates.Clear();
             SetThrowPreviewVisible(false);
-            RestoreReleasedCollisionsSafely(releasedColliders, carrierColliders);
+            if (releasedProxy != null)
+            {
+                RestoreCarryProxySafely(
+                    releasedProxy,
+                    releasedColliders,
+                    releasedEnabledStates,
+                    releasedTriggerStates,
+                    carrierColliders);
+            }
+            else
+            {
+                RestoreReleasedCollisionsSafely(releasedColliders, carrierColliders);
+            }
         }
 
         private void ClearDestroyedHeldState(Vector2 releaseVelocity)
@@ -2839,7 +3013,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static bool TryGetSolidBounds(PlayerController2D controller, out Bounds bounds)
+        private bool TryGetSolidBounds(PlayerController2D controller, out Bounds bounds)
         {
             bounds = controller != null
                 ? new Bounds(controller.transform.position, Vector3.zero)
@@ -2849,12 +3023,43 @@ namespace DrawBody.Prototype
                 return false;
             }
 
+            if (controller == slimeAttachedPlayer
+                && friendCarryProxy != null
+                && friendCarryProxy.enabled)
+            {
+                bounds = friendCarryProxy.bounds;
+                return true;
+            }
+            if (controller == heldPlayerController
+                && heldPlayerCarryProxy != null
+                && heldPlayerCarryProxy.enabled)
+            {
+                bounds = heldPlayerCarryProxy.bounds;
+                return true;
+            }
+            if (controller == playerController
+                && slimeAttachedPlayer != null
+                && hasFriendCarrierBoundsCache)
+            {
+                Vector3 scale = transform.lossyScale;
+                bounds = new Bounds(
+                    transform.TransformPoint(friendCarrierBoundsLocalCenter),
+                    new Vector3(
+                        friendCarrierBoundsLocalSize.x * Mathf.Abs(scale.x),
+                        friendCarrierBoundsLocalSize.y * Mathf.Abs(scale.y),
+                        friendCarrierBoundsLocalSize.z));
+                return true;
+            }
+
             bool hasBounds = false;
             Collider2D[] colliders = controller.GetComponentsInChildren<Collider2D>(false);
             for (int i = 0; i < colliders.Length; i++)
             {
                 Collider2D collider = colliders[i];
-                if (collider == null || !collider.enabled || collider.isTrigger)
+                bool isActiveCarryProxy = collider == heldPlayerCarryProxy
+                    || collider == friendCarryProxy;
+                if (collider == null || !collider.enabled
+                    || (collider.isTrigger && !isActiveCarryProxy))
                 {
                     continue;
                 }
@@ -2965,6 +3170,172 @@ namespace DrawBody.Prototype
             return throwSpeed * inkMultiplier * targetMultiplier;
         }
 
+        private static Collider2D CreateCarryProxy(
+            PlayerController2D target,
+            IList<Collider2D> sourceColliders,
+            List<Collider2D> recordedColliders,
+            List<bool> recordedEnabledStates,
+            List<bool> recordedTriggerStates,
+            bool forceProxy = false,
+            bool disableOriginals = true)
+        {
+            recordedColliders?.Clear();
+            recordedEnabledStates?.Clear();
+            recordedTriggerStates?.Clear();
+            if (target == null || sourceColliders == null)
+            {
+                return null;
+            }
+
+            int solidCount = 0;
+            Bounds bounds = default;
+            bool hasBounds = false;
+            for (int i = 0; i < sourceColliders.Count; i++)
+            {
+                Collider2D current = sourceColliders[i];
+                if (current == null || !current.enabled || current.isTrigger)
+                {
+                    continue;
+                }
+
+                if (!hasBounds)
+                {
+                    bounds = current.bounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(current.bounds);
+                }
+                solidCount++;
+            }
+
+            if (!hasBounds || (!forceProxy && solidCount <= CarryProxyColliderThreshold))
+            {
+                return null;
+            }
+
+            CapsuleCollider2D proxy = target.gameObject.AddComponent<CapsuleCollider2D>();
+            proxy.usedByEffector = false;
+            // Positioning while held is resolved by the explicit casts below.
+            // A trigger proxy cannot be solved through a ceiling by the physics
+            // engine, which prevents the carried pair from being launched.
+            proxy.isTrigger = true;
+            Vector3 scale = target.transform.lossyScale;
+            float scaleX = Mathf.Max(0.0001f, Mathf.Abs(scale.x));
+            float scaleY = Mathf.Max(0.0001f, Mathf.Abs(scale.y));
+            Vector3 localCenter = target.transform.InverseTransformPoint(bounds.center);
+            proxy.offset = new Vector2(localCenter.x, localCenter.y);
+            proxy.size = new Vector2(
+                Mathf.Max(0.18f, bounds.size.x / scaleX),
+                Mathf.Max(0.18f, bounds.size.y / scaleY));
+            proxy.direction = proxy.size.y >= proxy.size.x
+                ? CapsuleDirection2D.Vertical
+                : CapsuleDirection2D.Horizontal;
+
+            if (recordedColliders != null
+                && recordedEnabledStates != null
+                && recordedTriggerStates != null)
+            {
+                for (int i = 0; i < sourceColliders.Count; i++)
+                {
+                    Collider2D current = sourceColliders[i];
+                    if (current == null)
+                    {
+                        continue;
+                    }
+                    recordedColliders.Add(current);
+                    recordedEnabledStates.Add(current.enabled);
+                    recordedTriggerStates.Add(current.isTrigger);
+                    if (disableOriginals && !current.isTrigger)
+                    {
+                        current.enabled = false;
+                    }
+                }
+            }
+
+            return proxy;
+        }
+
+        private IEnumerator RestoreCarryProxy(
+            Collider2D proxy,
+            Collider2D[] originalColliders,
+            bool[] originalEnabledStates,
+            bool[] originalTriggerStates,
+            Collider2D[] carrierColliders)
+        {
+            float restoreDeadline = Time.time + Mathf.Min(0.16f, postThrowCollisionRestoreTimeout);
+            Collider2D[] proxyArray = proxy != null ? new[] { proxy } : new Collider2D[0];
+            while (proxy != null
+                && Time.time < restoreDeadline
+                && AnyCollidersOverlap(proxyArray, carrierColliders))
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            RestoreCarryProxyImmediately(
+                proxy,
+                originalColliders,
+                originalEnabledStates,
+                originalTriggerStates,
+                carrierColliders);
+        }
+
+        private void RestoreCarryProxySafely(
+            Collider2D proxy,
+            Collider2D[] originalColliders,
+            bool[] originalEnabledStates,
+            bool[] originalTriggerStates,
+            Collider2D[] carrierColliders)
+        {
+            // Never leave a released player with only the trigger proxy for even
+            // one physics step. A falling release could cross a thin floor before
+            // the delayed restore coroutine ran, leaving every real foot collider
+            // below the stage. The lifted carry pose already separates the pair,
+            // so restore the original drawing in this same frame.
+            RestoreCarryProxyImmediately(
+                proxy,
+                originalColliders,
+                originalEnabledStates,
+                originalTriggerStates,
+                carrierColliders);
+        }
+
+        private void RestoreCarryProxyImmediately(
+            Collider2D proxy,
+            Collider2D[] originalColliders,
+            bool[] originalEnabledStates,
+            bool[] originalTriggerStates,
+            Collider2D[] carrierColliders)
+        {
+            if (proxy != null)
+            {
+                if (!proxy.isTrigger)
+                {
+                    SetCollisionIgnored(new[] { proxy }, carrierColliders, false);
+                }
+                proxy.enabled = false;
+                Destroy(proxy);
+            }
+
+            for (int i = 0; i < originalColliders.Length; i++)
+            {
+                Collider2D current = originalColliders[i];
+                if (current == null)
+                {
+                    continue;
+                }
+                if (i < originalTriggerStates.Length)
+                {
+                    current.isTrigger = originalTriggerStates[i];
+                }
+                current.enabled = i < originalEnabledStates.Length
+                    ? originalEnabledStates[i]
+                    : true;
+            }
+            stageManager?.RefreshOnlinePlayerCollisionSafety();
+        }
+
         private IEnumerator RestoreReleasedCollisions(Collider2D[] releasedColliders, Collider2D[] carrierColliders)
         {
             float minimumRestoreAt = Time.time + postThrowCollisionIgnoreTime;
@@ -3034,6 +3405,39 @@ namespace DrawBody.Prototype
             heldTransform.GetComponentsInChildren(true, heldPlayerColliderScratch);
             GetComponentsInChildren(true, carrierColliderScratch);
 
+            if (heldPlayerCarryProxy != null)
+            {
+                for (int i = 0; i < heldPlayerColliderScratch.Count; i++)
+                {
+                    Collider2D current = heldPlayerColliderScratch[i];
+                    if (current == null
+                        || current == heldPlayerCarryProxy
+                        || heldColliderSet.Contains(current))
+                    {
+                        continue;
+                    }
+
+                    heldColliderSet.Add(current);
+                    heldColliders.Add(current);
+                    heldColliderEnabledStates.Add(current.enabled);
+                    heldColliderTriggerStates.Add(current.isTrigger);
+                    if (!current.isTrigger)
+                    {
+                        current.enabled = false;
+                    }
+                }
+
+                for (int i = 0; i < carrierColliderScratch.Count; i++)
+                {
+                    Collider2D current = carrierColliderScratch[i];
+                    if (current != null)
+                    {
+                        heldCarrierColliderSet.Add(current);
+                    }
+                }
+                return;
+            }
+
             for (int i = 0; i < heldPlayerColliderScratch.Count; i++)
             {
                 Collider2D current = heldPlayerColliderScratch[i];
@@ -3093,6 +3497,35 @@ namespace DrawBody.Prototype
             carrierColliderScratch.Clear();
             slimeAttachedPlayer.GetComponentsInChildren(true, heldPlayerColliderScratch);
             GetComponentsInChildren(true, carrierColliderScratch);
+
+            if (friendCarryProxy != null)
+            {
+                for (int i = 0; i < heldPlayerColliderScratch.Count; i++)
+                {
+                    Collider2D current = heldPlayerColliderScratch[i];
+                    if (current == null
+                        || current == friendCarryProxy
+                        || friendCarryOriginalColliderSet.Contains(current))
+                    {
+                        continue;
+                    }
+                    friendCarryOriginalColliders.Add(current);
+                    friendCarryOriginalColliderSet.Add(current);
+                    friendCarryOriginalEnabledStates.Add(current.enabled);
+                    friendCarryOriginalTriggerStates.Add(current.isTrigger);
+                    if (!current.isTrigger)
+                    {
+                        current.enabled = false;
+                    }
+                }
+
+                if (!ColliderListMatchesArray(carrierColliderScratch, slimeOwnColliders))
+                {
+                    slimeOwnColliders = carrierColliderScratch.ToArray();
+                }
+                slimeTargetColliders = new[] { friendCarryProxy };
+                return;
+            }
 
             if (ColliderListMatchesArray(carrierColliderScratch, slimeOwnColliders)
                 && ColliderListMatchesArray(heldPlayerColliderScratch, slimeTargetColliders))

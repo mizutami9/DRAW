@@ -16,7 +16,9 @@ namespace DrawBody.Prototype
         private const float MainCatFadeSeconds = 0.9f;
         private const float LaneCatFadeSeconds = 1.15f;
         private const int SwitchSetCount = 3;
-        private static readonly float[] LaneY = { -28f, -42f, -56f, -70f };
+        // The left shaft must descend the farthest. With the opposite ordering,
+        // the left route crossed through the lower right-hand route.
+        private static readonly float[] LaneY = { -70f, -56f, -42f, -28f };
 
         [System.Serializable]
         private sealed class EscapeState
@@ -53,7 +55,7 @@ namespace DrawBody.Prototype
         private readonly StageCatEscapeGate[] enemyGates = new StageCatEscapeGate[4];
         private readonly bool[] buttons = new bool[SwitchSetCount * 4];
         private readonly Transform[] laneCats = new Transform[4];
-        private readonly float[] laneBossXs = { 99f, 99f, 99f, 99f };
+        private readonly float[] laneBossXs = { 91f, 91f, 91f, 91f };
         private readonly float[] laneCatFades = new float[4];
         private readonly bool[] laneChases = new bool[4];
         private readonly GameObject[] trapdoorFloors = new GameObject[4];
@@ -86,6 +88,7 @@ namespace DrawBody.Prototype
         private int roomPhase;
         private float roomClock;
         private int terrainSerial;
+        private Transform lastOfflineActivePlayer;
 
         public override bool UsesGlobalFallBoundary => false;
 
@@ -104,11 +107,14 @@ namespace DrawBody.Prototype
         {
             if (onlineManager == null) onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
+            if (stageManager == null) stageManager = Object.FindFirstObjectByType<StageManager>();
+            stageManager?.SetOfflinePlayerCollisionIgnored(true);
         }
 
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            stageManager?.SetOfflinePlayerCollisionIgnored(false);
         }
 
         private void Start()
@@ -122,6 +128,7 @@ namespace DrawBody.Prototype
             BuildCourse();
             BuildMonitor();
             BuildGiantCats();
+            stageManager?.SetOfflinePlayerCollisionIgnored(true);
             ApplyRoomVisualState();
             RefreshMonitor();
         }
@@ -141,6 +148,7 @@ namespace DrawBody.Prototype
             receivedSequence = 0;
             receivedFreshRunState = false;
             terrainSerial = 0;
+            lastOfflineActivePlayer = null;
             participants.Clear();
             eliminated.Clear();
             assignedToShaft.Clear();
@@ -148,7 +156,7 @@ namespace DrawBody.Prototype
             scratchTargets.Clear();
             for (int lane = 0; lane < 4; lane++)
             {
-                laneBossXs[lane] = 99f;
+                laneBossXs[lane] = 91f;
                 laneCatFades[lane] = 0f;
                 laneChases[lane] = false;
                 laneEnemies[lane].Clear();
@@ -202,8 +210,11 @@ namespace DrawBody.Prototype
         private void UpdateChase()
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
+            AdjustPursuerForOfflineCharacterSwitch(players);
             bool anyoneBeforeSplit = false;
-            bool[] occupiedLanes = new bool[4];
+            bool foundShaftPlayer = false;
+            bool allShaftPlayersLanded = true;
+            bool anyLowerLaneOccupied = false;
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
@@ -222,12 +233,21 @@ namespace DrawBody.Prototype
                 bool landedInLane = inShaftOrLane && player.transform.position.y <= LaneY[lane] + 6.8f;
                 bool safeInRoom = roomPhase > 0 || IsInsideDropRoom(player);
                 if (!inShaftOrLane && !safeInRoom && x < 112f) anyoneBeforeSplit = true;
-                else if (landedInLane && x < 240f) occupiedLanes[lane] = true;
+                if (inShaftOrLane)
+                {
+                    foundShaftPlayer = true;
+                    if (landedInLane && x < 260f) anyLowerLaneOccupied = true;
+                    else if (!landedInLane) allShaftPlayersLanded = false;
+                }
                 if (!mainCatRetreating && mainCatFade >= 0.99f
                     && !inShaftOrLane && !safeInRoom && x < 112f && x < bossX + 3.4f)
                     RequestElimination(player);
-                if (laneChases[lane] && laneCatFades[lane] >= 0.99f
-                    && landedInLane && x < 240f && x < laneBossXs[lane] + 2.8f) RequestElimination(player);
+                if (laneChases[0] && laneCatFades[0] >= 0.99f && landedInLane && x < 260f)
+                {
+                    GetTunnelCatLayout(out _, out float sharedScale);
+                    if (x < laneBossXs[0] + Mathf.Max(2.8f, sharedScale * 4.1f))
+                        RequestElimination(player);
+                }
             }
 
             if (roomPhase == 0)
@@ -235,28 +255,61 @@ namespace DrawBody.Prototype
                 mainCatFade = Mathf.MoveTowards(mainCatFade, 1f, Time.deltaTime / MainCatFadeSeconds);
                 if (AreAllLivingPlayersInRoom()) BeginRoomSequence();
                 else if (anyoneBeforeSplit && mainCatFade >= 0.99f)
-                    bossX = Mathf.Min(103f, bossX + 4.8f * Time.deltaTime);
+                {
+                    float stride = 0.84f + Mathf.Abs(Mathf.Sin(Time.time * 4.2f)) * 0.32f;
+                    bossX = Mathf.Min(103f, bossX + 4.8f * stride * Time.deltaTime);
+                }
             }
             else
             {
                 UpdateRoomSequence();
             }
 
-            for (int lane = 0; lane < playerCount; lane++)
+            bool canStartSharedChase = foundShaftPlayer
+                && allShaftPlayersLanded
+                && anyLowerLaneOccupied;
+            if (!laneChases[0] && canStartSharedChase)
             {
-                if (!occupiedLanes[lane]) continue;
-                if (!laneChases[lane])
+                laneChases[0] = true;
+                laneCatFades[0] = 0f;
+                laneBossXs[0] = GetTunnelCatStartX();
+            }
+            else if (laneChases[0])
+            {
+                laneCatFades[0] = Mathf.MoveTowards(
+                    laneCatFades[0], 1f, Time.deltaTime / LaneCatFadeSeconds);
+                if (laneCatFades[0] >= 0.99f)
                 {
-                    laneChases[lane] = true;
-                    laneCatFades[lane] = 0f;
-                    laneBossXs[lane] = 99f;
+                    float stride = 0.82f + Mathf.Abs(Mathf.Sin(Time.time * 5.1f)) * 0.38f;
+                    laneBossXs[0] += 5.8f * stride * Time.deltaTime;
                 }
-                else
-                {
-                    laneCatFades[lane] = Mathf.MoveTowards(
-                        laneCatFades[lane], 1f, Time.deltaTime / LaneCatFadeSeconds);
-                    if (laneCatFades[lane] >= 0.99f) laneBossXs[lane] += 4.35f * Time.deltaTime;
-                }
+            }
+        }
+
+        private void AdjustPursuerForOfflineCharacterSwitch(PlayerController2D[] players)
+        {
+            if (IsOnline || players == null || players.Length <= 1 || stageManager == null) return;
+            Transform active = stageManager.ActivePlayerTransform;
+            if (active == null || active == lastOfflineActivePlayer) return;
+            bool isSwitch = lastOfflineActivePlayer != null;
+            lastOfflineActivePlayer = active;
+            if (!isSwitch) return;
+
+            PlayerController2D player = active.GetComponent<PlayerController2D>();
+            if (player == null) return;
+            string id = ResolvePlayerId(player);
+            if (!string.IsNullOrEmpty(id) && assignedToShaft.Contains(id))
+            {
+                GetTunnelCatLayout(out _, out float sharedScale);
+                laneBossXs[0] = Mathf.Min(
+                    laneBossXs[0],
+                    player.transform.position.x - sharedScale * 4.1f - 7f);
+                laneCatFades[0] = Mathf.Min(laneCatFades[0], 0.45f);
+            }
+            else
+            {
+                bossX = Mathf.Min(bossX, player.transform.position.x - 7.5f);
+                mainCatFade = Mathf.Min(mainCatFade, 0.55f);
             }
         }
 
@@ -344,7 +397,7 @@ namespace DrawBody.Prototype
                 if (body != null) body.simulated = false;
             }
             BroadcastState(true);
-            stageManager?.Retry();
+            stageManager?.ScheduleFullStageRetry();
         }
 
         public override void RequestElimination(PlayerController2D player)
@@ -386,9 +439,15 @@ namespace DrawBody.Prototype
             return foundLiving;
         }
 
-        private void GetRoomOccupancy(out int inside, out int living)
+        private bool AreAllLivingPlayersOnMarkers()
         {
-            inside = 0;
+            GetMarkerOccupancy(out int standing, out int living);
+            return living > 0 && standing == living;
+        }
+
+        private void GetMarkerOccupancy(out int standing, out int living)
+        {
+            standing = 0;
             living = 0;
             foreach (string id in participants)
             {
@@ -396,24 +455,47 @@ namespace DrawBody.Prototype
                 PlayerController2D player = ResolvePlayer(id);
                 if (player == null || !player.gameObject.activeInHierarchy) continue;
                 living++;
-                if (IsInsideDropRoom(player)) inside++;
+                if (IsPlayerStandingOnMarker(player, ResolvePlayerLane(player))) standing++;
             }
         }
 
-        private bool AreAllLivingPlayersOnMarkers()
+        private bool IsPlayerStandingOnMarker(PlayerController2D player, int lane)
         {
-            bool foundLiving = false;
-            foreach (string id in participants)
+            if (player == null || lane < 0 || lane >= positionMarkers.Length
+                || positionMarkers[lane] == null
+                || player.IsFriendCarried)
             {
-                if (eliminated.Contains(id)) continue;
-                PlayerController2D player = ResolvePlayer(id);
-                if (player == null || !player.gameObject.activeInHierarchy) continue;
-                foundLiving = true;
-                int lane = ResolvePlayerLane(player);
-                if (!player.IsGrounded || Mathf.Abs(player.transform.position.x - GetShaftX(lane)) > 0.72f)
-                    return false;
+                return false;
             }
-            return foundLiving;
+
+            Vector2 markerCenter = positionMarkers[lane].transform.position;
+            const float horizontalTolerance = 1.05f;
+            const float floorY = 0f;
+            const float floorTolerance = 0.58f;
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(false);
+            bool foundSolid = false;
+            Bounds combined = default;
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger) continue;
+                if (!foundSolid)
+                {
+                    combined = collider.bounds;
+                    foundSolid = true;
+                }
+                else
+                {
+                    combined.Encapsulate(collider.bounds);
+                }
+            }
+
+            if (!foundSolid) return false;
+            bool centeredOnOwnLine = Mathf.Abs(player.transform.position.x - markerCenter.x)
+                <= horizontalTolerance;
+            bool feetAtTrapdoor = combined.min.y >= floorY - floorTolerance
+                && combined.min.y <= floorY + floorTolerance;
+            return centeredOnOwnLine && feetAtTrapdoor;
         }
 
         private void OpenTrapdoors()
@@ -443,6 +525,8 @@ namespace DrawBody.Prototype
             if (IsOnline)
                 return Mathf.Clamp(PlayerColorPalette.GetLobbyPlayerSlot(
                     onlineManager?.CurrentLobby, stageManager.GetOnlinePlayerId(player)), 0, playerCount - 1);
+            int colorLane = ResolveOfflineColorLane(player);
+            if (colorLane >= 0) return colorLane;
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
             System.Array.Sort(players, (a, b) => a.GetInstanceID().CompareTo(b.GetInstanceID()));
             return Mathf.Clamp(System.Array.IndexOf(players, player), 0, playerCount - 1);
@@ -530,9 +614,9 @@ namespace DrawBody.Prototype
             CreateDropRoom();
             for (int lane = 0; lane < playerCount; lane++) BuildLane(lane);
 
-            CreateTeamWall("2-3_team_wall_10", 270f, 10);
-            CreateTeamWall("2-3_team_wall_20", 286f, 20);
-            CreateTeamWall("2-3_team_wall_30", 303f, 30);
+            CreateTeamWall("2-3_team_wall_10", 270f, 3);
+            CreateTeamWall("2-3_team_wall_20", 286f, 5);
+            CreateTeamWall("2-3_team_wall_30", 303f, 10);
             for (int lane = 0; lane < playerCount; lane++)
                 CreateRamp(314f, LaneY[lane], 380f, -35f);
             CreateFloor(379f, 428f, -35f);
@@ -669,11 +753,19 @@ namespace DrawBody.Prototype
             scratchTargets[id] = target;
         }
 
-        private void CreateTeamWall(string id, float x, int hits)
+        private void CreateTeamWall(string id, float x, int hitsPerPlayer)
         {
-            float bottom = LaneY[playerCount - 1] - 0.1f;
-            float top = LaneY[0] + 6.7f;
-            GameObject root = new GameObject("Shared Scratch Wall " + hits)
+            int requiredHits = hitsPerPlayer * playerCount;
+            float lowestLane = LaneY[0];
+            float highestLane = LaneY[0];
+            for (int lane = 1; lane < playerCount; lane++)
+            {
+                lowestLane = Mathf.Min(lowestLane, LaneY[lane]);
+                highestLane = Mathf.Max(highestLane, LaneY[lane]);
+            }
+            float bottom = lowestLane - 0.1f;
+            float top = highestLane + 6.7f;
+            GameObject root = new GameObject("Shared Scratch Wall x" + hitsPerPlayer)
             {
                 layer = 6,
                 tag = "Ground"
@@ -681,36 +773,67 @@ namespace DrawBody.Prototype
             root.transform.SetParent(transform, false);
             root.transform.position = new Vector3(x, (bottom + top) * 0.5f, 0f);
             BoxCollider2D sharedCollider = root.AddComponent<BoxCollider2D>();
-            sharedCollider.size = new Vector2(2.2f, top - bottom);
+            const float wallWidth = 4.2f;
+            float wallHeight = top - bottom;
+            sharedCollider.size = new Vector2(wallWidth, wallHeight);
+
+            Color pencil = hitsPerPlayer == 3
+                ? new Color(0.18f, 0.48f, 0.72f, 0.52f)
+                : hitsPerPlayer == 5
+                    ? new Color(0.52f, 0.28f, 0.68f, 0.52f)
+                    : new Color(0.72f, 0.2f, 0.28f, 0.52f);
+            Color ink = new Color(0.12f, 0.1f, 0.16f, 0.94f);
+            StageEscortController.AddFilledRect(root.transform, "Continuous Pencil Wash",
+                Vector2.zero, new Vector2(wallWidth - 0.16f, wallHeight - 0.12f),
+                new Color(pencil.r, pencil.g, pencil.b, 0.2f), 14);
+
+            const int verticalStrokeCount = 19;
+            for (int stroke = 0; stroke < verticalStrokeCount; stroke++)
+            {
+                float t = stroke / (verticalStrokeCount - 1f);
+                float xOffset = Mathf.Lerp(-1.9f, 1.9f, t);
+                float wobble = Mathf.Sin((stroke + 1) * 1.73f) * 0.08f;
+                StageGun.AddLine(root.transform, "Full Height Pencil Stroke " + stroke, new[]
+                {
+                    new Vector2(xOffset - 0.04f, -wallHeight * 0.49f),
+                    new Vector2(xOffset + wobble, -wallHeight * 0.18f),
+                    new Vector2(xOffset - wobble * 0.65f, wallHeight * 0.17f),
+                    new Vector2(xOffset + 0.035f, wallHeight * 0.49f)
+                }, 0.13f, pencil, 16);
+            }
+
+            float halfWidth = wallWidth * 0.5f;
+            float halfHeight = wallHeight * 0.5f;
+            StageGun.AddLine(root.transform, "Wobbly Shared Wall Outline", new[]
+            {
+                new Vector2(-halfWidth, -halfHeight),
+                new Vector2(-halfWidth - 0.06f, -halfHeight * 0.3f),
+                new Vector2(-halfWidth + 0.04f, halfHeight),
+                new Vector2(halfWidth, halfHeight + 0.03f),
+                new Vector2(halfWidth + 0.05f, halfHeight * 0.2f),
+                new Vector2(halfWidth - 0.03f, -halfHeight),
+                new Vector2(-halfWidth, -halfHeight)
+            }, 0.15f, ink, 19);
 
             for (int lane = 0; lane < playerCount; lane++)
             {
                 float localY = LaneY[lane] + 3.3f - root.transform.position.y;
-                Color fill = hits == 10
-                    ? new Color(0.28f, 0.52f, 0.72f)
-                    : hits == 20
-                        ? new Color(0.52f, 0.35f, 0.68f)
-                        : new Color(0.68f, 0.25f, 0.3f);
-                StageEscortController.AddFilledRect(root.transform, "Scratch Wall Panel " + lane,
-                    new Vector2(0f, localY), new Vector2(2.15f, 6.55f), fill, 16);
-                StageEscortController.AddBoxOutline(root.transform, new Vector2(0f, localY),
-                    new Vector2(2.2f, 6.6f), new Color(0.12f, 0.1f, 0.16f), 18);
                 for (int claw = -1; claw <= 1; claw++)
                 {
-                    float offset = claw * 0.42f;
+                    float offset = claw * 0.72f;
                     StageGun.AddLine(root.transform, "Claw Mark " + lane + "-" + claw, new[]
                     {
-                        new Vector2(-0.66f + offset, localY + 1.48f),
-                        new Vector2(0.58f + offset, localY - 0.05f)
-                    }, 0.1f, new Color(1f, 0.88f, 0.65f), 20);
+                        new Vector2(-1.05f + offset, localY + 1.58f),
+                        new Vector2(0.9f + offset, localY - 0.4f)
+                    }, 0.15f, new Color(0.24f, 0.12f, 0.12f, 0.94f), 20);
                 }
             }
 
             StageCatEscapeScratchTarget target = root.AddComponent<StageCatEscapeScratchTarget>();
-            target.Configure(this, id, hits, true);
+            target.Configure(this, id, requiredHits, true);
             for (int lane = 0; lane < playerCount; lane++)
                 target.AddCounterAt(new Vector3(0f,
-                    LaneY[lane] + 1.55f - root.transform.position.y, -0.08f));
+                    LaneY[lane] + 2.2f - root.transform.position.y, -0.08f));
             scratchTargets[id] = target;
         }
 
@@ -748,8 +871,7 @@ namespace DrawBody.Prototype
 
         private StageCatEscapeGate CreateGate(string name, Vector2 position, Vector2 size)
         {
-            GameObject root = CreateSolid(name, position, size,
-                new Color(0.37f, 0.42f, 0.48f), new Color(0.9f, 0.2f, 0.16f));
+            GameObject root = CreateTerrain(StageObjectType.Wall, name, position, size);
             StageCatEscapeGate gate = root.AddComponent<StageCatEscapeGate>();
             gate.Configure(size);
             return gate;
@@ -851,8 +973,8 @@ namespace DrawBody.Prototype
             {
                 if (roomPhase <= 4)
                 {
-                    GetRoomOccupancy(out int inside, out int living);
-                    roomStatus.text = LocalizationManager.Format("cat_escape_room_count", inside, living);
+                    GetMarkerOccupancy(out int standing, out int living);
+                    roomStatus.text = LocalizationManager.Format("cat_escape_room_count", standing, living);
                 }
                 else if (roomPhase == 5)
                 {
@@ -869,12 +991,13 @@ namespace DrawBody.Prototype
         private void BuildGiantCats()
         {
             giantCat = CreateGiantCat("Giant Pursuer", new Vector2(bossX, 2.1f), 1.25f);
-            for (int i = 0; i < playerCount; i++)
-            {
-                laneCats[i] = CreateGiantCat("Tunnel Giant Cat " + i,
-                    new Vector2(laneBossXs[i], LaneY[i] + 1.7f), 0.72f);
-                laneCats[i].gameObject.SetActive(false);
-            }
+            giantCat.gameObject.SetActive(false);
+            GetTunnelCatLayout(out float tunnelY, out float tunnelScale);
+            laneCats[0] = CreateGiantCat(
+                "Shared Tunnel Giant Cat",
+                new Vector2(laneBossXs[0], tunnelY),
+                tunnelScale);
+            laneCats[0].gameObject.SetActive(false);
         }
 
         private Transform CreateGiantCat(string name, Vector2 position, float scale)
@@ -917,19 +1040,69 @@ namespace DrawBody.Prototype
         {
             if (giantCat != null)
             {
-                giantCat.position = new Vector3(bossX, 2.1f, 0f);
+                ApplyRunningPose(giantCat, bossX, 2.1f, 1.25f, 0f, 4.2f);
                 bool visible = phase == 2 && mainCatFade > 0.01f && bossX < 112f;
                 giantCat.gameObject.SetActive(visible);
                 if (visible) SetCatAlpha(giantCat, mainCatFade);
             }
-            for (int i = 0; i < playerCount; i++)
+            if (laneCats[0] != null)
             {
-                if (laneCats[i] == null) continue;
-                laneCats[i].position = new Vector3(laneBossXs[i], LaneY[i] + 1.7f, 0f);
-                bool visible = phase == 2 && laneChases[i] && laneCatFades[i] > 0.01f
-                    && laneBossXs[i] < 232f;
-                laneCats[i].gameObject.SetActive(visible);
-                if (visible) SetCatAlpha(laneCats[i], laneCatFades[i]);
+                GetTunnelCatLayout(out float tunnelY, out float tunnelScale);
+                ApplyRunningPose(laneCats[0], laneBossXs[0], tunnelY,
+                    tunnelScale, 0.45f, 5.1f);
+                bool visible = phase == 2 && laneChases[0] && laneCatFades[0] > 0.01f
+                    && laneBossXs[0] < 260f;
+                laneCats[0].gameObject.SetActive(visible);
+                if (visible) SetCatAlpha(laneCats[0], laneCatFades[0]);
+            }
+        }
+
+        private void GetTunnelCatLayout(out float centerY, out float scale)
+        {
+            float lowest = LaneY[0];
+            float highest = LaneY[0];
+            for (int lane = 1; lane < playerCount; lane++)
+            {
+                lowest = Mathf.Min(lowest, LaneY[lane]);
+                highest = Mathf.Max(highest, LaneY[lane]);
+            }
+            float verticalSpan = highest - lowest + 6.8f;
+            centerY = (lowest + highest + 6.8f) * 0.5f;
+            scale = Mathf.Clamp(verticalSpan / 7.5f, 1.6f, 6.4f);
+        }
+
+        private float GetTunnelCatStartX()
+        {
+            GetTunnelCatLayout(out _, out float scale);
+            // Keep the visible nose several metres behind the shaft exits even
+            // when the single cat is scaled up to cover all four lanes.
+            return 108f - scale * 4.1f;
+        }
+
+        private static void ApplyRunningPose(
+            Transform cat, float x, float baseY, float baseScale, float phaseOffset, float strideSpeed)
+        {
+            float phase = Time.time * strideSpeed + phaseOffset;
+            float step = Mathf.Abs(Mathf.Sin(phase));
+            float landing = Mathf.Sin(phase * 2f);
+            float lunge = Mathf.Max(0f, Mathf.Sin(phase)) * 0.11f;
+            cat.position = new Vector3(
+                x + lunge + Mathf.Sin(phase * 0.5f) * 0.035f,
+                baseY + step * 0.2f,
+                0f);
+            cat.localRotation = Quaternion.Euler(0f, 0f,
+                -2.2f + landing * 2.4f);
+            float stretch = landing * 0.035f;
+            cat.localScale = new Vector3(
+                baseScale * (1f + stretch),
+                baseScale * (1f - stretch),
+                baseScale);
+
+            Transform doodle = cat.Find("Child Doodle Giant Cat");
+            if (doodle != null)
+            {
+                doodle.localRotation = Quaternion.Euler(0f, 0f, -landing * 1.6f);
+                doodle.localPosition = new Vector3(0f, 0.25f + step * 0.035f, 0f);
             }
         }
 
@@ -968,9 +1141,19 @@ namespace DrawBody.Prototype
             for (int i = 0; i < players.Length; i++)
                 if (players[i] != null && !IsEliminated(players[i]))
                 {
-                    players[i].SetControlsEnabled(enabledValue);
+                    bool isControlledPlayer = stageManager != null
+                        && players[i].transform == stageManager.ActivePlayerTransform;
+                    players[i].SetControlsEnabled(enabledValue && isControlledPlayer);
                     if (!enabledValue) players[i].ResetMotion();
                 }
+        }
+
+        private bool IsInactiveOfflinePlayer(PlayerController2D player)
+        {
+            if (player == null || IsOnline || stageManager == null) return false;
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsSortMode.None);
+            return players.Length > 1 && player.transform != stageManager.ActivePlayerTransform;
         }
 
         private void ShowPositionMarkers(bool visible)
@@ -992,19 +1175,49 @@ namespace DrawBody.Prototype
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
             System.Array.Sort(players, (a, b) => a.GetInstanceID().CompareTo(b.GetInstanceID()));
+            float nextLeft = -8.5f;
+            float leftmost = nextLeft;
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
                 if (player == null) continue;
-                Vector3 position = new Vector3(-4.5f + i * 1.55f, 4f, -0.2f);
+                player.GetComponent<PlayerCarryController>()?.ForceDrop();
+                Physics2D.SyncTransforms();
+                Bounds bounds = GetPlayerSolidBounds(player);
+                Vector3 position = player.transform.position;
+                position.x += nextLeft - bounds.min.x;
+                position.y += 0.02f - bounds.min.y;
+                position.z = -0.2f;
                 player.transform.position = position;
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
-                if (body != null) { body.position = position; body.linearVelocity = Vector2.zero; }
+                if (body != null)
+                {
+                    body.simulated = true;
+                    body.position = position;
+                    body.linearVelocity = Vector2.zero;
+                    body.angularVelocity = 0f;
+                }
                 player.ResetMotion();
-                StageMirrorFinalBossController.AlignCharacterBottomToSurface(player.transform, 0.02f);
                 if (body != null) body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+                nextLeft += Mathf.Max(1.2f, bounds.size.x) + 0.9f;
             }
+            bossX = Mathf.Min(bossX, leftmost - 7.5f);
             Physics2D.SyncTransforms();
+        }
+
+        private static Bounds GetPlayerSolidBounds(PlayerController2D player)
+        {
+            Bounds combined = new Bounds(player.transform.position, Vector3.one);
+            bool found = false;
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(false);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger) continue;
+                if (!found) { combined = collider.bounds; found = true; }
+                else combined.Encapsulate(collider.bounds);
+            }
+            return combined;
         }
 
         private void CaptureParticipants()
@@ -1020,9 +1233,32 @@ namespace DrawBody.Prototype
                 participants.Add(id);
                 int lane = IsOnline
                     ? PlayerColorPalette.GetLobbyPlayerSlot(onlineManager?.CurrentLobby, id)
-                    : i;
+                    : ResolveOfflineColorLane(players[i]);
+                if (lane < 0) lane = i;
                 playerLanes[id] = Mathf.Clamp(lane, 0, playerCount - 1);
             }
+        }
+
+        private int ResolveOfflineColorLane(PlayerController2D player)
+        {
+            BodyBuilder builder = player != null ? player.GetComponent<BodyBuilder>() : null;
+            if (builder == null) return -1;
+            Color actual = builder.PlayerColor;
+            int bestLane = -1;
+            float bestDistance = float.PositiveInfinity;
+            for (int lane = 0; lane < playerCount; lane++)
+            {
+                Color expected = PlayerColorPalette.GetColor(lane);
+                float distance = (actual.r - expected.r) * (actual.r - expected.r)
+                    + (actual.g - expected.g) * (actual.g - expected.g)
+                    + (actual.b - expected.b) * (actual.b - expected.b);
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    bestLane = lane;
+                }
+            }
+            return bestDistance <= 0.08f ? bestLane : -1;
         }
 
         private string ResolvePlayerId(PlayerController2D player)
@@ -1215,8 +1451,24 @@ namespace DrawBody.Prototype
 
         public void AddCounterAt(Vector3 localPosition)
         {
+            Color ink = new Color(0.08f, 0.07f, 0.12f, 0.96f);
+            Vector2[] thickOffsets =
+            {
+                new Vector2(-0.035f, 0f), new Vector2(0.035f, 0f),
+                new Vector2(0f, -0.035f), new Vector2(0f, 0.035f)
+            };
+            for (int i = 0; i < thickOffsets.Length; i++)
+            {
+                Vector3 position = localPosition + (Vector3)thickOffsets[i];
+                TextMesh stroke = StageEscortController.CreateText(
+                    transform, "Scratch Count Thick Stroke", position,
+                    72, 0.145f, ink, 22);
+                stroke.fontStyle = FontStyle.Bold;
+                labels.Add(stroke);
+            }
             TextMesh counter = StageEscortController.CreateText(transform, "Scratch Count",
-                localPosition, 50, 0.08f, Color.white, 22);
+                localPosition + Vector3.back * 0.01f, 76, 0.15f, ink, 23);
+            counter.fontStyle = FontStyle.Bold;
             labels.Add(counter);
             RefreshLabel();
         }
