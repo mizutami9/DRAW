@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "ΤΡΕΞΕ."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Αλλαγή χαρακτήρα"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "ΣΧΟΛΙΑ / ΑΝΑΦΟΡΑ ΣΦΑΛΜΑΤΟΣ"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Ευχαριστούμε που παίξατε!\nΣχόλια / Αναφορά σφάλματος"
     }
   ]
 }

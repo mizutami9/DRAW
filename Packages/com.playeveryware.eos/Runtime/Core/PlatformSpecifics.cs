@@ -60,6 +60,19 @@ namespace PlayEveryWare.EpicOnlineServices
 
         public virtual string GetTempDir()
         {
+#if !EXTERNAL_TO_UNITY
+            const string aiTestCachePrefix = "-pico-eos-cache-dir=";
+            string[] args = Environment.GetCommandLineArgs();
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] != null && args[i].StartsWith(
+                    aiTestCachePrefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    string overridePath = args[i].Substring(aiTestCachePrefix.Length).Trim('"');
+                    if (!string.IsNullOrWhiteSpace(overridePath)) return overridePath;
+                }
+            }
+#endif
             return Application.temporaryCachePath;
         }
 

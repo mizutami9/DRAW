@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "快跑。"
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "切換操作角色"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "意見回饋 / 錯誤回報"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "感謝遊玩！\n意見回饋 / 錯誤回報"
     }
   ]
 }

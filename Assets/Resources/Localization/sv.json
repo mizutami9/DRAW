@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "SPRING."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Byt karaktär"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "FEEDBACK / RAPPORTERA FEL"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Tack för att du spelade!\nFeedback / Rapportera fel"
     }
   ]
 }

@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "FUSS."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Karakterváltás"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "VISSZAJELZÉS / HIBAJELENTÉS"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Köszönjük, hogy játszottál!\nVisszajelzés / Hibajelentés"
     }
   ]
 }

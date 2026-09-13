@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "FUGI."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Schimbă personajul"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "FEEDBACK / RAPORTEAZĂ O EROARE"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Mulțumim că ai jucat!\nFeedback / Raportează o eroare"
     }
   ]
 }

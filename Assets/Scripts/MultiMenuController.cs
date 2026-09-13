@@ -119,7 +119,7 @@ namespace DrawBody.Prototype
             if (lobbyScreen != null && lobbyScreen.activeInHierarchy)
             {
                 ResolveLobbyRosterTexts();
-                if (lobbyRosterHeaderText != null) RefreshLobbyRoster(lobby, localPlayerId);
+                if (lobbyRosterHeaderText != null) RefreshLobbyRoster(lobby, localPlayerId, string.Empty);
                 else if (lobbyStatusText != null)
                 {
                     OnlineBackendMode mode = onlineManager != null
@@ -526,7 +526,7 @@ namespace DrawBody.Prototype
                 string localPlayerId = onlineManager != null ? onlineManager.LocalPlayerId : string.Empty;
                 if (lobbyRosterHeaderText != null)
                 {
-                    RefreshLobbyRoster(lobby, localPlayerId);
+                    RefreshLobbyRoster(lobby, localPlayerId, message);
                     if (lobbyStatusText != null)
                     {
                         lobbyStatusText.gameObject.SetActive(false);
@@ -591,7 +591,7 @@ namespace DrawBody.Prototype
             return direct != null ? direct : cell.GetComponentInChildren<Text>(true);
         }
 
-        private void RefreshLobbyRoster(OnlineLobbyInfo lobby, string localPlayerId)
+        private void RefreshLobbyRoster(OnlineLobbyInfo lobby, string localPlayerId, string message)
         {
             int playerCount = 0;
             if (lobby?.Players != null)
@@ -600,14 +600,20 @@ namespace DrawBody.Prototype
                     if (lobby.Players[i] != null && !string.IsNullOrEmpty(lobby.Players[i].PlayerId)) playerCount++;
             }
             int maxPlayers = lobby != null ? lobby.MaxPlayers : 4;
+            bool connectionFailed = lobby == null
+                && onlineManager != null
+                && onlineManager.State == OnlineConnectionState.Error;
+            string connectionMessage = connectionFailed && !string.IsNullOrWhiteSpace(message)
+                ? message
+                : LocalizationManager.T("multi_connecting");
             lobbyRosterHeaderText.text = lobby == null
-                ? LocalizationManager.T("multi_connecting")
+                ? connectionMessage
                 : $"{LocalizationManager.T("multi_participants")}  {playerCount} / {maxPlayers}";
 
             if (lobbyRoomIdText != null)
             {
                 string roomId = lobby == null
-                    ? LocalizationManager.T("multi_connecting")
+                    ? connectionFailed ? "-" : LocalizationManager.T("multi_connecting")
                     : onlineManager == null || onlineManager.EffectiveBackendMode == OnlineBackendMode.Fake
                         ? LocalizationManager.T("multi_local_test_no_invite")
                         : !string.IsNullOrEmpty(lobby.RoomCode)

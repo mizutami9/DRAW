@@ -100,6 +100,6 @@ If you switch `OnlineManager` back to `DirectTcp`, use `IP:7777` as the room ID.
 
 Use `PICO > Build Windows EXE` to create:
 
-`Builds/DrawBodyOnline/DrawBody.exe`
+`Builds/NICO DRAW/NICO DRAW.exe`
 
-Send the whole `Builds/DrawBodyOnline` folder to a friend, not only the exe.
+Send the whole `Builds/NICO DRAW` folder to a friend, not only the exe.

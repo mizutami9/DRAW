@@ -1,5 +1,5 @@
 param(
-    [string]$BuildPath = ".\Builds\NICODRAWSteamPlaytest"
+    [string]$BuildPath = ".\Builds\NICO DRAW Steam Playtest"
 )
 
 $ErrorActionPreference = "Stop"
@@ -49,8 +49,8 @@ if (-not (Test-Path -LiteralPath $eosConfig -PathType Leaf)) {
     if ($eos.ProductName -ne "NICO DRAW") { $failures.Add("EOS ProductName is not NICO DRAW.") }
 }
 
-if (-not (Test-Path -LiteralPath (Join-Path $expectedRoot "steam_api64.dll") -PathType Leaf)) {
-    $warnings.Add("Steamworks runtime is not present. EOS Device ID playtests work, but Steam ownership is not enforced.")
+if (-not (Test-Path -LiteralPath (Join-Path $dataPath "Plugins\x86_64\steam_api64.dll") -PathType Leaf)) {
+    $failures.Add("Steamworks runtime is missing from NICO DRAW_Data/Plugins/x86_64.")
 }
 
 if ($warnings.Count -gt 0) {

@@ -59,6 +59,7 @@ namespace DrawBody.Prototype
         private bool optionOverlayActive;
         private bool onlineStateSubscribed;
         private bool onlineSessionEnding;
+        private string endingOnlineLobbyId;
         private string currentStageId = "1-0";
         private string remotePlayerId;
         private string onlineCarrierPlayerId;
@@ -86,6 +87,7 @@ namespace DrawBody.Prototype
         private readonly Dictionary<PlayerController2D, RespawnAnimationState> respawnAnimations =
             new Dictionary<PlayerController2D, RespawnAnimationState>();
         private bool fullStageRetryScheduled;
+        private int lastAppliedOnlineRetryRevision = -1;
         private readonly Dictionary<PlayerController2D, float> respawnGraceUntil =
             new Dictionary<PlayerController2D, float>();
         private readonly HashSet<PlayerController2D> eliminatedPlayers = new HashSet<PlayerController2D>();
@@ -140,6 +142,7 @@ namespace DrawBody.Prototype
             || currentStageId == "2-3";
         public bool IsBlockBreakerChallenge => stageRuleMode == StageRuleMode.BlockBreaker;
         public bool IsDrawingMode => drawing;
+        public bool IsStageCleared => cleared;
         public bool IsGameplayActive => stageStarted && !titleMode && !stageEditing && !drawing && !cleared;
         public float ChallengeRemainingSeconds => challengeRemaining;
         public bool ChallengeTimeUp => challengeFailed;
@@ -359,17 +362,29 @@ namespace DrawBody.Prototype
             {
                 knownOnlineLobbyPlayers.Clear();
                 onlineSessionLobbyId = null;
+                lastAppliedOnlineRetryRevision = -1;
                 onlineStageLoadRequired = true;
                 stageSelectReturnToMultiLobby = false;
                 stageSelectRemoteWaiting = false;
                 return;
             }
 
+            // EOS callbacks and P2P packets already queued before LeaveLobby can
+            // arrive for a few frames afterwards. Never let an ended lobby's old
+            // Playing snapshot reopen the stage over the title screen.
+            if (onlineSessionEnding
+                && (string.IsNullOrEmpty(endingOnlineLobbyId) || lobby.LobbyId == endingOnlineLobbyId))
+            {
+                return;
+            }
+
             if (onlineSessionLobbyId != lobby.LobbyId)
             {
                 onlineSessionEnding = false;
+                endingOnlineLobbyId = null;
                 knownOnlineLobbyPlayers.Clear();
                 onlineSessionLobbyId = lobby.LobbyId;
+                lastAppliedOnlineRetryRevision = -1;
                 onlineStageLoadRequired = true;
                 stageSelectReturnToMultiLobby = false;
                 stageSelectRemoteWaiting = false;
@@ -664,6 +679,9 @@ namespace DrawBody.Prototype
 
         public bool IsOnlineStageActive => IsOnlineInStage();
         public bool IsOnlineStageHost => IsOnlineInStage() && IsLocalOnlineHost(onlineManager.CurrentLobby);
+        public DrawManager.Species ActiveLocalSpecies => player != null
+            ? player.CurrentSpecies
+            : DrawManager.Species.Human;
 
         public void RequestLeaveSession()
         {
@@ -699,6 +717,7 @@ namespace DrawBody.Prototype
 
         private void CompleteLeaveSession()
         {
+            endingOnlineLobbyId = onlineManager?.CurrentLobby?.LobbyId ?? onlineSessionLobbyId;
             onlineSessionEnding = true;
             onlineManager?.LeaveLobby();
             uiManager?.HideLeaveSessionConfirm();
@@ -767,6 +786,13 @@ namespace DrawBody.Prototype
             if (Input.GetKeyDown(KeyCode.R))
             {
                 Retry();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Q) && !titleMode && !drawing && !cleared
+                && !optionOverlayActive && !IsOnlineInStage()
+                && player != null && player.ControlsEnabled)
+            {
+                SwitchCharacter();
             }
 
             if (!drawing && !cleared)
@@ -1422,6 +1448,17 @@ namespace DrawBody.Prototype
                 && data.ObjectId == currentStageId
                 && IsOnlineHostPlayer(data.PlayerId))
             {
+                // A retry is sent immediately and is also repeated through the
+                // session snapshot. Treat both as the same revision so a client
+                // can never reload the stage twice for one host retry.
+                int retryRevision = data.RetryRevision + 1;
+                if (onlineManager?.CurrentLobby != null)
+                {
+                    retryRevision = Mathf.Max(retryRevision,
+                        onlineManager.CurrentLobby.RetryRevision);
+                }
+                if (retryRevision <= lastAppliedOnlineRetryRevision) return;
+                lastAppliedOnlineRetryRevision = retryRevision;
                 ApplyFullStageRetry();
             }
             else if (data.Kind == GimmickKindCollectRequest && IsLocalOnlineHost(onlineManager.CurrentLobby))
@@ -1442,6 +1479,7 @@ namespace DrawBody.Prototype
             }
             else if (data.Kind == GimmickKindSessionEnded && IsOnlineHostPlayer(data.PlayerId))
             {
+                endingOnlineLobbyId = onlineManager?.CurrentLobby?.LobbyId ?? onlineSessionLobbyId;
                 onlineSessionEnding = true;
                 string notice = LocalizationManager.T("online_host_disconnected");
                 onlineManager.LeaveLobby();
@@ -1617,6 +1655,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            // Stage-select starts already notify the lobby through SelectStage's
+            // stageSelectReturnToMultiLobby path. Clear-result progression does
+            // not use that path, so explicitly publish the next stage before the
+            // host loads it or clients remain on the cleared stage.
+            if (IsOnlineInStage() && IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                onlineManager.StartGame(nextStageId);
+            }
             SelectStage(nextStageId);
         }
 
@@ -4224,10 +4270,24 @@ namespace DrawBody.Prototype
             // Aligning while the body is scaled to 3% makes a large drawing grow
             // downward through the floor during the animation.
             targetPlayer.transform.localScale = state.OriginalScale;
-            Vector3 respawnOffset = GetRespawnOffset(targetPlayer);
-            Vector3 respawnDestination = spawnPoint != null
-                ? spawnPoint.position + respawnOffset
-                : targetPlayer.transform.position;
+            Vector3 respawnDestination;
+            Vector3 respawnOffset;
+            if (spawnPoint != null
+                && assignedPlayerStartPositions.TryGetValue(targetPlayer, out Vector3 assignedRespawn))
+            {
+                // Initial spawn validation already proved this exact location can
+                // support the player's current drawing. Recomputing from lobby
+                // count on death can move P1 back toward a short platform edge.
+                respawnDestination = assignedRespawn;
+                respawnOffset = assignedRespawn - spawnPoint.position;
+            }
+            else
+            {
+                respawnOffset = GetRespawnOffset(targetPlayer);
+                respawnDestination = spawnPoint != null
+                    ? spawnPoint.position + respawnOffset
+                    : targetPlayer.transform.position;
+            }
             RespawnPlayer(
                 targetPlayer,
                 respawnOffset,

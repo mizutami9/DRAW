@@ -49,6 +49,7 @@ namespace DrawBody.Prototype
 
         private const string DefaultLanguageCode = "ja";
         private const string FallbackLanguageCode = "en";
+        private const string InitialLanguageCode = "en";
         private static readonly List<LanguageDefinition> languageDefinitions = new List<LanguageDefinition>();
         private static readonly Dictionary<string, LanguageDefinition> languageDefinitionsByCode = new Dictionary<string, LanguageDefinition>(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, Dictionary<string, string>> externalTables = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
@@ -69,6 +70,11 @@ namespace DrawBody.Prototype
             { "option_reset_progress_done", "\u30af\u30ea\u30a2\u8a18\u9332\u3092\u30ea\u30bb\u30c3\u30c8\u3057\u307e\u3057\u305f\u3002" },
             { "option_reset_confirm", "\u30ea\u30bb\u30c3\u30c8" },
             { "option_reset_cancel", "\u30ad\u30e3\u30f3\u30bb\u30eb" },
+            { "option_complete", "\u5b8c\u4e86" },
+            { "option_screen_mode_format", "\u753b\u9762: {0}" },
+            { "option_resolution_format", "\u89e3\u50cf\u5ea6: {0}\u00d7{1}" },
+            { "option_fullscreen", "\u30d5\u30eb\u30b9\u30af\u30ea\u30fc\u30f3" },
+            { "option_windowed", "\u30a6\u30a3\u30f3\u30c9\u30a6" },
             { "lang_ja", "日本語" },
             { "lang_en", "EN" },
             { "status_play", "A/D または ←/→: 移動   Space: ジャンプ   Tab: 描き直し   R: リトライ   左クリック: 腕振り" },
@@ -177,6 +183,11 @@ namespace DrawBody.Prototype
             { "option_reset_progress_done", "Stage-clear records were reset." },
             { "option_reset_confirm", "RESET" },
             { "option_reset_cancel", "CANCEL" },
+            { "option_complete", "DONE" },
+            { "option_screen_mode_format", "DISPLAY: {0}" },
+            { "option_resolution_format", "RESOLUTION: {0}x{1}" },
+            { "option_fullscreen", "FULLSCREEN" },
+            { "option_windowed", "WINDOWED" },
             { "lang_ja", "日本語" },
             { "lang_en", "EN" },
             { "status_play", "A/D or Arrows: Move   Space: Jump   Tab: Redraw   R: Retry   Left Click: Swing" },
@@ -319,6 +330,11 @@ namespace DrawBody.Prototype
             { "option_back", "戻る  ESC" },
             { "option_back_esc", "戻る  ESC" },
             { "ui_back_esc", "戻る  ESC" },
+            { "option_complete", "\u5b8c\u4e86" },
+            { "option_screen_mode_format", "\u753b\u9762: {0}" },
+            { "option_resolution_format", "\u89e3\u50cf\u5ea6: {0}\u00d7{1}" },
+            { "option_fullscreen", "\u30d5\u30eb\u30b9\u30af\u30ea\u30fc\u30f3" },
+            { "option_windowed", "\u30a6\u30a3\u30f3\u30c9\u30a6" },
             { "title_exit", "EXIT" },
             { "title_debug", "DEBUG" },
             { "trailer_debug_title", "トレーラー撮影デバッグ" },
@@ -444,6 +460,8 @@ namespace DrawBody.Prototype
             { "online_eos_login", "EOSログイン中..." },
             { "online_eos_connect_not_ready", "EOS Connectが準備できていません。" },
             { "online_eos_login_failed", "EOSログインに失敗しました: {0}" },
+            { "online_steam_not_running", "Steamを起動し、SteamライブラリからNICO DRAWを起動してください。" },
+            { "online_steam_ticket_failed", "Steam認証チケットを取得できませんでした: {0}" },
             { "online_eos_create_lobby_failed", "EOSロビー作成に失敗しました: {0}" },
             { "online_eos_room_created", "EOSルームを作成しました。ルームコードを共有してください。" },
             { "online_eos_enter_lobby_id", "EOS Lobby IDを入力してください。" },
@@ -1105,6 +1123,11 @@ namespace DrawBody.Prototype
             { "option_back", "BACK  ESC" },
             { "option_back_esc", "BACK  ESC" },
             { "ui_back_esc", "BACK  ESC" },
+            { "option_complete", "DONE" },
+            { "option_screen_mode_format", "DISPLAY: {0}" },
+            { "option_resolution_format", "RESOLUTION: {0}x{1}" },
+            { "option_fullscreen", "FULLSCREEN" },
+            { "option_windowed", "WINDOWED" },
             { "title_exit", "EXIT" },
             { "title_debug", "DEBUG" },
             { "trailer_debug_title", "TRAILER CAPTURE DEBUG" },
@@ -1230,6 +1253,8 @@ namespace DrawBody.Prototype
             { "online_eos_login", "EOS login..." },
             { "online_eos_connect_not_ready", "EOS Connect interface is not ready." },
             { "online_eos_login_failed", "EOS login failed: {0}" },
+            { "online_steam_not_running", "Start Steam, then launch NICO DRAW from your Steam Library." },
+            { "online_steam_ticket_failed", "Could not obtain a Steam authentication ticket: {0}" },
             { "online_eos_create_lobby_failed", "EOS create lobby failed: {0}" },
             { "online_eos_room_created", "EOS room created. Share this room code." },
             { "online_eos_enter_lobby_id", "Enter an EOS Lobby ID." },
@@ -1866,7 +1891,7 @@ namespace DrawBody.Prototype
         };
 
         public static event Action LanguageChanged;
-        private static string currentLanguageCode = DefaultLanguageCode;
+        private static string currentLanguageCode = InitialLanguageCode;
 
         // Kept for scene and code compatibility while language selection moves to stable locale codes.
         public static Language CurrentLanguage => string.Equals(currentLanguageCode, DefaultLanguageCode, StringComparison.OrdinalIgnoreCase)
@@ -1943,7 +1968,7 @@ namespace DrawBody.Prototype
         private void Awake()
         {
             LoadExternalTables();
-            string saved = NormalizeLegacyLanguageCode(PlayerPrefs.GetString("language", DefaultLanguageCode));
+            string saved = NormalizeLegacyLanguageCode(PlayerPrefs.GetString("language", InitialLanguageCode));
             SetLanguage(saved);
         }
 
@@ -1962,7 +1987,16 @@ namespace DrawBody.Prototype
             }
 
             currentLanguageCode = normalized;
-            PlayerPrefs.SetString("language", currentLanguageCode);
+            try
+            {
+                PlayerPrefs.SetString("language", currentLanguageCode);
+            }
+            catch (PlayerPrefsException exception)
+            {
+                // Keep the selected language active even when concurrent local
+                // test clients temporarily contend for the preference store.
+                Debug.LogWarning($"Could not persist the language: {exception.Message}");
+            }
             LanguageChanged?.Invoke();
             return true;
         }
@@ -2112,7 +2146,7 @@ namespace DrawBody.Prototype
 
         private static string NormalizeLegacyLanguageCode(string languageCode)
         {
-            if (string.IsNullOrWhiteSpace(languageCode)) return DefaultLanguageCode;
+            if (string.IsNullOrWhiteSpace(languageCode)) return InitialLanguageCode;
             if (string.Equals(languageCode, Language.Japanese.ToString(), StringComparison.OrdinalIgnoreCase)) return DefaultLanguageCode;
             if (string.Equals(languageCode, Language.English.ToString(), StringComparison.OrdinalIgnoreCase)) return FallbackLanguageCode;
             return languageCode.Trim().ToLowerInvariant();

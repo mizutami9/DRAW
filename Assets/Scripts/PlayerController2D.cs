@@ -350,6 +350,10 @@ namespace DrawBody.Prototype
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            // Players can be launched at high speed by another Human. Discrete
+            // collision detection can step completely through thin platforms,
+            // especially with high-ink arms, so player bodies always use CCD.
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             bodyBuilder = GetComponent<BodyBuilder>();
             abilityController = GetComponent<PlayerAbilityController>();
             groundContactFilter = new ContactFilter2D();

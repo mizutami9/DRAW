@@ -7,7 +7,7 @@
 - ローカル確認には従来どおり `PICO/Build Windows EXE` を使う。
 - Steamへアップロードする成果物は `PICO/Build Windows Steam Release` を使う。
 - Steam配布版にはUnity Hubから `Windows Build Support (IL2CPP)` を追加しておく。未導入時は配布用ビルドが停止する。
-- 配布用出力は `Builds/NICODRAWSteamPlaytest/`。Mono版の `Assembly-CSharp.dll` をSteamへ登録しない。
+- 配布用出力は `Builds/NICO DRAW Steam Playtest/`。Mono版の `Assembly-CSharp.dll` をSteamへ登録しない。
 - SteamPipeへのアップロード前に `Tools/Steam/ValidateSteamPlaytestBuild.ps1` を実行する。
 - Playtest App IDとDepot IDを取得後は `Tools/Steam/UploadSteamPlaytest.ps1` でVDF生成とアップロードを行える。本編App IDではなくPlaytest子App IDを渡す。
 

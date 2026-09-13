@@ -472,9 +472,7 @@ namespace DrawBody.Prototype
                     if (count == 4) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Cat, 1), (DrawManager.Species.Bird, 2));
                     break;
                 case "8-2":
-                    if (count == 1) return Recommendations((DrawManager.Species.Human, 1));
-                    if (count >= 2) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Slime, count - 1));
-                    break;
+                    return System.Array.Empty<RecommendationEntry>();
                 case "8-3":
                     if (count == 1) return Recommendations((DrawManager.Species.Human, 1));
                     if (count >= 2) return Recommendations((DrawManager.Species.Human, 1), (DrawManager.Species.Cat, count - 1));

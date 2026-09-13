@@ -141,6 +141,7 @@ namespace DrawBody.Prototype
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
 
             if (phase == Phase.Countdown) countdownPresenter?.Show(phaseRemaining);
+            else if (phase == Phase.Failed) countdownPresenter?.ShowGameOver();
             else countdownPresenter?.Hide();
 
             if (IsOnline() && !HasAuthority())
@@ -309,7 +310,6 @@ namespace DrawBody.Prototype
             retryRemaining = 3f;
             if (ball != null) ball.Stop();
             SetLocalControls(false);
-            GameSfx.Play(SfxId.PlayerHit);
             BroadcastState(true);
         }
 

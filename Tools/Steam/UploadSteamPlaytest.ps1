@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory = $true)][uint32]$DepotId,
     [Parameter(Mandatory = $true)][string]$SteamCmdPath,
     [Parameter(Mandatory = $true)][string]$SteamUser,
-    [string]$BuildPath = ".\Builds\NICODRAWSteamPlaytest",
+    [string]$BuildPath = ".\Builds\NICO DRAW Steam Playtest",
     [string]$Description = "NICO DRAW Steam Playtest",
     [string]$SetLiveBranch = ""
 )

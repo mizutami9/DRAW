@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "UTÍKEJ."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Přepnout postavu"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "ZPĚTNÁ VAZBA / NAHLÁSIT CHYBU"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Děkujeme za hraní!\nZpětná vazba / Nahlásit chybu"
     }
   ]
 }

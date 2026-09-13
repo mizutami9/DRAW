@@ -73,6 +73,7 @@ namespace DrawBody.Prototype
         private string lobbyId;
         private bool isHost;
         private bool triedCreateDeviceId;
+        private bool loggingInWithSteam;
         private bool shuttingDown;
         private bool roomRequiresProof;
         private bool hadRemoteHost;
@@ -131,7 +132,19 @@ namespace DrawBody.Prototype
                     return;
                 }
 
+#if NICO_DRAW_STEAM && !DISABLESTEAMWORKS && (UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN)
+                if (SteamPlatformAuth.IsAvailable)
+                {
+                    LoginWithSteam();
+                }
+                else
+                {
+                    SetState(OnlineConnectionState.Error, null,
+                        LocalizationManager.T("online_steam_not_running"));
+                }
+#else
                 LoginWithDeviceId();
+#endif
             }
             catch (Exception ex)
             {
@@ -197,6 +210,7 @@ namespace DrawBody.Prototype
             isHost = false;
             ResetSessionTracking();
             triedCreateDeviceId = false;
+            loggingInWithSteam = false;
             State = OnlineConnectionState.Offline;
         }
 
@@ -810,9 +824,16 @@ namespace DrawBody.Prototype
             gimmickData.PlayerId = LocalPlayerId;
             if (isHost && gimmickData.Kind == "stage_retry")
             {
+                // Deliver the retry itself over the reliable gimmick channel as
+                // well as advancing the periodically repeated session snapshot.
+                // The snapshot is recovery for a reconnect/missed packet; the
+                // direct message makes every connected participant leave the
+                // GAME OVER screen at the same time as the host.
+                string retryPayload = JsonUtility.ToJson(gimmickData);
                 retryRevision++;
                 if (CurrentLobby != null) CurrentLobby.RetryRevision = retryRevision;
                 sessionMode = SessionModePlaying;
+                BroadcastReliableGimmick(retryPayload);
                 BroadcastSessionSync();
                 return;
             }
@@ -842,6 +863,7 @@ namespace DrawBody.Prototype
 
         private void LoginWithDeviceId()
         {
+            loggingInWithSteam = false;
             Credentials credentials = new Credentials
             {
                 Type = ExternalCredentialType.DeviceidAccessToken
@@ -859,6 +881,36 @@ namespace DrawBody.Prototype
 
             connectInterface.Login(ref options, null, OnConnectLogin);
         }
+
+#if NICO_DRAW_STEAM && !DISABLESTEAMWORKS && (UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN)
+        private void LoginWithSteam()
+        {
+            loggingInWithSteam = true;
+            SteamPlatformAuth.RequestEosTicket((success, token, error) =>
+            {
+                if (shuttingDown) return;
+                if (!success || string.IsNullOrEmpty(token))
+                {
+                    SetState(OnlineConnectionState.Error, null,
+                        LocalizationManager.Format("online_steam_ticket_failed", error));
+                    return;
+                }
+
+                Credentials credentials = new Credentials
+                {
+                    Type = ExternalCredentialType.SteamSessionTicket,
+                    Token = token
+                };
+                LoginOptions options = new LoginOptions
+                {
+                    // EOS rejects UserLoginInfo.DisplayName for Steam credentials.
+                    // The in-game display name is synchronized separately in lobby data.
+                    Credentials = credentials
+                };
+                connectInterface.Login(ref options, null, OnConnectLogin);
+            });
+        }
+#endif
 
         private void CreateDeviceId()
         {
@@ -1061,11 +1113,22 @@ namespace DrawBody.Prototype
         {
             Result resultCode = data.ResultCode;
             ProductUserId loggedInUserId = data.LocalUserId;
+            ContinuanceToken continuanceToken = data.ContinuanceToken;
             Enqueue(() =>
             {
+                if (loggingInWithSteam && resultCode == Result.InvalidUser && continuanceToken != null)
+                {
+                    CreateUserOptions createOptions = new CreateUserOptions
+                    {
+                        ContinuanceToken = continuanceToken
+                    };
+                    connectInterface.CreateUser(ref createOptions, null, OnSteamUserCreated);
+                    return;
+                }
+
                 if (resultCode != Result.Success)
                 {
-                    if (!triedCreateDeviceId)
+                    if (!loggingInWithSteam && !triedCreateDeviceId)
                     {
                         triedCreateDeviceId = true;
                         SetState(OnlineConnectionState.LoggingIn, null, LocalizationManager.T("online_eos_creating_device_id"));
@@ -1077,12 +1140,37 @@ namespace DrawBody.Prototype
                     return;
                 }
 
-                localUserId = loggedInUserId;
-                lobbyInterface = EOSManager.Instance.GetEOSLobbyInterface();
-                p2pInterface = EOSManager.Instance.GetEOSP2PInterface();
-                RegisterNotifications();
-                SetState(OnlineConnectionState.Online, null, LocalizationManager.Format("online_eos_online_as", LocalPlayerId));
+                CompleteConnectLogin(loggedInUserId);
             });
+        }
+
+        private void OnSteamUserCreated(ref Epic.OnlineServices.Connect.CreateUserCallbackInfo data)
+        {
+            Result resultCode = data.ResultCode;
+            ProductUserId createdUserId = data.LocalUserId;
+            Enqueue(() =>
+            {
+                if (resultCode != Result.Success)
+                {
+                    SetState(OnlineConnectionState.Error, null,
+                        LocalizationManager.Format("online_eos_login_failed", resultCode));
+                    return;
+                }
+                CompleteConnectLogin(createdUserId);
+            });
+        }
+
+        private void CompleteConnectLogin(ProductUserId userId)
+        {
+#if NICO_DRAW_STEAM && !DISABLESTEAMWORKS && (UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN)
+            if (loggingInWithSteam) SteamPlatformAuth.ReleaseTicket();
+#endif
+            localUserId = userId;
+            lobbyInterface = EOSManager.Instance.GetEOSLobbyInterface();
+            p2pInterface = EOSManager.Instance.GetEOSP2PInterface();
+            RegisterNotifications();
+            SetState(OnlineConnectionState.Online, null,
+                LocalizationManager.Format("online_eos_online_as", LocalPlayerId));
         }
 
         private void RegisterNotifications()
@@ -1427,9 +1515,11 @@ namespace DrawBody.Prototype
             CurrentLobby.StageRevision = payload.StageRevision;
             CurrentLobby.RetryRevision = payload.RetryRevision;
 
+            bool wasPlaying = State == OnlineConnectionState.Playing;
             bool modeChanged = payload.Mode != lastAppliedSessionMode;
             bool stageChanged = payload.StageRevision > lastAppliedStageRevision;
-            bool retryChanged = lastAppliedRetryRevision >= 0 && payload.RetryRevision > lastAppliedRetryRevision;
+            bool retryChanged = payload.RetryRevision > lastAppliedRetryRevision
+                && (lastAppliedRetryRevision >= 0 || (wasPlaying && payload.RetryRevision > 0));
             lastAppliedSessionMode = payload.Mode;
             lastAppliedStageRevision = Mathf.Max(lastAppliedStageRevision, payload.StageRevision);
             lastAppliedRetryRevision = Mathf.Max(lastAppliedRetryRevision, payload.RetryRevision);
@@ -1458,6 +1548,7 @@ namespace DrawBody.Prototype
                     StageId = CurrentLobby.StageId,
                     StageRevision = CurrentLobby.StageRevision,
                     RetryRevision = CurrentLobby.RetryRevision - 1,
+                    ContentFingerprint = ContentIntegrityVerifier.Fingerprint,
                     ObjectId = CurrentLobby.StageId,
                     Kind = "stage_retry",
                     Json = "{}"
@@ -1532,6 +1623,14 @@ namespace DrawBody.Prototype
 
         private void HandleMessage(ProductUserId peer, string line)
         {
+            // CloseConnections is asynchronous. Packets queued by the old room
+            // may still be readable after LeaveLobby; accepting a late session
+            // sync would recreate CurrentLobby and put the client back in Playing.
+            if (string.IsNullOrEmpty(lobbyId) || CurrentLobby == null)
+            {
+                return;
+            }
+
             if (peer != null)
             {
                 lastPeerPacketAt[peer.ToString()] = Time.unscaledTime;

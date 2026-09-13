@@ -189,13 +189,17 @@ namespace DrawBody.Prototype
 
             float countdownRemaining = roundReadyAt - Time.unscaledTime;
             ApplyCountdownControls(countdownRemaining <= 0f);
-            if (phase == RelayPhase.Active && countdownRemaining > 0f)
+            if (phase == RelayPhase.Failed)
+            {
+                countdownPresenter?.ShowGameOver();
+            }
+            else if (phase == RelayPhase.Active && countdownRemaining > 0f)
             {
                 countdownPresenter?.Show(countdownRemaining);
                 RefreshMonitor();
                 return;
             }
-            countdownPresenter?.Hide();
+            else countdownPresenter?.Hide();
 
             if (!HasAuthority)
             {
@@ -1244,7 +1248,6 @@ namespace DrawBody.Prototype
             if (phase != RelayPhase.Active) return;
             phase = RelayPhase.Failed;
             transitionRemaining = 2.2f;
-            GameSfx.Play(SfxId.PlayerDeath, 0.68f);
             BroadcastState(true);
         }
 

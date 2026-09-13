@@ -1735,6 +1735,18 @@
                     {
                         "key":  "sfx_browser_generated",
                         "value":  "Runtime-generated sound"
-                    }
-                ]
+                    },
+                    {
+        "key":  "gameplay_control_switch",
+        "value":  "Switch Character"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "FEEDBACK / BUG REPORT"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Thanks for playing!\nFeedback / Bug Report"
+    }
+  ]
 }

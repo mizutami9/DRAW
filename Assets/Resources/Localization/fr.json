@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "COURS."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Changer de personnage"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "AVIS / SIGNALER UN BUG"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Merci d\u0027avoir joué !\nAvis / Signaler un bug"
     }
   ]
 }

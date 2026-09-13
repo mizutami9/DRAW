@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "달려."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "조작 캐릭터 전환"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "피드백 / 버그 신고"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "플레이해 주셔서 감사합니다!\n피드백 / 버그 신고"
     }
   ]
 }

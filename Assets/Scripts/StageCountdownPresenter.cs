@@ -30,6 +30,15 @@ namespace DrawBody.Prototype
             lastValue = null;
         }
 
+        internal void ShowGameOver()
+        {
+            string value = LocalizationManager.T("game_over");
+            uiManager?.SetChallengeCountdown(true, value);
+            if (value == lastValue) return;
+            lastValue = value;
+            GameSfx.Play(SfxId.StageFailed);
+        }
+
         internal static int GetNumber(float remaining)
         {
             return Mathf.Clamp(Mathf.CeilToInt(remaining - 1f), 1, 3);

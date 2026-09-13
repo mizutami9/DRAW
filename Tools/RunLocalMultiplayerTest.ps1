@@ -3,7 +3,8 @@ param(
     [string]$GameExe,
     [ValidateRange(2, 4)]
     [int]$Players = 4,
-    [string]$Stage = "13-1",
+    [string]$Stage = "1-1",
+    [switch]$FullFlow,
     [ValidateRange(1024, 65535)]
     [int]$Port = 17777
 )
@@ -19,9 +20,14 @@ New-Item -ItemType Directory -Force -Path $logDirectory | Out-Null
 $common = @(
     "-pico-regression-port=$Port",
     "-pico-regression-players=$Players",
-    "-pico-regression-stage=$Stage",
     "-pico-debug-no-time-limit"
 )
+if ($FullFlow) {
+    $common += "-pico-regression-full-flow"
+}
+else {
+    $common += "-pico-regression-stage=$Stage"
+}
 
 Start-Process -FilePath $resolvedExe -ArgumentList ($common + @(
     "-pico-regression-role=host",

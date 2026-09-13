@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace DrawBody.Prototype
@@ -80,6 +81,10 @@ namespace DrawBody.Prototype
         private sealed class LocalRegressionOptions
         {
             public bool IsHost;
+            public bool FullFlow;
+            public bool AiTest;
+            public bool UseEos;
+            public string CoordinationPath;
             public int Port = 7777;
             public int ExpectedPlayers = 2;
             public string StageId = "1-1";
@@ -170,8 +175,15 @@ namespace DrawBody.Prototype
             localRegression = ParseLocalRegressionOptions(Environment.GetCommandLineArgs());
             if (localRegression != null)
             {
+                if (localRegression.UseEos)
+                {
+                    backendMode = OnlineBackendMode.Eos;
+                }
+                else
+                {
                 backendMode = OnlineBackendMode.DirectTcp;
                 directTcpPort = localRegression.Port;
+                }
                 autoLogin = true;
                 if (!string.IsNullOrWhiteSpace(localRegression.PlayerName))
                     PlayerNameSettings.TrySet(localRegression.PlayerName);
@@ -216,7 +228,9 @@ namespace DrawBody.Prototype
 
         private IEnumerator RunLocalRegression()
         {
-            const float timeoutSeconds = 45f;
+            float timeoutSeconds =
+                localRegression.UseEos ? 120f :
+                45f;
             float deadline = Time.unscaledTime + timeoutSeconds;
             while (State != OnlineConnectionState.Online && Time.unscaledTime < deadline)
                 yield return null;
@@ -238,12 +252,30 @@ namespace DrawBody.Prototype
                     yield break;
                 }
 
+                if (localRegression.UseEos)
+                {
+                    string roomCode = CurrentLobby?.RoomCode;
+                    if (string.IsNullOrEmpty(roomCode))
+                    {
+                        Debug.LogError("[PICO AI TEST] EOS room was created without a room code.");
+                        yield break;
+                    }
+                    PublishAiTestRoomCode(localRegression.CoordinationPath, roomCode);
+                }
+
+                if (localRegression.AiTest) yield return new WaitForSecondsRealtime(2f);
                 ToggleReady();
                 while (Time.unscaledTime < deadline)
                 {
                     OnlinePlayerInfo[] players = CurrentLobby?.Players;
                     if (CountPlayers(players) >= localRegression.ExpectedPlayers && AreAllPlayersReady(players))
                     {
+                        if (localRegression.FullFlow)
+                        {
+                            Debug.Log($"[PICO REGRESSION] Full flow lobby is ready with {players.Length} players. Select the first stage on the host.");
+                            yield break;
+                        }
+
                         Debug.Log($"[PICO REGRESSION] Starting {localRegression.StageId} with {players.Length} players.");
                         StartGame(localRegression.StageId);
                         // Normal host flow selects the stage locally before/while
@@ -271,7 +303,15 @@ namespace DrawBody.Prototype
             // instead of requiring a carefully timed manual launch order.
             while (Time.unscaledTime < deadline)
             {
-                JoinRoom($"127.0.0.1:{localRegression.Port}");
+                string joinTarget = localRegression.UseEos
+                    ? ReadAiTestRoomCode(localRegression.CoordinationPath)
+                    : $"127.0.0.1:{localRegression.Port}";
+                if (string.IsNullOrEmpty(joinTarget))
+                {
+                    yield return new WaitForSecondsRealtime(0.5f);
+                    continue;
+                }
+                JoinRoom(joinTarget);
                 float attemptDeadline = Time.unscaledTime + 1.5f;
                 while (State != OnlineConnectionState.InLobby
                     && State != OnlineConnectionState.Error
@@ -279,6 +319,7 @@ namespace DrawBody.Prototype
                     yield return null;
                 if (State == OnlineConnectionState.InLobby)
                 {
+                    if (localRegression.AiTest) yield return new WaitForSecondsRealtime(2f);
                     ToggleReady();
                     Debug.Log("[PICO REGRESSION] Joined local room and marked READY.");
                     yield break;
@@ -319,14 +360,53 @@ namespace DrawBody.Prototype
             LocalRegressionOptions result = new LocalRegressionOptions
             {
                 IsHost = string.Equals(role, "host", StringComparison.OrdinalIgnoreCase),
+                FullFlow = HasCommandLineFlag(args, "-pico-regression-full-flow"),
+                AiTest = HasCommandLineFlag(args, "-pico-ai-test"),
                 StageId = GetCommandLineValue(args, "-pico-regression-stage") ?? "1-1",
                 PlayerName = GetCommandLineValue(args, "-pico-regression-name")
             };
+            result.UseEos = string.Equals(
+                GetCommandLineValue(args, "-pico-regression-backend"),
+                "eos", StringComparison.OrdinalIgnoreCase);
+            result.CoordinationPath = GetCommandLineValue(args, "-pico-ai-coordination");
             if (int.TryParse(GetCommandLineValue(args, "-pico-regression-port"), out int port))
                 result.Port = Mathf.Clamp(port, 1024, 65535);
             if (int.TryParse(GetCommandLineValue(args, "-pico-regression-players"), out int players))
                 result.ExpectedPlayers = Mathf.Clamp(players, 2, 4);
             return result;
+        }
+
+        private static void PublishAiTestRoomCode(string path, string roomCode)
+        {
+            if (string.IsNullOrWhiteSpace(path)) return;
+            string fullPath = Path.GetFullPath(path);
+            string directory = Path.GetDirectoryName(fullPath);
+            if (!string.IsNullOrEmpty(directory)) Directory.CreateDirectory(directory);
+            File.WriteAllText(fullPath, roomCode.Trim());
+            Debug.Log($"[PICO AI TEST] Published EOS room code to {fullPath}.");
+        }
+
+        private static string ReadAiTestRoomCode(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path)) return null;
+            try
+            {
+                return File.Exists(path) ? File.ReadAllText(path).Trim() : null;
+            }
+            catch (IOException)
+            {
+                return null;
+            }
+        }
+
+        private static bool HasCommandLineFlag(string[] args, string key)
+        {
+            if (args == null) return false;
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (string.Equals(args[i], key, StringComparison.OrdinalIgnoreCase)) return true;
+            }
+            return false;
         }
 
         private static string GetCommandLineValue(string[] args, string key)

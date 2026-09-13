@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "LARI."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Ganti karakter"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "MASUKAN / LAPORKAN BUG"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Terima kasih sudah bermain!\nMasukan / Laporkan bug"
     }
   ]
 }

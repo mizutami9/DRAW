@@ -69,6 +69,7 @@ namespace DrawBody.Prototype
         private Coroutine gameplayNoticeRoutine;
         private Coroutine clearCelebrationSfxRoutine;
         private ClearScreenCharacterParade clearCharacterParade;
+        private PlaytestFeedbackController playtestFeedback;
 
         private void Awake()
         {
@@ -76,6 +77,8 @@ namespace DrawBody.Prototype
             ResolveGameplayDrawer();
             ResolveMenuDrawer();
             EnsureClearPanel();
+            EnsureGameplayControlHint();
+            EnsurePlaytestFeedback();
             clearCharacterParade = GetComponent<ClearScreenCharacterParade>();
             if (clearCharacterParade == null)
             {
@@ -1210,7 +1213,7 @@ namespace DrawBody.Prototype
             OptionSettingsController settings = optionPanel != null
                 ? optionPanel.GetComponent<OptionSettingsController>()
                 : null;
-            if (settings != null && !settings.CommitPlayerName()) return;
+            if (settings != null && !settings.CommitSettings()) return;
             bool reopenGameplayMenu = optionShowing && optionReturnToGameplayMenu;
             optionReturnToGameplayMenu = false;
             SetOption(false);
@@ -1307,6 +1310,7 @@ namespace DrawBody.Prototype
                     ApplyModernTheme();
                     RectTransform popup = clearPanel.transform.Find("StageClearResult") as RectTransform;
                     clearCharacterParade?.Begin(ResolveStageManager(), popup);
+                    playtestFeedback?.BringClearButtonForward();
                     if (!wasCleared)
                     {
                         if (clearCelebrationSfxRoutine != null) StopCoroutine(clearCelebrationSfxRoutine);
@@ -1363,6 +1367,63 @@ namespace DrawBody.Prototype
             {
                 gameplayHudDrawer = gameplayHudPanel.GetComponentInChildren<GameplayHudDrawer>(true);
             }
+        }
+
+        private void EnsureGameplayControlHint()
+        {
+            if (gameplayHudPanel == null
+                || gameplayHudPanel.transform.Find("GameplayControlHint") != null)
+            {
+                return;
+            }
+
+            Font font = GetComponentInChildren<Text>(true)?.font;
+            GameObject root = new GameObject("GameplayControlHint", typeof(RectTransform),
+                typeof(CanvasRenderer), typeof(Image));
+            root.transform.SetParent(gameplayHudPanel.transform, false);
+            RectTransform rect = root.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
+            rect.pivot = new Vector2(0f, 1f);
+            rect.anchoredPosition = new Vector2(14f, -14f);
+            rect.sizeDelta = new Vector2(360f, 58f);
+            Image paper = root.GetComponent<Image>();
+            paper.color = new Color(0.99f, 0.97f, 0.86f, 0.78f);
+            paper.raycastTarget = false;
+            Outline outline = root.AddComponent<Outline>();
+            outline.effectColor = new Color(0.2f, 0.15f, 0.1f, 0.42f);
+            outline.effectDistance = new Vector2(2f, -2f);
+
+            GameObject textObject = new GameObject("Text", typeof(RectTransform),
+                typeof(CanvasRenderer), typeof(Text));
+            textObject.transform.SetParent(root.transform, false);
+            RectTransform textRect = textObject.GetComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(10f, 4f);
+            textRect.offsetMax = new Vector2(-10f, -4f);
+            Text text = textObject.GetComponent<Text>();
+            text.font = font;
+            text.fontSize = 15;
+            text.fontStyle = FontStyle.Bold;
+            text.alignment = TextAnchor.MiddleLeft;
+            text.color = new Color(0.12f, 0.1f, 0.08f, 0.92f);
+            text.horizontalOverflow = HorizontalWrapMode.Wrap;
+            text.verticalOverflow = VerticalWrapMode.Truncate;
+            text.raycastTarget = false;
+
+            GameplayControlHintPresenter presenter = root.AddComponent<GameplayControlHintPresenter>();
+            presenter.Configure(text, ResolveStageManager());
+            root.transform.SetAsFirstSibling();
+        }
+
+        private void EnsurePlaytestFeedback()
+        {
+            playtestFeedback = GetComponent<PlaytestFeedbackController>();
+            if (playtestFeedback == null)
+            {
+                playtestFeedback = gameObject.AddComponent<PlaytestFeedbackController>();
+            }
+            playtestFeedback.Configure(titlePanel, clearPanel);
         }
 
         private void ResolveMenuDrawer()

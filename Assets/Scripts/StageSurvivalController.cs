@@ -236,6 +236,7 @@ namespace DrawBody.Prototype
             }
 
             if (phase == SurvivalPhase.StartCountdown) countdownPresenter?.Show(phaseRemaining);
+            else if (phase == SurvivalPhase.Failed) countdownPresenter?.ShowGameOver();
             else countdownPresenter?.Hide();
 
             if (IsOnlineActive() && !HasAuthority())

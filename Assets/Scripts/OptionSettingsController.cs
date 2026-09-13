@@ -28,6 +28,8 @@ namespace DrawBody.Prototype
         private Button registerButton;
         private Button backButton;
         private Button dataResetButton;
+        private Button screenModeButton;
+        private Button resolutionButton;
         private GameObject dataResetPopup;
 
         private float nextTickTime;
@@ -37,6 +39,7 @@ namespace DrawBody.Prototype
             HideLegacyOptionControls();
             EnsurePlayerNameControls();
             EnsureDataResetControls();
+            EnsureDisplayControls();
             if (bgmSlider != null)
             {
                 bgmSlider.minValue = 0f;
@@ -56,6 +59,70 @@ namespace DrawBody.Prototype
             ConfigureLanguageControls();
 
             LocalizationManager.LanguageChanged += Refresh;
+            Refresh();
+        }
+
+        private void EnsureDisplayControls()
+        {
+            RectTransform panel = transform as RectTransform;
+            if (panel == null) return;
+            Font font = GetComponentInChildren<Text>(true)?.font
+                ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            screenModeButton = EnsureOptionActionButton(panel, "OptionScreenModeButton", font,
+                new Vector2(-72f, 242f), new Vector2(245f, 44f), ToggleScreenMode);
+            resolutionButton = EnsureOptionActionButton(panel, "OptionResolutionButton", font,
+                new Vector2(190f, 242f), new Vector2(245f, 44f), CycleResolution);
+
+            if (backButton != null)
+            {
+                Text label = backButton.GetComponentInChildren<Text>(true);
+                if (label != null)
+                {
+                    LocalizedText localized = label.GetComponent<LocalizedText>();
+                    if (localized == null) localized = label.gameObject.AddComponent<LocalizedText>();
+                    localized.SetKey("option_complete");
+                }
+            }
+        }
+
+        private static Button EnsureOptionActionButton(RectTransform panel, string name, Font font,
+            Vector2 position, Vector2 size, UnityEngine.Events.UnityAction action)
+        {
+            Transform existing = panel.Find(name);
+            Button button;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject(name,
+                    typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button), typeof(Outline));
+                obj.transform.SetParent(panel, false);
+                obj.GetComponent<Image>().color = new Color(0.92f, 0.975f, 1f, 1f);
+                Outline outline = obj.GetComponent<Outline>();
+                outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.82f);
+                outline.effectDistance = new Vector2(2f, -2f);
+                Text label = CreateInputText(obj.transform, "Label", font,
+                    new Color(0.08f, 0.08f, 0.07f), TextAnchor.MiddleCenter);
+                label.fontSize = 17;
+                label.fontStyle = FontStyle.Bold;
+                button = obj.GetComponent<Button>();
+            }
+            else button = existing.GetComponent<Button>();
+            Place(button.transform as RectTransform, position, size);
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(action);
+            return button;
+        }
+
+        private void ToggleScreenMode()
+        {
+            DisplaySettings.ToggleScreenMode();
+            GameSfx.Play(SfxId.UiToggleOn);
+            Refresh();
+        }
+
+        private void CycleResolution()
+        {
+            DisplaySettings.CycleResolution();
+            GameSfx.Play(SfxId.UiToggleOn);
             Refresh();
         }
 
@@ -165,10 +232,10 @@ namespace DrawBody.Prototype
 
         private void LayoutPlayerNameControls(RectTransform panel)
         {
-            panel.sizeDelta = new Vector2(720f, 480f);
-            Place(panel.Find("OptionPlayerNameLabel") as RectTransform, new Vector2(-185f, 142f), new Vector2(190f, 40f));
-            Place(playerNameInput != null ? playerNameInput.transform as RectTransform : null, new Vector2(72f, 142f), new Vector2(350f, 46f));
-            Place(playerNameError != null ? playerNameError.transform as RectTransform : null, new Vector2(72f, 108f), new Vector2(350f, 22f));
+            panel.sizeDelta = new Vector2(720f, 560f);
+            Place(panel.Find("OptionPlayerNameLabel") as RectTransform, new Vector2(-185f, 174f), new Vector2(190f, 40f));
+            Place(playerNameInput != null ? playerNameInput.transform as RectTransform : null, new Vector2(72f, 174f), new Vector2(350f, 46f));
+            Place(playerNameError != null ? playerNameError.transform as RectTransform : null, new Vector2(72f, 140f), new Vector2(350f, 22f));
             Place(registerButton != null ? registerButton.transform as RectTransform : null, new Vector2(135f, 48f), new Vector2(280f, 62f));
         }
 
@@ -346,6 +413,13 @@ namespace DrawBody.Prototype
         {
             SavePlayerName(playerNameInput != null ? playerNameInput.text : string.Empty);
             return PlayerNameSettings.IsConfigured;
+        }
+
+        public bool CommitSettings()
+        {
+            if (!CommitPlayerName()) return false;
+            DisplaySettings.Save();
+            return true;
         }
 
         private void RefreshEntryButtons()
@@ -702,6 +776,19 @@ namespace DrawBody.Prototype
             if (languageSelectorValueText != null)
             {
                 languageSelectorValueText.text = LocalizationManager.CurrentLanguageDefinition.nativeName;
+            }
+
+            if (screenModeButton != null)
+            {
+                Text label = screenModeButton.GetComponentInChildren<Text>(true);
+                if (label != null) label.text = LocalizationManager.Format("option_screen_mode_format",
+                    LocalizationManager.T(DisplaySettings.IsFullScreen ? "option_fullscreen" : "option_windowed"));
+            }
+            if (resolutionButton != null)
+            {
+                Text label = resolutionButton.GetComponentInChildren<Text>(true);
+                if (label != null) label.text = LocalizationManager.Format("option_resolution_format",
+                    DisplaySettings.Width, DisplaySettings.Height);
             }
 
             bool selectorMode = LocalizationManager.SupportedLanguages.Count > 2;

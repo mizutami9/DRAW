@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "REN."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Personage wisselen"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "FEEDBACK / BUG MELDEN"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Bedankt voor het spelen!\nFeedback / Bug melden"
     }
   ]
 }

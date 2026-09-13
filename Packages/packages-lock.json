@@ -9,6 +9,13 @@
         "com.unity.editorcoroutines": "1.0.0"
       }
     },
+    "com.rlabrecque.steamworks.net": {
+      "version": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net#2025.164.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "03ffbd8d18d443a084f213615ea84c802e3e8e5d"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,

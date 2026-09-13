@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "JUOKSE."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Vaihda hahmoa"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "PALAUTE / ILMOITA VIRHEESTÄ"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Kiitos kun pelasit!\nPalaute / Ilmoita virheestä"
     }
   ]
 }

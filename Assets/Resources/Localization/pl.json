@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "BIEGNIJ."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Zmień postać"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "OPINIA / ZGŁOŚ BŁĄD"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Dziękujemy za grę!\nOpinia / Zgłoś błąd"
     }
   ]
 }

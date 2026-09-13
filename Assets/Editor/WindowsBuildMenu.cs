@@ -15,7 +15,31 @@ namespace DrawBody.EditorTools
             // Unity refuses to overwrite an existing Mono build directory and the
             // stale executable remains runnable after the failed build.
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
-            BuildWindows("Builds/DrawBodyOnline", false);
+            BuildWindows("Builds/NICO DRAW", false, false, false);
+        }
+
+        [MenuItem("PICO/Build Windows Demo EXE")]
+        public static void BuildWindowsDemoExe()
+        {
+            // Keep the distributable demo quick to build and compatible with the
+            // local multiplayer regression launcher. DemoAccessPolicy still
+            // hard-locks editing and rejects stages outside the demo set.
+            PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+            BuildWindows("Builds/NICO DRAW Demo", false, true, false);
+        }
+
+        [MenuItem("PICO/Build Windows Demo Multiplayer Test")]
+        public static void BuildWindowsDemoMultiplayerTest()
+        {
+            PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+            BuildWindows("Builds/NICO DRAW Demo Test", false, true, true);
+        }
+
+        [MenuItem("PICO/Build Windows AI Online Test")]
+        public static void BuildWindowsAiOnlineTest()
+        {
+            PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+            BuildWindows("Builds/NICO DRAW AI Test", false, false, true);
         }
 
         [MenuItem("PICO/Build Windows Steam Release")]
@@ -36,10 +60,10 @@ namespace DrawBody.EditorTools
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.IL2CPP);
             PlayerSettings.SetManagedStrippingLevel(NamedBuildTarget.Standalone, ManagedStrippingLevel.Low);
             WarnExternalReleasePrerequisites();
-            BuildWindows("Builds/NICODRAWSteamPlaytest", true);
+            BuildWindows("Builds/NICO DRAW Steam Playtest", true, true, false);
         }
 
-        private static void BuildWindows(string outputDirectory, bool hardenedRelease)
+        private static void BuildWindows(string outputDirectory, bool hardenedRelease, bool demoBuild, bool aiTestBuild)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
             {
@@ -58,14 +82,14 @@ namespace DrawBody.EditorTools
             BuildPlayerOptions options = new BuildPlayerOptions
             {
                 scenes = new[] { scenePath },
-                locationPathName = Path.Combine(outputDirectory, hardenedRelease ? "NICO DRAW.exe" : "DrawBody.exe"),
+                locationPathName = Path.Combine(outputDirectory, "NICO DRAW.exe"),
                 target = BuildTarget.StandaloneWindows64,
-                options = BuildOptions.None,
-                extraScriptingDefines = hardenedRelease ? new[] { "NICO_DRAW_DEMO" } : null
+                options = aiTestBuild ? BuildOptions.Development : BuildOptions.None,
+                extraScriptingDefines = GetBuildDefines(hardenedRelease, demoBuild, aiTestBuild)
             };
 
             BuildReport report;
-            using (DemoStageBuildFilter.Enter(hardenedRelease))
+            using (DemoStageBuildFilter.Enter(demoBuild))
             {
                 report = BuildPipeline.BuildPlayer(options);
             }
@@ -76,7 +100,11 @@ namespace DrawBody.EditorTools
                     RemoveIl2CppBackupArtifacts(outputDirectory);
                     ValidateHardenedBuild(outputDirectory);
                 }
-                string kind = hardenedRelease ? "Hardened Steam release (IL2CPP + signed content)" : "Windows test build";
+                string kind = hardenedRelease
+                    ? "Hardened Steam release (IL2CPP + signed content)"
+                    : demoBuild && aiTestBuild ? "Windows demo multiplayer test build"
+                    : aiTestBuild ? "Windows AI online test build"
+                    : demoBuild ? "Windows demo build" : "Windows test build";
                 UnityEngine.Debug.Log(kind + " created: " + options.locationPathName);
             }
             else
@@ -85,11 +113,38 @@ namespace DrawBody.EditorTools
             }
         }
 
+        private static string[] GetBuildDefines(bool steamBuild, bool demoBuild, bool aiTestBuild)
+        {
+            var defines = new System.Collections.Generic.List<string>();
+            if (steamBuild) defines.Add("NICO_DRAW_STEAM");
+            if (demoBuild) defines.Add("NICO_DRAW_DEMO");
+            if (aiTestBuild) defines.Add("NICO_DRAW_AI_TEST");
+            return defines.Count > 0 ? defines.ToArray() : null;
+        }
+
         [MenuItem("PICO/Build Windows EXE", true)]
         private static bool ValidateBuildWindowsExe()
         {
             return !EditorApplication.isPlayingOrWillChangePlaymode
                 && !EditorApplication.isCompiling;
+        }
+
+        [MenuItem("PICO/Build Windows Demo EXE", true)]
+        private static bool ValidateBuildWindowsDemoExe()
+        {
+            return ValidateBuildWindowsExe();
+        }
+
+        [MenuItem("PICO/Build Windows AI Online Test", true)]
+        private static bool ValidateBuildWindowsAiOnlineTest()
+        {
+            return ValidateBuildWindowsExe();
+        }
+
+        [MenuItem("PICO/Build Windows Demo Multiplayer Test", true)]
+        private static bool ValidateBuildWindowsDemoMultiplayerTest()
+        {
+            return ValidateBuildWindowsExe();
         }
 
         [MenuItem("PICO/Build Windows Steam Release", true)]
@@ -134,6 +189,9 @@ namespace DrawBody.EditorTools
                 throw new BuildFailedException("Steam release validation failed: a replaceable Mono gameplay assembly was found.");
             if (File.Exists(Path.Combine(outputDirectory, "steam_appid.txt")))
                 throw new BuildFailedException("Steam release validation failed: steam_appid.txt must not be uploaded to the depot.");
+            string steamRuntime = Path.Combine(dataDirectory, "Plugins", "x86_64", "steam_api64.dll");
+            if (!File.Exists(steamRuntime))
+                throw new BuildFailedException("Steam release validation failed: steam_api64.dll is missing from NICO DRAW_Data/Plugins/x86_64.");
         }
 
         private static void RemoveIl2CppBackupArtifacts(string outputDirectory)

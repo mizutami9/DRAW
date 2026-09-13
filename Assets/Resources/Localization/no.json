@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "LØP."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Bytt figur"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "TILBAKEMELDING / RAPPORTER FEIL"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Takk for at du spilte!\nTilbakemelding / Rapporter feil"
     }
   ]
 }

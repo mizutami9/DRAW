@@ -59,6 +59,7 @@ namespace DrawBody.Prototype
 
         public void RefreshDynamicTheme()
         {
+            ThemeTitle();
             ThemeGameplayHud();
             ThemeMenuAndResults();
             ThemeAllButtons();
@@ -432,12 +433,13 @@ namespace DrawBody.Prototype
         private void LayoutOptionPanel(RectTransform panel)
         {
             RectTransform title = FindRect(panel, "TitleOptionTitle");
-            PlaceOptionText(title, new Vector2(0f, 434f), new Vector2(640f, 42f), TextAnchor.MiddleCenter, 34, true);
-            EnsureOptionHeadingPaintStroke(panel, title, new Vector2(0f, 430f), new Vector2(440f, 50f), Violet);
+            panel.sizeDelta = new Vector2(720f, 560f);
+            PlaceOptionText(title, new Vector2(0f, 514f), new Vector2(640f, 42f), TextAnchor.MiddleCenter, 34, true);
+            EnsureOptionHeadingPaintStroke(panel, title, new Vector2(0f, 510f), new Vector2(440f, 50f), Violet);
             RectTransform subtitle = FindRect(panel, "TitleOptionSubtitle");
             if (subtitle != null) subtitle.gameObject.SetActive(false);
 
-            float[] rowY = { 340f, 280f, 220f };
+            float[] rowY = { 420f, 365f, 310f };
             Color[] rowColors =
             {
                 new Color(1f, 0.97f, 0.84f, 0.76f),
@@ -494,6 +496,13 @@ namespace DrawBody.Prototype
             HideIfExists(panel, "OptionVibrationButton");
             HideIfExists(panel, "OptionLanguageValue");
 
+            RectTransform screenMode = FindRect(panel, "OptionScreenModeButton");
+            RectTransform resolution = FindRect(panel, "OptionResolutionButton");
+            PlaceOptionRect(screenMode, new Vector2(-72f, 242f), new Vector2(245f, 44f));
+            PlaceOptionRect(resolution, new Vector2(190f, 242f), new Vector2(245f, 44f));
+            ThemeOptionButton(screenMode, Cyan, 17);
+            ThemeOptionButton(resolution, Yellow, 17);
+
             RectTransform back = FindRect(panel, "TitleOptionBackButton");
             PlaceOptionRect(back, new Vector2(135f, 48f), new Vector2(260f, 58f));
             ThemeOptionButton(back, Coral, 21);
@@ -502,7 +511,7 @@ namespace DrawBody.Prototype
             {
                 LocalizedText localized = backLabel.GetComponent<LocalizedText>();
                 if (localized == null) localized = backLabel.gameObject.AddComponent<LocalizedText>();
-                localized.SetKey("ui_back_esc");
+                localized.SetKey("option_complete");
             }
 
             RectTransform register = FindRect(panel, "OptionPlayerNameRegisterButton");

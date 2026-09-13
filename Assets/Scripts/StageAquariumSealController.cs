@@ -168,13 +168,17 @@ namespace DrawBody.Prototype
             ConfigureAquariumCamera();
             ApplyControls();
             float countdownRemaining = roundReadyAt - Time.unscaledTime;
-            if (phase == SealPhase.Active && countdownRemaining > 0f)
+            if (phase == SealPhase.Failed)
+            {
+                countdownPresenter?.ShowGameOver();
+            }
+            else if (phase == SealPhase.Active && countdownRemaining > 0f)
             {
                 countdownPresenter?.Show(countdownRemaining);
                 RefreshMonitor();
                 return;
             }
-            countdownPresenter?.Hide();
+            else countdownPresenter?.Hide();
             if (!HasAuthority)
             {
                 if (phase == SealPhase.Active)
@@ -1002,7 +1006,6 @@ namespace DrawBody.Prototype
             if (phase != SealPhase.Active) return;
             phase = SealPhase.Failed;
             transitionRemaining = 2.2f;
-            GameSfx.Play(SfxId.PlayerDeath, 0.72f);
             BroadcastState(true);
         }
 

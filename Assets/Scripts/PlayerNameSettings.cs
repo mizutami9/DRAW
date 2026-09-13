@@ -25,9 +25,18 @@ namespace DrawBody.Prototype
         {
             string sanitized = Sanitize(value);
             if (string.IsNullOrEmpty(sanitized)) return false;
-            PlayerPrefs.SetString(NameKey, sanitized);
-            PlayerPrefs.SetInt(ConfiguredKey, 1);
-            PlayerPrefs.Save();
+            try
+            {
+                PlayerPrefs.SetString(NameKey, sanitized);
+                PlayerPrefs.SetInt(ConfiguredKey, 1);
+                PlayerPrefs.Save();
+            }
+            catch (PlayerPrefsException exception)
+            {
+                // Multiple local clients can contend for the Windows PlayerPrefs
+                // store. A preference write must never abort OnlineManager.Awake.
+                Debug.LogWarning($"Could not persist the player name: {exception.Message}");
+            }
             return true;
         }
 

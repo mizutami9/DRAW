@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "CORRE."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Cambiar personaje"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "COMENTARIOS / REPORTAR UN ERROR"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "¡Gracias por jugar!\nComentarios / Reportar un error"
     }
   ]
 }

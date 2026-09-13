@@ -128,6 +128,7 @@ namespace DrawBody.Prototype
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
             EnsureCarriers(false);
             if (state == RoundState.Intro) countdownPresenter?.Show(remaining);
+            else if (state == RoundState.Result && !success) countdownPresenter?.ShowGameOver();
             else countdownPresenter?.Hide();
 
             if (HasAuthority)

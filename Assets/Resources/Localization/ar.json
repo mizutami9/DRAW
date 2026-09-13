@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "اركض."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "تبديل الشخصية"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "ملاحظات / الإبلاغ عن خطأ"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "شكرًا للعب!\nملاحظات / الإبلاغ عن خطأ"
     }
   ]
 }

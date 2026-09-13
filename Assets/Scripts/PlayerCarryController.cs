@@ -208,8 +208,25 @@ namespace DrawBody.Prototype
             }
             Vector2 normalized = direction.sqrMagnitude > 0.001f ? direction.normalized : Vector2.right;
             float multiplier = heldObject != null ? heldObject.ThrowMultiplier : 1f;
-            Vector2 throwVelocity = normalized * GetCurrentThrowSpeed() * multiplier;
+            float currentThrowSpeed = GetCurrentThrowSpeed();
+            if (IsHeldGameplayKey())
+            {
+                currentThrowSpeed = Mathf.Clamp(currentThrowSpeed * 0.45f, 8f, 14f);
+            }
+            Vector2 throwVelocity = normalized * currentThrowSpeed * multiplier;
             GameSfx.PlayAt(SfxId.HumanThrow, transform.position);
+            if (!string.IsNullOrEmpty(heldOnlinePlayerId))
+            {
+                // Scripted/recorded input must use the same network release path
+                // as live F input. Without this, the target owner's transform
+                // stream immediately overwrites the local throw velocity.
+                SendCarryEvent("throw", throwVelocity);
+            }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[PICO CARRY] Script throw target={heldOnlinePlayerId ?? "object"} " +
+                $"speed={throwVelocity.magnitude:0.0} velocity=({throwVelocity.x:0.0},{throwVelocity.y:0.0}) " +
+                $"armInk={(abilityController != null ? abilityController.CurrentProfile.ArmInk : 0f):0.0}");
+#endif
             DropHeld(throwVelocity);
             return true;
         }
@@ -1833,12 +1850,19 @@ namespace DrawBody.Prototype
             SetThrowPreviewVisible(false);
             if (releasedProxy != null)
             {
+                // Dense drawings use a trigger proxy while held. Restore their
+                // real limbs immediately for terrain collision, but keep only the
+                // thrower/player pairs ignored until the bodies have separated.
+                // Otherwise the thrown body transfers its launch impulse back to
+                // the thrower and lifts both characters.
+                SetCollisionIgnored(releasedColliders, carrierColliders, true);
                 RestoreCarryProxySafely(
                     releasedProxy,
                     releasedColliders,
                     releasedEnabledStates,
                     releasedTriggerStates,
                     carrierColliders);
+                RestoreReleasedCollisionsSafely(releasedColliders, carrierColliders);
             }
             else
             {

@@ -804,6 +804,10 @@ namespace DrawBody.Prototype
         private const string BarrierFloorId = "obj_cd4ea0b0ec634b7d";
         private const int BalloonsPerPlayer = 5;
         private const float BalloonVisualScale = 0.55f;
+        private const float BalloonBodyHalfWidth = 0.45f;
+        private const float BalloonBodyHalfHeight = 0.5f;
+        private const float BalloonSpikeClearance = 0.25f;
+        private const float BalloonRightVisibleEdgeX = 28f;
 
         [System.Serializable]
         private sealed class GalleryState
@@ -822,6 +826,7 @@ namespace DrawBody.Prototype
         private int balloonCount = BalloonsPerPlayer;
         private float nextSnapshotAt;
         private bool barrierClearedApplied;
+        private float highestSpikeTopY = float.NegativeInfinity;
 
         private bool HasAuthority => stageManager == null
             || !stageManager.IsOnlineStageActive
@@ -908,7 +913,15 @@ namespace DrawBody.Prototype
                     : kind == 4 ? new Vector2(0.55f, 0.22f) : Vector2.zero;
                 float speed = kind == 2 ? 1.15f : kind == 3 ? 0.92f : kind == 4 ? 0.75f : 0f;
                 Color color = Color.Lerp(colors[kind], Color.white, group * 0.055f);
-                CreateBalloon(index, positions[index], color, motion, travel, speed,
+                Vector2 position = positions[index];
+                if (!float.IsNegativeInfinity(highestSpikeTopY))
+                {
+                    position.y = Mathf.Max(position.y, highestSpikeTopY + BalloonSpikeClearance
+                        + BalloonBodyHalfHeight + Mathf.Abs(travel.y));
+                }
+                position.x = Mathf.Min(position.x, BalloonRightVisibleEdgeX
+                    - BalloonBodyHalfWidth - Mathf.Abs(travel.x));
+                CreateBalloon(index, position, color, motion, travel, speed,
                     0.4f + group * 0.83f + kind * 0.37f);
             }
         }
@@ -927,6 +940,7 @@ namespace DrawBody.Prototype
         private void FindBarrierObjects()
         {
             barrierObjects.Clear();
+            highestSpikeTopY = float.NegativeInfinity;
             StageEditorObject[] markers = GetComponentsInChildren<StageEditorObject>(true);
             StageEditorObject explicitFloor = null;
             float spikeMinX = float.PositiveInfinity;
@@ -941,6 +955,8 @@ namespace DrawBody.Prototype
                 if (marker.objectId == BarrierFloorId) explicitFloor = marker;
                 if (marker.type != StageObjectType.Spike) continue;
                 barrierObjects.Add(marker.gameObject);
+                highestSpikeTopY = Mathf.Max(highestSpikeTopY,
+                    marker.transform.position.y + marker.size.y * 0.5f);
                 spikeMinX = Mathf.Min(spikeMinX, marker.transform.position.x);
                 spikeMaxX = Mathf.Max(spikeMaxX, marker.transform.position.x);
                 spikeY += marker.transform.position.y;

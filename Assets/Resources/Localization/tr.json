@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "KOŞ."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Karakter değiştir"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "GERİ BİLDİRİM / HATA BİLDİR"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Oynadığınız için teşekkürler!\nGeri bildirim / Hata bildir"
     }
   ]
 }

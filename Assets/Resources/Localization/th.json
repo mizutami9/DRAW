@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "วิ่ง."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "สลับตัวละคร"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "ความคิดเห็น / รายงานบั๊ก"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "ขอบคุณที่เล่น!\nความคิดเห็น / รายงานบั๊ก"
     }
   ]
 }

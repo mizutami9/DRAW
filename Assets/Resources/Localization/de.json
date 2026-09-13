@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "LAUF."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Figur wechseln"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "FEEDBACK / FEHLER MELDEN"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Danke fürs Spielen!\nFeedback / Fehler melden"
     }
   ]
 }

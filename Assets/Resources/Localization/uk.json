@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "БІЖИ."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Змінити персонажа"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "ВІДГУК / ПОВІДОМИТИ ПРО ПОМИЛКУ"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Дякуємо за гру!\nВідгук / Повідомити про помилку"
     }
   ]
 }

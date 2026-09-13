@@ -4351,6 +4351,18 @@
     {
       "key": "ready_room_game_2_3",
       "value": "БЯГАЙ."
+    },
+    {
+        "key":  "gameplay_control_switch",
+        "value":  "Смяна на герой"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "ОБРАТНА ВРЪЗКА / ДОКЛАДВАЙ ГРЕШКА"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "Благодарим, че играхте!\nОбратна връзка / Докладвай грешка"
     }
   ]
 }

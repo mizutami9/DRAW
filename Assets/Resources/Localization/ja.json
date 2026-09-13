@@ -1735,6 +1735,18 @@
                     {
                         "key":  "sfx_browser_generated",
                         "value":  "実行時生成音"
-                    }
-                ]
+                    },
+                    {
+        "key":  "gameplay_control_switch",
+        "value":  "操作キャラ切替"
+    },
+    {
+        "key":  "feedback_button",
+        "value":  "フィードバック／バグ報告"
+    },
+    {
+        "key":  "feedback_clear_button",
+        "value":  "遊んでくれてありがとう！\n感想・バグ報告"
+    }
+  ]
 }
