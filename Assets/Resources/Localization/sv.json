@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Tack för att du spelade!\nFeedback / Rapportera fel"
-    }
+    },
+    { "key": "option_complete", "value": "KLAR" },
+    { "key": "option_screen_mode_format", "value": "SKÄRM: {0}" },
+    { "key": "option_resolution_format", "value": "UPPLÖSNING: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "HELSKÄRM" },
+    { "key": "option_windowed", "value": "FÖNSTERLÄGE" },
+    { "key": "online_steam_not_running", "value": "Starta Steam och öppna sedan NICO DRAW från ditt Steam-bibliotek." },
+    { "key": "online_steam_ticket_failed", "value": "Kunde inte hämta en Steam-autentiseringsbiljett: {0}" },
+    { "key": "wishlist_button", "value": "ÖNSKELISTA" },
+    { "key": "single_recommend_title", "value": "FLERSPELARLÄGE REKOMMENDERAS!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW är roligast när ni samarbetar!\nProva att spela med 2–4 spelare!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

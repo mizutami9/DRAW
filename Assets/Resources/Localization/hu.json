@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Köszönjük, hogy játszottál!\nVisszajelzés / Hibajelentés"
-    }
+    },
+    { "key": "option_complete", "value": "KÉSZ" },
+    { "key": "option_screen_mode_format", "value": "KIJELZŐ: {0}" },
+    { "key": "option_resolution_format", "value": "FELBONTÁS: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "TELJES KÉPERNYŐ" },
+    { "key": "option_windowed", "value": "ABLAKOS MÓD" },
+    { "key": "online_steam_not_running", "value": "Indítsd el a Steamet, majd a Steam-könyvtárból a NICO DRAW játékot." },
+    { "key": "online_steam_ticket_failed", "value": "Nem sikerült Steam-hitelesítési jegyet kérni: {0}" },
+    { "key": "wishlist_button", "value": "KÍVÁNSÁGLISTA" },
+    { "key": "single_recommend_title", "value": "TÖBBJÁTÉKOS MÓD AJÁNLOTT!" },
+    { "key": "single_recommend_message", "value": "A NICO DRAW együttműködve a legszórakoztatóbb!\nPróbáljátok ki 2–4 játékossal!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

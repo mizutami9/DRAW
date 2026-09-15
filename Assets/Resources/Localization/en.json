@@ -1747,6 +1747,10 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Thanks for playing!\nFeedback / Bug Report"
-    }
+    },
+    { "key": "wishlist_button", "value": "WISHLIST" },
+    { "key": "single_recommend_title", "value": "MULTIPLAYER RECOMMENDED!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW is best enjoyed by working together!\nTry playing with 2–4 players!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

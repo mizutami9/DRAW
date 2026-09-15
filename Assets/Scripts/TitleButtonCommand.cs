@@ -50,7 +50,9 @@ namespace DrawBody.Prototype
             switch (command)
             {
                 case Command.Single:
-                    stageManager?.OpenSingleMenu();
+                    UIManager uiManager = FindFirstObjectByType<UIManager>();
+                    if (uiManager != null) uiManager.ShowSinglePlayRecommendation();
+                    else stageManager?.OpenSingleMenu();
                     break;
                 case Command.Multi:
                     stageManager?.OpenMultiMenu();

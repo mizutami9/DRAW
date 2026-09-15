@@ -91,6 +91,7 @@ namespace DrawBody.Prototype
         private int lastAppliedStageRevision = -1;
         private int lastAppliedRetryRevision = -1;
         private int randomMatchOperation;
+        private int roomJoinOperation;
         private int scheduledRandomSearchOperation;
         private int scheduledRandomSearchRetries;
         private float scheduledRandomSearchAt = -1f;
@@ -576,6 +577,7 @@ namespace DrawBody.Prototype
             }
 
             randomMatchOperation++;
+            int operation = ++roomJoinOperation;
             CancelScheduledRandomSearch();
             string id = string.IsNullOrWhiteSpace(roomId) ? string.Empty : roomId.Trim();
             if (string.IsNullOrEmpty(id))
@@ -587,15 +589,16 @@ namespace DrawBody.Prototype
             id = id.ToUpperInvariant();
             if (IsRoomCode(id))
             {
-                JoinRoomByCode(id);
+                JoinRoomByCode(id, operation);
                 return;
             }
 
-            JoinLobbyById(id, string.Empty);
+            JoinLobbyById(id, string.Empty, operation);
         }
 
-        private void JoinLobbyById(string id, string roomCode)
+        private void JoinLobbyById(string id, string roomCode, int operation)
         {
+            if (operation != roomJoinOperation) return;
             ResetLobbyConnectionForJoin(false);
             JoinLobbyByIdOptions options = new JoinLobbyByIdOptions
             {
@@ -610,6 +613,20 @@ namespace DrawBody.Prototype
                 string joinedLobbyId = data.LobbyId;
                 Enqueue(() =>
                 {
+                    if (operation != roomJoinOperation)
+                    {
+                        if (resultCode == Result.Success && !string.IsNullOrEmpty(joinedLobbyId))
+                        {
+                            LeaveLobbyOptions staleLeave = new LeaveLobbyOptions
+                            {
+                                LocalUserId = localUserId,
+                                LobbyId = joinedLobbyId
+                            };
+                            lobbyInterface.LeaveLobby(ref staleLeave, null, (ref LeaveLobbyCallbackInfo _) => { });
+                        }
+                        return;
+                    }
+
                     if (resultCode != Result.Success)
                     {
                         SetState(OnlineConnectionState.Error, null, LocalizationManager.Format("online_eos_join_lobby_failed", resultCode));
@@ -628,6 +645,7 @@ namespace DrawBody.Prototype
         public void LeaveLobby()
         {
             randomMatchOperation++;
+            roomJoinOperation++;
             CancelScheduledRandomSearch();
             if (lobbyInterface != null && localUserId != null && !string.IsNullOrEmpty(lobbyId))
             {
@@ -995,10 +1013,11 @@ namespace DrawBody.Prototype
             });
         }
 
-        private void JoinRoomByCode(string roomCode)
+        private void JoinRoomByCode(string roomCode, int operation)
         {
             FindLobbyIdByRoomCode(roomCode, (resultCode, foundLobbyId) =>
             {
+                if (operation != roomJoinOperation) return;
                 if (resultCode != Result.Success)
                 {
                     SetState(OnlineConnectionState.Error, null, LocalizationManager.Format("online_eos_room_code_search_failed", resultCode));
@@ -1011,7 +1030,7 @@ namespace DrawBody.Prototype
                     return;
                 }
 
-                JoinLobbyById(foundLobbyId, roomCode);
+                JoinLobbyById(foundLobbyId, roomCode, operation);
             });
         }
 

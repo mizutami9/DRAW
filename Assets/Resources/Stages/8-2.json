@@ -3,7 +3,7 @@
     "displayName": "Stage 8-2 Reflect Draw",
     "backgroundColorHex": "#F7F2DE26",
     "ruleMode": 3,
-    "timeLimitSeconds": 60.0,
+    "timeLimitSeconds": 0.0,
     "collectionTarget": 163,
     "requiredCollectionCount": 1,
     "objects": [

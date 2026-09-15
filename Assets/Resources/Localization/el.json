@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Ευχαριστούμε που παίξατε!\nΣχόλια / Αναφορά σφάλματος"
-    }
+    },
+    { "key": "option_complete", "value": "ΤΕΛΟΣ" },
+    { "key": "option_screen_mode_format", "value": "ΟΘΟΝΗ: {0}" },
+    { "key": "option_resolution_format", "value": "ΑΝΑΛΥΣΗ: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "ΠΛΗΡΗΣ ΟΘΟΝΗ" },
+    { "key": "option_windowed", "value": "ΠΑΡΑΘΥΡΟ" },
+    { "key": "online_steam_not_running", "value": "Εκκινήστε το Steam και μετά το NICO DRAW από τη βιβλιοθήκη Steam." },
+    { "key": "online_steam_ticket_failed", "value": "Δεν ήταν δυνατή η λήψη εισιτηρίου ελέγχου ταυτότητας Steam: {0}" },
+    { "key": "wishlist_button", "value": "ΛΙΣΤΑ ΕΠΙΘΥΜΙΩΝ" },
+    { "key": "single_recommend_title", "value": "ΠΡΟΤΕΙΝΕΤΑΙ ΠΑΙΧΝΙΔΙ ΠΟΛΛΩΝ ΠΑΙΚΤΩΝ!" },
+    { "key": "single_recommend_message", "value": "Το NICO DRAW είναι καλύτερο με συνεργασία!\nΔοκιμάστε να παίξετε με 2–4 παίκτες!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

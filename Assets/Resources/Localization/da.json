@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Tak fordi du spillede!\nFeedback / Rapportér fejl"
-    }
+    },
+    { "key": "option_complete", "value": "FÆRDIG" },
+    { "key": "option_screen_mode_format", "value": "VISNING: {0}" },
+    { "key": "option_resolution_format", "value": "OPLØSNING: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "FULD SKÆRM" },
+    { "key": "option_windowed", "value": "VINDUESTILSTAND" },
+    { "key": "online_steam_not_running", "value": "Start Steam, og åbn derefter NICO DRAW fra dit Steam-bibliotek." },
+    { "key": "online_steam_ticket_failed", "value": "Kunne ikke hente en Steam-godkendelsesbillet: {0}" },
+    { "key": "wishlist_button", "value": "ØNSKELISTE" },
+    { "key": "single_recommend_title", "value": "FLERE SPILLERE ANBEFALES!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW er sjovest, når I samarbejder!\nPrøv at spille med 2–4 spillere!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

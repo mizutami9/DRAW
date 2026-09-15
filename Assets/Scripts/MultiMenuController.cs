@@ -35,6 +35,9 @@ namespace DrawBody.Prototype
         private readonly Text[] lobbyRosterHostBadges = new Text[4];
         private readonly Text[] lobbyRosterStatuses = new Text[4];
         private Text lobbyRoomIdText;
+        private Text joinRoomStatusText;
+        private Button joinRoomSubmitButton;
+        private Button joinRoomBackButton;
         private GameObject leaveConfirmPanel;
         private Text createRoomMaxPlayersText;
         private Text createRoomVisibilityText;
@@ -45,6 +48,7 @@ namespace DrawBody.Prototype
         private float randomMatchStartedAt = -1f;
         private float randomStatusRefreshTimer;
         private float lobbyNoticeTimer;
+        private bool joinRoomPending;
 
         private void OnEnable()
         {
@@ -188,6 +192,7 @@ namespace DrawBody.Prototype
 
         public void ShowRoom()
         {
+            CancelPendingRoomJoin();
             ShowOnly(roomScreen);
         }
 
@@ -199,6 +204,8 @@ namespace DrawBody.Prototype
 
         public void ShowJoinRoom()
         {
+            joinRoomPending = false;
+            SetJoinRoomState(false, string.Empty, false);
             ShowOnly(joinRoomScreen);
         }
 
@@ -238,9 +245,9 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            joinRoomPending = true;
+            SetJoinRoomState(true, LocalizationManager.T("multi_connecting"), false);
             onlineManager?.JoinRoom(roomId);
-            SetLobbyButtonState(false);
-            ShowLobby();
         }
 
         public void ShowLobby()
@@ -511,6 +518,31 @@ namespace DrawBody.Prototype
                 stageStartedFromOnline = false;
             }
 
+            if (joinRoomPending)
+            {
+                if (state == OnlineConnectionState.InLobby && lobby != null)
+                {
+                    joinRoomPending = false;
+                    SetJoinRoomState(false, string.Empty, false);
+                    ShowOnly(lobbyScreen);
+                }
+                else if (state == OnlineConnectionState.Error)
+                {
+                    joinRoomPending = false;
+                    string failure = string.IsNullOrWhiteSpace(message)
+                        ? LocalizationManager.Format("online_failed_to_join", "-")
+                        : message;
+                    SetJoinRoomState(false, failure, true);
+                    ShowOnly(joinRoomScreen);
+                    return;
+                }
+                else
+                {
+                    SetJoinRoomState(true, LocalizationManager.T("multi_connecting"), false);
+                    return;
+                }
+            }
+
             if (randomScreen != null && randomScreen.activeInHierarchy && randomStatusText != null)
             {
                 UpdateRandomSearchHeader();
@@ -538,6 +570,66 @@ namespace DrawBody.Prototype
                     lobbyStatusText.text = FormatLobbyStatus(lobby, message, localPlayerId, mode);
                 }
                 SetLobbyButtonState(lobby != null);
+            }
+        }
+
+        private void CancelPendingRoomJoin()
+        {
+            if (!joinRoomPending)
+            {
+                SetJoinRoomState(false, string.Empty, false);
+                return;
+            }
+
+            joinRoomPending = false;
+            onlineManager?.LeaveLobby();
+            SetJoinRoomState(false, string.Empty, false);
+        }
+
+        private void SetJoinRoomState(bool pending, string message, bool isError)
+        {
+            ResolveJoinRoomControls();
+            if (joinAddressInput != null)
+            {
+                joinAddressInput.interactable = !pending;
+            }
+            if (joinRoomSubmitButton != null)
+            {
+                joinRoomSubmitButton.interactable = !pending;
+            }
+            if (joinRoomBackButton != null)
+            {
+                joinRoomBackButton.interactable = true;
+            }
+            if (joinRoomStatusText != null)
+            {
+                joinRoomStatusText.text = message ?? string.Empty;
+                joinRoomStatusText.color = isError
+                    ? new Color(0.78f, 0.12f, 0.08f, 1f)
+                    : new Color(0.08f, 0.35f, 0.65f, 1f);
+                joinRoomStatusText.gameObject.SetActive(!string.IsNullOrWhiteSpace(message));
+            }
+        }
+
+        private void ResolveJoinRoomControls()
+        {
+            if (joinRoomScreen == null) return;
+
+            Text[] texts = joinRoomScreen.GetComponentsInChildren<Text>(true);
+            for (int i = 0; i < texts.Length && joinRoomStatusText == null; i++)
+            {
+                if (texts[i] != null && texts[i].name == "MultiJoinStatus")
+                {
+                    joinRoomStatusText = texts[i];
+                }
+            }
+
+            Button[] buttons = joinRoomScreen.GetComponentsInChildren<Button>(true);
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                if (buttons[i] == null) continue;
+                if (buttons[i].name == "MultiJoinButton") joinRoomSubmitButton = buttons[i];
+                else if (buttons[i].name == "MultiJoinBackButton") joinRoomBackButton = buttons[i];
             }
         }
 

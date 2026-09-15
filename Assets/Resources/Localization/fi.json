@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Kiitos kun pelasit!\nPalaute / Ilmoita virheestä"
-    }
+    },
+    { "key": "option_complete", "value": "VALMIS" },
+    { "key": "option_screen_mode_format", "value": "NÄYTTÖ: {0}" },
+    { "key": "option_resolution_format", "value": "TARKKUUS: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "KOKO NÄYTTÖ" },
+    { "key": "option_windowed", "value": "IKKUNATILA" },
+    { "key": "online_steam_not_running", "value": "Käynnistä Steam ja avaa sitten NICO DRAW Steam-kirjastostasi." },
+    { "key": "online_steam_ticket_failed", "value": "Steam-todennuslipun hakeminen epäonnistui: {0}" },
+    { "key": "wishlist_button", "value": "TOIVELISTA" },
+    { "key": "single_recommend_title", "value": "MONINPELIÄ SUOSITELLAAN!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW on hauskimmillaan yhteistyössä!\nKokeilkaa pelaamista 2–4 pelaajalla!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

@@ -38,6 +38,7 @@ namespace DrawBody.Prototype
         private Rigidbody2D rb;
         private BodyBuilder bodyBuilder;
         private PlayerAbilityController abilityController;
+        private StageManager stageManager;
         private float horizontalInput;
         private float lastGroundedAt = -100f;
         private float lastJumpPressedAt = -100f;
@@ -356,6 +357,7 @@ namespace DrawBody.Prototype
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             bodyBuilder = GetComponent<BodyBuilder>();
             abilityController = GetComponent<PlayerAbilityController>();
+            stageManager = Object.FindFirstObjectByType<StageManager>();
             groundContactFilter = new ContactFilter2D();
             groundContactFilter.SetLayerMask(groundLayer);
             groundContactFilter.useTriggers = false;
@@ -399,6 +401,14 @@ namespace DrawBody.Prototype
             if (!controlsEnabled)
             {
                 horizontalInput = 0f;
+                return;
+            }
+
+            if (IsInactiveSharedLocalPlayer())
+            {
+                horizontalInput = 0f;
+                scriptedJumpPressed = false;
+                lastJumpPressedAt = -100f;
                 return;
             }
 
@@ -494,6 +504,11 @@ namespace DrawBody.Prototype
 
         public void SetControlsEnabled(bool enabled)
         {
+            if (enabled && IsInactiveSharedLocalPlayer())
+            {
+                enabled = false;
+            }
+
             controlsEnabled = enabled;
             if (!enabled)
             {
@@ -503,6 +518,21 @@ namespace DrawBody.Prototype
                 SetTurtleRotation(false);
                 rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
             }
+        }
+
+        private bool IsInactiveSharedLocalPlayer()
+        {
+            if (scriptedInputEnabled)
+            {
+                return false;
+            }
+
+            if (stageManager == null)
+            {
+                stageManager = Object.FindFirstObjectByType<StageManager>();
+            }
+
+            return stageManager != null && stageManager.ShouldBlockSharedLocalInput(this);
         }
 
         public void SetFriendCarried(bool carried)

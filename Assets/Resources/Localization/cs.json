@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Děkujeme za hraní!\nZpětná vazba / Nahlásit chybu"
-    }
+    },
+    { "key": "option_complete", "value": "HOTOVO" },
+    { "key": "option_screen_mode_format", "value": "ZOBRAZENÍ: {0}" },
+    { "key": "option_resolution_format", "value": "ROZLIŠENÍ: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "CELÁ OBRAZOVKA" },
+    { "key": "option_windowed", "value": "REŽIM OKNA" },
+    { "key": "online_steam_not_running", "value": "Spusťte Steam a poté NICO DRAW z knihovny služby Steam." },
+    { "key": "online_steam_ticket_failed", "value": "Nepodařilo se získat ověřovací tiket služby Steam: {0}" },
+    { "key": "wishlist_button", "value": "SEZNAM PŘÁNÍ" },
+    { "key": "single_recommend_title", "value": "DOPORUČUJEME HRU PRO VÍCE HRÁČŮ!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW je nejlepší při společné spolupráci!\nZkuste si zahrát ve 2–4 hráčích!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

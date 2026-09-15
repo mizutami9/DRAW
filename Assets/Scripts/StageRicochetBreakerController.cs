@@ -18,6 +18,7 @@ namespace DrawBody.Prototype
         private const float MaximumBallSpeedMultiplier = 1.22f;
         private const float IntroSeconds = 12f;
         private const float CountdownSeconds = 4f;
+        private const bool HasTimeLimit = false;
 
         private enum Phase { Intro, Countdown, Playing, Clear, Failed }
 
@@ -150,7 +151,7 @@ namespace DrawBody.Prototype
                 if (phase == Phase.Playing)
                 {
                     playingElapsed += Time.deltaTime;
-                    if (!LocalMultiplayerDebugMode.NoTimeLimit)
+                    if (HasTimeLimit && !LocalMultiplayerDebugMode.NoTimeLimit)
                         remaining = Mathf.Max(0f, remaining - Time.deltaTime);
                 }
                 if (ball != null) ball.SetReplicaTarget(replicaBallPosition, replicaBallVelocity);
@@ -194,7 +195,7 @@ namespace DrawBody.Prototype
             }
 
             playingElapsed += Time.deltaTime;
-            if (!LocalMultiplayerDebugMode.NoTimeLimit)
+            if (HasTimeLimit && !LocalMultiplayerDebugMode.NoTimeLimit)
                 remaining = Mathf.Max(0f, remaining - Time.deltaTime);
             if (ball != null) ball.SetCruiseSpeed(GetCurrentBallSpeed());
             if (ball != null && (Mathf.Abs(ball.transform.position.y) > OuterHalfHeight + 3f
@@ -209,7 +210,7 @@ namespace DrawBody.Prototype
                 PrepareNextBall();
                 BroadcastState(true);
             }
-            if (!LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f)
+            if (HasTimeLimit && !LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f)
             {
                 BeginFailure();
             }
@@ -544,7 +545,7 @@ namespace DrawBody.Prototype
             }
             else if (phase == Phase.Failed) statusText.text = LocalizationManager.Format("ricochet_breaker_retry", Mathf.CeilToInt(retryRemaining));
             else if (phase == Phase.Clear) statusText.text = LocalizationManager.T("clear");
-            else statusText.text = FormatTime(remaining);
+            else statusText.text = LocalizationManager.T("ricochet_breaker_goal");
             FitText(statusText, 0.1f, 18f);
         }
 

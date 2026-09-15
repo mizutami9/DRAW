@@ -590,6 +590,17 @@ namespace DrawBody.Prototype
             }
 
             EnsureCreateRoomText(join, "MultiJoinLobbyIdLabel", LocalizationManager.T("multi_room_id"), font, new Vector2(-280f, 138f), 21, Color.black, false);
+            Text joinStatus = EnsureCreateRoomText(
+                join,
+                "MultiJoinStatus",
+                string.Empty,
+                font,
+                new Vector2(-280f, 25f),
+                18,
+                new Color(0.08f, 0.35f, 0.65f, 1f),
+                false);
+            joinStatus.rectTransform.sizeDelta = new Vector2(500f, 30f);
+            joinStatus.gameObject.SetActive(false);
 
             Transform inputTransform = FindDeep(join, "MultiJoinAddressInput");
             RectTransform inputRect = inputTransform != null ? inputTransform.GetComponent<RectTransform>() : null;

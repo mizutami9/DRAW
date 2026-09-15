@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "感谢游玩！\n反馈 / 错误报告"
-    }
+    },
+    { "key": "option_complete", "value": "完成" },
+    { "key": "option_screen_mode_format", "value": "显示模式：{0}" },
+    { "key": "option_resolution_format", "value": "分辨率：{0}×{1}" },
+    { "key": "option_fullscreen", "value": "全屏" },
+    { "key": "option_windowed", "value": "窗口模式" },
+    { "key": "online_steam_not_running", "value": "请启动 Steam，然后从 Steam 库中启动 NICO DRAW。" },
+    { "key": "online_steam_ticket_failed", "value": "无法获取 Steam 身份验证票据：{0}" },
+    { "key": "wishlist_button", "value": "愿望单" },
+    { "key": "single_recommend_title", "value": "推荐多人游戏！" },
+    { "key": "single_recommend_message", "value": "NICO DRAW 最适合大家一起合作游玩！\n请尝试与 2–4 名玩家一起玩！" },
+    { "key": "single_recommend_ok", "value": "确定" }
   ]
 }

@@ -25,7 +25,13 @@ namespace DrawBody.Prototype
         private Text clearNextLabel;
         private Text clearBackLabel;
         private GameObject stageSelectLockedPanel;
+        private Text stageSelectLockedText;
+        private Text stageSelectLeaveLabel;
         private GameObject leaveSessionConfirmPanel;
+        private GameObject singlePlayRecommendationPanel;
+        private Text singlePlayRecommendationTitle;
+        private Text singlePlayRecommendationMessage;
+        private Text singlePlayRecommendationOkLabel;
         private GameObject gameplayActionConfirmPanel;
         private GameplayButtonCommand.Command pendingGameplayAction;
         private GameObject speciesSwapConfirmPanel;
@@ -670,6 +676,97 @@ namespace DrawBody.Prototype
             GameSfx.Play(SfxId.UiButtonPress);
         }
 
+        public void ShowSinglePlayRecommendation()
+        {
+            EnsureSinglePlayRecommendationPanel();
+            RefreshSinglePlayRecommendationText();
+            if (singlePlayRecommendationPanel == null) return;
+            singlePlayRecommendationPanel.SetActive(true);
+            singlePlayRecommendationPanel.transform.SetAsLastSibling();
+        }
+
+        private void EnsureSinglePlayRecommendationPanel()
+        {
+            if (singlePlayRecommendationPanel != null) return;
+
+            Font font = GetComponentInChildren<Text>(true)?.font;
+            if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+
+            singlePlayRecommendationPanel = new GameObject(
+                "SinglePlayRecommendationPanel", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            singlePlayRecommendationPanel.transform.SetParent(transform, false);
+            Stretch(singlePlayRecommendationPanel.GetComponent<RectTransform>());
+            Image blocker = singlePlayRecommendationPanel.GetComponent<Image>();
+            blocker.color = new Color(0.025f, 0.04f, 0.055f, 0.68f);
+
+            GameObject card = new GameObject(
+                "SinglePlayRecommendationCard", typeof(RectTransform), typeof(CanvasRenderer),
+                typeof(Image), typeof(Outline), typeof(Shadow));
+            card.transform.SetParent(singlePlayRecommendationPanel.transform, false);
+            RectTransform cardRect = card.GetComponent<RectTransform>();
+            cardRect.anchorMin = cardRect.anchorMax = new Vector2(0.5f, 0.5f);
+            cardRect.pivot = new Vector2(0.5f, 0.5f);
+            cardRect.anchoredPosition = Vector2.zero;
+            cardRect.sizeDelta = new Vector2(700f, 330f);
+            card.GetComponent<Image>().color = new Color(0.99f, 0.97f, 0.86f, 1f);
+            card.AddComponent<SketchPaperTexture>();
+            Outline outline = card.GetComponent<Outline>();
+            outline.effectColor = new Color(0.18f, 0.13f, 0.08f, 0.86f);
+            outline.effectDistance = new Vector2(3f, -3f);
+            Shadow shadow = card.GetComponent<Shadow>();
+            shadow.effectColor = new Color(0f, 0f, 0f, 0.28f);
+            shadow.effectDistance = new Vector2(10f, -11f);
+            CreateClearCardFrame(card.transform, cardRect.sizeDelta);
+            CreateClearPaintStroke(card.transform, "RecommendationHighlight", new Vector2(0f, 108f),
+                new Vector2(570f, 66f), new Color(1f, 0.72f, 0.08f, 0.24f));
+
+            singlePlayRecommendationTitle = CreateClearText(
+                "SinglePlayRecommendationTitle", card.transform, font, 31, TextAnchor.MiddleCenter,
+                new Vector2(0f, 108f), new Vector2(620f, 58f));
+            singlePlayRecommendationTitle.fontStyle = FontStyle.Bold;
+            singlePlayRecommendationTitle.color = new Color(0.68f, 0.12f, 0.09f, 1f);
+
+            singlePlayRecommendationMessage = CreateClearText(
+                "SinglePlayRecommendationMessage", card.transform, font, 22, TextAnchor.MiddleCenter,
+                new Vector2(0f, 18f), new Vector2(620f, 124f));
+            singlePlayRecommendationMessage.color = new Color(0.13f, 0.1f, 0.07f, 1f);
+            singlePlayRecommendationMessage.resizeTextForBestFit = true;
+            singlePlayRecommendationMessage.resizeTextMinSize = 15;
+            singlePlayRecommendationMessage.resizeTextMaxSize = 22;
+
+            Button ok = CreateClearButton(
+                "SinglePlayRecommendationOk", card.transform, font, new Vector2(0f, -112f),
+                new Vector2(210f, 58f), new Color(0.48f, 0.88f, 0.48f, 1f));
+            singlePlayRecommendationOkLabel = ok.GetComponentInChildren<Text>(true);
+            ok.onClick.AddListener(() =>
+            {
+                singlePlayRecommendationPanel.SetActive(false);
+                ResolveStageManager()?.OpenSingleMenu();
+            });
+
+            RefreshSinglePlayRecommendationText();
+            singlePlayRecommendationPanel.SetActive(false);
+        }
+
+        private void RefreshSinglePlayRecommendationText()
+        {
+            if (singlePlayRecommendationTitle != null)
+            {
+                singlePlayRecommendationTitle.text = LocalizationManager.T("single_recommend_title");
+                singlePlayRecommendationTitle.font = LocalizationManager.LoadCurrentFont(singlePlayRecommendationTitle.font);
+            }
+            if (singlePlayRecommendationMessage != null)
+            {
+                singlePlayRecommendationMessage.text = LocalizationManager.T("single_recommend_message");
+                singlePlayRecommendationMessage.font = LocalizationManager.LoadCurrentFont(singlePlayRecommendationMessage.font);
+            }
+            if (singlePlayRecommendationOkLabel != null)
+            {
+                singlePlayRecommendationOkLabel.text = LocalizationManager.T("single_recommend_ok");
+                singlePlayRecommendationOkLabel.font = LocalizationManager.LoadCurrentFont(singlePlayRecommendationOkLabel.font);
+            }
+        }
+
         public void HideGameplayActionConfirm()
         {
             if (gameplayActionConfirmPanel != null)
@@ -1074,7 +1171,8 @@ namespace DrawBody.Prototype
             {
                 if (buttons[i] != null)
                 {
-                    buttons[i].interactable = !stageSelectLocked;
+                    buttons[i].interactable = !stageSelectLocked
+                        || buttons[i].name == "StageSelectLeaveSessionButton";
                 }
             }
 
@@ -1104,12 +1202,13 @@ namespace DrawBody.Prototype
             rect.anchorMax = new Vector2(0.5f, 0f);
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = new Vector2(0f, 84f);
-            rect.sizeDelta = new Vector2(500f, 72f);
+            rect.sizeDelta = new Vector2(760f, 78f);
             stageSelectLockedPanel.GetComponent<Image>().color = new Color(0.96f, 0.93f, 0.82f, 0.92f);
 
             GameObject textObject = new GameObject("StageSelectLockedText", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
             textObject.transform.SetParent(stageSelectLockedPanel.transform, false);
             Text text = textObject.GetComponent<Text>();
+            stageSelectLockedText = text;
             text.font = font;
             text.text = LocalizationManager.T("multi_host_selecting_stage");
             text.fontSize = 24;
@@ -1119,8 +1218,23 @@ namespace DrawBody.Prototype
             RectTransform textRect = text.rectTransform;
             textRect.anchorMin = Vector2.zero;
             textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = Vector2.zero;
-            textRect.offsetMax = Vector2.zero;
+            textRect.offsetMin = new Vector2(18f, 0f);
+            textRect.offsetMax = new Vector2(-250f, 0f);
+
+            Button leave = CreateClearButton(
+                "StageSelectLeaveSessionButton",
+                stageSelectLockedPanel.transform,
+                font,
+                new Vector2(255f, 0f),
+                new Vector2(210f, 54f),
+                new Color(1f, 0.62f, 0.54f, 0.98f));
+            stageSelectLeaveLabel = leave.GetComponentInChildren<Text>(true);
+            if (stageSelectLeaveLabel != null)
+            {
+                stageSelectLeaveLabel.text = LocalizationManager.T("menu_leave_session");
+                stageSelectLeaveLabel.fontSize = 19;
+            }
+            leave.onClick.AddListener(() => ResolveStageManager()?.RequestLeaveSession());
             stageSelectLockedPanel.SetActive(false);
         }
 
@@ -1293,6 +1407,7 @@ namespace DrawBody.Prototype
             clearStageId = stageId;
             clearNextStageId = nextStageId;
             EnsureClearPanel();
+            playtestFeedback?.SetClearContext(cleared, nextStageId);
             if (clearPanel != null)
             {
                 clearPanel.SetActive(cleared);
@@ -1385,7 +1500,7 @@ namespace DrawBody.Prototype
             rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
             rect.pivot = new Vector2(0f, 1f);
             rect.anchoredPosition = new Vector2(14f, -14f);
-            rect.sizeDelta = new Vector2(360f, 58f);
+            rect.sizeDelta = new Vector2(300f, 64f);
             Image paper = root.GetComponent<Image>();
             paper.color = new Color(0.99f, 0.97f, 0.86f, 0.78f);
             paper.raycastTarget = false;
@@ -1921,7 +2036,8 @@ namespace DrawBody.Prototype
 
             if (clearNextButton != null)
             {
-                clearNextButton.interactable = !string.IsNullOrEmpty(clearNextStageId);
+                clearNextButton.gameObject.SetActive(!string.IsNullOrEmpty(clearNextStageId));
+                clearNextButton.interactable = true;
             }
 
             RefreshClearAuthority();
@@ -1933,7 +2049,9 @@ namespace DrawBody.Prototype
             bool canChooseDestination = manager == null
                 || !manager.IsOnlineStageActive
                 || manager.IsOnlineStageHost;
-            if (clearNextButton != null) clearNextButton.gameObject.SetActive(canChooseDestination);
+            if (clearNextButton != null)
+                clearNextButton.gameObject.SetActive(canChooseDestination
+                    && !string.IsNullOrEmpty(clearNextStageId));
             if (clearBackButton != null) clearBackButton.gameObject.SetActive(canChooseDestination);
         }
 
@@ -1954,7 +2072,12 @@ namespace DrawBody.Prototype
         {
             RefreshGameplayMenu();
             RefreshGameplayActionConfirmText();
+            RefreshSinglePlayRecommendationText();
             RefreshSpeciesSwapText();
+            if (stageSelectLockedText != null)
+                stageSelectLockedText.text = LocalizationManager.T("multi_host_selecting_stage");
+            if (stageSelectLeaveLabel != null)
+                stageSelectLeaveLabel.text = LocalizationManager.T("menu_leave_session");
             if (editorTestReturnLabel != null)
             {
                 editorTestReturnLabel.text = LocalizationManager.T("stage_editor_return_esc");

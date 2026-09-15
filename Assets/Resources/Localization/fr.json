@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Merci d\u0027avoir joué !\nAvis / Signaler un bug"
-    }
+    },
+    { "key": "option_complete", "value": "TERMINÉ" },
+    { "key": "option_screen_mode_format", "value": "AFFICHAGE : {0}" },
+    { "key": "option_resolution_format", "value": "RÉSOLUTION : {0}×{1}" },
+    { "key": "option_fullscreen", "value": "PLEIN ÉCRAN" },
+    { "key": "option_windowed", "value": "FENÊTRÉ" },
+    { "key": "online_steam_not_running", "value": "Démarrez Steam, puis lancez NICO DRAW depuis votre bibliothèque Steam." },
+    { "key": "online_steam_ticket_failed", "value": "Impossible d’obtenir un ticket d’authentification Steam : {0}" },
+    { "key": "wishlist_button", "value": "LISTE DE SOUHAITS" },
+    { "key": "single_recommend_title", "value": "MULTIJOUEUR RECOMMANDÉ !" },
+    { "key": "single_recommend_message", "value": "NICO DRAW est encore meilleur en coopérant !\nEssayez d’y jouer à 2–4 joueurs !" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

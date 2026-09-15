@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Terima kasih sudah bermain!\nMasukan / Laporkan bug"
-    }
+    },
+    { "key": "option_complete", "value": "SELESAI" },
+    { "key": "option_screen_mode_format", "value": "TAMPILAN: {0}" },
+    { "key": "option_resolution_format", "value": "RESOLUSI: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "LAYAR PENUH" },
+    { "key": "option_windowed", "value": "MODE JENDELA" },
+    { "key": "online_steam_not_running", "value": "Jalankan Steam, lalu buka NICO DRAW dari Pustaka Steam." },
+    { "key": "online_steam_ticket_failed", "value": "Tidak dapat memperoleh tiket autentikasi Steam: {0}" },
+    { "key": "wishlist_button", "value": "DAFTAR KEINGINAN" },
+    { "key": "single_recommend_title", "value": "MULTIPEMAIN DIREKOMENDASIKAN!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW paling seru saat bermain bersama!\nCobalah bermain dengan 2–4 pemain!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

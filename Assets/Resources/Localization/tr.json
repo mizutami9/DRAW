@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Oynadığınız için teşekkürler!\nGeri bildirim / Hata bildir"
-    }
+    },
+    { "key": "option_complete", "value": "TAMAM" },
+    { "key": "option_screen_mode_format", "value": "EKRAN: {0}" },
+    { "key": "option_resolution_format", "value": "ÇÖZÜNÜRLÜK: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "TAM EKRAN" },
+    { "key": "option_windowed", "value": "PENCERE MODU" },
+    { "key": "online_steam_not_running", "value": "Steam’i başlatın, ardından NICO DRAW’u Steam Kitaplığınızdan açın." },
+    { "key": "online_steam_ticket_failed", "value": "Steam kimlik doğrulama bileti alınamadı: {0}" },
+    { "key": "wishlist_button", "value": "İSTEK LİSTESİ" },
+    { "key": "single_recommend_title", "value": "ÇOK OYUNCULU MOD ÖNERİLİR!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW birlikte çalışırken daha eğlenceli!\n2–4 oyuncuyla oynamayı deneyin!" },
+    { "key": "single_recommend_ok", "value": "TAMAM" }
   ]
 }

@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Mulțumim că ai jucat!\nFeedback / Raportează o eroare"
-    }
+    },
+    { "key": "option_complete", "value": "GATA" },
+    { "key": "option_screen_mode_format", "value": "AFIȘARE: {0}" },
+    { "key": "option_resolution_format", "value": "REZOLUȚIE: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "ECRAN COMPLET" },
+    { "key": "option_windowed", "value": "MOD FEREASTRĂ" },
+    { "key": "online_steam_not_running", "value": "Pornește Steam, apoi deschide NICO DRAW din biblioteca Steam." },
+    { "key": "online_steam_ticket_failed", "value": "Nu s-a putut obține un tichet de autentificare Steam: {0}" },
+    { "key": "wishlist_button", "value": "LISTĂ DE DORINȚE" },
+    { "key": "single_recommend_title", "value": "RECOMANDĂM MODUL MULTIPLAYER!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW este cel mai distractiv când cooperați!\nÎncercați să jucați în 2–4 jucători!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "플레이해 주셔서 감사합니다!\n피드백 / 버그 신고"
-    }
+    },
+    { "key": "option_complete", "value": "완료" },
+    { "key": "option_screen_mode_format", "value": "화면: {0}" },
+    { "key": "option_resolution_format", "value": "해상도: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "전체 화면" },
+    { "key": "option_windowed", "value": "창 모드" },
+    { "key": "online_steam_not_running", "value": "Steam을 실행한 다음 Steam 라이브러리에서 NICO DRAW를 실행하세요." },
+    { "key": "online_steam_ticket_failed", "value": "Steam 인증 티켓을 가져오지 못했습니다: {0}" },
+    { "key": "wishlist_button", "value": "찜 목록" },
+    { "key": "single_recommend_title", "value": "멀티플레이 추천!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW는 함께 협력할 때 가장 재미있습니다!\n2–4명이 함께 플레이해 보세요!" },
+    { "key": "single_recommend_ok", "value": "확인" }
   ]
 }

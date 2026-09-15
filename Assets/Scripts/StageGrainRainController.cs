@@ -493,12 +493,12 @@ namespace DrawBody.Prototype
                 timerText.text = roundLabel + "   " + (LocalMultiplayerDebugMode.NoTimeLimit
                     ? "\u221e"
                     : Mathf.CeilToInt(remaining).ToString("00") + ".0");
-                scoreText.text = LocalizationManager.Format("grain_rain_target", targetGrams);
+                scoreText.text = targetGrams.ToString("0") + "g";
             }
             else if (state == RoundState.Settle)
             {
                 timerText.text = LocalizationManager.T("grain_rain_measuring");
-                scoreText.text = LocalizationManager.Format("grain_rain_target", targetGrams);
+                scoreText.text = targetGrams.ToString("0") + "g";
             }
             else
             {

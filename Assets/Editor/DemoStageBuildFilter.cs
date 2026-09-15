@@ -12,6 +12,11 @@ namespace DrawBody.EditorTools
             "1-1", "1-2", "1-3", "6-3", "8-2", "9-3", "11-2", "14-3"
         };
 
+        private static readonly HashSet<string> AllowedBgmNames = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "title", "1", "6", "8", "9", "11", "14"
+        };
+
         private readonly List<MovedFile> movedFiles = new List<MovedFile>();
         private readonly string backupDirectory;
         private readonly bool enabled;
@@ -34,6 +39,17 @@ namespace DrawBody.EditorTools
                     if (AllowedStageIds.Contains(stageId)) continue;
                     MoveToBackup(stageFiles[i]);
                     string metaPath = stageFiles[i] + ".meta";
+                    if (File.Exists(metaPath)) MoveToBackup(metaPath);
+                }
+
+                string bgmDirectory = Path.Combine("Assets", "Resources", "Bgm");
+                string[] bgmFiles = Directory.GetFiles(bgmDirectory, "*.mp3", SearchOption.TopDirectoryOnly);
+                for (int i = 0; i < bgmFiles.Length; i++)
+                {
+                    string trackName = Path.GetFileNameWithoutExtension(bgmFiles[i]);
+                    if (AllowedBgmNames.Contains(trackName)) continue;
+                    MoveToBackup(bgmFiles[i]);
+                    string metaPath = bgmFiles[i] + ".meta";
                     if (File.Exists(metaPath)) MoveToBackup(metaPath);
                 }
 

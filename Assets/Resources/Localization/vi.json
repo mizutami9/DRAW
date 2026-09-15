@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Cảm ơn bạn đã chơi!\nPhản hồi / Báo lỗi"
-    }
+    },
+    { "key": "option_complete", "value": "HOÀN TẤT" },
+    { "key": "option_screen_mode_format", "value": "HIỂN THỊ: {0}" },
+    { "key": "option_resolution_format", "value": "ĐỘ PHÂN GIẢI: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "TOÀN MÀN HÌNH" },
+    { "key": "option_windowed", "value": "CHẾ ĐỘ CỬA SỔ" },
+    { "key": "online_steam_not_running", "value": "Hãy mở Steam, sau đó khởi chạy NICO DRAW từ Thư viện Steam." },
+    { "key": "online_steam_ticket_failed", "value": "Không thể lấy vé xác thực Steam: {0}" },
+    { "key": "wishlist_button", "value": "DANH SÁCH MONG MUỐN" },
+    { "key": "single_recommend_title", "value": "NÊN CHƠI NHIỀU NGƯỜI!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW vui nhất khi mọi người cùng hợp tác!\nHãy thử chơi với 2–4 người!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

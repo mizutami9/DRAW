@@ -2257,6 +2257,18 @@ namespace DrawBody.Prototype
         public PlayerController2D RemotePlayerController => secondaryPlayer;
         public string RemotePlayerId => remotePlayerId;
 
+        public bool ShouldBlockSharedLocalInput(PlayerController2D candidate)
+        {
+            if (candidate == null || IsOnlineInStage()
+                || primaryPlayer == null || secondaryPlayer == null)
+            {
+                return false;
+            }
+
+            bool isLocalSwitchablePlayer = candidate == primaryPlayer || candidate == secondaryPlayer;
+            return isLocalSwitchablePlayer && candidate != player;
+        }
+
         public void GetClearCelebrationPlayers(List<PlayerController2D> results)
         {
             if (results == null)
@@ -3684,14 +3696,6 @@ namespace DrawBody.Prototype
                 yield break;
             }
 
-            if (!challengeReadyRoom.TryValidatePlayerStageFit(redrawPlayer, out _))
-            {
-                SetPlayerRedrawingState(redrawPlayer, true);
-                drawManager?.ShowStageFitError();
-                spawnFitValidationRoutine = null;
-                yield break;
-            }
-
             redrawReturnPlayer = redrawPlayer;
             redrawReturnPosition = fittedPosition;
             hasRedrawReturnPosition = true;
@@ -4834,8 +4838,8 @@ namespace DrawBody.Prototype
 
         private void SetAllPlayerControls(bool enabled)
         {
-            primaryPlayer?.SetControlsEnabled(enabled);
-            secondaryPlayer?.SetControlsEnabled(enabled);
+            primaryPlayer?.SetControlsEnabled(enabled && primaryPlayer == player);
+            secondaryPlayer?.SetControlsEnabled(enabled && secondaryPlayer == player);
             foreach (KeyValuePair<string, PlayerController2D> pair in onlineRemotePlayers)
             {
                 if (pair.Value != null && pair.Value != primaryPlayer)

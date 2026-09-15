@@ -98,6 +98,7 @@ namespace DrawBody.EditorTools
                 if (hardenedRelease)
                 {
                     RemoveIl2CppBackupArtifacts(outputDirectory);
+                    RemoveUnusedArm64Plugins(outputDirectory);
                     ValidateHardenedBuild(outputDirectory);
                 }
                 string kind = hardenedRelease
@@ -203,6 +204,15 @@ namespace DrawBody.EditorTools
 
             Directory.Delete(backupDirectory, true);
             UnityEngine.Debug.Log("Removed Unity IL2CPP backup artifacts from the Steam distribution folder.");
+        }
+
+        private static void RemoveUnusedArm64Plugins(string outputDirectory)
+        {
+            string arm64Directory = Path.Combine(outputDirectory, "NICO DRAW_Data", "Plugins", "ARM64");
+            if (!Directory.Exists(arm64Directory)) return;
+
+            Directory.Delete(arm64Directory, true);
+            UnityEngine.Debug.Log("Removed ARM64 plugins from the Windows x64 Steam distribution folder.");
         }
     }
 }

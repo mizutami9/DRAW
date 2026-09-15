@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Благодарим, че играхте!\nОбратна връзка / Докладвай грешка"
-    }
+    },
+    { "key": "option_complete", "value": "ГОТОВО" },
+    { "key": "option_screen_mode_format", "value": "ЕКРАН: {0}" },
+    { "key": "option_resolution_format", "value": "РАЗДЕЛИТЕЛНА СПОСОБНОСТ: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "ЦЯЛ ЕКРАН" },
+    { "key": "option_windowed", "value": "ПРОЗОРЕЦ" },
+    { "key": "online_steam_not_running", "value": "Стартирайте Steam, след което отворете NICO DRAW от библиотеката си в Steam." },
+    { "key": "online_steam_ticket_failed", "value": "Неуспешно получаване на билет за удостоверяване от Steam: {0}" },
+    { "key": "wishlist_button", "value": "СПИСЪК С ЖЕЛАНИЯ" },
+    { "key": "single_recommend_title", "value": "ПРЕПОРЪЧВА СЕ МУЛТИПЛЕЙЪР!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW е най-забавна със съвместна игра!\nОпитайте да играете с 2–4 играчи!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

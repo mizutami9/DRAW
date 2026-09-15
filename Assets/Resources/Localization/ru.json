@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Спасибо за игру!\nОтзыв / Сообщить об ошибке"
-    }
+    },
+    { "key": "option_complete", "value": "ГОТОВО" },
+    { "key": "option_screen_mode_format", "value": "ЭКРАН: {0}" },
+    { "key": "option_resolution_format", "value": "РАЗРЕШЕНИЕ: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "ПОЛНЫЙ ЭКРАН" },
+    { "key": "option_windowed", "value": "ОКОННЫЙ РЕЖИМ" },
+    { "key": "online_steam_not_running", "value": "Запустите Steam, затем откройте NICO DRAW из библиотеки Steam." },
+    { "key": "online_steam_ticket_failed", "value": "Не удалось получить билет аутентификации Steam: {0}" },
+    { "key": "wishlist_button", "value": "В ЖЕЛАЕМОЕ" },
+    { "key": "single_recommend_title", "value": "РЕКОМЕНДУЕТСЯ МУЛЬТИПЛЕЕР!" },
+    { "key": "single_recommend_message", "value": "В NICO DRAW веселее играть сообща!\nПопробуйте сыграть вдвоём, втроём или вчетвером!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

@@ -4363,6 +4363,17 @@
     {
         "key":  "feedback_clear_button",
         "value":  "Bedankt voor het spelen!\nFeedback / Bug melden"
-    }
+    },
+    { "key": "option_complete", "value": "KLAAR" },
+    { "key": "option_screen_mode_format", "value": "WEERGAVE: {0}" },
+    { "key": "option_resolution_format", "value": "RESOLUTIE: {0}×{1}" },
+    { "key": "option_fullscreen", "value": "VOLLEDIG SCHERM" },
+    { "key": "option_windowed", "value": "VENSTERMODUS" },
+    { "key": "online_steam_not_running", "value": "Start Steam en open daarna NICO DRAW vanuit je Steam-bibliotheek." },
+    { "key": "online_steam_ticket_failed", "value": "Kan geen Steam-authenticatieticket ophalen: {0}" },
+    { "key": "wishlist_button", "value": "VERLANGLIJST" },
+    { "key": "single_recommend_title", "value": "MULTIPLAYER AANBEVOLEN!" },
+    { "key": "single_recommend_message", "value": "NICO DRAW is het leukst als je samenwerkt!\nProbeer het met 2–4 spelers!" },
+    { "key": "single_recommend_ok", "value": "OK" }
   ]
 }

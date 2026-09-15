@@ -9,6 +9,8 @@ namespace DrawBody.Prototype
     {
         private const string ConfigFileName = "feedback_config.json";
         private const float OpenCooldownSeconds = 1.5f;
+        private const uint FullGameAppId = 5090120;
+        private const string FullGameStoreUrl = "https://store.steampowered.com/app/5090120/";
 
         [Serializable]
         private sealed class FeedbackConfig
@@ -21,11 +23,15 @@ namespace DrawBody.Prototype
         private GameObject clearPanel;
         private Button titleButton;
         private Button clearButton;
+        private Button titleWishlistButton;
+        private Button clearWishlistButton;
         private FeedbackConfig config;
         private float nextAllowedOpenAt;
+        private bool showClearFeedback;
 
-        private bool IsAvailable => config != null && config.enabled
-            && (DemoAccessPolicy.IsDemoBuild || Debug.isDebugBuild || Application.isEditor);
+        private bool IsPlaytestAvailable => DemoAccessPolicy.IsDemoBuild
+            || Debug.isDebugBuild || Application.isEditor;
+        private bool IsFeedbackAvailable => IsPlaytestAvailable && config != null && config.enabled;
 
         public void Configure(GameObject nextTitlePanel, GameObject nextClearPanel)
         {
@@ -76,8 +82,12 @@ namespace DrawBody.Prototype
                 Transform bar = titlePanel.transform.Find("TitleMenuBar");
                 if (bar != null)
                 {
-                    titleButton = CreateButton("TitleFeedbackButton", bar, new Vector2(500f, 18f),
-                        new Vector2(190f, 56f), new Color(0.84f, 0.75f, 1f, 0.97f), 18);
+                    titleButton = CreateButton("TitleFeedbackButton", bar, new Vector2(500f, 27f),
+                        new Vector2(128f, 24f), new Color(0.84f, 0.75f, 1f, 0.97f), 10,
+                        OpenFeedback);
+                    titleWishlistButton = CreateButton("TitleWishlistButton", bar, new Vector2(500f, -5f),
+                        new Vector2(128f, 24f), new Color(1f, 0.82f, 0.28f, 0.98f), 11,
+                        OpenWishlist);
                 }
             }
 
@@ -86,14 +96,18 @@ namespace DrawBody.Prototype
                 Transform result = clearPanel.transform.Find("StageClearResult");
                 if (result != null)
                 {
-                    clearButton = CreateButton("ClearFeedbackButton", result, new Vector2(0f, -208f),
-                        new Vector2(330f, 38f), new Color(0.84f, 0.75f, 1f, 0.98f), 14);
+                    clearButton = CreateButton("ClearFeedbackButton", result, new Vector2(-155f, -120f),
+                        new Vector2(270f, 38f), new Color(0.84f, 0.75f, 1f, 0.98f), 14,
+                        OpenFeedback);
+                    clearWishlistButton = CreateButton("ClearWishlistButton", result, new Vector2(-155f, -168f),
+                        new Vector2(270f, 42f), new Color(1f, 0.82f, 0.28f, 0.99f), 17,
+                        OpenWishlist);
                 }
             }
         }
 
         private Button CreateButton(string name, Transform parent, Vector2 position,
-            Vector2 size, Color color, int fontSize)
+            Vector2 size, Color color, int fontSize, Action pressed)
         {
             GameObject root = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer),
                 typeof(Image), typeof(Button), typeof(Outline), typeof(Shadow));
@@ -135,7 +149,7 @@ namespace DrawBody.Prototype
             Navigation navigation = button.navigation;
             navigation.mode = Navigation.Mode.None;
             button.navigation = navigation;
-            button.onClick.AddListener(OpenFeedback);
+            button.onClick.AddListener(() => pressed?.Invoke());
             return button;
         }
 
@@ -143,6 +157,8 @@ namespace DrawBody.Prototype
         {
             SetLabel(titleButton, LocalizationManager.T("feedback_button"));
             SetLabel(clearButton, LocalizationManager.T("feedback_clear_button"));
+            SetLabel(titleWishlistButton, LocalizationManager.T("wishlist_button"));
+            SetLabel(clearWishlistButton, LocalizationManager.T("wishlist_button"));
         }
 
         private static void SetLabel(Button button, string value)
@@ -155,8 +171,17 @@ namespace DrawBody.Prototype
 
         private void RefreshVisibility()
         {
-            if (titleButton != null) titleButton.gameObject.SetActive(IsAvailable);
-            if (clearButton != null) clearButton.gameObject.SetActive(IsAvailable);
+            if (titleButton != null) titleButton.gameObject.SetActive(IsFeedbackAvailable);
+            if (clearButton != null) clearButton.gameObject.SetActive(IsFeedbackAvailable && showClearFeedback);
+            if (titleWishlistButton != null) titleWishlistButton.gameObject.SetActive(IsPlaytestAvailable);
+            if (clearWishlistButton != null)
+                clearWishlistButton.gameObject.SetActive(IsPlaytestAvailable && showClearFeedback);
+        }
+
+        public void SetClearContext(bool isCleared, string nextStageId)
+        {
+            showClearFeedback = isCleared && string.IsNullOrEmpty(nextStageId);
+            RefreshVisibility();
         }
 
         public void BringClearButtonForward()
@@ -164,6 +189,10 @@ namespace DrawBody.Prototype
             if (clearButton != null && clearButton.gameObject.activeSelf)
             {
                 clearButton.transform.SetAsLastSibling();
+            }
+            if (clearWishlistButton != null && clearWishlistButton.gameObject.activeSelf)
+            {
+                clearWishlistButton.transform.SetAsLastSibling();
             }
         }
 
@@ -174,6 +203,35 @@ namespace DrawBody.Prototype
             nextAllowedOpenAt = Time.unscaledTime + OpenCooldownSeconds;
             Debug.Log("[Feedback] Opening feedback form");
             Application.OpenURL(url);
+        }
+
+        private void OpenWishlist()
+        {
+            if (Time.unscaledTime < nextAllowedOpenAt) return;
+            nextAllowedOpenAt = Time.unscaledTime + OpenCooldownSeconds;
+
+#if NICO_DRAW_STEAM && !DISABLESTEAMWORKS && (UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN)
+            try
+            {
+                if (SteamPlatformAuth.IsAvailable && Steamworks.SteamUtils.IsOverlayEnabled())
+                {
+                    Debug.Log("[Wishlist] Opening full game store page in Steam Overlay (App ID "
+                        + FullGameAppId + ")");
+                    Steamworks.SteamFriends.ActivateGameOverlayToStore(
+                        new Steamworks.AppId_t(FullGameAppId),
+                        Steamworks.EOverlayToStoreFlag.k_EOverlayToStoreFlag_None);
+                    return;
+                }
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("[Wishlist] Steam Overlay failed; opening browser instead: "
+                    + exception.Message);
+            }
+#endif
+
+            Debug.Log("[Wishlist] Steam Overlay unavailable; opening full game store page in browser");
+            Application.OpenURL(FullGameStoreUrl);
         }
 
         private bool TryGetValidUrl(out string url)

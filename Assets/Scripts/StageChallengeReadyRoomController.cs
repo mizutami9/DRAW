@@ -9,6 +9,8 @@ namespace DrawBody.Prototype
         private const string NetworkKind = "challenge_ready_room";
         private const float MinimumRoomWidth = 5.4f;
         private const float MinimumRoomHeight = 4.6f;
+        private const float RoomBodyHorizontalPadding = 5.2f;
+        private const float RoomBodyVerticalPadding = 2.4f;
         private const float RoomFrameThickness = 0.72f;
         private const float ReadyStateResendInterval = 0.5f;
 
@@ -19,6 +21,8 @@ namespace DrawBody.Prototype
             public bool Launch;
             public string[] ReadyIds;
             public string FitRejectedId;
+            public float RoomWidth;
+            public float RoomHeight;
         }
 
         private sealed class RoomVisual
@@ -92,7 +96,8 @@ namespace DrawBody.Prototype
             if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
             configured = true;
             RefreshPresentation();
-            if (IsOnline && !HasAuthority) RequestHostSessionState();
+            if (IsOnline && HasAuthority) BroadcastSnapshot(false);
+            else if (IsOnline) RequestHostSessionState();
         }
 
         public void Abort()
@@ -202,8 +207,8 @@ namespace DrawBody.Prototype
                     maximumBodyHeight = Mathf.Max(maximumBodyHeight, bounds.size.y);
                 }
             }
-            roomWidth = Mathf.Max(MinimumRoomWidth, maximumBodyWidth + 5.2f);
-            roomHeight = Mathf.Max(MinimumRoomHeight, maximumBodyHeight + 2.4f);
+            roomWidth = Mathf.Max(MinimumRoomWidth, maximumBodyWidth + RoomBodyHorizontalPadding);
+            roomHeight = Mathf.Max(MinimumRoomHeight, maximumBodyHeight + RoomBodyVerticalPadding);
 
             if (IsOnline)
             {
@@ -1121,8 +1126,8 @@ namespace DrawBody.Prototype
         {
             float nextMaximumWidth = Mathf.Max(maximumBodyWidth, requiredBodyWidth);
             float nextMaximumHeight = Mathf.Max(maximumBodyHeight, requiredBodyHeight);
-            float nextRoomWidth = Mathf.Max(MinimumRoomWidth, nextMaximumWidth + 5.2f);
-            float nextRoomHeight = Mathf.Max(MinimumRoomHeight, nextMaximumHeight + 2.4f);
+            float nextRoomWidth = Mathf.Max(MinimumRoomWidth, nextMaximumWidth + RoomBodyHorizontalPadding);
+            float nextRoomHeight = Mathf.Max(MinimumRoomHeight, nextMaximumHeight + RoomBodyVerticalPadding);
             if (nextRoomWidth <= roomWidth + 0.05f && nextRoomHeight <= roomHeight + 0.05f)
             {
                 return;
@@ -1167,6 +1172,7 @@ namespace DrawBody.Prototype
                 }
             }
             RefreshPresentation();
+            if (IsOnline && HasAuthority) BroadcastSnapshot(false);
         }
 
         private void PlacePlayer(PlayerController2D player, int room)
@@ -1340,8 +1346,8 @@ namespace DrawBody.Prototype
             if (string.IsNullOrEmpty(playerId)) return;
             if (!ready) fitRejectedIds.Remove(playerId);
             if (ready && fitRejectedIds.Contains(playerId)) return;
-            bool changed = ready ? readyIds.Add(playerId) : readyIds.Remove(playerId);
-            if (changed && HasAuthority) BroadcastSnapshot(false);
+            if (ready) readyIds.Add(playerId);
+            else readyIds.Remove(playerId);
         }
 
         private bool AreAllPlayersReady()
@@ -1443,7 +1449,12 @@ namespace DrawBody.Prototype
             {
                 ObjectId = stageId,
                 Kind = NetworkKind,
-                Json = JsonUtility.ToJson(new ReadyMessage { Ready = ready })
+                Json = JsonUtility.ToJson(new ReadyMessage
+                {
+                    Ready = ready,
+                    RoomWidth = roomWidth,
+                    RoomHeight = roomHeight
+                })
             });
         }
 
@@ -1460,7 +1471,9 @@ namespace DrawBody.Prototype
                 {
                     ReadyIds = ids,
                     Launch = launch,
-                    FitRejectedId = fitRejectedId
+                    FitRejectedId = fitRejectedId,
+                    RoomWidth = roomWidth,
+                    RoomHeight = roomHeight
                 })
             });
         }
@@ -1473,12 +1486,34 @@ namespace DrawBody.Prototype
 
             if (HasAuthority && message.ReadyIds == null && !string.IsNullOrEmpty(data.PlayerId))
             {
+                if (message.RoomWidth > roomWidth + 0.05f
+                    || message.RoomHeight > roomHeight + 0.05f)
+                {
+                    ExpandRoomsToFit(
+                        Mathf.Max(0f, message.RoomWidth - RoomBodyHorizontalPadding),
+                        Mathf.Max(0f, message.RoomHeight - RoomBodyVerticalPadding),
+                        null);
+                }
                 SetReady(data.PlayerId, message.Ready);
+                // Reply even when the ready bit did not change. This doubles as
+                // a late-join/resync response for authoritative room dimensions.
+                BroadcastSnapshot(false);
                 return;
             }
 
             if (!HasAuthority && message.ReadyIds != null)
             {
+                // The host owns the room dimensions. Body drawings arrive on a
+                // separate channel, so clients also need the resolved size in
+                // the ready-room snapshot to keep walls and buttons identical.
+                if (message.RoomWidth > roomWidth + 0.05f
+                    || message.RoomHeight > roomHeight + 0.05f)
+                {
+                    ExpandRoomsToFit(
+                        Mathf.Max(0f, message.RoomWidth - RoomBodyHorizontalPadding),
+                        Mathf.Max(0f, message.RoomHeight - RoomBodyVerticalPadding),
+                        null);
+                }
                 readyIds.Clear();
                 for (int i = 0; i < message.ReadyIds.Length; i++)
                     if (!string.IsNullOrEmpty(message.ReadyIds[i])) readyIds.Add(message.ReadyIds[i]);
