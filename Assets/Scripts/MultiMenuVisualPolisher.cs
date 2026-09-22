@@ -53,6 +53,7 @@ namespace DrawBody.Prototype
             }
 
             LayoutBottomSheet(random, 278f);
+            EnsureSheetBackgroundDecorations(random, RandomColor);
             PlaceScreenHeading(
                 random,
                 "MultiRandomScreenTitle",
@@ -60,6 +61,13 @@ namespace DrawBody.Prototype
                 new Vector2(0f, 226f),
                 new Vector2(500f, 42f));
             EnsureHeadingPaintStroke(random, "MultiRandomHeadingStroke", new Vector2(0f, 222f), new Vector2(520f, 48f), RandomColor);
+            ConfigureScreenTitleGraphic(
+                random,
+                "MultiRandomScreenTitle",
+                "MultiRandomHeadingStroke",
+                "MultiRandomTitleGraphic",
+                "UI/multi-title-random-match-v1",
+                new Vector2(210f, 52f));
             MakeScreenOverlayTransparent(random);
             AddBackgroundDoodles(random);
 
@@ -100,6 +108,7 @@ namespace DrawBody.Prototype
             }
 
             LayoutBottomSheet(choice, 178f);
+            EnsureSheetBackgroundDecorations(choice, RandomColor);
             PlaceScreenHeading(
                 choice,
                 "MultiChoiceScreenTitle",
@@ -107,6 +116,13 @@ namespace DrawBody.Prototype
                 new Vector2(0f, 132f),
                 new Vector2(500f, 42f));
             EnsureHeadingPaintStroke(choice, "MultiChoiceHeadingStroke", new Vector2(0f, 128f), new Vector2(520f, 48f), RandomColor);
+            ConfigureScreenTitleGraphic(
+                choice,
+                "MultiChoiceScreenTitle",
+                "MultiChoiceHeadingStroke",
+                "MultiChoiceTitleGraphic",
+                "UI/multi-title-multi-play-v1",
+                new Vector2(190f, 50f));
             AddBackgroundDoodles(choice);
             PolishLargeButton(choice, "MultiRandomButton", RandomColor, RandomHoverColor, Vector2.zero, true);
             PolishLargeButton(choice, "MultiRoomButton", RoomColor, RoomHoverColor, Vector2.zero, false);
@@ -125,6 +141,7 @@ namespace DrawBody.Prototype
             }
 
             LayoutBottomSheet(room, 178f);
+            EnsureSheetBackgroundDecorations(room, RoomColor);
             PlaceScreenHeading(
                 room,
                 "MultiRoomScreenTitle",
@@ -132,6 +149,13 @@ namespace DrawBody.Prototype
                 new Vector2(0f, 132f),
                 new Vector2(500f, 42f));
             EnsureHeadingPaintStroke(room, "MultiRoomHeadingStroke", new Vector2(0f, 128f), new Vector2(520f, 48f), RoomColor);
+            ConfigureScreenTitleGraphic(
+                room,
+                "MultiRoomScreenTitle",
+                "MultiRoomHeadingStroke",
+                "MultiRoomTitleGraphic",
+                "UI/multi-title-room-v1",
+                new Vector2(150f, 52f));
             PolishLargeButton(room, "MultiCreateRoomNavButton", RoomColor, RoomHoverColor, Vector2.zero, false);
             PolishLargeButton(room, "MultiJoinRoomNavButton", RandomColor, RandomHoverColor, Vector2.zero, true);
             PolishSmallBackButton(room, "MultiRoomBackButton", Vector2.zero);
@@ -149,6 +173,7 @@ namespace DrawBody.Prototype
             }
 
             LayoutBottomSheet(create, 270f);
+            EnsureSheetBackgroundDecorations(create, YellowColor);
             PlaceScreenHeading(
                 create,
                 "MultiCreateRoomScreenTitle",
@@ -156,6 +181,13 @@ namespace DrawBody.Prototype
                 new Vector2(0f, 218f),
                 new Vector2(500f, 42f));
             EnsureHeadingPaintStroke(create, "MultiCreateHeadingStroke", new Vector2(0f, 214f), new Vector2(520f, 48f), YellowColor);
+            ConfigureScreenTitleGraphic(
+                create,
+                "MultiCreateRoomScreenTitle",
+                "MultiCreateHeadingStroke",
+                "MultiCreateRoomTitleGraphic",
+                "UI/multi-title-create-room-v1",
+                new Vector2(210f, 52f));
             Transform bodyTransform = FindDeep(create, "MultiCreateRoomBody");
             Text body = bodyTransform != null ? bodyTransform.GetComponent<Text>() : null;
             if (body != null)
@@ -412,6 +444,91 @@ namespace DrawBody.Prototype
             }
         }
 
+        private static void ConfigureScreenTitleGraphic(
+            Transform sheet,
+            string fallbackTitleName,
+            string fallbackStrokeName,
+            string graphicName,
+            string resourcePath,
+            Vector2 size)
+        {
+            if (sheet == null)
+            {
+                return;
+            }
+
+            Sprite titleSprite = Resources.Load<Sprite>(resourcePath);
+            // Older versions placed title art under the always-active screen root.
+            // The controller only toggles each bottom sheet, so those six images
+            // remained visible and piled up. Disable that legacy object, then keep
+            // the title inside the sheet whose visibility actually changes.
+            Transform screen = sheet.parent;
+            Transform legacy = screen != null ? screen.Find(graphicName) : null;
+            if (legacy != null && legacy.parent != sheet)
+            {
+                legacy.gameObject.SetActive(false);
+            }
+
+            Transform existing = sheet.Find(graphicName);
+            RectTransform graphic;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject(graphicName, typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(sheet, false);
+                graphic = obj.GetComponent<RectTransform>();
+            }
+            else
+            {
+                graphic = existing as RectTransform;
+            }
+            if (graphic == null)
+            {
+                return;
+            }
+
+            Transform fallbackTitleTransform = FindDeep(sheet, fallbackTitleName);
+            Text fallbackTitle = fallbackTitleTransform != null
+                ? fallbackTitleTransform.GetComponent<Text>()
+                : null;
+            RectTransform fallbackRect = fallbackTitle != null ? fallbackTitle.rectTransform : null;
+
+            graphic.anchorMin = new Vector2(0.5f, 0f);
+            graphic.anchorMax = new Vector2(0.5f, 0f);
+            graphic.pivot = new Vector2(0.5f, 0.5f);
+            float titleCenterY = fallbackRect != null
+                ? fallbackRect.anchoredPosition.y + fallbackRect.sizeDelta.y * 0.5f
+                : size.y * 0.5f;
+            graphic.anchoredPosition = new Vector2(0f, titleCenterY);
+            graphic.sizeDelta = size;
+            graphic.localRotation = Quaternion.identity;
+            graphic.localScale = Vector3.one;
+
+            Image image = graphic.GetComponent<Image>();
+            if (image == null)
+            {
+                image = graphic.gameObject.AddComponent<Image>();
+            }
+            image.sprite = titleSprite;
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = Color.white;
+            image.raycastTarget = false;
+            graphic.gameObject.SetActive(titleSprite != null);
+            graphic.SetAsLastSibling();
+
+            if (fallbackTitle != null)
+            {
+                fallbackTitle.enabled = titleSprite == null;
+            }
+
+            Transform fallbackStroke = sheet.Find(fallbackStrokeName);
+            if (fallbackStroke != null)
+            {
+                fallbackStroke.gameObject.SetActive(titleSprite == null);
+            }
+        }
+
         private static void LayoutWaitingSheet(Transform sheetTransform)
         {
             RectTransform sheet = sheetTransform as RectTransform;
@@ -500,6 +617,7 @@ namespace DrawBody.Prototype
             }
             outline.effectColor = InkColor;
             outline.effectDistance = new Vector2(2f, -2f);
+            DoodlePaperUi.Apply(image, color);
             card.transform.SetSiblingIndex(target.GetSiblingIndex());
             target.SetAsLastSibling();
         }
@@ -549,7 +667,7 @@ namespace DrawBody.Prototype
             Image image = button.GetComponent<Image>();
             if (image != null)
             {
-                image.color = normal;
+                DoodlePaperUi.Apply(image, normal);
             }
 
             MultiMenuButtonHover hover = button.GetComponent<MultiMenuButtonHover>();
@@ -569,6 +687,7 @@ namespace DrawBody.Prototype
             }
 
             LayoutBottomSheet(join, 230f);
+            EnsureSheetBackgroundDecorations(join, RandomColor);
             PlaceScreenHeading(
                 join,
                 "MultiJoinRoomScreenTitle",
@@ -576,6 +695,13 @@ namespace DrawBody.Prototype
                 new Vector2(0f, 180f),
                 new Vector2(500f, 42f));
             EnsureHeadingPaintStroke(join, "MultiJoinHeadingStroke", new Vector2(0f, 176f), new Vector2(520f, 48f), RandomColor);
+            ConfigureScreenTitleGraphic(
+                join,
+                "MultiJoinRoomScreenTitle",
+                "MultiJoinHeadingStroke",
+                "MultiJoinRoomTitleGraphic",
+                "UI/multi-title-join-room-v1",
+                new Vector2(190f, 52f));
             Transform bodyTransform = FindDeep(join, "MultiJoinRoomBody");
             Text body = bodyTransform != null ? bodyTransform.GetComponent<Text>() : null;
             if (body != null)
@@ -636,13 +762,21 @@ namespace DrawBody.Prototype
             }
 
             LayoutBottomSheet(lobby, 280f);
+            EnsureSheetBackgroundDecorations(lobby, VioletColor);
             PlaceScreenHeading(
                 lobby,
                 "MultiLobbyScreenTitle",
-                "multi_room_title",
+                "multi_room_lobby",
                 new Vector2(0f, 230f),
                 new Vector2(500f, 42f));
             EnsureHeadingPaintStroke(lobby, "MultiLobbyHeadingStroke", new Vector2(0f, 226f), new Vector2(520f, 48f), RandomColor);
+            ConfigureScreenTitleGraphic(
+                lobby,
+                "MultiLobbyScreenTitle",
+                "MultiLobbyHeadingStroke",
+                "MultiLobbyTitleGraphic",
+                "UI/multi-title-lobby-v1",
+                new Vector2(160f, 52f));
             MakeScreenOverlayTransparent(lobby);
             Transform statusTransform = FindDeep(lobby, "MultiLobbyStatus");
             Text status = statusTransform != null ? statusTransform.GetComponent<Text>() : null;
@@ -734,6 +868,7 @@ namespace DrawBody.Prototype
             }
             outline.effectColor = InkColor;
             outline.effectDistance = new Vector2(2.4f, -2.4f);
+            DoodlePaperUi.Apply(rosterImage, new Color(1f, 0.985f, 0.925f, 0.98f));
 
             EnsureRosterLine(
                 roster.transform,
@@ -791,7 +926,7 @@ namespace DrawBody.Prototype
             lineRect.anchoredPosition = topPosition;
             lineRect.sizeDelta = size;
             Image image = line.GetComponent<Image>();
-            image.color = background;
+            DoodlePaperUi.Apply(image, background);
             image.raycastTarget = false;
 
             Transform textTransform = line.transform.Find("Text");
@@ -957,6 +1092,7 @@ namespace DrawBody.Prototype
             }
             outline.effectColor = InkColor;
             outline.effectDistance = new Vector2(2f, -2f);
+            DoodlePaperUi.Apply(cardImage, color);
 
             Transform textTransform = card.transform.Find(textName);
             Text text = textTransform != null ? textTransform.GetComponent<Text>() : null;
@@ -1004,7 +1140,7 @@ namespace DrawBody.Prototype
             rect.sizeDelta = new Vector2(132f, 46f);
 
             Image image = buttonObject.GetComponent<Image>();
-            image.color = color;
+            DoodlePaperUi.Apply(image, color);
 
             Button button = buttonObject.GetComponent<Button>();
             Navigation navigation = button.navigation;
@@ -1330,6 +1466,15 @@ namespace DrawBody.Prototype
                 outline = parent.gameObject.AddComponent<Outline>();
             }
 
+            Image surface = parent.GetComponent<Image>();
+            if (surface != null)
+            {
+                DoodlePaperUi.Apply(surface, surface.color);
+                outline.enabled = false;
+                return;
+            }
+
+            outline.enabled = true;
             outline.effectColor = InkColor;
             outline.effectDistance = new Vector2(width, -width);
             outline.useGraphicAlpha = true;
@@ -1342,6 +1487,141 @@ namespace DrawBody.Prototype
             {
                 existing.gameObject.SetActive(false);
             }
+        }
+
+        private static void EnsureSheetBackgroundDecorations(Transform sheet, Color accent)
+        {
+            RectTransform sheetRect = sheet as RectTransform;
+            if (sheetRect == null)
+            {
+                return;
+            }
+
+            Transform existing = sheet.Find("MultiSheetBackground");
+            RectTransform root;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject("MultiSheetBackground", typeof(RectTransform));
+                obj.transform.SetParent(sheet, false);
+                root = obj.GetComponent<RectTransform>();
+            }
+            else
+            {
+                root = existing as RectTransform;
+            }
+            if (root == null)
+            {
+                return;
+            }
+
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.pivot = new Vector2(0.5f, 0.5f);
+            root.offsetMin = new Vector2(18f, 13f);
+            root.offsetMax = new Vector2(-18f, -13f);
+            root.localRotation = Quaternion.identity;
+            root.localScale = Vector3.one;
+            root.gameObject.SetActive(true);
+            root.SetAsFirstSibling();
+
+            Transform gridTransform = root.Find("NotebookDotGrid");
+            Image grid;
+            if (gridTransform == null)
+            {
+                GameObject obj = new GameObject("NotebookDotGrid", typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(root, false);
+                grid = obj.GetComponent<Image>();
+            }
+            else
+            {
+                grid = gridTransform.GetComponent<Image>();
+            }
+            if (grid != null)
+            {
+                RectTransform gridRect = grid.rectTransform;
+                gridRect.anchorMin = Vector2.zero;
+                gridRect.anchorMax = Vector2.one;
+                gridRect.offsetMin = new Vector2(10f, 6f);
+                gridRect.offsetMax = new Vector2(-10f, -6f);
+                gridRect.localRotation = Quaternion.identity;
+                grid.sprite = DoodleRuntimeAssets.DotGridSprite;
+                grid.type = Image.Type.Tiled;
+                // The sheet already contains the actionable controls and a crayon
+                // heading. Keep the notebook dots almost watermark-light.
+                grid.color = new Color(accent.r, accent.g, accent.b, 0.065f);
+                grid.raycastTarget = false;
+                grid.transform.SetAsFirstSibling();
+            }
+
+            Sprite coopDoodle = Resources.Load<Sprite>("UI/multi-sheet-coop-doodle-v1");
+            ConfigureSheetWatermark(
+                root,
+                "CoopWatermark",
+                coopDoodle != null ? coopDoodle : DoodleRuntimeAssets.GetTitleMenuIconSprite(1),
+                new Vector2(0f, 0.5f),
+                coopDoodle != null ? new Vector2(76f, 0f) : new Vector2(58f, 0f),
+                coopDoodle != null ? new Vector2(134f, 140f) : new Vector2(74f, 74f),
+                coopDoodle != null ? -2f : -5f,
+                coopDoodle != null
+                    ? new Color(1f, 1f, 1f, 0.36f)
+                    : new Color(accent.r, accent.g, accent.b, 0.24f));
+
+            Sprite networkDoodle = Resources.Load<Sprite>("UI/multi-sheet-network-doodle-v1");
+            ConfigureSheetWatermark(
+                root,
+                "NetworkWatermark",
+                networkDoodle != null ? networkDoodle : DoodleRuntimeAssets.GetTitleMenuIconSprite(5),
+                new Vector2(1f, 0.5f),
+                networkDoodle != null ? new Vector2(-66f, 27f) : new Vector2(-58f, 0f),
+                networkDoodle != null ? new Vector2(120f, 144f) : new Vector2(70f, 70f),
+                networkDoodle != null ? 1.5f : 4f,
+                networkDoodle != null
+                    ? new Color(1f, 1f, 1f, 0.32f)
+                    : new Color(accent.r, accent.g, accent.b, 0.22f));
+        }
+
+        private static void ConfigureSheetWatermark(
+            RectTransform parent,
+            string name,
+            Sprite sprite,
+            Vector2 anchor,
+            Vector2 position,
+            Vector2 size,
+            float rotation,
+            Color color)
+        {
+            Transform existing = parent.Find(name);
+            Image image;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject(name, typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(parent, false);
+                image = obj.GetComponent<Image>();
+            }
+            else
+            {
+                image = existing.GetComponent<Image>();
+            }
+            if (image == null)
+            {
+                return;
+            }
+
+            RectTransform rect = image.rectTransform;
+            rect.anchorMin = anchor;
+            rect.anchorMax = anchor;
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+            rect.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            rect.localScale = Vector3.one;
+            image.sprite = sprite;
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = color;
+            image.raycastTarget = false;
         }
 
         private static void EnsureGlobeIcon(Transform parent)

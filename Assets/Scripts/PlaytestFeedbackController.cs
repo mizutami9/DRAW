@@ -82,12 +82,14 @@ namespace DrawBody.Prototype
                 Transform bar = titlePanel.transform.Find("TitleMenuBar");
                 if (bar != null)
                 {
-                    titleButton = CreateButton("TitleFeedbackButton", bar, new Vector2(500f, 27f),
-                        new Vector2(128f, 24f), new Color(0.84f, 0.75f, 1f, 0.97f), 10,
+                    titleButton = CreateButton("TitleFeedbackButton", bar, new Vector2(455f, 20f),
+                        new Vector2(132f, 28f), new Color(1f, 0.86f, 0.32f, 0.98f), 10,
                         OpenFeedback);
-                    titleWishlistButton = CreateButton("TitleWishlistButton", bar, new Vector2(500f, -5f),
-                        new Vector2(128f, 24f), new Color(1f, 0.82f, 0.28f, 0.98f), 11,
+                    AddTitleButtonIcon(titleButton, false);
+                    titleWishlistButton = CreateButton("TitleWishlistButton", bar, new Vector2(455f, -18f),
+                        new Vector2(132f, 28f), new Color(1f, 0.86f, 0.32f, 0.98f), 10,
                         OpenWishlist);
+                    AddTitleButtonIcon(titleWishlistButton, true);
                 }
             }
 
@@ -118,13 +120,12 @@ namespace DrawBody.Prototype
             rect.anchoredPosition = position;
             rect.sizeDelta = size;
             Image image = root.GetComponent<Image>();
-            image.color = color;
+            DoodlePaperUi.Apply(image, color);
             Outline outline = root.GetComponent<Outline>();
-            outline.effectColor = new Color(0.2f, 0.14f, 0.1f, 0.65f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.enabled = false;
             Shadow shadow = root.GetComponent<Shadow>();
-            shadow.effectColor = new Color(0f, 0f, 0f, 0.22f);
-            shadow.effectDistance = new Vector2(5f, -5f);
+            shadow.effectColor = new Color(0f, 0f, 0f, 0.17f);
+            shadow.effectDistance = new Vector2(4f, -5f);
 
             GameObject labelObject = new GameObject("Label", typeof(RectTransform),
                 typeof(CanvasRenderer), typeof(Text));
@@ -153,12 +154,62 @@ namespace DrawBody.Prototype
             return button;
         }
 
+        private static void AddTitleButtonIcon(Button button, bool wishlist)
+        {
+            if (button == null) return;
+            Text label = button.GetComponentInChildren<Text>(true);
+            if (label != null)
+            {
+                label.rectTransform.offsetMin = new Vector2(31f, 2f);
+                label.rectTransform.offsetMax = new Vector2(-5f, -2f);
+            }
+
+            Transform existing = button.transform.Find("Icon");
+            RectTransform root;
+            if (existing == null)
+            {
+                GameObject iconObject = new GameObject("Icon", typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                iconObject.transform.SetParent(button.transform, false);
+                root = iconObject.GetComponent<RectTransform>();
+            }
+            else
+            {
+                root = existing as RectTransform;
+            }
+            if (root == null) return;
+            root.anchorMin = root.anchorMax = new Vector2(0f, 0.5f);
+            root.pivot = new Vector2(0.5f, 0.5f);
+            root.anchoredPosition = new Vector2(17f, 0f);
+            root.sizeDelta = new Vector2(22f, 22f);
+            root.localRotation = Quaternion.identity;
+            root.SetAsLastSibling();
+            for (int i = 0; i < root.childCount; i++) root.GetChild(i).gameObject.SetActive(false);
+
+            Color ink = new Color(0.12f, 0.08f, 0.05f, 0.94f);
+            Image image = root.GetComponent<Image>();
+            if (image == null) image = root.gameObject.AddComponent<Image>();
+            image.sprite = DoodleRuntimeAssets.GetTitleMenuIconSprite(wishlist ? 6 : 5);
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = ink;
+            image.raycastTarget = false;
+        }
+
         private void RefreshLabels()
         {
-            SetLabel(titleButton, LocalizationManager.T("feedback_button"));
+            SetLabel(titleButton, GetCompactFeedbackLabel());
             SetLabel(clearButton, LocalizationManager.T("feedback_clear_button"));
             SetLabel(titleWishlistButton, LocalizationManager.T("wishlist_button"));
             SetLabel(clearWishlistButton, LocalizationManager.T("wishlist_button"));
+        }
+
+        private static string GetCompactFeedbackLabel()
+        {
+            string value = LocalizationManager.T("feedback_button");
+            if (string.IsNullOrWhiteSpace(value)) return value;
+            int separator = value.IndexOfAny(new[] { '/', '／', '|', '\n' });
+            return separator > 0 ? value.Substring(0, separator).Trim() : value.Trim();
         }
 
         private static void SetLabel(Button button, string value)

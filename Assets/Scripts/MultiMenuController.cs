@@ -379,10 +379,7 @@ namespace DrawBody.Prototype
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = new Vector2(0f, 48f);
             rect.sizeDelta = new Vector2(460f, 210f);
-            leaveConfirmPanel.GetComponent<Image>().color = new Color(0.96f, 0.92f, 0.82f, 0.98f);
-            Outline outline = leaveConfirmPanel.AddComponent<Outline>();
-            outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.78f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            DoodlePaperUi.Apply(leaveConfirmPanel.GetComponent<Image>(), new Color(0.96f, 0.92f, 0.82f, 0.98f));
             Shadow shadow = leaveConfirmPanel.AddComponent<Shadow>();
             shadow.effectColor = new Color(0.08f, 0.06f, 0.04f, 0.24f);
             shadow.effectDistance = new Vector2(7f, -8f);
@@ -431,7 +428,7 @@ namespace DrawBody.Prototype
             rect.anchoredPosition = position;
             rect.sizeDelta = new Vector2(180f, 50f);
             Image image = buttonObject.GetComponent<Image>();
-            image.color = color;
+            DoodlePaperUi.Apply(image, color);
             Button button = buttonObject.GetComponent<Button>();
 
             Text text = CreateRuntimeText(name + "Text", buttonObject.transform, font, label, 20, Vector2.zero, new Vector2(168f, 44f));

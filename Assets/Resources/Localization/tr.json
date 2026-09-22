@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "ÇOK OYUNCULU MOD ÖNERİLİR!" },
     { "key": "single_recommend_message", "value": "NICO DRAW birlikte çalışırken daha eğlenceli!\n2–4 oyuncuyla oynamayı deneyin!" },
     { "key": "single_recommend_ok", "value": "TAMAM" }
+    ,{ "key": "title_exit_confirm", "value": "NICO DRAW'dan çıkılsın mı?" }
   ]
 }

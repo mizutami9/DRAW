@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "MULTIPLAYER AANBEVOLEN!" },
     { "key": "single_recommend_message", "value": "NICO DRAW is het leukst als je samenwerkt!\nProbeer het met 2–4 spelers!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "NICO DRAW afsluiten?" }
   ]
 }

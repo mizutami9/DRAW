@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "FLERSPILLER ANBEFALES!" },
     { "key": "single_recommend_message", "value": "NICO DRAW er morsomst når dere samarbeider!\nPrøv å spille med 2–4 spillere!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Avslutte NICO DRAW?" }
   ]
 }

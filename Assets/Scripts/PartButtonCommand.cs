@@ -166,10 +166,21 @@ namespace DrawBody.Prototype
             int columns = Mathf.Min(7, parts.Length);
             int row = index / columns;
             int column = index % columns;
-            float spacingX = 112f;
-            float spacingY = 42f;
+            float spacingX = 118f;
+            float spacingY = 52f;
             float startX = -spacingX * (columns - 1) * 0.5f;
-            rectTransform.anchoredPosition = new Vector2(startX + spacingX * column, -10f - spacingY * row);
+            rectTransform.anchoredPosition = new Vector2(startX + spacingX * column, -12f - spacingY * row);
+            rectTransform.sizeDelta = new Vector2(112f, 48f);
+        }
+
+        public void ApplyScrapbookPalette(Color selected, Color normal)
+        {
+            selectedColor = selected;
+            normalColor = normal;
+            if (image == null) image = GetComponent<Image>();
+            if (button == null) button = GetComponent<Button>();
+            if (drawManager == null) drawManager = FindFirstObjectByType<DrawManager>();
+            RefreshVisual(drawManager != null ? drawManager.CurrentPart : bodyPart);
         }
 
         private void SetAvailable(bool available)

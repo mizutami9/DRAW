@@ -30,33 +30,14 @@ namespace DrawBody.Prototype
 
         private void ApplyTexture()
         {
+            // Keep legacy serialized values readable so existing scenes/prefabs retain
+            // backward-compatible data even though the texture is now shared.
+            _ = fiberColor;
+            _ = size;
+            _ = fiberStrength;
+            _ = seed;
             Image image = GetComponent<Image>();
-            Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
-            texture.name = "GeneratedSketchPaper";
-            texture.wrapMode = TextureWrapMode.Repeat;
-            texture.filterMode = FilterMode.Bilinear;
-
-            System.Random random = new System.Random(seed);
-            for (int y = 0; y < size; y++)
-            {
-                for (int x = 0; x < size; x++)
-                {
-                    float nx = x / (float)size;
-                    float ny = y / (float)size;
-                    float grain = Mathf.PerlinNoise(nx * 22f + seed * 0.01f, ny * 22f);
-                    float fiber = Mathf.PerlinNoise(nx * 4f, ny * 74f + seed * 0.03f);
-                    float speck = random.NextDouble() > 0.986 ? Mathf.Lerp(0.18f, 0.4f, (float)random.NextDouble()) : 0f;
-                    float amount = Mathf.Clamp01((grain * 0.55f + fiber * 0.45f) * fiberStrength + speck);
-                    Color color = Color.Lerp(baseColor, fiberColor, amount);
-                    color.a = baseColor.a;
-                    texture.SetPixel(x, y, color);
-                }
-            }
-
-            texture.Apply(false, true);
-            image.sprite = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 100f);
-            image.type = Image.Type.Tiled;
-            image.color = Color.white;
+            DoodlePaperUi.Apply(image, baseColor);
         }
     }
 }

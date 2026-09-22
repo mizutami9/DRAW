@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "MULTIJOUEUR RECOMMANDÉ !" },
     { "key": "single_recommend_message", "value": "NICO DRAW est encore meilleur en coopérant !\nEssayez d’y jouer à 2–4 joueurs !" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Quitter NICO DRAW ?" }
   ]
 }

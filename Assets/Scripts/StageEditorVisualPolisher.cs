@@ -1387,6 +1387,7 @@ namespace DrawBody.Prototype
             string visibleValue = editor != null ? editor.SelectedWeightThreshold.ToString("0") : "300";
             input?.SetTextWithoutNotify(visibleValue);
             rect.GetComponent<StageEditorWeightThresholdInput>()?.RefreshVisibleText(visibleValue);
+            DoodlePaperUi.Apply(rect.GetComponent<Image>(), Color.white);
             return rect;
         }
 
@@ -1447,7 +1448,7 @@ namespace DrawBody.Prototype
             Image image = rect.GetComponent<Image>();
             if (image != null)
             {
-                image.color = color;
+                DoodlePaperUi.Apply(image, color);
             }
 
             Outline outline = rect.GetComponent<Outline>();
@@ -1455,8 +1456,7 @@ namespace DrawBody.Prototype
             {
                 outline = rect.gameObject.AddComponent<Outline>();
             }
-            outline.effectColor = new Color(Ink.r, Ink.g, Ink.b, 0.68f);
-            outline.effectDistance = new Vector2(1.5f, -1.5f);
+            outline.enabled = false;
 
             Text label = rect.GetComponentInChildren<Text>(true);
             if (label != null)
@@ -1476,7 +1476,7 @@ namespace DrawBody.Prototype
             Image image = rect.GetComponent<Image>();
             if (image != null)
             {
-                image.color = color;
+                DoodlePaperUi.Apply(image, color);
             }
 
             Outline outline = rect.GetComponent<Outline>();
@@ -1484,8 +1484,7 @@ namespace DrawBody.Prototype
             {
                 outline = rect.gameObject.AddComponent<Outline>();
             }
-            outline.effectColor = new Color(Ink.r, Ink.g, Ink.b, 0.7f);
-            outline.effectDistance = new Vector2(outlineWidth, -outlineWidth);
+            outline.enabled = false;
         }
 
         private static void PlaceTopLeft(RectTransform rect, Vector2 position, Vector2 size)
@@ -1735,10 +1734,9 @@ namespace DrawBody.Prototype
             panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
             panel.sizeDelta = new Vector2(440f, 558f);
             panel.anchoredPosition = Vector2.zero;
-            panelObject.GetComponent<Image>().color = PanelColor;
+            DoodlePaperUi.Apply(panelObject.GetComponent<Image>(), PanelColor);
             Outline panelOutline = panelObject.GetComponent<Outline>();
-            panelOutline.effectColor = new Color(0.08f, 0.07f, 0.055f, 0.82f);
-            panelOutline.effectDistance = new Vector2(2f, -2f);
+            panelOutline.enabled = false;
 
             CreateText(panel, "Title", LocalizationManager.T("stage_editor_color_title"), 24, TextAnchor.MiddleCenter, new Vector2(0f, -28f), new Vector2(350f, 38f));
 
@@ -1878,10 +1876,9 @@ namespace DrawBody.Prototype
             obj.transform.SetParent(parent, false);
             RectTransform rect = obj.GetComponent<RectTransform>();
             PlaceCenteredTop(rect, position, size);
-            obj.GetComponent<Image>().color = color;
+            DoodlePaperUi.Apply(obj.GetComponent<Image>(), color);
             Outline outline = obj.GetComponent<Outline>();
-            outline.effectColor = InkColor;
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.enabled = false;
             CreateText(rect, "Label", label, 16, TextAnchor.MiddleCenter, Vector2.zero, size);
             return obj.GetComponent<Button>();
         }

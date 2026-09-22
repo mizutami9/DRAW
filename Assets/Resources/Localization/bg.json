@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "ПРЕПОРЪЧВА СЕ МУЛТИПЛЕЙЪР!" },
     { "key": "single_recommend_message", "value": "NICO DRAW е най-забавна със съвместна игра!\nОпитайте да играете с 2–4 играчи!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Изход от NICO DRAW?" }
   ]
 }

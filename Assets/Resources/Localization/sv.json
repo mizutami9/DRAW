@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "FLERSPELARLÄGE REKOMMENDERAS!" },
     { "key": "single_recommend_message", "value": "NICO DRAW är roligast när ni samarbetar!\nProva att spela med 2–4 spelare!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Avsluta NICO DRAW?" }
   ]
 }

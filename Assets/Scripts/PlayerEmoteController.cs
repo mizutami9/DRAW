@@ -321,15 +321,14 @@ namespace DrawBody.Prototype
             toggleRect.pivot = new Vector2(0f, 0.5f);
             paletteToggleRoot = toggleRect.gameObject;
             Image togglePaper = toggleRect.gameObject.AddComponent<Image>();
-            togglePaper.color = new Color(1f, 0.82f, 0.34f, 0.98f);
+            DoodlePaperUi.Apply(togglePaper, new Color(1f, 0.82f, 0.34f, 0.98f));
             Button toggleButton = toggleRect.gameObject.AddComponent<Button>();
             toggleButton.targetGraphic = togglePaper;
             Navigation toggleNavigation = toggleButton.navigation;
             toggleNavigation.mode = Navigation.Mode.None;
             toggleButton.navigation = toggleNavigation;
             Outline toggleOutline = toggleRect.gameObject.AddComponent<Outline>();
-            toggleOutline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.88f);
-            toggleOutline.effectDistance = new Vector2(3f, -3f);
+            toggleOutline.enabled = false;
             AddPaletteToggleDots(toggleRect);
             toggleButton.onClick.AddListener(() =>
             {
@@ -342,10 +341,9 @@ namespace DrawBody.Prototype
                 new Vector2(0f, 0.5f), new Vector2(94f, 0f), new Vector2(104f, 506f));
             palettePanel.pivot = new Vector2(0f, 0.5f);
             Image paper = palettePanel.gameObject.AddComponent<Image>();
-            paper.color = new Color(1f, 0.96f, 0.76f, 0.88f);
+            DoodlePaperUi.Apply(paper, new Color(1f, 0.96f, 0.76f, 0.88f));
             Outline panelOutline = palettePanel.gameObject.AddComponent<Outline>();
-            panelOutline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.88f);
-            panelOutline.effectDistance = new Vector2(3f, -3f);
+            panelOutline.enabled = false;
 
             for (int i = 0; i < EmoteCount; i++)
             {
@@ -353,9 +351,9 @@ namespace DrawBody.Prototype
                 RectTransform buttonRect = CreateRect("Emote " + (i + 1), palettePanel,
                     new Vector2(0.5f, 0.5f), new Vector2(0f, 212f - i * 53f), new Vector2(84f, 44f));
                 Image image = buttonRect.gameObject.AddComponent<Image>();
-                image.color = i % 2 == 0
+                DoodlePaperUi.Apply(image, i % 2 == 0
                     ? new Color(1f, 0.82f, 0.34f, 0.98f)
-                    : new Color(0.64f, 0.88f, 1f, 0.98f);
+                    : new Color(0.64f, 0.88f, 1f, 0.98f));
                 Button button = buttonRect.gameObject.AddComponent<Button>();
                 button.targetGraphic = image;
                 Navigation navigation = button.navigation;
@@ -374,8 +372,7 @@ namespace DrawBody.Prototype
                     }
                 });
                 Outline outline = buttonRect.gameObject.AddComponent<Outline>();
-                outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.8f);
-                outline.effectDistance = new Vector2(2f, -2f);
+                outline.enabled = false;
                 // Present every row as an explicit shortcut mapping:
                 // "1. [up picture]", "5. [human picture]", and so on.
                 // A large number plus period reads as a key guide rather than a

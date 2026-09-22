@@ -201,7 +201,7 @@ namespace DrawBody.Prototype
             Image image = rect.GetComponent<Image>();
             if (image != null)
             {
-                image.color = new Color(0.98f, 0.91f, 0.66f, 0.96f);
+                DoodlePaperUi.Apply(image, new Color(0.98f, 0.91f, 0.66f, 0.96f));
             }
 
             Outline outline = rect.GetComponent<Outline>();
@@ -210,8 +210,7 @@ namespace DrawBody.Prototype
                 outline = rect.gameObject.AddComponent<Outline>();
             }
 
-            outline.effectColor = new Color(0.42f, 0.28f, 0.12f, 0.65f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.enabled = false;
 
             Text label = rect.GetComponentInChildren<Text>();
             if (label != null)
@@ -245,8 +244,9 @@ namespace DrawBody.Prototype
                 outline = rect.gameObject.AddComponent<Outline>();
             }
 
-            outline.effectColor = new Color(0.22f, 0.15f, 0.08f, 0.62f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            Image image = rect.GetComponent<Image>();
+            if (image != null) DoodlePaperUi.Apply(image, image.color);
+            outline.enabled = false;
 
             Text label = rect.GetComponentInChildren<Text>();
             if (label != null)
@@ -262,7 +262,7 @@ namespace DrawBody.Prototype
             Image image = rect.GetComponent<Image>();
             if (image != null)
             {
-                image.color = new Color(0.98f, 0.95f, 0.82f, 0.96f);
+                DoodlePaperUi.Apply(image, new Color(0.98f, 0.95f, 0.82f, 0.96f));
             }
 
             Outline outline = rect.GetComponent<Outline>();
@@ -271,8 +271,7 @@ namespace DrawBody.Prototype
                 outline = rect.gameObject.AddComponent<Outline>();
             }
 
-            outline.effectColor = new Color(0.2f, 0.14f, 0.08f, 0.58f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.enabled = false;
 
             for (int i = 0; i < rect.childCount; i++)
             {
@@ -421,7 +420,8 @@ namespace DrawBody.Prototype
 
             if (drawerOutline != null)
             {
-                drawerOutline.enabled = showPanel;
+                drawerOutline.enabled = showPanel
+                    && !DoodlePaperUi.IsApplied(drawerImage);
             }
         }
     }

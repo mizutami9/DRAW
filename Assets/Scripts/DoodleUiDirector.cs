@@ -40,6 +40,8 @@ namespace DrawBody.Prototype
             ThemeMultiAndOptions();
             ThemeGameplayHud();
             ThemeMenuAndResults();
+            ApplyAllButtonLabelSpacing();
+            NormalizePaperSurfaceEffects();
         }
 
         private void OnEnable()
@@ -64,6 +66,12 @@ namespace DrawBody.Prototype
             ThemeMenuAndResults();
             ThemeAllButtons();
             NormalizeBackButtonLabels();
+            RectTransform draw = FindRect("DrawPanel");
+            draw?.GetComponent<DrawScreenVisualPolisher>()?.Polish();
+            RectTransform multi = FindRect("TitleMultiPanel");
+            multi?.GetComponent<MultiMenuVisualPolisher>()?.Polish();
+            ApplyAllButtonLabelSpacing();
+            NormalizePaperSurfaceEffects();
         }
 
         private void HandleLanguageChanged()
@@ -104,6 +112,25 @@ namespace DrawBody.Prototype
                 ? stageSelect.GetComponent<StageSelectVisualPolisher>()
                 : null;
             stagePolisher?.Polish();
+
+            // DRAW has interactive child graphics and a denser bespoke layout.
+            // Reapply it after the generic passes so common button styling cannot
+            // cover the notebook tabs, tool icons, or localized type settings.
+            RectTransform draw = FindRect("DrawPanel");
+            draw?.GetComponent<DrawScreenVisualPolisher>()?.Polish();
+
+            // Multiplayer screens swap several full-screen children at runtime.
+            // Re-apply their shared geometry after the generic passes so the
+            // image headings remain above the sheets and the fallback labels
+            // do not get re-enabled by the localization/text pass.
+            RectTransform multi = FindRect("TitleMultiPanel");
+            multi?.GetComponent<MultiMenuVisualPolisher>()?.Polish();
+
+            // Dedicated screen polishers run after the generic theme and may
+            // rebuild their labels. Finish with one bounded fit pass: captions
+            // receive a wider inset, and only cramped buttons grow slightly.
+            ApplyAllButtonLabelSpacing();
+            NormalizePaperSurfaceEffects();
         }
 
         private void ThemeStageBackgroundDoodles()
@@ -231,18 +258,34 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            EnsureBackdrop(panel, "TitleBackdrop", new Color(0.96f, 0.93f, 0.83f, 0.18f));
-            EnsureDoodleCluster(panel, "TitleDoodles", new Vector2(-390f, -120f), 1.35f);
+            // The live title stage already draws notebook rules.  A second UI rule
+            // layer and the former decorated border made the scene unnecessarily busy.
+            HideIfExists(panel, "TitleBackdrop");
+            EnsureTitleScrapbookDecorations(panel);
 
             RectTransform logo = FindRect(panel, "TitleNicoDrowLogo");
             if (logo != null)
             {
-                logo.anchorMin = new Vector2(0.5f, 1f);
-                logo.anchorMax = new Vector2(0.5f, 1f);
-                logo.pivot = new Vector2(0.5f, 1f);
-                logo.anchoredPosition = new Vector2(0f, -28f);
-                logo.sizeDelta = new Vector2(1040f, 330f);
+                // The alpha art occupies only the centre of this source image.  This
+                // rect places the visible logo in the band between the title stage
+                // and the bottom controls. A small intentional overlap makes the mark
+                // read as the main title instead of another compact UI label.
+                float panelHeight = panel.rect.height > 1f ? panel.rect.height : 720f;
+                const float menuTop = 128f;
+                float stageLowerEdge = panelHeight * 0.4703f;
+                float availableHeight = Mathf.Max(28f, stageLowerEdge - menuTop);
+                float signScale = Mathf.Clamp((availableHeight + 10f) / 230f, 0.24f, 1f);
+                float signCenterY = (stageLowerEdge + menuTop) * 0.5f
+                    + Mathf.Min(4f, availableHeight * 0.025f);
+
+                logo.anchorMin = new Vector2(0.5f, 0f);
+                logo.anchorMax = new Vector2(0.5f, 0f);
+                logo.pivot = new Vector2(0.5f, 0.5f);
+                logo.anchoredPosition = new Vector2(0f, signCenterY);
+                logo.sizeDelta = new Vector2(1320f, 420f);
                 logo.localRotation = Quaternion.identity;
+                logo.localScale = Vector3.one * signScale;
+                EnsureTitleLogoMount(panel, logo);
             }
 
             RectTransform menu = FindRect(panel, "TitleMenuBar");
@@ -252,18 +295,20 @@ namespace DrawBody.Prototype
                 menu.anchorMin = new Vector2(0f, 0f);
                 menu.anchorMax = new Vector2(1f, 0f);
                 menu.pivot = new Vector2(0.5f, 0f);
-                menu.anchoredPosition = new Vector2(0f, 12f);
-                menu.sizeDelta = new Vector2(-56f, 94f);
-                SetImage(menu, new Color(0.995f, 0.975f, 0.9f, 0.96f));
-                EnsureOutline(menu.gameObject, 3.2f, 0.84f);
-                EnsureShadow(menu.gameObject, new Vector2(6f, -7f), 0.2f);
+                menu.anchoredPosition = new Vector2(0f, 10f);
+                menu.sizeDelta = new Vector2(-38f, 118f);
+                // A single quiet paper shelf replaces the former full-screen collage.
+                // It keeps the controls grounded without competing with the stage.
+                SetPaperSurface(menu, new Color(1f, 0.985f, 0.925f, 0.9f));
+                HideIfExists(menu, "TornPaperEdges");
 
-                SetButtonLayout(menu, "TitleSingleButton", new Vector2(-344f, 18f), new Vector2(148f, 58f), Green, -1.2f);
-                SetButtonLayout(menu, "TitleMultiButton", new Vector2(-172f, 18f), new Vector2(148f, 58f), Cyan, 0.8f);
-                SetButtonLayout(menu, "TitleDrawButton", new Vector2(0f, 18f), new Vector2(148f, 58f), Yellow, -0.7f);
-                SetButtonLayout(menu, "TitleOptionButton", new Vector2(172f, 18f), new Vector2(148f, 58f), Violet, 0.6f);
-                SetButtonLayout(menu, "TitleExitButton", new Vector2(344f, 18f), new Vector2(148f, 58f), Coral, -0.5f);
+                SetTitleMenuButton(menu, "TitleSingleButton", new Vector2(-400f, 24f), Green, TitleMenuIcon.Play);
+                SetTitleMenuButton(menu, "TitleMultiButton", new Vector2(-230f, 24f), Cyan, TitleMenuIcon.Group);
+                SetTitleMenuButton(menu, "TitleDrawButton", new Vector2(-60f, 22f), Yellow, TitleMenuIcon.Pencil);
+                SetTitleMenuButton(menu, "TitleOptionButton", new Vector2(110f, 24f), Violet, TitleMenuIcon.Gear);
+                SetTitleMenuButton(menu, "TitleExitButton", new Vector2(280f, 24f), Coral, TitleMenuIcon.Exit);
                 HideIfExists(menu, "TitleDebugButton");
+                menu.SetAsLastSibling();
             }
 
             HideIfExists(panel, "TitleTagline");
@@ -280,6 +325,7 @@ namespace DrawBody.Prototype
 
             SetImage(panel, Paper);
             EnsureBackdrop(panel, "StageMapBackdrop", new Color(0.35f, 0.7f, 0.9f, 0.055f));
+            EnsureStageSelectScrapbookDecorations(panel);
             Text heading = EnsureText(panel, "ModernStageSelectTitle", LocalizationManager.T("stage_select"), 38, TextAnchor.MiddleLeft);
             LocalizedText localizedHeading = heading.GetComponent<LocalizedText>();
             if (localizedHeading == null)
@@ -296,6 +342,7 @@ namespace DrawBody.Prototype
             headingRect.anchoredPosition = new Vector2(42f, -24f);
             headingRect.sizeDelta = new Vector2(430f, 58f);
             EnsurePaintStrokeHighlight(headingRect, Cyan);
+            ConfigureStageSelectTitleGraphic(panel, headingRect);
 
             for (int i = 1; i <= 15; i++)
             {
@@ -310,7 +357,7 @@ namespace DrawBody.Prototype
                     : i % 3 == 1
                         ? new Color(1f, 0.97f, 0.83f, 0.98f)
                         : new Color(0.92f, 1f, 0.89f, 0.98f);
-                SetImage(card, tint);
+                SetPaperSurface(card, tint);
                 EnsureOutline(card.gameObject, 2.8f, 0.68f);
                 EnsureShadow(card.gameObject, new Vector2(6f, -7f), 0.18f);
                 EnsureTape(card, new Vector2(0f, 164f), (i % 5 - 2) * 2f, i % 2 == 0 ? Cyan : Yellow);
@@ -320,6 +367,78 @@ namespace DrawBody.Prototype
             SetFloatingButton(panel, "StageSelectNextPageButton", new Vector2(92f, 78f), new Vector2(64f, 52f), Cyan);
             SetFloatingButton(panel, "StageSelectBackButton", new Vector2(528f, 38f), new Vector2(172f, 56f), Coral);
             SetFloatingButton(panel, "StageSelectEditModeButton", new Vector2(-528f, 38f), new Vector2(188f, 56f), Violet);
+        }
+
+        private static void EnsureStageSelectScrapbookDecorations(RectTransform panel)
+        {
+            if (panel == null)
+            {
+                return;
+            }
+
+            QuietMenuBackdrop.Apply(panel, "StageSelectScrapbookDecorations",
+                QuietMenuBackdropPreset.StageSelect);
+        }
+
+        private static void ConfigureStageSelectTitleGraphic(RectTransform panel, RectTransform fallbackTitle)
+        {
+            if (panel == null)
+            {
+                return;
+            }
+
+            Sprite titleSprite = Resources.Load<Sprite>("UI/stage-title-crayon-v1");
+            Transform existing = panel.Find("StageSelectTitleGraphic");
+            RectTransform graphic;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject("StageSelectTitleGraphic", typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(panel, false);
+                graphic = obj.GetComponent<RectTransform>();
+            }
+            else
+            {
+                graphic = existing as RectTransform;
+            }
+            if (graphic == null)
+            {
+                return;
+            }
+
+            graphic.anchorMin = new Vector2(0.5f, 1f);
+            graphic.anchorMax = new Vector2(0.5f, 1f);
+            graphic.pivot = new Vector2(0.5f, 1f);
+            // Keep the title inside the dedicated header band.  The stage cards are
+            // lowered by StageSelectVisualPolisher, leaving clear space below this art.
+            graphic.anchoredPosition = new Vector2(0f, -36f);
+            graphic.sizeDelta = new Vector2(330f, 116f);
+            graphic.localRotation = Quaternion.identity;
+
+            Image image = graphic.GetComponent<Image>();
+            if (image == null)
+            {
+                image = graphic.gameObject.AddComponent<Image>();
+            }
+            image.sprite = titleSprite;
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = Color.white;
+            image.raycastTarget = false;
+            graphic.gameObject.SetActive(titleSprite != null);
+            graphic.SetAsLastSibling();
+
+            Text fallbackText = fallbackTitle != null ? fallbackTitle.GetComponent<Text>() : null;
+            if (fallbackText != null)
+            {
+                fallbackText.enabled = titleSprite == null;
+            }
+
+            RectTransform fallbackStroke = panel.Find("ModernStageSelectTitleMarkerHighlight") as RectTransform;
+            if (fallbackStroke != null)
+            {
+                fallbackStroke.gameObject.SetActive(titleSprite == null);
+            }
         }
 
         private void ThemeDrawScreen()
@@ -351,7 +470,7 @@ namespace DrawBody.Prototype
             RectTransform partBar = FindRect(panel, "PartButtonBar");
             if (partBar != null)
             {
-                SetImage(partBar, new Color(1f, 0.97f, 0.86f, 0.96f));
+                SetPaperSurface(partBar, new Color(1f, 0.97f, 0.86f, 0.96f));
                 EnsureOutline(partBar.gameObject, 2.4f, 0.62f);
                 EnsureShadow(partBar.gameObject, new Vector2(5f, -5f), 0.14f);
             }
@@ -378,9 +497,15 @@ namespace DrawBody.Prototype
                 Image multiBackground = multi.GetComponent<Image>();
                 if (multiBackground != null)
                 {
-                    multiBackground.color = new Color(Paper.r, Paper.g, Paper.b, 0.08f);
+                    // Multiplayer menus are an overlay on the live title-stage.
+                    // Keep the root transparent so the playable background remains
+                    // fully visible; only the bottom control sheet is opaque paper.
+                    multiBackground.color = Color.clear;
                     multiBackground.raycastTarget = false;
                 }
+
+                EnsureMultiScrapbookDecorations(multi);
+                HideIfExists(multi, "MultiNotebookBackdrop");
 
                 string[] sheets =
                 {
@@ -398,7 +523,7 @@ namespace DrawBody.Prototype
                     {
                         continue;
                     }
-                    SetImage(sheet, PaperRaised);
+                    SetPaperSurface(sheet, PaperRaised);
                     EnsureOutline(sheet.gameObject, 3f, 0.78f);
                     EnsureShadow(sheet.gameObject, new Vector2(7f, -8f), 0.2f);
                 }
@@ -413,14 +538,14 @@ namespace DrawBody.Prototype
             RectTransform option = FindRect("TitleOptionPanel");
             if (option != null)
             {
-                option.anchorMin = new Vector2(0.5f, 0f);
-                option.anchorMax = new Vector2(0.5f, 0f);
-                option.pivot = new Vector2(0.5f, 0f);
-                option.anchoredPosition = new Vector2(0f, 16f);
-                option.sizeDelta = new Vector2(720f, 480f);
+                option.anchorMin = Vector2.zero;
+                option.anchorMax = Vector2.one;
+                option.pivot = new Vector2(0.5f, 0.5f);
+                option.anchoredPosition = Vector2.zero;
+                option.offsetMin = Vector2.zero;
+                option.offsetMax = Vector2.zero;
                 SetImage(option, Paper);
-                EnsureOutline(option.gameObject, 3f, 0.76f);
-                EnsureShadow(option.gameObject, new Vector2(7f, -8f), 0.2f);
+                DisableGraphicEffects(option.gameObject);
                 LayoutOptionPanel(option);
             }
 
@@ -430,62 +555,101 @@ namespace DrawBody.Prototype
             }
         }
 
+        private static void EnsureMultiScrapbookDecorations(RectTransform panel)
+        {
+            if (panel == null)
+            {
+                return;
+            }
+
+            QuietMenuBackdrop.Apply(panel, "MultiScrapbookDecorations",
+                QuietMenuBackdropPreset.Multi);
+        }
+
         private void LayoutOptionPanel(RectTransform panel)
         {
+            EnsureOptionScrapbookDecorations(panel);
+
             RectTransform title = FindRect(panel, "TitleOptionTitle");
-            panel.sizeDelta = new Vector2(720f, 560f);
-            PlaceOptionText(title, new Vector2(0f, 514f), new Vector2(640f, 42f), TextAnchor.MiddleCenter, 34, true);
-            EnsureOptionHeadingPaintStroke(panel, title, new Vector2(0f, 510f), new Vector2(440f, 50f), Violet);
+            PlaceOptionText(title, new Vector2(0f, 625f), new Vector2(700f, 72f),
+                TextAnchor.MiddleCenter, 52, true);
+            Text titleText = title != null ? title.GetComponent<Text>() : null;
+            if (titleText != null)
+            {
+                LocalizedText localized = titleText.GetComponent<LocalizedText>();
+                if (localized != null) localized.enabled = false;
+                titleText.supportRichText = true;
+                titleText.text = BuildRainbowOptionTitle(LocalizationManager.T("title_option"));
+                titleText.resizeTextForBestFit = true;
+                titleText.resizeTextMinSize = 34;
+                titleText.resizeTextMaxSize = 52;
+            }
+            EnsureOptionHeadingPaintStroke(panel, title, new Vector2(0f, 580f),
+                new Vector2(430f, 20f), Violet);
+            ConfigureOptionTitleGraphic(panel, title);
             RectTransform subtitle = FindRect(panel, "TitleOptionSubtitle");
             if (subtitle != null) subtitle.gameObject.SetActive(false);
 
-            float[] rowY = { 420f, 365f, 310f };
+            float[] rowY = { 500f, 425f, 350f, 275f, 200f };
             Color[] rowColors =
             {
-                new Color(1f, 0.97f, 0.84f, 0.76f),
-                new Color(0.92f, 0.975f, 1f, 0.7f),
-                new Color(0.98f, 0.93f, 1f, 0.7f)
+                new Color(0.84f, 0.97f, 1f, 0.84f),
+                new Color(1f, 0.86f, 0.82f, 0.84f),
+                new Color(0.84f, 0.92f, 1f, 0.84f),
+                new Color(0.88f, 0.98f, 0.92f, 0.84f),
+                new Color(1f, 0.97f, 0.79f, 0.84f)
             };
             for (int i = 0; i < rowY.Length; i++)
             {
                 EnsureOptionRow(panel, "OptionRow" + i, rowY[i], rowColors[i]);
             }
 
-            PlaceOptionText(FindRect(panel, "OptionBgmLabel"), new Vector2(-190f, rowY[0]), new Vector2(160f, 40f), TextAnchor.MiddleLeft, 20, true);
+            EnsureOptionIcon(panel, "OptionBgmIcon", 7, new Vector2(-365f, rowY[0]), 42f);
+            RectTransform bgmLabel = FindRect(panel, "OptionBgmLabel");
+            UsePlainLocalizedOptionLabel(bgmLabel, "option_bgm");
+            PlaceOptionText(bgmLabel, new Vector2(-286f, rowY[0]),
+                new Vector2(130f, 42f), TextAnchor.MiddleLeft, 22, true);
             RectTransform bgmSlider = FindRect(panel, "OptionBgmSlider");
-            PlaceOptionRect(bgmSlider, new Vector2(35f, rowY[0]), new Vector2(250f, 36f));
+            PlaceOptionRect(bgmSlider, new Vector2(55f, rowY[0]), new Vector2(390f, 40f));
             ThemeOptionSlider(bgmSlider, Cyan);
-            PlaceOptionText(FindRect(panel, "OptionBgmValue"), new Vector2(218f, rowY[0]), new Vector2(72f, 36f), TextAnchor.MiddleRight, 18, true);
+            EnsureOptionBadge(panel, "OptionBgmValueBadge", new Vector2(310f, rowY[0]),
+                new Vector2(96f, 44f));
+            PlaceOptionText(FindRect(panel, "OptionBgmValue"), new Vector2(310f, rowY[0]),
+                new Vector2(84f, 40f), TextAnchor.MiddleCenter, 19, true);
 
-            PlaceOptionText(FindRect(panel, "OptionSeLabel"), new Vector2(-190f, rowY[1]), new Vector2(160f, 40f), TextAnchor.MiddleLeft, 20, true);
+            EnsureOptionIcon(panel, "OptionSeIcon", 8, new Vector2(-365f, rowY[1]), 42f);
+            RectTransform seLabel = FindRect(panel, "OptionSeLabel");
+            UsePlainLocalizedOptionLabel(seLabel, "option_se");
+            PlaceOptionText(seLabel, new Vector2(-286f, rowY[1]),
+                new Vector2(130f, 42f), TextAnchor.MiddleLeft, 22, true);
             RectTransform seSlider = FindRect(panel, "OptionSeSlider");
-            PlaceOptionRect(seSlider, new Vector2(35f, rowY[1]), new Vector2(250f, 36f));
+            PlaceOptionRect(seSlider, new Vector2(55f, rowY[1]), new Vector2(390f, 40f));
             ThemeOptionSlider(seSlider, Coral);
-            PlaceOptionText(FindRect(panel, "OptionSeValue"), new Vector2(218f, rowY[1]), new Vector2(72f, 36f), TextAnchor.MiddleRight, 18, true);
+            EnsureOptionBadge(panel, "OptionSeValueBadge", new Vector2(310f, rowY[1]),
+                new Vector2(96f, 44f));
+            PlaceOptionText(FindRect(panel, "OptionSeValue"), new Vector2(310f, rowY[1]),
+                new Vector2(84f, 40f), TextAnchor.MiddleCenter, 19, true);
 
+            EnsureOptionIcon(panel, "OptionLanguageIcon", 5, new Vector2(-365f, rowY[2]), 42f);
             RectTransform languageLabel = FindRect(panel, "OptionLanguageLabel");
-            PlaceOptionText(languageLabel, new Vector2(-190f, rowY[2]), new Vector2(160f, 40f), TextAnchor.MiddleLeft, 20, true);
-            Text languageText = languageLabel != null ? languageLabel.GetComponent<Text>() : null;
-            if (languageText != null)
-            {
-                LocalizedText localized = languageText.GetComponent<LocalizedText>();
-                if (localized == null) localized = languageText.gameObject.AddComponent<LocalizedText>();
-                localized.SetKey("option_language");
-            }
+            UsePlainLocalizedOptionLabel(languageLabel, "option_language");
+            PlaceOptionText(languageLabel, new Vector2(-272f, rowY[2]), new Vector2(165f, 42f),
+                TextAnchor.MiddleLeft, 22, true);
             RectTransform japanese = FindRect(panel, "OptionJapaneseButton");
             RectTransform english = FindRect(panel, "OptionEnglishButton");
             bool selectorMode = LocalizationManager.SupportedLanguages.Count > 2;
             if (selectorMode)
             {
-                PlaceOptionRect(japanese, new Vector2(70f, rowY[2]), new Vector2(330f, 44f));
+                PlaceOptionRect(japanese, new Vector2(102f, rowY[2]), new Vector2(500f, 46f));
                 HideIfExists(panel, "OptionLanguageCurrentValue");
                 HideIfExists(panel, "OptionEnglishButton");
-                ThemeOptionButton(japanese, Cyan, 18);
+                ThemeOptionButton(japanese, new Color(0.66f, 0.88f, 1f, 1f), 19);
+                EnsureOptionButtonIcon(japanese, "DropdownArrow", 0, true, -90f, 20f);
             }
             else
             {
-                PlaceOptionRect(japanese, new Vector2(-12f, rowY[2]), new Vector2(130f, 42f));
-                PlaceOptionRect(english, new Vector2(138f, rowY[2]), new Vector2(130f, 42f));
+                PlaceOptionRect(japanese, new Vector2(-25f, rowY[2]), new Vector2(230f, 44f));
+                PlaceOptionRect(english, new Vector2(225f, rowY[2]), new Vector2(230f, 44f));
                 ThemeOptionButton(japanese, LocalizationManager.IsCurrentLanguage("ja") ? Cyan : PaperRaised, 18);
                 ThemeOptionButton(english, LocalizationManager.IsCurrentLanguage("en") ? Cyan : PaperRaised, 18);
             }
@@ -496,16 +660,27 @@ namespace DrawBody.Prototype
             HideIfExists(panel, "OptionVibrationButton");
             HideIfExists(panel, "OptionLanguageValue");
 
+            EnsureOptionIcon(panel, "OptionDisplayIcon", 9, new Vector2(-365f, rowY[3]), 42f);
             RectTransform screenMode = FindRect(panel, "OptionScreenModeButton");
             RectTransform resolution = FindRect(panel, "OptionResolutionButton");
-            PlaceOptionRect(screenMode, new Vector2(-72f, 242f), new Vector2(245f, 44f));
-            PlaceOptionRect(resolution, new Vector2(190f, 242f), new Vector2(245f, 44f));
-            ThemeOptionButton(screenMode, Cyan, 17);
-            ThemeOptionButton(resolution, Yellow, 17);
+            PlaceOptionRect(screenMode, new Vector2(-110f, rowY[3]), new Vector2(310f, 46f));
+            PlaceOptionRect(resolution, new Vector2(220f, rowY[3]), new Vector2(310f, 46f));
+            ThemeOptionButton(screenMode, new Color(0.91f, 0.98f, 0.96f, 1f), 17);
+            ThemeOptionButton(resolution, new Color(0.91f, 0.98f, 0.96f, 1f), 17);
+
+            EnsureOptionIcon(panel, "OptionPlayerNameIcon", 10, new Vector2(-365f, rowY[4]), 42f);
+            PlaceOptionText(FindRect(panel, "OptionPlayerNameLabel"), new Vector2(-270f, rowY[4]),
+                new Vector2(175f, 42f), TextAnchor.MiddleLeft, 20, true);
+            RectTransform playerNameInput = FindRect(panel, "OptionPlayerNameInput");
+            PlaceOptionRect(playerNameInput, new Vector2(100f, rowY[4]), new Vector2(485f, 46f));
+            ThemeOptionInput(playerNameInput);
+            PlaceOptionText(FindRect(panel, "OptionPlayerNameError"), new Vector2(100f, 165f),
+                new Vector2(485f, 24f), TextAnchor.MiddleCenter, 14, true);
 
             RectTransform back = FindRect(panel, "TitleOptionBackButton");
-            PlaceOptionRect(back, new Vector2(135f, 48f), new Vector2(260f, 58f));
-            ThemeOptionButton(back, Coral, 21);
+            PlaceOptionRect(back, new Vector2(185f, 85f), new Vector2(300f, 62f));
+            ThemeOptionButton(back, new Color(1f, 0.48f, 0.64f, 1f), 22);
+            EnsureOptionButtonIcon(back, "DoneIcon", 12, false, 0f, 30f);
             Text backLabel = back != null ? back.GetComponentInChildren<Text>(true) : null;
             if (backLabel != null)
             {
@@ -515,14 +690,196 @@ namespace DrawBody.Prototype
             }
 
             RectTransform register = FindRect(panel, "OptionPlayerNameRegisterButton");
-            PlaceOptionRect(register, new Vector2(135f, 48f), new Vector2(280f, 62f));
+            PlaceOptionRect(register, new Vector2(185f, 85f), new Vector2(300f, 62f));
             ThemeOptionButton(register, Green, 22);
+            EnsureOptionButtonIcon(register, "DoneIcon", 12, false, 0f, 30f);
 
             RectTransform reset = FindRect(panel, "OptionDataResetButton");
-            PlaceOptionRect(reset, new Vector2(-220f, 48f), new Vector2(190f, 58f));
+            PlaceOptionRect(reset, new Vector2(-185f, 85f), new Vector2(270f, 62f));
             ThemeOptionButton(reset, Coral, 17);
+            EnsureOptionButtonIcon(reset, "ResetIcon", 11, false, 0f, 30f);
 
             BringOptionControlsForward(panel);
+        }
+
+        private static string BuildRainbowOptionTitle(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            if (LocalizationManager.CurrentLanguageIsRightToLeft)
+            {
+                string escaped = value.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+                return "<color=#" + ColorUtility.ToHtmlStringRGB(Violet) + ">" + escaped + "</color>";
+            }
+            Color[] palette = { Violet, Coral, Yellow, Green, Cyan, Violet };
+            string result = string.Empty;
+            int colorIndex = 0;
+            for (int i = 0; i < value.Length; i++)
+            {
+                char character = value[i];
+                if (char.IsWhiteSpace(character))
+                {
+                    result += character;
+                    continue;
+                }
+
+                string glyph = character == '<' ? "&lt;"
+                    : character == '>' ? "&gt;"
+                    : character == '&' ? "&amp;"
+                    : character.ToString();
+                result += "<color=#" + ColorUtility.ToHtmlStringRGB(palette[colorIndex % palette.Length])
+                    + ">" + glyph + "</color>";
+                colorIndex++;
+            }
+            return result;
+        }
+
+        private static void ConfigureOptionTitleGraphic(RectTransform panel, RectTransform fallbackTitle)
+        {
+            if (panel == null) return;
+
+            Sprite titleSprite = Resources.Load<Sprite>("UI/option-title-crayon-v1");
+            Transform existing = panel.Find("OptionTitleGraphic");
+            RectTransform graphic;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject("OptionTitleGraphic", typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(panel, false);
+                graphic = obj.GetComponent<RectTransform>();
+            }
+            else graphic = existing as RectTransform;
+            if (graphic == null) return;
+
+            PlaceOptionRect(graphic, new Vector2(0f, 606f), new Vector2(360f, 124f));
+            Image image = graphic.GetComponent<Image>();
+            if (image == null) image = graphic.gameObject.AddComponent<Image>();
+            image.sprite = titleSprite;
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = Color.white;
+            image.raycastTarget = false;
+            graphic.gameObject.SetActive(titleSprite != null);
+
+            Text fallback = fallbackTitle != null ? fallbackTitle.GetComponent<Text>() : null;
+            if (fallback != null) fallback.enabled = titleSprite == null;
+            Transform stroke = panel.Find("OptionHeadingPaintStroke");
+            if (stroke != null) stroke.gameObject.SetActive(titleSprite == null);
+            if (titleSprite != null) graphic.SetAsLastSibling();
+        }
+
+        private static void UsePlainLocalizedOptionLabel(RectTransform rect, string key)
+        {
+            if (rect == null) return;
+            PrefixedLocalizedText prefixed = rect.GetComponent<PrefixedLocalizedText>();
+            if (prefixed != null) prefixed.enabled = false;
+            LocalizedText localized = rect.GetComponent<LocalizedText>();
+            if (localized == null) localized = rect.gameObject.AddComponent<LocalizedText>();
+            localized.enabled = true;
+            localized.SetKey(key);
+        }
+
+        private static void EnsureOptionScrapbookDecorations(RectTransform panel)
+        {
+            QuietMenuBackdrop.Apply(panel, "OptionScrapbookDecorations",
+                QuietMenuBackdropPreset.Option);
+        }
+
+        private static void EnsureOptionIcon(RectTransform panel, string name, int iconIndex,
+            Vector2 position, float size)
+        {
+            Transform existing = panel.Find(name);
+            RectTransform root;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject(name, typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(panel, false);
+                root = obj.GetComponent<RectTransform>();
+            }
+            else root = existing as RectTransform;
+            if (root == null) return;
+
+            PlaceOptionRect(root, position, new Vector2(size, size));
+            Image image = root.GetComponent<Image>();
+            if (image == null) image = root.gameObject.AddComponent<Image>();
+            image.sprite = DoodleRuntimeAssets.GetTitleMenuIconSprite(iconIndex);
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = Ink;
+            image.raycastTarget = false;
+        }
+
+        private static void EnsureOptionBadge(RectTransform panel, string name, Vector2 position,
+            Vector2 size)
+        {
+            Transform existing = panel.Find(name);
+            RectTransform root;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject(name, typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(panel, false);
+                root = obj.GetComponent<RectTransform>();
+            }
+            else root = existing as RectTransform;
+            if (root == null) return;
+
+            PlaceOptionRect(root, position, size);
+            Image image = root.GetComponent<Image>();
+            if (image == null) image = root.gameObject.AddComponent<Image>();
+            DoodlePaperUi.Apply(image, new Color(1f, 0.995f, 0.94f, 0.96f));
+            image.raycastTarget = false;
+            EnsureOutline(root.gameObject, 1f, 0.2f);
+        }
+
+        private static void EnsureOptionButtonIcon(RectTransform button, string name, int iconIndex,
+            bool alignRight, float rotation, float size)
+        {
+            if (button == null) return;
+            Transform existing = button.Find(name);
+            RectTransform root;
+            if (existing == null)
+            {
+                GameObject obj = new GameObject(name, typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(button, false);
+                root = obj.GetComponent<RectTransform>();
+            }
+            else root = existing as RectTransform;
+            if (root == null) return;
+
+            float anchor = alignRight ? 1f : 0f;
+            root.anchorMin = root.anchorMax = new Vector2(anchor, 0.5f);
+            root.pivot = new Vector2(0.5f, 0.5f);
+            root.anchoredPosition = new Vector2(alignRight ? -24f : 31f, 0f);
+            root.sizeDelta = new Vector2(size, size);
+            root.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            root.SetAsLastSibling();
+
+            Image image = root.GetComponent<Image>();
+            if (image == null) image = root.gameObject.AddComponent<Image>();
+            image.sprite = DoodleRuntimeAssets.GetTitleMenuIconSprite(iconIndex);
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = Ink;
+            image.raycastTarget = false;
+
+            Text label = button.GetComponentInChildren<Text>(true);
+            if (label == null) return;
+            if (alignRight) label.rectTransform.offsetMax = new Vector2(-48f, label.rectTransform.offsetMax.y);
+            else label.rectTransform.offsetMin = new Vector2(58f, label.rectTransform.offsetMin.y);
+        }
+
+        private static void ThemeOptionInput(RectTransform input)
+        {
+            if (input == null) return;
+            Image image = input.GetComponent<Image>();
+            if (image != null)
+            {
+                DoodlePaperUi.Apply(image, new Color(1f, 0.97f, 0.72f, 1f));
+            }
+            EnsureOutline(input.gameObject, 1.5f, 0.62f);
+            EnsureShadow(input.gameObject, new Vector2(3f, -3f), 0.13f);
         }
 
         private static void EnsureOptionHeadingPaintStroke(
@@ -581,11 +938,12 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            PlaceOptionRect(row, new Vector2(0f, y), new Vector2(580f, 48f));
+            PlaceOptionRect(row, new Vector2(0f, y), new Vector2(820f, 62f));
             Image image = row.GetComponent<Image>();
-            image.color = color;
+            DoodlePaperUi.Apply(image, color);
             image.raycastTarget = false;
-            EnsureOutline(row.gameObject, 1f, 0.22f);
+            EnsureOutline(row.gameObject, 1.2f, 0.24f);
+            EnsureShadow(row.gameObject, new Vector2(2f, -3f), 0.08f);
             row.SetAsFirstSibling();
         }
 
@@ -603,6 +961,9 @@ namespace DrawBody.Prototype
             text.alignment = alignment;
             text.fontStyle = bold ? FontStyle.Bold : FontStyle.Normal;
             text.color = bold ? Ink : new Color(Ink.r, Ink.g, Ink.b, 0.72f);
+            text.resizeTextForBestFit = true;
+            text.resizeTextMinSize = Mathf.Min(12, fontSize);
+            text.resizeTextMaxSize = fontSize;
         }
 
         private static void PlaceOptionRect(RectTransform rect, Vector2 position, Vector2 size)
@@ -627,7 +988,11 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            SetImage(rect, color);
+            Image image = rect.GetComponent<Image>();
+            if (image != null)
+            {
+                DoodlePaperUi.Apply(image, color);
+            }
             EnsureOutline(rect.gameObject, 2f, 0.7f);
             EnsureShadow(rect.gameObject, new Vector2(3f, -3f), 0.16f);
             Text label = rect.GetComponentInChildren<Text>(true);
@@ -637,6 +1002,9 @@ namespace DrawBody.Prototype
                 label.fontSize = fontSize;
                 label.fontStyle = FontStyle.Bold;
                 label.color = Ink;
+                label.resizeTextForBestFit = true;
+                label.resizeTextMinSize = 12;
+                label.resizeTextMaxSize = fontSize;
             }
 
             for (int i = 0; i < rect.childCount; i++)
@@ -900,10 +1268,13 @@ namespace DrawBody.Prototype
             string[] names =
             {
                 "TitleOptionTitle", "TitleOptionSubtitle",
-                "OptionBgmLabel", "OptionBgmSlider", "OptionBgmValue",
-                "OptionSeLabel", "OptionSeSlider", "OptionSeValue",
+                "OptionBgmLabel", "OptionBgmSlider", "OptionBgmValueBadge", "OptionBgmValue",
+                "OptionSeLabel", "OptionSeSlider", "OptionSeValueBadge", "OptionSeValue",
                 "OptionLanguageLabel", "OptionJapaneseButton", "OptionEnglishButton",
+                "OptionScreenModeButton", "OptionResolutionButton",
                 "OptionPlayerNameLabel", "OptionPlayerNameInput", "OptionPlayerNameError",
+                "OptionBgmIcon", "OptionSeIcon", "OptionLanguageIcon", "OptionDisplayIcon",
+                "OptionPlayerNameIcon",
                 "OptionDataResetButton", "OptionPlayerNameRegisterButton", "TitleOptionBackButton",
                 "OptionLanguagePopup", "OptionDataResetPopup"
             };
@@ -934,7 +1305,7 @@ namespace DrawBody.Prototype
             RectTransform drawer = FindRect(hud, "GameplayActionDrawer");
             if (drawer != null)
             {
-                SetImage(drawer, new Color(1f, 0.975f, 0.89f, 0.97f));
+                SetPaperSurface(drawer, new Color(1f, 0.975f, 0.89f, 0.97f));
                 EnsureOutline(drawer.gameObject, 3f, 0.8f);
                 EnsureShadow(drawer.gameObject, new Vector2(8f, -8f), 0.2f);
                 EnsureTape(drawer, new Vector2(0f, 218f), -2f, Yellow);
@@ -993,7 +1364,7 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                SetImage(panel, PaperRaised);
+                SetPaperSurface(panel, PaperRaised);
                 EnsureOutline(panel.gameObject, 3.2f, 0.82f);
                 EnsureShadow(panel.gameObject, new Vector2(9f, -10f), 0.22f);
                 if (panels[i] != "StageClearResult")
@@ -1020,9 +1391,27 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                EnsureOutline(button.gameObject, 2.8f, 0.86f);
-                EnsureShadow(button.gameObject, new Vector2(5f, -5f), 0.21f);
                 Color baseColor = button.targetGraphic != null ? button.targetGraphic.color : PaperRaised;
+                Image buttonSurface = rect.GetComponent<Image>();
+                if (buttonSurface != null)
+                {
+                    DoodlePaperUi.Apply(buttonSurface, baseColor);
+                }
+
+                // Apply the paper surface first. The shared effect helpers can then
+                // distinguish a pasted paper control from a non-paper icon/slider and
+                // avoid rebuilding the former's silhouette with a heavy black outline.
+                bool titlePaperButton = IsTitlePaperButton(button.name);
+                if (titlePaperButton)
+                {
+                    EnsureOutline(button.gameObject, 1.35f, 0.46f);
+                    EnsureShadow(button.gameObject, new Vector2(4f, -5f), 0.17f);
+                }
+                else
+                {
+                    EnsureOutline(button.gameObject, 2.8f, 0.86f);
+                    EnsureShadow(button.gameObject, new Vector2(5f, -5f), 0.21f);
+                }
                 ColorBlock colors = button.colors;
                 colors.normalColor = Color.white;
                 colors.highlightedColor = Brighten(baseColor, 0.14f);
@@ -1039,14 +1428,19 @@ namespace DrawBody.Prototype
                     motion = button.gameObject.AddComponent<DoodleButtonMotion>();
                 }
 
-                rect.localRotation = Quaternion.identity;
-                motion.Configure(0f);
+                float restingRotation = IsTitlePrimaryButton(button.name)
+                    ? Mathf.DeltaAngle(0f, rect.localEulerAngles.z)
+                    : 0f;
+                if (!IsTitlePrimaryButton(button.name)) rect.localRotation = Quaternion.identity;
+                motion.Configure(restingRotation);
 
                 StageCardHover legacyHover = button.GetComponent<StageCardHover>();
                 if (legacyHover != null)
                 {
                     legacyHover.enabled = false;
                 }
+
+                ApplyButtonLabelSpacing(button);
             }
 
             Dropdown[] dropdowns = GetComponentsInChildren<Dropdown>(true);
@@ -1064,6 +1458,165 @@ namespace DrawBody.Prototype
                 if (feedback == null) feedback = toggles[i].gameObject.AddComponent<DoodleToggleSfx>();
                 feedback.Configure(toggles[i]);
             }
+        }
+
+        private void ApplyAllButtonLabelSpacing()
+        {
+            Button[] buttons = GetComponentsInChildren<Button>(true);
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                EnsureButtonBreathingRoom(buttons[i]);
+                ApplyButtonLabelSpacing(buttons[i]);
+            }
+        }
+
+        private static void EnsureButtonBreathingRoom(Button button)
+        {
+            if (button == null) return;
+            RectTransform buttonRect = button.GetComponent<RectTransform>();
+            if (buttonRect == null) return;
+
+            Text caption = null;
+            Text[] texts = button.GetComponentsInChildren<Text>(true);
+            for (int i = 0; i < texts.Length; i++)
+            {
+                Text candidate = texts[i];
+                if (candidate == null || candidate.GetComponentInParent<Button>() != button
+                    || string.IsNullOrWhiteSpace(candidate.text)
+                    || candidate.name.Contains("Placeholder")) continue;
+                caption = candidate;
+                break;
+            }
+            if (caption == null) return;
+
+            float width = Mathf.Abs(buttonRect.rect.width);
+            float height = Mathf.Abs(buttonRect.rect.height);
+            if (width < 34f || height < 22f) return;
+
+            RectTransform captionRect = caption.rectTransform;
+            float reservedWidth = captionRect.anchorMax.x - captionRect.anchorMin.x > 0.8f
+                ? Mathf.Max(0f, captionRect.offsetMin.x - captionRect.offsetMax.x)
+                : Mathf.Max(0f, width - Mathf.Abs(captionRect.rect.width));
+            float reservedHeight = captionRect.anchorMax.y - captionRect.anchorMin.y > 0.8f
+                ? Mathf.Max(0f, captionRect.offsetMin.y - captionRect.offsetMax.y)
+                : Mathf.Max(0f, height - Mathf.Abs(captionRect.rect.height));
+
+            float desiredWidth = caption.preferredWidth + reservedWidth + 34f;
+            float desiredHeight = caption.preferredHeight + reservedHeight + 16f;
+            float maximumWidthGrowth = width >= 220f ? 28f : width >= 140f ? 20f : width >= 84f ? 14f : 8f;
+            float maximumHeightGrowth = height >= 56f ? 10f : 6f;
+            float widthGrowth = Mathf.Clamp(desiredWidth - width, 0f, maximumWidthGrowth);
+            float heightGrowth = Mathf.Clamp(desiredHeight - height, 0f, maximumHeightGrowth);
+            if (widthGrowth < 0.1f && heightGrowth < 0.1f) return;
+
+            buttonRect.sizeDelta += new Vector2(widthGrowth, heightGrowth);
+        }
+
+        private static void ApplyButtonLabelSpacing(Button button)
+        {
+            if (button == null) return;
+
+            RectTransform buttonRect = button.GetComponent<RectTransform>();
+            if (buttonRect == null) return;
+
+            float width = Mathf.Abs(buttonRect.rect.width);
+            float height = Mathf.Abs(buttonRect.rect.height);
+            if (width < 18f || height < 16f) return;
+
+            // Compact editor/page buttons need less inset than the large menu
+            // cards. Padding is applied to the caption only: neighbouring UI
+            // cannot be pushed into an overlap by this shared pass.
+            float horizontalPadding = width >= 140f ? 18f : width >= 72f ? 12f : 6f;
+            float verticalPadding = height >= 60f ? 9f : height >= 34f ? 6f : 3f;
+
+            Text[] captions = button.GetComponentsInChildren<Text>(true);
+            for (int i = 0; i < captions.Length; i++)
+            {
+                Text caption = captions[i];
+                if (caption == null || caption.name.Contains("Placeholder")) continue;
+
+                // A button can contain another button (dropdown templates and
+                // a few composite controls do this). Only touch text owned by
+                // the current button, never a nested control's caption.
+                if (caption.GetComponentInParent<Button>() != button) continue;
+
+                // Badges and text-based decorations can also live below a button
+                // without being its caption. If an intermediate visual/selectable
+                // owns the text, leave that deliberately small layout untouched.
+                // Plain grouping transforms are allowed so existing label wrappers
+                // still receive the shared inset.
+                Transform ancestor = caption.transform.parent;
+                bool belongsToButtonCaption = true;
+                while (ancestor != null && ancestor != button.transform)
+                {
+                    if (ancestor.GetComponent<Graphic>() != null
+                        || ancestor.GetComponent<Selectable>() != null)
+                    {
+                        belongsToButtonCaption = false;
+                        break;
+                    }
+
+                    ancestor = ancestor.parent;
+                }
+
+                if (!belongsToButtonCaption || ancestor != button.transform) continue;
+
+                RectTransform captionRect = caption.rectTransform;
+                bool stretchesHorizontally = captionRect.anchorMax.x - captionRect.anchorMin.x > 0.8f;
+                bool stretchesVertically = captionRect.anchorMax.y - captionRect.anchorMin.y > 0.8f;
+
+                if (stretchesHorizontally)
+                {
+                    Vector2 minimum = captionRect.offsetMin;
+                    Vector2 maximum = captionRect.offsetMax;
+                    minimum.x = Mathf.Max(minimum.x, horizontalPadding);
+                    maximum.x = Mathf.Min(maximum.x, -horizontalPadding);
+                    captionRect.offsetMin = minimum;
+                    captionRect.offsetMax = maximum;
+                }
+
+                if (stretchesVertically)
+                {
+                    Vector2 minimum = captionRect.offsetMin;
+                    Vector2 maximum = captionRect.offsetMax;
+                    minimum.y = Mathf.Max(minimum.y, verticalPadding);
+                    maximum.y = Mathf.Min(maximum.y, -verticalPadding);
+                    captionRect.offsetMin = minimum;
+                    captionRect.offsetMax = maximum;
+                }
+
+                int designedMaximum = caption.resizeTextForBestFit && caption.resizeTextMaxSize > 0
+                    ? caption.resizeTextMaxSize
+                    : caption.fontSize;
+                designedMaximum = Mathf.Max(10, designedMaximum);
+                caption.resizeTextForBestFit = true;
+                caption.resizeTextMinSize = Mathf.Clamp(designedMaximum - 10, 10, designedMaximum);
+                caption.resizeTextMaxSize = designedMaximum;
+                caption.horizontalOverflow = HorizontalWrapMode.Wrap;
+                caption.verticalOverflow = VerticalWrapMode.Truncate;
+            }
+        }
+
+        private static bool IsTitlePrimaryButton(string buttonName)
+        {
+            switch (buttonName)
+            {
+                case "TitleSingleButton":
+                case "TitleMultiButton":
+                case "TitleDrawButton":
+                case "TitleOptionButton":
+                case "TitleExitButton":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private static bool IsTitlePaperButton(string buttonName)
+        {
+            return IsTitlePrimaryButton(buttonName)
+                || buttonName == "TitleFeedbackButton"
+                || buttonName == "TitleWishlistButton";
         }
 
         private void NormalizeBackButtonLabels()
@@ -1273,7 +1826,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            SetImage(rect, background);
+            SetPaperSurface(rect, background);
             EnsureOutline(rect.gameObject, 2.8f, 0.76f);
             EnsureShadow(rect.gameObject, new Vector2(7f, -7f), 0.18f);
             EnsureTape(rect, new Vector2(0f, rect.rect.height * 0.5f), -3f, accent);
@@ -1286,9 +1839,196 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            SetImage(rect, color);
+            SetPaperSurface(rect, color);
             EnsureOutline(rect.gameObject, 2.2f, 0.86f);
             EnsureShadow(rect.gameObject, new Vector2(3f, -3f), 0.2f);
+        }
+
+        private enum TitleMenuIcon
+        {
+            Play,
+            Group,
+            Pencil,
+            Gear,
+            Exit
+        }
+
+        private void SetTitleMenuButton(RectTransform parent, string name, Vector2 position,
+            Color color, TitleMenuIcon icon)
+        {
+            RectTransform rect = FindRect(parent, name);
+            if (rect == null) return;
+
+            Vector2 size = new Vector2(166f, 68f);
+            SetButtonLayout(parent, name, position, size, color, 0f);
+            float angle = icon == TitleMenuIcon.Play ? -1.1f
+                : icon == TitleMenuIcon.Group ? 0.7f
+                : icon == TitleMenuIcon.Pencil ? -0.45f
+                : icon == TitleMenuIcon.Gear ? 0.55f
+                : -0.7f;
+            rect.localRotation = Quaternion.Euler(0f, 0f, angle);
+            Image surface = rect.GetComponent<Image>();
+            if (surface != null)
+            {
+                DoodlePaperUi.Apply(surface, color);
+            }
+            EnsureOutline(rect.gameObject, 1.35f, 0.46f);
+            EnsureShadow(rect.gameObject, new Vector2(4f, -5f), 0.17f);
+
+            Text label = rect.GetComponentInChildren<Text>(true);
+            if (label != null)
+            {
+                label.fontSize = 21;
+                label.fontStyle = FontStyle.Bold;
+                label.alignment = TextAnchor.MiddleCenter;
+                label.rectTransform.offsetMin = new Vector2(45f, 3f);
+                label.rectTransform.offsetMax = new Vector2(-7f, -3f);
+            }
+
+            EnsureTitleButtonIcon(rect, icon);
+            EnsureTitleButtonPaperFibres(rect, color);
+        }
+
+        private static void EnsureTitleButtonIcon(RectTransform button, TitleMenuIcon icon)
+        {
+            Transform found = button.Find("TitleButtonIcon");
+            RectTransform root;
+            if (found == null)
+            {
+                GameObject obj = new GameObject("TitleButtonIcon", typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(button, false);
+                root = obj.GetComponent<RectTransform>();
+            }
+            else
+            {
+                root = found as RectTransform;
+            }
+            if (root == null) return;
+
+            root.anchorMin = root.anchorMax = new Vector2(0f, 0.5f);
+            root.pivot = new Vector2(0.5f, 0.5f);
+            root.anchoredPosition = new Vector2(27f, 0f);
+            root.sizeDelta = new Vector2(36f, 36f);
+            root.localRotation = Quaternion.identity;
+            root.SetAsLastSibling();
+            for (int i = 0; i < root.childCount; i++) root.GetChild(i).gameObject.SetActive(false);
+
+            Image image = root.GetComponent<Image>();
+            if (image == null) image = root.gameObject.AddComponent<Image>();
+            image.sprite = DoodleRuntimeAssets.GetTitleMenuIconSprite((int)icon);
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = new Color(Ink.r, Ink.g, Ink.b, 0.98f);
+            image.raycastTarget = false;
+        }
+
+        private static void EnsureTitleButtonPaperFibres(RectTransform button, Color color)
+        {
+            Transform found = button.Find("PaperFibres");
+            RectTransform fibres;
+            if (found == null)
+            {
+                GameObject obj = new GameObject("PaperFibres", typeof(RectTransform));
+                obj.transform.SetParent(button, false);
+                fibres = obj.GetComponent<RectTransform>();
+            }
+            else fibres = found as RectTransform;
+            if (fibres == null) return;
+            Stretch(fibres);
+            fibres.SetAsFirstSibling();
+            if (fibres.childCount > 0) return;
+
+            Color stroke = new Color(Mathf.Max(0f, color.r - 0.18f), Mathf.Max(0f, color.g - 0.18f),
+                Mathf.Max(0f, color.b - 0.18f), 0.16f);
+            for (int i = 0; i < 7; i++)
+            {
+                float y = -23f + i * 8f;
+                CreateLine(fibres, new Vector2(-72f + (i % 3) * 5f, y),
+                    new Vector2(70f - (i % 2) * 9f, y + (i % 2 == 0 ? 1.5f : -1.5f)),
+                    1.2f, stroke, "CrayonFibre");
+            }
+        }
+
+        private void EnsureTitleScrapbookDecorations(RectTransform panel)
+        {
+            QuietMenuBackdrop.Apply(panel, "TitleScrapbookDecorations",
+                QuietMenuBackdropPreset.Title);
+        }
+
+        private static void EnsureTitleLogoMount(RectTransform panel, RectTransform logo)
+        {
+            Transform found = panel.Find("TitleLogoMount");
+            RectTransform mount;
+            if (found == null)
+            {
+                GameObject obj = new GameObject("TitleLogoMount", typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(panel, false);
+                mount = obj.GetComponent<RectTransform>();
+            }
+            else
+            {
+                mount = found as RectTransform;
+            }
+            if (mount == null) return;
+
+            mount.gameObject.SetActive(true);
+            mount.anchorMin = logo.anchorMin;
+            mount.anchorMax = logo.anchorMax;
+            mount.pivot = new Vector2(0.5f, 0.5f);
+            mount.anchoredPosition = logo.anchoredPosition;
+            mount.sizeDelta = new Vector2(760f, 250f);
+            mount.localRotation = Quaternion.identity;
+            mount.localScale = logo.localScale;
+            Image paper = mount.GetComponent<Image>();
+            if (paper != null)
+            {
+                paper.enabled = false;
+                paper.raycastTarget = false;
+            }
+            Transform leftTape = mount.Find("LogoTapeLeft");
+            if (leftTape != null) leftTape.gameObject.SetActive(false);
+            Transform rightTape = mount.Find("LogoTapeRight");
+            if (rightTape != null) rightTape.gameObject.SetActive(false);
+
+            TitleLogoAccentAnimator accent = mount.GetComponent<TitleLogoAccentAnimator>();
+            if (accent == null)
+            {
+                accent = mount.gameObject.AddComponent<TitleLogoAccentAnimator>();
+            }
+            accent.Configure();
+
+            // Keep the paper directly behind the logo while allowing the menu shelf
+            // to be raised to the front later in ThemeTitle.
+            mount.SetAsLastSibling();
+            logo.SetAsLastSibling();
+        }
+
+        private static void EnsureTitleLogoTape(RectTransform parent, string name,
+            Vector2 position, Vector2 size, float rotation, Color color)
+        {
+            Transform found = parent.Find(name);
+            RectTransform tape;
+            if (found == null)
+            {
+                GameObject obj = new GameObject(name, typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(Image));
+                obj.transform.SetParent(parent, false);
+                tape = obj.GetComponent<RectTransform>();
+            }
+            else tape = found as RectTransform;
+            if (tape == null) return;
+
+            tape.anchorMin = tape.anchorMax = new Vector2(0.5f, 0.5f);
+            tape.pivot = new Vector2(0.5f, 0.5f);
+            tape.anchoredPosition = position;
+            tape.sizeDelta = size;
+            tape.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            Image image = tape.GetComponent<Image>();
+            image.sprite = DoodleRuntimeAssets.SquareSprite;
+            image.color = color;
+            image.raycastTarget = false;
         }
 
         private void SetButtonLayout(RectTransform parent, string name, Vector2 position, Vector2 size, Color color, float rotation)
@@ -1305,7 +2045,7 @@ namespace DrawBody.Prototype
             rect.anchoredPosition = position;
             rect.sizeDelta = size;
             rect.localRotation = Quaternion.identity;
-            SetImage(rect, color);
+            SetPaperSurface(rect, color);
             EnsureOutline(rect.gameObject, 2.5f, 0.84f);
             EnsureShadow(rect.gameObject, new Vector2(5f, -5f), 0.21f);
 
@@ -1328,7 +2068,7 @@ namespace DrawBody.Prototype
 
             rect.anchoredPosition = position;
             rect.sizeDelta = size;
-            SetImage(rect, color);
+            SetPaperSurface(rect, color);
             EnsureOutline(rect.gameObject, 2.8f, 0.86f);
             EnsureShadow(rect.gameObject, new Vector2(5f, -5f), 0.21f);
         }
@@ -1338,7 +2078,7 @@ namespace DrawBody.Prototype
             RectTransform button = FindRect(parent, name);
             if (button != null)
             {
-                SetImage(button, color);
+                SetPaperSurface(button, color);
             }
         }
 
@@ -1354,7 +2094,7 @@ namespace DrawBody.Prototype
             sheet.pivot = new Vector2(0.5f, 0.5f);
             sheet.anchoredPosition = new Vector2(0f, 20f);
             sheet.sizeDelta = size;
-            SetImage(sheet, PaperRaised);
+            SetPaperSurface(sheet, PaperRaised);
             EnsureOutline(sheet.gameObject, 3f, 0.78f);
             EnsureShadow(sheet.gameObject, new Vector2(7f, -8f), 0.2f);
         }
@@ -1397,15 +2137,6 @@ namespace DrawBody.Prototype
             }
 
             CreateLine(root, new Vector2(-548f, -350f), new Vector2(-548f, 350f), 2f, new Color(Coral.r, Coral.g, Coral.b, tint.a * 1.45f), "MarginRule");
-        }
-
-        private void EnsureDoodleCluster(RectTransform parent, string name, Vector2 position, float scale)
-        {
-            Transform existing = parent.Find(name);
-            if (existing != null)
-            {
-                existing.gameObject.SetActive(false);
-            }
         }
 
         private Text EnsureText(RectTransform parent, string name, string value, int size, TextAnchor alignment)
@@ -1544,7 +2275,7 @@ namespace DrawBody.Prototype
                 float a1 = Mathf.PI * 2f * (i + 1) / segments;
                 Vector2 from = center + new Vector2(Mathf.Cos(a0), Mathf.Sin(a0)) * radius;
                 Vector2 to = center + new Vector2(Mathf.Cos(a1), Mathf.Sin(a1)) * radius;
-                CreateLine(parent, from, to, width, new Color(color.r, color.g, color.b, 0.5f), "DoodleCircle");
+                CreateLine(parent, from, to, width, color, "DoodleCircle");
             }
         }
 
@@ -1573,6 +2304,23 @@ namespace DrawBody.Prototype
             }
         }
 
+        private static void SetPaperSurface(RectTransform rect, Color color)
+        {
+            if (rect == null)
+            {
+                return;
+            }
+
+            DoodlePaperUi.Apply(rect.GetComponent<Image>(), color);
+        }
+
+        private static void DisableGraphicEffects(GameObject target)
+        {
+            if (target == null) return;
+            Shadow[] effects = target.GetComponents<Shadow>();
+            for (int i = 0; i < effects.Length; i++) effects[i].enabled = false;
+        }
+
         private static void EnsureOutline(GameObject target, float distance, float alpha)
         {
             Outline outline = target.GetComponent<Outline>();
@@ -1581,6 +2329,14 @@ namespace DrawBody.Prototype
                 outline = target.AddComponent<Outline>();
             }
 
+            Image surface = target.GetComponent<Image>();
+            if (DoodlePaperUi.IsApplied(surface))
+            {
+                outline.enabled = false;
+                return;
+            }
+
+            outline.enabled = true;
             outline.effectColor = new Color(Ink.r, Ink.g, Ink.b, alpha);
             outline.effectDistance = new Vector2(distance, -distance);
             outline.useGraphicAlpha = true;
@@ -1588,6 +2344,17 @@ namespace DrawBody.Prototype
 
         private static void EnsureShadow(GameObject target, Vector2 distance, float alpha)
         {
+            Image surface = target != null ? target.GetComponent<Image>() : null;
+            bool isPaperSurface = DoodlePaperUi.IsApplied(surface);
+            if (isPaperSurface)
+            {
+                // The shared nine-slice already carries a softly diffused, offset paper
+                // shadow. Adding Unity's single hard mesh copy on top makes the edge look
+                // like a digital UI panel again, so paper surfaces keep only the baked lift.
+                DoodlePaperUi.DisableLegacyEffects(target);
+                return;
+            }
+
             Shadow[] effects = target.GetComponents<Shadow>();
             Shadow shadow = null;
             for (int i = 0; i < effects.Length; i++)
@@ -1604,9 +2371,26 @@ namespace DrawBody.Prototype
                 shadow = target.AddComponent<Shadow>();
             }
 
+            shadow.enabled = true;
             shadow.effectColor = new Color(Ink.r, Ink.g, Ink.b, alpha);
             shadow.effectDistance = distance;
             shadow.useGraphicAlpha = true;
+        }
+
+        /// <summary>
+        /// Screen-specific polishers may add their own Outline/Shadow after the shared
+        /// theme pass. Normalize every shared paper surface once those polishers finish:
+        /// the sprite itself supplies the cut/pencil edge and diffuse lifted-paper shadow.
+        /// </summary>
+        private void NormalizePaperSurfaceEffects()
+        {
+            Image[] images = GetComponentsInChildren<Image>(true);
+            for (int imageIndex = 0; imageIndex < images.Length; imageIndex++)
+            {
+                Image image = images[imageIndex];
+                if (!DoodlePaperUi.IsApplied(image)) continue;
+                DoodlePaperUi.DisableLegacyEffects(image.gameObject);
+            }
         }
 
         private Font FindFont()

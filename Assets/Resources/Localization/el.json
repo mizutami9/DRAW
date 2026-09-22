@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "ΠΡΟΤΕΙΝΕΤΑΙ ΠΑΙΧΝΙΔΙ ΠΟΛΛΩΝ ΠΑΙΚΤΩΝ!" },
     { "key": "single_recommend_message", "value": "Το NICO DRAW είναι καλύτερο με συνεργασία!\nΔοκιμάστε να παίξετε με 2–4 παίκτες!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Έξοδος από το NICO DRAW;" }
   ]
 }

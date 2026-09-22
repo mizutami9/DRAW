@@ -323,13 +323,12 @@ namespace DrawBody.Prototype
                 new Vector2(1f, 1f), new Vector2(0f, -index * 66f), new Vector2(336f, 58f));
             row.pivot = new Vector2(1f, 1f);
             Image paper = row.gameObject.AddComponent<Image>();
-            paper.color = index % 2 == 0
+            DoodlePaperUi.Apply(paper, index % 2 == 0
                 ? new Color(1f, 0.965f, 0.79f, 0.93f)
-                : new Color(0.91f, 0.97f, 1f, 0.93f);
+                : new Color(0.91f, 0.97f, 1f, 0.93f));
             paper.raycastTarget = false;
             Outline outline = row.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.15f, 0.12f, 0.08f, 0.76f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.enabled = false;
 
             RectTransform portraitPaper = CreateRect("Portrait Paper", row,
                 new Vector2(0f, 0.5f), new Vector2(8f, 0f), new Vector2(46f, 46f));

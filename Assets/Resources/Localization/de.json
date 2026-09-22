@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "MEHRSPIELER EMPFOHLEN!" },
     { "key": "single_recommend_message", "value": "NICO DRAW macht gemeinsam am meisten Spaß!\nProbiert es mit 2–4 Spielern aus!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "NICO DRAW beenden?" }
   ]
 }

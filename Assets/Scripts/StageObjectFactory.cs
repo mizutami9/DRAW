@@ -15,6 +15,9 @@ namespace DrawBody.Prototype
         private static Sprite circleSprite;
         private static Sprite scaleBodySprite;
         private static Font monitorFont;
+        private static readonly Color TitleTerrainPaperColor = new Color(0.84f, 0.94f, 0.77f, 1f);
+        private static readonly Color TitleTerrainStrokeColor = new Color(0.24f, 0.62f, 0.29f, 0.96f);
+        private static readonly Color TitleTerrainAccentColor = new Color(0.43f, 0.76f, 0.43f, 0.58f);
 
         public GameObject Create(StageObjectData data, Transform parent)
         {
@@ -731,7 +734,8 @@ namespace DrawBody.Prototype
                 return CreatePathSolid(data, parent);
             }
 
-            Color stroke = GetObjectColor(data.type);
+            bool useTitleTerrainStyle = UsesTitleTerrainStyle(data);
+            Color stroke = useTitleTerrainStyle ? TitleTerrainStrokeColor : GetObjectColor(data.type);
             GameObject obj = new GameObject(data.objectId);
             obj.name = data.type.ToString();
             obj.transform.SetParent(parent, false);
@@ -772,7 +776,14 @@ namespace DrawBody.Prototype
                 effector.useSideBounce = false;
             }
 
-            AddSolidPaperBase(obj.transform, data.size);
+            if (useTitleTerrainStyle)
+            {
+                AddSolidPaperBase(obj.transform, data.size, TitleTerrainPaperColor);
+            }
+            else
+            {
+                AddSolidPaperBase(obj.transform, data.size);
+            }
             if (isOneWayPlatform)
             {
                 AddOneWayPlatformTint(obj.transform, data.size);
@@ -785,7 +796,18 @@ namespace DrawBody.Prototype
             }
             else
             {
-                AddSolidStraightBoxOutline(obj.transform, data.size);
+                if (useTitleTerrainStyle)
+                {
+                    AddSolidStraightBoxOutline(
+                        obj.transform,
+                        data.size,
+                        TitleTerrainStrokeColor,
+                        TitleTerrainAccentColor);
+                }
+                else
+                {
+                    AddSolidStraightBoxOutline(obj.transform, data.size);
+                }
             }
             bool isConveyor = data.type == StageObjectType.Belt
                 || data.type == StageObjectType.ConveyorLeft
@@ -913,6 +935,21 @@ namespace DrawBody.Prototype
         private static void AddSolidStraightBoxOutline(
             Transform parent, Vector2 size, float outlineWidth = 0.055f)
         {
+            AddSolidStraightBoxOutline(
+                parent,
+                size,
+                Color.black,
+                new Color(0.1f, 0.48f, 0.95f, 0.42f),
+                outlineWidth);
+        }
+
+        private static void AddSolidStraightBoxOutline(
+            Transform parent,
+            Vector2 size,
+            Color outlineColor,
+            Color accentColor,
+            float outlineWidth = 0.055f)
+        {
             float x = size.x * 0.5f;
             float y = size.y * 0.5f;
             Vector3[] outline =
@@ -923,12 +960,11 @@ namespace DrawBody.Prototype
                 new Vector3(-x, y, 0f),
                 new Vector3(-x, -y, 0f)
             };
-            AddDoodleLine("Solid Straight Outline", parent, outline, Color.black, outlineWidth, 12);
+            AddDoodleLine("Solid Straight Outline", parent, outline, outlineColor, outlineWidth, 12);
             Vector3 accent = new Vector3(0.015f, -0.015f, 0f);
             Vector3[] accentOutline = new Vector3[outline.Length];
             for (int i = 0; i < outline.Length; i++) accentOutline[i] = outline[i] + accent;
-            AddDoodleLine("Solid Straight Accent", parent, accentOutline,
-                new Color(0.1f, 0.48f, 0.95f, 0.42f), outlineWidth * 0.47f, 11);
+            AddDoodleLine("Solid Straight Accent", parent, accentOutline, accentColor, outlineWidth * 0.47f, 11);
         }
 
         private static void AddOneWayPlatformTint(Transform parent, Vector2 size)
@@ -1521,7 +1557,12 @@ namespace DrawBody.Prototype
 
         private GameObject CreateConnectedRectSolid(StageObjectData data, Transform parent)
         {
-            Color stroke = GetObjectColor(data.type);
+            bool useTitleTerrainStyle = UsesTitleTerrainStyle(data);
+            Color stroke = useTitleTerrainStyle ? TitleTerrainStrokeColor : GetObjectColor(data.type);
+            Color outline = useTitleTerrainStyle ? TitleTerrainStrokeColor : Color.black;
+            Color outlineAccent = useTitleTerrainStyle
+                ? TitleTerrainAccentColor
+                : new Color(0.1f, 0.48f, 0.95f, 0.42f);
             GameObject obj = new GameObject(data.objectId);
             obj.name = data.type + " Connected";
             obj.transform.SetParent(parent, false);
@@ -1549,7 +1590,14 @@ namespace DrawBody.Prototype
                 GameObject fillRoot = new GameObject($"Connected Fill {i}");
                 fillRoot.transform.SetParent(obj.transform, false);
                 fillRoot.transform.localPosition = part.position;
-                AddSolidPaperBase(fillRoot.transform, part.size);
+                if (useTitleTerrainStyle)
+                {
+                    AddSolidPaperBase(fillRoot.transform, part.size, TitleTerrainPaperColor);
+                }
+                else
+                {
+                    AddSolidPaperBase(fillRoot.transform, part.size);
+                }
                 AddSolidWash(fillRoot.transform, part.size, stroke);
                 AddSolidPencilFill(fillRoot.transform, part.size, stroke);
             }
@@ -1571,10 +1619,10 @@ namespace DrawBody.Prototype
                 for (int y = 0; y < ys.Count - 1; y++)
                 {
                     if (!occupied[x, y]) continue;
-                    if (y == 0 || !occupied[x, y - 1]) AddConnectedEdge(obj.transform, new Vector2(xs[x], ys[y]), new Vector2(xs[x + 1], ys[y]));
-                    if (y == ys.Count - 2 || !occupied[x, y + 1]) AddConnectedEdge(obj.transform, new Vector2(xs[x + 1], ys[y + 1]), new Vector2(xs[x], ys[y + 1]));
-                    if (x == 0 || !occupied[x - 1, y]) AddConnectedEdge(obj.transform, new Vector2(xs[x], ys[y + 1]), new Vector2(xs[x], ys[y]));
-                    if (x == xs.Count - 2 || !occupied[x + 1, y]) AddConnectedEdge(obj.transform, new Vector2(xs[x + 1], ys[y]), new Vector2(xs[x + 1], ys[y + 1]));
+                    if (y == 0 || !occupied[x, y - 1]) AddConnectedEdge(obj.transform, new Vector2(xs[x], ys[y]), new Vector2(xs[x + 1], ys[y]), outline, outlineAccent);
+                    if (y == ys.Count - 2 || !occupied[x, y + 1]) AddConnectedEdge(obj.transform, new Vector2(xs[x + 1], ys[y + 1]), new Vector2(xs[x], ys[y + 1]), outline, outlineAccent);
+                    if (x == 0 || !occupied[x - 1, y]) AddConnectedEdge(obj.transform, new Vector2(xs[x], ys[y + 1]), new Vector2(xs[x], ys[y]), outline, outlineAccent);
+                    if (x == xs.Count - 2 || !occupied[x + 1, y]) AddConnectedEdge(obj.transform, new Vector2(xs[x + 1], ys[y]), new Vector2(xs[x + 1], ys[y + 1]), outline, outlineAccent);
                 }
             }
 
@@ -1607,10 +1655,15 @@ namespace DrawBody.Prototype
             return false;
         }
 
-        private static void AddConnectedEdge(Transform parent, Vector2 from, Vector2 to)
+        private static void AddConnectedEdge(
+            Transform parent,
+            Vector2 from,
+            Vector2 to,
+            Color outlineColor,
+            Color accentColor)
         {
-            AddDoodleLine("Connected Outer Edge", parent, new[] { (Vector3)from, (Vector3)to }, Color.black, 0.055f, 12);
-            AddDoodleLine("Connected Blue Edge", parent, new[] { (Vector3)(from + new Vector2(0.015f, -0.015f)), (Vector3)(to + new Vector2(0.015f, -0.015f)) }, new Color(0.1f, 0.48f, 0.95f, 0.42f), 0.026f, 11);
+            AddDoodleLine("Connected Outer Edge", parent, new[] { (Vector3)from, (Vector3)to }, outlineColor, 0.055f, 12);
+            AddDoodleLine("Connected Accent Edge", parent, new[] { (Vector3)(from + new Vector2(0.015f, -0.015f)), (Vector3)(to + new Vector2(0.015f, -0.015f)) }, accentColor, 0.026f, 11);
         }
 
         private GameObject CreatePathSolid(StageObjectData data, Transform parent)
@@ -4080,6 +4133,17 @@ namespace DrawBody.Prototype
             }
         }
 
+        private static bool UsesTitleTerrainStyle(StageObjectData data)
+        {
+            return data != null
+                && (data.type == StageObjectType.Platform
+                    || data.type == StageObjectType.Wall
+                    || data.type == StageObjectType.BreakableWall
+                    || data.type == StageObjectType.BulletBreakableWall)
+                && !string.IsNullOrEmpty(data.objectId)
+                && data.objectId.StartsWith("title-playground-", StringComparison.Ordinal);
+        }
+
         private static void AddObjectGlyph(Transform parent, StageObjectData data)
         {
             string label = StageObjectCatalog.Get(data.type).Label;
@@ -4205,6 +4269,11 @@ namespace DrawBody.Prototype
 
         private static void AddSolidPaperBase(Transform parent, Vector2 size)
         {
+            AddSolidPaperBase(parent, size, new Color(0.985f, 0.975f, 0.93f, 1f));
+        }
+
+        private static void AddSolidPaperBase(Transform parent, Vector2 size, Color paperColor)
+        {
             GameObject baseObject = new GameObject("Solid Opaque Paper Base");
             baseObject.transform.SetParent(parent, false);
             baseObject.transform.localPosition = new Vector3(0f, 0f, 0.03f);
@@ -4212,7 +4281,7 @@ namespace DrawBody.Prototype
 
             SpriteRenderer renderer = baseObject.AddComponent<SpriteRenderer>();
             renderer.sprite = GetSquareSprite();
-            renderer.color = new Color(0.985f, 0.975f, 0.93f, 1f);
+            renderer.color = paperColor;
             renderer.sortingOrder = 2;
         }
 

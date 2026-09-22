@@ -101,10 +101,7 @@ namespace DrawBody.Prototype
             List<StageObjectData> objects = new List<StageObjectData>();
             // The title and multiplayer controls occupy the bottom of the
             // screen. Keep the whole playable floor above that UI band.
-            AddTitleObject(objects, StageObjectType.Platform, new Vector2(0f, -0.2f), new Vector2(28f, 0.55f));
-            AddTitleObject(objects, StageObjectType.Platform, new Vector2(0f, 6.75f), new Vector2(28f, 0.55f));
-            AddTitleObject(objects, StageObjectType.Wall, new Vector2(-13.75f, 3.275f), new Vector2(0.55f, 6.95f));
-            AddTitleObject(objects, StageObjectType.Wall, new Vector2(13.75f, 3.275f), new Vector2(0.55f, 6.95f));
+            AddTitleRoomFrame(objects);
 
             // Keep the middle open for running around, while placing a few simple
             // shelves and toys around the edges of the room.
@@ -143,6 +140,32 @@ namespace DrawBody.Prototype
                 // waiting for friends.
                 spawnPoint.position = new Vector3(-8.7f, 2.65f, spawnPoint.position.z);
             }
+        }
+
+        private static void AddTitleRoomFrame(List<StageObjectData> objects)
+        {
+            const float roomWidth = 28f;
+            const float terrainThickness = 0.55f;
+            const float floorY = -0.2f;
+            const float ceilingY = 6.75f;
+
+            float outerBottom = floorY - terrainThickness * 0.5f;
+            float outerTop = ceilingY + terrainThickness * 0.5f;
+            float wallX = roomWidth * 0.5f - terrainThickness * 0.5f;
+            float wallHeight = outerTop - outerBottom;
+            float wallY = (outerTop + outerBottom) * 0.5f;
+
+            StageObjectData frame = StageObjectFactory.CreateDefaultData(StageObjectType.Platform, Vector2.zero);
+            frame.objectId = $"title-playground-{objects.Count:D2}-RoomFrame";
+            frame.size = new Vector2(roomWidth, wallHeight);
+            frame.connectedRects = new[]
+            {
+                new StageRectPartData { position = new Vector2(0f, floorY), size = new Vector2(roomWidth, terrainThickness) },
+                new StageRectPartData { position = new Vector2(0f, ceilingY), size = new Vector2(roomWidth, terrainThickness) },
+                new StageRectPartData { position = new Vector2(-wallX, wallY), size = new Vector2(terrainThickness, wallHeight) },
+                new StageRectPartData { position = new Vector2(wallX, wallY), size = new Vector2(terrainThickness, wallHeight) }
+            };
+            objects.Add(frame);
         }
 
         private static void AddTitleObject(

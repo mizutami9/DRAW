@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "РЕКОМЕНДУЕТСЯ МУЛЬТИПЛЕЕР!" },
     { "key": "single_recommend_message", "value": "В NICO DRAW веселее играть сообща!\nПопробуйте сыграть вдвоём, втроём или вчетвером!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Выйти из NICO DRAW?" }
   ]
 }

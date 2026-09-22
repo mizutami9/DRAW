@@ -64,7 +64,9 @@ namespace DrawBody.Prototype
                     stageManager?.OpenOptionMenu();
                     break;
                 case Command.Exit:
-                    stageManager?.ExitGame();
+                    UIManager exitUiManager = FindFirstObjectByType<UIManager>();
+                    if (exitUiManager != null) exitUiManager.ShowTitleExitConfirmation();
+                    else stageManager?.ExitGame();
                     break;
                 case Command.Title:
                     stageManager?.EnterTitle();

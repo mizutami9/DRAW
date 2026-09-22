@@ -69,9 +69,9 @@ namespace DrawBody.Prototype
             Font font = GetComponentInChildren<Text>(true)?.font
                 ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             screenModeButton = EnsureOptionActionButton(panel, "OptionScreenModeButton", font,
-                new Vector2(-72f, 242f), new Vector2(245f, 44f), ToggleScreenMode);
+                new Vector2(-110f, 275f), new Vector2(310f, 46f), ToggleScreenMode);
             resolutionButton = EnsureOptionActionButton(panel, "OptionResolutionButton", font,
-                new Vector2(190f, 242f), new Vector2(245f, 44f), CycleResolution);
+                new Vector2(220f, 275f), new Vector2(310f, 46f), CycleResolution);
 
             if (backButton != null)
             {
@@ -106,6 +106,8 @@ namespace DrawBody.Prototype
                 button = obj.GetComponent<Button>();
             }
             else button = existing.GetComponent<Button>();
+            DoodlePaperUi.Apply(button != null ? button.GetComponent<Image>() : null,
+                new Color(0.92f, 0.975f, 1f, 1f));
             Place(button.transform as RectTransform, position, size);
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(action);
@@ -191,6 +193,9 @@ namespace DrawBody.Prototype
             }
             else playerNameError = panel.Find("OptionPlayerNameError")?.GetComponent<Text>();
 
+            DoodlePaperUi.Apply(playerNameInput != null ? playerNameInput.GetComponent<Image>() : null,
+                new Color(1f, 0.97f, 0.72f, 1f));
+
             backButton = panel.Find("TitleOptionBackButton")?.GetComponent<Button>();
             Transform register = panel.Find("OptionPlayerNameRegisterButton");
             if (register == null)
@@ -211,6 +216,8 @@ namespace DrawBody.Prototype
                 register = buttonObject.transform;
             }
             registerButton = register.GetComponent<Button>();
+            DoodlePaperUi.Apply(registerButton != null ? registerButton.GetComponent<Image>() : null,
+                new Color(0.28f, 0.84f, 0.38f, 1f));
             registerButton.onClick.RemoveListener(RegisterPlayerName);
             registerButton.onClick.AddListener(RegisterPlayerName);
 
@@ -232,11 +239,10 @@ namespace DrawBody.Prototype
 
         private void LayoutPlayerNameControls(RectTransform panel)
         {
-            panel.sizeDelta = new Vector2(720f, 560f);
-            Place(panel.Find("OptionPlayerNameLabel") as RectTransform, new Vector2(-185f, 174f), new Vector2(190f, 40f));
-            Place(playerNameInput != null ? playerNameInput.transform as RectTransform : null, new Vector2(72f, 174f), new Vector2(350f, 46f));
-            Place(playerNameError != null ? playerNameError.transform as RectTransform : null, new Vector2(72f, 140f), new Vector2(350f, 22f));
-            Place(registerButton != null ? registerButton.transform as RectTransform : null, new Vector2(135f, 48f), new Vector2(280f, 62f));
+            Place(panel.Find("OptionPlayerNameLabel") as RectTransform, new Vector2(-270f, 200f), new Vector2(175f, 42f));
+            Place(playerNameInput != null ? playerNameInput.transform as RectTransform : null, new Vector2(100f, 200f), new Vector2(485f, 46f));
+            Place(playerNameError != null ? playerNameError.transform as RectTransform : null, new Vector2(100f, 165f), new Vector2(485f, 24f));
+            Place(registerButton != null ? registerButton.transform as RectTransform : null, new Vector2(185f, 85f), new Vector2(300f, 62f));
         }
 
         private void EnsureDataResetControls()
@@ -265,9 +271,11 @@ namespace DrawBody.Prototype
             }
 
             dataResetButton = existing.GetComponent<Button>();
+            DoodlePaperUi.Apply(dataResetButton != null ? dataResetButton.GetComponent<Image>() : null,
+                new Color(1f, 0.45f, 0.34f, 1f));
             dataResetButton.onClick.RemoveListener(OpenDataResetPopup);
             dataResetButton.onClick.AddListener(OpenDataResetPopup);
-            Place(existing as RectTransform, new Vector2(-220f, 48f), new Vector2(190f, 58f));
+            Place(existing as RectTransform, new Vector2(-185f, 85f), new Vector2(270f, 62f));
             EnsureDataResetPopup(panel, font);
         }
 
@@ -295,7 +303,7 @@ namespace DrawBody.Prototype
             card.pivot = new Vector2(0.5f, 0.5f);
             card.anchoredPosition = Vector2.zero;
             card.sizeDelta = new Vector2(580f, 270f);
-            cardObject.GetComponent<Image>().color = new Color(1f, 0.975f, 0.88f, 1f);
+            DoodlePaperUi.Apply(cardObject.GetComponent<Image>(), new Color(1f, 0.975f, 0.88f, 1f));
             Outline cardOutline = cardObject.GetComponent<Outline>();
             cardOutline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.95f);
             cardOutline.effectDistance = new Vector2(4f, -4f);
@@ -348,7 +356,7 @@ namespace DrawBody.Prototype
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = position;
             rect.sizeDelta = new Vector2(210f, 56f);
-            obj.GetComponent<Image>().color = color;
+            DoodlePaperUi.Apply(obj.GetComponent<Image>(), color);
             Outline outline = obj.GetComponent<Outline>();
             outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.9f);
             outline.effectDistance = new Vector2(3f, -3f);
@@ -523,7 +531,7 @@ namespace DrawBody.Prototype
             card.pivot = new Vector2(0.5f, 0.5f);
             card.anchoredPosition = Vector2.zero;
             card.sizeDelta = new Vector2(650f, 424f);
-            cardObject.GetComponent<Image>().color = new Color(1f, 0.975f, 0.88f, 1f);
+            DoodlePaperUi.Apply(cardObject.GetComponent<Image>(), new Color(1f, 0.975f, 0.88f, 1f));
             Outline cardOutline = cardObject.GetComponent<Outline>();
             cardOutline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.92f);
             cardOutline.effectDistance = new Vector2(4f, -4f);
@@ -616,7 +624,7 @@ namespace DrawBody.Prototype
             rect.pivot = new Vector2(0.5f, 1f);
             rect.anchoredPosition = position;
             rect.sizeDelta = size;
-            buttonObject.GetComponent<Image>().color = new Color(1f, 0.985f, 0.925f, 1f);
+            DoodlePaperUi.Apply(buttonObject.GetComponent<Image>(), new Color(1f, 0.985f, 0.925f, 1f));
             Outline outline = buttonObject.GetComponent<Outline>();
             outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.72f);
             outline.effectDistance = new Vector2(2f, -2f);

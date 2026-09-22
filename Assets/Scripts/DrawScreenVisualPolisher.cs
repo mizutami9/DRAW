@@ -40,18 +40,16 @@ namespace DrawBody.Prototype
 
         public void Polish()
         {
-            if (polished)
+            if (!polished)
             {
-                RefreshLabels();
-                RefreshPresetSlotVisuals();
-                return;
+                polished = true;
+                RebuildToolLayout();
+                StraightenDrawUi();
+                EnsureDrawTitlePaintStroke();
+                GameplayHudDrawer.RedrawTurtleIcon(FindRect(transform, "TurtleDrawSpeciesButton"));
             }
 
-            polished = true;
-            RebuildToolLayout();
-            StraightenDrawUi();
-            EnsureDrawTitlePaintStroke();
-            GameplayHudDrawer.RedrawTurtleIcon(FindRect(transform, "TurtleDrawSpeciesButton"));
+            ApplyScrapbookVisuals();
             RefreshLabels();
             ApplyTypography();
         }
@@ -64,16 +62,17 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            Hide(FindRect(transform, "PreviewTitle"));
-
             panel.anchorMin = new Vector2(0.5f, 0f);
             panel.anchorMax = new Vector2(0.5f, 0f);
             panel.pivot = new Vector2(0.5f, 0f);
-            panel.anchoredPosition = new Vector2(-145f, 14f);
-            panel.sizeDelta = new Vector2(930f, 118f);
+            // Keep a real paper margin around every control.  The previous 134px dock
+            // packed the Yomogi descenders against the bottom edge (and outside it for
+            // some languages), while its narrow cards left almost no horizontal inset.
+            panel.anchoredPosition = new Vector2(-108f, 10f);
+            panel.sizeDelta = new Vector2(1044f, 146f);
 
             RectTransform abilityCard = EnsureCard(transform as RectTransform, "SpeciesAbilityCard");
-            SetCenterRect(abilityCard, new Vector2(85f, 0f), new Vector2(280f, 220f));
+            SetCenterRect(abilityCard, new Vector2(92f, 10f), new Vector2(280f, 250f));
             RestyleCard(abilityCard, new Color(1f, 0.965f, 0.78f, 0.97f));
 
             RectTransform abilityHeader = EnsureImage(abilityCard, "AbilityHeaderBand");
@@ -148,17 +147,18 @@ namespace DrawBody.Prototype
 
             RectTransform pen = FindRect(panel, "PenToolButton");
             RectTransform eraser = FindRect(panel, "EraserToolButton");
-            SetDockRect(pen, new Vector2(12f, 12f), new Vector2(108f, 94f));
-            SetDockRect(eraser, new Vector2(128f, 12f), new Vector2(108f, 94f));
+            SetDockRect(pen, new Vector2(10f, 8f), new Vector2(134f, 130f));
+            SetDockRect(eraser, new Vector2(152f, 8f), new Vector2(134f, 130f));
             EnsureSelectionBadge(pen, new Color(0.08f, 0.64f, 0.78f, 1f));
             EnsureSelectionBadge(eraser, new Color(0.95f, 0.42f, 0.25f, 1f));
 
             RectTransform brush = FindRect(panel, "BrushSizeChip");
-            SetDockRect(brush, new Vector2(244f, 10f), new Vector2(240f, 98f));
+            SetDockRect(brush, new Vector2(294f, 8f), new Vector2(270f, 130f));
             RestyleCard(brush, new Color(1f, 0.975f, 0.9f, 0.96f));
             Text brushHeader = EnsureLabel(brush, "BrushSectionHeader", "BRUSH", 13, TextAnchor.MiddleLeft);
-            SetTopRect(brushHeader.rectTransform, new Vector2(14f, -8f), new Vector2(150f, 24f), new Vector2(0f, 1f));
+            SetTopRect(brushHeader.rectTransform, new Vector2(16f, -8f), new Vector2(190f, 25f), new Vector2(0f, 1f));
             brushHeader.fontStyle = FontStyle.Bold;
+            ConfigureContainedText(brushHeader, 10, 14, TextAnchor.MiddleLeft);
             Hide(FindRect(brush, "BrushSizeTitle"));
 
             RectTransform slider = FindRect(brush, "BrushSizeSlider");
@@ -170,14 +170,14 @@ namespace DrawBody.Prototype
             CreateBrushPresetButtons(brush);
 
             RectTransform inkCard = EnsureCard(panel, "InkStatusCard");
-            SetDockRect(inkCard, new Vector2(492f, 10f), new Vector2(260f, 98f));
+            SetDockRect(inkCard, new Vector2(572f, 8f), new Vector2(292f, 130f));
             RestyleCard(inkCard, new Color(0.92f, 0.975f, 1f, 0.97f));
             MoveInto(FindRect(panel, "InkUsageTitle"), inkCard);
             MoveInto(FindRect(panel, "InkGaugeBack"), inkCard);
             MoveInto(FindRect(panel, "InkText"), inkCard);
 
             RectTransform inkTitle = FindRect(inkCard, "InkUsageTitle");
-            SetTopRect(inkTitle, new Vector2(12f, -5f), new Vector2(236f, 20f), new Vector2(0f, 1f));
+            SetTopRect(inkTitle, new Vector2(43f, -7f), new Vector2(237f, 24f), new Vector2(0f, 1f));
             Text inkTitleText = inkTitle != null ? inkTitle.GetComponent<Text>() : null;
             if (inkTitleText != null)
             {
@@ -190,26 +190,32 @@ namespace DrawBody.Prototype
                 inkTitleText.fontSize = 15;
                 inkTitleText.fontStyle = FontStyle.Bold;
                 inkTitleText.alignment = TextAnchor.MiddleLeft;
+                ConfigureContainedText(inkTitleText, 10, 15, TextAnchor.MiddleLeft);
             }
 
             RectTransform gauge = FindRect(inkCard, "InkGaugeBack");
-            SetTopRect(gauge, new Vector2(12f, -47f), new Vector2(236f, 11f), new Vector2(0f, 1f));
+            SetTopRect(gauge, new Vector2(12f, -57f), new Vector2(268f, 12f), new Vector2(0f, 1f));
             ConfigureStraightGauge(gauge, "InkGaugeFill");
             RectTransform inkText = FindRect(inkCard, "InkText");
             Hide(inkText);
 
             Text personalLabel = EnsureLabel(inkCard, "PersonalInkLabel", "YOU", 13, TextAnchor.MiddleLeft);
-            SetTopRect(personalLabel.rectTransform, new Vector2(12f, -25f), new Vector2(130f, 20f), new Vector2(0f, 1f));
+            SetTopRect(personalLabel.rectTransform, new Vector2(12f, -32f), new Vector2(150f, 22f), new Vector2(0f, 1f));
             Text personalValue = EnsureLabel(inkCard, "PersonalInkValue", "0 / 500", 14, TextAnchor.MiddleRight);
-            SetTopRect(personalValue.rectTransform, new Vector2(142f, -25f), new Vector2(106f, 20f), new Vector2(0f, 1f));
+            SetTopRect(personalValue.rectTransform, new Vector2(162f, -32f), new Vector2(118f, 22f), new Vector2(0f, 1f));
 
             Text teamLabel = EnsureLabel(inkCard, "TeamInkLabel", "TEAM", 13, TextAnchor.MiddleLeft);
-            SetTopRect(teamLabel.rectTransform, new Vector2(12f, -62f), new Vector2(130f, 20f), new Vector2(0f, 1f));
+            SetTopRect(teamLabel.rectTransform, new Vector2(12f, -79f), new Vector2(150f, 22f), new Vector2(0f, 1f));
             Text teamValue = EnsureLabel(inkCard, "TeamInkValue", "0 / 350", 14, TextAnchor.MiddleRight);
-            SetTopRect(teamValue.rectTransform, new Vector2(142f, -62f), new Vector2(106f, 20f), new Vector2(0f, 1f));
+            SetTopRect(teamValue.rectTransform, new Vector2(162f, -79f), new Vector2(118f, 22f), new Vector2(0f, 1f));
             RectTransform teamGauge = EnsureGauge(inkCard, "TeamInkGaugeBack", "TeamInkGaugeFill");
-            SetTopRect(teamGauge, new Vector2(12f, -84f), new Vector2(236f, 11f), new Vector2(0f, 1f));
+            SetTopRect(teamGauge, new Vector2(12f, -107f), new Vector2(268f, 12f), new Vector2(0f, 1f));
             ConfigureStraightGauge(teamGauge, "TeamInkGaugeFill");
+
+            ConfigureContainedText(personalLabel, 9, 13, TextAnchor.MiddleLeft);
+            ConfigureContainedText(personalValue, 10, 14, TextAnchor.MiddleRight);
+            ConfigureContainedText(teamLabel, 9, 13, TextAnchor.MiddleLeft);
+            ConfigureContainedText(teamValue, 10, 14, TextAnchor.MiddleRight);
 
             if (personalValue != null)
             {
@@ -219,16 +225,16 @@ namespace DrawBody.Prototype
             teamValue.fontStyle = FontStyle.Bold;
 
             RectTransform history = EnsureCard(panel, "HistoryCard");
-            SetDockRect(history, new Vector2(760f, 10f), new Vector2(158f, 98f));
+            SetDockRect(history, new Vector2(872f, 8f), new Vector2(172f, 130f));
             RestyleCard(history, new Color(1f, 0.96f, 0.9f, 0.97f));
             MoveInto(FindRect(panel, "ToolClearButton"), history);
             MoveInto(FindRect(panel, "ToolUndoButton"), history);
             RectTransform clear = FindRect(history, "ToolClearButton");
             RectTransform undo = FindRect(history, "ToolUndoButton");
             RectTransform fullReset = EnsureFullResetButton(history);
-            SetDockRect(clear, new Vector2(6f, 67f), new Vector2(146f, 27f));
-            SetDockRect(undo, new Vector2(6f, 36f), new Vector2(146f, 27f));
-            SetDockRect(fullReset, new Vector2(6f, 5f), new Vector2(146f, 27f));
+            SetDockRect(clear, new Vector2(7f, 89f), new Vector2(158f, 34f));
+            SetDockRect(undo, new Vector2(7f, 48f), new Vector2(158f, 34f));
+            SetDockRect(fullReset, new Vector2(7f, 7f), new Vector2(158f, 34f));
             EnsureFullResetConfirmDialog();
 
             for (int i = 0; i < panel.childCount; i++)
@@ -242,8 +248,8 @@ namespace DrawBody.Prototype
 
             RectTransform decide = FindRect(transform, "DecideButton");
             RectTransform cancel = FindRect(transform, "CancelDrawButton");
-            SetBottomRect(decide, new Vector2(420f, 14f), new Vector2(168f, 118f));
-            SetBottomRect(cancel, new Vector2(570f, 14f), new Vector2(96f, 118f));
+            SetBottomRect(decide, new Vector2(535f, 86f), new Vector2(194f, 72f));
+            SetBottomRect(cancel, new Vector2(535f, 16f), new Vector2(194f, 62f));
 
             HideLegacyDecoration(brush);
             HideLegacyDecoration(gauge);
@@ -256,30 +262,575 @@ namespace DrawBody.Prototype
             HideLegacyDecoration(cancel);
         }
 
+        private void ApplyScrapbookVisuals()
+        {
+            RectTransform root = FindRect(transform, "DrawPanel");
+            if (root == null)
+            {
+                return;
+            }
+
+            EnsureScrapbookFrame(root);
+
+            RectTransform title = FindRect(root, "DrawTitle");
+            if (title != null)
+            {
+                title.anchorMin = new Vector2(0f, 1f);
+                title.anchorMax = new Vector2(0f, 1f);
+                title.pivot = new Vector2(0f, 1f);
+                title.anchoredPosition = new Vector2(36f, -20f);
+                title.sizeDelta = new Vector2(230f, 82f);
+                Text titleText = title.GetComponent<Text>();
+                if (titleText != null)
+                {
+                    titleText.fontSize = 47;
+                    titleText.fontStyle = FontStyle.Bold;
+                    titleText.alignment = TextAnchor.MiddleLeft;
+                    titleText.resizeTextForBestFit = true;
+                    titleText.resizeTextMinSize = 30;
+                    titleText.resizeTextMaxSize = 47;
+                }
+            }
+            EnsureDrawTitlePaintStroke();
+            ConfigureDrawTitleGraphic(root, title);
+
+            RectTransform partBar = FindRect(root, "PartButtonBar");
+            if (partBar != null)
+            {
+                Image background = partBar.GetComponent<Image>();
+                if (background != null)
+                {
+                    background.color = Color.clear;
+                    background.raycastTarget = false;
+                }
+                SetEffectEnabled<Outline>(partBar, false);
+                SetEffectEnabled<Shadow>(partBar, false);
+                ConfigurePartTabs(partBar);
+            }
+
+            ConfigureSpeciesRail(root);
+            ConfigureNotebookWorkspace(FindRect(root, "DrawArea"), true);
+            ConfigureNotebookWorkspace(FindRect(root, "PreviewArea"), false);
+            ConfigurePreviewLabel(root);
+
+            RectTransform abilityCard = FindRect(root, "SpeciesAbilityCard");
+            RectTransform previewWorkspace = FindRect(root, "PreviewArea");
+            float workspaceY = previewWorkspace != null ? previewWorkspace.anchoredPosition.y : 10f;
+            SetCenterRect(abilityCard, new Vector2(92f, workspaceY), new Vector2(280f, 250f));
+            RestyleCard(abilityCard, new Color(1f, 0.94f, 0.67f, 0.98f));
+            EnsurePaperTape(abilityCard, "AbilityPaperTapeLeft", new Vector2(44f, -3f), 54f, -7f,
+                new Color(1f, 0.78f, 0.24f, 0.72f));
+            EnsurePaperTape(abilityCard, "AbilityPaperTapeRight", new Vector2(230f, -3f), 54f, 6f,
+                new Color(0.54f, 0.7f, 1f, 0.68f));
+            RectTransform abilityHeader = FindRect(abilityCard, "AbilityHeaderBand");
+            if (abilityHeader != null)
+            {
+                Image headerImage = abilityHeader.GetComponent<Image>();
+                if (headerImage != null)
+                {
+                    DoodlePaperUi.Apply(headerImage, new Color(1f, 0.91f, 0.55f, 0.68f));
+                }
+            }
+
+            RectTransform toolPanel = FindRect(root, "DrawToolPanel");
+            if (toolPanel != null)
+            {
+                Image toolBackground = toolPanel.GetComponent<Image>();
+                if (toolBackground != null)
+                {
+                    toolBackground.color = Color.clear;
+                    toolBackground.raycastTarget = false;
+                }
+                SetEffectEnabled<Outline>(toolPanel, false);
+                SetEffectEnabled<Shadow>(toolPanel, false);
+            }
+
+            RectTransform pen = FindRect(root, "PenToolButton");
+            RectTransform eraser = FindRect(root, "EraserToolButton");
+            ConfigureToolTile(pen, 2, new Color(1f, 0.84f, 0.25f, 1f));
+            ConfigureToolTile(eraser, 13, new Color(0.93f, 0.96f, 0.98f, 1f));
+
+            RectTransform brush = FindRect(root, "BrushSizeChip");
+            RectTransform ink = FindRect(root, "InkStatusCard");
+            RectTransform history = FindRect(root, "HistoryCard");
+            RestyleCard(brush, new Color(1f, 0.975f, 0.9f, 0.98f));
+            RestyleCard(ink, new Color(0.9f, 0.97f, 1f, 0.98f));
+            RestyleCard(history, new Color(1f, 0.95f, 0.88f, 0.98f));
+            EnsurePaperTape(brush, "BrushPaperTape", new Vector2(218f, -3f), 42f, 5f,
+                new Color(0.39f, 0.76f, 1f, 0.6f));
+            EnsurePaperTape(ink, "InkPaperTape", new Vector2(236f, -3f), 42f, -5f,
+                new Color(0.37f, 0.8f, 0.58f, 0.62f));
+
+            RectTransform inkIcon = EnsureImage(ink, "InkBottleIcon");
+            if (inkIcon != null)
+            {
+                SetTopRect(inkIcon, new Vector2(12f, -4f), new Vector2(27f, 27f), new Vector2(0f, 1f));
+                Image iconImage = inkIcon.GetComponent<Image>();
+                iconImage.sprite = DoodleRuntimeAssets.GetTitleMenuIconSprite(20);
+                iconImage.color = new Color(0.08f, 0.16f, 0.3f, 0.9f);
+                iconImage.raycastTarget = false;
+                RectTransform inkTitle = FindRect(ink, "InkUsageTitle");
+                SetTopRect(inkTitle, new Vector2(43f, -7f), new Vector2(237f, 24f), new Vector2(0f, 1f));
+            }
+
+            ConfigureCompactAction(FindRect(root, "ToolClearButton"), 14,
+                new Color(1f, 0.96f, 0.82f, 1f));
+            ConfigureCompactAction(FindRect(root, "ToolUndoButton"), 11,
+                new Color(1f, 0.96f, 0.82f, 1f));
+            ConfigureCompactAction(FindRect(root, "FullResetButton"), 14,
+                new Color(1f, 0.69f, 0.69f, 1f));
+
+            ConfigureLargeAction(FindRect(root, "DecideButton"), 12,
+                new Color(0.35f, 0.88f, 0.47f, 1f));
+            ConfigureLargeAction(FindRect(root, "CancelDrawButton"), 15,
+                new Color(1f, 0.43f, 0.36f, 1f));
+
+            RectTransform presetCard = FindRect(root, "DrawingPresetCard");
+            if (presetCard != null)
+            {
+                LayoutDrawingPresetCard(root, presetCard, abilityCard);
+                RestyleCard(presetCard, new Color(0.91f, 0.97f, 1f, 0.98f));
+                RectTransform open = FindRect(presetCard, "DrawingPresetOpenButton");
+                ConfigureCompactAction(open, 6, new Color(0.5f, 0.82f, 0.96f, 1f));
+            }
+
+            if (drawingPresetPopup != null && drawingPresetPopup.activeSelf)
+                drawingPresetPopup.transform.SetAsLastSibling();
+            if (fullResetConfirmDialog != null && fullResetConfirmDialog.activeSelf)
+                fullResetConfirmDialog.transform.SetAsLastSibling();
+            if (drawingPresetConfirmDialog != null && drawingPresetConfirmDialog.activeSelf)
+                drawingPresetConfirmDialog.transform.SetAsLastSibling();
+        }
+
+        private static void EnsureScrapbookFrame(RectTransform root)
+        {
+            QuietMenuBackdrop.Apply(root, "DrawScrapbookFrame",
+                QuietMenuBackdropPreset.Draw);
+        }
+
+        private static void ConfigureDrawTitleGraphic(RectTransform root, RectTransform fallbackTitle)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            Sprite titleSprite = Resources.Load<Sprite>("UI/draw-title-crayon-v1");
+            RectTransform graphic = EnsureImage(root, "DrawTitleGraphic");
+            graphic.anchorMin = new Vector2(0f, 1f);
+            graphic.anchorMax = new Vector2(0f, 1f);
+            graphic.pivot = new Vector2(0f, 1f);
+            graphic.anchoredPosition = new Vector2(30f, -18f);
+            graphic.sizeDelta = new Vector2(238f, 84f);
+            graphic.localRotation = Quaternion.identity;
+
+            Image image = graphic.GetComponent<Image>();
+            image.sprite = titleSprite;
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = Color.white;
+            image.raycastTarget = false;
+            graphic.gameObject.SetActive(titleSprite != null);
+
+            Text fallbackText = fallbackTitle != null ? fallbackTitle.GetComponent<Text>() : null;
+            if (fallbackText != null)
+            {
+                fallbackText.enabled = titleSprite == null;
+            }
+
+            RectTransform stroke = FindRect(root, "DrawTitlePaintStroke");
+            if (stroke != null)
+            {
+                stroke.gameObject.SetActive(titleSprite == null);
+            }
+
+            if (titleSprite != null && fallbackTitle != null)
+            {
+                graphic.SetSiblingIndex(Mathf.Max(1, fallbackTitle.GetSiblingIndex()));
+            }
+        }
+
+        private void ConfigurePartTabs(RectTransform partBar)
+        {
+            Button[] buttons = partBar.GetComponentsInChildren<Button>(true);
+            Color selected = new Color(0.31f, 0.79f, 0.96f, 1f);
+            Color normal = new Color(1f, 0.965f, 0.84f, 1f);
+            Color[] tapeColors =
+            {
+                new Color(0.2f, 0.76f, 0.95f, 0.76f),
+                new Color(1f, 0.76f, 0.24f, 0.76f),
+                new Color(0.96f, 0.47f, 0.52f, 0.72f),
+                new Color(0.5f, 0.82f, 0.49f, 0.72f),
+                new Color(0.67f, 0.5f, 0.94f, 0.72f)
+            };
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                RectTransform rect = buttons[i].GetComponent<RectTransform>();
+                rect.anchorMin = new Vector2(0.5f, 1f);
+                rect.anchorMax = new Vector2(0.5f, 1f);
+                rect.pivot = new Vector2(0.5f, 1f);
+                rect.sizeDelta = new Vector2(112f, 48f);
+                SetPaperButton(rect, normal);
+                PartButtonCommand command = rect.GetComponent<PartButtonCommand>();
+                command?.ApplyScrapbookPalette(selected, normal);
+                EnsurePaperTape(rect, "PartTabTape", new Vector2(56f, -1f), 34f, (i % 3 - 1) * 2f,
+                    tapeColors[i % tapeColors.Length]);
+                EnsureButtonIcon(rect, "PartSketchIcon", GetPartIconIndex(rect.name),
+                    new Vector2(17f, 0f), new Vector2(25f, 25f), new Color(0.11f, 0.1f, 0.08f, 0.92f), false);
+                Text label = rect.GetComponentInChildren<Text>(true);
+                if (label != null)
+                {
+                    label.rectTransform.anchorMin = new Vector2(0.29f, 0f);
+                    label.rectTransform.anchorMax = Vector2.one;
+                    label.rectTransform.offsetMin = new Vector2(2f, 3f);
+                    label.rectTransform.offsetMax = new Vector2(-5f, -3f);
+                    label.fontSize = 14;
+                    label.alignment = TextAnchor.MiddleCenter;
+                    label.resizeTextForBestFit = true;
+                    label.resizeTextMinSize = 9;
+                    label.resizeTextMaxSize = 14;
+                    label.transform.SetAsLastSibling();
+                }
+            }
+        }
+
+        private void ConfigureSpeciesRail(RectTransform root)
+        {
+            RectTransform panel = FindRect(root, "DrawSpeciesPanel");
+            if (panel == null)
+            {
+                return;
+            }
+
+            RestyleCard(panel, new Color(1f, 0.97f, 0.84f, 0.92f));
+            RectTransform title = FindRect(panel, "DrawSpeciesTitle");
+            if (title != null)
+            {
+                title.gameObject.SetActive(true);
+                SetTopRect(title, new Vector2(4f, -5f), new Vector2(64f, 27f), new Vector2(0f, 1f));
+                Text label = title.GetComponent<Text>();
+                if (label != null)
+                {
+                    label.fontSize = 12;
+                    label.fontStyle = FontStyle.Bold;
+                    label.alignment = TextAnchor.MiddleCenter;
+                    label.resizeTextForBestFit = true;
+                    label.resizeTextMinSize = 8;
+                    label.resizeTextMaxSize = 12;
+                }
+            }
+
+            string[] names =
+            {
+                "HumanDrawSpeciesButton", "CatDrawSpeciesButton", "BirdDrawSpeciesButton",
+                "TurtleDrawSpeciesButton", "SlimeDrawSpeciesButton"
+            };
+            Color[] colors =
+            {
+                new Color(1f, 0.84f, 0.3f, 1f), new Color(1f, 0.9f, 0.72f, 1f),
+                new Color(0.86f, 0.95f, 1f, 1f), new Color(0.85f, 0.96f, 0.84f, 1f),
+                new Color(0.94f, 0.86f, 1f, 1f)
+            };
+            for (int i = 0; i < names.Length; i++)
+            {
+                RectTransform button = FindRect(panel, names[i]);
+                if (button == null) continue;
+                SetPaperButton(button, colors[i]);
+                button.GetComponent<SpeciesButtonCommand>()?.ApplyScrapbookPalette(
+                    new Color(1f, 0.78f, 0.25f, 1f), colors[i]);
+                EnsurePaperTape(button, "SpeciesPaperTape", new Vector2(25f, -1f), 23f,
+                    (i % 2 == 0 ? -4f : 4f), new Color(1f, 0.84f, 0.36f, 0.58f));
+            }
+        }
+
+        private static void ConfigureNotebookWorkspace(RectTransform workspace, bool drawingArea)
+        {
+            if (workspace == null)
+            {
+                return;
+            }
+
+            Image paper = workspace.GetComponent<Image>();
+            if (paper != null)
+            {
+                DoodlePaperUi.Apply(paper, drawingArea
+                    ? new Color(1f, 0.995f, 0.95f, 1f)
+                    : new Color(0.94f, 0.985f, 1f, 1f));
+            }
+            ApplyStraightOutline(workspace, 2f);
+            EnsurePaperShadow(workspace, new Vector2(6f, -7f), 0.2f);
+
+            RectTransform grid = EnsureImage(workspace, drawingArea ? "DrawNotebookGrid" : "PreviewNotebookGrid");
+            grid.anchorMin = Vector2.zero;
+            grid.anchorMax = Vector2.one;
+            grid.offsetMin = new Vector2(14f, 14f);
+            grid.offsetMax = new Vector2(-12f, -12f);
+            Image gridImage = grid.GetComponent<Image>();
+            gridImage.sprite = DoodleRuntimeAssets.DotGridSprite;
+            gridImage.type = Image.Type.Tiled;
+            gridImage.color = drawingArea
+                ? new Color(1f, 1f, 1f, 0.7f)
+                : new Color(1f, 1f, 1f, 0.36f);
+            gridImage.raycastTarget = false;
+            grid.SetAsFirstSibling();
+
+            RectTransform binding = EnsureImage(workspace, "NotebookBindingMargin");
+            binding.anchorMin = new Vector2(0f, 0f);
+            binding.anchorMax = new Vector2(0f, 1f);
+            binding.pivot = new Vector2(0f, 0.5f);
+            binding.anchoredPosition = new Vector2(12f, 0f);
+            binding.sizeDelta = new Vector2(2f, -24f);
+            Image bindingLine = binding.GetComponent<Image>();
+            bindingLine.sprite = DoodleRuntimeAssets.SquareSprite;
+            bindingLine.color = new Color(0.22f, 0.17f, 0.12f, 0.3f);
+            bindingLine.raycastTarget = false;
+            binding.SetSiblingIndex(Mathf.Min(1, workspace.childCount - 1));
+            for (int i = 0; i < 11; i++)
+            {
+                RectTransform ring = EnsureImage(workspace, "NotebookRing" + i);
+                ring.anchorMin = new Vector2(0f, 0f);
+                ring.anchorMax = new Vector2(0f, 0f);
+                ring.pivot = new Vector2(0.5f, 0.5f);
+                ring.anchoredPosition = new Vector2(12f, 24f + i * 25f);
+                ring.sizeDelta = new Vector2(16f, 4f);
+                Image ringImage = ring.GetComponent<Image>();
+                ringImage.sprite = DoodleRuntimeAssets.CircleSprite;
+                ringImage.color = new Color(0.16f, 0.13f, 0.1f, 0.62f);
+                ringImage.raycastTarget = false;
+                ring.SetSiblingIndex(Mathf.Min(2 + i, workspace.childCount - 1));
+            }
+        }
+
+        private void ConfigurePreviewLabel(RectTransform root)
+        {
+            RectTransform preview = FindRect(root, "PreviewArea");
+            RectTransform title = FindRect(root, "PreviewTitle");
+            if (preview == null || title == null)
+            {
+                return;
+            }
+
+            title.gameObject.SetActive(true);
+            title.SetParent(root, false);
+            title.anchorMin = new Vector2(0.5f, 0.5f);
+            title.anchorMax = new Vector2(0.5f, 0.5f);
+            title.pivot = new Vector2(0.5f, 0.5f);
+            title.anchoredPosition = preview.anchoredPosition + new Vector2(0f, 166f);
+            title.sizeDelta = new Vector2(136f, 38f);
+            Text label = title.GetComponent<Text>();
+            if (label != null)
+            {
+                label.fontSize = 20;
+                label.fontStyle = FontStyle.Bold;
+                label.alignment = TextAnchor.MiddleCenter;
+            }
+
+            RectTransform paper = EnsureImage(root, "PreviewTitlePaper");
+            paper.anchorMin = title.anchorMin;
+            paper.anchorMax = title.anchorMax;
+            paper.pivot = title.pivot;
+            paper.anchoredPosition = title.anchoredPosition;
+            paper.sizeDelta = title.sizeDelta;
+            Image image = paper.GetComponent<Image>();
+            DoodlePaperUi.Apply(image, new Color(1f, 0.92f, 0.61f, 0.98f));
+            image.raycastTarget = false;
+            paper.SetSiblingIndex(Mathf.Max(0, title.GetSiblingIndex()));
+            title.SetAsLastSibling();
+        }
+
+        private static void ConfigureToolTile(RectTransform rect, int iconIndex, Color color)
+        {
+            if (rect == null) return;
+            SetPaperButton(rect, color);
+            EnsureButtonIcon(rect, "ScrapbookToolIcon", iconIndex, new Vector2(0f, 21f),
+                new Vector2(43f, 43f), new Color(0.1f, 0.09f, 0.07f, 0.94f), true);
+            Text label = rect.GetComponentInChildren<Text>(true);
+            if (label != null)
+            {
+                // Leave enough room below the glyph baseline for the handwritten
+                // font's long descenders.  Overflow is clipped to the button instead
+                // of painting over the scrapbook frame.
+                label.rectTransform.anchorMin = new Vector2(0f, 0.1f);
+                label.rectTransform.anchorMax = new Vector2(1f, 0.39f);
+                label.rectTransform.offsetMin = new Vector2(10f, 2f);
+                label.rectTransform.offsetMax = new Vector2(-10f, -2f);
+                ConfigureContainedText(label, 11, 18, TextAnchor.MiddleCenter);
+                label.transform.SetAsLastSibling();
+            }
+        }
+
+        private static void ConfigureCompactAction(RectTransform rect, int iconIndex, Color color)
+        {
+            if (rect == null) return;
+            SetPaperButton(rect, color);
+            EnsureButtonIcon(rect, "ScrapbookActionIcon", iconIndex, new Vector2(15f, 0f),
+                new Vector2(18f, 18f), new Color(0.12f, 0.1f, 0.08f, 0.92f), false);
+            Text label = rect.GetComponentInChildren<Text>(true);
+            if (label != null)
+            {
+                label.rectTransform.anchorMin = new Vector2(0.24f, 0f);
+                label.rectTransform.anchorMax = Vector2.one;
+                label.rectTransform.offsetMin = new Vector2(4f, 3f);
+                label.rectTransform.offsetMax = new Vector2(-9f, -3f);
+                ConfigureContainedText(label, 9, 14, TextAnchor.MiddleCenter);
+                label.transform.SetAsLastSibling();
+            }
+        }
+
+        private static void ConfigureLargeAction(RectTransform rect, int iconIndex, Color color)
+        {
+            if (rect == null) return;
+            SetPaperButton(rect, color);
+            EnsureButtonIcon(rect, "ScrapbookActionIcon", iconIndex, new Vector2(27f, 0f),
+                new Vector2(34f, 34f), new Color(0.08f, 0.09f, 0.07f, 0.94f), false);
+            Text label = rect.GetComponentInChildren<Text>(true);
+            if (label != null)
+            {
+                label.rectTransform.anchorMin = new Vector2(0.28f, 0f);
+                label.rectTransform.anchorMax = Vector2.one;
+                label.rectTransform.offsetMin = new Vector2(5f, 6f);
+                label.rectTransform.offsetMax = new Vector2(-12f, -6f);
+                ConfigureContainedText(label, 10, 19, TextAnchor.MiddleCenter);
+                label.transform.SetAsLastSibling();
+            }
+        }
+
+        private static void ConfigureContainedText(Text text, int minimumSize, int maximumSize,
+            TextAnchor alignment)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.alignment = alignment;
+            text.resizeTextForBestFit = true;
+            text.resizeTextMinSize = minimumSize;
+            text.resizeTextMaxSize = maximumSize;
+            text.horizontalOverflow = HorizontalWrapMode.Wrap;
+            text.verticalOverflow = VerticalWrapMode.Truncate;
+        }
+
+        private static void SetPaperButton(RectTransform rect, Color color)
+        {
+            if (rect == null) return;
+            Image image = rect.GetComponent<Image>();
+            if (image != null)
+            {
+                DoodlePaperUi.Apply(image, color);
+            }
+            ApplyStraightOutline(rect, 1.5f);
+            EnsurePaperShadow(rect, new Vector2(4f, -4f), 0.18f);
+        }
+
+        private static void EnsureButtonIcon(RectTransform parent, string name, int iconIndex,
+            Vector2 position, Vector2 size, Color color, bool centered)
+        {
+            if (parent == null) return;
+            RectTransform icon = EnsureImage(parent, name);
+            icon.anchorMin = centered ? new Vector2(0.5f, 0.5f) : new Vector2(0f, 0.5f);
+            icon.anchorMax = icon.anchorMin;
+            icon.pivot = new Vector2(0.5f, 0.5f);
+            icon.anchoredPosition = position;
+            icon.sizeDelta = size;
+            Image image = icon.GetComponent<Image>();
+            image.sprite = DoodleRuntimeAssets.GetTitleMenuIconSprite(iconIndex);
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
+            image.color = color;
+            image.raycastTarget = false;
+            icon.SetSiblingIndex(0);
+        }
+
+        private static int GetPartIconIndex(string name)
+        {
+            if (name.Contains("Head")) return 16;
+            if (name.Contains("Torso") || name.Contains("Body")) return 17;
+            if (name.Contains("Arm") || name.Contains("Wing") || name.Contains("Tail")) return 18;
+            return 19;
+        }
+
+        private static void EnsurePaperTape(RectTransform parent, string name, Vector2 position,
+            float width, float rotation, Color color)
+        {
+            if (parent == null) return;
+            RectTransform tape = EnsureImage(parent, name);
+            tape.anchorMin = new Vector2(0f, 1f);
+            tape.anchorMax = new Vector2(0f, 1f);
+            tape.pivot = new Vector2(0.5f, 0.5f);
+            tape.anchoredPosition = position;
+            tape.sizeDelta = new Vector2(width, 8f);
+            tape.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            Image image = tape.GetComponent<Image>();
+            DoodlePaperUi.Apply(image, color);
+            image.raycastTarget = false;
+            tape.SetSiblingIndex(0);
+        }
+
+        private static void EnsurePaperShadow(RectTransform rect, Vector2 distance, float alpha)
+        {
+            if (rect == null) return;
+            if (DoodlePaperUi.IsApplied(rect.GetComponent<Image>()))
+            {
+                DoodlePaperUi.DisableLegacyEffects(rect.gameObject);
+                return;
+            }
+
+            Shadow shadow = null;
+            Shadow[] shadows = rect.GetComponents<Shadow>();
+            for (int i = 0; i < shadows.Length; i++)
+            {
+                if (shadows[i] != null && shadows[i].GetType() == typeof(Shadow))
+                {
+                    shadow = shadows[i];
+                    break;
+                }
+            }
+            if (shadow == null) shadow = rect.gameObject.AddComponent<Shadow>();
+            shadow.enabled = true;
+            shadow.effectColor = new Color(0.12f, 0.09f, 0.05f, alpha);
+            shadow.effectDistance = distance;
+            shadow.useGraphicAlpha = true;
+        }
+
+        private static void SetEffectEnabled<T>(RectTransform rect, bool enabled) where T : Behaviour
+        {
+            if (rect == null) return;
+            T[] effects = rect.GetComponents<T>();
+            for (int i = 0; i < effects.Length; i++)
+            {
+                if (effects[i] != null) effects[i].enabled = enabled;
+            }
+        }
+
         private void RefreshLabels()
         {
+            SetPlainText("DrawTitle", LocalizationManager.T("title_draw"));
+            SetPlainText("PreviewTitle", LocalizationManager.T("preview"));
+            SetPlainText("DrawSpeciesTitle", LocalizationManager.T("draw_preset_button"));
             SetPlainText("BrushSectionHeader", LocalizationManager.T("draw_pen_size"));
             SetPlainText("InkUsageTitle", LocalizationManager.T("draw_ink"));
             SetPlainText("PersonalInkLabel", LocalizationManager.T("ink_personal_cap"));
-            SetPlainText("TeamInkLabel", LocalizationManager.Format("ink_team_formula", 1));
             SetPlainText("HumanJumpGaugeLabel", LocalizationManager.T("ability_human_jump_gauge"));
             SetPlainText("HumanArmGaugeLabel", LocalizationManager.T("ability_human_arm_gauge"));
-            SetButtonLabel("PenToolButton", "\u270e  " + LocalizationManager.T("pen"), 18);
-            SetButtonLabel("EraserToolButton", "\u25b1  " + LocalizationManager.T("eraser"), 17);
-            SetButtonLabel("ToolClearButton", "\u2715  " + LocalizationManager.T("draw_clear_part"), 14);
-            SetButtonLabel("ToolUndoButton", "\u21b6  " + LocalizationManager.T("draw_undo_once"), 14);
-            SetButtonLabel("FullResetButton", "\u25a0  " + LocalizationManager.T("draw_reset_all"), 13);
+            SetButtonLabel("PenToolButton", LocalizationManager.T("pen"), 18);
+            SetButtonLabel("EraserToolButton", LocalizationManager.T("eraser"), 17);
+            SetButtonLabel("ToolClearButton", LocalizationManager.T("draw_clear_part"), 14);
+            SetButtonLabel("ToolUndoButton", LocalizationManager.T("draw_undo_once"), 14);
+            SetButtonLabel("FullResetButton", LocalizationManager.T("draw_reset_all"), 13);
             SetPlainText("FullResetConfirmTitle", LocalizationManager.T("draw_reset_confirm_title"));
             SetPlainText("FullResetConfirmMessage", LocalizationManager.T("draw_reset_confirm_message"));
             SetButtonLabel("FullResetConfirmButton", LocalizationManager.T("draw_reset_confirm_yes"), 18);
             SetButtonLabel("FullResetCancelButton", LocalizationManager.T("draw_reset_confirm_no"), 18);
             RefreshPresetSlotVisuals();
-            SetButtonLabel("DecideButton", "\u2713  " + LocalizationManager.T("draw_finish") + "\nENTER", 19);
-            SetButtonLabel("CancelDrawButton", LocalizationManager.T("ui_back_esc"), 13);
+            SetButtonLabel("DecideButton", LocalizationManager.T("draw_finish") + "\nENTER", 19);
+            SetButtonLabel("CancelDrawButton", LocalizationManager.T("ui_back_esc"), 16);
             Text backLabel = FindRect(transform, "CancelDrawButton")?.GetComponentInChildren<Text>(true);
             if (backLabel != null)
             {
-                backLabel.resizeTextForBestFit = false;
+                backLabel.resizeTextForBestFit = true;
+                backLabel.resizeTextMinSize = 10;
+                backLabel.resizeTextMaxSize = 16;
             }
             ApplyTypography();
         }
@@ -348,7 +899,7 @@ namespace DrawBody.Prototype
             text.text = value;
             text.fontSize = size;
             text.fontStyle = FontStyle.Bold;
-            text.alignment = TextAnchor.MiddleCenter;
+            ConfigureContainedText(text, Mathf.Min(9, size), size, TextAnchor.MiddleCenter);
         }
 
         private void CreateBrushPresetButtons(RectTransform brush)
@@ -379,26 +930,30 @@ namespace DrawBody.Prototype
                     button = existing.GetComponent<Button>();
                 }
 
-                SetDockRect(rect, new Vector2(10f + i * 45f, 8f), new Vector2(40f, 54f));
+                SetDockRect(rect, new Vector2(12f + i * 49f, 10f), new Vector2(45f, 70f));
+                DoodlePaperUi.Apply(rect.GetComponent<Image>(),
+                    new Color(1f, 0.985f, 0.925f, 1f));
                 Outline outline = rect.GetComponent<Outline>();
                 if (outline == null)
                 {
                     outline = rect.gameObject.AddComponent<Outline>();
                 }
+                outline.enabled = false;
 
                 Text number = EnsureLabel(rect, "Value", preset.ToString("0"), 12, TextAnchor.MiddleCenter);
                 number.rectTransform.anchorMin = new Vector2(0f, 0f);
                 number.rectTransform.anchorMax = new Vector2(1f, 0f);
                 number.rectTransform.pivot = new Vector2(0.5f, 0f);
-                number.rectTransform.anchoredPosition = new Vector2(0f, 3f);
-                number.rectTransform.sizeDelta = new Vector2(0f, 18f);
+                number.rectTransform.anchoredPosition = new Vector2(0f, 6f);
+                number.rectTransform.sizeDelta = new Vector2(0f, 20f);
                 number.fontStyle = FontStyle.Bold;
+                ConfigureContainedText(number, 10, 12, TextAnchor.MiddleCenter);
 
                 RectTransform sample = EnsureImage(rect, "StrokeSample");
                 sample.anchorMin = new Vector2(0.5f, 1f);
                 sample.anchorMax = new Vector2(0.5f, 1f);
                 sample.pivot = new Vector2(0.5f, 0.5f);
-                sample.anchoredPosition = new Vector2(0f, -17f);
+                sample.anchoredPosition = new Vector2(0f, -19f);
                 sample.sizeDelta = new Vector2(24f, Mathf.Lerp(2f, 9f, i / 4f));
                 sample.GetComponent<Image>().color = new Color(0.1f, 0.09f, 0.08f, 1f);
 
@@ -443,7 +998,7 @@ namespace DrawBody.Prototype
             }
 
             Image image = rect.GetComponent<Image>();
-            image.color = new Color(1f, 0.72f, 0.62f, 1f);
+            DoodlePaperUi.Apply(image, new Color(1f, 0.72f, 0.62f, 1f));
             Text label = EnsureLabel(rect, "Label", string.Empty, 13, TextAnchor.MiddleCenter);
             Stretch(label.rectTransform);
             label.fontStyle = FontStyle.Bold;
@@ -517,7 +1072,7 @@ namespace DrawBody.Prototype
             }
 
             Image image = rect.GetComponent<Image>();
-            image.color = color;
+            DoodlePaperUi.Apply(image, color);
             Button button = rect.GetComponent<Button>();
             Text label = EnsureLabel(rect, "Label", string.Empty, 18, TextAnchor.MiddleCenter);
             Stretch(label.rectTransform);
@@ -564,7 +1119,7 @@ namespace DrawBody.Prototype
             }
 
             RectTransform panel = EnsureCard(root, "DrawingPresetCard");
-            SetTopRect(panel, new Vector2(92f, -190f), new Vector2(138f, 52f), new Vector2(0f, 1f));
+            LayoutDrawingPresetCard(root, panel, FindRect(root, "SpeciesAbilityCard"));
             RestyleCard(panel, new Color(0.9f, 0.97f, 1f, 0.98f));
             Button open = EnsureDialogButton(panel, "DrawingPresetOpenButton", new Color(0.3f, 0.7f, 0.94f, 1f));
             Stretch(open.GetComponent<RectTransform>());
@@ -654,6 +1209,41 @@ namespace DrawBody.Prototype
             FitDrawingPresetPopup(root, popup);
             drawingPresetPopup = overlay.gameObject;
             drawingPresetPopup.SetActive(false);
+        }
+
+        private static void LayoutDrawingPresetCard(
+            RectTransform root,
+            RectTransform presetCard,
+            RectTransform abilityCard)
+        {
+            if (presetCard == null)
+            {
+                return;
+            }
+
+            // Keep presets with the character information they affect. The old fixed
+            // top-left position collided with the species rail on narrower/aspect-ratio
+            // constrained layouts. Anchoring above the ability card keeps the rail clear
+            // and remains stable as the canvas scaler changes the root dimensions.
+            const float width = 156f;
+            const float height = 46f;
+            const float cardGap = 10f;
+            Vector2 position = abilityCard != null
+                ? abilityCard.anchoredPosition + new Vector2(
+                    0f,
+                    abilityCard.rect.height * 0.5f + height * 0.5f + cardGap)
+                : new Vector2(92f, 158f);
+
+            RectTransform partBar = FindRect(root, "PartButtonBar");
+            if (root != null && partBar != null && root.rect.height > 0f)
+            {
+                float partBarBottom = root.rect.height * 0.5f
+                    + partBar.anchoredPosition.y
+                    - partBar.rect.height;
+                position.y = Mathf.Min(position.y, partBarBottom - height * 0.5f - 8f);
+            }
+
+            SetCenterRect(presetCard, position, new Vector2(width, height));
         }
 
         private static void FitDrawingPresetPopup(RectTransform root, RectTransform popup)
@@ -935,7 +1525,7 @@ namespace DrawBody.Prototype
                 Color buttonColor = selected
                     ? new Color(0.32f, 0.82f, 0.94f, 1f)
                     : new Color(1f, 0.985f, 0.925f, 1f);
-                image.color = buttonColor;
+                DoodlePaperUi.Apply(image, buttonColor);
                 Button button = rect.GetComponent<Button>();
                 ColorBlock colors = button.colors;
                 colors.normalColor = Color.white;
@@ -944,10 +1534,7 @@ namespace DrawBody.Prototype
                 colors.selectedColor = colors.highlightedColor;
                 button.colors = colors;
                 Outline outline = rect.GetComponent<Outline>();
-                outline.effectColor = selected
-                    ? new Color(0.04f, 0.18f, 0.24f, 1f)
-                    : new Color(0.2f, 0.18f, 0.14f, 0.45f);
-                outline.effectDistance = selected ? new Vector2(3f, -3f) : new Vector2(1f, -1f);
+                if (outline != null) outline.enabled = false;
                 Transform check = rect.Find("SelectedCheck");
                 if (check != null)
                 {
@@ -1057,7 +1644,8 @@ namespace DrawBody.Prototype
 
         private static void ApplyStraightOutline(RectTransform rect, float width)
         {
-            if (rect == null || rect.GetComponent<Image>() == null)
+            Image surface = rect != null ? rect.GetComponent<Image>() : null;
+            if (surface == null)
             {
                 return;
             }
@@ -1066,6 +1654,12 @@ namespace DrawBody.Prototype
             if (outline == null)
             {
                 outline = rect.gameObject.AddComponent<Outline>();
+            }
+
+            if (DoodlePaperUi.IsApplied(surface))
+            {
+                outline.enabled = false;
+                return;
             }
 
             outline.enabled = true;
@@ -1170,9 +1764,11 @@ namespace DrawBody.Prototype
         private void ApplyTypography()
         {
             Text reference = FindRect(transform, "DrawTitle")?.GetComponent<Text>();
-            Font font = reference != null && reference.font != null
+            Font fallback = reference != null && reference.font != null
                 ? reference.font
-                : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                : DoodleRuntimeAssets.HandwrittenFont;
+            Font font = LocalizationManager.LoadCurrentFont(fallback);
+            bool rightToLeft = LocalizationManager.CurrentLanguageIsRightToLeft;
             Text[] texts = GetComponentsInChildren<Text>(true);
             Color ink = new Color(0.12f, 0.1f, 0.08f, 1f);
             for (int i = 0; i < texts.Length; i++)
@@ -1214,6 +1810,12 @@ namespace DrawBody.Prototype
                     || text.name == "AbilityEffectText"
                     || text.name == "AbilityInkText";
                 text.fontStyle = buttonLabel || emphasized ? FontStyle.Bold : FontStyle.Normal;
+                if (rightToLeft)
+                {
+                    if (text.alignment == TextAnchor.MiddleLeft) text.alignment = TextAnchor.MiddleRight;
+                    else if (text.alignment == TextAnchor.UpperLeft) text.alignment = TextAnchor.UpperRight;
+                    else if (text.alignment == TextAnchor.LowerLeft) text.alignment = TextAnchor.LowerRight;
+                }
             }
         }
 
@@ -1227,7 +1829,7 @@ namespace DrawBody.Prototype
             Image image = card.GetComponent<Image>();
             if (image != null)
             {
-                image.color = color;
+                DoodlePaperUi.Apply(image, color);
             }
 
             Outline outline = card.GetComponent<Outline>();
@@ -1236,8 +1838,7 @@ namespace DrawBody.Prototype
                 outline = card.gameObject.AddComponent<Outline>();
             }
 
-            outline.effectColor = new Color(0.12f, 0.09f, 0.06f, 0.55f);
-            outline.effectDistance = new Vector2(1.5f, -1.5f);
+            outline.enabled = false;
         }
 
         private static void ModernizeSlider(RectTransform slider)

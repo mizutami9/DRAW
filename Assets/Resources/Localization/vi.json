@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "NÊN CHƠI NHIỀU NGƯỜI!" },
     { "key": "single_recommend_message", "value": "NICO DRAW vui nhất khi mọi người cùng hợp tác!\nHãy thử chơi với 2–4 người!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Thoát NICO DRAW?" }
   ]
 }

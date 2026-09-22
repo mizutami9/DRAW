@@ -138,5 +138,16 @@ namespace DrawBody.Prototype
                 rectTransform.localRotation = Quaternion.identity;
             }
         }
+
+        public void ApplyScrapbookPalette(Color selected, Color normal)
+        {
+            selectedColor = selected;
+            normalColor = normal;
+            if (image == null) image = GetComponent<Image>();
+            if (button == null) button = GetComponent<Button>();
+            if (outline == null) outline = GetComponent<Outline>();
+            if (drawManager == null) drawManager = FindFirstObjectByType<DrawManager>();
+            RefreshVisual(drawManager != null ? drawManager.CurrentSpecies : species);
+        }
     }
 }

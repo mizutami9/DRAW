@@ -256,7 +256,10 @@ namespace DrawBody.Prototype
 
             if (drawArea != null)
             {
-                drawArea.anchoredPosition = new Vector2(-225f, 0f);
+                drawArea.anchorMin = new Vector2(0.5f, 0.5f);
+                drawArea.anchorMax = new Vector2(0.5f, 0.5f);
+                drawArea.pivot = new Vector2(0.5f, 0.5f);
+                drawArea.anchoredPosition = new Vector2(-230f, 0f);
                 drawArea.sizeDelta = Vector2.one * drawAreaSquareSize;
                 EnsureRectMask(drawArea.gameObject);
             }
@@ -274,7 +277,10 @@ namespace DrawBody.Prototype
                 RectTransform previewArea = previewRoot.parent as RectTransform;
                 if (previewArea != null)
                 {
-                    previewArea.anchoredPosition = new Vector2(390f, 0f);
+                    previewArea.anchorMin = new Vector2(0.5f, 0.5f);
+                    previewArea.anchorMax = new Vector2(0.5f, 0.5f);
+                    previewArea.pivot = new Vector2(0.5f, 0.5f);
+                    previewArea.anchoredPosition = new Vector2(415f, 0f);
                     previewArea.sizeDelta = Vector2.one * previewSquareSize;
                     EnsureRectMask(previewArea.gameObject);
                     MovePreviewTitleOutside(previewArea);
@@ -291,8 +297,11 @@ namespace DrawBody.Prototype
                 toolPanel.anchorMin = new Vector2(0.5f, 0f);
                 toolPanel.anchorMax = new Vector2(0.5f, 0f);
                 toolPanel.pivot = new Vector2(0.5f, 0f);
-                toolPanel.anchoredPosition = new Vector2(-145f, 14f);
-                toolPanel.sizeDelta = new Vector2(930f, 118f);
+                // Keep this in sync with DrawScreenVisualPolisher.RebuildToolLayout.
+                // DrawManager can run after the visual polisher's Awake pass, so restoring
+                // the legacy compact rectangle here would clip the roomier tool cards.
+                toolPanel.anchoredPosition = new Vector2(-108f, 10f);
+                toolPanel.sizeDelta = new Vector2(1044f, 146f);
             }
 
             if (inkText != null)
@@ -315,9 +324,8 @@ namespace DrawBody.Prototype
                 speciesPanel.anchorMin = new Vector2(0f, 0f);
                 speciesPanel.anchorMax = new Vector2(0f, 0f);
                 speciesPanel.pivot = new Vector2(0f, 0f);
-                speciesPanel.anchoredPosition = new Vector2(16f, 144f);
-                speciesPanel.sizeDelta = new Vector2(68f, 300f);
-                HideChild("DrawSpeciesTitle");
+                speciesPanel.anchoredPosition = new Vector2(20f, 146f);
+                speciesPanel.sizeDelta = new Vector2(72f, 330f);
                 LayoutDrawSpeciesButtons(speciesPanel);
             }
 
@@ -338,47 +346,53 @@ namespace DrawBody.Prototype
             // therefore be much shorter than 720, making the square workspaces overlap both
             // the part bar above and the tool dock below. Preserve drawing coordinates by
             // scaling the workspace transforms instead of changing their RectTransform sizes.
-            const float topControlsDepth = 136f;
-            const float bottomControlsHeight = 132f;
+            const float topControlsDepth = 110f;
+            // The refreshed tool dock reaches 158px from the lower canvas edge. Reserve
+            // a little paper gap above it so short/wide windows never overlap the drawing
+            // workspace or the character rail with localized tool labels.
+            const float bottomControlsHeight = 174f;
             const float workspaceGap = 12f;
             float panelHeight = panelRect.rect.height;
             float availableHeight = panelHeight
                 - topControlsDepth
                 - bottomControlsHeight
                 - workspaceGap * 2f;
-            float workspaceScale = Mathf.Clamp(availableHeight / drawAreaSquareSize, 0.78f, 1f);
+            float workspaceScale = Mathf.Clamp(availableHeight / drawAreaSquareSize, 0.78f, 1.08f);
             float usableBottom = bottomControlsHeight + workspaceGap;
             float usableTop = panelHeight - topControlsDepth - workspaceGap;
             float workspaceCenterY = (usableBottom + usableTop) * 0.5f - panelHeight * 0.5f;
 
             if (drawArea != null)
             {
-                drawArea.anchoredPosition = new Vector2(-225f, workspaceCenterY);
+                drawArea.anchoredPosition = new Vector2(-230f, workspaceCenterY);
                 drawArea.localScale = Vector3.one * workspaceScale;
             }
 
             if (previewRoot != null && previewRoot.parent is RectTransform previewArea)
             {
-                previewArea.anchoredPosition = new Vector2(390f, workspaceCenterY);
+                previewArea.anchoredPosition = new Vector2(415f, workspaceCenterY);
                 previewArea.localScale = Vector3.one * workspaceScale;
             }
 
             RectTransform speciesPanel = FindRect("DrawSpeciesPanel");
             if (speciesPanel != null)
             {
-                speciesPanel.anchoredPosition = new Vector2(16f, usableBottom);
+                speciesPanel.anchoredPosition = new Vector2(20f, usableBottom);
             }
 
-            float workspaceLeft = -225f - drawAreaSquareSize * workspaceScale * 0.5f;
-            float workspaceRight = 390f + previewSquareSize * workspaceScale * 0.5f;
+            float workspaceLeft = -230f - drawAreaSquareSize * workspaceScale * 0.5f;
+            float workspaceRight = 415f + previewSquareSize * workspaceScale * 0.5f;
             float headerCenterX = (workspaceLeft + workspaceRight) * 0.5f;
             float headerWidth = workspaceRight - workspaceLeft;
 
             RectTransform partBar = FindRect("PartButtonBar");
             if (partBar != null)
             {
-                partBar.anchoredPosition = new Vector2(headerCenterX, -58f);
-                partBar.sizeDelta = new Vector2(headerWidth, 78f);
+                partBar.anchorMin = new Vector2(0.5f, 1f);
+                partBar.anchorMax = new Vector2(0.5f, 1f);
+                partBar.pivot = new Vector2(0.5f, 1f);
+                partBar.anchoredPosition = new Vector2(headerCenterX, -24f);
+                partBar.sizeDelta = new Vector2(headerWidth, 70f);
             }
 
             if (validationBanner != null)
@@ -390,6 +404,9 @@ namespace DrawBody.Prototype
                     bannerRect.sizeDelta = new Vector2(headerWidth, 42f);
                 }
             }
+
+            DrawScreenVisualPolisher polisher = drawPanel.GetComponent<DrawScreenVisualPolisher>();
+            polisher?.Polish();
         }
 
         private static void EnsureRectMask(GameObject target)
@@ -462,8 +479,8 @@ namespace DrawBody.Prototype
                     button.anchorMin = new Vector2(0.5f, 1f);
                     button.anchorMax = new Vector2(0.5f, 1f);
                     button.pivot = new Vector2(0.5f, 1f);
-                    button.anchoredPosition = new Vector2(0f, -10f - i * 58f);
-                    button.sizeDelta = new Vector2(52f, 52f);
+                    button.anchoredPosition = new Vector2(0f, -40f - i * 55f);
+                    button.sizeDelta = new Vector2(50f, 50f);
                 }
 
                 HideChild(prefix + "DrawSpeciesLabel");
@@ -2172,7 +2189,7 @@ namespace DrawBody.Prototype
             Color shownColor = selected ? baseColor : new Color(0.92f, 0.91f, 0.87f, 1f);
             if (image != null)
             {
-                image.color = shownColor;
+                DoodlePaperUi.Apply(image, shownColor);
             }
 
             ColorBlock colors = button.colors;
@@ -2189,11 +2206,18 @@ namespace DrawBody.Prototype
                 outline.effectDistance = new Vector2(2.5f, -2.5f);
             }
 
-            outline.enabled = true;
-            outline.effectDistance = selected ? new Vector2(4f, -4f) : new Vector2(1f, -1f);
-            outline.effectColor = selected
-                ? new Color(0.04f, 0.12f, 0.16f, 1f)
-                : new Color(0.2f, 0.18f, 0.14f, 0.42f);
+            if (DoodlePaperUi.IsApplied(image))
+            {
+                outline.enabled = false;
+            }
+            else
+            {
+                outline.enabled = true;
+                outline.effectDistance = selected ? new Vector2(4f, -4f) : new Vector2(1f, -1f);
+                outline.effectColor = selected
+                    ? new Color(0.04f, 0.12f, 0.16f, 1f)
+                    : new Color(0.2f, 0.18f, 0.14f, 0.42f);
+            }
 
             Transform selectionBadge = button.transform.Find("SelectionBadge");
             if (selectionBadge != null)
@@ -2469,10 +2493,9 @@ namespace DrawBody.Prototype
             bannerRect.sizeDelta = new Vector2(760f, 42f);
 
             Image background = validationBanner.GetComponent<Image>();
-            background.color = new Color(1f, 0.88f, 0.82f, 0.98f);
+            DoodlePaperUi.Apply(background, new Color(1f, 0.88f, 0.82f, 0.98f));
             Outline backgroundOutline = validationBanner.AddComponent<Outline>();
-            backgroundOutline.effectColor = new Color(0.72f, 0.08f, 0.08f, 0.9f);
-            backgroundOutline.effectDistance = new Vector2(3f, -3f);
+            backgroundOutline.enabled = false;
 
             GameObject textObject = new GameObject(
                 "ValidationMessage",

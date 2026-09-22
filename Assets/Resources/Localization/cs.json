@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "DOPORUČUJEME HRU PRO VÍCE HRÁČŮ!" },
     { "key": "single_recommend_message", "value": "NICO DRAW je nejlepší při společné spolupráci!\nZkuste si zahrát ve 2–4 hráčích!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Ukončit NICO DRAW?" }
   ]
 }

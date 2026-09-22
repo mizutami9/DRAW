@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "¡MULTIJUGADOR RECOMENDADO!" },
     { "key": "single_recommend_message", "value": "¡NICO DRAW se disfruta más colaborando!\n¡Prueba a jugar con 2–4 jugadores!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "¿Salir de NICO DRAW?" }
   ]
 }

@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "MULTIJOGADOR RECOMENDADO!" },
     { "key": "single_recommend_message", "value": "NICO DRAW é ainda melhor jogando em equipe!\nExperimente jogar com 2–4 pessoas!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Sair do NICO DRAW?" }
   ]
 }

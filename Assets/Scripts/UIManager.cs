@@ -32,6 +32,10 @@ namespace DrawBody.Prototype
         private Text singlePlayRecommendationTitle;
         private Text singlePlayRecommendationMessage;
         private Text singlePlayRecommendationOkLabel;
+        private GameObject titleExitConfirmationPanel;
+        private Text titleExitConfirmationMessage;
+        private Text titleExitConfirmationYesLabel;
+        private Text titleExitConfirmationNoLabel;
         private GameObject gameplayActionConfirmPanel;
         private GameplayButtonCommand.Command pendingGameplayAction;
         private GameObject speciesSwapConfirmPanel;
@@ -189,10 +193,9 @@ namespace DrawBody.Prototype
             root.anchoredPosition = new Vector2(0f, -34f);
             root.sizeDelta = new Vector2(780f, 68f);
             Image paper = gameplayNotice.GetComponent<Image>();
-            paper.color = new Color(1f, 0.91f, 0.72f, 0.97f);
+            DoodlePaperUi.Apply(paper, new Color(1f, 0.91f, 0.72f, 0.97f));
             Outline outline = gameplayNotice.AddComponent<Outline>();
-            outline.effectColor = new Color(0.72f, 0.18f, 0.12f, 0.95f);
-            outline.effectDistance = new Vector2(3f, -3f);
+            outline.enabled = false;
             Shadow shadow = gameplayNotice.AddComponent<Shadow>();
             shadow.effectColor = new Color(0.1f, 0.08f, 0.05f, 0.22f);
             shadow.effectDistance = new Vector2(6f, -6f);
@@ -282,10 +285,9 @@ namespace DrawBody.Prototype
             rect.anchoredPosition = new Vector2(0f, -18f);
             rect.sizeDelta = new Vector2(300f, 44f);
             Image background = challengeHud.GetComponent<Image>();
-            background.color = new Color(1f, 0.97f, 0.78f, 0.96f);
+            DoodlePaperUi.Apply(background, new Color(1f, 0.97f, 0.78f, 0.96f));
             Outline outline = challengeHud.AddComponent<Outline>();
-            outline.effectColor = new Color(0.12f, 0.3f, 0.48f, 0.8f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.enabled = false;
 
             Font font = statusText != null && statusText.font != null
                 ? statusText.font
@@ -708,15 +710,12 @@ namespace DrawBody.Prototype
             cardRect.pivot = new Vector2(0.5f, 0.5f);
             cardRect.anchoredPosition = Vector2.zero;
             cardRect.sizeDelta = new Vector2(700f, 330f);
-            card.GetComponent<Image>().color = new Color(0.99f, 0.97f, 0.86f, 1f);
-            card.AddComponent<SketchPaperTexture>();
+            DoodlePaperUi.Apply(card.GetComponent<Image>(), new Color(0.99f, 0.97f, 0.86f, 1f));
             Outline outline = card.GetComponent<Outline>();
-            outline.effectColor = new Color(0.18f, 0.13f, 0.08f, 0.86f);
-            outline.effectDistance = new Vector2(3f, -3f);
+            outline.enabled = false;
             Shadow shadow = card.GetComponent<Shadow>();
             shadow.effectColor = new Color(0f, 0f, 0f, 0.28f);
             shadow.effectDistance = new Vector2(10f, -11f);
-            CreateClearCardFrame(card.transform, cardRect.sizeDelta);
             CreateClearPaintStroke(card.transform, "RecommendationHighlight", new Vector2(0f, 108f),
                 new Vector2(570f, 66f), new Color(1f, 0.72f, 0.08f, 0.24f));
 
@@ -767,6 +766,103 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void ShowTitleExitConfirmation()
+        {
+            EnsureTitleExitConfirmationPanel();
+            RefreshTitleExitConfirmationText();
+            if (titleExitConfirmationPanel == null) return;
+            titleExitConfirmationPanel.SetActive(true);
+            titleExitConfirmationPanel.transform.SetAsLastSibling();
+            GameSfx.Play(SfxId.UiButtonPress);
+        }
+
+        private void EnsureTitleExitConfirmationPanel()
+        {
+            if (titleExitConfirmationPanel != null) return;
+
+            Font font = GetComponentInChildren<Text>(true)?.font;
+            if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+
+            titleExitConfirmationPanel = new GameObject(
+                "TitleExitConfirmationPanel", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            titleExitConfirmationPanel.transform.SetParent(transform, false);
+            Stretch(titleExitConfirmationPanel.GetComponent<RectTransform>());
+            Image blocker = titleExitConfirmationPanel.GetComponent<Image>();
+            blocker.color = new Color(0.025f, 0.04f, 0.055f, 0.68f);
+
+            GameObject card = new GameObject(
+                "TitleExitConfirmationCard", typeof(RectTransform), typeof(CanvasRenderer),
+                typeof(Image), typeof(Outline), typeof(Shadow));
+            card.transform.SetParent(titleExitConfirmationPanel.transform, false);
+            RectTransform cardRect = card.GetComponent<RectTransform>();
+            cardRect.anchorMin = cardRect.anchorMax = cardRect.pivot = new Vector2(0.5f, 0.5f);
+            cardRect.sizeDelta = new Vector2(590f, 270f);
+            DoodlePaperUi.Apply(card.GetComponent<Image>(), new Color(0.99f, 0.965f, 0.84f, 1f));
+            card.GetComponent<Outline>().enabled = false;
+            Shadow shadow = card.GetComponent<Shadow>();
+            shadow.effectColor = new Color(0f, 0f, 0f, 0.28f);
+            shadow.effectDistance = new Vector2(10f, -11f);
+
+            CreateClearPaintStroke(card.transform, "ExitConfirmationHighlight", new Vector2(0f, 74f),
+                new Vector2(475f, 54f), new Color(1f, 0.36f, 0.25f, 0.18f));
+            titleExitConfirmationMessage = CreateClearText(
+                "TitleExitConfirmationMessage", card.transform, font, 27, TextAnchor.MiddleCenter,
+                new Vector2(0f, 60f), new Vector2(515f, 94f));
+            titleExitConfirmationMessage.fontStyle = FontStyle.Bold;
+            titleExitConfirmationMessage.color = new Color(0.16f, 0.08f, 0.06f, 1f);
+            titleExitConfirmationMessage.resizeTextForBestFit = true;
+            titleExitConfirmationMessage.resizeTextMinSize = 17;
+            titleExitConfirmationMessage.resizeTextMaxSize = 27;
+
+            Button exit = CreateClearButton(
+                "TitleExitConfirmationYes", card.transform, font, new Vector2(-122f, -70f),
+                new Vector2(210f, 64f), new Color(1f, 0.42f, 0.32f, 1f));
+            titleExitConfirmationYesLabel = exit.GetComponentInChildren<Text>(true);
+            exit.onClick.AddListener(ConfirmTitleExit);
+
+            Button cancel = CreateClearButton(
+                "TitleExitConfirmationNo", card.transform, font, new Vector2(122f, -70f),
+                new Vector2(210f, 64f), new Color(0.72f, 0.88f, 0.96f, 1f));
+            titleExitConfirmationNoLabel = cancel.GetComponentInChildren<Text>(true);
+            cancel.onClick.AddListener(HideTitleExitConfirmation);
+
+            RefreshTitleExitConfirmationText();
+            titleExitConfirmationPanel.SetActive(false);
+        }
+
+        private void ConfirmTitleExit()
+        {
+            HideTitleExitConfirmation();
+            ResolveStageManager()?.ExitGame();
+        }
+
+        private void HideTitleExitConfirmation()
+        {
+            if (titleExitConfirmationPanel != null)
+                titleExitConfirmationPanel.SetActive(false);
+        }
+
+        private void RefreshTitleExitConfirmationText()
+        {
+            Font font = LocalizationManager.LoadCurrentFont(
+                titleExitConfirmationMessage != null ? titleExitConfirmationMessage.font : null);
+            if (titleExitConfirmationMessage != null)
+            {
+                titleExitConfirmationMessage.text = LocalizationManager.T("title_exit_confirm");
+                titleExitConfirmationMessage.font = font;
+            }
+            if (titleExitConfirmationYesLabel != null)
+            {
+                titleExitConfirmationYesLabel.text = LocalizationManager.T("title_exit");
+                titleExitConfirmationYesLabel.font = font;
+            }
+            if (titleExitConfirmationNoLabel != null)
+            {
+                titleExitConfirmationNoLabel.text = LocalizationManager.T("cancel");
+                titleExitConfirmationNoLabel.font = font;
+            }
+        }
+
         public void HideGameplayActionConfirm()
         {
             if (gameplayActionConfirmPanel != null)
@@ -812,10 +908,9 @@ namespace DrawBody.Prototype
             cardRect.anchorMin = cardRect.anchorMax = cardRect.pivot = new Vector2(0.5f, 0.5f);
             cardRect.sizeDelta = new Vector2(540f, 260f);
             Image paper = card.GetComponent<Image>();
-            paper.color = new Color(1f, 0.965f, 0.78f, 1f);
+            DoodlePaperUi.Apply(paper, new Color(1f, 0.965f, 0.78f, 1f));
             Outline outline = card.AddComponent<Outline>();
-            outline.effectColor = new Color(0.04f, 0.07f, 0.11f, 1f);
-            outline.effectDistance = new Vector2(4f, -4f);
+            outline.enabled = false;
 
             Text message = CreateClearText(
                 "GameplayActionConfirmMessage", card.transform, font, 26,
@@ -927,10 +1022,9 @@ namespace DrawBody.Prototype
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.sizeDelta = new Vector2(600f, 280f);
             Image paper = speciesSwapConfirmPanel.GetComponent<Image>();
-            paper.color = new Color(1f, 0.965f, 0.78f, 1f);
+            DoodlePaperUi.Apply(paper, new Color(1f, 0.965f, 0.78f, 1f));
             Outline outline = speciesSwapConfirmPanel.AddComponent<Outline>();
-            outline.effectColor = new Color(0.04f, 0.07f, 0.11f, 1f);
-            outline.effectDistance = new Vector2(4f, -4f);
+            outline.enabled = false;
 
             Text title = CreateClearText(
                 "SpeciesSwapTitle",
@@ -1039,10 +1133,9 @@ namespace DrawBody.Prototype
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.sizeDelta = new Vector2(520f, 250f);
             Image paper = leaveSessionConfirmPanel.GetComponent<Image>();
-            paper.color = new Color(0.985f, 0.975f, 0.925f, 1f);
+            DoodlePaperUi.Apply(paper, new Color(0.985f, 0.975f, 0.925f, 1f));
             Outline outline = leaveSessionConfirmPanel.AddComponent<Outline>();
-            outline.effectColor = new Color(0.04f, 0.07f, 0.11f, 1f);
-            outline.effectDistance = new Vector2(3f, -3f);
+            outline.enabled = false;
 
             Text message = CreateClearText(
                 "LeaveSessionMessage",
@@ -1203,7 +1296,8 @@ namespace DrawBody.Prototype
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = new Vector2(0f, 84f);
             rect.sizeDelta = new Vector2(760f, 78f);
-            stageSelectLockedPanel.GetComponent<Image>().color = new Color(0.96f, 0.93f, 0.82f, 0.92f);
+            DoodlePaperUi.Apply(stageSelectLockedPanel.GetComponent<Image>(),
+                new Color(0.96f, 0.93f, 0.82f, 0.92f));
 
             GameObject textObject = new GameObject("StageSelectLockedText", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
             textObject.transform.SetParent(stageSelectLockedPanel.transform, false);
@@ -1251,6 +1345,7 @@ namespace DrawBody.Prototype
                 HideLeaveSessionConfirm();
                 HideGameplayActionConfirm();
                 HideSpeciesSwapConfirm();
+                HideTitleExitConfirmation();
             }
             if (titlePanel != null)
             {
@@ -1502,11 +1597,10 @@ namespace DrawBody.Prototype
             rect.anchoredPosition = new Vector2(14f, -14f);
             rect.sizeDelta = new Vector2(300f, 64f);
             Image paper = root.GetComponent<Image>();
-            paper.color = new Color(0.99f, 0.97f, 0.86f, 0.78f);
+            DoodlePaperUi.Apply(paper, new Color(0.99f, 0.97f, 0.86f, 0.78f));
             paper.raycastTarget = false;
             Outline outline = root.AddComponent<Outline>();
-            outline.effectColor = new Color(0.2f, 0.15f, 0.1f, 0.42f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.enabled = false;
 
             GameObject textObject = new GameObject("Text", typeof(RectTransform),
                 typeof(CanvasRenderer), typeof(Text));
@@ -1612,16 +1706,13 @@ namespace DrawBody.Prototype
             resultRect.sizeDelta = new Vector2(820f, 460f);
 
             Image paper = result.AddComponent<Image>();
-            paper.color = new Color(0.99f, 0.975f, 0.89f, 1f);
-            result.AddComponent<SketchPaperTexture>();
+            DoodlePaperUi.Apply(paper, new Color(0.99f, 0.975f, 0.89f, 1f));
             Outline paperOutline = result.AddComponent<Outline>();
-            paperOutline.effectColor = new Color(0.12f, 0.1f, 0.075f, 0.92f);
-            paperOutline.effectDistance = new Vector2(3f, -3f);
+            paperOutline.enabled = false;
             Shadow paperShadow = result.AddComponent<Shadow>();
             paperShadow.effectColor = new Color(0f, 0f, 0f, 0.26f);
             paperShadow.effectDistance = new Vector2(11f, -12f);
 
-            CreateClearCardFrame(result.transform, resultRect.sizeDelta);
             CreateClearPaintStroke(result.transform, "ClearStampPaint", new Vector2(0f, 94f),
                 new Vector2(650f, 112f), new Color(1f, 0.76f, 0.08f, 0.28f));
             CreateDynamicClearPetals(result.transform);
@@ -1635,10 +1726,9 @@ namespace DrawBody.Prototype
             ticketRect.sizeDelta = new Vector2(590f, 132f);
             clearStamp = ticketRect;
             clearStampImage = stageTicket.GetComponent<Image>();
-            clearStampImage.color = new Color(1f, 0.96f, 0.78f, 0.96f);
+            DoodlePaperUi.Apply(clearStampImage, new Color(1f, 0.96f, 0.78f, 0.96f));
             clearStampOutline = stageTicket.AddComponent<Outline>();
-            clearStampOutline.effectColor = new Color(0.78f, 0.16f, 0.12f, 0.92f);
-            clearStampOutline.effectDistance = new Vector2(4f, -4f);
+            clearStampOutline.enabled = false;
             Shadow stampShadow = stageTicket.AddComponent<Shadow>();
             stampShadow.effectColor = new Color(0f, 0f, 0f, 0.2f);
             stampShadow.effectDistance = new Vector2(7f, -8f);
@@ -1953,10 +2043,9 @@ namespace DrawBody.Prototype
             rect.anchoredPosition = position;
             rect.sizeDelta = size;
             Image image = buttonObject.GetComponent<Image>();
-            image.color = color;
+            DoodlePaperUi.Apply(image, color);
             Outline outline = buttonObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.12f, 0.1f, 0.08f, 0.88f);
-            outline.effectDistance = new Vector2(3f, -3f);
+            outline.enabled = false;
             Shadow shadow = buttonObject.AddComponent<Shadow>();
             shadow.effectColor = new Color(0f, 0f, 0f, 0.2f);
             shadow.effectDistance = new Vector2(7f, -7f);
@@ -2073,6 +2162,7 @@ namespace DrawBody.Prototype
             RefreshGameplayMenu();
             RefreshGameplayActionConfirmText();
             RefreshSinglePlayRecommendationText();
+            RefreshTitleExitConfirmationText();
             RefreshSpeciesSwapText();
             if (stageSelectLockedText != null)
                 stageSelectLockedText.text = LocalizationManager.T("multi_host_selecting_stage");

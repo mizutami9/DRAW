@@ -117,14 +117,21 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            Shadow shadow = GetComponent<Shadow>();
-            if (shadow == null)
+            bool paperSurface = DoodlePaperUi.IsApplied(targetImage);
+            if (paperSurface)
             {
-                shadow = gameObject.AddComponent<Shadow>();
+                DoodlePaperUi.DisableLegacyEffects(gameObject);
             }
-
-            shadow.effectColor = new Color(0.12f, 0.09f, 0.04f, 0.22f);
-            shadow.effectDistance = new Vector2(5f, -6f);
+            else
+            {
+                Shadow shadow = GetComponent<Shadow>();
+                if (shadow == null)
+                {
+                    shadow = gameObject.AddComponent<Shadow>();
+                }
+                shadow.effectColor = new Color(0.12f, 0.09f, 0.04f, 0.22f);
+                shadow.effectDistance = new Vector2(5f, -6f);
+            }
 
             HideDecoration("CrayonFill");
             HideDecoration("MaskingTape");
@@ -133,11 +140,19 @@ namespace DrawBody.Prototype
             selectionScribble = null;
 
             Outline outline = GetComponent<Outline>();
+            if (paperSurface)
+            {
+                if (outline != null) outline.enabled = false;
+                Transform paperLabel = transform.Find("Label");
+                if (paperLabel != null) paperLabel.SetAsLastSibling();
+                return;
+            }
+
             if (outline == null)
             {
                 outline = gameObject.AddComponent<Outline>();
             }
-
+            outline.enabled = true;
             outline.effectColor = new Color(0.2f, 0.14f, 0.08f, 0.62f);
             outline.effectDistance = new Vector2(2f, -2f);
             outline.useGraphicAlpha = true;

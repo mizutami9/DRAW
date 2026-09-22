@@ -635,10 +635,9 @@ namespace DrawBody.Prototype
             RectTransform panel = CreateRect("Panel", canvasObject.transform as RectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -18f), new Vector2(1500f, 190f));
             panel.pivot = new Vector2(0.5f, 1f);
             Image panelImage = panel.gameObject.AddComponent<Image>();
-            panelImage.color = new Color(0.97f, 0.94f, 0.82f, 0.94f);
+            DoodlePaperUi.Apply(panelImage, new Color(0.97f, 0.94f, 0.82f, 0.94f));
             Outline outline = panel.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.08f, 0.07f, 0.05f, 0.85f);
-            outline.effectDistance = new Vector2(3f, -3f);
+            outline.enabled = false;
 
             Text title = CreateText("Title", panel, LocalizationManager.T("trailer_tas_title"), font, 30, new Vector2(-530f, 66f), new Vector2(390f, 44f));
             title.fontStyle = FontStyle.Bold;
@@ -703,7 +702,7 @@ namespace DrawBody.Prototype
         {
             RectTransform rect = CreateRect(name, parent, new Vector2(0.5f, 0.5f), position, size);
             Image image = rect.gameObject.AddComponent<Image>();
-            image.color = new Color(1f, 0.82f, 0.25f, 1f);
+            DoodlePaperUi.Apply(image, new Color(1f, 0.82f, 0.25f, 1f));
             Button button = rect.gameObject.AddComponent<Button>();
             button.targetGraphic = image;
             button.onClick.AddListener(() =>

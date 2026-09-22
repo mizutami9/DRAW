@@ -55,7 +55,7 @@ namespace DrawBody.Prototype
                 Image image = card.GetComponent<Image>();
                 if (image != null)
                 {
-                    image.color = GetWorldCardColor(i);
+                    DoodlePaperUi.Apply(image, GetWorldCardColor(i));
                 }
             }
         }
@@ -83,20 +83,27 @@ namespace DrawBody.Prototype
                 Image image = rect.GetComponent<Image>();
                 if (image != null)
                 {
-                    image.color = GetWorldCardColor(ParseWorldNumber(rect.name));
+                    DoodlePaperUi.Apply(image, GetWorldCardColor(ParseWorldNumber(rect.name)));
                 }
 
-                if (rect.GetComponent<SketchPaperTexture>() == null)
+                SketchPaperTexture legacyPaper = rect.GetComponent<SketchPaperTexture>();
+                if (legacyPaper != null)
                 {
-                    rect.gameObject.AddComponent<SketchPaperTexture>();
+                    legacyPaper.enabled = false;
                 }
 
-                RemoveIfExists(rect, "WorldMaskingTapeA");
-                RemoveIfExists(rect, "WorldMaskingTapeB");
+                // World sheets are the clearest scrapbook element on this screen.  Tape only
+                // some of them so the decoration feels hand-placed instead of becoming a
+                // repeated UI border.  The tape is a child decoration and does not alter the
+                // card layout or its hit area.
+                EnsureWorldCardTape(rect, ParseWorldNumber(rect.name));
                 RemoveIfExists(rect, "FoldedCorner");
                 RemoveShadow(rect.gameObject);
-                AddBoldFrame(rect, "WorldBoldFrame", 3.1f, new Color(0.18f, 0.12f, 0.07f, 0.58f));
+                DisableLegacyFrame(rect, "WorldBoldFrame");
                 rect.sizeDelta = new Vector2(200f, 330f);
+                // Reserve the upper band for the crayon STAGE heading.  Moving the
+                // complete cards keeps their internal layout and hit areas intact.
+                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 140f);
                 rect.localRotation = Quaternion.identity;
                 NormalizeWorldHeading(rect, ParseWorldNumber(rect.name));
                 LayoutStageButtons(rect);
@@ -473,8 +480,12 @@ namespace DrawBody.Prototype
 
                 RemoveIfExists(rect, "MaskingTape");
                 RemoveIfExists(rect, "StickyNoteBoldFrame");
-                AddShadow(button.gameObject, new Vector2(5f, -5f), 0.21f);
-                AddBoldFrame(rect, "ButtonBoldFrame", 3f, new Color(0.12f, 0.09f, 0.06f, 0.86f));
+                Image surface = button.GetComponent<Image>();
+                if (surface != null)
+                {
+                    DoodlePaperUi.Apply(surface, surface.color);
+                }
+                DisableLegacyFrame(rect, "ButtonBoldFrame");
                 rect.localRotation = Quaternion.identity;
 
                 Text label = button.GetComponentInChildren<Text>(true);
@@ -514,12 +525,10 @@ namespace DrawBody.Prototype
             label.verticalOverflow = VerticalWrapMode.Truncate;
 
             Image image = button.GetComponent<Image>();
-            if (image != null) image.color = new Color(0.98f, 0.96f, 0.9f, 0.95f);
+            if (image != null) DoodlePaperUi.Apply(image, new Color(0.98f, 0.96f, 0.9f, 0.95f));
             Outline outline = button.GetComponent<Outline>();
             if (outline == null) outline = button.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.12f, 0.09f, 0.06f, 0.86f);
-            outline.effectDistance = new Vector2(3f, -3f);
-            outline.useGraphicAlpha = true;
+            outline.enabled = false;
 
             Transform status = button.transform.Find("DebugCreationStatus");
             if (status != null)
@@ -527,18 +536,6 @@ namespace DrawBody.Prototype
                 status.gameObject.SetActive(false);
                 Destroy(status.gameObject);
             }
-        }
-
-        private static void AddShadow(GameObject target, Vector2 distance, float alpha)
-        {
-            Shadow shadow = FindPlainShadow(target);
-            if (shadow == null)
-            {
-                shadow = target.AddComponent<Shadow>();
-            }
-
-            shadow.effectColor = new Color(0.1f, 0.07f, 0.03f, alpha);
-            shadow.effectDistance = distance;
         }
 
         private static void RemoveShadow(GameObject target)
@@ -556,21 +553,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static Shadow FindPlainShadow(GameObject target)
-        {
-            Shadow[] effects = target.GetComponents<Shadow>();
-            for (int i = 0; i < effects.Length; i++)
-            {
-                if (effects[i] != null && effects[i].GetType() == typeof(Shadow))
-                {
-                    return effects[i];
-                }
-            }
-
-            return null;
-        }
-
-        private static void AddBoldFrame(RectTransform parent, string name, float width, Color color)
+        private static void DisableLegacyFrame(RectTransform parent, string name)
         {
             Transform existing = parent.Find(name);
             if (existing != null)
@@ -579,14 +562,10 @@ namespace DrawBody.Prototype
             }
 
             Outline outline = parent.GetComponent<Outline>();
-            if (outline == null)
+            if (outline != null)
             {
-                outline = parent.gameObject.AddComponent<Outline>();
+                outline.enabled = false;
             }
-
-            outline.effectColor = color;
-            outline.effectDistance = new Vector2(width, -width);
-            outline.useGraphicAlpha = true;
         }
 
         private static void RemoveIfExists(RectTransform parent, string childName)
@@ -598,17 +577,58 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static void AddMaskingTape(RectTransform parent, string name, Vector2 position, float rotation)
+        private static void EnsureWorldCardTape(RectTransform card, int world)
         {
-            if (parent.Find(name) != null)
+            bool leftTape = world % 3 == 1;
+            bool rightTape = world % 3 == 0;
+
+            SetDecorationActive(card, "WorldMaskingTapeA", leftTape);
+            SetDecorationActive(card, "WorldMaskingTapeB", rightTape);
+
+            if (leftTape)
+            {
+                AddMaskingTape(card, "WorldMaskingTapeA", new Vector2(-47f, 160f), -5f,
+                    new Color(0.64f, 0.88f, 0.94f, 0.62f));
+            }
+            else if (rightTape)
+            {
+                AddMaskingTape(card, "WorldMaskingTapeB", new Vector2(46f, 160f), 4f,
+                    new Color(1f, 0.86f, 0.48f, 0.58f));
+            }
+        }
+
+        private static void SetDecorationActive(RectTransform parent, string childName, bool active)
+        {
+            Transform child = parent != null ? parent.Find(childName) : null;
+            if (child != null)
+            {
+                child.gameObject.SetActive(active);
+            }
+        }
+
+        private static void AddMaskingTape(RectTransform parent, string name, Vector2 position,
+            float rotation, Color color)
+        {
+            if (parent == null)
             {
                 return;
             }
 
-            GameObject tape = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-            tape.transform.SetParent(parent, false);
+            Transform existing = parent.Find(name);
+            GameObject tape;
+            if (existing != null)
+            {
+                tape = existing.gameObject;
+                tape.SetActive(true);
+            }
+            else
+            {
+                tape = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                tape.transform.SetParent(parent, false);
+            }
+
             Image image = tape.GetComponent<Image>();
-            image.color = new Color(1f, 0.9f, 0.58f, 0.52f);
+            image.color = color;
             image.raycastTarget = false;
 
             RectTransform rect = tape.GetComponent<RectTransform>();
@@ -616,8 +636,57 @@ namespace DrawBody.Prototype
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = position;
-            rect.sizeDelta = new Vector2(66f, 18f);
+            rect.sizeDelta = new Vector2(64f, 17f);
             rect.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            rect.SetAsFirstSibling();
+
+            Color paperEdge = new Color(0.34f, 0.28f, 0.16f, 0.18f);
+            EnsureTapeLine(rect, "TapeTopEdge", new Vector2(-29f, 7f), new Vector2(28f, 6f),
+                0.8f, paperEdge);
+            EnsureTapeLine(rect, "TapeBottomEdge", new Vector2(-28f, -6f), new Vector2(29f, -7f),
+                0.8f, paperEdge);
+
+            // Two nearly invisible fibres are enough to keep the tape from reading as a flat
+            // Unity rectangle at small stage-select scale.
+            Color fibre = new Color(1f, 1f, 0.94f, 0.2f);
+            EnsureTapeLine(rect, "TapeFibreA", new Vector2(-23f, 2f), new Vector2(21f, 1f),
+                0.7f, fibre);
+            EnsureTapeLine(rect, "TapeFibreB", new Vector2(-15f, -2f), new Vector2(25f, -1f),
+                0.6f, fibre);
+        }
+
+        private static void EnsureTapeLine(RectTransform parent, string name, Vector2 from,
+            Vector2 to, float width, Color color)
+        {
+            Transform existing = parent.Find(name);
+            RectTransform rect;
+            Image image;
+            if (existing == null)
+            {
+                GameObject line = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                line.transform.SetParent(parent, false);
+                rect = line.GetComponent<RectTransform>();
+                image = line.GetComponent<Image>();
+            }
+            else
+            {
+                rect = existing as RectTransform;
+                image = existing.GetComponent<Image>();
+            }
+
+            if (rect == null || image == null)
+            {
+                return;
+            }
+
+            image.color = color;
+            image.raycastTarget = false;
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0f, 0.5f);
+            rect.anchoredPosition = from;
+            rect.sizeDelta = new Vector2(Vector2.Distance(from, to), width);
+            rect.localRotation = Quaternion.Euler(0f, 0f,
+                Mathf.Atan2(to.y - from.y, to.x - from.x) * Mathf.Rad2Deg);
         }
 
         private static void AddFoldedCorner(RectTransform parent)

@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "멀티플레이 추천!" },
     { "key": "single_recommend_message", "value": "NICO DRAW는 함께 협력할 때 가장 재미있습니다!\n2–4명이 함께 플레이해 보세요!" },
     { "key": "single_recommend_ok", "value": "확인" }
+    ,{ "key": "title_exit_confirm", "value": "NICO DRAW를 종료할까요?" }
   ]
 }

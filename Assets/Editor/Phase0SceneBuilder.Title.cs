@@ -19,11 +19,11 @@ namespace DrawBody.EditorTools
                 GameObject logoObject = new GameObject("TitleNicoDrowLogo");
                 logoObject.transform.SetParent(panel.transform, false);
                 RectTransform logoRect = logoObject.AddComponent<RectTransform>();
-                logoRect.anchorMin = new Vector2(0.5f, 1f);
-                logoRect.anchorMax = new Vector2(0.5f, 1f);
-                logoRect.pivot = new Vector2(0.5f, 1f);
-                logoRect.anchoredPosition = new Vector2(0f, -14f);
-                logoRect.sizeDelta = new Vector2(1120f, 365f);
+                logoRect.anchorMin = new Vector2(0.5f, 0f);
+                logoRect.anchorMax = new Vector2(0.5f, 0f);
+                logoRect.pivot = new Vector2(0.5f, 0.5f);
+                logoRect.anchoredPosition = new Vector2(0f, 234f);
+                logoRect.sizeDelta = new Vector2(810f, 270f);
                 logoRect.localRotation = Quaternion.identity;
 
                 Image logoImage = logoObject.AddComponent<Image>();

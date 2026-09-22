@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "推荐多人游戏！" },
     { "key": "single_recommend_message", "value": "NICO DRAW 最适合大家一起合作游玩！\n请尝试与 2–4 名玩家一起玩！" },
     { "key": "single_recommend_ok", "value": "确定" }
+    ,{ "key": "title_exit_confirm", "value": "要退出 NICO DRAW 吗？" }
   ]
 }

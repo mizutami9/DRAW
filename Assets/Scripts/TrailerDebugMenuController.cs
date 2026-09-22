@@ -57,7 +57,7 @@ namespace DrawBody.Prototype
             {
                 GameObject buttonObject = CreateUiObject("TitleDebugButton", titleMenu);
                 Image image = buttonObject.AddComponent<Image>();
-                image.color = new Color(0.22f, 0.78f, 0.92f, 1f);
+                DoodlePaperUi.Apply(image, new Color(0.22f, 0.78f, 0.92f, 1f));
                 Button button = buttonObject.AddComponent<Button>();
                 button.targetGraphic = image;
                 TitleButtonCommand command = buttonObject.AddComponent<TitleButtonCommand>();
@@ -91,10 +91,9 @@ namespace DrawBody.Prototype
             card.sizeDelta = new Vector2(780f, 470f);
             card.anchoredPosition = Vector2.zero;
             Image cardImage = cardObject.AddComponent<Image>();
-            cardImage.color = new Color(1f, 0.97f, 0.84f, 1f);
+            DoodlePaperUi.Apply(cardImage, new Color(1f, 0.97f, 0.84f, 1f));
             Outline outline = cardObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.08f, 0.07f, 0.06f, 0.9f);
-            outline.effectDistance = new Vector2(4f, -4f);
+            outline.enabled = false;
 
             titleLabel = CreateLabel("Title", card, string.Empty, 38, font);
             SetRect(titleLabel.rectTransform, new Vector2(0f, 158f), new Vector2(700f, 65f));
@@ -182,12 +181,11 @@ namespace DrawBody.Prototype
             RectTransform rect = target.transform as RectTransform;
             SetRect(rect, position, size);
             Image image = target.AddComponent<Image>();
-            image.color = color;
+            DoodlePaperUi.Apply(image, color);
             Button button = target.AddComponent<Button>();
             button.targetGraphic = image;
             Outline outline = target.AddComponent<Outline>();
-            outline.effectColor = new Color(0.08f, 0.07f, 0.06f, 0.85f);
-            outline.effectDistance = new Vector2(3f, -3f);
+            outline.enabled = false;
             label = CreateLabel("Label", rect, string.Empty, 25, font);
             return button;
         }

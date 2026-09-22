@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "يُنصح باللعب الجماعي!" },
     { "key": "single_recommend_message", "value": "تكون NICO DRAW أكثر متعة عند التعاون معًا!\nجرّب اللعب مع 2–4 لاعبين!" },
     { "key": "single_recommend_ok", "value": "حسنًا" }
+    ,{ "key": "title_exit_confirm", "value": "هل تريد الخروج من NICO DRAW؟" }
   ]
 }

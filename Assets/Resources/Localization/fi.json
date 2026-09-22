@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "MONINPELIÄ SUOSITELLAAN!" },
     { "key": "single_recommend_message", "value": "NICO DRAW on hauskimmillaan yhteistyössä!\nKokeilkaa pelaamista 2–4 pelaajalla!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Lopetetaanko NICO DRAW?" }
   ]
 }

@@ -30,7 +30,8 @@ namespace DrawBody.EditorTools
             panel.AddComponent<DrawScreenVisualPolisher>();
 
             Text title = CreateText("DrawTitle", panel.transform, font, 48, TextAnchor.UpperLeft);
-            title.text = "DROW";
+            title.text = LocalizationManager.T("title_draw");
+            AddLocalizedText(title.gameObject, "title_draw");
             title.color = new Color(0.12f, 0.1f, 0.08f);
             title.fontStyle = FontStyle.Bold;
             title.rectTransform.anchorMin = new Vector2(0f, 1f);

@@ -4375,5 +4375,6 @@
     { "key": "single_recommend_title", "value": "RECOMANDĂM MODUL MULTIPLAYER!" },
     { "key": "single_recommend_message", "value": "NICO DRAW este cel mai distractiv când cooperați!\nÎncercați să jucați în 2–4 jucători!" },
     { "key": "single_recommend_ok", "value": "OK" }
+    ,{ "key": "title_exit_confirm", "value": "Ieși din NICO DRAW?" }
   ]
 }

@@ -309,10 +309,9 @@ namespace DrawBody.Prototype
             RectTransform panel = CreateUiRect("Panel", canvasObject.transform as RectTransform, new Vector2(0.5f, 0f), new Vector2(0f, 22f), new Vector2(980f, 112f));
             panel.pivot = new Vector2(0.5f, 0f);
             Image image = panel.gameObject.AddComponent<Image>();
-            image.color = new Color(0.98f, 0.95f, 0.83f, 0.95f);
+            DoodlePaperUi.Apply(image, new Color(0.98f, 0.95f, 0.83f, 0.95f));
             Outline outline = panel.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.06f, 0.05f, 0.04f, 0.9f);
-            outline.effectDistance = new Vector2(3f, -3f);
+            outline.enabled = false;
 
             statusLabel = CreateUiText("Status", panel, LocalizationManager.T("steam_header_ready"), font, 21, new Vector2(0f, 32f), new Vector2(900f, 34f));
             CreateUiButton("Capture", panel, LocalizationManager.T("steam_header_capture") + "  [F12]", font, new Vector2(-185f, -17f), new Vector2(510f, 48f), new Color(0.96f, 0.46f, 0.7f, 1f), ExportHeader);
@@ -549,13 +548,12 @@ namespace DrawBody.Prototype
         {
             RectTransform rect = CreateUiRect(name, parent, new Vector2(0.5f, 0.5f), position, size);
             Image image = rect.gameObject.AddComponent<Image>();
-            image.color = color;
+            DoodlePaperUi.Apply(image, color);
             Button button = rect.gameObject.AddComponent<Button>();
             button.targetGraphic = image;
             button.onClick.AddListener(action);
             Outline outline = rect.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color(0.07f, 0.06f, 0.05f, 0.85f);
-            outline.effectDistance = new Vector2(2f, -2f);
+            outline.enabled = false;
             CreateUiText("Label", rect, label, font, 22, Vector2.zero, size);
         }
     }

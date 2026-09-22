@@ -30,6 +30,14 @@ namespace DrawBody.Prototype
             Outline outline = GetComponent<Outline>();
             if (outline != null)
             {
+                Image surface = GetComponent<Image>();
+                if (DoodlePaperUi.IsApplied(surface))
+                {
+                    outline.enabled = false;
+                    return;
+                }
+
+                outline.enabled = true;
                 outline.effectColor = new Color(0.08f, 0.07f, 0.06f, 0.86f);
                 outline.effectDistance = new Vector2(2.8f, -2.8f);
             }
