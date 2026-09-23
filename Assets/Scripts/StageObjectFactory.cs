@@ -14,10 +14,19 @@ namespace DrawBody.Prototype
         private static Material lineMaterial;
         private static Sprite circleSprite;
         private static Sprite scaleBodySprite;
+        private static Sprite natureWallVineSprite;
         private static Font monitorFont;
-        private static readonly Color TitleTerrainPaperColor = new Color(0.84f, 0.94f, 0.77f, 1f);
-        private static readonly Color TitleTerrainStrokeColor = new Color(0.24f, 0.62f, 0.29f, 0.96f);
-        private static readonly Color TitleTerrainAccentColor = new Color(0.43f, 0.76f, 0.43f, 0.58f);
+        private static readonly Color TitleTerrainPaperColor = new Color(0.905f, 0.965f, 0.845f, 1f);
+        private static readonly Color TitleTerrainStrokeColor = new Color(0.16f, 0.57f, 0.22f, 0.98f);
+        private static readonly Color TitleTerrainAccentColor = new Color(0.34f, 0.72f, 0.34f, 0.72f);
+        private Transform visualThemeRoot;
+        private string visualThemeStageId;
+
+        public void ConfigureStageVisualTheme(string stageId, Transform root)
+        {
+            visualThemeStageId = stageId;
+            visualThemeRoot = root;
+        }
 
         public GameObject Create(StageObjectData data, Transform parent)
         {
@@ -534,7 +543,10 @@ namespace DrawBody.Prototype
                 1.5f);
             float thickness = GetStageBoundaryThickness(data);
             float outwardGrowth = thickness - storedThickness;
-            Color stroke = new Color(0.16f, 0.17f, 0.2f, 1f);
+            bool useNatureTerrainStyle = UsesNatureStageTheme(parent);
+            Color stroke = useNatureTerrainStyle
+                ? TitleTerrainStrokeColor
+                : new Color(0.16f, 0.17f, 0.2f, 1f);
 
             CreateBoundarySide(
                 "Boundary Ceiling",
@@ -559,6 +571,15 @@ namespace DrawBody.Prototype
                 new Vector2(thickness, wallHeight),
                 stroke,
                 root.transform);
+
+            if (useNatureTerrainStyle)
+            {
+                float seamY = height * 0.5f - storedThickness;
+                float leftX = -width * 0.5f + storedThickness - thickness * 0.5f;
+                float rightX = width * 0.5f - storedThickness + thickness * 0.5f;
+                AddTerrainSeamMask(root.transform, false, root.transform.TransformPoint(new Vector3(leftX, seamY, 0f)), thickness, true);
+                AddTerrainSeamMask(root.transform, false, root.transform.TransformPoint(new Vector3(rightX, seamY, 0f)), thickness, true);
+            }
 
             data.size = new Vector2(width, height);
             // Keep the authored value stable. GetStageBoundaryThickness applies
@@ -716,10 +737,37 @@ namespace DrawBody.Prototype
             BoxCollider2D collider = side.AddComponent<BoxCollider2D>();
             collider.size = size;
 
-            AddSolidPaperBase(side.transform, size);
+            bool useNatureTerrainStyle = UsesNatureStageTheme(parent);
+            if (useNatureTerrainStyle)
+            {
+                AddSolidPaperBase(side.transform, size, TitleTerrainPaperColor);
+            }
+            else
+            {
+                AddSolidPaperBase(side.transform, size);
+            }
             AddSolidWash(side.transform, size, stroke);
-            AddSolidPencilFill(side.transform, size, stroke);
-            AddSolidStraightBoxOutline(side.transform, size);
+            if (useNatureTerrainStyle)
+            {
+                AddNatureTerrainFill(
+                    side.transform,
+                    size,
+                    stroke,
+                    name != "Boundary Ceiling",
+                    GetStableNatureVisualSeed(name));
+            }
+            else
+            {
+                AddSolidPencilFill(side.transform, size, stroke);
+            }
+            if (useNatureTerrainStyle)
+            {
+                AddNatureTerrainBoxOutline(side.transform, size);
+            }
+            else
+            {
+                AddSolidStraightBoxOutline(side.transform, size);
+            }
         }
 
         private GameObject CreateSolid(StageObjectData data, Transform parent)
@@ -734,8 +782,8 @@ namespace DrawBody.Prototype
                 return CreatePathSolid(data, parent);
             }
 
-            bool useTitleTerrainStyle = UsesTitleTerrainStyle(data);
-            Color stroke = useTitleTerrainStyle ? TitleTerrainStrokeColor : GetObjectColor(data.type);
+            bool useNatureTerrainStyle = UsesNatureTerrainStyle(data, parent);
+            Color stroke = useNatureTerrainStyle ? TitleTerrainStrokeColor : GetObjectColor(data.type);
             GameObject obj = new GameObject(data.objectId);
             obj.name = data.type.ToString();
             obj.transform.SetParent(parent, false);
@@ -776,7 +824,7 @@ namespace DrawBody.Prototype
                 effector.useSideBounce = false;
             }
 
-            if (useTitleTerrainStyle)
+            if (useNatureTerrainStyle)
             {
                 AddSolidPaperBase(obj.transform, data.size, TitleTerrainPaperColor);
             }
@@ -789,20 +837,28 @@ namespace DrawBody.Prototype
                 AddOneWayPlatformTint(obj.transform, data.size);
             }
             AddSolidWash(obj.transform, data.size, stroke);
-            AddSolidPencilFill(obj.transform, data.size, stroke);
+            if (useNatureTerrainStyle)
+            {
+                AddNatureTerrainFill(
+                    obj.transform,
+                    data.size,
+                    stroke,
+                    UsesNatureStageTheme(parent),
+                    GetStableNatureVisualSeed(data.objectId));
+            }
+            else
+            {
+                AddSolidPencilFill(obj.transform, data.size, stroke);
+            }
             if (isOneWayPlatform)
             {
                 AddOneWayPlatformSurfaceVisual(obj.transform, data.size);
             }
             else
             {
-                if (useTitleTerrainStyle)
+                if (useNatureTerrainStyle)
                 {
-                    AddSolidStraightBoxOutline(
-                        obj.transform,
-                        data.size,
-                        TitleTerrainStrokeColor,
-                        TitleTerrainAccentColor);
+                    AddNatureTerrainBoxOutline(obj.transform, data.size);
                 }
                 else
                 {
@@ -965,6 +1021,57 @@ namespace DrawBody.Prototype
             Vector3[] accentOutline = new Vector3[outline.Length];
             for (int i = 0; i < outline.Length; i++) accentOutline[i] = outline[i] + accent;
             AddDoodleLine("Solid Straight Accent", parent, accentOutline, accentColor, outlineWidth * 0.47f, 11);
+        }
+
+        private static void AddNatureTerrainBoxOutline(Transform parent, Vector2 size)
+        {
+            Vector2[] corners =
+            {
+                new Vector2(-size.x * 0.5f, -size.y * 0.5f),
+                new Vector2(size.x * 0.5f, -size.y * 0.5f),
+                new Vector2(size.x * 0.5f, size.y * 0.5f),
+                new Vector2(-size.x * 0.5f, size.y * 0.5f)
+            };
+            List<Vector3> main = new List<Vector3>(21);
+            List<Vector3> echo = new List<Vector3>(21);
+            for (int edgeIndex = 0; edgeIndex < corners.Length; edgeIndex++)
+            {
+                Vector2 from = corners[edgeIndex];
+                Vector2 to = corners[(edgeIndex + 1) % corners.Length];
+                Vector2 direction = to - from;
+                Vector2 inward = new Vector2(-direction.y, direction.x).normalized;
+                for (int pointIndex = 0; pointIndex < 5; pointIndex++)
+                {
+                    if (edgeIndex > 0 && pointIndex == 0)
+                    {
+                        continue;
+                    }
+
+                    float t = pointIndex / 4f;
+                    float envelope = Mathf.Sin(t * Mathf.PI);
+                    float wobble = Mathf.Sin(edgeIndex * 2.17f + pointIndex * 1.73f) * 0.012f * envelope;
+                    Vector2 point = Vector2.Lerp(from, to, t);
+                    main.Add(point + inward * wobble);
+                    echo.Add(point + inward * (0.02f + wobble * 0.65f));
+                }
+            }
+            main.Add(main[0]);
+            echo.Add(echo[0]);
+
+            AddDoodleLine(
+                "Nature Green Pencil Outline",
+                parent,
+                main.ToArray(),
+                TitleTerrainStrokeColor,
+                0.064f,
+                12);
+            AddDoodleLine(
+                "Nature Green Pencil Echo",
+                parent,
+                echo.ToArray(),
+                TitleTerrainAccentColor,
+                0.03f,
+                11);
         }
 
         private static void AddOneWayPlatformTint(Transform parent, Vector2 size)
@@ -1267,6 +1374,7 @@ namespace DrawBody.Prototype
 
             GameObject connectionRoot = new GameObject("Bridge Terrain Connections");
             connectionRoot.transform.SetParent(parent, false);
+            bool useNatureTerrainStyle = UsesNatureStageTheme(parent);
             for (int childIndex = 0; childIndex < parent.childCount; childIndex++)
             {
                 Transform oldMask = parent.GetChild(childIndex).Find("Terrain Connection Masks");
@@ -1334,7 +1442,7 @@ namespace DrawBody.Prototype
                         {
                             if (TryGetSharedEdge(rectsA[rectAIndex], rectsB[rectBIndex], out bool vertical, out Vector2 seamCenter, out float seamLength))
                             {
-                                AddTerrainSeamMask(maskParent, vertical, seamCenter, seamLength);
+                                AddTerrainSeamMask(maskParent, vertical, seamCenter, seamLength, useNatureTerrainStyle);
                             }
                         }
                     }
@@ -1381,7 +1489,12 @@ namespace DrawBody.Prototype
             return false;
         }
 
-        private static void AddTerrainSeamMask(Transform maskParent, bool vertical, Vector2 worldCenter, float length)
+        private static void AddTerrainSeamMask(
+            Transform maskParent,
+            bool vertical,
+            Vector2 worldCenter,
+            float length,
+            bool useNatureTerrainStyle)
         {
             float visibleLength = Mathf.Max(0.04f, length - 0.07f);
             GameObject mask = new GameObject("Connected Terrain Seam Mask");
@@ -1390,10 +1503,14 @@ namespace DrawBody.Prototype
             mask.transform.localScale = vertical ? new Vector3(0.11f, visibleLength, 1f) : new Vector3(visibleLength, 0.11f, 1f);
             SpriteRenderer renderer = mask.AddComponent<SpriteRenderer>();
             renderer.sprite = GetSquareSprite();
-            renderer.color = new Color(0.985f, 0.975f, 0.93f, 1f);
+            renderer.color = useNatureTerrainStyle
+                ? TitleTerrainPaperColor
+                : new Color(0.985f, 0.975f, 0.93f, 1f);
             renderer.sortingOrder = 18;
 
-            Color pencil = new Color(0.22f, 0.2f, 0.16f, 0.22f);
+            Color pencil = useNatureTerrainStyle
+                ? new Color(TitleTerrainStrokeColor.r, TitleTerrainStrokeColor.g, TitleTerrainStrokeColor.b, 0.3f)
+                : new Color(0.22f, 0.2f, 0.16f, 0.22f);
             int strokes = Mathf.Max(2, Mathf.CeilToInt(visibleLength / 0.18f));
             for (int i = 0; i < strokes; i++)
             {
@@ -1557,10 +1674,11 @@ namespace DrawBody.Prototype
 
         private GameObject CreateConnectedRectSolid(StageObjectData data, Transform parent)
         {
-            bool useTitleTerrainStyle = UsesTitleTerrainStyle(data);
-            Color stroke = useTitleTerrainStyle ? TitleTerrainStrokeColor : GetObjectColor(data.type);
-            Color outline = useTitleTerrainStyle ? TitleTerrainStrokeColor : Color.black;
-            Color outlineAccent = useTitleTerrainStyle
+            bool useNatureTerrainStyle = UsesNatureTerrainStyle(data, parent);
+            bool addNatureInteriorPlants = UsesNatureStageTheme(parent);
+            Color stroke = useNatureTerrainStyle ? TitleTerrainStrokeColor : GetObjectColor(data.type);
+            Color outline = useNatureTerrainStyle ? TitleTerrainStrokeColor : Color.black;
+            Color outlineAccent = useNatureTerrainStyle
                 ? TitleTerrainAccentColor
                 : new Color(0.1f, 0.48f, 0.95f, 0.42f);
             GameObject obj = new GameObject(data.objectId);
@@ -1590,7 +1708,7 @@ namespace DrawBody.Prototype
                 GameObject fillRoot = new GameObject($"Connected Fill {i}");
                 fillRoot.transform.SetParent(obj.transform, false);
                 fillRoot.transform.localPosition = part.position;
-                if (useTitleTerrainStyle)
+                if (useNatureTerrainStyle)
                 {
                     AddSolidPaperBase(fillRoot.transform, part.size, TitleTerrainPaperColor);
                 }
@@ -1599,7 +1717,14 @@ namespace DrawBody.Prototype
                     AddSolidPaperBase(fillRoot.transform, part.size);
                 }
                 AddSolidWash(fillRoot.transform, part.size, stroke);
-                AddSolidPencilFill(fillRoot.transform, part.size, stroke);
+                if (useNatureTerrainStyle)
+                {
+                    AddNatureTerrainCoreTexture(fillRoot.transform, part.size, stroke);
+                }
+                else
+                {
+                    AddSolidPencilFill(fillRoot.transform, part.size, stroke);
+                }
             }
 
             xs.Sort();
@@ -1619,11 +1744,46 @@ namespace DrawBody.Prototype
                 for (int y = 0; y < ys.Count - 1; y++)
                 {
                     if (!occupied[x, y]) continue;
-                    if (y == 0 || !occupied[x, y - 1]) AddConnectedEdge(obj.transform, new Vector2(xs[x], ys[y]), new Vector2(xs[x + 1], ys[y]), outline, outlineAccent);
-                    if (y == ys.Count - 2 || !occupied[x, y + 1]) AddConnectedEdge(obj.transform, new Vector2(xs[x + 1], ys[y + 1]), new Vector2(xs[x], ys[y + 1]), outline, outlineAccent);
-                    if (x == 0 || !occupied[x - 1, y]) AddConnectedEdge(obj.transform, new Vector2(xs[x], ys[y + 1]), new Vector2(xs[x], ys[y]), outline, outlineAccent);
-                    if (x == xs.Count - 2 || !occupied[x + 1, y]) AddConnectedEdge(obj.transform, new Vector2(xs[x + 1], ys[y]), new Vector2(xs[x + 1], ys[y + 1]), outline, outlineAccent);
+                    float verticalDepth = Mathf.Clamp((ys[y + 1] - ys[y]) * 0.24f, 0.08f, 0.65f);
+                    float horizontalDepth = Mathf.Clamp((xs[x + 1] - xs[x]) * 0.24f, 0.08f, 0.65f);
+                    if (y == 0 || !occupied[x, y - 1])
+                    {
+                        Vector2 from = new Vector2(xs[x], ys[y]);
+                        Vector2 to = new Vector2(xs[x + 1], ys[y]);
+                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle);
+                        if (useNatureTerrainStyle) AddNatureConnectedEdgeGradient(obj.transform, from, to, verticalDepth);
+                        if (addNatureInteriorPlants) AddNaturePlantsOnWorldBottomEdge(obj.transform, from, to, verticalDepth, GetStableNatureVisualSeed(data.objectId) + x * 31 + y * 17);
+                    }
+                    if (y == ys.Count - 2 || !occupied[x, y + 1])
+                    {
+                        Vector2 from = new Vector2(xs[x + 1], ys[y + 1]);
+                        Vector2 to = new Vector2(xs[x], ys[y + 1]);
+                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle);
+                        if (useNatureTerrainStyle) AddNatureConnectedEdgeGradient(obj.transform, from, to, verticalDepth);
+                        if (addNatureInteriorPlants) AddNaturePlantsOnWorldBottomEdge(obj.transform, from, to, verticalDepth, GetStableNatureVisualSeed(data.objectId) + x * 37 + y * 19);
+                    }
+                    if (x == 0 || !occupied[x - 1, y])
+                    {
+                        Vector2 from = new Vector2(xs[x], ys[y + 1]);
+                        Vector2 to = new Vector2(xs[x], ys[y]);
+                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle);
+                        if (useNatureTerrainStyle) AddNatureConnectedEdgeGradient(obj.transform, from, to, horizontalDepth);
+                        if (addNatureInteriorPlants) AddNaturePlantsOnWorldBottomEdge(obj.transform, from, to, horizontalDepth, GetStableNatureVisualSeed(data.objectId) + x * 41 + y * 23);
+                    }
+                    if (x == xs.Count - 2 || !occupied[x + 1, y])
+                    {
+                        Vector2 from = new Vector2(xs[x + 1], ys[y]);
+                        Vector2 to = new Vector2(xs[x + 1], ys[y + 1]);
+                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle);
+                        if (useNatureTerrainStyle) AddNatureConnectedEdgeGradient(obj.transform, from, to, horizontalDepth);
+                        if (addNatureInteriorPlants) AddNaturePlantsOnWorldBottomEdge(obj.transform, from, to, horizontalDepth, GetStableNatureVisualSeed(data.objectId) + x * 43 + y * 29);
+                    }
                 }
+            }
+
+            if (IsTitleRoomFrame(data))
+            {
+                AddTitleHangingVines(obj.transform);
             }
 
             AddEditorMetadata(obj, data);
@@ -1660,10 +1820,358 @@ namespace DrawBody.Prototype
             Vector2 from,
             Vector2 to,
             Color outlineColor,
-            Color accentColor)
+            Color accentColor,
+            bool natureStyle = false)
         {
             AddDoodleLine("Connected Outer Edge", parent, new[] { (Vector3)from, (Vector3)to }, outlineColor, 0.055f, 12);
-            AddDoodleLine("Connected Accent Edge", parent, new[] { (Vector3)(from + new Vector2(0.015f, -0.015f)), (Vector3)(to + new Vector2(0.015f, -0.015f)) }, accentColor, 0.026f, 11);
+            if (!natureStyle)
+            {
+                AddDoodleLine("Connected Accent Edge", parent, new[] { (Vector3)(from + new Vector2(0.015f, -0.015f)), (Vector3)(to + new Vector2(0.015f, -0.015f)) }, accentColor, 0.026f, 11);
+                return;
+            }
+
+            Vector2 direction = to - from;
+            Vector2 inward = direction.sqrMagnitude > 0.000001f
+                ? new Vector2(-direction.y, direction.x).normalized
+                : Vector2.zero;
+            Vector3[] sketch = new Vector3[7];
+            for (int i = 0; i < sketch.Length; i++)
+            {
+                float t = i / (sketch.Length - 1f);
+                float wobble = i == 0 || i == sketch.Length - 1
+                    ? 0.012f
+                    : 0.018f + Mathf.Sin(i * 2.19f + from.x * 0.31f + from.y * 0.23f) * 0.011f;
+                sketch[i] = Vector2.Lerp(from, to, t) + inward * wobble;
+            }
+            AddDoodleLine("Connected Green Pencil Echo", parent, sketch, accentColor, 0.025f, 11);
+        }
+
+        private static bool IsTitleRoomFrame(StageObjectData data)
+        {
+            return data != null
+                && !string.IsNullOrEmpty(data.objectId)
+                && data.objectId.EndsWith("-RoomFrame", StringComparison.Ordinal);
+        }
+
+        private static void AddTitleHangingVines(Transform parent)
+        {
+            float[] anchors = { -12.75f, -11.95f, -3.7f, 3.85f, 12.65f };
+            float[] lengths = { 0.78f, 1.28f, 0.72f, 0.95f, 1.35f };
+            for (int vineIndex = 0; vineIndex < anchors.Length; vineIndex++)
+            {
+                AddHangingVine(parent, new Vector2(anchors[vineIndex], 6.48f), lengths[vineIndex], vineIndex);
+            }
+        }
+
+        public void AddNatureHangingVine(Transform parent, Vector2 worldAnchor, float length, int seed)
+        {
+            if (parent == null)
+            {
+                return;
+            }
+
+            Vector3 localAnchor = parent.InverseTransformPoint(new Vector3(worldAnchor.x, worldAnchor.y, 0f));
+            AddHangingVine(parent, localAnchor, Mathf.Max(0.35f, length), seed);
+        }
+
+        public void AddNatureWallVine(Transform parent, Vector2 worldBottom, float height, int seed)
+        {
+            if (parent == null)
+            {
+                return;
+            }
+
+            Vector3 localBottom = parent.InverseTransformPoint(new Vector3(worldBottom.x, worldBottom.y, 0f));
+            float clampedHeight = Mathf.Max(0.5f, height);
+            if (!TryAddNatureWallVineSprite(parent, localBottom, clampedHeight, seed))
+            {
+                AddWallVine(parent, localBottom, clampedHeight, seed);
+            }
+        }
+
+        private static bool TryAddNatureWallVineSprite(Transform parent, Vector2 bottom, float height, int seed)
+        {
+            if (natureWallVineSprite == null)
+            {
+                natureWallVineSprite = Resources.Load<Sprite>("StageDecorations/CrayonSet/vine-climbing");
+            }
+
+            Sprite sprite = natureWallVineSprite;
+            if (sprite == null || sprite.bounds.size.x <= 0f || sprite.bounds.size.y <= 0f)
+            {
+                return false;
+            }
+
+            Vector2[] spriteVertices = sprite.vertices;
+            Vector2 bottomVertex = spriteVertices.Length > 0
+                ? spriteVertices[0]
+                : new Vector2(sprite.bounds.center.x, sprite.bounds.min.y);
+            for (int vertexIndex = 1; vertexIndex < spriteVertices.Length; vertexIndex++)
+            {
+                Vector2 candidate = spriteVertices[vertexIndex];
+                if (candidate.y < bottomVertex.y
+                    || (Mathf.Approximately(candidate.y, bottomVertex.y)
+                        && Mathf.Abs(candidate.x - sprite.bounds.center.x) < Mathf.Abs(bottomVertex.x - sprite.bounds.center.x)))
+                {
+                    bottomVertex = candidate;
+                }
+            }
+
+            float scale = height / sprite.bounds.size.y;
+            float horizontalScale = scale * (0.88f + Mathf.Abs(Mathf.Sin(seed * 0.61f)) * 0.16f);
+            if ((seed & 1) != 0)
+            {
+                horizontalScale = -horizontalScale;
+            }
+
+            GameObject vine = new GameObject("Nature Hand Drawn Wall Vine");
+            vine.transform.SetParent(parent, false);
+            vine.transform.localScale = new Vector3(horizontalScale, scale, 1f);
+            vine.transform.localPosition = new Vector3(
+                bottom.x - bottomVertex.x * horizontalScale,
+                bottom.y - bottomVertex.y * scale,
+                0f);
+
+            SpriteRenderer renderer = vine.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = new Color(0.94f, 1f, 0.92f, 0.97f);
+            renderer.sortingOrder = 15;
+
+            AddNatureGrassSpriteCluster(
+                parent,
+                bottom,
+                Vector2.up,
+                0.66f + Mathf.Abs(Mathf.Sin(seed * 0.43f)) * 0.32f,
+                0.25f + Mathf.Abs(Mathf.Cos(seed * 0.37f)) * 0.12f,
+                seed + 101);
+            return true;
+        }
+
+        private static void AddHangingVine(Transform parent, Vector2 anchor, float length, int seed)
+        {
+            Color vine = new Color(0.2f, 0.58f, 0.25f, 0.68f);
+            Color leaf = new Color(0.26f, 0.66f, 0.29f, 0.6f);
+            const int pointCount = 8;
+            Vector3[] points = new Vector3[pointCount];
+            for (int pointIndex = 0; pointIndex < pointCount; pointIndex++)
+            {
+                float t = pointIndex / (pointCount - 1f);
+                float sway = Mathf.Sin(t * Mathf.PI * 2.2f + seed * 1.35f) * (0.07f + seed % 2 * 0.025f);
+                points[pointIndex] = new Vector3(
+                    anchor.x + sway,
+                    anchor.y - length * t,
+                    0f);
+            }
+
+            AddDoodleLine("Nature Hanging Vine", parent, points, vine, 0.035f, -62);
+            for (int pointIndex = 2; pointIndex < pointCount - 1; pointIndex += 2)
+            {
+                Vector3 stem = points[pointIndex];
+                float side = ((pointIndex + seed) & 1) == 0 ? 1f : -1f;
+                AddDoodleLine(
+                    "Nature Vine Leaf",
+                    parent,
+                    new[]
+                    {
+                        stem,
+                        stem + new Vector3(0.14f * side, 0.06f, 0f),
+                        stem + new Vector3(0.07f * side, -0.035f, 0f),
+                        stem
+                    },
+                    leaf,
+                    0.026f,
+                    -61);
+            }
+        }
+
+        private static void AddWallVine(Transform parent, Vector2 bottom, float height, int seed)
+        {
+            Color stemDark = new Color(0.08f, 0.43f, 0.14f, 0.94f);
+            Color stemLight = new Color(0.28f, 0.67f, 0.27f, 0.68f);
+            Color leafOutline = new Color(0.08f, 0.47f, 0.15f, 0.92f);
+            Color leafFill = new Color(0.34f, 0.72f, 0.3f, 0.16f);
+            const int pointCount = 22;
+            Vector2[] points = new Vector2[pointCount];
+            for (int pointIndex = 0; pointIndex < pointCount; pointIndex++)
+            {
+                float t = pointIndex / (pointCount - 1f);
+                float sway = Mathf.Sin(t * Mathf.PI * 2.15f + seed * 1.17f) * 0.095f
+                    + Mathf.Sin(t * Mathf.PI * 7.1f + seed * 0.43f) * 0.043f
+                    + Mathf.Sin(t * Mathf.PI * 13.4f + seed * 0.19f) * 0.015f;
+                points[pointIndex] = new Vector2(bottom.x + sway, bottom.y + height * t);
+            }
+
+            List<Vector3> vertices = new List<Vector3>(420);
+            List<Color> colors = new List<Color>(420);
+            List<int> triangles = new List<int>(630);
+            for (int pointIndex = 0; pointIndex < pointCount - 1; pointIndex++)
+            {
+                Vector2 from = points[pointIndex];
+                Vector2 to = points[pointIndex + 1];
+                AppendPencilQuad(vertices, colors, triangles, from, to, 0.046f, stemDark);
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    from + new Vector2(0.018f + Mathf.Sin(pointIndex * 1.7f) * 0.006f, 0f),
+                    to + new Vector2(0.018f + Mathf.Sin((pointIndex + 1) * 1.7f) * 0.006f, 0f),
+                    0.016f,
+                    stemLight);
+            }
+
+            for (int pointIndex = 2; pointIndex < pointCount - 1; pointIndex++)
+            {
+                if ((pointIndex + seed) % 5 == 0)
+                {
+                    continue;
+                }
+
+                Vector2 stem = points[pointIndex];
+                float side = Mathf.Sin((pointIndex + seed) * 2.37f) >= 0f ? 1f : -1f;
+                float branchLength = 0.075f + Mathf.Abs(Mathf.Sin((pointIndex + seed) * 1.31f)) * 0.105f;
+                Vector2 branchTip = stem + new Vector2(
+                    side * branchLength,
+                    0.035f + Mathf.Abs(Mathf.Cos((pointIndex + seed) * 0.91f)) * 0.065f);
+                AppendPencilQuad(vertices, colors, triangles, stem, branchTip, 0.022f, stemDark);
+
+                float leafLength = 0.12f + Mathf.Abs(Mathf.Sin(pointIndex * 1.49f + seed)) * 0.11f;
+                Vector2 leafTip = branchTip + new Vector2(
+                    side * leafLength,
+                    0.07f + Mathf.Abs(Mathf.Cos(pointIndex * 1.13f + seed)) * 0.1f);
+                AppendVineLeaf(
+                    vertices,
+                    colors,
+                    triangles,
+                    branchTip,
+                    leafTip,
+                    0.042f + Mathf.Abs(Mathf.Sin(pointIndex * 1.81f + seed)) * 0.035f,
+                    leafFill,
+                    leafOutline);
+
+                if ((pointIndex + seed) % 7 == 2)
+                {
+                    Vector2 oppositeTip = stem + new Vector2(-side * 0.12f, 0.09f);
+                    AppendPencilQuad(vertices, colors, triangles, stem, oppositeTip, 0.019f, stemDark);
+                    AppendVineLeaf(
+                        vertices,
+                        colors,
+                        triangles,
+                        oppositeTip,
+                        oppositeTip + new Vector2(-side * 0.11f, 0.09f),
+                        0.04f,
+                        leafFill,
+                        leafOutline);
+                }
+
+                if ((pointIndex + seed) % 6 == 1)
+                {
+                    AppendVineCurl(vertices, colors, triangles, stem, side, seed + pointIndex, stemDark);
+                }
+            }
+
+            Vector2 terminalBase = points[pointCount - 1];
+            AppendVineLeaf(
+                vertices,
+                colors,
+                triangles,
+                terminalBase,
+                terminalBase + new Vector2(Mathf.Sin(seed) * 0.12f, 0.22f),
+                0.065f,
+                leafFill,
+                leafOutline);
+
+            CreatePencilMesh(parent, "Nature Wall Vine", vertices, colors, triangles, 15);
+            AddNatureGrassSpriteCluster(
+                parent,
+                bottom,
+                Vector2.up,
+                0.62f + Mathf.Abs(Mathf.Sin(seed * 0.43f)) * 0.28f,
+                0.24f + Mathf.Abs(Mathf.Cos(seed * 0.37f)) * 0.1f,
+                seed + 101);
+        }
+
+        private static void AppendVineLeaf(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 leafBase,
+            Vector2 leafTip,
+            float halfWidth,
+            Color fill,
+            Color outline)
+        {
+            Vector2 axis = leafTip - leafBase;
+            if (axis.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 normal = new Vector2(-axis.y, axis.x).normalized;
+            Vector2 nearCenter = Vector2.Lerp(leafBase, leafTip, 0.34f);
+            Vector2 farCenter = Vector2.Lerp(leafBase, leafTip, 0.67f);
+            Vector2 upperNear = nearCenter + normal * halfWidth * 0.78f;
+            Vector2 upperFar = farCenter + normal * halfWidth;
+            Vector2 lowerFar = farCenter - normal * halfWidth;
+            Vector2 lowerNear = nearCenter - normal * halfWidth * 0.78f;
+            int first = vertices.Count;
+            vertices.Add(leafBase);
+            vertices.Add(upperNear);
+            vertices.Add(upperFar);
+            vertices.Add(leafTip);
+            vertices.Add(lowerFar);
+            vertices.Add(lowerNear);
+            colors.Add(fill);
+            colors.Add(fill);
+            colors.Add(fill);
+            colors.Add(fill);
+            colors.Add(fill);
+            colors.Add(fill);
+            triangles.Add(first);
+            triangles.Add(first + 1);
+            triangles.Add(first + 2);
+            triangles.Add(first);
+            triangles.Add(first + 2);
+            triangles.Add(first + 3);
+            triangles.Add(first);
+            triangles.Add(first + 3);
+            triangles.Add(first + 4);
+            triangles.Add(first);
+            triangles.Add(first + 4);
+            triangles.Add(first + 5);
+
+            AppendPencilQuad(vertices, colors, triangles, leafBase, upperNear, 0.021f, outline);
+            AppendPencilQuad(vertices, colors, triangles, upperNear, upperFar, 0.021f, outline);
+            AppendPencilQuad(vertices, colors, triangles, upperFar, leafTip, 0.021f, outline);
+            AppendPencilQuad(vertices, colors, triangles, leafTip, lowerFar, 0.021f, outline);
+            AppendPencilQuad(vertices, colors, triangles, lowerFar, lowerNear, 0.021f, outline);
+            AppendPencilQuad(vertices, colors, triangles, lowerNear, leafBase, 0.021f, outline);
+            AppendPencilQuad(vertices, colors, triangles, leafBase, leafTip, 0.013f, outline * 0.8f);
+            Vector2 veinCenter = Vector2.Lerp(leafBase, leafTip, 0.56f);
+            AppendPencilQuad(vertices, colors, triangles, veinCenter, upperFar, 0.009f, outline * 0.58f);
+            AppendPencilQuad(vertices, colors, triangles, veinCenter, lowerFar, 0.009f, outline * 0.58f);
+        }
+
+        private static void AppendVineCurl(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 origin,
+            float side,
+            int seed,
+            Color color)
+        {
+            Vector2 previous = origin;
+            for (int pointIndex = 1; pointIndex <= 9; pointIndex++)
+            {
+                float t = pointIndex / 9f;
+                float angle = t * Mathf.PI * 2.05f + seed * 0.31f;
+                float radius = 0.025f + t * 0.105f;
+                Vector2 next = origin + new Vector2(
+                    side * (0.06f + Mathf.Cos(angle) * radius),
+                    0.035f + t * 0.17f + Mathf.Sin(angle) * radius * 0.55f);
+                AppendPencilQuad(vertices, colors, triangles, previous, next, 0.018f, color * 0.82f);
+                previous = next;
+            }
         }
 
         private GameObject CreatePathSolid(StageObjectData data, Transform parent)
@@ -3114,7 +3622,19 @@ namespace DrawBody.Prototype
 
             GameObject visual = new GameObject("Background Visual");
             visual.transform.SetParent(root.transform, false);
-            if (!TryApplyBackgroundSprite(visual, data.type, data.size))
+            bool useDistantNatureStyle = IsDistantNatureDecoration(data, parent);
+            bool alignFloraToSurface = IsSurfaceAlignedFlora(data);
+            float opacity = useDistantNatureStyle
+                ? GetDistantTitleDecorationOpacity(data.type)
+                : IsGeneratedNatureDecoration(data) ? 0.88f : 1f;
+            int sortingOrder = useDistantNatureStyle ? -90 : -69;
+            if (!TryApplyBackgroundSprite(
+                visual,
+                data.type,
+                data.size,
+                opacity,
+                sortingOrder,
+                alignFloraToSurface))
             {
                 visual.transform.localScale = new Vector3(
                     Mathf.Max(0.2f, data.size.x),
@@ -3122,17 +3642,29 @@ namespace DrawBody.Prototype
                     1f);
 
                 Color line = GetBackgroundDecorationColor(data.type);
+                line.a *= opacity;
                 DrawBackgroundDecoration(visual.transform, data.type, line);
             }
 
-            BoxCollider2D selectionCollider = root.AddComponent<BoxCollider2D>();
-            selectionCollider.size = new Vector2(Mathf.Max(0.2f, data.size.x), Mathf.Max(0.2f, data.size.y));
-            selectionCollider.isTrigger = true;
+            bool needsEditorSelectionCollider = !IsGeneratedNatureDecoration(data)
+                || (parent != null && parent.name == "RuntimeStageEditorRoot");
+            if (needsEditorSelectionCollider)
+            {
+                BoxCollider2D selectionCollider = root.AddComponent<BoxCollider2D>();
+                selectionCollider.size = new Vector2(Mathf.Max(0.2f, data.size.x), Mathf.Max(0.2f, data.size.y));
+                selectionCollider.isTrigger = true;
+            }
             AddEditorMetadata(root, data);
             return root;
         }
 
-        private static bool TryApplyBackgroundSprite(GameObject visual, StageObjectType type, Vector2 requestedSize)
+        private static bool TryApplyBackgroundSprite(
+            GameObject visual,
+            StageObjectType type,
+            Vector2 requestedSize,
+            float opacity,
+            int sortingOrder,
+            bool alignBottomToOrigin)
         {
             string resourcePath = GetCrayonDecorationResourcePath(type);
             Sprite sprite = string.IsNullOrEmpty(resourcePath) ? null : Resources.Load<Sprite>(resourcePath);
@@ -3170,15 +3702,73 @@ namespace DrawBody.Prototype
 
             SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
             renderer.sprite = sprite;
-            renderer.color = Color.white;
-            renderer.sortingOrder = -69;
+            renderer.color = new Color(1f, 1f, 1f, Mathf.Clamp01(opacity));
+            renderer.sortingOrder = sortingOrder;
 
             Vector2 spriteSize = sprite.bounds.size;
             float fitScale = Mathf.Min(
                 Mathf.Max(0.2f, requestedSize.x) / Mathf.Max(0.01f, spriteSize.x),
                 Mathf.Max(0.2f, requestedSize.y) / Mathf.Max(0.01f, spriteSize.y));
             visual.transform.localScale = new Vector3(fitScale, fitScale, 1f);
+            if (alignBottomToOrigin)
+            {
+                Vector2[] vertices = sprite.vertices;
+                float lowestVisibleY = vertices.Length > 0 ? vertices[0].y : sprite.bounds.min.y;
+                for (int i = 1; i < vertices.Length; i++)
+                {
+                    lowestVisibleY = Mathf.Min(lowestVisibleY, vertices[i].y);
+                }
+                visual.transform.localPosition = new Vector3(0f, -lowestVisibleY * fitScale, 0f);
+            }
             return true;
+        }
+
+        private static float GetDistantTitleDecorationOpacity(StageObjectType type)
+        {
+            switch (type)
+            {
+                case StageObjectType.BackgroundTree:
+                    return 0.38f;
+                case StageObjectType.BackgroundMountain:
+                    return 0.36f;
+                default:
+                    return 0.28f;
+            }
+        }
+
+        private static bool IsGeneratedNatureDecoration(StageObjectData data)
+        {
+            return data != null
+                && !string.IsNullOrEmpty(data.objectId)
+                && (data.objectId.StartsWith("title-playground-", StringComparison.Ordinal)
+                    || data.objectId.StartsWith("nature-", StringComparison.Ordinal));
+        }
+
+        private bool IsDistantNatureDecoration(StageObjectData data, Transform parent)
+        {
+            if (data == null || string.IsNullOrEmpty(data.objectId))
+            {
+                return false;
+            }
+
+            if (data.objectId.StartsWith("title-playground-distant-", StringComparison.Ordinal)
+                || data.objectId.StartsWith("nature-distant-", StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            return UsesNatureStageTheme(parent)
+                && (data.type == StageObjectType.BackgroundTree
+                    || data.type == StageObjectType.BackgroundMountain
+                    || data.type == StageObjectType.BackgroundCloud);
+        }
+
+        private static bool IsSurfaceAlignedFlora(StageObjectData data)
+        {
+            return data != null
+                && !string.IsNullOrEmpty(data.objectId)
+                && (data.objectId.StartsWith("title-playground-flora-", StringComparison.Ordinal)
+                    || data.objectId.StartsWith("nature-flora-", StringComparison.Ordinal));
         }
 
         private static bool IsBackgroundDecorationType(StageObjectType type)
@@ -4133,15 +4723,38 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static bool UsesTitleTerrainStyle(StageObjectData data)
+        private bool UsesNatureTerrainStyle(StageObjectData data, Transform parent)
         {
             return data != null
                 && (data.type == StageObjectType.Platform
                     || data.type == StageObjectType.Wall
                     || data.type == StageObjectType.BreakableWall
                     || data.type == StageObjectType.BulletBreakableWall)
-                && !string.IsNullOrEmpty(data.objectId)
-                && data.objectId.StartsWith("title-playground-", StringComparison.Ordinal);
+                && ((!string.IsNullOrEmpty(data.objectId)
+                        && data.objectId.StartsWith("title-playground-", StringComparison.Ordinal))
+                    || UsesNatureStageTheme(parent));
+        }
+
+        private bool UsesNatureStageTheme(Transform parent)
+        {
+            if (parent == null || visualThemeRoot == null || !IsNatureStageId(visualThemeStageId))
+            {
+                return false;
+            }
+
+            return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
+        }
+
+        private static bool IsNatureStageId(string stageId)
+        {
+            return stageId == "1-1"
+                || stageId == "2-1"
+                || stageId == "3-1"
+                || stageId == "5-2"
+                || stageId == "7-2"
+                || stageId == "9-3"
+                || stageId == "10-2"
+                || stageId == "14-2";
         }
 
         private static void AddObjectGlyph(Transform parent, StageObjectData data)
@@ -4310,7 +4923,12 @@ namespace DrawBody.Prototype
             AddDoodleLine("Solid Sketch Outline B", parent, loosePoints, color * 0.9f, width, sortingOrder + 1);
         }
 
-        private static void AddSolidPencilFill(Transform parent, Vector2 size, Color color, int sortingOrder = 4)
+        private static void AddSolidPencilFill(
+            Transform parent,
+            Vector2 size,
+            Color color,
+            int sortingOrder = 4,
+            float opacityScale = 1f)
         {
             float left = -size.x * 0.5f;
             float right = size.x * 0.5f;
@@ -4342,7 +4960,12 @@ namespace DrawBody.Prototype
 
                         if (endX > left && startX < right && endY > bottom)
                         {
-                            Color layerColor = new Color(pencil.r, pencil.g, pencil.b, 0.14f + layer * 0.045f + Mathf.Abs(Mathf.Sin(index * 0.71f)) * 0.07f);
+                            Color layerColor = new Color(
+                                pencil.r,
+                                pencil.g,
+                                pencil.b,
+                                (0.14f + layer * 0.045f + Mathf.Abs(Mathf.Sin(index * 0.71f)) * 0.07f)
+                                    * opacityScale);
                             AppendPencilQuad(
                                 vertices, colors, triangles,
                                 new Vector3(startX, startY, 0f),
@@ -4367,10 +4990,604 @@ namespace DrawBody.Prototype
                     new Vector3(left + 0.1f, y + Mathf.Sin(i * 1.3f) * 0.025f, 0f),
                     new Vector3(right - 0.1f, y + Mathf.Cos(i * 1.9f) * 0.025f, 0f),
                     0.01f,
-                    new Color(color.r, color.g, color.b, 0.13f));
+                    new Color(color.r, color.g, color.b, 0.13f * opacityScale));
             }
 
             CreatePencilMesh(parent, "Solid Pencil Fill Mesh", vertices, colors, triangles, sortingOrder);
+        }
+
+        private static void AddNatureTerrainFill(
+            Transform parent,
+            Vector2 size,
+            Color color,
+            bool addInteriorPlants,
+            int seed)
+        {
+            AddNatureTerrainCoreTexture(parent, size, color);
+            AddNatureTerrainEdgeGradient(parent, size, color);
+            if (addInteriorPlants)
+            {
+                AddNatureTerrainInteriorPlants(parent, size, seed);
+            }
+        }
+
+        private static void AddNatureTerrainCoreTexture(Transform parent, Vector2 size, Color color)
+        {
+            if (!IsVerticalNatureSurface(parent, size, out bool runAlongLocalX))
+            {
+                AddNatureDiagonalPencilTexture(parent, size, color);
+                return;
+            }
+
+            float left = -size.x * 0.5f;
+            float right = size.x * 0.5f;
+            float bottom = -size.y * 0.5f;
+            float top = size.y * 0.5f;
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            int strokeIndex = 0;
+
+            for (int layer = 0; layer < 4; layer++)
+            {
+                float spacing = 0.14f + layer * 0.027f;
+                float acrossStart = runAlongLocalX ? bottom : left;
+                float acrossEnd = runAlongLocalX ? top : right;
+                float alongStart = runAlongLocalX ? left : bottom;
+                float alongEnd = runAlongLocalX ? right : top;
+                float across = acrossStart + 0.045f + layer * 0.035f;
+                while (across < acrossEnd - 0.035f)
+                {
+                    Vector2 previous = runAlongLocalX
+                        ? new Vector2(alongStart + 0.035f, across)
+                        : new Vector2(across, alongStart + 0.035f);
+                    Color stroke = new Color(
+                        color.r,
+                        color.g,
+                        color.b,
+                        0.105f + layer * 0.03f + Mathf.Abs(Mathf.Sin(strokeIndex * 1.73f)) * 0.05f);
+                    for (int segment = 1; segment <= 7; segment++)
+                    {
+                        float t = segment / 7f;
+                        float along = Mathf.Lerp(alongStart + 0.035f, alongEnd - 0.035f, t);
+                        float wobble = Mathf.Sin(strokeIndex * 1.91f + segment * 2.17f) * 0.022f;
+                        Vector2 next = runAlongLocalX
+                            ? new Vector2(along, across + wobble)
+                            : new Vector2(across + wobble, along);
+                        AppendPencilQuad(
+                            vertices,
+                            colors,
+                            triangles,
+                            previous,
+                            next,
+                            0.009f + layer * 0.0025f,
+                            stroke);
+                        previous = next;
+                    }
+
+                    across += spacing + Mathf.Sin(strokeIndex * 2.41f) * 0.018f;
+                    strokeIndex++;
+                }
+            }
+
+            CreatePencilMesh(parent, "Nature Vertical Pencil Texture", vertices, colors, triangles, 4);
+        }
+
+        private static void AddNatureDiagonalPencilTexture(Transform parent, Vector2 size, Color color)
+        {
+            float left = -size.x * 0.5f;
+            float right = size.x * 0.5f;
+            float bottom = -size.y * 0.5f;
+            float top = size.y * 0.5f;
+            const float slope = 0.27f;
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            int strokeIndex = 0;
+
+            for (int layer = 0; layer < 4; layer++)
+            {
+                float spacing = 0.14f + layer * 0.025f;
+                float baseline = bottom - slope * size.x + layer * 0.032f;
+                while (baseline < top)
+                {
+                    float startX = left;
+                    float startY = baseline;
+                    float endX = right;
+                    float endY = baseline + slope * size.x;
+                    if (startY < bottom)
+                    {
+                        startX += (bottom - startY) / slope;
+                        startY = bottom;
+                    }
+                    if (endY > top)
+                    {
+                        endX -= (endY - top) / slope;
+                        endY = top;
+                    }
+
+                    if (endX - startX > 0.04f)
+                    {
+                        Vector2 previous = new Vector2(startX, startY);
+                        Color stroke = new Color(
+                            color.r,
+                            color.g,
+                            color.b,
+                            0.11f + layer * 0.03f + Mathf.Abs(Mathf.Sin(strokeIndex * 1.67f)) * 0.05f);
+                        int segmentCount = Mathf.Clamp(Mathf.CeilToInt((endX - startX) / 1.15f), 2, 14);
+                        for (int segment = 1; segment <= segmentCount; segment++)
+                        {
+                            float t = segment / (float)segmentCount;
+                            Vector2 next = Vector2.Lerp(new Vector2(startX, startY), new Vector2(endX, endY), t);
+                            Vector2 normal = new Vector2(-slope, 1f).normalized;
+                            next += normal * (Mathf.Sin(strokeIndex * 1.93f + segment * 2.11f) * 0.018f);
+                            AppendPencilQuad(
+                                vertices,
+                                colors,
+                                triangles,
+                                previous,
+                                next,
+                                0.009f + layer * 0.0025f,
+                                stroke);
+                            previous = next;
+                        }
+                    }
+
+                    baseline += spacing + Mathf.Sin(strokeIndex * 2.37f) * 0.014f;
+                    strokeIndex++;
+                }
+            }
+
+            // A few faint reverse strokes keep the fill from looking like a digital hatch pattern.
+            int crossCount = Mathf.Clamp(Mathf.CeilToInt(size.x / 1.7f), 2, 18);
+            for (int cross = 0; cross < crossCount; cross++)
+            {
+                float x = Mathf.Lerp(left + 0.08f, right - 0.08f, (cross + 0.5f) / crossCount);
+                float y = Mathf.Lerp(bottom + 0.08f, top - 0.08f, 0.25f + Mathf.Abs(Mathf.Sin(cross * 1.71f)) * 0.5f);
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(x - 0.24f, y + 0.07f),
+                    new Vector2(x + 0.24f, y - 0.07f),
+                    0.007f,
+                    new Color(color.r, color.g, color.b, 0.12f));
+            }
+
+            CreatePencilMesh(parent, "Nature Diagonal Pencil Texture", vertices, colors, triangles, 4);
+        }
+
+        private static bool IsVerticalNatureSurface(Transform parent, Vector2 size, out bool runAlongLocalX)
+        {
+            Vector3 localXInWorld = parent.TransformVector(new Vector3(size.x, 0f, 0f));
+            Vector3 localYInWorld = parent.TransformVector(new Vector3(0f, size.y, 0f));
+            float worldWidth = Mathf.Abs(localXInWorld.x) + Mathf.Abs(localYInWorld.x);
+            float worldHeight = Mathf.Abs(localXInWorld.y) + Mathf.Abs(localYInWorld.y);
+            Vector3 localXAxis = parent.TransformDirection(Vector3.right);
+            Vector3 localYAxis = parent.TransformDirection(Vector3.up);
+            runAlongLocalX = Mathf.Abs(localXAxis.y) > Mathf.Abs(localYAxis.y);
+            return worldHeight > worldWidth * 1.08f;
+        }
+
+        private static void AddNatureTerrainInteriorPlants(Transform parent, Vector2 size, int seed)
+        {
+            if (parent == null || size.x < 0.45f || size.y < 0.35f)
+            {
+                return;
+            }
+
+            Vector3 localUp3 = parent.InverseTransformDirection(Vector3.up);
+            Vector2 localUp = new Vector2(localUp3.x, localUp3.y);
+            if (localUp.sqrMagnitude <= 0.000001f)
+            {
+                localUp = Vector2.up;
+            }
+            localUp.Normalize();
+
+            Vector2 inward;
+            float halfLength;
+            float availableDepth;
+            if (Mathf.Abs(localUp.x) > Mathf.Abs(localUp.y))
+            {
+                inward = localUp.x >= 0f ? Vector2.right : Vector2.left;
+                halfLength = size.y * 0.5f;
+                availableDepth = size.x;
+            }
+            else
+            {
+                inward = localUp.y >= 0f ? Vector2.up : Vector2.down;
+                halfLength = size.x * 0.5f;
+                availableDepth = size.y;
+            }
+
+            Vector2 tangent = new Vector2(-inward.y, inward.x);
+            float halfDepth = availableDepth * 0.5f;
+            Vector2 edgeCenter = -inward * halfDepth;
+            Vector2 from = edgeCenter - tangent * halfLength;
+            Vector2 to = edgeCenter + tangent * halfLength;
+            float plantDepth = Mathf.Clamp(availableDepth * 0.34f, 0.18f, 0.48f);
+            AddNatureInteriorPlantsAlongEdge(parent, from, to, inward * plantDepth, seed);
+        }
+
+        private static void AddNaturePlantsOnWorldBottomEdge(
+            Transform parent,
+            Vector2 from,
+            Vector2 to,
+            float depth,
+            int seed)
+        {
+            Vector2 edge = to - from;
+            if (parent == null || edge.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 inward = new Vector2(-edge.y, edge.x).normalized;
+            Vector3 worldInward = parent.TransformDirection(new Vector3(inward.x, inward.y, 0f));
+            if (Vector2.Dot(new Vector2(worldInward.x, worldInward.y).normalized, Vector2.up) < 0.72f)
+            {
+                return;
+            }
+
+            float plantDepth = Mathf.Clamp(depth * 1.45f, 0.17f, 0.46f);
+            AddNatureInteriorPlantsAlongEdge(parent, from, to, inward * plantDepth, seed);
+        }
+
+        private static void AddNatureInteriorPlantsAlongEdge(
+            Transform parent,
+            Vector2 from,
+            Vector2 to,
+            Vector2 inward,
+            int seed)
+        {
+            Vector2 edge = to - from;
+            float length = edge.magnitude;
+            if (length < 0.58f || inward.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 tangent = edge / length;
+            Vector2 inwardDirection = inward.normalized;
+            float maxHeight = inward.magnitude;
+            int clusterCount = Mathf.Clamp(Mathf.FloorToInt(length / 4.4f) + 1, 1, 5);
+            for (int cluster = 0; cluster < clusterCount; cluster++)
+            {
+                float t;
+                if (clusterCount == 1)
+                {
+                    t = 0.1f + Mathf.Abs(Mathf.Sin(seed * 0.217f)) * 0.8f;
+                }
+                else
+                {
+                    t = (cluster + 0.5f) / clusterCount;
+                    t += Mathf.Sin(seed * 0.17f + cluster * 2.31f) * (0.2f / clusterCount);
+                }
+
+                float height = Mathf.Min(
+                    maxHeight,
+                    maxHeight * (0.58f + Mathf.Abs(Mathf.Sin(seed * 0.31f + cluster * 1.77f)) * 0.42f));
+                float width = height * (1.9f + Mathf.Abs(Mathf.Cos(seed * 0.19f + cluster * 1.43f)) * 1.45f);
+                float margin = Mathf.Clamp(width * 0.52f / length + 0.015f, 0.035f, 0.42f);
+                t = Mathf.Clamp(t, margin, 1f - margin);
+                Vector2 root = Vector2.Lerp(from, to, t) + inwardDirection * 0.012f;
+                AddNatureGrassSpriteCluster(
+                    parent,
+                    root,
+                    inwardDirection,
+                    width,
+                    height,
+                    seed + cluster * 13);
+            }
+        }
+
+        private static void AddNatureGrassSpriteCluster(
+            Transform parent,
+            Vector2 root,
+            Vector2 inward,
+            float width,
+            float height,
+            int seed)
+        {
+            Sprite sprite = Resources.Load<Sprite>("StageDecorations/grass-doodle");
+            if (sprite == null || sprite.bounds.size.x <= 0f || sprite.bounds.size.y <= 0f)
+            {
+                return;
+            }
+
+            float scaleX = Mathf.Max(0.08f, width) / sprite.bounds.size.x;
+            float scaleY = Mathf.Max(0.06f, height) / sprite.bounds.size.y;
+            float angle = Mathf.Atan2(inward.y, inward.x) * Mathf.Rad2Deg - 90f;
+            Vector2[] spriteVertices = sprite.vertices;
+            float lowestVisibleY = spriteVertices.Length > 0 ? spriteVertices[0].y : sprite.bounds.min.y;
+            for (int i = 1; i < spriteVertices.Length; i++)
+            {
+                lowestVisibleY = Mathf.Min(lowestVisibleY, spriteVertices[i].y);
+            }
+
+            GameObject grass = new GameObject("Nature Uneven Grass Patch");
+            grass.transform.SetParent(parent, false);
+            grass.transform.localPosition = root + inward * (-lowestVisibleY * scaleY);
+            grass.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
+            grass.transform.localScale = new Vector3(((seed & 1) == 0 ? 1f : -1f) * scaleX, scaleY, 1f);
+            SpriteRenderer renderer = grass.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            float tint = 0.9f + Mathf.Abs(Mathf.Sin(seed * 0.37f)) * 0.1f;
+            renderer.color = new Color(0.9f * tint, 1f, 0.88f * tint, 0.97f);
+            renderer.sortingOrder = 9;
+        }
+
+        private static void AppendTerrainGrassTuft(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 root,
+            Vector2 tangent,
+            Vector2 inward,
+            float height,
+            int seed)
+        {
+            Color dark = new Color(0.12f, 0.49f, 0.17f, 0.72f);
+            Color light = new Color(0.39f, 0.72f, 0.3f, 0.48f);
+            const int bladeCount = 7;
+            for (int blade = 0; blade < bladeCount; blade++)
+            {
+                float centered = (blade - (bladeCount - 1) * 0.5f) / (bladeCount - 1f);
+                float bladeHeight = height * (0.48f + Mathf.Abs(Mathf.Sin(seed * 0.23f + blade * 1.49f)) * 0.52f);
+                Vector2 bladeRoot = root + tangent * centered * height * 0.75f;
+                Vector2 bladeTip = bladeRoot
+                    + inward * bladeHeight
+                    + tangent * (centered * height * 0.42f + Mathf.Sin(seed + blade * 2.1f) * 0.035f);
+                AppendPencilQuad(vertices, colors, triangles, bladeRoot, bladeTip, 0.018f, dark);
+                if ((blade & 1) == 0)
+                {
+                    AppendPencilQuad(
+                        vertices,
+                        colors,
+                        triangles,
+                        bladeRoot + tangent * 0.009f,
+                        bladeTip + tangent * 0.009f,
+                        0.009f,
+                        light);
+                }
+            }
+
+            AppendPencilQuad(
+                vertices,
+                colors,
+                triangles,
+                root - tangent * height * 0.43f,
+                root + tangent * height * 0.43f,
+                0.022f,
+                dark * 0.72f);
+        }
+
+        private static void AppendTerrainLeafySprig(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 root,
+            Vector2 tangent,
+            Vector2 inward,
+            float height,
+            int seed)
+        {
+            Color stem = new Color(0.1f, 0.45f, 0.16f, 0.78f);
+            Color fill = new Color(0.39f, 0.74f, 0.31f, 0.2f);
+            Color outline = new Color(0.13f, 0.52f, 0.18f, 0.76f);
+            Vector2 tip = root + inward * height + tangent * Mathf.Sin(seed * 0.41f) * 0.06f;
+            AppendPencilQuad(vertices, colors, triangles, root, tip, 0.021f, stem);
+            for (int leafIndex = 1; leafIndex <= 3; leafIndex++)
+            {
+                float t = 0.22f + leafIndex * 0.19f;
+                float side = ((leafIndex + seed) & 1) == 0 ? 1f : -1f;
+                Vector2 leafBase = Vector2.Lerp(root, tip, t);
+                Vector2 leafTip = leafBase
+                    + tangent * side * (0.1f + leafIndex * 0.012f)
+                    + inward * 0.065f;
+                AppendVineLeaf(vertices, colors, triangles, leafBase, leafTip, 0.043f, fill, outline);
+            }
+        }
+
+        private static void AppendTerrainTinyFlower(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 root,
+            Vector2 tangent,
+            Vector2 inward,
+            float height)
+        {
+            Color stem = new Color(0.13f, 0.48f, 0.18f, 0.7f);
+            Color petal = new Color(0.96f, 0.72f, 0.12f, 0.72f);
+            Vector2 center = root + inward * height;
+            AppendPencilQuad(vertices, colors, triangles, root, center, 0.017f, stem);
+            AppendPencilQuad(vertices, colors, triangles, center - tangent * 0.055f, center + tangent * 0.055f, 0.025f, petal);
+            AppendPencilQuad(vertices, colors, triangles, center - inward * 0.055f, center + inward * 0.055f, 0.025f, petal);
+            AppendPencilQuad(
+                vertices,
+                colors,
+                triangles,
+                center - (tangent + inward).normalized * 0.045f,
+                center + (tangent + inward).normalized * 0.045f,
+                0.018f,
+                petal * 0.82f);
+        }
+
+        private static int GetStableNatureVisualSeed(string value)
+        {
+            unchecked
+            {
+                int hash = 17;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        hash = hash * 31 + value[i];
+                    }
+                }
+                return hash & 0x7fffffff;
+            }
+        }
+
+        private static void AddNatureTerrainEdgeGradient(Transform parent, Vector2 size, Color color)
+        {
+            float halfWidth = size.x * 0.5f;
+            float halfHeight = size.y * 0.5f;
+            float horizontalDepth = Mathf.Min(halfWidth, Mathf.Clamp(size.x * 0.16f, 0.08f, 0.7f));
+            float verticalDepth = Mathf.Min(halfHeight, Mathf.Clamp(size.y * 0.24f, 0.08f, 0.65f));
+            Color edge = new Color(color.r, color.g, color.b, 0.1f);
+            Color clear = new Color(color.r, color.g, color.b, 0f);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+
+            AppendGradientQuad(
+                vertices, colors, triangles,
+                new Vector2(-halfWidth, -halfHeight), new Vector2(-halfWidth, halfHeight),
+                new Vector2(-halfWidth + horizontalDepth, -halfHeight), new Vector2(-halfWidth + horizontalDepth, halfHeight),
+                edge, clear);
+            AppendGradientQuad(
+                vertices, colors, triangles,
+                new Vector2(halfWidth, halfHeight), new Vector2(halfWidth, -halfHeight),
+                new Vector2(halfWidth - horizontalDepth, halfHeight), new Vector2(halfWidth - horizontalDepth, -halfHeight),
+                edge, clear);
+            AppendGradientQuad(
+                vertices, colors, triangles,
+                new Vector2(-halfWidth, -halfHeight), new Vector2(halfWidth, -halfHeight),
+                new Vector2(-halfWidth, -halfHeight + verticalDepth), new Vector2(halfWidth, -halfHeight + verticalDepth),
+                edge, clear);
+            AppendGradientQuad(
+                vertices, colors, triangles,
+                new Vector2(halfWidth, halfHeight), new Vector2(-halfWidth, halfHeight),
+                new Vector2(halfWidth, halfHeight - verticalDepth), new Vector2(-halfWidth, halfHeight - verticalDepth),
+                edge, clear);
+
+            AppendNatureEdgeScribbles(
+                vertices, colors, triangles,
+                new Vector2(-halfWidth, -halfHeight), new Vector2(halfWidth, -halfHeight),
+                Vector2.up * verticalDepth, 11);
+            AppendNatureEdgeScribbles(
+                vertices, colors, triangles,
+                new Vector2(halfWidth, halfHeight), new Vector2(-halfWidth, halfHeight),
+                Vector2.down * verticalDepth, 23);
+            AppendNatureEdgeScribbles(
+                vertices, colors, triangles,
+                new Vector2(-halfWidth, halfHeight), new Vector2(-halfWidth, -halfHeight),
+                Vector2.right * horizontalDepth, 37);
+            AppendNatureEdgeScribbles(
+                vertices, colors, triangles,
+                new Vector2(halfWidth, -halfHeight), new Vector2(halfWidth, halfHeight),
+                Vector2.left * horizontalDepth, 53);
+
+            CreatePencilMesh(parent, "Nature Terrain Edge Shading", vertices, colors, triangles, 5);
+        }
+
+        private static void AddNatureConnectedEdgeGradient(
+            Transform parent,
+            Vector2 from,
+            Vector2 to,
+            float depth)
+        {
+            Vector2 direction = to - from;
+            if (direction.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 inward = new Vector2(-direction.y, direction.x).normalized * depth;
+            Color edge = new Color(TitleTerrainStrokeColor.r, TitleTerrainStrokeColor.g, TitleTerrainStrokeColor.b, 0.1f);
+            Color clear = new Color(edge.r, edge.g, edge.b, 0f);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            AppendGradientQuad(vertices, colors, triangles, from, to, from + inward, to + inward, edge, clear);
+            int seed = Mathf.RoundToInt(
+                Mathf.Abs(from.x * 13f + from.y * 17f + to.x * 19f + to.y * 23f));
+            AppendNatureEdgeScribbles(vertices, colors, triangles, from, to, inward, seed);
+            CreatePencilMesh(parent, "Nature Connected Edge Shading", vertices, colors, triangles, 5);
+        }
+
+        private static void AppendNatureEdgeScribbles(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 edgeFrom,
+            Vector2 edgeTo,
+            Vector2 inward,
+            int seed)
+        {
+            Vector2 edge = edgeTo - edgeFrom;
+            float length = edge.magnitude;
+            if (length <= 0.001f || inward.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 direction = edge / length;
+            Vector2 inwardDirection = inward.normalized;
+            int segmentCount = Mathf.Max(1, Mathf.CeilToInt(length / 0.68f));
+            const int bandCount = 9;
+            for (int band = 0; band < bandCount; band++)
+            {
+                float bandT = band / (bandCount - 1f);
+                float distance = inward.magnitude * Mathf.Pow(bandT, 1.45f);
+                float alpha = Mathf.Lerp(0.32f, 0.028f, bandT);
+                Color stroke = new Color(
+                    TitleTerrainStrokeColor.r,
+                    TitleTerrainStrokeColor.g,
+                    TitleTerrainStrokeColor.b,
+                    alpha);
+                for (int segment = 0; segment < segmentCount; segment++)
+                {
+                    float phase = seed * 0.37f + band * 1.91f + segment * 2.53f;
+                    float startDistance = length * (segment + 0.06f + Mathf.Abs(Mathf.Sin(phase)) * 0.07f) / segmentCount;
+                    float endDistance = length * (segment + 0.7f + Mathf.Abs(Mathf.Cos(phase * 1.27f)) * 0.16f) / segmentCount;
+                    startDistance = Mathf.Clamp(startDistance, 0f, length);
+                    endDistance = Mathf.Clamp(endDistance, startDistance, length);
+                    float inwardJitter = Mathf.Sin(phase * 1.73f) * 0.014f;
+                    Vector2 offset = inwardDirection * Mathf.Max(0.006f, distance + inwardJitter);
+                    Vector2 start = edgeFrom + direction * startDistance + offset;
+                    Vector2 end = edgeFrom + direction * endDistance + offset
+                        + inwardDirection * (Mathf.Cos(phase * 1.41f) * 0.018f);
+                    AppendPencilQuad(
+                        vertices,
+                        colors,
+                        triangles,
+                        start,
+                        end,
+                        0.009f + (1f - bandT) * 0.006f,
+                        stroke);
+                }
+            }
+        }
+
+        private static void AppendGradientQuad(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 outerFrom,
+            Vector2 outerTo,
+            Vector2 innerFrom,
+            Vector2 innerTo,
+            Color outerColor,
+            Color innerColor)
+        {
+            int first = vertices.Count;
+            vertices.Add(outerFrom);
+            vertices.Add(outerTo);
+            vertices.Add(innerFrom);
+            vertices.Add(innerTo);
+            colors.Add(outerColor);
+            colors.Add(outerColor);
+            colors.Add(innerColor);
+            colors.Add(innerColor);
+            triangles.Add(first);
+            triangles.Add(first + 2);
+            triangles.Add(first + 1);
+            triangles.Add(first + 1);
+            triangles.Add(first + 2);
+            triangles.Add(first + 3);
         }
 
         private static void AddDoorDoodle(Transform parent)

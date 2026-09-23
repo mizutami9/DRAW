@@ -108,6 +108,7 @@ namespace DrawBody.Prototype
             AddTitleObject(objects, StageObjectType.Platform, new Vector2(-8.7f, 1.5f), new Vector2(5.2f, 0.38f));
             AddTitleObject(objects, StageObjectType.Platform, new Vector2(8.6f, 2.2f), new Vector2(5.4f, 0.38f));
             AddTitleObject(objects, StageObjectType.OneWayPlatform, new Vector2(0.2f, 4.65f), new Vector2(5.3f, 0.28f));
+            AddTitlePlaygroundDecorations(objects);
 
             AddTitleObject(objects, StageObjectType.WoodBox, new Vector2(-5.3f, 0.6f), new Vector2(1.05f, 1.05f));
             AddTitleObject(objects, StageObjectType.WoodBox, new Vector2(-4.15f, 0.6f), new Vector2(1.05f, 1.05f));
@@ -166,6 +167,57 @@ namespace DrawBody.Prototype
                 new StageRectPartData { position = new Vector2(wallX, wallY), size = new Vector2(terrainThickness, wallHeight) }
             };
             objects.Add(frame);
+        }
+
+        private static void AddTitlePlaygroundDecorations(List<StageObjectData> objects)
+        {
+            const float floorPlantY = 0.06f;
+            const float leftShelfPlantY = 1.675f;
+            const float rightShelfPlantY = 2.375f;
+            const float oneWayPlantY = 4.775f;
+
+            // Soft scenery stays well behind the playable objects so the title
+            // room feels illustrated without making its toys hard to read.
+            AddTitleDecoration(objects, StageObjectType.BackgroundTree, new Vector2(-11.6f, 1.75f), new Vector2(3.1f, 3.5f), true);
+            AddTitleDecoration(objects, StageObjectType.BackgroundMountain, new Vector2(-5.8f, 1.45f), new Vector2(6f, 2.6f), true);
+            AddTitleDecoration(objects, StageObjectType.BackgroundMountain, new Vector2(-0.2f, 1.2f), new Vector2(5.1f, 2.2f), true);
+            AddTitleDecoration(objects, StageObjectType.BackgroundMountain, new Vector2(5.1f, 1.4f), new Vector2(5.8f, 2.5f), true);
+            AddTitleDecoration(objects, StageObjectType.BackgroundCloud, new Vector2(-6.4f, 4.9f), new Vector2(2.7f, 1.25f), true);
+            AddTitleDecoration(objects, StageObjectType.BackgroundCloud, new Vector2(0.8f, 5.25f), new Vector2(1.8f, 0.85f), true);
+            AddTitleDecoration(objects, StageObjectType.BackgroundCloud, new Vector2(5.9f, 4.75f), new Vector2(2.35f, 1.1f), true);
+
+            // Plants sit just above the floor and shelves. Deliberately vary
+            // their species and size instead of repeating a uniform border.
+            AddTitleDecoration(objects, StageObjectType.BackgroundGrass, new Vector2(-12.65f, floorPlantY), new Vector2(1.15f, 0.58f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundBush, new Vector2(-11.25f, floorPlantY), new Vector2(1.35f, 0.9f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundFlower, new Vector2(-7.1f, floorPlantY), new Vector2(0.55f, 0.72f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundGrass, new Vector2(-6.35f, floorPlantY), new Vector2(1.05f, 0.52f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundTulip, new Vector2(-1.95f, floorPlantY), new Vector2(0.55f, 0.72f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundGrass, new Vector2(3.15f, floorPlantY), new Vector2(1.15f, 0.54f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundSunflower, new Vector2(3.9f, floorPlantY), new Vector2(0.68f, 0.86f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundMushroom, new Vector2(7.7f, floorPlantY), new Vector2(0.65f, 0.58f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundGrass, new Vector2(9.45f, floorPlantY), new Vector2(1.05f, 0.52f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundFlower, new Vector2(12.55f, floorPlantY), new Vector2(0.55f, 0.72f));
+
+            AddTitleDecoration(objects, StageObjectType.BackgroundGrass, new Vector2(-10.6f, leftShelfPlantY), new Vector2(0.9f, 0.46f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundFlower, new Vector2(-6.7f, leftShelfPlantY), new Vector2(0.48f, 0.65f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundGrass, new Vector2(2.2f, oneWayPlantY), new Vector2(0.8f, 0.42f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundGrass, new Vector2(6.35f, rightShelfPlantY), new Vector2(0.85f, 0.44f));
+            AddTitleDecoration(objects, StageObjectType.BackgroundFlower, new Vector2(10.35f, rightShelfPlantY), new Vector2(0.5f, 0.66f));
+        }
+
+        private static void AddTitleDecoration(
+            List<StageObjectData> objects,
+            StageObjectType type,
+            Vector2 position,
+            Vector2 size,
+            bool distant = false)
+        {
+            StageObjectData data = StageObjectFactory.CreateDefaultData(type, position);
+            string layer = distant ? "distant" : "flora";
+            data.objectId = $"title-playground-{layer}-{objects.Count:D2}-{type}";
+            data.size = size;
+            objects.Add(data);
         }
 
         private static void AddTitleObject(
@@ -251,22 +303,24 @@ namespace DrawBody.Prototype
             EnsureReferences();
             StagePoseTowerRandomizer.Prepare(data);
             CurrentStageData = data;
-            RefreshStageFallBoundary(data.objects);
+            StageObjectData[] runtimeObjects = BuildRuntimeStageObjects(data);
+            RefreshStageFallBoundary(runtimeObjects);
             ClearStageRoot();
+            objectFactory.ConfigureStageVisualTheme(data.id, stageRoot);
             StageBackgroundAppearance.Apply(StageBackgroundAppearance.Parse(data.backgroundColorHex));
             if (fallbackStageRoot != null)
             {
                 fallbackStageRoot.SetActive(false);
             }
 
-            objectFactory.FitSeparateBridges(data.objects);
+            objectFactory.FitSeparateBridges(runtimeObjects);
 
             int playerCount = GetCurrentStagePlayerCount();
             HashSet<string> enabledBombDroppers = BuildPlayerScaledBombDropperIds(data, playerCount);
 
-            for (int i = 0; i < data.objects.Length; i++)
+            for (int i = 0; i < runtimeObjects.Length; i++)
             {
-                StageObjectData obj = data.objects[i];
+                StageObjectData obj = runtimeObjects[i];
                 if (obj == null)
                 {
                     continue;
@@ -308,9 +362,321 @@ namespace DrawBody.Prototype
                 objectFactory.Create(obj, stageRoot);
             }
 
-            objectFactory.RefreshBridgeConnectionVisuals(data.objects, stageRoot);
+            objectFactory.RefreshBridgeConnectionVisuals(runtimeObjects, stageRoot);
+            AddNatureStageVines(data.id, runtimeObjects);
 
             ConfigureStageGimmicks(data);
+        }
+
+        private static StageObjectData[] BuildRuntimeStageObjects(StageData data)
+        {
+            if (data == null || (data.id != "1-1" && data.id != "2-1" && data.id != "3-1"))
+            {
+                return data != null && data.objects != null ? data.objects : new StageObjectData[0];
+            }
+
+            List<StageObjectData> objects = data.objects != null
+                ? new List<StageObjectData>(data.objects)
+                : new List<StageObjectData>();
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] != null
+                    && !string.IsNullOrEmpty(objects[i].objectId)
+                    && objects[i].objectId.StartsWith("nature-", System.StringComparison.Ordinal))
+                {
+                    return objects.ToArray();
+                }
+            }
+
+            if (data.id == "1-1")
+            {
+                AppendStage11Nature(objects);
+            }
+            else if (data.id == "2-1")
+            {
+                AppendStage21Nature(objects);
+            }
+            else
+            {
+                AppendStage31Nature(objects);
+            }
+            return objects.ToArray();
+        }
+
+        private static void AppendStage11Nature(List<StageObjectData> objects)
+        {
+            AddNatureDecoration(objects, "1-1", "mountain-a", StageObjectType.BackgroundMountain, new Vector2(-2f, 1.1f), new Vector2(7.5f, 3.2f), true);
+            AddNatureDecoration(objects, "1-1", "mountain-b", StageObjectType.BackgroundMountain, new Vector2(10.5f, 1.35f), new Vector2(7f, 3f), true);
+            AddNatureDecoration(objects, "1-1", "mountain-c", StageObjectType.BackgroundMountain, new Vector2(31f, 8.1f), new Vector2(8f, 3.5f), true);
+            AddNatureDecoration(objects, "1-1", "mountain-d", StageObjectType.BackgroundMountain, new Vector2(49.5f, 14.3f), new Vector2(8.5f, 3.7f), true);
+            AddNatureDecoration(objects, "1-1", "tree-a", StageObjectType.BackgroundTree, new Vector2(31.5f, 7.8f), new Vector2(4.1f, 4.8f), true);
+            AddNatureDecoration(objects, "1-1", "tree-b", StageObjectType.BackgroundTree, new Vector2(57f, 14.4f), new Vector2(3.8f, 4.5f), true);
+
+            AddNatureDecoration(objects, "1-1", "grass-01", StageObjectType.BackgroundGrass, new Vector2(-8.35f, -0.615f), new Vector2(1.15f, 0.58f));
+            AddNatureDecoration(objects, "1-1", "bush-01", StageObjectType.BackgroundBush, new Vector2(-4.2f, -0.615f), new Vector2(1.35f, 0.9f));
+            AddNatureDecoration(objects, "1-1", "flower-01", StageObjectType.BackgroundFlower, new Vector2(2.75f, -0.615f), new Vector2(0.55f, 0.72f));
+            AddNatureDecoration(objects, "1-1", "grass-03", StageObjectType.BackgroundGrass, new Vector2(11.4f, -0.315f), new Vector2(1.05f, 0.52f));
+            AddNatureDecoration(objects, "1-1", "mushroom-01", StageObjectType.BackgroundMushroom, new Vector2(15.05f, -0.315f), new Vector2(0.62f, 0.56f));
+            AddNatureDecoration(objects, "1-1", "grass-04", StageObjectType.BackgroundGrass, new Vector2(22f, 12.485f), new Vector2(0.95f, 0.48f));
+            AddNatureDecoration(objects, "1-1", "flower-02", StageObjectType.BackgroundSunflower, new Vector2(25.6f, 12.485f), new Vector2(0.62f, 0.82f));
+            AddNatureDecoration(objects, "1-1", "grass-05", StageObjectType.BackgroundGrass, new Vector2(7.8f, 18.985f), new Vector2(1.05f, 0.52f));
+            AddNatureDecoration(objects, "1-1", "bush-02", StageObjectType.BackgroundBush, new Vector2(27f, 5.985f), new Vector2(1.2f, 0.78f));
+            AddNatureDecoration(objects, "1-1", "flower-03", StageObjectType.BackgroundFlower, new Vector2(35.2f, 5.985f), new Vector2(0.52f, 0.7f));
+            AddNatureDecoration(objects, "1-1", "grass-06", StageObjectType.BackgroundGrass, new Vector2(47.2f, 12.285f), new Vector2(1.05f, 0.52f));
+            AddNatureDecoration(objects, "1-1", "flower-04", StageObjectType.BackgroundTulip, new Vector2(58f, 12.285f), new Vector2(0.52f, 0.72f));
+            AddNatureDecoration(objects, "1-1", "grass-07", StageObjectType.BackgroundGrass, new Vector2(9.6f, 28.485f), new Vector2(1.1f, 0.55f));
+        }
+
+        private static void AppendStage21Nature(List<StageObjectData> objects)
+        {
+            float[] mountainX = { 6f, 30f, 55f, 82f, 108f };
+            for (int i = 0; i < mountainX.Length; i++)
+            {
+                AddNatureDecoration(objects, "2-1", "mountain-" + i, StageObjectType.BackgroundMountain, new Vector2(mountainX[i], 2.2f + (i % 2) * 0.6f), new Vector2(9f, 3.8f), true);
+            }
+            AddNatureDecoration(objects, "2-1", "tree-a", StageObjectType.BackgroundTree, new Vector2(50f, 1.35f), new Vector2(3.8f, 4.4f), true);
+            AddNatureDecoration(objects, "2-1", "tree-b", StageObjectType.BackgroundTree, new Vector2(76f, 1.15f), new Vector2(4f, 4.6f), true);
+            AddNatureDecoration(objects, "2-1", "tree-c", StageObjectType.BackgroundTree, new Vector2(101f, 1f), new Vector2(3.8f, 4.4f), true);
+
+            AddNatureDecoration(objects, "2-1", "grass-01", StageObjectType.BackgroundGrass, new Vector2(-8.5f, -0.56f), new Vector2(1.1f, 0.55f));
+            AddNatureDecoration(objects, "2-1", "flower-01", StageObjectType.BackgroundFlower, new Vector2(-0.5f, -0.56f), new Vector2(0.52f, 0.7f));
+            AddNatureDecoration(objects, "2-1", "bush-01", StageObjectType.BackgroundBush, new Vector2(14.5f, -0.57f), new Vector2(1.2f, 0.78f));
+            AddNatureDecoration(objects, "2-1", "grass-02", StageObjectType.BackgroundGrass, new Vector2(20.5f, -0.57f), new Vector2(1f, 0.5f));
+            AddNatureDecoration(objects, "2-1", "grass-03", StageObjectType.BackgroundGrass, new Vector2(24.7f, 0.285f), new Vector2(1.05f, 0.52f));
+            AddNatureDecoration(objects, "2-1", "mushroom-01", StageObjectType.BackgroundMushroom, new Vector2(28.7f, 0.285f), new Vector2(0.62f, 0.56f));
+            AddNatureDecoration(objects, "2-1", "flower-02", StageObjectType.BackgroundSunflower, new Vector2(35.2f, 0.285f), new Vector2(0.64f, 0.84f));
+            AddNatureDecoration(objects, "2-1", "grass-04", StageObjectType.BackgroundGrass, new Vector2(39.8f, 0.285f), new Vector2(0.95f, 0.48f));
+            AddNatureDecoration(objects, "2-1", "grass-05", StageObjectType.BackgroundGrass, new Vector2(115.5f, -2.515f), new Vector2(1.05f, 0.52f));
+            AddNatureDecoration(objects, "2-1", "flower-03", StageObjectType.BackgroundTulip, new Vector2(122.5f, -2.515f), new Vector2(0.54f, 0.72f));
+        }
+
+        private static void AppendStage31Nature(List<StageObjectData> objects)
+        {
+            Vector2[] mountainPositions =
+            {
+                new Vector2(4f, 20.5f), new Vector2(29f, 14.5f), new Vector2(6f, -5f),
+                new Vector2(29f, -18.5f), new Vector2(5f, -31.5f), new Vector2(29f, -44f),
+                new Vector2(-4f, -56.5f)
+            };
+            for (int i = 0; i < mountainPositions.Length; i++)
+            {
+                AddNatureDecoration(objects, "3-1", "mountain-" + i, StageObjectType.BackgroundMountain, mountainPositions[i], new Vector2(8f, 3.5f), true);
+            }
+            AddNatureDecoration(objects, "3-1", "tree-a", StageObjectType.BackgroundTree, new Vector2(-9f, 20.5f), new Vector2(3.8f, 4.5f), true);
+            AddNatureDecoration(objects, "3-1", "tree-b", StageObjectType.BackgroundTree, new Vector2(31f, 10f), new Vector2(3.8f, 4.5f), true);
+            AddNatureDecoration(objects, "3-1", "tree-c", StageObjectType.BackgroundTree, new Vector2(-7f, -10f), new Vector2(3.6f, 4.2f), true);
+            AddNatureDecoration(objects, "3-1", "tree-d", StageObjectType.BackgroundTree, new Vector2(32f, -32f), new Vector2(3.8f, 4.5f), true);
+            AddNatureDecoration(objects, "3-1", "tree-e", StageObjectType.BackgroundTree, new Vector2(-12f, -53f), new Vector2(3.8f, 4.5f), true);
+
+            AddNatureDecoration(objects, "3-1", "grass-01", StageObjectType.BackgroundGrass, new Vector2(-10.2f, 18.94f), new Vector2(1.1f, 0.55f));
+            AddNatureDecoration(objects, "3-1", "flower-01", StageObjectType.BackgroundFlower, new Vector2(-2.2f, 18.94f), new Vector2(0.52f, 0.7f));
+            AddNatureDecoration(objects, "3-1", "bush-01", StageObjectType.BackgroundBush, new Vector2(9.5f, 14.43f), new Vector2(1.15f, 0.76f));
+            AddNatureDecoration(objects, "3-1", "grass-02", StageObjectType.BackgroundGrass, new Vector2(13f, 14.43f), new Vector2(0.95f, 0.48f));
+            AddNatureDecoration(objects, "3-1", "grass-03", StageObjectType.BackgroundGrass, new Vector2(31.5f, -2.015f), new Vector2(1.05f, 0.52f));
+            AddNatureDecoration(objects, "3-1", "flower-02", StageObjectType.BackgroundTulip, new Vector2(9.8f, -34.015f), new Vector2(0.52f, 0.7f));
+            AddNatureDecoration(objects, "3-1", "grass-04", StageObjectType.BackgroundGrass, new Vector2(0.3f, -38.015f), new Vector2(0.95f, 0.48f));
+            AddNatureDecoration(objects, "3-1", "mushroom-01", StageObjectType.BackgroundMushroom, new Vector2(26f, -40.29f), new Vector2(0.62f, 0.56f));
+            AddNatureDecoration(objects, "3-1", "grass-05", StageObjectType.BackgroundGrass, new Vector2(-16.7f, -63.015f), new Vector2(1.05f, 0.52f));
+        }
+
+        private static void AddNatureDecoration(
+            List<StageObjectData> objects,
+            string stageId,
+            string suffix,
+            StageObjectType type,
+            Vector2 position,
+            Vector2 size,
+            bool distant = false)
+        {
+            StageObjectData data = StageObjectFactory.CreateDefaultData(type, position);
+            data.objectId = $"nature-{(distant ? "distant" : "flora")}-{stageId}-{suffix}";
+            data.size = size;
+            objects.Add(data);
+        }
+
+        private void AddNatureStageVines(string stageId, StageObjectData[] objects)
+        {
+            if (objectFactory == null || stageRoot == null)
+            {
+                return;
+            }
+
+            int seed = 20;
+            if (stageId == "1-1")
+            {
+                AddNatureVine(new Vector2(9.2f, 23.48f), 1.65f, ref seed);
+                AddNatureVine(new Vector2(7.4f, 17.98f), 1.35f, ref seed);
+                AddNatureVine(new Vector2(39f, 10.28f), 1.4f, ref seed);
+                AddNatureVine(new Vector2(49f, 10.28f), 1.75f, ref seed);
+                AddNatureWallVine(new Vector2(15.92f, -0.22f), 6.3f, ref seed);
+                AddNatureWallVine(new Vector2(24.16f, 4.65f), 4.4f, ref seed);
+                AddNatureWallVine(new Vector2(37.82f, 4.3f), 4.2f, ref seed);
+                AddNatureWallVine(new Vector2(41.82f, 12.5f), 5.4f, ref seed);
+            }
+            else if (stageId == "2-1")
+            {
+                float[] xs = { -7f, 18f, 43f, 67f, 93f, 117f };
+                for (int i = 0; i < xs.Length; i++)
+                {
+                    AddNatureVine(new Vector2(xs[i], 15.7f), 1.15f + (i % 3) * 0.4f, ref seed);
+                }
+                AddNatureWallVine(new Vector2(38.66f, 0.45f), 5.6f, ref seed);
+                AddNatureWallVine(new Vector2(40.62f, -4.25f), 2.6f, ref seed);
+            }
+            else if (stageId == "3-1")
+            {
+                AddNatureVine(new Vector2(-8f, 30.2f), 1.4f, ref seed);
+                AddNatureVine(new Vector2(8f, 30.2f), 1.8f, ref seed);
+                AddNatureVine(new Vector2(31f, 30.2f), 1.25f, ref seed);
+                AddNatureVine(new Vector2(-9f, 18.48f), 1.2f, ref seed);
+                AddNatureVine(new Vector2(30f, -2.47f), 1.55f, ref seed);
+                AddNatureVine(new Vector2(27f, -40.74f), 1.45f, ref seed);
+                AddNatureWallVine(new Vector2(-2.84f, 13.45f), 3.8f, ref seed);
+                AddNatureWallVine(new Vector2(14.16f, -1.8f), 5.7f, ref seed);
+                AddNatureWallVine(new Vector2(23.34f, 4.2f), 5.8f, ref seed);
+                AddNatureWallVine(new Vector2(13.12f, -47f), 3.1f, ref seed);
+            }
+            else if (IsAdditionalNatureStage(stageId))
+            {
+                AddAutomaticNatureWallVines(stageId, objects, ref seed);
+            }
+        }
+
+        private void AddAutomaticNatureWallVines(
+            string stageId,
+            StageObjectData[] objects,
+            ref int seed)
+        {
+            if (objects == null || objects.Length == 0)
+            {
+                return;
+            }
+
+            HashSet<string> dynamicTargets = new HashSet<string>();
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageObjectData source = objects[i];
+                if (source != null && !string.IsNullOrEmpty(source.linkTargetId))
+                {
+                    dynamicTargets.Add(source.linkTargetId);
+                }
+            }
+
+            List<StageObjectData> candidates = new List<StageObjectData>();
+            StageObjectData boundary = null;
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageObjectData data = objects[i];
+                if (data == null)
+                {
+                    continue;
+                }
+
+                if (data.type == StageObjectType.StageBoundary)
+                {
+                    boundary = data;
+                    continue;
+                }
+
+                if ((data.type != StageObjectType.Platform
+                        && data.type != StageObjectType.Wall
+                        && data.type != StageObjectType.BreakableWall
+                        && data.type != StageObjectType.BulletBreakableWall)
+                    || (data.pathPoints != null && data.pathPoints.Length >= 2)
+                    || (data.connectedRects != null && data.connectedRects.Length > 0)
+                    || (!string.IsNullOrEmpty(data.objectId) && dynamicTargets.Contains(data.objectId)))
+                {
+                    continue;
+                }
+
+                GetRotatedSize(data, out float worldWidth, out float worldHeight);
+                if (worldHeight >= 3f && worldHeight > worldWidth * 1.45f)
+                {
+                    candidates.Add(data);
+                }
+            }
+
+            candidates.Sort((left, right) =>
+            {
+                int xOrder = left.position.x.CompareTo(right.position.x);
+                return xOrder != 0 ? xOrder : left.position.y.CompareTo(right.position.y);
+            });
+
+            int vineCount = Mathf.Clamp((candidates.Count + 2) / 3, 0, 4);
+            for (int vineIndex = 0; vineIndex < vineCount; vineIndex++)
+            {
+                int candidateIndex = Mathf.Clamp(
+                    Mathf.RoundToInt((vineIndex + 0.5f) * candidates.Count / vineCount - 0.5f),
+                    0,
+                    candidates.Count - 1);
+                StageObjectData wall = candidates[candidateIndex];
+                GetRotatedSize(wall, out float width, out float height);
+                int wallSeed = GetStableNatureSeed(stageId + ":" + wall.objectId);
+                bool useRightEdge = (wallSeed & 1) != 0;
+                float x = wall.position.x + (useRightEdge ? width * 0.5f - 0.14f : -width * 0.5f + 0.14f);
+                float y = wall.position.y - height * 0.5f + 0.16f;
+                AddNatureWallVine(
+                    new Vector2(x, y),
+                    Mathf.Clamp(height * 0.42f, 2.4f, 5.8f),
+                    ref seed);
+            }
+
+            if (vineCount == 0 && boundary != null)
+            {
+                int boundarySeed = GetStableNatureSeed(stageId + ":boundary");
+                bool useRightEdge = (boundarySeed & 1) != 0;
+                float x = boundary.position.x
+                    + (useRightEdge ? boundary.size.x * 0.5f - 0.18f : -boundary.size.x * 0.5f + 0.18f);
+                float y = boundary.position.y - boundary.size.y * 0.5f + 0.75f;
+                AddNatureWallVine(
+                    new Vector2(x, y),
+                    Mathf.Clamp(boundary.size.y * 0.3f, 2.8f, 5.2f),
+                    ref seed);
+            }
+        }
+
+        private static void GetRotatedSize(StageObjectData data, out float width, out float height)
+        {
+            float radians = data.rotation * Mathf.Deg2Rad;
+            float cosine = Mathf.Abs(Mathf.Cos(radians));
+            float sine = Mathf.Abs(Mathf.Sin(radians));
+            width = data.size.x * cosine + data.size.y * sine;
+            height = data.size.x * sine + data.size.y * cosine;
+        }
+
+        private static bool IsAdditionalNatureStage(string stageId)
+        {
+            return stageId == "5-2"
+                || stageId == "7-2"
+                || stageId == "9-3"
+                || stageId == "10-2"
+                || stageId == "14-2";
+        }
+
+        private static int GetStableNatureSeed(string value)
+        {
+            unchecked
+            {
+                int hash = 17;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        hash = hash * 31 + value[i];
+                    }
+                }
+                return hash & 0x7fffffff;
+            }
+        }
+
+        private void AddNatureVine(Vector2 anchor, float length, ref int seed)
+        {
+            objectFactory.AddNatureHangingVine(stageRoot, anchor, length, seed++);
+        }
+
+        private void AddNatureWallVine(Vector2 bottom, float height, ref int seed)
+        {
+            objectFactory.AddNatureWallVine(stageRoot, bottom, height, seed++);
         }
 
         private static int GetCurrentStagePlayerCount()
