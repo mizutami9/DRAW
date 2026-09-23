@@ -314,6 +314,7 @@ namespace DrawBody.Prototype
             int count = Mathf.Clamp(IsOnline ? expectedIds.Count : offlinePlayers.Count, 1, 4);
             int columns = count == 1 ? 1 : 2;
             int rows = Mathf.CeilToInt(count / (float)columns);
+            CreateGlobalReadyRoomBackdrop(GetGlobalBackgroundTheme());
             for (int i = 0; i < count; i++)
             {
                 int column = i % columns;
@@ -642,7 +643,14 @@ namespace DrawBody.Prototype
         {
             if (!IsOnline) return Random.Range(0, int.MaxValue);
             OnlineLobbyInfo lobby = onlineManager != null ? onlineManager.CurrentLobby : null;
-            string source = (lobby != null ? lobby.LobbyId : string.Empty)
+            string sharedSessionId = lobby == null
+                ? "online"
+                : !string.IsNullOrEmpty(lobby.LobbyId)
+                    ? "lobby:" + lobby.LobbyId
+                    : !string.IsNullOrEmpty(lobby.RoomCode)
+                        ? "room:" + lobby.RoomCode
+                        : "online";
+            string source = sharedSessionId
                 + "|" + stageId
                 + "|" + (lobby != null ? lobby.StageRevision : 0)
                 + "|" + (lobby != null ? lobby.RetryRevision : 0);
@@ -666,11 +674,22 @@ namespace DrawBody.Prototype
             return (first + Mathf.Max(0, roomIndex) * step) % 10;
         }
 
+        private int GetGlobalBackgroundTheme()
+        {
+            // A session has one coherent background. Individual booths may use
+            // other decorations, but every client derives this shared theme from
+            // the same online seed.
+            return GetDecorationTheme(0);
+        }
+
         private void CreateReadyRoomPresentation(Vector2 center, int roomIndex)
         {
-            int theme = GetDecorationTheme(roomIndex);
+            int decorationTheme = GetDecorationTheme(roomIndex);
+            int backgroundTheme = GetGlobalBackgroundTheme();
             GameObject frameRoot = new GameObject(
-                "Ready Room Crayon Booth " + (roomIndex + 1) + " Theme " + (theme + 1));
+                "Ready Room Crayon Booth " + (roomIndex + 1)
+                + " Decoration " + (decorationTheme + 1)
+                + " Background " + (backgroundTheme + 1));
             frameRoot.transform.SetParent(transform, false);
             frameRoot.transform.localPosition = center;
 
@@ -693,6 +712,12 @@ namespace DrawBody.Prototype
                 new Color(0.78f, 0.3f, 0.86f, 0.44f)
             };
 
+            // The large, pale doodles are scenery only. They deliberately sit
+            // below players, the redraw floor and the physical room frame, and
+            // never receive a collider or a gameplay component.
+            AddReadyRoomBackdrop(frameRoot.transform, halfWidth, halfHeight,
+                roomIndex, backgroundTheme);
+
             // Uneven colored strokes make the frame read as a handmade booth,
             // while staying entirely inside the non-playable wall surfaces.
             int verticalStrokeCount = Mathf.Max(4, Mathf.FloorToInt(roomHeight / 0.8f));
@@ -700,14 +725,14 @@ namespace DrawBody.Prototype
             {
                 float t = (stroke + 0.5f) / verticalStrokeCount;
                 float y = Mathf.Lerp(-halfHeight + 0.45f, halfHeight - 0.45f, t);
-                Color color = crayons[(stroke + roomIndex + theme) % crayons.Length];
+                Color color = crayons[(stroke + roomIndex + decorationTheme) % crayons.Length];
                 StageEscortController.AddLine(frameRoot.transform,
                     new Vector2(-halfWidth - 0.22f, y - 0.16f),
                     new Vector2(-halfWidth + 0.22f, y + 0.16f), 0.075f, color, 36);
                 StageEscortController.AddLine(frameRoot.transform,
                     new Vector2(halfWidth - 0.22f, y - 0.16f),
                     new Vector2(halfWidth + 0.22f, y + 0.16f), 0.075f,
-                    crayons[(stroke + roomIndex + theme + 2) % crayons.Length], 36);
+                    crayons[(stroke + roomIndex + decorationTheme + 2) % crayons.Length], 36);
             }
 
             int topStrokeCount = Mathf.Max(5, Mathf.FloorToInt(roomWidth / 0.75f));
@@ -718,10 +743,330 @@ namespace DrawBody.Prototype
                 StageEscortController.AddLine(frameRoot.transform,
                     new Vector2(x - 0.18f, halfHeight - 0.2f),
                     new Vector2(x + 0.18f, halfHeight + 0.2f), 0.075f,
-                    crayons[(stroke + roomIndex + theme + 1) % crayons.Length], 36);
+                    crayons[(stroke + roomIndex + decorationTheme + 1) % crayons.Length], 36);
             }
 
-            AddReadyRoomTheme(frameRoot.transform, halfWidth, halfHeight, crayons, roomIndex, theme);
+            AddReadyRoomTheme(
+                frameRoot.transform,
+                halfWidth,
+                halfHeight,
+                crayons,
+                roomIndex,
+                decorationTheme);
+        }
+
+        private void CreateGlobalReadyRoomBackdrop(int theme)
+        {
+            Transform backdrop = new GameObject(
+                "Ready Room Global Background Theme " + (theme + 1)).transform;
+            backdrop.SetParent(transform, false);
+
+            UnityEngine.Rendering.SortingGroup group =
+                backdrop.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>();
+            group.sortingOrder = -70;
+
+            StageEscortController.AddFilledRect(
+                backdrop,
+                "Full Screen Theme Color",
+                Vector2.zero,
+                new Vector2(52f, 30f),
+                GetGlobalThemeColor(theme),
+                0);
+
+            bool darkTheme = theme == 2 || theme == 7 || theme == 8;
+            Color paperLine = darkTheme
+                ? new Color(0.62f, 0.74f, 1f, 0.1f)
+                : new Color(0.12f, 0.34f, 0.48f, 0.075f);
+            for (int lineIndex = 0; lineIndex < 11; lineIndex++)
+            {
+                float y = -12.5f + lineIndex * 2.5f;
+                float wobble = Mathf.Sin(lineIndex * 1.73f + theme * 0.61f) * 0.34f;
+                StageEscortController.AddLine(
+                    backdrop,
+                    new Vector2(-26f, y - wobble),
+                    new Vector2(26f, y + wobble),
+                    0.035f,
+                    paperLine,
+                    1);
+            }
+
+            switch (theme)
+            {
+                case 0: // Party
+                    AddGlobalThemeSprite(backdrop, "confetti", new Vector2(0f, 1.2f), 8.5f, 0f, 0.33f);
+                    AddGlobalThemeSprite(backdrop, "star", new Vector2(-9.5f, 2.6f), 5.8f, -8f, 0.42f);
+                    AddGlobalThemeSprite(backdrop, "star", new Vector2(10.2f, -2.8f), 4.6f, 12f, 0.4f);
+                    break;
+                case 1: // Balloons
+                    AddGlobalThemeSprite(backdrop, "balloon", new Vector2(-10.5f, -1.7f), 7.2f, -8f, 0.48f);
+                    AddGlobalThemeSprite(backdrop, "balloon", new Vector2(10.2f, 1.8f), 6.5f, 9f, 0.43f, true);
+                    AddGlobalThemeSprite(backdrop, "confetti", new Vector2(0f, 4.8f), 5.2f, 0f, 0.28f);
+                    break;
+                case 2: // Starry night
+                    AddGlobalThemeSprite(backdrop, "moon", new Vector2(-9.6f, 2.2f), 7.4f, -8f, 0.64f);
+                    AddGlobalThemeSprite(backdrop, "cloud", new Vector2(8.8f, -3.8f), 4.2f, 0f, 0.28f);
+                    AddGlobalThemeSprite(backdrop, "star", new Vector2(8.8f, 3.8f), 3.4f, 10f, 0.58f);
+                    AddGlobalThemeSprite(backdrop, "star", new Vector2(1.5f, -4.8f), 1.9f, -8f, 0.42f);
+                    break;
+                case 3: // Rainbow sky
+                    AddGlobalThemeSprite(backdrop, "rainbow", new Vector2(0f, 3.1f), 10.5f, 0f, 0.38f);
+                    AddGlobalThemeSprite(backdrop, "cloud", new Vector2(-10.8f, -2.2f), 5.2f, 0f, 0.4f);
+                    AddGlobalThemeSprite(backdrop, "cloud", new Vector2(10.5f, -1.2f), 4.6f, 0f, 0.36f, true);
+                    break;
+                case 4: // Aquarium
+                    AddGlobalThemeSprite(backdrop, "fish", new Vector2(-9.5f, -1.2f), 6.8f, -6f, 0.52f);
+                    AddGlobalThemeSprite(backdrop, "fish", new Vector2(9.7f, 2.3f), 5.5f, 7f, 0.46f, true);
+                    AddGlobalThemeSprite(backdrop, "bubbles", new Vector2(1.2f, 1.4f), 7.8f, 0f, 0.34f);
+                    break;
+                case 5: // Flower garden
+                    AddGlobalThemeSprite(backdrop, "sunflower", new Vector2(-10.2f, -2.4f), 7.2f, -4f, 0.5f);
+                    AddGlobalThemeSprite(backdrop, "flower", new Vector2(9.7f, -2.7f), 6.4f, 5f, 0.43f);
+                    AddGlobalThemeSprite(backdrop, "butterfly", new Vector2(7.8f, 4.5f), 3.2f, -12f, 0.44f);
+                    break;
+                case 6: // Music
+                    AddGlobalThemeSprite(backdrop, "microphone", new Vector2(-10.4f, -1.3f), 6.6f, -16f, 0.46f);
+                    AddGlobalThemeSprite(backdrop, "microphone", new Vector2(10.2f, 2.1f), 5.6f, 15f, 0.34f, true);
+                    AddThemeMusicNote(backdrop, new Vector2(-3.8f, 4.2f), 2.1f,
+                        new Color(0.94f, 0.38f, 0.68f, 0.48f), true);
+                    AddThemeMusicNote(backdrop, new Vector2(5f, -4.2f), 1.8f,
+                        new Color(0.24f, 0.58f, 0.94f, 0.46f), false);
+                    break;
+                case 7: // Space
+                    AddGlobalSaturn(backdrop, new Vector2(-8.4f, -0.8f), 3.45f, -7f);
+                    AddGlobalThemeSprite(backdrop, "rocket", new Vector2(9.3f, -3.1f), 5.2f, 18f, 0.52f);
+                    AddGlobalComet(backdrop, new Vector2(8.8f, 4.2f), 3.8f, -12f);
+                    AddGlobalThemeSprite(backdrop, "star", new Vector2(1.2f, 4.8f), 1.8f, 8f, 0.6f);
+                    AddGlobalThemeSprite(backdrop, "star", new Vector2(4.5f, -4.9f), 1.25f, -12f, 0.5f);
+                    break;
+                case 8: // Lightning arcade
+                    AddGlobalThemeSprite(backdrop, "lightning", new Vector2(-10.3f, 0.8f), 7.2f, -8f, 0.58f);
+                    AddGlobalThemeSprite(backdrop, "crown", new Vector2(0f, 4.6f), 4.6f, 0f, 0.52f);
+                    AddGlobalThemeSprite(backdrop, "lightning", new Vector2(10.2f, -1.1f), 6.4f, 10f, 0.52f, true);
+                    AddGlobalThemeSprite(backdrop, "gear", new Vector2(6.2f, 4f), 2.8f, 0f, 0.4f);
+                    break;
+                default: // Art desk
+                    AddGlobalThemeSprite(backdrop, "palette", new Vector2(-9.5f, 0.2f), 7.4f, -8f, 0.48f);
+                    AddGlobalThemeSprite(backdrop, "pencil", new Vector2(9.8f, 1.7f), 7.5f, 18f, 0.5f);
+                    AddGlobalThemeSprite(backdrop, "paintbrush", new Vector2(6.8f, -4.4f), 5f, -28f, 0.42f);
+                    AddGlobalThemeSprite(backdrop, "crayon", new Vector2(-3.8f, 4.7f), 3.3f, -20f, 0.38f);
+                    break;
+            }
+
+            ReadyRoomGlobalBackdropFollower follower =
+                backdrop.gameObject.AddComponent<ReadyRoomGlobalBackdropFollower>();
+            follower.Configure(Camera.main, 8f);
+        }
+
+        private static Color GetGlobalThemeColor(int theme)
+        {
+            switch (theme)
+            {
+                case 0: return new Color(0.97f, 0.86f, 0.62f, 0.92f);
+                case 1: return new Color(0.96f, 0.78f, 0.86f, 0.92f);
+                case 2: return new Color(0.16f, 0.2f, 0.39f, 0.94f);
+                case 3: return new Color(0.66f, 0.84f, 0.92f, 0.92f);
+                case 4: return new Color(0.38f, 0.7f, 0.75f, 0.93f);
+                case 5: return new Color(0.68f, 0.84f, 0.58f, 0.92f);
+                case 6: return new Color(0.76f, 0.65f, 0.86f, 0.92f);
+                case 7: return new Color(0.045f, 0.06f, 0.14f, 0.96f);
+                case 8: return new Color(0.19f, 0.12f, 0.3f, 0.94f);
+                default: return new Color(0.91f, 0.72f, 0.53f, 0.92f);
+            }
+        }
+
+        private static void AddGlobalThemeSprite(
+            Transform parent,
+            string resourceName,
+            Vector2 position,
+            float targetHeight,
+            float rotation,
+            float alpha,
+            bool flipX = false)
+        {
+            Sprite sprite = Resources.Load<Sprite>(
+                "StageDecorations/CrayonSet/" + resourceName);
+            if (sprite == null || sprite.bounds.size.y <= 0f) return;
+
+            GameObject visual = new GameObject("Global Theme " + resourceName);
+            visual.transform.SetParent(parent, false);
+            visual.transform.localPosition = new Vector3(position.x, position.y, -0.03f);
+            visual.transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            float scale = Mathf.Max(0.01f, targetHeight) / sprite.bounds.size.y;
+            visual.transform.localScale = new Vector3(flipX ? -scale : scale, scale, 1f);
+            SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = new Color(1f, 1f, 1f, Mathf.Clamp01(alpha));
+            renderer.sortingOrder = 3;
+        }
+
+        private static void AddGlobalSaturn(
+            Transform parent,
+            Vector2 position,
+            float radius,
+            float rotation)
+        {
+            Transform saturn = new GameObject("Global Theme Hand Drawn Saturn").transform;
+            saturn.SetParent(parent, false);
+            saturn.localPosition = position;
+            saturn.localRotation = Quaternion.Euler(0f, 0f, rotation);
+
+            Color body = new Color(0.69f, 0.48f, 0.9f, 0.7f);
+            Color ring = new Color(1f, 0.7f, 0.24f, 0.78f);
+            Color pencil = new Color(0.88f, 0.72f, 1f, 0.48f);
+            AddThemePlanet(saturn, Vector2.zero, radius, body, ring);
+            for (int stroke = -3; stroke <= 3; stroke++)
+            {
+                float y = stroke * radius * 0.18f;
+                float normalized = Mathf.Clamp01(1f - y * y / (radius * radius));
+                float halfWidth = radius * Mathf.Sqrt(normalized) * 0.72f;
+                StageEscortController.AddLine(
+                    saturn,
+                    new Vector2(-halfWidth, y - 0.05f * (stroke & 1)),
+                    new Vector2(halfWidth, y + 0.04f * ((stroke + 1) & 1)),
+                    0.075f,
+                    pencil,
+                    5);
+            }
+        }
+
+        private static void AddGlobalComet(
+            Transform parent,
+            Vector2 position,
+            float scale,
+            float rotation)
+        {
+            Transform comet = new GameObject("Global Theme Hand Drawn Comet").transform;
+            comet.SetParent(parent, false);
+            comet.localPosition = position;
+            comet.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            comet.localScale = Vector3.one * scale;
+            AddThemeComet(comet, Vector2.zero, new Color(0.52f, 0.78f, 1f, 0.62f));
+        }
+
+        private static void AddReadyRoomBackdrop(
+            Transform parent,
+            float halfWidth,
+            float halfHeight,
+            int roomIndex,
+            int theme)
+        {
+            Transform backdrop = new GameObject("Ready Room Theme Backdrop " + (theme + 1)).transform;
+            backdrop.SetParent(parent, false);
+
+            Color[][] palettes =
+            {
+                new[] { new Color(1f, 0.72f, 0.12f, 0.13f), new Color(0.96f, 0.28f, 0.3f, 0.12f), new Color(0.18f, 0.68f, 0.9f, 0.12f) },
+                new[] { new Color(0.96f, 0.35f, 0.58f, 0.13f), new Color(0.28f, 0.72f, 0.92f, 0.12f), new Color(0.92f, 0.66f, 0.16f, 0.12f) },
+                new[] { new Color(0.2f, 0.38f, 0.78f, 0.13f), new Color(0.62f, 0.42f, 0.86f, 0.12f), new Color(0.98f, 0.78f, 0.22f, 0.13f) },
+                new[] { new Color(0.18f, 0.7f, 0.9f, 0.12f), new Color(0.94f, 0.34f, 0.45f, 0.11f), new Color(0.35f, 0.72f, 0.38f, 0.11f) },
+                new[] { new Color(0.1f, 0.62f, 0.82f, 0.13f), new Color(0.2f, 0.76f, 0.66f, 0.11f), new Color(0.92f, 0.48f, 0.24f, 0.12f) },
+                new[] { new Color(0.16f, 0.64f, 0.32f, 0.13f), new Color(0.92f, 0.38f, 0.58f, 0.12f), new Color(0.96f, 0.7f, 0.18f, 0.12f) },
+                new[] { new Color(0.58f, 0.3f, 0.82f, 0.13f), new Color(0.18f, 0.58f, 0.9f, 0.12f), new Color(0.94f, 0.38f, 0.54f, 0.12f) },
+                new[] { new Color(0.3f, 0.3f, 0.76f, 0.13f), new Color(0.72f, 0.38f, 0.88f, 0.12f), new Color(0.98f, 0.68f, 0.14f, 0.13f) },
+                new[] { new Color(0.98f, 0.66f, 0.1f, 0.13f), new Color(0.22f, 0.64f, 0.9f, 0.12f), new Color(0.92f, 0.28f, 0.34f, 0.12f) },
+                new[] { new Color(0.94f, 0.46f, 0.18f, 0.12f), new Color(0.2f, 0.68f, 0.88f, 0.12f), new Color(0.66f, 0.36f, 0.84f, 0.12f) }
+            };
+            Color[] colors = palettes[Mathf.Clamp(theme, 0, palettes.Length - 1)];
+            float motifAlpha = theme == 7 ? 0.38f : theme == 2 || theme == 8 ? 0.32f : 0.25f;
+            for (int colorIndex = 0; colorIndex < colors.Length; colorIndex++)
+            {
+                Color color = colors[colorIndex];
+                color.a = motifAlpha;
+                colors[colorIndex] = color;
+            }
+
+            Color wash;
+            if (theme == 7)
+                wash = new Color(0.72f, 0.78f, 0.94f, 0.34f);
+            else if (theme == 2)
+                wash = new Color(0.76f, 0.8f, 0.96f, 0.29f);
+            else if (theme == 8)
+                wash = new Color(0.84f, 0.76f, 0.94f, 0.28f);
+            else
+            {
+                wash = Color.Lerp(colors[0], Color.white, 0.62f);
+                wash.a = 0.19f;
+            }
+            Vector2 innerSize = new Vector2(
+                Mathf.Max(0.8f, halfWidth * 2f - RoomFrameThickness * 1.45f),
+                Mathf.Max(0.8f, halfHeight * 2f - RoomFrameThickness * 1.45f));
+            StageEscortController.AddFilledRect(backdrop, "Pale Theme Paper Wash",
+                Vector2.zero, innerSize, wash, 2);
+
+            float left = -halfWidth + 1.12f;
+            float right = halfWidth - 1.12f;
+            float upper = halfHeight - 1.2f;
+            float middle = Mathf.Clamp(0.2f + (roomIndex % 2) * 0.12f,
+                -halfHeight + 1.1f, halfHeight - 1.1f);
+            float lower = -halfHeight + 0.88f;
+
+            switch (theme)
+            {
+                case 0: // Party wall paper
+                    AddThemeStar(backdrop, new Vector2(left, middle + 0.2f), 0.58f, colors[0]);
+                    AddThemeStar(backdrop, new Vector2(right, middle - 0.12f), 0.46f, colors[1]);
+                    AddThemeConfetti(backdrop, halfWidth - 0.2f, upper - 0.25f, colors, roomIndex);
+                    break;
+                case 1: // Balloon room
+                    AddThemeBalloon(backdrop, new Vector2(left, middle + 0.35f), colors[0], 0.18f);
+                    AddThemeBalloon(backdrop, new Vector2(0f, upper - 0.32f), colors[1], -0.12f);
+                    AddThemeBalloon(backdrop, new Vector2(right, middle + 0.12f), colors[2], -0.2f);
+                    break;
+                case 2: // Night sky
+                    AddThemeCrescent(backdrop, new Vector2(left, upper - 0.12f), colors[2]);
+                    AddThemeStar(backdrop, new Vector2(0f, middle + 0.35f), 0.7f, colors[0]);
+                    AddThemeStar(backdrop, new Vector2(right, upper - 0.32f), 0.38f, colors[1]);
+                    break;
+                case 3: // Cloud and rainbow sky
+                    AddThemeRainbow(backdrop, new Vector2(0f, middle + 0.1f), colors);
+                    AddThemeCloud(backdrop, new Vector2(left, upper - 0.3f), colors[0]);
+                    AddThemeCloud(backdrop, new Vector2(right, middle - 0.15f), colors[1]);
+                    break;
+                case 4: // Aquarium
+                    AddThemeFish(backdrop, new Vector2(left + 0.25f, middle + 0.2f), 0.62f, colors[2], false);
+                    AddThemeFish(backdrop, new Vector2(right - 0.18f, middle - 0.35f), 0.52f, colors[0], true);
+                    for (int bubble = 0; bubble < 5; bubble++)
+                    {
+                        float t = bubble / 4f;
+                        AddThemeCircle(backdrop,
+                            new Vector2(Mathf.Lerp(left, right, t), Mathf.Lerp(lower + 0.2f, upper, t)),
+                            0.08f + (bubble % 3) * 0.045f, colors[1], false);
+                    }
+                    break;
+                case 5: // Flower garden
+                    AddThemeFlower(backdrop, new Vector2(left, lower + 0.35f), 0.48f, colors[1], colors[2]);
+                    AddThemeFlower(backdrop, new Vector2(0f, lower + 0.22f), 0.56f, colors[2], colors[0]);
+                    AddThemeFlower(backdrop, new Vector2(right, lower + 0.4f), 0.44f, colors[0], colors[1]);
+                    StageEscortController.AddLine(backdrop, new Vector2(left - 0.5f, lower),
+                        new Vector2(right + 0.5f, lower + 0.06f), 0.06f, colors[0], 4);
+                    break;
+                case 6: // Music room
+                    AddThemeMusicNote(backdrop, new Vector2(left, middle), 0.92f, colors[0], true);
+                    AddThemeMusicNote(backdrop, new Vector2(0.15f, upper - 0.35f), 0.72f, colors[1], false);
+                    AddThemeMusicNote(backdrop, new Vector2(right, middle - 0.25f), 0.82f, colors[2], true);
+                    break;
+                case 7: // Space room
+                    AddThemePlanet(backdrop, new Vector2(left, middle + 0.12f), 0.52f, colors[1], colors[2]);
+                    AddThemeComet(backdrop, new Vector2(right, upper - 0.28f), colors[0]);
+                    AddThemeStar(backdrop, new Vector2(0.25f, middle - 0.3f), 0.44f, colors[2]);
+                    break;
+                case 8: // Lightning arcade
+                    AddThemeLightning(backdrop, new Vector2(left, middle + 0.15f), 1.05f, colors[0]);
+                    AddThemeCrown(backdrop, new Vector2(0f, middle + 0.15f), 1.05f, colors[2]);
+                    AddThemeLightning(backdrop, new Vector2(right, middle - 0.1f), 0.95f, colors[1]);
+                    break;
+                default: // Art room
+                    AddThemeCrayon(backdrop, new Vector2(left, middle), 1.15f, colors[0], 18f);
+                    AddThemeCrayon(backdrop, new Vector2(right, middle - 0.1f), 1.05f, colors[1], -17f);
+                    AddThemeStar(backdrop, new Vector2(-0.62f, upper - 0.25f), 0.4f, colors[2]);
+                    AddThemeCircle(backdrop, new Vector2(0f, middle - 0.25f), 0.34f, colors[0], false);
+                    AddThemeTriangle(backdrop, new Vector2(0.72f, upper - 0.35f), 0.36f, colors[1]);
+                    break;
+            }
+
+            Renderer[] renderers = backdrop.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+                renderers[i].sortingOrder = renderers[i].gameObject.name == "Pale Theme Paper Wash" ? 2 : 4;
         }
 
         private static void AddReadyRoomPennants(Transform parent, float halfWidth, float halfHeight,
@@ -1615,6 +1960,42 @@ namespace DrawBody.Prototype
             GameSfx.Play(SfxId.StageCountdownGo);
             stageManager.CompleteChallengeReadyRoom();
             Destroy(gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Keeps the decorative ready-room backdrop larger than the active camera.
+    /// It is presentation-only and deliberately has no collider or network state.
+    /// </summary>
+    [DefaultExecutionOrder(200)]
+    internal sealed class ReadyRoomGlobalBackdropFollower : MonoBehaviour
+    {
+        private Camera targetCamera;
+        private float referenceOrthographicSize = 8f;
+
+        public void Configure(Camera camera, float referenceSize)
+        {
+            targetCamera = camera;
+            referenceOrthographicSize = Mathf.Max(0.1f, referenceSize);
+            SyncToCamera();
+        }
+
+        private void LateUpdate()
+        {
+            SyncToCamera();
+        }
+
+        private void SyncToCamera()
+        {
+            if (targetCamera == null) targetCamera = Camera.main;
+            if (targetCamera == null) return;
+
+            Vector3 cameraPosition = targetCamera.transform.position;
+            transform.position = new Vector3(cameraPosition.x, cameraPosition.y, 0.5f);
+            float scale = targetCamera.orthographic
+                ? Mathf.Max(0.5f, targetCamera.orthographicSize / referenceOrthographicSize)
+                : 1f;
+            transform.localScale = new Vector3(scale, scale, 1f);
         }
     }
 }

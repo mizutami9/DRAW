@@ -697,7 +697,15 @@ namespace DrawBody.Prototype
                     BuildSpawner(root, size);
                     break;
                 case StageObjectType.EscortGoal:
-                    BuildGoal(root, size, data.objectId == null || !data.objectId.StartsWith("10-2_"));
+                    bool isFriendGoalHouse = string.Equals(
+                        data.objectId,
+                        "10-2_friend_goal",
+                        System.StringComparison.Ordinal);
+                    BuildGoal(
+                        root,
+                        size,
+                        data.objectId == null || !data.objectId.StartsWith("10-2_"),
+                        isFriendGoalHouse);
                     break;
                 case StageObjectType.EscortPlayerOnlyFloor:
                     BuildPlayerOnlyFloor(root, size);
@@ -742,12 +750,34 @@ namespace DrawBody.Prototype
             StageEscortController.AddLine(root.transform, new Vector2(size.x * 0.1f, size.y * 0.1f), new Vector2(0f, -size.y * 0.08f), 0.1f, Color.white, 35);
         }
 
-        private static void BuildGoal(GameObject root, Vector2 size, bool showLabel)
+        private static void BuildGoal(
+            GameObject root,
+            Vector2 size,
+            bool showLabel,
+            bool useFriendGoalHouse)
         {
             BoxCollider2D selection = root.AddComponent<BoxCollider2D>();
             selection.size = size;
             selection.isTrigger = true;
             root.AddComponent<StageEscortGoalMarker>();
+
+            // 10-2 ends at the ally's home. Keep the trigger and marker on the
+            // root, and replace only the child artwork so online goal authority
+            // and overlap checks remain exactly the same.
+            if (useFriendGoalHouse)
+            {
+                float artworkSize = Mathf.Max(size.x * 1.25f, size.y * 1.12f);
+                if (StageGun.TryCreateResourceSprite(
+                    root.transform,
+                    "StageDecorations/CrayonSet/house",
+                    "Crayon Friend Goal House",
+                    Vector2.one * artworkSize,
+                    30))
+                {
+                    return;
+                }
+            }
+
             Color fill = new Color(0.45f, 0.9f, 0.55f, 1f);
             Color ink = new Color(0.05f, 0.38f, 0.16f, 1f);
             StageEscortController.AddFilledRect(root.transform, "Goal House", Vector2.zero, size, fill, 30);

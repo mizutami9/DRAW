@@ -512,6 +512,8 @@ namespace DrawBody.Prototype
                 AddNatureWallVine(new Vector2(24.16f, 4.65f), 4.4f, ref seed);
                 AddNatureWallVine(new Vector2(37.82f, 4.3f), 4.2f, ref seed);
                 AddNatureWallVine(new Vector2(41.82f, 12.5f), 5.4f, ref seed);
+                AddNatureWallVine(new Vector2(0.32f, 19.2f), 3.55f, ref seed);
+                AddNatureWallVine(new Vector2(46.32f, 12.5f), 5.15f, ref seed);
             }
             else if (stageId == "2-1")
             {
@@ -539,6 +541,7 @@ namespace DrawBody.Prototype
             else if (IsAdditionalNatureStage(stageId))
             {
                 AddAutomaticNatureWallVines(stageId, objects, ref seed);
+                AddAutomaticNatureHangingVines(stageId, objects, ref seed);
             }
         }
 
@@ -602,7 +605,7 @@ namespace DrawBody.Prototype
                 return xOrder != 0 ? xOrder : left.position.y.CompareTo(right.position.y);
             });
 
-            int vineCount = Mathf.Clamp((candidates.Count + 2) / 3, 0, 4);
+            int vineCount = Mathf.Clamp(Mathf.CeilToInt(candidates.Count * 0.6f), 0, 6);
             for (int vineIndex = 0; vineIndex < vineCount; vineIndex++)
             {
                 int candidateIndex = Mathf.Clamp(
@@ -621,17 +624,115 @@ namespace DrawBody.Prototype
                     ref seed);
             }
 
-            if (vineCount == 0 && boundary != null)
+            if (vineCount < 2 && boundary != null)
             {
-                int boundarySeed = GetStableNatureSeed(stageId + ":boundary");
-                bool useRightEdge = (boundarySeed & 1) != 0;
-                float x = boundary.position.x
-                    + (useRightEdge ? boundary.size.x * 0.5f - 0.18f : -boundary.size.x * 0.5f + 0.18f);
-                float y = boundary.position.y - boundary.size.y * 0.5f + 0.75f;
-                AddNatureWallVine(
-                    new Vector2(x, y),
-                    Mathf.Clamp(boundary.size.y * 0.3f, 2.8f, 5.2f),
-                    ref seed);
+                for (int boundaryVine = vineCount; boundaryVine < 2; boundaryVine++)
+                {
+                    bool useRightEdge = boundaryVine != 0;
+                    float x = boundary.position.x
+                        + (useRightEdge ? boundary.size.x * 0.5f - 0.18f : -boundary.size.x * 0.5f + 0.18f);
+                    float y = boundary.position.y - boundary.size.y * 0.5f
+                        + 0.75f
+                        + boundaryVine * Mathf.Clamp(boundary.size.y * 0.12f, 0.5f, 1.8f);
+                    AddNatureWallVine(
+                        new Vector2(x, y),
+                        Mathf.Clamp(boundary.size.y * (0.26f + boundaryVine * 0.035f), 2.8f, 5.4f),
+                        ref seed);
+                }
+            }
+        }
+
+        private void AddAutomaticNatureHangingVines(
+            string stageId,
+            StageObjectData[] objects,
+            ref int seed)
+        {
+            if (objects == null || objects.Length == 0)
+            {
+                return;
+            }
+
+            HashSet<string> dynamicTargets = new HashSet<string>();
+            StageObjectData boundary = null;
+            for (int objectIndex = 0; objectIndex < objects.Length; objectIndex++)
+            {
+                StageObjectData source = objects[objectIndex];
+                if (source == null)
+                {
+                    continue;
+                }
+                if (!string.IsNullOrEmpty(source.linkTargetId))
+                {
+                    dynamicTargets.Add(source.linkTargetId);
+                }
+                if (source.type == StageObjectType.StageBoundary)
+                {
+                    boundary = source;
+                }
+            }
+
+            List<StageObjectData> overheadSurfaces = new List<StageObjectData>();
+            for (int objectIndex = 0; objectIndex < objects.Length; objectIndex++)
+            {
+                StageObjectData data = objects[objectIndex];
+                if (data == null
+                    || (data.type != StageObjectType.Platform
+                        && data.type != StageObjectType.Ceiling
+                        && data.type != StageObjectType.OneWayPlatform)
+                    || (data.pathPoints != null && data.pathPoints.Length >= 2)
+                    || (data.connectedRects != null && data.connectedRects.Length > 0)
+                    || (!string.IsNullOrEmpty(data.objectId) && dynamicTargets.Contains(data.objectId)))
+                {
+                    continue;
+                }
+
+                GetRotatedSize(data, out float width, out float height);
+                if (width < 3.8f || width < height * 2.4f)
+                {
+                    continue;
+                }
+                if (boundary != null
+                    && data.position.y - height * 0.5f < boundary.position.y - boundary.size.y * 0.5f + 1.1f)
+                {
+                    continue;
+                }
+                overheadSurfaces.Add(data);
+            }
+
+            overheadSurfaces.Sort((left, right) =>
+            {
+                int yOrder = right.position.y.CompareTo(left.position.y);
+                return yOrder != 0 ? yOrder : left.position.x.CompareTo(right.position.x);
+            });
+
+            int hangingCount = Mathf.Clamp(Mathf.CeilToInt(overheadSurfaces.Count * 0.48f), 0, 6);
+            for (int vineIndex = 0; vineIndex < hangingCount; vineIndex++)
+            {
+                int surfaceIndex = Mathf.Clamp(
+                    Mathf.RoundToInt((vineIndex + 0.5f) * overheadSurfaces.Count / hangingCount - 0.5f),
+                    0,
+                    overheadSurfaces.Count - 1);
+                StageObjectData surface = overheadSurfaces[surfaceIndex];
+                GetRotatedSize(surface, out float width, out float height);
+                int surfaceSeed = GetStableNatureSeed(stageId + ":hanging:" + surface.objectId);
+                float normalizedX = 0.2f + (surfaceSeed % 601) / 1000f;
+                float x = surface.position.x + Mathf.Lerp(-width * 0.5f, width * 0.5f, normalizedX);
+                float y = surface.position.y - height * 0.5f - 0.02f;
+                float length = 0.7f + (surfaceSeed % 7) * 0.13f;
+                AddNatureVine(new Vector2(x, y), length, ref seed);
+            }
+
+            if (boundary != null)
+            {
+                int ceilingVines = Mathf.Max(0, 2 - hangingCount);
+                for (int vineIndex = 0; vineIndex < ceilingVines; vineIndex++)
+                {
+                    int boundarySeed = GetStableNatureSeed(stageId + ":ceiling:" + vineIndex);
+                    float t = 0.24f + vineIndex * 0.52f + ((boundarySeed % 101) - 50) * 0.0008f;
+                    float x = boundary.position.x + Mathf.Lerp(-boundary.size.x * 0.5f, boundary.size.x * 0.5f, t);
+                    float y = boundary.position.y + boundary.size.y * 0.5f - 0.08f;
+                    AddNatureVine(new Vector2(x, y), 0.95f + vineIndex * 0.35f, ref seed);
+                }
             }
         }
 
