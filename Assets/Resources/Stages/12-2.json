@@ -1,7 +1,7 @@
 {
   "id":"12-2",
   "displayName":"Stage 12-2 Coin Rush Hall",
-  "backgroundColorHex":"#EEF9FF26",
+  "backgroundColorHex":"#485D6D38",
   "ruleMode":1,
   "timeLimitSeconds":120.0,
   "collectionTarget":164,

@@ -1,7 +1,7 @@
 {
     "id": "13-3",
     "displayName": "Stage 13-3 Human Circuit",
-    "backgroundColorHex": "#F2FAFF26",
+    "backgroundColorHex": "#D4D9DAFF",
     "ruleMode": 0,
     "timeLimitSeconds": 180.0,
     "collectionTarget": 163,

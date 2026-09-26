@@ -1,7 +1,7 @@
 {
     "id": "9-1",
     "displayName": "Stage 9-1 Slime Missile Cave",
-    "backgroundColorHex": "#F1F8E926",
+    "backgroundColorHex": "#D4D9DAFF",
     "ruleMode": 2,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,

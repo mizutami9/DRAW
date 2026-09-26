@@ -262,7 +262,7 @@ namespace DrawBody.Prototype
         {
             GameObject backdrop = new GameObject("15-1 Sky Arena");
             backdrop.transform.SetParent(transform, false);
-            StageEscortController.AddBoxOutline(backdrop.transform, Vector2.zero, new Vector2(34f, 17f), new Color(0.18f, 0.45f, 0.72f, 0.5f), -20);
+            StageEscortController.AddBoxOutline(backdrop.transform, Vector2.zero, new Vector2(34f, 17f), new Color(0.24f, 0.82f, 1f, 0.72f), -20);
             for (int i = 0; i < 4; i++)
             {
                 pads[i] = StageFlyingPlayerPad.Create(transform, i, StartPositions[i], PlayerColors[i]);

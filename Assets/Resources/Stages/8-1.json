@@ -1,7 +1,7 @@
 {
     "id": "8-1",
     "displayName": "Stage 8-1 Pillar Survival",
-    "backgroundColorHex": "#F7F2DE26",
+    "backgroundColorHex": "#D4D9DAFF",
     "ruleMode": 2,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,

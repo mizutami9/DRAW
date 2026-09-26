@@ -1,7 +1,7 @@
 {
     "id": "14-3",
     "displayName": "Stage 14-3 Laser Relay",
-    "backgroundColorHex": "#EEF1D8FF",
+    "backgroundColorHex": "#D4D9DAFF",
     "ruleMode": 0,
     "timeLimitSeconds": 60.0,
     "collectionTarget": 163,

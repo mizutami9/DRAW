@@ -483,8 +483,11 @@ namespace DrawBody.Prototype
             floor.tag = "Ground";
             BoxCollider2D collider = floor.AddComponent<BoxCollider2D>();
             collider.size = new Vector2(FloorWidth, 0.75f);
-            CreateRect(floor.transform, new Vector2(FloorWidth, 0.75f), new Color(0.9f, 0.86f, 0.72f, 1f), 12);
-            AddBoxOutline(floor.transform, new Vector2(FloorWidth, 0.75f), new Color(0.16f, 0.11f, 0.07f, 1f), 13);
+            StageObjectFactory.AddFactorySteelPanelVisual(
+                floor.transform,
+                new Vector2(FloorWidth, 0.75f),
+                "8-1-pillar-survival-floor",
+                12);
         }
 
         private void CreateBoundary(Transform parent)

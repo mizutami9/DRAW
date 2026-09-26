@@ -363,6 +363,11 @@ namespace DrawBody.Prototype
             }
 
             objectFactory.RefreshBridgeConnectionVisuals(runtimeObjects, stageRoot);
+            objectFactory.CreateCaveStageBackdrop(data.id, runtimeObjects, stageRoot);
+            objectFactory.CreateUnderwaterStageBackdrop(data.id, runtimeObjects, stageRoot);
+            objectFactory.CreateNightCityStageBackdrop(data.id, runtimeObjects, stageRoot);
+            objectFactory.CreateFactoryStageBackdrop(data.id, runtimeObjects, stageRoot);
+            objectFactory.CreateSpaceStageBackdrop(data.id, runtimeObjects, stageRoot);
             AddNatureStageVines(data.id, runtimeObjects);
 
             ConfigureStageGimmicks(data);
@@ -749,7 +754,6 @@ namespace DrawBody.Prototype
         {
             return stageId == "5-2"
                 || stageId == "7-2"
-                || stageId == "9-3"
                 || stageId == "10-2"
                 || stageId == "14-2";
         }

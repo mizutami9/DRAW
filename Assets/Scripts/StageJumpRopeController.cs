@@ -839,14 +839,11 @@ namespace DrawBody.Prototype
             floor.tag = "Ground";
             BoxCollider2D collider = floor.AddComponent<BoxCollider2D>();
             collider.size = new Vector2(FloorWidth, 0.72f);
-            GameObject fill = new GameObject("Paper Fill");
-            fill.transform.SetParent(floor.transform, false);
-            fill.transform.localScale = new Vector3(FloorWidth, 0.72f, 1f);
-            SpriteRenderer renderer = fill.AddComponent<SpriteRenderer>();
-            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
-            renderer.color = new Color(0.91f, 0.87f, 0.73f, 1f);
-            renderer.sortingOrder = 12;
-            AddBoxOutline(floor.transform, new Vector2(FloorWidth, 0.72f), new Color(0.18f, 0.12f, 0.08f, 1f), 13);
+            StageObjectFactory.AddFactorySteelPanelVisual(
+                floor.transform,
+                new Vector2(FloorWidth, 0.72f),
+                "6-2-jump-rope-floor",
+                12);
         }
 
         private void CreateBoundary(Transform parent)

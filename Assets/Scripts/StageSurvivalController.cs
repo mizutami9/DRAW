@@ -1056,17 +1056,33 @@ namespace DrawBody.Prototype
             BoxCollider2D collider = root.AddComponent<BoxCollider2D>();
             collider.size = new Vector2(FloorWidth - 0.08f, 0.62f);
 
-            GameObject fillObject = new GameObject("Paper Fill");
-            fillObject.transform.SetParent(root.transform, false);
-            fillObject.transform.localScale = new Vector3(FloorWidth - 0.08f, 0.62f, 1f);
-            SpriteRenderer fill = fillObject.AddComponent<SpriteRenderer>();
-            fill.sprite = DoodleRuntimeAssets.SquareSprite;
-            Color baseColor = index % 2 == 0
-                ? new Color(0.93f, 0.89f, 0.77f, 1f)
-                : new Color(0.88f, 0.84f, 0.72f, 1f);
-            fill.color = baseColor;
-            fill.sortingOrder = 12;
-            AddBoxOutline(root.transform, new Vector2(FloorWidth - 0.08f, 0.62f), new Color(0.18f, 0.12f, 0.08f, 1f), 13);
+            bool useFactoryVisual = stageManager != null
+                && StageObjectFactory.IsFactoryStageId(stageManager.CurrentStageId);
+            SpriteRenderer fill;
+            Color baseColor;
+            if (useFactoryVisual)
+            {
+                fill = StageObjectFactory.AddFactorySteelPanelVisual(
+                    root.transform,
+                    new Vector2(FloorWidth - 0.08f, 0.62f),
+                    "survival-factory-floor-" + index,
+                    12);
+                baseColor = fill != null ? fill.color : new Color(0.67f, 0.7f, 0.71f, 1f);
+            }
+            else
+            {
+                GameObject fillObject = new GameObject("Paper Fill");
+                fillObject.transform.SetParent(root.transform, false);
+                fillObject.transform.localScale = new Vector3(FloorWidth - 0.08f, 0.62f, 1f);
+                fill = fillObject.AddComponent<SpriteRenderer>();
+                fill.sprite = DoodleRuntimeAssets.SquareSprite;
+                baseColor = index % 2 == 0
+                    ? new Color(0.93f, 0.89f, 0.77f, 1f)
+                    : new Color(0.88f, 0.84f, 0.72f, 1f);
+                fill.color = baseColor;
+                fill.sortingOrder = 12;
+                AddBoxOutline(root.transform, new Vector2(FloorWidth - 0.08f, 0.62f), new Color(0.18f, 0.12f, 0.08f, 1f), 13);
+            }
             return new FloorPiece { Root = root, Collider = collider, Fill = fill, BaseColor = baseColor };
         }
 

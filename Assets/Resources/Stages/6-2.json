@@ -1,7 +1,7 @@
 {
     "id": "6-2",
     "displayName": "Stage 6-2 Hurdle Survival",
-    "backgroundColorHex": "#F7F2DE26",
+    "backgroundColorHex": "#D4D9DAFF",
     "ruleMode": 2,
     "timeLimitSeconds": 45.0,
     "collectionTarget": 163,

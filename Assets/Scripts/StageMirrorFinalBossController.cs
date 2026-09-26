@@ -794,15 +794,19 @@ namespace DrawBody.Prototype
         private void CreateUpperSegment(float x, float width)
         {
             GameObject root = new GameObject("Upper One Way Floor"); root.transform.SetParent(transform, false); root.transform.localPosition = new Vector2(x, UpperFloorY); root.layer = 6; root.tag = "Ground";
-            BoxCollider2D collider = root.AddComponent<BoxCollider2D>(); collider.size = new Vector2(width, 0.62f); collider.usedByEffector = true;
+            Vector2 size = new Vector2(width, 0.62f);
+            BoxCollider2D collider = root.AddComponent<BoxCollider2D>(); collider.size = size; collider.usedByEffector = true;
             PlatformEffector2D effector = root.AddComponent<PlatformEffector2D>();
             effector.useOneWay = true;
             effector.useOneWayGrouping = true;
             effector.surfaceArc = 180f;
             effector.useSideFriction = false;
             effector.useSideBounce = false;
-            StageEscortController.AddFilledRect(root.transform, "One Way Paper", Vector2.zero, new Vector2(width, 0.62f), new Color(0.76f, 0.91f, 1f, 0.9f), 8);
-            StageEscortController.AddLine(root.transform, new Vector2(-width * 0.5f, 0.3f), new Vector2(width * 0.5f, 0.3f), 0.08f, new Color(0.1f, 0.46f, 0.85f), 10);
+            StageObjectFactory.AddSpaceFuturisticPanelVisual(
+                root.transform,
+                size,
+                "15-3-upper-one-way-" + Mathf.RoundToInt(x * 100f) + "-" + Mathf.RoundToInt(width * 100f),
+                8);
         }
         private void CreateStairs(float startX, bool risesRight)
         {
@@ -825,8 +829,11 @@ namespace DrawBody.Prototype
         {
             GameObject root = new GameObject(name); root.transform.SetParent(transform, false); root.transform.localPosition = position; root.layer = 6; root.tag = "Ground";
             BoxCollider2D collider = root.AddComponent<BoxCollider2D>(); collider.size = size;
-            StageEscortController.AddFilledRect(root.transform, "Paper", Vector2.zero, size, new Color(0.9f, 0.88f, 0.8f), 8);
-            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, new Color(0.14f, 0.11f, 0.09f), 9);
+            StageObjectFactory.AddSpaceFuturisticPanelVisual(
+                root.transform,
+                size,
+                "15-3-" + name + "-" + Mathf.RoundToInt(position.x * 100f) + "-" + Mathf.RoundToInt(position.y * 100f),
+                8);
         }
 
         private void BuildMachines()

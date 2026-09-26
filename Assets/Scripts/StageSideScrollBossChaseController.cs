@@ -246,8 +246,16 @@ namespace DrawBody.Prototype
             root.transform.position = new Vector3((left + right) * 0.5f, y, 0f);
             root.layer = 6;
             Vector2 size = new Vector2(right - left, 0.65f);
-            StageEscortController.AddFilledRect(root.transform, "Paper Fill", Vector2.zero, size, crumble ? new Color(0.9f, 0.7f, 0.42f) : new Color(0.94f, 0.94f, 0.88f), -4);
-            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, new Color(0.12f, 0.12f, 0.12f), -2);
+            string visualKey = "15-2-floor-"
+                + Mathf.RoundToInt(left * 100f) + "-"
+                + Mathf.RoundToInt(right * 100f) + "-"
+                + Mathf.RoundToInt(y * 100f);
+            StageObjectFactory.AddSpaceFuturisticPanelVisual(
+                root.transform,
+                size,
+                visualKey,
+                -4,
+                crumble);
             BoxCollider2D collider = root.AddComponent<BoxCollider2D>(); collider.size = size;
             StageSideBossFloor floor = root.AddComponent<StageSideBossFloor>();
             floor.Configure(collider, crumble);
@@ -262,8 +270,14 @@ namespace DrawBody.Prototype
             GameObject root = new GameObject("Moving Escape Floor");
             root.transform.SetParent(transform, false); root.transform.position = position;
             root.layer = 6;
-            StageEscortController.AddFilledRect(root.transform, "Moving Fill", Vector2.zero, size, new Color(0.52f, 0.82f, 1f), -4);
-            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, new Color(0.08f, 0.3f, 0.6f), -2);
+            string visualKey = "15-2-moving-floor-"
+                + Mathf.RoundToInt(position.x * 100f) + "-"
+                + Mathf.RoundToInt(position.y * 100f);
+            StageObjectFactory.AddSpaceFuturisticPanelVisual(
+                root.transform,
+                size,
+                visualKey,
+                -4);
             BoxCollider2D collider = root.AddComponent<BoxCollider2D>(); collider.size = size;
             Rigidbody2D body = root.AddComponent<Rigidbody2D>(); body.bodyType = RigidbodyType2D.Kinematic; body.interpolation = RigidbodyInterpolation2D.Interpolate;
             root.AddComponent<StageSideBossMovingFloor>().Configure(position, travel);
@@ -328,8 +342,14 @@ namespace DrawBody.Prototype
             root.transform.position = new Vector3(x, y, 0f);
             root.layer = 6;
             Vector2 size = new Vector2(4.2f, 0.55f);
-            StageEscortController.AddFilledRect(root.transform, "Ceiling Fill", Vector2.zero, size, new Color(0.75f, 0.82f, 0.9f), -4);
-            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, new Color(0.08f, 0.22f, 0.4f), -2);
+            string visualKey = "15-2-button-ceiling-"
+                + Mathf.RoundToInt(x * 100f) + "-"
+                + Mathf.RoundToInt(y * 100f);
+            StageObjectFactory.AddSpaceFuturisticPanelVisual(
+                root.transform,
+                size,
+                visualKey,
+                -4);
             BoxCollider2D collider = root.AddComponent<BoxCollider2D>(); collider.size = size;
         }
 
@@ -1307,6 +1327,8 @@ namespace DrawBody.Prototype
         private BoxCollider2D floorCollider;
         private SpriteRenderer[] renderers;
         private Color[] originalColors;
+        private Renderer[] visualRenderers;
+        private bool[] originalRendererEnabledStates;
         private bool crumble;
         private bool busy;
 
@@ -1314,6 +1336,10 @@ namespace DrawBody.Prototype
         {
             floorCollider = collider; crumble = isCrumbling; renderers = GetComponentsInChildren<SpriteRenderer>(); originalColors = new Color[renderers.Length];
             for (int i = 0; i < renderers.Length; i++) originalColors[i] = renderers[i].color;
+            visualRenderers = GetComponentsInChildren<Renderer>(true);
+            originalRendererEnabledStates = new bool[visualRenderers.Length];
+            for (int i = 0; i < visualRenderers.Length; i++)
+                originalRendererEnabledStates[i] = visualRenderers[i] != null && visualRenderers[i].enabled;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -1336,11 +1362,19 @@ namespace DrawBody.Prototype
         public IEnumerator BreakTemporarily(float duration)
         {
             busy = true; if (floorCollider != null) floorCollider.enabled = false;
-            for (int i = 0; i < renderers.Length; i++) renderers[i].enabled = false;
+            if (visualRenderers != null)
+                for (int i = 0; i < visualRenderers.Length; i++)
+                    if (visualRenderers[i] != null) visualRenderers[i].enabled = false;
             GameSfx.PlayAt(SfxId.CrumblingFloorCollapse, transform.position);
             yield return new WaitForSeconds(duration);
             if (floorCollider != null) floorCollider.enabled = true;
-            for (int i = 0; i < renderers.Length; i++) { renderers[i].enabled = true; renderers[i].color = originalColors[i]; }
+            if (visualRenderers != null)
+                for (int i = 0; i < visualRenderers.Length; i++)
+                    if (visualRenderers[i] != null)
+                        visualRenderers[i].enabled = originalRendererEnabledStates != null
+                            && i < originalRendererEnabledStates.Length
+                            && originalRendererEnabledStates[i];
+            for (int i = 0; i < renderers.Length; i++) renderers[i].color = originalColors[i];
             busy = false;
         }
     }

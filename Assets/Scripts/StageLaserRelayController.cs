@@ -171,6 +171,12 @@ namespace DrawBody.Prototype
             for (int i = transform.childCount - 1; i >= 0; i--)
             {
                 GameObject obsolete = transform.GetChild(i).gameObject;
+                // Runtime arena rebuilding replaces the authored preview only.
+                // Keep the decoration-only factory backdrop made by StageLoader.
+                if (obsolete.name == "Factory Stage Backdrop")
+                {
+                    continue;
+                }
                 obsolete.SetActive(false);
                 Destroy(obsolete);
             }
@@ -317,14 +323,14 @@ namespace DrawBody.Prototype
             float wallHeight = ceilingBottom - floorTop;
             float wallCenterY = (ceilingBottom + floorTop) * 0.5f;
             StageEscortController.AddFilledRect(arenaRoot, "Laser Relay Room", new Vector2(0f, 0.3f),
-                new Vector2(RoomHalfWidth * 2f, 15f), new Color(0.91f, 0.94f, 0.83f, 0.38f), -60);
+                new Vector2(RoomHalfWidth * 2f, 15f), new Color(0.66f, 0.72f, 0.76f, 0.3f), -60);
             CreateSolid("Laser Relay Floor", new Vector2(0f, FloorY), new Vector2(innerWidth, floorThickness));
             float boxRoomWidth = BoxRoomRightX - RoomHalfWidth + wallThickness;
             float boxRoomCenterX = RoomHalfWidth - wallThickness * 0.5f + boxRoomWidth * 0.5f;
             StageEscortController.AddFilledRect(arenaRoot, "Box Workshop Room",
                 new Vector2(boxRoomCenterX, (FloorY + BoxRoomCeilingY) * 0.5f),
                 new Vector2(boxRoomWidth, BoxRoomCeilingY - FloorY),
-                new Color(0.95f, 0.88f, 0.72f, 0.42f), -59);
+                new Color(0.76f, 0.67f, 0.52f, 0.34f), -59);
             CreateSolid("Box Workshop Floor", new Vector2(boxRoomCenterX, FloorY),
                 new Vector2(boxRoomWidth, floorThickness));
             CreateSolid("Box Workshop Ceiling", new Vector2(boxRoomCenterX, BoxRoomCeilingY),
@@ -363,13 +369,11 @@ namespace DrawBody.Prototype
             BoxCollider2D collider = solid.AddComponent<BoxCollider2D>();
             collider.size = size;
             relayBlockers.Add(collider);
-            StageEscortController.AddFilledRect(solid.transform, "Paper", Vector2.zero, size,
-                new Color(0.7f, 0.78f, 0.55f, 0.72f), 3);
-            StageEscortController.AddPencilHatchingRect(solid.transform, "Pencil Hatching",
-                Vector2.zero, size, new Color(0.18f, 0.34f, 0.12f, 0.3f), 4,
-                Mathf.Min(size.x, size.y) < 0.75f ? 0.24f : 0.42f);
-            StageEscortController.AddBoxOutline(solid.transform, Vector2.zero, size,
-                new Color(0.18f, 0.28f, 0.12f, 0.9f), 5);
+            StageObjectFactory.AddFactorySteelPanelVisual(
+                solid.transform,
+                size,
+                "14-3-" + name,
+                3);
         }
 
         private int ResolveRelayPlayerCount()

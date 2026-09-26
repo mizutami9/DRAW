@@ -23,6 +23,30 @@ namespace DrawBody.Prototype
         private static readonly Color TitleTerrainPaperColor = new Color(0.905f, 0.965f, 0.845f, 1f);
         private static readonly Color TitleTerrainStrokeColor = new Color(0.16f, 0.57f, 0.22f, 0.98f);
         private static readonly Color TitleTerrainAccentColor = new Color(0.34f, 0.72f, 0.34f, 0.72f);
+        private static readonly Color CaveTerrainPaperColor = new Color(0.78f, 0.805f, 0.82f, 1f);
+        private static readonly Color CaveTerrainStrokeColor = new Color(0.19f, 0.205f, 0.23f, 0.98f);
+        private static readonly Color CaveTerrainAccentColor = new Color(0.42f, 0.45f, 0.49f, 0.72f);
+        private static readonly Color CaveBackdropPaperColor = new Color(0.63f, 0.72f, 0.78f, 0.18f);
+        private static readonly Color CaveBackdropRockColor = new Color(0.29f, 0.34f, 0.39f, 0.25f);
+        private static readonly Color CaveBackdropGraphiteColor = new Color(0.17f, 0.21f, 0.25f, 0.38f);
+        private static readonly Color UnderwaterSandPaperColor = new Color(0.94f, 0.84f, 0.59f, 1f);
+        private static readonly Color UnderwaterSandStrokeColor = new Color(0.62f, 0.43f, 0.2f, 0.96f);
+        private static readonly Color UnderwaterRockPaperColor = new Color(0.61f, 0.71f, 0.72f, 1f);
+        private static readonly Color UnderwaterRockStrokeColor = new Color(0.15f, 0.31f, 0.36f, 0.98f);
+        private static readonly Color UnderwaterRockAccentColor = new Color(0.35f, 0.57f, 0.59f, 0.68f);
+        private static readonly Color NightCityTerrainPaperColor = new Color(0.46f, 0.53f, 0.64f, 1f);
+        private static readonly Color NightCityTerrainStrokeColor = new Color(0.08f, 0.12f, 0.2f, 0.98f);
+        private static readonly Color NightCityTerrainAccentColor = new Color(0.31f, 0.43f, 0.62f, 0.76f);
+        private static readonly Color NightCitySkyColor = new Color(0.075f, 0.12f, 0.24f, 0.74f);
+        private static readonly Color FactoryTerrainPaperColor = new Color(0.67f, 0.7f, 0.71f, 1f);
+        private static readonly Color FactoryTerrainStrokeColor = new Color(0.13f, 0.15f, 0.17f, 0.98f);
+        private static readonly Color FactoryTerrainAccentColor = new Color(0.39f, 0.43f, 0.46f, 0.78f);
+        private static readonly Color FactoryBackdropWashColor = new Color(0.42f, 0.48f, 0.54f, 0.28f);
+        private static readonly Color SpaceTerrainPaperColor = new Color(0.57f, 0.63f, 0.7f, 1f);
+        private static readonly Color SpaceTerrainStrokeColor = new Color(0.055f, 0.08f, 0.14f, 0.99f);
+        private static readonly Color SpaceTerrainAccentColor = new Color(0.27f, 0.4f, 0.57f, 0.82f);
+        private static readonly Color SpaceTerrainGlowColor = new Color(0.26f, 0.78f, 1f, 0.84f);
+        private static readonly Color SpaceBackdropColor = new Color(0.035f, 0.055f, 0.17f, 0.94f);
         private Transform visualThemeRoot;
         private string visualThemeStageId;
 
@@ -30,6 +54,142 @@ namespace DrawBody.Prototype
         {
             visualThemeStageId = stageId;
             visualThemeRoot = root;
+        }
+
+        public void CreateCaveStageBackdrop(
+            string stageId,
+            IList<StageObjectData> objects,
+            Transform parent)
+        {
+            if (parent == null || !IsCaveStageId(stageId))
+            {
+                return;
+            }
+
+            Transform existing = parent.Find("Cave Stage Backdrop");
+            if (existing != null)
+            {
+                DestroyImmediate(existing.gameObject);
+            }
+
+            Rect bounds = GetCaveBackdropBounds(objects);
+            GameObject backdrop = new GameObject("Cave Stage Backdrop");
+            backdrop.transform.SetParent(parent, false);
+            backdrop.transform.localPosition = Vector3.zero;
+
+            AddCaveBackdropPaper(backdrop.transform, bounds);
+            AddCaveBackdropDrawing(
+                backdrop.transform,
+                bounds,
+                objects,
+                GetStableNatureVisualSeed(stageId + "|cave-backdrop"));
+        }
+
+        public void CreateUnderwaterStageBackdrop(
+            string stageId,
+            IList<StageObjectData> objects,
+            Transform parent)
+        {
+            if (parent == null || !IsUnderwaterStageId(stageId))
+            {
+                return;
+            }
+
+            Transform existing = parent.Find("Underwater Stage Backdrop");
+            if (existing != null)
+            {
+                DestroyImmediate(existing.gameObject);
+            }
+
+            Rect bounds = GetCaveBackdropBounds(objects);
+            GameObject backdrop = new GameObject("Underwater Stage Backdrop");
+            backdrop.transform.SetParent(parent, false);
+            backdrop.transform.localPosition = Vector3.zero;
+            int seed = GetStableNatureVisualSeed(stageId + "|underwater-backdrop");
+            AddUnderwaterWaterBackdrop(backdrop.transform, bounds, seed);
+            AddUnderwaterSeaweedField(backdrop.transform, objects, seed + 1709);
+        }
+
+        public void CreateNightCityStageBackdrop(
+            string stageId,
+            IList<StageObjectData> objects,
+            Transform parent)
+        {
+            if (parent == null || !IsNightCityStageId(stageId))
+            {
+                return;
+            }
+
+            Transform existing = parent.Find("Night City Stage Backdrop");
+            if (existing != null)
+            {
+                DestroyImmediate(existing.gameObject);
+            }
+
+            Rect bounds = GetCaveBackdropBounds(objects);
+            GameObject backdrop = new GameObject("Night City Stage Backdrop");
+            backdrop.transform.SetParent(parent, false);
+            backdrop.transform.localPosition = Vector3.zero;
+
+            int seed = GetStableNatureVisualSeed(stageId + "|night-city-backdrop");
+            AddNightCityBackdrop(backdrop.transform, bounds, seed);
+            AddNightCityInfrastructure(backdrop.transform, bounds, objects, seed + 2917);
+        }
+
+        public void CreateFactoryStageBackdrop(
+            string stageId,
+            IList<StageObjectData> objects,
+            Transform parent)
+        {
+            if (parent == null || !IsFactoryStageId(stageId))
+            {
+                return;
+            }
+
+            Transform existing = parent.Find("Factory Stage Backdrop");
+            if (existing != null)
+            {
+                DestroyImmediate(existing.gameObject);
+            }
+
+            Rect bounds = GetFactoryBackdropBounds(stageId, objects);
+            GameObject backdrop = new GameObject("Factory Stage Backdrop");
+            backdrop.transform.SetParent(parent, false);
+            backdrop.transform.localPosition = Vector3.zero;
+
+            int seed = GetStableNatureVisualSeed(stageId + "|factory-backdrop");
+            bool keepArenaInteriorClear = HasAlternatePlayerLayoutDefinitions(stageId, objects);
+            AddFactoryBackdrop(backdrop.transform, bounds, seed, !keepArenaInteriorClear);
+            if (!keepArenaInteriorClear)
+            {
+                AddFactoryInfrastructure(backdrop.transform, bounds, objects, stageId, seed + 4513);
+            }
+        }
+
+        public void CreateSpaceStageBackdrop(
+            string stageId,
+            IList<StageObjectData> objects,
+            Transform parent)
+        {
+            if (parent == null || !IsSpaceStageId(stageId))
+            {
+                return;
+            }
+
+            Transform existing = parent.Find("Space Stage Backdrop");
+            if (existing != null)
+            {
+                DestroyImmediate(existing.gameObject);
+            }
+
+            Rect bounds = GetSpaceBackdropBounds(stageId, objects);
+            GameObject backdrop = new GameObject("Space Stage Backdrop");
+            backdrop.transform.SetParent(parent, false);
+            backdrop.transform.localPosition = Vector3.zero;
+
+            int seed = GetStableNatureVisualSeed(stageId + "|space-backdrop");
+            AddSpaceBackdrop(backdrop.transform, bounds, seed);
+            AddSpaceInfrastructure(backdrop.transform, bounds, objects, stageId, seed + 6173);
         }
 
         public GameObject Create(StageObjectData data, Transform parent)
@@ -548,9 +708,24 @@ namespace DrawBody.Prototype
             float thickness = GetStageBoundaryThickness(data);
             float outwardGrowth = thickness - storedThickness;
             bool useNatureTerrainStyle = UsesNatureStageTheme(parent);
-            Color stroke = useNatureTerrainStyle
-                ? TitleTerrainStrokeColor
-                : new Color(0.16f, 0.17f, 0.2f, 1f);
+            bool useCaveTerrainStyle = UsesCaveStageTheme(parent);
+            bool useUnderwaterTerrainStyle = UsesUnderwaterStageTheme(parent);
+            bool useNightCityTerrainStyle = UsesNightCityStageTheme(parent);
+            bool useFactoryTerrainStyle = UsesFactoryStageTheme(parent);
+            bool useSpaceTerrainStyle = UsesSpaceStageTheme(parent);
+            Color stroke = useCaveTerrainStyle
+                ? CaveTerrainStrokeColor
+                : useUnderwaterTerrainStyle
+                    ? UnderwaterRockStrokeColor
+                : useNightCityTerrainStyle
+                    ? NightCityTerrainStrokeColor
+                : useFactoryTerrainStyle
+                    ? FactoryTerrainStrokeColor
+                : useSpaceTerrainStyle
+                    ? SpaceTerrainStrokeColor
+                : useNatureTerrainStyle
+                    ? TitleTerrainStrokeColor
+                    : new Color(0.16f, 0.17f, 0.2f, 1f);
 
             CreateBoundarySide(
                 "Boundary Ceiling",
@@ -576,13 +751,33 @@ namespace DrawBody.Prototype
                 stroke,
                 root.transform);
 
-            if (useNatureTerrainStyle)
+            if (useNatureTerrainStyle || useCaveTerrainStyle || useUnderwaterTerrainStyle || useNightCityTerrainStyle || useFactoryTerrainStyle || useSpaceTerrainStyle)
             {
                 float seamY = height * 0.5f - storedThickness;
                 float leftX = -width * 0.5f + storedThickness - thickness * 0.5f;
                 float rightX = width * 0.5f - storedThickness + thickness * 0.5f;
-                AddTerrainSeamMask(root.transform, false, root.transform.TransformPoint(new Vector3(leftX, seamY, 0f)), thickness, true);
-                AddTerrainSeamMask(root.transform, false, root.transform.TransformPoint(new Vector3(rightX, seamY, 0f)), thickness, true);
+                AddTerrainSeamMask(
+                    root.transform,
+                    false,
+                    root.transform.TransformPoint(new Vector3(leftX, seamY, 0f)),
+                    thickness,
+                    useNatureTerrainStyle,
+                    useCaveTerrainStyle,
+                    useUnderwaterTerrainStyle,
+                    useNightCityTerrainStyle,
+                    useFactoryTerrainStyle,
+                    useSpaceTerrainStyle);
+                AddTerrainSeamMask(
+                    root.transform,
+                    false,
+                    root.transform.TransformPoint(new Vector3(rightX, seamY, 0f)),
+                    thickness,
+                    useNatureTerrainStyle,
+                    useCaveTerrainStyle,
+                    useUnderwaterTerrainStyle,
+                    useNightCityTerrainStyle,
+                    useFactoryTerrainStyle,
+                    useSpaceTerrainStyle);
             }
 
             data.size = new Vector2(width, height);
@@ -742,7 +937,32 @@ namespace DrawBody.Prototype
             collider.size = size;
 
             bool useNatureTerrainStyle = UsesNatureStageTheme(parent);
-            if (useNatureTerrainStyle)
+            bool useCaveTerrainStyle = UsesCaveStageTheme(parent);
+            bool useUnderwaterTerrainStyle = UsesUnderwaterStageTheme(parent);
+            bool useNightCityTerrainStyle = UsesNightCityStageTheme(parent);
+            bool useFactoryTerrainStyle = UsesFactoryStageTheme(parent);
+            bool useSpaceTerrainStyle = UsesSpaceStageTheme(parent);
+            if (useCaveTerrainStyle)
+            {
+                AddSolidPaperBase(side.transform, size, CaveTerrainPaperColor);
+            }
+            else if (useUnderwaterTerrainStyle)
+            {
+                AddSolidPaperBase(side.transform, size, UnderwaterRockPaperColor);
+            }
+            else if (useNightCityTerrainStyle)
+            {
+                AddSolidPaperBase(side.transform, size, NightCityTerrainPaperColor);
+            }
+            else if (useFactoryTerrainStyle)
+            {
+                AddSolidPaperBase(side.transform, size, FactoryTerrainPaperColor);
+            }
+            else if (useSpaceTerrainStyle)
+            {
+                AddSolidPaperBase(side.transform, size, SpaceTerrainPaperColor);
+            }
+            else if (useNatureTerrainStyle)
             {
                 AddSolidPaperBase(side.transform, size, TitleTerrainPaperColor);
             }
@@ -751,20 +971,66 @@ namespace DrawBody.Prototype
                 AddSolidPaperBase(side.transform, size);
             }
             AddSolidWash(side.transform, size, stroke);
-            if (useNatureTerrainStyle)
+            int visualSeed = GetStableNatureVisualSeed(name);
+            if (useCaveTerrainStyle)
+            {
+                AddCaveTerrainFill(side.transform, size, stroke, visualSeed);
+            }
+            else if (useUnderwaterTerrainStyle)
+            {
+                AddUnderwaterRockFill(side.transform, size, visualSeed);
+            }
+            else if (useNightCityTerrainStyle)
+            {
+                AddNightCityTerrainFill(side.transform, size, visualSeed);
+            }
+            else if (useFactoryTerrainStyle)
+            {
+                AddFactoryTerrainFill(side.transform, size, visualSeed);
+            }
+            else if (useSpaceTerrainStyle)
+            {
+                AddSpaceTerrainFill(side.transform, size, visualSeed);
+            }
+            else if (useNatureTerrainStyle)
             {
                 AddNatureTerrainFill(
                     side.transform,
                     size,
                     stroke,
                     name != "Boundary Ceiling",
-                    GetStableNatureVisualSeed(name));
+                    visualSeed);
             }
             else
             {
                 AddSolidPencilFill(side.transform, size, stroke);
             }
-            if (useNatureTerrainStyle)
+            if (useCaveTerrainStyle)
+            {
+                AddCaveTerrainBoxOutline(side.transform, size);
+                AddCaveStalactitesOnWorldBottomEdge(side.transform, size, visualSeed + 701);
+            }
+            else if (useUnderwaterTerrainStyle)
+            {
+                AddUnderwaterTerrainBoxOutline(side.transform, size, UnderwaterRockStrokeColor);
+                if (string.Equals(name, "Boundary Ceiling", StringComparison.Ordinal))
+                {
+                    AddUnderwaterRockUnderside(side.transform, size, visualSeed + 701);
+                }
+            }
+            else if (useNightCityTerrainStyle)
+            {
+                AddNightCityTerrainBoxOutline(side.transform, size, visualSeed);
+            }
+            else if (useFactoryTerrainStyle)
+            {
+                AddFactoryTerrainBoxOutline(side.transform, size, visualSeed);
+            }
+            else if (useSpaceTerrainStyle)
+            {
+                AddSpaceTerrainBoxOutline(side.transform, size, visualSeed);
+            }
+            else if (useNatureTerrainStyle)
             {
                 AddNatureTerrainBoxOutline(side.transform, size);
             }
@@ -787,7 +1053,28 @@ namespace DrawBody.Prototype
             }
 
             bool useNatureTerrainStyle = UsesNatureTerrainStyle(data, parent);
-            Color stroke = useNatureTerrainStyle ? TitleTerrainStrokeColor : GetObjectColor(data.type);
+            bool useCaveTerrainStyle = UsesCaveTerrainStyle(data, parent);
+            bool useUnderwaterTerrainStyle = UsesUnderwaterTerrainStyle(data, parent);
+            bool useNightCityTerrainStyle = UsesNightCityTerrainStyle(data, parent);
+            bool useFactoryTerrainStyle = UsesFactoryTerrainStyle(data, parent);
+            bool useSpaceTerrainStyle = UsesSpaceTerrainStyle(data, parent);
+            bool useUnderwaterSandBody = useUnderwaterTerrainStyle && IsUnderwaterMainSandFloor(data);
+            bool addUnderwaterSandCap = useUnderwaterTerrainStyle
+                && !useUnderwaterSandBody
+                && IsUnderwaterHorizontalPlatform(data);
+            Color stroke = useCaveTerrainStyle
+                ? CaveTerrainStrokeColor
+                : useUnderwaterTerrainStyle
+                    ? (useUnderwaterSandBody ? UnderwaterSandStrokeColor : UnderwaterRockStrokeColor)
+                : useNightCityTerrainStyle
+                    ? NightCityTerrainStrokeColor
+                : useFactoryTerrainStyle
+                    ? FactoryTerrainStrokeColor
+                : useSpaceTerrainStyle
+                    ? SpaceTerrainStrokeColor
+                : useNatureTerrainStyle
+                    ? TitleTerrainStrokeColor
+                    : GetObjectColor(data.type);
             GameObject obj = new GameObject(data.objectId);
             obj.name = data.type.ToString();
             obj.transform.SetParent(parent, false);
@@ -828,7 +1115,30 @@ namespace DrawBody.Prototype
                 effector.useSideBounce = false;
             }
 
-            if (useNatureTerrainStyle)
+            if (useCaveTerrainStyle)
+            {
+                AddSolidPaperBase(obj.transform, data.size, CaveTerrainPaperColor);
+            }
+            else if (useUnderwaterTerrainStyle)
+            {
+                AddSolidPaperBase(
+                    obj.transform,
+                    data.size,
+                    useUnderwaterSandBody ? UnderwaterSandPaperColor : UnderwaterRockPaperColor);
+            }
+            else if (useNightCityTerrainStyle)
+            {
+                AddSolidPaperBase(obj.transform, data.size, NightCityTerrainPaperColor);
+            }
+            else if (useFactoryTerrainStyle)
+            {
+                AddSolidPaperBase(obj.transform, data.size, FactoryTerrainPaperColor);
+            }
+            else if (useSpaceTerrainStyle)
+            {
+                AddSolidPaperBase(obj.transform, data.size, SpaceTerrainPaperColor);
+            }
+            else if (useNatureTerrainStyle)
             {
                 AddSolidPaperBase(obj.transform, data.size, TitleTerrainPaperColor);
             }
@@ -841,14 +1151,46 @@ namespace DrawBody.Prototype
                 AddOneWayPlatformTint(obj.transform, data.size);
             }
             AddSolidWash(obj.transform, data.size, stroke);
-            if (useNatureTerrainStyle)
+            int visualSeed = GetStableNatureVisualSeed(data.objectId);
+            if (useCaveTerrainStyle)
+            {
+                AddCaveTerrainFill(obj.transform, data.size, stroke, visualSeed);
+            }
+            else if (useUnderwaterTerrainStyle)
+            {
+                if (useUnderwaterSandBody)
+                {
+                    AddUnderwaterSandFill(obj.transform, data.size, visualSeed);
+                }
+                else
+                {
+                    AddUnderwaterRockFill(obj.transform, data.size, visualSeed);
+                    if (addUnderwaterSandCap)
+                    {
+                        AddUnderwaterSandCap(obj.transform, data.size, visualSeed + 409);
+                    }
+                }
+            }
+            else if (useNightCityTerrainStyle)
+            {
+                AddNightCityTerrainFill(obj.transform, data.size, visualSeed);
+            }
+            else if (useFactoryTerrainStyle)
+            {
+                AddFactoryTerrainFill(obj.transform, data.size, visualSeed);
+            }
+            else if (useSpaceTerrainStyle)
+            {
+                AddSpaceTerrainFill(obj.transform, data.size, visualSeed);
+            }
+            else if (useNatureTerrainStyle)
             {
                 AddNatureTerrainFill(
                     obj.transform,
                     data.size,
                     stroke,
                     UsesNatureStageTheme(parent),
-                    GetStableNatureVisualSeed(data.objectId));
+                    visualSeed);
             }
             else
             {
@@ -857,10 +1199,42 @@ namespace DrawBody.Prototype
             if (isOneWayPlatform)
             {
                 AddOneWayPlatformSurfaceVisual(obj.transform, data.size);
+                if (useCaveTerrainStyle)
+                {
+                    AddCaveStalactitesOnWorldBottomEdge(obj.transform, data.size, visualSeed + 701);
+                }
             }
             else
             {
-                if (useNatureTerrainStyle)
+                if (useCaveTerrainStyle)
+                {
+                    AddCaveTerrainBoxOutline(obj.transform, data.size);
+                    AddCaveStalactitesOnWorldBottomEdge(obj.transform, data.size, visualSeed + 701);
+                }
+                else if (useUnderwaterTerrainStyle)
+                {
+                    AddUnderwaterTerrainBoxOutline(
+                        obj.transform,
+                        data.size,
+                        useUnderwaterSandBody ? UnderwaterSandStrokeColor : UnderwaterRockStrokeColor);
+                    if (!useUnderwaterSandBody && IsUnderwaterHorizontalPlatform(data))
+                    {
+                        AddUnderwaterRockUnderside(obj.transform, data.size, visualSeed + 701);
+                    }
+                }
+                else if (useNightCityTerrainStyle)
+                {
+                    AddNightCityTerrainBoxOutline(obj.transform, data.size, visualSeed);
+                }
+                else if (useFactoryTerrainStyle)
+                {
+                    AddFactoryTerrainBoxOutline(obj.transform, data.size, visualSeed);
+                }
+                else if (useSpaceTerrainStyle)
+                {
+                    AddSpaceTerrainBoxOutline(obj.transform, data.size, visualSeed);
+                }
+                else if (useNatureTerrainStyle)
                 {
                     AddNatureTerrainBoxOutline(obj.transform, data.size);
                 }
@@ -972,10 +1346,38 @@ namespace DrawBody.Prototype
 
             BoxCollider2D collider = cabin.AddComponent<BoxCollider2D>();
             collider.size = cabinSize;
-            AddSolidPaperBase(cabin.transform, cabinSize);
-            AddSolidWash(cabin.transform, cabinSize, new Color(0.12f, 0.48f, 0.86f, 1f));
-            AddSolidPencilFill(cabin.transform, cabinSize, new Color(0.12f, 0.48f, 0.86f, 1f));
-            AddSolidStraightBoxOutline(cabin.transform, cabinSize);
+            if (UsesCaveStageTheme(parent))
+            {
+                int visualSeed = GetStableNatureVisualSeed(data.objectId) + 977;
+                AddSolidPaperBase(cabin.transform, cabinSize, CaveTerrainPaperColor);
+                AddSolidWash(cabin.transform, cabinSize, CaveTerrainStrokeColor);
+                AddCaveTerrainFill(cabin.transform, cabinSize, CaveTerrainStrokeColor, visualSeed);
+                AddCaveTerrainBoxOutline(cabin.transform, cabinSize);
+                AddCaveStalactitesOnWorldBottomEdge(cabin.transform, cabinSize, visualSeed + 701);
+            }
+            else if (UsesFactoryStageTheme(parent))
+            {
+                int visualSeed = GetStableNatureVisualSeed(data.objectId) + 977;
+                AddSolidPaperBase(cabin.transform, cabinSize, FactoryTerrainPaperColor);
+                AddSolidWash(cabin.transform, cabinSize, FactoryTerrainStrokeColor);
+                AddFactoryTerrainFill(cabin.transform, cabinSize, visualSeed);
+                AddFactoryTerrainBoxOutline(cabin.transform, cabinSize, visualSeed);
+            }
+            else if (UsesSpaceStageTheme(parent))
+            {
+                int visualSeed = GetStableNatureVisualSeed(data.objectId) + 977;
+                AddSolidPaperBase(cabin.transform, cabinSize, SpaceTerrainPaperColor);
+                AddSolidWash(cabin.transform, cabinSize, SpaceTerrainStrokeColor);
+                AddSpaceTerrainFill(cabin.transform, cabinSize, visualSeed);
+                AddSpaceTerrainBoxOutline(cabin.transform, cabinSize, visualSeed);
+            }
+            else
+            {
+                AddSolidPaperBase(cabin.transform, cabinSize);
+                AddSolidWash(cabin.transform, cabinSize, new Color(0.12f, 0.48f, 0.86f, 1f));
+                AddSolidPencilFill(cabin.transform, cabinSize, new Color(0.12f, 0.48f, 0.86f, 1f));
+                AddSolidStraightBoxOutline(cabin.transform, cabinSize);
+            }
 
             Rigidbody2D body = cabin.AddComponent<Rigidbody2D>();
             body.bodyType = RigidbodyType2D.Kinematic;
@@ -1392,6 +1794,7 @@ namespace DrawBody.Prototype
             GameObject connectionRoot = new GameObject("Bridge Terrain Connections");
             connectionRoot.transform.SetParent(parent, false);
             bool useNatureTerrainStyle = UsesNatureStageTheme(parent);
+            bool useCaveTerrainStyle = UsesCaveStageTheme(parent);
             for (int childIndex = 0; childIndex < parent.childCount; childIndex++)
             {
                 Transform oldMask = parent.GetChild(childIndex).Find("Terrain Connection Masks");
@@ -1459,7 +1862,13 @@ namespace DrawBody.Prototype
                         {
                             if (TryGetSharedEdge(rectsA[rectAIndex], rectsB[rectBIndex], out bool vertical, out Vector2 seamCenter, out float seamLength))
                             {
-                                AddTerrainSeamMask(maskParent, vertical, seamCenter, seamLength, useNatureTerrainStyle);
+                                AddTerrainSeamMask(
+                                    maskParent,
+                                    vertical,
+                                    seamCenter,
+                                    seamLength,
+                                    useNatureTerrainStyle,
+                                    useCaveTerrainStyle);
                             }
                         }
                     }
@@ -1511,7 +1920,12 @@ namespace DrawBody.Prototype
             bool vertical,
             Vector2 worldCenter,
             float length,
-            bool useNatureTerrainStyle)
+            bool useNatureTerrainStyle,
+            bool useCaveTerrainStyle = false,
+            bool useUnderwaterTerrainStyle = false,
+            bool useNightCityTerrainStyle = false,
+            bool useFactoryTerrainStyle = false,
+            bool useSpaceTerrainStyle = false)
         {
             float visibleLength = Mathf.Max(0.04f, length - 0.07f);
             GameObject mask = new GameObject("Connected Terrain Seam Mask");
@@ -1520,14 +1934,34 @@ namespace DrawBody.Prototype
             mask.transform.localScale = vertical ? new Vector3(0.11f, visibleLength, 1f) : new Vector3(visibleLength, 0.11f, 1f);
             SpriteRenderer renderer = mask.AddComponent<SpriteRenderer>();
             renderer.sprite = GetSquareSprite();
-            renderer.color = useNatureTerrainStyle
-                ? TitleTerrainPaperColor
-                : new Color(0.985f, 0.975f, 0.93f, 1f);
+            renderer.color = useCaveTerrainStyle
+                ? CaveTerrainPaperColor
+                : useUnderwaterTerrainStyle
+                    ? UnderwaterRockPaperColor
+                : useNightCityTerrainStyle
+                    ? NightCityTerrainPaperColor
+                : useFactoryTerrainStyle
+                    ? FactoryTerrainPaperColor
+                : useSpaceTerrainStyle
+                    ? SpaceTerrainPaperColor
+                : useNatureTerrainStyle
+                    ? TitleTerrainPaperColor
+                    : new Color(0.985f, 0.975f, 0.93f, 1f);
             renderer.sortingOrder = 18;
 
-            Color pencil = useNatureTerrainStyle
-                ? new Color(TitleTerrainStrokeColor.r, TitleTerrainStrokeColor.g, TitleTerrainStrokeColor.b, 0.3f)
-                : new Color(0.22f, 0.2f, 0.16f, 0.22f);
+            Color pencil = useCaveTerrainStyle
+                ? new Color(CaveTerrainStrokeColor.r, CaveTerrainStrokeColor.g, CaveTerrainStrokeColor.b, 0.34f)
+                : useUnderwaterTerrainStyle
+                    ? new Color(UnderwaterRockStrokeColor.r, UnderwaterRockStrokeColor.g, UnderwaterRockStrokeColor.b, 0.34f)
+                : useNightCityTerrainStyle
+                    ? new Color(NightCityTerrainStrokeColor.r, NightCityTerrainStrokeColor.g, NightCityTerrainStrokeColor.b, 0.38f)
+                : useFactoryTerrainStyle
+                    ? new Color(FactoryTerrainStrokeColor.r, FactoryTerrainStrokeColor.g, FactoryTerrainStrokeColor.b, 0.4f)
+                : useSpaceTerrainStyle
+                    ? new Color(SpaceTerrainStrokeColor.r, SpaceTerrainStrokeColor.g, SpaceTerrainStrokeColor.b, 0.42f)
+                : useNatureTerrainStyle
+                    ? new Color(TitleTerrainStrokeColor.r, TitleTerrainStrokeColor.g, TitleTerrainStrokeColor.b, 0.3f)
+                    : new Color(0.22f, 0.2f, 0.16f, 0.22f);
             int strokes = Mathf.Max(2, Mathf.CeilToInt(visibleLength / 0.18f));
             for (int i = 0; i < strokes; i++)
             {
@@ -1692,12 +2126,44 @@ namespace DrawBody.Prototype
         private GameObject CreateConnectedRectSolid(StageObjectData data, Transform parent)
         {
             bool useNatureTerrainStyle = UsesNatureTerrainStyle(data, parent);
+            bool useCaveTerrainStyle = UsesCaveTerrainStyle(data, parent);
+            bool useNightCityTerrainStyle = UsesNightCityTerrainStyle(data, parent);
+            bool useFactoryTerrainStyle = UsesFactoryTerrainStyle(data, parent);
+            bool useSpaceTerrainStyle = UsesSpaceTerrainStyle(data, parent);
             bool addNatureInteriorPlants = UsesNatureStageTheme(parent);
-            Color stroke = useNatureTerrainStyle ? TitleTerrainStrokeColor : GetObjectColor(data.type);
-            Color outline = useNatureTerrainStyle ? TitleTerrainStrokeColor : Color.black;
-            Color outlineAccent = useNatureTerrainStyle
-                ? TitleTerrainAccentColor
-                : new Color(0.1f, 0.48f, 0.95f, 0.42f);
+            Color stroke = useCaveTerrainStyle
+                ? CaveTerrainStrokeColor
+                : useNightCityTerrainStyle
+                    ? NightCityTerrainStrokeColor
+                : useFactoryTerrainStyle
+                    ? FactoryTerrainStrokeColor
+                : useSpaceTerrainStyle
+                    ? SpaceTerrainStrokeColor
+                : useNatureTerrainStyle
+                    ? TitleTerrainStrokeColor
+                    : GetObjectColor(data.type);
+            Color outline = useCaveTerrainStyle
+                ? CaveTerrainStrokeColor
+                : useNightCityTerrainStyle
+                    ? NightCityTerrainStrokeColor
+                : useFactoryTerrainStyle
+                    ? FactoryTerrainStrokeColor
+                : useSpaceTerrainStyle
+                    ? SpaceTerrainStrokeColor
+                : useNatureTerrainStyle
+                    ? TitleTerrainStrokeColor
+                    : Color.black;
+            Color outlineAccent = useCaveTerrainStyle
+                ? CaveTerrainAccentColor
+                : useNightCityTerrainStyle
+                    ? NightCityTerrainAccentColor
+                : useFactoryTerrainStyle
+                    ? FactoryTerrainAccentColor
+                : useSpaceTerrainStyle
+                    ? SpaceTerrainAccentColor
+                : useNatureTerrainStyle
+                    ? TitleTerrainAccentColor
+                    : new Color(0.1f, 0.48f, 0.95f, 0.42f);
             GameObject obj = new GameObject(data.objectId);
             obj.name = data.type + " Connected";
             obj.transform.SetParent(parent, false);
@@ -1725,7 +2191,24 @@ namespace DrawBody.Prototype
                 GameObject fillRoot = new GameObject($"Connected Fill {i}");
                 fillRoot.transform.SetParent(obj.transform, false);
                 fillRoot.transform.localPosition = part.position;
-                if (useNatureTerrainStyle)
+                int partVisualSeed = GetStableNatureVisualSeed(data.objectId) + i * 977;
+                if (useCaveTerrainStyle)
+                {
+                    AddSolidPaperBase(fillRoot.transform, part.size, CaveTerrainPaperColor);
+                }
+                else if (useNightCityTerrainStyle)
+                {
+                    AddSolidPaperBase(fillRoot.transform, part.size, NightCityTerrainPaperColor);
+                }
+                else if (useFactoryTerrainStyle)
+                {
+                    AddSolidPaperBase(fillRoot.transform, part.size, FactoryTerrainPaperColor);
+                }
+                else if (useSpaceTerrainStyle)
+                {
+                    AddSolidPaperBase(fillRoot.transform, part.size, SpaceTerrainPaperColor);
+                }
+                else if (useNatureTerrainStyle)
                 {
                     AddSolidPaperBase(fillRoot.transform, part.size, TitleTerrainPaperColor);
                 }
@@ -1734,7 +2217,23 @@ namespace DrawBody.Prototype
                     AddSolidPaperBase(fillRoot.transform, part.size);
                 }
                 AddSolidWash(fillRoot.transform, part.size, stroke);
-                if (useNatureTerrainStyle)
+                if (useCaveTerrainStyle)
+                {
+                    AddCaveTerrainFill(fillRoot.transform, part.size, stroke, partVisualSeed);
+                }
+                else if (useNightCityTerrainStyle)
+                {
+                    AddNightCityTerrainFill(fillRoot.transform, part.size, partVisualSeed);
+                }
+                else if (useFactoryTerrainStyle)
+                {
+                    AddFactoryTerrainFill(fillRoot.transform, part.size, partVisualSeed);
+                }
+                else if (useSpaceTerrainStyle)
+                {
+                    AddSpaceTerrainFill(fillRoot.transform, part.size, partVisualSeed);
+                }
+                else if (useNatureTerrainStyle)
                 {
                     AddNatureTerrainCoreTexture(fillRoot.transform, part.size, stroke);
                 }
@@ -1767,32 +2266,54 @@ namespace DrawBody.Prototype
                     {
                         Vector2 from = new Vector2(xs[x], ys[y]);
                         Vector2 to = new Vector2(xs[x + 1], ys[y]);
-                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle);
+                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle || useCaveTerrainStyle || useNightCityTerrainStyle || useFactoryTerrainStyle || useSpaceTerrainStyle);
                         if (useNatureTerrainStyle) AddNatureConnectedEdgeGradient(obj.transform, from, to, verticalDepth);
+                        if (useCaveTerrainStyle)
+                        {
+                            AddCaveConnectedEdgeGradient(obj.transform, from, to, verticalDepth);
+                            AddCaveStalactitesAlongExposedEdge(
+                                obj.transform,
+                                from,
+                                to,
+                                verticalDepth,
+                                GetStableNatureVisualSeed(data.objectId) + x * 31 + y * 17);
+                        }
                         if (addNatureInteriorPlants) AddNaturePlantsOnWorldBottomEdge(obj.transform, from, to, verticalDepth, GetStableNatureVisualSeed(data.objectId) + x * 31 + y * 17);
                     }
                     if (y == ys.Count - 2 || !occupied[x, y + 1])
                     {
                         Vector2 from = new Vector2(xs[x + 1], ys[y + 1]);
                         Vector2 to = new Vector2(xs[x], ys[y + 1]);
-                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle);
+                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle || useCaveTerrainStyle || useNightCityTerrainStyle || useFactoryTerrainStyle || useSpaceTerrainStyle);
                         if (useNatureTerrainStyle) AddNatureConnectedEdgeGradient(obj.transform, from, to, verticalDepth);
+                        if (useCaveTerrainStyle)
+                        {
+                            AddCaveConnectedEdgeGradient(obj.transform, from, to, verticalDepth);
+                            AddCaveStalactitesAlongExposedEdge(
+                                obj.transform,
+                                from,
+                                to,
+                                verticalDepth,
+                                GetStableNatureVisualSeed(data.objectId) + x * 37 + y * 19);
+                        }
                         if (addNatureInteriorPlants) AddNaturePlantsOnWorldBottomEdge(obj.transform, from, to, verticalDepth, GetStableNatureVisualSeed(data.objectId) + x * 37 + y * 19);
                     }
                     if (x == 0 || !occupied[x - 1, y])
                     {
                         Vector2 from = new Vector2(xs[x], ys[y + 1]);
                         Vector2 to = new Vector2(xs[x], ys[y]);
-                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle);
+                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle || useCaveTerrainStyle || useNightCityTerrainStyle || useFactoryTerrainStyle || useSpaceTerrainStyle);
                         if (useNatureTerrainStyle) AddNatureConnectedEdgeGradient(obj.transform, from, to, horizontalDepth);
+                        if (useCaveTerrainStyle) AddCaveConnectedEdgeGradient(obj.transform, from, to, horizontalDepth);
                         if (addNatureInteriorPlants) AddNaturePlantsOnWorldBottomEdge(obj.transform, from, to, horizontalDepth, GetStableNatureVisualSeed(data.objectId) + x * 41 + y * 23);
                     }
                     if (x == xs.Count - 2 || !occupied[x + 1, y])
                     {
                         Vector2 from = new Vector2(xs[x + 1], ys[y]);
                         Vector2 to = new Vector2(xs[x + 1], ys[y + 1]);
-                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle);
+                        AddConnectedEdge(obj.transform, from, to, outline, outlineAccent, useNatureTerrainStyle || useCaveTerrainStyle || useNightCityTerrainStyle || useFactoryTerrainStyle || useSpaceTerrainStyle);
                         if (useNatureTerrainStyle) AddNatureConnectedEdgeGradient(obj.transform, from, to, horizontalDepth);
+                        if (useCaveTerrainStyle) AddCaveConnectedEdgeGradient(obj.transform, from, to, horizontalDepth);
                         if (addNatureInteriorPlants) AddNaturePlantsOnWorldBottomEdge(obj.transform, from, to, horizontalDepth, GetStableNatureVisualSeed(data.objectId) + x * 43 + y * 29);
                     }
                 }
@@ -3730,6 +4251,73 @@ namespace DrawBody.Prototype
             root.transform.position = data.position;
             root.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
 
+            // Outdoor doodles left in older stage data fight the cave silhouette and
+            // make the room read as a normal notebook stage. Keep their data intact
+            // for editing/backward compatibility, but do not draw them in cave play.
+            if (UsesCaveStageTheme(parent)
+                && (data.type == StageObjectType.BackgroundCloud
+                    || data.type == StageObjectType.BackgroundSun
+                    || data.type == StageObjectType.BackgroundRainbow
+                    || data.type == StageObjectType.BackgroundCastle))
+            {
+                AddEditorMetadata(root, data);
+                return root;
+            }
+
+            // The generated night skyline owns the moon and ambient sky. Old
+            // daytime suns left in authored stage data would otherwise appear
+            // in front of the city and make the scene read as daytime.
+            if (UsesNightCityStageTheme(parent)
+                && data.type == StageObjectType.BackgroundSun)
+            {
+                AddEditorMetadata(root, data);
+                return root;
+            }
+
+            if (UsesFactoryStageTheme(parent)
+                && (data.type == StageObjectType.BackgroundCloud
+                    || data.type == StageObjectType.BackgroundSun
+                    || data.type == StageObjectType.BackgroundRainbow
+                    || data.type == StageObjectType.BackgroundCastle
+                    || data.type == StageObjectType.BackgroundTree
+                    || data.type == StageObjectType.BackgroundGrass
+                    || data.type == StageObjectType.BackgroundFlower
+                    || data.type == StageObjectType.BackgroundBush
+                    || data.type == StageObjectType.BackgroundMountain
+                    || data.type == StageObjectType.BackgroundMushroom
+                    || data.type == StageObjectType.BackgroundUfo
+                    || data.type == StageObjectType.BackgroundHotAirBalloon
+                    || data.type == StageObjectType.BackgroundHouse
+                    || data.type == StageObjectType.BackgroundFossil))
+            {
+                AddEditorMetadata(root, data);
+                return root;
+            }
+
+            // The generated space window owns the sky and celestial bodies.
+            // Preserve legacy decoration data for editing, but avoid duplicate
+            // moons/clouds or daytime scenery in normal play.
+            if (UsesSpaceStageTheme(parent)
+                && (data.type == StageObjectType.BackgroundTree
+                    || data.type == StageObjectType.BackgroundGrass
+                    || data.type == StageObjectType.BackgroundFlower
+                    || data.type == StageObjectType.BackgroundBush
+                    || data.type == StageObjectType.BackgroundCloud
+                    || data.type == StageObjectType.BackgroundMoon
+                    || data.type == StageObjectType.BackgroundSun
+                    || data.type == StageObjectType.BackgroundRainbow
+                    || data.type == StageObjectType.BackgroundMountain
+                    || data.type == StageObjectType.BackgroundPlanet
+                    || data.type == StageObjectType.BackgroundComet
+                    || data.type == StageObjectType.BackgroundBlackHoleDecor
+                    || data.type == StageObjectType.BackgroundRocket
+                    || data.type == StageObjectType.BackgroundUfo
+                    || data.type == StageObjectType.BackgroundAlien))
+            {
+                AddEditorMetadata(root, data);
+                return root;
+            }
+
             GameObject visual = new GameObject("Background Visual");
             visual.transform.SetParent(root.transform, false);
             bool useDistantNatureStyle = IsDistantNatureDecoration(data, parent);
@@ -3737,6 +4325,14 @@ namespace DrawBody.Prototype
             float opacity = useDistantNatureStyle
                 ? GetDistantTitleDecorationOpacity(data.type)
                 : IsGeneratedNatureDecoration(data) ? 0.88f : 1f;
+            if (UsesUnderwaterStageTheme(parent)
+                && data.type == StageObjectType.BackgroundBubbles)
+            {
+                // 2-2 already contains several large legacy bubble cards. Keep
+                // their authored placement, but make them a faint distant layer
+                // behind the smaller animated bubbles generated by the theme.
+                opacity = 0.12f;
+            }
             int sortingOrder = useDistantNatureStyle ? -90 : -69;
             if (!TryApplyBackgroundSprite(
                 visual,
@@ -4846,9 +5442,111 @@ namespace DrawBody.Prototype
                     || UsesNatureStageTheme(parent));
         }
 
+        private bool UsesCaveTerrainStyle(StageObjectData data, Transform parent)
+        {
+            return data != null
+                && IsCaveTerrainType(data.type)
+                && UsesCaveStageTheme(parent);
+        }
+
+        private bool UsesUnderwaterTerrainStyle(StageObjectData data, Transform parent)
+        {
+            return data != null
+                && IsCaveTerrainType(data.type)
+                && UsesUnderwaterStageTheme(parent);
+        }
+
+        private bool UsesNightCityTerrainStyle(StageObjectData data, Transform parent)
+        {
+            return data != null
+                && IsCaveTerrainType(data.type)
+                && UsesNightCityStageTheme(parent);
+        }
+
+        private bool UsesFactoryTerrainStyle(StageObjectData data, Transform parent)
+        {
+            return data != null
+                && (IsCaveTerrainType(data.type)
+                    || data.type == StageObjectType.EscortPlayerOneWayFloor)
+                && UsesFactoryStageTheme(parent);
+        }
+
+        private bool UsesSpaceTerrainStyle(StageObjectData data, Transform parent)
+        {
+            return data != null
+                && (IsCaveTerrainType(data.type)
+                    || data.type == StageObjectType.EscortPlayerOneWayFloor)
+                && UsesSpaceStageTheme(parent);
+        }
+
+        private static bool IsCaveTerrainType(StageObjectType type)
+        {
+            return type == StageObjectType.Platform
+                || type == StageObjectType.Wall
+                || type == StageObjectType.Ceiling
+                || type == StageObjectType.HalfPlatform
+                || type == StageObjectType.OneWayPlatform
+                || type == StageObjectType.FallingFloor
+                || type == StageObjectType.MovingPlatform
+                || type == StageObjectType.MovingOneWayPlatform
+                || type == StageObjectType.BreakableFloor
+                || type == StageObjectType.BreakableWall
+                || type == StageObjectType.BulletBreakableWall;
+        }
+
         private bool UsesNatureStageTheme(Transform parent)
         {
             if (parent == null || visualThemeRoot == null || !IsNatureStageId(visualThemeStageId))
+            {
+                return false;
+            }
+
+            return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
+        }
+
+        private bool UsesCaveStageTheme(Transform parent)
+        {
+            if (parent == null || visualThemeRoot == null || !IsCaveStageId(visualThemeStageId))
+            {
+                return false;
+            }
+
+            return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
+        }
+
+        private bool UsesUnderwaterStageTheme(Transform parent)
+        {
+            if (parent == null || visualThemeRoot == null || !IsUnderwaterStageId(visualThemeStageId))
+            {
+                return false;
+            }
+
+            return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
+        }
+
+        private bool UsesNightCityStageTheme(Transform parent)
+        {
+            if (parent == null || visualThemeRoot == null || !IsNightCityStageId(visualThemeStageId))
+            {
+                return false;
+            }
+
+            return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
+        }
+
+        private bool UsesFactoryStageTheme(Transform parent)
+        {
+            if (parent == null || visualThemeRoot == null || !IsFactoryStageId(visualThemeStageId))
+            {
+                return false;
+            }
+
+            return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
+        }
+
+        private bool UsesSpaceStageTheme(Transform parent)
+        {
+            if (parent == null || visualThemeRoot == null || !IsSpaceStageId(visualThemeStageId))
             {
                 return false;
             }
@@ -4863,9 +5561,75 @@ namespace DrawBody.Prototype
                 || stageId == "3-1"
                 || stageId == "5-2"
                 || stageId == "7-2"
-                || stageId == "9-3"
                 || stageId == "10-2"
                 || stageId == "14-2";
+        }
+
+        private static bool IsCaveStageId(string stageId)
+        {
+            return stageId == "1-2"
+                || stageId == "3-2"
+                || stageId == "12-1"
+                || stageId == "12-2";
+        }
+
+        private static bool IsUnderwaterStageId(string stageId)
+        {
+            return stageId == "2-2" || stageId == "6-3";
+        }
+
+        private static bool IsNightCityStageId(string stageId)
+        {
+            return stageId == "3-3"
+                || stageId == "5-1"
+                || stageId == "6-1"
+                || stageId == "12-3"
+                || stageId == "13-1";
+        }
+
+        internal static bool IsFactoryStageId(string stageId)
+        {
+            return stageId == "4-1"
+                || stageId == "4-2"
+                || stageId == "6-2"
+                || stageId == "7-3"
+                || stageId == "8-1"
+                || stageId == "9-1"
+                || stageId == "9-3"
+                || stageId == "10-3"
+                || stageId == "11-2"
+                || stageId == "11-3"
+                || stageId == "13-3"
+                || stageId == "14-3";
+        }
+
+        internal static bool IsSpaceStageId(string stageId)
+        {
+            return stageId == "4-3"
+                || stageId == "15-1"
+                || stageId == "15-2"
+                || stageId == "15-3";
+        }
+
+        private static bool IsUnderwaterHorizontalPlatform(StageObjectData data)
+        {
+            if (data == null || data.type != StageObjectType.Platform)
+            {
+                return false;
+            }
+
+            float worldAngle = Mathf.Abs(Mathf.DeltaAngle(0f, data.rotation));
+            bool localTopFacesUp = worldAngle < 2f;
+            return localTopFacesUp && data.size.x >= Mathf.Max(3f, data.size.y * 1.8f);
+        }
+
+        private static bool IsUnderwaterMainSandFloor(StageObjectData data)
+        {
+            return IsUnderwaterHorizontalPlatform(data)
+                && (string.Equals(data.objectId, "Platform_Start", StringComparison.Ordinal)
+                    || (!string.IsNullOrEmpty(data.objectId)
+                        && data.objectId.IndexOf("preview_floor", StringComparison.OrdinalIgnoreCase) >= 0)
+                    || data.size.x >= 24f);
         }
 
         private static void AddObjectGlyph(Transform parent, StageObjectData data)
@@ -5105,6 +5869,4525 @@ namespace DrawBody.Prototype
             }
 
             CreatePencilMesh(parent, "Solid Pencil Fill Mesh", vertices, colors, triangles, sortingOrder);
+        }
+
+        private static void AddNightCityTerrainFill(Transform parent, Vector2 size, int seed)
+        {
+            AddSolidPencilFill(parent, size, NightCityTerrainStrokeColor, 4, 0.92f);
+
+            float left = -size.x * 0.5f;
+            float right = size.x * 0.5f;
+            float bottom = -size.y * 0.5f;
+            float top = size.y * 0.5f;
+            uint state = CreateCaveVisualState(seed ^ 0x4E494748);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            Color seam = new Color(
+                NightCityTerrainStrokeColor.r,
+                NightCityTerrainStrokeColor.g,
+                NightCityTerrainStrokeColor.b,
+                0.34f);
+            Color scratch = new Color(0.73f, 0.8f, 0.9f, 0.16f);
+
+            float verticalSpacing = CaveVisualRange(ref state, 1.45f, 2.35f);
+            for (float x = left + verticalSpacing; x < right - 0.1f; x += verticalSpacing)
+            {
+                float wobble = CaveVisualRange(ref state, -0.045f, 0.045f);
+                AppendCaveWobblyStroke(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(x + wobble, bottom + 0.04f),
+                    new Vector2(x - wobble * 0.5f, top - 0.04f),
+                    0.016f,
+                    seam,
+                    0.025f,
+                    ref state);
+            }
+
+            float horizontalSpacing = CaveVisualRange(ref state, 1.25f, 2.05f);
+            for (float y = bottom + horizontalSpacing; y < top - 0.1f; y += horizontalSpacing)
+            {
+                AppendCaveWobblyStroke(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(left + 0.04f, y + CaveVisualRange(ref state, -0.035f, 0.035f)),
+                    new Vector2(right - 0.04f, y + CaveVisualRange(ref state, -0.035f, 0.035f)),
+                    0.014f,
+                    seam * 0.86f,
+                    0.02f,
+                    ref state);
+            }
+
+            int scratchCount = Mathf.Clamp(Mathf.RoundToInt(size.x * size.y * 0.1f), 4, 52);
+            for (int i = 0; i < scratchCount; i++)
+            {
+                Vector2 from = new Vector2(
+                    CaveVisualRange(ref state, left + 0.12f, right - 0.12f),
+                    CaveVisualRange(ref state, bottom + 0.12f, top - 0.12f));
+                Vector2 to = from + new Vector2(
+                    CaveVisualRange(ref state, 0.18f, 0.62f),
+                    CaveVisualRange(ref state, 0.08f, 0.26f));
+                to.x = Mathf.Min(to.x, right - 0.08f);
+                to.y = Mathf.Min(to.y, top - 0.08f);
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    from,
+                    to,
+                    CaveVisualRange(ref state, 0.009f, 0.018f),
+                    scratch);
+            }
+
+            int rivetColumns = Mathf.Clamp(Mathf.FloorToInt(size.x / 2.2f) + 1, 2, 28);
+            int rivetRows = Mathf.Clamp(Mathf.FloorToInt(size.y / 2.2f) + 1, 2, 18);
+            for (int xIndex = 0; xIndex < rivetColumns; xIndex++)
+            {
+                for (int yIndex = 0; yIndex < rivetRows; yIndex++)
+                {
+                    if ((xIndex + yIndex) % 2 != 0 && CaveVisual01(ref state) < 0.56f)
+                    {
+                        continue;
+                    }
+
+                    float x = Mathf.Lerp(left + 0.1f, right - 0.1f, rivetColumns <= 1 ? 0.5f : xIndex / (rivetColumns - 1f));
+                    float y = Mathf.Lerp(bottom + 0.1f, top - 0.1f, rivetRows <= 1 ? 0.5f : yIndex / (rivetRows - 1f));
+                    float radius = CaveVisualRange(ref state, 0.025f, 0.045f);
+                    AppendPencilQuad(vertices, colors, triangles, new Vector2(x - radius, y), new Vector2(x + radius, y), 0.018f, seam);
+                    AppendPencilQuad(vertices, colors, triangles, new Vector2(x, y - radius), new Vector2(x, y + radius), 0.018f, seam);
+                }
+            }
+
+            CreatePencilMesh(parent, "Night City Metal Panel Pencil", vertices, colors, triangles, 7);
+        }
+
+        private static void AddNightCityTerrainBoxOutline(Transform parent, Vector2 size, int seed)
+        {
+            float jitter = ((seed & 3) - 1.5f) * 0.006f;
+            AddSolidSketchBoxOutline(
+                parent,
+                size,
+                NightCityTerrainAccentColor,
+                0.038f,
+                11,
+                new Vector3(0.018f + jitter, -0.014f, 0f));
+            AddSolidSketchBoxOutline(
+                parent,
+                size,
+                NightCityTerrainStrokeColor,
+                0.072f,
+                13);
+        }
+
+        private static void AddFactoryTerrainFill(Transform parent, Vector2 size, int seed)
+        {
+            AddSolidPencilFill(parent, size, FactoryTerrainStrokeColor, 4, 0.82f);
+            AddFactoryPanelDetailMesh(parent, size, seed, 7);
+        }
+
+        private static void AddFactoryPanelDetailMesh(
+            Transform parent,
+            Vector2 size,
+            int seed,
+            int sortingOrder)
+        {
+            float left = -size.x * 0.5f;
+            float right = size.x * 0.5f;
+            float bottom = -size.y * 0.5f;
+            float top = size.y * 0.5f;
+            uint state = CreateCaveVisualState(seed ^ 0x46414354);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            Color joint = new Color(
+                FactoryTerrainStrokeColor.r,
+                FactoryTerrainStrokeColor.g,
+                FactoryTerrainStrokeColor.b,
+                0.52f);
+            Color scrape = new Color(0.9f, 0.92f, 0.91f, 0.15f);
+
+            float panelSpanX = CaveVisualRange(ref state, 2.1f, 3.6f);
+            for (float x = left + panelSpanX; x < right - 0.12f; x += panelSpanX)
+            {
+                AppendCaveWobblyStroke(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(x + CaveVisualRange(ref state, -0.035f, 0.035f), bottom + 0.04f),
+                    new Vector2(x + CaveVisualRange(ref state, -0.035f, 0.035f), top - 0.04f),
+                    0.024f,
+                    joint,
+                    0.018f,
+                    ref state);
+            }
+
+            float panelSpanY = CaveVisualRange(ref state, 1.8f, 2.9f);
+            for (float y = bottom + panelSpanY; y < top - 0.12f; y += panelSpanY)
+            {
+                AppendCaveWobblyStroke(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(left + 0.04f, y + CaveVisualRange(ref state, -0.03f, 0.03f)),
+                    new Vector2(right - 0.04f, y + CaveVisualRange(ref state, -0.03f, 0.03f)),
+                    0.022f,
+                    joint * 0.88f,
+                    0.016f,
+                    ref state);
+            }
+
+            int rivetColumns = Mathf.Clamp(Mathf.CeilToInt(size.x / 2.7f) + 1, 2, 34);
+            int rivetRows = Mathf.Clamp(Mathf.CeilToInt(size.y / 2.4f) + 1, 2, 24);
+            for (int xIndex = 0; xIndex < rivetColumns; xIndex++)
+            {
+                for (int yIndex = 0; yIndex < rivetRows; yIndex++)
+                {
+                    bool edge = xIndex == 0 || xIndex == rivetColumns - 1
+                        || yIndex == 0 || yIndex == rivetRows - 1;
+                    if (!edge && ((xIndex * 3 + yIndex * 5) & 3) != 0)
+                    {
+                        continue;
+                    }
+
+                    float x = Mathf.Lerp(left + 0.11f, right - 0.11f, xIndex / (rivetColumns - 1f));
+                    float y = Mathf.Lerp(bottom + 0.11f, top - 0.11f, yIndex / (rivetRows - 1f));
+                    float radius = edge ? 0.045f : 0.035f;
+                    AppendPencilQuad(vertices, colors, triangles, new Vector2(x - radius, y), new Vector2(x + radius, y), 0.024f, joint);
+                    AppendPencilQuad(vertices, colors, triangles, new Vector2(x, y - radius), new Vector2(x, y + radius), 0.024f, joint);
+                }
+            }
+
+            int scrapeCount = Mathf.Clamp(Mathf.RoundToInt(size.x * size.y * 0.075f), 3, 58);
+            for (int i = 0; i < scrapeCount; i++)
+            {
+                Vector2 from = new Vector2(
+                    CaveVisualRange(ref state, left + 0.14f, right - 0.14f),
+                    CaveVisualRange(ref state, bottom + 0.14f, top - 0.14f));
+                Vector2 to = from + new Vector2(
+                    CaveVisualRange(ref state, 0.18f, 0.74f),
+                    CaveVisualRange(ref state, -0.08f, 0.18f));
+                to.x = Mathf.Clamp(to.x, left + 0.08f, right - 0.08f);
+                to.y = Mathf.Clamp(to.y, bottom + 0.08f, top - 0.08f);
+                AppendPencilQuad(vertices, colors, triangles, from, to, CaveVisualRange(ref state, 0.01f, 0.02f), scrape);
+            }
+
+            // A small amount of hand-drawn warning paint makes long industrial
+            // beams readable without turning every platform into a road sign.
+            if (size.x >= 7f && size.y <= 1.35f && (seed & 3) == 1)
+            {
+                float stripeWidth = 0.32f;
+                float stripLeft = Mathf.Max(left + 0.22f, right - Mathf.Min(3.2f, size.x * 0.28f));
+                Color yellow = new Color(0.95f, 0.69f, 0.12f, 0.44f);
+                Color charcoal = new Color(0.11f, 0.12f, 0.13f, 0.45f);
+                for (float x = stripLeft; x < right - 0.2f; x += stripeWidth)
+                {
+                    Color stripe = (Mathf.FloorToInt((x - stripLeft) / stripeWidth) & 1) == 0 ? yellow : charcoal;
+                    AppendPencilQuad(
+                        vertices,
+                        colors,
+                        triangles,
+                        new Vector2(x, bottom + 0.08f),
+                        new Vector2(Mathf.Min(x + 0.38f, right - 0.08f), top - 0.08f),
+                        0.12f,
+                        stripe);
+                }
+            }
+
+            CreatePencilMesh(parent, "Factory Steel Plate Joints And Rivets", vertices, colors, triangles, sortingOrder);
+        }
+
+        private static void AddFactoryTerrainBoxOutline(
+            Transform parent,
+            Vector2 size,
+            int seed,
+            int sortingOrder = 13)
+        {
+            float jitter = ((seed & 7) - 3.5f) * 0.004f;
+            AddSolidSketchBoxOutline(
+                parent,
+                size,
+                FactoryTerrainAccentColor,
+                0.042f,
+                sortingOrder - 2,
+                new Vector3(0.016f + jitter, -0.012f, 0f));
+            AddSolidSketchBoxOutline(
+                parent,
+                size,
+                FactoryTerrainStrokeColor,
+                0.078f,
+                sortingOrder);
+        }
+
+        internal static SpriteRenderer AddFactorySteelPanelVisual(
+            Transform parent,
+            Vector2 size,
+            string seedKey,
+            int sortingOrder)
+        {
+            if (parent == null)
+            {
+                return null;
+            }
+
+            GameObject baseObject = new GameObject("Factory Steel Plate Fill");
+            baseObject.transform.SetParent(parent, false);
+            baseObject.transform.localScale = new Vector3(size.x, size.y, 1f);
+            SpriteRenderer renderer = baseObject.AddComponent<SpriteRenderer>();
+            renderer.sprite = GetSquareSprite();
+            renderer.color = FactoryTerrainPaperColor;
+            renderer.sortingOrder = sortingOrder;
+
+            int seed = GetStableNatureVisualSeed(seedKey);
+            AddSolidPencilFill(parent, size, FactoryTerrainStrokeColor, sortingOrder + 1, 0.78f);
+            AddFactoryPanelDetailMesh(parent, size, seed, sortingOrder + 2);
+            AddFactoryTerrainBoxOutline(parent, size, seed, sortingOrder + 3);
+            return renderer;
+        }
+
+        private static void AddSpaceTerrainFill(Transform parent, Vector2 size, int seed)
+        {
+            AddSolidPencilFill(parent, size, SpaceTerrainStrokeColor, 4, 0.74f);
+            AddSpacePanelDetailMesh(parent, size, seed, 7, false);
+        }
+
+        private static void AddSpacePanelDetailMesh(
+            Transform parent,
+            Vector2 size,
+            int seed,
+            int sortingOrder,
+            bool warningPanel)
+        {
+            float left = -size.x * 0.5f;
+            float right = size.x * 0.5f;
+            float bottom = -size.y * 0.5f;
+            float top = size.y * 0.5f;
+            uint state = CreateCaveVisualState(seed ^ 0x53504143);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            Color joint = new Color(
+                SpaceTerrainStrokeColor.r,
+                SpaceTerrainStrokeColor.g,
+                SpaceTerrainStrokeColor.b,
+                0.58f);
+            Color bevel = new Color(0.82f, 0.9f, 0.96f, 0.22f);
+            Color glow = warningPanel
+                ? new Color(1f, 0.68f, 0.14f, 0.9f)
+                : SpaceTerrainGlowColor;
+
+            float panelSpanX = CaveVisualRange(ref state, 2.7f, 4.3f);
+            for (float x = left + panelSpanX; x < right - 0.12f; x += panelSpanX)
+            {
+                float wobble = CaveVisualRange(ref state, -0.035f, 0.035f);
+                AppendCaveWobblyStroke(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(x + wobble, bottom + 0.035f),
+                    new Vector2(x - wobble * 0.5f, top - 0.035f),
+                    0.028f,
+                    joint,
+                    0.016f,
+                    ref state);
+            }
+
+            float panelSpanY = CaveVisualRange(ref state, 2.1f, 3.3f);
+            for (float y = bottom + panelSpanY; y < top - 0.12f; y += panelSpanY)
+            {
+                AppendCaveWobblyStroke(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(left + 0.035f, y),
+                    new Vector2(right - 0.035f, y + CaveVisualRange(ref state, -0.025f, 0.025f)),
+                    0.025f,
+                    joint * 0.9f,
+                    0.015f,
+                    ref state);
+            }
+
+            if (size.x > 0.34f && size.y > 0.34f)
+            {
+                float insetX = Mathf.Min(0.16f, size.x * 0.12f);
+                float insetY = Mathf.Min(0.16f, size.y * 0.12f);
+                AppendCaveWobblyStroke(vertices, colors, triangles,
+                    new Vector2(left + insetX, top - insetY),
+                    new Vector2(right - insetX, top - insetY), 0.022f, bevel, 0.01f, ref state);
+                AppendCaveWobblyStroke(vertices, colors, triangles,
+                    new Vector2(left + insetX, bottom + insetY),
+                    new Vector2(right - insetX, bottom + insetY), 0.018f, joint * 0.72f, 0.01f, ref state);
+            }
+
+            int rivetColumns = Mathf.Clamp(Mathf.CeilToInt(size.x / 3.1f) + 1, 2, 42);
+            int rivetRows = Mathf.Clamp(Mathf.CeilToInt(size.y / 2.7f) + 1, 2, 24);
+            for (int xIndex = 0; xIndex < rivetColumns; xIndex++)
+            {
+                for (int yIndex = 0; yIndex < rivetRows; yIndex++)
+                {
+                    bool edge = xIndex == 0 || xIndex == rivetColumns - 1
+                        || yIndex == 0 || yIndex == rivetRows - 1;
+                    if (!edge && ((xIndex * 5 + yIndex * 3) & 3) != 0)
+                    {
+                        continue;
+                    }
+
+                    float x = Mathf.Lerp(left + Mathf.Min(0.12f, size.x * 0.22f), right - Mathf.Min(0.12f, size.x * 0.22f), xIndex / (rivetColumns - 1f));
+                    float y = Mathf.Lerp(bottom + Mathf.Min(0.12f, size.y * 0.22f), top - Mathf.Min(0.12f, size.y * 0.22f), yIndex / (rivetRows - 1f));
+                    float radius = edge ? 0.044f : 0.033f;
+                    AppendPencilQuad(vertices, colors, triangles,
+                        new Vector2(x - radius, y), new Vector2(x + radius, y), 0.022f, joint);
+                    AppendPencilQuad(vertices, colors, triangles,
+                        new Vector2(x, y - radius), new Vector2(x, y + radius), 0.022f, joint);
+                }
+            }
+
+            if (size.x >= 1.8f && size.x >= size.y * 1.25f)
+            {
+                float inset = Mathf.Min(0.42f, size.x * 0.12f);
+                float y = Mathf.Clamp(top - Mathf.Min(0.21f, size.y * 0.34f), bottom + 0.06f, top - 0.06f);
+                Vector2 from = new Vector2(left + inset, y);
+                Vector2 to = new Vector2(right - inset, y + CaveVisualRange(ref state, -0.018f, 0.018f));
+                AppendPencilQuad(vertices, colors, triangles, from, to, 0.095f, new Color(glow.r, glow.g, glow.b, 0.16f));
+                AppendPencilQuad(vertices, colors, triangles, from, to, 0.035f, glow);
+            }
+            else if (size.y >= 3f)
+            {
+                float x = Mathf.Clamp(right - Mathf.Min(0.22f, size.x * 0.28f), left + 0.07f, right - 0.07f);
+                float inset = Mathf.Min(0.42f, size.y * 0.1f);
+                Vector2 from = new Vector2(x, bottom + inset);
+                Vector2 to = new Vector2(x + CaveVisualRange(ref state, -0.018f, 0.018f), top - inset);
+                AppendPencilQuad(vertices, colors, triangles, from, to, 0.095f, new Color(glow.r, glow.g, glow.b, 0.16f));
+                AppendPencilQuad(vertices, colors, triangles, from, to, 0.035f, glow);
+            }
+
+            int scrapeCount = Mathf.Clamp(Mathf.RoundToInt(size.x * size.y * 0.045f), 2, 44);
+            Color scrape = new Color(0.93f, 0.96f, 1f, 0.12f);
+            for (int scrapeIndex = 0; scrapeIndex < scrapeCount; scrapeIndex++)
+            {
+                Vector2 from = new Vector2(
+                    CaveVisualRange(ref state, left + 0.1f, right - 0.1f),
+                    CaveVisualRange(ref state, bottom + 0.08f, top - 0.08f));
+                Vector2 to = from + new Vector2(
+                    CaveVisualRange(ref state, 0.14f, 0.58f),
+                    CaveVisualRange(ref state, -0.05f, 0.13f));
+                to.x = Mathf.Clamp(to.x, left + 0.06f, right - 0.06f);
+                to.y = Mathf.Clamp(to.y, bottom + 0.05f, top - 0.05f);
+                AppendPencilQuad(vertices, colors, triangles, from, to,
+                    CaveVisualRange(ref state, 0.009f, 0.018f), scrape);
+            }
+
+            CreatePencilMesh(parent, "Space Futuristic Panel Details", vertices, colors, triangles, sortingOrder);
+        }
+
+        private static void AddSpaceTerrainBoxOutline(
+            Transform parent,
+            Vector2 size,
+            int seed,
+            int sortingOrder = 13)
+        {
+            float jitter = ((seed & 7) - 3.5f) * 0.0035f;
+            AddSolidSketchBoxOutline(
+                parent,
+                size,
+                SpaceTerrainAccentColor,
+                0.044f,
+                sortingOrder - 2,
+                new Vector3(0.014f + jitter, -0.012f, 0f));
+            AddSolidSketchBoxOutline(
+                parent,
+                size,
+                SpaceTerrainStrokeColor,
+                0.082f,
+                sortingOrder);
+        }
+
+        internal static SpriteRenderer AddSpaceFuturisticPanelVisual(
+            Transform parent,
+            Vector2 size,
+            string seedKey,
+            int sortingOrder,
+            bool warningPanel = false)
+        {
+            if (parent == null)
+            {
+                return null;
+            }
+
+            GameObject baseObject = new GameObject("Space Station Panel Fill");
+            baseObject.transform.SetParent(parent, false);
+            baseObject.transform.localScale = new Vector3(size.x, size.y, 1f);
+            SpriteRenderer renderer = baseObject.AddComponent<SpriteRenderer>();
+            renderer.sprite = GetSquareSprite();
+            renderer.color = warningPanel
+                ? new Color(0.64f, 0.59f, 0.48f, 1f)
+                : SpaceTerrainPaperColor;
+            renderer.sortingOrder = sortingOrder;
+
+            int seed = GetStableNatureVisualSeed(seedKey);
+            AddSolidPencilFill(parent, size, SpaceTerrainStrokeColor, sortingOrder + 1, 0.68f);
+            AddSpacePanelDetailMesh(parent, size, seed, sortingOrder + 2, warningPanel);
+            AddSpaceTerrainBoxOutline(parent, size, seed, sortingOrder + 3);
+            return renderer;
+        }
+
+        private static Rect GetSpaceBackdropBounds(string stageId, IList<StageObjectData> objects)
+        {
+            // The chapter 15 arenas are assembled by their controllers after the
+            // JSON has loaded. Fixed canvases keep the star field present across
+            // their complete camera route instead of measuring the lone spawn.
+            switch (stageId)
+            {
+                case "4-3":
+                    return Rect.MinMaxRect(-23f, -11f, 31f, 17f);
+                case "15-1":
+                    return Rect.MinMaxRect(-23f, -11f, 23f, 15f);
+                case "15-2":
+                    return Rect.MinMaxRect(-20f, -12f, 202f, 14f);
+                case "15-3":
+                    return Rect.MinMaxRect(-22f, -12f, 22f, 14f);
+                default:
+                    return GetCaveBackdropBounds(objects);
+            }
+        }
+
+        private static Rect GetBackdropColorFillBounds(Rect detailBounds)
+        {
+            // Decorative layouts stay close to the playable area, but their
+            // solid color must cover every supported aspect ratio and the
+            // CameraFollow2D group zoom. Keeping this overscan separate avoids
+            // generating hundreds of off-screen stars, plants or machines.
+            return Rect.MinMaxRect(
+                detailBounds.xMin - 72f,
+                detailBounds.yMin - 24f,
+                detailBounds.xMax + 72f,
+                detailBounds.yMax + 24f);
+        }
+
+        private static void AddSpaceBackdrop(Transform parent, Rect bounds, int seed)
+        {
+            Rect colorBounds = GetBackdropColorFillBounds(bounds);
+            GameObject wash = new GameObject("Space Deep Navy Crayon Wash");
+            wash.transform.SetParent(parent, false);
+            wash.transform.localPosition = new Vector3(colorBounds.center.x, colorBounds.center.y, 0f);
+            wash.transform.localScale = new Vector3(colorBounds.width, colorBounds.height, 1f);
+            SpriteRenderer washRenderer = wash.AddComponent<SpriteRenderer>();
+            washRenderer.sprite = GetSquareSprite();
+            washRenderer.color = SpaceBackdropColor;
+            washRenderer.sortingOrder = -99;
+
+            Color[] depthBands =
+            {
+                new Color(0.025f, 0.035f, 0.12f, 0.5f),
+                new Color(0.07f, 0.09f, 0.27f, 0.28f),
+                new Color(0.08f, 0.18f, 0.38f, 0.18f)
+            };
+            float bandHeight = bounds.height / depthBands.Length;
+            for (int band = 0; band < depthBands.Length; band++)
+            {
+                float bandTop = band == 0
+                    ? colorBounds.yMax
+                    : bounds.yMax - bandHeight * band;
+                float bandBottom = band == depthBands.Length - 1
+                    ? colorBounds.yMin
+                    : bounds.yMax - bandHeight * (band + 1f);
+                GameObject layer = new GameObject("Space Sky Depth " + band);
+                layer.transform.SetParent(parent, false);
+                layer.transform.localPosition = new Vector3(
+                    colorBounds.center.x,
+                    (bandTop + bandBottom) * 0.5f,
+                    0f);
+                layer.transform.localScale = new Vector3(colorBounds.width, bandTop - bandBottom + 0.12f, 1f);
+                SpriteRenderer renderer = layer.AddComponent<SpriteRenderer>();
+                renderer.sprite = GetSquareSprite();
+                renderer.color = depthBands[band];
+                renderer.sortingOrder = -98;
+            }
+
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> textureVertices = new List<Vector3>();
+            List<Color> textureColors = new List<Color>();
+            List<int> textureTriangles = new List<int>();
+            int hatchCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 18f), 85, 420);
+            for (int hatch = 0; hatch < hatchCount; hatch++)
+            {
+                Vector2 from = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin, bounds.xMax),
+                    CaveVisualRange(ref state, bounds.yMin, bounds.yMax));
+                float length = CaveVisualRange(ref state, 0.55f, 3.5f);
+                Vector2 to = from + new Vector2(length, length * CaveVisualRange(ref state, 0.16f, 0.38f));
+                to.x = Mathf.Min(to.x, bounds.xMax);
+                to.y = Mathf.Min(to.y, bounds.yMax);
+                Color hatchColor = (hatch & 3) == 0
+                    ? new Color(0.33f, 0.48f, 0.86f, CaveVisualRange(ref state, 0.045f, 0.09f))
+                    : new Color(0.48f, 0.38f, 0.82f, CaveVisualRange(ref state, 0.025f, 0.065f));
+                AppendPencilQuad(
+                    textureVertices,
+                    textureColors,
+                    textureTriangles,
+                    from,
+                    to,
+                    CaveVisualRange(ref state, 0.012f, 0.029f),
+                    hatchColor);
+            }
+
+            int nebulaCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 38f), 2, 7);
+            for (int nebula = 0; nebula < nebulaCount; nebula++)
+            {
+                float centerX = Mathf.Lerp(bounds.xMin, bounds.xMax, (nebula + 0.5f) / nebulaCount)
+                    + CaveVisualRange(ref state, -2.5f, 2.5f);
+                float centerY = CaveVisualRange(ref state, bounds.yMin + bounds.height * 0.28f, bounds.yMax - 1.4f);
+                float span = CaveVisualRange(ref state, 5f, 10f);
+                Color nebulaColor = nebula % 2 == 0
+                    ? new Color(0.32f, 0.21f, 0.7f, 0.07f)
+                    : new Color(0.08f, 0.56f, 0.72f, 0.055f);
+                for (int stroke = 0; stroke < 5; stroke++)
+                {
+                    float offset = (stroke - 2f) * CaveVisualRange(ref state, 0.22f, 0.52f);
+                    AppendCaveWobblyStroke(
+                        textureVertices,
+                        textureColors,
+                        textureTriangles,
+                        new Vector2(centerX - span * 0.5f, centerY + offset),
+                        new Vector2(centerX + span * 0.5f, centerY - offset * 0.45f),
+                        CaveVisualRange(ref state, 0.16f, 0.34f),
+                        nebulaColor,
+                        0.2f,
+                        ref state);
+                }
+            }
+            CreatePencilMesh(parent, "Space Crayon Sky Texture And Nebulae", textureVertices, textureColors, textureTriangles, -97);
+
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            int starCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 14f), 55, 320);
+            Color[] starColors =
+            {
+                new Color(1f, 0.88f, 0.28f, 0.88f),
+                new Color(0.83f, 0.93f, 1f, 0.84f),
+                new Color(0.56f, 0.8f, 1f, 0.78f)
+            };
+            for (int star = 0; star < starCount; star++)
+            {
+                Vector2 center = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin + 0.35f, bounds.xMax - 0.35f),
+                    CaveVisualRange(ref state, bounds.yMin + 0.45f, bounds.yMax - 0.35f));
+                float radius = CaveVisualRange(ref state, 0.025f, 0.105f);
+                Color starColor = starColors[star % starColors.Length];
+                AppendPencilQuad(vertices, colors, triangles, center - Vector2.right * radius, center + Vector2.right * radius, Mathf.Max(0.012f, radius * 0.27f), starColor);
+                AppendPencilQuad(vertices, colors, triangles, center - Vector2.up * radius, center + Vector2.up * radius, Mathf.Max(0.012f, radius * 0.27f), starColor);
+                if (star % 17 == 0)
+                {
+                    Vector2 diagonal = new Vector2(radius * 0.62f, radius * 0.62f);
+                    AppendPencilQuad(vertices, colors, triangles, center - diagonal, center + diagonal, Mathf.Max(0.009f, radius * 0.18f), starColor * 0.76f);
+                }
+            }
+
+            int shootingStarCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 55f), 1, 5);
+            for (int shootingStar = 0; shootingStar < shootingStarCount; shootingStar++)
+            {
+                float slot = (shootingStar + 0.63f) / shootingStarCount;
+                Vector2 head = new Vector2(
+                    Mathf.Lerp(bounds.xMin + 3f, bounds.xMax - 3f, slot),
+                    CaveVisualRange(ref state, bounds.center.y + 1f, bounds.yMax - 1.2f));
+                AppendSpaceShootingStar(vertices, colors, triangles, head, CaveVisualRange(ref state, 1.3f, 2.8f), ref state);
+            }
+
+            int asteroidCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 4.8f), 7, 42);
+            for (int asteroid = 0; asteroid < asteroidCount; asteroid++)
+            {
+                Vector2 center = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin + 1f, bounds.xMax - 1f),
+                    CaveVisualRange(ref state, bounds.yMin + 1f, bounds.yMax - 1f));
+                AppendSpaceAsteroid(
+                    vertices,
+                    colors,
+                    triangles,
+                    center,
+                    CaveVisualRange(ref state, 0.16f, 0.5f),
+                    ref state);
+            }
+
+            int vistaCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 48f), 1, 5);
+            float vistaSpan = bounds.width / vistaCount;
+            for (int vista = 0; vista < vistaCount; vista++)
+            {
+                float segmentLeft = bounds.xMin + vistaSpan * vista;
+                int motif = vista % 4;
+                if (motif == 0)
+                {
+                    AppendSpaceEarth(
+                        vertices,
+                        colors,
+                        triangles,
+                        new Vector2(segmentLeft + vistaSpan * 0.13f, bounds.yMin + bounds.height * 0.13f),
+                        Mathf.Clamp(bounds.height * 0.24f, 3.3f, 6.2f),
+                        ref state);
+                }
+                else if (motif == 1)
+                {
+                    AppendSpaceRingedPlanet(
+                        vertices,
+                        colors,
+                        triangles,
+                        new Vector2(segmentLeft + vistaSpan * 0.56f, bounds.yMin + bounds.height * 0.64f),
+                        Mathf.Clamp(bounds.height * 0.11f, 1.5f, 3.2f),
+                        ref state);
+                }
+                else if (motif == 2)
+                {
+                    AppendSpaceMoon(
+                        vertices,
+                        colors,
+                        triangles,
+                        new Vector2(segmentLeft + vistaSpan * 0.73f, bounds.yMin + bounds.height * 0.74f),
+                        Mathf.Clamp(bounds.height * 0.13f, 1.7f, 3.5f),
+                        ref state);
+                }
+                else
+                {
+                    AppendSpaceBluePlanet(
+                        vertices,
+                        colors,
+                        triangles,
+                        new Vector2(segmentLeft + vistaSpan * 0.52f, bounds.yMin + bounds.height * 0.38f),
+                        Mathf.Clamp(bounds.height * 0.1f, 1.4f, 2.8f),
+                        ref state);
+                }
+            }
+            CreatePencilMesh(parent, "Space Hand Drawn Planets Stars And Asteroids", vertices, colors, triangles, -88);
+        }
+
+        private static void AppendSpaceDisc(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float radius,
+            Color fill,
+            Color outline,
+            ref uint state,
+            float xScale = 1f,
+            int segmentCount = 28)
+        {
+            segmentCount = Mathf.Clamp(segmentCount, 12, 40);
+            Vector2[] edge = new Vector2[segmentCount];
+            float phase = CaveVisualRange(ref state, -0.08f, 0.08f);
+            for (int point = 0; point < segmentCount; point++)
+            {
+                float angle = phase + point * Mathf.PI * 2f / segmentCount;
+                float wobble = 1f + CaveVisualRange(ref state, -0.035f, 0.035f);
+                edge[point] = center + new Vector2(
+                    Mathf.Cos(angle) * radius * xScale * wobble,
+                    Mathf.Sin(angle) * radius * wobble);
+            }
+            AppendFilledCavePolygon(vertices, colors, triangles, edge, fill);
+            for (int point = 0; point < edge.Length; point++)
+            {
+                AppendPencilQuad(vertices, colors, triangles, edge[point], edge[(point + 1) % edge.Length], Mathf.Max(0.025f, radius * 0.025f), outline);
+            }
+        }
+
+        private static void AppendSpaceEllipseStroke(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float radiusX,
+            float radiusY,
+            float width,
+            Color color,
+            ref uint state,
+            float angleDegrees = 0f,
+            int segmentCount = 30)
+        {
+            float radians = angleDegrees * Mathf.Deg2Rad;
+            float cos = Mathf.Cos(radians);
+            float sin = Mathf.Sin(radians);
+            Vector2 previous = Vector2.zero;
+            for (int point = 0; point <= segmentCount; point++)
+            {
+                float angle = point * Mathf.PI * 2f / segmentCount;
+                Vector2 local = new Vector2(Mathf.Cos(angle) * radiusX, Mathf.Sin(angle) * radiusY);
+                local *= 1f + CaveVisualRange(ref state, -0.018f, 0.018f);
+                Vector2 current = center + new Vector2(local.x * cos - local.y * sin, local.x * sin + local.y * cos);
+                if (point > 0)
+                {
+                    AppendPencilQuad(vertices, colors, triangles, previous, current, width * CaveVisualRange(ref state, 0.86f, 1.14f), color);
+                }
+                previous = current;
+            }
+        }
+
+        private static void AppendSpaceEarth(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float radius,
+            ref uint state)
+        {
+            AppendSpaceDisc(vertices, colors, triangles, center, radius,
+                new Color(0.16f, 0.56f, 0.94f, 0.66f),
+                new Color(0.45f, 0.83f, 1f, 0.82f), ref state, 1f, 34);
+
+            Color land = new Color(0.28f, 0.76f, 0.44f, 0.72f);
+            Color landInk = new Color(0.12f, 0.45f, 0.3f, 0.72f);
+            Vector2[][] continents =
+            {
+                new[]
+                {
+                    center + new Vector2(-0.78f, 0.32f) * radius,
+                    center + new Vector2(-0.55f, 0.66f) * radius,
+                    center + new Vector2(-0.18f, 0.55f) * radius,
+                    center + new Vector2(-0.06f, 0.24f) * radius,
+                    center + new Vector2(-0.37f, 0.02f) * radius,
+                    center + new Vector2(-0.42f, -0.42f) * radius,
+                    center + new Vector2(-0.67f, -0.2f) * radius
+                },
+                new[]
+                {
+                    center + new Vector2(0.06f, 0.63f) * radius,
+                    center + new Vector2(0.53f, 0.53f) * radius,
+                    center + new Vector2(0.76f, 0.23f) * radius,
+                    center + new Vector2(0.42f, 0.05f) * radius,
+                    center + new Vector2(0.35f, -0.38f) * radius,
+                    center + new Vector2(0.04f, -0.57f) * radius,
+                    center + new Vector2(-0.08f, -0.18f) * radius,
+                    center + new Vector2(0.16f, 0.12f) * radius
+                },
+                new[]
+                {
+                    center + new Vector2(0.52f, -0.4f) * radius,
+                    center + new Vector2(0.78f, -0.54f) * radius,
+                    center + new Vector2(0.66f, -0.75f) * radius,
+                    center + new Vector2(0.38f, -0.64f) * radius
+                }
+            };
+            for (int continent = 0; continent < continents.Length; continent++)
+            {
+                AppendFilledCavePolygon(vertices, colors, triangles, continents[continent], land);
+                for (int point = 0; point < continents[continent].Length; point++)
+                {
+                    AppendPencilQuad(vertices, colors, triangles,
+                        continents[continent][point],
+                        continents[continent][(point + 1) % continents[continent].Length],
+                        Mathf.Max(0.018f, radius * 0.014f), landInk);
+                }
+            }
+
+            for (int stroke = 0; stroke < 8; stroke++)
+            {
+                float y = CaveVisualRange(ref state, -0.72f, 0.72f) * radius;
+                float half = Mathf.Sqrt(Mathf.Max(0.01f, radius * radius - y * y)) * CaveVisualRange(ref state, 0.42f, 0.86f);
+                AppendCaveWobblyStroke(vertices, colors, triangles,
+                    center + new Vector2(-half, y), center + new Vector2(half, y + CaveVisualRange(ref state, -0.08f, 0.08f) * radius),
+                    Mathf.Max(0.012f, radius * 0.009f), new Color(0.72f, 0.94f, 1f, 0.16f), radius * 0.01f, ref state);
+            }
+        }
+
+        private static void AppendSpaceRingedPlanet(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float radius,
+            ref uint state)
+        {
+            Color ring = new Color(0.86f, 0.52f, 1f, 0.68f);
+            AppendSpaceEllipseStroke(vertices, colors, triangles, center, radius * 1.75f, radius * 0.45f, Mathf.Max(0.08f, radius * 0.1f), ring, ref state, -9f);
+            AppendSpaceEllipseStroke(vertices, colors, triangles, center, radius * 1.5f, radius * 0.32f, Mathf.Max(0.025f, radius * 0.03f), new Color(1f, 0.71f, 0.96f, 0.62f), ref state, -9f);
+            AppendSpaceDisc(vertices, colors, triangles, center, radius,
+                new Color(0.57f, 0.35f, 0.9f, 0.78f),
+                new Color(0.83f, 0.62f, 1f, 0.9f), ref state, 1f, 26);
+            for (int band = -1; band <= 1; band++)
+            {
+                float y = band * radius * 0.32f;
+                float half = radius * Mathf.Sqrt(Mathf.Max(0.05f, 1f - (y * y) / (radius * radius)));
+                AppendCaveWobblyStroke(vertices, colors, triangles,
+                    center + new Vector2(-half, y), center + new Vector2(half, y - radius * 0.05f),
+                    Mathf.Max(0.018f, radius * 0.025f), new Color(0.95f, 0.7f, 1f, 0.3f), radius * 0.012f, ref state);
+            }
+        }
+
+        private static void AppendSpaceMoon(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float radius,
+            ref uint state)
+        {
+            AppendSpaceDisc(vertices, colors, triangles, center, radius,
+                new Color(0.96f, 0.78f, 0.32f, 0.76f),
+                new Color(1f, 0.9f, 0.56f, 0.9f), ref state, 1f, 30);
+            for (int crater = 0; crater < 7; crater++)
+            {
+                float angle = CaveVisualRange(ref state, -Mathf.PI, Mathf.PI);
+                float distance = CaveVisualRange(ref state, 0.08f, 0.65f) * radius;
+                float craterRadius = CaveVisualRange(ref state, 0.08f, 0.2f) * radius;
+                AppendSpaceDisc(vertices, colors, triangles,
+                    center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance,
+                    craterRadius,
+                    new Color(0.56f, 0.43f, 0.3f, 0.2f),
+                    new Color(0.62f, 0.48f, 0.32f, 0.34f), ref state, 1.2f, 12);
+            }
+        }
+
+        private static void AppendSpaceBluePlanet(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float radius,
+            ref uint state)
+        {
+            AppendSpaceDisc(vertices, colors, triangles, center, radius,
+                new Color(0.28f, 0.52f, 0.92f, 0.72f),
+                new Color(0.48f, 0.78f, 1f, 0.84f), ref state, 1f, 26);
+            for (int band = 0; band < 4; band++)
+            {
+                float y = Mathf.Lerp(-0.58f, 0.58f, band / 3f) * radius;
+                float half = radius * Mathf.Sqrt(Mathf.Max(0.05f, 1f - (y * y) / (radius * radius)));
+                AppendCaveWobblyStroke(vertices, colors, triangles,
+                    center + new Vector2(-half, y), center + new Vector2(half, y + CaveVisualRange(ref state, -0.08f, 0.08f) * radius),
+                    Mathf.Max(0.016f, radius * 0.023f), new Color(0.58f, 0.9f, 1f, 0.34f), radius * 0.018f, ref state);
+            }
+        }
+
+        private static void AppendSpaceAsteroid(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float radius,
+            ref uint state)
+        {
+            int pointCount = 8 + Mathf.FloorToInt(CaveVisual01(ref state) * 4f);
+            Vector2[] edge = new Vector2[pointCount];
+            for (int point = 0; point < pointCount; point++)
+            {
+                float angle = point * Mathf.PI * 2f / pointCount;
+                float pointRadius = radius * CaveVisualRange(ref state, 0.7f, 1.18f);
+                edge[point] = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * pointRadius;
+            }
+            Color fill = new Color(0.52f, 0.55f, 0.62f, 0.5f);
+            Color outline = new Color(0.14f, 0.17f, 0.26f, 0.72f);
+            AppendFilledCavePolygon(vertices, colors, triangles, edge, fill);
+            for (int point = 0; point < pointCount; point++)
+            {
+                AppendPencilQuad(vertices, colors, triangles, edge[point], edge[(point + 1) % pointCount], Mathf.Max(0.012f, radius * 0.055f), outline);
+            }
+            for (int crater = 0; crater < 2; crater++)
+            {
+                Vector2 offset = new Vector2(CaveVisualRange(ref state, -0.3f, 0.3f), CaveVisualRange(ref state, -0.3f, 0.3f)) * radius;
+                AppendSpaceDisc(vertices, colors, triangles, center + offset, radius * CaveVisualRange(ref state, 0.11f, 0.2f),
+                    new Color(0.16f, 0.18f, 0.25f, 0.24f), outline * 0.55f, ref state, 1.2f, 10);
+            }
+        }
+
+        private static void AppendSpaceShootingStar(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 head,
+            float length,
+            ref uint state)
+        {
+            Vector2 direction = new Vector2(-1f, CaveVisualRange(ref state, 0.28f, 0.58f)).normalized;
+            Vector2 tail = head + direction * length;
+            Color warm = new Color(1f, 0.86f, 0.34f, 0.83f);
+            AppendPencilQuad(vertices, colors, triangles, tail, head, 0.055f, warm);
+            AppendPencilQuad(vertices, colors, triangles, tail + Vector2.up * 0.14f, head - direction * 0.22f, 0.022f, warm * 0.58f);
+            AppendPencilQuad(vertices, colors, triangles, head - Vector2.right * 0.14f, head + Vector2.right * 0.14f, 0.045f, warm);
+            AppendPencilQuad(vertices, colors, triangles, head - Vector2.up * 0.14f, head + Vector2.up * 0.14f, 0.045f, warm);
+        }
+
+        private static void AddSpaceInfrastructure(
+            Transform parent,
+            Rect bounds,
+            IList<StageObjectData> objects,
+            string stageId,
+            int seed)
+        {
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            float left = bounds.xMin + 0.65f;
+            float right = bounds.xMax - 0.65f;
+            float top = bounds.yMax - 0.65f;
+            float bottom = bounds.yMin + 0.65f;
+            if (stageId == "4-3")
+            {
+                TryGetNightCityBoundaryInterior(objects, ref left, ref right, ref top, ref bottom);
+            }
+            else if (stageId == "15-2")
+            {
+                // This stage scrolls horizontally with a deliberately shorter
+                // vertical camera. Keep its window rails just inside that view.
+                top = Mathf.Min(top, 9.55f);
+                bottom = Mathf.Max(bottom, -8.15f);
+            }
+
+            Color panel = new Color(0.38f, 0.48f, 0.62f, 0.74f);
+            Color edge = new Color(0.035f, 0.055f, 0.11f, 0.92f);
+            Color highlight = new Color(0.72f, 0.84f, 0.94f, 0.32f);
+            Color cyan = new Color(0.24f, 0.8f, 1f, 0.82f);
+            Color amber = new Color(1f, 0.78f, 0.22f, 0.88f);
+
+            AppendSpaceStationBeam(vertices, colors, triangles,
+                new Vector2(left, top), new Vector2(right, top), 0.78f,
+                panel, edge, highlight, true, ref state);
+            AppendSpaceStationBeam(vertices, colors, triangles,
+                new Vector2(left, bottom), new Vector2(right, bottom), 0.72f,
+                panel * 0.92f, edge, highlight, true, ref state);
+            AppendSpaceStationBeam(vertices, colors, triangles,
+                new Vector2(left, bottom), new Vector2(left, top), 0.76f,
+                panel, edge, highlight, false, ref state);
+            AppendSpaceStationBeam(vertices, colors, triangles,
+                new Vector2(right, bottom), new Vector2(right, top), 0.76f,
+                panel, edge, highlight, false, ref state);
+
+            int ribCount = Mathf.Clamp(Mathf.CeilToInt((right - left) / 28f), 1, 9);
+            for (int rib = 1; rib < ribCount; rib++)
+            {
+                float x = Mathf.Lerp(left, right, rib / (float)ribCount)
+                    + CaveVisualRange(ref state, -0.32f, 0.32f);
+                AppendSpaceStationBeam(vertices, colors, triangles,
+                    new Vector2(x, bottom + 0.25f), new Vector2(x, top - 0.25f),
+                    CaveVisualRange(ref state, 0.38f, 0.54f),
+                    panel * 0.62f, edge * 0.72f, highlight * 0.74f, false, ref state);
+            }
+
+            int lightCount = Mathf.Clamp(Mathf.RoundToInt((right - left) / 12f), 3, 22);
+            for (int light = 0; light < lightCount; light++)
+            {
+                float t = (light + 0.5f) / lightCount;
+                float x = Mathf.Lerp(left + 1.2f, right - 1.2f, t)
+                    + CaveVisualRange(ref state, -0.28f, 0.28f);
+                Color lightColor = light % 4 == 0 ? cyan : amber;
+                AppendSpaceLightBar(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(x, top - 0.47f),
+                    CaveVisualRange(ref state, 0.55f, 1.05f),
+                    lightColor,
+                    ref state);
+            }
+
+            int cableSections = Mathf.Clamp(Mathf.CeilToInt((right - left) / 16f), 2, 16);
+            for (int cable = 0; cable < cableSections; cable++)
+            {
+                float x0 = Mathf.Lerp(left + 0.45f, right - 0.45f, cable / (float)cableSections);
+                float x1 = Mathf.Lerp(left + 0.45f, right - 0.45f, (cable + 1f) / cableSections);
+                AppendSpaceCableArc(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(x0, top - 0.38f),
+                    new Vector2(x1, top - 0.38f),
+                    CaveVisualRange(ref state, 0.28f, 0.8f),
+                    edge,
+                    ref state);
+            }
+
+            AppendSpaceJointPlate(vertices, colors, triangles, new Vector2(left, top), panel, edge, cyan, ref state);
+            AppendSpaceJointPlate(vertices, colors, triangles, new Vector2(right, top), panel, edge, amber, ref state);
+            AppendSpaceJointPlate(vertices, colors, triangles, new Vector2(left, bottom), panel, edge, amber, ref state);
+            AppendSpaceJointPlate(vertices, colors, triangles, new Vector2(right, bottom), panel, edge, cyan, ref state);
+
+            CreatePencilMesh(parent, "Space Station Window Frame Lights And Cables", vertices, colors, triangles, -42);
+        }
+
+        private static void AppendSpaceStationBeam(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 from,
+            Vector2 to,
+            float width,
+            Color fill,
+            Color outline,
+            Color highlight,
+            bool warningStripes,
+            ref uint state)
+        {
+            Vector2 delta = to - from;
+            float length = delta.magnitude;
+            if (length <= 0.05f)
+            {
+                return;
+            }
+
+            Vector2 direction = delta / length;
+            Vector2 normal = new Vector2(-direction.y, direction.x);
+            Vector2[] body =
+            {
+                from + normal * width * 0.5f,
+                to + normal * width * 0.5f,
+                to - normal * width * 0.5f,
+                from - normal * width * 0.5f
+            };
+            AppendFilledCavePolygon(vertices, colors, triangles, body, fill);
+            for (int edgeIndex = 0; edgeIndex < body.Length; edgeIndex++)
+            {
+                AppendCaveWobblyStroke(vertices, colors, triangles,
+                    body[edgeIndex], body[(edgeIndex + 1) % body.Length],
+                    0.055f, outline, 0.018f, ref state);
+            }
+            AppendCaveWobblyStroke(vertices, colors, triangles,
+                from + normal * width * 0.27f,
+                to + normal * width * 0.27f,
+                0.025f, highlight, 0.012f, ref state);
+
+            int panelCount = Mathf.Clamp(Mathf.CeilToInt(length / 4.6f), 1, 52);
+            for (int panelIndex = 0; panelIndex <= panelCount; panelIndex++)
+            {
+                float t = panelIndex / (float)panelCount;
+                Vector2 center = Vector2.Lerp(from, to, t);
+                AppendPencilQuad(vertices, colors, triangles,
+                    center + normal * width * 0.46f,
+                    center - normal * width * 0.46f,
+                    0.026f,
+                    new Color(outline.r, outline.g, outline.b, 0.58f));
+                if (panelIndex < panelCount && warningStripes && (panelIndex & 3) == 1)
+                {
+                    Vector2 stripeCenter = Vector2.Lerp(from, to, (panelIndex + 0.5f) / panelCount);
+                    float halfLength = Mathf.Min(length / panelCount * 0.28f, 0.75f);
+                    Color warning = new Color(1f, 0.72f, 0.12f, 0.78f);
+                    for (int stripe = -1; stripe <= 1; stripe++)
+                    {
+                        Vector2 centerOffset = direction * (stripe * halfLength * 0.55f);
+                        AppendPencilQuad(vertices, colors, triangles,
+                            stripeCenter + centerOffset - direction * halfLength * 0.18f + normal * width * 0.31f,
+                            stripeCenter + centerOffset + direction * halfLength * 0.18f - normal * width * 0.31f,
+                            0.06f,
+                            warning);
+                    }
+                }
+            }
+
+            int rivetCount = Mathf.Clamp(panelCount * 2 + 1, 3, 75);
+            for (int rivet = 0; rivet < rivetCount; rivet++)
+            {
+                float t = rivet / (rivetCount - 1f);
+                Vector2 center = Vector2.Lerp(from, to, t)
+                    + normal * width * ((rivet & 1) == 0 ? 0.36f : -0.36f);
+                AppendPencilQuad(vertices, colors, triangles, center - direction * 0.035f, center + direction * 0.035f, 0.028f, outline * 0.78f);
+            }
+        }
+
+        private static void AppendSpaceLightBar(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float halfWidth,
+            Color light,
+            ref uint state)
+        {
+            Vector2 left = center - Vector2.right * halfWidth;
+            Vector2 right = center + Vector2.right * halfWidth;
+            AppendPencilQuad(vertices, colors, triangles, left, right, 0.22f,
+                new Color(light.r, light.g, light.b, 0.12f));
+            AppendCaveWobblyStroke(vertices, colors, triangles, left, right, 0.095f,
+                new Color(0.025f, 0.04f, 0.09f, 0.94f), 0.012f, ref state);
+            AppendCaveWobblyStroke(vertices, colors, triangles,
+                left + Vector2.right * 0.08f, right - Vector2.right * 0.08f,
+                0.052f, light, 0.009f, ref state);
+        }
+
+        private static void AppendSpaceCableArc(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 from,
+            Vector2 to,
+            float sag,
+            Color color,
+            ref uint state)
+        {
+            Vector2 previous = from;
+            const int Samples = 8;
+            for (int sample = 1; sample <= Samples; sample++)
+            {
+                float t = sample / (float)Samples;
+                Vector2 next = Vector2.Lerp(from, to, t)
+                    + Vector2.down * (Mathf.Sin(t * Mathf.PI) * sag)
+                    + Vector2.up * CaveVisualRange(ref state, -0.018f, 0.018f);
+                AppendPencilQuad(vertices, colors, triangles, previous, next,
+                    CaveVisualRange(ref state, 0.025f, 0.044f), color);
+                previous = next;
+            }
+        }
+
+        private static void AppendSpaceJointPlate(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            Color fill,
+            Color outline,
+            Color indicator,
+            ref uint state)
+        {
+            Vector2[] plate =
+            {
+                center + new Vector2(-0.58f, -0.5f),
+                center + new Vector2(0.55f, -0.47f),
+                center + new Vector2(0.59f, 0.48f),
+                center + new Vector2(-0.54f, 0.52f)
+            };
+            AppendFilledCavePolygon(vertices, colors, triangles, plate, fill);
+            for (int edgeIndex = 0; edgeIndex < plate.Length; edgeIndex++)
+            {
+                AppendPencilQuad(vertices, colors, triangles,
+                    plate[edgeIndex], plate[(edgeIndex + 1) % plate.Length], 0.05f, outline);
+            }
+            AppendPencilQuad(vertices, colors, triangles,
+                center + new Vector2(-0.25f, 0f), center + new Vector2(0.25f, 0f), 0.055f, indicator);
+            Vector2[] rivets =
+            {
+                center + new Vector2(-0.39f, -0.32f),
+                center + new Vector2(0.39f, -0.32f),
+                center + new Vector2(-0.39f, 0.32f),
+                center + new Vector2(0.39f, 0.32f)
+            };
+            for (int rivet = 0; rivet < rivets.Length; rivet++)
+            {
+                AppendPencilQuad(vertices, colors, triangles,
+                    rivets[rivet] - Vector2.right * 0.035f,
+                    rivets[rivet] + Vector2.right * 0.035f,
+                    0.025f,
+                    outline * CaveVisualRange(ref state, 0.72f, 0.9f));
+            }
+        }
+
+        private static void AddNightCityBackdrop(Transform parent, Rect bounds, int seed)
+        {
+            Rect colorBounds = GetBackdropColorFillBounds(bounds);
+            GameObject wash = new GameObject("Night City Crayon Sky Wash");
+            wash.transform.SetParent(parent, false);
+            wash.transform.localPosition = new Vector3(colorBounds.center.x, colorBounds.center.y, 0f);
+            wash.transform.localScale = new Vector3(colorBounds.width, colorBounds.height, 1f);
+            SpriteRenderer washRenderer = wash.AddComponent<SpriteRenderer>();
+            washRenderer.sprite = GetSquareSprite();
+            washRenderer.color = NightCitySkyColor;
+            washRenderer.sortingOrder = -99;
+
+            Color[] depthBands =
+            {
+                new Color(0.18f, 0.24f, 0.42f, 0.22f),
+                new Color(0.11f, 0.17f, 0.32f, 0.2f),
+                new Color(0.055f, 0.085f, 0.18f, 0.22f)
+            };
+            float bandHeight = bounds.height / depthBands.Length;
+            for (int band = 0; band < depthBands.Length; band++)
+            {
+                float bandTop = band == 0
+                    ? colorBounds.yMax
+                    : bounds.yMax - bandHeight * band;
+                float bandBottom = band == depthBands.Length - 1
+                    ? colorBounds.yMin
+                    : bounds.yMax - bandHeight * (band + 1f);
+                GameObject layer = new GameObject("Night City Sky Depth " + band);
+                layer.transform.SetParent(parent, false);
+                layer.transform.localPosition = new Vector3(
+                    colorBounds.center.x,
+                    (bandTop + bandBottom) * 0.5f,
+                    0f);
+                layer.transform.localScale = new Vector3(colorBounds.width, bandTop - bandBottom + 0.12f, 1f);
+                SpriteRenderer renderer = layer.AddComponent<SpriteRenderer>();
+                renderer.sprite = GetSquareSprite();
+                renderer.color = depthBands[band];
+                renderer.sortingOrder = -98;
+            }
+
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> skyVertices = new List<Vector3>();
+            List<Color> skyColors = new List<Color>();
+            List<int> skyTriangles = new List<int>();
+            int hatchCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 20f), 80, 380);
+            for (int i = 0; i < hatchCount; i++)
+            {
+                Vector2 from = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin, bounds.xMax),
+                    CaveVisualRange(ref state, bounds.yMin, bounds.yMax));
+                float length = CaveVisualRange(ref state, 0.55f, 2.8f);
+                Vector2 to = from + new Vector2(length, length * CaveVisualRange(ref state, 0.08f, 0.2f));
+                to.x = Mathf.Min(to.x, bounds.xMax);
+                to.y = Mathf.Min(to.y, bounds.yMax);
+                AppendPencilQuad(
+                    skyVertices,
+                    skyColors,
+                    skyTriangles,
+                    from,
+                    to,
+                    CaveVisualRange(ref state, 0.012f, 0.026f),
+                    new Color(0.36f, 0.47f, 0.7f, CaveVisualRange(ref state, 0.035f, 0.075f)));
+            }
+
+            int starCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 4.2f), 12, 58);
+            Color starColor = new Color(1f, 0.82f, 0.24f, 0.68f);
+            for (int star = 0; star < starCount; star++)
+            {
+                Vector2 center = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin + 0.7f, bounds.xMax - 0.7f),
+                    CaveVisualRange(ref state, bounds.center.y, bounds.yMax - 0.55f));
+                float radius = CaveVisualRange(ref state, 0.045f, 0.13f);
+                AppendPencilQuad(skyVertices, skyColors, skyTriangles, center - Vector2.right * radius, center + Vector2.right * radius, 0.025f, starColor);
+                AppendPencilQuad(skyVertices, skyColors, skyTriangles, center - Vector2.up * radius, center + Vector2.up * radius, 0.025f, starColor);
+                if ((star & 3) == 0)
+                {
+                    Vector2 diagonal = new Vector2(radius * 0.72f, radius * 0.72f);
+                    AppendPencilQuad(skyVertices, skyColors, skyTriangles, center - diagonal, center + diagonal, 0.015f, starColor * 0.78f);
+                }
+            }
+            CreatePencilMesh(parent, "Night City Sky Pencil Texture", skyVertices, skyColors, skyTriangles, -97);
+
+            AddNightCityCrescentMoon(parent, bounds, ref state);
+            AddNightCitySkylineLayer(parent, bounds, 0.72f, 0.23f, -95, ref state);
+            AddNightCitySkylineLayer(parent, bounds, 0.5f, 0.4f, -92, ref state);
+        }
+
+        private static void AddNightCityCrescentMoon(Transform parent, Rect bounds, ref uint state)
+        {
+            float radius = Mathf.Clamp(Mathf.Min(bounds.width, bounds.height) * 0.035f, 0.55f, 1.45f);
+            Vector2 center = new Vector2(
+                Mathf.Lerp(bounds.xMin, bounds.xMax, CaveVisualRange(ref state, 0.16f, 0.3f)),
+                Mathf.Lerp(bounds.yMin, bounds.yMax, CaveVisualRange(ref state, 0.73f, 0.86f)));
+
+            GameObject moon = new GameObject("Night City Crayon Moon");
+            moon.transform.SetParent(parent, false);
+            moon.transform.localPosition = center;
+            moon.transform.localScale = Vector3.one * radius * 2f;
+            SpriteRenderer moonRenderer = moon.AddComponent<SpriteRenderer>();
+            moonRenderer.sprite = GetCircleSprite();
+            moonRenderer.color = new Color(1f, 0.77f, 0.18f, 0.82f);
+            moonRenderer.sortingOrder = -96;
+
+            GameObject cutout = new GameObject("Night City Moon Pencil Cutout");
+            cutout.transform.SetParent(parent, false);
+            cutout.transform.localPosition = center + new Vector2(radius * 0.42f, radius * 0.2f);
+            cutout.transform.localScale = Vector3.one * radius * 1.85f;
+            SpriteRenderer cutoutRenderer = cutout.AddComponent<SpriteRenderer>();
+            cutoutRenderer.sprite = GetCircleSprite();
+            cutoutRenderer.color = new Color(0.095f, 0.145f, 0.27f, 0.98f);
+            cutoutRenderer.sortingOrder = -95;
+        }
+
+        private static void AddNightCitySkylineLayer(
+            Transform parent,
+            Rect bounds,
+            float maximumHeightRatio,
+            float opacity,
+            int sortingOrder,
+            ref uint state)
+        {
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            Color fill = sortingOrder < -93
+                ? new Color(0.2f, 0.26f, 0.39f, opacity)
+                : new Color(0.09f, 0.13f, 0.23f, opacity + 0.14f);
+            Color outline = new Color(0.045f, 0.07f, 0.13f, Mathf.Clamp01(opacity + 0.23f));
+            Color window = new Color(1f, 0.73f, 0.18f, sortingOrder < -93 ? 0.24f : 0.42f);
+            float baseY = bounds.yMin + bounds.height * (sortingOrder < -93 ? 0.04f : 0.015f);
+            float cursor = bounds.xMin - 0.8f;
+            int buildingIndex = 0;
+            while (cursor < bounds.xMax + 0.4f && buildingIndex < 96)
+            {
+                float width = CaveVisualRange(ref state, 2.1f, 5.2f);
+                float minHeightRatio = sortingOrder < -93 ? 0.28f : 0.16f;
+                float height = bounds.height * CaveVisualRange(ref state, minHeightRatio, maximumHeightRatio);
+                float left = cursor;
+                float right = Mathf.Min(bounds.xMax + 0.8f, cursor + width);
+                float topLeft = baseY + height + CaveVisualRange(ref state, -0.22f, 0.22f);
+                float topRight = baseY + height + CaveVisualRange(ref state, -0.22f, 0.22f);
+                Vector2[] building =
+                {
+                    new Vector2(left, baseY),
+                    new Vector2(right, baseY),
+                    new Vector2(right, topRight),
+                    new Vector2(left, topLeft)
+                };
+                AppendFilledCavePolygon(vertices, colors, triangles, building, fill);
+                AppendCaveWobblyStroke(vertices, colors, triangles, building[3], building[2], 0.035f, outline, 0.035f, ref state);
+                AppendCaveWobblyStroke(vertices, colors, triangles, building[0], building[3], 0.028f, outline, 0.025f, ref state);
+                AppendCaveWobblyStroke(vertices, colors, triangles, building[1], building[2], 0.028f, outline, 0.025f, ref state);
+
+                int litWindows = Mathf.Clamp(Mathf.RoundToInt(width * height * 0.045f), 2, 7);
+                for (int lit = 0; lit < litWindows; lit++)
+                {
+                    float windowWidth = CaveVisualRange(ref state, 0.12f, 0.24f);
+                    float windowHeight = CaveVisualRange(ref state, 0.17f, 0.34f);
+                    float windowX = CaveVisualRange(ref state, left + 0.32f, right - 0.32f);
+                    float windowY = CaveVisualRange(ref state, baseY + 0.45f, Mathf.Min(topLeft, topRight) - 0.45f);
+                    Vector2[] pane =
+                    {
+                        new Vector2(windowX - windowWidth, windowY - windowHeight),
+                        new Vector2(windowX + windowWidth, windowY - windowHeight),
+                        new Vector2(windowX + windowWidth, windowY + windowHeight),
+                        new Vector2(windowX - windowWidth, windowY + windowHeight)
+                    };
+                    AppendFilledCavePolygon(vertices, colors, triangles, pane, window);
+                }
+
+                if (buildingIndex % 5 == 1)
+                {
+                    float roofY = Mathf.Max(topLeft, topRight);
+                    float antennaX = Mathf.Lerp(left, right, CaveVisualRange(ref state, 0.32f, 0.7f));
+                    AppendPencilQuad(vertices, colors, triangles, new Vector2(antennaX, roofY), new Vector2(antennaX, roofY + CaveVisualRange(ref state, 0.5f, 1.5f)), 0.035f, outline);
+                    AppendPencilQuad(vertices, colors, triangles, new Vector2(antennaX - 0.22f, roofY + 0.34f), new Vector2(antennaX + 0.22f, roofY + 0.34f), 0.025f, outline);
+                }
+                else if (buildingIndex % 7 == 3)
+                {
+                    float roofY = Mathf.Max(topLeft, topRight);
+                    float tankCenter = (left + right) * 0.5f;
+                    Vector2[] tank =
+                    {
+                        new Vector2(tankCenter - 0.42f, roofY + 0.28f),
+                        new Vector2(tankCenter + 0.42f, roofY + 0.28f),
+                        new Vector2(tankCenter + 0.34f, roofY + 0.88f),
+                        new Vector2(tankCenter - 0.34f, roofY + 0.88f)
+                    };
+                    AppendFilledCavePolygon(vertices, colors, triangles, tank, fill * 1.15f);
+                    AppendPencilQuad(vertices, colors, triangles, new Vector2(tankCenter - 0.3f, roofY), tank[0], 0.035f, outline);
+                    AppendPencilQuad(vertices, colors, triangles, new Vector2(tankCenter + 0.3f, roofY), tank[1], 0.035f, outline);
+                }
+
+                cursor = right + CaveVisualRange(ref state, 0.18f, 0.7f);
+                buildingIndex++;
+            }
+
+            CreatePencilMesh(parent, "Night City Skyline Layer " + sortingOrder, vertices, colors, triangles, sortingOrder);
+        }
+
+        private static void AddNightCityInfrastructure(
+            Transform parent,
+            Rect bounds,
+            IList<StageObjectData> objects,
+            int seed)
+        {
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            float left = bounds.xMin + 1f;
+            float right = bounds.xMax - 1f;
+            float top = bounds.yMax - 1f;
+            float bottom = bounds.yMin + 1f;
+            TryGetNightCityBoundaryInterior(objects, ref left, ref right, ref top, ref bottom);
+
+            Color pipeDark = new Color(0.055f, 0.075f, 0.12f, 0.9f);
+            Color pipeFill = new Color(0.28f, 0.36f, 0.49f, 0.78f);
+            float pipeY = top - 0.42f;
+            AppendNightCityPipeRun(vertices, colors, triangles, new Vector2(left + 0.55f, pipeY), new Vector2(right - 0.55f, pipeY), pipeDark, pipeFill, ref state);
+            AppendNightCityPipeRun(vertices, colors, triangles, new Vector2(left + 1.1f, pipeY - 0.42f), new Vector2(right - 1.4f, pipeY - 0.42f), pipeDark * 0.9f, pipeFill * 0.82f, ref state);
+
+            int ventCount = Mathf.Clamp(Mathf.RoundToInt((right - left) / 34f), 1, 8);
+            for (int vent = 0; vent < ventCount; vent++)
+            {
+                float t = (vent + 0.7f) / (ventCount + 0.4f);
+                Vector2 center = new Vector2(
+                    Mathf.Lerp(left + 1.5f, right - 1.5f, t),
+                    top - CaveVisualRange(ref state, 0.8f, 1.2f));
+                AppendNightCityVent(vertices, colors, triangles, center, CaveVisualRange(ref state, 0.72f, 1.15f), pipeDark, pipeFill, ref state);
+            }
+
+            int ceilingLampCount = Mathf.Clamp(Mathf.RoundToInt((right - left) / 20f), 2, 11);
+            for (int lamp = 0; lamp < ceilingLampCount; lamp++)
+            {
+                float t = (lamp + 0.5f) / ceilingLampCount;
+                Vector2 anchor = new Vector2(
+                    Mathf.Lerp(left + 1.6f, right - 1.6f, t) + CaveVisualRange(ref state, -0.5f, 0.5f),
+                    top - 0.08f);
+                AppendNightCityHangingLamp(
+                    vertices,
+                    colors,
+                    triangles,
+                    anchor,
+                    CaveVisualRange(ref state, 0.8f, 2.15f),
+                    ref state);
+            }
+
+            int wallLampCount = Mathf.Clamp(Mathf.RoundToInt((top - bottom) / 10f), 1, 4);
+            for (int lamp = 0; lamp < wallLampCount; lamp++)
+            {
+                float y = Mathf.Lerp(bottom + 2f, top - 2.5f, (lamp + 0.55f) / wallLampCount);
+                AppendNightCityWallLamp(vertices, colors, triangles, new Vector2(left + 0.06f, y), 1f, ref state);
+                AppendNightCityWallLamp(vertices, colors, triangles, new Vector2(right - 0.06f, y + CaveVisualRange(ref state, -0.7f, 0.7f)), -1f, ref state);
+            }
+
+            List<Rect> parts = new List<Rect>();
+            int underFloorCount = 0;
+            int platformLampCount = 0;
+            if (objects != null)
+            {
+                for (int objectIndex = 0; objectIndex < objects.Count && underFloorCount < 30; objectIndex++)
+                {
+                    StageObjectData data = objects[objectIndex];
+                    if (data == null || !IsNightCityInfrastructureTerrainType(data.type) || !IsAxisAligned(data.rotation))
+                    {
+                        continue;
+                    }
+
+                    parts.Clear();
+                    AppendStageRects(data, parts);
+                    for (int partIndex = 0; partIndex < parts.Count && underFloorCount < 30; partIndex++)
+                    {
+                        Rect rect = parts[partIndex];
+                        if (rect.width < 4.5f || rect.height > 4.2f)
+                        {
+                            continue;
+                        }
+
+                        float inset = Mathf.Min(0.45f, rect.width * 0.08f);
+                        float y = rect.yMin - CaveVisualRange(ref state, 0.18f, 0.34f);
+                        AppendNightCityPipeRun(
+                            vertices,
+                            colors,
+                            triangles,
+                            new Vector2(rect.xMin + inset, y),
+                            new Vector2(rect.xMax - inset, y),
+                            pipeDark,
+                            pipeFill,
+                            ref state);
+                        if (rect.width > 7f && (underFloorCount & 1) == 0)
+                        {
+                            AppendNightCityVent(
+                                vertices,
+                                colors,
+                                triangles,
+                                new Vector2(rect.center.x + CaveVisualRange(ref state, -rect.width * 0.22f, rect.width * 0.22f), y - 0.25f),
+                                CaveVisualRange(ref state, 0.55f, 0.9f),
+                                pipeDark,
+                                pipeFill,
+                                ref state);
+                        }
+
+                        if (platformLampCount < 12
+                            && rect.width > 6.5f
+                            && rect.yMin > bottom + 3f
+                            && CaveVisual01(ref state) > 0.42f)
+                        {
+                            AppendNightCityHangingLamp(
+                                vertices,
+                                colors,
+                                triangles,
+                                new Vector2(
+                                    rect.center.x + CaveVisualRange(ref state, -rect.width * 0.28f, rect.width * 0.28f),
+                                    rect.yMin - 0.04f),
+                                CaveVisualRange(ref state, 0.55f, 1.25f),
+                                ref state);
+                            platformLampCount++;
+                        }
+                        underFloorCount++;
+                    }
+                }
+            }
+
+            // Loose utility cables use a sagging pencil line, separate from the
+            // rigid ducts, so the ceiling feels assembled rather than tiled.
+            int cableSections = Mathf.Clamp(Mathf.CeilToInt((right - left) / 18f), 2, 14);
+            for (int section = 0; section < cableSections; section++)
+            {
+                float x0 = Mathf.Lerp(left + 0.7f, right - 0.7f, section / (float)cableSections);
+                float x1 = Mathf.Lerp(left + 0.7f, right - 0.7f, (section + 1f) / cableSections);
+                Vector2 previous = new Vector2(x0, top - 0.16f);
+                for (int sample = 1; sample <= 7; sample++)
+                {
+                    float t = sample / 7f;
+                    float sag = Mathf.Sin(t * Mathf.PI) * CaveVisualRange(ref state, 0.22f, 0.62f);
+                    Vector2 next = new Vector2(Mathf.Lerp(x0, x1, t), top - 0.16f - sag);
+                    AppendPencilQuad(vertices, colors, triangles, previous, next, 0.035f, new Color(0.035f, 0.04f, 0.065f, 0.82f));
+                    previous = next;
+                }
+            }
+
+            CreatePencilMesh(parent, "Night City Lamps Ducts And Cables", vertices, colors, triangles, -24);
+        }
+
+        private static bool TryGetNightCityBoundaryInterior(
+            IList<StageObjectData> objects,
+            ref float left,
+            ref float right,
+            ref float top,
+            ref float bottom)
+        {
+            if (objects == null)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < objects.Count; i++)
+            {
+                StageObjectData data = objects[i];
+                if (data == null || data.type != StageObjectType.StageBoundary)
+                {
+                    continue;
+                }
+
+                float inset = GetStageBoundaryInteriorThickness(data);
+                left = data.position.x - data.size.x * 0.5f + inset;
+                right = data.position.x + data.size.x * 0.5f - inset;
+                top = data.position.y + data.size.y * 0.5f - inset;
+                bottom = data.position.y - data.size.y * 0.5f + inset;
+                return true;
+            }
+            return false;
+        }
+
+        private static bool IsNightCityInfrastructureTerrainType(StageObjectType type)
+        {
+            return type == StageObjectType.Platform
+                || type == StageObjectType.Wall
+                || type == StageObjectType.Ceiling
+                || type == StageObjectType.HalfPlatform
+                || type == StageObjectType.OneWayPlatform;
+        }
+
+        private static void AppendNightCityPipeRun(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 from,
+            Vector2 to,
+            Color dark,
+            Color fill,
+            ref uint state)
+        {
+            if ((to - from).sqrMagnitude < 0.04f)
+            {
+                return;
+            }
+
+            AppendCaveWobblyStroke(vertices, colors, triangles, from, to, 0.19f, dark, 0.025f, ref state);
+            AppendCaveWobblyStroke(vertices, colors, triangles, from, to, 0.105f, fill, 0.017f, ref state);
+            float length = Vector2.Distance(from, to);
+            int clampCount = Mathf.Clamp(Mathf.FloorToInt(length / 4.5f), 1, 10);
+            Vector2 direction = (to - from).normalized;
+            Vector2 normal = new Vector2(-direction.y, direction.x);
+            for (int clamp = 1; clamp <= clampCount; clamp++)
+            {
+                Vector2 center = Vector2.Lerp(from, to, clamp / (clampCount + 1f));
+                AppendPencilQuad(vertices, colors, triangles, center - normal * 0.16f, center + normal * 0.16f, 0.045f, dark);
+            }
+        }
+
+        private static void AppendNightCityVent(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float scale,
+            Color dark,
+            Color fill,
+            ref uint state)
+        {
+            float halfWidth = 0.72f * scale;
+            float halfHeight = 0.42f * scale;
+            Vector2[] body =
+            {
+                center + new Vector2(-halfWidth, -halfHeight),
+                center + new Vector2(halfWidth, -halfHeight + CaveVisualRange(ref state, -0.025f, 0.025f)),
+                center + new Vector2(halfWidth - 0.02f, halfHeight),
+                center + new Vector2(-halfWidth + 0.03f, halfHeight - 0.02f)
+            };
+            AppendFilledCavePolygon(vertices, colors, triangles, body, fill);
+            for (int edge = 0; edge < body.Length; edge++)
+            {
+                AppendPencilQuad(vertices, colors, triangles, body[edge], body[(edge + 1) % body.Length], 0.045f, dark);
+            }
+            for (int louver = -2; louver <= 2; louver++)
+            {
+                float y = center.y + louver * halfHeight * 0.3f;
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(center.x - halfWidth * 0.66f, y + 0.025f),
+                    new Vector2(center.x + halfWidth * 0.66f, y - 0.025f),
+                    0.025f,
+                    dark * 0.78f);
+            }
+        }
+
+        private static void AppendNightCityHangingLamp(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 anchor,
+            float cableLength,
+            ref uint state)
+        {
+            Color graphite = new Color(0.045f, 0.05f, 0.075f, 0.94f);
+            Color metal = new Color(0.24f, 0.28f, 0.36f, 0.92f);
+            Color light = new Color(1f, 0.75f, 0.17f, 0.9f);
+            Vector2 bulb = anchor + new Vector2(CaveVisualRange(ref state, -0.08f, 0.08f), -cableLength);
+            AppendCaveWobblyStroke(vertices, colors, triangles, anchor, bulb + Vector2.up * 0.16f, 0.04f, graphite, 0.025f, ref state);
+
+            Vector2[] shade =
+            {
+                bulb + new Vector2(-0.16f, 0.16f),
+                bulb + new Vector2(0.16f, 0.16f),
+                bulb + new Vector2(0.38f, -0.13f),
+                bulb + new Vector2(-0.38f, -0.13f)
+            };
+            AppendFilledCavePolygon(vertices, colors, triangles, shade, metal);
+            for (int edge = 0; edge < shade.Length; edge++)
+            {
+                AppendPencilQuad(vertices, colors, triangles, shade[edge], shade[(edge + 1) % shade.Length], 0.045f, graphite);
+            }
+            Vector2[] glow =
+            {
+                bulb + new Vector2(-0.24f, -0.11f),
+                bulb + new Vector2(0.24f, -0.11f),
+                bulb + new Vector2(1.25f, -2.8f),
+                bulb + new Vector2(-1.25f, -2.8f)
+            };
+            AppendFilledCavePolygon(vertices, colors, triangles, glow, new Color(1f, 0.72f, 0.16f, 0.07f));
+            AppendPencilQuad(vertices, colors, triangles, bulb + new Vector2(-0.13f, -0.13f), bulb + new Vector2(0.13f, -0.13f), 0.09f, light);
+            AppendPencilQuad(vertices, colors, triangles, bulb + new Vector2(-0.36f, -0.28f), bulb + new Vector2(-0.55f, -0.56f), 0.025f, light * 0.65f);
+            AppendPencilQuad(vertices, colors, triangles, bulb + new Vector2(0.36f, -0.28f), bulb + new Vector2(0.55f, -0.56f), 0.025f, light * 0.65f);
+        }
+
+        private static void AppendNightCityWallLamp(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 anchor,
+            float direction,
+            ref uint state)
+        {
+            Color graphite = new Color(0.045f, 0.05f, 0.075f, 0.94f);
+            Color metal = new Color(0.25f, 0.3f, 0.4f, 0.9f);
+            Color light = new Color(1f, 0.74f, 0.16f, 0.82f);
+            Vector2 bracket = anchor + new Vector2(direction * 0.58f, 0.02f);
+            Vector2 bulb = bracket + new Vector2(direction * 0.08f, -0.34f);
+            AppendPencilQuad(vertices, colors, triangles, anchor, bracket, 0.07f, graphite);
+            AppendPencilQuad(vertices, colors, triangles, bracket, bulb + Vector2.up * 0.12f, 0.05f, graphite);
+            Vector2[] shade =
+            {
+                bulb + new Vector2(-0.22f, 0.13f),
+                bulb + new Vector2(0.22f, 0.13f),
+                bulb + new Vector2(0.32f, -0.1f),
+                bulb + new Vector2(-0.32f, -0.1f)
+            };
+            AppendFilledCavePolygon(vertices, colors, triangles, shade, metal);
+            for (int edge = 0; edge < shade.Length; edge++)
+            {
+                AppendPencilQuad(vertices, colors, triangles, shade[edge], shade[(edge + 1) % shade.Length], 0.038f, graphite);
+            }
+            Vector2[] glow =
+            {
+                bulb + new Vector2(direction * 0.1f, -0.06f),
+                bulb + new Vector2(direction * 0.38f, -0.2f),
+                bulb + new Vector2(direction * 2.1f, -1.65f),
+                bulb + new Vector2(direction * 0.55f, -1.45f)
+            };
+            AppendFilledCavePolygon(vertices, colors, triangles, glow, new Color(1f, 0.72f, 0.16f, 0.065f));
+            AppendPencilQuad(vertices, colors, triangles, bulb + new Vector2(-0.12f, -0.1f), bulb + new Vector2(0.12f, -0.1f), 0.075f, light);
+        }
+
+        private static Rect GetFactoryBackdropBounds(string stageId, IList<StageObjectData> objects)
+        {
+            // Several challenge stages construct their arena in Start(), after
+            // the authored stage objects have been loaded. Give those stages a
+            // stable visual canvas instead of relying on their nearly-empty JSON.
+            switch (stageId)
+            {
+                case "6-2":
+                    return Rect.MinMaxRect(-18f, -7f, 18f, 11f);
+                case "8-1":
+                    return Rect.MinMaxRect(-27f, -7f, 27f, 14f);
+                case "10-3":
+                    return Rect.MinMaxRect(-23f, -14f, 23f, 14f);
+                case "11-2":
+                case "11-3":
+                    return Rect.MinMaxRect(-22f, -7f, 22f, 12f);
+                case "13-3":
+                    return Rect.MinMaxRect(-18f, -13f, 148f, 15f);
+                case "14-3":
+                    return Rect.MinMaxRect(-24f, -12f, 31f, 13f);
+                default:
+                    return GetCaveBackdropBounds(objects);
+            }
+        }
+
+        private static bool HasAlternatePlayerLayoutDefinitions(
+            string stageId,
+            IList<StageObjectData> objects)
+        {
+            if (string.IsNullOrEmpty(stageId) || objects == null)
+            {
+                return false;
+            }
+
+            string layoutPrefix = stageId + "-layout-p";
+            for (int objectIndex = 0; objectIndex < objects.Count; objectIndex++)
+            {
+                StageObjectData data = objects[objectIndex];
+                if (data != null
+                    && !string.IsNullOrEmpty(data.objectId)
+                    && data.objectId.StartsWith(layoutPrefix, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void AddFactoryBackdrop(
+            Transform parent,
+            Rect bounds,
+            int seed,
+            bool includeInteriorMachinery)
+        {
+            Rect colorBounds = GetBackdropColorFillBounds(bounds);
+            GameObject wash = new GameObject("Factory Graphite Paper Wash");
+            wash.transform.SetParent(parent, false);
+            wash.transform.localPosition = new Vector3(colorBounds.center.x, colorBounds.center.y, 0f);
+            wash.transform.localScale = new Vector3(colorBounds.width, colorBounds.height, 1f);
+            SpriteRenderer washRenderer = wash.AddComponent<SpriteRenderer>();
+            washRenderer.sprite = GetSquareSprite();
+            washRenderer.color = FactoryBackdropWashColor;
+            washRenderer.sortingOrder = -99;
+
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> paperVertices = new List<Vector3>();
+            List<Color> paperColors = new List<Color>();
+            List<int> paperTriangles = new List<int>();
+            int hatchCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 24f), 72, 360);
+            for (int hatch = 0; hatch < hatchCount; hatch++)
+            {
+                Vector2 from = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin, bounds.xMax),
+                    CaveVisualRange(ref state, bounds.yMin, bounds.yMax));
+                float length = CaveVisualRange(ref state, 0.45f, 2.6f);
+                Vector2 to = from + new Vector2(length, length * CaveVisualRange(ref state, 0.08f, 0.24f));
+                to.x = Mathf.Min(to.x, bounds.xMax);
+                to.y = Mathf.Min(to.y, bounds.yMax);
+                AppendPencilQuad(
+                    paperVertices,
+                    paperColors,
+                    paperTriangles,
+                    from,
+                    to,
+                    CaveVisualRange(ref state, 0.01f, 0.023f),
+                    new Color(0.2f, 0.25f, 0.29f, CaveVisualRange(ref state, 0.035f, 0.075f)));
+            }
+            CreatePencilMesh(parent, "Factory Background Graphite Hatching", paperVertices, paperColors, paperTriangles, -98);
+
+            // Stages with player-count-specific layout definitions keep every
+            // alternate wall in their JSON. Those definitions are selected later
+            // by the stage controller and must not also become backdrop pipes and
+            // gears. Keep only the quiet paper wash inside these runtime arenas.
+            if (!includeInteriorMachinery)
+            {
+                return;
+            }
+
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            Color steel = new Color(0.2f, 0.25f, 0.31f, 0.3f);
+            Color graphite = new Color(0.08f, 0.1f, 0.13f, 0.42f);
+            Color rust = new Color(0.66f, 0.28f, 0.12f, 0.2f);
+
+            float topY = bounds.yMax - Mathf.Clamp(bounds.height * 0.085f, 1.1f, 2.7f);
+            float lowerY = bounds.yMin + Mathf.Clamp(bounds.height * 0.12f, 1.1f, 3.3f);
+            AppendFactoryTruss(vertices, colors, triangles,
+                new Vector2(bounds.xMin + 0.4f, topY), new Vector2(bounds.xMax - 0.4f, topY),
+                0.72f, steel, graphite, ref state);
+            AppendFactoryTruss(vertices, colors, triangles,
+                new Vector2(bounds.xMin + 0.4f, lowerY), new Vector2(bounds.xMax - 0.4f, lowerY),
+                0.55f, steel * 0.82f, graphite * 0.82f, ref state);
+
+            int columnCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 18f), 2, 13);
+            for (int column = 0; column < columnCount; column++)
+            {
+                float t = (column + 0.5f) / columnCount;
+                float x = Mathf.Lerp(bounds.xMin + 1.2f, bounds.xMax - 1.2f, t)
+                    + CaveVisualRange(ref state, -0.7f, 0.7f);
+                float columnBottom = bounds.yMin + CaveVisualRange(ref state, 0.2f, 1.6f);
+                float columnTop = bounds.yMax - CaveVisualRange(ref state, 0.5f, 1.7f);
+                AppendFactoryTruss(vertices, colors, triangles,
+                    new Vector2(x, columnBottom), new Vector2(x, columnTop),
+                    CaveVisualRange(ref state, 0.42f, 0.68f), steel, graphite, ref state);
+            }
+
+            int gearCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 18f + bounds.height / 14f), 5, 18);
+            for (int gear = 0; gear < gearCount; gear++)
+            {
+                Vector2 center = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin + 1.2f, bounds.xMax - 1.2f),
+                    CaveVisualRange(ref state, bounds.yMin + 1.3f, bounds.yMax - 1.3f));
+                float radius = CaveVisualRange(ref state, 0.45f, 1.25f);
+                AppendFactoryGear(
+                    vertices,
+                    colors,
+                    triangles,
+                    center,
+                    radius,
+                    8 + Mathf.FloorToInt(CaveVisual01(ref state) * 5f),
+                    gear % 3 == 0 ? rust : steel,
+                    graphite,
+                    ref state);
+            }
+
+            int armCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 45f), 1, 6);
+            for (int arm = 0; arm < armCount; arm++)
+            {
+                Vector2 basePoint = new Vector2(
+                    Mathf.Lerp(bounds.xMin + 2f, bounds.xMax - 2f, (arm + 0.5f) / armCount),
+                    lowerY + 0.45f);
+                Vector2 elbow = basePoint + new Vector2(
+                    CaveVisualRange(ref state, -1.8f, 1.8f),
+                    CaveVisualRange(ref state, 2.2f, 4.8f));
+                Vector2 wrist = elbow + new Vector2(
+                    CaveVisualRange(ref state, 1.2f, 3.4f) * (arm % 2 == 0 ? 1f : -1f),
+                    CaveVisualRange(ref state, 0.5f, 2.2f));
+                AppendPencilQuad(vertices, colors, triangles, basePoint, elbow, 0.28f, rust);
+                AppendPencilQuad(vertices, colors, triangles, elbow, wrist, 0.24f, rust);
+                AppendFactoryGear(vertices, colors, triangles, elbow, 0.34f, 8, rust, graphite, ref state);
+                AppendFactoryGear(vertices, colors, triangles, basePoint, 0.42f, 9, rust, graphite, ref state);
+            }
+
+            // Large background pipe banks with visible elbows and valve wheels.
+            Vector2[] upperPipe =
+            {
+                new Vector2(bounds.xMin + 0.7f, topY - 1.3f),
+                new Vector2(bounds.xMin + bounds.width * 0.28f, topY - 1.3f),
+                new Vector2(bounds.xMin + bounds.width * 0.28f, topY - 3.2f),
+                new Vector2(bounds.xMin + bounds.width * 0.62f, topY - 3.2f),
+                new Vector2(bounds.xMin + bounds.width * 0.62f, topY - 1.8f),
+                new Vector2(bounds.xMax - 0.8f, topY - 1.8f)
+            };
+            AppendFactoryPipePolyline(vertices, colors, triangles, upperPipe, graphite, new Color(0.33f, 0.4f, 0.47f, 0.32f), ref state);
+            AppendFactoryGear(vertices, colors, triangles, upperPipe[2], 0.48f, 8, rust, graphite, ref state);
+            AppendFactoryGear(vertices, colors, triangles, upperPipe[4], 0.42f, 8, rust, graphite, ref state);
+
+            CreatePencilMesh(parent, "Factory Background Ironwork And Machinery", vertices, colors, triangles, -78);
+        }
+
+        private static void AddFactoryInfrastructure(
+            Transform parent,
+            Rect bounds,
+            IList<StageObjectData> objects,
+            string stageId,
+            int seed)
+        {
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            Color dark = new Color(0.07f, 0.08f, 0.1f, 0.9f);
+            Color steel = new Color(0.31f, 0.35f, 0.39f, 0.78f);
+            float left = bounds.xMin + 1f;
+            float right = bounds.xMax - 1f;
+            float top = bounds.yMax - 1f;
+            float bottom = bounds.yMin + 1f;
+            // 14-3 stores an editor preview boundary, while its runtime arena is
+            // rebuilt wider by StageLaserRelayController. Do not let that preview
+            // crop the lamps and pipework from the playable right-hand section.
+            if (stageId != "14-3")
+            {
+                TryGetNightCityBoundaryInterior(objects, ref left, ref right, ref top, ref bottom);
+            }
+
+            int lampCount = Mathf.Clamp(Mathf.RoundToInt((right - left) / 15f), 2, 13);
+            for (int lamp = 0; lamp < lampCount; lamp++)
+            {
+                float t = (lamp + 0.5f) / lampCount;
+                Vector2 anchor = new Vector2(
+                    Mathf.Lerp(left + 1.3f, right - 1.3f, t) + CaveVisualRange(ref state, -0.35f, 0.35f),
+                    top - 0.08f);
+                AppendNightCityHangingLamp(
+                    vertices,
+                    colors,
+                    triangles,
+                    anchor,
+                    CaveVisualRange(ref state, 0.65f, 1.75f),
+                    ref state);
+            }
+
+            int wallLampCount = Mathf.Clamp(Mathf.RoundToInt((top - bottom) / 12f), 1, 8);
+            for (int wallLamp = 0; wallLamp < wallLampCount; wallLamp++)
+            {
+                float t = (wallLamp + 0.55f) / wallLampCount;
+                float y = Mathf.Lerp(bottom + 1.1f, top - 2.1f, t);
+                bool useLeftWall = (wallLamp & 1) == 0;
+                AppendNightCityWallLamp(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(useLeftWall ? left + 0.08f : right - 0.08f, y),
+                    useLeftWall ? 1f : -1f,
+                    ref state);
+            }
+
+            Vector2[] ceilingPipe =
+            {
+                new Vector2(left + 0.35f, top - 0.45f),
+                new Vector2(left + (right - left) * 0.35f, top - 0.45f),
+                new Vector2(left + (right - left) * 0.35f, top - 1.05f),
+                new Vector2(right - 0.35f, top - 1.05f)
+            };
+            AppendFactoryPipePolyline(vertices, colors, triangles, ceilingPipe, dark, steel, ref state);
+
+            List<Rect> parts = new List<Rect>();
+            int attachedCount = 0;
+            if (objects != null)
+            {
+                for (int objectIndex = 0; objectIndex < objects.Count && attachedCount < 34; objectIndex++)
+                {
+                    StageObjectData data = objects[objectIndex];
+                    if (data == null || !IsNightCityInfrastructureTerrainType(data.type) || !IsAxisAligned(data.rotation))
+                    {
+                        continue;
+                    }
+
+                    parts.Clear();
+                    AppendStageRects(data, parts);
+                    for (int partIndex = 0; partIndex < parts.Count && attachedCount < 34; partIndex++)
+                    {
+                        Rect rect = parts[partIndex];
+                        if (rect.width >= 5f && rect.height <= 4f)
+                        {
+                            float y = rect.yMin - CaveVisualRange(ref state, 0.2f, 0.38f);
+                            AppendNightCityPipeRun(
+                                vertices,
+                                colors,
+                                triangles,
+                                new Vector2(rect.xMin + 0.25f, y),
+                                new Vector2(rect.xMax - 0.25f, y),
+                                dark,
+                                steel,
+                                ref state);
+                            if ((attachedCount & 2) == 0 && rect.width > 7f)
+                            {
+                                AppendFactoryGear(
+                                    vertices,
+                                    colors,
+                                    triangles,
+                                    new Vector2(rect.center.x + CaveVisualRange(ref state, -rect.width * 0.25f, rect.width * 0.25f), y - 0.42f),
+                                    CaveVisualRange(ref state, 0.24f, 0.42f),
+                                    8,
+                                    new Color(0.52f, 0.27f, 0.1f, 0.65f),
+                                    dark,
+                                    ref state);
+                            }
+                            attachedCount++;
+                        }
+                        else if (rect.height >= 5f && rect.width <= 4f)
+                        {
+                            float x = rect.xMax + CaveVisualRange(ref state, 0.18f, 0.34f);
+                            AppendNightCityPipeRun(
+                                vertices,
+                                colors,
+                                triangles,
+                                new Vector2(x, rect.yMin + 0.3f),
+                                new Vector2(x, rect.yMax - 0.3f),
+                                dark,
+                                steel,
+                                ref state);
+                            attachedCount++;
+                        }
+                    }
+                }
+            }
+
+            // Keep infrastructure behind monitors and their text (some challenge
+            // monitors render around -32..-25) while remaining in front of the
+            // distant factory silhouette.
+            CreatePencilMesh(parent, "Factory Lamps Pipes And Gears", vertices, colors, triangles, -40);
+        }
+
+        private static void AppendFactoryTruss(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 from,
+            Vector2 to,
+            float width,
+            Color fill,
+            Color outline,
+            ref uint state)
+        {
+            Vector2 delta = to - from;
+            float length = delta.magnitude;
+            if (length <= 0.05f)
+            {
+                return;
+            }
+
+            Vector2 direction = delta / length;
+            Vector2 normal = new Vector2(-direction.y, direction.x);
+            Vector2 railAFrom = from + normal * width * 0.5f;
+            Vector2 railATo = to + normal * width * 0.5f;
+            Vector2 railBFrom = from - normal * width * 0.5f;
+            Vector2 railBTo = to - normal * width * 0.5f;
+            AppendCaveWobblyStroke(vertices, colors, triangles, railAFrom, railATo, 0.1f, outline, 0.025f, ref state);
+            AppendCaveWobblyStroke(vertices, colors, triangles, railBFrom, railBTo, 0.1f, outline, 0.025f, ref state);
+            AppendPencilQuad(vertices, colors, triangles, railAFrom, railATo, 0.052f, fill);
+            AppendPencilQuad(vertices, colors, triangles, railBFrom, railBTo, 0.052f, fill);
+
+            int bays = Mathf.Clamp(Mathf.RoundToInt(length / 2.1f), 1, 48);
+            for (int bay = 0; bay < bays; bay++)
+            {
+                float t0 = bay / (float)bays;
+                float t1 = (bay + 1f) / bays;
+                Vector2 a0 = Vector2.Lerp(railAFrom, railATo, t0);
+                Vector2 a1 = Vector2.Lerp(railAFrom, railATo, t1);
+                Vector2 b0 = Vector2.Lerp(railBFrom, railBTo, t0);
+                Vector2 b1 = Vector2.Lerp(railBFrom, railBTo, t1);
+                AppendPencilQuad(vertices, colors, triangles, a0, b1, 0.045f, outline * 0.88f);
+                AppendPencilQuad(vertices, colors, triangles, b0, a1, 0.045f, outline * 0.88f);
+                AppendPencilQuad(vertices, colors, triangles, a0, b0, 0.05f, outline);
+            }
+            AppendPencilQuad(vertices, colors, triangles, railATo, railBTo, 0.05f, outline);
+        }
+
+        private static void AppendFactoryGear(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 center,
+            float radius,
+            int teeth,
+            Color fill,
+            Color outline,
+            ref uint state)
+        {
+            teeth = Mathf.Clamp(teeth, 7, 14);
+            int pointCount = teeth * 4;
+            Vector2[] edge = new Vector2[pointCount];
+            float phase = CaveVisualRange(ref state, -Mathf.PI, Mathf.PI);
+            for (int point = 0; point < pointCount; point++)
+            {
+                float angle = phase + point * Mathf.PI * 2f / pointCount;
+                int toothPhase = point & 3;
+                float tooth = toothPhase == 1 || toothPhase == 2 ? 1.16f : 0.92f;
+                float hand = 1f + Mathf.Sin(point * 2.17f + phase) * 0.025f;
+                edge[point] = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius * tooth * hand;
+            }
+            AppendFilledCavePolygon(vertices, colors, triangles, edge, fill);
+            for (int point = 0; point < pointCount; point++)
+            {
+                AppendPencilQuad(vertices, colors, triangles, edge[point], edge[(point + 1) % pointCount], 0.035f, outline);
+            }
+
+            int spokes = Mathf.Clamp(teeth / 2, 4, 7);
+            for (int spoke = 0; spoke < spokes; spoke++)
+            {
+                float angle = phase + spoke * Mathf.PI * 2f / spokes;
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                AppendPencilQuad(vertices, colors, triangles, center + direction * radius * 0.2f, center + direction * radius * 0.76f, Mathf.Max(0.028f, radius * 0.07f), outline * 0.85f);
+            }
+            float hub = radius * 0.2f;
+            AppendPencilQuad(vertices, colors, triangles, center - Vector2.right * hub, center + Vector2.right * hub, Mathf.Max(0.05f, hub * 0.7f), outline);
+            AppendPencilQuad(vertices, colors, triangles, center - Vector2.up * hub, center + Vector2.up * hub, Mathf.Max(0.05f, hub * 0.7f), outline);
+        }
+
+        private static void AppendFactoryPipePolyline(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2[] points,
+            Color dark,
+            Color fill,
+            ref uint state)
+        {
+            if (points == null || points.Length < 2)
+            {
+                return;
+            }
+
+            for (int point = 1; point < points.Length; point++)
+            {
+                AppendCaveWobblyStroke(vertices, colors, triangles, points[point - 1], points[point], 0.24f, dark, 0.022f, ref state);
+                AppendCaveWobblyStroke(vertices, colors, triangles, points[point - 1], points[point], 0.135f, fill, 0.014f, ref state);
+                if (point < points.Length - 1)
+                {
+                    AppendFactoryGear(vertices, colors, triangles, points[point], 0.21f, 8, fill, dark, ref state);
+                }
+            }
+        }
+
+        private static void AddUnderwaterWaterBackdrop(Transform parent, Rect bounds, int seed)
+        {
+            Rect colorBounds = GetBackdropColorFillBounds(bounds);
+            GameObject wash = new GameObject("Underwater Crayon Wash");
+            wash.transform.SetParent(parent, false);
+            wash.transform.localPosition = new Vector3(colorBounds.center.x, colorBounds.center.y, 0f);
+            wash.transform.localScale = new Vector3(colorBounds.width, colorBounds.height, 1f);
+            SpriteRenderer washRenderer = wash.AddComponent<SpriteRenderer>();
+            washRenderer.sprite = GetSquareSprite();
+            washRenderer.color = new Color(0.22f, 0.68f, 0.82f, 0.22f);
+            washRenderer.sortingOrder = -99;
+
+            Color[] bands =
+            {
+                new Color(0.68f, 0.94f, 0.98f, 0.045f),
+                new Color(0.4f, 0.82f, 0.92f, 0.065f),
+                new Color(0.22f, 0.68f, 0.82f, 0.085f),
+                new Color(0.09f, 0.47f, 0.65f, 0.11f)
+            };
+            float bandHeight = bounds.height / bands.Length;
+            for (int band = 0; band < bands.Length; band++)
+            {
+                float bandTop = band == 0
+                    ? colorBounds.yMax
+                    : bounds.yMax - bandHeight * band;
+                float bandBottom = band == bands.Length - 1
+                    ? colorBounds.yMin
+                    : bounds.yMax - bandHeight * (band + 1f);
+                GameObject layer = new GameObject("Underwater Depth Band " + band);
+                layer.transform.SetParent(parent, false);
+                layer.transform.localPosition = new Vector3(
+                    colorBounds.center.x,
+                    (bandTop + bandBottom) * 0.5f,
+                    0f);
+                layer.transform.localScale = new Vector3(colorBounds.width, bandTop - bandBottom + 0.08f, 1f);
+                SpriteRenderer renderer = layer.AddComponent<SpriteRenderer>();
+                renderer.sprite = GetSquareSprite();
+                renderer.color = bands[band];
+                renderer.sortingOrder = -98 + band;
+            }
+
+            uint state = CreateCaveVisualState(seed);
+            AddUnderwaterLightShafts(parent, bounds, ref state);
+            AddUnderwaterDistantScenery(parent, bounds, ref state);
+
+            List<Vector3> currentVertices = new List<Vector3>();
+            List<Color> currentColors = new List<Color>();
+            List<int> currentTriangles = new List<int>();
+            int waveRows = Mathf.Clamp(Mathf.CeilToInt(bounds.height / 5.2f), 4, 12);
+            for (int row = 0; row < waveRows; row++)
+            {
+                float y = Mathf.Lerp(bounds.yMin + 0.8f, bounds.yMax - 0.8f, (row + 0.5f) / waveRows);
+                float segmentWidth = Mathf.Clamp(bounds.width / 9f, 3.2f, 8.5f);
+                for (float x = bounds.xMin + CaveVisualRange(ref state, 0.25f, 1.4f);
+                    x < bounds.xMax - 0.25f;
+                    x += segmentWidth + CaveVisualRange(ref state, 1.1f, 2.8f))
+                {
+                    Vector2 a = new Vector2(x, y + CaveVisualRange(ref state, -0.12f, 0.12f));
+                    Vector2 b = new Vector2(
+                        Mathf.Min(bounds.xMax - 0.2f, x + segmentWidth),
+                        y + CaveVisualRange(ref state, -0.12f, 0.12f));
+                    AppendCaveWobblyStroke(
+                        currentVertices,
+                        currentColors,
+                        currentTriangles,
+                        a,
+                        b,
+                        CaveVisualRange(ref state, 0.012f, 0.024f),
+                        new Color(0.09f, 0.5f, 0.67f, CaveVisualRange(ref state, 0.09f, 0.16f)),
+                        0.045f,
+                        ref state);
+                }
+            }
+            CreatePencilMesh(
+                parent,
+                "Underwater Broken Current Lines",
+                currentVertices,
+                currentColors,
+                currentTriangles,
+                -85);
+
+            List<Vector3> causticVertices = new List<Vector3>();
+            List<Color> causticColors = new List<Color>();
+            List<int> causticTriangles = new List<int>();
+            int causticCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 180f), 8, 24);
+            for (int caustic = 0; caustic < causticCount; caustic++)
+            {
+                Vector2 center = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin + 0.8f, bounds.xMax - 0.8f),
+                    CaveVisualRange(ref state, bounds.yMin + 0.8f, bounds.yMax - 0.8f));
+                float span = CaveVisualRange(ref state, 0.45f, 1.35f);
+                AppendCaveWobblyStroke(
+                    causticVertices,
+                    causticColors,
+                    causticTriangles,
+                    center - new Vector2(span, 0.02f),
+                    center + new Vector2(0f, CaveVisualRange(ref state, 0.08f, 0.2f)),
+                    0.018f,
+                    new Color(0.78f, 0.98f, 1f, 0.2f),
+                    0.025f,
+                    ref state);
+                AppendCaveWobblyStroke(
+                    causticVertices,
+                    causticColors,
+                    causticTriangles,
+                    center,
+                    center + new Vector2(span, CaveVisualRange(ref state, -0.08f, 0.08f)),
+                    0.014f,
+                    new Color(0.76f, 0.98f, 1f, 0.15f),
+                    0.025f,
+                    ref state);
+            }
+            CreatePencilMesh(
+                parent,
+                "Underwater Broken Light Caustics",
+                causticVertices,
+                causticColors,
+                causticTriangles,
+                -83);
+
+            AddUnderwaterBubbleColumns(parent, bounds, ref state);
+        }
+
+        private static void AddUnderwaterLightShafts(Transform parent, Rect bounds, ref uint state)
+        {
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            int shaftCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 24f), 2, 5);
+            for (int shaft = 0; shaft < shaftCount; shaft++)
+            {
+                float slot = (shaft + 0.65f) / shaftCount;
+                float topX = Mathf.Lerp(bounds.xMin, bounds.xMax, slot)
+                    + CaveVisualRange(ref state, -1.2f, 1.2f);
+                float topY = bounds.yMax - 0.25f;
+                float bottomY = Mathf.Lerp(bounds.yMin, bounds.yMax, CaveVisualRange(ref state, 0.12f, 0.34f));
+                float drift = CaveVisualRange(ref state, -2.2f, 2.2f);
+                float topHalf = CaveVisualRange(ref state, 0.45f, 1.05f);
+                float bottomHalf = CaveVisualRange(ref state, 1.4f, 3.1f);
+                Vector2[] shaftEdge =
+                {
+                    new Vector2(topX - topHalf, topY),
+                    new Vector2(topX + topHalf, topY - CaveVisualRange(ref state, 0.01f, 0.14f)),
+                    new Vector2(topX + drift + bottomHalf, bottomY + CaveVisualRange(ref state, -0.18f, 0.18f)),
+                    new Vector2(topX + drift - bottomHalf, bottomY)
+                };
+                Color fill = new Color(0.8f, 0.98f, 1f, CaveVisualRange(ref state, 0.035f, 0.06f));
+                AppendFilledCavePolygon(vertices, colors, triangles, shaftEdge, fill);
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    shaftEdge[0],
+                    shaftEdge[3],
+                    0.018f,
+                    new Color(0.79f, 0.97f, 1f, 0.08f));
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    shaftEdge[1],
+                    shaftEdge[2],
+                    0.014f,
+                    new Color(0.79f, 0.97f, 1f, 0.065f));
+            }
+            CreatePencilMesh(parent, "Underwater Hand Drawn Light Shafts", vertices, colors, triangles, -94);
+        }
+
+        private static void AddUnderwaterDistantScenery(Transform parent, Rect bounds, ref uint state)
+        {
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            float sceneryY = Mathf.Lerp(bounds.yMin, bounds.yMax, 0.18f);
+            Color rockFill = new Color(0.08f, 0.34f, 0.43f, 0.105f);
+            Color rockOutline = new Color(0.05f, 0.27f, 0.36f, 0.2f);
+            for (int rock = 0; rock < 5; rock++)
+            {
+                float slot = rock / 4f;
+                float x = Mathf.Lerp(bounds.xMin + 1.5f, bounds.xMax - 1.5f, slot)
+                    + CaveVisualRange(ref state, -1.25f, 1.25f);
+                float halfWidth = CaveVisualRange(ref state, 1.0f, 2.7f);
+                float height = CaveVisualRange(ref state, 1.1f, 3.5f);
+                Vector2[] rockEdge =
+                {
+                    new Vector2(x - halfWidth, sceneryY),
+                    new Vector2(x - halfWidth * 0.72f, sceneryY + height * 0.42f),
+                    new Vector2(x - halfWidth * 0.22f, sceneryY + height),
+                    new Vector2(x + halfWidth * 0.2f, sceneryY + height * 0.83f),
+                    new Vector2(x + halfWidth * 0.7f, sceneryY + height * 0.38f),
+                    new Vector2(x + halfWidth, sceneryY)
+                };
+                AppendFilledCavePolygon(vertices, colors, triangles, rockEdge, rockFill);
+                for (int edge = 0; edge < rockEdge.Length - 1; edge++)
+                {
+                    AppendPencilQuad(
+                        vertices,
+                        colors,
+                        triangles,
+                        rockEdge[edge],
+                        rockEdge[edge + 1],
+                        0.027f + (edge % 2) * 0.006f,
+                        rockOutline);
+                }
+            }
+
+            Color coral = new Color(0.08f, 0.4f, 0.45f, 0.18f);
+            for (int coralIndex = 0; coralIndex < 5; coralIndex++)
+            {
+                bool leftSide = (coralIndex & 1) == 0;
+                float x = leftSide
+                    ? Mathf.Lerp(bounds.xMin + 1.1f, bounds.center.x - 2f, CaveVisual01(ref state) * 0.38f)
+                    : Mathf.Lerp(bounds.center.x + 2f, bounds.xMax - 1.1f, 0.62f + CaveVisual01(ref state) * 0.38f);
+                Vector2 root = new Vector2(x, sceneryY);
+                float coralHeight = CaveVisualRange(ref state, 0.55f, 1.35f);
+                Vector2 fork = root + new Vector2(CaveVisualRange(ref state, -0.12f, 0.12f), coralHeight * 0.54f);
+                Vector2 tip = root + new Vector2(CaveVisualRange(ref state, -0.25f, 0.25f), coralHeight);
+                AppendPencilQuad(vertices, colors, triangles, root, fork, 0.065f, coral);
+                AppendPencilQuad(vertices, colors, triangles, fork, tip, 0.052f, coral);
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    fork,
+                    fork + new Vector2(leftSide ? -0.34f : 0.34f, coralHeight * 0.24f),
+                    0.045f,
+                    coral * 0.86f);
+            }
+
+            Color fishFill = new Color(0.06f, 0.35f, 0.47f, 0.135f);
+            Color fishOutline = new Color(0.04f, 0.28f, 0.39f, 0.18f);
+            int schoolCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 25f), 2, 4);
+            for (int school = 0; school < schoolCount; school++)
+            {
+                Vector2 schoolCenter = new Vector2(
+                    Mathf.Lerp(bounds.xMin + 3f, bounds.xMax - 3f, (school + 0.5f) / schoolCount),
+                    Mathf.Lerp(bounds.yMin, bounds.yMax, CaveVisualRange(ref state, 0.38f, 0.7f)));
+                int fishCount = 2 + Mathf.FloorToInt(CaveVisual01(ref state) * 3f);
+                for (int fish = 0; fish < fishCount; fish++)
+                {
+                    float direction = ((school + fish) & 1) == 0 ? 1f : -1f;
+                    Vector2 center = schoolCenter + new Vector2(
+                        (fish - (fishCount - 1) * 0.5f) * CaveVisualRange(ref state, 0.65f, 1.05f),
+                        Mathf.Sin((fish + 1) * 2.1f) * 0.32f);
+                    float halfWidth = CaveVisualRange(ref state, 0.28f, 0.46f);
+                    float halfHeight = halfWidth * CaveVisualRange(ref state, 0.38f, 0.54f);
+                    Vector2[] body =
+                    {
+                        center + new Vector2(-halfWidth * direction, 0f),
+                        center + new Vector2(-halfWidth * 0.25f * direction, halfHeight),
+                        center + new Vector2(halfWidth * 0.65f * direction, halfHeight * 0.7f),
+                        center + new Vector2(halfWidth * direction, 0f),
+                        center + new Vector2(halfWidth * 0.65f * direction, -halfHeight * 0.7f),
+                        center + new Vector2(-halfWidth * 0.25f * direction, -halfHeight)
+                    };
+                    Vector2 tailBase = center - Vector2.right * direction * halfWidth * 0.75f;
+                    Vector2[] tail =
+                    {
+                        tailBase,
+                        tailBase - Vector2.right * direction * halfWidth * 0.62f + Vector2.up * halfHeight,
+                        tailBase - Vector2.right * direction * halfWidth * 0.62f - Vector2.up * halfHeight
+                    };
+                    AppendFilledCavePolygon(vertices, colors, triangles, body, fishFill);
+                    AppendFilledCavePolygon(vertices, colors, triangles, tail, fishFill * 0.9f);
+                    for (int edge = 0; edge < body.Length; edge++)
+                    {
+                        AppendPencilQuad(
+                            vertices,
+                            colors,
+                            triangles,
+                            body[edge],
+                            body[(edge + 1) % body.Length],
+                            0.015f,
+                            fishOutline);
+                    }
+                }
+            }
+            CreatePencilMesh(parent, "Underwater Distant Reef And Fish Shadows", vertices, colors, triangles, -92);
+        }
+
+        private static void AddUnderwaterBubbleColumns(Transform parent, Rect bounds, ref uint state)
+        {
+            int columnCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 12f), 4, 7);
+            float verticalInset = Mathf.Clamp(bounds.height * 0.14f, 2.5f, 6f);
+            float bottom = bounds.yMin + verticalInset;
+            float top = bounds.yMax - verticalInset;
+            float travelHeight = Mathf.Max(4f, top - bottom);
+            int bubbleIndex = 0;
+            for (int column = 0; column < columnCount; column++)
+            {
+                float columnX = Mathf.Lerp(
+                    bounds.xMin + 1.2f,
+                    bounds.xMax - 1.2f,
+                    (column + 0.65f) / columnCount)
+                    + CaveVisualRange(ref state, -0.65f, 0.65f);
+                int bubblesInColumn = 5 + Mathf.FloorToInt(CaveVisual01(ref state) * 3f);
+                float columnPhase = CaveVisualRange(ref state, 0f, travelHeight);
+                for (int bubble = 0; bubble < bubblesInColumn; bubble++)
+                {
+                    float t = bubblesInColumn <= 1 ? 0f : bubble / (bubblesInColumn - 1f);
+                    GameObject bubbleObject = new GameObject("Underwater Bubble Column " + column + " Bubble " + bubble);
+                    bubbleObject.transform.SetParent(parent, false);
+                    bubbleObject.transform.localPosition = new Vector3(columnX, Mathf.Lerp(bottom, top, t), 0f);
+                    float size = CaveVisualRange(ref state, 0.11f, 0.24f) * Mathf.Lerp(0.84f, 1.22f, t);
+                    bubbleObject.transform.localScale = Vector3.one * size;
+
+                    SpriteRenderer wash = bubbleObject.AddComponent<SpriteRenderer>();
+                    wash.sprite = GetCircleSprite();
+                    wash.color = new Color(0.72f, 0.96f, 1f, 0.09f);
+                    wash.sortingOrder = -67;
+
+                    Vector3[] ring = new Vector3[15];
+                    for (int point = 0; point < ring.Length; point++)
+                    {
+                        float angle = point / (ring.Length - 1f) * Mathf.PI * 2f;
+                        float wobble = 0.47f + Mathf.Sin(point * 2.31f + column) * 0.025f;
+                        ring[point] = new Vector3(Mathf.Cos(angle) * wobble, Mathf.Sin(angle) * wobble, -0.01f);
+                    }
+                    AddDoodleLine(
+                        "Bubble Pencil Ring",
+                        bubbleObject.transform,
+                        ring,
+                        new Color(0.52f, 0.9f, 0.98f, CaveVisualRange(ref state, 0.42f, 0.62f)),
+                        0.075f,
+                        -66);
+
+                    GameObject shine = new GameObject("Bubble White Pencil Shine");
+                    shine.transform.SetParent(bubbleObject.transform, false);
+                    shine.transform.localPosition = new Vector3(-0.19f, 0.21f, -0.02f);
+                    shine.transform.localScale = Vector3.one * 0.17f;
+                    SpriteRenderer shineRenderer = shine.AddComponent<SpriteRenderer>();
+                    shineRenderer.sprite = GetCircleSprite();
+                    shineRenderer.color = new Color(0.98f, 1f, 1f, 0.78f);
+                    shineRenderer.sortingOrder = -65;
+
+                    AquariumBubbleMover mover = bubbleObject.AddComponent<AquariumBubbleMover>();
+                    mover.Configure(
+                        bottom,
+                        top,
+                        CaveVisualRange(ref state, 0.18f, 0.4f),
+                        columnPhase + t * travelHeight + bubbleIndex * 0.17f);
+                    bubbleIndex++;
+                }
+            }
+        }
+
+        private static void AddUnderwaterSeaweedField(
+            Transform parent,
+            IList<StageObjectData> objects,
+            int seed)
+        {
+            if (objects == null)
+            {
+                return;
+            }
+
+            List<CaveBackdropSurface> floors = new List<CaveBackdropSurface>();
+            List<Rect> avoidZones = new List<Rect>();
+            for (int objectIndex = 0; objectIndex < objects.Count; objectIndex++)
+            {
+                StageObjectData data = objects[objectIndex];
+                if (data == null)
+                {
+                    continue;
+                }
+
+                if (IsUnderwaterHorizontalPlatform(data))
+                {
+                    float halfWidth = data.size.x * 0.5f;
+                    float top = data.position.y + data.size.y * 0.5f;
+                    floors.Add(new CaveBackdropSurface
+                    {
+                        From = new Vector2(data.position.x - halfWidth + 0.3f, top),
+                        To = new Vector2(data.position.x + halfWidth - 0.3f, top),
+                        Outward = Vector2.up,
+                        MaxHeight = IsUnderwaterMainSandFloor(data) ? 2.25f : 1.65f,
+                        AllowsCrystal = false
+                    });
+                }
+
+                if (data.type == StageObjectType.Spawn
+                    || data.type == StageObjectType.Goal
+                    || data.type == StageObjectType.Key
+                    || data.type == StageObjectType.Keyhole
+                    || data.type == StageObjectType.Button
+                    || data.type == StageObjectType.ChallengeClock
+                    || data.type == StageObjectType.ConveyorLeft
+                    || data.type == StageObjectType.ConveyorRight)
+                {
+                    float horizontalPadding = data.type == StageObjectType.ChallengeClock ? 0.9f : 0.5f;
+                    float verticalPadding = data.type == StageObjectType.ChallengeClock ? 0.45f : 0.3f;
+                    float halfWidth = Mathf.Max(0.45f, Mathf.Abs(data.size.x) * 0.5f) + horizontalPadding;
+                    float halfHeight = Mathf.Max(0.45f, Mathf.Abs(data.size.y) * 0.5f) + verticalPadding;
+                    avoidZones.Add(Rect.MinMaxRect(
+                        data.position.x - halfWidth,
+                        data.position.y - halfHeight,
+                        data.position.x + halfWidth,
+                        data.position.y + halfHeight));
+                }
+            }
+
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            int clusterCount = 0;
+            for (int floorIndex = 0; floorIndex < floors.Count && clusterCount < 20; floorIndex++)
+            {
+                CaveBackdropSurface floor = floors[floorIndex];
+                float length = (floor.To - floor.From).magnitude;
+                Vector2 tangent = (floor.To - floor.From).normalized;
+                float cursor = CaveVisualRange(ref state, 0.7f, 2.2f);
+                while (cursor < length - 0.55f && clusterCount < 20)
+                {
+                    Vector2 anchor = floor.From + tangent * cursor + Vector2.up * 0.035f;
+                    float plantHeight = floor.MaxHeight * CaveVisualRange(ref state, 0.55f, 1f);
+                    int plantVariant = Mathf.FloorToInt(CaveVisual01(ref state) * 4f) % 4;
+                    Rect plantBounds = Rect.MinMaxRect(
+                        anchor.x - 0.62f,
+                        anchor.y - 0.08f,
+                        anchor.x + 0.62f,
+                        anchor.y + plantHeight + 0.18f);
+                    bool blocked = false;
+                    for (int avoidIndex = 0; avoidIndex < avoidZones.Count; avoidIndex++)
+                    {
+                        if (plantBounds.Overlaps(avoidZones[avoidIndex]))
+                        {
+                            blocked = true;
+                            break;
+                        }
+                    }
+
+                    if (!blocked && CaveVisual01(ref state) > 0.24f)
+                    {
+                        AppendUnderwaterPlantCluster(
+                            vertices,
+                            colors,
+                            triangles,
+                            anchor,
+                            plantHeight,
+                            plantVariant,
+                            ref state);
+                        clusterCount++;
+                    }
+                    cursor += CaveVisualRange(ref state, 2.1f, 5.8f);
+                }
+            }
+            CreatePencilMesh(parent, "Underwater Seaweed And Coral", vertices, colors, triangles, -28);
+        }
+
+        private static void AppendUnderwaterPlantCluster(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 anchor,
+            float height,
+            int variant,
+            ref uint state)
+        {
+            int normalizedVariant = ((variant % 4) + 4) % 4;
+            Color[] outlines =
+            {
+                new Color(0.015f, 0.34f, 0.25f, 0.92f),
+                new Color(0.01f, 0.40f, 0.32f, 0.9f),
+                new Color(0.04f, 0.35f, 0.43f, 0.9f),
+                new Color(0.06f, 0.43f, 0.29f, 0.92f)
+            };
+            Color[] fills =
+            {
+                new Color(0.20f, 0.68f, 0.43f, 0.52f),
+                new Color(0.17f, 0.76f, 0.57f, 0.48f),
+                new Color(0.18f, 0.68f, 0.72f, 0.48f),
+                new Color(0.40f, 0.72f, 0.30f, 0.48f)
+            };
+            Color[] highlights =
+            {
+                new Color(0.58f, 0.91f, 0.61f, 0.48f),
+                new Color(0.53f, 0.95f, 0.75f, 0.46f),
+                new Color(0.61f, 0.93f, 0.91f, 0.46f),
+                new Color(0.72f, 0.91f, 0.51f, 0.44f)
+            };
+            Color outline = outlines[normalizedVariant];
+            Color fill = fills[normalizedVariant];
+            Color highlight = highlights[normalizedVariant];
+
+            if (normalizedVariant == 1 || normalizedVariant == 2)
+            {
+                int stemCount = normalizedVariant == 2
+                    ? 4 + Mathf.FloorToInt(CaveVisual01(ref state) * 2f)
+                    : 3 + Mathf.FloorToInt(CaveVisual01(ref state) * 2f);
+                for (int stem = 0; stem < stemCount; stem++)
+                {
+                    float spread = normalizedVariant == 2 ? 0.24f : 0.2f;
+                    float offset = (stem - (stemCount - 1) * 0.5f)
+                        * CaveVisualRange(ref state, spread * 0.7f, spread * 1.2f);
+                    AppendUnderwaterLeafyStem(
+                        vertices,
+                        colors,
+                        triangles,
+                        anchor + new Vector2(offset, 0f),
+                        height * CaveVisualRange(ref state, normalizedVariant == 2 ? 0.48f : 0.6f, 1f),
+                        normalizedVariant == 2 ? 0.82f : 1f,
+                        outline,
+                        fill,
+                        highlight,
+                        ref state);
+                }
+            }
+            else
+            {
+                int bladeCount = normalizedVariant == 3
+                    ? 4 + Mathf.FloorToInt(CaveVisual01(ref state) * 2f)
+                    : 3 + Mathf.FloorToInt(CaveVisual01(ref state) * 3f);
+                for (int blade = 0; blade < bladeCount; blade++)
+                {
+                    float centered = blade - (bladeCount - 1) * 0.5f;
+                    float offset = centered * CaveVisualRange(ref state, 0.16f, 0.26f);
+                    float bladeHeight = height * CaveVisualRange(
+                        ref state,
+                        normalizedVariant == 3 ? 0.42f : 0.58f,
+                        normalizedVariant == 3 ? 0.78f : 1f);
+                    float halfWidth = CaveVisualRange(
+                        ref state,
+                        normalizedVariant == 3 ? 0.12f : 0.09f,
+                        normalizedVariant == 3 ? 0.21f : 0.17f);
+                    AppendUnderwaterRibbonBlade(
+                        vertices,
+                        colors,
+                        triangles,
+                        anchor + new Vector2(offset, 0f),
+                        bladeHeight,
+                        halfWidth,
+                        outline,
+                        fill,
+                        highlight,
+                        ref state);
+                }
+            }
+
+            AppendUnderwaterPlantBase(
+                vertices,
+                colors,
+                triangles,
+                anchor,
+                outline,
+                fill,
+                ref state);
+        }
+
+        private static void AppendUnderwaterRibbonBlade(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 root,
+            float height,
+            float baseHalfWidth,
+            Color outline,
+            Color fill,
+            Color highlight,
+            ref uint state)
+        {
+            const int sampleCount = 13;
+            Vector2[] centers = new Vector2[sampleCount];
+            Vector2[] left = new Vector2[sampleCount];
+            Vector2[] right = new Vector2[sampleCount];
+            float phase = CaveVisualRange(ref state, -Mathf.PI, Mathf.PI);
+            float cycles = CaveVisualRange(ref state, 1.15f, 1.85f);
+            float amplitude = CaveVisualRange(ref state, baseHalfWidth * 0.85f, baseHalfWidth * 1.55f);
+            float lean = CaveVisualRange(ref state, -0.16f, 0.16f) * Mathf.Min(1.8f, height);
+
+            for (int sample = 0; sample < sampleCount; sample++)
+            {
+                float t = sample / (sampleCount - 1f);
+                float wave = Mathf.Sin(phase + t * Mathf.PI * cycles) * amplitude * t;
+                float pencilWobble = Mathf.Sin(phase * 0.61f + sample * 2.17f) * 0.012f * t;
+                centers[sample] = root + new Vector2(lean * t + wave + pencilWobble, height * t);
+            }
+
+            for (int sample = 0; sample < sampleCount; sample++)
+            {
+                Vector2 before = centers[Mathf.Max(0, sample - 1)];
+                Vector2 after = centers[Mathf.Min(sampleCount - 1, sample + 1)];
+                Vector2 tangent = (after - before).normalized;
+                Vector2 normal = new Vector2(-tangent.y, tangent.x);
+                float t = sample / (sampleCount - 1f);
+                float taper = Mathf.Lerp(1f, 0.055f, Mathf.Pow(t, 1.18f));
+                float handCut = 0.91f + Mathf.Sin(sample * 2.03f + phase) * 0.09f;
+                float halfWidth = baseHalfWidth * taper * handCut;
+                left[sample] = centers[sample] + normal * halfWidth;
+                right[sample] = centers[sample] - normal * halfWidth;
+            }
+
+            int first = vertices.Count;
+            for (int sample = 0; sample < sampleCount; sample++)
+            {
+                float t = sample / (sampleCount - 1f);
+                Color shaded = Color.Lerp(fill, outline, 0.08f + t * 0.08f);
+                vertices.Add(left[sample]);
+                vertices.Add(right[sample]);
+                colors.Add(shaded);
+                colors.Add(fill);
+            }
+            for (int sample = 0; sample < sampleCount - 1; sample++)
+            {
+                int index = first + sample * 2;
+                triangles.Add(index);
+                triangles.Add(index + 2);
+                triangles.Add(index + 1);
+                triangles.Add(index + 1);
+                triangles.Add(index + 2);
+                triangles.Add(index + 3);
+            }
+
+            for (int sample = 0; sample < sampleCount - 1; sample++)
+            {
+                float outlineWidth = 0.025f + (sample % 3) * 0.004f;
+                AppendPencilQuad(vertices, colors, triangles, left[sample], left[sample + 1], outlineWidth, outline);
+                AppendPencilQuad(vertices, colors, triangles, right[sample], right[sample + 1], outlineWidth, outline);
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    centers[sample] + (left[sample] - centers[sample]) * 0.14f,
+                    centers[sample + 1] + (left[sample + 1] - centers[sample + 1]) * 0.14f,
+                    0.014f,
+                    highlight);
+            }
+            AppendPencilQuad(vertices, colors, triangles, left[0], right[0], 0.024f, outline);
+            AppendPencilQuad(
+                vertices,
+                colors,
+                triangles,
+                left[sampleCount - 1],
+                right[sampleCount - 1],
+                0.022f,
+                outline);
+
+            for (int sample = 2; sample < sampleCount - 2; sample += 3)
+            {
+                Vector2 hatchFrom = Vector2.Lerp(left[sample], right[sample], 0.22f);
+                Vector2 hatchTo = Vector2.Lerp(left[sample + 1], right[sample + 1], 0.72f);
+                AppendPencilQuad(vertices, colors, triangles, hatchFrom, hatchTo, 0.011f, outline * 0.42f);
+            }
+        }
+
+        private static void AppendUnderwaterLeafyStem(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 root,
+            float height,
+            float leafScale,
+            Color outline,
+            Color fill,
+            Color highlight,
+            ref uint state)
+        {
+            const int pointCount = 10;
+            Vector2[] points = new Vector2[pointCount];
+            float phase = CaveVisualRange(ref state, -Mathf.PI, Mathf.PI);
+            float lean = CaveVisualRange(ref state, -0.16f, 0.16f);
+            for (int point = 0; point < pointCount; point++)
+            {
+                float t = point / (pointCount - 1f);
+                points[point] = root + new Vector2(
+                    lean * t + Mathf.Sin(phase + t * Mathf.PI * 1.55f) * (0.04f + t * 0.09f),
+                    height * t);
+                if (point > 0)
+                {
+                    AppendPencilQuad(vertices, colors, triangles, points[point - 1], points[point], 0.052f, outline);
+                    AppendPencilQuad(
+                        vertices,
+                        colors,
+                        triangles,
+                        points[point - 1] + Vector2.right * 0.014f,
+                        points[point] + Vector2.right * 0.014f,
+                        0.017f,
+                        highlight);
+                }
+            }
+
+            for (int point = 2; point < pointCount - 1; point++)
+            {
+                float side = (point & 1) == 0 ? -1f : 1f;
+                float leafLength = CaveVisualRange(ref state, 0.19f, 0.34f) * leafScale;
+                Vector2 leafBase = points[point];
+                Vector2 leafTip = leafBase + new Vector2(
+                    side * leafLength,
+                    CaveVisualRange(ref state, 0.08f, 0.2f) * leafScale);
+                AppendVineLeaf(
+                    vertices,
+                    colors,
+                    triangles,
+                    leafBase,
+                    leafTip,
+                    CaveVisualRange(ref state, 0.055f, 0.095f) * leafScale,
+                    fill,
+                    outline);
+                if (point == 4 || point == 7)
+                {
+                    Vector2 oppositeTip = leafBase + new Vector2(
+                        -side * leafLength * 0.72f,
+                        CaveVisualRange(ref state, 0.06f, 0.14f));
+                    AppendVineLeaf(
+                        vertices,
+                        colors,
+                        triangles,
+                        leafBase,
+                        oppositeTip,
+                        CaveVisualRange(ref state, 0.045f, 0.075f) * leafScale,
+                        fill * 0.9f,
+                        outline);
+                }
+            }
+
+            Vector2 terminalDirection = (points[pointCount - 1] - points[pointCount - 2]).normalized;
+            Vector2 terminalTip = points[pointCount - 1]
+                + terminalDirection * CaveVisualRange(ref state, 0.17f, 0.27f) * leafScale;
+            AppendVineLeaf(
+                vertices,
+                colors,
+                triangles,
+                points[pointCount - 1],
+                terminalTip,
+                CaveVisualRange(ref state, 0.06f, 0.1f) * leafScale,
+                fill,
+                outline);
+        }
+
+        private static void AppendUnderwaterPlantBase(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 anchor,
+            Color outline,
+            Color fill,
+            ref uint state)
+        {
+            float halfWidth = CaveVisualRange(ref state, 0.2f, 0.34f);
+            float moundHeight = CaveVisualRange(ref state, 0.08f, 0.14f);
+            Vector2[] mound =
+            {
+                anchor + new Vector2(-halfWidth, -0.015f),
+                anchor + new Vector2(-halfWidth * 0.68f, moundHeight * 0.6f),
+                anchor + new Vector2(-halfWidth * 0.2f, moundHeight),
+                anchor + new Vector2(halfWidth * 0.28f, moundHeight * 0.82f),
+                anchor + new Vector2(halfWidth * 0.74f, moundHeight * 0.52f),
+                anchor + new Vector2(halfWidth, -0.015f)
+            };
+            AppendFilledCavePolygon(vertices, colors, triangles, mound, fill * 0.82f);
+            for (int edge = 0; edge < mound.Length - 1; edge++)
+            {
+                AppendPencilQuad(vertices, colors, triangles, mound[edge], mound[edge + 1], 0.025f, outline);
+            }
+            AppendPencilQuad(vertices, colors, triangles, mound[mound.Length - 1], mound[0], 0.02f, outline * 0.75f);
+
+            for (int tuft = 0; tuft < 5; tuft++)
+            {
+                float t = tuft / 4f;
+                Vector2 tuftRoot = Vector2.Lerp(mound[0], mound[mound.Length - 1], t);
+                Vector2 tuftTip = tuftRoot + new Vector2(
+                    CaveVisualRange(ref state, -0.08f, 0.08f),
+                    CaveVisualRange(ref state, 0.11f, 0.24f));
+                AppendPencilQuad(vertices, colors, triangles, tuftRoot, tuftTip, 0.019f, outline * 0.78f);
+            }
+        }
+
+        private static Rect GetCaveBackdropBounds(IList<StageObjectData> objects)
+        {
+            bool found = false;
+            float minX = 0f;
+            float maxX = 0f;
+            float minY = 0f;
+            float maxY = 0f;
+            List<Rect> rects = new List<Rect>();
+            if (objects != null)
+            {
+                for (int objectIndex = 0; objectIndex < objects.Count; objectIndex++)
+                {
+                    StageObjectData data = objects[objectIndex];
+                    if (data == null
+                        || (!IsCaveTerrainType(data.type)
+                            && data.type != StageObjectType.StageBoundary
+                            && data.type != StageObjectType.Elevator))
+                    {
+                        continue;
+                    }
+
+                    rects.Clear();
+                    AppendStageRects(data, rects);
+                    for (int rectIndex = 0; rectIndex < rects.Count; rectIndex++)
+                    {
+                        Rect rect = rects[rectIndex];
+                        if (!found)
+                        {
+                            minX = rect.xMin;
+                            maxX = rect.xMax;
+                            minY = rect.yMin;
+                            maxY = rect.yMax;
+                            found = true;
+                        }
+                        else
+                        {
+                            minX = Mathf.Min(minX, rect.xMin);
+                            maxX = Mathf.Max(maxX, rect.xMax);
+                            minY = Mathf.Min(minY, rect.yMin);
+                            maxY = Mathf.Max(maxY, rect.yMax);
+                        }
+                    }
+                }
+            }
+
+            if (!found)
+            {
+                minX = -30f;
+                maxX = 30f;
+                minY = -18f;
+                maxY = 18f;
+            }
+
+            float width = Mathf.Max(32f, maxX - minX);
+            float height = Mathf.Max(22f, maxY - minY);
+            float marginX = Mathf.Max(10f, width * 0.08f);
+            float marginY = Mathf.Max(8f, height * 0.1f);
+            return Rect.MinMaxRect(
+                minX - marginX,
+                minY - marginY,
+                maxX + marginX,
+                maxY + marginY);
+        }
+
+        private static void AddCaveBackdropPaper(Transform parent, Rect bounds)
+        {
+            Rect colorBounds = GetBackdropColorFillBounds(bounds);
+            GameObject paper = new GameObject("Cave Blue Gray Paper Wash");
+            paper.transform.SetParent(parent, false);
+            paper.transform.localPosition = new Vector3(colorBounds.center.x, colorBounds.center.y, 0f);
+            paper.transform.localScale = new Vector3(colorBounds.width, colorBounds.height, 1f);
+            SpriteRenderer renderer = paper.AddComponent<SpriteRenderer>();
+            renderer.sprite = GetSquareSprite();
+            renderer.color = CaveBackdropPaperColor;
+            renderer.sortingOrder = -99;
+        }
+
+        private struct CaveBackdropSurface
+        {
+            public Vector2 From;
+            public Vector2 To;
+            public Vector2 Outward;
+            public float MaxHeight;
+            public bool AllowsCrystal;
+        }
+
+        private static void AddCaveBackdropDrawing(
+            Transform parent,
+            Rect bounds,
+            IList<StageObjectData> objects,
+            int seed)
+        {
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> hatchVertices = new List<Vector3>();
+            List<Color> hatchColors = new List<Color>();
+            List<int> hatchTriangles = new List<int>();
+            List<Vector3> rockVertices = new List<Vector3>();
+            List<Color> rockColors = new List<Color>();
+            List<int> rockTriangles = new List<int>();
+            List<Vector3> pencilVertices = new List<Vector3>();
+            List<Color> pencilColors = new List<Color>();
+            List<int> pencilTriangles = new List<int>();
+
+            int hatchCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 22f), 64, 320);
+            for (int hatchIndex = 0; hatchIndex < hatchCount; hatchIndex++)
+            {
+                Vector2 start = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin, bounds.xMax),
+                    CaveVisualRange(ref state, bounds.yMin, bounds.yMax));
+                float length = CaveVisualRange(ref state, 0.45f, 2.35f);
+                Vector2 end = start + new Vector2(length, length * CaveVisualRange(ref state, 0.13f, 0.3f));
+                end.x = Mathf.Min(end.x, bounds.xMax);
+                end.y = Mathf.Min(end.y, bounds.yMax);
+                Color hatch = new Color(0.24f, 0.34f, 0.4f, CaveVisualRange(ref state, 0.028f, 0.058f));
+                AppendPencilQuad(
+                    hatchVertices,
+                    hatchColors,
+                    hatchTriangles,
+                    start,
+                    end,
+                    CaveVisualRange(ref state, 0.012f, 0.024f),
+                    hatch);
+            }
+
+            List<Rect> solidRects = new List<Rect>();
+            List<CaveBackdropSurface> surfaces = new List<CaveBackdropSurface>();
+            CollectCaveBackdropSurfaces(objects, solidRects, surfaces);
+            for (int surfaceIndex = 0; surfaceIndex < surfaces.Count; surfaceIndex++)
+            {
+                CaveBackdropSurface surface = surfaces[surfaceIndex];
+                Vector2 midpoint = (surface.From + surface.To) * 0.5f;
+                if (!IsCaveBackdropSurfaceExposed(midpoint, surface.Outward, solidRects))
+                {
+                    continue;
+                }
+
+                AppendCaveBackdropClustersOnSurface(
+                    rockVertices,
+                    rockColors,
+                    rockTriangles,
+                    pencilVertices,
+                    pencilColors,
+                    pencilTriangles,
+                    surface,
+                    ref state);
+
+                if (surface.AllowsCrystal
+                    && surface.Outward.y > 0.7f
+                    && (surface.To - surface.From).magnitude > 4f
+                    && CaveVisual01(ref state) > 0.83f)
+                {
+                    Vector2 anchor = Vector2.Lerp(
+                        surface.From,
+                        surface.To,
+                        CaveVisualRange(ref state, 0.22f, 0.78f));
+                    AppendCaveBackdropCrystal(
+                        rockVertices,
+                        rockColors,
+                        rockTriangles,
+                        pencilVertices,
+                        pencilColors,
+                        pencilTriangles,
+                        anchor + surface.Outward * 0.04f,
+                        CaveVisualRange(ref state, 0.52f, 0.95f),
+                        ref state);
+                }
+            }
+
+            CreatePencilMesh(parent, "Cave Background Paper Hatching", hatchVertices, hatchColors, hatchTriangles, -98);
+            CreatePencilMesh(parent, "Cave Background Rock Silhouettes", rockVertices, rockColors, rockTriangles, -92);
+            CreatePencilMesh(parent, "Cave Background Graphite Drawing", pencilVertices, pencilColors, pencilTriangles, -91);
+        }
+
+        private static void CollectCaveBackdropSurfaces(
+            IList<StageObjectData> objects,
+            List<Rect> solidRects,
+            List<CaveBackdropSurface> surfaces)
+        {
+            if (objects == null)
+            {
+                return;
+            }
+
+            List<Rect> parts = new List<Rect>();
+            for (int objectIndex = 0; objectIndex < objects.Count; objectIndex++)
+            {
+                StageObjectData data = objects[objectIndex];
+                if (data == null)
+                {
+                    continue;
+                }
+
+                if (data.type == StageObjectType.StageBoundary)
+                {
+                    float inset = GetStageBoundaryInteriorThickness(data);
+                    float left = data.position.x - data.size.x * 0.5f + inset;
+                    float right = data.position.x + data.size.x * 0.5f - inset;
+                    float top = data.position.y + data.size.y * 0.5f - inset;
+                    surfaces.Add(new CaveBackdropSurface
+                    {
+                        From = new Vector2(left + 0.2f, top),
+                        To = new Vector2(right - 0.2f, top),
+                        Outward = Vector2.down,
+                        MaxHeight = 2.65f,
+                        AllowsCrystal = false
+                    });
+                    continue;
+                }
+
+                if (!IsStaticCaveBackdropAnchor(data.type)
+                    || (data.pathPoints != null && data.pathPoints.Length >= 2))
+                {
+                    continue;
+                }
+
+                parts.Clear();
+                AppendStageRects(data, parts);
+                for (int partIndex = 0; partIndex < parts.Count; partIndex++)
+                {
+                    Rect rect = parts[partIndex];
+                    solidRects.Add(rect);
+                    if (rect.width < 1.65f || rect.width < rect.height * 1.22f)
+                    {
+                        continue;
+                    }
+
+                    float inset = Mathf.Min(0.16f, rect.width * 0.06f);
+                    surfaces.Add(new CaveBackdropSurface
+                    {
+                        From = new Vector2(rect.xMin + inset, rect.yMin),
+                        To = new Vector2(rect.xMax - inset, rect.yMin),
+                        Outward = Vector2.down,
+                        MaxHeight = Mathf.Clamp(rect.width * 0.12f, 0.7f, 2.15f),
+                        AllowsCrystal = false
+                    });
+
+                    if (data.type == StageObjectType.Platform && rect.width >= 3.25f)
+                    {
+                        surfaces.Add(new CaveBackdropSurface
+                        {
+                            From = new Vector2(rect.xMin + inset, rect.yMax),
+                            To = new Vector2(rect.xMax - inset, rect.yMax),
+                            Outward = Vector2.up,
+                            MaxHeight = Mathf.Clamp(rect.width * 0.075f, 0.42f, 1.25f),
+                            AllowsCrystal = true
+                        });
+                    }
+                }
+            }
+        }
+
+        private static bool IsStaticCaveBackdropAnchor(StageObjectType type)
+        {
+            return type == StageObjectType.Platform
+                || type == StageObjectType.Wall
+                || type == StageObjectType.Ceiling
+                || type == StageObjectType.HalfPlatform;
+        }
+
+        private static bool IsCaveBackdropSurfaceExposed(
+            Vector2 midpoint,
+            Vector2 outward,
+            List<Rect> solidRects)
+        {
+            Vector2 sample = midpoint + outward.normalized * 0.12f;
+            for (int i = 0; i < solidRects.Count; i++)
+            {
+                Rect rect = solidRects[i];
+                if (sample.x > rect.xMin + 0.015f
+                    && sample.x < rect.xMax - 0.015f
+                    && sample.y > rect.yMin + 0.015f
+                    && sample.y < rect.yMax - 0.015f)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static void AppendCaveBackdropClustersOnSurface(
+            List<Vector3> fillVertices,
+            List<Color> fillColors,
+            List<int> fillTriangles,
+            List<Vector3> lineVertices,
+            List<Color> lineColors,
+            List<int> lineTriangles,
+            CaveBackdropSurface surface,
+            ref uint state)
+        {
+            Vector2 edge = surface.To - surface.From;
+            float length = edge.magnitude;
+            if (length < 0.7f)
+            {
+                return;
+            }
+
+            Vector2 tangent = edge / length;
+            Vector2 outward = surface.Outward.normalized;
+            float cursor = CaveVisualRange(ref state, 0.08f, 0.55f);
+            int guard = 0;
+            while (cursor < length - 0.35f && guard++ < 80)
+            {
+                cursor += CaveVisualRange(ref state, 0.12f, 0.72f);
+                float clusterLength = Mathf.Min(
+                    CaveVisualRange(ref state, 0.72f, 2.8f),
+                    length - cursor);
+                if (clusterLength < 0.42f)
+                {
+                    break;
+                }
+
+                if (CaveVisual01(ref state) > 0.12f)
+                {
+                    AppendOrganicCaveBackdropCluster(
+                        fillVertices,
+                        fillColors,
+                        fillTriangles,
+                        lineVertices,
+                        lineColors,
+                        lineTriangles,
+                        surface.From + tangent * cursor,
+                        tangent,
+                        outward,
+                        clusterLength,
+                        surface.MaxHeight,
+                        ref state);
+                }
+                cursor += clusterLength + CaveVisualRange(ref state, 0.22f, 1.05f);
+            }
+        }
+
+        private static void AppendOrganicCaveBackdropCluster(
+            List<Vector3> fillVertices,
+            List<Color> fillColors,
+            List<int> fillTriangles,
+            List<Vector3> lineVertices,
+            List<Color> lineColors,
+            List<int> lineTriangles,
+            Vector2 start,
+            Vector2 tangent,
+            Vector2 outward,
+            float clusterLength,
+            float maxHeight,
+            ref uint state)
+        {
+            int toothCount = Mathf.Clamp(
+                Mathf.RoundToInt(clusterLength / CaveVisualRange(ref state, 0.48f, 0.82f)),
+                1,
+                6);
+            float slotWidth = clusterLength / toothCount;
+            Color outline = new Color(
+                CaveBackdropGraphiteColor.r,
+                CaveBackdropGraphiteColor.g,
+                CaveBackdropGraphiteColor.b,
+                CaveVisualRange(ref state, 0.25f, 0.39f));
+            Color hatch = new Color(0.22f, 0.28f, 0.33f, 0.12f);
+
+            Vector2 rootPrevious = start + outward * CaveVisualRange(ref state, -0.025f, 0.04f);
+            for (int toothIndex = 0; toothIndex < toothCount; toothIndex++)
+            {
+                float centerDistance = (toothIndex + 0.5f) * slotWidth
+                    + CaveVisualRange(ref state, -0.12f, 0.12f) * slotWidth;
+                float width = slotWidth * CaveVisualRange(ref state, 0.62f, 1.04f);
+                float height = maxHeight * CaveVisualRange(ref state, 0.34f, 1f);
+                Vector2 center = start + tangent * centerDistance;
+                Vector2 baseLeft = center - tangent * (width * 0.5f);
+                Vector2 baseRight = center + tangent * (width * 0.5f);
+                Vector2 shoulderLeft = center - tangent * (width * 0.29f) + outward * (height * 0.2f);
+                Vector2 shoulderRight = center + tangent * (width * 0.33f) + outward * (height * 0.24f);
+                Vector2 tip = center
+                    + outward * height
+                    + tangent * CaveVisualRange(ref state, -0.14f, 0.14f) * width;
+                Vector2[] polygon = { baseLeft, shoulderLeft, tip, shoulderRight, baseRight };
+                Color fill = new Color(
+                    CaveBackdropRockColor.r,
+                    CaveBackdropRockColor.g,
+                    CaveBackdropRockColor.b,
+                    CaveVisualRange(ref state, 0.09f, 0.155f));
+                AppendFilledCavePolygon(fillVertices, fillColors, fillTriangles, polygon, fill);
+
+                for (int edgeIndex = 0; edgeIndex < polygon.Length - 1; edgeIndex++)
+                {
+                    AppendCaveWobblyStroke(
+                        lineVertices,
+                        lineColors,
+                        lineTriangles,
+                        polygon[edgeIndex],
+                        polygon[edgeIndex + 1],
+                        CaveVisualRange(ref state, 0.021f, 0.039f),
+                        outline,
+                        0.027f,
+                        ref state);
+                }
+
+                int hatchCount = 2 + Mathf.FloorToInt(CaveVisual01(ref state) * 4f);
+                for (int hatchIndex = 0; hatchIndex < hatchCount; hatchIndex++)
+                {
+                    float baseT = (hatchIndex + CaveVisualRange(ref state, 0.35f, 0.72f)) / (hatchCount + 0.8f);
+                    Vector2 hatchFrom = Vector2.Lerp(baseLeft, baseRight, Mathf.Clamp01(baseT));
+                    Vector2 hatchTo = Vector2.Lerp(
+                        hatchFrom,
+                        tip + tangent * CaveVisualRange(ref state, -0.08f, 0.08f) * width,
+                        CaveVisualRange(ref state, 0.42f, 0.82f));
+                    AppendCaveWobblyStroke(
+                        lineVertices, lineColors, lineTriangles,
+                        hatchFrom, hatchTo, 0.012f, hatch, 0.02f, ref state);
+                }
+
+                Vector2 rootNext = baseRight + outward * CaveVisualRange(ref state, -0.02f, 0.055f);
+                AppendCaveWobblyStroke(
+                    lineVertices,
+                    lineColors,
+                    lineTriangles,
+                    rootPrevious,
+                    rootNext,
+                    CaveVisualRange(ref state, 0.025f, 0.045f),
+                    outline,
+                    0.022f,
+                    ref state);
+                rootPrevious = rootNext;
+            }
+        }
+
+        private static void AppendCaveWobblyStroke(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 from,
+            Vector2 to,
+            float width,
+            Color color,
+            float wobble,
+            ref uint state)
+        {
+            Vector2 delta = to - from;
+            float length = delta.magnitude;
+            if (length <= 0.001f)
+            {
+                return;
+            }
+
+            Vector2 direction = delta / length;
+            Vector2 normal = new Vector2(-direction.y, direction.x);
+            int segmentCount = Mathf.Clamp(Mathf.CeilToInt(length / 0.2f), 2, 28);
+            float phase = CaveVisualRange(ref state, -Mathf.PI, Mathf.PI);
+            Vector2 previous = from;
+            for (int segment = 1; segment <= segmentCount; segment++)
+            {
+                float t = segment / (float)segmentCount;
+                float envelope = Mathf.Sin(t * Mathf.PI);
+                float displacement = (
+                    Mathf.Sin(phase + t * Mathf.PI * CaveVisualRange(ref state, 1.35f, 2.4f)) * wobble
+                    + CaveVisualRange(ref state, -wobble * 0.32f, wobble * 0.32f)) * envelope;
+                Vector2 next = Vector2.Lerp(from, to, t) + normal * displacement;
+                if (segment == 1
+                    || segment == segmentCount
+                    || CaveVisual01(ref state) > 0.1f)
+                {
+                    AppendPencilQuad(
+                        vertices,
+                        colors,
+                        triangles,
+                        previous,
+                        next,
+                        width * CaveVisualRange(ref state, 0.82f, 1.18f),
+                        color);
+                }
+                previous = next;
+            }
+        }
+
+        private static void AppendCaveBackdropRockTooth(
+            List<Vector3> rockVertices,
+            List<Color> rockColors,
+            List<int> rockTriangles,
+            List<Vector3> pencilVertices,
+            List<Color> pencilColors,
+            List<int> pencilTriangles,
+            Vector2 anchor,
+            Vector2 tangent,
+            Vector2 direction,
+            float width,
+            float height,
+            ref uint state)
+        {
+            tangent.Normalize();
+            direction.Normalize();
+            float lean = CaveVisualRange(ref state, -0.16f, 0.16f) * width;
+            Vector2[] edge =
+            {
+                anchor - tangent * (width * 0.5f),
+                anchor - tangent * (width * 0.29f) + direction * (height * 0.24f),
+                anchor + direction * height + tangent * lean,
+                anchor + tangent * (width * 0.31f) + direction * (height * 0.2f),
+                anchor + tangent * (width * 0.5f)
+            };
+            AppendFilledCavePolygon(
+                rockVertices,
+                rockColors,
+                rockTriangles,
+                edge,
+                new Color(
+                    CaveBackdropRockColor.r,
+                    CaveBackdropRockColor.g,
+                    CaveBackdropRockColor.b,
+                    CaveVisualRange(ref state, 0.11f, 0.2f)));
+
+            Color outline = new Color(
+                CaveBackdropGraphiteColor.r,
+                CaveBackdropGraphiteColor.g,
+                CaveBackdropGraphiteColor.b,
+                CaveVisualRange(ref state, 0.2f, 0.34f));
+            for (int i = 0; i < edge.Length - 1; i++)
+            {
+                AppendPencilQuad(
+                    pencilVertices,
+                    pencilColors,
+                    pencilTriangles,
+                    edge[i],
+                    edge[i + 1],
+                    CaveVisualRange(ref state, 0.025f, 0.052f),
+                    outline);
+            }
+            AppendPencilQuad(pencilVertices, pencilColors, pencilTriangles, edge[4], edge[0], 0.03f, outline);
+
+            Color hatch = new Color(0.28f, 0.33f, 0.38f, 0.12f);
+            for (int hatchIndex = 0; hatchIndex < 3; hatchIndex++)
+            {
+                float baseT = (hatchIndex + 1f) / 4f;
+                Vector2 from = Vector2.Lerp(edge[0], edge[4], baseT);
+                Vector2 to = Vector2.Lerp(from, edge[2], CaveVisualRange(ref state, 0.4f, 0.72f));
+                AppendPencilQuad(pencilVertices, pencilColors, pencilTriangles, from, to, 0.018f, hatch);
+            }
+        }
+
+        private static void AppendCaveBackdropBrokenContour(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            float left,
+            float right,
+            float y,
+            int row,
+            ref uint state)
+        {
+            int segmentCount = Mathf.Clamp(Mathf.CeilToInt((right - left) / 5.5f), 5, 32);
+            Vector2 previous = new Vector2(left, y + CaveVisualRange(ref state, -0.16f, 0.16f));
+            Color contour = new Color(0.22f, 0.27f, 0.31f, 0.16f);
+            for (int segment = 1; segment <= segmentCount; segment++)
+            {
+                Vector2 next = new Vector2(
+                    Mathf.Lerp(left, right, segment / (float)segmentCount),
+                    y + Mathf.Sin(row * 1.71f + segment * 1.29f) * 0.22f
+                        + CaveVisualRange(ref state, -0.09f, 0.09f));
+                if (CaveVisual01(ref state) > 0.22f)
+                {
+                    AppendPencilQuad(vertices, colors, triangles, previous, next, 0.024f, contour);
+                    AppendPencilQuad(
+                        vertices,
+                        colors,
+                        triangles,
+                        previous + new Vector2(0f, -0.035f),
+                        next + new Vector2(0f, -0.035f),
+                        0.011f,
+                        new Color(0.54f, 0.59f, 0.62f, 0.1f));
+                }
+                previous = next;
+            }
+        }
+
+        private static void AppendCaveBackdropCrystal(
+            List<Vector3> rockVertices,
+            List<Color> rockColors,
+            List<int> rockTriangles,
+            List<Vector3> pencilVertices,
+            List<Color> pencilColors,
+            List<int> pencilTriangles,
+            Vector2 anchor,
+            float scale,
+            ref uint state)
+        {
+            Color[] fills =
+            {
+                new Color(0.35f, 0.58f, 0.82f, 0.13f),
+                new Color(0.55f, 0.4f, 0.78f, 0.12f),
+                new Color(0.33f, 0.72f, 0.76f, 0.11f)
+            };
+            for (int crystal = 0; crystal < 3; crystal++)
+            {
+                float offset = (crystal - 1) * scale * 0.34f;
+                float height = scale * (crystal == 1 ? 1.25f : CaveVisualRange(ref state, 0.65f, 0.92f));
+                float width = scale * (crystal == 1 ? 0.44f : 0.34f);
+                Vector2 baseLeft = anchor + new Vector2(offset - width * 0.5f, 0f);
+                Vector2 baseRight = anchor + new Vector2(offset + width * 0.5f, 0f);
+                Vector2 tip = anchor + new Vector2(offset + CaveVisualRange(ref state, -0.08f, 0.08f), height);
+                Vector2[] polygon = { baseLeft, tip, baseRight };
+                AppendFilledCavePolygon(rockVertices, rockColors, rockTriangles, polygon, fills[crystal]);
+                Color outline = new Color(fills[crystal].r, fills[crystal].g, fills[crystal].b, 0.28f);
+                AppendPencilQuad(pencilVertices, pencilColors, pencilTriangles, baseLeft, tip, 0.025f, outline);
+                AppendPencilQuad(pencilVertices, pencilColors, pencilTriangles, tip, baseRight, 0.025f, outline);
+            }
+        }
+
+        private static void AppendCaveBackdropCrack(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 root,
+            float length,
+            ref uint state)
+        {
+            float angle = CaveVisualRange(ref state, -2.7f, -0.44f);
+            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            Vector2 tangent = new Vector2(-direction.y, direction.x);
+            Vector2 previous = root;
+            Color crack = new Color(0.17f, 0.2f, 0.24f, 0.2f);
+            for (int segment = 1; segment <= 4; segment++)
+            {
+                Vector2 next = root
+                    + direction * (length * segment / 4f)
+                    + tangent * CaveVisualRange(ref state, -0.16f, 0.16f);
+                AppendPencilQuad(vertices, colors, triangles, previous, next, 0.026f - segment * 0.003f, crack);
+                if (segment == 2)
+                {
+                    Vector2 branch = next
+                        + (direction * 0.42f + tangent * (CaveVisual01(ref state) > 0.5f ? 0.7f : -0.7f)).normalized
+                            * (length * 0.35f);
+                    AppendPencilQuad(vertices, colors, triangles, next, branch, 0.017f, crack);
+                }
+                previous = next;
+            }
+        }
+
+        private static void AppendFilledCavePolygon(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2[] edge,
+            Color color)
+        {
+            if (edge == null || edge.Length < 3)
+            {
+                return;
+            }
+
+            Vector2 center = Vector2.zero;
+            for (int i = 0; i < edge.Length; i++) center += edge[i];
+            center /= edge.Length;
+            int first = vertices.Count;
+            vertices.Add(center);
+            colors.Add(color);
+            for (int i = 0; i < edge.Length; i++)
+            {
+                vertices.Add(edge[i]);
+                colors.Add(color);
+            }
+            for (int i = 0; i < edge.Length; i++)
+            {
+                triangles.Add(first);
+                triangles.Add(first + 1 + i);
+                triangles.Add(first + 1 + ((i + 1) % edge.Length));
+            }
+        }
+
+        private static void AddUnderwaterSandFill(Transform parent, Vector2 size, int seed)
+        {
+            AddSolidPencilFill(parent, size, UnderwaterSandStrokeColor, 4, 0.72f);
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            float left = -size.x * 0.5f + 0.08f;
+            float right = size.x * 0.5f - 0.08f;
+            float bottom = -size.y * 0.5f + 0.06f;
+            float top = size.y * 0.5f - 0.06f;
+            int grainCount = Mathf.Clamp(Mathf.RoundToInt(size.x * Mathf.Max(1f, size.y) * 4.2f), 18, 260);
+            Color grain = new Color(
+                UnderwaterSandStrokeColor.r,
+                UnderwaterSandStrokeColor.g,
+                UnderwaterSandStrokeColor.b,
+                0.3f);
+            for (int grainIndex = 0; grainIndex < grainCount; grainIndex++)
+            {
+                Vector2 center = new Vector2(
+                    CaveVisualRange(ref state, left, right),
+                    CaveVisualRange(ref state, bottom, top));
+                float length = CaveVisualRange(ref state, 0.035f, 0.13f);
+                float angle = CaveVisualRange(ref state, -0.45f, 0.45f);
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    center - direction * (length * 0.5f),
+                    center + direction * (length * 0.5f),
+                    CaveVisualRange(ref state, 0.008f, 0.016f),
+                    grain);
+            }
+
+            Color wave = new Color(0.72f, 0.51f, 0.23f, 0.46f);
+            for (int waveIndex = 0; waveIndex < 2; waveIndex++)
+            {
+                AppendCaveWobblyStroke(
+                    vertices,
+                    colors,
+                    triangles,
+                    new Vector2(left, top - waveIndex * 0.08f),
+                    new Vector2(right, top - waveIndex * 0.08f),
+                    waveIndex == 0 ? 0.035f : 0.019f,
+                    wave,
+                    0.035f,
+                    ref state);
+            }
+            CreatePencilMesh(parent, "Underwater Sand Grains", vertices, colors, triangles, 7);
+        }
+
+        private static void AddUnderwaterRockFill(Transform parent, Vector2 size, int seed)
+        {
+            AddSolidPencilFill(parent, size, UnderwaterRockStrokeColor, 4, 1.16f);
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            float left = -size.x * 0.5f + 0.08f;
+            float right = size.x * 0.5f - 0.08f;
+            float bottom = -size.y * 0.5f + 0.08f;
+            float top = size.y * 0.5f - 0.08f;
+            int crackCount = Mathf.Clamp(Mathf.RoundToInt((size.x + size.y) / 3.1f), 1, 24);
+            Color crack = new Color(0.08f, 0.2f, 0.24f, 0.48f);
+            for (int crackIndex = 0; crackIndex < crackCount; crackIndex++)
+            {
+                Vector2 root = new Vector2(
+                    CaveVisualRange(ref state, left, right),
+                    CaveVisualRange(ref state, bottom, top));
+                Vector2 previous = root;
+                float angle = CaveVisualRange(ref state, -2.75f, -0.38f);
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                Vector2 normal = new Vector2(-direction.y, direction.x);
+                float length = CaveVisualRange(ref state, 0.32f, 0.9f);
+                for (int segment = 1; segment <= 3; segment++)
+                {
+                    Vector2 next = root
+                        + direction * (length * segment / 3f)
+                        + normal * CaveVisualRange(ref state, -0.08f, 0.08f);
+                    next.x = Mathf.Clamp(next.x, left, right);
+                    next.y = Mathf.Clamp(next.y, bottom, top);
+                    AppendPencilQuad(
+                        vertices,
+                        colors,
+                        triangles,
+                        previous,
+                        next,
+                        0.019f - segment * 0.002f,
+                        crack);
+                    previous = next;
+                }
+            }
+
+            int shadeCount = Mathf.Clamp(Mathf.RoundToInt(size.x * size.y / 1.8f), 4, 180);
+            Color shade = new Color(
+                UnderwaterRockAccentColor.r,
+                UnderwaterRockAccentColor.g,
+                UnderwaterRockAccentColor.b,
+                0.2f);
+            for (int shadeIndex = 0; shadeIndex < shadeCount; shadeIndex++)
+            {
+                Vector2 start = new Vector2(
+                    CaveVisualRange(ref state, left, right),
+                    CaveVisualRange(ref state, bottom, top));
+                Vector2 end = start + new Vector2(
+                    CaveVisualRange(ref state, 0.18f, 0.62f),
+                    CaveVisualRange(ref state, 0.08f, 0.32f));
+                end.x = Mathf.Clamp(end.x, left, right);
+                end.y = Mathf.Clamp(end.y, bottom, top);
+                AppendPencilQuad(vertices, colors, triangles, start, end, 0.012f, shade);
+            }
+            CreatePencilMesh(parent, "Underwater Rock Crayon Texture", vertices, colors, triangles, 7);
+        }
+
+        private static void AddUnderwaterSandCap(Transform parent, Vector2 size, int seed)
+        {
+            float capHeight = Mathf.Min(0.34f, Mathf.Max(0.18f, size.y * 0.22f));
+            GameObject cap = new GameObject("Underwater Sand Cap");
+            cap.transform.SetParent(parent, false);
+            cap.transform.localPosition = new Vector3(0f, size.y * 0.5f - capHeight * 0.5f, -0.01f);
+            cap.transform.localScale = new Vector3(size.x - 0.08f, capHeight, 1f);
+            SpriteRenderer renderer = cap.AddComponent<SpriteRenderer>();
+            renderer.sprite = GetSquareSprite();
+            renderer.color = UnderwaterSandPaperColor;
+            renderer.sortingOrder = 8;
+
+            uint state = CreateCaveVisualState(seed);
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            float y = size.y * 0.5f - 0.015f;
+            AppendCaveWobblyStroke(
+                vertices,
+                colors,
+                triangles,
+                new Vector2(-size.x * 0.5f + 0.04f, y),
+                new Vector2(size.x * 0.5f - 0.04f, y),
+                0.043f,
+                new Color(UnderwaterSandStrokeColor.r, UnderwaterSandStrokeColor.g, UnderwaterSandStrokeColor.b, 0.88f),
+                0.04f,
+                ref state);
+            int grains = Mathf.Clamp(Mathf.RoundToInt(size.x * 2.4f), 5, 90);
+            for (int grainIndex = 0; grainIndex < grains; grainIndex++)
+            {
+                Vector2 grain = new Vector2(
+                    CaveVisualRange(ref state, -size.x * 0.5f + 0.08f, size.x * 0.5f - 0.08f),
+                    y - CaveVisualRange(ref state, 0.07f, capHeight - 0.035f));
+                AppendPencilQuad(
+                    vertices,
+                    colors,
+                    triangles,
+                    grain,
+                    grain + new Vector2(CaveVisualRange(ref state, 0.035f, 0.1f), 0.015f),
+                    0.012f,
+                    new Color(0.55f, 0.37f, 0.16f, 0.34f));
+            }
+            CreatePencilMesh(parent, "Underwater Sand Cap Pencil", vertices, colors, triangles, 10);
+        }
+
+        private static void AddUnderwaterTerrainBoxOutline(Transform parent, Vector2 size, Color color)
+        {
+            AddSolidSketchBoxOutline(parent, size, color, 0.068f, 13);
+            bool sand = Mathf.Abs(color.r - UnderwaterSandStrokeColor.r) < 0.06f
+                && Mathf.Abs(color.g - UnderwaterSandStrokeColor.g) < 0.06f;
+            Color accent = sand
+                ? new Color(0.79f, 0.61f, 0.3f, 0.42f)
+                : new Color(
+                    UnderwaterRockAccentColor.r,
+                    UnderwaterRockAccentColor.g,
+                    UnderwaterRockAccentColor.b,
+                    0.42f);
+            AddSolidSketchBoxOutline(
+                parent,
+                size,
+                accent,
+                0.026f,
+                14,
+                new Vector3(0.025f, -0.018f, 0f));
+        }
+
+        private static void AddUnderwaterRockUnderside(Transform parent, Vector2 size, int seed)
+        {
+            // Broad, irregular rock teeth sit behind the real collider. They are
+            // decorative only and preserve the authored rectangular physics.
+            AddCaveStalactitesOnWorldBottomEdge(parent, size, seed);
+        }
+
+        private static void AddCaveTerrainFill(
+            Transform parent,
+            Vector2 size,
+            Color color,
+            int seed)
+        {
+            AddSolidPencilFill(parent, size, color, 4, 1.45f);
+            AddCaveRockTexture(parent, size, seed);
+            AddCaveTerrainEdgeGradient(parent, size, color);
+            AddCaveCracks(parent, size, seed + 389);
+        }
+
+        private static void AddCaveTerrainBoxOutline(Transform parent, Vector2 size)
+        {
+            Vector2[] corners =
+            {
+                new Vector2(-size.x * 0.5f, -size.y * 0.5f),
+                new Vector2(size.x * 0.5f, -size.y * 0.5f),
+                new Vector2(size.x * 0.5f, size.y * 0.5f),
+                new Vector2(-size.x * 0.5f, size.y * 0.5f)
+            };
+            List<Vector3> main = new List<Vector3>();
+            List<Vector3> echo = new List<Vector3>();
+            List<Vector3> dryPencil = new List<Vector3>();
+            for (int edgeIndex = 0; edgeIndex < corners.Length; edgeIndex++)
+            {
+                Vector2 from = corners[edgeIndex];
+                Vector2 to = corners[(edgeIndex + 1) % corners.Length];
+                Vector2 direction = to - from;
+                Vector2 inward = new Vector2(-direction.y, direction.x).normalized;
+                int segmentCount = Mathf.Clamp(Mathf.CeilToInt(direction.magnitude / 0.7f), 6, 28);
+                for (int pointIndex = 0; pointIndex <= segmentCount; pointIndex++)
+                {
+                    if (edgeIndex > 0 && pointIndex == 0)
+                    {
+                        continue;
+                    }
+
+                    float t = pointIndex / (float)segmentCount;
+                    float envelope = Mathf.Sin(t * Mathf.PI);
+                    float wobble = (
+                        Mathf.Sin(edgeIndex * 4.17f + pointIndex * 1.91f) * 0.026f
+                        + Mathf.Sin(edgeIndex * 1.73f + pointIndex * 4.07f) * 0.012f) * envelope;
+                    Vector2 point = Vector2.Lerp(from, to, t);
+                    main.Add(point + inward * wobble);
+                    echo.Add(point + inward * (0.038f + wobble * 0.68f));
+                    dryPencil.Add(point + inward * (-0.026f - wobble * 0.44f));
+                }
+            }
+
+            main.Add(main[0]);
+            echo.Add(echo[0]);
+            dryPencil.Add(dryPencil[0]);
+            AddDoodleLine(
+                "Cave Rough Pencil Outline",
+                parent,
+                main.ToArray(),
+                CaveTerrainStrokeColor,
+                0.096f,
+                13);
+            AddDoodleLine(
+                "Cave Graphite Echo",
+                parent,
+                echo.ToArray(),
+                CaveTerrainAccentColor,
+                0.038f,
+                12);
+            AddDoodleLine(
+                "Cave Dry Pencil Edge",
+                parent,
+                dryPencil.ToArray(),
+                new Color(CaveTerrainStrokeColor.r, CaveTerrainStrokeColor.g, CaveTerrainStrokeColor.b, 0.58f),
+                0.028f,
+                14);
+        }
+
+        private static void AddCaveRockTexture(Transform parent, Vector2 size, int seed)
+        {
+            if (parent == null || size.x < 0.18f || size.y < 0.18f)
+            {
+                return;
+            }
+
+            float left = -size.x * 0.5f + 0.055f;
+            float right = size.x * 0.5f - 0.055f;
+            float bottom = -size.y * 0.5f + 0.055f;
+            float top = size.y * 0.5f - 0.055f;
+            if (right <= left || top <= bottom)
+            {
+                return;
+            }
+
+            uint state = CreateCaveVisualState(seed);
+            int strokeCount = Mathf.Clamp(
+                Mathf.RoundToInt(size.x * size.y * 1.15f + (size.x + size.y) * 1.8f),
+                8,
+                86);
+            List<Vector3> vertices = new List<Vector3>(strokeCount * 12);
+            List<Color> colors = new List<Color>(strokeCount * 12);
+            List<int> triangles = new List<int>(strokeCount * 18);
+            for (int strokeIndex = 0; strokeIndex < strokeCount; strokeIndex++)
+            {
+                float x = CaveVisualRange(ref state, left, right);
+                float y = CaveVisualRange(ref state, bottom, top);
+                float maxLength = Mathf.Min(1.35f, Mathf.Max(0.16f, right - x));
+                float length = CaveVisualRange(ref state, 0.18f, Mathf.Max(0.19f, maxLength));
+                float rise = CaveVisualRange(ref state, -0.17f, 0.28f);
+                if ((strokeIndex & 3) == 0)
+                {
+                    rise *= -0.55f;
+                }
+
+                Vector2 start = new Vector2(x, y);
+                Vector2 end = new Vector2(Mathf.Min(right, x + length), Mathf.Clamp(y + rise, bottom, top));
+                Vector2 bend = Vector2.Lerp(start, end, CaveVisualRange(ref state, 0.38f, 0.62f));
+                bend.y = Mathf.Clamp(bend.y + CaveVisualRange(ref state, -0.055f, 0.055f), bottom, top);
+                Color graphite = new Color(
+                    CaveTerrainStrokeColor.r,
+                    CaveTerrainStrokeColor.g,
+                    CaveTerrainStrokeColor.b,
+                    CaveVisualRange(ref state, 0.11f, 0.25f));
+                float width = CaveVisualRange(ref state, 0.009f, 0.018f);
+                AppendPencilQuad(vertices, colors, triangles, start, bend, width, graphite);
+                AppendPencilQuad(vertices, colors, triangles, bend, end, width * 0.9f, graphite);
+            }
+
+            int facetCount = Mathf.Clamp(Mathf.RoundToInt(size.x * size.y / 4.5f), 1, 12);
+            for (int facetIndex = 0; facetIndex < facetCount; facetIndex++)
+            {
+                Vector2 center = new Vector2(
+                    CaveVisualRange(ref state, left, right),
+                    CaveVisualRange(ref state, bottom, top));
+                float radiusX = CaveVisualRange(ref state, 0.12f, Mathf.Min(0.48f, size.x * 0.18f));
+                float radiusY = CaveVisualRange(ref state, 0.07f, Mathf.Min(0.3f, size.y * 0.2f));
+                Color facet = new Color(
+                    CaveTerrainAccentColor.r,
+                    CaveTerrainAccentColor.g,
+                    CaveTerrainAccentColor.b,
+                    CaveVisualRange(ref state, 0.1f, 0.19f));
+                Vector2 a = new Vector2(Mathf.Clamp(center.x - radiusX, left, right), center.y);
+                Vector2 b = new Vector2(center.x, Mathf.Clamp(center.y + radiusY, bottom, top));
+                Vector2 c = new Vector2(Mathf.Clamp(center.x + radiusX, left, right), center.y - radiusY * 0.2f);
+                AppendPencilQuad(vertices, colors, triangles, a, b, 0.012f, facet);
+                AppendPencilQuad(vertices, colors, triangles, b, c, 0.012f, facet);
+            }
+
+            CreatePencilMesh(parent, "Cave Layered Graphite Texture", vertices, colors, triangles, 5);
+        }
+
+        private static void AddCaveCracks(Transform parent, Vector2 size, int seed)
+        {
+            if (parent == null || size.x < 0.32f || size.y < 0.24f)
+            {
+                return;
+            }
+
+            uint state = CreateCaveVisualState(seed);
+            bool horizontalSlab = size.x > size.y * 1.28f;
+            bool verticalSlab = size.y > size.x * 1.28f;
+            float longSide = Mathf.Max(size.x, size.y);
+            int crackCount = Mathf.Clamp(Mathf.FloorToInt(longSide / 5.2f) + 1, 1, 7);
+            List<Vector3> vertices = new List<Vector3>(crackCount * 44);
+            List<Color> colors = new List<Color>(crackCount * 44);
+            List<int> triangles = new List<int>(crackCount * 66);
+            Color crack = new Color(0.12f, 0.13f, 0.15f, 0.72f);
+            Color dry = new Color(0.38f, 0.4f, 0.43f, 0.36f);
+
+            for (int crackIndex = 0; crackIndex < crackCount; crackIndex++)
+            {
+                Vector2 root;
+                Vector2 inward;
+                float depth;
+                if (horizontalSlab)
+                {
+                    bool fromTop = CaveVisual01(ref state) > 0.36f;
+                    root = new Vector2(
+                        CaveVisualRange(ref state, -size.x * 0.4f, size.x * 0.4f),
+                        (fromTop ? 1f : -1f) * (size.y * 0.5f - 0.025f));
+                    inward = fromTop ? Vector2.down : Vector2.up;
+                    depth = Mathf.Clamp(size.y * CaveVisualRange(ref state, 0.34f, 0.72f), 0.12f, 0.72f);
+                }
+                else if (verticalSlab)
+                {
+                    bool fromRight = CaveVisual01(ref state) > 0.5f;
+                    root = new Vector2(
+                        (fromRight ? 1f : -1f) * (size.x * 0.5f - 0.025f),
+                        CaveVisualRange(ref state, -size.y * 0.4f, size.y * 0.4f));
+                    inward = fromRight ? Vector2.left : Vector2.right;
+                    depth = Mathf.Clamp(size.x * CaveVisualRange(ref state, 0.34f, 0.72f), 0.12f, 0.72f);
+                }
+                else
+                {
+                    float angle = CaveVisualRange(ref state, 0f, Mathf.PI * 2f);
+                    inward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                    root = new Vector2(
+                        CaveVisualRange(ref state, -size.x * 0.28f, size.x * 0.28f),
+                        CaveVisualRange(ref state, -size.y * 0.28f, size.y * 0.28f));
+                    depth = Mathf.Clamp(Mathf.Min(size.x, size.y) * CaveVisualRange(ref state, 0.24f, 0.46f), 0.13f, 0.68f);
+                }
+
+                Vector2 tangent = new Vector2(-inward.y, inward.x);
+                Vector2 p1 = root + inward * (depth * 0.34f) + tangent * CaveVisualRange(ref state, -0.1f, 0.1f);
+                Vector2 p2 = root + inward * (depth * 0.68f) + tangent * CaveVisualRange(ref state, -0.13f, 0.13f);
+                Vector2 tip = root + inward * depth + tangent * CaveVisualRange(ref state, -0.11f, 0.11f);
+                AppendCaveCrackStroke(vertices, colors, triangles, root, p1, crack, dry);
+                AppendCaveCrackStroke(vertices, colors, triangles, p1, p2, crack, dry);
+                AppendCaveCrackStroke(vertices, colors, triangles, p2, tip, crack, dry);
+
+                float branchLength = depth * CaveVisualRange(ref state, 0.28f, 0.48f);
+                Vector2 branchDirection = (inward * 0.52f + tangent * (CaveVisual01(ref state) > 0.5f ? 0.85f : -0.85f)).normalized;
+                Vector2 branchBend = p1 + branchDirection * (branchLength * 0.55f) + tangent * CaveVisualRange(ref state, -0.035f, 0.035f);
+                Vector2 branchTip = p1 + branchDirection * branchLength;
+                AppendCaveCrackStroke(vertices, colors, triangles, p1, branchBend, crack, dry);
+                AppendCaveCrackStroke(vertices, colors, triangles, branchBend, branchTip, crack, dry);
+
+                if ((crackIndex + seed & 1) == 0)
+                {
+                    Vector2 secondDirection = (inward * 0.38f - branchDirection * 0.72f).normalized;
+                    AppendCaveCrackStroke(
+                        vertices,
+                        colors,
+                        triangles,
+                        p2,
+                        p2 + secondDirection * (branchLength * 0.62f),
+                        crack,
+                        dry);
+                }
+            }
+
+            CreatePencilMesh(parent, "Cave Hand Drawn Cracks", vertices, colors, triangles, 10);
+        }
+
+        private static void AppendCaveCrackStroke(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 from,
+            Vector2 to,
+            Color crack,
+            Color dry)
+        {
+            AppendPencilQuad(vertices, colors, triangles, from, to, 0.028f, crack);
+            Vector2 offset = new Vector2(0.012f, -0.008f);
+            AppendPencilQuad(vertices, colors, triangles, from + offset, to + offset, 0.011f, dry);
+        }
+
+        private static void AddCaveTerrainEdgeGradient(Transform parent, Vector2 size, Color color)
+        {
+            float halfWidth = size.x * 0.5f;
+            float halfHeight = size.y * 0.5f;
+            float horizontalDepth = Mathf.Min(halfWidth, Mathf.Clamp(size.x * 0.18f, 0.1f, 0.78f));
+            float verticalDepth = Mathf.Min(halfHeight, Mathf.Clamp(size.y * 0.27f, 0.1f, 0.72f));
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            Color edge = new Color(color.r, color.g, color.b, 0.22f);
+            Color clear = new Color(color.r, color.g, color.b, 0.015f);
+
+            AppendGradientQuad(
+                vertices, colors, triangles,
+                new Vector2(-halfWidth, -halfHeight), new Vector2(halfWidth, -halfHeight),
+                new Vector2(-halfWidth, -halfHeight + verticalDepth), new Vector2(halfWidth, -halfHeight + verticalDepth),
+                edge, clear);
+            AppendGradientQuad(
+                vertices, colors, triangles,
+                new Vector2(halfWidth, -halfHeight), new Vector2(halfWidth, halfHeight),
+                new Vector2(halfWidth - horizontalDepth, -halfHeight), new Vector2(halfWidth - horizontalDepth, halfHeight),
+                edge, clear);
+            AppendGradientQuad(
+                vertices, colors, triangles,
+                new Vector2(halfWidth, halfHeight), new Vector2(-halfWidth, halfHeight),
+                new Vector2(halfWidth, halfHeight - verticalDepth), new Vector2(-halfWidth, halfHeight - verticalDepth),
+                edge, clear);
+            AppendGradientQuad(
+                vertices, colors, triangles,
+                new Vector2(-halfWidth, halfHeight), new Vector2(-halfWidth, -halfHeight),
+                new Vector2(-halfWidth + horizontalDepth, halfHeight), new Vector2(-halfWidth + horizontalDepth, -halfHeight),
+                edge, clear);
+
+            AppendCaveEdgeScribbles(
+                vertices, colors, triangles,
+                new Vector2(-halfWidth, -halfHeight), new Vector2(halfWidth, -halfHeight),
+                Vector2.up * verticalDepth, 11);
+            AppendCaveEdgeScribbles(
+                vertices, colors, triangles,
+                new Vector2(halfWidth, -halfHeight), new Vector2(halfWidth, halfHeight),
+                Vector2.left * horizontalDepth, 23);
+            AppendCaveEdgeScribbles(
+                vertices, colors, triangles,
+                new Vector2(halfWidth, halfHeight), new Vector2(-halfWidth, halfHeight),
+                Vector2.down * verticalDepth, 37);
+            AppendCaveEdgeScribbles(
+                vertices, colors, triangles,
+                new Vector2(-halfWidth, halfHeight), new Vector2(-halfWidth, -halfHeight),
+                Vector2.right * horizontalDepth, 53);
+
+            CreatePencilMesh(parent, "Cave Dark Edge Shading", vertices, colors, triangles, 6);
+        }
+
+        private static void AddCaveConnectedEdgeGradient(
+            Transform parent,
+            Vector2 from,
+            Vector2 to,
+            float depth)
+        {
+            Vector2 edge = to - from;
+            if (parent == null || edge.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 inward = new Vector2(-edge.y, edge.x).normalized * depth;
+            List<Vector3> vertices = new List<Vector3>();
+            List<Color> colors = new List<Color>();
+            List<int> triangles = new List<int>();
+            Color dark = new Color(CaveTerrainStrokeColor.r, CaveTerrainStrokeColor.g, CaveTerrainStrokeColor.b, 0.22f);
+            Color clear = new Color(CaveTerrainStrokeColor.r, CaveTerrainStrokeColor.g, CaveTerrainStrokeColor.b, 0.015f);
+            AppendGradientQuad(vertices, colors, triangles, from, to, from + inward, to + inward, dark, clear);
+            AppendCaveEdgeScribbles(vertices, colors, triangles, from, to, inward, 73);
+            CreatePencilMesh(parent, "Cave Connected Edge Shading", vertices, colors, triangles, 6);
+        }
+
+        private static void AppendCaveEdgeScribbles(
+            List<Vector3> vertices,
+            List<Color> colors,
+            List<int> triangles,
+            Vector2 from,
+            Vector2 to,
+            Vector2 inward,
+            int seed)
+        {
+            Vector2 edge = to - from;
+            float length = edge.magnitude;
+            if (length <= 0.05f || inward.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 direction = edge / length;
+            Vector2 inwardDirection = inward.normalized;
+            int segmentCount = Mathf.Clamp(Mathf.CeilToInt(length / 0.78f), 2, 34);
+            for (int band = 0; band < 4; band++)
+            {
+                float bandT = (band + 0.4f) / 4f;
+                float distance = inward.magnitude * bandT;
+                Color graphite = new Color(
+                    CaveTerrainStrokeColor.r,
+                    CaveTerrainStrokeColor.g,
+                    CaveTerrainStrokeColor.b,
+                    Mathf.Lerp(0.22f, 0.06f, bandT));
+                for (int segment = 0; segment < segmentCount; segment++)
+                {
+                    float phase = seed * 0.19f + band * 2.31f + segment * 1.73f;
+                    float startT = (segment + 0.05f + Mathf.Abs(Mathf.Sin(phase)) * 0.1f) / segmentCount;
+                    float endT = (segment + 0.62f + Mathf.Abs(Mathf.Cos(phase * 1.27f)) * 0.25f) / segmentCount;
+                    Vector2 offset = inwardDirection * (distance + Mathf.Sin(phase * 1.61f) * 0.015f);
+                    Vector2 a = from + direction * (length * Mathf.Clamp01(startT)) + offset;
+                    Vector2 b = from + direction * (length * Mathf.Clamp01(endT)) + offset
+                        + inwardDirection * (Mathf.Cos(phase) * 0.02f);
+                    AppendPencilQuad(vertices, colors, triangles, a, b, 0.012f, graphite);
+                }
+            }
+        }
+
+        private static void AddCaveStalactitesOnWorldBottomEdge(
+            Transform parent,
+            Vector2 size,
+            int seed)
+        {
+            if (parent == null)
+            {
+                return;
+            }
+
+            Vector3 localDown3 = parent.InverseTransformDirection(Vector3.down);
+            Vector2 localDown = new Vector2(localDown3.x, localDown3.y);
+            if (localDown.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 outward;
+            float halfLength;
+            float halfDepth;
+            if (Mathf.Abs(localDown.x) > Mathf.Abs(localDown.y))
+            {
+                outward = localDown.x >= 0f ? Vector2.right : Vector2.left;
+                halfLength = size.y * 0.5f;
+                halfDepth = size.x * 0.5f;
+            }
+            else
+            {
+                outward = localDown.y >= 0f ? Vector2.up : Vector2.down;
+                halfLength = size.x * 0.5f;
+                halfDepth = size.y * 0.5f;
+            }
+
+            float length = halfLength * 2f;
+            float depth = halfDepth * 2f;
+            if (length < Mathf.Max(1.35f, depth * 1.15f))
+            {
+                return;
+            }
+
+            Vector2 tangent = new Vector2(-outward.y, outward.x);
+            Vector2 edgeCenter = outward * halfDepth;
+            Vector2 from = edgeCenter - tangent * halfLength;
+            Vector2 to = edgeCenter + tangent * halfLength;
+            AddCaveStalactitesAlongEdge(parent, from, to, outward, seed);
+        }
+
+        private static void AddCaveStalactitesAlongExposedEdge(
+            Transform parent,
+            Vector2 from,
+            Vector2 to,
+            float terrainDepth,
+            int seed)
+        {
+            Vector2 edge = to - from;
+            float length = edge.magnitude;
+            if (parent == null || length < Mathf.Max(1.35f, terrainDepth * 1.15f))
+            {
+                return;
+            }
+
+            Vector2 inward = new Vector2(-edge.y, edge.x).normalized;
+            Vector2 outward = -inward;
+            Vector3 worldOutward3 = parent.TransformDirection(new Vector3(outward.x, outward.y, 0f));
+            Vector2 worldOutward = new Vector2(worldOutward3.x, worldOutward3.y).normalized;
+            if (Vector2.Dot(worldOutward, Vector2.down) < 0.76f)
+            {
+                return;
+            }
+
+            AddCaveStalactitesAlongEdge(parent, from, to, outward, seed);
+        }
+
+        private static void AddCaveStalactitesAlongEdge(
+            Transform parent,
+            Vector2 from,
+            Vector2 to,
+            Vector2 outward,
+            int seed)
+        {
+            Vector2 edge = to - from;
+            float length = edge.magnitude;
+            if (length < 1.35f || outward.sqrMagnitude <= 0.000001f)
+            {
+                return;
+            }
+
+            Vector2 tangent = edge / length;
+            outward.Normalize();
+            uint state = CreateCaveVisualState(seed);
+            int estimatedClusters = Mathf.Clamp(Mathf.RoundToInt(length / 1.15f), 1, 96);
+            List<Vector3> fillVertices = new List<Vector3>(estimatedClusters * 24);
+            List<Color> fillColors = new List<Color>(estimatedClusters * 24);
+            List<int> fillTriangles = new List<int>(estimatedClusters * 30);
+            List<Vector3> lineVertices = new List<Vector3>(estimatedClusters * 150);
+            List<Color> lineColors = new List<Color>(estimatedClusters * 150);
+            List<int> lineTriangles = new List<int>(estimatedClusters * 210);
+            float cursor = CaveVisualRange(ref state, 0.04f, 0.28f);
+            int guard = 0;
+            while (cursor < length - 0.22f && guard++ < 128)
+            {
+                cursor += CaveVisualRange(ref state, 0.06f, 0.38f);
+                float clusterSpan = Mathf.Min(
+                    CaveVisualRange(ref state, 0.45f, 1.55f),
+                    length - cursor);
+                if (clusterSpan < 0.28f)
+                {
+                    break;
+                }
+
+                float centerDistance = cursor + clusterSpan * CaveVisualRange(ref state, 0.42f, 0.58f);
+                Vector2 anchor = from + tangent * centerDistance + outward * 0.018f;
+                int variant = Mathf.FloorToInt(CaveVisual01(ref state) * 4f) % 4;
+                float width = Mathf.Clamp(clusterSpan * CaveVisualRange(ref state, 0.5f, 0.83f), 0.31f, 1.18f);
+                float height = CaveVisualRange(ref state, 0.5f, 1.62f);
+                AppendCaveStalactiteCluster(
+                    fillVertices,
+                    fillColors,
+                    fillTriangles,
+                    lineVertices,
+                    lineColors,
+                    lineTriangles,
+                    anchor,
+                    tangent,
+                    outward,
+                    width,
+                    height,
+                    variant,
+                    ref state);
+                cursor += clusterSpan + CaveVisualRange(ref state, 0.1f, 0.72f);
+            }
+
+            CreatePencilMesh(parent, "Cave Stalactite Fill", fillVertices, fillColors, fillTriangles, 8);
+            CreatePencilMesh(parent, "Cave Stalactite Pencil", lineVertices, lineColors, lineTriangles, 14);
+        }
+
+        private static void AppendCaveStalactiteCluster(
+            List<Vector3> fillVertices,
+            List<Color> fillColors,
+            List<int> fillTriangles,
+            List<Vector3> lineVertices,
+            List<Color> lineColors,
+            List<int> lineTriangles,
+            Vector2 anchor,
+            Vector2 tangent,
+            Vector2 outward,
+            float width,
+            float height,
+            int variant,
+            ref uint state)
+        {
+            switch (variant)
+            {
+                case 0:
+                    AppendCaveStalactiteTooth(
+                        fillVertices, fillColors, fillTriangles, lineVertices, lineColors, lineTriangles,
+                        anchor, tangent, outward, 0f, width, height * 1.12f,
+                        CaveVisualRange(ref state, -0.12f, 0.12f), ref state);
+                    break;
+                case 1:
+                    AppendCaveStalactiteTooth(
+                        fillVertices, fillColors, fillTriangles, lineVertices, lineColors, lineTriangles,
+                        anchor, tangent, outward, -width * 0.21f, width * 0.58f, height * 0.72f, -0.05f, ref state);
+                    AppendCaveStalactiteTooth(
+                        fillVertices, fillColors, fillTriangles, lineVertices, lineColors, lineTriangles,
+                        anchor, tangent, outward, width * 0.2f, width * 0.52f, height * 1.05f, 0.06f, ref state);
+                    break;
+                case 2:
+                    AppendCaveStalactiteTooth(
+                        fillVertices, fillColors, fillTriangles, lineVertices, lineColors, lineTriangles,
+                        anchor, tangent, outward, -width * 0.29f, width * 0.38f, height * 0.58f, -0.025f, ref state);
+                    AppendCaveStalactiteTooth(
+                        fillVertices, fillColors, fillTriangles, lineVertices, lineColors, lineTriangles,
+                        anchor, tangent, outward, 0f, width * 0.54f, height * 1.18f, 0.035f, ref state);
+                    AppendCaveStalactiteTooth(
+                        fillVertices, fillColors, fillTriangles, lineVertices, lineColors, lineTriangles,
+                        anchor, tangent, outward, width * 0.31f, width * 0.34f, height * 0.48f, 0.015f, ref state);
+                    break;
+                default:
+                    AppendCaveStalactiteTooth(
+                        fillVertices, fillColors, fillTriangles, lineVertices, lineColors, lineTriangles,
+                        anchor, tangent, outward, -width * 0.08f, width * 0.76f, height * 0.82f, -0.08f, ref state);
+                    AppendCaveStalactiteTooth(
+                        fillVertices, fillColors, fillTriangles, lineVertices, lineColors, lineTriangles,
+                        anchor, tangent, outward, width * 0.34f, width * 0.3f, height * 1.3f, 0.045f, ref state);
+                    break;
+            }
+
+            Color shelfInk = new Color(0.13f, 0.145f, 0.17f, 0.82f);
+            Color shelfDry = new Color(0.62f, 0.65f, 0.68f, 0.32f);
+            Vector2 shelfPrevious = anchor - tangent * (width * 0.58f);
+            for (int shelfSegment = 1; shelfSegment <= 5; shelfSegment++)
+            {
+                float t = shelfSegment / 5f;
+                Vector2 shelfNext = anchor
+                    + tangent * Mathf.Lerp(-width * 0.58f, width * 0.58f, t)
+                    + outward * CaveVisualRange(ref state, -0.025f, 0.075f);
+                AppendPencilQuad(
+                    lineVertices, lineColors, lineTriangles,
+                    shelfPrevious, shelfNext,
+                    CaveVisualRange(ref state, 0.043f, 0.066f),
+                    shelfInk);
+                AppendPencilQuad(
+                    lineVertices, lineColors, lineTriangles,
+                    shelfPrevious - outward * 0.024f + tangent * 0.009f,
+                    shelfNext - outward * 0.024f + tangent * 0.009f,
+                    0.016f,
+                    shelfDry);
+                shelfPrevious = shelfNext;
+            }
+        }
+
+        private static void AppendCaveStalactiteTooth(
+            List<Vector3> fillVertices,
+            List<Color> fillColors,
+            List<int> fillTriangles,
+            List<Vector3> lineVertices,
+            List<Color> lineColors,
+            List<int> lineTriangles,
+            Vector2 anchor,
+            Vector2 tangent,
+            Vector2 outward,
+            float offset,
+            float width,
+            float height,
+            float lean,
+            ref uint state)
+        {
+            Vector2 center = anchor + tangent * offset;
+            Vector2 baseLeft = center
+                - tangent * (width * 0.5f)
+                + outward * CaveVisualRange(ref state, -0.035f, 0.035f);
+            Vector2 baseRight = center
+                + tangent * (width * 0.5f)
+                + outward * CaveVisualRange(ref state, -0.035f, 0.035f);
+            Vector2 lowerLeft = center
+                - tangent * (width * CaveVisualRange(ref state, 0.35f, 0.44f))
+                + outward * (height * CaveVisualRange(ref state, 0.12f, 0.22f));
+            Vector2 upperLeft = center
+                - tangent * (width * CaveVisualRange(ref state, 0.16f, 0.28f))
+                + outward * (height * CaveVisualRange(ref state, 0.43f, 0.61f));
+            Vector2 tip = center
+                + outward * height
+                + tangent * ((lean + CaveVisualRange(ref state, -0.045f, 0.045f)) * width);
+            Vector2 upperRight = center
+                + tangent * (width * CaveVisualRange(ref state, 0.14f, 0.27f))
+                + outward * (height * CaveVisualRange(ref state, 0.48f, 0.66f));
+            Vector2 lowerRight = center
+                + tangent * (width * CaveVisualRange(ref state, 0.34f, 0.43f))
+                + outward * (height * CaveVisualRange(ref state, 0.14f, 0.28f));
+            Vector2[] edge =
+            {
+                baseLeft,
+                lowerLeft,
+                upperLeft,
+                tip,
+                upperRight,
+                lowerRight,
+                baseRight
+            };
+            AppendFilledCavePolygon(
+                fillVertices,
+                fillColors,
+                fillTriangles,
+                edge,
+                new Color(0.31f, 0.335f, 0.37f, 0.38f));
+            Vector2 washOffset = tangent * CaveVisualRange(ref state, -0.025f, 0.025f)
+                - outward * CaveVisualRange(ref state, 0.006f, 0.028f);
+            Vector2[] washEdge = new Vector2[edge.Length];
+            for (int pointIndex = 0; pointIndex < edge.Length; pointIndex++)
+            {
+                washEdge[pointIndex] = edge[pointIndex] + washOffset;
+            }
+            AppendFilledCavePolygon(
+                fillVertices,
+                fillColors,
+                fillTriangles,
+                washEdge,
+                new Color(0.52f, 0.55f, 0.58f, 0.1f));
+
+            Color outline = new Color(0.13f, 0.145f, 0.17f, 0.86f);
+            Color dry = new Color(0.56f, 0.59f, 0.62f, 0.29f);
+            for (int edgeIndex = 0; edgeIndex < edge.Length; edgeIndex++)
+            {
+                Vector2 from = edge[edgeIndex];
+                Vector2 to = edge[(edgeIndex + 1) % edge.Length];
+                float widthVariation = CaveVisualRange(ref state, 0.043f, 0.069f);
+                AppendCaveWobblyStroke(
+                    lineVertices,
+                    lineColors,
+                    lineTriangles,
+                    from,
+                    to,
+                    widthVariation,
+                    outline,
+                    CaveVisualRange(ref state, 0.024f, 0.047f),
+                    ref state);
+                Vector2 echoOffset = -outward * CaveVisualRange(ref state, 0.012f, 0.035f)
+                    + tangent * CaveVisualRange(ref state, -0.015f, 0.015f);
+                AppendCaveWobblyStroke(
+                    lineVertices,
+                    lineColors,
+                    lineTriangles,
+                    from + echoOffset,
+                    to + echoOffset,
+                    CaveVisualRange(ref state, 0.011f, 0.02f),
+                    dry,
+                    0.022f,
+                    ref state);
+            }
+
+            Color hatch = new Color(0.14f, 0.16f, 0.19f, 0.32f);
+            int hatchCount = 4 + Mathf.FloorToInt(CaveVisual01(ref state) * 6f);
+            for (int hatchIndex = 0; hatchIndex < hatchCount; hatchIndex++)
+            {
+                if (CaveVisual01(ref state) < 0.13f)
+                {
+                    continue;
+                }
+                float baseT = (hatchIndex + CaveVisualRange(ref state, 0.3f, 0.78f)) / (hatchCount + 0.8f);
+                Vector2 hatchFrom = Vector2.Lerp(baseLeft, baseRight, baseT)
+                    + outward * (height * CaveVisualRange(ref state, 0.035f, 0.13f));
+                Vector2 hatchTo = Vector2.Lerp(
+                    hatchFrom,
+                    tip + tangent * Mathf.Sin(hatchIndex * 2.13f + lean) * (width * 0.08f),
+                    CaveVisualRange(ref state, 0.42f, 0.88f));
+                AppendCaveWobblyStroke(
+                    lineVertices,
+                    lineColors,
+                    lineTriangles,
+                    hatchFrom,
+                    hatchTo,
+                    CaveVisualRange(ref state, 0.012f, 0.022f),
+                    hatch,
+                    0.019f,
+                    ref state);
+            }
+
+            int crossHatchCount = 1 + Mathf.FloorToInt(CaveVisual01(ref state) * 3f);
+            for (int crossIndex = 0; crossIndex < crossHatchCount; crossIndex++)
+            {
+                float t = CaveVisualRange(ref state, 0.22f, 0.68f);
+                Vector2 centerLine = Vector2.Lerp(center, tip, t);
+                float half = width * Mathf.Lerp(0.27f, 0.08f, t);
+                AppendCaveWobblyStroke(
+                    lineVertices,
+                    lineColors,
+                    lineTriangles,
+                    centerLine - tangent * half,
+                    centerLine + tangent * half,
+                    0.012f,
+                    new Color(hatch.r, hatch.g, hatch.b, 0.2f),
+                    0.014f,
+                    ref state);
+            }
+        }
+
+        private static uint CreateCaveVisualState(int seed)
+        {
+            uint state = unchecked((uint)seed) ^ 0x9E3779B9u;
+            return state == 0u ? 0xA341316Cu : state;
+        }
+
+        private static uint NextCaveVisualValue(ref uint state)
+        {
+            state ^= state << 13;
+            state ^= state >> 17;
+            state ^= state << 5;
+            return state;
+        }
+
+        private static float CaveVisual01(ref uint state)
+        {
+            return (NextCaveVisualValue(ref state) & 0x00FFFFFFu) / 16777215f;
+        }
+
+        private static float CaveVisualRange(ref uint state, float min, float max)
+        {
+            if (max <= min)
+            {
+                return min;
+            }
+
+            return Mathf.Lerp(min, max, CaveVisual01(ref state));
         }
 
         private static void AddNatureTerrainFill(
