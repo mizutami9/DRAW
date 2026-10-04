@@ -7,6 +7,8 @@ namespace DrawBody.Prototype
     public sealed class StageBoxDropper : MonoBehaviour
     {
         private const int MaximumLiveBoxes = 32;
+        private const int DefaultMaximumManualBoxes = 20;
+        private const float ManualDispenseCooldown = 1.1f;
 
         private readonly Queue<GameObject> spawnedBoxes = new Queue<GameObject>();
         private StageObjectFactory factory;
@@ -20,7 +22,9 @@ namespace DrawBody.Prototype
         private float droppedBoxSize = 0.9f;
         private int sequence;
         private float nextSpawnTime;
+        private float nextManualDispenseTime;
         private bool manualDispense;
+        private int maximumManualBoxes = DefaultMaximumManualBoxes;
 
         public void Configure(
             StageObjectFactory targetFactory,
@@ -70,9 +74,10 @@ namespace DrawBody.Prototype
             SpawnBox(Vector2.one * droppedBoxSize);
         }
 
-        public void ConfigureManualDispense()
+        public void ConfigureManualDispense(int maximumLiveBoxes = DefaultMaximumManualBoxes)
         {
             manualDispense = true;
+            maximumManualBoxes = Mathf.Clamp(maximumLiveBoxes, 1, MaximumLiveBoxes);
         }
 
         public bool DispenseSelectedSize(float selectedSize)
@@ -84,9 +89,67 @@ namespace DrawBody.Prototype
         {
             if (factory == null || spawnParent == null) return false;
             if (syncManager != null && syncManager.IsOnlineActive && !syncManager.IsHost) return false;
+            if (Time.unscaledTime < nextManualDispenseTime) return false;
+            PruneDestroyedBoxes();
+            if (manualDispense && spawnedBoxes.Count >= maximumManualBoxes
+                && !TryRemoveOldestUnusedBox())
+            {
+                return false;
+            }
+            nextManualDispenseTime = Time.unscaledTime + ManualDispenseCooldown;
             visualAnimator?.PlayDispense();
             selectedSize = new Vector2(Mathf.Clamp(selectedSize.x, 0.5f, 3f), Mathf.Clamp(selectedSize.y, 0.5f, 3f));
             return SpawnBox(selectedSize);
+        }
+
+        private void PruneDestroyedBoxes()
+        {
+            int count = spawnedBoxes.Count;
+            for (int i = 0; i < count; i++)
+            {
+                GameObject spawned = spawnedBoxes.Dequeue();
+                if (spawned != null) spawnedBoxes.Enqueue(spawned);
+            }
+        }
+
+        private bool TryRemoveOldestUnusedBox()
+        {
+            int count = spawnedBoxes.Count;
+            for (int i = 0; i < count; i++)
+            {
+                GameObject candidate = spawnedBoxes.Dequeue();
+                if (candidate == null) continue;
+                if (IsHeldByPlayer(candidate.transform))
+                {
+                    spawnedBoxes.Enqueue(candidate);
+                    continue;
+                }
+
+                RemoveSpawnedBox(candidate);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool IsHeldByPlayer(Transform target)
+        {
+            PlayerCarryController[] carriers = Object.FindObjectsByType<PlayerCarryController>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < carriers.Length; i++)
+            {
+                if (carriers[i] != null && carriers[i].IsHoldingTarget(target)) return true;
+            }
+            return false;
+        }
+
+        private void RemoveSpawnedBox(GameObject spawned)
+        {
+            if (spawned == null) return;
+            StageEditorObject spawnedMarker = spawned.GetComponent<StageEditorObject>();
+            if (syncManager != null && syncManager.IsOnlineActive && spawnedMarker != null)
+                syncManager.RemoveDropperBox(spawnedMarker.objectId);
+            else
+                Destroy(spawned);
         }
 
         public void ClearSpawnedBoxes()
@@ -146,15 +209,7 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                StageEditorObject oldestMarker = oldest.GetComponent<StageEditorObject>();
-                if (syncManager != null && syncManager.IsOnlineActive && oldestMarker != null)
-                {
-                    syncManager.RemoveDropperBox(oldestMarker.objectId);
-                }
-                else
-                {
-                    Destroy(oldest);
-                }
+                RemoveSpawnedBox(oldest);
             }
             return true;
         }

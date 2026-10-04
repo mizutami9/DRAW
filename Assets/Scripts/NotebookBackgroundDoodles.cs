@@ -36,9 +36,8 @@ namespace DrawBody.Prototype
 
         private static readonly string[] WordDoodles =
         {
-            "Hello!", "OK!", "GO!", "NICE!", "WOW!", "Oops!", "Zzz...",
-            "100!", "TEST", "GAME OVER", "START", "GOAL",
-            "<-  ->  ^  v", "1+1=2", "x^2", "E=mc^2", "2026", "A+", "O  X  /\\"
+            "!", "!!", "?!", "...", "100!", "★", "☆", "♪",
+            "<-  ->  ^  v", "1+1=2", "x²", "E=mc²", "2026", "A+", "O  X  /\\"
         };
 
         private static readonly Color[] PencilColors =

@@ -63,7 +63,7 @@ namespace DrawBody.Prototype
                     string keyholeId = targetStageObject.objectId;
                     receiver.Configure(
                         source.transform,
-                        () => ActivateFromTrigger(keyholeId),
+                        () => ActivateKeyFromTrigger(keyholeId, source.transform),
                         () => syncManager != null && syncManager.ShouldAskHost);
                     continue;
                 }
@@ -229,7 +229,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        public void HandleActivationRequest(string sourceObjectId)
+        public void HandleActivationRequest(string sourceObjectId, Vector2? reportedKeyPosition = null)
         {
             if (string.IsNullOrEmpty(sourceObjectId))
             {
@@ -242,7 +242,7 @@ namespace DrawBody.Prototype
                 && (stageObject.type == StageObjectType.Keyhole
                     || stageObject.type == StageObjectType.PoseCharacterKeyhole))
             {
-                source.GetComponent<KeyLockReceiver>()?.TryUnlockAuthoritatively();
+                source.GetComponent<KeyLockReceiver>()?.TryUnlockAuthoritatively(reportedKeyPosition);
                 return;
             }
 
@@ -346,6 +346,19 @@ namespace DrawBody.Prototype
             }
 
             ActivateFromNetwork(sourceObjectId, syncManager != null && syncManager.IsOnlineActive && syncManager.IsHost);
+        }
+
+        private void ActivateKeyFromTrigger(string keyholeObjectId, Transform key)
+        {
+            if (syncManager != null && syncManager.ShouldAskHost)
+            {
+                syncManager.RequestKeyLinkActivation(keyholeObjectId, key);
+                return;
+            }
+
+            ActivateFromNetwork(
+                keyholeObjectId,
+                syncManager != null && syncManager.IsOnlineActive && syncManager.IsHost);
         }
 
         private void SetHeldButtonStateFromTrigger(string sourceObjectId, bool held)
@@ -1053,20 +1066,38 @@ namespace DrawBody.Prototype
             UnlockAndConsume(true);
         }
 
-        public bool TryUnlockAuthoritatively()
+        public bool TryUnlockAuthoritatively(Vector2? reportedKeyPosition = null)
         {
             if (unlocked || expectedKey == null || !expectedKey.gameObject.activeInHierarchy)
             {
                 return false;
             }
 
-            if (!IsKeyWithinInsertionArea(GetComponent<Collider2D>(), expectedKey.GetComponent<Collider2D>()))
+            Collider2D receiver = GetComponent<Collider2D>();
+            Collider2D keyCollider = expectedKey.GetComponent<Collider2D>();
+            bool locallyOverlapping = IsKeyWithinInsertionArea(receiver, keyCollider);
+            if (!locallyOverlapping && (!reportedKeyPosition.HasValue
+                || !IsReportedKeyPositionPlausible(receiver, reportedKeyPosition.Value)))
             {
                 return false;
             }
 
+            if (!locallyOverlapping && reportedKeyPosition.HasValue)
+            {
+                expectedKey.position = reportedKeyPosition.Value;
+                Physics2D.SyncTransforms();
+            }
+
             UnlockAndConsume(true);
             return true;
+        }
+
+        private bool IsReportedKeyPositionPlausible(Collider2D receiverCollider, Vector2 position)
+        {
+            float receiverRadius = receiverCollider != null && receiverCollider.enabled
+                ? receiverCollider.bounds.extents.magnitude
+                : 0.8f;
+            return Vector2.Distance(transform.position, position) <= Mathf.Max(1.35f, receiverRadius + 0.65f);
         }
 
         public void ApplyUnlockedState()
@@ -1495,6 +1526,14 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
+                // The weighing trigger is deliberately tall so a stack of
+                // characters is included. Do not, however, weigh somebody on
+                // another floor that happens to cross that vertical column.
+                if (!HasClearPathToScale(pair.Key))
+                {
+                    continue;
+                }
+
                 total += Mathf.Max(0f, pair.Key.CurrentProfile.TotalInk);
             }
 
@@ -1506,6 +1545,40 @@ namespace DrawBody.Prototype
                 }
             }
             return total;
+        }
+
+        private bool HasClearPathToScale(PlayerAbilityController player)
+        {
+            if (player == null) return false;
+
+            Vector2 origin = player.transform.position;
+            Vector2 plateCenter = transform.TransformPoint(new Vector2(0f, 0.43f));
+            Vector2 delta = plateCenter - origin;
+            float distance = delta.magnitude;
+            if (distance <= 0.05f) return true;
+
+            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, delta / distance, distance + 0.08f);
+            float scaleHitDistance = distance + 0.08f;
+            float blockingHitDistance = float.PositiveInfinity;
+            for (int i = 0; i < hits.Length; i++)
+            {
+                Collider2D hit = hits[i].collider;
+                if (hit == null || !hit.enabled || hit.isTrigger) continue;
+                if (hit.transform == transform || hit.transform.IsChildOf(transform))
+                {
+                    scaleHitDistance = Mathf.Min(scaleHitDistance, hits[i].distance);
+                    continue;
+                }
+
+                // Character colliders may belong to the weighed player or to
+                // another character underneath it in a valid stack. A carried
+                // box can likewise support the stack and must not look like a
+                // separating floor.
+                if (hit.GetComponentInParent<PlayerAbilityController>() != null) continue;
+                if (hit.GetComponentInParent<CarryableObject>() != null) continue;
+                blockingHitDistance = Mathf.Min(blockingHitDistance, hits[i].distance);
+            }
+            return blockingHitDistance >= scaleHitDistance - 0.03f;
         }
 
         private void RefreshVisual(bool force)

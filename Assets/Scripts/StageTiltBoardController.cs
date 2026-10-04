@@ -1106,9 +1106,28 @@ namespace DrawBody.Prototype
                 || HasAuthority || !IsHost(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= receivedSequence) return;
+            bool hadNetworkState = receivedSequence > 0;
+            bool sameRound = state.Round == round && state.Variant == layoutVariant;
+            BoardPhase previousPhase = phase;
+            int previousFilledMask = filledMask;
             receivedSequence = state.Sequence;
-            if (state.Round != round || state.Variant != layoutVariant) BeginRound(state.Round, state.Variant);
-            phase = (BoardPhase)state.Phase;
+            if (!sameRound) BeginRound(state.Round, state.Variant);
+            BoardPhase incomingPhase = (BoardPhase)state.Phase;
+            if (hadNetworkState && sameRound)
+            {
+                int newlyFilledMask = state.FilledMask & ~previousFilledMask;
+                for (int i = 0; i < holes.Count; i++)
+                {
+                    if ((newlyFilledMask & (1 << i)) != 0)
+                        GameSfx.PlayAt(SfxId.CoinCollect, holes[i].Position);
+                }
+                if (previousPhase == BoardPhase.Active
+                    && (incomingPhase == BoardPhase.RoundClear || incomingPhase == BoardPhase.Complete))
+                    GameSfx.Play(SfxId.GoalReached);
+                else if (previousPhase != BoardPhase.Failed && incomingPhase == BoardPhase.Failed)
+                    GameSfx.Play(SfxId.PlayerDeath, 0.7f);
+            }
+            phase = incomingPhase;
             remaining = state.Remaining;
             filledMask = state.FilledMask;
             magneticField = state.MagneticField;

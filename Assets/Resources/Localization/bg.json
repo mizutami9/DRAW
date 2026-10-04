@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "ЦЕЛ  {0:0}g (90g x PLAERS)"
+      "value": "ЦЕЛ  {0:0}g (70g x PLAERS)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Да прекратите ли текущото ниво и да се върнете към избора на ниво?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Незавършените промени няма да бъдат запазени. Да се върнете без запазване?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "БЕЗ ЗАПАЗВАНЕ"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Прерисуваният герой е запазен."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Неуспешно запазване. Натиснете „ГОТОВО“ отново."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "ИЗБОР НА НИВО"
     },
     {
       "key": "online_content_mismatch",
       "value": "Онлайн играта не е достъпна, защото данните или версията на играта не съвпадат. Проверете файловете на играта в Steam."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Връзката със сесията беше прекъсната. Влезте отново в стаята."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "ПРЕПОРЪЧВА СЕ МУЛТИПЛЕЙЪР!" },
     { "key": "single_recommend_message", "value": "NICO DRAW е най-забавна със съвместна игра!\nОпитайте да играете с 2–4 играчи!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Изход от NICO DRAW?" }
+    ,{ "key": "title_exit_confirm", "value": "Изход от NICO DRAW?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} вече използва този герой. Да се изпрати ли заявка за размяна?" },
+    { "key": "draw_species_swap_send", "value": "ИЗПРАТИ ЗАЯВКА" },
+    { "key": "background_word_push", "value": "БУТАЙ!" }
   ]
 }

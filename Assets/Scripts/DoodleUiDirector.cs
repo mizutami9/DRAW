@@ -1476,6 +1476,37 @@ namespace DrawBody.Prototype
             RectTransform buttonRect = button.GetComponent<RectTransform>();
             if (buttonRect == null) return;
 
+            // StageSelectVisualPolisher owns the exact geometry of these rows.
+            // Letting the generic caption-fit pass size them as well made the
+            // first page and subsequently activated pages disagree.
+            if (button.name.StartsWith("Stage_", System.StringComparison.Ordinal)
+                && button.name.EndsWith("_Button", System.StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            // This theme pass runs again when a screen is reopened or the language
+            // changes.  Growing sizeDelta from its current value made buttons become
+            // larger on every visit (most visibly the TAB/ESC chips and stage select).
+            // Keep the latest screen-authored size as a baseline and always calculate
+            // the optional label allowance from that stable value.
+            DoodleButtonSizeBaseline baseline = button.GetComponent<DoodleButtonSizeBaseline>();
+            if (baseline == null)
+            {
+                baseline = button.gameObject.AddComponent<DoodleButtonSizeBaseline>();
+            }
+            baseline.Prepare(buttonRect);
+
+            // Shortcut chips live in two fixed 32px rows. Their labels are only TAB
+            // and ESC, so growing the hit boxes adds no readability and can make the
+            // rows touch after a theme refresh.
+            if (button.name == "GameplayDrawerTabButton"
+                || button.name == "GameplayEscHintButton")
+            {
+                baseline.MarkApplied(buttonRect);
+                return;
+            }
+
             Text caption = null;
             Text[] texts = button.GetComponentsInChildren<Text>(true);
             for (int i = 0; i < texts.Length; i++)
@@ -1489,8 +1520,8 @@ namespace DrawBody.Prototype
             }
             if (caption == null) return;
 
-            float width = Mathf.Abs(buttonRect.rect.width);
-            float height = Mathf.Abs(buttonRect.rect.height);
+            float width = baseline.BaseRenderedSize.x;
+            float height = baseline.BaseRenderedSize.y;
             if (width < 34f || height < 22f) return;
 
             RectTransform captionRect = caption.rectTransform;
@@ -1507,9 +1538,8 @@ namespace DrawBody.Prototype
             float maximumHeightGrowth = height >= 56f ? 10f : 6f;
             float widthGrowth = Mathf.Clamp(desiredWidth - width, 0f, maximumWidthGrowth);
             float heightGrowth = Mathf.Clamp(desiredHeight - height, 0f, maximumHeightGrowth);
-            if (widthGrowth < 0.1f && heightGrowth < 0.1f) return;
-
-            buttonRect.sizeDelta += new Vector2(widthGrowth, heightGrowth);
+            buttonRect.sizeDelta = baseline.BaseSizeDelta + new Vector2(widthGrowth, heightGrowth);
+            baseline.MarkApplied(buttonRect);
         }
 
         private static void ApplyButtonLabelSpacing(Button button)
@@ -2458,6 +2488,58 @@ namespace DrawBody.Prototype
         private static float Luminance(Color color)
         {
             return color.r * 0.2126f + color.g * 0.7152f + color.b * 0.0722f;
+        }
+    }
+
+    /// <summary>
+    /// Remembers the size authored by a screen-specific layout pass.  It is runtime
+    /// only and deliberately lives beside the shared UI theme so every button uses
+    /// the same idempotent sizing rule.
+    /// </summary>
+    internal sealed class DoodleButtonSizeBaseline : MonoBehaviour
+    {
+        private bool initialized;
+        private Vector2 baseSizeDelta;
+        private Vector2 baseRenderedSize;
+        private Vector2 lastAppliedSizeDelta;
+
+        public Vector2 BaseSizeDelta => baseSizeDelta;
+        public Vector2 BaseRenderedSize => baseRenderedSize;
+
+        public void Prepare(RectTransform rect)
+        {
+            if (rect == null)
+            {
+                return;
+            }
+
+            // A bespoke screen polisher may intentionally restore/change the design
+            // size before the shared pass. Treat that as the new baseline. If the
+            // current value is our own previous result, keep the original baseline.
+            if (!initialized || !Approximately(rect.sizeDelta, lastAppliedSizeDelta))
+            {
+                baseSizeDelta = rect.sizeDelta;
+                baseRenderedSize = new Vector2(
+                    Mathf.Abs(rect.rect.width),
+                    Mathf.Abs(rect.rect.height));
+                initialized = true;
+            }
+
+            rect.sizeDelta = baseSizeDelta;
+            lastAppliedSizeDelta = baseSizeDelta;
+        }
+
+        public void MarkApplied(RectTransform rect)
+        {
+            if (rect != null)
+            {
+                lastAppliedSizeDelta = rect.sizeDelta;
+            }
+        }
+
+        private static bool Approximately(Vector2 a, Vector2 b)
+        {
+            return Mathf.Abs(a.x - b.x) < 0.05f && Mathf.Abs(a.y - b.y) < 0.05f;
         }
     }
 

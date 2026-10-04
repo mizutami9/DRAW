@@ -1133,7 +1133,7 @@ namespace DrawBody.Prototype
                 AquariumSolidVisual.Sand);
             StageRedrawZoneFactory.CreateRuntimeFloorZone(arenaRoot,
                 "6-3_runtime_redraw_zone_" + round,
-                new Vector2(0f, FloorY), roomWidth, 13.2f);
+                new Vector2(0f, FloorY), roomWidth, 13.2f, 0.75f);
             CreateSolid(
                 "Aquarium Ceiling",
                 new Vector2(0f, 7.25f),
@@ -1638,9 +1638,9 @@ namespace DrawBody.Prototype
             if (pressed && !buttonPressed && Time.unscaledTime >= nextBoxAt)
             {
                 nextBoxAt = Time.unscaledTime + BoxCooldownSeconds;
-                boxDropper?.DispenseSelectedSize(BoxSizes[previewIndex]);
-                GameSfx.PlayAt(SfxId.UiButtonPress,
-                    boxButton != null ? boxButton.transform.position : transform.position);
+                if (boxDropper != null && boxDropper.DispenseSelectedSize(BoxSizes[previewIndex]))
+                    GameSfx.PlayAt(SfxId.UiButtonPress,
+                        boxButton != null ? boxButton.transform.position : transform.position);
             }
             buttonPressed = pressed;
             RefreshBoxStationVisual();
@@ -1912,7 +1912,6 @@ namespace DrawBody.Prototype
                 ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
                 : null;
             local?.SetControlsEnabled(enabled);
-            if (!IsOnline) stageManager.RemotePlayerController?.SetControlsEnabled(enabled);
         }
 
         private IEnumerator PositionPlayersAfterStageSetup()
@@ -2053,10 +2052,25 @@ namespace DrawBody.Prototype
                 || HasAuthority || !IsHost(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= receivedSequence) return;
+            bool hadNetworkState = receivedSequence > 0;
+            bool sameAttempt = state.Round == round && state.Attempt == roundAttempt;
+            SealPhase previousPhase = phase;
+            bool previousButtonPressed = buttonPressed;
             receivedSequence = state.Sequence;
             SealPhase incoming = (SealPhase)state.Phase;
-            if (state.Round != round || state.Attempt != roundAttempt)
+            if (!sameAttempt)
                 BeginRound(state.Round, state.Attempt);
+            if (hadNetworkState && sameAttempt)
+            {
+                if (state.ButtonPressed && !previousButtonPressed)
+                {
+                    GameSfx.PlayAt(SfxId.UiButtonPress,
+                        boxButton != null ? boxButton.transform.position : transform.position);
+                }
+                if (previousPhase == SealPhase.Active
+                    && (incoming == SealPhase.RoundClear || incoming == SealPhase.Complete))
+                    GameSfx.Play(SfxId.GoalReached);
+            }
             phase = incoming;
             remaining = state.Remaining;
             sealedMask = state.SealedMask;

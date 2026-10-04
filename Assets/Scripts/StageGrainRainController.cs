@@ -19,8 +19,15 @@ namespace DrawBody.Prototype
         private const float ForecastSeconds = 1.15f;
         private const float ForecastRestSeconds = 0.8f;
         private const int BurstGrainsPerPoint = 5;
-        private const float ArenaHalfWidth = 14.4f;
-        private const float SpawnY = 12.9f;
+        private const float TargetGramsPerPlayer = 70f;
+        private const float StepJumpHeight = 10.2f;
+        // 9-3 deliberately uses a double-size arena while player drawings keep
+        // their normal world size. Scale every spatial part of the challenge
+        // through this value so terrain, monitor, grain field and camera stay in
+        // the same composition and the characters read as smaller on screen.
+        private const float SpatialScale = 2f;
+        private const float ArenaHalfWidth = 14.4f * SpatialScale;
+        private const float SpawnY = 12.9f * SpatialScale;
 
         private enum RoundState { Intro, Rain, Settle, Result }
 
@@ -115,8 +122,9 @@ namespace DrawBody.Prototype
 
             playerCount = Mathf.Clamp(
                 stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1, 1, 4);
-            targetGrams = 90f * playerCount;
+            targetGrams = TargetGramsPerPlayer * playerCount;
             EnsureCarriers(true);
+            ConfigureStepJumpPads();
             BuildMonitor();
             LockCamera();
             if (HasAuthority) BeginRound(1);
@@ -204,6 +212,24 @@ namespace DrawBody.Prototype
             RefreshDisplay();
         }
 
+        private static void ConfigureStepJumpPads()
+        {
+            StageEditorObject[] objects = Object.FindObjectsByType<StageEditorObject>(
+                FindObjectsSortMode.None);
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageEditorObject item = objects[i];
+                if (item == null || string.IsNullOrEmpty(item.objectId)
+                    || !item.objectId.StartsWith("9-3_step_jump_", System.StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                JumpPad pad = item.GetComponentInChildren<JumpPad>(true);
+                pad?.ConfigureTargetHeight(StepJumpHeight);
+            }
+        }
+
         private void BeginRound(int nextRound)
         {
             round = Mathf.Clamp(nextRound, 1, TotalRounds);
@@ -289,13 +315,18 @@ namespace DrawBody.Prototype
                 rainbow = true;
             }
 
-            float x = Mathf.Lerp(-ArenaHalfWidth + 0.5f, ArenaHalfWidth - 0.5f, (float)random.NextDouble());
+            float x = Mathf.Lerp(
+                -ArenaHalfWidth + ScaleDistance(0.5f),
+                ArenaHalfWidth - ScaleDistance(0.5f),
+                (float)random.NextDouble());
             float y = SpawnY;
-            float size = Mathf.Lerp(0.17f, 0.35f, (float)random.NextDouble());
+            float size = ScaleDistance(Mathf.Lerp(0.17f, 0.35f, (float)random.NextDouble()));
             size *= Mathf.Lerp(0.92f, 1.18f, grams / 40f);
-            float fallSpeed = Mathf.Lerp(0.6f, 3.4f, (float)random.NextDouble());
-            float drift = Mathf.Lerp(-0.55f, 0.55f, (float)random.NextDouble());
-            float gravity = Mathf.Lerp(0.42f, 0.9f, (float)random.NextDouble());
+            float fallSpeed = ScaleDistance(Mathf.Lerp(0.6f, 3.4f, (float)random.NextDouble()));
+            float drift = ScaleDistance(Mathf.Lerp(-0.55f, 0.55f, (float)random.NextDouble()));
+            float gravity = ScaleDistance(Mathf.Lerp(0.42f, 0.9f, (float)random.NextDouble()));
+            Vector2 playerContactFreeFallVelocity = new Vector2(drift, -fallSpeed);
+            float playerContactGravity = gravity;
 
             if (round == 2)
             {
@@ -303,10 +334,10 @@ namespace DrawBody.Prototype
                 // can actually enter the room instead of hitting its outer face.
                 // The blizzard travels horizontally; gravity and initial
                 // vertical velocity would otherwise collect it at bottom-left.
-                x = ArenaHalfWidth - 0.25f;
-                y = Mathf.Lerp(-5.45f, 9.45f, (float)random.NextDouble());
+                x = ArenaHalfWidth - ScaleDistance(0.25f);
+                y = ScaleDistance(Mathf.Lerp(-5.45f, 9.45f, (float)random.NextDouble()));
                 fallSpeed = 0f;
-                drift = -Mathf.Lerp(7.2f, 11.2f, (float)random.NextDouble());
+                drift = -ScaleDistance(Mathf.Lerp(7.2f, 11.2f, (float)random.NextDouble()));
                 gravity = 0f;
                 size *= 0.82f;
             }
@@ -318,11 +349,11 @@ namespace DrawBody.Prototype
                 int withinWave = offset % grainsPerWave;
                 int targetIndex = withinWave / BurstGrainsPerPoint;
                 x = GetForecastX(wave, targetIndex)
-                    + Mathf.Lerp(-0.3f, 0.3f, (float)random.NextDouble());
-                y = SpawnY + Mathf.Lerp(0f, 0.7f, (float)random.NextDouble());
-                fallSpeed = Mathf.Lerp(9.5f, 13.5f, (float)random.NextDouble());
-                drift = Mathf.Lerp(-0.12f, 0.12f, (float)random.NextDouble());
-                gravity = 0.32f;
+                    + ScaleDistance(Mathf.Lerp(-0.3f, 0.3f, (float)random.NextDouble()));
+                y = SpawnY + ScaleDistance(Mathf.Lerp(0f, 0.7f, (float)random.NextDouble()));
+                fallSpeed = ScaleDistance(Mathf.Lerp(9.5f, 13.5f, (float)random.NextDouble()));
+                drift = ScaleDistance(Mathf.Lerp(-0.12f, 0.12f, (float)random.NextDouble()));
+                gravity = ScaleDistance(0.32f);
                 size *= 0.94f;
             }
 
@@ -337,6 +368,15 @@ namespace DrawBody.Prototype
             }
             StageGrainParticle particle = renderer.gameObject.AddComponent<StageGrainParticle>();
             particle.Configure(DrawManager.Species.Human, new Vector2(drift, -fallSpeed), grams, gravity, true);
+            if (round == 2)
+            {
+                // The blizzard enters horizontally, but once a grain actually
+                // strikes a character it behaves like an ordinary falling grain
+                // instead of continuing to push sideways through the player.
+                particle.ConfigurePlayerContactFreeFall(
+                    playerContactFreeFallVelocity,
+                    playerContactGravity);
+            }
             if (round == 2) renderer.gameObject.AddComponent<StageBlizzardGrainCleanup>();
             if (rainbow) renderer.gameObject.AddComponent<StageRainbowGrainVisual>();
         }
@@ -344,12 +384,15 @@ namespace DrawBody.Prototype
         private float GetForecastX(int wave, int targetIndex)
         {
             int count = Mathf.Max(1, playerCount);
-            float segmentWidth = (ArenaHalfWidth * 2f - 2f) / count;
-            float center = -ArenaHalfWidth + 1f + segmentWidth * (targetIndex + 0.5f);
+            float segmentWidth = (ArenaHalfWidth * 2f - ScaleDistance(2f)) / count;
+            float center = -ArenaHalfWidth + ScaleDistance(1f) + segmentWidth * (targetIndex + 0.5f);
             System.Random random = new System.Random(930300 + wave * 3571 + targetIndex * 811);
             float jitter = Mathf.Lerp(-segmentWidth * 0.28f, segmentWidth * 0.28f,
                 (float)random.NextDouble());
-            return Mathf.Clamp(center + jitter, -ArenaHalfWidth + 0.8f, ArenaHalfWidth - 0.8f);
+            return Mathf.Clamp(
+                center + jitter,
+                -ArenaHalfWidth + ScaleDistance(0.8f),
+                ArenaHalfWidth - ScaleDistance(0.8f));
         }
 
         private void CreateForecastMarkers(int wave)
@@ -360,18 +403,19 @@ namespace DrawBody.Prototype
                 float x = GetForecastX(wave, i);
                 GameObject marker = new GameObject("Forecast Drop Point " + (i + 1));
                 marker.transform.SetParent(transform, false);
-                marker.transform.position = new Vector3(x, -6.12f, 0f);
+                marker.transform.position = new Vector3(x, ScaleDistance(-6.12f), 0f);
 
                 SpriteRenderer outer = StageGrainCarryObjectFactory.AddDot(
-                    marker.transform, "Warning Outer", Vector2.zero, 1.2f,
+                    marker.transform, "Warning Outer", Vector2.zero, ScaleDistance(1.2f),
                     new Color(1f, 0.34f, 0.08f, 0.34f), 68);
                 SpriteRenderer inner = StageGrainCarryObjectFactory.AddDot(
-                    marker.transform, "Warning Center", Vector2.zero, 0.5f,
+                    marker.transform, "Warning Center", Vector2.zero, ScaleDistance(0.5f),
                     new Color(1f, 0.78f, 0.08f, 0.62f), 69);
                 StageGun.AddLine(marker.transform, "Forecast Falling Guide", new[]
                 {
-                    new Vector2(0f, 0.35f), new Vector2(0f, SpawnY + 5.8f)
-                }, 0.075f, new Color(1f, 0.3f, 0.08f, 0.3f), 67);
+                    new Vector2(0f, ScaleDistance(0.35f)),
+                    new Vector2(0f, SpawnY + ScaleDistance(5.8f))
+                }, ScaleDistance(0.075f), new Color(1f, 0.3f, 0.08f, 0.3f), 67);
                 Transform guideTransform = marker.transform.Find("Forecast Falling Guide");
                 LineRenderer guide = guideTransform != null
                     ? guideTransform.GetComponent<LineRenderer>()
@@ -472,10 +516,23 @@ namespace DrawBody.Prototype
         {
             GameObject monitor = new GameObject("9-3 Grain Monitor");
             monitor.transform.SetParent(transform, false);
-            monitor.transform.position = new Vector3(0f, 10.8f, 0.2f);
-            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(10.8f, 2.65f), 3);
-            timerText = CreateText(monitor.transform, new Vector2(0f, 0.42f), 0.16f, 9, new Color(0.04f, 0.43f, 0.58f));
-            scoreText = CreateText(monitor.transform, new Vector2(0f, -0.45f), 0.095f, 9, new Color(0.1f, 0.28f, 0.5f));
+            monitor.transform.position = new Vector3(0f, ScaleDistance(10.8f), 0.2f);
+            DoodleMonitorVisuals.Build(
+                monitor.transform,
+                new Vector2(ScaleDistance(10.8f), ScaleDistance(2.65f)),
+                3);
+            timerText = CreateText(
+                monitor.transform,
+                new Vector2(0f, ScaleDistance(0.42f)),
+                ScaleDistance(0.16f),
+                9,
+                new Color(0.04f, 0.43f, 0.58f));
+            scoreText = CreateText(
+                monitor.transform,
+                new Vector2(0f, ScaleDistance(-0.45f)),
+                ScaleDistance(0.095f),
+                9,
+                new Color(0.1f, 0.28f, 0.5f));
 
         }
 
@@ -539,10 +596,15 @@ namespace DrawBody.Prototype
             if (cameraFollow != null) cameraFollow.enabled = false;
             oldCameraPosition = gameCamera.transform.position;
             oldCameraSize = gameCamera.orthographicSize;
-            float widthSize = 15.8f / Mathf.Max(0.2f, gameCamera.aspect);
-            gameCamera.transform.position = new Vector3(0f, 3.3f, oldCameraPosition.z);
-            gameCamera.orthographicSize = Mathf.Max(10.2f, widthSize);
+            float widthSize = ScaleDistance(15.8f) / Mathf.Max(0.2f, gameCamera.aspect);
+            gameCamera.transform.position = new Vector3(0f, ScaleDistance(3.3f), oldCameraPosition.z);
+            gameCamera.orthographicSize = Mathf.Max(ScaleDistance(10.2f), widthSize);
             cameraLocked = true;
+        }
+
+        private static float ScaleDistance(float value)
+        {
+            return value * SpatialScale;
         }
 
         private void RestoreCamera()
@@ -670,7 +732,7 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (particle == null || particle.IsInsideCarrier) return;
-            if (transform.position.x <= -14.15f || Time.unscaledTime - bornAt >= 16f)
+            if (transform.position.x <= -28.3f || Time.unscaledTime - bornAt >= 16f)
                 particle.Consume();
         }
     }

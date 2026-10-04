@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "TARGET  {0:0}g (90g x PLAYERS)"
+      "value": "TARGET  {0:0}g (70g x PLAYERS)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Akhiri tahap saat ini dan kembali ke pemilihan tahap?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Perubahan yang belum selesai tidak akan disimpan. Kembali tanpa menyimpan?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "KEMBALI TANPA SIMPAN"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Karakter yang digambar ulang telah disimpan."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Gagal menyimpan. Tekan „SELESAI“ lagi."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "PILIH TAHAP"
     },
     {
       "key": "online_content_mismatch",
       "value": "Permainan online tidak tersedia karena data atau versi game tidak cocok. Verifikasi file game di Steam."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Koneksi sesi terputus. Silakan masuk kembali ke ruang."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "MULTIPEMAIN DIREKOMENDASIKAN!" },
     { "key": "single_recommend_message", "value": "NICO DRAW paling seru saat bermain bersama!\nCobalah bermain dengan 2–4 pemain!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Keluar dari NICO DRAW?" }
+    ,{ "key": "title_exit_confirm", "value": "Keluar dari NICO DRAW?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} sedang menggunakan karakter ini. Kirim permintaan tukar?" },
+    { "key": "draw_species_swap_send", "value": "KIRIM PERMINTAAN" },
+    { "key": "background_word_push", "value": "DORONG!" }
   ]
 }

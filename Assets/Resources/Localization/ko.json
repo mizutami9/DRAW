@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "타블렛  {0:0}g (90g x 플레이어)"
+      "value": "타블렛  {0:0}g (70g x 플레이어)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "현재 스테이지를 끝내고 스테이지 선택으로 돌아갈까요?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "완성하지 않은 변경 내용은 저장되지 않습니다. 저장하지 않고 돌아갈까요?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "저장하지 않고 돌아가기"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "다시 그린 캐릭터를 저장했습니다."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "저장하지 못했습니다. ‘완성’을 다시 눌러 주세요."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "스테이지 선택"
     },
     {
       "key": "online_content_mismatch",
       "value": "게임 데이터 또는 버전이 일치하지 않아 온라인 플레이를 시작할 수 없습니다. Steam에서 게임 파일 무결성을 확인하세요."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "세션 연결이 끊어졌습니다. 방에 다시 참가해 주세요."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "멀티플레이 추천!" },
     { "key": "single_recommend_message", "value": "NICO DRAW는 함께 협력할 때 가장 재미있습니다!\n2–4명이 함께 플레이해 보세요!" },
     { "key": "single_recommend_ok", "value": "확인" }
-    ,{ "key": "title_exit_confirm", "value": "NICO DRAW를 종료할까요?" }
+    ,{ "key": "title_exit_confirm", "value": "NICO DRAW를 종료할까요?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} 님이 이 캐릭터를 사용 중입니다. 교환 요청을 보내시겠습니까?" },
+    { "key": "draw_species_swap_send", "value": "요청 보내기" },
+    { "key": "background_word_push", "value": "밀어!" }
   ]
 }

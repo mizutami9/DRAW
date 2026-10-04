@@ -19,6 +19,7 @@ namespace DrawBody.Prototype
         private const float FullGlideWingInk = 700f;
         private const float FullSpeedCatLegInk = 240f;
         public const float MaximumSlimeAbilityInk = 700f;
+        private const float FallbackGameplayGravityScale = 3.3f;
         private const int WallJumpTrajectoryDashCount = 14;
         private const float WallJumpTrajectoryDuration = 0.95f;
         [SerializeField] private float slimeWallJumpHorizontalSpeed = 22f;
@@ -36,6 +37,9 @@ namespace DrawBody.Prototype
         [SerializeField] private float slopeAssistMaxAngle = 50f;
 
         private Rigidbody2D rb;
+        private RigidbodyType2D gameplayBodyType;
+        private float gameplayGravityScale;
+        private bool gameplayFreezeRotation;
         private BodyBuilder bodyBuilder;
         private PlayerAbilityController abilityController;
         private StageManager stageManager;
@@ -351,6 +355,18 @@ namespace DrawBody.Prototype
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            // The same player object is reused when changing stages. Some
+            // mechanics temporarily suspend it, so retain the authored gameplay
+            // state instead of relying on the current (possibly suspended) state
+            // when a later stage starts.
+            // Local/remote extra players are cloned from the live player object.
+            // If that source happens to be suspended at the instant of cloning,
+            // do not adopt Kinematic/gravity-zero as the clone's normal state.
+            gameplayBodyType = RigidbodyType2D.Dynamic;
+            gameplayGravityScale = rb.gravityScale > 0f
+                ? rb.gravityScale
+                : FallbackGameplayGravityScale;
+            gameplayFreezeRotation = true;
             // Players can be launched at high speed by another Human. Discrete
             // collision detection can step completely through thin platforms,
             // especially with high-ink arms, so player bodies always use CCD.
@@ -509,6 +525,19 @@ namespace DrawBody.Prototype
                 enabled = false;
             }
 
+            // Stage-specific countdown/challenge controllers can refresh their
+            // control gate every frame. In offline two-character play those
+            // controllers may also ask the inactive character to enable itself;
+            // IsInactiveSharedLocalPlayer correctly rejects that request above.
+            // Re-applying the already-disabled state must not erase physics
+            // velocity, though: an inactive character can still be carried and
+            // thrown by the active character. Otherwise Player 2 loses its
+            // horizontal throw velocity every frame while Player 1 is active.
+            if (controlsEnabled == enabled)
+            {
+                return;
+            }
+
             controlsEnabled = enabled;
             if (!enabled)
             {
@@ -552,6 +581,24 @@ namespace DrawBody.Prototype
             StopBirdGlideAudio();
         }
 
+        public void RecoverAfterCarryRelease()
+        {
+            friendCarried = false;
+            humanCarryStruggling = false;
+            bodyColliderCache = null;
+            IsGrounded = false;
+            if (rb == null || !rb.simulated || rb.bodyType != RigidbodyType2D.Dynamic)
+            {
+                return;
+            }
+
+            rb.WakeUp();
+            if (rb.gravityScale > 0f && Mathf.Abs(rb.linearVelocity.y) < 0.05f)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, -0.35f);
+            }
+        }
+
         public void SetHumanCarryStruggling(bool active)
         {
             humanCarryStruggling = active;
@@ -574,11 +621,31 @@ namespace DrawBody.Prototype
             wallJumpSourceSide = 0;
             isTouchingSlimeWall = false;
             lastWallSide = 0;
+            temporarySpeedMultiplier = 1f;
+            temporarySpeedRemaining = 0f;
+            GetComponent<PlayerSpeedBoostEffect>()?.Clear();
             if (!preserveHeldTurtleShell)
             {
                 SetTurtleShellState(false);
             }
             SetTurtleRotation(false);
+        }
+
+        public void RestoreGameplayPhysicsState()
+        {
+            if (rb == null)
+            {
+                rb = GetComponent<Rigidbody2D>();
+                if (rb == null) return;
+            }
+
+            rb.simulated = true;
+            rb.bodyType = gameplayBodyType;
+            rb.gravityScale = gameplayGravityScale;
+            rb.freezeRotation = gameplayFreezeRotation;
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.WakeUp();
         }
 
         private void UpdateTurtleAbilityInput()

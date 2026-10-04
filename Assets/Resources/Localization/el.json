@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "ΣΤΟΧΟΣ  {0:0}g (90g x παίκτες)"
+      "value": "ΣΤΟΧΟΣ  {0:0}g (70g x παίκτες)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Τερματισμός του τρέχοντος επιπέδου και επιστροφή στην επιλογή επιπέδου;"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Οι μη ολοκληρωμένες αλλαγές δεν θα αποθηκευτούν. Επιστροφή χωρίς αποθήκευση;"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "ΕΠΙΣΤΡΟΦΗ ΧΩΡΙΣ ΑΠΟΘΗΚΕΥΣΗ"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Ο επανασχεδιασμένος χαρακτήρας αποθηκεύτηκε."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Η αποθήκευση απέτυχε. Πατήστε ξανά «ΤΕΛΟΣ»."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "ΕΠΙΛΟΓΗ ΕΠΙΠΕΔΟΥ"
     },
     {
       "key": "online_content_mismatch",
       "value": "Το διαδικτυακό παιχνίδι δεν είναι διαθέσιμο επειδή τα δεδομένα ή η έκδοση του παιχνιδιού δεν ταιριάζουν. Επαλήθευσε τα αρχεία παιχνιδιού στο Steam."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Η σύνδεση με τη συνεδρία χάθηκε. Μπείτε ξανά στο δωμάτιο."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "ΠΡΟΤΕΙΝΕΤΑΙ ΠΑΙΧΝΙΔΙ ΠΟΛΛΩΝ ΠΑΙΚΤΩΝ!" },
     { "key": "single_recommend_message", "value": "Το NICO DRAW είναι καλύτερο με συνεργασία!\nΔοκιμάστε να παίξετε με 2–4 παίκτες!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Έξοδος από το NICO DRAW;" }
+    ,{ "key": "title_exit_confirm", "value": "Έξοδος από το NICO DRAW;" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "Ο/Η {0} χρησιμοποιεί ήδη αυτόν τον χαρακτήρα. Να σταλεί αίτημα ανταλλαγής;" },
+    { "key": "draw_species_swap_send", "value": "ΑΠΟΣΤΟΛΗ ΑΙΤΗΜΑΤΟΣ" },
+    { "key": "background_word_push", "value": "ΣΠΡΩΞΕ!" }
   ]
 }

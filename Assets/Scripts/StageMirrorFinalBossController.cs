@@ -191,7 +191,7 @@ namespace DrawBody.Prototype
                 PlayerController2D player = ResolvePlayer(roomPlayerIds[i]); if (player == null) continue;
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>(); if (body != null) { body.simulated = true; body.linearVelocity = Vector2.zero; }
                 SetPlayerVisible(player, true);
-                if (!IsOnline || stageManager != null && stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
+                if (stageManager != null && stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
             }
             eliminatedPlayers.Clear();
         }
@@ -771,7 +771,7 @@ namespace DrawBody.Prototype
                     body.angularVelocity = 0f;
                 }
                 SetPlayerVisible(player, true);
-                if (!IsOnline || stageManager.ActivePlayerTransform == player.transform)
+                if (stageManager.ActivePlayerTransform == player.transform)
                     player.SetControlsEnabled(true);
             }
             eliminatedPlayers.Clear();
@@ -1268,7 +1268,7 @@ namespace DrawBody.Prototype
                 PlayerController2D player = ResolvePlayer(roomPlayerIds[i]); if (player == null) continue;
                 player.transform.position = new Vector2(-4.5f + i * 3f, LowerFloorY + 1.3f);
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>(); if (body != null) body.linearVelocity = Vector2.zero;
-                if (!IsOnline || stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
+                if (stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
             }
             Physics2D.SyncTransforms();
             for (int i = 0; i < playerCount; i++)
@@ -1424,7 +1424,7 @@ namespace DrawBody.Prototype
                     eliminatedPlayers.Remove(id); Rigidbody2D restoredBody = player.GetComponent<Rigidbody2D>();
                     if (restoredBody != null) { restoredBody.simulated = true; restoredBody.linearVelocity = Vector2.zero; restoredBody.angularVelocity = 0f; }
                     SetPlayerVisible(player, true);
-                    if (!IsOnline || stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
+                    if (stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
                     continue;
                 }
                 eliminatedPlayers.Add(id); player.SetControlsEnabled(false);

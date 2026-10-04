@@ -212,6 +212,7 @@ namespace DrawBody.Prototype
                 spawner?.GetComponent<StageDropperVisualAnimator>()?.PlayDispense();
                 friend = StageEscortFriend.Create(transform, state.Position, false, stageId == "10-2");
                 IgnorePlayerOnlyFloors(friend);
+                GameSfx.PlayAt(SfxId.EmotePop, state.Position, 0.9f);
             }
             else if (!state.Active && friend != null)
             {
@@ -374,15 +375,15 @@ namespace DrawBody.Prototype
             GameObject goal = new GameObject("Friend Goal House");
             goal.transform.SetParent(parent, false);
             goal.transform.localPosition = new Vector2(14.2f, 1.55f);
-            AddFilledRect(goal.transform, "Goal House", Vector2.zero, new Vector2(1.7f, 2.1f), new Color(0.45f, 0.9f, 0.55f, 1f), 30);
-            AddBoxOutline(goal.transform, Vector2.zero, new Vector2(1.7f, 2.1f), new Color(0.05f, 0.38f, 0.16f, 1f), 31);
-            AddFilledRect(goal.transform, "Goal Door", new Vector2(0f, -0.48f), new Vector2(0.75f, 1.1f), new Color(0.03f, 0.12f, 0.08f, 1f), 32);
-            AddLine(goal.transform, new Vector2(-1.05f, 1.05f), new Vector2(0f, 1.72f), 0.13f, new Color(0.05f, 0.38f, 0.16f, 1f), 33);
-            AddLine(goal.transform, new Vector2(0f, 1.72f), new Vector2(1.05f, 1.05f), 0.13f, new Color(0.05f, 0.38f, 0.16f, 1f), 33);
+            AddFilledRect(goal.transform, "Goal House", Vector2.zero, new Vector2(1.7f, 2.1f), new Color(0.45f, 0.9f, 0.55f, 1f), 4);
+            AddBoxOutline(goal.transform, Vector2.zero, new Vector2(1.7f, 2.1f), new Color(0.05f, 0.38f, 0.16f, 1f), 5);
+            AddFilledRect(goal.transform, "Goal Door", new Vector2(0f, -0.48f), new Vector2(0.75f, 1.1f), new Color(0.03f, 0.12f, 0.08f, 1f), 6);
+            AddLine(goal.transform, new Vector2(-1.05f, 1.05f), new Vector2(0f, 1.72f), 0.13f, new Color(0.05f, 0.38f, 0.16f, 1f), 7);
+            AddLine(goal.transform, new Vector2(0f, 1.72f), new Vector2(1.05f, 1.05f), 0.13f, new Color(0.05f, 0.38f, 0.16f, 1f), 7);
             if (stageId != "10-2")
             {
                 TextMesh label = CreateText(goal.transform, "Goal Label", new Vector3(0f, 2.15f, -0.03f),
-                    42, 0.1f, new Color(0.05f, 0.38f, 0.16f, 1f), 34);
+                    42, 0.1f, new Color(0.05f, 0.38f, 0.16f, 1f), 8);
                 label.text = LocalizationManager.T("stage_goal_label");
             }
         }
@@ -772,7 +773,7 @@ namespace DrawBody.Prototype
                     "StageDecorations/CrayonSet/house",
                     "Crayon Friend Goal House",
                     Vector2.one * artworkSize,
-                    30))
+                    6))
                 {
                     return;
                 }
@@ -780,15 +781,15 @@ namespace DrawBody.Prototype
 
             Color fill = new Color(0.45f, 0.9f, 0.55f, 1f);
             Color ink = new Color(0.05f, 0.38f, 0.16f, 1f);
-            StageEscortController.AddFilledRect(root.transform, "Goal House", Vector2.zero, size, fill, 30);
-            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, ink, 31);
-            StageEscortController.AddFilledRect(root.transform, "Goal Door", new Vector2(0f, -size.y * 0.23f), new Vector2(size.x * 0.44f, size.y * 0.52f), new Color(0.03f, 0.12f, 0.08f, 1f), 32);
-            StageEscortController.AddLine(root.transform, new Vector2(-size.x * 0.62f, size.y * 0.5f), new Vector2(0f, size.y * 0.82f), 0.13f, ink, 33);
-            StageEscortController.AddLine(root.transform, new Vector2(0f, size.y * 0.82f), new Vector2(size.x * 0.62f, size.y * 0.5f), 0.13f, ink, 33);
+            StageEscortController.AddFilledRect(root.transform, "Goal House", Vector2.zero, size, fill, 4);
+            StageEscortController.AddBoxOutline(root.transform, Vector2.zero, size, ink, 5);
+            StageEscortController.AddFilledRect(root.transform, "Goal Door", new Vector2(0f, -size.y * 0.23f), new Vector2(size.x * 0.44f, size.y * 0.52f), new Color(0.03f, 0.12f, 0.08f, 1f), 6);
+            StageEscortController.AddLine(root.transform, new Vector2(-size.x * 0.62f, size.y * 0.5f), new Vector2(0f, size.y * 0.82f), 0.13f, ink, 7);
+            StageEscortController.AddLine(root.transform, new Vector2(0f, size.y * 0.82f), new Vector2(size.x * 0.62f, size.y * 0.5f), 0.13f, ink, 7);
             if (showLabel)
             {
                 TextMesh label = StageEscortController.CreateText(root.transform, "Goal Label",
-                    new Vector3(0f, size.y * 1.02f, -0.03f), 42, 0.1f, ink, 34);
+                    new Vector3(0f, size.y * 1.02f, -0.03f), 42, 0.1f, ink, 8);
                 label.text = LocalizationManager.T("stage_goal_label");
             }
         }
@@ -883,7 +884,14 @@ namespace DrawBody.Prototype
     public sealed class StageEscortFriend : MonoBehaviour
     {
         private const float WalkSpeed = 1.15f;
-        private static readonly string[] SpeechWords = { "GO!", "HELP!", "WAIT!", "YIKES!", "RUN!" };
+        private static readonly string[] SpeechKeys =
+        {
+            "ice_speedrun_start",
+            "cat_escape_go",
+            "multi_wait",
+            "survival_get_ready",
+            "spike_chase_run"
+        };
         private bool authoritative;
         private bool stopped;
         private bool defeated;
@@ -1055,7 +1063,7 @@ namespace DrawBody.Prototype
             }
             else if (randomSpeechEnabled && !stopped && Time.time >= nextSpeechAt)
             {
-                speechText.text = SpeechWords[Random.Range(0, SpeechWords.Length)];
+                speechText.text = LocalizationManager.T(SpeechKeys[Random.Range(0, SpeechKeys.Length)]);
                 speechBubble.gameObject.SetActive(true);
                 speechRemaining = Random.Range(0.85f, 1.25f);
                 nextSpeechAt = Time.time + Random.Range(3.2f, 6.2f);
@@ -1471,7 +1479,7 @@ namespace DrawBody.Prototype
             // so both the permission and the crayon floor survive that cleanup.
             StageRedrawZoneFactory.CreateRuntimeFloorZone(arenaRoot,
                 "5-3_runtime_redraw_zone_" + roundIndex,
-                floorCenter, width, 6.8f);
+                floorCenter, width, 6.8f, 0.58f);
         }
 
         private float GetRouteY(int roundIndex, float t)
@@ -1622,7 +1630,8 @@ namespace DrawBody.Prototype
             {
                 PlayerController2D player = players[i];
                 if (player == null || !player.gameObject.activeInHierarchy || IsOnline && !IsLocalPlayer(player)) continue;
-                player.SetControlsEnabled(planning && !stageManager.IsDrawingMode);
+                bool isControlledPlayer = stageManager.ActivePlayerTransform == player.transform;
+                player.SetControlsEnabled(planning && isControlledPlayer && !stageManager.IsDrawingMode);
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
                 if (body == null) continue;
                 if (planning)
@@ -1679,6 +1688,8 @@ namespace DrawBody.Prototype
             if (data == null || data.ObjectId != StageId || data.Kind != StateKind || HasAuthority || !IsHost(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= lastSequence) return;
+            bool hadNetworkState = lastSequence > 0;
+            bool previousSnackCollected = snackCollected;
             lastSequence = state.Sequence;
             EscortPhase previousPhase = phase;
             EscortPhase incomingPhase = (EscortPhase)state.Phase;
@@ -1700,6 +1711,8 @@ namespace DrawBody.Prototype
                 for (int i = 0; i < planningPads.Count; i++)
                     if (planningPads[i] != null) planningPads[i].SetActive(false);
                 friend = StageDrawnEscortFriend.Create(arenaRoot, state.FriendPosition, false);
+                if (hadNetworkState)
+                    GameSfx.PlayAt(SfxId.EmotePop, state.FriendPosition, 0.9f);
             }
             else if (!state.FriendActive && friend != null)
             {
@@ -1711,6 +1724,14 @@ namespace DrawBody.Prototype
             if (friend != null && phase == EscortPhase.Failed) friend.Collapse();
             if (friend != null && (phase == EscortPhase.RoundClear || phase == EscortPhase.Complete)
                 && previousPhase != phase) friend.Celebrate();
+            if (hadNetworkState && !previousSnackCollected && state.SnackCollected)
+                GameSfx.PlayAt(SfxId.CoinCollect, state.FriendPosition, 0.82f);
+            if (hadNetworkState && previousPhase == EscortPhase.Running
+                && (incomingPhase == EscortPhase.RoundClear || incomingPhase == EscortPhase.Complete))
+                GameSfx.PlayAt(SfxId.GoalReached, goalPosition, 0.92f);
+            else if (hadNetworkState && previousPhase != EscortPhase.Failed
+                && incomingPhase == EscortPhase.Failed)
+                GameSfx.PlayAt(SfxId.PlayerDeath, state.FriendPosition, 0.72f);
             ApplyPlayerPhase();
             RefreshMonitor();
         }
@@ -1878,9 +1899,9 @@ namespace DrawBody.Prototype
             goal.transform.SetParent(arenaRoot, false);
             goal.transform.position = position;
             StageGun.TryCreateResourceSprite(goal.transform, "StageObjects/NicoDraw/goal-door",
-                "Colored Pencil Goal Door", new Vector2(3.15f, 2.65f), 27);
+                "Colored Pencil Goal Door", new Vector2(3.15f, 2.65f), 6);
             TextMesh label = StageEscortController.CreateText(goal.transform, "Goal Label",
-                new Vector3(0f, 1.85f, -0.04f), 40, 0.095f, new Color(0.04f, 0.42f, 0.16f), 28);
+                new Vector3(0f, 1.85f, -0.04f), 40, 0.095f, new Color(0.04f, 0.42f, 0.16f), 8);
             label.text = LocalizationManager.T("stage_goal_label");
         }
 

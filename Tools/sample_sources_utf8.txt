@@ -1,0 +1,308 @@
+[1] INFERIA (英語圏, 英語)
+    Evidence: 2026年6月の2周年企画でPICO PARK 2をグループ配信。
+    Source: https://x.com/InferiaVT
+    X: https://x.com/InferiaVT | Stream: https://www.twitch.tv/natsu_inferia
+[2] V4_Hawthorn (英語圏, 英語)
+    Evidence: 配信タイトルに『Playing Meccha Chameleon w/ Friends!』と明記。
+    Source: https://twitracker.com/streamers/v4_hawthorn ; https://mobile.twstalker.com/Momochiii_vt
+    X: https://x.com/V4_Hawthorn | Stream: https://www.twitch.tv/v4_hawthorn
+[3] Kisekipie (英語圏, 英語)
+    Evidence: Twitchプロフィールに本人X @Kisekipie_Angel明記。Big Walk等の複数人配信実績。
+    Source: https://www.twitchmetrics.net/c/213400888-kisekipie
+    X: https://x.com/Kisekipie_Angel | Stream: https://www.twitch.tv/kisekipie
+[4] PhoebeBang (英語圏, 英語)
+    Evidence: MECCHA CHAMELEONをfriendsと配信。プロフィールでもREPO/Phasmophobia等の複数人ゲームを明記。
+    Source: https://www.twitchmetrics.net/c/47097191-phoebebang
+    X: https://x.com/PhoebeBang | Stream: https://www.twitch.tv/phoebebang
+[5] Falem Star (英語圏, 英語)
+    Evidence: 本人X周辺でBritish VTuberとのMECCHA CHAMELEONコラボ確認。
+    Source: https://mobile.twstalker.com/StardemonFalem
+    X: https://x.com/StardemonFalem | Stream: https://www.twitch.tv/stardemonfalem
+[6] Kimi Mera (英語圏, 英語)
+    Evidence: 本人が『bunch of lovely friends』とのMECCHA CHAMELEONを告知。
+    Source: https://twstalker.com/KimiMeraVT
+    X: https://x.com/KimiMeraVT | Stream: https://www.twitch.tv/kimimeravt
+[7] NessyXS (英語圏, 英語)
+    Evidence: 2026-08-29『Let's Play Pico Park 2 with friends』。友人組での協力実況が明示。
+    Source: https://streamscharts.com/channels/nessyxs
+    X: https://x.com/nessy_xs | Stream: https://www.twitch.tv/nessyxs
+[8] Kamiimaru (英語圏, 英語)
+    Evidence: TwitchMetricsでMECCHA CHAMELEON主要カテゴリ確認。
+    Source: https://www.twitchmetrics.net/c/428857074-kamiimaru
+    X: https://x.com/Kamiimaru | Stream: https://www.twitch.tv/kamiimaru
+[9] Domino Muryo (英語圏, 英語)
+    Evidence: 本人XでfriendsとのMECCHA CHAMELEONを告知。
+    Source: https://w.twstalker.com/DominoMuryo
+    X: https://x.com/DominoMuryo | Stream: https://www.twitch.tv/dominomuryo
+[10] Ramen Doodles VT (英語圏, 英語)
+    Evidence: MECCHA CHAMELEON英語ランキング掲載。CarrdでX/Twitch/Discord/Email確認済み。
+    Source: https://ramendood1es.carrd.co/ ; https://www.twitchmetrics.net/channels/follower?game=MECCHA+CHAMELEON&lang=&page=2
+    X: https://x.com/RamenDood1es | Stream: https://www.twitch.tv/ramendood1es
+[11] KotaWaruu (英語圏, 英語)
+    Evidence: 本人XでMECCHA CHAMELEON collab告知。
+    Source: https://www.twstalker.com/KotaWaruu
+    X: https://x.com/KotaWaruu | Stream: https://www.twitch.tv/kotawaruu
+[12] Nimo_55 (英語圏, 英語)
+    Evidence: GameChangersGGs系のPICO PARK 2大人数コラボ参加実績。
+    Source: https://www.twitchmetrics.net/channels/follower?game=Europa+Universalis+IV ; https://x.com/nimo_55
+    X: https://x.com/nimo_55 | Stream: https://www.twitch.tv/nimo_55
+[13] AikaMeii (英語圏, 英語)
+    Evidence: 本人Xで『Some pewpews before Meccha Chameleon』と配信告知。
+    Source: https://www.twstalker.com/KotaWaruu
+    X: https://x.com/AikaMeii | Stream: https://www.twitch.tv/aikameii
+[14] Echo Astea (英語圏, 英語)
+    Evidence: MECCHA CHAMELEON英語ランキング掲載。Carrdで本人X・Twitch確認。
+    Source: https://echoastea.carrd.co/ ; https://www.twitchmetrics.net/channels/viewership?game=MECCHA+CHAMELEON&lang=en
+    X: https://x.com/EchoAstea | Stream: https://www.twitch.tv/echoastea
+[15] Issei_Kai (英語圏, 英語)
+    Evidence: 本人投稿でDBD custom games後にMECCHA CHAMELEON collabを明記。
+    Source: https://mobile.twstalker.com/StardemonFalem
+    X: https://x.com/Issei_Kai_ | Stream: https://www.twitch.tv/issei_kai_
+[16] baebyKK (英語圏, 英語)
+    Evidence: 2026-09-20 PICO PARK 2を2h、平均39・最大45。配信タイトルに!discord !socials。
+    Source: https://streamscharts.com/streams?game=pico-park-2&platform=twitch
+    X: https://x.com/baebyKK | Stream: https://www.twitch.tv/baebykk
+[17] SaquSya (英語圏, 英語)
+    Evidence: 2026-08-22『Testing More Friendships With Pico Park 2!』。@streaky_audios / @mx_tonks / @erisserenity / @nomadstales / @shezurivera / @palilious を明記した7人規模コラボ。3h45、平均89.2・最大115。
+    Source: https://streamervitals.com/saqusya
+    X: https://x.com/saqusya | Stream: https://www.twitch.tv/saqusya
+[18] YaDEERa (英語圏, 英語)
+    Evidence: MECCHA CHAMELEON + Lockdown Protocolのコラボcommunity nightを告知。
+    Source: https://twstalker.com/YaDEERaTTV
+    X: https://x.com/YaDEERaTTV | Stream: https://www.twitch.tv/yadeera
+[19] Rinimiki (英語圏, 英語)
+    Evidence: 10人追加募集のMECCHA CHAMELEON open collabを本人が主催。
+    Source: https://twstalker.com/ExoRookie82
+    X: https://x.com/Rinimiki | Stream: https://www.twitch.tv/rinimiki
+[20] DixeeChris (英語圏, 英語)
+    Evidence: 2026-06-20『Bonus Stream With The Boys』でPICO PARK 2を5時間45分。@buckfoozle / @streamstickers / @amish_ace をタイトルに明記。平均118・最大146視聴。
+    Source: https://streamscharts.com/channels/dixeechris/subscribers ; https://streamervitals.com/dixeechris
+    X: https://x.com/DixeeChris | Stream: https://www.twitch.tv/dixeechris
+[21] Hohiha (英語圏, 英語)
+    Evidence: MECCHA CHAMELEON with friendsを3時間配信、peak 41。
+    Source: https://www.twitchmetrics.net/c/99163781-hohiha
+    X: https://x.com/HohihaVT | Stream: https://www.twitch.tv/hohiha
+[22] ThatDogCoda (英語圏, 英語)
+    Evidence: MECCHA CHAMELEON実績＋複数人コラボ配信を定期実施。
+    Source: https://linktr.ee/ThatDogCoda ; https://www.twitch.tv/thatdogcoda/schedule ; https://streamervitals.com/thatdogcoda
+    X: https://x.com/ThatDogCoda | Stream: https://www.twitch.tv/thatdogcoda
+[23] mojine_ (英語圏, 英語)
+    Evidence: MECCHA CHAMELEON VTuberランキング掲載。コラボ文化の強いVTuber。
+    Source: https://streamervitals.com/mojine_ ; https://w.twstalker.com/MioLive2d
+    X: https://x.com/mojine_ | Stream: https://www.twitch.tv/mojine_
+[24] Minorikyun (英語圏, 英語)
+    Evidence: 2026-09-05 PICO PARK 2を10h01、平均77.6・最大90。!socials / !discordあり。
+    Source: https://streamervitals.com/minorikyun
+    X: https://x.com/Minorikyun | Stream: https://www.twitch.tv/minorikyun
+[25] Royool_T (英語圏, 英語)
+    Evidence: 2026-09-17 PICO PARK 2を2時間。平均24・最大28。
+    Source: https://www.twitchmetrics.net/channels/follower?game=Apex+Legends&lang=en&page=4 ; https://www.instalker.org/MissMontyyy ; https://streamscharts.com/channels/royool_t
+    X: https://x.com/Royool_T | Stream: https://www.twitch.tv/Royool_T
+[26] Aida Lyra (英語圏, 英語)
+    Evidence: PICO PARK 2 VTUBER COLLAB WITH FRIENDSを実施。複数VTuberとのゲーム実績。
+    Source: https://www.youtube.com/watch?v=6yGUNsUaN18 ; https://www.youtube.com/watch?v=NxbPfnsGEHY
+    X: https://x.com/aida_lyra | Stream: https://www.youtube.com/@AidaLyra ; https://www.twitch.tv/aidalyra
+[27] Goldyne (英語圏, 英語)
+    Evidence: MECCHA CHAMELEON実績。プロフィールでも friends と一緒にゲームを遊ぶ活動方針を明記。
+    Source: https://streamervitals.com/goldyne ; https://mobile.twstalker.com/DynamiteGoldyne
+    X: https://x.com/DynamiteGoldyne | Stream: https://www.twitch.tv/goldyne
+[28] Lucifellow (英語圏, 英語)
+    Evidence: 2026年にPICO PARK 2とMECCHA CHAMEREONを各1回配信。協力ゲーム適性を直接確認。
+    Source: https://streamrecorder.io/twitch/lucifellow
+    X: https://x.com/lucifellowVR | Stream: https://www.twitch.tv/lucifellow
+[29] Kaneko Mineko / 金子みねこ (日本 / インドネシア, 日本語)
+    Evidence: 2026年8月にPICO PARK 2の参加型/コラボ配信を告知。
+    Source: https://db.bitstar.tokyo/youtube/UCU50fd_m-gPZkNzTW_aRvSg ; https://x.com/kaneneko_813
+    X: https://x.com/kaneneko_813 | Stream: https://www.youtube.com/@kanekomineko ; https://www.twitch.tv/kanekomineko_vt
+[30] Yendys00 (アメリカ, 英語)
+    Evidence: 2026-09-11 PICO PARK 2、平均15・最大26。9/14も@bolddustuとの共同配信。
+    Source: https://twitracker.com/streamers/yendys00
+    X: https://x.com/yendys00 | Stream: https://www.twitch.tv/yendys00
+[31] HolyFX (アメリカ, 英語)
+    Evidence: 2026-06-19『PICO PARK 2 COLLAB』。7/29にもmerriffmathersとのduo配信。
+    Source: https://www.twitchmetrics.net/c/78257718-holyfx/videos ; https://www.twitchmetrics.net/c/78257718-holyfx
+    X: https://x.com/HolyFxPrime | Stream: https://www.twitch.tv/holyfx
+[32] EsBrilloG (スペイン語圏, スペイン語)
+    Evidence: MECCHA CHAMELEON配信実績あり。TwitchプロフィールからX本人アカウント確認済み。
+    Source: https://betterbanned.com/en/streamer/esbrillog ; https://www.twitchmetrics.net/c/822227699-esbrillog
+    X: https://x.com/brillog_oficial | Stream: https://www.twitch.tv/esbrillog
+[33] akumane_ / Amane (スペイン語圏, スペイン語)
+    Evidence: 2026-04-01にPICO PARK 2配信実績。既存候補の中でも連絡導線が明確。
+    Source: https://twstalker.com/Meryenda_
+    X: https://x.com/akumane_ | Stream: https://www.twitch.tv/akumane_
+[34] Airi Lockheart (スペイン語圏, スペイン語)
+    Evidence: 2026-08-28『Pico Park 2 ¡Collab con amiwas!』。共演者名が明確。
+    Source: https://streamscharts.com/channels/airilockheart
+    X: https://x.com/AiriLockheart | Stream: https://www.twitch.tv/airilockheart
+[35] kuroneko_LP (スペイン語圏, スペイン語)
+    Evidence: 2026-09-05『HOY le jugamos a pico』でPICO PARKを2時間。平均19・最大23視聴。
+    Source: https://x.com/lp_kuroneko/with_replies ; https://www.twitchmetrics.net/c/784698001-kuroneko_lp
+    X: https://x.com/lp_kuroneko | Stream: https://www.twitch.tv/kuroneko_LP
+[36] Eris Mochizuki (スペイン語圏, スペイン語)
+    Evidence: 本人Xで女性VTuber多数とのMECCHA CHAMELEONコラボを告知。
+    Source: https://mobile.twstalker.com/VTuber_Eris
+    X: https://x.com/VTuber_Eris | Stream: https://www.twitch.tv/vtuber_eris
+[37] KatarinaAkina (スペイン語圏, スペイン語)
+    Evidence: 2026-08-13配信内でPICO PARK 2を3h17、平均89.8・最大99。配信全体は平均80.2・最大101。
+    Source: https://streamervitals.com/katarinaakina/stream/357402
+    X: https://x.com/KatarinaAkina | Stream: https://www.twitch.tv/katarinaakina
+[38] Studio Caudas (ブラジル, ポルトガル語)
+    Evidence: 2026-08-22 PICO PARK 2活動確認。ポルトガル語圏の小規模候補。
+    Source: https://www.twitchmetrics.net/channels/follower?game=PICO+PARK+2
+    X: https://x.com/studiocaudas | Stream: https://www.twitch.tv/studiocaudas
+[39] ShiroxBR (ブラジル, ポルトガル語)
+    Evidence: 2026-09-18 PICO PARK 2を2h54、平均35・最大55。
+    Source: https://streamscharts.com/streams?game=pico-park-2&platform=twitch
+    X: https://x.com/shirobrx | Stream: https://www.twitch.tv/ShiroxBR
+[40] AlohasFreedom (フランス, フランス語)
+    Evidence: 2025-12-27の5人PICO PARK 2 Let's Playに参加。
+    Source: https://linktr.ee/alohasfreedom ; https://www.twitchmetrics.net/c/408356558-alohasfreedom
+    X: https://x.com/alohasfreedom | Stream: https://www.twitch.tv/alohasfreedom
+[41] HitochiroVT (フランス, フランス語)
+    Evidence: 本人Xの週間予定に『Collab Meccha Chameleon avec plusieurs invités』。
+    Source: https://w.twstalker.com/HitochiroVT
+    X: https://x.com/HitochiroVT | Stream: https://www.twitch.tv/hitochirovt
+[42] lePodcase / Alexandre Arlène (フランス, フランス語)
+    Evidence: 2026年8月にPICO PARK 2配信実績。公式ブログでもTwitchとTwitterを本人導線として掲載。
+    Source: https://a-poudlard.blogspot.com/ ; https://facebookz-mania.twstalker.com/CendresBD
+    X: https://x.com/CendresBD | Stream: https://www.twitch.tv/lepodcase
+[43] Chality (タイ, タイ語)
+    Evidence: FreyraineのMECCHA CHAMELEON partyメンバー。
+    Source: https://www.sotwe.com/chality_prl
+    X: https://x.com/Chality_prl | Stream: https://www.youtube.com/@ChalityPRL
+[44] MiiChan (タイ, タイ語)
+    Evidence: 2026年8月にVTuberコラボとしてMECCHA CHAMELEON配信。
+    Source: https://www.sotwe.com/subarashii_mii
+    X: https://x.com/subarashii_mii | Stream: https://www.youtube.com/@subarashii_mii
+[45] 深海まだこ (日本, 日本語)
+    Evidence: 2026-09-24に友人を集めてPICO PARK 2の飲酒コラボ配信。
+    Source: https://x.com/Fukakai_madako
+    X: https://x.com/Fukakai_madako | Stream: https://www.twitch.tv/fukakaimadako
+[46] にな0_0 (日本, 日本語)
+    Evidence: 参加型・協力ゲーム型。固定4人ではないが、デモ拡散候補として強い。
+    Source: https://streamscharts.com/channels/nina_0_0_v ; Yahoo!リアルタイム検索（@nina_games0_0vからtwitch.tv/nina_0_0_vへの本人配信告知）
+    X: https://x.com/nina_games0_0v | Stream: https://www.twitch.tv/nina_0_0_v
+[47] かがり篝 / kagari0083 (日本, 日本語)
+    Evidence: 2026-09-18『唐突にはじまるPICOPARK with C.C.H』。9/22にも配信しており現在も活動中。
+    Source: https://www.mebae-lens.jp/streamers/1549620 ; https://mobile.twstalker.com/rinnenano
+    X: https://x.com/kagari0083 | Stream: https://www.twitch.tv/kagari0083
+[48] おかぴ_ふくろう (日本, 日本語)
+    Evidence: 大勢のMECCHA CHAMELEONコラボ参加を本人投稿。通常配信でもコラボ実績あり。
+    Source: https://search.yahoo.co.jp/realtime/search?ei=UTF-8&p=Chameleon&rkf=1 ; https://www.twitchmetrics.net/channels/follower?game=World+of+Tanks&lang=ja&page=2
+    X: https://x.com/owlet0422 | Stream: https://www.twitch.tv/owlet0422
+[49] 黑須つくる (日本, 日本語)
+    Evidence: 2026-05-22に雨閖ナムフォンとPICO PARK 2。継続コラボ実績あり。
+    Source: https://vtuber-live.net/archive_list/UC0g1DkNCqX7IS5HNiWiDsNw
+    X: https://x.com/makeclothesV | Stream: https://www.youtube.com/@makeclothes
+[50] アキツ (日本, 日本語)
+    Evidence: 2026-08のPICO PARK 2コラボで、みけだ / 猫麗シャオ / 湊暒ななぎ と4人。
+    Source: https://www.nicozon.net/watch/sm42453082 ; https://www.nicozon.net/tag/%E3%83%8B%E3%83%A5%E3%83%BC%E3%83%88%E3%83%B3%E3%83%80%E3%83%B3%E3%82%B9
+    X: https://x.com/Akitsu1030 | Stream: https://youtube.com/@akitsu1030
+[51] Commander中佐 (日本, 日本語)
+    Evidence: MECCHA CHAMELEONを複数回コラボ配信。REPOも5人以上の協力コラボ実績。
+    Source: https://search.yahoo.co.jp/realtime/search?ei=UTF-8&mtype=video&p=%E3%82%B3%E3%83%A9%E3%83%9C%E7%9B%B8%E6%89%8B%E6%A7%98 ; https://twstalker.com/kota_nosukemaru
+    X: https://x.com/commander_4645 | Stream: https://www.youtube.com/@commander_4645
+[52] ユイ＝ピコピコ (日本, 日本語)
+    Evidence: 2026-09-07および09-09にPICO PARK 2配信を告知。Fall Guysとの同日配信も実施。
+    Source: https://vtuber.chminer.net/channel?c=UC5O1Tt0K19exQfqsh2BMveA
+    X: https://x.com/Yui_PikoPiko | Stream: https://www.youtube.com/channel/UC5O1Tt0K19exQfqsh2BMveA
+[53] ジェネラルさん / shogun_333 (日本, 日本語)
+    Evidence: 2026-08-30にPICO PARK 2。9月集計803フォロワー。
+    Source: https://www.twitchmetrics.net/channels/follower?game=PICO+PARK+2
+    X: https://x.com/shogun_333 | Stream: https://www.twitch.tv/shogun_333
+[54] tatuyaki (日本, 日本語)
+    Evidence: MECCHA CHAMELEON発売日に一緒に遊ぶ相手を公募。複数配信プラットフォームを運用。
+    Source: https://kiokoi.livedoor.blog/archives/15755252.html ; https://mobile.twstalker.com/SemmerlingLM4
+    X: https://x.com/tatuyaki8 | Stream: https://www.youtube.com/@tatuyaki
+[55] EciWoelfchen (ドイツ, ドイツ語)
+    Evidence: MECCHA CHAMELEONを2026年9月にも配信。VTuber交流企画も運営。
+    Source: TwitchMetrics / X検索 ; https://www.twitchmetrics.net/c/32418770-eciwoelfchen
+    X: https://x.com/EciWoelfchen | Stream: https://www.twitch.tv/eciwoelfchen
+[56] Yorinaki (ドイツ/スイス, ドイツ語)
+    Evidence: 複数人向けMECCHA CHAMELEON実績。本人プロフィールでイベント主催も明記。
+    Source: TwitchMetrics / X公開プロフィール
+    X: https://x.com/Yorinaki | Stream: https://www.twitch.tv/yorinaki
+[57] Akiilotl / Akilotl (ドイツ, ドイツ語)
+    Evidence: MECCHA CHAMELEONを2026年8〜9月期に配信。VTuber Wikiでもコラボ活動が多い旨。
+    Source: Linktree / TwitchMetrics
+    X: https://x.com/Akilotltwitch | Stream: https://www.twitch.tv/akiilotl
+[58] CurlyLocksGamer (イギリス, 英語)
+    Evidence: MECCHA CHAMELEON配信実績。アーティスト活動も並行。
+    Source: TwitchMetrics / 公開プロフィール
+    X: https://x.com/Curlylocksgamer | Stream: https://www.twitch.tv/curlylocksgamer
+[59] ViannaKyu (英語圏, 英語)
+    Evidence: Ritsune/Sirae/AileeとのVKYUZA4人MECCHA CHAMELEONコラボ。
+    Source: TwitchMetrics / VKYUZA公開X
+    X: https://x.com/ViannaKyu | Stream: https://www.twitch.tv/viannakyu
+[60] SharpvyVT (英語圏, 英語)
+    Evidence: 9/22 Overcooked 2 WITH FRIENDS、9/23 PEAK with peeps、9/24 Escape the Backrooms w/AhriHikari。9/20は4人BG3。
+    Source: SublessVOD / X公開プロフィール
+    X: https://x.com/SharpvyVT | Stream: https://www.twitch.tv/sharpvyvt
+[61] Kiara_TV (アメリカ, 英語)
+    Evidence: 9/10『Walking Big with @gammachris @zoiteki @digitalbasic』。本人TwitchプロフィールにTwitter @kiarastreamsを明記。
+    Source: StreamerVitals / TwiTracker
+    X: https://x.com/KiaraStreams | Stream: https://www.twitch.tv/kiara_tv
+[62] Veepai (アメリカ, 英語)
+    Evidence: 9/12 Big Walk。Cumfy Officialのfriend groupにVeepai本人が掲載され、Carrot・Beku・SpooSenpai等とのネットワークあり。
+    Source: HoloList / vTubie / Cumfy Official Linktree
+    X: https://x.com/veepaivt | Stream: https://www.twitch.tv/veepai
+[63] LittleMonstersTV (カナダ, 英語)
+    Evidence: 8/18 PEAK w/ Park_Jom 約6時間。普段からチャット参加型・ゲーム連動型の配信を継続。
+    Source: StreamerVitals / TwiCopy / The Fun Pimps公式Streamer List
+    X: https://x.com/lilmonsterstv | Stream: https://www.twitch.tv/littlemonsterstv
+[64] AstraVexellara (アメリカ, 英語)
+    Evidence: 9/11『100% Big Walk w/ Siblings!』。R.E.P.O.コラボ、Elden Ring co-op、viewer interactionを継続。
+    Source: TwitchMetrics / Streams Charts / 本人Reddit自己紹介 ; https://www.twitchmetrics.net/channels/follower?game=The+First+Descendant
+    X: https://x.com/AstraVexellara | Stream: https://www.twitch.tv/astravexellara
+[65] KippTheLostDragon (英語圏, None)
+    Evidence: 9月のMECCHA CHAMELEON配信でGildedSiren、KikiSenchou、Thaumielle、Myrly_Angelic等を明記した多人数コラボ。
+    Source: None
+    X: https://x.com/kipplost | Stream: https://www.twitch.tv/kippthelostdragon
+[66] Reapsie (英語圏, None)
+    Evidence: MECCHA CHAMELEON、PEAK、Lethal Company等の複数人ゲーム実績。2026-09-24にもMECCHA CHAMELEON配信確認。
+    Source: None
+    X: https://x.com/Reapsiee | Stream: https://www.twitch.tv/reapsie
+[67] Yumichii_ (US, 英語)
+    Evidence: 9/19にGames with friends枠でMECCHA CHAMELEON。MECCHA比率も高い。
+    Source: https://twitracker.com/streamers/yumichii_ ; https://streamervitals.com/yumichii_
+    X: https://x.com/Yumichii_ | Stream: https://www.twitch.tv/yumichii_
+[68] AztralBat (US, 英語)
+    Evidence: 8/12 Meccha Chameleon w/ friendos、8/7は8人規模MECCHAコラボ。
+    Source: https://bacharu.io/vtuber/aztralbat
+    X: https://x.com/AztralBat | Stream: https://www.twitch.tv/aztralbat
+[69] Alex Turell (EN, 英語)
+    Evidence: 6/27-28にMECCHA CHAMELEON Collab Weekendを自ら企画。
+    Source: https://www.reddit.com/r/VirtualYoutubers/comments/1uh4uuv/ ; https://www.reddit.com/r/IndieVTubers/comments/1wmkpjs/
+    X: https://x.com/cocoloco3412 | Stream: https://www.twitch.tv/cocoloco3412 ; https://www.youtube.com/@AlexTurell-cocoloco3412
+[70] BethanyGoesMoo (US/EN, 英語)
+    Evidence: 9/9に『Meccha'ing The Chameleons With Friends!』を4時間配信。
+    Source: https://www.twitchmetrics.net/c/418754593-bethanygoesmoo
+    X: None | Stream: https://www.twitch.tv/bethanygoesmoo
+[71] StrawHatPal (EN, 英語)
+    Evidence: 9/8に『SURPRISE LATE NIGHT COLLAB WITH FRIENDS』でMECCHA。MECCHAが直近カテゴリ61%。
+    Source: https://twitracker.com/streamers/strawhatpal ; https://myoshi.co/strawhatpal
+    X: None | Stream: https://www.twitch.tv/strawhatpal
+[72] Ninu_VT (EN, 英語)
+    Evidence: 9/20 MECCHA、9/9 PEAK WITH FRIENDS、9/18 Marvel Rivals w/ itsnovalia。
+    Source: https://twitracker.com/streamers/ninu_vt ; https://linktr.ee/ninuchan
+    X: None | Stream: https://www.twitch.tv/ninu_vt
+[73] FA.ye-18 (US/EN, 英語)
+    Evidence: 9/23にJey VT・Pipistrella VTとのMECCHAコラボ。平均34・ピーク40。
+    Source: https://twitracker.com/streamers/faye_18vt ; https://hololist.net/fa-ye-18/
+    X: https://x.com/FAye18VT | Stream: https://www.twitch.tv/faye_18vt ; https://www.youtube.com/@Faye18VT
+[74] malkotoyuki (EN, 英語)
+    Evidence: 9/12・9/19にMECCHA CHAMELEON。直近カテゴリの79%がMECCHA。
+    Source: https://twitracker.com/streamers/malkotoyuki
+    X: None | Stream: https://www.twitch.tv/malkotoyuki
+[75] Papacotes (EN, 英語)
+    Evidence: 9/12コミュニティMECCHA、9/13 KingAchillesとの配信後MECCHA。MECCHAが主要ゲーム。
+    Source: https://www.twitchmetrics.net/c/408610558-papacotes
+    X: None | Stream: https://www.twitch.tv/papacotes
+[76] SalemMoon69 (EN, 英語)
+    Evidence: 9月にMECCHA初プレイ。9/12にはGamble With Your Friendsを複数人配信。
+    Source: https://www.twitchmetrics.net/c/639297209-salemmoon69
+    X: None | Stream: https://www.twitch.tv/salemmoon69
+[77] iitsWheezy (EN, 英語)
+    Evidence: 復帰配信でMECCHA CHAMELEONをプレイ。プロフィールに!links導線あり。
+    Source: https://www.twitchmetrics.net/c/92704526-iitswheezy
+    X: None | Stream: https://www.twitch.tv/iitswheezy

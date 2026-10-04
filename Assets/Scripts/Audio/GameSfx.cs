@@ -15,6 +15,7 @@ namespace DrawBody.Prototype
         private readonly List<AudioSource> sources = new List<AudioSource>();
         private int nextSourceIndex;
         private float masterVolume = DefaultMasterVolume;
+        private float nextLifeSoundAllowedAt;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -105,6 +106,11 @@ namespace DrawBody.Prototype
         private void PlayInternal(SfxId id, float volumeScale, bool spatial, Vector3 position)
         {
             if (IsMuted(id)) return;
+            bool lifeSound = id == SfxId.PlayerDeath || id == SfxId.PlayerRespawn;
+            if (lifeSound && Time.unscaledTime < nextLifeSoundAllowedAt)
+            {
+                return;
+            }
             SfxDefinition definition = SfxCatalog.Get(id);
             if (nextAllowedTimes.TryGetValue(id, out float nextTime) && Time.unscaledTime < nextTime)
             {
@@ -118,6 +124,13 @@ namespace DrawBody.Prototype
             }
 
             nextAllowedTimes[id] = Time.unscaledTime + definition.Cooldown;
+            if (lifeSound)
+            {
+                // Death and respawn use different ids, so their individual
+                // cooldowns did not prevent a four-player death loop from
+                // filling the source pool with the same loud feedback.
+                nextLifeSoundAllowedAt = Time.unscaledTime + 0.45f;
+            }
             AudioSource source = GetAvailableSource();
             source.transform.position = position;
             source.spatialBlend = spatial ? 0.7f : 0f;

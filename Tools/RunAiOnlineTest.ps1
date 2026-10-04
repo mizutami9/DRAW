@@ -68,7 +68,7 @@ try {
             "-pico-regression-name=$name",
             "-logFile", (Join-Path $runDirectory "client-$index-unity.log")
         )
-        $process = Start-Process -FilePath $resolvedExe -ArgumentList $arguments -PassThru
+        $process = Start-Process -FilePath $resolvedExe -ArgumentList $arguments -PassThru -WindowStyle Hidden
         $started.Add($process)
         if ($index -eq 1) { Start-Sleep -Milliseconds 700 }
         else { Start-Sleep -Milliseconds 250 }

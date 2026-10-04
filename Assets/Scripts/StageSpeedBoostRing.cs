@@ -158,6 +158,13 @@ namespace DrawBody.Prototype
             SetVisible(true);
         }
 
+        public void Clear()
+        {
+            multiplier = 1f;
+            remaining = 0f;
+            SetVisible(false);
+        }
+
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();

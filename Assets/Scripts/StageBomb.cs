@@ -10,6 +10,7 @@ namespace DrawBody.Prototype
     {
         private const float MinimumFuseSeconds = 0.2f;
         private const float BlastRangeWarningSeconds = 0.65f;
+        private static readonly List<Collider2D> BlastHits = new List<Collider2D>(256);
 
         private bool startsOnPickup;
         private float fuseSeconds = 5f;
@@ -115,6 +116,30 @@ namespace DrawBody.Prototype
             {
                 Arm(Mathf.Min(0.16f, fuseSeconds));
             }
+        }
+
+        public void TriggerFromSlimeSpike()
+        {
+            TriggerFromDirectAttack();
+        }
+
+        public void TriggerFromCatScratch()
+        {
+            TriggerFromDirectAttack();
+        }
+
+        private void TriggerFromDirectAttack()
+        {
+            if (exploded) return;
+            if (syncManager != null && syncManager.IsOnlineActive)
+            {
+                // Participants request the hit; only the host confirms and
+                // broadcasts the explosion to keep bomb state deterministic.
+                syncManager.RequestDetonateBomb(ObjectId);
+                return;
+            }
+
+            ApplyExplosion(transform.position, BlastRadius, true);
         }
 
         public void ApplyNetworkExplosion(Vector2 position, float radius, bool applyGameplay)
@@ -324,16 +349,18 @@ namespace DrawBody.Prototype
 
         private void ApplyBlastToPlayersAndBodies(Vector2 position, float radius)
         {
-            Collider2D[] hits = Physics2D.OverlapCircleAll(position, radius);
+            BlastHits.Clear();
+            ContactFilter2D filter = new ContactFilter2D().NoFilter();
+            Physics2D.OverlapCircle(position, radius, filter, BlastHits);
             HashSet<Rigidbody2D> affectedBodies = new HashSet<Rigidbody2D>();
             HashSet<PlayerController2D> affectedPlayers = new HashSet<PlayerController2D>();
             StageManager stageManager = Object.FindFirstObjectByType<StageManager>();
             bool online = syncManager != null && syncManager.IsOnlineActive;
             Transform localPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
             bool canSimulateWorldBodies = !online || syncManager.IsHost;
-            for (int i = 0; i < hits.Length; i++)
+            for (int i = 0; i < BlastHits.Count; i++)
             {
-                Collider2D hit = hits[i];
+                Collider2D hit = BlastHits[i];
                 if (hit == null)
                 {
                     continue;
@@ -366,6 +393,7 @@ namespace DrawBody.Prototype
                 float distance = Mathf.Max(0.25f, direction.magnitude);
                 body.AddForce(direction.normalized * Mathf.Lerp(24f, 7f, distance / radius), ForceMode2D.Impulse);
             }
+            BlastHits.Clear();
         }
 
         private void ReleaseFromCarriers()
@@ -410,6 +438,7 @@ namespace DrawBody.Prototype
 
         private static void CreateExplosionVisual(Vector2 position, float radius)
         {
+            if (!BombExplosionVisual.CanCreate) return;
             GameObject root = new GameObject("Bomb Explosion");
             root.transform.position = position;
             BombExplosionVisual visual = root.AddComponent<BombExplosionVisual>();
@@ -571,6 +600,11 @@ namespace DrawBody.Prototype
         private string originStageId;
         private StageManager stageManager;
         private static Sprite circleSprite;
+        private static Material sharedExplosionMaterial;
+        private static int activeVisualCount;
+        private bool countedActive;
+
+        public static bool CanCreate => activeVisualCount < 4;
 
         public void Configure(float blastRadius, bool isMega = false, string sourceStageId = null)
         {
@@ -582,6 +616,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (!CanCreate)
+            {
+                HideAndDestroy();
+                return;
+            }
+            activeVisualCount++;
+            countedActive = true;
+
             radius = Mathf.Max(0.5f, blastRadius);
             mega = isMega;
             duration = mega ? 1.25f : 0.82f;
@@ -591,7 +633,9 @@ namespace DrawBody.Prototype
                 Destroy(gameObject);
                 return;
             }
-            material = new Material(shader);
+            if (sharedExplosionMaterial == null)
+                sharedExplosionMaterial = new Material(shader) { name = "Shared Bomb Explosion Material" };
+            material = sharedExplosionMaterial;
 
             flash = CreateDisc("Explosion White Flash", Color.white, 334);
             fireball = CreateDisc(
@@ -599,7 +643,7 @@ namespace DrawBody.Prototype
                 new Color(1f, 0.34f, 0.025f, 0.9f),
                 330);
 
-            for (int ring = 0; ring < (mega ? 4 : 3); ring++)
+            for (int ring = 0; ring < (mega ? 4 : 2); ring++)
             {
                 GameObject ringObject = new GameObject("Explosion Ring " + ring);
                 ringObject.transform.SetParent(transform, false);
@@ -619,7 +663,7 @@ namespace DrawBody.Prototype
                 rings.Add(line);
             }
 
-            int cloudCount = mega ? 18 : 11;
+            int cloudCount = mega ? 18 : 6;
             for (int cloud = 0; cloud < cloudCount; cloud++)
             {
                 GameObject cloudObject = new GameObject("Explosion Cloud " + cloud);
@@ -630,7 +674,7 @@ namespace DrawBody.Prototype
                 clouds.Add(renderer);
             }
 
-            int sparkCount = mega ? 28 : 16;
+            int sparkCount = mega ? 28 : 8;
             for (int spark = 0; spark < sparkCount; spark++)
             {
                 GameObject sparkObject = new GameObject("Explosion Spark " + spark);
@@ -775,9 +819,10 @@ namespace DrawBody.Prototype
             {
                 if (renderers[i] != null) renderers[i].enabled = false;
             }
-            if (material != null)
+            if (countedActive)
             {
-                Destroy(material);
+                activeVisualCount = Mathf.Max(0, activeVisualCount - 1);
+                countedActive = false;
             }
         }
 

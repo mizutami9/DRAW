@@ -1693,6 +1693,10 @@
                         "value":  "Online play is unavailable because the game data or version does not match. Verify the game files in Steam."
                     },
                     {
+                        "key":  "online_session_disconnected",
+                        "value":  "The session connection was lost. Please join the room again."
+                    },
+                    {
                         "key":  "online_host_disconnected",
                         "value":  "The host disconnected, so the room was closed."
                     },
@@ -1752,6 +1756,7 @@
     { "key": "single_recommend_title", "value": "MULTIPLAYER RECOMMENDED!" },
     { "key": "single_recommend_message", "value": "NICO DRAW is best enjoyed by working together!\nTry playing with 2–4 players!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Quit NICO DRAW?" }
+    ,{ "key": "title_exit_confirm", "value": "Quit NICO DRAW?" },
+    { "key": "background_word_push", "value": "PUSH!" }
   ]
 }

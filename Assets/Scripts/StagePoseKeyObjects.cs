@@ -629,7 +629,7 @@ namespace DrawBody.Prototype
     {
         public static StageRedrawZone CreateRuntimeFloorZone(
             Transform parent, string objectId, Vector2 floorCenter,
-            float floorWidth, float triggerHeight)
+            float floorWidth, float triggerHeight, float floorThickness = 0.64f)
         {
             float safeWidth = Mathf.Max(0.5f, floorWidth);
             float safeHeight = Mathf.Max(0.5f, triggerHeight);
@@ -641,6 +641,10 @@ namespace DrawBody.Prototype
             GameObject root = CreateRedrawZone(data, parent);
             StageRedrawZone zone = root != null ? root.GetComponent<StageRedrawZone>() : null;
             zone?.AlignToFloor(floorCenter, safeWidth);
+            // The redraw crayon band is 0.64 units tall. Keep its top edge flush
+            // with the actual floor surface without moving the trigger volume.
+            float visualCenterY = floorCenter.y + Mathf.Max(0f, floorThickness) * 0.5f - 0.32f;
+            zone?.AlignFloorVisual(new Vector2(floorCenter.x, visualCenterY), safeWidth);
             return zone;
         }
 
@@ -740,6 +744,34 @@ namespace DrawBody.Prototype
         // ─── 静的API ───
 
         public static bool HasActiveZones() => ActiveZones.Count > 0;
+
+        public static bool TryGetNearestRespawnPoint(Vector2 from, out Vector3 point)
+        {
+            point = default;
+            float bestDistance = float.PositiveInfinity;
+            bool found = false;
+            foreach (StageRedrawZone zone in ActiveZones)
+            {
+                if (zone == null || !zone.isActiveAndEnabled) continue;
+                Collider2D col = zone.zoneCollider != null ? zone.zoneCollider : zone.GetComponent<Collider2D>();
+                if (col == null || !col.enabled || !col.gameObject.activeInHierarchy) continue;
+
+                Bounds bounds = col.bounds;
+                Vector2 nearest = col.ClosestPoint(from);
+                float inset = Mathf.Min(0.35f, bounds.extents.x * 0.25f);
+                float minX = bounds.min.x + inset;
+                float maxX = bounds.max.x - inset;
+                float x = minX <= maxX ? Mathf.Clamp(nearest.x, minX, maxX) : bounds.center.x;
+                Vector3 candidate = new Vector3(x, bounds.min.y + 0.08f, zone.transform.position.z);
+                float distance = ((Vector2)candidate - from).sqrMagnitude;
+                if (distance >= bestDistance) continue;
+
+                bestDistance = distance;
+                point = candidate;
+                found = true;
+            }
+            return found;
+        }
 
         public static bool IsPlayerInZone(PlayerController2D player)
         {

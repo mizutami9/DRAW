@@ -67,6 +67,14 @@ namespace DrawBody.Prototype
             Apply(false);
         }
 
+        private void OnDisable()
+        {
+            // A clicked stage button can still be selected/highlighted when its
+            // parent page closes. Reset before the next visit so the lifted
+            // position and 1.04x hover scale cannot become the new baseline.
+            Apply(false);
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             Apply(true);

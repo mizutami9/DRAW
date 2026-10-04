@@ -1104,7 +1104,6 @@ namespace DrawBody.Prototype
         {
             PlayerController2D active = stageManager?.ActivePlayerTransform != null ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
             active?.SetControlsEnabled(value && !stageManager.IsDrawingMode);
-            if (stageManager != null && !stageManager.IsOnlineStageActive) stageManager.RemotePlayerController?.SetControlsEnabled(value);
         }
 
         private void LockCamera()

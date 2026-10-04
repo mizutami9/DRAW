@@ -8,17 +8,23 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "8-2";
         private const string StateKind = "ricochet_breaker_state";
+        private const string ReflectionRequestKind = "ricochet_breaker_reflection_request";
         private const float OuterHalfWidth = 15.5f;
         private const float OuterHalfHeight = 9f;
         private const float InnerHalfWidth = 12.35f;
         private const float InnerHalfHeight = 5.7f;
         private const float BallSpeed = 6.4f;
-        private const float InitialBallSpeedMultiplier = 0.35f;
+        private const float InitialBallSpeedMultiplier = 0.7f;
         private const float BallAccelerationPerSecond = 0.018f;
         private const float MaximumBallSpeedMultiplier = 1.22f;
-        private const float IntroSeconds = 12f;
-        private const float CountdownSeconds = 4f;
+        private const float IntroSeconds = 2f;
+        private const float CountdownSeconds = 3f;
+        private const float AdditionalBallDelaySeconds = 10f;
+        private const int MaximumConcurrentBalls = 2;
         private const bool HasTimeLimit = false;
+        private const float ReflectionRequestCooldown = 0.28f;
+        private const float ReflectionRequestPlayerTolerance = 1.1f;
+        private const float ReflectionRequestTravelAllowance = 0.35f;
 
         private enum Phase { Intro, Countdown, Playing, Clear, Failed }
 
@@ -34,9 +40,26 @@ namespace DrawBody.Prototype
             public Vector2 BallVelocity;
             public Vector2 BallDirection;
             public bool BallActive;
+            public int BallGeneration;
+            public Vector2 AdditionalBallPosition;
+            public Vector2 AdditionalBallVelocity;
+            public Vector2 AdditionalBallDirection;
+            public bool AdditionalBallActive;
+            public int AdditionalBallGeneration;
             public int BallsLaunched;
             public float RetryRemaining;
-            public string[] BrokenIds;
+            public long[] BrokenWords;
+        }
+
+        [System.Serializable]
+        private sealed class ReflectionRequest
+        {
+            public int Sequence;
+            public bool AdditionalBall;
+            public int BallGeneration;
+            public Vector2 Point;
+            public Vector2 Normal;
+            public Vector2 IncomingVelocity;
         }
 
         private readonly struct LetterSegment
@@ -52,6 +75,8 @@ namespace DrawBody.Prototype
 
         private readonly List<StageBombBreakableWall> blocks = new List<StageBombBreakableWall>();
         private readonly HashSet<string> brokenIds = new HashSet<string>();
+        private readonly Dictionary<string, float> lastAcceptedReflectionAt = new Dictionary<string, float>();
+        private readonly Dictionary<string, int> lastReflectionRequestSequence = new Dictionary<string, int>();
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageObjectFactory factory;
@@ -60,6 +85,7 @@ namespace DrawBody.Prototype
         private CameraFollow2D cameraFollow;
         private Camera gameCamera;
         private StageRicochetBall ball;
+        private StageRicochetBall additionalBall;
         private TextMesh titleText;
         private TextMesh countText;
         private TextMesh statusText;
@@ -73,7 +99,10 @@ namespace DrawBody.Prototype
         private int stateSequence;
         private int lastStateSequence;
         private int ballsLaunched;
+        private int primaryBallGeneration;
+        private int additionalBallGeneration;
         private int replicaBallGeneration;
+        private int replicaAdditionalBallGeneration;
         private int lastSpawnCorner = -1;
         private float nextBallSpawnAt;
         private bool configured;
@@ -81,9 +110,10 @@ namespace DrawBody.Prototype
         private bool cameraStateCaptured;
         private Vector3 oldCameraPosition;
         private float oldCameraSize;
-        private Vector2 replicaBallPosition;
-        private Vector2 replicaBallVelocity;
         private Vector2 preparedBallDirection = Vector2.up;
+        private Vector2 additionalBallDirection = Vector2.down;
+        private bool additionalBallSpawned;
+        private int reflectionRequestSequence;
 
         public void Configure(float seconds)
         {
@@ -131,8 +161,8 @@ namespace DrawBody.Prototype
             if (!configured) Configure(60f);
             BuildArena();
             LockCamera();
-            // The 15-second preparation period is part of the play: players can
-            // spread out around the ring before the first ball is served.
+            // Keep a short preparation window so players can spread around the
+            // ring without making every retry wait through the old 15 seconds.
             SetLocalControls(true);
             RefreshDisplay();
         }
@@ -154,7 +184,6 @@ namespace DrawBody.Prototype
                     if (HasTimeLimit && !LocalMultiplayerDebugMode.NoTimeLimit)
                         remaining = Mathf.Max(0f, remaining - Time.deltaTime);
                 }
-                if (ball != null) ball.SetReplicaTarget(replicaBallPosition, replicaBallVelocity);
                 RefreshDisplay();
                 return;
             }
@@ -198,12 +227,20 @@ namespace DrawBody.Prototype
             if (HasTimeLimit && !LocalMultiplayerDebugMode.NoTimeLimit)
                 remaining = Mathf.Max(0f, remaining - Time.deltaTime);
             if (ball != null) ball.SetCruiseSpeed(GetCurrentBallSpeed());
-            if (ball != null && (Mathf.Abs(ball.transform.position.y) > OuterHalfHeight + 3f
-                || Mathf.Abs(ball.transform.position.x) > OuterHalfWidth + 3f))
+            if (additionalBall != null) additionalBall.SetCruiseSpeed(GetCurrentBallSpeed());
+            if (ball != null) ball.RecoverMissedSideWall(InnerHalfWidth, InnerHalfHeight, 0.62f);
+            if (additionalBall != null) additionalBall.RecoverMissedSideWall(InnerHalfWidth, InnerHalfHeight, 0.62f);
+            if (IsOutsideArena(ball)) LoseBall(ball);
+            if (IsOutsideArena(additionalBall)) LoseBall(additionalBall);
+
+            if (!additionalBallSpawned
+                && GetPlayerCount() >= 3
+                && playingElapsed >= AdditionalBallDelaySeconds
+                && GetActiveBallCount() < MaximumConcurrentBalls)
             {
-                LoseBall();
+                SpawnAdditionalBall();
             }
-            else if (ball == null && ballsLaunched < 3 && Time.time >= nextBallSpawnAt)
+            else if (GetActiveBallCount() == 0 && ballsLaunched < 3 && Time.time >= nextBallSpawnAt)
             {
                 phase = Phase.Countdown;
                 phaseRemaining = CountdownSeconds;
@@ -218,6 +255,7 @@ namespace DrawBody.Prototype
             {
                 phase = Phase.Clear;
                 ball?.Stop();
+                additionalBall?.Stop();
                 SetLocalControls(false);
                 BroadcastState(true);
                 RefreshDisplay();
@@ -252,10 +290,118 @@ namespace DrawBody.Prototype
             StageRicochetImpactPulse.Create(transform, point);
         }
 
-        private void LoseBall()
+        internal void RequestLocalPlayerReflection(
+            StageRicochetBall target,
+            Vector2 point,
+            Vector2 normal,
+            Vector2 incomingVelocity)
         {
-            if (ball != null) Destroy(ball.gameObject);
-            ball = null;
+            if (!IsOnline() || HasAuthority() || phase != Phase.Playing
+                || onlineManager == null || target == null) return;
+
+            bool isAdditional = target == additionalBall;
+            int generation = isAdditional ? replicaAdditionalBallGeneration : replicaBallGeneration;
+            if (generation <= 0 || target != ball && target != additionalBall) return;
+
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = ReflectionRequestKind,
+                Json = JsonUtility.ToJson(new ReflectionRequest
+                {
+                    Sequence = ++reflectionRequestSequence,
+                    AdditionalBall = isAdditional,
+                    BallGeneration = generation,
+                    Point = point,
+                    Normal = normal,
+                    IncomingVelocity = incomingVelocity
+                })
+            });
+        }
+
+        private void HandleReflectionRequest(string playerId, ReflectionRequest request)
+        {
+            if (!HasAuthority() || phase != Phase.Playing || request == null
+                || string.IsNullOrEmpty(playerId) || !IsLobbyPlayer(playerId)) return;
+
+            StageRicochetBall target = request.AdditionalBall ? additionalBall : ball;
+            int generation = request.AdditionalBall ? additionalBallGeneration : primaryBallGeneration;
+            if (target == null || request.BallGeneration != generation
+                || request.Normal.sqrMagnitude < 0.25f
+                || request.IncomingVelocity.sqrMagnitude < 0.25f) return;
+
+            string cooldownKey = playerId + ":" + generation + ":" + (request.AdditionalBall ? "1" : "0");
+            if (request.Sequence <= 0
+                || lastReflectionRequestSequence.TryGetValue(cooldownKey, out int lastSequence)
+                    && request.Sequence <= lastSequence) return;
+            lastReflectionRequestSequence[cooldownKey] = request.Sequence;
+            if (lastAcceptedReflectionAt.TryGetValue(cooldownKey, out float lastAccepted)
+                && Time.unscaledTime - lastAccepted < ReflectionRequestCooldown) return;
+
+            PlayerController2D player = stageManager != null
+                ? stageManager.GetOnlinePlayerController(playerId)
+                : null;
+            if (player == null || !IsPointNearPlayer(player, request.Point, ReflectionRequestPlayerTolerance)) return;
+
+            Rigidbody2D targetBody = target.Body;
+            Vector2 currentVelocity = targetBody != null ? targetBody.linearVelocity : Vector2.zero;
+            float speed = Mathf.Max(0.5f, currentVelocity.magnitude);
+            float allowedDistance = ReflectionRequestPlayerTolerance
+                + speed * ReflectionRequestTravelAllowance;
+            if (Vector2.Distance(target.transform.position, request.Point) > allowedDistance) return;
+
+            Vector2 currentDirection = currentVelocity.sqrMagnitude > 0.1f
+                ? currentVelocity.normalized
+                : request.IncomingVelocity.normalized;
+            if (Vector2.Dot(currentDirection, request.IncomingVelocity.normalized) < 0.15f) return;
+
+            if (!target.ApplyReportedPlayerReflection(
+                    player,
+                    request.Point,
+                    request.Normal,
+                    currentDirection * speed)) return;
+
+            lastAcceptedReflectionAt[cooldownKey] = Time.unscaledTime;
+            NotifyPlayerReflection(request.Point);
+            BroadcastState(true);
+        }
+
+        private static bool IsPointNearPlayer(PlayerController2D player, Vector2 point, float tolerance)
+        {
+            if (player == null) return false;
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled) continue;
+                // Human arms are trigger colliders so they cannot wedge the
+                // locomotion body into terrain. They are still visible drawn
+                // segments and must be valid ricochet surfaces. Do not accept
+                // unrelated interaction/proxy triggers as ball contacts.
+                if (collider.isTrigger && collider.GetComponent<LineRenderer>() == null) continue;
+                if (Vector2.Distance(collider.ClosestPoint(point), point) <= tolerance) return true;
+            }
+            return false;
+        }
+
+        private bool IsOutsideArena(StageRicochetBall target)
+        {
+            return target != null
+                && (Mathf.Abs(target.transform.position.y) > OuterHalfHeight + 3f
+                    || Mathf.Abs(target.transform.position.x) > OuterHalfWidth + 3f);
+        }
+
+        private void LoseBall(StageRicochetBall target)
+        {
+            if (target == null) return;
+            if (target == ball) ball = null;
+            if (target == additionalBall) additionalBall = null;
+            Destroy(target.gameObject);
+            if (GetActiveBallCount() > 0)
+            {
+                BroadcastState(true);
+                return;
+            }
             if (ballsLaunched >= 3)
             {
                 if (RemainingBlocks() > 0) BeginFailure();
@@ -267,7 +413,7 @@ namespace DrawBody.Prototype
 
         private void PrepareNextBall()
         {
-            if (!HasAuthority() || ball != null || ballsLaunched >= 3) return;
+            if (!HasAuthority() || GetActiveBallCount() > 0 || ballsLaunched >= 3) return;
             playingElapsed = 0f;
             int corner = Random.Range(0, 4);
             if (corner == lastSpawnCorner) corner = (corner + Random.Range(1, 4)) % 4;
@@ -279,12 +425,67 @@ namespace DrawBody.Prototype
                 (fromTop ? 1f : -1f) * (InnerHalfHeight - 0.72f));
             preparedBallDirection = fromTop ? Vector2.down : Vector2.up;
             ballsLaunched++;
+            primaryBallGeneration = ballsLaunched;
             ball = StageRicochetBall.Create(transform, this, position, true);
             float currentSpeed = GetCurrentBallSpeed();
             ball.PrepareLaunch(preparedBallDirection, currentSpeed, Mathf.CeilToInt(phaseRemaining));
-            replicaBallPosition = position;
-            replicaBallVelocity = Vector2.zero;
             BroadcastState(true);
+        }
+
+        private void SpawnAdditionalBall()
+        {
+            if (!HasAuthority() || phase != Phase.Playing || additionalBallSpawned
+                || additionalBall != null || GetActiveBallCount() >= MaximumConcurrentBalls
+                || ballsLaunched >= 3) return;
+
+            int corner = Random.Range(0, 4);
+            if (corner == lastSpawnCorner) corner = (corner + Random.Range(1, 4)) % 4;
+            lastSpawnCorner = corner;
+            bool fromTop = corner >= 2;
+            bool fromRight = corner == 1 || corner == 3;
+            Vector2 position = new Vector2(
+                (fromRight ? 1f : -1f) * (InnerHalfWidth - 0.72f),
+                (fromTop ? 1f : -1f) * (InnerHalfHeight - 0.72f));
+            additionalBallDirection = fromTop ? Vector2.down : Vector2.up;
+            additionalBallSpawned = true;
+            ballsLaunched++;
+            additionalBallGeneration = ballsLaunched;
+            additionalBall = StageRicochetBall.Create(transform, this, position, true);
+            additionalBall.Launch(additionalBallDirection, GetCurrentBallSpeed());
+            BroadcastState(true);
+        }
+
+        private int GetActiveBallCount()
+        {
+            int count = 0;
+            if (ball != null) count++;
+            if (additionalBall != null) count++;
+            return count;
+        }
+
+        internal int ActiveBallCountForTest => GetActiveBallCount();
+        internal int AvailableBallCountForTest => Mathf.Max(0, 3 - ballsLaunched + GetActiveBallCount());
+        internal bool IsPlayingForTest => phase == Phase.Playing;
+        internal bool IsCountdownForTest => phase == Phase.Countdown;
+        internal bool IsFailedForTest => phase == Phase.Failed;
+
+        internal void EnsureAdditionalBallForTest()
+        {
+            if (HasAuthority() && phase == Phase.Playing && ball != null && additionalBall == null
+                && !additionalBallSpawned && ballsLaunched < 3)
+                SpawnAdditionalBall();
+        }
+
+        internal void DropOneBallForTest()
+        {
+            if (!HasAuthority()) return;
+            StageRicochetBall target = additionalBall != null ? additionalBall : ball;
+            LoseBall(target);
+        }
+
+        private int GetPlayerCount()
+        {
+            return stageManager != null ? Mathf.Clamp(stageManager.GetInkBudgetPlayerCount(), 1, 4) : 1;
         }
 
         private void LaunchPreparedBall()
@@ -293,7 +494,6 @@ namespace DrawBody.Prototype
             float currentSpeed = GetCurrentBallSpeed();
             ball.PrepareLaunch(preparedBallDirection, currentSpeed, 1);
             ball.LaunchPrepared();
-            replicaBallVelocity = preparedBallDirection * currentSpeed;
         }
 
         private float GetCurrentBallSpeed()
@@ -310,6 +510,7 @@ namespace DrawBody.Prototype
             phase = Phase.Failed;
             retryRemaining = 3f;
             if (ball != null) ball.Stop();
+            if (additionalBall != null) additionalBall.Stop();
             SetLocalControls(false);
             BroadcastState(true);
         }
@@ -531,7 +732,7 @@ namespace DrawBody.Prototype
         {
             if (titleText == null) return;
             titleText.text = LocalizationManager.T("ricochet_breaker_title");
-            int availableBalls = Mathf.Max(0, 3 - ballsLaunched + (ball != null ? 1 : 0));
+            int availableBalls = Mathf.Max(0, 3 - ballsLaunched + GetActiveBallCount());
             countText.text = LocalizationManager.Format("ricochet_breaker_blocks", RemainingBlocks(), availableBalls);
             FitText(countText, 0.08f, 7.2f);
             if (phase == Phase.Intro || phase == Phase.Countdown)
@@ -551,7 +752,14 @@ namespace DrawBody.Prototype
 
         private void HandleNetworkData(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId || data.Kind != StateKind || HasAuthority() || !IsHost(data.PlayerId)) return;
+            if (data == null || data.ObjectId != StageId) return;
+            if (data.Kind == ReflectionRequestKind)
+            {
+                if (HasAuthority())
+                    HandleReflectionRequest(data.PlayerId, JsonUtility.FromJson<ReflectionRequest>(data.Json));
+                return;
+            }
+            if (data.Kind != StateKind || HasAuthority() || !IsHost(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= lastStateSequence) return;
             lastStateSequence = state.Sequence;
@@ -560,32 +768,60 @@ namespace DrawBody.Prototype
             phaseRemaining = state.PhaseRemaining;
             playingElapsed = Mathf.Max(0f, state.PlayingElapsed);
             retryRemaining = state.RetryRemaining;
-            replicaBallPosition = state.BallPosition;
-            replicaBallVelocity = state.BallVelocity;
             preparedBallDirection = state.BallDirection.sqrMagnitude > 0.01f
                 ? state.BallDirection.normalized
                 : Vector2.up;
+            additionalBallDirection = state.AdditionalBallDirection.sqrMagnitude > 0.01f
+                ? state.AdditionalBallDirection.normalized
+                : Vector2.down;
             if (state.BallActive)
             {
-                if (ball == null || replicaBallGeneration != state.BallsLaunched)
+                if (ball == null || replicaBallGeneration != state.BallGeneration)
                 {
                     if (ball != null) Destroy(ball.gameObject);
                     ball = StageRicochetBall.Create(transform, this, state.BallPosition, false);
-                    replicaBallGeneration = state.BallsLaunched;
+                    replicaBallGeneration = state.BallGeneration;
                 }
                 if (phase == Phase.Countdown)
                     ball.PrepareLaunch(preparedBallDirection, GetCurrentBallSpeed(), Mathf.CeilToInt(phaseRemaining));
                 else ball.HideLaunchPreview();
+                ball.SetReplicaTarget(state.BallPosition, state.BallVelocity);
             }
             else if (ball != null)
             {
                 Destroy(ball.gameObject);
                 ball = null;
             }
-            ballsLaunched = state.BallsLaunched;
-            if (state.BrokenIds != null)
+            if (state.AdditionalBallActive)
             {
-                for (int i = 0; i < state.BrokenIds.Length; i++) ApplyBrokenId(state.BrokenIds[i]);
+                if (additionalBall == null || replicaAdditionalBallGeneration != state.AdditionalBallGeneration)
+                {
+                    if (additionalBall != null) Destroy(additionalBall.gameObject);
+                    additionalBall = StageRicochetBall.Create(transform, this, state.AdditionalBallPosition, false);
+                    replicaAdditionalBallGeneration = state.AdditionalBallGeneration;
+                }
+                additionalBall.HideLaunchPreview();
+                additionalBall.SetReplicaTarget(state.AdditionalBallPosition, state.AdditionalBallVelocity);
+                additionalBallSpawned = true;
+            }
+            else if (additionalBall != null)
+            {
+                Destroy(additionalBall.gameObject);
+                additionalBall = null;
+            }
+            ballsLaunched = state.BallsLaunched;
+            if (state.BrokenWords != null)
+            {
+                for (int i = 0; i < blocks.Count; i++)
+                {
+                    int wordIndex = i / 64;
+                    int bitIndex = i % 64;
+                    if (wordIndex < state.BrokenWords.Length
+                        && (state.BrokenWords[wordIndex] & (1L << bitIndex)) != 0)
+                    {
+                        ApplyBrokenId(blocks[i] != null ? blocks[i].ObjectId : null);
+                    }
+                }
             }
             SetLocalControls(phase == Phase.Intro || phase == Phase.Countdown || phase == Phase.Playing);
         }
@@ -608,6 +844,7 @@ namespace DrawBody.Prototype
             if (!IsOnline() || !HasAuthority() || !force && Time.unscaledTime < nextStateAt) return;
             nextStateAt = Time.unscaledTime + 0.05f;
             Rigidbody2D ballBody = ball != null ? ball.Body : null;
+            Rigidbody2D additionalBallBody = additionalBall != null ? additionalBall.Body : null;
             onlineManager.SendGimmickData(new OnlineGimmickData
             {
                 ObjectId = StageId,
@@ -623,11 +860,29 @@ namespace DrawBody.Prototype
                     BallVelocity = ballBody != null ? ballBody.linearVelocity : Vector2.zero,
                     BallDirection = preparedBallDirection,
                     BallActive = ball != null,
+                    BallGeneration = primaryBallGeneration,
+                    AdditionalBallPosition = additionalBall != null ? (Vector2)additionalBall.transform.position : Vector2.zero,
+                    AdditionalBallVelocity = additionalBallBody != null ? additionalBallBody.linearVelocity : Vector2.zero,
+                    AdditionalBallDirection = additionalBallDirection,
+                    AdditionalBallActive = additionalBall != null,
+                    AdditionalBallGeneration = additionalBallGeneration,
                     BallsLaunched = ballsLaunched,
                     RetryRemaining = retryRemaining,
-                    BrokenIds = new List<string>(brokenIds).ToArray()
+                    BrokenWords = BuildBrokenWords()
                 })
             });
+        }
+
+        private long[] BuildBrokenWords()
+        {
+            long[] words = new long[Mathf.Max(1, (blocks.Count + 63) / 64)];
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                StageBombBreakableWall block = blocks[i];
+                if (block == null || !block.IsBroken) continue;
+                words[i / 64] |= 1L << (i % 64);
+            }
+            return words;
         }
 
         private void SetLocalControls(bool enabled)
@@ -636,11 +891,6 @@ namespace DrawBody.Prototype
             PlayerController2D active = stageManager.ActivePlayerTransform != null
                 ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
             if (active != null && active.gameObject.activeSelf) active.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
-            if (!IsOnline())
-            {
-                PlayerController2D secondary = stageManager.RemotePlayerController;
-                if (secondary != null && secondary.gameObject.activeSelf) secondary.SetControlsEnabled(enabled);
-            }
         }
 
         private bool IsOnline() => stageManager != null && stageManager.IsOnlineStageActive;
@@ -652,6 +902,15 @@ namespace DrawBody.Prototype
             if (players == null) return false;
             for (int i = 0; i < players.Length; i++)
                 if (players[i] != null && players[i].IsHost && players[i].PlayerId == playerId) return true;
+            return false;
+        }
+
+        private bool IsLobbyPlayer(string playerId)
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null || string.IsNullOrEmpty(playerId)) return false;
+            for (int i = 0; i < players.Length; i++)
+                if (players[i] != null && players[i].PlayerId == playerId) return true;
             return false;
         }
 
@@ -752,8 +1011,14 @@ namespace DrawBody.Prototype
     [DisallowMultipleComponent]
     public sealed class StageRicochetBall : MonoBehaviour
     {
+        private const float PlayerReflectionCooldown = 0.1f;
+        private const float LocalReflectionRequestCooldown = 0.24f;
+        private const float PlayerSweepPadding = 0.08f;
+        private const float PlayerSeparationPadding = 0.055f;
+
         private StageRicochetBreakerController owner;
         private StageRicochetEnemyChallengeController enemyOwner;
+        private StageManager stageManager;
         private Rigidbody2D body;
         private CircleCollider2D hitbox;
         private bool authoritative;
@@ -765,6 +1030,11 @@ namespace DrawBody.Prototype
         private float cruiseSpeed = 3.2f;
         private GameObject serveGuide;
         private TextMesh serveCountdown;
+        private float lastPlayerReflectionAt = -10f;
+        private int lastReflectedPlayerId;
+        private float lastLocalReflectionRequestAt = -10f;
+        private bool launched;
+        private float lowSpeedSince = -1f;
 
         public Rigidbody2D Body => body;
 
@@ -820,6 +1090,7 @@ namespace DrawBody.Prototype
             ball.hitbox = collider;
             ball.authoritative = authoritative;
             ball.replicaTarget = position;
+            ball.stageManager = Object.FindFirstObjectByType<StageManager>();
             ball.IgnorePassThroughSurfaces();
             return ball;
         }
@@ -839,6 +1110,8 @@ namespace DrawBody.Prototype
             body.bodyType = RigidbodyType2D.Dynamic;
             body.linearVelocity = direction.normalized * cruiseSpeed;
             previousVelocity = body.linearVelocity;
+            launched = true;
+            lowSpeedSince = -1f;
             SetServeGuideVisible(false);
         }
 
@@ -850,6 +1123,8 @@ namespace DrawBody.Prototype
             body.bodyType = RigidbodyType2D.Kinematic;
             body.linearVelocity = Vector2.zero;
             previousVelocity = Vector2.zero;
+            launched = false;
+            lowSpeedSince = -1f;
             EnsureServeGuide();
             UpdateServeGuide(countdown);
             SetServeGuideVisible(true);
@@ -878,6 +1153,8 @@ namespace DrawBody.Prototype
 
         public void Stop()
         {
+            launched = false;
+            lowSpeedSince = -1f;
             if (body != null) body.linearVelocity = Vector2.zero;
         }
 
@@ -886,6 +1163,7 @@ namespace DrawBody.Prototype
             replicaTarget = position;
             replicaVelocity = velocity;
             replicaReceivedAt = Time.unscaledTime;
+            if (velocity.sqrMagnitude > 0.25f) cruiseSpeed = velocity.magnitude;
             if (body != null) body.linearVelocity = velocity;
         }
 
@@ -894,15 +1172,45 @@ namespace DrawBody.Prototype
             if (body == null) return;
             if (!authoritative)
             {
+                Vector2 start = body.position;
                 float age = Mathf.Clamp(Time.unscaledTime - replicaReceivedAt, 0f, 0.35f);
                 Vector2 predicted = replicaTarget + replicaVelocity * age;
                 float blend = 1f - Mathf.Exp(-24f * Time.fixedUnscaledDeltaTime);
                 body.position = Vector2.Lerp(body.position, predicted, blend);
+                if (owner != null) TrySweepPlayer(start, body.position - start, true);
                 return;
             }
             float speed = body.linearVelocity.magnitude;
             if (speed > 0.2f)
+            {
                 body.linearVelocity = body.linearVelocity.normalized * cruiseSpeed;
+                lowSpeedSince = -1f;
+            }
+            else if (launched && body.bodyType == RigidbodyType2D.Dynamic)
+            {
+                if (lowSpeedSince < 0f)
+                {
+                    lowSpeedSince = Time.unscaledTime;
+                }
+                else if (Time.unscaledTime - lowSpeedSince >= 0.2f)
+                {
+                    // The challenge has no resting-ball state. A solver contact
+                    // can nevertheless zero the velocity and leave the ball
+                    // suspended forever. Resume the last valid direction without
+                    // changing the configured ball speed or scoring rules.
+                    Vector2 direction = previousVelocity.sqrMagnitude > 0.1f
+                        ? previousVelocity.normalized
+                        : preparedDirection.sqrMagnitude > 0.01f
+                            ? preparedDirection.normalized
+                            : Vector2.up;
+                    body.linearVelocity = direction * cruiseSpeed;
+                    lowSpeedSince = -1f;
+                }
+            }
+            TrySweepPlayer(
+                body.position,
+                body.linearVelocity * Mathf.Max(Time.fixedDeltaTime, 0.001f),
+                false);
             previousVelocity = body.linearVelocity;
         }
 
@@ -921,6 +1229,7 @@ namespace DrawBody.Prototype
                 previousVelocity = passVelocity;
                 return;
             }
+            PlayerController2D player = collision.collider.GetComponentInParent<PlayerController2D>();
             Vector2 normal = collision.contactCount > 0 ? collision.GetContact(0).normal :
                 ((Vector2)transform.position - (Vector2)collision.transform.position).normalized;
             // Rigidbody2D may already have applied its material response when the
@@ -928,6 +1237,18 @@ namespace DrawBody.Prototype
             // so a second reflection cannot accidentally send the ball back into
             // the surface.
             Vector2 incoming = previousVelocity.sqrMagnitude > 0.1f ? previousVelocity : Vector2.up * cruiseSpeed;
+            if (player != null)
+            {
+                Vector2 point = collision.contactCount > 0
+                    ? collision.GetContact(0).point
+                    : collision.collider.ClosestPoint(transform.position);
+                if (ApplyPlayerReflection(player, point, normal, incoming, true))
+                {
+                    owner?.NotifyPlayerReflection(point);
+                    enemyOwner?.NotifyPlayerReflection(point);
+                }
+                return;
+            }
             body.linearVelocity = Vector2.Reflect(incoming, normal).normalized * cruiseSpeed;
             previousVelocity = body.linearVelocity;
 
@@ -935,13 +1256,156 @@ namespace DrawBody.Prototype
             if (wall != null) owner?.HitBlock(wall, transform.position);
             StageRicochetEnemyTarget enemy = collision.collider.GetComponentInParent<StageRicochetEnemyTarget>();
             if (enemy != null) enemyOwner?.HitEnemy(enemy, transform.position);
-            PlayerController2D player = collision.collider.GetComponentInParent<PlayerController2D>();
-            if (player != null)
+        }
+
+        internal bool ApplyReportedPlayerReflection(
+            PlayerController2D player,
+            Vector2 point,
+            Vector2 normal,
+            Vector2 incomingVelocity)
+        {
+            return authoritative
+                && ApplyPlayerReflection(player, point, normal, incomingVelocity, true);
+        }
+
+        private bool TrySweepPlayer(Vector2 origin, Vector2 movement, bool localPlayerOnly)
+        {
+            float distance = movement.magnitude;
+            if (distance < 0.001f || hitbox == null) return false;
+
+            Vector2 direction = movement / distance;
+            float radius = GetWorldRadius() + PlayerSweepPadding;
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(
+                origin,
+                radius,
+                direction,
+                distance + PlayerSweepPadding);
+            for (int i = 0; i < hits.Length; i++)
             {
-                Vector2 point = collision.contactCount > 0 ? collision.GetContact(0).point : (Vector2)transform.position;
-                owner?.NotifyPlayerReflection(point);
-                enemyOwner?.NotifyPlayerReflection(point);
+                Collider2D collider = hits[i].collider;
+                if (collider == null || collider == hitbox) continue;
+                PlayerController2D player = collider.GetComponentInParent<PlayerController2D>();
+                if (collider.isTrigger
+                    && (player == null || collider.GetComponent<LineRenderer>() == null)) continue;
+                if (player == null)
+                {
+                    if (collider.GetComponentInParent<StageRicochetBallPassSurface>() != null) continue;
+                    // Do not report a player through a nearer solid/logo block.
+                    return false;
+                }
+                if (localPlayerOnly && !IsLocalPlayer(player)) continue;
+
+                Vector2 incoming = localPlayerOnly
+                    ? (replicaVelocity.sqrMagnitude > 0.1f ? replicaVelocity : direction * cruiseSpeed)
+                    : (body.linearVelocity.sqrMagnitude > 0.1f ? body.linearVelocity : direction * cruiseSpeed);
+                Vector2 normal = hits[i].normal.sqrMagnitude > 0.1f
+                    ? hits[i].normal
+                    : (origin - (Vector2)player.transform.position).normalized;
+                Vector2 point = hits[i].point;
+
+                if (localPlayerOnly)
+                {
+                    if (Time.unscaledTime - lastLocalReflectionRequestAt < LocalReflectionRequestCooldown) return false;
+                    if (!ApplyPlayerReflection(player, point, normal, incoming, false)) return false;
+                    lastLocalReflectionRequestAt = Time.unscaledTime;
+                    owner?.RequestLocalPlayerReflection(this, point, normal, incoming);
+                    owner?.NotifyPlayerReflection(point);
+                    return true;
+                }
+
+                if (ApplyPlayerReflection(player, point, normal, incoming, true))
+                {
+                    owner?.NotifyPlayerReflection(point);
+                    enemyOwner?.NotifyPlayerReflection(point);
+                    return true;
+                }
             }
+            return false;
+        }
+
+        private bool ApplyPlayerReflection(
+            PlayerController2D player,
+            Vector2 point,
+            Vector2 normal,
+            Vector2 incomingVelocity,
+            bool moveOutOfContact)
+        {
+            if (body == null || player == null || incomingVelocity.sqrMagnitude < 0.01f) return false;
+            int playerId = player.GetInstanceID();
+            if (playerId == lastReflectedPlayerId
+                && Time.unscaledTime - lastPlayerReflectionAt < PlayerReflectionCooldown)
+            {
+                // A hand-drawn body can report several segment contacts in the
+                // same physics step. Preserve the first bounce instead of
+                // reflecting it again and cancelling the direction change.
+                body.linearVelocity = previousVelocity.sqrMagnitude > 0.1f
+                    ? previousVelocity.normalized * cruiseSpeed
+                    : body.linearVelocity;
+                return false;
+            }
+
+            Vector2 incoming = incomingVelocity.normalized;
+            Vector2 playerToBall = (Vector2)body.position - (Vector2)player.transform.position;
+            Vector2 bounceNormal = normal.sqrMagnitude > 0.01f ? normal.normalized : -incoming;
+            if (Vector2.Dot(incoming, bounceNormal) > 0f) bounceNormal = -bounceNormal;
+
+            // Thin/angled line segments can yield an almost tangential normal.
+            // Blend in the direction away from the player so a visible body hit
+            // always produces a meaningful bounce rather than a tiny deflection.
+            Vector2 away = playerToBall.sqrMagnitude > 0.01f ? playerToBall.normalized : -incoming;
+            if (Vector2.Dot(incoming, away) > 0f) away = -away;
+            float approach = -Vector2.Dot(incoming, bounceNormal);
+            if (approach < 0.38f)
+                bounceNormal = (bounceNormal * 0.35f + away * 0.65f - incoming * 0.3f).normalized;
+            if (Vector2.Dot(incoming, bounceNormal) > -0.16f)
+                bounceNormal = (bounceNormal - incoming).normalized;
+
+            Vector2 outgoing = Vector2.Reflect(incoming, bounceNormal).normalized;
+            if (Vector2.Dot(outgoing, incoming) > 0.68f)
+                outgoing = Vector2.Lerp(outgoing, -incoming, 0.72f).normalized;
+            if (Vector2.Dot(outgoing, bounceNormal) < 0.28f)
+                outgoing = (outgoing + bounceNormal * 0.72f).normalized;
+
+            // A hit on the upper/lower half of a character must not continue
+            // through that character in the same vertical direction.
+            if (Mathf.Abs(playerToBall.y) > Mathf.Abs(playerToBall.x) * 0.45f)
+            {
+                float awayY = Mathf.Sign(playerToBall.y);
+                if (outgoing.y * awayY < 0.3f)
+                {
+                    outgoing.y = awayY * Mathf.Max(0.55f, Mathf.Abs(incoming.y));
+                    outgoing.Normalize();
+                }
+            }
+
+            cruiseSpeed = Mathf.Max(0.5f, cruiseSpeed);
+            body.linearVelocity = outgoing * cruiseSpeed;
+            previousVelocity = body.linearVelocity;
+            replicaVelocity = body.linearVelocity;
+            if (moveOutOfContact)
+                body.position = point + bounceNormal * (GetWorldRadius() + PlayerSeparationPadding);
+            else
+                replicaTarget = body.position;
+            replicaReceivedAt = Time.unscaledTime;
+            lastReflectedPlayerId = playerId;
+            lastPlayerReflectionAt = Time.unscaledTime;
+            return true;
+        }
+
+        private float GetWorldRadius()
+        {
+            if (hitbox == null) return 0.32f;
+            Vector3 scale = hitbox.transform.lossyScale;
+            return hitbox.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.y));
+        }
+
+        private bool IsLocalPlayer(PlayerController2D player)
+        {
+            if (player == null) return false;
+            if (stageManager == null) stageManager = Object.FindFirstObjectByType<StageManager>();
+            return stageManager != null
+                && stageManager.ActivePlayerTransform != null
+                && player.transform == stageManager.ActivePlayerTransform;
         }
 
         private void IgnorePassThroughSurfaces()
@@ -963,13 +1427,46 @@ namespace DrawBody.Prototype
             StageEditorObject stageObject = collision.collider.GetComponentInParent<StageEditorObject>();
             if (stageObject == null) return false;
 
+            // The geometry fallback below is only for horizontal player floors.
+            // At the upper/lower corner of a vertical wall, the contact normal can
+            // contain a large Y component. Treating that corner as a floor calls
+            // IgnoreCollision for the whole wall collider, after which the ball
+            // can pass through that side wall for the rest of its lifetime.
+            if (stageObject.type != StageObjectType.Platform
+                && stageObject.type != StageObjectType.OneWayPlatform
+                && stageObject.type != StageObjectType.MovingOneWayPlatform
+                && stageObject.type != StageObjectType.EscortPlayerOneWayFloor)
+            {
+                return false;
+            }
+
             // These two stages intentionally let the ball leave through the
             // horizontal player floors. Keep a geometry fallback because a
             // rebuilt/connected floor can put its Collider on a sibling object,
             // outside the marker's transform hierarchy.
             if (collision.contactCount <= 0) return false;
             ContactPoint2D contact = collision.GetContact(0);
-            return Mathf.Abs(contact.point.y) >= 5.25f && Mathf.Abs(contact.normal.y) >= 0.55f;
+            return Mathf.Abs(contact.point.y) >= 5.25f && Mathf.Abs(contact.normal.y) >= 0.8f;
+        }
+
+        internal void RecoverMissedSideWall(float halfWidth, float halfHeight, float wallThickness)
+        {
+            if (!authoritative || body == null || !launched) return;
+            float radius = GetWorldRadius();
+            if (Mathf.Abs(body.position.y) > halfHeight + radius) return;
+
+            float centerLimit = Mathf.Max(radius, halfWidth - wallThickness * 0.5f - radius);
+            float side = Mathf.Sign(body.position.x);
+            if (Mathf.Abs(body.position.x) <= centerLimit + 0.04f || side == 0f) return;
+
+            body.position = new Vector2(side * centerLimit, body.position.y);
+            Vector2 incoming = body.linearVelocity.sqrMagnitude > 0.1f
+                ? body.linearVelocity
+                : previousVelocity;
+            if (incoming.sqrMagnitude < 0.1f) incoming = -side * Vector2.right * cruiseSpeed;
+            incoming.x = -side * Mathf.Max(Mathf.Abs(incoming.x), cruiseSpeed * 0.35f);
+            body.linearVelocity = incoming.normalized * cruiseSpeed;
+            previousVelocity = body.linearVelocity;
         }
 
         private void EnsureServeGuide()

@@ -6,6 +6,12 @@ namespace DrawBody.Prototype
     public sealed class DrawScreenVisualPolisher : MonoBehaviour
     {
         private bool polished;
+        private const float PresetPopupWidth = 1080f;
+        private const float PresetPopupHeight = 700f;
+        private const float PresetSlotWidth = 496f;
+        private const float PresetSlotHeight = 104f;
+        private const float PresetSlotColumnStep = 514f;
+        private const float PresetSlotRowStep = 110f;
         private readonly float[] brushPresets = { 3f, 5f, 6f, 8f, 10f };
         private float selectedBrushPreset = 6f;
         private GameObject fullResetConfirmDialog;
@@ -35,6 +41,7 @@ namespace DrawBody.Prototype
             if (drawManager != null)
             {
                 drawManager.CurrentSpeciesChanged -= HandlePresetSpeciesChanged;
+                drawManager.SpeciesAvailabilityChanged -= HandlePresetSpeciesAvailabilityChanged;
             }
         }
 
@@ -506,18 +513,10 @@ namespace DrawBody.Prototype
             RectTransform title = FindRect(panel, "DrawSpeciesTitle");
             if (title != null)
             {
-                title.gameObject.SetActive(true);
-                SetTopRect(title, new Vector2(4f, -5f), new Vector2(64f, 27f), new Vector2(0f, 1f));
-                Text label = title.GetComponent<Text>();
-                if (label != null)
-                {
-                    label.fontSize = 12;
-                    label.fontStyle = FontStyle.Bold;
-                    label.alignment = TextAnchor.MiddleCenter;
-                    label.resizeTextForBestFit = true;
-                    label.resizeTextMinSize = 8;
-                    label.resizeTextMaxSize = 12;
-                }
+                // The rail already communicates character selection through its
+                // icons. This old PRESETS label is unrelated to the rail and was
+                // visually misleading now that presets have their own button.
+                title.gameObject.SetActive(false);
             }
 
             string[] names =
@@ -807,7 +806,7 @@ namespace DrawBody.Prototype
         {
             SetPlainText("DrawTitle", LocalizationManager.T("title_draw"));
             SetPlainText("PreviewTitle", LocalizationManager.T("preview"));
-            SetPlainText("DrawSpeciesTitle", LocalizationManager.T("draw_preset_button"));
+            Hide(FindRect(transform, "DrawSpeciesTitle"));
             SetPlainText("BrushSectionHeader", LocalizationManager.T("draw_pen_size"));
             SetPlainText("InkUsageTitle", LocalizationManager.T("draw_ink"));
             SetPlainText("PersonalInkLabel", LocalizationManager.T("ink_personal_cap"));
@@ -1139,10 +1138,10 @@ namespace DrawBody.Prototype
             blocker.raycastTarget = true;
 
             RectTransform popup = EnsureCard(overlay, "DrawingPresetPopupCard");
-            SetCenterRect(popup, Vector2.zero, new Vector2(980f, 650f));
+            SetCenterRect(popup, Vector2.zero, new Vector2(PresetPopupWidth, PresetPopupHeight));
             RestyleCard(popup, new Color(1f, 0.975f, 0.86f, 1f));
             Text title = EnsureLabel(popup, "DrawingPresetTitle", string.Empty, 28, TextAnchor.MiddleCenter);
-            SetTopRect(title.rectTransform, new Vector2(35f, -16f), new Vector2(910f, 45f), new Vector2(0f, 1f));
+            SetTopRect(title.rectTransform, new Vector2(35f, -12f), new Vector2(1010f, 45f), new Vector2(0f, 1f));
             title.fontStyle = FontStyle.Bold;
 
             DrawManager.Species[] presetSpecies =
@@ -1158,24 +1157,30 @@ namespace DrawBody.Prototype
             {
                 int slot = i;
                 RectTransform slotCard = EnsureCard(popup, "DrawingPresetSlot" + (i + 1));
-                SetTopRect(slotCard, new Vector2(28f + i * 310f, -72f), new Vector2(294f, 510f), new Vector2(0f, 1f));
+                int column = i % 2;
+                int rowIndex = i / 2;
+                SetTopRect(
+                    slotCard,
+                    new Vector2(28f + column * PresetSlotColumnStep, -68f - rowIndex * PresetSlotRowStep),
+                    new Vector2(PresetSlotWidth, PresetSlotHeight),
+                    new Vector2(0f, 1f));
                 RestyleCard(slotCard, i % 2 == 0
                     ? new Color(1f, 0.94f, 0.72f, 1f)
                     : new Color(0.9f, 0.96f, 1f, 1f));
-                Text slotLabel = EnsureLabel(slotCard, "SlotLabel", string.Empty, 19, TextAnchor.MiddleCenter);
-                SetTopRect(slotLabel.rectTransform, new Vector2(12f, -7f), new Vector2(270f, 30f), new Vector2(0f, 1f));
+                Text slotLabel = EnsureLabel(slotCard, "SlotLabel", string.Empty, 20, TextAnchor.MiddleCenter);
+                SetTopRect(slotLabel.rectTransform, new Vector2(8f, -12f), new Vector2(72f, 80f), new Vector2(0f, 1f));
                 slotLabel.fontStyle = FontStyle.Bold;
                 for (int speciesIndex = 0; speciesIndex < presetSpecies.Length; speciesIndex++)
                 {
                     DrawManager.Species species = presetSpecies[speciesIndex];
                     RectTransform row = EnsureCard(slotCard, "PresetSpecies_" + species);
-                    SetTopRect(row, new Vector2(10f, -43f - speciesIndex * 90f), new Vector2(274f, 82f), new Vector2(0f, 1f));
+                    SetTopRect(row, new Vector2(86f, -9f), new Vector2(400f, 86f), new Vector2(0f, 1f));
                     RestyleCard(row, new Color(1f, 0.99f, 0.93f, 0.96f));
-                    Text speciesLabel = EnsureLabel(row, "SpeciesLabel", string.Empty, 15, TextAnchor.MiddleLeft);
-                    SetTopRect(speciesLabel.rectTransform, new Vector2(72f, -4f), new Vector2(98f, 24f), new Vector2(0f, 1f));
+                    Text speciesLabel = EnsureLabel(row, "SpeciesLabel", string.Empty, 16, TextAnchor.MiddleLeft);
+                    SetTopRect(speciesLabel.rectTransform, new Vector2(128f, -4f), new Vector2(96f, 24f), new Vector2(0f, 1f));
                     speciesLabel.fontStyle = FontStyle.Bold;
-                    Text status = EnsureLabel(row, "StatusLabel", string.Empty, 11, TextAnchor.MiddleRight);
-                    SetTopRect(status.rectTransform, new Vector2(172f, -4f), new Vector2(92f, 24f), new Vector2(0f, 1f));
+                    Text status = EnsureLabel(row, "StatusLabel", string.Empty, 12, TextAnchor.MiddleRight);
+                    SetTopRect(status.rectTransform, new Vector2(294f, -4f), new Vector2(96f, 24f), new Vector2(0f, 1f));
                     RectTransform previewRect = FindRect(row, "PresetDrawingPreview");
                     if (previewRect == null)
                     {
@@ -1187,23 +1192,23 @@ namespace DrawBody.Prototype
                         previewObject.transform.SetParent(row, false);
                         previewRect = previewObject.GetComponent<RectTransform>();
                     }
-                    SetTopRect(previewRect, new Vector2(8f, -7f), new Vector2(56f, 68f), new Vector2(0f, 1f));
+                    SetTopRect(previewRect, new Vector2(8f, -7f), new Vector2(112f, 72f), new Vector2(0f, 1f));
                     DrawingPresetPreviewGraphic preview = previewRect.GetComponent<DrawingPresetPreviewGraphic>();
                     preview.raycastTarget = false;
                     preview.color = new Color(0.08f, 0.34f, 0.52f, 0.95f);
                     Button save = EnsureDialogButton(row, "PresetSaveButton", new Color(1f, 0.65f, 0.16f, 1f));
-                    SetDockRect(save.GetComponent<RectTransform>(), new Vector2(70f, 7f), new Vector2(94f, 42f));
+                    SetDockRect(save.GetComponent<RectTransform>(), new Vector2(128f, 7f), new Vector2(122f, 42f));
                     save.onClick.RemoveAllListeners();
                     save.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, species, PresetAction.Save));
                     Button load = EnsureDialogButton(row, "PresetLoadButton", new Color(0.22f, 0.68f, 0.9f, 1f));
-                    SetDockRect(load.GetComponent<RectTransform>(), new Vector2(172f, 7f), new Vector2(94f, 42f));
+                    SetDockRect(load.GetComponent<RectTransform>(), new Vector2(258f, 7f), new Vector2(132f, 42f));
                     load.onClick.RemoveAllListeners();
                     load.onClick.AddListener(() => OpenDrawingPresetConfirm(slot, species, PresetAction.Load));
                 }
             }
 
             Button close = EnsureDialogButton(popup, "DrawingPresetCloseButton", new Color(0.9f, 0.42f, 0.32f, 1f));
-            SetDockRect(close.GetComponent<RectTransform>(), new Vector2(820f, 18f), new Vector2(130f, 48f));
+            SetDockRect(close.GetComponent<RectTransform>(), new Vector2(902f, 18f), new Vector2(140f, 48f));
             close.onClick.RemoveAllListeners();
             close.onClick.AddListener(CloseDrawingPresetPopup);
             FitDrawingPresetPopup(root, popup);
@@ -1255,10 +1260,8 @@ namespace DrawBody.Prototype
 
             const float horizontalMargin = 20f;
             const float verticalMargin = 12f;
-            const float popupWidth = 980f;
-            const float popupHeight = 650f;
-            float widthScale = (root.rect.width - horizontalMargin * 2f) / popupWidth;
-            float heightScale = (root.rect.height - verticalMargin * 2f) / popupHeight;
+            float widthScale = (root.rect.width - horizontalMargin * 2f) / PresetPopupWidth;
+            float heightScale = (root.rect.height - verticalMargin * 2f) / PresetPopupHeight;
             float scale = Mathf.Clamp(Mathf.Min(widthScale, heightScale), 0.72f, 1f);
             popup.localScale = Vector3.one * scale;
         }
@@ -1337,6 +1340,7 @@ namespace DrawBody.Prototype
             if (drawManager != null && drawManager != resolved)
             {
                 drawManager.CurrentSpeciesChanged -= HandlePresetSpeciesChanged;
+                drawManager.SpeciesAvailabilityChanged -= HandlePresetSpeciesAvailabilityChanged;
             }
 
             drawManager = resolved;
@@ -1344,12 +1348,25 @@ namespace DrawBody.Prototype
             {
                 drawManager.CurrentSpeciesChanged -= HandlePresetSpeciesChanged;
                 drawManager.CurrentSpeciesChanged += HandlePresetSpeciesChanged;
+                drawManager.SpeciesAvailabilityChanged -= HandlePresetSpeciesAvailabilityChanged;
+                drawManager.SpeciesAvailabilityChanged += HandlePresetSpeciesAvailabilityChanged;
             }
         }
 
         private void HandlePresetSpeciesChanged(DrawManager.Species species)
         {
             RefreshPresetSlotVisuals();
+        }
+
+        private void HandlePresetSpeciesAvailabilityChanged()
+        {
+            RefreshPresetSlotVisuals();
+            if (drawingPresetConfirmDialog != null
+                && drawingPresetConfirmDialog.activeSelf
+                && !IsPresetSpeciesAvailable(pendingPresetSpecies))
+            {
+                CloseDrawingPresetConfirm();
+            }
         }
 
         private void RefreshPresetSlotVisuals()
@@ -1382,6 +1399,15 @@ namespace DrawBody.Prototype
                 {
                     Transform row = slot.Find("PresetSpecies_" + species);
                     if (row == null) continue;
+                    bool available = IsPresetSpeciesAvailable(species);
+                    row.gameObject.SetActive(available);
+                    if (!available) continue;
+
+                    SetTopRect(
+                        row as RectTransform,
+                        new Vector2(86f, -9f),
+                        new Vector2(400f, 86f),
+                        new Vector2(0f, 1f));
                     bool exists = CharacterDrawingPresetStore.Exists(species, i);
                     Text speciesLabel = row.Find("SpeciesLabel")?.GetComponent<Text>();
                     Text status = row.Find("StatusLabel")?.GetComponent<Text>();
@@ -1399,11 +1425,22 @@ namespace DrawBody.Prototype
                     preview?.SetDrawing(
                         exists ? CharacterDrawingPresetStore.Load(species, i) : null,
                         species);
-                    SetButtonText(save, LocalizationManager.T("draw_preset_register"), 12);
-                    SetButtonText(load, LocalizationManager.T("draw_preset_apply"), 12);
+                    SetButtonText(save, LocalizationManager.T("draw_preset_register"), 14);
+                    SetButtonText(load, LocalizationManager.T("draw_preset_apply"), 14);
+                    if (save != null) save.interactable = true;
                     if (load != null) load.interactable = exists;
                 }
             }
+        }
+
+        private bool IsPresetSpeciesAvailable(DrawManager.Species species)
+        {
+            // Presets belong to the character currently being redrawn, not to
+            // every species that the stage might permit. Species changes on the
+            // DRAW rail raise CurrentSpeciesChanged and rebuild these rows.
+            return drawManager != null
+                && species == drawManager.CurrentSpecies
+                && drawManager.IsSpeciesAllowed(species);
         }
 
         private static void SetButtonText(Button button, string value, int size)
@@ -1421,6 +1458,7 @@ namespace DrawBody.Prototype
         {
             ResolveDrawManager();
             if (drawManager == null
+                || !IsPresetSpeciesAvailable(species)
                 || action == PresetAction.Load
                 && !CharacterDrawingPresetStore.Exists(species, slot))
             {
@@ -1473,6 +1511,13 @@ namespace DrawBody.Prototype
             if (drawManager == null)
             {
                 CloseDrawingPresetConfirm();
+                return;
+            }
+
+            if (!IsPresetSpeciesAvailable(pendingPresetSpecies))
+            {
+                CloseDrawingPresetConfirm();
+                RefreshPresetSlotVisuals();
                 return;
             }
 

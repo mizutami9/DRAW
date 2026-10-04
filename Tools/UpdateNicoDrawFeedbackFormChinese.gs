@@ -54,7 +54,7 @@ function updateExistingNicoDrawFeedbackFormWithChinese() {
       'Title / タイトル / 标题画面 / 標題畫面',
       'Lobby or Room / ロビー・ルーム / 大厅或房间 / 大廳或房間',
       'Drawing or Preset / 書き直し・プリセット / 重画或预设 / 重畫或預設',
-      '1-1', '1-2', '1-3', '6-3', '8-2', '9-3', '11-2', '14-3',
+      '1-1', '1-2', '6-3', '8-2', '9-3', '11-2', '11-3', '14-3',
       'Other / その他 / 其他',
       'No bug / バグなし / 未遇到错误 / 未遇到錯誤'
     ])

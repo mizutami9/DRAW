@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "TARGET  {0:0}g (90g x PLAYERS)"
+      "value": "TARGET  {0:0}g (70g x PLAYERS)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Avslutte det gjeldende brettet og gå tilbake til brettvalg?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Uferdige endringer blir ikke lagret. Gå tilbake uten å lagre?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "TILBAKE UTEN Å LAGRE"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Den nytegnede figuren er lagret."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Kunne ikke lagre. Trykk på «FERDIG» igjen."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "BRETTVALG"
     },
     {
       "key": "online_content_mismatch",
       "value": "Nettspill er utilgjengelig fordi spilldataene eller versjonen ikke samsvarer. Kontroller spillfilene i Steam."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Tilkoblingen til økten ble brutt. Bli med i rommet på nytt."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "FLERSPILLER ANBEFALES!" },
     { "key": "single_recommend_message", "value": "NICO DRAW er morsomst når dere samarbeider!\nPrøv å spille med 2–4 spillere!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Avslutte NICO DRAW?" }
+    ,{ "key": "title_exit_confirm", "value": "Avslutte NICO DRAW?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} bruker allerede denne figuren. Sende en bytteforespørsel?" },
+    { "key": "draw_species_swap_send", "value": "SEND FORESPØRSEL" },
+    { "key": "background_word_push", "value": "SKYV!" }
   ]
 }

@@ -5,6 +5,7 @@ namespace DrawBody.Prototype
     public sealed class JumpPad : MonoBehaviour
     {
         [SerializeField] private float jumpVelocity = 27f;
+        [SerializeField] private float targetJumpHeight;
         [SerializeField] private Transform animatedRoot;
         [SerializeField] private float birdLaunchMultiplier = 3f;
 
@@ -24,6 +25,11 @@ namespace DrawBody.Prototype
         public void ConfigureBirdMultiplier(float multiplier)
         {
             birdLaunchMultiplier = Mathf.Clamp(multiplier, 0.25f, 3f);
+        }
+
+        public void ConfigureTargetHeight(float height)
+        {
+            targetJumpHeight = Mathf.Max(0f, height);
         }
 
         private void Update()
@@ -113,6 +119,18 @@ namespace DrawBody.Prototype
                 && player.CurrentSpecies == DrawManager.Species.Bird
                     ? birdLaunchMultiplier
                     : 1f;
+            float launchVelocity = jumpVelocity;
+            if (targetJumpHeight > 0f)
+            {
+                float gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
+                if (gravity > 0.01f)
+                    launchVelocity = Mathf.Sqrt(2f * gravity * targetJumpHeight);
+
+                // A target-height pad is intended to reach one authored tier
+                // regardless of species. Applying the bird bonus here would
+                // skip multiple tiers and defeat that layout.
+                speciesMultiplier = 1f;
+            }
             Vector2 velocity = rb.linearVelocity;
             PlayerCarryController launchCarry = player != null
                 ? player.GetComponent<PlayerCarryController>()
@@ -124,7 +142,7 @@ namespace DrawBody.Prototype
                 // in the bird and discard large sideways collision impulses.
                 velocity.x = Mathf.Clamp(velocity.x * 0.2f, -4f, 4f);
             }
-            velocity.y = Mathf.Max(velocity.y, jumpVelocity * speciesMultiplier);
+            velocity.y = Mathf.Max(velocity.y, launchVelocity * speciesMultiplier);
             rb.linearVelocity = velocity;
             bounceTimer = 0.22f;
             GameSfx.PlayAt(SfxId.JumpPadLaunch, transform.position, speciesMultiplier > 1f ? 1.15f : 1f);

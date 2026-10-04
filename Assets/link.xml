@@ -1,0 +1,12 @@
+<linker>
+    <!-- EOS configuration creates these converters through Newtonsoft reflection.
+         Keep them in IL2CPP players even when managed stripping is enabled. -->
+    <assembly fullname="Newtonsoft.Json" preserve="all" />
+    <assembly fullname="com.playeveryware.eos.core">
+        <type fullname="PlayEveryWare.EpicOnlineServices.ListOfStringsToPlatformFlags" preserve="all" />
+        <type fullname="PlayEveryWare.EpicOnlineServices.ListOfStringsToAuthScopeFlags" preserve="all" />
+        <type fullname="PlayEveryWare.EpicOnlineServices.ListOfStringsToIntegratedPlatformManagementFlags" preserve="all" />
+        <type fullname="PlayEveryWare.EpicOnlineServices.ListOfStringsToInputStateButtonFlags" preserve="all" />
+        <type fullname="PlayEveryWare.EpicOnlineServices.StringToTypeConverter`1" preserve="all" />
+    </assembly>
+</linker>

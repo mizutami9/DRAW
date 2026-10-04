@@ -79,7 +79,7 @@
                     {
                         "movementAngle":  0,
                         "position":  {
-                                         "y":  -5,
+                                         "y":  -5.12,
                                          "x":  -8
                                      },
                         "linkTargetId":  null,

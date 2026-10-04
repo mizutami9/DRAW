@@ -47,9 +47,17 @@ namespace DrawBody.Prototype
             Eraser
         }
 
+        private enum UiSegmentStyle
+        {
+            Ink,
+            GameplayPreview,
+            EraserCursor
+        }
+
         private sealed class PartDrawing
         {
             public readonly List<Vector2> Points = new List<Vector2>();
+            public readonly List<float> StrokeWidths = new List<float>();
             public readonly List<GameObject> LineSegments = new List<GameObject>();
             public readonly List<GameObject> PreviewSegments = new List<GameObject>();
             public float UsedInk;
@@ -61,6 +69,8 @@ namespace DrawBody.Prototype
             public BodyPart Part;
             public readonly Dictionary<Species, Dictionary<BodyPart, List<Vector2>>> Points =
                 new Dictionary<Species, Dictionary<BodyPart, List<Vector2>>>();
+            public readonly Dictionary<Species, Dictionary<BodyPart, List<float>>> StrokeWidths =
+                new Dictionary<Species, Dictionary<BodyPart, List<float>>>();
         }
 
         [SerializeField] private StageManager stageManager;
@@ -99,7 +109,8 @@ namespace DrawBody.Prototype
         [SerializeField] private float maxInk = IndividualInkLimit;
         [SerializeField] private float pixelsPerInk = 5f;
         [SerializeField] private float minPointDistance = 8f;
-        [SerializeField] private float lineWidth = 6f;
+        public const float DefaultBrushWidth = 6f;
+        [SerializeField] private float lineWidth = DefaultBrushWidth;
         [SerializeField] private float eraserRadius = 18f;
         [SerializeField] private float previewScale = 0.7f;
         [SerializeField] private float previewLineWidth = 5f;
@@ -123,6 +134,7 @@ namespace DrawBody.Prototype
         private Species snapshotSpecies;
         private BodyPart snapshotPart;
         private Dictionary<Species, Dictionary<BodyPart, List<Vector2>>> editSnapshot;
+        private Dictionary<Species, Dictionary<BodyPart, List<float>>> editWidthSnapshot;
         private ToolMode toolMode = ToolMode.Pen;
         private readonly float[] brushSizes = { 3f, 5f, 6f, 8f, 10f };
         private int brushSizeIndex = 2;
@@ -134,6 +146,7 @@ namespace DrawBody.Prototype
         private GameObject eraserCursor;
         private float eraserCursorRadius = -1f;
         private readonly List<Vector2> clearedPartUndoPoints = new List<Vector2>();
+        private readonly List<float> clearedPartUndoStrokeWidths = new List<float>();
         private Species clearedPartUndoSpecies;
         private BodyPart clearedPartUndoPart;
         private bool hasClearedPartUndo;
@@ -185,6 +198,12 @@ namespace DrawBody.Prototype
             GameSfx.Play(accepted ? SfxId.DrawConfirm : SfxId.UiToggleOff);
         }
 
+        public void ShowSpeciesSwapUnavailable()
+        {
+            SetMessage(LocalizationManager.T("draw_species_swap_unavailable"), true);
+            GameSfx.Play(SfxId.UiToggleOff);
+        }
+
         public void ShowStageFitError()
         {
             SetMessage(LocalizationManager.T("msg_body_too_large_for_spawn"), true);
@@ -195,6 +214,12 @@ namespace DrawBody.Prototype
         {
             SetMessage(LocalizationManager.T("msg_body_too_large_for_ready_room"), true);
             GameSfx.Play(SfxId.DrawInkWarning);
+        }
+
+        public void ShowDrawingSaveError()
+        {
+            SetMessage(LocalizationManager.T("draw_save_failed"), true);
+            GameSfx.Play(SfxId.UiToggleOff);
         }
 
         public void SetAllowedSpecies(StageSpeciesMask availability)
@@ -538,6 +563,8 @@ namespace DrawBody.Prototype
         private void OnEnable()
         {
             LocalizationManager.LanguageChanged += RefreshLocalizedText;
+            // The draw screen may have been inactive while the language changed.
+            RefreshLocalizedText();
             if (onlineManager != null)
             {
                 onlineManager.BodyDataReceived += HandleInkBudgetChanged;
@@ -650,10 +677,13 @@ namespace DrawBody.Prototype
 
             clearedPartUndoPoints.Clear();
             clearedPartUndoPoints.AddRange(current.Points);
+            clearedPartUndoStrokeWidths.Clear();
+            clearedPartUndoStrokeWidths.AddRange(current.StrokeWidths);
             clearedPartUndoSpecies = currentSpecies;
             clearedPartUndoPart = currentPart;
             hasClearedPartUndo = true;
             current.Points.Clear();
+            current.StrokeWidths.Clear();
             current.UsedInk = 0f;
             drawing = false;
 
@@ -689,6 +719,7 @@ namespace DrawBody.Prototype
             toolMode = ToolMode.Pen;
             hasClearedPartUndo = false;
             clearedPartUndoPoints.Clear();
+            clearedPartUndoStrokeWidths.Clear();
             drawing = false;
 
             RebuildAllVisuals();
@@ -700,6 +731,7 @@ namespace DrawBody.Prototype
             UpdateToolButtons();
             CurrentSpeciesChanged?.Invoke(currentSpecies);
             CurrentPartChanged?.Invoke(currentPart);
+            CharacterDrawingPresetStore.SaveAuto(CreateState());
             feedback?.ButtonPress();
         }
 
@@ -716,16 +748,20 @@ namespace DrawBody.Prototype
             snapshotSpecies = currentSpecies;
             snapshotPart = currentPart;
             editSnapshot = new Dictionary<Species, Dictionary<BodyPart, List<Vector2>>>();
+            editWidthSnapshot = new Dictionary<Species, Dictionary<BodyPart, List<float>>>();
 
             foreach (KeyValuePair<Species, Dictionary<BodyPart, PartDrawing>> speciesPair in speciesDrawings)
             {
                 Dictionary<BodyPart, List<Vector2>> partSnapshot = new Dictionary<BodyPart, List<Vector2>>();
+                Dictionary<BodyPart, List<float>> widthSnapshot = new Dictionary<BodyPart, List<float>>();
                 foreach (KeyValuePair<BodyPart, PartDrawing> partPair in speciesPair.Value)
                 {
                     partSnapshot[partPair.Key] = new List<Vector2>(partPair.Value.Points);
+                    widthSnapshot[partPair.Key] = new List<float>(partPair.Value.StrokeWidths);
                 }
 
                 editSnapshot[speciesPair.Key] = partSnapshot;
+                editWidthSnapshot[speciesPair.Key] = widthSnapshot;
             }
 
             hasEditSnapshot = true;
@@ -754,6 +790,14 @@ namespace DrawBody.Prototype
 
                     targetPart.Points.Clear();
                     targetPart.Points.AddRange(partPair.Value);
+                    targetPart.StrokeWidths.Clear();
+                    if (editWidthSnapshot != null
+                        && editWidthSnapshot.TryGetValue(speciesPair.Key, out Dictionary<BodyPart, List<float>> speciesWidths)
+                        && speciesWidths.TryGetValue(partPair.Key, out List<float> savedWidths))
+                    {
+                        targetPart.StrokeWidths.AddRange(savedWidths);
+                    }
+                    NormalizeStrokeWidths(targetPart, DefaultBrushWidth);
                     targetPart.UsedInk = CalculateInk(targetPart.Points);
                 }
             }
@@ -784,8 +828,11 @@ namespace DrawBody.Prototype
             {
                 current.Points.Clear();
                 current.Points.AddRange(clearedPartUndoPoints);
+                current.StrokeWidths.Clear();
+                current.StrokeWidths.AddRange(clearedPartUndoStrokeWidths);
                 current.UsedInk = CalculateInk(current.Points);
                 clearedPartUndoPoints.Clear();
+                clearedPartUndoStrokeWidths.Clear();
                 hasClearedPartUndo = false;
                 RebuildAllVisuals();
                 SetPartSegmentVisibility();
@@ -812,6 +859,10 @@ namespace DrawBody.Prototype
             {
                 current.Points.RemoveAt(current.Points.Count - 1);
             }
+            if (current.StrokeWidths.Count > 0)
+            {
+                current.StrokeWidths.RemoveAt(current.StrokeWidths.Count - 1);
+            }
 
             current.UsedInk = CalculateInk(current.Points);
             RebuildAllVisuals();
@@ -823,6 +874,7 @@ namespace DrawBody.Prototype
 
         public void SetBrushSize(int index)
         {
+            FinishStroke();
             brushSizeIndex = Mathf.Clamp(index, 0, brushSizes.Length - 1);
             lineWidth = brushSizes[brushSizeIndex];
             eraserRadius = Mathf.Max(8f, lineWidth * 3.2f);
@@ -832,6 +884,7 @@ namespace DrawBody.Prototype
 
         public void SetBrushSizePixels(float pixels)
         {
+            FinishStroke();
             lineWidth = Mathf.Clamp(pixels, 1f, 30f);
             eraserRadius = Mathf.Max(8f, lineWidth * 3.2f);
             UpdateEraserCursor();
@@ -898,11 +951,7 @@ namespace DrawBody.Prototype
                 && stageManager != null
                 && !stageManager.CanConfirmSpeciesForActivePlayer(species))
             {
-                if (stageManager.RequestSpeciesSwap(species))
-                {
-                    ShowSpeciesSwapPending();
-                }
-                else
+                if (!stageManager.PromptSpeciesSwapRequest(species))
                 {
                     SetMessage(LocalizationManager.T("draw_species_swap_unavailable"), true);
                     GameSfx.Play(SfxId.UiToggleOff);
@@ -945,6 +994,7 @@ namespace DrawBody.Prototype
             if (!active)
             {
                 stageManager?.RecordActivePlayerDrawingState();
+                CharacterDrawingPresetStore.SaveAuto(CreateState());
                 SendCurrentBodyData();
             }
             UpdatePreviewHighlight();
@@ -1053,7 +1103,8 @@ namespace DrawBody.Prototype
 
         public void ConfirmDrawing()
         {
-            if (TryApplyDrawing())
+            bool deferCommit = stageManager != null && stageManager.IsDrawingMode;
+            if (TryApplyDrawing(deferCommit))
             {
                 GameSfx.Play(SfxId.DrawConfirm);
                 if (stageManager != null)
@@ -1061,7 +1112,7 @@ namespace DrawBody.Prototype
                     // Keep the pre-edit snapshot until the stage-side fit check succeeds.
                     // If it fails, Back must restore the old valid body instead of carrying
                     // the rejected body into the ready room or stage.
-                    stageManager.ConfirmDrawingMode();
+                    stageManager.ConfirmDrawingMode(true);
                 }
                 else
                 {
@@ -1072,17 +1123,18 @@ namespace DrawBody.Prototype
 
         public void CommitEditing()
         {
+            CharacterDrawingPresetStore.SaveAuto(CreateState());
             hasEditSnapshot = false;
             editSnapshot = null;
+            editWidthSnapshot = null;
         }
 
-        public bool TryApplyDrawing()
+        public bool TryApplyDrawing(bool deferCommit = false)
         {
             if (!CanConfirmCurrentSpecies())
             {
-                if (stageManager != null && stageManager.RequestSpeciesSwap(currentSpecies))
+                if (stageManager != null && stageManager.PromptSpeciesSwapRequest(currentSpecies))
                 {
-                    ShowSpeciesSwapPending();
                     return false;
                 }
 
@@ -1106,7 +1158,11 @@ namespace DrawBody.Prototype
 
             SetMessage(string.Empty);
             ApplyDrawing();
-            SendCurrentBodyData();
+            if (!deferCommit)
+            {
+                CharacterDrawingPresetStore.SaveAuto(CreateState());
+                SendCurrentBodyData();
+            }
             return true;
         }
 
@@ -1151,8 +1207,13 @@ namespace DrawBody.Prototype
 
         public void SetBuildTarget(BodyBuilder builder, PlayerAbilityController abilities)
         {
+            bool builderChanged = bodyBuilder != builder;
             bodyBuilder = builder;
             abilityController = abilities;
+            if (builderChanged && active && previewRoot != null)
+            {
+                RebuildPreviewVisuals();
+            }
         }
 
         public DrawingState CreateState()
@@ -1169,12 +1230,15 @@ namespace DrawBody.Prototype
             foreach (KeyValuePair<Species, Dictionary<BodyPart, PartDrawing>> speciesPair in speciesDrawings)
             {
                 Dictionary<BodyPart, List<Vector2>> partPoints = new Dictionary<BodyPart, List<Vector2>>();
+                Dictionary<BodyPart, List<float>> partWidths = new Dictionary<BodyPart, List<float>>();
                 foreach (KeyValuePair<BodyPart, PartDrawing> partPair in speciesPair.Value)
                 {
                     partPoints[partPair.Key] = new List<Vector2>(partPair.Value.Points);
+                    partWidths[partPair.Key] = new List<float>(partPair.Value.StrokeWidths);
                 }
 
                 state.Points[speciesPair.Key] = partPoints;
+                state.StrokeWidths[speciesPair.Key] = partWidths;
             }
 
             return state;
@@ -1206,6 +1270,13 @@ namespace DrawBody.Prototype
 
                     targetPart.Points.Clear();
                     targetPart.Points.AddRange(partPair.Value);
+                    targetPart.StrokeWidths.Clear();
+                    if (state.StrokeWidths.TryGetValue(speciesPair.Key, out Dictionary<BodyPart, List<float>> speciesWidths)
+                        && speciesWidths.TryGetValue(partPair.Key, out List<float> loadedWidths))
+                    {
+                        targetPart.StrokeWidths.AddRange(loadedWidths);
+                    }
+                    NormalizeStrokeWidths(targetPart, DefaultBrushWidth);
                     targetPart.UsedInk = CalculateInk(targetPart.Points);
                 }
             }
@@ -1246,6 +1317,13 @@ namespace DrawBody.Prototype
         {
             EnsureInitialized();
             return GetUnscaledBodyPoints(part);
+        }
+
+        public IReadOnlyList<float> GetBodyStrokeWidths(BodyPart part)
+        {
+            EnsureInitialized();
+            NormalizeStrokeWidths(drawings[part], DefaultBrushWidth);
+            return drawings[part].StrokeWidths;
         }
 
         private List<Vector2> GetUnscaledBodyPoints(BodyPart part)
@@ -1300,6 +1378,7 @@ namespace DrawBody.Prototype
                 {
                     Part = part.ToString(),
                     Points = drawing.Points.ToArray(),
+                    StrokeWidths = drawing.StrokeWidths.ToArray(),
                     Ink = drawing.UsedInk
                 };
             }
@@ -1347,12 +1426,15 @@ namespace DrawBody.Prototype
             foreach (Species entrySpecies in System.Enum.GetValues(typeof(Species)))
             {
                 Dictionary<BodyPart, List<Vector2>> partPoints = new Dictionary<BodyPart, List<Vector2>>();
+                Dictionary<BodyPart, List<float>> partWidths = new Dictionary<BodyPart, List<float>>();
                 foreach (BodyPart part in GetAllParts())
                 {
                     partPoints[part] = new List<Vector2>();
+                    partWidths[part] = new List<float>();
                 }
 
                 state.Points[entrySpecies] = partPoints;
+                state.StrokeWidths[entrySpecies] = partWidths;
             }
 
             if (body.Parts != null)
@@ -1382,6 +1464,9 @@ namespace DrawBody.Prototype
                         ScaleDrawablePoints(loadedPoints, 1f / SlimeGameplayCoordinateScale);
                     }
                     state.Points[species][part] = loadedPoints;
+                    state.StrokeWidths[species][part] = partDrawing.StrokeWidths != null
+                        ? new List<float>(partDrawing.StrokeWidths)
+                        : new List<float>();
                 }
             }
 
@@ -1491,8 +1576,10 @@ namespace DrawBody.Prototype
 
                     hasClearedPartUndo = false;
                     clearedPartUndoPoints.Clear();
+                    clearedPartUndoStrokeWidths.Clear();
+                    current.StrokeWidths.Add(lineWidth);
                     current.Points.Add(startPoint);
-                    feedback?.BeginStroke(startPoint, GetPartColor(currentPart));
+                    feedback?.BeginStroke(startPoint, GetPartColor());
                     RefreshInkText();
                     RefreshConnectionMessage();
                 }
@@ -1535,7 +1622,8 @@ namespace DrawBody.Prototype
         private void EraseAt(Vector2 point)
         {
             PartDrawing current = drawings[currentPart];
-            if (!EraseCircle(current.Points, point, eraserRadius))
+            NormalizeStrokeWidths(current, DefaultBrushWidth);
+            if (!EraseCircle(current.Points, current.StrokeWidths, point, eraserRadius))
             {
                 return;
             }
@@ -1548,7 +1636,11 @@ namespace DrawBody.Prototype
             UpdateConnectionMarker();
         }
 
-        private static bool EraseCircle(List<Vector2> points, Vector2 center, float radius)
+        private static bool EraseCircle(
+            List<Vector2> points,
+            List<float> strokeWidths,
+            Vector2 center,
+            float radius)
         {
             if (points == null || points.Count == 0)
             {
@@ -1556,9 +1648,11 @@ namespace DrawBody.Prototype
             }
 
             List<Vector2> rebuilt = new List<Vector2>();
+            List<float> rebuiltWidths = new List<float>();
             bool changed = false;
             bool hasPrevious = false;
             Vector2 previous = Vector2.zero;
+            int strokeIndex = 0;
 
             for (int i = 0; i < points.Count; i++)
             {
@@ -1567,8 +1661,13 @@ namespace DrawBody.Prototype
                 {
                     AppendBreak(rebuilt);
                     hasPrevious = false;
+                    strokeIndex++;
                     continue;
                 }
+
+                float strokeWidth = strokeIndex < strokeWidths.Count
+                    ? strokeWidths[strokeIndex]
+                    : DefaultBrushWidth;
 
                 if (!hasPrevious)
                 {
@@ -1578,7 +1677,7 @@ namespace DrawBody.Prototype
                     {
                         if (Vector2.Distance(current, center) > radius)
                         {
-                            AppendPoint(rebuilt, current);
+                            AppendPiece(rebuilt, rebuiltWidths, current, current, strokeWidth);
                         }
                         else
                         {
@@ -1598,12 +1697,12 @@ namespace DrawBody.Prototype
                 {
                     if (pieceCount >= 1)
                     {
-                        AppendPiece(rebuilt, a0, a1);
+                        AppendPiece(rebuilt, rebuiltWidths, a0, a1, strokeWidth);
                     }
 
                     if (pieceCount >= 2)
                     {
-                        AppendPiece(rebuilt, b0, b1);
+                        AppendPiece(rebuilt, rebuiltWidths, b0, b1, strokeWidth);
                     }
 
                     if (pieceCount != 1 || a0 != previous || a1 != current)
@@ -1623,6 +1722,8 @@ namespace DrawBody.Prototype
 
             points.Clear();
             points.AddRange(rebuilt);
+            strokeWidths.Clear();
+            strokeWidths.AddRange(rebuiltWidths);
             return true;
         }
 
@@ -1741,10 +1842,17 @@ namespace DrawBody.Prototype
             count++;
         }
 
-        private static void AppendPiece(List<Vector2> points, Vector2 start, Vector2 end)
+        private static void AppendPiece(
+            List<Vector2> points,
+            List<float> strokeWidths,
+            Vector2 start,
+            Vector2 end,
+            float width)
         {
+            bool startsStroke = points.Count == 0 || IsBreakPoint(points[points.Count - 1]);
             if (Vector2.Distance(start, end) <= Mathf.Epsilon)
             {
+                if (startsStroke) strokeWidths.Add(width);
                 AppendPoint(points, start);
                 return;
             }
@@ -1752,8 +1860,10 @@ namespace DrawBody.Prototype
             if (points.Count > 0 && !IsBreakPoint(points[points.Count - 1]) && Vector2.Distance(points[points.Count - 1], start) > 0.01f)
             {
                 AppendBreak(points);
+                startsStroke = true;
             }
 
+            if (startsStroke) strokeWidths.Add(width);
             AppendPoint(points, start);
             AppendPoint(points, end);
         }
@@ -1854,6 +1964,7 @@ namespace DrawBody.Prototype
 
             if (current.Points.Count == 0)
             {
+                current.StrokeWidths.Add(lineWidth);
                 current.Points.Add(point);
                 return;
             }
@@ -1861,6 +1972,7 @@ namespace DrawBody.Prototype
             Vector2 previous = current.Points[current.Points.Count - 1];
             if (IsBreakPoint(previous))
             {
+                current.StrokeWidths.Add(lineWidth);
                 current.Points.Add(point);
                 return;
             }
@@ -1897,8 +2009,8 @@ namespace DrawBody.Prototype
 
             current.Points.Add(point);
             current.UsedInk += inkCost;
-            CreateSegment(current, currentPart, previous, point);
-            feedback?.DrawSegment(previous, point, GetPartColor(currentPart));
+            CreateSegment(current, currentPart, previous, point, GetLastStrokeWidth(current));
+            feedback?.DrawSegment(previous, point, GetPartColor());
             previewDirty = true;
             RefreshInkText();
             RefreshConnectionMessage();
@@ -1916,26 +2028,47 @@ namespace DrawBody.Prototype
             FinishStroke();
             PartDrawing current = drawings[currentPart];
             current.Points.Clear();
+            current.StrokeWidths.Clear();
             current.UsedInk = 0f;
             ClearVisuals(current);
         }
 
-        private void CreateSegment(PartDrawing partDrawing, BodyPart part, Vector2 start, Vector2 end)
+        private void CreateSegment(
+            PartDrawing partDrawing,
+            BodyPart part,
+            Vector2 start,
+            Vector2 end,
+            float width)
         {
             if (lineRoot == null)
             {
                 return;
             }
 
-            GameObject segment = CreateUiSegment("InkSegment", lineRoot, start, end, lineWidth, GetPartColor(part), 1f);
+            float safeWidth = Mathf.Clamp(width, 1f, 30f);
+            GameObject segment = CreateUiSegment(UiSegmentStyle.Ink, lineRoot, start, end, safeWidth, GetPartColor());
             segment.SetActive(part == currentPart);
             partDrawing.LineSegments.Add(segment);
 
             if (previewRoot != null)
             {
-                GameObject previewSegment = CreateUiSegment("PreviewSegment", previewRoot, ToPreviewPoint(part, start), ToPreviewPoint(part, end), previewLineWidth, GetPartColor(part), 1f);
-                partDrawing.PreviewSegments.Add(previewSegment);
+                partDrawing.PreviewSegments.Add(CreatePreviewSegment(part, start, end, safeWidth));
             }
+        }
+
+        private GameObject CreatePreviewSegment(
+            BodyPart part,
+            Vector2 start,
+            Vector2 end,
+            float sourceWidth)
+        {
+            return CreateUiSegment(
+                UiSegmentStyle.GameplayPreview,
+                previewRoot,
+                ToPreviewPoint(part, start),
+                ToPreviewPoint(part, end),
+                GetGameplayPreviewStrokeWidth(sourceWidth),
+                GetPartColor());
         }
 
         private void RefreshInkText()
@@ -2294,7 +2427,7 @@ namespace DrawBody.Prototype
                 float a1 = Mathf.PI * 2f * (i + 1) / segments;
                 Vector2 p0 = new Vector2(Mathf.Cos(a0), Mathf.Sin(a0)) * eraserRadius;
                 Vector2 p1 = new Vector2(Mathf.Cos(a1), Mathf.Sin(a1)) * eraserRadius;
-                CreateUiSegment("EraserCursorRing", cursorRoot, p0, p1, 2.2f, color, 1f);
+                CreateUiSegment(UiSegmentStyle.EraserCursor, cursorRoot, p0, p1, 2.2f, color);
             }
         }
 
@@ -2560,7 +2693,7 @@ namespace DrawBody.Prototype
             rect.anchoredPosition = GetRequiredLocalStartPoint(currentPart);
 
             Image image = connectionMarker.GetComponent<Image>();
-            image.color = GetPartColor(currentPart);
+            image.color = GetPartColor();
         }
 
         private void EnsureConnectionMarker()
@@ -3084,34 +3217,50 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static GameObject CreateUiSegment(string name, RectTransform parent, Vector2 start, Vector2 end, float width, Color color, float scale)
+        private static GameObject CreateUiSegment(
+            UiSegmentStyle style,
+            RectTransform parent,
+            Vector2 start,
+            Vector2 end,
+            float width,
+            Color color)
         {
+            string name = style switch
+            {
+                UiSegmentStyle.Ink => "InkSegment",
+                UiSegmentStyle.GameplayPreview => "PreviewSegment",
+                UiSegmentStyle.EraserCursor => "EraserCursorRing",
+                _ => "UiSegment"
+            };
             GameObject segment = new GameObject(name);
             segment.transform.SetParent(parent, false);
 
             Image image = segment.AddComponent<Image>();
             image.raycastTarget = false;
-            image.color = color;
 
             RectTransform rect = image.rectTransform;
-            Vector2 scaledStart = start * scale;
-            Vector2 scaledEnd = end * scale;
-            Vector2 delta = scaledEnd - scaledStart;
-            float noise = Hash01(scaledStart.x * 12.1f + scaledStart.y * 7.7f + scaledEnd.x * 3.9f + scaledEnd.y * 5.1f);
-            bool pencilStroke = name == "InkSegment" || name == "PreviewSegment";
+            Vector2 delta = end - start;
+            float noise = Hash01(start.x * 12.1f + start.y * 7.7f + end.x * 3.9f + end.y * 5.1f);
+            bool pencilStroke = style == UiSegmentStyle.Ink;
+            bool gameplayPreviewStroke = style == UiSegmentStyle.GameplayPreview;
             float widthJitter = Mathf.Lerp(0.72f, 1.08f, noise);
             Vector2 normal = delta.sqrMagnitude > 0.001f ? new Vector2(-delta.y, delta.x).normalized : Vector2.up;
             Color jitteredColor = color;
-            jitteredColor.a *= pencilStroke ? Mathf.Lerp(0.42f, 0.68f, noise) : Mathf.Lerp(0.82f, 1f, noise);
+            jitteredColor.a *= pencilStroke
+                ? Mathf.Lerp(0.42f, 0.68f, noise)
+                : gameplayPreviewStroke ? 1f : Mathf.Lerp(0.82f, 1f, noise);
             image.color = jitteredColor;
             float baseWidth = pencilStroke ? width * 0.5f : width;
-            rect.sizeDelta = new Vector2(delta.magnitude * Mathf.Lerp(0.98f, 1.01f, noise), baseWidth * widthJitter);
-            rect.anchoredPosition = (scaledStart + scaledEnd) * 0.5f + normal * Mathf.Lerp(-0.8f, 0.8f, noise);
+            float lengthScale = gameplayPreviewStroke ? 1f : Mathf.Lerp(0.98f, 1.01f, noise);
+            float appliedWidthJitter = gameplayPreviewStroke ? 1f : widthJitter;
+            float normalOffset = gameplayPreviewStroke ? 0f : Mathf.Lerp(-0.8f, 0.8f, noise);
+            rect.sizeDelta = new Vector2(delta.magnitude * lengthScale, baseWidth * appliedWidthJitter);
+            rect.anchoredPosition = (start + end) * 0.5f + normal * normalOffset;
             rect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);
 
             if (pencilStroke && delta.magnitude > 8f)
             {
-                int fibers = name == "PreviewSegment" ? 3 : 5;
+                const int fibers = 5;
                 for (int i = 0; i < fibers; i++)
                 {
                     float fiberNoise = Hash01(noise * 97f + i * 13.37f);
@@ -3134,7 +3283,7 @@ namespace DrawBody.Prototype
                 }
             }
 
-            if (!pencilStroke && delta.magnitude > 12f)
+            if (!pencilStroke && !gameplayPreviewStroke && delta.magnitude > 12f)
             {
                 GameObject ghost = new GameObject("HandDrawnGhost");
                 ghost.transform.SetParent(segment.transform, false);
@@ -3159,7 +3308,7 @@ namespace DrawBody.Prototype
             return Mathf.Repeat(Mathf.Sin(value) * 43758.5453f, 1f);
         }
 
-        private Color GetPartColor(BodyPart part)
+        private Color GetPartColor()
         {
             if (bodyBuilder != null)
             {
@@ -3167,6 +3316,21 @@ namespace DrawBody.Prototype
             }
 
             return PlayerColorPalette.GetColor(0);
+        }
+
+        private float GetGameplayPreviewStrokeWidth(float sourceStrokeWidth)
+        {
+            float fitScale = previewScale * previewContentScale;
+            if (bodyBuilder != null)
+            {
+                return bodyBuilder.GetRuntimeStrokeWidthInDrawingUnits(sourceStrokeWidth)
+                    * fitScale;
+            }
+
+            // Scene initialization can briefly build the UI before the gameplay
+            // BodyBuilder reference is assigned. Keep that pass proportional too.
+            return previewLineWidth * sourceStrokeWidth / DefaultBrushWidth
+                * previewContentScale;
         }
 
         private void InitializeDrawings()
@@ -3229,6 +3393,11 @@ namespace DrawBody.Prototype
             SnapSpeciesConnectionStarts();
             RebuildAllVisuals();
             initialized = true;
+            DrawingState autoSave = CharacterDrawingPresetStore.LoadAuto();
+            if (autoSave != null)
+            {
+                LoadState(autoSave, false);
+            }
         }
 
         private void BuildDefaultBody(Species species)
@@ -3369,11 +3538,59 @@ namespace DrawBody.Prototype
         {
             PartDrawing drawing = drawings[part];
             drawing.Points.Clear();
+            drawing.StrokeWidths.Clear();
             for (int i = 0; i < points.Length; i++)
             {
                 drawing.Points.Add(IsBreakPoint(points[i]) ? StrokeBreak : points[i] * coordinateScale);
             }
+            NormalizeStrokeWidths(drawing, DefaultBrushWidth);
             drawing.UsedInk = CalculateInk(drawing.Points);
+        }
+
+        private static int CountStrokes(IReadOnlyList<Vector2> points)
+        {
+            int count = 0;
+            bool insideStroke = false;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (IsBreakPoint(points[i]))
+                {
+                    insideStroke = false;
+                }
+                else if (!insideStroke)
+                {
+                    count++;
+                    insideStroke = true;
+                }
+            }
+            return count;
+        }
+
+        private static void NormalizeStrokeWidths(PartDrawing drawing, float fallbackWidth)
+        {
+            int strokeCount = CountStrokes(drawing.Points);
+            if (drawing.StrokeWidths.Count > strokeCount)
+            {
+                drawing.StrokeWidths.RemoveRange(strokeCount, drawing.StrokeWidths.Count - strokeCount);
+            }
+            while (drawing.StrokeWidths.Count < strokeCount)
+            {
+                drawing.StrokeWidths.Add(fallbackWidth);
+            }
+            for (int i = 0; i < drawing.StrokeWidths.Count; i++)
+            {
+                drawing.StrokeWidths[i] = Mathf.Clamp(
+                    drawing.StrokeWidths[i] > 0f ? drawing.StrokeWidths[i] : fallbackWidth,
+                    1f,
+                    30f);
+            }
+        }
+
+        private static float GetLastStrokeWidth(PartDrawing drawing)
+        {
+            return drawing.StrokeWidths.Count > 0
+                ? drawing.StrokeWidths[drawing.StrokeWidths.Count - 1]
+                : DefaultBrushWidth;
         }
 
         private static void ScaleDrawablePoints(List<Vector2> points, float scale)
@@ -3419,15 +3636,25 @@ namespace DrawBody.Prototype
             foreach (BodyPart part in GetCurrentParts())
             {
                 PartDrawing drawing = drawings[part];
+                NormalizeStrokeWidths(drawing, DefaultBrushWidth);
                 IReadOnlyList<Vector2> points = drawing.Points;
+                int strokeIndex = 0;
                 for (int i = 1; i < points.Count; i++)
                 {
-                    if (IsBreakPoint(points[i - 1]) || IsBreakPoint(points[i]))
+                    if (IsBreakPoint(points[i - 1]))
+                    {
+                        strokeIndex++;
+                        continue;
+                    }
+                    if (IsBreakPoint(points[i]))
                     {
                         continue;
                     }
 
-                    CreateSegment(drawing, part, points[i - 1], points[i]);
+                    float width = strokeIndex < drawing.StrokeWidths.Count
+                        ? drawing.StrokeWidths[strokeIndex]
+                        : DefaultBrushWidth;
+                    CreateSegment(drawing, part, points[i - 1], points[i], width);
                 }
             }
 
@@ -3448,23 +3675,27 @@ namespace DrawBody.Prototype
             foreach (BodyPart part in GetCurrentParts())
             {
                 PartDrawing drawing = drawings[part];
+                NormalizeStrokeWidths(drawing, DefaultBrushWidth);
                 IReadOnlyList<Vector2> points = drawing.Points;
+                int strokeIndex = 0;
                 for (int i = 1; i < points.Count; i++)
                 {
-                    if (IsBreakPoint(points[i - 1]) || IsBreakPoint(points[i]))
+                    if (IsBreakPoint(points[i - 1]))
+                    {
+                        strokeIndex++;
+                        continue;
+                    }
+                    if (IsBreakPoint(points[i]))
                     {
                         continue;
                     }
 
-                    GameObject previewSegment = CreateUiSegment(
-                        "PreviewSegment",
-                        previewRoot,
-                        ToPreviewPoint(part, points[i - 1]),
-                        ToPreviewPoint(part, points[i]),
-                        previewLineWidth,
-                        GetPartColor(part),
-                        1f);
-                    drawing.PreviewSegments.Add(previewSegment);
+                    float width = strokeIndex < drawing.StrokeWidths.Count
+                        ? drawing.StrokeWidths[strokeIndex]
+                        : DefaultBrushWidth;
+
+                    drawing.PreviewSegments.Add(
+                        CreatePreviewSegment(part, points[i - 1], points[i], width));
                 }
             }
 

@@ -1693,6 +1693,10 @@
                         "value":  "ゲームデータまたはバージョンが一致しないため、オンラインプレイを開始できません。Steamでファイルの整合性を確認してください。"
                     },
                     {
+                        "key":  "online_session_disconnected",
+                        "value":  "セッションとの接続が切れました。ルームへ入り直してください。"
+                    },
+                    {
                         "key":  "online_host_disconnected",
                         "value":  "ホストが切断したため、ルームを終了しました。"
                     },
@@ -1752,6 +1756,7 @@
     { "key": "single_recommend_title", "value": "マルチプレイ推奨！" },
     { "key": "single_recommend_message", "value": "NICO DRAWは、みんなで協力して遊ぶのがおすすめです！\nぜひ2～4人でプレイしてみてください！" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "NICO DRAWを終了しますか？" }
+    ,{ "key": "title_exit_confirm", "value": "NICO DRAWを終了しますか？" },
+    { "key": "background_word_push", "value": "押せ！" }
   ]
 }

@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "TARGET  {0:0}g (90g x PLAYRS)"
+      "value": "TARGET  {0:0}g (70g x PLAYRS)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Kết thúc màn hiện tại và quay lại chọn màn?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Các thay đổi chưa hoàn tất sẽ không được lưu. Quay lại mà không lưu?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "QUAY LẠI KHÔNG LƯU"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Đã lưu nhân vật được vẽ lại."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Không thể lưu. Hãy nhấn “HOÀN TẤT” lần nữa."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "CHỌN MÀN"
     },
     {
       "key": "online_content_mismatch",
       "value": "Không thể chơi trực tuyến vì dữ liệu hoặc phiên bản trò chơi không khớp. Hãy xác minh tệp trò chơi trên Steam."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Đã mất kết nối với phiên chơi. Vui lòng tham gia lại phòng."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "NÊN CHƠI NHIỀU NGƯỜI!" },
     { "key": "single_recommend_message", "value": "NICO DRAW vui nhất khi mọi người cùng hợp tác!\nHãy thử chơi với 2–4 người!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Thoát NICO DRAW?" }
+    ,{ "key": "title_exit_confirm", "value": "Thoát NICO DRAW?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} đang sử dụng nhân vật này. Gửi yêu cầu đổi nhân vật?" },
+    { "key": "draw_species_swap_send", "value": "GỬI YÊU CẦU" },
+    { "key": "background_word_push", "value": "ĐẨY!" }
   ]
 }

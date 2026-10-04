@@ -28,6 +28,7 @@ namespace DrawBody.Prototype
         public string DisplayName;
         public bool IsHost;
         public bool IsReady;
+        public int PlayerSlot = -1;
     }
 
     [Serializable]
@@ -66,6 +67,7 @@ namespace DrawBody.Prototype
     {
         public string Part;
         public Vector2[] Points = Array.Empty<Vector2>();
+        public float[] StrokeWidths = Array.Empty<float>();
         public float Ink;
     }
 
@@ -121,6 +123,7 @@ namespace DrawBody.Prototype
         public string CarriedPlayerId;
         public string CarryAction;
         public Vector2 CarryOffset;
+        public int CarryEventSequence;
         public bool HumanCarryStruggling;
         public string LastAppliedThrowCarrierId;
         public int LastAppliedThrowSequence;

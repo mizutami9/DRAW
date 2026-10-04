@@ -46,6 +46,7 @@ namespace DrawBody.Prototype
         private void OnEnable()
         {
             LocalizationManager.LanguageChanged += RefreshLabels;
+            RefreshLabels();
         }
 
         private void OnDisable()
@@ -98,10 +99,10 @@ namespace DrawBody.Prototype
                 Transform result = clearPanel.transform.Find("StageClearResult");
                 if (result != null)
                 {
-                    clearButton = CreateButton("ClearFeedbackButton", result, new Vector2(-155f, -120f),
+                    clearButton = CreateButton("ClearFeedbackButton", result, new Vector2(-145f, -144f),
                         new Vector2(270f, 38f), new Color(0.84f, 0.75f, 1f, 0.98f), 14,
                         OpenFeedback);
-                    clearWishlistButton = CreateButton("ClearWishlistButton", result, new Vector2(-155f, -168f),
+                    clearWishlistButton = CreateButton("ClearWishlistButton", result, new Vector2(145f, -144f),
                         new Vector2(270f, 42f), new Color(1f, 0.82f, 0.28f, 0.99f), 17,
                         OpenWishlist);
                 }

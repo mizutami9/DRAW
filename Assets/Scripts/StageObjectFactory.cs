@@ -233,7 +233,7 @@ namespace DrawBody.Prototype
                 case StageObjectType.Spike:
                     return CreateSpike(data, parent);
                 case StageObjectType.Spawn:
-                    return CreateMarker(data, parent, new Color(0.1f, 0.3f, 1f), "START");
+                    return CreateMarker(data, parent, new Color(0.1f, 0.3f, 1f));
                 case StageObjectType.Goal:
                     return CreateGoal(data, parent);
                 case StageObjectType.CollectibleFish:
@@ -4047,9 +4047,18 @@ namespace DrawBody.Prototype
             BoxCollider2D weighingArea = obj.AddComponent<BoxCollider2D>();
             weighingArea.isTrigger = true;
             // A vertical weighing column also catches players stacked on top of
-            // another player. InkWeightScale filters out airborne characters.
-            weighingArea.size = new Vector2(0.94f, 8f);
-            weighingArea.offset = new Vector2(0f, 4.48f);
+            // another player. Keep its height in world units: the scale root is
+            // enlarged by authored data.size, and scaling this local height as
+            // well made large scales detect players on unrelated floors above.
+            // InkWeightScale filters out airborne characters.
+            float scaleY = Mathf.Max(0.2f, Mathf.Abs(data.size.y));
+            const float weighingColumnWorldHeight = 8f;
+            const float weighingColumnLocalBottom = 0.48f;
+            float weighingColumnLocalHeight = weighingColumnWorldHeight / scaleY;
+            weighingArea.size = new Vector2(0.94f, weighingColumnLocalHeight);
+            weighingArea.offset = new Vector2(
+                0f,
+                weighingColumnLocalBottom + weighingColumnLocalHeight * 0.5f);
 
             if (!hasColoredPencilScaleArt)
             {
@@ -4567,7 +4576,7 @@ namespace DrawBody.Prototype
                     break;
                 case StageObjectType.BackgroundPush:
                     AddBackgroundCrayonFill(parent, type, color);
-                    DrawBackgroundWord(parent, "PUSH", color);
+                    DrawBackgroundWord(parent, LocalizationManager.T("background_word_push"), color);
                     break;
                 case StageObjectType.BackgroundArrow:
                     AddBackgroundCrayonFill(parent, type, color);
@@ -4879,7 +4888,10 @@ namespace DrawBody.Prototype
             collider.isTrigger = true;
             obj.AddComponent<Goal>();
 
-            if (AddResourceSprite(obj.transform, "StageObjects/NicoDraw/goal-door", new Vector2(2.3f, 0.92f), 20, "Colored Pencil Exit Door"))
+            // Goal artwork is scenery behind the character. Keeping it below
+            // the body stroke order (10) prevents the doorway from covering a
+            // player who is standing inside it.
+            if (AddResourceSprite(obj.transform, "StageObjects/NicoDraw/goal-door", new Vector2(2.3f, 0.92f), 6, "Colored Pencil Exit Door"))
             {
                 AddEditorMetadata(obj, data);
                 return obj;
@@ -4904,7 +4916,7 @@ namespace DrawBody.Prototype
             beamLine.material = GetLineMaterial();
             beamLine.startColor = new Color(0.2f, 0.75f, 1f, 0.55f);
             beamLine.endColor = new Color(0.2f, 0.75f, 1f, 0.55f);
-            beamLine.sortingOrder = 16;
+            beamLine.sortingOrder = 6;
 
             GameObject ufo = new GameObject("UFO");
             ufo.transform.SetParent(obj.transform, false);
@@ -4919,14 +4931,14 @@ namespace DrawBody.Prototype
                 new Vector3(0.12f, -0.09f, 0f),
                 new Vector3(-0.12f, -0.09f, 0f),
                 new Vector3(-0.34f, 0f, 0f)
-            }, Color.black, 0.04f, 20);
+            }, Color.black, 0.04f, 7);
             AddDoodleLine("UFO Dome", ufo.transform, new[]
             {
                 new Vector3(-0.12f, 0.1f, 0f),
                 new Vector3(-0.04f, 0.22f, 0f),
                 new Vector3(0.08f, 0.22f, 0f),
                 new Vector3(0.16f, 0.1f, 0f)
-            }, new Color(0.1f, 0.45f, 1f), 0.032f, 21);
+            }, new Color(0.1f, 0.45f, 1f), 0.032f, 8);
             AddDoodleLine("Beam Rays", obj.transform, new[]
             {
                 new Vector3(-0.18f, 0.22f, -0.02f),
@@ -4935,12 +4947,12 @@ namespace DrawBody.Prototype
                 new Vector3(0.02f, -0.5f, -0.02f),
                 new Vector3(0.18f, 0.22f, -0.02f),
                 new Vector3(0.42f, -0.45f, -0.02f)
-            }, new Color(0.2f, 0.75f, 1f, 0.42f), 0.022f, 17);
+            }, new Color(0.2f, 0.75f, 1f, 0.42f), 0.022f, 6);
             AddEditorMetadata(obj, data);
             return obj;
         }
 
-        private GameObject CreateMarker(StageObjectData data, Transform parent, Color color, string label)
+        private GameObject CreateMarker(StageObjectData data, Transform parent, Color color)
         {
             GameObject obj = new GameObject(data.objectId);
             obj.name = data.type.ToString();
@@ -5647,10 +5659,6 @@ namespace DrawBody.Prototype
             else if (data.type == StageObjectType.BalanceScale || data.type == StageObjectType.Seesaw)
             {
                 glyph = "↔";
-            }
-            else if (data.type == StageObjectType.Key)
-            {
-                glyph = "鍵";
             }
             else if (data.type == StageObjectType.Coin)
             {

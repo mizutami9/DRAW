@@ -41,6 +41,7 @@ namespace DrawBody.Prototype
             }
 
             EnsureEscapeButton();
+            NormalizeShortcutLayout();
             ApplyLocalizedLabels();
 
             ApplyImmediate();
@@ -49,6 +50,14 @@ namespace DrawBody.Prototype
         private void OnEnable()
         {
             LocalizationManager.LanguageChanged += ApplyLocalizedLabels;
+            // This HUD is inactive on the title/options screens and therefore can
+            // miss the language-changed event. Always pull the current language
+            // again when gameplay makes it visible.
+            ApplyLocalizedLabels();
+            // GameplayHud is disabled while visiting title/stage-select screens.
+            // Restore the compact shortcut rows whenever it becomes visible so a
+            // previous theme/layout pass can never leave TAB and ESC overlapping.
+            NormalizeShortcutLayout();
         }
 
         private void Start()
@@ -123,6 +132,32 @@ namespace DrawBody.Prototype
         {
             UIManager uiManager = FindFirstObjectByType<UIManager>();
             uiManager?.ToggleMenu();
+        }
+
+        private void NormalizeShortcutLayout()
+        {
+            NormalizeShortcut(tabButton, 40f);
+            NormalizeShortcut(escButton, 0f);
+        }
+
+        private static void NormalizeShortcut(Button button, float rowY)
+        {
+            RectTransform buttonRect = button != null ? button.GetComponent<RectTransform>() : null;
+            RectTransform row = buttonRect != null ? buttonRect.parent as RectTransform : null;
+            if (buttonRect == null || row == null)
+            {
+                return;
+            }
+
+            row.anchorMin = row.anchorMax = Vector2.zero;
+            row.pivot = Vector2.zero;
+            row.anchoredPosition = new Vector2(0f, rowY);
+            row.sizeDelta = new Vector2(250f, 32f);
+
+            buttonRect.anchorMin = buttonRect.anchorMax = Vector2.zero;
+            buttonRect.pivot = Vector2.zero;
+            buttonRect.anchoredPosition = Vector2.zero;
+            buttonRect.sizeDelta = new Vector2(68f, 30f);
         }
 
         private void NormalizeLayout()

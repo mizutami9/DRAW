@@ -113,7 +113,7 @@ namespace DrawBody.Prototype
                 if (authoredZones[i] != null) authoredZones[i].gameObject.SetActive(false);
             }
             StageRedrawZoneFactory.CreateRuntimeFloorZone(transform,
-                "10-3_runtime_redraw_zone", new Vector2(0f, -8.65f), 34f, 18f);
+                "10-3_runtime_redraw_zone", new Vector2(0f, -8.65f), 34f, 18f, 0.7f);
         }
 
         private void Update()

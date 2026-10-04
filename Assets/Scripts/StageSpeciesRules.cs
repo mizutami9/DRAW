@@ -30,13 +30,15 @@ namespace DrawBody.Prototype
         {
             if (string.Equals(stageId, "2-3", StringComparison.OrdinalIgnoreCase))
                 return StageSpeciesMask.Cat;
+            if (string.Equals(stageId, "11-3", StringComparison.OrdinalIgnoreCase))
+                return StageSpeciesMask.Human;
             return GetAllowedForWorld(GetWorldNumber(stageId));
         }
 
         public static bool RequiresUniqueSpecies(string stageId)
         {
-            // 11-3 intentionally allows free team composition. Unlike the other
-            // stages from world 11 onward, duplicate character species are valid.
+            // 11-3 is a Human-only co-op stage, so every participant must be
+            // allowed to use the same species rather than reserving it per slot.
             if (string.Equals(stageId, "11-3", StringComparison.OrdinalIgnoreCase))
             {
                 return false;

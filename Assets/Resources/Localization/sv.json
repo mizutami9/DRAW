@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "Target  {0:0}g (90g x PLAYERS)"
+      "value": "Target  {0:0}g (70g x PLAYERS)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Avsluta den aktuella banan och återgå till banvalet?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Ofärdiga ändringar sparas inte. Gå tillbaka utan att spara?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "TILLBAKA UTAN ATT SPARA"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Den omritade figuren har sparats."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Det gick inte att spara. Tryck på ”KLAR” igen."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "BANVAL"
     },
     {
       "key": "online_content_mismatch",
       "value": "Onlinespel är inte tillgängligt eftersom speldata eller version inte stämmer överens. Verifiera spelfilerna i Steam."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Anslutningen till sessionen bröts. Gå med i rummet igen."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "FLERSPELARLÄGE REKOMMENDERAS!" },
     { "key": "single_recommend_message", "value": "NICO DRAW är roligast när ni samarbetar!\nProva att spela med 2–4 spelare!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Avsluta NICO DRAW?" }
+    ,{ "key": "title_exit_confirm", "value": "Avsluta NICO DRAW?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} använder redan den här figuren. Skicka en bytesförfrågan?" },
+    { "key": "draw_species_swap_send", "value": "SKICKA FÖRFRÅGAN" },
+    { "key": "background_word_push", "value": "PUTTA!" }
   ]
 }

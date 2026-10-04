@@ -54,11 +54,11 @@ function createNicoDrawFeedbackForm() {
       'Drawing or Preset / 書き直し・プリセット',
       '1-1',
       '1-2',
-      '1-3',
       '6-3',
       '8-2',
       '9-3',
       '11-2',
+      '11-3',
       '14-3',
       'Other / その他',
       'No bug / バグなし'

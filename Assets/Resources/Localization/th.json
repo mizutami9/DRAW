@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "ตาร์กี  {0:0}g (90g x players)"
+      "value": "ตาร์กี  {0:0}g (70g x players)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "จบด่านปัจจุบันและกลับไปหน้าเลือกด่านหรือไม่?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "การเปลี่ยนแปลงที่ยังไม่เสร็จจะไม่ถูกบันทึก ต้องการกลับโดยไม่บันทึกหรือไม่?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "กลับโดยไม่บันทึก"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "บันทึกตัวละครที่วาดใหม่แล้ว"
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "บันทึกไม่สำเร็จ โปรดกด “เสร็จสิ้น” อีกครั้ง"
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "เลือกด่าน"
     },
     {
       "key": "online_content_mismatch",
       "value": "ไม่สามารถเล่นออนไลน์ได้เนื่องจากข้อมูลเกมหรือเวอร์ชันไม่ตรงกัน โปรดตรวจสอบไฟล์เกมใน Steam"
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "การเชื่อมต่อเซสชันขาดหาย โปรดเข้าร่วมห้องอีกครั้ง"
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "แนะนำให้เล่นหลายคน!" },
     { "key": "single_recommend_message", "value": "NICO DRAW สนุกที่สุดเมื่อร่วมมือกัน!\nลองเล่นพร้อมกัน 2–4 คนดูสิ!" },
     { "key": "single_recommend_ok", "value": "ตกลง" }
-    ,{ "key": "title_exit_confirm", "value": "ออกจาก NICO DRAW หรือไม่?" }
+    ,{ "key": "title_exit_confirm", "value": "ออกจาก NICO DRAW หรือไม่?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} กำลังใช้ตัวละครนี้อยู่ ส่งคำขอสลับหรือไม่?" },
+    { "key": "draw_species_swap_send", "value": "ส่งคำขอ" },
+    { "key": "background_word_push", "value": "ผลัก!" }
   ]
 }

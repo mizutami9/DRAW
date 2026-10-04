@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "TARGET  {0:0}g (90g x PLAIERS)"
+      "value": "TARGET  {0:0}g (70g x PLAIERS)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Lopetetaanko nykyinen taso ja palataanko tason valintaan?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Keskeneräisiä muutoksia ei tallenneta. Palataanko tallentamatta?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "PALAA TALLENTAMATTA"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Uudelleen piirretty hahmo tallennettiin."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Tallennus epäonnistui. Paina uudelleen ”VALMIS”."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "TASON VALINTA"
     },
     {
       "key": "online_content_mismatch",
       "value": "Verkkopeli ei ole käytettävissä, koska pelitiedot tai versio eivät täsmää. Tarkista pelitiedostot Steamissa."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Yhteys peli-istuntoon katkesi. Liity huoneeseen uudelleen."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "MONINPELIÄ SUOSITELLAAN!" },
     { "key": "single_recommend_message", "value": "NICO DRAW on hauskimmillaan yhteistyössä!\nKokeilkaa pelaamista 2–4 pelaajalla!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Lopetetaanko NICO DRAW?" }
+    ,{ "key": "title_exit_confirm", "value": "Lopetetaanko NICO DRAW?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} käyttää jo tätä hahmoa. Lähetetäänkö vaihtopyyntö?" },
+    { "key": "draw_species_swap_send", "value": "LÄHETÄ PYYNTÖ" },
+    { "key": "background_word_push", "value": "TYÖNNÄ!" }
   ]
 }

@@ -7,6 +7,23 @@
 /[L|l]ogs/
 /[U|u]ser[S|s]ettings/
 
+# Local build, model, and audit artifacts. These are large machine-local
+# dependencies/outputs and must never be included in the game repository.
+/.build-temp/
+/.codex-build/
+/.local_models/
+/.translation_models/
+/.speaker_models/
+/.speaker_audit/
+/sample_thumbs/
+
+# Local analysis caches and deliverables created beside the game project.
+**/__pycache__/
+*.py[cod]
+/NICO_DRAW_*outreach*.xlsx
+/debug.log
+/scratch_user_prompt.txt
+
 # Memory dumps
 *.[M|m]emDmp
 
@@ -39,6 +56,11 @@ Assets/Thumbs.db
 *.apk
 *.unitypackage
 *.app
+
+# SteamCMD self-update files, caches, logs, and account-local runtime state.
+# Keep only the bootstrap executable; it restores the remaining runtime files.
+/sdk/tools/ContentBuilder/builder/*
+!/sdk/tools/ContentBuilder/builder/steamcmd.exe
 
 # Crash reports
 sysinfo.txt

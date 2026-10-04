@@ -182,13 +182,21 @@ namespace DrawBody.Prototype
             SetAllPlayerControls(true);
         }
 
-        private static void SetAllPlayerControls(bool enabled)
+        private void SetAllPlayerControls(bool enabled)
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
+            Transform activePlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
             for (int i = 0; i < players.Length; i++)
             {
-                if (!enabled) players[i].ResetMotion();
-                players[i].SetControlsEnabled(enabled);
+                if (!enabled)
+                {
+                    players[i].ResetMotion();
+                    players[i].SetControlsEnabled(false);
+                }
+                else if (players[i].transform == activePlayer)
+                {
+                    players[i].SetControlsEnabled(true);
+                }
             }
         }
 

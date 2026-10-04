@@ -43,6 +43,7 @@ namespace DrawBody.Prototype
         private DrawManager.Species speciesSwapRequestedSpecies;
         private DrawManager.Species speciesSwapOfferedSpecies;
         private bool speciesSwapWaitingForResponse;
+        private bool speciesSwapConfirmingOutgoing;
         private Button clearNextButton;
         private Button clearBackButton;
         private Button editorTestReturnButton;
@@ -325,6 +326,9 @@ namespace DrawBody.Prototype
         private void OnEnable()
         {
             LocalizationManager.LanguageChanged += RefreshText;
+            // Re-apply the selected language after returning from a screen on
+            // which this manager was inactive.
+            RefreshText();
         }
 
         private void OnDisable()
@@ -668,7 +672,8 @@ namespace DrawBody.Prototype
         public void ShowGameplayActionConfirm(GameplayButtonCommand.Command command)
         {
             if (command != GameplayButtonCommand.Command.Retry
-                && command != GameplayButtonCommand.Command.StageSelect) return;
+                && command != GameplayButtonCommand.Command.StageSelect
+                && command != GameplayButtonCommand.Command.CloseDrawing) return;
             EnsureGameplayActionConfirmPanel();
             if (gameplayActionConfirmPanel == null) return;
             pendingGameplayAction = command;
@@ -885,6 +890,10 @@ namespace DrawBody.Prototype
                 if (manager.IsOnlineStageActive) manager.OpenStageSelectFromMultiLobby();
                 else manager.OpenStageSelect();
             }
+            else if (action == GameplayButtonCommand.Command.CloseDrawing)
+            {
+                manager.CancelDrawingMode();
+            }
         }
 
         private void EnsureGameplayActionConfirmPanel()
@@ -936,18 +945,23 @@ namespace DrawBody.Prototype
         {
             if (gameplayActionConfirmPanel == null) return;
             bool retry = pendingGameplayAction == GameplayButtonCommand.Command.Retry;
+            bool closeDrawing = pendingGameplayAction == GameplayButtonCommand.Command.CloseDrawing;
             Transform card = gameplayActionConfirmPanel.transform.Find("GameplayActionConfirmCard");
             if (card == null) return;
             Text message = card.Find("GameplayActionConfirmMessage")?.GetComponent<Text>();
             if (message != null)
-                message.text = LocalizationManager.T(retry
-                    ? "menu_retry_confirm_message"
-                    : "menu_stage_select_confirm_message");
+                message.text = LocalizationManager.T(closeDrawing
+                    ? "draw_cancel_confirm_message"
+                    : retry
+                        ? "menu_retry_confirm_message"
+                        : "menu_stage_select_confirm_message");
             Text confirm = card.Find("GameplayActionConfirmButton")?.GetComponentInChildren<Text>(true);
             if (confirm != null)
-                confirm.text = LocalizationManager.T(retry
-                    ? "menu_retry_confirm_yes"
-                    : "menu_stage_select_confirm_yes");
+                confirm.text = LocalizationManager.T(closeDrawing
+                    ? "draw_cancel_confirm_yes"
+                    : retry
+                        ? "menu_retry_confirm_yes"
+                        : "menu_stage_select_confirm_yes");
             Text cancel = card.Find("GameplayActionCancelButton")?.GetComponentInChildren<Text>(true);
             if (cancel != null) cancel.text = LocalizationManager.T("cancel");
         }
@@ -967,6 +981,7 @@ namespace DrawBody.Prototype
             speciesSwapRequestedSpecies = requestedSpecies;
             speciesSwapOfferedSpecies = offeredSpecies;
             speciesSwapWaitingForResponse = false;
+            speciesSwapConfirmingOutgoing = false;
             RefreshSpeciesSwapText();
             speciesSwapConfirmPanel.SetActive(true);
             speciesSwapConfirmPanel.transform.SetAsLastSibling();
@@ -987,6 +1002,28 @@ namespace DrawBody.Prototype
             speciesSwapRequestedSpecies = requestedSpecies;
             speciesSwapOfferedSpecies = offeredSpecies;
             speciesSwapWaitingForResponse = true;
+            speciesSwapConfirmingOutgoing = false;
+            RefreshSpeciesSwapText();
+            speciesSwapConfirmPanel.SetActive(true);
+            speciesSwapConfirmPanel.transform.SetAsLastSibling();
+        }
+
+        public void ShowOutgoingSpeciesSwapConfirm(
+            string targetName,
+            DrawManager.Species requestedSpecies,
+            DrawManager.Species offeredSpecies)
+        {
+            EnsureSpeciesSwapConfirmPanel();
+            if (speciesSwapConfirmPanel == null)
+            {
+                return;
+            }
+
+            speciesSwapRequesterName = targetName;
+            speciesSwapRequestedSpecies = requestedSpecies;
+            speciesSwapOfferedSpecies = offeredSpecies;
+            speciesSwapWaitingForResponse = false;
+            speciesSwapConfirmingOutgoing = true;
             RefreshSpeciesSwapText();
             speciesSwapConfirmPanel.SetActive(true);
             speciesSwapConfirmPanel.transform.SetAsLastSibling();
@@ -1056,7 +1093,7 @@ namespace DrawBody.Prototype
                 new Vector2(220f, 66f),
                 new Color(0.3f, 0.78f, 0.42f, 1f));
             accept.GetComponentInChildren<Text>().text = LocalizationManager.T("draw_species_swap_accept");
-            accept.onClick.AddListener(() => ResolveStageManager()?.AcceptSpeciesSwapRequest());
+            accept.onClick.AddListener(ConfirmSpeciesSwapDialog);
 
             Button reject = CreateClearButton(
                 "SpeciesSwapRejectButton",
@@ -1066,8 +1103,34 @@ namespace DrawBody.Prototype
                 new Vector2(220f, 66f),
                 new Color(0.94f, 0.46f, 0.36f, 1f));
             reject.GetComponentInChildren<Text>().text = LocalizationManager.T("draw_species_swap_reject");
-            reject.onClick.AddListener(() => ResolveStageManager()?.RejectSpeciesSwapRequest());
+            reject.onClick.AddListener(CancelSpeciesSwapDialog);
             speciesSwapConfirmPanel.SetActive(false);
+        }
+
+        private void ConfirmSpeciesSwapDialog()
+        {
+            StageManager manager = ResolveStageManager();
+            if (speciesSwapConfirmingOutgoing)
+            {
+                manager?.ConfirmOutgoingSpeciesSwapRequest();
+            }
+            else
+            {
+                manager?.AcceptSpeciesSwapRequest();
+            }
+        }
+
+        private void CancelSpeciesSwapDialog()
+        {
+            StageManager manager = ResolveStageManager();
+            if (speciesSwapConfirmingOutgoing)
+            {
+                manager?.CancelOutgoingSpeciesSwapRequest();
+            }
+            else
+            {
+                manager?.RejectSpeciesSwapRequest();
+            }
         }
 
         private void RefreshSpeciesSwapText()
@@ -1091,7 +1154,9 @@ namespace DrawBody.Prototype
                 message.text = LocalizationManager.Format(
                     speciesSwapWaitingForResponse
                         ? "draw_species_swap_pending_detail"
-                        : "draw_species_swap_request",
+                        : speciesSwapConfirmingOutgoing
+                            ? "draw_species_swap_outgoing_confirm"
+                            : "draw_species_swap_request",
                     speciesSwapRequesterName,
                     LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(speciesSwapRequestedSpecies)),
                     LocalizationManager.T(StageSpeciesRules.GetSpeciesLocalizationKey(speciesSwapOfferedSpecies)));
@@ -1102,9 +1167,13 @@ namespace DrawBody.Prototype
             if (acceptButton != null) acceptButton.gameObject.SetActive(!speciesSwapWaitingForResponse);
             if (rejectButton != null) rejectButton.gameObject.SetActive(!speciesSwapWaitingForResponse);
             Text accept = acceptButton?.Find("SpeciesSwapAcceptButtonLabel")?.GetComponent<Text>();
-            if (accept != null) accept.text = LocalizationManager.T("draw_species_swap_accept");
+            if (accept != null) accept.text = LocalizationManager.T(speciesSwapConfirmingOutgoing
+                ? "draw_species_swap_send"
+                : "draw_species_swap_accept");
             Text reject = rejectButton?.Find("SpeciesSwapRejectButtonLabel")?.GetComponent<Text>();
-            if (reject != null) reject.text = LocalizationManager.T("draw_species_swap_reject");
+            if (reject != null) reject.text = LocalizationManager.T(speciesSwapConfirmingOutgoing
+                ? "cancel"
+                : "draw_species_swap_reject");
         }
 
         public void HideLeaveSessionConfirm()

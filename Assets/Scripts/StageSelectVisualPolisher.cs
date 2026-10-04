@@ -29,7 +29,7 @@ namespace DrawBody.Prototype
                 StageSelectButtonCommand command = buttons[i] != null
                     ? buttons[i].GetComponent<StageSelectButtonCommand>()
                     : null;
-                Text label = buttons[i] != null ? buttons[i].GetComponentInChildren<Text>(true) : null;
+                Text label = buttons[i] != null ? FindStageButtonLabel(buttons[i]) : null;
                 if (command != null && label != null) NormalizeStageButton(buttons[i], label);
             }
         }
@@ -488,7 +488,7 @@ namespace DrawBody.Prototype
                 DisableLegacyFrame(rect, "ButtonBoldFrame");
                 rect.localRotation = Quaternion.identity;
 
-                Text label = button.GetComponentInChildren<Text>(true);
+                Text label = FindStageButtonLabel(button);
                 if (label != null)
                 {
                     StageSelectButtonCommand stageCommand = button.GetComponent<StageSelectButtonCommand>();
@@ -536,6 +536,23 @@ namespace DrawBody.Prototype
                 status.gameObject.SetActive(false);
                 Destroy(status.gameObject);
             }
+        }
+
+        private static Text FindStageButtonLabel(Button button)
+        {
+            if (button == null) return null;
+            Transform demoBadge = button.transform.Find("DemoStageUnavailableBadge");
+            Text[] labels = button.GetComponentsInChildren<Text>(true);
+            for (int i = 0; i < labels.Length; i++)
+            {
+                Text label = labels[i];
+                if (label == null || demoBadge != null && label.transform.IsChildOf(demoBadge))
+                {
+                    continue;
+                }
+                return label;
+            }
+            return null;
         }
 
         private static void RemoveShadow(GameObject target)

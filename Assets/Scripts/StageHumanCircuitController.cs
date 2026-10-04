@@ -803,9 +803,10 @@ namespace DrawBody.Prototype
                 if (HasAuthority && pressed && !station.Pressed && Time.unscaledTime >= station.NextDispenseAt)
                 {
                     station.NextDispenseAt = Time.unscaledTime + BoxButtonCooldown;
-                    station.Dropper?.DispenseSelectedSize(BoxSizes[station.PreviewIndex]);
-                    GameSfx.PlayAt(SfxId.UiButtonPress, station.ButtonCollider != null
-                        ? station.ButtonCollider.transform.position : transform.position);
+                    if (station.Dropper != null
+                        && station.Dropper.DispenseSelectedSize(BoxSizes[station.PreviewIndex]))
+                        GameSfx.PlayAt(SfxId.UiButtonPress, station.ButtonCollider != null
+                            ? station.ButtonCollider.transform.position : transform.position);
                 }
                 station.Pressed = pressed;
                 RefreshBoxButtonVisual(station, pressed);
@@ -1323,6 +1324,8 @@ namespace DrawBody.Prototype
             if (data.Kind != StateKind || HasAuthority || !IsHostPlayer(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= lastStateSequence) return;
+            bool hadNetworkState = lastStateSequence > 0;
+            int oldBoxPressedMask = boxPressedMask;
             lastStateSequence = state.Sequence;
             int oldMask = completedMask;
             completedMask = state.CompletedMask;
@@ -1338,6 +1341,17 @@ namespace DrawBody.Prototype
             }
             if (rooms.Count > 4) rooms[4].RelayProgress = state.RelayProgress;
             ApplyBoxPreviews(state.BoxPreviewPacked);
+            if (hadNetworkState)
+            {
+                int newlyPressedMask = state.BoxPressedMask & ~oldBoxPressedMask;
+                for (int i = 0; i < boxStations.Count; i++)
+                {
+                    if ((newlyPressedMask & (1 << i)) == 0) continue;
+                    Collider2D button = boxStations[i].ButtonCollider;
+                    GameSfx.PlayAt(SfxId.UiButtonPress,
+                        button != null ? button.transform.position : transform.position);
+                }
+            }
             boxPressedMask = state.BoxPressedMask;
         }
 

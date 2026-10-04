@@ -35,8 +35,8 @@ namespace DrawBody.Prototype
         {
             if (command == Command.Confirm)
             {
-                // An occupied species is still actionable: Confirm sends a swap
-                // request instead of completing the drawing immediately.
+                // An occupied species is still actionable: Confirm opens the
+                // requester-side confirmation before any swap message is sent.
                 bool canConfirm = drawManager != null;
                 if (commandButton != null && commandButton.interactable != canConfirm)
                 {

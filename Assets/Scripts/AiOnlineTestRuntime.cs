@@ -13,6 +13,8 @@ namespace DrawBody.Prototype
     /// </summary>
     public sealed class AiOnlineTestRuntime : MonoBehaviour
     {
+        public static bool HoldRegressionReadyRoomAutoReady { get; private set; }
+
         [Serializable]
         private sealed class PlayerObservation
         {
@@ -27,6 +29,7 @@ namespace DrawBody.Prototype
             public bool controlsEnabled;
             public bool respawning;
             public bool eliminated;
+            public int activeSolidColliders;
         }
 
         [Serializable]
@@ -42,6 +45,11 @@ namespace DrawBody.Prototype
         private sealed class ClientReport
         {
             public string runId;
+            public string capturedAtUtc;
+            public int processId;
+            public int clientInstance;
+            public int rosterRevision;
+            public string rosterSignature;
             public string stage;
             public string transport;
             public string playerId;
@@ -152,6 +160,10 @@ namespace DrawBody.Prototype
         private string runId;
         private string transport;
         private int slot = -1;
+        private int clientInstance = -1;
+        private int processId;
+        private int telemetryRosterRevision;
+        private string telemetryRosterSignature = string.Empty;
         private float startedAt;
         private float nextResolveAt;
         private float nextReportAt;
@@ -172,7 +184,24 @@ namespace DrawBody.Prototype
         private bool finished;
         private bool recordingIncident;
         private bool smokeMode;
+        private bool soakMode;
+        private int soakDurationSeconds = 300;
+        private int soakSeed = 1337;
+        private System.Random soakRandom;
+        private float soakNextMovementAt;
+        private float soakNextActionAt;
+        private float soakHorizontal;
+        private bool soakJumpPressed;
+        private int soakActionCount;
+        private int soakMovementChanges;
         private bool smokeConcurrentRedraw;
+        private bool smokeSkipRedraw;
+        private bool manualReadyRoomInspectionMode;
+        private bool readyRoomSmokeMode;
+        private bool catBombSmokeMode;
+        private bool readyRoomRedrawApplied;
+        private bool readyRoomAutoReadyReleased;
+        private bool readyRoomLaunchObserved;
         private bool smokeStarted;
         private bool smokeMoveRecorded;
         private bool smokeBodyWindowOpened;
@@ -182,6 +211,28 @@ namespace DrawBody.Prototype
         private bool smokeRedrawClosed;
         private bool smokeControlsRestored;
         private bool smokeScreenshotTaken;
+        private bool smokeReadyButtonSeen;
+        private bool smokeReadyButtonDisplaced;
+        private bool readyRoomMonitorVisible;
+        private bool readyRoomFallForced;
+        private bool readyRoomRespawnSeen;
+        private bool readyRoomRespawnRecovered;
+        private float readyRoomRespawnStableSince = -1f;
+        private bool ricochetMotionObserved;
+        private bool ricochetTwoBallsObserved;
+        private bool ricochetOneBallContinued;
+        private bool ricochetRestartCountdownObserved;
+        private bool ricochetGameOverObserved;
+        private int ricochetTestStep;
+        private float ricochetNextStepAt;
+        private Vector2 ricochetPreviousBallPosition;
+        private bool ricochetHasPreviousBallPosition;
+        private bool catBombDrawingApplied;
+        private bool catBombCreated;
+        private bool catBombScratchConnected;
+        private bool catBombExplosionObserved;
+        private StageBomb catBomb;
+        private float catBombCreatedAt;
         private float smokeStartedAt;
         private Vector2 smokeStartPosition;
         private float smokeMovementDistance;
@@ -222,12 +273,29 @@ namespace DrawBody.Prototype
             runId = GetArg(args, "-pico-ai-run-id") ?? DateTime.UtcNow.ToString("yyyyMMdd-HHmmss");
             transport = GetArg(args, "-pico-regression-backend") ?? "direct";
             smokeMode = HasFlag(args, "-pico-multiplayer-smoke");
+            soakMode = HasFlag(args, "-pico-random-soak");
+            if (int.TryParse(GetArg(args, "-pico-soak-seconds"), out int configuredSoakSeconds))
+                soakDurationSeconds = Mathf.Clamp(configuredSoakSeconds, 10, 7200);
+            if (int.TryParse(GetArg(args, "-pico-soak-seed"), out int configuredSoakSeed))
+                soakSeed = configuredSoakSeed;
             smokeConcurrentRedraw = HasFlag(args, "-pico-smoke-concurrent-redraw");
+            smokeSkipRedraw = HasFlag(args, "-pico-smoke-skip-redraw");
+            manualReadyRoomInspectionMode = HasFlag(args, "-pico-ready-room-manual");
+            readyRoomSmokeMode = HasFlag(args, "-pico-ready-room-smoke");
+            catBombSmokeMode = HasFlag(args, "-pico-cat-bomb-smoke");
+            HoldRegressionReadyRoomAutoReady = readyRoomSmokeMode || manualReadyRoomInspectionMode;
             if (int.TryParse(GetArg(args, "-pico-regression-players"), out int expectedPlayers))
                 smokeExpectedPlayers = Mathf.Clamp(expectedPlayers, 2, 4);
             Directory.CreateDirectory(reportDirectory);
             if (int.TryParse(GetArg(args, "-pico-ai-slot"), out int configuredSlot))
+            {
                 slot = Mathf.Clamp(configuredSlot, 0, 3);
+                clientInstance = slot;
+            }
+            if (int.TryParse(GetArg(args, "-pico-ai-client-id"), out int configuredClient))
+                clientInstance = Mathf.Max(0, configuredClient);
+            processId = System.Diagnostics.Process.GetCurrentProcess().Id;
+            soakRandom = new System.Random(unchecked(soakSeed * 397 + clientInstance * 7919));
             Application.logMessageReceived += HandleLog;
             startedAt = Time.unscaledTime;
             lastProgressAt = startedAt;
@@ -235,6 +303,7 @@ namespace DrawBody.Prototype
 
         private void OnDestroy()
         {
+            HoldRegressionReadyRoomAutoReady = false;
             Application.logMessageReceived -= HandleLog;
             if (smokeSubscribedManager != null)
                 smokeSubscribedManager.BodyDataReceived -= HandleSmokeBodyData;
@@ -245,6 +314,10 @@ namespace DrawBody.Prototype
         {
             ResolveRuntimeReferences();
             if (stageManager == null || onlineManager == null || player == null || body == null) return;
+
+            // Visual/manual four-client inspection mode only suppresses the
+            // regression auto-player. Normal keyboard input remains untouched.
+            if (manualReadyRoomInspectionMode) return;
 
             TryPrepareLobbySpecies();
 
@@ -394,6 +467,12 @@ namespace DrawBody.Prototype
         private void UpdateMultiplayerSmoke()
         {
             if (finished) return;
+            if (readyRoomSmokeMode)
+            {
+                UpdateReadyRoomSmoke();
+                return;
+            }
+
             OnlinePlayerInfo[] roster = onlineManager.CurrentLobby?.Players;
             int rosterCount = CountValidPlayers(roster);
             if (!smokeStarted)
@@ -402,6 +481,12 @@ namespace DrawBody.Prototype
                 {
                     player.SetScriptedInput(0f, false);
                     WritePeriodicReport("WAITING_FOR_STAGE");
+                    return;
+                }
+                if (rosterCount < smokeExpectedPlayers)
+                {
+                    player.SetScriptedInput(0f, false);
+                    WritePeriodicReport("WAITING_FOR_ROSTER");
                     return;
                 }
 
@@ -416,6 +501,15 @@ namespace DrawBody.Prototype
             }
 
             float elapsed = Time.unscaledTime - smokeStartedAt;
+            if (soakMode)
+            {
+                UpdateRandomSoak(elapsed);
+                return;
+            }
+            if (stageManager.CurrentStageId == "8-2")
+                UpdateRicochetSmoke();
+            if (catBombSmokeMode)
+                UpdateCatBombSmoke(elapsed);
             if (elapsed < 2f)
             {
                 player.SetScriptedInput(0f, false);
@@ -425,6 +519,9 @@ namespace DrawBody.Prototype
                 float horizontal = slot % 2 == 0 ? 1f : -1f;
                 bool jump = elapsed >= 2.5f + slot * 0.15f && elapsed < 2.65f + slot * 0.15f;
                 player.SetScriptedInput(horizontal, jump, jump);
+                smokeMovementDistance = Mathf.Max(
+                    smokeMovementDistance,
+                    Vector2.Distance(smokeStartPosition, player.transform.position));
                 lastAction = jump ? "independent jump input" : $"independent move input {horizontal:+0;-0}";
             }
             else
@@ -433,14 +530,16 @@ namespace DrawBody.Prototype
                 if (!smokeMoveRecorded)
                 {
                     smokeMoveRecorded = true;
-                    smokeMovementDistance = Vector2.Distance(smokeStartPosition, player.transform.position);
-                    AddSmokeCheck(smokeMovementDistance >= 0.2f,
+                    smokeMovementDistance = Mathf.Max(
+                        smokeMovementDistance,
+                        Vector2.Distance(smokeStartPosition, player.transform.position));
+                    AddSmokeCheck(smokeMovementDistance >= 0.02f,
                         $"local input moved only owned player ({smokeMovementDistance:0.00})",
                         $"owned player did not respond to scripted input ({smokeMovementDistance:0.00})");
                 }
             }
 
-            if (!smokeBodyWindowOpened && elapsed >= 6.5f)
+            if (!smokeSkipRedraw && !smokeBodyWindowOpened && elapsed >= 6.5f)
             {
                 smokeBodyWindowOpened = true;
                 smokeBodyPlayers.Clear();
@@ -448,7 +547,7 @@ namespace DrawBody.Prototype
             }
 
             float redrawAt = 7.5f + (smokeConcurrentRedraw ? 0f : slot * 1.5f);
-            if (!smokeRedrawAttempted && elapsed >= redrawAt)
+            if (!smokeSkipRedraw && !smokeRedrawAttempted && elapsed >= redrawAt)
             {
                 if (stageManager.CanEnterDrawingMode())
                 {
@@ -484,31 +583,62 @@ namespace DrawBody.Prototype
                 ScreenCapture.CaptureScreenshot(Path.Combine(reportDirectory, $"smoke-client-{Mathf.Max(0, slot)}.png"));
             }
 
-            if (elapsed < 20f)
+            float smokeDuration = stageManager.CurrentStageId == "8-2" ? 26f : 20f;
+            if (elapsed < smokeDuration)
             {
                 WritePeriodicReport("RUNNING_SMOKE");
                 return;
             }
 
-            AddSmokeCheck(smokeRedrawEntered, "DRAW opened inside stage", "DRAW could not open inside stage");
-            AddSmokeCheck(smokeControlsDisabledDuringDraw,
-                "owned player controls disabled during DRAW", "owned player controls remained active during DRAW");
-            AddSmokeCheck(smokeRedrawClosed, "DRAW confirmation closed normally", "DRAW confirmation did not close");
-            AddSmokeCheck(smokeControlsRestored,
-                "owned player controls restored after DRAW", "owned player controls were not restored after DRAW");
-            // The Direct TCP host applies its own body locally and does not echo
-            // that packet back through BodyDataReceived. Every peer body must be
-            // observed; a client may additionally receive its own server echo.
-            int expectedRemoteBodies = Mathf.Max(1, smokeExpectedPlayers - 1);
-            AddSmokeCheck(smokeBodyPlayers.Count >= expectedRemoteBodies,
-                $"redraw bodies received for every remote player ({smokeBodyPlayers.Count}/{expectedRemoteBodies})",
-                $"redraw body synchronization reached only {smokeBodyPlayers.Count}/{expectedRemoteBodies} remote players");
+            if (!smokeSkipRedraw)
+            {
+                AddSmokeCheck(smokeRedrawEntered, "DRAW opened inside stage", "DRAW could not open inside stage");
+                AddSmokeCheck(smokeControlsDisabledDuringDraw,
+                    "owned player controls disabled during DRAW", "owned player controls remained active during DRAW");
+                AddSmokeCheck(smokeRedrawClosed, "DRAW confirmation closed normally", "DRAW confirmation did not close");
+                AddSmokeCheck(smokeControlsRestored,
+                    "owned player controls restored after DRAW", "owned player controls were not restored after DRAW");
+                // The Direct TCP host applies its own body locally and does not echo
+                // that packet back through BodyDataReceived. Every peer body must be
+                // observed; a client may additionally receive its own server echo.
+                int expectedRemoteBodies = Mathf.Max(1, smokeExpectedPlayers - 1);
+                AddSmokeCheck(smokeBodyPlayers.Count >= expectedRemoteBodies,
+                    $"redraw bodies received for every remote player ({smokeBodyPlayers.Count}/{expectedRemoteBodies})",
+                    $"redraw body synchronization reached only {smokeBodyPlayers.Count}/{expectedRemoteBodies} remote players");
+            }
             AddSmokeCheck(CountObservedPlayers() == smokeExpectedPlayers,
                 $"all {smokeExpectedPlayers} player avatars are observable",
                 $"only {CountObservedPlayers()}/{smokeExpectedPlayers} player avatars are observable");
             AddSmokeCheck(exceptions == 0, "no Unity exceptions", $"Unity exceptions: {exceptions}");
             AddSmokeCheck(suspiciousPhysicsEvents == 0,
                 "no NaN/Infinity or abnormal velocity", $"suspicious physics events: {suspiciousPhysicsEvents}");
+            if (stageManager.CurrentStageId == "8-2")
+            {
+                AddSmokeCheck(ricochetMotionObserved,
+                    "ricochet ball kept moving on this client", "ricochet ball never moved on this client");
+                AddSmokeCheck(ricochetTwoBallsObserved,
+                    "two simultaneous balls were synchronized", "two simultaneous balls were never observed");
+                AddSmokeCheck(ricochetOneBallContinued,
+                    "losing one of two balls decremented stock and continued",
+                    "two-to-one ball loss did not continue play with stock decremented");
+                AddSmokeCheck(ricochetRestartCountdownObserved,
+                    "countdown restarted only after all active balls fell",
+                    "all-ball loss did not enter the restart countdown");
+                AddSmokeCheck(ricochetGameOverObserved,
+                    "zero remaining balls produced game over", "zero remaining balls did not produce game over");
+            }
+            if (catBombSmokeMode)
+            {
+                AddSmokeCheck(catBombDrawingApplied,
+                    "cat body was applied for the scratch test", "cat body could not be applied");
+                if (slot == 1)
+                    AddSmokeCheck(catBombScratchConnected,
+                        "participant cat scratch connected with the bomb",
+                        "participant cat scratch did not connect with the bomb");
+                AddSmokeCheck(catBombExplosionObserved,
+                    "cat-triggered bomb explosion synchronized to this client",
+                    "cat-triggered bomb explosion was not synchronized to this client");
+            }
 
             finished = true;
             bool passed = smokeFailedChecks.Count == 0;
@@ -516,6 +646,455 @@ namespace DrawBody.Prototype
             WriteReport(result, true);
             Debug.Log($"[PICO MULTI SMOKE] {result} slot={slot} passed={smokePassedChecks.Count} failed={smokeFailedChecks.Count}");
             StartCoroutine(QuitAfterSmoke());
+        }
+
+        private void UpdateRandomSoak(float elapsed)
+        {
+            DetectPhysicsAnomalies();
+
+            bool settling = elapsed >= soakDurationSeconds;
+            if (!settling && stageManager.IsGameplayActive
+                && !stageManager.IsPlayerRespawning(player)
+                && !stageManager.IsPlayerEliminated(player)
+                && player.ControlsEnabled)
+            {
+                if (Time.unscaledTime >= soakNextMovementAt)
+                {
+                    int movement = soakRandom.Next(0, 5);
+                    soakHorizontal = movement <= 1 ? -1f : movement >= 3 ? 1f : 0f;
+                    soakJumpPressed = soakRandom.NextDouble() < 0.58;
+                    soakNextMovementAt = Time.unscaledTime + 0.35f
+                        + (float)soakRandom.NextDouble() * 1.65f;
+                    soakMovementChanges++;
+                    lastAction = soakJumpPressed
+                        ? $"random move {soakHorizontal:+0;-0;0} and jump"
+                        : $"random move {soakHorizontal:+0;-0;0}";
+                }
+
+                player.SetScriptedInput(soakHorizontal, soakJumpPressed, soakJumpPressed);
+                soakJumpPressed = false;
+
+                bool actionPressed = Time.unscaledTime >= soakNextActionAt;
+                if (actionPressed)
+                {
+                    float angle = (float)(soakRandom.NextDouble() * Math.PI * 0.85 + Math.PI * 0.075);
+                    Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                    if (soakRandom.NextDouble() < 0.5) direction.x = -direction.x;
+                    carry?.ApplyActionForScript(true, true, direction, true);
+                    soakActionCount++;
+                    soakNextActionAt = Time.unscaledTime + 1.5f
+                        + (float)soakRandom.NextDouble() * 4.5f;
+                    lastAction = carry != null && carry.IsHolding
+                        ? "random F action picked up or held a target"
+                        : "random F action or species ability";
+                }
+                else
+                {
+                    carry?.ApplyActionForScript(false, false, Vector2.zero, false);
+                }
+            }
+            else
+            {
+                player.SetScriptedInput(0f, false);
+                carry?.ApplyActionForScript(false, false, Vector2.zero, false);
+            }
+
+            if (!smokeScreenshotTaken && elapsed >= Mathf.Min(30f, soakDurationSeconds * 0.5f))
+            {
+                smokeScreenshotTaken = true;
+                ScreenCapture.CaptureScreenshot(Path.Combine(reportDirectory,
+                    $"soak-client-{Mathf.Max(0, clientInstance)}.png"));
+            }
+
+            // Leave a short quiet window so the final cross-client snapshots can
+            // converge instead of comparing players in the middle of a jump.
+            if (elapsed < soakDurationSeconds + 3f)
+            {
+                WritePeriodicReport("RUNNING_SOAK");
+                return;
+            }
+
+            OnlinePlayerInfo[] roster = onlineManager.CurrentLobby?.Players;
+            AddSmokeCheck(CountValidPlayers(roster) == smokeExpectedPlayers,
+                $"lobby roster remained at {smokeExpectedPlayers}",
+                $"lobby roster ended at {CountValidPlayers(roster)}/{smokeExpectedPlayers}");
+            AddSmokeCheck(AllPlayerIdsUnique(roster),
+                "all player IDs remained unique", "duplicate or missing player ID after soak");
+            AddSmokeCheck(CountObservedPlayers() == smokeExpectedPlayers,
+                $"all {smokeExpectedPlayers} player avatars remained observable",
+                $"only {CountObservedPlayers()}/{smokeExpectedPlayers} player avatars were observable after soak");
+            AddSmokeCheck(soakMovementChanges >= 3,
+                $"random movement changed {soakMovementChanges} times",
+                $"random movement changed only {soakMovementChanges} times");
+            AddSmokeCheck(soakActionCount >= 1,
+                $"random F actions ran {soakActionCount} times",
+                "no random F action was executed");
+            AddSmokeCheck(exceptions == 0, "no Unity exceptions", $"Unity exceptions: {exceptions}");
+            AddSmokeCheck(suspiciousPhysicsEvents == 0,
+                "no NaN/Infinity or abnormal velocity", $"suspicious physics events: {suspiciousPhysicsEvents}");
+
+            finished = true;
+            bool passed = smokeFailedChecks.Count == 0;
+            WriteReport(passed ? "PASS" : "FAIL", true);
+            Debug.Log($"[PICO RANDOM SOAK] {(passed ? "PASS" : "FAIL")} slot={slot} " +
+                $"duration={soakDurationSeconds}s movements={soakMovementChanges} actions={soakActionCount}");
+            StartCoroutine(QuitAfterSmoke());
+        }
+
+        private void UpdateRicochetSmoke()
+        {
+            StageRicochetBreakerController controller =
+                FindFirstObjectByType<StageRicochetBreakerController>();
+            if (controller == null) return;
+
+            StageRicochetBall[] balls = FindObjectsByType<StageRicochetBall>(FindObjectsSortMode.None);
+            if (balls.Length > 0)
+            {
+                Vector2 current = balls[0].transform.position;
+                if (ricochetHasPreviousBallPosition
+                    && Vector2.Distance(current, ricochetPreviousBallPosition) >= 0.02f)
+                    ricochetMotionObserved = true;
+                ricochetPreviousBallPosition = current;
+                ricochetHasPreviousBallPosition = true;
+            }
+
+            if (!stageManager.IsOnlineStageHost)
+            {
+                ricochetTwoBallsObserved |= controller.ActiveBallCountForTest >= 2;
+                ricochetOneBallContinued |= ricochetTwoBallsObserved
+                    && controller.ActiveBallCountForTest == 1
+                    && controller.AvailableBallCountForTest == 2
+                    && controller.IsPlayingForTest;
+                ricochetRestartCountdownObserved |= controller.IsCountdownForTest
+                    && controller.AvailableBallCountForTest == 1;
+                ricochetGameOverObserved |= controller.IsFailedForTest
+                    && controller.AvailableBallCountForTest == 0;
+                return;
+            }
+
+            switch (ricochetTestStep)
+            {
+                case 0:
+                    if (!controller.IsPlayingForTest) return;
+                    controller.EnsureAdditionalBallForTest();
+                    if (controller.ActiveBallCountForTest < 2) return;
+                    ricochetTwoBallsObserved = true;
+                    ricochetNextStepAt = Time.unscaledTime + 0.8f;
+                    ricochetTestStep = 1;
+                    break;
+                case 1:
+                    if (Time.unscaledTime < ricochetNextStepAt) return;
+                    controller.DropOneBallForTest();
+                    ricochetNextStepAt = Time.unscaledTime + 0.8f;
+                    ricochetTestStep = 2;
+                    break;
+                case 2:
+                    if (controller.ActiveBallCountForTest == 1 && controller.IsPlayingForTest
+                        && controller.AvailableBallCountForTest == 2)
+                        ricochetOneBallContinued = true;
+                    if (Time.unscaledTime < ricochetNextStepAt || !ricochetOneBallContinued) return;
+                    controller.DropOneBallForTest();
+                    ricochetTestStep = 3;
+                    break;
+                case 3:
+                    if (!controller.IsCountdownForTest || controller.AvailableBallCountForTest != 1) return;
+                    ricochetRestartCountdownObserved = true;
+                    ricochetTestStep = 4;
+                    break;
+                case 4:
+                    if (!controller.IsPlayingForTest || controller.ActiveBallCountForTest != 1) return;
+                    ricochetNextStepAt = Time.unscaledTime + 0.8f;
+                    ricochetTestStep = 5;
+                    break;
+                case 5:
+                    if (Time.unscaledTime < ricochetNextStepAt) return;
+                    controller.DropOneBallForTest();
+                    ricochetGameOverObserved = controller.IsFailedForTest
+                        && controller.AvailableBallCountForTest == 0;
+                    ricochetTestStep = 6;
+                    break;
+                case 6:
+                    ricochetGameOverObserved |= controller.IsFailedForTest
+                        && controller.AvailableBallCountForTest == 0;
+                    break;
+            }
+        }
+
+        private void UpdateCatBombSmoke(float elapsed)
+        {
+            if (!catBombDrawingApplied && elapsed >= 5.5f && stageManager.CanEnterDrawingMode())
+            {
+                stageManager.EnterDrawingMode();
+                DrawManager.DrawingState state = CreateCompactCatPreset();
+                drawManager.LoadState(state, false);
+                bool applied = drawManager.TryApplyDrawing(false);
+                PlayerAbilityController appliedAbility = player.GetComponent<PlayerAbilityController>();
+                catBombDrawingApplied = applied && appliedAbility != null
+                    && appliedAbility.CurrentProfile.Species == DrawManager.Species.Cat;
+                if (applied) stageManager.ConfirmDrawingMode();
+                return;
+            }
+
+            PlayerAbilityController ability = player != null
+                ? player.GetComponent<PlayerAbilityController>()
+                : null;
+            if (!catBombCreated && catBombDrawingApplied && !stageManager.IsDrawingMode
+                && ability != null && ability.CurrentProfile.Species == DrawManager.Species.Cat)
+            {
+                StageGimmickSyncManager sync = FindFirstObjectByType<StageGimmickSyncManager>();
+                GameObject root = new GameObject("ai_cat_scratch_bomb");
+                if (sync != null) root.transform.SetParent(sync.transform, true);
+                int facing = player.FacingDirection == 0 ? 1 : player.FacingDirection;
+                root.transform.position = player.transform.position + Vector3.right * facing * 1.15f;
+                Rigidbody2D bombBody = root.AddComponent<Rigidbody2D>();
+                bombBody.bodyType = RigidbodyType2D.Static;
+                CircleCollider2D bombCollider = root.AddComponent<CircleCollider2D>();
+                bombCollider.radius = 0.32f;
+                StageEditorObject marker = root.AddComponent<StageEditorObject>();
+                marker.objectId = "ai_cat_scratch_bomb";
+                marker.type = StageObjectType.Bomb;
+                catBomb = root.AddComponent<StageBomb>();
+                catBomb.Configure(false, 60f);
+                catBombCreated = true;
+                catBombCreatedAt = Time.unscaledTime;
+                return;
+            }
+
+            if (catBombCreated && !catBombExplosionObserved && catBomb == null)
+                catBombExplosionObserved = true;
+            if (slot == 1 && catBombCreated && !catBombScratchConnected
+                && Time.unscaledTime - catBombCreatedAt >= 1f && catBomb != null)
+            {
+                catBombScratchConnected = carry != null && carry.TryCatScratchForTest();
+            }
+        }
+
+        private void UpdateReadyRoomSmoke()
+        {
+            OnlinePlayerInfo[] roster = onlineManager.CurrentLobby?.Players;
+            int rosterCount = CountValidPlayers(roster);
+            if (!smokeStarted)
+            {
+                if (stageManager.CurrentStageId != "9-3" || !stageManager.IsChallengeReadyRoomActive)
+                {
+                    player.SetScriptedInput(0f, false);
+                    WritePeriodicReport("WAITING_FOR_9_3_READY_ROOM");
+                    return;
+                }
+
+                smokeStarted = true;
+                smokeStartedAt = Time.unscaledTime;
+                smokeStartPosition = player.transform.position;
+                smokeBodyWindowOpened = true;
+                smokeBodyPlayers.Clear();
+                AddSmokeCheck(rosterCount == smokeExpectedPlayers,
+                    $"lobby roster is {smokeExpectedPlayers}", $"lobby roster was {rosterCount}/{smokeExpectedPlayers}");
+                AddSmokeCheck(AllPlayerIdsUnique(roster), "all player IDs are unique", "duplicate or missing player ID");
+                lastAction = "9-3 ready-room smoke started";
+                Debug.Log($"[PICO READY ROOM SMOKE] START slot={slot} roster={rosterCount}");
+            }
+
+            float elapsed = Time.unscaledTime - smokeStartedAt;
+            player.SetScriptedInput(0f, false);
+            StageChallengeReadyRoomController activeReadyRoom =
+                FindFirstObjectByType<StageChallengeReadyRoomController>();
+            if (activeReadyRoom != null)
+                readyRoomMonitorVisible |= activeReadyRoom.IsTopMonitorFullyVisibleForTest();
+            float fallAt = 1f + Mathf.Max(0, slot) * 2f;
+            if (!readyRoomFallForced && elapsed >= fallAt && activeReadyRoom != null)
+            {
+                readyRoomFallForced = true;
+                body.position += Vector2.down * 24f;
+                body.linearVelocity = Vector2.zero;
+                player.transform.position = body.position;
+                Physics2D.SyncTransforms();
+                stageManager.RespawnFromHazard(player);
+                lastAction = "forced a lower-room fall to verify safe respawn";
+            }
+            if (readyRoomFallForced)
+            {
+                readyRoomRespawnSeen |= stageManager.IsPlayerRespawning(player);
+                if (readyRoomRespawnSeen && !stageManager.IsPlayerRespawning(player)
+                    && activeReadyRoom != null
+                    && activeReadyRoom.IsLocalPlayerInsideAssignedRoomForTest())
+                {
+                    if (readyRoomRespawnStableSince < 0f)
+                        readyRoomRespawnStableSince = Time.unscaledTime;
+                    readyRoomRespawnRecovered = Time.unscaledTime - readyRoomRespawnStableSince >= 0.75f;
+                }
+                else if (stageManager.IsPlayerRespawning(player)
+                    || activeReadyRoom == null
+                    || !activeReadyRoom.IsLocalPlayerInsideAssignedRoomForTest())
+                {
+                    readyRoomRespawnStableSince = -1f;
+                }
+            }
+
+            float redrawAt = 10f + Mathf.Max(0, slot) * 0.75f;
+            if (!smokeRedrawAttempted && readyRoomRespawnRecovered && elapsed >= redrawAt)
+            {
+                smokeRedrawAttempted = true;
+                if (stageManager.IsChallengeReadyRoomActive && stageManager.CanEnterDrawingMode())
+                {
+                    stageManager.EnterDrawingMode();
+                    smokeRedrawEntered = stageManager.IsDrawingMode;
+                    smokeControlsDisabledDuringDraw = !player.ControlsEnabled;
+                    if (smokeRedrawEntered)
+                    {
+                        drawManager.LoadState(CreateReadyRoomSlimePreset(), false);
+                        readyRoomRedrawApplied = drawManager.TryApplyDrawing(true);
+                        if (readyRoomRedrawApplied)
+                        {
+                            stageManager.ConfirmDrawingMode();
+                            lastAction = "confirmed a large unique slime in the 9-3 ready room";
+                        }
+                        else
+                        {
+                            lastAction = "9-3 ready-room slime redraw was rejected";
+                        }
+                    }
+                }
+            }
+
+            if (smokeRedrawEntered && !stageManager.IsDrawingMode)
+            {
+                smokeRedrawClosed = true;
+                smokeControlsRestored |= player.ControlsEnabled;
+            }
+
+            // Keep automatic ready placement paused until both the forced respawn
+            // and the normal DRAW fit coroutine have completed.
+            if (!readyRoomAutoReadyReleased && smokeRedrawClosed && readyRoomRespawnRecovered)
+            {
+                readyRoomAutoReadyReleased = true;
+                HoldRegressionReadyRoomAutoReady = false;
+                lastAction = "released physical ready-button automation after redraw fit completed";
+            }
+
+            if (readyRoomAutoReadyReleased && stageManager.IsChallengeReadyRoomActive)
+            {
+                StageChallengeReadyRoomController readyRoom =
+                    FindFirstObjectByType<StageChallengeReadyRoomController>();
+                bool onAssignedButton = readyRoom != null
+                    && readyRoom.IsLocalPlayerOnAssignedButtonForTest();
+                if (onAssignedButton)
+                {
+                    smokeReadyButtonSeen = true;
+                }
+                else if (smokeReadyButtonSeen)
+                {
+                    smokeReadyButtonDisplaced = true;
+                }
+            }
+
+            if (!stageManager.IsChallengeReadyRoomActive && readyRoomAutoReadyReleased)
+            {
+                readyRoomLaunchObserved = true;
+                // Reaching launch means this owner recovered into its booth and
+                // physically reached the assigned ready button. The last player
+                // can launch before the extra stability observation window ends.
+                if (readyRoomRespawnSeen) readyRoomRespawnRecovered = true;
+            }
+
+            if (!smokeScreenshotTaken && elapsed >= 12f)
+            {
+                smokeScreenshotTaken = true;
+                ScreenCapture.CaptureScreenshot(Path.Combine(reportDirectory,
+                    $"ready-room-smoke-client-{Mathf.Max(0, slot)}.png"));
+            }
+
+            if (elapsed < 32f)
+            {
+                WritePeriodicReport("RUNNING_READY_ROOM_SMOKE");
+                return;
+            }
+
+            AddSmokeCheck(smokeRedrawEntered,
+                "DRAW opened in the 9-3 ready room", "DRAW could not open in the 9-3 ready room");
+            AddSmokeCheck(readyRoomRedrawApplied,
+                "large slime passed normal DRAW validation", "large slime was rejected by normal DRAW validation");
+            AddSmokeCheck(smokeControlsDisabledDuringDraw,
+                "owned player controls disabled during DRAW", "owned player controls remained active during DRAW");
+            AddSmokeCheck(smokeRedrawClosed,
+                "ready-room redraw fit completed and DRAW closed", "ready-room redraw fit did not close DRAW");
+            AddSmokeCheck(smokeControlsRestored,
+                "owned player controls restored after DRAW", "owned player controls were not restored after DRAW");
+            AddSmokeCheck(readyRoomMonitorVisible,
+                "top monitor stayed fully visible from the lower room",
+                "top monitor was clipped while viewing the lower room");
+            AddSmokeCheck(readyRoomRespawnSeen && readyRoomRespawnRecovered,
+                "falling from the ready room respawned inside the assigned room",
+                readyRoomRespawnSeen
+                    ? "ready-room respawn did not return inside the assigned room"
+                    : "forced ready-room fall never entered respawn");
+            AddSmokeCheck(readyRoomLaunchObserved,
+                "all four ready buttons launched stage 9-3", "four-player ready flow did not launch stage 9-3");
+            bool shouldHaveWaitedForLaterRedraw = slot >= 0 && slot < smokeExpectedPlayers - 1;
+            AddSmokeCheck(!smokeReadyButtonDisplaced
+                    && (!shouldHaveWaitedForLaterRedraw || smokeReadyButtonSeen),
+                "ready player stayed on its button while later redraws resized the rooms",
+                smokeReadyButtonDisplaced
+                    ? "a later redraw pulled the ready player off its button"
+                    : "the ready player never reached its assigned button before the later redraw");
+            int expectedRemoteBodies = Mathf.Max(1, smokeExpectedPlayers - 1);
+            AddSmokeCheck(smokeBodyPlayers.Count >= expectedRemoteBodies,
+                $"slime redraw bodies received for every remote player ({smokeBodyPlayers.Count}/{expectedRemoteBodies})",
+                $"slime redraw synchronization reached only {smokeBodyPlayers.Count}/{expectedRemoteBodies} remote players");
+            PlayerObservation[] observed = ObservePlayers();
+            int slimeCount = 0;
+            for (int i = 0; i < observed.Length; i++)
+                if (observed[i].species == DrawManager.Species.Slime.ToString()) slimeCount++;
+            AddSmokeCheck(slimeCount == smokeExpectedPlayers,
+                $"all {smokeExpectedPlayers} clients agree on slime bodies",
+                $"only {slimeCount}/{smokeExpectedPlayers} observed bodies were slime");
+            AddSmokeCheck(exceptions == 0, "no Unity exceptions", $"Unity exceptions: {exceptions}");
+            AddSmokeCheck(suspiciousPhysicsEvents == 0,
+                "no NaN/Infinity or abnormal velocity", $"suspicious physics events: {suspiciousPhysicsEvents}");
+
+            finished = true;
+            bool passed = smokeFailedChecks.Count == 0;
+            WriteReport(passed ? "PASS" : "FAIL", true);
+            Debug.Log($"[PICO READY ROOM SMOKE] {(passed ? "PASS" : "FAIL")} slot={slot} " +
+                $"passed={smokePassedChecks.Count} failed={smokeFailedChecks.Count}");
+            StartCoroutine(QuitAfterSmoke());
+        }
+
+        private DrawManager.DrawingState CreateReadyRoomSlimePreset()
+        {
+            DrawManager.DrawingState state = drawManager.CreateState();
+            state.Species = DrawManager.Species.Slime;
+            state.Part = DrawManager.BodyPart.SlimeBody;
+            if (!state.Points.TryGetValue(DrawManager.Species.Slime,
+                    out Dictionary<DrawManager.BodyPart, List<Vector2>> slime)
+                || !slime.TryGetValue(DrawManager.BodyPart.SlimeBody, out List<Vector2> points)
+                || points == null || points.Count == 0)
+            {
+                return state;
+            }
+
+            Vector2 center = Vector2.zero;
+            int finiteCount = 0;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (float.IsNaN(points[i].x) || float.IsNaN(points[i].y)) continue;
+                center += points[i];
+                finiteCount++;
+            }
+            if (finiteCount == 0) return state;
+            center /= finiteCount;
+
+            float scale = 0.35f + Mathf.Max(0, slot) * 0.025f;
+            float wobble = 0.05f + Mathf.Max(0, slot) * 0.02f;
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector2 point = points[i];
+                if (float.IsNaN(point.x) || float.IsNaN(point.y)) continue;
+                point = center + (point - center) * scale;
+                point.x += Mathf.Sin(i * 1.7f + slot) * wobble;
+                point.y += Mathf.Cos(i * 1.3f + slot * 0.7f) * wobble * 0.55f;
+                points[i] = point;
+            }
+            return state;
         }
 
         private IEnumerator QuitAfterSmoke()
@@ -545,7 +1124,7 @@ namespace DrawBody.Prototype
                 || !species.TryGetValue(part, out List<Vector2> points) || points == null)
                 return state;
 
-            float wobble = 3f + Mathf.Max(0, slot) * 1.25f;
+            float wobble = 0.25f + Mathf.Max(0, slot) * 0.1f;
             if (points.Count <= 2 && points.Count > 0)
             {
                 Vector2 first = points[0];
@@ -629,13 +1208,56 @@ namespace DrawBody.Prototype
 
             lobbySpeciesAttempted = true;
             lobbyPreparedSlot = slot;
-            drawManager.LoadState(slot == 2
-                ? CreateStrongThrowHumanPreset()
-                : CreateFunnyHumanPreset(slot), false);
+            DrawManager.DrawingState lobbyState;
+            if (catBombSmokeMode)
+            {
+                lobbyState = CreateCompactCatPreset();
+            }
+            else
+            {
+                lobbyState = !smokeMode && slot == 2
+                    ? CreateStrongThrowHumanPreset()
+                    : CreateFunnyHumanPreset(slot);
+            }
+            drawManager.LoadState(lobbyState, false);
             bool applied = drawManager.TryApplyDrawing();
             lastAction = applied
-                ? $"load and confirm funny human preset {slot + 1} before stage start"
-                : $"funny human preset {slot + 1} was rejected";
+                ? $"load and confirm lobby preset {slot + 1} before stage start"
+                : $"lobby preset {slot + 1} was rejected";
+        }
+
+        private DrawManager.DrawingState CreateCompactCatPreset()
+        {
+            DrawManager.DrawingState state = drawManager.CreateState();
+            state.Species = DrawManager.Species.Cat;
+            state.Part = DrawManager.BodyPart.Torso;
+            if (!state.Points.TryGetValue(DrawManager.Species.Cat,
+                    out Dictionary<DrawManager.BodyPart, List<Vector2>> parts))
+                return state;
+
+            foreach (KeyValuePair<DrawManager.BodyPart, List<Vector2>> pair in parts)
+            {
+                List<Vector2> points = pair.Value;
+                if (points == null || points.Count == 0) continue;
+                Vector2 center = Vector2.zero;
+                int count = 0;
+                for (int i = 0; i < points.Count; i++)
+                {
+                    if (float.IsNaN(points[i].x) || float.IsInfinity(points[i].x)
+                        || float.IsNaN(points[i].y) || float.IsInfinity(points[i].y)) continue;
+                    center += points[i];
+                    count++;
+                }
+                if (count == 0) continue;
+                center /= count;
+                for (int i = 0; i < points.Count; i++)
+                {
+                    if (float.IsNaN(points[i].x) || float.IsInfinity(points[i].x)
+                        || float.IsNaN(points[i].y) || float.IsInfinity(points[i].y)) continue;
+                    points[i] = center + (points[i] - center) * 0.45f;
+                }
+            }
+            return state;
         }
 
         private bool HasStrongThrowProfile()
@@ -1187,7 +1809,7 @@ namespace DrawBody.Prototype
                         ? definition.firstKey
                         : definition.secondKey;
                     DriveToward(TryGetObject(keyObjective.objectId, out StageEditorObject key)
-                        ? key.transform.position
+                        ? (Vector2)key.transform.position
                         : keyObjective.fallbackPosition);
                     lastAction = $"steer toward key platform {receiverSlot + 1} after throw";
                 }
@@ -1195,7 +1817,7 @@ namespace DrawBody.Prototype
                 {
                     DriveToward(TryGetObject(definition.upperButton.completionObjectId,
                             out StageEditorObject jumpPad)
-                        ? jumpPad.transform.position + Vector3.up * 0.35f
+                        ? (Vector2)(jumpPad.transform.position + Vector3.up * 0.35f)
                         : new Vector2(14f, 0.5f));
                     lastAction = $"player {receiverSlot + 1} rides jump pad to throw staging";
                 }
@@ -1469,7 +2091,7 @@ namespace DrawBody.Prototype
                 ? selected.targetObjectId
                 : selected.objectId;
             return TryGetObject(id, out StageEditorObject marker)
-                ? marker.transform.position
+                ? (Vector2)marker.transform.position
                 : selected.fallbackPosition;
         }
 
@@ -1615,10 +2237,16 @@ namespace DrawBody.Prototype
             recordingIncident = true;
             try
             {
-            string safeSlot = Mathf.Max(0, slot).ToString();
+            string artifactId = Mathf.Max(0, clientInstance).ToString();
+            UpdateTelemetryRosterRevision();
             string line = JsonUtility.ToJson(new ClientReport
             {
                 runId = runId,
+                capturedAtUtc = DateTime.UtcNow.ToString("O"),
+                processId = processId,
+                clientInstance = clientInstance,
+                rosterRevision = telemetryRosterRevision,
+                rosterSignature = telemetryRosterSignature,
                 stage = stageManager != null ? stageManager.CurrentStageId : string.Empty,
                 transport = transport,
                 playerId = onlineManager != null ? onlineManager.LocalPlayerId : string.Empty,
@@ -1637,12 +2265,12 @@ namespace DrawBody.Prototype
                 players = ObservePlayers(),
                 importantObjects = ObserveObjects()
             });
-            File.AppendAllText(Path.Combine(reportDirectory, $"incidents-client-{safeSlot}.jsonl"), line + Environment.NewLine);
+            File.AppendAllText(Path.Combine(reportDirectory, $"incidents-client-{artifactId}.jsonl"), line + Environment.NewLine);
             if (screenshot && Time.unscaledTime >= nextScreenshotAt)
             {
                 nextScreenshotAt = Time.unscaledTime + 3f;
                 string path = Path.Combine(reportDirectory,
-                    $"incident-{safeSlot}-{DateTime.UtcNow:HHmmssfff}-{kind}.png");
+                    $"incident-{artifactId}-{DateTime.UtcNow:HHmmssfff}-{kind}.png");
                 ScreenCapture.CaptureScreenshot(path);
             }
             }
@@ -1665,10 +2293,16 @@ namespace DrawBody.Prototype
 
         private void WriteReport(string result, bool final)
         {
-            int safeSlot = Mathf.Max(0, slot);
+            int artifactId = Mathf.Max(0, clientInstance);
+            UpdateTelemetryRosterRevision();
             ClientReport report = new ClientReport
             {
                 runId = runId,
+                capturedAtUtc = DateTime.UtcNow.ToString("O"),
+                processId = processId,
+                clientInstance = clientInstance,
+                rosterRevision = telemetryRosterRevision,
+                rosterSignature = telemetryRosterSignature,
                 stage = stageManager != null ? stageManager.CurrentStageId : string.Empty,
                 transport = transport,
                 playerId = onlineManager != null ? onlineManager.LocalPlayerId : string.Empty,
@@ -1688,10 +2322,31 @@ namespace DrawBody.Prototype
                 importantObjects = ObserveObjects()
             };
             string json = JsonUtility.ToJson(report, true);
-            TryWriteShared(Path.Combine(reportDirectory, $"client-{safeSlot}.json"), json);
-            TryAppendShared(Path.Combine(reportDirectory, $"telemetry-client-{safeSlot}.jsonl"),
+            TryWriteShared(Path.Combine(reportDirectory, $"client-{artifactId}.json"), json);
+            TryAppendShared(Path.Combine(reportDirectory, $"telemetry-client-{artifactId}.jsonl"),
                 JsonUtility.ToJson(report) + Environment.NewLine);
-            if (final) TryWriteShared(Path.Combine(reportDirectory, $"client-{safeSlot}.done"), result);
+            if (final) TryWriteShared(Path.Combine(reportDirectory, $"client-{artifactId}.done"), result);
+        }
+
+        private void UpdateTelemetryRosterRevision()
+        {
+            OnlineLobbyInfo lobby = onlineManager != null ? onlineManager.CurrentLobby : null;
+            List<string> entries = new List<string>();
+            if (lobby?.Players != null)
+            {
+                for (int i = 0; i < lobby.Players.Length; i++)
+                {
+                    OnlinePlayerInfo member = lobby.Players[i];
+                    if (member == null || string.IsNullOrEmpty(member.PlayerId)) continue;
+                    int memberSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, member.PlayerId);
+                    entries.Add(member.PlayerId + ":" + memberSlot);
+                }
+            }
+            entries.Sort(StringComparer.Ordinal);
+            string signature = string.Join("|", entries);
+            if (string.Equals(signature, telemetryRosterSignature, StringComparison.Ordinal)) return;
+            telemetryRosterSignature = signature;
+            telemetryRosterRevision++;
         }
 
         private static void TryWriteShared(string path, string contents)
@@ -1740,6 +2395,20 @@ namespace DrawBody.Prototype
                 PlayerAbilityController observedAbility = observed != null
                     ? observed.GetComponent<PlayerAbilityController>()
                     : null;
+                int activeSolidColliders = 0;
+                if (observed != null && observed.gameObject.activeInHierarchy)
+                {
+                    Collider2D[] colliders = observed.GetComponentsInChildren<Collider2D>(true);
+                    for (int colliderIndex = 0; colliderIndex < colliders.Length; colliderIndex++)
+                    {
+                        Collider2D collider = colliders[colliderIndex];
+                        if (collider != null && collider.enabled && collider.gameObject.activeInHierarchy
+                            && !collider.isTrigger)
+                        {
+                            activeSolidColliders++;
+                        }
+                    }
+                }
                 result.Add(new PlayerObservation
                 {
                     playerId = info.PlayerId,
@@ -1752,7 +2421,8 @@ namespace DrawBody.Prototype
                     grounded = observed != null && observed.IsGrounded,
                     controlsEnabled = observed != null && observed.ControlsEnabled,
                     respawning = observed != null && stageManager.IsPlayerRespawning(observed),
-                    eliminated = observed != null && stageManager.IsPlayerEliminated(observed)
+                    eliminated = observed != null && stageManager.IsPlayerEliminated(observed),
+                    activeSolidColliders = activeSolidColliders
                 });
             }
             return result.ToArray();

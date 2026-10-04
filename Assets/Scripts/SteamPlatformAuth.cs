@@ -11,7 +11,17 @@ namespace DrawBody.Prototype
     /// </summary>
     internal sealed class SteamPlatformAuth : MonoBehaviour
     {
-        internal const uint AppId = 5230890;
+#if NICO_DRAW_PLAYTEST
+        // Private Steam Playtest app used for final multiplayer verification.
+        internal const uint AppId = SteamDistributionIds.PlaytestAppId;
+#elif NICO_DRAW_DEMO
+        // Public Steam demo app. Steam release builds currently include the
+        // demo content filter, so they must restart/initialize against this app.
+        internal const uint AppId = SteamDistributionIds.DemoAppId;
+#else
+        // Kept for explicit non-demo Steam test builds.
+        internal const uint AppId = SteamDistributionIds.PlaytestAppId;
+#endif
         private const int InitialTicketBufferSize = 1024;
         private const string EosTicketAudience = "epiconlineservices";
 

@@ -97,6 +97,8 @@ namespace DrawBody.Prototype
         private readonly List<Transform> bossOrbitShards = new List<Transform>();
         private readonly Dictionary<PlayerController2D, Dictionary<Renderer, bool>> hiddenPlayerRenderers =
             new Dictionary<PlayerController2D, Dictionary<Renderer, bool>>();
+        private readonly Dictionary<PlayerController2D, Dictionary<Collider2D, bool>> hiddenPlayerColliders =
+            new Dictionary<PlayerController2D, Dictionary<Collider2D, bool>>();
 
         private StageManager stageManager;
         private OnlineManager onlineManager;
@@ -965,6 +967,7 @@ namespace DrawBody.Prototype
         {
             if (player == null) return;
             Renderer[] renderers = player.GetComponentsInChildren<Renderer>(true);
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(true);
             if (!visible)
             {
                 if (!hiddenPlayerRenderers.ContainsKey(player))
@@ -976,15 +979,32 @@ namespace DrawBody.Prototype
                 }
                 for (int i = 0; i < renderers.Length; i++)
                     if (renderers[i] != null) renderers[i].enabled = false;
+                if (!hiddenPlayerColliders.ContainsKey(player))
+                {
+                    Dictionary<Collider2D, bool> states = new Dictionary<Collider2D, bool>();
+                    for (int i = 0; i < colliders.Length; i++)
+                        if (colliders[i] != null) states[colliders[i]] = colliders[i].enabled;
+                    hiddenPlayerColliders[player] = states;
+                }
+                for (int i = 0; i < colliders.Length; i++)
+                    if (colliders[i] != null) colliders[i].enabled = false;
                 return;
             }
 
             // Hand-drawn bodies intentionally contain disabled helper/fill
             // renderers. Restore only the state captured at elimination time.
-            if (!hiddenPlayerRenderers.TryGetValue(player, out Dictionary<Renderer, bool> savedStates)) return;
-            foreach (KeyValuePair<Renderer, bool> state in savedStates)
-                if (state.Key != null) state.Key.enabled = state.Value;
-            hiddenPlayerRenderers.Remove(player);
+            if (hiddenPlayerRenderers.TryGetValue(player, out Dictionary<Renderer, bool> savedStates))
+            {
+                foreach (KeyValuePair<Renderer, bool> state in savedStates)
+                    if (state.Key != null) state.Key.enabled = state.Value;
+                hiddenPlayerRenderers.Remove(player);
+            }
+            if (hiddenPlayerColliders.TryGetValue(player, out Dictionary<Collider2D, bool> savedColliderStates))
+            {
+                foreach (KeyValuePair<Collider2D, bool> state in savedColliderStates)
+                    if (state.Key != null) state.Key.enabled = state.Value;
+                hiddenPlayerColliders.Remove(player);
+            }
         }
 
         private void RefreshMonitor()

@@ -966,7 +966,7 @@ namespace DrawBody.Prototype
         {
             if (monitorTitle == null) return;
             monitorTitle.text = LocalizationManager.T("cat_escape_title");
-            if (phase == 0) monitorStatus.text = "READY";
+            if (phase == 0) monitorStatus.text = LocalizationManager.T("stage_ready_label");
             else if (phase == 1) monitorStatus.text = LocalizationManager.Format("cat_escape_ready", Mathf.CeilToInt(clock));
             else monitorStatus.text = LocalizationManager.T("cat_escape_go");
             if (roomStatus != null)

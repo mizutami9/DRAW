@@ -129,7 +129,7 @@ namespace DrawBody.Prototype
                     stageManager?.RequestLeaveSession();
                     break;
                 case Command.CloseDrawing:
-                    stageManager?.CancelDrawingMode();
+                    stageManager?.RequestCancelDrawingMode();
                     break;
                 case Command.StageSelect:
                     if (uiManager != null) uiManager.ShowGameplayActionConfirm(Command.StageSelect);

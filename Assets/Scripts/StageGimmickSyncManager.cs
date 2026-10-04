@@ -26,6 +26,7 @@ namespace DrawBody.Prototype
         private const string KindBombWallDamage = "bomb_wall_damage";
         private const string KindBombArmRequest = "bomb_arm_request";
         private const string KindBombArmState = "bomb_arm_state";
+        private const string KindBombDetonateRequest = "bomb_detonate_request";
         private const string KindPlacedEnemyDefeatRequest = "placed_enemy_defeat_request";
         private const string KindPlacedEnemyDefeatState = "placed_enemy_defeat_state";
 
@@ -65,6 +66,13 @@ namespace DrawBody.Prototype
         private int sequence;
         private int snapshotRequestAttempts;
         private float nextSnapshotRequestAt;
+
+        [System.Serializable]
+        private sealed class LinkActivationRequestState
+        {
+            public bool HasKeyPosition;
+            public Vector2 KeyPosition;
+        }
 
         [System.Serializable]
         private sealed class OwnershipState
@@ -324,6 +332,23 @@ namespace DrawBody.Prototype
             {
                 ObjectId = objectId,
                 Kind = KindBombArmRequest,
+                Json = "{}"
+            });
+        }
+
+        public void RequestDetonateBomb(string objectId)
+        {
+            if (string.IsNullOrEmpty(objectId)) return;
+            if (!IsOnlineActive || IsHost)
+            {
+                DetonateBombById(objectId);
+                return;
+            }
+
+            Send(new OnlineGimmickData
+            {
+                ObjectId = objectId,
+                Kind = KindBombDetonateRequest,
                 Json = "{}"
             });
         }
@@ -668,6 +693,25 @@ namespace DrawBody.Prototype
             });
         }
 
+        public void RequestKeyLinkActivation(string sourceObjectId, Transform key)
+        {
+            if (string.IsNullOrEmpty(sourceObjectId) || !IsOnlineActive)
+            {
+                return;
+            }
+
+            Send(new OnlineGimmickData
+            {
+                ObjectId = sourceObjectId,
+                Kind = KindLinkRequest,
+                Json = JsonUtility.ToJson(new LinkActivationRequestState
+                {
+                    HasKeyPosition = key != null,
+                    KeyPosition = key != null ? (Vector2)key.position : Vector2.zero
+                })
+            });
+        }
+
         public void RequestHeldButtonState(string sourceObjectId, bool held)
         {
             if (string.IsNullOrEmpty(sourceObjectId) || !IsOnlineActive)
@@ -805,7 +849,10 @@ namespace DrawBody.Prototype
             {
                 if (IsHost)
                 {
-                    ResolveLinkController()?.HandleActivationRequest(data.ObjectId);
+                    LinkActivationRequestState state = JsonUtility.FromJson<LinkActivationRequestState>(data.Json);
+                    ResolveLinkController()?.HandleActivationRequest(
+                        data.ObjectId,
+                        state != null && state.HasKeyPosition ? state.KeyPosition : (Vector2?)null);
                 }
 
                 return;
@@ -945,6 +992,12 @@ namespace DrawBody.Prototype
                     return;
                 }
                 ApplyBombArm(data.ObjectId);
+                return;
+            }
+
+            if (data.Kind == KindBombDetonateRequest)
+            {
+                if (IsHost) DetonateBombById(data.ObjectId);
                 return;
             }
 
@@ -1800,6 +1853,20 @@ namespace DrawBody.Prototype
                     bombs[i].ArmFromNetwork();
                     return;
                 }
+            }
+        }
+
+        private void DetonateBombById(string objectId)
+        {
+            if (string.IsNullOrEmpty(objectId)) return;
+            StageBomb[] bombs = Object.FindObjectsByType<StageBomb>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < bombs.Length; i++)
+            {
+                StageBomb bomb = bombs[i];
+                if (bomb == null || bomb.HasExploded || bomb.ObjectId != objectId) continue;
+                DetonateBomb(objectId, bomb.transform.position, bomb.BlastRadius);
+                return;
             }
         }
 

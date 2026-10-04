@@ -331,7 +331,7 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (!IsOnline() || !HasAuthority() || Time.unscaledTime < nextSnapshotAt) return;
-            nextSnapshotAt = Time.unscaledTime + 0.75f;
+            nextSnapshotAt = Time.unscaledTime + 0.2f;
             BroadcastBulletSnapshot();
         }
 
@@ -402,7 +402,7 @@ namespace DrawBody.Prototype
             {
                 BulletMotionData data = JsonUtility.FromJson<BulletMotionData>(message.Json);
                 if (data != null && bullets.TryGetValue(data.Sequence, out StageGunBullet bullet) && bullet != null)
-                    bullet.ApplyNetworkEnd();
+                    bullet.ApplyNetworkEnd(data.Position);
             }
             else if (message.Kind == WallKind && !HasAuthority() && IsHost(message.PlayerId))
             {
@@ -612,6 +612,7 @@ namespace DrawBody.Prototype
                 StageBalloonTarget balloon = collider.GetComponentInParent<StageBalloonTarget>();
                 if (balloon != null)
                 {
+                    transform.position = hits[i].point;
                     balloon.Hit(hits[i].point);
                     return true;
                 }
@@ -708,6 +709,13 @@ namespace DrawBody.Prototype
             if (ending) return;
             ending = true;
             Destroy(gameObject);
+        }
+
+        public void ApplyNetworkEnd(Vector2 authoritativePosition)
+        {
+            if (ending) return;
+            transform.position = authoritativePosition;
+            ApplyNetworkEnd();
         }
 
         private void EndAuthoritative()
@@ -814,6 +822,7 @@ namespace DrawBody.Prototype
         {
             public int Sequence;
             public int BrokenMask;
+            public float MotionClock;
         }
 
         private StageBalloonTarget[] balloons = new StageBalloonTarget[0];
@@ -827,6 +836,8 @@ namespace DrawBody.Prototype
         private float nextSnapshotAt;
         private bool barrierClearedApplied;
         private float highestSpikeTopY = float.NegativeInfinity;
+        private float motionClockOffset;
+        private bool hasMotionClock;
 
         private bool HasAuthority => stageManager == null
             || !stageManager.IsOnlineStageActive
@@ -874,7 +885,7 @@ namespace DrawBody.Prototype
         {
             if (stageManager != null && stageManager.CurrentStageId != StageId) return;
             if (!HasAuthority || !IsOnline() || Time.unscaledTime < nextSnapshotAt) return;
-            nextSnapshotAt = Time.unscaledTime + 1f;
+            nextSnapshotAt = Time.unscaledTime + 0.25f;
             BroadcastState();
         }
 
@@ -934,7 +945,7 @@ namespace DrawBody.Prototype
             root.transform.position = position;
             root.transform.localScale = Vector3.one * BalloonVisualScale;
             balloons[index] = root.AddComponent<StageBalloonTarget>();
-            balloons[index].Configure(HitBalloon, index, color, motion, travel, speed, phase);
+            balloons[index].Configure(HitBalloon, index, color, motion, travel, speed, phase, GetMotionClock);
         }
 
         private void FindBarrierObjects()
@@ -1034,6 +1045,11 @@ namespace DrawBody.Prototype
             if (state == null || state.Sequence < appliedSequence) return;
             appliedSequence = state.Sequence;
             brokenMask = state.BrokenMask;
+            float receivedOffset = state.MotionClock - Time.time;
+            motionClockOffset = hasMotionClock
+                ? Mathf.Lerp(motionClockOffset, receivedOffset, 0.35f)
+                : receivedOffset;
+            hasMotionClock = true;
             ApplyState();
         }
 
@@ -1047,9 +1063,15 @@ namespace DrawBody.Prototype
                 Json = JsonUtility.ToJson(new GalleryState
                 {
                     Sequence = sequence,
-                    BrokenMask = brokenMask
+                    BrokenMask = brokenMask,
+                    MotionClock = Time.time
                 })
             });
+        }
+
+        private float GetMotionClock()
+        {
+            return HasAuthority || !hasMotionClock ? Time.time : Time.time + motionClockOffset;
         }
 
         private bool IsOnline()
@@ -1088,9 +1110,11 @@ namespace DrawBody.Prototype
         private bool popped;
         private CircleCollider2D hitbox;
         private Renderer[] renderers;
+        private System.Func<float> clockProvider;
 
         internal void Configure(System.Action<int, Vector2> onHit, int balloonIndex, Color color,
-            Motion motionMode, Vector2 movement, float movementSpeed, float movementPhase)
+            Motion motionMode, Vector2 movement, float movementSpeed, float movementPhase,
+            System.Func<float> motionClockProvider = null)
         {
             hitHandler = onHit;
             index = balloonIndex;
@@ -1099,20 +1123,22 @@ namespace DrawBody.Prototype
             travel = movement;
             speed = movementSpeed;
             phase = movementPhase;
+            clockProvider = motionClockProvider;
             BuildVisual(color);
         }
 
         private void Update()
         {
             if (popped) return;
-            float clock = Time.time * Mathf.Max(0.01f, speed) + phase;
+            float motionTime = clockProvider != null ? clockProvider() : Time.time;
+            float clock = motionTime * Mathf.Max(0.01f, speed) + phase;
             if (motion == Motion.Oscillate || motion == Motion.Blink)
             {
                 transform.position = origin + travel * Mathf.Sin(clock);
             }
             if (motion != Motion.Blink) return;
 
-            float cycle = Mathf.Repeat(Time.time + phase, 4.2f);
+            float cycle = Mathf.Repeat(motionTime + phase, 4.2f);
             float alpha = cycle < 2.55f ? 1f
                 : cycle < 2.9f ? Mathf.InverseLerp(2.9f, 2.55f, cycle)
                 : cycle < 3.65f ? 0f

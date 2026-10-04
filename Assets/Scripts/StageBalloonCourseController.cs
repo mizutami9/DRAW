@@ -205,7 +205,9 @@ namespace DrawBody.Prototype
                 if (floor != null) floor.SetActive(!cleared);
                 if (cleared && !floorClearedApplied[section])
                 {
-                    Vector2 effectPosition = floor != null ? floor.transform.position : Vector2.zero;
+                    Vector2 effectPosition = floor != null
+                        ? (Vector2)floor.transform.position
+                        : Vector2.zero;
                     GameSfx.PlayAt(SfxId.BombWallBreak, effectPosition, 0.82f);
                     if (section == 2) CreateFloorBreakEffect(effectPosition);
                 }

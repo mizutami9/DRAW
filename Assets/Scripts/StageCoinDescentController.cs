@@ -128,7 +128,11 @@ namespace DrawBody.Prototype
             {
                 PlayerController2D player = players[i];
                 if (player == null || IsEliminated(player)) continue;
-                if (IsOnline() && player.transform != localPlayer) continue;
+                // Offline added characters share one input source. Only the
+                // selected character may consume that input; the other one must
+                // remain a fully simulated physics target so throws keep their
+                // velocity.
+                if (player.transform != localPlayer) continue;
                 player.SetControlsEnabled(true);
             }
         }

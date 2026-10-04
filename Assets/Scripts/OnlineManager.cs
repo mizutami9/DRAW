@@ -87,6 +87,7 @@ namespace DrawBody.Prototype
             public string CoordinationPath;
             public int Port = 7777;
             public int ExpectedPlayers = 2;
+            public int StartPlayers = 2;
             public string StageId = "1-1";
             public string PlayerName;
         }
@@ -97,6 +98,13 @@ namespace DrawBody.Prototype
         public event Action<OnlineCarryData> CarryDataReceived;
         public event Action<OnlineGimmickData> GimmickDataReceived;
         private static int nextLocalBodyRevision;
+
+        /// <summary>
+        /// Latest body revision published by this client. Ready-room messages use
+        /// this value to prevent a peer from validating an older remote body when
+        /// redraw completion and body packets arrive on different channels.
+        /// </summary>
+        public int LocalBodyRevision => nextLocalBodyRevision;
         public OnlineConnectionState State => backend != null ? backend.State : OnlineConnectionState.Offline;
         public OnlineLobbyInfo CurrentLobby => backend != null ? backend.CurrentLobby : null;
         public string LocalPlayerId => backend != null ? backend.LocalPlayerId : string.Empty;
@@ -268,7 +276,7 @@ namespace DrawBody.Prototype
                 while (Time.unscaledTime < deadline)
                 {
                     OnlinePlayerInfo[] players = CurrentLobby?.Players;
-                    if (CountPlayers(players) >= localRegression.ExpectedPlayers && AreAllPlayersReady(players))
+                    if (CountPlayers(players) >= localRegression.StartPlayers && AreAllPlayersReady(players))
                     {
                         if (localRegression.FullFlow)
                         {
@@ -372,7 +380,12 @@ namespace DrawBody.Prototype
             if (int.TryParse(GetCommandLineValue(args, "-pico-regression-port"), out int port))
                 result.Port = Mathf.Clamp(port, 1024, 65535);
             if (int.TryParse(GetCommandLineValue(args, "-pico-regression-players"), out int players))
+            {
                 result.ExpectedPlayers = Mathf.Clamp(players, 2, 4);
+                result.StartPlayers = result.ExpectedPlayers;
+            }
+            if (int.TryParse(GetCommandLineValue(args, "-pico-regression-start-players"), out int startPlayers))
+                result.StartPlayers = Mathf.Clamp(startPlayers, 2, result.ExpectedPlayers);
             return result;
         }
 
@@ -928,8 +941,17 @@ namespace DrawBody.Prototype
                     SerializableBodyPartDrawing part = body.Parts[i];
                     if (part == null || !IsFinite(part.Ink) || part.Ink < 0f
                         || part.Ink > DrawManager.IndividualInkLimit + 0.01f
-                        || part.Points == null || part.Points.Length > 20000)
+                        || part.Points == null || part.Points.Length > 20000
+                        || part.StrokeWidths != null && part.StrokeWidths.Length > part.Points.Length)
                         return false;
+                    if (part.StrokeWidths != null)
+                    {
+                        for (int widthIndex = 0; widthIndex < part.StrokeWidths.Length; widthIndex++)
+                        {
+                            float width = part.StrokeWidths[widthIndex];
+                            if (!IsFinite(width) || width < 1f || width > 30f) return false;
+                        }
+                    }
                     totalInk += part.Ink;
                     if (totalInk > DrawManager.IndividualInkLimit + 0.01f) return false;
                     for (int pointIndex = 0; pointIndex < part.Points.Length; pointIndex++)

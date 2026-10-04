@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "Objectif  {0:0}g (90g x PLAYEURS)"
+      "value": "Objectif  {0:0}g (70g x PLAYEURS)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Quitter le niveau actuel et revenir à la sélection des niveaux ?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Les modifications inachevées ne seront pas enregistrées. Revenir sans enregistrer ?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "REVENIR SANS ENREGISTRER"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Le personnage redessiné a été enregistré."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Échec de l’enregistrement. Appuyez de nouveau sur « TERMINÉ »."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "SÉLECTION DES NIVEAUX"
     },
     {
       "key": "online_content_mismatch",
       "value": "Le jeu en ligne est indisponible car les données ou la version du jeu ne correspondent pas. Vérifiez les fichiers du jeu dans Steam."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "La connexion à la session a été perdue. Rejoignez de nouveau le salon."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "MULTIJOUEUR RECOMMANDÉ !" },
     { "key": "single_recommend_message", "value": "NICO DRAW est encore meilleur en coopérant !\nEssayez d’y jouer à 2–4 joueurs !" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Quitter NICO DRAW ?" }
+    ,{ "key": "title_exit_confirm", "value": "Quitter NICO DRAW ?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} utilise déjà ce personnage. Envoyer une demande d’échange ?" },
+    { "key": "draw_species_swap_send", "value": "ENVOYER LA DEMANDE" },
+    { "key": "background_word_push", "value": "POUSSE !" }
   ]
 }

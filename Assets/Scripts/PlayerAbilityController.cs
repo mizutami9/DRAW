@@ -76,6 +76,15 @@ namespace DrawBody.Prototype
             return profile;
         }
 
+#if NICO_DRAW_AI_TEST
+        internal void ForceSpeciesForTest(DrawManager.Species species)
+        {
+            AbilityProfile profile = CurrentProfile;
+            profile.Species = species;
+            ApplyProfile(profile);
+        }
+#endif
+
         public static AbilityProfile CalculateProfile(DrawManager drawManager)
         {
             DrawManager.Species species = drawManager.CurrentSpecies;
@@ -219,7 +228,10 @@ namespace DrawBody.Prototype
         public static float CalculateHumanJumpMultiplier(float legInk)
         {
             float ratio = Mathf.Clamp01(Mathf.Max(0f, legInk) / 160f);
-            return Mathf.Lerp(1f, 3f, ratio * ratio);
+            // The human should feel capable with the stock drawing while long
+            // legs still provide a visible, bounded upgrade.  The requested
+            // range is 1.5x at minimum and 1.2 times the former 1.5x cap.
+            return Mathf.Lerp(1.5f, 1.8f, ratio * ratio);
         }
 
         private float GetMass(TorsoTier tier)

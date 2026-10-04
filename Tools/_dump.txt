@@ -1,0 +1,252 @@
+== 独立営業先_メイン
+No.|区分|代表窓口（候補名）|営業グループ名|営業言語|確認ゲーム|複数人実況の根拠・実績|共演者・グループメンバー|証拠URL・情報ソース|X URL|配信先（YouTube / Twitch）|国・地域|主戦場|連絡方法|選定理由・相性
+1|既存維持|Lonroce|Lonroce グループ|繁体字中国語|PICO PARK 2|固定メンバー4人を明記した複数回のPICO PARK 2告知を確認|舒鼠鼠數|https://streamscharts.com/channels/lonroce/statistics ; https://twstalker.com/LonroceDE|https://x.com/LonroceDE|https://www.twitch.tv/lonroce|台湾|Twitch|X DM候補|台湾のTwitch配信者。中国語圏。複数配信者とのゲームコラボを継続。
+2|既存維持|柊むらさき / Hiragi Murasaki|台湾 MECCHAコラボグループ|繁体字中国語|MECCHA CHAMELEON|7/10大型コラボ・連動対象として確認|柳葉魚子醬 / Yanagiba Nanako / 夢見ルノ / Runo / 涅菈 Nera / Nera_Reverie|https://vkol.link/live/meccha-chameleonft ; https://vtubie.com/hiragi-murasaki/|https://x.com/hiragi_murasaki|https://www.youtube.com/@柊むらさき|台湾|YouTube / X|X DM|台湾VTuber/VSinger。MECCHA CHAMELEON大型コラボ参加。
+3|既存維持|Kymani / kymaniklowni|Kymani MECCHAグループ|英語|MECCHA CHAMELEON|共演者5名をタイトルに明記したMECCHA配信|Midorin / Lemon / theLemonCitron / Codename: Echo / TheLarxa|https://w.twstalker.com/kymaniklowni|https://x.com/kymaniklowni|https://www.twitch.tv/kymaniklowni|英語圏|X / Twitch|X DM / business email|英語VTuber。MECCHA CHAMELEONコラボ主催。
+4|既存維持|krillianvt|krillian PICO PARK 2グループ|フランス語|PICO PARK 2|6/17に5名の共演者を明記、3時間プレイ|payavt / starpriism|https://vtubie.com/krillian/ ; https://www.twitchmetrics.net/c/748232316-krillianvt|https://x.com/krillianVT|https://www.twitch.tv/krillianvt|英語 / フランス語圏|Twitch|X DM / Twitch / Discord|英語・フランス語VTuber。インディーゲーム中心。公開X・Twitch・Discordあり。
+5|既存維持|Koemi Eimii|タイ MECCHAコラボグループ|タイ語|MECCHA CHAMELEON|7/27本人コラボ告知・複数VTuber共演|PopKorn163 / Miledy Z / Harumoon / Mizuhara Yami / Sienna [RE:S] / Meteona Mars|https://hololist.net/koemi-eimii/ ; https://vtubie.com/koemi-eimii/ ; https://twstalker.co|https://x.com/Eimiichan__|https://www.youtube.com/@KoemiEimii ; https://www.twitch.tv/eimiichan_|タイ|YouTube / Twitch|X DM / Discord / Twitch|TH/ENの個人VTuber。2026年9月も高頻度活動。
+6|既存維持|Bebe Duck|DayJobÜ PH|英語|L4D2 / 協力ゲーム|DayJobÜ固定コラボ相手として複数回確認|SralZoren / Zoren / Kyun Shino|https://bacharu.io/vtuber/bebe-duck ; https://vtubie.com/bebe-duck/|https://x.com/bebeduckVT|https://www.youtube.com/@bebeduckVT ; https://www.twitch.tv/bebeduckVT|フィリピン|YouTube / Twitch|X DM / Twitch / Carrd|PH/ENの独立VTuber・VDesigner。DayJobÜ創設メンバー。現在活動中。
+7|既存維持|PsychoDcast|PsychoDcast PICO PARK 2 グループ|英語|PICO PARK 2|2026-01-01 PICO PARK 2 8人コラボ告知・英語圏ネットワーク|Kotoki / tigerish / TIGERINTOKYO / Aurelia Lillia / Steamypot / AngryOwlCat / HanahPanda /|2026-01-01 PICO PARK 2 collab告知|https://x.com/PsychoDcast|https://www.twitch.tv/psychodcast|英語圏|Twitch / X|X DM候補|英語圏ポッドキャスト・ゲーム配信者。8人規模のPICO PARK 2コラボ主催。
+8|既存維持|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)|英語|Overcooked! 2 / Content Warning|「めっちゃカメレオン」メンバーとしてOvercooked! 2やContent Warningを定期共演|宇宙色きのこ / Sorairo Kinoko / Amelie Kanon / アメリー・カノン / さんご。 / シャルロット・リリー / 恣ノ宮うか|https://www.youtube.com/watch?v=lmYu2CJWz8c ; https://www.youtube.com/channel/UCqQb-TTl7VI|https://x.com/Lunon_Azu_|https://www.youtube.com/@Lunon_azu|英語圏|YouTube|X DM / YouTube|個人VTuber。ゲーム中心で2026/9も活動。
+9|既存維持|雨閖ナムフォン|ナムフォン＆つくる PICO PARK 2組|日本語|PICO PARK 2|PICO PARK 2 鼎談コラボ配信・複数回共演|黒須つくる / 潤田一佐|https://vtuber-post.com/database/detail.php?id=UC0g1DkNCqX7IS5HNiWiDsNw|https://x.com/namfon_lily|https://www.youtube.com/channel/UC0g1DkNCqX7IS5HNiWiDsNw|日本|YouTube|YouTube / X公開情報で未特定（2026-09-25検索済）|日本の小規模VTuber。少人数コラボを実施している。
+10|既存維持|BlurCyrus|BlurCyrus Game Night組|英語|PICO PARK 2|3人Game Night / PICO PARK 2 Chaos配信|madmill / lanvoine|https://twitchtracker.com/blurcyrus/streams|https://x.com/blur_cyrus|https://www.twitch.tv/blurcyrus|シンガポール|Twitch|X DM / Twitch / !socials|SG/EN Twitch配信者。!socials導線あり。複数人ゲームナイト/コラボを継続。
+11|既存維持|INFERIA|INFERIA（単独窓口）|英語|PICO PARK 2|2026年6月の2周年企画でPICO PARK 2をグループ配信。|コラボ仲間（配信時に都度招集）|https://x.com/InferiaVT|https://x.com/InferiaVT|https://www.twitch.tv/natsu_inferia|英語圏|Twitch中心のVTuberグループ|X DM / 公開contact|英語圏VTuberグループ。複数メンバーで活動し、コラボ配信が前提の体制。
+12|既存維持|V4_Hawthorn|V4_Hawthorn（単独窓口）|英語|MECCHA CHAMELEON|配信タイトルに『Playing Meccha Chameleon w/ Friends!』と明記。|コラボ仲間（配信時に都度招集）|https://twitracker.com/streamers/v4_hawthorn ; https://mobile.twstalker.com/Momochiii_vt|https://x.com/V4_Hawthorn|https://www.twitch.tv/v4_hawthorn|英語圏|Twitch|X DM / Twitch / Discord|英語圏Twitch Affiliate。2026年9月も活動。MECCHA CHAMELEONをfriendsとプレイ。
+13|既存維持|Kisekipie|Kisekipie（単独窓口）|英語|Big Walk / 協力ゲーム|Twitchプロフィールに本人X @Kisekipie_Angel明記。Big Walk等の複数人配信実績。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/c/213400888-kisekipie|https://x.com/Kisekipie_Angel|https://www.twitch.tv/kisekipie|英語圏|X / Twitch|X DM / Twitch|英語/スペイン語ストリーマー。MECCHA CHAMELEON配信ランキング掲載。
+14|既存維持|PhoebeBang|PhoebeBang（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEONをfriendsと配信。プロフィールでもREPO/Phasmophobia等の複数人ゲームを明記。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/c/47097191-phoebebang|https://x.com/PhoebeBang|https://www.twitch.tv/phoebebang|英語圏|Twitch / X|X DM / Twitch|英語ストリーマー。cozy＋friendsとのmultiplayer中心。MECCHA CHAMELEON配信実績。
+15|既存維持|Falem Star|Falem Star（単独窓口）|英語|MECCHA CHAMELEON|本人X周辺でBritish VTuberとのMECCHA CHAMELEONコラボ確認。|コラボ仲間（配信時に都度招集）|https://mobile.twstalker.com/StardemonFalem|https://x.com/StardemonFalem|https://www.twitch.tv/stardemonfalem|英語圏|X / Twitch|X DM|英語VTuber。MECCHA CHAMELEONコラボ予定を共有。
+16|既存維持|Kimi Mera|Kimi Mera（単独窓口）|英語|MECCHA CHAMELEON|本人が『bunch of lovely friends』とのMECCHA CHAMELEONを告知。|コラボ仲間（配信時に都度招集）|https://twstalker.com/KimiMeraVT|https://x.com/KimiMeraVT|https://www.twitch.tv/kimimeravt|英語圏|X / Twitch|X DM|英語Chimera VTuber。MECCHA CHAMELEON大型コラボ参加。
+17|既存維持|NessyXS|NessyXS（単独窓口）|英語|PICO PARK 2|2026-08-29『Let's Play Pico Park 2 with friends』。友人組での協力実況が明示。|コラボ仲間（配信時に都度招集）|https://streamscharts.com/channels/nessyxs|https://x.com/nessy_xs|https://www.twitch.tv/nessyxs|英語圏|Twitch|X DM / Twitch|英語Twitch Affiliate。小規模の友人コラボ型。
+18|既存維持|Kamiimaru|Kamiimaru（単独窓口）|英語|MECCHA CHAMELEON|TwitchMetricsでMECCHA CHAMELEON主要カテゴリ確認。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/c/428857074-kamiimaru|https://x.com/Kamiimaru|https://www.twitch.tv/kamiimaru|英語圏|Twitch|X DM / Twitch|英語Koi God VTuber。MECCHA CHAMELEON配信実績。
+19|既存維持|Domino Muryo|Domino Muryo（単独窓口）|英語|MECCHA CHAMELEON|本人XでfriendsとのMECCHA CHAMELEONを告知。|コラボ仲間（配信時に都度招集）|https://w.twstalker.com/DominoMuryo|https://x.com/DominoMuryo|https://www.twitch.tv/dominomuryo|英語圏|X / Twitch|X DM|英語VTuber。MECCHA CHAMELEONをCivil and friendsとプレイ。
+20|既存維持|Ramen Doodles VT|Ramen Doodles VT（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEON英語ランキング掲載。CarrdでX/Twitch/Discord/Email確認済み。|コラボ仲間（配信時に都度招集）|https://ramendood1es.carrd.co/ ; https://www.twitchmetrics.net/channels/follower?game=MECC|https://x.com/RamenDood1es|https://www.twitch.tv/ramendood1es|英語圏|X / Twitch|X DM / Discord / email|英語VTuber・アーティスト。MECCHA CHAMELEON配信実績あり。
+21|既存維持|KotaWaruu|KotaWaruu（単独窓口）|英語|MECCHA CHAMELEON|本人XでMECCHA CHAMELEON collab告知。|コラボ仲間（配信時に都度招集）|https://www.twstalker.com/KotaWaruu|https://x.com/KotaWaruu|https://www.twitch.tv/kotawaruu|英語圏|X / Twitch|X DM|英語VTuber。MECCHA CHAMELEONコラボを告知・参加。
+22|既存維持|Nimo_55|Nimo_55（単独窓口）|英語|PICO PARK 2|GameChangersGGs系のPICO PARK 2大人数コラボ参加実績。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/channels/follower?game=Europa+Universalis+IV ; https://x.com|https://x.com/nimo_55|https://www.twitch.tv/nimo_55|英語圏|Twitch|X DM候補|英語圏のTwitch Affiliate。ゲーム配信中心。2026年も活動。
+23|既存維持|AikaMeii|AikaMeii（単独窓口）|英語|MECCHA CHAMELEON|本人Xで『Some pewpews before Meccha Chameleon』と配信告知。|コラボ仲間（配信時に都度招集）|https://www.twstalker.com/KotaWaruu|https://x.com/AikaMeii|https://www.twitch.tv/aikameii|英語圏|X / Twitch|X DM|英語VTuber。MECCHA CHAMELEON配信を本人告知。
+24|既存維持|Echo Astea|Echo Astea（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEON英語ランキング掲載。Carrdで本人X・Twitch確認。|コラボ仲間（配信時に都度招集）|https://echoastea.carrd.co/ ; https://www.twitchmetrics.net/channels/viewership?game=MECCH|https://x.com/EchoAstea|https://www.twitch.tv/echoastea|英語圏|X / Twitch|X DM / business email / Discord|英語VTuber・Artist/Gamer。MECCHA CHAMELEON配信実績あり。
+25|既存維持|Issei_Kai|Issei_Kai（単独窓口）|英語|MECCHA CHAMELEON|本人投稿でDBD custom games後にMECCHA CHAMELEON collabを明記。|コラボ仲間（配信時に都度招集）|https://mobile.twstalker.com/StardemonFalem|https://x.com/Issei_Kai_|https://www.twitch.tv/issei_kai_|英語圏|X / Twitch|X DM|英語VTuber。British VTuberコラボ＋MECCHA CHAMELEONを予定。
+26|既存維持|baebyKK|baebyKK（単独窓口）|英語|PICO PARK 2|2026-09-20 PICO PARK 2を2h、平均39・最大45。配信タイトルに!discord !socials。|コラボ仲間（配信時に都度招集）|https://streamscharts.com/streams?game=pico-park-2&platform=twitch|https://x.com/baebyKK|https://www.twitch.tv/baebykk|英語圏|Twitch|X DM / Twitch / Discord / socials|英語Twitch Affiliate。!discord / !socialsを公開しているイベント型配信者。
+27|既存維持|SaquSya|SaquSya（単独窓口）|英語|PICO PARK 2|2026-08-22『Testing More Friendships With Pico Park 2!』。@streaky_audios / @mx_tonks / @eris|コラボ仲間（配信時に都度招集）|https://streamervitals.com/saqusya|https://x.com/saqusya|https://www.twitch.tv/saqusya|英語圏|Twitch|X / Twitch|英語圏の配信者。2026年8〜9月も継続配信。
+28|既存維持|YaDEERa|YaDEERa（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEON + Lockdown Protocolのコラボcommunity nightを告知。|コラボ仲間（配信時に都度招集）|https://twstalker.com/YaDEERaTTV|https://x.com/YaDEERaTTV|https://www.twitch.tv/yadeera|英語圏|X / Twitch|X DM / public email|英語/ラテン系ストリーマー。MECCHA CHAMELEON community night実施。
+29|既存維持|Rinimiki|Rinimiki（単独窓口）|英語|MECCHA CHAMELEON|10人追加募集のMECCHA CHAMELEON open collabを本人が主催。|コラボ仲間（配信時に都度招集）|https://twstalker.com/ExoRookie82|https://x.com/Rinimiki|https://www.twitch.tv/rinimiki|英語圏|X / Twitch|X DM|英語Star Bun VTuber。MECCHA CHAMELEON open collab主催。
+30|既存維持|DixeeChris|DixeeChris（単独窓口）|英語|PICO PARK 2|2026-06-20『Bonus Stream With The Boys』でPICO PARK 2を5時間45分。@buckfoozle / @streamstickers / |コラボ仲間（配信時に都度招集）|https://streamscharts.com/channels/dixeechris/subscribers ; https://streamervitals.com/dix|https://x.com/DixeeChris|https://www.twitch.tv/dixeechris|英語圏|Twitch|Twitch / X公開情報で未特定（2026-09-25検索済）|英語Twitch配信者。複数人ゲーム/コミュニティ配信を行う。
+31|既存維持|Hohiha|Hohiha（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEON with friendsを3時間配信、peak 41。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/c/99163781-hohiha|https://x.com/HohihaVT|https://www.twitch.tv/hohiha|英語圏|Twitch|X DM / Twitch|英語Ghost VTuber。2026年6月にMECCHA CHAMELEON with friendsを複数回配信。
+32|既存維持|ThatDogCoda|ThatDogCoda（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEON実績＋複数人コラボ配信を定期実施。|コラボ仲間（配信時に都度招集）|https://linktr.ee/ThatDogCoda ; https://www.twitch.tv/thatdogcoda/schedule ; https://strea|https://x.com/ThatDogCoda|https://www.twitch.tv/thatdogcoda|英語圏|Twitch|X DM / Linktree / Discord|Twitch Partner。英語圏。MECCHA CHAMELEON配信実績あり。VRChat等でも複数人コラボを継続。
+33|既存維持|mojine_|mojine_（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEON VTuberランキング掲載。コラボ文化の強いVTuber。|コラボ仲間（配信時に都度招集）|https://streamervitals.com/mojine_ ; https://w.twstalker.com/MioLive2d|https://x.com/mojine_|https://www.twitch.tv/mojine_|英語圏|Twitch|X DM / Twitch|英語圏VTuber / Twitch Partner。MECCHA CHAMELEON配信実績あり。2026年9月も高頻度活動。
+34|既存維持|Minorikyun|Minorikyun（単独窓口）|英語|PICO PARK 2|2026-09-05 PICO PARK 2を10h01、平均77.6・最大90。!socials / !discordあり。|コラボ仲間（配信時に都度招集）|https://streamervitals.com/minorikyun|https://x.com/Minorikyun|https://www.twitch.tv/minorikyun|英語圏|Twitch|X DM / Twitch / Discord|英語Twitch配信者。長時間企画型でDiscord/socials導線あり。
+35|既存維持|Royool_T|Royool_T（単独窓口）|英語|PICO PARK 2|2026-09-17 PICO PARK 2を2時間。平均24・最大28。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/channels/follower?game=Apex+Legends&lang=en&page=4 ; https:/|https://x.com/Royool_T|https://www.twitch.tv/Royool_T|英語圏|Twitch|X DM / Twitch|英語Twitch Affiliate。2026年9月も活動中の小規模配信者。
+36|既存維持|Aida Lyra|Aida Lyra（単独窓口）|英語|PICO PARK 2|PICO PARK 2 VTUBER COLLAB WITH FRIENDSを実施。複数VTuberとのゲーム実績。|コラボ仲間（配信時に都度招集）|https://www.youtube.com/watch?v=6yGUNsUaN18 ; https://www.youtube.com/watch?v=NxbPfnsGEHY|https://x.com/aida_lyra|https://www.youtube.com/@AidaLyra ; https://www.twitch.tv/aidalyra|英語圏|YouTube / Twitch|X DM / 公開連絡先|英語VTuber/Vsinger。ゲーム、音楽、デザインを扱う。
+37|既存維持|Goldyne|Goldyne（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEON実績。プロフィールでも friends と一緒にゲームを遊ぶ活動方針を明記。|コラボ仲間（配信時に都度招集）|https://streamervitals.com/goldyne ; https://mobile.twstalker.com/DynamiteGoldyne|https://x.com/DynamiteGoldyne|https://www.twitch.tv/goldyne|英語圏|Twitch|X DM / 公開business email / Discord|英語圏VTuber / Twitch Partner。MECCHA CHAMELEON配信実績あり。ゲームを友人と遊ぶことを明記。
+38|既存維持|Lucifellow|Lucifellow（単独窓口）|英語|PICO PARK 2|2026年にPICO PARK 2とMECCHA CHAMEREONを各1回配信。協力ゲーム適性を直接確認。|コラボ仲間（配信時に都度招集）|https://streamrecorder.io/twitch/lucifellow|https://x.com/lucifellowVR|https://www.twitch.tv/lucifellow|英語圏|Twitch|X DM / 公開Business Email / Twitch|英語圏Twitch Partner / YouTube Partner。Kitsune/VTuber系。公開Business Emailあり。直近30日平均181、最大693視聴。
+39|既存維持|Kaneko Mineko / 金子みねこ|Kaneko Mineko / 金子みねこ（単独窓口）|日本語|PICO PARK 2|2026年8月にPICO PARK 2の参加型/コラボ配信を告知。|コラボ仲間（配信時に都度招集）|https://db.bitstar.tokyo/youtube/UCU50fd_m-gPZkNzTW_aRvSg ; https://x.com/kaneneko_813|https://x.com/kaneneko_813|https://www.youtube.com/@kanekomineko ; https://www.twitch.tv/kanekomineko_vt|日本 / インドネシア|YouTube / Twitch|X DM候補|日本語・インドネシア語・英語で活動するVTuber。ゲーム・イラスト・雑談配信。
+40|既存維持|Yendys00|Yendys00（単独窓口）|英語|PICO PARK 2|2026-09-11 PICO PARK 2、平均15・最大26。9/14も@bolddustuとの共同配信。|コラボ仲間（配信時に都度招集）|https://twitracker.com/streamers/yendys00|https://x.com/yendys00|https://www.twitch.tv/yendys00|アメリカ|Twitch|X DM / Twitch|米国/英語圏Twitch配信者。友人とのゲーム配信を頻繁に行う。
+41|既存維持|HolyFX|HolyFX（単独窓口）|英語|PICO PARK 2|2026-06-19『PICO PARK 2 COLLAB』。7/29にもmerriffmathersとのduo配信。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/c/78257718-holyfx/videos ; https://www.twitchmetrics.net/c/7|https://x.com/HolyFxPrime|https://www.twitch.tv/holyfx|アメリカ|Twitch|X DM / Twitch|米国のTwitch Partner。フルタイム配信者。コミュニティ/コラボ企画を頻繁に実施。
+42|既存維持|EsBrilloG|EsBrilloG（単独窓口）|スペイン語|MECCHA CHAMELEON|MECCHA CHAMELEON配信実績あり。TwitchプロフィールからX本人アカウント確認済み。|コラボ仲間（配信時に都度招集）|https://betterbanned.com/en/streamer/esbrillog ; https://www.twitchmetrics.net/c/822227699|https://x.com/brillog_oficial|https://www.twitch.tv/esbrillog|スペイン語圏|Twitch|X DM / Twitch|スペイン語圏Twitch Affiliate。2026年9月にMECCHA CHAMELEON配信確認。
+43|既存維持|akumane_ / Amane|akumane_ / Amane（単独窓口）|スペイン語|PICO PARK 2|2026-04-01にPICO PARK 2配信実績。既存候補の中でも連絡導線が明確。|コラボ仲間（配信時に都度招集）|https://twstalker.com/Meryenda_|https://x.com/akumane_|https://www.twitch.tv/akumane_|スペイン語圏|Twitch / X|X DM / 公開メール / Twitch|スペイン語圏のストリーマー。Xに公開連絡用メールあり。
+44|既存維持|Airi Lockheart|Airi Lockheart（単独窓口）|スペイン語|PICO PARK 2|2026-08-28『Pico Park 2 ¡Collab con amiwas!』。共演者名が明確。|コラボ仲間（配信時に都度招集）|https://streamscharts.com/channels/airilockheart|https://x.com/AiriLockheart|https://www.twitch.tv/airilockheart|スペイン語圏|Twitch / X|X DM / Twitch|スペイン語Twitch Affiliate。!redes / !discord / !kofi / !throne の公開導線あり。
+45|既存維持|kuroneko_LP|kuroneko_LP（単独窓口）|スペイン語|PICO PARK|2026-09-05『HOY le jugamos a pico』でPICO PARKを2時間。平均19・最大23視聴。|コラボ仲間（配信時に都度招集）|https://x.com/lp_kuroneko/with_replies ; https://www.twitchmetrics.net/c/784698001-kuronek|https://x.com/lp_kuroneko|https://www.twitch.tv/kuroneko_LP|スペイン語圏|Twitch|X DM / Twitch|スペイン語Twitch配信者。ゲームに加えてArt配信も行う。2026-09-20まで活動確認。
+46|既存維持|Eris Mochizuki|Eris Mochizuki（単独窓口）|スペイン語|MECCHA CHAMELEON|本人Xで女性VTuber多数とのMECCHA CHAMELEONコラボを告知。|コラボ仲間（配信時に都度招集）|https://mobile.twstalker.com/VTuber_Eris|https://x.com/VTuber_Eris|https://www.twitch.tv/vtuber_eris|スペイン語圏|X / YouTube/Twitch|X DM|スペイン語VTuber。10人規模のMECCHA CHAMELEONコラボ参加。
+47|既存維持|KatarinaAkina|KatarinaAkina（単独窓口）|スペイン語|PICO PARK 2|2026-08-13配信内でPICO PARK 2を3h17、平均89.8・最大99。配信全体は平均80.2・最大101。|コラボ仲間（配信時に都度招集）|https://streamervitals.com/katarinaakina/stream/357402|https://x.com/KatarinaAkina|https://www.twitch.tv/katarinaakina|スペイン語圏|Twitch|Twitch / X公開情報で未特定（2026-09-25検索済）|スペイン語VTuber。グループ企画『EXTENSIBLE GRUPAL』を継続。
+48|既存維持|Studio Caudas|Studio Caudas（単独窓口）|ポルトガル語|PICO PARK 2|2026-08-22 PICO PARK 2活動確認。ポルトガル語圏の小規模候補。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/channels/follower?game=PICO+PARK+2|https://x.com/studiocaudas|https://www.twitch.tv/studiocaudas|ブラジル|Twitch / YouTube|X DM / Twitch / YouTube|ブラジルのポルトガル語ゲーム/クリエイティブ配信チーム。
+49|既存維持|ShiroxBR|ShiroxBR（単独窓口）|ポルトガル語|PICO PARK 2|2026-09-18 PICO PARK 2を2h54、平均35・最大55。|コラボ仲間（配信時に都度招集）|https://streamscharts.com/streams?game=pico-park-2&platform=twitch|https://x.com/shirobrx|https://www.twitch.tv/ShiroxBR|ブラジル|Twitch|X DM / Twitch|ブラジル・ポルトガル語Twitch Affiliate。ほぼ毎日深夜配信。
+50|既存維持|AlohasFreedom|AlohasFreedom（単独窓口）|フランス語|PICO PARK 2|2025-12-27の5人PICO PARK 2 Let's Playに参加。|コラボ仲間（配信時に都度招集）|https://linktr.ee/alohasfreedom ; https://www.twitchmetrics.net/c/408356558-alohasfreedom|https://x.com/alohasfreedom|https://www.twitch.tv/alohasfreedom|フランス|YouTube / Twitch|X / Linktree / Discord / Instagram（本人Linktreeで確認）|フランス語圏のゲーム配信者。Gameroldies周辺の固定コラボメンバー。
+51|既存維持|HitochiroVT|HitochiroVT（単独窓口）|フランス語|MECCHA CHAMELEON|本人Xの週間予定に『Collab Meccha Chameleon avec plusieurs invités』。|コラボ仲間（配信時に都度招集）|https://w.twstalker.com/HitochiroVT|https://x.com/HitochiroVT|https://www.twitch.tv/hitochirovt|フランス|X / Twitch|X DM|フランス語VTuber。MECCHA CHAMELEON複数人コラボを予定・実施。
+52|既存維持|lePodcase / Alexandre Arlène|lePodcase / Alexandre Arlène（単独窓口）|フランス語|PICO PARK 2|2026年8月にPICO PARK 2配信実績。公式ブログでもTwitchとTwitterを本人導線として掲載。|コラボ仲間（配信時に都度招集）|https://a-poudlard.blogspot.com/ ; https://facebookz-mania.twstalker.com/CendresBD|https://x.com/CendresBD|https://www.twitch.tv/lepodcase|フランス|Twitch / X|X DM / Twitch|フランスのイラストレーター/配信者Alexandre Arlène。Twitch名lePodcase。
+53|既存維持|Chality|Chality（単独窓口）|タイ語|MECCHA CHAMELEON|FreyraineのMECCHA CHAMELEON partyメンバー。|コラボ仲間（配信時に都度招集）|https://www.sotwe.com/chality_prl|https://x.com/Chality_prl|https://www.youtube.com/@ChalityPRL|タイ|YouTube / X|X DM|TH/EN/JP対応Jellyfish VTuber。MECCHA CHAMELEON大型friendsコラボ参加。
+54|既存維持|MiiChan|MiiChan（単独窓口）|タイ語|MECCHA CHAMELEON|2026年8月にVTuberコラボとしてMECCHA CHAMELEON配信。|コラボ仲間（配信時に都度招集）|https://www.sotwe.com/subarashii_mii|https://x.com/subarashii_mii|https://www.youtube.com/@subarashii_mii|タイ|YouTube / X|X DM|タイV-Artist。MECCHA CHAMELEON ft.Vtubersを本人告知。
+55|既存維持|深海まだこ|深海まだこ（単独窓口）|日本語|PICO PARK 2|2026-09-24に友人を集めてPICO PARK 2の飲酒コラボ配信。|コラボ仲間（配信時に都度招集）|https://x.com/Fukakai_madako|https://x.com/Fukakai_madako|https://www.twitch.tv/fukakaimadako|日本|Twitch / YouTube|X DM候補|セルフ受肉VTuber・Live2Dモデラー。コラボ配信を頻繁に実施。
+56|既存維持|にな0_0|にな0_0（単独窓口）|日本語|協力ゲーム|参加型・協力ゲーム型。固定4人ではないが、デモ拡散候補として強い。|コラボ仲間（配信時に都度招集）|https://streamscharts.com/channels/nina_0_0_v ; Yahoo!リアルタイム検索（@nina_games0_0vからtwitch.tv/|https://x.com/nina_games0_0v|https://www.twitch.tv/nina_0_0_v|日本|Twitch|X DM / Twitch|9/19『初めてのPICO PARK2 参加大歓迎』3h42 avg15/max17。9/21も『みんなで協力』3h avg17/max21。9/24 Fall Guys活動も確認
+57|既存維持|かがり篝 / kagari0083|かがり篝 / kagari0083（単独窓口）|日本語|協力ゲーム|2026-09-18『唐突にはじまるPICOPARK with C.C.H』。9/22にも配信しており現在も活動中。|コラボ仲間（配信時に都度招集）|https://www.mebae-lens.jp/streamers/1549620 ; https://mobile.twstalker.com/rinnenano|https://x.com/kagari0083|https://www.twitch.tv/kagari0083|日本|Twitch|X DM / Twitch|日本語Twitch配信者。Street Fighter 6中心だがApex/PICO PARK 2も配信。累計134配信・平均6.92視聴。
+58|既存維持|おかぴ_ふくろう|おかぴ_ふくろう（単独窓口）|日本語|MECCHA CHAMELEON|大勢のMECCHA CHAMELEONコラボ参加を本人投稿。通常配信でもコラボ実績あり。|コラボ仲間（配信時に都度招集）|https://search.yahoo.co.jp/realtime/search?ei=UTF-8&p=Chameleon&rkf=1 ; https://www.twitch|https://x.com/owlet0422|https://www.twitch.tv/owlet0422|日本|Twitch|X DM / Twitch|日本語Twitch Affiliate。2026年9月も配信継続。
+59|既存維持|黑須つくる|黑須つくる（単独窓口）|日本語|PICO PARK 2|2026-05-22に雨閖ナムフォンとPICO PARK 2。継続コラボ実績あり。|コラボ仲間（配信時に都度招集）|https://vtuber-live.net/archive_list/UC0g1DkNCqX7IS5HNiWiDsNw|https://x.com/makeclothesV|https://www.youtube.com/@makeclothes|日本|YouTube|X / 松竹芸能公式窓口|松竹芸能所属VTuber。アークナイツ高難易度攻略、料理、SF6などを配信。
+60|既存維持|アキツ|アキツ（単独窓口）|日本語|PICO PARK 2|2026-08のPICO PARK 2コラボで、みけだ / 猫麗シャオ / 湊暒ななぎ と4人。|コラボ仲間（配信時に都度招集）|https://www.nicozon.net/watch/sm42453082 ; https://www.nicozon.net/tag/%E3%83%8B%E3%83%A5%|https://x.com/Akitsu1030|https://youtube.com/@akitsu1030|日本|YouTube|X DM / YouTube|日本のゲーム配信者/VTuber。みけだ周辺のコラボメンバー。
+61|既存維持|Commander中佐|Commander中佐（単独窓口）|日本語|MECCHA CHAMELEON|MECCHA CHAMELEONを複数回コラボ配信。REPOも5人以上の協力コラボ実績。|コラボ仲間（配信時に都度招集）|https://search.yahoo.co.jp/realtime/search?ei=UTF-8&mtype=video&p=%E3%82%B3%E3%83%A9%E3%83|https://x.com/commander_4645|https://www.youtube.com/@commander_4645|日本|YouTube|X DM / Litlink / YouTube|ゲーム実況をYouTube中心に活動するVTuber。2026年も継続投稿。
+62|既存維持|ユイ＝ピコピコ|ユイ＝ピコピコ（単独窓口）|日本語|PICO PARK 2|2026-09-07および09-09にPICO PARK 2配信を告知。Fall Guysとの同日配信も実施。|コラボ仲間（配信時に都度招集）|https://vtuber.chminer.net/channel?c=UC5O1Tt0K19exQfqsh2BMveA|https://x.com/Yui_PikoPiko|https://www.youtube.com/channel/UC5O1Tt0K19exQfqsh2BMveA|日本|YouTube / X|X DM候補|日本VTuber。2026年9月も継続してゲーム配信を告知。
+63|既存維持|ジェネラルさん / shogun_333|ジェネラルさん / shogun_333（単独窓口）|日本語|PICO PARK 2|2026-08-30にPICO PARK 2。9月集計803フォロワー。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/channels/follower?game=PICO+PARK+2|https://x.com/shogun_333|https://www.twitch.tv/shogun_333|日本|Twitch|X DM / Twitch|日本語Twitch配信者。
+64|既存維持|tatuyaki|tatuyaki（単独窓口）|日本語|MECCHA CHAMELEON|MECCHA CHAMELEON発売日に一緒に遊ぶ相手を公募。複数配信プラットフォームを運用。|コラボ仲間（配信時に都度招集）|https://kiokoi.livedoor.blog/archives/15755252.html ; https://mobile.twstalker.com/Semmerl|https://x.com/tatuyaki8|https://www.youtube.com/@tatuyaki|日本|YouTube / Twitch|X DM / YouTube / Twitch|APEX/ポケモン/麻雀などを配信する小規模ゲーム実況者・VTuber。
+65|既存維持|EciWoelfchen|EciWoelfchen（単独窓口）|ドイツ語|MECCHA CHAMELEON|MECCHA CHAMELEONを2026年9月にも配信。VTuber交流企画も運営。|コラボ仲間（配信時に都度招集）|TwitchMetrics / X検索 ; https://www.twitchmetrics.net/c/32418770-eciwoelfchen|https://x.com/EciWoelfchen|https://www.twitch.tv/eciwoelfchen|ドイツ|Twitch|X DM|ドイツ語VTuber/配信者。MECCHA CHAMELEON配信実績。本人も趣味で絵を描き、配信素材を自作。
+66|既存維持|Yorinaki|Yorinaki（単独窓口）|ドイツ語|MECCHA CHAMELEON|複数人向けMECCHA CHAMELEON実績。本人プロフィールでイベント主催も明記。|コラボ仲間（配信時に都度招集）|TwitchMetrics / X公開プロフィール|https://x.com/Yorinaki|https://www.twitch.tv/yorinaki|ドイツ/スイス|Twitch|X DM|ドイツ語圏VTuber/Content Creator。MECCHA CHAMELEONを9月に配信。イベント企画も行う。
+67|既存維持|Akiilotl / Akilotl|Akiilotl / Akilotl（単独窓口）|ドイツ語|MECCHA CHAMELEON|MECCHA CHAMELEONを2026年8〜9月期に配信。VTuber Wikiでもコラボ活動が多い旨。|コラボ仲間（配信時に都度招集）|Linktree / TwitchMetrics|https://x.com/Akilotltwitch|https://www.twitch.tv/akiilotl|ドイツ|Twitch|X DM|独英VTuber兼Artist。MECCHA CHAMELEON配信実績。コラボ時に他配信者と遊ぶ活動も多い。
+68|既存維持|CurlyLocksGamer|CurlyLocksGamer（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEON配信実績。アーティスト活動も並行。|コラボ仲間（配信時に都度招集）|TwitchMetrics / 公開プロフィール|https://x.com/Curlylocksgamer|https://www.twitch.tv/curlylocksgamer|イギリス|Twitch|X DM|英国のArtist兼Twitch配信者。9月にMECCHA CHAMELEONを配信し、普段はcosy/chaotic系ゲームを扱う。
+69|既存維持|ViannaKyu|ViannaKyu（単独窓口）|英語|MECCHA CHAMELEON|Ritsune/Sirae/AileeとのVKYUZA4人MECCHA CHAMELEONコラボ。|コラボ仲間（配信時に都度招集）|TwitchMetrics / VKYUZA公開X|https://x.com/ViannaKyu|https://www.twitch.tv/viannakyu|英語圏|Twitch|X DM|VKYUZA Gen1 VTuber。9月デビュー後すぐにMECCHA CHAMELEONの4人グループコラボを実施。
+70|既存維持|SharpvyVT|SharpvyVT（単独窓口）|英語|協力ゲーム|9/22 Overcooked 2 WITH FRIENDS、9/23 PEAK with peeps、9/24 Escape the Backrooms w/AhriHikari|コラボ仲間（配信時に都度招集）|SublessVOD / X公開プロフィール|https://x.com/SharpvyVT|https://www.twitch.tv/sharpvyvt|英語圏|Twitch|X DM|EN indie VTuber。9月はPEAK、Overcooked! 2、Escape the Backrooms、REANIMAL、Golf With Your Friends
+71|既存維持|Kiara_TV|Kiara_TV（単独窓口）|英語|協力ゲーム|9/10『Walking Big with @gammachris @zoiteki @digitalbasic』。本人TwitchプロフィールにTwitter @kiarastr|コラボ仲間（配信時に都度招集）|StreamerVitals / TwiTracker|https://x.com/KiaraStreams|https://www.twitch.tv/kiara_tv|アメリカ|Twitch|X DM / 公開メール|米国VTuber・speedrunner・variety streamer。9/10にGammaChris・zoiteki・digitalbasicと4人でBig Walkを配信。
+72|既存維持|Veepai|Veepai（単独窓口）|英語|Big Walk / 協力ゲーム|9/12 Big Walk。Cumfy Officialのfriend groupにVeepai本人が掲載され、Carrot・Beku・SpooSenpai等とのネットワークあり。|コラボ仲間（配信時に都度招集）|HoloList / vTubie / Cumfy Official Linktree|https://x.com/veepaivt|https://www.twitch.tv/veepai|アメリカ|Twitch / YouTube|X DM / 公開メール|米国Independent VTuber。Art/Drawingも活動ジャンル。9/12にBig Walkを配信。Cumfy OfficialというTwitch友人グループにも所属
+73|既存維持|LittleMonstersTV|LittleMonstersTV（単独窓口）|英語|協力ゲーム|8/18 PEAK w/ Park_Jom 約6時間。普段からチャット参加型・ゲーム連動型の配信を継続。|コラボ仲間（配信時に都度招集）|StreamerVitals / TwiCopy / The Fun Pimps公式Streamer List|https://x.com/lilmonsterstv|https://www.twitch.tv/littlemonsterstv|カナダ|Twitch|X DM|カナダの英語Twitch Affiliate。視聴者がゲームへ介入できるintegration系配信を主軸にし、9月も長時間配信を継続。8/18にはPark_JomとPEAKを約6
+74|既存維持|AstraVexellara|AstraVexellara（単独窓口）|英語|R.E.P.O.|9/11『100% Big Walk w/ Siblings!』。R.E.P.O.コラボ、Elden Ring co-op、viewer interactionを継続。|コラボ仲間（配信時に都度招集）|TwitchMetrics / Streams Charts / 本人Reddit自己紹介 ; https://www.twitchmetrics.net/channels/fol|https://x.com/AstraVexellara|https://www.twitch.tv/astravexellara|アメリカ|Twitch|X DM|米国Lunar Demon VTuber。9/11にBig Walkをsiblingsと配信。9/26まで活動。過去にはR.E.P.O.複数人コラボやElden Ring seam
+75|既存維持|KippTheLostDragon|KippTheLostDragon（単独窓口）|英語|MECCHA CHAMELEON|9月のMECCHA CHAMELEON配信でGildedSiren、KikiSenchou、Thaumielle、Myrly_Angelic等を明記した多人数コラボ。|コラボ仲間（配信時に都度招集）|https://www.twitch.tv/kippthelostdragon|https://x.com/kipplost|https://www.twitch.tv/kippthelostdragon|英語圏|Twitch|X DM / Twitch|英語圏Twitch Affiliate/VTuber。2026年9月もMECCHA CHAMELEONを継続配信。本人ソーシャルからX @kipplost確認。
+76|既存維持|Reapsie|Reapsie（単独窓口）|英語|MECCHA CHAMELEON|MECCHA CHAMELEON、PEAK、Lethal Company等の複数人ゲーム実績。2026-09-24にもMECCHA CHAMELEON配信確認。|コラボ仲間（配信時に都度招集）|https://www.twitch.tv/reapsie|https://x.com/Reapsiee|https://www.twitch.tv/reapsie|英語圏|Twitch|X DM / Twitch|英語圏のvariety streamer兼フリーランス動画編集者。XプロフィールからTwitch本人リンク確認。
+77|既存維持|Yumichii_|Yumichii_（単独窓口）|英語|MECCHA CHAMELEON|9/19にGames with friends枠でMECCHA CHAMELEON。MECCHA比率も高い。|コラボ仲間（配信時に都度招集）|https://twitracker.com/streamers/yumichii_ ; https://streamervitals.com/yumichii_|https://x.com/Yumichii_|https://www.twitch.tv/yumichii_|US|Twitch|X DM / Twitch|英語圏VTuber。9月も継続配信。直近30日平均視聴約50。
+78|既存維持|AztralBat|AztralBat（単独窓口）|英語|MECCHA CHAMELEON|8/12 Meccha Chameleon w/ friendos、8/7は8人規模MECCHAコラボ。|コラボ仲間（配信時に都度招集）|https://bacharu.io/vtuber/aztralbat|https://x.com/AztralBat|https://www.twitch.tv/aztralbat|US|Twitch|X DM / Twitch|米国EN VTuber。9月もX活動確認。
+79|既存維持|Alex Turell|Alex Turell（単独窓口）|英語|MECCHA CHAMELEON|6/27-28にMECCHA CHAMELEON Collab Weekendを自ら企画。|コラボ仲間（配信時に都度招集）|https://www.reddit.com/r/VirtualYoutubers/comments/1uh4uuv/ ; https://www.reddit.com/r/Ind|https://x.com/cocoloco3412|https://www.twitch.tv/cocoloco3412 ; https://www.youtube.com/@AlexTurell-cocoloco3412|EN|YouTube / Twitch|X DM / Twitch / Bluesky|英語で活動する個人VTuber。2026/9/28再デビュー予定。
+80|既存維持|BethanyGoesMoo|BethanyGoesMoo（単独窓口）|英語|MECCHA CHAMELEON|9/9に『Meccha'ing The Chameleons With Friends!』を4時間配信。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/c/418754593-bethanygoesmoo||https://www.twitch.tv/bethanygoesmoo|US/EN|Twitch|Twitch|英語圏VTuber。9/26まで活動確認。直近30日MECCHA中心。
+81|既存維持|StrawHatPal|StrawHatPal（単独窓口）|英語|MECCHA CHAMELEON|9/8に『SURPRISE LATE NIGHT COLLAB WITH FRIENDS』でMECCHA。MECCHAが直近カテゴリ61%。|コラボ仲間（配信時に都度招集）|https://twitracker.com/streamers/strawhatpal ; https://myoshi.co/strawhatpal||https://www.twitch.tv/strawhatpal|EN|Twitch|Twitch / MyOshi|英語圏インディーVTuber。コラボ募集中プロフィールも確認。
+82|既存維持|Ninu_VT|Ninu_VT（単独窓口）|英語|MECCHA CHAMELEON|9/20 MECCHA、9/9 PEAK WITH FRIENDS、9/18 Marvel Rivals w/ itsnovalia。|コラボ仲間（配信時に都度招集）|https://twitracker.com/streamers/ninu_vt ; https://linktr.ee/ninuchan||https://www.twitch.tv/ninu_vt|EN|Twitch|Twitch / Linktree|英語圏VTuber。9月も高頻度で活動。
+83|既存維持|FA.ye-18|FA.ye-18（単独窓口）|英語|MECCHA CHAMELEON|9/23にJey VT・Pipistrella VTとのMECCHAコラボ。平均34・ピーク40。|コラボ仲間（配信時に都度招集）|https://twitracker.com/streamers/faye_18vt ; https://hololist.net/fa-ye-18/|https://x.com/FAye18VT|https://www.twitch.tv/faye_18vt ; https://www.youtube.com/@Faye18VT|US/EN|Twitch / X|X DM / Twitch|Jetgirl VTuber。9/26まで配信、公式プロフィールでX/Twitch/YouTube本人導線確認。
+84|既存維持|malkotoyuki|malkotoyuki（単独窓口）|英語|MECCHA CHAMELEON|9/12・9/19にMECCHA CHAMELEON。直近カテゴリの79%がMECCHA。|コラボ仲間（配信時に都度招集）|https://twitracker.com/streamers/malkotoyuki||https://www.twitch.tv/malkotoyuki|EN|Twitch|Twitch / Discord|英語圏Twitch Affiliate。9月も活動、直近30日平均9・ピーク24。
+85|既存維持|Papacotes|Papacotes（単独窓口）|英語|MECCHA CHAMELEON|9/12コミュニティMECCHA、9/13 KingAchillesとの配信後MECCHA。MECCHAが主要ゲーム。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/c/408610558-papacotes||https://www.twitch.tv/papacotes|EN|Twitch|Twitch|英語圏Twitch Affiliate。9月も高頻度活動。
+86|既存維持|SalemMoon69|SalemMoon69（単独窓口）|英語|MECCHA CHAMELEON|9月にMECCHA初プレイ。9/12にはGamble With Your Friendsを複数人配信。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/c/639297209-salemmoon69||https://www.twitch.tv/salemmoon69|EN|Twitch|Twitch / socials command|英語圏Twitch配信者。9/22まで活動確認。
+87|既存維持|iitsWheezy|iitsWheezy（単独窓口）|英語|MECCHA CHAMELEON|復帰配信でMECCHA CHAMELEONをプレイ。プロフィールに!links導線あり。|コラボ仲間（配信時に都度招集）|https://www.twitchmetrics.net/c/92704526-iitswheezy||https://www.twitch.tv/iitswheezy|EN|Twitch|Twitch / !links|英語圏Twitch配信者。9/14に復帰配信。
+88|新規追加|Ace Okami|VDachi|英語|Pico Park 2 / Lethal Company|VDachiグループとしてPico Park 2やLethal Companyなどの協力ゲームを定期配信・チャリティ参加|Ariyawna / Huntress Spectre / Neeko Arcaea / Kitsuki / Vassi Sappho|https://vdachi.carrd.co ; https://www.youtube.com/results?search_query=VDachi+pico+park|https://x.com/AceOkamiVT|https://www.twitch.tv/aceokami|英語圏|Twitch|X DM / Twitch|固定VTuberグループ。2〜4人以上の協力パズル・アクション実績が豊富でNICO DRAWに極めて親和的。
+89|新規追加|Auteru Tori|Auteru & Friends|英語|PICO PARK|Ryoma Barrenwort、mogu、Mochiらと複数回PICO PARK協力配信を実施|Ryoma Barrenwort / mogu / Mochi|https://www.youtube.com/@AuteruTori|https://x.com/AuteruTori|https://www.youtube.com/@AuteruTori|英語圏|YouTube|X DM / YouTube|PICO PARK経験済みの個人VTuber。固定・準固定仲間と協力ゲームを定期的にプレイ。
+90|新規追加|Katara|Katara & Friends|英語|Human: Fall Flat|Nazzealous、Zuu Neptuneらと大人数Human Fall Flat協力パズル配信を実施|Nazzealous / Zuu Neptune / Alethealuna / Snowpy / Vgl Epic / Snow Wolf|https://www.youtube.com/@KataraVT|https://x.com/KataraVT|https://www.youtube.com/@KataraVT|英語圏|YouTube|X DM / YouTube|物理パズル協力ゲームのグループ配信実績多数。仲間を招集する起点。
+91|新規追加|Lominoth|Lominoth & Friends|英語|Heave Ho / Heave Ho 2|Oniheart、Lotus、ZoeyらとHeave Ho 2の協力アクション配信を実施|Oniheart / Lotus / Zoeythefoxdemon|https://www.youtube.com/@Lominoth|https://x.com/Lominoth|https://www.youtube.com/@Lominoth|英語圏|YouTube|X DM / YouTube|つかまる・投げるアクションが特徴のHeave Hoを仲間と遊んでおり、NICO DRAWの協力ギミックと完全一致。
+92|新規追加|Stella Fos|Stella & Mimi|英語|Escape Simulator 2|MageMimiとEscape Simulator 2の2人協力謎解き配信を実施|MageMimi|https://www.youtube.com/@StellaFos|https://x.com/StellaFos|https://www.youtube.com/@StellaFos|英語圏|YouTube|X DM / YouTube|2人協力パズル・脱出ゲームを定期的にプレイ。2人プレイ対応のNICO DRAWに最適。
+93|新規追加|Senz|Senz, RiiKami & Keiseira|英語|Chained Together / Party Animals|RiiKami、KeiseiraとChained TogetherおよびParty Animalsの協力プレイ動画を投稿|RiiKami / Keiseira|https://www.youtube.com/@SenzVT|https://x.com/SenzVT|https://www.youtube.com/@SenzVT|英語圏|YouTube|X DM / YouTube|結束プレイ・物理協力ゲームで盛り上がる人気インディーVTuberトリオ。
+94|新規追加|AngelNea|AngelNea & Friends|英語|R.E.P.O.|固定フレンドと「REPO with Friends」シリーズを多数回配信・アーカイブ公開|Friends|https://www.youtube.com/@AngelNea|https://x.com/AngelNeaVT|https://www.youtube.com/@AngelNea|英語圏|YouTube|X DM / YouTube|仲間との協力マルチゲームを長期シリーズ化して遊ぶプレイスタイル。
+95|新規追加|Sera Kesera|Sera Kesera Collab|英語|R.E.P.O.|VTuber仲間複数人を集めたREPO CO-OPコラボ動画を公開|Collab VTubers|https://www.youtube.com/@SeraKesera|https://x.com/SeraKesera|https://www.youtube.com/@SeraKesera|英語圏|YouTube|X DM / YouTube|インディー協力ホラー・アクションのコラボ主催者。
+96|新規追加|Saruna Gibbler|Saruna & Friends|英語|R.E.P.O.|フレンドとの「REPO WITH FRIENDS」協力マルチ配信を実施|Friends|https://www.youtube.com/@SarunaGibbler|https://x.com/SarunaGibbler|https://www.youtube.com/@SarunaGibbler|英語圏|YouTube|X DM / YouTube|小〜中規模で確実にインディー協力ゲームを遊ぶ配信者。
+97|新規追加|Chizu Koyote|VZatsu Cooking Squad|英語|Overcooked! 2|Jomei Mujina、Mika NinamoriらとOvercooked 2協力配信を実施|Jomei Mujina / Mika Ninamori|https://www.twitch.tv/chizukoyote|https://x.com/ChizuKoyote|https://www.twitch.tv/chizukoyote|英語圏|Twitch|X DM / Twitch|役割分担・連携が必須のOvercooked 2を固定メンバーでプレイ。NICO DRAWの役割分担パズルに好相性。
+98|新規追加|HobbyGinger|HobbyGinger（単独窓口）|英語|PICO PARK 2|TwitchTrackerにてPICO PARK 2を11.7時間配信確認（ピーク21人）|Co-op friends|https://twitchtracker.com/hobbyginger/games/2124007713|https://x.com/HobbyGinger|https://www.twitch.tv/hobbyginger|英語圏|Twitch|Twitch / X|PICO PARK 2を長時間やり込んでいる小規模・高熱量ストリーマー。
+99|新規追加|zatsusencompany|zatsusencompany（単独窓口）|英語|PICO PARK 2|TwitchTrackerにてPICO PARK 2を2.7時間配信確認（ピーク21人）|Stream friends|https://twitchtracker.com/zatsusencompany/games/2124007713|https://x.com/zatsusen|https://www.twitch.tv/zatsusencompany|英語圏|Twitch|Twitch / X|小規模ストリーマー。仲間と協力パズル配信を行う。
+100|新規追加|tannedtuna|tannedtuna（単独窓口）|英語|PICO PARK 2|TwitchTrackerにてPICO PARK 2を5.1時間配信確認（ピーク21人）|Friends|https://twitchtracker.com/tannedtuna/games/2124007713|https://x.com/tannedtuna|https://www.twitch.tv/tannedtuna|英語圏|Twitch|Twitch / X|PICO PARK 2を5時間以上配信。小規模でDM確認率が高い。
+101|新規追加|NEVERBROKEAGAIN666|NBA666 Group|英語|PICO PARK 2|TwitchTrackerにてPICO PARK 2を6.2時間配信確認（ピーク33人）|Friends|https://twitchtracker.com/neverbrokeagain666/games/2124007713|https://x.com/nba666_|https://www.twitch.tv/neverbrokeagain666|英語圏|Twitch|Twitch / X|PICO PARK 2を複数回配信。平均30人規模の理想的なアクティブコミュニティ。
+102|新規追加|HazraZim|HazraZim（単独窓口）|英語|PICO PARK 2|TwitchTrackerにてPICO PARK 2を6.0時間配信確認（ピーク15人）|Friends|https://twitchtracker.com/hazrazim/games/2124007713|https://x.com/HazraZim|https://www.twitch.tv/hazrazim|英語圏|Twitch|Twitch / X|小規模・親密なグループ配信者。インディー営業の受容度が高い。
+103|新規追加|Riko Kyuumi|Riko Kyuumi & Friends|英語|Party Animals|インディーVTuber仲間とParty Animalsグループ対戦・協力配信を実施|Indie VTuber friends|https://www.youtube.com/@RikoKyuumi|https://x.com/RikoKyuumi|https://www.youtube.com/@RikoKyuumi|英語圏|YouTube|X DM / YouTube|物理演算パーティゲームを仲間と遊ぶ英語圏VTuber。
+104|新規追加|Date Tsukasa|つかさ・ほかる・しおん・そら組|日本語|Chained Together|Tenbare Hokaru、Sakine Shion、Hazuki Soraとの4人Chained Togetherコラボ配信を実施|Tenbare Hokaru / Sakine Shion / Hazuki Sora|https://www.youtube.com/@DateTsukasa|https://x.com/DateTsukasa|https://www.youtube.com/@DateTsukasa|日本|YouTube|X DM / YouTube|4人連携協力アクションのクリア実績あり。
+105|新規追加|二茅ニナ (Nigaya Nina)|ニナ・そる・ルリ組|日本語|Overcooked! 2|夕凪そる、雪代ルリとの3人Overcooked 2協力配信を実施|夕凪そる / 雪代ルリ|https://www.twitch.tv/nigayanina|https://x.com/NigayaNina|https://www.twitch.tv/nigayanina|日本|Twitch|Twitch / X DM|3人協力ゲームを定期的に行う固定コラボ仲間。
+106|新規追加|羽天ひより (Uten Hiyori)|ひより・ユナ・るるふ・かける組|日本語|Human: Fall Flat|伊冬ユナ、陽月るるふ、間取かけるとの4人Human Fall Flatパズル攻略コラボを実施|伊冬ユナ / 陽月るるふ / 間取かける|https://www.youtube.com/@uten_hiyori|https://x.com/uten_hiyori|https://www.youtube.com/@uten_hiyori|日本|YouTube|X DM / YouTube|4人物理パズルゲームの経験豊富。仲間4人でNICO DRAWの想定プレイ人数に合致。
+107|新規追加|Meow Ha|Meow Ha & Friends|繁体字中国語|Heave Ho|Cage、Xiao GuらとHeave Hoの4人協力アクション配信を実施|Cage / Xiao Gu|https://www.youtube.com/@MeowHa|https://x.com/MeowHaVT|https://www.youtube.com/@MeowHa|台湾 / 繁体字圏|YouTube|X DM / YouTube|中国語圏で物理協力アクションを仲間と遊ぶ配信者。
+== グループメンバー一覧
+No.|代表窓口（営業先）|営業グループ名|メンバー名|X URL|配信URL|関係性・役割|統合理由（重複防止）
+1|Lonroce|Lonroce グループ|舒鼠鼠數|https://x.com/susumii_eue|https://www.twitch.tv/susumii_eue|固定メンバー / 協力配信仲間|Lonroceと同一グループ・重複防止のため統合
+2|柊むらさき / Hiragi Murasaki|台湾 MECCHAコラボグループ|柳葉魚子醬 / Yanagiba Nanako|https://x.com/Yanagiba775|https://www.twitch.tv/yanagibananakochan|固定メンバー / 協力配信仲間|柊むらさき / Hiragi Murasakiと同一グループ・重複防止のため統合
+3|柊むらさき / Hiragi Murasaki|台湾 MECCHAコラボグループ|夢見ルノ / Runo|https://x.com/yumemirunoo|https://www.youtube.com/@runoch0909|固定メンバー / 協力配信仲間|柊むらさき / Hiragi Murasakiと同一グループ・重複防止のため統合
+4|柊むらさき / Hiragi Murasaki|台湾 MECCHAコラボグループ|涅菈 Nera / Nera_Reverie|https://x.com/Nera_Reverie|https://www.twitch.tv/nera_reverie|固定メンバー / 協力配信仲間|柊むらさき / Hiragi Murasakiと同一グループ・重複防止のため統合
+5|Kymani / kymaniklowni|Kymani MECCHAグループ|Midorin|https://x.com/itsMidorin|https://www.twitch.tv/itsmidorin|固定メンバー / 協力配信仲間|Kymani / kymaniklowniと同一グループ・重複防止のため統合
+6|Kymani / kymaniklowni|Kymani MECCHAグループ|Lemon / theLemonCitron|https://x.com/theLemonCitron|https://www.twitch.tv/lemon_773|固定メンバー / 協力配信仲間|Kymani / kymaniklowniと同一グループ・重複防止のため統合
+7|Kymani / kymaniklowni|Kymani MECCHAグループ|Codename: Echo|https://x.com/codename3cho|https://www.twitch.tv/codename3cho|固定メンバー / 協力配信仲間|Kymani / kymaniklowniと同一グループ・重複防止のため統合
+8|Kymani / kymaniklowni|Kymani MECCHAグループ|TheLarxa|https://x.com/TheLarxa|https://www.twitch.tv/thelarxa|固定メンバー / 協力配信仲間|Kymani / kymaniklowniと同一グループ・重複防止のため統合
+9|krillianvt|krillian PICO PARK 2グループ|payavt|https://x.com/payavt|https://www.twitch.tv/payavt|固定メンバー / 協力配信仲間|krillianvtと同一グループ・重複防止のため統合
+10|krillianvt|krillian PICO PARK 2グループ|starpriism|https://x.com/starpriism|https://www.twitch.tv/starpriism|固定メンバー / 協力配信仲間|krillianvtと同一グループ・重複防止のため統合
+11|Koemi Eimii|タイ MECCHAコラボグループ|PopKorn163|https://x.com/PopKorn163|https://www.youtube.com/@PopKorn163|固定メンバー / 協力配信仲間|Koemi Eimiiと同一グループ・重複防止のため統合
+12|Koemi Eimii|タイ MECCHAコラボグループ|Miledy Z|https://x.com/MiledyZ_Devlin|https://www.youtube.com/@MiledyZDevlin|固定メンバー / 協力配信仲間|Koemi Eimiiと同一グループ・重複防止のため統合
+13|Koemi Eimii|タイ MECCHAコラボグループ|Harumoon|https://x.com/Harumoon_v2|https://www.youtube.com/@Harumoon_v2|固定メンバー / 協力配信仲間|Koemi Eimiiと同一グループ・重複防止のため統合
+14|Koemi Eimii|タイ MECCHAコラボグループ|Mizuhara Yami|https://x.com/Mizuhara_Yami|https://www.youtube.com/@MizuharaYami|固定メンバー / 協力配信仲間|Koemi Eimiiと同一グループ・重複防止のため統合
+15|Koemi Eimii|タイ MECCHAコラボグループ|Sienna [RE:S]|https://x.com/sienna_res|https://www.youtube.com/@sienna_res|固定メンバー / 協力配信仲間|Koemi Eimiiと同一グループ・重複防止のため統合
+16|Koemi Eimii|タイ MECCHAコラボグループ|Meteona Mars|https://x.com/mar_chan15|https://www.youtube.com/@MeteonaMarsCh|固定メンバー / 協力配信仲間|Koemi Eimiiと同一グループ・重複防止のため統合
+17|Bebe Duck|DayJobÜ PH|SralZoren / Zoren|https://x.com/sralzoren|https://www.youtube.com/@SralZoren ; https://www.twitch.tv/sralzoren|固定メンバー / 協力配信仲間|Bebe Duckと同一グループ・重複防止のため統合
+18|Bebe Duck|DayJobÜ PH|Kyun Shino|https://x.com/KyunShino|https://www.twitch.tv/kyunshino|固定メンバー / 協力配信仲間|Bebe Duckと同一グループ・重複防止のため統合
+19|PsychoDcast|PsychoDcast PICO PARK 2 グループ|Kotoki|||固定メンバー / 協力配信仲間|PsychoDcastと同一グループ・重複防止のため統合
+20|PsychoDcast|PsychoDcast PICO PARK 2 グループ|tigerish / TIGERINTOKYO|https://x.com/tigerintokyo|https://www.twitch.tv/tigerish7|固定メンバー / 協力配信仲間|PsychoDcastと同一グループ・重複防止のため統合
+21|PsychoDcast|PsychoDcast PICO PARK 2 グループ|Aurelia Lillia|https://x.com/AureliaLilliaVT|https://www.twitch.tv/aurelia|固定メンバー / 協力配信仲間|PsychoDcastと同一グループ・重複防止のため統合
+22|PsychoDcast|PsychoDcast PICO PARK 2 グループ|Steamypot|https://x.com/Steamypot|https://www.twitch.tv/steamypot|固定メンバー / 協力配信仲間|PsychoDcastと同一グループ・重複防止のため統合
+23|PsychoDcast|PsychoDcast PICO PARK 2 グループ|AngryOwlCat|https://x.com/AngryowlCat|https://www.twitch.tv/angryowlcat|固定メンバー / 協力配信仲間|PsychoDcastと同一グループ・重複防止のため統合
+24|PsychoDcast|PsychoDcast PICO PARK 2 グループ|HanahPanda|https://x.com/HanahPanda|https://www.twitch.tv/hanahpanda|固定メンバー / 協力配信仲間|PsychoDcastと同一グループ・重複防止のため統合
+25|PsychoDcast|PsychoDcast PICO PARK 2 グループ|yueho|||固定メンバー / 協力配信仲間|PsychoDcastと同一グループ・重複防止のため統合
+26|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)|宇宙色きのこ / Sorairo Kinoko|https://x.com/kinoko_sorairo|https://www.youtube.com/@kinoko_sorairo|固定メンバー / 協力配信仲間|月奏あず / Lunon Azuと同一グループ・重複防止のため統合
+27|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)|Amelie Kanon / アメリー・カノン|https://x.com/AmelieKanon|https://www.youtube.com/@AmelieKanon ; https://www.twitch.tv/ameliekanon|固定メンバー / 協力配信仲間|月奏あず / Lunon Azuと同一グループ・重複防止のため統合
+28|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)|さんご。|||固定メンバー / 協力配信仲間|月奏あず / Lunon Azuと同一グループ・重複防止のため統合
+29|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)|シャルロット・リリー|||固定メンバー / 協力配信仲間|月奏あず / Lunon Azuと同一グループ・重複防止のため統合
+30|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)|恣ノ宮うか|||固定メンバー / 協力配信仲間|月奏あず / Lunon Azuと同一グループ・重複防止のため統合
+31|雨閖ナムフォン|ナムフォン＆つくる PICO PARK 2組|黒須つくる|||固定メンバー / 協力配信仲間|雨閖ナムフォンと同一グループ・重複防止のため統合
+32|雨閖ナムフォン|ナムフォン＆つくる PICO PARK 2組|潤田一佐|||固定メンバー / 協力配信仲間|雨閖ナムフォンと同一グループ・重複防止のため統合
+33|BlurCyrus|BlurCyrus Game Night組|madmill|||固定メンバー / 協力配信仲間|BlurCyrusと同一グループ・重複防止のため統合
+34|BlurCyrus|BlurCyrus Game Night組|lanvoine|||固定メンバー / 協力配信仲間|BlurCyrusと同一グループ・重複防止のため統合
+35|Ace Okami|VDachi|Ariyawna|||固定メンバー / 協力配信仲間|Ace Okamiと同一グループ・重複防止のため統合
+36|Ace Okami|VDachi|Huntress Spectre|||固定メンバー / 協力配信仲間|Ace Okamiと同一グループ・重複防止のため統合
+37|Ace Okami|VDachi|Neeko Arcaea|||固定メンバー / 協力配信仲間|Ace Okamiと同一グループ・重複防止のため統合
+38|Ace Okami|VDachi|Kitsuki|||固定メンバー / 協力配信仲間|Ace Okamiと同一グループ・重複防止のため統合
+39|Ace Okami|VDachi|Vassi Sappho|||固定メンバー / 協力配信仲間|Ace Okamiと同一グループ・重複防止のため統合
+40|Auteru Tori|Auteru & Friends|Ryoma Barrenwort|||固定メンバー / 協力配信仲間|Auteru Toriと同一グループ・重複防止のため統合
+41|Auteru Tori|Auteru & Friends|mogu|||固定メンバー / 協力配信仲間|Auteru Toriと同一グループ・重複防止のため統合
+42|Auteru Tori|Auteru & Friends|Mochi|||固定メンバー / 協力配信仲間|Auteru Toriと同一グループ・重複防止のため統合
+43|Katara|Katara & Friends|Nazzealous|||固定メンバー / 協力配信仲間|Kataraと同一グループ・重複防止のため統合
+44|Katara|Katara & Friends|Zuu Neptune|||固定メンバー / 協力配信仲間|Kataraと同一グループ・重複防止のため統合
+45|Katara|Katara & Friends|Alethealuna|||固定メンバー / 協力配信仲間|Kataraと同一グループ・重複防止のため統合
+46|Katara|Katara & Friends|Snowpy|||固定メンバー / 協力配信仲間|Kataraと同一グループ・重複防止のため統合
+47|Katara|Katara & Friends|Vgl Epic|||固定メンバー / 協力配信仲間|Kataraと同一グループ・重複防止のため統合
+48|Katara|Katara & Friends|Snow Wolf|||固定メンバー / 協力配信仲間|Kataraと同一グループ・重複防止のため統合
+49|Lominoth|Lominoth & Friends|Oniheart|||固定メンバー / 協力配信仲間|Lominothと同一グループ・重複防止のため統合
+50|Lominoth|Lominoth & Friends|Lotus|||固定メンバー / 協力配信仲間|Lominothと同一グループ・重複防止のため統合
+51|Lominoth|Lominoth & Friends|Zoeythefoxdemon|||固定メンバー / 協力配信仲間|Lominothと同一グループ・重複防止のため統合
+52|Stella Fos|Stella & Mimi|MageMimi|||固定メンバー / 協力配信仲間|Stella Fosと同一グループ・重複防止のため統合
+53|Senz|Senz, RiiKami & Keiseira|RiiKami|||固定メンバー / 協力配信仲間|Senzと同一グループ・重複防止のため統合
+54|Senz|Senz, RiiKami & Keiseira|Keiseira|||固定メンバー / 協力配信仲間|Senzと同一グループ・重複防止のため統合
+55|Chizu Koyote|VZatsu Cooking Squad|Jomei Mujina|||固定メンバー / 協力配信仲間|Chizu Koyoteと同一グループ・重複防止のため統合
+56|Chizu Koyote|VZatsu Cooking Squad|Mika Ninamori|||固定メンバー / 協力配信仲間|Chizu Koyoteと同一グループ・重複防止のため統合
+57|Date Tsukasa|つかさ・ほかる・しおん・そら組|Tenbare Hokaru|||固定メンバー / 協力配信仲間|Date Tsukasaと同一グループ・重複防止のため統合
+58|Date Tsukasa|つかさ・ほかる・しおん・そら組|Sakine Shion|||固定メンバー / 協力配信仲間|Date Tsukasaと同一グループ・重複防止のため統合
+59|Date Tsukasa|つかさ・ほかる・しおん・そら組|Hazuki Sora|||固定メンバー / 協力配信仲間|Date Tsukasaと同一グループ・重複防止のため統合
+60|二茅ニナ (Nigaya Nina)|ニナ・そる・ルリ組|夕凪そる|||固定メンバー / 協力配信仲間|二茅ニナ (Nigaya Nina)と同一グループ・重複防止のため統合
+61|二茅ニナ (Nigaya Nina)|ニナ・そる・ルリ組|雪代ルリ|||固定メンバー / 協力配信仲間|二茅ニナ (Nigaya Nina)と同一グループ・重複防止のため統合
+62|羽天ひより (Uten Hiyori)|ひより・ユナ・るるふ・かける組|伊冬ユナ|||固定メンバー / 協力配信仲間|羽天ひより (Uten Hiyori)と同一グループ・重複防止のため統合
+63|羽天ひより (Uten Hiyori)|ひより・ユナ・るるふ・かける組|陽月るるふ|||固定メンバー / 協力配信仲間|羽天ひより (Uten Hiyori)と同一グループ・重複防止のため統合
+64|羽天ひより (Uten Hiyori)|ひより・ユナ・るるふ・かける組|間取かける|||固定メンバー / 協力配信仲間|羽天ひより (Uten Hiyori)と同一グループ・重複防止のため統合
+65|Meow Ha|Meow Ha & Friends|Cage|||固定メンバー / 協力配信仲間|Meow Haと同一グループ・重複防止のため統合
+66|Meow Ha|Meow Ha & Friends|Xiao Gu|||固定メンバー / 協力配信仲間|Meow Haと同一グループ・重複防止のため統合
+== 統合・除外候補一覧
+No.|候補名|扱い|統合先代表（統合の場合）|理由・根拠
+1|舒鼠鼠數|グループ統合|Lonroce|Lonroce グループのメンバーとして代表窓口（Lonroce）に統合
+2|柳葉魚子醬 / Yanagiba Nanako|グループ統合|柊むらさき / Hiragi Murasaki|台湾 MECCHAコラボグループのメンバーとして代表窓口（柊むらさき / Hiragi Murasaki）に統合
+3|夢見ルノ / Runo|グループ統合|柊むらさき / Hiragi Murasaki|台湾 MECCHAコラボグループのメンバーとして代表窓口（柊むらさき / Hiragi Murasaki）に統合
+4|涅菈 Nera / Nera_Reverie|グループ統合|柊むらさき / Hiragi Murasaki|台湾 MECCHAコラボグループのメンバーとして代表窓口（柊むらさき / Hiragi Murasaki）に統合
+5|Midorin|グループ統合|Kymani / kymaniklowni|Kymani MECCHAグループのメンバーとして代表窓口（Kymani / kymaniklowni）に統合
+6|Lemon / theLemonCitron|グループ統合|Kymani / kymaniklowni|Kymani MECCHAグループのメンバーとして代表窓口（Kymani / kymaniklowni）に統合
+7|Codename: Echo|グループ統合|Kymani / kymaniklowni|Kymani MECCHAグループのメンバーとして代表窓口（Kymani / kymaniklowni）に統合
+8|TheLarxa|グループ統合|Kymani / kymaniklowni|Kymani MECCHAグループのメンバーとして代表窓口（Kymani / kymaniklowni）に統合
+9|payavt|グループ統合|krillianvt|krillian PICO PARK 2グループのメンバーとして代表窓口（krillianvt）に統合
+10|starpriism|グループ統合|krillianvt|krillian PICO PARK 2グループのメンバーとして代表窓口（krillianvt）に統合
+11|PopKorn163|グループ統合|Koemi Eimii|タイ MECCHAコラボグループのメンバーとして代表窓口（Koemi Eimii）に統合
+12|Miledy Z|グループ統合|Koemi Eimii|タイ MECCHAコラボグループのメンバーとして代表窓口（Koemi Eimii）に統合
+13|Harumoon|グループ統合|Koemi Eimii|タイ MECCHAコラボグループのメンバーとして代表窓口（Koemi Eimii）に統合
+14|Mizuhara Yami|グループ統合|Koemi Eimii|タイ MECCHAコラボグループのメンバーとして代表窓口（Koemi Eimii）に統合
+15|Sienna [RE:S]|グループ統合|Koemi Eimii|タイ MECCHAコラボグループのメンバーとして代表窓口（Koemi Eimii）に統合
+16|Meteona Mars|グループ統合|Koemi Eimii|タイ MECCHAコラボグループのメンバーとして代表窓口（Koemi Eimii）に統合
+17|SralZoren / Zoren|グループ統合|Bebe Duck|DayJobÜ PHのメンバーとして代表窓口（Bebe Duck）に統合
+18|Kyun Shino|グループ統合|Bebe Duck|DayJobÜ PHのメンバーとして代表窓口（Bebe Duck）に統合
+19|Kotoki|グループ統合|PsychoDcast|PsychoDcast PICO PARK 2 グループのメンバーとして代表窓口（PsychoDcast）に統合
+20|tigerish / TIGERINTOKYO|グループ統合|PsychoDcast|PsychoDcast PICO PARK 2 グループのメンバーとして代表窓口（PsychoDcast）に統合
+21|Aurelia Lillia|グループ統合|PsychoDcast|PsychoDcast PICO PARK 2 グループのメンバーとして代表窓口（PsychoDcast）に統合
+22|Steamypot|グループ統合|PsychoDcast|PsychoDcast PICO PARK 2 グループのメンバーとして代表窓口（PsychoDcast）に統合
+23|AngryOwlCat|グループ統合|PsychoDcast|PsychoDcast PICO PARK 2 グループのメンバーとして代表窓口（PsychoDcast）に統合
+24|HanahPanda|グループ統合|PsychoDcast|PsychoDcast PICO PARK 2 グループのメンバーとして代表窓口（PsychoDcast）に統合
+25|yueho|グループ統合|PsychoDcast|PsychoDcast PICO PARK 2 グループのメンバーとして代表窓口（PsychoDcast）に統合
+26|宇宙色きのこ / Sorairo Kinoko|グループ統合|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)のメンバーとして代表窓口（月奏あず / Lunon Azu）に統合
+27|Amelie Kanon / アメリー・カノン|グループ統合|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)のメンバーとして代表窓口（月奏あず / Lunon Azu）に統合
+28|さんご。|グループ統合|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)のメンバーとして代表窓口（月奏あず / Lunon Azu）に統合
+29|シャルロット・リリー|グループ統合|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)のメンバーとして代表窓口（月奏あず / Lunon Azu）に統合
+30|恣ノ宮うか|グループ統合|月奏あず / Lunon Azu|めっちゃカメレオン (MECCHA CHAMELEON組)のメンバーとして代表窓口（月奏あず / Lunon Azu）に統合
+31|黒須つくる|グループ統合|雨閖ナムフォン|ナムフォン＆つくる PICO PARK 2組のメンバーとして代表窓口（雨閖ナムフォン）に統合
+32|潤田一佐|グループ統合|雨閖ナムフォン|ナムフォン＆つくる PICO PARK 2組のメンバーとして代表窓口（雨閖ナムフォン）に統合
+33|madmill|グループ統合|BlurCyrus|BlurCyrus Game Night組のメンバーとして代表窓口（BlurCyrus）に統合
+34|lanvoine|グループ統合|BlurCyrus|BlurCyrus Game Night組のメンバーとして代表窓口（BlurCyrus）に統合
+35|DuckyDalmatian|除外|-|活動停止 - 直近30日配信0・followers 0と表示
+36|Tony Statovci|除外|-|規模が大きすぎる - Twitch 220K+級。PICO PARK 2実績はある
+37|Kino & Lotus|除外|-|送付済み - ユーザー確認済みの送付済み一覧と一致
+38|Lominoth|除外|-|送付済み - ユーザー確認済みの送付済み一覧と一致
+39|OniHeart|除外|-|送付済み - ユーザー確認済みの送付済み一覧と一致
+40|MizukoKanagawa|除外|-|送付済み - ユーザー確認済みの送付済み一覧と一致
+41|キュレ / Cure|除外|-|送付済み - ユーザー確認済みの送付済み一覧と一致
+42|Tomobean|除外|-|重複＋X本人紐付け未確定 - 同一Twitchがメインに2行あり、Xが @TomobeanVT / @minitomo69 の2種類で混在。公開検索ではTwitch本人との確実な紐
+43|再監査日|除外|-|候補名 - 旧No.
+44|2026-10-03|除外|-|西西寶寶 / perce_xixi - 1
+45|2026-10-03|除外|-|ExoRookie - 8
+46|2026-10-03|除外|-|Respawned Kitty - 20
+47|2026-10-03|除外|-|Azaleafoxx / Foxy - 23
+48|2026-10-03|除外|-|Kevyn VT - 26
+49|2026-10-03|除外|-|Léo Valoreign - 35
+50|2026-10-03|除外|-|Avrael - 70
+== 集計ダッシュボード
+||||
+|NICO DRAW 実況者営業リスト 集計ダッシュボード|||
+||||
+|【全体指標】|||
+|項目|組数 / 件数|備考|
+|独立営業先 総組数|107|重複排除済みの独立営業先（目標100組以上達成）|
+|├ 既存維持組数|87|既存111人から再監査・重複整理を経て選定|
+|└ 新規追加組数|20|海外・英語圏を中心とした2〜4人協力実況グループ|
+|グループ統合人数|34|代表窓口に統合された固定メンバー（別DM防止）|
+|除外・後回し人数|16|活動停止・ソロ専門などの理由で除外|
+||||
+||||
+|【営業言語別 内訳】|||
+|営業言語|組数|割合|推奨DMテンプレ
+|英語|71|66.4%|英語用DMテンプレ
+|日本語|15|14.0%|日本語用DMテンプレ
+|スペイン語|6|5.6%|スペイン語用DMテンプレ
+|フランス語|4|3.7%|フランス語用DMテンプレ
+|繁体字中国語|3|2.8%|繁体字中国語用DMテンプレ
+|タイ語|3|2.8%|タイ語用DMテンプレ
+|ドイツ語|3|2.8%|ドイツ語用DMテンプレ
+|ポルトガル語|2|1.9%|ポルトガル語用DMテンプレ

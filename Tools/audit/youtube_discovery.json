@@ -1,0 +1,4117 @@
+{
+  "generated": "2026-10-03",
+  "query_count": 39,
+  "search_errors": [],
+  "raw_channels": 437,
+  "recent_channels": 158,
+  "rejected": {
+    "no_contact": 27,
+    "too_large": 12,
+    "inactive": 14
+  },
+  "candidate_count": 105,
+  "candidates": [
+    {
+      "channel_id": "UC-xMVKXP6qJwij7JuPsvgGA",
+      "name": "Sapphira Saltspill",
+      "youtube_url": "https://www.youtube.com/@SaphSaltspill",
+      "subscribers": 1,
+      "subscriber_text": "1 subscriber",
+      "x_url": "https://x.com/SaphSaltspill",
+      "external_links": [
+        "https://x.com/SaphSaltspill"
+      ],
+      "twitch_url": "https://twitch.tv/saphsaltspill",
+      "language": "English",
+      "last_active": "2026-09-29",
+      "proofs": [
+        {
+          "video_id": "dfxj2xczq2M",
+          "url": "https://www.youtube.com/watch?v=dfxj2xczq2M",
+          "title": "SAPH'S FIRST REPO COLLAB VOD",
+          "duration": 10688,
+          "channel_id": "UC-xMVKXP6qJwij7JuPsvgGA",
+          "channel": "Sapphira Saltspill",
+          "channel_url": "https://www.youtube.com/@SaphSaltspill",
+          "query_language": "English",
+          "query": "\"R.E.P.O.\" collab vtuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-09-03"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCN6hL09nVsqjJuCDMxPGbqg",
+      "name": "DragonWitch Stream Archiv",
+      "youtube_url": "https://www.youtube.com/@BlutiUncut",
+      "subscribers": 6,
+      "subscriber_text": "6 subscribers",
+      "x_url": "https://x.com/Bluti_DragonW",
+      "external_links": [
+        "https://discord.gg/pM4wfKHvbf",
+        "https://instagram.com/bluti_dragonwitch?igsh=MXFpMTBqenZhcmc0bg==",
+        "https://tiktok.com/@bluti_the_dragonwitch",
+        "https://www.instagram.com/bluti_dragonwitch?igsh=MXFpMTBqenZhcmc0bg==",
+        "https://www.tiktok.com/@bluti_the_dragonwitch",
+        "https://x.com/Bluti_DragonW"
+      ],
+      "twitch_url": "https://twitch.tv/bluti_the_dragonwitch",
+      "language": "German",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "id": "le8tZb3CRKQ",
+          "title": "REPO | Stream  04.09.26",
+          "date": "2026-09-17",
+          "url": "https://www.youtube.com/watch?v=le8tZb3CRKQ",
+          "game": "R.E.P.O."
+        },
+        {
+          "video_id": "6iOXDC2E07I",
+          "url": "https://www.youtube.com/watch?v=6iOXDC2E07I",
+          "title": "Peak | Stream 27.08.26",
+          "duration": 14744,
+          "channel_id": "UCN6hL09nVsqjJuCDMxPGbqg",
+          "channel": "DragonWitch Stream Archiv",
+          "channel_url": "https://www.youtube.com/@BlutiUncut",
+          "query_language": "German",
+          "query": "\"PEAK\" zusammen vtuber deutsch after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-16"
+        }
+      ],
+      "games": [
+        "PEAK",
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC5PCSP3u5wizHU6zdk1lXGg",
+      "name": "EmunaVT VOD Channel ",
+      "youtube_url": "https://www.youtube.com/@EmunaBoo",
+      "subscribers": 6,
+      "subscriber_text": "6 subscribers",
+      "x_url": "https://x.com/EmunaVT",
+      "external_links": [
+        "https://x.com/EmunaVT"
+      ],
+      "twitch_url": "https://twitch.tv/emunavt",
+      "language": "English",
+      "last_active": "2026-09-27",
+      "proofs": [
+        {
+          "video_id": "NMD0PHRFr5Y",
+          "url": "https://www.youtube.com/watch?v=NMD0PHRFr5Y",
+          "title": "VOD 07/17/2026 | Two Dorks Playing Chained Together | Collab stream with @snowydiamondvt",
+          "duration": 4780,
+          "channel_id": "UC5PCSP3u5wizHU6zdk1lXGg",
+          "channel": "EmunaVT VOD Channel ",
+          "channel_url": "https://www.youtube.com/@EmunaBoo",
+          "query_language": "English",
+          "query": "\"Chained Together\" collab vtuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-07-21"
+        }
+      ],
+      "games": [
+        "Chained Together"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC9tbRutdf8efqM0GPU3pniA",
+      "name": "Unshiu Satsuma 🍊☕",
+      "youtube_url": "https://www.youtube.com/@unshiusatsuma",
+      "subscribers": 12,
+      "subscriber_text": "12 subscribers",
+      "x_url": "https://x.com/unshiusatsuma",
+      "external_links": [
+        "https://x.com/unshiusatsuma"
+      ],
+      "twitch_url": "https://twitch.tv/unshiusatsuma",
+      "language": "English",
+      "last_active": "2026-10-01",
+      "proofs": [
+        {
+          "id": "21JmhmFhhHc",
+          "title": "FIGHTING THROUGH THE ANIMAL KINGDOM 🐱 PARTY ANIMALS w/ @nonoscarnival!!",
+          "date": "2026-09-28",
+          "url": "https://www.youtube.com/watch?v=21JmhmFhhHc",
+          "game": "Party Animals"
+        },
+        {
+          "id": "sQaxMdDSfDo",
+          "title": "THE LIGHT AT THE END OF THE STOVE 🍳 OVERCOOKED 2 w/ @katherynepersik",
+          "date": "2026-09-23",
+          "url": "https://www.youtube.com/watch?v=sQaxMdDSfDo",
+          "game": "Overcooked 2"
+        },
+        {
+          "id": "x-mkHVs0bBE",
+          "title": "LEARNING HOW TO CLIMB AGAIN (& achievement hunting maybe) ⛰️ PEAK w/ @ikztata",
+          "date": "2026-09-20",
+          "url": "https://www.youtube.com/watch?v=x-mkHVs0bBE",
+          "game": "PEAK"
+        }
+      ],
+      "games": [
+        "Overcooked 2",
+        "PEAK",
+        "Party Animals"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCZ8KPKVlXWaAQvivqAQw-8w",
+      "name": "Yuehime Luxemstar Ch. ",
+      "youtube_url": "https://www.youtube.com/@yueluxemstar",
+      "subscribers": 13,
+      "subscriber_text": "13 subscribers",
+      "x_url": "https://x.com/Luxemstar",
+      "external_links": [
+        "https://x.com/Luxemstar"
+      ],
+      "twitch_url": "https://twitch.tv/luxemstar",
+      "language": "Thai",
+      "last_active": "2026-08-20",
+      "proofs": [
+        {
+          "id": "5-ONNKvJ5QQ",
+          "title": "[🔴Live] เพื่อยอดเขานั้นฉันจะฝ่าฟัน ! | #PEAK #YueHimeL #VtuberTH",
+          "date": "2026-08-16",
+          "url": "https://www.youtube.com/watch?v=5-ONNKvJ5QQ",
+          "game": "PEAK"
+        },
+        {
+          "video_id": "wVvCEOCgdHA",
+          "url": "https://www.youtube.com/watch?v=wVvCEOCgdHA",
+          "title": "[🔴Live] เมื่อจินตนาการสำคัญกว่าความรู้ ?!? | 【Meccha Chameleon 】",
+          "duration": 9361,
+          "channel_id": "UCZ8KPKVlXWaAQvivqAQw-8w",
+          "channel": "Yuehime Luxemstar Ch. ",
+          "channel_url": "https://www.youtube.com/@yueluxemstar",
+          "query_language": "Thai",
+          "query": "\"MECCHA CHAMELEON\" vtuber ไทย after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-02"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON",
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCsEl9Zpe9l5G607gDe8ZhEA",
+      "name": "angelicluvVODS",
+      "youtube_url": "https://www.youtube.com/@angelicluvVODS",
+      "subscribers": 21,
+      "subscriber_text": "21 subscribers",
+      "x_url": "https://x.com/angelicluv_twt",
+      "external_links": [
+        "https://discord.gg/K4x8CaqW6R",
+        "https://tiktok.com/@angelicluvtiktok",
+        "https://www.tiktok.com/@angelicluvtiktok",
+        "https://x.com/angelicluv_twt"
+      ],
+      "twitch_url": "https://twitch.tv/angelicluv_twitch/about",
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "irnkGZ_oDN8",
+          "url": "https://www.youtube.com/watch?v=irnkGZ_oDN8",
+          "title": "ʚ♡ɞ we were here too many times ʚ♡ɞ",
+          "duration": 9339,
+          "channel_id": "UCsEl9Zpe9l5G607gDe8ZhEA",
+          "channel": "angelicluvVODS",
+          "channel_url": "https://www.youtube.com/@angelicluvVODS",
+          "query_language": "English",
+          "query": "\"We Were Here\" collab vtuber after:2026-07-01",
+          "game": "We Were Here",
+          "date": "2026-08-12"
+        },
+        {
+          "id": "Gzjj_9gVy58",
+          "title": "ʚ♡ɞ oops all repo!",
+          "date": "2026-07-08",
+          "url": "https://www.youtube.com/watch?v=Gzjj_9gVy58",
+          "game": "R.E.P.O."
+        }
+      ],
+      "games": [
+        "R.E.P.O.",
+        "We Were Here"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCLuhv4rdAyrHPdWJWGdlA0Q",
+      "name": "olivehoodiesVODs",
+      "youtube_url": "https://www.youtube.com/@olivehoodiesVODs",
+      "subscribers": 46,
+      "subscriber_text": "46 subscribers",
+      "x_url": "https://x.com/olivehoodies",
+      "external_links": [
+        "https://x.com/olivehoodies"
+      ],
+      "twitch_url": "https://twitch.tv/olivehoodies",
+      "language": "English",
+      "last_active": "2026-09-21",
+      "proofs": [
+        {
+          "video_id": "LgpMlKMnOLY",
+          "url": "https://www.youtube.com/watch?v=LgpMlKMnOLY",
+          "title": "Baby's First VTuber Collab (R.E.P.O.) - olivehoodies VOD",
+          "duration": 8941,
+          "channel_id": "UCLuhv4rdAyrHPdWJWGdlA0Q",
+          "channel": "olivehoodiesVODs",
+          "channel_url": "https://www.youtube.com/@olivehoodiesVODs",
+          "query_language": "English",
+          "query": "\"R.E.P.O.\" collab vtuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-08-11"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC7wZXoyEW_4JoWMUaEH7EZg",
+      "name": "Eru",
+      "youtube_url": "https://www.youtube.com/@3rurumi",
+      "subscribers": 53,
+      "subscriber_text": "53 subscribers",
+      "x_url": "https://x.com/3rurumi",
+      "external_links": [
+        "https://x.com/3rurumi"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-08-19",
+      "proofs": [
+        {
+          "video_id": "LYMbqD1Dmr0",
+          "url": "https://www.youtube.com/watch?v=LYMbqD1Dmr0",
+          "title": "【Overcooked 2】cooking our way to victory !!! ( ๑ ˃̵ᴗ˂̵)و ♡",
+          "duration": 7141,
+          "channel_id": "UC7wZXoyEW_4JoWMUaEH7EZg",
+          "channel": "Eru",
+          "channel_url": "https://www.youtube.com/@3rurumi",
+          "query_language": "English",
+          "query": "\"Overcooked 2\" collab vtuber after:2026-07-01",
+          "game": "Overcooked 2",
+          "date": "2026-07-25"
+        }
+      ],
+      "games": [
+        "Overcooked 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCZEjGbtyXW0CUz-L5dGZzVw",
+      "name": "桜庭犬愛",
+      "youtube_url": "https://www.youtube.com/@桜庭犬愛",
+      "subscribers": 72,
+      "subscriber_text": "72 subscribers",
+      "x_url": "https://x.com/39raba_inua?s=21",
+      "external_links": [
+        "https://tiktok.com/@sakuraba_inua?_r=1&_t=ZS-95WRYHDrBvJ",
+        "https://www.tiktok.com/@sakuraba_inua?_r=1&_t=ZS-95WRYHDrBvJ",
+        "https://x.com/39raba_inua?s=21"
+      ],
+      "twitch_url": "https://twitch.tv/sakuraba_inua",
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "CPd-9XMaWEc",
+          "url": "https://www.youtube.com/watch?v=CPd-9XMaWEc",
+          "title": "【Chained Together】初コラボ",
+          "duration": 10768,
+          "channel_id": "UCZEjGbtyXW0CUz-L5dGZzVw",
+          "channel": "桜庭犬愛",
+          "channel_url": "https://www.youtube.com/@桜庭犬愛",
+          "query_language": "Japanese",
+          "query": "Chained Together コラボ VTuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-09-20"
+        }
+      ],
+      "games": [
+        "Chained Together"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCdqNyvvkEXvRRhJ8ZNnne6w",
+      "name": "今田未定",
+      "youtube_url": "https://www.youtube.com/@今田未定",
+      "subscribers": 73,
+      "subscriber_text": "73 subscribers",
+      "x_url": "https://twitter.com/UNtitlEDtwi",
+      "external_links": [
+        "https://twitter.com/UNtitlEDtwi",
+        "https://twitter.com/spoon_madamitei"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-09-25",
+      "proofs": [
+        {
+          "video_id": "va_ZhNeLGlc",
+          "url": "https://www.youtube.com/watch?v=va_ZhNeLGlc",
+          "title": "【Chained Together】一蓮托生！！【#コラボ配信 】【#vtuber 】",
+          "duration": 7204,
+          "channel_id": "UCdqNyvvkEXvRRhJ8ZNnne6w",
+          "channel": "今田未定",
+          "channel_url": "https://www.youtube.com/@今田未定",
+          "query_language": "Japanese",
+          "query": "Chained Together コラボ VTuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-09-25"
+        }
+      ],
+      "games": [
+        "Chained Together"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCfW_A-xaP-6D6hlnDEbpl0g",
+      "name": "Scenteon",
+      "youtube_url": "https://www.youtube.com/@scenteon",
+      "subscribers": 79,
+      "subscriber_text": "79 subscribers",
+      "x_url": "https://twitter.com/ScenteonTTV",
+      "external_links": [
+        "https://twitter.com/ScenteonTTV"
+      ],
+      "twitch_url": "https://twitch.tv/scenteon",
+      "language": "English",
+      "last_active": "2026-09-24",
+      "proofs": [
+        {
+          "video_id": "8EhTubhQ8ik",
+          "url": "https://www.youtube.com/watch?v=8EhTubhQ8ik",
+          "title": "Lethal Company with friends Mysterous/Amber/Ariel",
+          "duration": 1984,
+          "channel_id": "UCfW_A-xaP-6D6hlnDEbpl0g",
+          "channel": "Scenteon",
+          "channel_url": "https://www.youtube.com/@scenteon",
+          "query_language": "English",
+          "query": "\"Lethal Company\" \"with friends\" vtuber after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-08-24"
+        },
+        {
+          "video_id": "xlZGseN-TFU",
+          "url": "https://www.youtube.com/watch?v=xlZGseN-TFU",
+          "title": "Lethal Company with Friends!~ WEEEE!",
+          "duration": 10106,
+          "channel_id": "UCfW_A-xaP-6D6hlnDEbpl0g",
+          "channel": "Scenteon",
+          "channel_url": "https://www.youtube.com/@scenteon",
+          "query_language": "English",
+          "query": "\"Lethal Company\" \"with friends\" vtuber after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-08-24"
+        }
+      ],
+      "games": [
+        "Lethal Company"
+      ],
+      "search_hit_count": 2
+    },
+    {
+      "channel_id": "UCYBkIBvWIY3kgMJ7zerZRAg",
+      "name": "あゆさんVT",
+      "youtube_url": "https://www.youtube.com/@Ayusanー0",
+      "subscribers": 87,
+      "subscriber_text": "87 subscribers",
+      "x_url": "https://x.com/Ayusan_YT",
+      "external_links": [
+        "https://x.com/Ayusan_YT"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-09-28",
+      "proofs": [
+        {
+          "video_id": "PqawnTUIl0A",
+          "url": "https://www.youtube.com/watch?v=PqawnTUIl0A",
+          "title": "(Party Animals) 零時四人組、勝ち残るのはいったい誰だ？！",
+          "duration": 5580,
+          "channel_id": "UCYBkIBvWIY3kgMJ7zerZRAg",
+          "channel": "あゆさんVT",
+          "channel_url": "https://www.youtube.com/@Ayusanー0",
+          "query_language": "English",
+          "query": "\"Party Animals\" collab vtuber after:2026-07-01",
+          "game": "Party Animals",
+          "date": "2026-08-24"
+        }
+      ],
+      "games": [
+        "Party Animals"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCYHFNtxTVI8oPSH6_wewsXg",
+      "name": "Yed Yasha VODs",
+      "youtube_url": "https://www.youtube.com/@yedyashaVODs",
+      "subscribers": 89,
+      "subscriber_text": "89 subscribers",
+      "x_url": "https://twitter.com/yedyasha",
+      "external_links": [
+        "https://tiktok.com/@yedyasha",
+        "https://twitter.com/yedyasha",
+        "https://www.tiktok.com/@yedyasha"
+      ],
+      "twitch_url": "https://twitch.tv/yedyasha",
+      "language": "English",
+      "last_active": "2026-09-27",
+      "proofs": [
+        {
+          "video_id": "nCtKAQU1-po",
+          "url": "https://www.youtube.com/watch?v=nCtKAQU1-po",
+          "title": "Cooking @Fay_Falyra @Therysoraxxy | Overcooked 2",
+          "duration": 23565,
+          "channel_id": "UCYHFNtxTVI8oPSH6_wewsXg",
+          "channel": "Yed Yasha VODs",
+          "channel_url": "https://www.youtube.com/@yedyashaVODs",
+          "query_language": "English",
+          "query": "\"Overcooked 2\" collab vtuber after:2026-07-01",
+          "game": "Overcooked 2",
+          "date": "2026-08-23"
+        },
+        {
+          "id": "ZJJCZjY_tRQ",
+          "title": "Reaching the Top in our SLEEP | PEAK w/ VTired+",
+          "date": "2026-07-23",
+          "url": "https://www.youtube.com/watch?v=ZJJCZjY_tRQ",
+          "game": "PEAK"
+        }
+      ],
+      "games": [
+        "Overcooked 2",
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC_1riXe4G-1bCp9V5oZJivw",
+      "name": "Celestia Libri",
+      "youtube_url": "https://www.youtube.com/@CelestiaLibri",
+      "subscribers": 90,
+      "subscriber_text": "90 subscribers",
+      "x_url": "https://x.com/CelestiaLibri",
+      "external_links": [
+        "https://x.com/CelestiaLibri"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-09-28",
+      "proofs": [
+        {
+          "video_id": "xUyMRohYpJE",
+          "url": "https://www.youtube.com/watch?v=xUyMRohYpJE",
+          "title": "[WE WERE HERE EXPEDITIONS: THE FRIENDSHIP] Our Friendship Keeps Getting Stronger",
+          "duration": 10238,
+          "channel_id": "UC_1riXe4G-1bCp9V5oZJivw",
+          "channel": "Celestia Libri",
+          "channel_url": "https://www.youtube.com/@CelestiaLibri",
+          "query_language": "English",
+          "query": "\"We Were Here\" collab vtuber after:2026-07-01",
+          "game": "We Were Here",
+          "date": "2026-09-03"
+        }
+      ],
+      "games": [
+        "We Were Here"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCeqb5BmuKPU4y-YaSRQ_kyA",
+      "name": "猫村きなこ",
+      "youtube_url": "https://www.youtube.com/@nekomura_kinako",
+      "subscribers": 96,
+      "subscriber_text": "96 subscribers",
+      "x_url": "https://x.com/nekomura_kinako",
+      "external_links": [
+        "https://x.com/nekomura_kinako"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-09-29",
+      "proofs": [
+        {
+          "video_id": "KN9-iICZSMg",
+          "url": "https://www.youtube.com/watch?v=KN9-iICZSMg",
+          "title": "【他責厳禁！】PICO PARK 2でCCHのみんなと遊ぶよーーーーー🐈🐾🐾【コラボ♪】",
+          "duration": 10594,
+          "channel_id": "UCeqb5BmuKPU4y-YaSRQ_kyA",
+          "channel": "猫村きなこ",
+          "channel_url": "https://www.youtube.com/@nekomura_kinako",
+          "query_language": "Japanese",
+          "query": "PICO PARK 2 コラボ VTuber after:2026-07-01",
+          "game": "PICO PARK 2",
+          "date": "2026-09-18"
+        }
+      ],
+      "games": [
+        "PICO PARK 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCr3CEBWznJWlL-qnAkCi_hw",
+      "name": "Raktrix",
+      "youtube_url": "https://www.youtube.com/@Raktrix-nv7gg",
+      "subscribers": 135,
+      "subscriber_text": "135 subscribers",
+      "x_url": "https://x.com/DiscortmanGil",
+      "external_links": [
+        "https://discord.gg/nVEZfdVKVC",
+        "https://x.com/DiscortmanGil"
+      ],
+      "twitch_url": "https://twitch.tv/raktrix",
+      "language": "Spanish",
+      "last_active": "2026-09-26",
+      "proofs": [
+        {
+          "id": "vyAS8g2yVd0",
+          "title": "¡No vi venir esa BOMBA! 💀 #shorts #peakgame #fail",
+          "date": "2026-08-29",
+          "url": "https://www.youtube.com/watch?v=vyAS8g2yVd0",
+          "game": "PEAK"
+        },
+        {
+          "video_id": "oNVC2Fc04vU",
+          "url": "https://www.youtube.com/watch?v=oNVC2Fc04vU",
+          "title": "PICO PARK PERO PERDEMOS LA AMISTAD  Película",
+          "duration": 11230,
+          "channel_id": "UCr3CEBWznJWlL-qnAkCi_hw",
+          "channel": "Raktrix",
+          "channel_url": "https://www.youtube.com/@Raktrix-nv7gg",
+          "query_language": "Spanish",
+          "query": "\"PICO PARK 2\" colaboración vtuber after:2026-07-01",
+          "game": "PICO PARK 2",
+          "date": "2026-08-21"
+        }
+      ],
+      "games": [
+        "PEAK",
+        "PICO PARK 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCobYJlChfWH_p5j7G3egC8Q",
+      "name": "ZAO's Twitch VODs",
+      "youtube_url": "https://www.youtube.com/@ZAOsTwitchVODs",
+      "subscribers": 179,
+      "subscriber_text": "179 subscribers",
+      "x_url": "https://x.com/ZAO526",
+      "external_links": [
+        "https://instagram.com/zao.vtuber",
+        "https://www.instagram.com/zao.vtuber",
+        "https://x.com/ZAO526"
+      ],
+      "twitch_url": "https://twitch.tv/zao526",
+      "language": "Traditional Chinese",
+      "last_active": "2026-09-29",
+      "proofs": [
+        {
+          "video_id": "DZx0413wDtc",
+          "url": "https://www.youtube.com/watch?v=DZx0413wDtc",
+          "title": "ZAO｜9 . 17｜PEAK 男人們！爬山 ft. 与一 . 二步 . 凱利斯 . 穆克蕗 . 諾恪里",
+          "duration": 11538,
+          "channel_id": "UCobYJlChfWH_p5j7G3egC8Q",
+          "channel": "ZAO's Twitch VODs",
+          "channel_url": "https://www.youtube.com/@ZAOsTwitchVODs",
+          "query_language": "Traditional Chinese",
+          "query": "PEAK 合作 台灣 VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-29"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCvdjppnrNaYc6D9h3PH4fUA",
+      "name": "RussieDear Clipped",
+      "youtube_url": "https://www.youtube.com/@RussieDearClips",
+      "subscribers": 204,
+      "subscriber_text": "204 subscribers",
+      "x_url": "https://twitter.com/Russiedear",
+      "external_links": [
+        "https://twitter.com/Russiedear"
+      ],
+      "twitch_url": "https://twitch.tv/russiedear",
+      "language": "English",
+      "last_active": "2026-09-30",
+      "proofs": [
+        {
+          "video_id": "JSdtqX8kMC8",
+          "url": "https://www.youtube.com/watch?v=JSdtqX8kMC8",
+          "title": "Pico Park 2 w/ The Pals",
+          "duration": 5843,
+          "channel_id": "UCvdjppnrNaYc6D9h3PH4fUA",
+          "channel": "RussieDear Clipped",
+          "channel_url": "https://www.youtube.com/@RussieDearClips",
+          "query_language": "English",
+          "query": "\"PICO PARK 2\" \"with friends\" vtuber after:2026-07-01",
+          "game": "PICO PARK 2",
+          "date": "2026-09-16"
+        },
+        {
+          "id": "iMzGo0CWnns",
+          "title": "Pico Park w / The Pals",
+          "date": "2026-09-04",
+          "url": "https://www.youtube.com/watch?v=iMzGo0CWnns",
+          "game": "PICO PARK 2"
+        }
+      ],
+      "games": [
+        "PICO PARK 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCe6XwfOQGGio0Juxa_ZcWfg",
+      "name": "Hyupil music",
+      "youtube_url": "https://www.youtube.com/@Hyupil_music",
+      "subscribers": 225,
+      "subscriber_text": "225 subscribers",
+      "x_url": "https://x.com/Hyu_pil",
+      "external_links": [
+        "https://x.com/Hyu_pil"
+      ],
+      "twitch_url": null,
+      "language": "Korean",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "jWbni1BNeoY",
+          "url": "https://www.youtube.com/watch?v=jWbni1BNeoY",
+          "title": "[유입환영]리썰 컴퍼니 합방 w.나탈리, 백랑",
+          "duration": 10570,
+          "channel_id": "UCe6XwfOQGGio0Juxa_ZcWfg",
+          "channel": "Hyupil music",
+          "channel_url": "https://www.youtube.com/@Hyupil_music",
+          "query_language": "Korean",
+          "query": "리썰 컴퍼니 합방 버튜버 after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-09-03"
+        }
+      ],
+      "games": [
+        "Lethal Company"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCQjV7T467g_9Pwa9QDLiqDQ",
+      "name": "Inui Nasefuwa",
+      "youtube_url": "https://www.youtube.com/@InuiNasefuwa",
+      "subscribers": 240,
+      "subscriber_text": "240 subscribers",
+      "x_url": "https://x.com/nasefuwa",
+      "external_links": [
+        "https://x.com/nasefuwa"
+      ],
+      "twitch_url": null,
+      "language": "Spanish",
+      "last_active": "2026-09-26",
+      "proofs": [
+        {
+          "video_id": "CpjYtZGxkgk",
+          "url": "https://www.youtube.com/watch?v=CpjYtZGxkgk",
+          "title": "Quiero salvarte, Scoutmaster | Peak |",
+          "duration": 8335,
+          "channel_id": "UCQjV7T467g_9Pwa9QDLiqDQ",
+          "channel": "Inui Nasefuwa",
+          "channel_url": "https://www.youtube.com/@InuiNasefuwa",
+          "query_language": "Spanish",
+          "query": "\"PEAK\" amigos vtuber español after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-15"
+        },
+        {
+          "video_id": "2GttSp3pnYQ",
+          "url": "https://www.youtube.com/watch?v=2GttSp3pnYQ",
+          "title": "Noche de Chilenos C-H-I ! | Lethal Company COLLAB |",
+          "duration": 10647,
+          "channel_id": "UCQjV7T467g_9Pwa9QDLiqDQ",
+          "channel": "Inui Nasefuwa",
+          "channel_url": "https://www.youtube.com/@InuiNasefuwa",
+          "query_language": "Spanish",
+          "query": "\"Lethal Company\" amigos vtuber español after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-08-09"
+        },
+        {
+          "video_id": "bcBWPaYVJ_U",
+          "url": "https://www.youtube.com/watch?v=bcBWPaYVJ_U",
+          "title": "Está horrible... a subir al pico! | Peak COLLAB |",
+          "duration": 11390,
+          "channel_id": "UCQjV7T467g_9Pwa9QDLiqDQ",
+          "channel": "Inui Nasefuwa",
+          "channel_url": "https://www.youtube.com/@InuiNasefuwa",
+          "query_language": "Spanish",
+          "query": "\"PEAK\" amigos vtuber español after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-02"
+        }
+      ],
+      "games": [
+        "Lethal Company",
+        "PEAK"
+      ],
+      "search_hit_count": 3
+    },
+    {
+      "channel_id": "UCIypKGf9W051zXO3Pk4cLVA",
+      "name": "JinniuLong",
+      "youtube_url": "https://www.youtube.com/@JinniuLong",
+      "subscribers": 250,
+      "subscriber_text": "250 subscribers",
+      "x_url": "https://twitter.com/JinniuLong",
+      "external_links": [
+        "https://twitter.com/JinniuLong"
+      ],
+      "twitch_url": "https://twitch.tv/jinniulong",
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "id": "5gvO9wGlem4",
+          "title": "A REALLY BIG ASS REPO COLLAB, ITS GONNA GET CRAZY, AND FUN AT THE SAME TIME! | VTUBER BEEEG COLLAB",
+          "date": "2026-10-03",
+          "url": "https://www.youtube.com/watch?v=5gvO9wGlem4",
+          "game": "R.E.P.O."
+        },
+        {
+          "video_id": "nqJZ7Yg7HEo",
+          "url": "https://www.youtube.com/watch?v=nqJZ7Yg7HEo",
+          "title": "BEEN A WHILE SINCE I PLAYED PEAK, LETS CHECK OUT THE NEW SHIZZ WITH VTUBERS! | VTUBER PEAK COLLAB",
+          "duration": 9958,
+          "channel_id": "UCIypKGf9W051zXO3Pk4cLVA",
+          "channel": "JinniuLong",
+          "channel_url": "https://www.youtube.com/@JinniuLong",
+          "query_language": "English",
+          "query": "\"PEAK\" collab vtuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-21"
+        }
+      ],
+      "games": [
+        "PEAK",
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCWnGFhw9ycZjeHkyp5cuA3g",
+      "name": "Re: Lyt 黎來達👐",
+      "youtube_url": "https://www.youtube.com/@relyt_ch",
+      "subscribers": 262,
+      "subscriber_text": "262 subscribers",
+      "x_url": "https://twitter.com/relyt_419",
+      "external_links": [
+        "https://twitter.com/relyt_419"
+      ],
+      "twitch_url": "https://twitch.tv/relyt_ch",
+      "language": "Traditional Chinese",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "yYkZI9tsKiM",
+          "url": "https://www.youtube.com/watch?v=yYkZI9tsKiM",
+          "title": "👐【MECCHA CHAMELEON】feat. V朋們 & 觀眾｜Re: Lyt",
+          "duration": 9890,
+          "channel_id": "UCWnGFhw9ycZjeHkyp5cuA3g",
+          "channel": "Re: Lyt 黎來達👐",
+          "channel_url": "https://www.youtube.com/@relyt_ch",
+          "query_language": "Traditional Chinese",
+          "query": "MECCHA CHAMELEON 台灣 VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-11"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCQgP19ZVcXjjfEYymtNT7oA",
+      "name": "Messskull Ch. 密斯骷髏",
+      "youtube_url": "https://www.youtube.com/@messskull227",
+      "subscribers": 270,
+      "subscriber_text": "270 subscribers",
+      "x_url": "https://twitter.com/mess_skull",
+      "external_links": [
+        "https://discord.gg/JD43ZhGn8D",
+        "https://twitter.com/mess_skull"
+      ],
+      "twitch_url": "https://twitch.tv/messskull_yt",
+      "language": "Traditional Chinese",
+      "last_active": "2026-08-15",
+      "proofs": [
+        {
+          "video_id": "8BFnNpK8t4Q",
+          "url": "https://www.youtube.com/watch?v=8BFnNpK8t4Q",
+          "title": "【MECCHA CHAMELEON】好久沒開台了ww【密斯】",
+          "duration": 25861,
+          "channel_id": "UCQgP19ZVcXjjfEYymtNT7oA",
+          "channel": "Messskull Ch. 密斯骷髏",
+          "channel_url": "https://www.youtube.com/@messskull227",
+          "query_language": "Traditional Chinese",
+          "query": "MECCHA CHAMELEON 台灣 VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-07-13"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCeFQBZfvGMEHQEpcxkuwF2A",
+      "name": "神ヶ崎ケイ Vtuber",
+      "youtube_url": "https://www.youtube.com/@神ヶ崎ケイVtuber",
+      "subscribers": 292,
+      "subscriber_text": "292 subscribers",
+      "x_url": "https://twitter.com/KamigasakiKei_V",
+      "external_links": [
+        "https://twitter.com/KamigasakiKei_V"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-09-29",
+      "proofs": [
+        {
+          "video_id": "xRUAXyayIyQ",
+          "url": "https://www.youtube.com/watch?v=xRUAXyayIyQ",
+          "title": "楽しくコラボだよ！！最終回かな～？【PICO PARK 2】",
+          "duration": 7206,
+          "channel_id": "UCeFQBZfvGMEHQEpcxkuwF2A",
+          "channel": "神ヶ崎ケイ Vtuber",
+          "channel_url": "https://www.youtube.com/@神ヶ崎ケイVtuber",
+          "query_language": "Japanese",
+          "query": "PICO PARK 2 コラボ VTuber after:2026-07-01",
+          "game": "PICO PARK 2",
+          "date": "2026-09-16"
+        },
+        {
+          "video_id": "Cas4j1QBixA",
+          "url": "https://www.youtube.com/watch?v=Cas4j1QBixA",
+          "title": "楽しくコラボだよ！！ｱｰｳ【PICO PARK 2】",
+          "duration": 7421,
+          "channel_id": "UCeFQBZfvGMEHQEpcxkuwF2A",
+          "channel": "神ヶ崎ケイ Vtuber",
+          "channel_url": "https://www.youtube.com/@神ヶ崎ケイVtuber",
+          "query_language": "Japanese",
+          "query": "PICO PARK 2 コラボ VTuber after:2026-07-01",
+          "game": "PICO PARK 2",
+          "date": "2026-08-19"
+        },
+        {
+          "video_id": "AQQtm51RtI8",
+          "url": "https://www.youtube.com/watch?v=AQQtm51RtI8",
+          "title": "楽しくコラボだよ！！プレイヤースキル求めてきたな...【PICO PARK 2】",
+          "duration": 7091,
+          "channel_id": "UCeFQBZfvGMEHQEpcxkuwF2A",
+          "channel": "神ヶ崎ケイ Vtuber",
+          "channel_url": "https://www.youtube.com/@神ヶ崎ケイVtuber",
+          "query_language": "Japanese",
+          "query": "PICO PARK 2 コラボ VTuber after:2026-07-01",
+          "game": "PICO PARK 2",
+          "date": "2026-07-14"
+        }
+      ],
+      "games": [
+        "PICO PARK 2"
+      ],
+      "search_hit_count": 3
+    },
+    {
+      "channel_id": "UCsTm_prsSzKBwZVNM7_da9Q",
+      "name": "Rein Talveti【VERSACHI】",
+      "youtube_url": "https://www.youtube.com/@ReinTalvetiCH",
+      "subscribers": 304,
+      "subscriber_text": "304 subscribers",
+      "x_url": "https://x.com/ReinTalveti",
+      "external_links": [
+        "https://discord.gg/7bwhm37UqJ",
+        "https://instagram.com/reintalveti",
+        "https://tiktok.com/@reintalveti",
+        "https://www.instagram.com/reintalveti",
+        "https://www.tiktok.com/@reintalveti",
+        "https://x.com/ReinTalveti"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "L-z5Kc9DLsg",
+          "url": "https://www.youtube.com/watch?v=L-z5Kc9DLsg",
+          "title": "【We Were Here Together】Pasti Cepet #ReinLive #vtuberid",
+          "duration": 8297,
+          "channel_id": "UCsTm_prsSzKBwZVNM7_da9Q",
+          "channel": "Rein Talveti【VERSACHI】",
+          "channel_url": "https://www.youtube.com/@ReinTalvetiCH",
+          "query_language": "English",
+          "query": "\"We Were Here\" collab vtuber after:2026-07-01",
+          "game": "We Were Here",
+          "date": "2026-08-07"
+        }
+      ],
+      "games": [
+        "We Were Here"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCrrhKi8Z7ws1FR8FsdvfTBw",
+      "name": "HajimeCh",
+      "youtube_url": "https://www.youtube.com/@HajimeCh13943",
+      "subscribers": 310,
+      "subscriber_text": "310 subscribers",
+      "x_url": "https://twitter.com/HajimeCh13943",
+      "external_links": [
+        "https://twitter.com/HajimeCh13943"
+      ],
+      "twitch_url": null,
+      "language": "Thai",
+      "last_active": "2026-09-22",
+      "proofs": [
+        {
+          "video_id": "NvwIQT2jXKE",
+          "url": "https://www.youtube.com/watch?v=NvwIQT2jXKE",
+          "title": "Meccha Chameleon - จิตรกรกลับมาแล้วววว",
+          "duration": 7856,
+          "channel_id": "UCrrhKi8Z7ws1FR8FsdvfTBw",
+          "channel": "HajimeCh",
+          "channel_url": "https://www.youtube.com/@HajimeCh13943",
+          "query_language": "Thai",
+          "query": "\"MECCHA CHAMELEON\" vtuber ไทย after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-07-13"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCv99jPk4eJFhQ26dDLzHX6A",
+      "name": "Kobold's Burrow",
+      "youtube_url": "https://www.youtube.com/@KoboldsBurrow",
+      "subscribers": 325,
+      "subscriber_text": "325 subscribers",
+      "x_url": "https://twitter.com/koboldsburrow",
+      "external_links": [
+        "https://bsky.app/profile/koboldsburrow.bsky.social",
+        "https://twitter.com/koboldsburrow"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-09-17",
+      "proofs": [
+        {
+          "video_id": "4WJbztK-t4M",
+          "url": "https://www.youtube.com/watch?v=4WJbztK-t4M",
+          "title": "[Gaming] Overcooked 2! [PNGTuber]",
+          "duration": 13364,
+          "channel_id": "UCv99jPk4eJFhQ26dDLzHX6A",
+          "channel": "Kobold's Burrow",
+          "channel_url": "https://www.youtube.com/@KoboldsBurrow",
+          "query_language": "English",
+          "query": "\"Overcooked 2\" collab vtuber after:2026-07-01",
+          "game": "Overcooked 2",
+          "date": "2026-07-30"
+        }
+      ],
+      "games": [
+        "Overcooked 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCNidYjCf7cp8G3c1Gc90N3g",
+      "name": "青藍ラピ",
+      "youtube_url": "https://www.youtube.com/@Seiran_Lapi",
+      "subscribers": 342,
+      "subscriber_text": "342 subscribers",
+      "x_url": "https://x.com/Lapi_s_919",
+      "external_links": [
+        "https://lit.link/SeiranLapi",
+        "https://x.com/Lapi_s_919"
+      ],
+      "twitch_url": "https://twitch.tv/lapi_seiran",
+      "language": "Japanese",
+      "last_active": "2026-09-17",
+      "proofs": [
+        {
+          "video_id": "tzHGMDIR_kI",
+          "url": "https://www.youtube.com/watch?v=tzHGMDIR_kI",
+          "title": "【PEAK】リア友コラボ！私がキャリーします😎(青藍ラピ視点)【個人Vtuber】",
+          "duration": 15291,
+          "channel_id": "UCNidYjCf7cp8G3c1Gc90N3g",
+          "channel": "青藍ラピ",
+          "channel_url": "https://www.youtube.com/@Seiran_Lapi",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-25"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC0rLOnG8uAYsW2loUCJ6Lww",
+      "name": "SakuraLuna",
+      "youtube_url": "https://www.youtube.com/@NotSakuraLuna",
+      "subscribers": 361,
+      "subscriber_text": "361 subscribers",
+      "x_url": "https://twitter.com/NotSakuraLuna",
+      "external_links": [
+        "https://discord.gg/zJaSTpBhrx",
+        "https://twitter.com/NotSakuraLuna"
+      ],
+      "twitch_url": "https://twitch.tv/notsakuraluna",
+      "language": "English",
+      "last_active": "2026-08-17",
+      "proofs": [
+        {
+          "video_id": "aDHqtE49vv0",
+          "url": "https://www.youtube.com/watch?v=aDHqtE49vv0",
+          "title": "【VOD】First ever Lethal Company with friends!!! (ft Mocamilku)",
+          "duration": 7096,
+          "channel_id": "UC0rLOnG8uAYsW2loUCJ6Lww",
+          "channel": "SakuraLuna",
+          "channel_url": "https://www.youtube.com/@NotSakuraLuna",
+          "query_language": "English",
+          "query": "\"Lethal Company\" \"with friends\" vtuber after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-08-14"
+        },
+        {
+          "id": "kEZMLguatO4",
+          "title": "【VOD】Meccha Chameleon with friends!!! (many frieneds) (ft Mocamilku)",
+          "date": "2026-07-03",
+          "url": "https://www.youtube.com/watch?v=kEZMLguatO4",
+          "game": "MECCHA CHAMELEON"
+        }
+      ],
+      "games": [
+        "Lethal Company",
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCBI9GcT_lFroNj7y5YwrVCQ",
+      "name": "Schining",
+      "youtube_url": "https://www.youtube.com/@Schining",
+      "subscribers": 369,
+      "subscriber_text": "369 subscribers",
+      "x_url": "https://twitter.com/Schining_",
+      "external_links": [
+        "https://discord.gg/wsJ8cjY",
+        "https://twitter.com/Schining_"
+      ],
+      "twitch_url": "https://twitch.tv/schining_",
+      "language": "German",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "Efsis1RxK5Q",
+          "url": "https://www.youtube.com/watch?v=Efsis1RxK5Q",
+          "title": "Es wird wieder geklettert / PEAK THE FINAL ASCENT🗻🧗🧗‍♀️ | DEUTSCH / GERVTUBER",
+          "duration": 20982,
+          "channel_id": "UCBI9GcT_lFroNj7y5YwrVCQ",
+          "channel": "Schining",
+          "channel_url": "https://www.youtube.com/@Schining",
+          "query_language": "German",
+          "query": "\"PEAK\" zusammen vtuber deutsch after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-27"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC4qAYv5e8I-3wO9xBiQKaIQ",
+      "name": "汐月Shizuki ",
+      "youtube_url": "https://www.youtube.com/@shizuki-1",
+      "subscribers": 387,
+      "subscriber_text": "387 subscribers",
+      "x_url": "https://x.com/xun1942144/status/1972704152557154352?t=KYW_6Q1_mcOalfN6FhflBQ&s=19",
+      "external_links": [
+        "https://discord.gg/6NZC6jSf7z",
+        "https://instagram.com/shizu_ki0418?igsh=MWk1am1lMHI2bXJ3aA==",
+        "https://www.instagram.com/shizu_ki0418?igsh=MWk1am1lMHI2bXJ3aA==",
+        "https://x.com/xun1942144/status/1972704152557154352?t=KYW_6Q1_mcOalfN6FhflBQ&s=19"
+      ],
+      "twitch_url": "https://twitch.tv/shizuki0418",
+      "language": "Traditional Chinese",
+      "last_active": "2026-09-25",
+      "proofs": [
+        {
+          "video_id": "o_QRGiApM0k",
+          "url": "https://www.youtube.com/watch?v=o_QRGiApM0k",
+          "title": "《MECCHA CHAMELEON》來玩躲貓貓喇! ft.很多人",
+          "duration": 7783,
+          "channel_id": "UC4qAYv5e8I-3wO9xBiQKaIQ",
+          "channel": "汐月Shizuki ",
+          "channel_url": "https://www.youtube.com/@shizuki-1",
+          "query_language": "Traditional Chinese",
+          "query": "MECCHA CHAMELEON 台灣 VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-07-25"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCzN9QhwTlWqgQ_Buq5BExdw",
+      "name": "Kazuto /KRG_Kazuto",
+      "youtube_url": "https://www.youtube.com/@kazutokrg_kazuto1107",
+      "subscribers": 409,
+      "subscriber_text": "409 subscribers",
+      "x_url": "https://twitter.com/kazuki_kiduka",
+      "external_links": [
+        "https://twitter.com/kazuki_kiduka"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-09-29",
+      "proofs": [
+        {
+          "video_id": "YP0Q-qS3Oa8",
+          "url": "https://www.youtube.com/watch?v=YP0Q-qS3Oa8",
+          "title": "【PEAK】4人でPEAKコラボ",
+          "duration": 10730,
+          "channel_id": "UCzN9QhwTlWqgQ_Buq5BExdw",
+          "channel": "Kazuto /KRG_Kazuto",
+          "channel_url": "https://www.youtube.com/@kazutokrg_kazuto1107",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-14"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCymIo2XZQBb8zViWzuPzoMQ",
+      "name": "Kudo Kafka channel",
+      "youtube_url": "https://www.youtube.com/@KDkfkch.777",
+      "subscribers": 427,
+      "subscriber_text": "427 subscribers",
+      "x_url": "https://twitter.com/v99_no_session",
+      "external_links": [
+        "https://bsky.app/profile/kudokfktkmn.bsky.social",
+        "https://twitter.com/v99_no_session",
+        "https://x.com/Kudokfk_tkmn"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "id": "C5A3UYXv06Y",
+          "title": "【 PEAK / コラボ配信 】今週2回目の登山！登り切りたい！！【葛戸カフカ／Vtuber】",
+          "date": "2026-09-19",
+          "url": "https://www.youtube.com/watch?v=C5A3UYXv06Y",
+          "game": "PEAK"
+        },
+        {
+          "video_id": "WAPLgvrDwBM",
+          "url": "https://www.youtube.com/watch?v=WAPLgvrDwBM",
+          "title": "【 PEAK / コラボ配信 】最初のアプデからやってないので新要素知らなすぎる登山家です【葛戸カフカ／Vtuber】",
+          "duration": 11339,
+          "channel_id": "UCymIo2XZQBb8zViWzuPzoMQ",
+          "channel": "葛戸 カフカ / Kudo Kafka　",
+          "channel_url": "https://www.youtube.com/@KDkfkch.777",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-17"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC1YJeu2rIWFdqNMLoxQcPdA",
+      "name": "Chione Charmaine【VERSACHI】",
+      "youtube_url": "https://www.youtube.com/@ChioneCharmaine",
+      "subscribers": 445,
+      "subscriber_text": "445 subscribers",
+      "x_url": "https://x.com/chionecharmaine?t=20sjLsFQDS-uPRS79LWBIA&s=09",
+      "external_links": [
+        "https://instagram.com/chionecharmaine?igsh=eHJoaDR4ZGcxcXEy",
+        "https://tiktok.com/@chione.charmaine?_t=ZS-901ZqH6JmHC&_r=1",
+        "https://www.instagram.com/chionecharmaine?igsh=eHJoaDR4ZGcxcXEy",
+        "https://www.tiktok.com/@chione.charmaine?_t=ZS-901ZqH6JmHC&_r=1",
+        "https://x.com/chionecharmaine?t=20sjLsFQDS-uPRS79LWBIA&s=09"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-01",
+      "proofs": [
+        {
+          "id": "DgsTwHgDz94",
+          "title": "【Chained Together】melanjutkan perjuangan solo itu #chionecharmaine #vtuberid #vtuberindonesia",
+          "date": "2026-09-03",
+          "url": "https://www.youtube.com/watch?v=DgsTwHgDz94",
+          "game": "Chained Together"
+        },
+        {
+          "video_id": "D2dgiY-D0og",
+          "url": "https://www.youtube.com/watch?v=D2dgiY-D0og",
+          "title": "【We Were Here Together】pasrah aja yuk #chionecharmaine #vtuberid #vtuberindonesia #ChioneAir",
+          "duration": 9250,
+          "channel_id": "UC1YJeu2rIWFdqNMLoxQcPdA",
+          "channel": "Chione Charmaine【VERSACHI】",
+          "channel_url": "https://www.youtube.com/@ChioneCharmaine",
+          "query_language": "English",
+          "query": "\"We Were Here\" collab vtuber after:2026-07-01",
+          "game": "We Were Here",
+          "date": "2026-08-08"
+        }
+      ],
+      "games": [
+        "Chained Together",
+        "We Were Here"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC_B_QFCJGH_alYuEhqOewUA",
+      "name": "山猫たまき",
+      "youtube_url": "https://www.youtube.com/@TamakiYamaCat",
+      "subscribers": 597,
+      "subscriber_text": "597 subscribers",
+      "x_url": "https://twitter.com/Tamaki_yamacat3",
+      "external_links": [
+        "https://twitter.com/Tamaki_yamacat3"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "LHHzyhQXbh0",
+          "url": "https://www.youtube.com/watch?v=LHHzyhQXbh0",
+          "title": "【PEAK】そうなんです【コラボ/新人Vtuber】",
+          "duration": 9123,
+          "channel_id": "UC_B_QFCJGH_alYuEhqOewUA",
+          "channel": "山猫たまき",
+          "channel_url": "https://www.youtube.com/@TamakiYamaCat",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-07-29"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UClIyow-XT2xcYzYjilKuiKA",
+      "name": "世良もろは",
+      "youtube_url": "https://www.youtube.com/@seramoroha",
+      "subscribers": 607,
+      "subscriber_text": "607 subscribers",
+      "x_url": "https://x.com/seramoroha",
+      "external_links": [
+        "https://x.com/seramoroha"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-01",
+      "proofs": [
+        {
+          "id": "ODHOin0pPEQ",
+          "title": "【#コラボ】第3回そままつさんと2人で楽しくオバクク2【#overcooked2 】",
+          "date": "2026-10-01",
+          "url": "https://www.youtube.com/watch?v=ODHOin0pPEQ",
+          "game": "Overcooked 2"
+        },
+        {
+          "video_id": "Xwpsaq6zJ5Q",
+          "url": "https://www.youtube.com/watch?v=Xwpsaq6zJ5Q",
+          "title": "[#Collab] Having fun playing Overcooked! 2 with Somamatsu-san - Round 2 [#overcooked2]",
+          "duration": 3860,
+          "channel_id": "UClIyow-XT2xcYzYjilKuiKA",
+          "channel": "世良もろは",
+          "channel_url": "https://www.youtube.com/@seramoroha",
+          "query_language": "English",
+          "query": "\"Overcooked 2\" collab vtuber after:2026-07-01",
+          "game": "Overcooked 2",
+          "date": "2026-09-19"
+        }
+      ],
+      "games": [
+        "Overcooked 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCfuMiuO_3YXT3Tre_M_p9-A",
+      "name": "AYCIA",
+      "youtube_url": "https://www.youtube.com/@AYCIA707",
+      "subscribers": 618,
+      "subscriber_text": "618 subscribers",
+      "x_url": "https://x.com/AYCIA707",
+      "external_links": [
+        "https://x.com/AYCIA707"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "id": "DSKN5q3QL7Y",
+          "title": "KALO LANCAR LANJUT, KALO TIDAK NT [REPO] @DikeyShinosuke #pngtuberid #vtuberid",
+          "date": "2026-10-03",
+          "url": "https://www.youtube.com/watch?v=DSKN5q3QL7Y",
+          "game": "R.E.P.O."
+        },
+        {
+          "video_id": "DHYoSo22aHA",
+          "url": "https://www.youtube.com/watch?v=DHYoSo22aHA",
+          "title": "MULUNG DI PLANET LAIN[Lethal Company] w/ friends #pngtuberid #vtuberid",
+          "duration": 12900,
+          "channel_id": "UCfuMiuO_3YXT3Tre_M_p9-A",
+          "channel": "AYCIA",
+          "channel_url": "https://www.youtube.com/@AYCIA707",
+          "query_language": "English",
+          "query": "\"Lethal Company\" \"with friends\" vtuber after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-09-24"
+        },
+        {
+          "id": "tT1WA4dyUMw",
+          "title": "BELAJAR MENGGAMBAR BERSAMA [MEcCHA CHAMELEON] #pngtuberid #vtuberid",
+          "date": "2026-09-19",
+          "url": "https://www.youtube.com/watch?v=tT1WA4dyUMw",
+          "game": "MECCHA CHAMELEON"
+        }
+      ],
+      "games": [
+        "Lethal Company",
+        "MECCHA CHAMELEON",
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCtm0Ee7HkTKg3XCwY3-EjDQ",
+      "name": "三柴ミスケ",
+      "youtube_url": "https://www.youtube.com/@mimisuke",
+      "subscribers": 618,
+      "subscriber_text": "618 subscribers",
+      "x_url": "https://x.com/mishiba_misuke",
+      "external_links": [
+        "https://x.com/mishiba_misuke"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "id": "_01UQF7WHII",
+          "title": "【PEAK】深夜の視聴者参加型PEAK（本当）【#Vtuber/#三柴ミスケ】初見・ROM歓迎",
+          "date": "2026-09-16",
+          "url": "https://www.youtube.com/watch?v=_01UQF7WHII",
+          "game": "PEAK"
+        },
+        {
+          "video_id": "gHzv5GhhvVc",
+          "url": "https://www.youtube.com/watch?v=gHzv5GhhvVc",
+          "title": "【PEAK/コラボ】PEAK解禁　w/葉竜らぷる＆如月ヴァン＆満月まひろ【#Vtuber/#三柴ミスケ】初見・ROM歓迎",
+          "duration": 19091,
+          "channel_id": "UCtm0Ee7HkTKg3XCwY3-EjDQ",
+          "channel": "三柴ミスケ",
+          "channel_url": "https://www.youtube.com/@mimisuke",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-19"
+        },
+        {
+          "id": "TvzM6BUAfD4",
+          "title": "【PEAK】【#Vtuber/#三柴ミスケ】初見・ROM歓迎",
+          "date": "2026-07-26",
+          "url": "https://www.youtube.com/watch?v=TvzM6BUAfD4",
+          "game": "PEAK"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCId-8YQ8-Ml0RHZe7D6Eh9Q",
+      "name": "Lofu琭桴🥃VType調酒師",
+      "youtube_url": "https://www.youtube.com/@Lofu66998",
+      "subscribers": 645,
+      "subscriber_text": "645 subscribers",
+      "x_url": "https://twitter.com/lofu669988",
+      "external_links": [
+        "https://instagram.com/lofu669988",
+        "https://lit.link/en/lofu669988",
+        "https://twitter.com/lofu669988",
+        "https://www.instagram.com/lofu669988"
+      ],
+      "twitch_url": null,
+      "language": "Traditional Chinese",
+      "last_active": "2026-09-25",
+      "proofs": [
+        {
+          "video_id": "B0NvQWHh5v8",
+          "url": "https://www.youtube.com/watch?v=B0NvQWHh5v8",
+          "title": "跟酒客一起玩PICO PARK 2-Lofu琭桴 #歡迎初見",
+          "duration": 11242,
+          "channel_id": "UCId-8YQ8-Ml0RHZe7D6Eh9Q",
+          "channel": "Lofu琭桴🥃VType調酒師",
+          "channel_url": "https://www.youtube.com/@Lofu66998",
+          "query_language": "Traditional Chinese",
+          "query": "PICO PARK 2 合作 台灣 VTuber after:2026-07-01",
+          "game": "PICO PARK 2",
+          "date": "2026-07-02"
+        }
+      ],
+      "games": [
+        "PICO PARK 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCfVrAUe2kU4QL6CD_0rr9jA",
+      "name": "Virtual-Neet Meko ",
+      "youtube_url": "https://www.youtube.com/@VirtualNeetMeko",
+      "subscribers": 645,
+      "subscriber_text": "645 subscribers",
+      "x_url": "https://twitter.com/vtuber_meko",
+      "external_links": [
+        "https://twitter.com/vtuber_meko"
+      ],
+      "twitch_url": "https://twitch.tv/virtualneetmeko",
+      "language": "Traditional Chinese",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "FhBM6PdwDus",
+          "url": "https://www.youtube.com/watch?v=FhBM6PdwDus",
+          "title": "【Meccha Chameleon】Ft.很多人 .... 晚點開放觀眾場 【Meko視角】",
+          "duration": 5473,
+          "channel_id": "UCfVrAUe2kU4QL6CD_0rr9jA",
+          "channel": "Virtual-Neet Meko",
+          "channel_url": "https://www.youtube.com/@VirtualNeetMeko",
+          "query_language": "Traditional Chinese",
+          "query": "MECCHA CHAMELEON 台灣 VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-07-05"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCVfup18PeIXJcuGeoXMHg_A",
+      "name": "春霞すのう_個人勢Vtuber",
+      "youtube_url": "https://www.youtube.com/@春霞すのう_個人勢Vtuber",
+      "subscribers": 723,
+      "subscriber_text": "723 subscribers",
+      "x_url": "https://twitter.com/HarukasumiS_V",
+      "external_links": [
+        "https://twitter.com/HarukasumiS_V"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "mpWW43pwbz4",
+          "url": "https://www.youtube.com/watch?v=mpWW43pwbz4",
+          "title": "【REPO/コラボ】よちよち歩きで行きます！！！【＃Vtuber/春霞すのう】",
+          "duration": 5790,
+          "channel_id": "UCVfup18PeIXJcuGeoXMHg_A",
+          "channel": "春霞すのう_個人勢Vtuber",
+          "channel_url": "https://www.youtube.com/@春霞すのう_個人勢Vtuber",
+          "query_language": "Japanese",
+          "query": "R.E.P.O. コラボ VTuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-10-03"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCyU7NcaAbrdpwwC6HUIwqTQ",
+      "name": "Elodie Marelune",
+      "youtube_url": "https://www.youtube.com/@ElodieMarelune",
+      "subscribers": 826,
+      "subscriber_text": "826 subscribers",
+      "x_url": "https://x.com/elodiemarelune",
+      "external_links": [
+        "https://discord.gg/UUvUGBc565",
+        "https://tiktok.com/@elodiemarelune",
+        "https://www.tiktok.com/@elodiemarelune",
+        "https://x.com/elodiemarelune"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "id": "FQReFDnzi_E",
+          "title": "【 PEAK 】P FOR PEAK!!!!",
+          "date": "2026-09-30",
+          "url": "https://www.youtube.com/watch?v=FQReFDnzi_E",
+          "game": "PEAK"
+        },
+        {
+          "id": "bbjOYzblL_w",
+          "title": "【 PEAK 】KITA MENUJU PUNCAK BERSAMA ROMBONGAN STUDY TOUR!!!!",
+          "date": "2026-09-25",
+          "url": "https://www.youtube.com/watch?v=bbjOYzblL_w",
+          "game": "PEAK"
+        },
+        {
+          "video_id": "awkcQC10jSM",
+          "url": "https://www.youtube.com/watch?v=awkcQC10jSM",
+          "title": "【 CHAINED TOGETHER 】KERJASAMA MENUJU DUNIA ATAS!!!",
+          "duration": 9957,
+          "channel_id": "UCyU7NcaAbrdpwwC6HUIwqTQ",
+          "channel": "Elodie Marelune",
+          "channel_url": "https://www.youtube.com/@ElodieMarelune",
+          "query_language": "English",
+          "query": "\"Chained Together\" collab vtuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-09-23"
+        }
+      ],
+      "games": [
+        "Chained Together",
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCowJ_9Ftr9M8Y2WkqCv-1Ig",
+      "name": "卯月ななみ",
+      "youtube_url": "https://www.youtube.com/@uzuki_nanami",
+      "subscribers": 841,
+      "subscriber_text": "841 subscribers",
+      "x_url": "https://twitter.com/_uzuki_nanami",
+      "external_links": [
+        "https://twitter.com/_uzuki_nanami"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "id": "1QE0j6cSDGc",
+          "title": "【UNITeS-ユナイツ‐】【#ゆないつといっしょ】みんなと一緒に #めっちゃカメレオン ！！",
+          "date": "2026-09-20",
+          "url": "https://www.youtube.com/watch?v=1QE0j6cSDGc",
+          "game": "MECCHA CHAMELEON"
+        },
+        {
+          "video_id": "wW5X_J7xLKI",
+          "url": "https://www.youtube.com/watch?v=wW5X_J7xLKI",
+          "title": "初見さん歓迎！【家族コラボ】【#peak 】みんなで楽しく山登り！！",
+          "duration": 8499,
+          "channel_id": "UCowJ_9Ftr9M8Y2WkqCv-1Ig",
+          "channel": "卯月ななみ",
+          "channel_url": "https://www.youtube.com/@uzuki_nanami",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-31"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON",
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCxQO-g1UUSdQflVLgcn4czw",
+      "name": "Ken Evagreen Ch.",
+      "youtube_url": "https://www.youtube.com/@kenevagreen",
+      "subscribers": 879,
+      "subscriber_text": "879 subscribers",
+      "x_url": "https://twitter.com/EvagreenKen",
+      "external_links": [
+        "https://twitter.com/EvagreenKen"
+      ],
+      "twitch_url": "https://twitch.tv/kenevagreen",
+      "language": "English",
+      "last_active": "2026-09-30",
+      "proofs": [
+        {
+          "video_id": "PG7s7-aEz74",
+          "url": "https://www.youtube.com/watch?v=PG7s7-aEz74",
+          "title": "【Chained Together】Climbing hell with 4 doofus's【Collab】",
+          "duration": 6822,
+          "channel_id": "UCxQO-g1UUSdQflVLgcn4czw",
+          "channel": "Ken Evagreen Ch.",
+          "channel_url": "https://www.youtube.com/@kenevagreen",
+          "query_language": "English",
+          "query": "\"Chained Together\" collab vtuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-07-21"
+        },
+        {
+          "id": "a3NCgC-pBRI",
+          "title": "【MECCHA CHAMELEON】絵が描けない人の視点【コラボ】",
+          "date": "2026-07-13",
+          "url": "https://www.youtube.com/watch?v=a3NCgC-pBRI",
+          "game": "MECCHA CHAMELEON"
+        }
+      ],
+      "games": [
+        "Chained Together",
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCYE_P_X3dJt1I1xjiiBWTtw",
+      "name": "SAYA SERICA 사야 세리카 ch. ",
+      "youtube_url": "https://www.youtube.com/@saya_serica",
+      "subscribers": 1110,
+      "subscriber_text": "1.11K subscribers",
+      "x_url": "https://x.com/saya_serica",
+      "external_links": [
+        "https://x.com/saya_serica"
+      ],
+      "twitch_url": null,
+      "language": "Korean",
+      "last_active": "2026-09-27",
+      "proofs": [
+        {
+          "video_id": "AytjcWhdKs8",
+          "url": "https://www.youtube.com/watch?v=AytjcWhdKs8",
+          "title": "peak 피크 합방 (w.록시,동아,유수",
+          "duration": 24031,
+          "channel_id": "UCYE_P_X3dJt1I1xjiiBWTtw",
+          "channel": "SAYA SERICA 사야 세리카 ch. ",
+          "channel_url": "https://www.youtube.com/@saya_serica",
+          "query_language": "Korean",
+          "query": "PEAK 합방 버튜버 after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-15"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCnVPAfwJZZhLyiKwfkyB5xQ",
+      "name": "雛餅しゅか*",
+      "youtube_url": "https://www.youtube.com/@SyukaHinamochi",
+      "subscribers": 1110,
+      "subscriber_text": "1.11K subscribers",
+      "x_url": "https://twitter.com/syuka0815",
+      "external_links": [
+        "https://twitter.com/syuka0815",
+        "https://twitter.com/syukahinamochi"
+      ],
+      "twitch_url": "https://twitch.tv/syukahinamochi",
+      "language": "Japanese",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "c32ZaUyaK18",
+          "url": "https://www.youtube.com/watch?v=c32ZaUyaK18",
+          "title": "【めっちゃカメレオンコラボ】みんなでめちゃカメ交流会！【#VStreamer #Vtuber】",
+          "duration": 8104,
+          "channel_id": "UCnVPAfwJZZhLyiKwfkyB5xQ",
+          "channel": "雛餅しゅか*",
+          "channel_url": "https://www.youtube.com/@SyukaHinamochi",
+          "query_language": "Japanese",
+          "query": "メッチャカメレオン コラボ VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-26"
+        },
+        {
+          "id": "AhvmkDkoikY",
+          "title": "【めっちゃカメレオンコラボ】みんなでめちゃカメ交流会！夜の部【#VStreamer #Vtuber】",
+          "date": "2026-08-26",
+          "url": "https://www.youtube.com/watch?v=AhvmkDkoikY",
+          "game": "MECCHA CHAMELEON"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCSeDGuxXM9geg4fKw9s4Hsw",
+      "name": "Cayla Ch.",
+      "youtube_url": "https://www.youtube.com/@AkiraCayla",
+      "subscribers": 1170,
+      "subscriber_text": "1.17K subscribers",
+      "x_url": "https://twitter.com/CaylaAkira",
+      "external_links": [
+        "https://discord.gg/YNZ4Bp3SDM",
+        "https://tiktok.com/@akiracayla",
+        "https://twitter.com/CaylaAkira",
+        "https://www.tiktok.com/@akiracayla"
+      ],
+      "twitch_url": "https://twitch.tv/caylavt",
+      "language": "Thai",
+      "last_active": "2026-09-13",
+      "proofs": [
+        {
+          "video_id": "mnsfFo-D_xs",
+          "url": "https://www.youtube.com/watch?v=mnsfFo-D_xs",
+          "title": "【MECCHA CHAMELEON】ศิลปะเป็น 0 แบบพี่ เกมนี้จะรอดมั้ยหนอ",
+          "duration": 6230,
+          "channel_id": "UCSeDGuxXM9geg4fKw9s4Hsw",
+          "channel": "Cayla Ch.",
+          "channel_url": "https://www.youtube.com/@AkiraCayla",
+          "query_language": "Thai",
+          "query": "\"MECCHA CHAMELEON\" vtuber ไทย after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-07-05"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCxaNTAzHDgFDbzl7mZeDRmw",
+      "name": "ギエン 嫌われ者のヴィラン",
+      "youtube_url": "https://www.youtube.com/@Gien_Villain",
+      "subscribers": 1180,
+      "subscriber_text": "1.18K subscribers",
+      "x_url": "https://twitter.com/Gien_Villain",
+      "external_links": [
+        "https://tiktok.com/@gien_villain",
+        "https://twitter.com/Gien_Villain",
+        "https://www.tiktok.com/@gien_villain"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "F3SllQKSqyc",
+          "url": "https://www.youtube.com/watch?v=F3SllQKSqyc",
+          "title": "【 コラボ / #peak   】不思議なメンツで山登り【 個人VTuber / ギエン 】",
+          "duration": 10664,
+          "channel_id": "UCxaNTAzHDgFDbzl7mZeDRmw",
+          "channel": "ギエン 嫌われ者のヴィラン",
+          "channel_url": "https://www.youtube.com/@Gien_Villain",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-28"
+        },
+        {
+          "id": "gppA_m5x4Hw",
+          "title": "【 #コラボ / #repo 】恐怖レポ24時間耐久#3【 個人VTuber / ギエン 】",
+          "date": "2026-09-19",
+          "url": "https://www.youtube.com/watch?v=gppA_m5x4Hw",
+          "game": "R.E.P.O."
+        },
+        {
+          "id": "_8mZyW7IA6A",
+          "title": "【 #コラボ / #repo 】恐怖レポ24時間耐久#2【 個人VTuber / ギエン 】",
+          "date": "2026-09-19",
+          "url": "https://www.youtube.com/watch?v=_8mZyW7IA6A",
+          "game": "R.E.P.O."
+        }
+      ],
+      "games": [
+        "PEAK",
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCUKgggkEPoLOkNawCbQwFzw",
+      "name": "TheRake Dark",
+      "youtube_url": "https://www.youtube.com/@TheRakeDark",
+      "subscribers": 1240,
+      "subscriber_text": "1.24K subscribers",
+      "x_url": "https://x.com/TheRakeDark",
+      "external_links": [
+        "https://instagram.com/therakedark_stranger",
+        "https://www.instagram.com/therakedark_stranger",
+        "https://x.com/TheRakeDark"
+      ],
+      "twitch_url": "https://twitch.tv/therakedark_stranger",
+      "language": "Spanish",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "WbJTufh0um4",
+          "url": "https://www.youtube.com/watch?v=WbJTufh0um4",
+          "title": "PEAK 03 / 2 INTENTOS 2 ROTUNDOS FRACASOS, UNO PEOR QUE EL ANTERIOR",
+          "duration": 7017,
+          "channel_id": "UCUKgggkEPoLOkNawCbQwFzw",
+          "channel": "TheRake Dark",
+          "channel_url": "https://www.youtube.com/@TheRakeDark",
+          "query_language": "Spanish",
+          "query": "\"PEAK\" amigos vtuber español after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-19"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCU-O713Qgg5-OKKlt6nceiQ",
+      "name": "MixerMaze",
+      "youtube_url": "https://www.youtube.com/@MixerMaze",
+      "subscribers": 1290,
+      "subscriber_text": "1.29K subscribers",
+      "x_url": "https://x.com/mixer_vtuber",
+      "external_links": [
+        "https://discord.gg/yHk3QZbHKX",
+        "https://x.com/mixer_vtuber"
+      ],
+      "twitch_url": null,
+      "language": "Thai",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "PRBQcz3O__o",
+          "url": "https://www.youtube.com/watch?v=PRBQcz3O__o",
+          "title": "⭐️ meccha chameleon⭐️ เกมนี้มันเล่นยังไงนะ?? w/ผองเพื่อนวีทูปเบอร์",
+          "duration": 8407,
+          "channel_id": "UCU-O713Qgg5-OKKlt6nceiQ",
+          "channel": "MixerMaze",
+          "channel_url": "https://www.youtube.com/@MixerMaze",
+          "query_language": "Thai",
+          "query": "\"MECCHA CHAMELEON\" vtuber ไทย after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-11"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCpcs6wgNBULhrsAjkw-i-LA",
+      "name": "Masked Games",
+      "youtube_url": "https://www.youtube.com/@MaskedGamess",
+      "subscribers": 1380,
+      "subscriber_text": "1.38K subscribers",
+      "x_url": "https://twitter.com/MaskedGames3",
+      "external_links": [
+        "https://discord.gg/ndpmnkmr",
+        "https://twitter.com/MaskedGames3"
+      ],
+      "twitch_url": null,
+      "language": "Spanish",
+      "last_active": "2026-10-01",
+      "proofs": [
+        {
+          "id": "S9ZzQl2jTxM",
+          "title": "¡NUEVA ACTUALIZACION EN PEAK! ⛰️ The Final Ascent ...A VER QUE NOS ESPERA",
+          "date": "2026-08-14",
+          "url": "https://www.youtube.com/watch?v=S9ZzQl2jTxM",
+          "game": "PEAK"
+        },
+        {
+          "id": "86SBsGWl8ec",
+          "title": "¡Subiendo montañas hasta la ultima🧗sin amigos ¿Podre sobrevivir? PEAK #final",
+          "date": "2026-08-09",
+          "url": "https://www.youtube.com/watch?v=86SBsGWl8ec",
+          "game": "PEAK"
+        },
+        {
+          "video_id": "C9AoY985kWo",
+          "url": "https://www.youtube.com/watch?v=C9AoY985kWo",
+          "title": "¡Subiendo montañas SOLO! otra vez 🧗sin amigos ¿Podre sobrevivir? PEAK #5",
+          "duration": 5896,
+          "channel_id": "UCpcs6wgNBULhrsAjkw-i-LA",
+          "channel": "Masked Games",
+          "channel_url": "https://www.youtube.com/@MaskedGamess",
+          "query_language": "Spanish",
+          "query": "\"PEAK\" amigos vtuber español after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-05"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC516T2Gecu9kZG01yuRKTnA",
+      "name": "犬山コウタ",
+      "youtube_url": "https://www.youtube.com/@inuyama_kouta",
+      "subscribers": 1530,
+      "subscriber_text": "1.53K subscribers",
+      "x_url": "https://twitter.com/inuyama_kouta",
+      "external_links": [
+        "https://twitter.com/inuyama_kouta"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-09-30",
+      "proofs": [
+        {
+          "id": "FKLOHkwLCdo",
+          "title": "【CHAINED TOGETHER】僕たちズッ友だよ！【part3】",
+          "date": "2026-09-27",
+          "url": "https://www.youtube.com/watch?v=FKLOHkwLCdo",
+          "game": "Chained Together"
+        },
+        {
+          "id": "m3G750lOAE8",
+          "title": "【CHAINED TOGETHER】僕たちズッ友だよ！【part2】",
+          "date": "2026-09-26",
+          "url": "https://www.youtube.com/watch?v=m3G750lOAE8",
+          "game": "Chained Together"
+        },
+        {
+          "video_id": "fNXBa7nNbxA",
+          "url": "https://www.youtube.com/watch?v=fNXBa7nNbxA",
+          "title": "【CHAINED TOGETHER】旅は道連れ世は情け【コラボ】",
+          "duration": 5967,
+          "channel_id": "UC516T2Gecu9kZG01yuRKTnA",
+          "channel": "犬山コウタ",
+          "channel_url": "https://www.youtube.com/@inuyama_kouta",
+          "query_language": "Japanese",
+          "query": "Chained Together コラボ VTuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-09-01"
+        }
+      ],
+      "games": [
+        "Chained Together"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCy3pHPkIK7qpeVQX46MpohQ",
+      "name": "ゆうたむ",
+      "youtube_url": "https://www.youtube.com/@yuutamu0909",
+      "subscribers": 1750,
+      "subscriber_text": "1.75K subscribers",
+      "x_url": "https://twitter.com/yutamuko000",
+      "external_links": [
+        "https://twitter.com/yutamuko000"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-09-14",
+      "proofs": [
+        {
+          "video_id": "psXL-3Z-uJ4",
+          "url": "https://www.youtube.com/watch?v=psXL-3Z-uJ4",
+          "title": "【 R.E.P.O.】大好きなあの子とコラボ！！！＃VTuber",
+          "duration": 17003,
+          "channel_id": "UCy3pHPkIK7qpeVQX46MpohQ",
+          "channel": "ゆうたむ",
+          "channel_url": "https://www.youtube.com/@yuutamu0909",
+          "query_language": "Japanese",
+          "query": "R.E.P.O. コラボ VTuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-08-30"
+        },
+        {
+          "video_id": "eystR0ydpYE",
+          "url": "https://www.youtube.com/watch?v=eystR0ydpYE",
+          "title": "【 R.E.P.O.】初コラボ＃VTuber",
+          "duration": 9097,
+          "channel_id": "UCy3pHPkIK7qpeVQX46MpohQ",
+          "channel": "ゆうたむ",
+          "channel_url": "https://www.youtube.com/@yuutamu0909",
+          "query_language": "Japanese",
+          "query": "R.E.P.O. コラボ VTuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-08-20"
+        },
+        {
+          "id": "1cGtjFe5vyg",
+          "title": "【 R.E.P.O.】メンシのレポ参加型！！＃参加型＃VTuber",
+          "date": "2026-08-18",
+          "url": "https://www.youtube.com/watch?v=1cGtjFe5vyg",
+          "game": "R.E.P.O."
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 2
+    },
+    {
+      "channel_id": "UCQ2v5ttS3wZyJK-zK7QabZw",
+      "name": "Icarus Adamantine",
+      "youtube_url": "https://www.youtube.com/@IcarusAdamantine",
+      "subscribers": 1850,
+      "subscriber_text": "1.85K subscribers",
+      "x_url": "https://x.com/Adamantine666",
+      "external_links": [
+        "https://instagram.com/icarusadamantine",
+        "https://www.instagram.com/icarusadamantine",
+        "https://x.com/Adamantine666"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "id": "SeNo7XTnecE",
+          "title": "【PEAK】aku pendaki amatir mendaki bersama para suhu",
+          "date": "2026-10-01",
+          "url": "https://www.youtube.com/watch?v=SeNo7XTnecE",
+          "game": "PEAK"
+        },
+        {
+          "id": "5suXPSVtMYo",
+          "title": "【PEAK】aku pendaki amatir mendaki bersama para suhu",
+          "date": "2026-09-26",
+          "url": "https://www.youtube.com/watch?v=5suXPSVtMYo",
+          "game": "PEAK"
+        },
+        {
+          "video_id": "wzLwVdKbFgA",
+          "url": "https://www.youtube.com/watch?v=wzLwVdKbFgA",
+          "title": "【CHAINED TOGETHER】test kemistri",
+          "duration": 9461,
+          "channel_id": "UCQ2v5ttS3wZyJK-zK7QabZw",
+          "channel": "Icarus Adamantine",
+          "channel_url": "https://www.youtube.com/@IcarusAdamantine",
+          "query_language": "English",
+          "query": "\"Chained Together\" collab vtuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-09-23"
+        }
+      ],
+      "games": [
+        "Chained Together",
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC3RlgI30hWTfUMfVWKbWTLw",
+      "name": "vividlyVODS",
+      "youtube_url": "https://www.youtube.com/@vividlyVODS",
+      "subscribers": 1910,
+      "subscriber_text": "1.91K subscribers",
+      "x_url": "https://twitter.com/vividlyASMR",
+      "external_links": [
+        "https://twitter.com/vividlyASMR"
+      ],
+      "twitch_url": "https://twitch.tv/vividlyvivi",
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "K-h-f-zZNAA",
+          "url": "https://www.youtube.com/watch?v=K-h-f-zZNAA",
+          "title": "⛓️🧑‍🤝‍🧑🔥 chained to @yozora and throwing away the key ☢️ [Chained Together]",
+          "duration": 16989,
+          "channel_id": "UC3RlgI30hWTfUMfVWKbWTLw",
+          "channel": "vividlyVODS",
+          "channel_url": "https://www.youtube.com/@vividlyVODS",
+          "query_language": "English",
+          "query": "\"Chained Together\" collab vtuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-09-24"
+        }
+      ],
+      "games": [
+        "Chained Together"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCOUw2PkiemR-hdf2DszrdNw",
+      "name": "莉莉露 Lililu Ch.《SxC 巧莓起酥》",
+      "youtube_url": "https://www.youtube.com/@莉莉露_Ch",
+      "subscribers": 1910,
+      "subscriber_text": "1.91K subscribers",
+      "x_url": "https://twitter.com/Lililu015",
+      "external_links": [
+        "https://discord.gg/wdNmYUNzrV",
+        "https://twitter.com/Lililu015",
+        "https://twitter.com/Omu_Vt"
+      ],
+      "twitch_url": "https://twitch.tv/lililu015vt",
+      "language": "Traditional Chinese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "Svma-ZaXM4E",
+          "url": "https://www.youtube.com/watch?v=Svma-ZaXM4E",
+          "title": "【#REPO】R.E.P.O.｜有人要陪我玩嗎？💖 #初見歡迎【莉莉露 Lililu Ch.】",
+          "duration": 9844,
+          "channel_id": "UCOUw2PkiemR-hdf2DszrdNw",
+          "channel": "莉莉露 Lililu Ch.《SxC 巧莓起酥》",
+          "channel_url": "https://www.youtube.com/@莉莉露_Ch",
+          "query_language": "Traditional Chinese",
+          "query": "R.E.P.O. 合作 台灣 VTuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-09-21"
+        },
+        {
+          "video_id": "9RpLOvy4reQ",
+          "url": "https://www.youtube.com/watch?v=9RpLOvy4reQ",
+          "title": "【#REPO】R.E.P.O.｜有人要陪我玩嗎？💖 #初見歡迎【莉莉露 Lililu Ch.】",
+          "duration": 11345,
+          "channel_id": "UCOUw2PkiemR-hdf2DszrdNw",
+          "channel": "莉莉露 Lililu Ch.《SxC 巧莓起酥》",
+          "channel_url": "https://www.youtube.com/@莉莉露_Ch",
+          "query_language": "Traditional Chinese",
+          "query": "R.E.P.O. 合作 台灣 VTuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-09-16"
+        },
+        {
+          "video_id": "1xrJBfsPsKs",
+          "url": "https://www.youtube.com/watch?v=1xrJBfsPsKs",
+          "title": "【#REPO】R.E.P.O.｜抓了人來陪我玩💖 #初見歡迎【莉莉露 Lililu Ch.】",
+          "duration": 8264,
+          "channel_id": "UCOUw2PkiemR-hdf2DszrdNw",
+          "channel": "莉莉露 Lililu Ch.《SxC 巧莓起酥》",
+          "channel_url": "https://www.youtube.com/@莉莉露_Ch",
+          "query_language": "Traditional Chinese",
+          "query": "R.E.P.O. 合作 台灣 VTuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-09-14"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 5
+    },
+    {
+      "channel_id": "UCiBj8JpHY8Tn_wQh1G4WRGQ",
+      "name": "色夜智 / しゃち王国",
+      "youtube_url": "https://www.youtube.com/@sh_ch_i",
+      "subscribers": 1940,
+      "subscriber_text": "1.94K subscribers",
+      "x_url": "https://x.com/sh_ch_i",
+      "external_links": [
+        "https://x.com/sh_ch_i"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "TA44V2lExq8",
+          "url": "https://www.youtube.com/watch?v=TA44V2lExq8",
+          "title": "【PEAKコラボ】限界作業部による限界登山🏔️【色夜智/Vtuber】",
+          "duration": 3571,
+          "channel_id": "UCiBj8JpHY8Tn_wQh1G4WRGQ",
+          "channel": "色夜智 / しゃち王国",
+          "channel_url": "https://www.youtube.com/@sh_ch_i",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-27"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC5ycSJbL2jRh3wOyo1IrbEQ",
+      "name": "星綺ゆな / Hoshiiro Yuna",
+      "youtube_url": "https://www.youtube.com/@hoshiyuna",
+      "subscribers": 1990,
+      "subscriber_text": "1.99K subscribers",
+      "x_url": "https://twitter.com/hoshiyuna_1",
+      "external_links": [
+        "https://twitter.com/hoshiyuna_1"
+      ],
+      "twitch_url": "https://twitch.tv/hoshiiroyuna_1",
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "tGKXqGSVzWo",
+          "url": "https://www.youtube.com/watch?v=tGKXqGSVzWo",
+          "title": "【コラボ配信】果たしてこの騒がしい4人でクリアできるのか…？ /Chained Together",
+          "duration": 7274,
+          "channel_id": "UC5ycSJbL2jRh3wOyo1IrbEQ",
+          "channel": "星綺ゆな / Hoshiiro Yuna",
+          "channel_url": "https://www.youtube.com/@hoshiyuna",
+          "query_language": "Japanese",
+          "query": "Chained Together コラボ VTuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-10-02"
+        }
+      ],
+      "games": [
+        "Chained Together"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCT44ajV-3yIW25-QICtpSeA",
+      "name": "Arietty",
+      "youtube_url": "https://www.youtube.com/@Arietty",
+      "subscribers": 2009,
+      "subscriber_text": "2.01K subscribers",
+      "x_url": "https://x.com/Ariettyx3",
+      "external_links": [
+        "https://instagram.com/ariettyx3",
+        "https://tiktok.com/@ariettyx3",
+        "https://www.instagram.com/ariettyx3",
+        "https://www.tiktok.com/@ariettyx3",
+        "https://x.com/Ariettyx3"
+      ],
+      "twitch_url": "https://twitch.tv/ariettyx3",
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "ycdh9WYvzws",
+          "url": "https://www.youtube.com/watch?v=ycdh9WYvzws",
+          "title": "Climbing the Mountains TOGETHER! Collab with @HimechiiVT  & @SaachiChuVT 【 PEAK 】",
+          "duration": 11932,
+          "channel_id": "UCT44ajV-3yIW25-QICtpSeA",
+          "channel": "Arietty",
+          "channel_url": "https://www.youtube.com/@Arietty",
+          "query_language": "English",
+          "query": "\"PEAK\" collab vtuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-30"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCEBY3y05Ff6MQvPmkG0vP6g",
+      "name": "甄kuroneko🐈‍⬛ Ch.",
+      "youtube_url": "https://www.youtube.com/@coalkuroneko",
+      "subscribers": 2200,
+      "subscriber_text": "2.2K subscribers",
+      "x_url": "https://twitter.com/coalkuroneko",
+      "external_links": [
+        "https://discord.gg/wzGMQzsxuG",
+        "https://twitter.com/coalkuroneko"
+      ],
+      "twitch_url": "https://twitch.tv/coalkuroneko",
+      "language": "Traditional Chinese",
+      "last_active": "2026-09-26",
+      "proofs": [
+        {
+          "video_id": "pNSIUAb5E2E",
+          "url": "https://www.youtube.com/watch?v=pNSIUAb5E2E",
+          "title": "【MECCHA CHAMELEON】塗鴉躲貓貓初見!?✨終於有人陪我玩了😭feat.夢月之境【甄kuroneko】 #高中生vtuber #甄的出現了",
+          "duration": 5473,
+          "channel_id": "UCEBY3y05Ff6MQvPmkG0vP6g",
+          "channel": "甄kuroneko🐈‍⬛ Ch.",
+          "channel_url": "https://www.youtube.com/@coalkuroneko",
+          "query_language": "Traditional Chinese",
+          "query": "MECCHA CHAMELEON 台灣 VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-11"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC38mDWcYGyfFiPEGK3QSuIQ",
+      "name": "【HKVtuber】AHashiKkiu_ ch.",
+      "youtube_url": "https://www.youtube.com/@AHashiKkiu_",
+      "subscribers": 2310,
+      "subscriber_text": "2.31K subscribers",
+      "x_url": "https://twitter.com/AHashiKkiu_",
+      "external_links": [
+        "https://discord.gg/cyRjdZ3CXU",
+        "https://twitter.com/AHashiKkiu_"
+      ],
+      "twitch_url": "https://twitch.tv/ahashikkiu_",
+      "language": "German",
+      "last_active": "2026-10-01",
+      "proofs": [
+        {
+          "id": "7MZcKkQfZhE",
+          "title": "🎄【🏫#迎真創意學院/🦦Party Animals】紅社代表劉千橋出戰視角！\\ 初見歡迎！/【⭐一隻阿橋 | 粵語 | HKVtuber🐿️】【13.09.2026】🎄",
+          "date": "2026-09-14",
+          "url": "https://www.youtube.com/watch?v=7MZcKkQfZhE",
+          "game": "Party Animals"
+        },
+        {
+          "video_id": "UV_QhhdnkZg",
+          "url": "https://www.youtube.com/watch?v=UV_QhhdnkZg",
+          "title": "🎄【🏫#迎真創意學院/🗻PEAK】爬山學會Peak Day 3——千橋今天來郊遊(?) \\ 初見歡迎！/【⭐一隻阿橋 | 粵語 | HKVtuber🐿️】【07.09.2026】🎄",
+          "duration": 9369,
+          "channel_id": "UC38mDWcYGyfFiPEGK3QSuIQ",
+          "channel": "一隻阿橋 ch. 【召雨偶像系HKVtuber】",
+          "channel_url": "https://www.youtube.com/@AHashiKkiu_",
+          "query_language": "German",
+          "query": "\"PEAK\" zusammen vtuber deutsch after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-08"
+        }
+      ],
+      "games": [
+        "PEAK",
+        "Party Animals"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCSQLFuAcg98soULdXaFLQcg",
+      "name": "猫野 ちゆる / Nekono Chiyuru",
+      "youtube_url": "https://www.youtube.com/@nekono_chiyuru",
+      "subscribers": 2350,
+      "subscriber_text": "2.35K subscribers",
+      "x_url": "https://twitter.com/nekono_chiyuru",
+      "external_links": [
+        "https://twitter.com/nekono_chiyuru"
+      ],
+      "twitch_url": "https://twitch.tv/nekonochiyuru",
+      "language": "Japanese",
+      "last_active": "2026-10-01",
+      "proofs": [
+        {
+          "id": "0xuYlyY71aE",
+          "title": "【 #めっちゃカメレオン  】大胆に隠れてこそ🔥‼️【 #猫野ちゆる  /  #Vtuber 】",
+          "date": "2026-09-29",
+          "url": "https://www.youtube.com/watch?v=0xuYlyY71aE",
+          "game": "MECCHA CHAMELEON"
+        },
+        {
+          "video_id": "DtjHJojcYlc",
+          "url": "https://www.youtube.com/watch?v=DtjHJojcYlc",
+          "title": "[ #peak #Collab ] A cat who's a hiking beginner, what will happen? [ #NekonoChiyuru / #Vtuber ]",
+          "duration": 6993,
+          "channel_id": "UCSQLFuAcg98soULdXaFLQcg",
+          "channel": "猫野 ちゆる / Nekono Chiyuru",
+          "channel_url": "https://www.youtube.com/@nekono_chiyuru",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-24"
+        },
+        {
+          "id": "fM7yBsT4vTw",
+          "title": "【 #REPO #コラボ 】先輩！ガチャが回したいです！【  #猫野ちゆる  /  #Vtuber 】",
+          "date": "2026-09-21",
+          "url": "https://www.youtube.com/watch?v=fM7yBsT4vTw",
+          "game": "R.E.P.O."
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON",
+        "PEAK",
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCfS-gKD7gKgbYQEtvCyfoFA",
+      "name": "EONIA",
+      "youtube_url": "https://www.youtube.com/channel/UCfS-gKD7gKgbYQEtvCyfoFA",
+      "subscribers": 2610,
+      "subscriber_text": "2.61K subscribers",
+      "x_url": "https://twitter.com/EONIA_ch",
+      "external_links": [
+        "https://bsky.app/profile/eonia-ch.bsky.social",
+        "https://twitter.com/EONIA_ch"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-09-23",
+      "proofs": [
+        {
+          "video_id": "KLnOb1yurmg",
+          "url": "https://www.youtube.com/watch?v=KLnOb1yurmg",
+          "title": "【MECCHA CHAMELEON COLLAB】 Now you see us, now you don't!!! 🎨 🦎",
+          "duration": 7772,
+          "channel_id": "UCfS-gKD7gKgbYQEtvCyfoFA",
+          "channel": "EONIA",
+          "channel_url": "https://www.youtube.com/channel/UCfS-gKD7gKgbYQEtvCyfoFA",
+          "query_language": "English",
+          "query": "\"MECCHA CHAMELEON\" collab vtuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-18"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCtC_aVI3AXSV9c9PuUhKvdQ",
+      "name": "イズ・プルガ / Ys Purga",
+      "youtube_url": "https://www.youtube.com/@EmployeeYsPurga",
+      "subscribers": 2770,
+      "subscriber_text": "2.77K subscribers",
+      "x_url": "https://x.com/EmployeeYsPurga",
+      "external_links": [
+        "https://x.com/EmployeeYsPurga"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "sZEuCIyaO7k",
+          "url": "https://www.youtube.com/watch?v=sZEuCIyaO7k",
+          "title": "【PICO PARK 2】パズル攻略顔面凶器集団【OTOCHI家コラボ】",
+          "duration": 5273,
+          "channel_id": "UCtC_aVI3AXSV9c9PuUhKvdQ",
+          "channel": "イズ・プルガ / Ys Purga",
+          "channel_url": "https://www.youtube.com/@EmployeeYsPurga",
+          "query_language": "Japanese",
+          "query": "PICO PARK 2 コラボ VTuber after:2026-07-01",
+          "game": "PICO PARK 2",
+          "date": "2026-09-14"
+        }
+      ],
+      "games": [
+        "PICO PARK 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC2Pc_OJt_N2UXB_wtw6cVYg",
+      "name": "Relive_濛瀧 Taki",
+      "youtube_url": "https://www.youtube.com/@Relive_Taki",
+      "subscribers": 2930,
+      "subscriber_text": "2.93K subscribers",
+      "x_url": "https://x.com/Relive_Taki",
+      "external_links": [
+        "https://instagram.com/relive_taki",
+        "https://www.instagram.com/relive_taki",
+        "https://x.com/Relive_Taki"
+      ],
+      "twitch_url": null,
+      "language": "Traditional Chinese",
+      "last_active": "2026-09-08",
+      "proofs": [
+        {
+          "video_id": "0V7yIzSO214",
+          "url": "https://www.youtube.com/watch?v=0V7yIzSO214",
+          "title": "【#peak 】第一次爬山，不知道要不要帶水，應該是要讓人家來山下接我吧 !我這一生如履薄冰 你說我能爬到山頂嗎( ͡° ͜ʖ ͡°)【濛瀧】#ReLiveProject #台v#peak",
+          "duration": 11436,
+          "channel_id": "UC2Pc_OJt_N2UXB_wtw6cVYg",
+          "channel": "Relive_濛瀧 Taki",
+          "channel_url": "https://www.youtube.com/@Relive_Taki",
+          "query_language": "Traditional Chinese",
+          "query": "PEAK 合作 台灣 VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-26"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCkoHUSoBGDzVZagvEiE9iMg",
+      "name": "Holostars Central ",
+      "youtube_url": "https://www.youtube.com/@Holostarscentral",
+      "subscribers": 3220,
+      "subscriber_text": "3.22K subscribers",
+      "x_url": "https://x.com/Veilfernart",
+      "external_links": [
+        "https://x.com/Veilfernart"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-09-24",
+      "proofs": [
+        {
+          "video_id": "8KmO2fPf_ps",
+          "url": "https://www.youtube.com/watch?v=8KmO2fPf_ps",
+          "title": "[ALL POV] Holostars REPO Collab [ Highlights ]",
+          "duration": 2010,
+          "channel_id": "UCkoHUSoBGDzVZagvEiE9iMg",
+          "channel": "Holostars Central ",
+          "channel_url": "https://www.youtube.com/@Holostarscentral",
+          "query_language": "English",
+          "query": "\"R.E.P.O.\" collab vtuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-07-10"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCfTaHjdctcy9veUwXK_GDBg",
+      "name": "Takiya Ch.",
+      "youtube_url": "https://www.youtube.com/@takiya_koz",
+      "subscribers": 3360,
+      "subscriber_text": "3.36K subscribers",
+      "x_url": "https://x.com/Takiya_koz",
+      "external_links": [
+        "https://tiktok.com/@takiya_koz",
+        "https://www.tiktok.com/@takiya_koz",
+        "https://x.com/Takiya_koz"
+      ],
+      "twitch_url": null,
+      "language": "Thai",
+      "last_active": "2026-09-29",
+      "proofs": [
+        {
+          "video_id": "bHQm7v-Hf7w",
+          "url": "https://www.youtube.com/watch?v=bHQm7v-Hf7w",
+          "title": "ไก่กับไข่ อะไรเนียนกว่ากัน | MECCHA CHAMELEON【Takiya 🐯💰】",
+          "duration": 8736,
+          "channel_id": "UCfTaHjdctcy9veUwXK_GDBg",
+          "channel": "Takiya Ch.",
+          "channel_url": "https://www.youtube.com/@takiya_koz",
+          "query_language": "Thai",
+          "query": "\"MECCHA CHAMELEON\" vtuber ไทย after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-07-22"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC2fZgxXAiHIqcq5DN-Wal2A",
+      "name": "Yuanye Ch.淵夜",
+      "youtube_url": "https://www.youtube.com/@yuanye0219",
+      "subscribers": 3600,
+      "subscriber_text": "3.6K subscribers",
+      "x_url": "https://twitter.com/yuanye0219",
+      "external_links": [
+        "https://discord.gg/TyVBXx889X",
+        "https://lit.link/zh-tw/yuanye0219",
+        "https://twitter.com/yuanye0219"
+      ],
+      "twitch_url": null,
+      "language": "Traditional Chinese",
+      "last_active": "2026-10-01",
+      "proofs": [
+        {
+          "video_id": "-d0qwXwK3m4",
+          "url": "https://www.youtube.com/watch?v=-d0qwXwK3m4",
+          "title": "【PEAK】我無法相信這遊戲沒辦法通關【淵夜】#vtuber  #台v #台灣vtuber #淵夜 #peak",
+          "duration": 7985,
+          "channel_id": "UC2fZgxXAiHIqcq5DN-Wal2A",
+          "channel": "Yuanye Ch.淵夜",
+          "channel_url": "https://www.youtube.com/@yuanye0219",
+          "query_language": "Traditional Chinese",
+          "query": "PEAK 合作 台灣 VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-10-01"
+        },
+        {
+          "video_id": "c7cqg9sOuHE",
+          "url": "https://www.youtube.com/watch?v=c7cqg9sOuHE",
+          "title": "【PEAK】再見了......繪師大人✋【淵夜】#vtuber  #台v #台灣vtuber #淵夜 #peak",
+          "duration": 8804,
+          "channel_id": "UC2fZgxXAiHIqcq5DN-Wal2A",
+          "channel": "Yuanye Ch.淵夜",
+          "channel_url": "https://www.youtube.com/@yuanye0219",
+          "query_language": "Traditional Chinese",
+          "query": "PEAK 合作 台灣 VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-29"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 2
+    },
+    {
+      "channel_id": "UC539EUZgL1CJ_CRnBWIua4w",
+      "name": "こうめとゆるり。",
+      "youtube_url": "https://www.youtube.com/@南こうめ",
+      "subscribers": 3620,
+      "subscriber_text": "3.62K subscribers",
+      "x_url": "https://x.com/koume_dmm",
+      "external_links": [
+        "https://x.com/koume_dmm"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "t3nnT1oYoKY",
+          "url": "https://www.youtube.com/watch?v=t3nnT1oYoKY",
+          "title": "【めっちゃカメレオン】和珠×ルイルイ×こうめの3人でわちゃわちゃ隠れんぼ🌈",
+          "duration": 8047,
+          "channel_id": "UC539EUZgL1CJ_CRnBWIua4w",
+          "channel": "こうめとゆるり。",
+          "channel_url": "https://www.youtube.com/@南こうめ",
+          "query_language": "Japanese",
+          "query": "メッチャカメレオン コラボ VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-09-30"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCEBKdRCiJjA8Qfa2jfTTxuA",
+      "name": "Aria Reacts ",
+      "youtube_url": "https://www.youtube.com/@ariaCrossfade",
+      "subscribers": 3660,
+      "subscriber_text": "3.66K subscribers",
+      "x_url": "https://x.com/ariaCrossFADE",
+      "external_links": [
+        "https://x.com/ariaCrossFADE"
+      ],
+      "twitch_url": null,
+      "language": "Portuguese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "j9MHcrFRPwo",
+          "url": "https://www.youtube.com/watch?v=j9MHcrFRPwo",
+          "title": "[Vtuber Reacts] SMii7Y and Lethal Company?! SMii7Y Reaction Video!",
+          "duration": 1575,
+          "channel_id": "UCEBKdRCiJjA8Qfa2jfTTxuA",
+          "channel": "Aria Reacts ",
+          "channel_url": "https://www.youtube.com/@ariaCrossfade",
+          "query_language": "Portuguese",
+          "query": "\"Lethal Company\" amigos vtuber brasil after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-10-03"
+        },
+        {
+          "id": "wBRnkKFwkak",
+          "title": "[Vtuber Reacts] Moxxie and Stoals! Helluva Boss Short 13 | Mission Book Report | Reaction",
+          "date": "2026-07-11",
+          "url": "https://www.youtube.com/watch?v=wBRnkKFwkak",
+          "game": "R.E.P.O."
+        }
+      ],
+      "games": [
+        "Lethal Company",
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC8GhBHdDPr8jwpT3AT0Ha-Q",
+      "name": "Ashentine Ch.",
+      "youtube_url": "https://www.youtube.com/@AshentineVT",
+      "subscribers": 3730,
+      "subscriber_text": "3.73K subscribers",
+      "x_url": "https://x.com/Ashentine_",
+      "external_links": [
+        "https://x.com/Ashentine_"
+      ],
+      "twitch_url": "https://twitch.tv/ashentine_",
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "7Y9ak5zmKjw",
+          "url": "https://www.youtube.com/watch?v=7Y9ak5zmKjw",
+          "title": "Playing REPO for the first time! COLLAB WITH @HildaKingsley |⛅💧  LIVE",
+          "duration": 11772,
+          "channel_id": "UC8GhBHdDPr8jwpT3AT0Ha-Q",
+          "channel": "Ashentine Ch.",
+          "channel_url": "https://www.youtube.com/@AshentineVT",
+          "query_language": "English",
+          "query": "\"R.E.P.O.\" collab vtuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-09-22"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCiD8yhnP-5iIL5oJz7xCkJQ",
+      "name": "Ztaellar",
+      "youtube_url": "https://www.youtube.com/@Ztaellar",
+      "subscribers": 3890,
+      "subscriber_text": "3.89K subscribers",
+      "x_url": "https://x.com/ztaellar",
+      "external_links": [
+        "https://instagram.com/ztaellarvt",
+        "https://x.com/ztaellar",
+        "www.instagram.com/ztaellarvt",
+        "www.x.com/ztaellar"
+      ],
+      "twitch_url": null,
+      "language": "Spanish",
+      "last_active": "2026-09-24",
+      "proofs": [
+        {
+          "video_id": "iOd7uZPgzK4",
+          "url": "https://www.youtube.com/watch?v=iOd7uZPgzK4",
+          "title": "(PEAK) Escalando el monte con Tavo, Kyoni y Liran ♪",
+          "duration": 6875,
+          "channel_id": "UCiD8yhnP-5iIL5oJz7xCkJQ",
+          "channel": "Ztaellar",
+          "channel_url": "https://www.youtube.com/@Ztaellar",
+          "query_language": "Spanish",
+          "query": "\"PEAK\" amigos vtuber español after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-14"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCVxXVS9n9Xh5FzzlvkoaOww",
+      "name": "Ururuka Noy Ch.",
+      "youtube_url": "https://www.youtube.com/@UrurukaNoy",
+      "subscribers": 3910,
+      "subscriber_text": "3.91K subscribers",
+      "x_url": "https://twitter.com/Ururuka_Noy",
+      "external_links": [
+        "https://discord.gg/PjJqFSxpd2",
+        "https://twitter.com/Ururuka_Noy"
+      ],
+      "twitch_url": "https://twitch.tv/noyururukavt",
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "kCPXzbVeeDw",
+          "url": "https://www.youtube.com/watch?v=kCPXzbVeeDw",
+          "title": "Puzzle Escape Collab with @lemon_773  | We Were Here Together",
+          "duration": 24566,
+          "channel_id": "UCVxXVS9n9Xh5FzzlvkoaOww",
+          "channel": "Ururuka Noy Ch. / 狼鹿ノイ",
+          "channel_url": "https://www.youtube.com/@UrurukaNoy",
+          "query_language": "English",
+          "query": "\"We Were Here\" collab vtuber after:2026-07-01",
+          "game": "We Were Here",
+          "date": "2026-09-19"
+        }
+      ],
+      "games": [
+        "We Were Here"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCjyzhdpYWHRfbmCqnogDevA",
+      "name": "Shogo",
+      "youtube_url": "https://www.youtube.com/@shogoinukai",
+      "subscribers": 4190,
+      "subscriber_text": "4.19K subscribers",
+      "x_url": "https://x.com/Shogoinukai?t=wLQpFQMkqRcIfnE7LVTmIg&s=09",
+      "external_links": [
+        "https://instagram.com/shogoinukai/profilecard/?igsh=YWNubzIzemY4YXcz",
+        "https://tiktok.com/@shogoinukai?_t=8r242dELGC6&_r=1",
+        "https://www.instagram.com/shogoinukai/profilecard/?igsh=YWNubzIzemY4YXcz",
+        "https://www.tiktok.com/@shogoinukai?_t=8r242dELGC6&_r=1",
+        "https://x.com/Shogoinukai?t=wLQpFQMkqRcIfnE7LVTmIg&s=09"
+      ],
+      "twitch_url": null,
+      "language": "Portuguese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "gQmDsKCcmEQ",
+          "url": "https://www.youtube.com/watch?v=gQmDsKCcmEQ",
+          "title": "REPO COLLAB WITH MY FRIENDS!!!! (VTUBER-BR)",
+          "duration": 6880,
+          "channel_id": "UCjyzhdpYWHRfbmCqnogDevA",
+          "channel": "Shogo",
+          "channel_url": "https://www.youtube.com/@shogoinukai",
+          "query_language": "Portuguese",
+          "query": "\"R.E.P.O.\" collab vtuber brasil after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-08-13"
+        },
+        {
+          "id": "Ztqk1L_OASA",
+          "title": "COLLAB DE PEAK COM OS AMIGUINHOS !!!! (VTUBER-BR)",
+          "date": "2026-08-06",
+          "url": "https://www.youtube.com/watch?v=Ztqk1L_OASA",
+          "game": "PEAK"
+        }
+      ],
+      "games": [
+        "PEAK",
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCVQhS49-jpkRlTl7Xbi8TgA",
+      "name": "Alicia Alveria Ch.",
+      "youtube_url": "https://www.youtube.com/@alicialveria",
+      "subscribers": 4490,
+      "subscriber_text": "4.49K subscribers",
+      "x_url": "https://x.com/alicialveria",
+      "external_links": [
+        "https://instagram.com/alicialveria",
+        "https://tiktok.com/@alicialveria",
+        "https://www.instagram.com/alicialveria",
+        "https://www.tiktok.com/@alicialveria",
+        "https://x.com/alicialveria"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-09-25",
+      "proofs": [
+        {
+          "video_id": "EwBWLKut1bo",
+          "url": "https://www.youtube.com/watch?v=EwBWLKut1bo",
+          "title": "【CHAINED TOGETHER】aku ikhlas dirantai bareng mereka「Alicia Alveria」",
+          "duration": 11928,
+          "channel_id": "UCVQhS49-jpkRlTl7Xbi8TgA",
+          "channel": "Alicia Alveria Ch.",
+          "channel_url": "https://www.youtube.com/@alicialveria",
+          "query_language": "English",
+          "query": "\"Chained Together\" collab vtuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-09-13"
+        },
+        {
+          "id": "Ws15S_G2t08",
+          "title": "【PEAK】WITH MY MINE GUWEH POKOKNYA!!「Alicia Alveria」",
+          "date": "2026-08-26",
+          "url": "https://www.youtube.com/watch?v=Ws15S_G2t08",
+          "game": "PEAK"
+        }
+      ],
+      "games": [
+        "Chained Together",
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCzV_ZAGTD3aaIZn5tc417Hg",
+      "name": "ダン坊",
+      "youtube_url": "https://www.youtube.com/@dumbou",
+      "subscribers": 4530,
+      "subscriber_text": "4.53K subscribers",
+      "x_url": "https://twitter.com/dumbou123",
+      "external_links": [
+        "https://twitter.com/dumbou123"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "M8E2v8IINz4",
+          "url": "https://www.youtube.com/watch?v=M8E2v8IINz4",
+          "title": "【めっちゃカメレオン】ペイントかくれんぼ【ダン坊視点 / Vtuber】",
+          "duration": 7698,
+          "channel_id": "UCzV_ZAGTD3aaIZn5tc417Hg",
+          "channel": "ダン坊",
+          "channel_url": "https://www.youtube.com/@dumbou",
+          "query_language": "Japanese",
+          "query": "メッチャカメレオン コラボ VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-10-03"
+        },
+        {
+          "id": "4b6SugZkpBo",
+          "title": "【Escape Simulator 2】みんなで謎解きやで！！！！！【Vtuber / 夏凪優斗 / 逢魔牙ワルト / ダン坊】",
+          "date": "2026-09-25",
+          "url": "https://www.youtube.com/watch?v=4b6SugZkpBo",
+          "game": "Escape Simulator 2"
+        }
+      ],
+      "games": [
+        "Escape Simulator 2",
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCQVNj_nBUSAKxRPER2SaCQg",
+      "name": "甘噛ベル",
+      "youtube_url": "https://www.youtube.com/@Amagami_Vel",
+      "subscribers": 4550,
+      "subscriber_text": "4.55K subscribers",
+      "x_url": "https://x.com/Amagami_Vel",
+      "external_links": [
+        "https://tiktok.com/@amagamivel_vtuber",
+        "https://www.tiktok.com/@amagamivel_vtuber",
+        "https://x.com/Amagami_Vel"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "DYdFF3gbne0",
+          "url": "https://www.youtube.com/watch?v=DYdFF3gbne0",
+          "title": "【Chained Together💖Vtuber】たぶん今夜が最終回✨ww🎵Go to Heaven！コラボだよ(*'ω'*)🌟",
+          "duration": 5813,
+          "channel_id": "UCQVNj_nBUSAKxRPER2SaCQg",
+          "channel": "甘噛ベル",
+          "channel_url": "https://www.youtube.com/@Amagami_Vel",
+          "query_language": "English",
+          "query": "\"Chained Together\" collab vtuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-10-01"
+        }
+      ],
+      "games": [
+        "Chained Together"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCiGIJDGCH2xeUPgp33U1_Fw",
+      "name": "Furripino Enjoyer 😈🍬",
+      "youtube_url": "https://www.youtube.com/@FurripinoEnjoyer",
+      "subscribers": 4560,
+      "subscriber_text": "4.56K subscribers",
+      "x_url": "https://x.com/furripinoenjyr",
+      "external_links": [
+        "https://x.com/furripinoenjyr"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "fcFIWWv6rT0",
+          "url": "https://www.youtube.com/watch?v=fcFIWWv6rT0",
+          "title": "The Biggest Filipino VTuber Collab (Meccha Chameleon) | ENG SUB",
+          "duration": 3009,
+          "channel_id": "UCiGIJDGCH2xeUPgp33U1_Fw",
+          "channel": "Furripino Enjoyer 😈🍬",
+          "channel_url": "https://www.youtube.com/@FurripinoEnjoyer",
+          "query_language": "English",
+          "query": "\"MECCHA CHAMELEON\" collab vtuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-23"
+        },
+        {
+          "video_id": "7nZgG3w_6Sg",
+          "url": "https://www.youtube.com/watch?v=7nZgG3w_6Sg",
+          "title": "This Game Broke 8 Filipino VTubers (Meccha Chameleon) | ENG SUB",
+          "duration": 2341,
+          "channel_id": "UCiGIJDGCH2xeUPgp33U1_Fw",
+          "channel": "Furripino Enjoyer 😈🍬",
+          "channel_url": "https://www.youtube.com/@FurripinoEnjoyer",
+          "query_language": "English",
+          "query": "\"MECCHA CHAMELEON\" collab vtuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-07-06"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 2
+    },
+    {
+      "channel_id": "UCBoyYYpJFEWR_dMw4xaU26w",
+      "name": "Ellena Mociela",
+      "youtube_url": "https://www.youtube.com/@ellenamociela",
+      "subscribers": 5280,
+      "subscriber_text": "5.28K subscribers",
+      "x_url": "https://x.com/ellenamocie",
+      "external_links": [
+        "https://discord.gg/vgPdCyyMVa",
+        "https://instagram.com/ellenamociela",
+        "https://tiktok.com/@ellenamociela",
+        "https://www.instagram.com/ellenamociela",
+        "https://www.tiktok.com/@ellenamociela",
+        "https://x.com/ellenamocie"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "BmribmOwOH8",
+          "url": "https://www.youtube.com/watch?v=BmribmOwOH8",
+          "title": "【 CHAINED TOGETHER 】Apakaah pertemenan peristrian di uji disini!",
+          "duration": 8652,
+          "channel_id": "UCBoyYYpJFEWR_dMw4xaU26w",
+          "channel": "Ellena Mociela",
+          "channel_url": "https://www.youtube.com/@ellenamociela",
+          "query_language": "English",
+          "query": "\"Chained Together\" collab vtuber after:2026-07-01",
+          "game": "Chained Together",
+          "date": "2026-09-13"
+        }
+      ],
+      "games": [
+        "Chained Together"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCMCP6giszLHnxIg-cJTt6SA",
+      "name": "Gigi Shygami",
+      "youtube_url": "https://www.youtube.com/@GigiShygami",
+      "subscribers": 7490,
+      "subscriber_text": "7.49K subscribers",
+      "x_url": "https://twitter.com/gigishygami",
+      "external_links": [
+        "https://tiktok.com/@gigishygami",
+        "https://twitter.com/gigishygami",
+        "https://www.tiktok.com/@gigishygami"
+      ],
+      "twitch_url": "https://twitch.tv/gigishygami",
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "id": "RYJdXE41uBk",
+          "title": "【PEAK】 @NoraASMR KAMBEK UY !! #peak",
+          "date": "2026-09-09",
+          "url": "https://www.youtube.com/watch?v=RYJdXE41uBk",
+          "game": "PEAK"
+        },
+        {
+          "video_id": "w1qo1k2HQc8",
+          "url": "https://www.youtube.com/watch?v=w1qo1k2HQc8",
+          "title": "【PICO PARK】Ngetes Kerja Sama! #picopark",
+          "duration": 7842,
+          "channel_id": "UCMCP6giszLHnxIg-cJTt6SA",
+          "channel": "Gigi Shygami",
+          "channel_url": "https://www.youtube.com/@GigiShygami",
+          "query_language": "English",
+          "query": "\"PICO PARK 2\" \"with friends\" vtuber after:2026-07-01",
+          "game": "PICO PARK 2",
+          "date": "2026-07-11"
+        }
+      ],
+      "games": [
+        "PEAK",
+        "PICO PARK 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC8MecbIgesuA31g4vEhWKIw",
+      "name": "AloneKalli",
+      "youtube_url": "https://www.youtube.com/@AloneKalli",
+      "subscribers": 8039,
+      "subscriber_text": "8.04K subscribers",
+      "x_url": "https://x.com/alonekalli",
+      "external_links": [
+        "https://instagram.com/al0nekalli",
+        "https://tiktok.com/alonekalli",
+        "https://www.instagram.com/al0nekalli",
+        "https://x.com/alonekalli",
+        "www.tiktok.com/alonekalli"
+      ],
+      "twitch_url": "https://twitch.tv/alonekalli",
+      "language": "Portuguese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "kT9WdoPt7EU",
+          "url": "https://www.youtube.com/watch?v=kT9WdoPt7EU",
+          "title": "BUGUEI COM ESSE SPOT NO MECCHA CHAMELEON",
+          "duration": 9346,
+          "channel_id": "UC8MecbIgesuA31g4vEhWKIw",
+          "channel": "AloneKalli",
+          "channel_url": "https://www.youtube.com/@AloneKalli",
+          "query_language": "Portuguese",
+          "query": "\"MECCHA CHAMELEON\" vtuber brasil after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-03"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCIJekcMQljejltyWtvpsEGA",
+      "name": "Umiko Yukina",
+      "youtube_url": "https://www.youtube.com/@umiko_VT",
+      "subscribers": 8210,
+      "subscriber_text": "8.21K subscribers",
+      "x_url": "https://twitter.com/Umiko_VT",
+      "external_links": [
+        "https://discord.gg/rXtWFESZ",
+        "https://tiktok.com/@umikovt",
+        "https://twitter.com/Umiko_VT",
+        "https://www.tiktok.com/@umikovt"
+      ],
+      "twitch_url": "https://twitch.tv/umiko_vt",
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "OJx2XFCyGQw",
+          "url": "https://www.youtube.com/watch?v=OJx2XFCyGQw",
+          "title": "GG Freaking Easy... At Least That's What I Thought?【Peak Collab】",
+          "duration": 11814,
+          "channel_id": "UCIJekcMQljejltyWtvpsEGA",
+          "channel": "Umiko Yukina",
+          "channel_url": "https://www.youtube.com/@umiko_VT",
+          "query_language": "English",
+          "query": "\"PEAK\" collab vtuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-10-03"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCWMgIRmANlu52PusdZV8jVw",
+      "name": "真白 優 ｰMashiro Yuuｰ",
+      "youtube_url": "https://www.youtube.com/@MashiroYuu__",
+      "subscribers": 8210,
+      "subscriber_text": "8.21K subscribers",
+      "x_url": "https://x.com/MashiroYuu_",
+      "external_links": [
+        "https://tiktok.com/@mashiroyuu_?_t=8pGXXUPD739&_r=1",
+        "https://www.tiktok.com/@mashiroyuu_?_t=8pGXXUPD739&_r=1",
+        "https://x.com/MashiroYuu_"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "Z9jRyTyCtu0",
+          "url": "https://www.youtube.com/watch?v=Z9jRyTyCtu0",
+          "title": "【コラボ配信】 3人で頂上を目指す.ᐟ.ᐟツインテール組でPEAKコラボ⛰💗🌈✨【 #新人Vtuber /#vtuber  】",
+          "duration": 12410,
+          "channel_id": "UCWMgIRmANlu52PusdZV8jVw",
+          "channel": "真白 優 ｰMashiro Yuuｰ",
+          "channel_url": "https://www.youtube.com/@MashiroYuu__",
+          "query_language": "Japanese",
+          "query": "PEAK コラボ VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-10-03"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC6q-LoPzS1IGbDlSZ523ICA",
+      "name": "HoshizukiVT",
+      "youtube_url": "https://www.youtube.com/@Hoshizuki_VT",
+      "subscribers": 11200,
+      "subscriber_text": "11.2K subscribers",
+      "x_url": "https://x.com/HoshizukiVT",
+      "external_links": [
+        "hoshizukivt.carrd.co",
+        "https://hoshizukivt.carrd.co",
+        "https://x.com/HoshizukiVT"
+      ],
+      "twitch_url": "http://www.twitch.tv/hoshizukivt",
+      "language": "German",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "IXVIkGaW7Bk",
+          "url": "https://www.youtube.com/watch?v=IXVIkGaW7Bk",
+          "title": "🏔️ PEAK Update mit VTubern! Teamwork oder kompletter Absturz?",
+          "duration": 14311,
+          "channel_id": "UC6q-LoPzS1IGbDlSZ523ICA",
+          "channel": "HoshizukiVT",
+          "channel_url": "https://www.youtube.com/@Hoshizuki_VT",
+          "query_language": "German",
+          "query": "\"PEAK\" zusammen vtuber deutsch after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-30"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCtCeCDawas1DBNKHAxnc2FQ",
+      "name": "Ishimura Higashi",
+      "youtube_url": "https://www.youtube.com/@石村ヒガシ",
+      "subscribers": 12600,
+      "subscriber_text": "12.6K subscribers",
+      "x_url": "https://twitter.com/higashi444",
+      "external_links": [
+        "https://instagram.com/ishimura_higashi",
+        "https://twitter.com/higashi444",
+        "https://www.instagram.com/ishimura_higashi"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-09-17",
+      "proofs": [
+        {
+          "id": "3xvNyEBwRE8",
+          "title": "【参加型】元自衛隊、隠れることに本気を出します。第２回 #特化Vめっちゃカメレオン【#めっちゃカメレオン】",
+          "date": "2026-09-17",
+          "url": "https://www.youtube.com/watch?v=3xvNyEBwRE8",
+          "game": "MECCHA CHAMELEON"
+        },
+        {
+          "video_id": "EZqRZU5YP2k",
+          "url": "https://www.youtube.com/watch?v=EZqRZU5YP2k",
+          "title": "【参加型】元自衛隊のVtuberが、めっちゃカメレオンで隠れます ！【#めっちゃカメレオン】",
+          "duration": 23840,
+          "channel_id": "UCtCeCDawas1DBNKHAxnc2FQ",
+          "channel": "石村ヒガシ【Ishimura Higashi】",
+          "channel_url": "https://www.youtube.com/@石村ヒガシ",
+          "query_language": "Japanese",
+          "query": "メッチャカメレオン コラボ VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-09-16"
+        },
+        {
+          "id": "9vC4-AC9PcM",
+          "title": "【#めっちゃカメレオン】元自衛隊、隠れることに本気を出します。#特化Vめっちゃカメレオン",
+          "date": "2026-08-27",
+          "url": "https://www.youtube.com/watch?v=9vC4-AC9PcM",
+          "game": "MECCHA CHAMELEON"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCod1xFK-G7mYI1tO3aXEjsw",
+      "name": "Hotaru 🐿️🌿 【Takara Live】",
+      "youtube_url": "https://www.youtube.com/@HisuiHotaruTKL",
+      "subscribers": 20400,
+      "subscriber_text": "20.4K subscribers",
+      "x_url": "https://x.com/HisuiHotaruTKL",
+      "external_links": [
+        "https://instagram.com/hisuihotarutkl?igsh=MWphNHZwc3M2NGZuOA==&utm_source=qr",
+        "https://tiktok.com/@hisuihotaru?_r=1&_t=ZT-95umiBcuJhN",
+        "https://www.instagram.com/hisuihotarutkl?igsh=MWphNHZwc3M2NGZuOA==&utm_source=qr",
+        "https://www.tiktok.com/@hisuihotaru?_r=1&_t=ZT-95umiBcuJhN",
+        "https://x.com/HisuiHotaruTKL"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "dgeu6m27xPk",
+          "url": "https://www.youtube.com/watch?v=dgeu6m27xPk",
+          "title": "REACHING THE PEAK | Cuties & Hotarun Collab",
+          "duration": 10639,
+          "channel_id": "UCod1xFK-G7mYI1tO3aXEjsw",
+          "channel": "Hotaru 🐿️🌿 【Takara Live】",
+          "channel_url": "https://www.youtube.com/@HisuiHotaruTKL",
+          "query_language": "English",
+          "query": "\"PEAK\" collab vtuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-10-01"
+        },
+        {
+          "id": "6or1W_UBqfs",
+          "title": "REACHING THE PEAK | Onee-san & Hotarun Collab",
+          "date": "2026-09-25",
+          "url": "https://www.youtube.com/watch?v=6or1W_UBqfs",
+          "game": "PEAK"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCGbHFSP1AC3fuMXLyGjUltg",
+      "name": "Sunshinee Tsukiku",
+      "youtube_url": "https://www.youtube.com/@SunshineeTsk",
+      "subscribers": 26200,
+      "subscriber_text": "26.2K subscribers",
+      "x_url": "https://x.com/Sunshinee_Tsk",
+      "external_links": [
+        "https://discord.gg/g6m5ET5EP6",
+        "https://instagram.com/sunshinee_vtuber",
+        "https://linktr.ee/SunshineeTsK",
+        "https://tiktok.com/@sunshinee.tsk",
+        "https://www.instagram.com/sunshinee_vtuber",
+        "https://www.tiktok.com/@sunshinee.tsk",
+        "https://x.com/Sunshinee_Tsk"
+      ],
+      "twitch_url": "https://twitch.tv/sunshineetsk",
+      "language": "Portuguese",
+      "last_active": "2026-09-28",
+      "proofs": [
+        {
+          "video_id": "NuL7GFHnGyY",
+          "url": "https://www.youtube.com/watch?v=NuL7GFHnGyY",
+          "title": "[+16] 😭 eu confio em vocês... eu acho | R.E.P.O. ⭐ !pix, !mysunshine, !olha",
+          "duration": 13144,
+          "channel_id": "UCGbHFSP1AC3fuMXLyGjUltg",
+          "channel": "Sunshinee Tsukiku",
+          "channel_url": "https://www.youtube.com/@SunshineeTsk",
+          "query_language": "Portuguese",
+          "query": "\"R.E.P.O.\" collab vtuber brasil after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-09-02"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCjg5uNaziMoFgbXCIdWkcuA",
+      "name": "VTClipsDayo",
+      "youtube_url": "https://www.youtube.com/@vtuberclipsdayo",
+      "subscribers": 27300,
+      "subscriber_text": "27.3K subscribers",
+      "x_url": "https://x.com/vtuberclipsdayo",
+      "external_links": [
+        "https://discord.gg/WA8tAr54Je",
+        "https://x.com/vtuberclipsdayo"
+      ],
+      "twitch_url": "https://twitch.tv/kaeruyurei",
+      "language": "English",
+      "last_active": "2026-09-29",
+      "proofs": [
+        {
+          "id": "WhIludKLUb0",
+          "title": "This Might Be The Most UNHINGED Meccha Chameleon Lobby EVER! 😱",
+          "date": "2026-08-12",
+          "url": "https://www.youtube.com/watch?v=WhIludKLUb0",
+          "game": "MECCHA CHAMELEON"
+        },
+        {
+          "video_id": "zDPWIfNxOY4",
+          "url": "https://www.youtube.com/watch?v=zDPWIfNxOY4",
+          "title": "This Might Be The FUNNIEST Meccha Chameleon Lobby EVER! 🤣",
+          "duration": 2371,
+          "channel_id": "UCjg5uNaziMoFgbXCIdWkcuA",
+          "channel": "VTClipsDayo",
+          "channel_url": "https://www.youtube.com/@vtuberclipsdayo",
+          "query_language": "English",
+          "query": "\"MECCHA CHAMELEON\" collab vtuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-07-22"
+        },
+        {
+          "video_id": "kNhrtnki2Tw",
+          "url": "https://www.youtube.com/watch?v=kNhrtnki2Tw",
+          "title": "THIS MIGHT BE THE FUNNIEST MECCHA CHAMELEON MOMENT... 😂",
+          "duration": 2130,
+          "channel_id": "UCjg5uNaziMoFgbXCIdWkcuA",
+          "channel": "VTClipsDayo",
+          "channel_url": "https://www.youtube.com/@vtuberclipsdayo",
+          "query_language": "English",
+          "query": "\"MECCHA CHAMELEON\" collab vtuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-07-15"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 2
+    },
+    {
+      "channel_id": "UCH5qHIX39urIof90KBQNIxg",
+      "name": "쿠레나이 나츠키 Kurenai Natsuki",
+      "youtube_url": "https://www.youtube.com/@나츠키",
+      "subscribers": 32299,
+      "subscriber_text": "32.3K subscribers",
+      "x_url": "https://twitter.com/Kurenai_Natsuki",
+      "external_links": [
+        "https://twitter.com/Kurenai_Natsuki"
+      ],
+      "twitch_url": null,
+      "language": "Korean",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "9DyvMjtOW2c",
+          "url": "https://www.youtube.com/watch?v=9DyvMjtOW2c",
+          "title": "What happens when a VTuber plays games with their real-life sister lol👹[GanadaTsuki Overcooked! 2...",
+          "duration": 976,
+          "channel_id": "UCH5qHIX39urIof90KBQNIxg",
+          "channel": "쿠레나이 나츠키 Kurenai Natsuki",
+          "channel_url": "https://www.youtube.com/@나츠키",
+          "query_language": "Korean",
+          "query": "피코 파크 2 합방 버튜버 after:2026-07-01",
+          "game": "Overcooked 2",
+          "date": "2026-07-05"
+        }
+      ],
+      "games": [
+        "Overcooked 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCvEX2UICvFAa_T6pqizC20g",
+      "name": "乙女おと / Otome Oto",
+      "youtube_url": "https://www.youtube.com/@0tome0to",
+      "subscribers": 41000,
+      "subscriber_text": "41K subscribers",
+      "x_url": "https://twitter.com/0tome0to",
+      "external_links": [
+        "https://twitter.com/0tome0to"
+      ],
+      "twitch_url": null,
+      "language": "Japanese",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "Ilbvx3sUoMo",
+          "url": "https://www.youtube.com/watch?v=Ilbvx3sUoMo",
+          "title": "【乙女おと視点】めっちゃカメレオンコラボ！【Vtuber／OtomeOto】",
+          "duration": 3813,
+          "channel_id": "UCvEX2UICvFAa_T6pqizC20g",
+          "channel": "乙女おと / Otome Oto",
+          "channel_url": "https://www.youtube.com/@0tome0to",
+          "query_language": "Japanese",
+          "query": "メッチャカメレオン コラボ VTuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-13"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC6Tm95waoh3j4xT9vYsM4sQ",
+      "name": "- 欣希亞 Live 💜 { 遊戲勢Vtuber }【 台灣Vtuber 】-",
+      "youtube_url": "https://www.youtube.com/@CyniaLive",
+      "subscribers": 41900,
+      "subscriber_text": "41.9K subscribers",
+      "x_url": "https://twitter.com/Meng_Cynia",
+      "external_links": [
+        "https://discord.gg/bhpVt5k",
+        "https://twitter.com/Meng_Cynia"
+      ],
+      "twitch_url": "https://twitch.tv/mengcynia",
+      "language": "Traditional Chinese",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "IP7UB_0gNUc",
+          "url": "https://www.youtube.com/watch?v=IP7UB_0gNUc",
+          "title": "9/27 工作了!!  《 R.E.P.O. 》 一起REPO #REPO #Vtuber #台V #巧克團 #欣希亞 ft. 巧克團",
+          "duration": 8569,
+          "channel_id": "UC6Tm95waoh3j4xT9vYsM4sQ",
+          "channel": "- 欣希亞 Live 💜 { 遊戲勢Vtuber }【 台灣Vtuber 】-",
+          "channel_url": "https://www.youtube.com/@CyniaLive",
+          "query_language": "Traditional Chinese",
+          "query": "R.E.P.O. 合作 台灣 VTuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-09-27"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCTJgiEwY9Qy6r6D74bbJw3w",
+      "name": "KommaVT",
+      "youtube_url": "https://www.youtube.com/@KommaVT",
+      "subscribers": 43300,
+      "subscriber_text": "43.3K subscribers",
+      "x_url": "https://twitter.com/KommaVT",
+      "external_links": [
+        "https://beacons.ai/kommavt/mediakit",
+        "https://discord.gg/DfQzAwNPr3",
+        "https://kommavt.carrd.co",
+        "https://tiktok.com/@kommavt",
+        "https://twitter.com/KommaVT",
+        "https://www.tiktok.com/@kommavt",
+        "kommavt.carrd.co"
+      ],
+      "twitch_url": "https://twitch.tv/kommavt",
+      "language": "English",
+      "last_active": "2026-09-19",
+      "proofs": [
+        {
+          "video_id": "hH34we4StwM",
+          "url": "https://www.youtube.com/watch?v=hH34we4StwM",
+          "title": "This game is PEAK【 COLLAB 】",
+          "duration": 14412,
+          "channel_id": "UCTJgiEwY9Qy6r6D74bbJw3w",
+          "channel": "KommaVT",
+          "channel_url": "https://www.youtube.com/@KommaVT",
+          "query_language": "English",
+          "query": "\"PEAK\" collab vtuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-21"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCW22_sB1qXfpfedjx2Sh8hQ",
+      "name": "beathellscream",
+      "youtube_url": "https://www.youtube.com/@beathellscream",
+      "subscribers": 52,
+      "subscriber_text": "52 subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://discord.gg/XHGMM3Vb8a"
+      ],
+      "twitch_url": "https://twitch.tv/beathellscream",
+      "language": "English",
+      "last_active": "2026-09-26",
+      "proofs": [
+        {
+          "video_id": "DpB8iaZqmF4",
+          "url": "https://www.youtube.com/watch?v=DpB8iaZqmF4",
+          "title": "Lethal Company with Friends (Episode 1)",
+          "duration": 5223,
+          "channel_id": "UCW22_sB1qXfpfedjx2Sh8hQ",
+          "channel": "beathellscream",
+          "channel_url": "https://www.youtube.com/@beathellscream",
+          "query_language": "English",
+          "query": "\"Lethal Company\" \"with friends\" vtuber after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-09-19"
+        }
+      ],
+      "games": [
+        "Lethal Company"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCGJBg3ChofSazMafmHSE7Jw",
+      "name": "AnistraePlays",
+      "youtube_url": "https://www.youtube.com/@AnistraePlays",
+      "subscribers": 66,
+      "subscriber_text": "66 subscribers",
+      "x_url": null,
+      "external_links": [
+        "anistrae.carrd.co",
+        "https://anistrae.carrd.co"
+      ],
+      "twitch_url": "https://twitch.tv/anistrae/about",
+      "language": "English",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "qHAIRbkP50E",
+          "url": "https://www.youtube.com/watch?v=qHAIRbkP50E",
+          "title": "The more, the merrier! | REPO Collab Livestream VOD",
+          "duration": 9357,
+          "channel_id": "UCGJBg3ChofSazMafmHSE7Jw",
+          "channel": "AnistraePlays",
+          "channel_url": "https://www.youtube.com/@AnistraePlays",
+          "query_language": "English",
+          "query": "\"R.E.P.O.\" collab vtuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-08-31"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCU3jQr-FjHf2P8Hh5AdvKJg",
+      "name": "Sral Zoren VODS",
+      "youtube_url": "https://www.youtube.com/@SralZorenVODS",
+      "subscribers": 98,
+      "subscriber_text": "98 subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://solo.to/sralzoren"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-08-31",
+      "proofs": [
+        {
+          "video_id": "-ew4DNtYzoc",
+          "url": "https://www.youtube.com/watch?v=-ew4DNtYzoc",
+          "title": "THE GRAND PINOY MECCHA CHAMELEON COLLAB!",
+          "duration": 20031,
+          "channel_id": "UCU3jQr-FjHf2P8Hh5AdvKJg",
+          "channel": "Sral Zoren VODS",
+          "channel_url": "https://www.youtube.com/@SralZorenVODS",
+          "query_language": "English",
+          "query": "\"MECCHA CHAMELEON\" collab vtuber after:2026-07-01",
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-07"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCtESGFf2Z1jNghQRO8qKYOA",
+      "name": "Shippoi",
+      "youtube_url": "https://www.youtube.com/@shippoi",
+      "subscribers": 130,
+      "subscriber_text": "130 subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://discord.gg/qq2GQGMAsz"
+      ],
+      "twitch_url": "https://twitch.tv/nisage_hatagure",
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "XUUnyTY9ppQ",
+          "url": "https://www.youtube.com/watch?v=XUUnyTY9ppQ",
+          "title": "Chaos ensues! | R.E.P.O. Collab!",
+          "duration": 9084,
+          "channel_id": "UCtESGFf2Z1jNghQRO8qKYOA",
+          "channel": "Shippoi",
+          "channel_url": "https://www.youtube.com/@shippoi",
+          "query_language": "English",
+          "query": "\"R.E.P.O.\" collab vtuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-09-27"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCq3idQiOPEhJI3UML29_21g",
+      "name": "月亞兒",
+      "youtube_url": "https://www.youtube.com/@tsukia_mew",
+      "subscribers": 553,
+      "subscriber_text": "553 subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://instagram.com/tsukiaaoi",
+        "https://www.instagram.com/tsukiaaoi"
+      ],
+      "twitch_url": null,
+      "language": "Traditional Chinese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "r5QsDoVvszA",
+          "url": "https://www.youtube.com/watch?v=r5QsDoVvszA",
+          "title": "第一次玩...需要教學😭會不會嚇死...｜R.E.P.O.｜多人線上生存恐怖遊戲｜Vtype｜月亞｜直播｜遊戲",
+          "duration": 9134,
+          "channel_id": "UCq3idQiOPEhJI3UML29_21g",
+          "channel": "月亞兒",
+          "channel_url": "https://www.youtube.com/@tsukia_mew",
+          "query_language": "Traditional Chinese",
+          "query": "R.E.P.O. 合作 台灣 VTuber after:2026-07-01",
+          "game": "R.E.P.O.",
+          "date": "2026-08-01"
+        }
+      ],
+      "games": [
+        "R.E.P.O."
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCRQQNVFumcVC4Dqt8NuULyw",
+      "name": "Lana 漿",
+      "youtube_url": "https://www.youtube.com/@Lana-xn1cu",
+      "subscribers": 589,
+      "subscriber_text": "589 subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://discord.gg/MUVSrU2PQ6"
+      ],
+      "twitch_url": null,
+      "language": "Traditional Chinese",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "fRi0WQG8EEY",
+          "url": "https://www.youtube.com/watch?v=fRi0WQG8EEY",
+          "title": "【初見+合作 (樂樂Raku)】PEAK：關於重力、可疑食物與隊友的極限生存。",
+          "duration": 8671,
+          "channel_id": "UCRQQNVFumcVC4Dqt8NuULyw",
+          "channel": "Lana 漿",
+          "channel_url": "https://www.youtube.com/@Lana-xn1cu",
+          "query_language": "Traditional Chinese",
+          "query": "PEAK 合作 台灣 VTuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-30"
+        },
+        {
+          "id": "Ms842syKe5Q",
+          "title": "雜玩 Time｜MECCHA CHAMELEON 開畫嘍~~~ (ﾟ∀ﾟ) 與朋友同台直播中",
+          "date": "2026-07-09",
+          "url": "https://www.youtube.com/watch?v=Ms842syKe5Q",
+          "game": "MECCHA CHAMELEON"
+        },
+        {
+          "id": "t0RBKXLMIwc",
+          "title": "雜玩 Time｜MECCHA CHAMELEON 開畫嘍~~~ (ﾟ∀ﾟ) 與朋友同台直播中",
+          "date": "2026-07-08",
+          "url": "https://www.youtube.com/watch?v=t0RBKXLMIwc",
+          "game": "MECCHA CHAMELEON"
+        }
+      ],
+      "games": [
+        "MECCHA CHAMELEON",
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCz4-NWdRiqC7WjTkyc5TTpQ",
+      "name": "Mochika Usagi Ch. 【 𝚄𝚖𝚎𝚜𝚑𝚞 】",
+      "youtube_url": "https://www.youtube.com/@Mochika_usagi",
+      "subscribers": 974,
+      "subscriber_text": "974 subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://discord.gg/d6wrmvnsmk"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "Zk4B8_1TCcQ",
+          "url": "https://www.youtube.com/watch?v=Zk4B8_1TCcQ",
+          "title": "【 PARTY ANIMALS 】Cứ cười đi, chuyện đâu còn đó @Callme.Mandukkiee",
+          "duration": 10915,
+          "channel_id": "UCz4-NWdRiqC7WjTkyc5TTpQ",
+          "channel": "Mochika Usagi Ch. 【 𝚄𝚖𝚎𝚜𝚑𝚞 】",
+          "channel_url": "https://www.youtube.com/@Mochika_usagi",
+          "query_language": "English",
+          "query": "\"Party Animals\" collab vtuber after:2026-07-01",
+          "game": "Party Animals",
+          "date": "2026-09-27"
+        },
+        {
+          "video_id": "3Mhj116RLoo",
+          "url": "https://www.youtube.com/watch?v=3Mhj116RLoo",
+          "title": "【 Party Animals】 Nhào zô coi ai hơn ai?",
+          "duration": 13847,
+          "channel_id": "UCz4-NWdRiqC7WjTkyc5TTpQ",
+          "channel": "Mochika Usagi Ch. 【 𝚄𝚖𝚎𝚜𝚑𝚞 】",
+          "channel_url": "https://www.youtube.com/@Mochika_usagi",
+          "query_language": "English",
+          "query": "\"Party Animals\" collab vtuber after:2026-07-01",
+          "game": "Party Animals",
+          "date": "2026-09-20"
+        }
+      ],
+      "games": [
+        "Party Animals"
+      ],
+      "search_hit_count": 2
+    },
+    {
+      "channel_id": "UC4BEhNpv4UsPPx_mhFD1KiA",
+      "name": "WujuDancerXP",
+      "youtube_url": "https://www.youtube.com/@WujuDancerXP",
+      "subscribers": 1220,
+      "subscriber_text": "1.22K subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://linktr.ee/WujuDancerXP"
+      ],
+      "twitch_url": null,
+      "language": "Spanish",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "qfNivBP0sbw",
+          "url": "https://www.youtube.com/watch?v=qfNivBP0sbw",
+          "title": "¡La ocarina maldita! | Lethal Company",
+          "duration": 1370,
+          "channel_id": "UC4BEhNpv4UsPPx_mhFD1KiA",
+          "channel": "WujuDancerXP",
+          "channel_url": "https://www.youtube.com/@WujuDancerXP",
+          "query_language": "Spanish",
+          "query": "\"Lethal Company\" amigos vtuber español after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-09-25"
+        },
+        {
+          "video_id": "UeNVSCRL2p4",
+          "url": "https://www.youtube.com/watch?v=UeNVSCRL2p4",
+          "title": "Carta inversa de UNO mágica y Luna de carnaval! | Lethal Company",
+          "duration": 1533,
+          "channel_id": "UC4BEhNpv4UsPPx_mhFD1KiA",
+          "channel": "WujuDancerXP",
+          "channel_url": "https://www.youtube.com/@WujuDancerXP",
+          "query_language": "Spanish",
+          "query": "\"Lethal Company\" amigos vtuber español after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-09-15"
+        }
+      ],
+      "games": [
+        "Lethal Company"
+      ],
+      "search_hit_count": 2
+    },
+    {
+      "channel_id": "UCdGEiRR1xy8wwd2K71Rm-Ww",
+      "name": "Pandapam",
+      "youtube_url": "https://www.youtube.com/@Pandapam00",
+      "subscribers": 1920,
+      "subscriber_text": "1.92K subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://discord.gg/d8NrFSzFWA",
+        "https://instagram.com/pandapam00",
+        "https://tiktok.com/@panda._.pam",
+        "https://www.instagram.com/pandapam00",
+        "https://www.tiktok.com/@panda._.pam"
+      ],
+      "twitch_url": "https://twitch.tv/panda_pam00",
+      "language": "Spanish",
+      "last_active": "2026-09-28",
+      "proofs": [
+        {
+          "video_id": "wZh0GNr8Ur0",
+          "url": "https://www.youtube.com/watch?v=wZh0GNr8Ur0",
+          "title": "THE VERY BEST OF PEAK🔥",
+          "duration": 2693,
+          "channel_id": "UCdGEiRR1xy8wwd2K71Rm-Ww",
+          "channel": "Pandapam",
+          "channel_url": "https://www.youtube.com/@Pandapam00",
+          "query_language": "Spanish",
+          "query": "\"PEAK\" amigos vtuber español after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-09-28"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCc28Akv9F04ZS0LcWlx6oMw",
+      "name": "VaelaNyan",
+      "youtube_url": "https://www.youtube.com/@밸라냥",
+      "subscribers": 2830,
+      "subscriber_text": "2.83K subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://discord.gg/h7gHj6SAS3"
+      ],
+      "twitch_url": null,
+      "language": "Korean",
+      "last_active": "2026-10-03",
+      "proofs": [
+        {
+          "video_id": "HKsbgYv7l7s",
+          "url": "https://www.youtube.com/watch?v=HKsbgYv7l7s",
+          "title": "【밸라냥】 하프라이프의 17번 지구나 화이트 포레스트가 아닌 타 지구에서 등산으로 살아남기 !【Peak : 등산 게임】 (합방 / 실황) w. sunayuri",
+          "duration": 13835,
+          "channel_id": "UCc28Akv9F04ZS0LcWlx6oMw",
+          "channel": "밸라냥",
+          "channel_url": "https://www.youtube.com/@밸라냥",
+          "query_language": "Korean",
+          "query": "PEAK 합방 버튜버 after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-10-01"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UC0CLCZC0tj_vxW_DFxXs9dw",
+      "name": "Meryxle",
+      "youtube_url": "https://www.youtube.com/@MeryxleVT",
+      "subscribers": 3380,
+      "subscriber_text": "3.38K subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://linktr.ee/Meryxle"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-10-01",
+      "proofs": [
+        {
+          "video_id": "ATDqlLGJhSQ",
+          "url": "https://www.youtube.com/watch?v=ATDqlLGJhSQ",
+          "title": "THIS REALLY IS A KITCHEN NIGHTMARE | Overcooked! 2 Collab",
+          "duration": 9443,
+          "channel_id": "UC0CLCZC0tj_vxW_DFxXs9dw",
+          "channel": "Meryxle",
+          "channel_url": "https://www.youtube.com/@MeryxleVT",
+          "query_language": "English",
+          "query": "\"Overcooked 2\" collab vtuber after:2026-07-01",
+          "game": "Overcooked 2",
+          "date": "2026-09-29"
+        }
+      ],
+      "games": [
+        "Overcooked 2"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCW5jGdvHKNtpjmxilbb7dyA",
+      "name": "Mr Sane",
+      "youtube_url": "https://www.youtube.com/@Mr_Sane",
+      "subscribers": 4640,
+      "subscriber_text": "4.64K subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://bsky.app/profile/0mrsane0.bsky.social",
+        "https://discord.gg/TJ7GVbJWHu",
+        "https://linktr.ee/MrSane",
+        "https://mrsane.carrd.co",
+        "https://tiktok.com/@ominoustyping?is_from_webapp=1&sender_device=pc",
+        "https://www.tiktok.com/@ominoustyping?is_from_webapp=1&sender_device=pc",
+        "mrsane.carrd.co"
+      ],
+      "twitch_url": "https://twitch.tv/0mr_sane0",
+      "language": "English",
+      "last_active": "2026-10-02",
+      "proofs": [
+        {
+          "video_id": "VoMH49ka25M",
+          "url": "https://www.youtube.com/watch?v=VoMH49ka25M",
+          "title": "Lethal company | modded with friends part 2 | Twitch stream",
+          "duration": 6988,
+          "channel_id": "UCW5jGdvHKNtpjmxilbb7dyA",
+          "channel": "Mr Sane",
+          "channel_url": "https://www.youtube.com/@Mr_Sane",
+          "query_language": "English",
+          "query": "\"Lethal Company\" \"with friends\" vtuber after:2026-07-01",
+          "game": "Lethal Company",
+          "date": "2026-09-21"
+        }
+      ],
+      "games": [
+        "Lethal Company"
+      ],
+      "search_hit_count": 1
+    },
+    {
+      "channel_id": "UCqgPGYnfdFcwzcADjKaAXZQ",
+      "name": "HimeAhri",
+      "youtube_url": "https://www.youtube.com/@HimeAhriTTV",
+      "subscribers": 5320,
+      "subscriber_text": "5.32K subscribers",
+      "x_url": null,
+      "external_links": [
+        "https://linktr.ee/himeahri"
+      ],
+      "twitch_url": null,
+      "language": "English",
+      "last_active": "2026-09-18",
+      "proofs": [
+        {
+          "video_id": "Sk3hPPxpmcg",
+          "url": "https://www.youtube.com/watch?v=Sk3hPPxpmcg",
+          "title": "Peak collab with a bunny and a fox OwO",
+          "duration": 21539,
+          "channel_id": "UCqgPGYnfdFcwzcADjKaAXZQ",
+          "channel": "HimeAhri",
+          "channel_url": "https://www.youtube.com/@HimeAhriTTV",
+          "query_language": "English",
+          "query": "\"PEAK\" collab vtuber after:2026-07-01",
+          "game": "PEAK",
+          "date": "2026-08-12"
+        }
+      ],
+      "games": [
+        "PEAK"
+      ],
+      "search_hit_count": 1
+    }
+  ]
+}

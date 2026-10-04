@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "TARGET  {0:0}g (90g x PLAYERS)"
+      "value": "TARGET  {0:0}g (70g x PLAYERS)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Kilépsz a jelenlegi pályáról és visszatérsz a pályaválasztóhoz?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "A befejezetlen módosítások nem lesznek mentve. Visszalépsz mentés nélkül?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "VISSZA MENTÉS NÉLKÜL"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Az újrarajzolt karakter mentve."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "A mentés sikertelen. Nyomd meg újra a „KÉSZ” gombot."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "PÁLYAVÁLASZTÁS"
     },
     {
       "key": "online_content_mismatch",
       "value": "Az online játék nem érhető el, mert a játékadatok vagy a verzió nem egyezik. Ellenőrizd a játékfájlokat a Steamben."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Megszakadt a kapcsolat a játékmenettel. Csatlakozz újra a szobához."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "TÖBBJÁTÉKOS MÓD AJÁNLOTT!" },
     { "key": "single_recommend_message", "value": "A NICO DRAW együttműködve a legszórakoztatóbb!\nPróbáljátok ki 2–4 játékossal!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Kilépsz a NICO DRAW-ból?" }
+    ,{ "key": "title_exit_confirm", "value": "Kilépsz a NICO DRAW-ból?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} már ezt a karaktert használja. Küldesz cserekérelmet?" },
+    { "key": "draw_species_swap_send", "value": "KÉRELEM KÜLDÉSE" },
+    { "key": "background_word_push", "value": "TOLD!" }
   ]
 }

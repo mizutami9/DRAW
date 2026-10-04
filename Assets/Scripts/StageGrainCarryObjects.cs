@@ -682,6 +682,9 @@ namespace DrawBody.Prototype
         private StageGrainEmitter sourceEmitter;
         private bool sourceEmitterNotified;
         private bool allowGroundedCarrierContainment;
+        private bool freeFallOnPlayerContact;
+        private Vector2 playerContactFreeFallVelocity;
+        private float playerContactGravityScale;
         private float configuredGravityScale = 0.72f;
         private float grams = 10f;
 
@@ -769,6 +772,13 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void ConfigurePlayerContactFreeFall(Vector2 velocity, float gravityScale)
+        {
+            freeFallOnPlayerContact = true;
+            playerContactFreeFallVelocity = velocity;
+            playerContactGravityScale = Mathf.Max(0f, gravityScale);
+        }
+
         private void OnEnable() { ActiveParticles.Add(this); }
         private void OnDisable()
         {
@@ -841,6 +851,7 @@ namespace DrawBody.Prototype
 
         private void OnCollisionStay2D(Collision2D collision)
         {
+            SwitchToPlayerContactFreeFall(collision.collider);
             // Grains resting on a character form a pile and naturally touch one
             // another. Only contact with actual terrain starts the cleanup timer.
             if (collision.collider.GetComponentInParent<PlayerController2D>() != null
@@ -852,6 +863,25 @@ namespace DrawBody.Prototype
                 lastFloorContactAt = Time.time;
                 return;
             }
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            SwitchToPlayerContactFreeFall(collision.collider);
+        }
+
+        private void SwitchToPlayerContactFreeFall(Collider2D other)
+        {
+            if (!freeFallOnPlayerContact || consumed || body == null || other == null
+                || other.GetComponentInParent<PlayerController2D>() == null)
+            {
+                return;
+            }
+
+            freeFallOnPlayerContact = false;
+            configuredGravityScale = playerContactGravityScale;
+            body.gravityScale = configuredGravityScale;
+            body.linearVelocity = playerContactFreeFallVelocity;
         }
 
         public void Consume()

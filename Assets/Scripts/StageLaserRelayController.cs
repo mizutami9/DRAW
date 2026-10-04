@@ -342,7 +342,8 @@ namespace DrawBody.Prototype
             StageRedrawZoneFactory.CreateRuntimeFloorZone(arenaRoot,
                 "14-3_runtime_redraw_zone_" + round,
                 new Vector2((BoxRoomRightX - RoomHalfWidth) * 0.5f, FloorY),
-                BoxRoomRightX + RoomHalfWidth - wallThickness, ceilingY - FloorY);
+                BoxRoomRightX + RoomHalfWidth - wallThickness, ceilingY - FloorY,
+                floorThickness);
             CreateSolid("Laser Relay Ceiling", new Vector2(0f, ceilingY), new Vector2(innerWidth, ceilingThickness));
             CreateSolid("Laser Relay Left Wall", new Vector2(-RoomHalfWidth, wallCenterY),
                 new Vector2(wallThickness, wallHeight));
@@ -1156,9 +1157,9 @@ namespace DrawBody.Prototype
             if (pressed && !buttonPressed && Time.unscaledTime >= nextBoxAt)
             {
                 nextBoxAt = Time.unscaledTime + BoxCooldownSeconds;
-                boxDropper?.DispenseSelectedSize(BoxSizes[previewIndex]);
-                GameSfx.PlayAt(SfxId.UiButtonPress,
-                    boxButton != null ? boxButton.transform.position : transform.position);
+                if (boxDropper != null && boxDropper.DispenseSelectedSize(BoxSizes[previewIndex]))
+                    GameSfx.PlayAt(SfxId.UiButtonPress,
+                        boxButton != null ? boxButton.transform.position : transform.position);
             }
             buttonPressed = pressed;
             RefreshBoxStationVisual();
@@ -1297,8 +1298,6 @@ namespace DrawBody.Prototype
                 ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
                 : null;
             local?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
-            if (!IsOnline)
-                stageManager.RemotePlayerController?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
         }
 
         private void BroadcastState(bool force = false)
@@ -1325,10 +1324,33 @@ namespace DrawBody.Prototype
                 || HasAuthority || !IsHost(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= receivedSequence) return;
+            bool hadNetworkState = receivedSequence > 0;
+            bool sameAttempt = state.Round == round && state.Attempt == roundAttempt;
+            RelayPhase previousPhase = phase;
+            int previousGoalMask = goalMask;
+            bool previousButtonPressed = buttonPressed;
             receivedSequence = state.Sequence;
-            if (state.Round != round || state.Attempt != roundAttempt)
+            if (!sameAttempt)
                 BeginRound(state.Round, state.Attempt);
-            phase = (RelayPhase)state.Phase;
+            RelayPhase incomingPhase = (RelayPhase)state.Phase;
+            if (hadNetworkState && sameAttempt)
+            {
+                int newlyLitMask = state.GoalMask & ~previousGoalMask;
+                for (int i = 0; i < goals.Count; i++)
+                {
+                    if ((newlyLitMask & (1 << goals[i].Index)) != 0)
+                        GameSfx.PlayAt(SfxId.GoalReached, goals[i].Position);
+                }
+                if (state.ButtonPressed && !previousButtonPressed)
+                {
+                    GameSfx.PlayAt(SfxId.UiButtonPress,
+                        boxButton != null ? boxButton.transform.position : transform.position);
+                }
+                if (previousPhase == RelayPhase.Active
+                    && (incomingPhase == RelayPhase.RoundClear || incomingPhase == RelayPhase.Complete))
+                    GameSfx.Play(SfxId.GoalReached);
+            }
+            phase = incomingPhase;
             remaining = state.Remaining;
             goalMask = state.GoalMask;
             if (state.GoalCharges != null)

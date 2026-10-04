@@ -7,7 +7,8 @@ namespace DrawBody.Prototype
 {
     public static class CharacterDrawingPresetStore
     {
-        public const int SlotCount = 3;
+        public const int SlotCount = 10;
+        private const string AutoSaveFileName = "character_autosave.json";
 
         [Serializable]
         private sealed class PresetFile
@@ -30,6 +31,7 @@ namespace DrawBody.Prototype
         {
             public int part;
             public Vector2[] points;
+            public float[] strokeWidths;
         }
 
         public static bool Exists(int slot)
@@ -39,12 +41,18 @@ namespace DrawBody.Prototype
 
         public static bool Exists(DrawManager.Species species, int slot)
         {
-            return File.Exists(GetSpeciesPath(species, slot));
+            if (File.Exists(GetSpeciesPath(species, slot))) return true;
+            return TryExtractSpeciesState(LoadFromPath(GetPath(slot)), species, out _);
         }
 
         public static bool Save(int slot, DrawManager.DrawingState state)
         {
             return SaveToPath(GetPath(slot), state);
+        }
+
+        public static bool SaveAuto(DrawManager.DrawingState state)
+        {
+            return SaveToPath(Path.Combine(Application.persistentDataPath, AutoSaveFileName), state);
         }
 
         public static bool Save(DrawManager.Species species, int slot, DrawManager.DrawingState state)
@@ -72,6 +80,20 @@ namespace DrawBody.Prototype
             }
 
             speciesState.Points[species] = copiedParts;
+            if (state.StrokeWidths.TryGetValue(
+                    species,
+                    out Dictionary<DrawManager.BodyPart, List<float>> sourceWidths))
+            {
+                Dictionary<DrawManager.BodyPart, List<float>> copiedWidths =
+                    new Dictionary<DrawManager.BodyPart, List<float>>();
+                foreach (KeyValuePair<DrawManager.BodyPart, List<float>> part in sourceWidths)
+                {
+                    copiedWidths[part.Key] = part.Value != null
+                        ? new List<float>(part.Value)
+                        : new List<float>();
+                }
+                speciesState.StrokeWidths[species] = copiedWidths;
+            }
             return SaveToPath(GetSpeciesPath(species, slot), speciesState);
         }
 
@@ -89,7 +111,14 @@ namespace DrawBody.Prototype
                         partEntries.Add(new PartEntry
                         {
                             part = (int)partPair.Key,
-                            points = partPair.Value != null ? partPair.Value.ToArray() : Array.Empty<Vector2>()
+                            points = partPair.Value != null ? partPair.Value.ToArray() : Array.Empty<Vector2>(),
+                            strokeWidths = state.StrokeWidths.TryGetValue(
+                                    speciesPair.Key,
+                                    out Dictionary<DrawManager.BodyPart, List<float>> speciesWidths)
+                                && speciesWidths.TryGetValue(partPair.Key, out List<float> widths)
+                                && widths != null
+                                    ? widths.ToArray()
+                                    : Array.Empty<float>()
                         });
                     }
                     speciesEntries.Add(new SpeciesEntry
@@ -120,25 +149,59 @@ namespace DrawBody.Prototype
             return LoadFromPath(GetPath(slot));
         }
 
+        public static DrawManager.DrawingState LoadAuto()
+        {
+            return LoadFromPath(Path.Combine(Application.persistentDataPath, AutoSaveFileName));
+        }
+
         public static DrawManager.DrawingState Load(DrawManager.Species species, int slot)
         {
             DrawManager.DrawingState state = LoadFromPath(GetSpeciesPath(species, slot));
+            bool loadedLegacy = state == null;
+            if (loadedLegacy)
+            {
+                state = LoadFromPath(GetPath(slot));
+            }
+
+            if (!TryExtractSpeciesState(state, species, out DrawManager.DrawingState speciesState))
+                return null;
+
+            // Older builds stored all species in character_preset_N.json. Keep
+            // that file intact and lazily copy the requested species into the
+            // current per-species format so existing presets do not disappear.
+            if (loadedLegacy) SaveToPath(GetSpeciesPath(species, slot), speciesState);
+            return speciesState;
+        }
+
+        private static bool TryExtractSpeciesState(
+            DrawManager.DrawingState state,
+            DrawManager.Species species,
+            out DrawManager.DrawingState speciesState)
+        {
+            speciesState = null;
             if (state == null
-                || state.Species != species
                 || !state.Points.TryGetValue(
                     species,
                     out Dictionary<DrawManager.BodyPart, List<Vector2>> sourceParts))
             {
-                return null;
+                return false;
             }
 
-            DrawManager.DrawingState speciesState = new DrawManager.DrawingState
+            speciesState = new DrawManager.DrawingState
             {
                 Species = species,
-                Part = state.Part
+                Part = state.Species == species
+                    ? state.Part
+                    : DrawManager.GetPartsForSpecies(species)[0]
             };
             speciesState.Points[species] = sourceParts;
-            return speciesState;
+            if (state.StrokeWidths.TryGetValue(
+                    species,
+                    out Dictionary<DrawManager.BodyPart, List<float>> sourceWidths))
+            {
+                speciesState.StrokeWidths[species] = sourceWidths;
+            }
+            return true;
         }
 
         private static DrawManager.DrawingState LoadFromPath(string path)
@@ -156,8 +219,11 @@ namespace DrawBody.Prototype
                 foreach (DrawManager.Species species in Enum.GetValues(typeof(DrawManager.Species)))
                 {
                     Dictionary<DrawManager.BodyPart, List<Vector2>> parts = new Dictionary<DrawManager.BodyPart, List<Vector2>>();
+                    Dictionary<DrawManager.BodyPart, List<float>> widths = new Dictionary<DrawManager.BodyPart, List<float>>();
                     foreach (DrawManager.BodyPart part in DrawManager.GetAllParts()) parts[part] = new List<Vector2>();
+                    foreach (DrawManager.BodyPart part in DrawManager.GetAllParts()) widths[part] = new List<float>();
                     state.Points[species] = parts;
+                    state.StrokeWidths[species] = widths;
                 }
                 for (int i = 0; i < file.species.Length; i++)
                 {
@@ -182,6 +248,10 @@ namespace DrawBody.Prototype
                             }
                         }
                         parts[(DrawManager.BodyPart)partEntry.part] = points;
+                        state.StrokeWidths[species][(DrawManager.BodyPart)partEntry.part] =
+                            partEntry.strokeWidths != null
+                                ? new List<float>(partEntry.strokeWidths)
+                                : new List<float>();
                     }
                 }
                 return state;

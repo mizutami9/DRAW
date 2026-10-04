@@ -51,6 +51,13 @@ namespace DrawBody.Prototype
                 }
                 if (!duplicate)
                 {
+                    if (player.PlayerId == playerId
+                        && player.PlayerSlot >= 0
+                        && player.PlayerSlot < Colors.Length
+                        && IsUniqueAuthoritativeSlot(lobby.Players, player))
+                    {
+                        return player.PlayerSlot;
+                    }
                     ordered.Add(player);
                 }
             }
@@ -67,6 +74,18 @@ namespace DrawBody.Prototype
                 if (ordered[i].PlayerId == playerId) return i;
             }
             return -1;
+        }
+
+        private static bool IsUniqueAuthoritativeSlot(
+            IReadOnlyList<OnlinePlayerInfo> players, OnlinePlayerInfo target)
+        {
+            for (int i = 0; i < players.Count; i++)
+            {
+                OnlinePlayerInfo other = players[i];
+                if (other == null || other.PlayerId == target.PlayerId) continue;
+                if (other.PlayerSlot == target.PlayerSlot) return false;
+            }
+            return true;
         }
     }
 }

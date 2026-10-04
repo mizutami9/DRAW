@@ -17,12 +17,14 @@ namespace DrawBody.Prototype
         [System.Serializable]
         private sealed class ReadyMessage
         {
+            public bool IsRequest;
             public bool Ready;
             public bool Launch;
             public string[] ReadyIds;
             public string FitRejectedId;
             public float RoomWidth;
             public float RoomHeight;
+            public int BodyRevision;
         }
 
         private sealed class RoomVisual
@@ -31,6 +33,26 @@ namespace DrawBody.Prototype
             public Vector2 ButtonCenter;
             public Transform ButtonCap;
             public Collider2D ButtonCollider;
+        }
+
+        private readonly struct RoomPlayerPlacement
+        {
+            public readonly PlayerController2D Player;
+            public readonly int Room;
+            public readonly Vector2 OffsetFromRoomCenter;
+            public readonly bool WasOnReadyButton;
+
+            public RoomPlayerPlacement(
+                PlayerController2D player,
+                int room,
+                Vector2 offsetFromRoomCenter,
+                bool wasOnReadyButton)
+            {
+                Player = player;
+                Room = room;
+                OffsetFromRoomCenter = offsetFromRoomCenter;
+                WasOnReadyButton = wasOnReadyButton;
+            }
         }
 
         private readonly struct RecommendationEntry
@@ -51,11 +73,17 @@ namespace DrawBody.Prototype
         private readonly HashSet<string> readyIds = new HashSet<string>();
         private readonly HashSet<string> buttonArmedIds = new HashSet<string>();
         private readonly HashSet<string> fitRejectedIds = new HashSet<string>();
+        private readonly HashSet<string> remoteReadyRequestIds = new HashSet<string>();
+        private readonly Dictionary<string, int> remoteReadyBodyRevisions =
+            new Dictionary<string, int>();
+        private readonly Dictionary<string, float> buttonContactGraceUntil =
+            new Dictionary<string, float>();
         private readonly Dictionary<PlayerController2D, Vector3> returnPositions =
             new Dictionary<PlayerController2D, Vector3>();
 
         private StageManager stageManager;
         private OnlineManager onlineManager;
+        private OnlinePlayerSync onlinePlayerSync;
         private Transform suspendedStageRoot;
         private TextMesh descriptionText;
         private TextMesh statusText;
@@ -74,8 +102,9 @@ namespace DrawBody.Prototype
         private float nextLocalReadySendTime;
         private float nextSessionStateRequestTime;
         private float nextRegressionAutoReadyTime;
-        private bool hostSessionStateKnown;
         private int decorationSeed;
+        private CameraFollow2D readyRoomCameraFollow;
+        private Transform readyRoomCameraAnchor;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -86,11 +115,13 @@ namespace DrawBody.Prototype
             suspendedStageRoot = stageRoot;
             stageId = manager != null ? manager.CurrentStageId : string.Empty;
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            onlinePlayerSync = Object.FindFirstObjectByType<OnlinePlayerSync>();
             localId = onlineManager != null ? onlineManager.LocalPlayerId : string.Empty;
             decorationSeed = CreateDecorationSeed();
 
             CaptureRosterAndReturnPositions();
             BuildRooms();
+            ConfigureReadyRoomCamera();
             PositionPlayersInRooms();
             if (suspendedStageRoot != null) suspendedStageRoot.gameObject.SetActive(false);
             if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
@@ -113,6 +144,7 @@ namespace DrawBody.Prototype
         private void OnDestroy()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            RestoreReadyRoomCamera();
             stageManager?.CancelChallengeReadyRoomReference(this);
         }
 
@@ -124,6 +156,12 @@ namespace DrawBody.Prototype
                 Abort();
                 return;
             }
+
+            // Other gameplay systems normally retarget this camera to the local
+            // player after a respawn/body rebuild. The ready-room overview must
+            // remain fixed so the upper monitor is visible from either row.
+            if (readyRoomCameraFollow != null && readyRoomCameraAnchor != null)
+                readyRoomCameraFollow.SetTarget(readyRoomCameraAnchor);
 
             if (!IsOnline) RefreshOfflineRoster();
 
@@ -138,9 +176,14 @@ namespace DrawBody.Prototype
             // move that process' player onto its own physical ready button. This
             // still exercises the regular overlap and host-authoritative ready
             // flow, while leaving normal online sessions completely manual.
+            bool regressionReadyPlacementHeld = false;
+#if NICO_DRAW_AI_TEST
+            regressionReadyPlacementHeld = AiOnlineTestRuntime.HoldRegressionReadyRoomAutoReady;
+#endif
             if (IsOnline
                 && onlineManager != null
                 && onlineManager.IsLocalRegressionActive
+                && !regressionReadyPlacementHeld
                 && Time.unscaledTime >= nextRegressionAutoReadyTime)
             {
                 nextRegressionAutoReadyTime = Time.unscaledTime + 0.25f;
@@ -155,9 +198,11 @@ namespace DrawBody.Prototype
                 }
                 else
                 {
-                    if (!hostSessionStateKnown && Time.unscaledTime >= nextSessionStateRequestTime)
+                    // Continue polling until launch. A single pre-launch response
+                    // must not stop recovery when the later launch packet is lost.
+                    if (!launched && Time.unscaledTime >= nextSessionStateRequestTime)
                         RequestHostSessionState();
-                    bool localOnButton = IsLocalPlayerOnAssignedButton();
+                    bool localOnButton = IsLocalPlayerOnAssignedButtonStable();
                     if (!localOnButton) fitRejectedIds.Remove(localId);
                     bool localReady = localOnButton && !fitRejectedIds.Contains(localId);
                     bool readyChanged = localReady != lastLocalReady;
@@ -189,7 +234,6 @@ namespace DrawBody.Prototype
 
         internal void ApplyHostRunState(bool runStarted)
         {
-            hostSessionStateKnown = true;
             if (runStarted) Launch();
         }
 
@@ -197,19 +241,6 @@ namespace DrawBody.Prototype
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-            for (int i = 0; i < players.Length && i < 4; i++)
-            {
-                if (players[i] == null) continue;
-                returnPositions[players[i]] = players[i].transform.position;
-                if (TryGetSolidBounds(players[i], out Bounds bounds))
-                {
-                    maximumBodyWidth = Mathf.Max(maximumBodyWidth, bounds.size.x);
-                    maximumBodyHeight = Mathf.Max(maximumBodyHeight, bounds.size.y);
-                }
-            }
-            roomWidth = Mathf.Max(MinimumRoomWidth, maximumBodyWidth + RoomBodyHorizontalPadding);
-            roomHeight = Mathf.Max(MinimumRoomHeight, maximumBodyHeight + RoomBodyVerticalPadding);
-
             if (IsOnline)
             {
                 OnlinePlayerInfo[] roster = onlineManager?.CurrentLobby?.Players;
@@ -250,13 +281,45 @@ namespace DrawBody.Prototype
                     if (expectedIds.Count < 4) expectedIds.Add(localId);
                     else expectedIds[expectedIds.Count - 1] = localId;
                 }
+
+                // Only current lobby members may participate in room sizing and
+                // launch validation. A stale player object left while the online
+                // roster is settling must never force every client back to DRAW.
+                returnPositions.Clear();
+                maximumBodyWidth = 1.5f;
+                maximumBodyHeight = 2.5f;
+                for (int i = 0; i < expectedIds.Count; i++)
+                {
+                    PlayerController2D onlinePlayer = stageManager.GetOnlinePlayerController(expectedIds[i]);
+                    if (onlinePlayer == null) continue;
+                    returnPositions[onlinePlayer] = onlinePlayer.transform.position;
+                    IncludeBodySize(onlinePlayer);
+                }
+                UpdateRoomSizeFromMaximumBody();
                 return;
             }
 
             for (int i = 0; i < players.Length && offlinePlayers.Count < 4; i++)
             {
-                if (players[i] != null) offlinePlayers.Add(players[i]);
+                if (players[i] == null) continue;
+                offlinePlayers.Add(players[i]);
+                returnPositions[players[i]] = players[i].transform.position;
+                IncludeBodySize(players[i]);
             }
+            UpdateRoomSizeFromMaximumBody();
+        }
+
+        private void IncludeBodySize(PlayerController2D targetPlayer)
+        {
+            if (!TryGetSolidBounds(targetPlayer, out Bounds bounds)) return;
+            maximumBodyWidth = Mathf.Max(maximumBodyWidth, bounds.size.x);
+            maximumBodyHeight = Mathf.Max(maximumBodyHeight, bounds.size.y);
+        }
+
+        private void UpdateRoomSizeFromMaximumBody()
+        {
+            roomWidth = Mathf.Max(MinimumRoomWidth, maximumBodyWidth + RoomBodyHorizontalPadding);
+            roomHeight = Mathf.Max(MinimumRoomHeight, maximumBodyHeight + RoomBodyVerticalPadding);
         }
 
         private void RefreshOfflineRoster()
@@ -293,6 +356,7 @@ namespace DrawBody.Prototype
             for (int i = transform.childCount - 1; i >= 0; i--)
             {
                 GameObject child = transform.GetChild(i).gameObject;
+                if (readyRoomCameraAnchor != null && child == readyRoomCameraAnchor.gameObject) continue;
                 child.SetActive(false);
                 Destroy(child);
             }
@@ -305,6 +369,7 @@ namespace DrawBody.Prototype
             buttonArmedIds.Clear();
             lastLocalReady = false;
             BuildRooms();
+            UpdateReadyRoomCameraAnchor();
             PositionPlayersInRooms();
             RefreshPresentation();
         }
@@ -1453,13 +1518,24 @@ namespace DrawBody.Prototype
         {
             float requiredBodyWidth = maximumBodyWidth;
             float requiredBodyHeight = maximumBodyHeight;
-            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-            for (int i = 0; i < players.Length; i++)
+            if (IsOnline)
             {
-                if (!TryGetSolidBounds(players[i], out Bounds bounds)) continue;
-                requiredBodyWidth = Mathf.Max(requiredBodyWidth, bounds.size.x);
-                requiredBodyHeight = Mathf.Max(requiredBodyHeight, bounds.size.y);
+                for (int i = 0; i < expectedIds.Count; i++)
+                {
+                    PlayerController2D onlinePlayer = stageManager.GetOnlinePlayerController(expectedIds[i]);
+                    if (!TryGetSolidBounds(onlinePlayer, out Bounds bounds)) continue;
+                    requiredBodyWidth = Mathf.Max(requiredBodyWidth, bounds.size.x);
+                    requiredBodyHeight = Mathf.Max(requiredBodyHeight, bounds.size.y);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < offlinePlayers.Count; i++)
+                {
+                    if (!TryGetSolidBounds(offlinePlayers[i], out Bounds bounds)) continue;
+                    requiredBodyWidth = Mathf.Max(requiredBodyWidth, bounds.size.x);
+                    requiredBodyHeight = Mathf.Max(requiredBodyHeight, bounds.size.y);
+                }
             }
             ExpandRoomsToFit(requiredBodyWidth, requiredBodyHeight, null);
         }
@@ -1478,6 +1554,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            // Rebuilding the generated rooms used to send every character other
+            // than the one being redrawn back to its room's starting edge. In a
+            // multiplayer ready room that visibly pulled players off their ready
+            // buttons when the last player finished a larger drawing. Preserve
+            // each locally-owned character's placement relative to its old room,
+            // and preserve ready-button occupancy explicitly.
+            List<RoomPlayerPlacement> placements = CaptureRoomPlayerPlacements(playerBeingRedrawn);
+
             maximumBodyWidth = nextMaximumWidth;
             maximumBodyHeight = nextMaximumHeight;
             roomWidth = nextRoomWidth;
@@ -1486,6 +1570,7 @@ namespace DrawBody.Prototype
             for (int i = transform.childCount - 1; i >= 0; i--)
             {
                 GameObject child = transform.GetChild(i).gameObject;
+                if (readyRoomCameraAnchor != null && child == readyRoomCameraAnchor.gameObject) continue;
                 child.SetActive(false);
                 Destroy(child);
             }
@@ -1494,30 +1579,73 @@ namespace DrawBody.Prototype
             statusText = null;
             readyIds.Clear();
             buttonArmedIds.Clear();
+            remoteReadyRequestIds.Clear();
+            remoteReadyBodyRevisions.Clear();
             lastLocalReady = false;
             BuildRooms();
+            UpdateReadyRoomCameraAnchor();
+            RestoreRoomPlayerPlacements(placements);
+            RefreshPresentation();
+            if (IsOnline && HasAuthority) BroadcastSnapshot(false);
+        }
+
+        private List<RoomPlayerPlacement> CaptureRoomPlayerPlacements(PlayerController2D playerBeingRedrawn)
+        {
+            List<RoomPlayerPlacement> placements = new List<RoomPlayerPlacement>();
+            if (rooms.Count == 0) return placements;
 
             if (IsOnline)
             {
                 PlayerController2D local = stageManager.ActivePlayerTransform != null
                     ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
                     : null;
-                if (local != null && local != playerBeingRedrawn)
-                {
-                    int room = expectedIds.IndexOf(localId);
-                    if (room >= 0) PlacePlayer(local, room);
-                }
+                int room = expectedIds.IndexOf(localId);
+                CaptureRoomPlayerPlacement(local, room, playerBeingRedrawn, placements);
+                return placements;
             }
-            else
+
+            for (int i = 0; i < offlinePlayers.Count && i < rooms.Count; i++)
+                CaptureRoomPlayerPlacement(offlinePlayers[i], i, playerBeingRedrawn, placements);
+            return placements;
+        }
+
+        private void CaptureRoomPlayerPlacement(
+            PlayerController2D player,
+            int room,
+            PlayerController2D playerBeingRedrawn,
+            List<RoomPlayerPlacement> placements)
+        {
+            if (player == null || player == playerBeingRedrawn || room < 0 || room >= rooms.Count) return;
+            placements.Add(new RoomPlayerPlacement(
+                player,
+                room,
+                (Vector2)player.transform.position - rooms[room].Center,
+                IsPlayerPressingRoomButton(player, room)));
+        }
+
+        private void RestoreRoomPlayerPlacements(List<RoomPlayerPlacement> placements)
+        {
+            for (int i = 0; i < placements.Count; i++)
             {
-                for (int i = 0; i < offlinePlayers.Count && i < rooms.Count; i++)
+                RoomPlayerPlacement placement = placements[i];
+                if (placement.Player == null || placement.Room < 0 || placement.Room >= rooms.Count) continue;
+                if (placement.WasOnReadyButton)
                 {
-                    if (offlinePlayers[i] != null && offlinePlayers[i] != playerBeingRedrawn)
-                        PlacePlayer(offlinePlayers[i], i);
+                    PlacePlayerOnReadyButton(placement.Player, placement.Room);
+                    continue;
                 }
+
+                Vector3 destination = rooms[placement.Room].Center + placement.OffsetFromRoomCenter;
+                destination.z = placement.Player.transform.position.z;
+                Rigidbody2D body = placement.Player.GetComponent<Rigidbody2D>();
+                if (body != null)
+                {
+                    body.simulated = true;
+                    body.position = destination;
+                }
+                placement.Player.transform.position = destination;
             }
-            RefreshPresentation();
-            if (IsOnline && HasAuthority) BroadcastSnapshot(false);
+            Physics2D.SyncTransforms();
         }
 
         private void PlacePlayer(PlayerController2D player, int room)
@@ -1560,6 +1688,95 @@ namespace DrawBody.Prototype
             return local != null && room >= 0 && room < rooms.Count && IsPlayerPressingRoomButton(local, room);
         }
 
+        private bool IsLocalPlayerOnAssignedButtonStable()
+        {
+            PlayerController2D local = stageManager.ActivePlayerTransform != null
+                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
+            int room = expectedIds.IndexOf(localId);
+            return local != null && room >= 0 && room < rooms.Count
+                && IsPlayerPressingRoomButtonStable(local, room, localId);
+        }
+
+        internal bool IsLocalPlayerOnAssignedButtonForTest()
+        {
+            return IsLocalPlayerOnAssignedButtonStable();
+        }
+
+        internal bool IsLocalPlayerInsideAssignedRoomForTest()
+        {
+            PlayerController2D local = stageManager != null && stageManager.ActivePlayerTransform != null
+                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
+                : null;
+            int room = expectedIds.IndexOf(localId);
+            if (local == null || room < 0 || room >= rooms.Count
+                || !TryGetSolidBounds(local, out Bounds bounds)) return false;
+            Vector2 center = rooms[room].Center;
+            return bounds.center.x >= center.x - roomWidth * 0.5f
+                && bounds.center.x <= center.x + roomWidth * 0.5f
+                && bounds.center.y >= center.y - roomHeight * 0.5f
+                && bounds.center.y <= center.y + roomHeight * 0.5f;
+        }
+
+        internal bool TryGetAssignedRespawnPoint(PlayerController2D targetPlayer, out Vector3 point)
+        {
+            point = default;
+            if (targetPlayer == null || rooms.Count == 0) return false;
+            int room = IsOnline
+                ? expectedIds.IndexOf(stageManager != null ? stageManager.GetOnlinePlayerId(targetPlayer) : null)
+                : offlinePlayers.IndexOf(targetPlayer);
+            if (room < 0 || room >= rooms.Count) return false;
+            Vector2 center = rooms[room].Center;
+            point = new Vector3(
+                center.x,
+                center.y - roomHeight * 0.5f + 0.44f,
+                targetPlayer.transform.position.z);
+            return true;
+        }
+
+        internal bool TryGetAssignedRespawnPosition(PlayerController2D targetPlayer, out Vector3 position)
+        {
+            position = targetPlayer != null ? targetPlayer.transform.position : Vector3.zero;
+            if (!TryGetAssignedRespawnPoint(targetPlayer, out Vector3 floorPoint)) return false;
+
+            // Respawn animation changes the root scale while its Rigidbody is
+            // disabled. Collider2D.bounds can consequently still describe the
+            // old fall position for one physics step. Probe inside the assigned
+            // booth first, then derive the exact bottom alignment from fresh
+            // bounds so a stale value cannot leave the player below the room.
+            Vector3 probe = new Vector3(
+                floorPoint.x,
+                floorPoint.y + Mathf.Max(1f, roomHeight * 0.25f),
+                targetPlayer.transform.position.z);
+            Rigidbody2D body = targetPlayer.GetComponent<Rigidbody2D>();
+            targetPlayer.transform.position = probe;
+            if (body != null) body.position = probe;
+            Physics2D.SyncTransforms();
+            if (!TryGetSolidBounds(targetPlayer, out Bounds bounds)) return false;
+
+            // A death respawn must not resize/rebuild the ready rooms. Place the
+            // restored body at the center of its existing assigned room instead.
+            position = probe;
+            position.x += floorPoint.x - bounds.center.x;
+            position.y += floorPoint.y + 0.04f - bounds.min.y;
+            return true;
+        }
+
+        internal bool IsTopMonitorFullyVisibleForTest()
+        {
+            Camera camera = Camera.main;
+            Transform monitor = descriptionText != null ? descriptionText.transform.parent : null;
+            if (camera == null || monitor == null) return false;
+            Renderer[] renderers = monitor.GetComponentsInChildren<Renderer>(true);
+            if (renderers.Length == 0) return false;
+            Bounds bounds = renderers[0].bounds;
+            for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+            Vector3 min = camera.WorldToViewportPoint(bounds.min);
+            Vector3 max = camera.WorldToViewportPoint(bounds.max);
+            return min.z > 0f && max.z > 0f
+                && min.x >= 0.01f && max.x <= 0.99f
+                && min.y >= 0.01f && max.y <= 0.99f;
+        }
+
         private void AutoPlaceLocalPlayerOnReadyButton()
         {
             PlayerController2D local = stageManager.ActivePlayerTransform != null
@@ -1569,22 +1786,28 @@ namespace DrawBody.Prototype
             if (local == null || room < 0 || room >= rooms.Count
                 || IsPlayerPressingRoomButton(local, room)) return;
 
+            PlacePlayerOnReadyButton(local, room);
+        }
+
+        private void PlacePlayerOnReadyButton(PlayerController2D player, int room)
+        {
+            if (player == null || room < 0 || room >= rooms.Count) return;
             Vector3 destination = rooms[room].ButtonCenter;
-            destination.z = local.transform.position.z;
+            destination.z = player.transform.position.z;
             float capTop = rooms[room].ButtonCollider != null
                 ? rooms[room].ButtonCollider.bounds.max.y
                 : rooms[room].ButtonCenter.y + 0.72f;
-            if (TryGetSolidBounds(local, out Bounds bounds))
+            if (TryGetSolidBounds(player, out Bounds bounds))
             {
-                destination.x += local.transform.position.x - bounds.center.x;
-                destination.y = capTop + 0.04f + local.transform.position.y - bounds.min.y;
+                destination.x += player.transform.position.x - bounds.center.x;
+                destination.y = capTop + 0.04f + player.transform.position.y - bounds.min.y;
             }
             else
             {
                 destination.y = capTop + 0.6f;
             }
 
-            Rigidbody2D body = local.GetComponent<Rigidbody2D>();
+            Rigidbody2D body = player.GetComponent<Rigidbody2D>();
             if (body != null)
             {
                 body.simulated = true;
@@ -1592,8 +1815,8 @@ namespace DrawBody.Prototype
                 body.linearVelocity = Vector2.zero;
                 body.angularVelocity = 0f;
             }
-            local.transform.position = destination;
-            local.ResetMotion();
+            player.transform.position = destination;
+            player.ResetMotion();
             Physics2D.SyncTransforms();
         }
 
@@ -1621,9 +1844,18 @@ namespace DrawBody.Prototype
             {
                 string playerId = expectedIds[i];
                 PlayerController2D onlinePlayer = stageManager.GetOnlinePlayerController(playerId);
-                bool ready = onlinePlayer != null
-                    && i < rooms.Count
-                    && IsPlayerPressingRoomButton(onlinePlayer, i);
+                bool localPlayer = playerId == localId;
+                bool bodyRevisionApplied = localPlayer
+                    || !remoteReadyBodyRevisions.TryGetValue(playerId, out int requiredRevision)
+                    || onlinePlayerSync == null
+                    || onlinePlayerSync.HasAppliedRemoteBodyRevision(playerId, requiredRevision);
+                // Each owner decides whether its character is on its assigned cap.
+                // Using the host's delayed proxy collider here allowed an old body
+                // to become ready before the replacement BodyData was rebuilt.
+                bool ready = onlinePlayer != null && i < rooms.Count
+                    && (localPlayer
+                        ? IsPlayerPressingRoomButtonStable(onlinePlayer, i, playerId)
+                        : remoteReadyRequestIds.Contains(playerId) && bodyRevisionApplied);
                 if (!ready) fitRejectedIds.Remove(playerId);
                 if (ready)
                 {
@@ -1640,6 +1872,7 @@ namespace DrawBody.Prototype
             {
                 BroadcastSnapshot(false);
             }
+
         }
 
         private bool IsPlayerPressingRoomButton(PlayerController2D player, int room)
@@ -1668,6 +1901,45 @@ namespace DrawBody.Prototype
             for (int i = 0; i < hits.Length; i++)
                 if (hits[i] != null && hits[i].GetComponentInParent<PlayerController2D>() == player) return true;
             return false;
+        }
+
+        private bool IsPlayerPressingRoomButtonStable(PlayerController2D player, int room, string playerId)
+        {
+            bool pressing = IsPlayerPressingRoomButton(player, room);
+            if (pressing)
+            {
+                if (!string.IsNullOrEmpty(playerId))
+                    buttonContactGraceUntil[playerId] = Time.unscaledTime + 0.4f;
+                return true;
+            }
+            return !string.IsNullOrEmpty(playerId)
+                && buttonContactGraceUntil.TryGetValue(playerId, out float graceUntil)
+                && Time.unscaledTime < graceUntil;
+        }
+
+        private void ConfigureReadyRoomCamera()
+        {
+            readyRoomCameraFollow = Object.FindFirstObjectByType<CameraFollow2D>();
+            if (readyRoomCameraFollow == null) return;
+            readyRoomCameraAnchor = new GameObject("Ready Room Camera Anchor").transform;
+            readyRoomCameraAnchor.SetParent(transform, false);
+            UpdateReadyRoomCameraAnchor();
+            readyRoomCameraFollow.SetTarget(readyRoomCameraAnchor);
+        }
+
+        private void UpdateReadyRoomCameraAnchor()
+        {
+            if (readyRoomCameraAnchor == null) return;
+            // CameraFollow2D carries a -0.6 Y offset. Aim above the booth grid so
+            // lower-row players retain the top game/recommendation monitors.
+            readyRoomCameraAnchor.localPosition = new Vector3(0f, 2.45f, 0f);
+        }
+
+        private void RestoreReadyRoomCamera()
+        {
+            if (readyRoomCameraFollow == null || stageManager == null) return;
+            Transform activePlayer = stageManager.ActivePlayerTransform;
+            if (activePlayer != null) readyRoomCameraFollow.SetTarget(activePlayer);
         }
 
         private static bool TryGetSolidBounds(PlayerController2D player, out Bounds bounds)
@@ -1796,9 +2068,11 @@ namespace DrawBody.Prototype
                 Kind = NetworkKind,
                 Json = JsonUtility.ToJson(new ReadyMessage
                 {
+                    IsRequest = true,
                     Ready = ready,
                     RoomWidth = roomWidth,
-                    RoomHeight = roomHeight
+                    RoomHeight = roomHeight,
+                    BodyRevision = onlineManager.LocalBodyRevision
                 })
             });
         }
@@ -1814,6 +2088,7 @@ namespace DrawBody.Prototype
                 Kind = NetworkKind,
                 Json = JsonUtility.ToJson(new ReadyMessage
                 {
+                    IsRequest = false,
                     ReadyIds = ids,
                     Launch = launch,
                     FitRejectedId = fitRejectedId,
@@ -1829,17 +2104,30 @@ namespace DrawBody.Prototype
             ReadyMessage message = JsonUtility.FromJson<ReadyMessage>(data.Json);
             if (message == null) return;
 
-            if (HasAuthority && message.ReadyIds == null && !string.IsNullOrEmpty(data.PlayerId))
+            if (HasAuthority && message.IsRequest && !string.IsNullOrEmpty(data.PlayerId))
             {
-                if (message.RoomWidth > roomWidth + 0.05f
-                    || message.RoomHeight > roomHeight + 0.05f)
+                bool expandedRoom = message.RoomWidth > roomWidth + 0.05f
+                    || message.RoomHeight > roomHeight + 0.05f;
+                if (expandedRoom)
                 {
                     ExpandRoomsToFit(
                         Mathf.Max(0f, message.RoomWidth - RoomBodyHorizontalPadding),
                         Mathf.Max(0f, message.RoomHeight - RoomBodyVerticalPadding),
                         null);
                 }
-                SetReady(data.PlayerId, message.Ready);
+                if (message.Ready && !expandedRoom)
+                {
+                    remoteReadyRequestIds.Add(data.PlayerId);
+                    remoteReadyBodyRevisions[data.PlayerId] = message.BodyRevision;
+                }
+                else
+                {
+                    remoteReadyRequestIds.Remove(data.PlayerId);
+                    remoteReadyBodyRevisions.Remove(data.PlayerId);
+                }
+                SetReady(data.PlayerId, message.Ready && !expandedRoom
+                    && (onlinePlayerSync == null
+                        || onlinePlayerSync.HasAppliedRemoteBodyRevision(data.PlayerId, message.BodyRevision)));
                 // Reply even when the ready bit did not change. This doubles as
                 // a late-join/resync response for authoritative room dimensions.
                 BroadcastSnapshot(false);
@@ -1908,6 +2196,23 @@ namespace DrawBody.Prototype
         {
             rejectedId = string.Empty;
             rejectedPlayer = null;
+            if (IsOnline)
+            {
+                for (int i = 0; i < expectedIds.Count; i++)
+                {
+                    string playerId = expectedIds[i];
+                    PlayerController2D candidate = stageManager.GetOnlinePlayerController(playerId);
+                    if (candidate == null) continue;
+                    if (!returnPositions.ContainsKey(candidate))
+                        returnPositions[candidate] = candidate.transform.position;
+                    if (TryValidatePlayerStageFit(candidate, out _)) continue;
+                    rejectedPlayer = candidate;
+                    rejectedId = playerId;
+                    return false;
+                }
+                return true;
+            }
+
             List<KeyValuePair<PlayerController2D, Vector3>> entries =
                 new List<KeyValuePair<PlayerController2D, Vector3>>(returnPositions);
             for (int i = 0; i < entries.Count; i++)
@@ -1933,6 +2238,7 @@ namespace DrawBody.Prototype
         {
             if (launched) return;
             launched = true;
+            stageManager?.ForceCloseDrawingForChallengeLaunch();
             if (suspendedStageRoot != null) suspendedStageRoot.gameObject.SetActive(true);
 
             foreach (KeyValuePair<PlayerController2D, Vector3> entry in returnPositions)

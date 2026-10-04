@@ -403,6 +403,15 @@ namespace DrawBody.Prototype
                     parts[partPair.Key] = partPair.Value != null ? new List<Vector2>(partPair.Value) : new List<Vector2>();
                 }
                 clone.Points[speciesPair.Key] = parts;
+                if (source.StrokeWidths.TryGetValue(
+                        speciesPair.Key,
+                        out Dictionary<DrawManager.BodyPart, List<float>> sourceWidths))
+                {
+                    Dictionary<DrawManager.BodyPart, List<float>> widths = new Dictionary<DrawManager.BodyPart, List<float>>();
+                    foreach (KeyValuePair<DrawManager.BodyPart, List<float>> widthPair in sourceWidths)
+                        widths[widthPair.Key] = new List<float>(widthPair.Value);
+                    clone.StrokeWidths[speciesPair.Key] = widths;
+                }
             }
             return clone;
         }

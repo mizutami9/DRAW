@@ -65,13 +65,34 @@ namespace DrawBody.Prototype
                 Vector2 offset = offsets.TryGetValue(part.Key, out Vector2 value) ? value : Vector2.zero;
                 IReadOnlyList<Vector2> points = part.Value;
                 if (points == null) continue;
+                IReadOnlyList<float> strokeWidths = null;
+                if (state.StrokeWidths.TryGetValue(
+                        species,
+                        out Dictionary<DrawManager.BodyPart, List<float>> speciesWidths)
+                    && speciesWidths.TryGetValue(part.Key, out List<float> savedWidths))
+                {
+                    strokeWidths = savedWidths;
+                }
+                int strokeIndex = 0;
                 for (int i = 1; i < points.Count; i++)
                 {
-                    if (DrawManager.IsBreakPoint(points[i - 1])
-                        || DrawManager.IsBreakPoint(points[i])) continue;
+                    if (DrawManager.IsBreakPoint(points[i - 1]))
+                    {
+                        strokeIndex++;
+                        continue;
+                    }
+                    if (DrawManager.IsBreakPoint(points[i])) continue;
                     Vector2 start = targetCenter + (points[i - 1] + offset - sourceCenter) * scale;
                     Vector2 end = targetCenter + (points[i] + offset - sourceCenter) * scale;
-                    AddSegment(helper, start, end, width, color);
+                    float sourceWidth = strokeWidths != null && strokeIndex < strokeWidths.Count
+                        ? strokeWidths[strokeIndex]
+                        : DrawManager.DefaultBrushWidth;
+                    AddSegment(
+                        helper,
+                        start,
+                        end,
+                        width * Mathf.Clamp(sourceWidth, 1f, 30f) / DrawManager.DefaultBrushWidth,
+                        color);
                 }
             }
         }

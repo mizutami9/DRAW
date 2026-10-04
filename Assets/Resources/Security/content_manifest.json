@@ -1,70 +1,70 @@
 {
     "SchemaVersion": 1,
-    "ProductVersion": "1.0",
+    "ProductVersion": "0.1.0-demo.2",
     "Entries": [
         {
             "ResourcePath": "Localization/ar",
-            "Sha256": "9d2d036a4f4d6b7d8e516ef3b2e6f15b79ad7b69d3f5d11e1881cf93103e0fe3"
+            "Sha256": "c3ac89a51e05e5dde210bc231ff890320e998cb7a11a7fa885c819ce03197e27"
         },
         {
             "ResourcePath": "Localization/bg",
-            "Sha256": "f1377db702092482d72de7c1326e787361776ae9c330a35ced50bec6eee13af0"
+            "Sha256": "0b34cddd21e216a4cab69d015c32d7dad646de78dab9a88c6a672ed8e1fbb6ee"
         },
         {
             "ResourcePath": "Localization/cs",
-            "Sha256": "c430850b570d943eb3618f678b39b62c03fd1bf9f43e7e2ffcb9c4e79e044825"
+            "Sha256": "5b612a670f8a2620f3567a1ad85103ca5ec0f023f825e63b0be1e5bd9307499e"
         },
         {
             "ResourcePath": "Localization/da",
-            "Sha256": "a083c7c3ceb85baebc5faa340c5004b66d55a8ac0d07f8fd39b66ebab7941cc2"
+            "Sha256": "826fad5d7afa9b1d1f0c449ae5030efe3b4dfe637d120d15755784ae55c26f5b"
         },
         {
             "ResourcePath": "Localization/de",
-            "Sha256": "ed45acf1e8a7021ebe25db5c13213a17a64df4f6587c88e1508330f4ac539a74"
+            "Sha256": "3dca38757a09029a74aa905d350799fba230564c952561de8c9cd01a76571b2a"
         },
         {
             "ResourcePath": "Localization/el",
-            "Sha256": "24a5ac2b3da647b9df6a74f670bd5959859da52c5a504b605f2f009e7d28f6e2"
+            "Sha256": "67e5082fe86b71682843e01be655926d39ce0460373d82b0ef03a238126638e2"
         },
         {
             "ResourcePath": "Localization/en",
-            "Sha256": "200e74fea22520a511d85d7d267b0e28aea584f8cb41ac1baa95de30016b1e04"
+            "Sha256": "1a7197f9ae275ee2a479e9ff5faed37a96b5d18e283cd31a518711305a46250b"
         },
         {
             "ResourcePath": "Localization/es",
-            "Sha256": "3838ac77251112bd5b0699c171fbcaee9c1eb9ae3d662b4acee2302e7cdab839"
+            "Sha256": "b9d4b86b046361f1738d05b3a24569af50f478a604ac6651b75c25d6eae8c9c2"
         },
         {
             "ResourcePath": "Localization/es-419",
-            "Sha256": "b3eb4d3f74309cd1b6a72cad4fb4ff4d36f72bb74c2f85fbe6cf77d36ffe37fa"
+            "Sha256": "cef4778cf7b6af2a016229aa9939002bb1bdd33c867c299d250a63421bf264c7"
         },
         {
             "ResourcePath": "Localization/fi",
-            "Sha256": "6c1e52600f937db2ab152df2aba4a6f99750740f6b2fb4527eb7302e764b51ae"
+            "Sha256": "ee48ae1b50ba95226adaa9dbcd0964b1c623c8e4fc7c72d700c86250d36ab50f"
         },
         {
             "ResourcePath": "Localization/fr",
-            "Sha256": "6ad8c7e520ed423d72c518c93ffc8caadbb4b2c9e6c08184754f37938e304e20"
+            "Sha256": "2c7624c8708d94cba0293ff0e9908db25b2ff4bd768fdab21d51726299978c45"
         },
         {
             "ResourcePath": "Localization/hu",
-            "Sha256": "dfa55b35e5fbd46fed6a46537c02a0d9ab356d3c43d603f3da0f510d4fe8508c"
+            "Sha256": "81974f790cc416952caaa54d74c7adbdc9a28eba881453c324b2b897b6393f6e"
         },
         {
             "ResourcePath": "Localization/id",
-            "Sha256": "ba36793ea4fec12046caa37701eacdd5ef8902a8951114577055556fddf97053"
+            "Sha256": "c5e0842fac5dd9f5a67acdfe9526e06ee400251bc8d7ba5b82208385a95350f7"
         },
         {
             "ResourcePath": "Localization/it",
-            "Sha256": "83e19574253dc240058f0564808c3c2894d56046bb222fe2cc15f0ce7a19a2f2"
+            "Sha256": "8a4777a8f7f9ad96a8ec56ecf6d6756d5506918d03bd9b93c7270d8ba48ee239"
         },
         {
             "ResourcePath": "Localization/ja",
-            "Sha256": "64570d8537a68b1acbf847e6859cb5804dd641326516174d821a1d4a71550998"
+            "Sha256": "e3e2f632cea6cc41ab2c882a82f7a87860c268858b6a69ba61b5bbc4180a1830"
         },
         {
             "ResourcePath": "Localization/ko",
-            "Sha256": "97223c26fd16eb7459a06c5e002064861cd6ebf77d170708e82ed46101fd24ff"
+            "Sha256": "4edc060121e8f4860c59149431966fd9c75269ac8616bd5acb3dd4a4bd999fe9"
         },
         {
             "ResourcePath": "Localization/languages",
@@ -72,31 +72,31 @@
         },
         {
             "ResourcePath": "Localization/nl",
-            "Sha256": "b967c98c7933704d014dfb2ef032f2ecb1c1ec45a318e92d20602678927c6dcd"
+            "Sha256": "c0ea9cad6fc826812d5c79877511590fd014fecd8f02a5e40e953c6e5386da63"
         },
         {
             "ResourcePath": "Localization/no",
-            "Sha256": "1935c2eed6a7dfd00d4cf8cb3bed92be9f765218f6fb0ffbc558198ef3467881"
+            "Sha256": "5e673c93a898197c5b55428ae49f0114c3a2e255180c91287aeac0e07a9fbcfb"
         },
         {
             "ResourcePath": "Localization/pl",
-            "Sha256": "a131cfb5d9db05bb80a35e3bb5f99e7d5a0b1f40fc867084f228d7601ad78f2e"
+            "Sha256": "545cfde16701715bf1d8a255c70ae8c4511c2777bed4e0f3527a2e229d5520df"
         },
         {
             "ResourcePath": "Localization/pt-BR",
-            "Sha256": "9e8c0464106079dbc95372d0fb677a8c7a7403a4891a47ec385c13ac05b40a02"
+            "Sha256": "883e08f0326b1c22cb97a1e342467df1237423f0049347dd332055c3d718dcd8"
         },
         {
             "ResourcePath": "Localization/pt-PT",
-            "Sha256": "d76d9f9f20300c7e854b523e99a9c6103c6bf86150cc0fcc10d1086a51f77808"
+            "Sha256": "063e58e1130bb3abe54d56adc5457d32851d9ca7f166c0f64b0a7f7216d63f92"
         },
         {
             "ResourcePath": "Localization/ro",
-            "Sha256": "2a111875df9b95c745b6b92efefd71dddbd868f83ad3e1831e5e4087dd12b684"
+            "Sha256": "9a7b8947bab1fbb5f195bc783965b63fc480b47bc5ba49b010a3f09d1e6285df"
         },
         {
             "ResourcePath": "Localization/ru",
-            "Sha256": "11af68604b8f7945371114bb29097fb2509f2cad180223425ec35d37cdcc9667"
+            "Sha256": "b6059267f8badd1e2df57b690ff7540c7de7b72a40b97fd449ac7b626d0f79a1"
         },
         {
             "ResourcePath": "Localization/stage_decorations_en",
@@ -108,43 +108,43 @@
         },
         {
             "ResourcePath": "Localization/sv",
-            "Sha256": "ac179fe3430f2c032258b0b22fbc0ccc15061b32ca4d95ed8c4396827dd7067e"
+            "Sha256": "9affbad9a58954a6e6c5e2a8c688ca63613b5abf48759d8fbcd52b64ed072745"
         },
         {
             "ResourcePath": "Localization/th",
-            "Sha256": "585432b069d0c35f93aa751293f18943cb2e086c947479a2b42f9f63bbb314b3"
+            "Sha256": "c34b32ed63d482235c7d57ee08b3960221e80a53059b5e28b7ada7b108f38911"
         },
         {
             "ResourcePath": "Localization/tr",
-            "Sha256": "3a9fa2b14c4e3ad7f363ef24afd944cb7dd8a0baf15b083a6ccb7e3073df3901"
+            "Sha256": "33fe56bf9cc2d5012e63075a08315bec84e92721bfca21eb4bc8a67072a14269"
         },
         {
             "ResourcePath": "Localization/uk",
-            "Sha256": "1ce35bb25a46132e46f4a43f8b1dd7817cff837b10dcc159428cc93610d2ac3e"
+            "Sha256": "c1cdf7ba9b879fd6f98e948954e12cbdf9ecfef6ccf93fd7844d21f8b9800a83"
         },
         {
             "ResourcePath": "Localization/vi",
-            "Sha256": "fa04bd54f8cc94b0a083307eb2ac38aa415f0e6e083edb2db4f6c0492b5c3098"
+            "Sha256": "c2b17e6fc071750b7bf0833d52e6aee2cc1874513948c2df104b4bac37f02d26"
         },
         {
             "ResourcePath": "Localization/zh-CN",
-            "Sha256": "de6b4a53e8d74c808055a9d36cfea7c470a44a62d90230120595ed67340b1f69"
+            "Sha256": "baa2563cf640bf512f619ec3c05905b04059d64116417e5cb496103f51b4a422"
         },
         {
             "ResourcePath": "Localization/zh-TW",
-            "Sha256": "bbfa849fe5d159628afd086a567344f6dc1e80b7955daf573c9a68b1aa8fcacc"
+            "Sha256": "9d9606b66afdf6e10544ab4c88f01cd696f19c1d4a9401c1b524698d0dc51c66"
         },
         {
             "ResourcePath": "Stages/1-1",
-            "Sha256": "133c0fde43c330f2fb85fc1d95caea341da0309f264a8053bd63e95218ad76ee"
+            "Sha256": "9ab16b3a978d6a93103bf425b0e683af8c4412cdf2b163ebe480f20bb64b9fc3"
         },
         {
             "ResourcePath": "Stages/1-2",
-            "Sha256": "523fd5747e860bdc93e0d832b38bf7dce11893a68c2c8fe7cad94933990c3a71"
+            "Sha256": "cf862adbcb0e8eb8ce32f28cd6fd435aa0a03b4853245cfc64ade402b5793eb3"
         },
         {
             "ResourcePath": "Stages/1-3",
-            "Sha256": "2a891dfdc03ba56f6c1a9a80ea4b7081bf0869fb8232498ca1119d4ebf0f9742"
+            "Sha256": "f2149d1f12ccc06c948784315c6db19a56cda173c90b7ec3c4b2409e63b9699e"
         },
         {
             "ResourcePath": "Stages/10-1",
@@ -152,11 +152,11 @@
         },
         {
             "ResourcePath": "Stages/10-2",
-            "Sha256": "e624aa8006839cbeb3a83b2a7d37a866a88c66f97d3c847222b75bdcca5ccf95"
+            "Sha256": "3fc2eb344184d278e8839bb98b259af7e85197681da6e6adb14090f287ab38af"
         },
         {
             "ResourcePath": "Stages/10-3",
-            "Sha256": "dd5d15ab37ce945369d1c184e0f30c8c272e32dcff9beb5c84f2d4ad527f2c04"
+            "Sha256": "dd35cfb7b4c44dd4fc38e0ca4b82d925d5f6055a94e28d879a44e518f736aef0"
         },
         {
             "ResourcePath": "Stages/11-1",
@@ -164,27 +164,27 @@
         },
         {
             "ResourcePath": "Stages/11-2",
-            "Sha256": "4d3fa430cb6c9424a927ef1943f334132345c603b63c5edfaea581c2e5a52dc7"
+            "Sha256": "767f5b66290f65510ba76cbc9f43eaa0c469f1cd081384e70ef6ceb02cdbd9d6"
         },
         {
             "ResourcePath": "Stages/11-3",
-            "Sha256": "79a04569fc6dd009ae879ecbd0bdf3de45dc5a35cf1eeb07bbc16573f773a3e0"
+            "Sha256": "b51722c1a6b85eb3fcbf16234744c313597440ff0d85bfff0c90355a9c857ece"
         },
         {
             "ResourcePath": "Stages/12-1",
-            "Sha256": "538de8177a95d1cdc0a5a3b93e5e4cb337f7d5eea6e05556bc5b79829a5a0e3b"
+            "Sha256": "8d2e2427a52fc1dfc799e6cb2fa9a1b78dbceda8a15f2d5178a696f6b213b41d"
         },
         {
             "ResourcePath": "Stages/12-2",
-            "Sha256": "eba701351cf5b8d0c16817468843951bc830cad1aabc946fe735ed18effa0441"
+            "Sha256": "206aa8387b78c02b17ab03db47de3c462f65400a27991aa2a1c08e45fdcf15cf"
         },
         {
             "ResourcePath": "Stages/12-3",
-            "Sha256": "c7f6778a643bcd3159483f133256410d527b1fcb4e72d279775bcb0df1c9baf6"
+            "Sha256": "9228e08b835f3d59604c2de95424e6c45886a430747d0e29f639463cb3bbcf09"
         },
         {
             "ResourcePath": "Stages/13-1",
-            "Sha256": "2bef0f91854e19b3bb507c0c10e5a23c61583e05d429f79ba38c5f21ccc97b16"
+            "Sha256": "d7ff61ceee5b9d834eb27a5555b4f14546f5e40de788cc488291059a585ea374"
         },
         {
             "ResourcePath": "Stages/13-2",
@@ -192,7 +192,7 @@
         },
         {
             "ResourcePath": "Stages/13-3",
-            "Sha256": "6124d035d28951f90926a698264228734da1c739749e9324dd9eceedcb47f451"
+            "Sha256": "13279bc4fdc70081e7c81c3f64a4ae7a9fcb55c0580ed4a37c7ee15552c76a54"
         },
         {
             "ResourcePath": "Stages/14-1",
@@ -204,27 +204,27 @@
         },
         {
             "ResourcePath": "Stages/14-3",
-            "Sha256": "941085447793f67871cf76da2e83d6befc1e17e7dfbeb92e05b98e57d5025afd"
+            "Sha256": "3cb6eb7c34df67edc9bce7e3baa3c1c4a7aeeb384e7c84abb4d6dd6b7da0df29"
         },
         {
             "ResourcePath": "Stages/15-1",
-            "Sha256": "c4bba1caedcb796fee48b0e29b2f00cd36ddb692e1433c408b97cf7d146a5b28"
+            "Sha256": "1f387cfbed8a1e0c2fe6fbec0b292daebaa351caadcf0ddc9cff5a35da7a53c5"
         },
         {
             "ResourcePath": "Stages/15-2",
-            "Sha256": "4b95d22a5a681811543cc17519e83420f20761ba4d85a6c97bde85fba1e4ba95"
+            "Sha256": "886c40850b6802dc886b70a9260df0dedcca2e235f343c131ff7cc137ba1dfbe"
         },
         {
             "ResourcePath": "Stages/15-3",
-            "Sha256": "d336f89d3f193dc68425d08600dc19343766517611271f54abc5114a8c5ef85b"
+            "Sha256": "20b1bc7bb0cac9cb29671313f3a6e5d9c22d16cf2d2c7827aa7900b0aaa8a134"
         },
         {
             "ResourcePath": "Stages/2-1",
-            "Sha256": "c520cf393ef906f10e29fb451ad5eaa417d23791d86db38c9683ae3cd0cac5e4"
+            "Sha256": "f9eb76e5cfe071220aabf58aae48e576698ab41da695d6abd9fe338e91bebd3b"
         },
         {
             "ResourcePath": "Stages/2-2",
-            "Sha256": "60c7a33e4e6f6b87dcf1121142defabbc13fb429fbcd44eece8dee5ba79a6fab"
+            "Sha256": "24444868604727cecface64c37e1dc0abc6d50f57ac477aad18f2d28fcf58960"
         },
         {
             "ResourcePath": "Stages/2-3",
@@ -232,35 +232,35 @@
         },
         {
             "ResourcePath": "Stages/3-1",
-            "Sha256": "477e3b905dc8c4064912c46f8c2c3f8cd218be9e0cf81e561e9e385a8125312d"
+            "Sha256": "db34470d9ea04f0147d40cbcd5eefb3a9cf250cd921725be4ffde4996cef732b"
         },
         {
             "ResourcePath": "Stages/3-2",
-            "Sha256": "2b7c65ea1a1fa47d6c70bd5582e29c2e8d3ea80e6a9a56332732e84adfb9d06f"
+            "Sha256": "adb034293cc418979048e46256674a3051c7530d47f9f58a44957228dbd62893"
         },
         {
             "ResourcePath": "Stages/3-3",
-            "Sha256": "54bcb8a0a6026ddb381bb1e5147300c84de77c4256fdd9b3c29dc03c6021b760"
+            "Sha256": "d5b2939ee6ba3bf29f7b32b85a64ba606d881632c53c489c1e5519a121bf197b"
         },
         {
             "ResourcePath": "Stages/4-1",
-            "Sha256": "79727917ec355b8d80f5245da8db584d0877166662a2fee34f18a6c066062d1e"
+            "Sha256": "42b02a5b59557192ee666ed8f16791f819e0e3bdc3b1135ff407802867b464d3"
         },
         {
             "ResourcePath": "Stages/4-2",
-            "Sha256": "6fccc85f47250985f1bc823387496b8d2dbfe642b578a451c31468a51dad646b"
+            "Sha256": "3e15f9e0eb8184c0364ec62aad25f2a317644621eb17994eb4b0293fc8ed4275"
         },
         {
             "ResourcePath": "Stages/4-3",
-            "Sha256": "8f6ee7fa378dce8d71c578315af77746af948aa83d0ea5f02d97f12ba37d68ce"
+            "Sha256": "db464eb3824cb04ddee328ff0b173d886f977aa4e7cfe26854efea934f3930a1"
         },
         {
             "ResourcePath": "Stages/5-1",
-            "Sha256": "b6fc91ea0ea3ab290510d25306a799b99d9eee42527340e32f6ab951131eadb8"
+            "Sha256": "33419e0acef051b4b442f6475aae38b31d5aa1b1eee17eb5ce7fac44cb4fcbdb"
         },
         {
             "ResourcePath": "Stages/5-2",
-            "Sha256": "b435a5da6a1ca3fdb638051386d710d045b57bed97c380a7fd4dc3e3700e3b6c"
+            "Sha256": "3c8d847c995d8f24416353059a311f764c91abffbfb80876d07dd6f929c69fd3"
         },
         {
             "ResourcePath": "Stages/5-3",
@@ -268,15 +268,15 @@
         },
         {
             "ResourcePath": "Stages/6-1",
-            "Sha256": "a03ae8ac564b772a9b893e7c4bc470fe84dc0e4792d764eb84f102643f311172"
+            "Sha256": "ea007c1e8725f284012364ba3a0b03ebca96ed5901b9a2094befb992877b25b0"
         },
         {
             "ResourcePath": "Stages/6-2",
-            "Sha256": "ce6af1ff773262c6bb9e0ea814ae329d013879e6c3491aa9390757c91f0cf88f"
+            "Sha256": "382bf9b241b1b95c98422c883815a1d5664e98549e0a369aca17136ccd8de925"
         },
         {
             "ResourcePath": "Stages/6-3",
-            "Sha256": "e4d1aeff5e18dbfea14fdb45b21675312e69ac57b5cca871b2938e94a833659f"
+            "Sha256": "822df15c2efee4593dc93e8e14c02a77068ca862cd8df8bf0eacde2e50f16bdf"
         },
         {
             "ResourcePath": "Stages/7-1",
@@ -284,19 +284,19 @@
         },
         {
             "ResourcePath": "Stages/7-2",
-            "Sha256": "f4bfcaa550ca43640fbd325317a8b901116baf0fdf67e04f1c65d298389bdd6f"
+            "Sha256": "0407aa40afb42216c3f4e6d3660048967d660cafc0193e0c04926b23d182eadf"
         },
         {
             "ResourcePath": "Stages/7-3",
-            "Sha256": "d6be774de9fc40d000b432f4d24c33988de9b2510410948171c15c7b7c9660c1"
+            "Sha256": "046395cf5656513be5e1c9d71af77d49a3b962ce76b417a3bdb206bc77e42791"
         },
         {
             "ResourcePath": "Stages/8-1",
-            "Sha256": "e01b531cc1dd7bef0ce1863e5e23f416582ee9a0d88962b81be4f5315a40f5c0"
+            "Sha256": "c6ceea98751c606673f7f1aeb11bcb2608106bc7f28218d0ef9dd039b84e5405"
         },
         {
             "ResourcePath": "Stages/8-2",
-            "Sha256": "110edae079e2a30c5b79e4fa0dbbf9c10f142088b2dc940e676186b255704ed6"
+            "Sha256": "275e9510efd84e249985de295b3a043b750e0f014d8ab108228a1755a2aa889f"
         },
         {
             "ResourcePath": "Stages/8-3",
@@ -304,7 +304,7 @@
         },
         {
             "ResourcePath": "Stages/9-1",
-            "Sha256": "bc6ec95c829226306df41c8ac086a94a84ab1180c16121803e66920b27bb3fd4"
+            "Sha256": "55e4851256efd5217a9b96126808e70c52d9b10cbfa5214af74cc0351601a155"
         },
         {
             "ResourcePath": "Stages/9-2",
@@ -312,8 +312,8 @@
         },
         {
             "ResourcePath": "Stages/9-3",
-            "Sha256": "29d3f03f897844228d0ff647fa82e8e804160a10fed614695f3df5cddc6adae0"
+            "Sha256": "3919552c7564889f680db2bab1fdd01ae59c8891dc9005642d76a92f28863f62"
         }
     ],
-    "Signature": "1dY/6eGUDWUpW8xQHFCGWpOycTHYF3DeY6dvoB9W73byaAofSr9mAc6TBX90Vk2urX+8eI4b5z+MA5PdZ57gnEY7SIv9cjZQAFBd0H4oYzRNTsStcyUsRQZWHD0KJu2mDq8QebW4GmUHljpvMP2E8ICAbGJ+51Y6A5cfD6Q1moDEfJdwAO5gIDM1FigekTWXexMDNM2G/eAPTw9PpDc2MteH2PyeBbLA/R04L7ZdXGNUSG6iCHdCFSgeJHxP2ZonKWEJ7oBu3X0M7usU+kuwn1cViRYNKJi/fSrjYvK3pjM9LQ9MVdzpiF0hzKM+JUX4idoaWCnqgE/cMx2jPAF0Rw57jLQm+LSrMh2NO/+RTKJOxiIEhTloPS0bhXDGV5K2Bt2bmI7sVRYcqwHJytg3HRg0kc+l1IVQ0FSQtCG+wSiY2qdyzQHQ3ckNUnPa4nLbCtsB2sHPYXji+C2ly07HcvagqHlrDlKam5s5j0rjjSgq74kR8Pvr5FI+92BLoFxN"
+    "Signature": "WuPNx2L1pynIicwiX2HUNvO63YlQxB0mMJuel4r+U/jIS0VmvPY/Y1h6maMkZcUi5Z2axWvHe58AC3w86g/FnyN8u8f2Z/lyLjD1IvnE/3FdiUB62p9W+a8g4yO2HGZZDzokjGVmOryj37wKkWCkPS/BxUzIzqNA/hW/scMJP7nLEGqX6UQpZvmeJBeQev6ugf0gm1werqZCQ4KDnQMdf7hldmm17IslWo04WluFqiS13M8Mt0nYjYlNnngMDG3uovyfJCYf1N1RlhBNyPiMBZZKOS7hgx1gkAsuvdjaH+5HHf5kyf530hGv0cZtJcn+d6sxTvHyXhyZ+Qklt/e/7x9ivx8ornksIXQtOGay+/+qvkLOS7f2NSHi4oKtpqz50CF0yNx45Oe9UQc1g4U+ai5MCb6nQRWQUpoJm+/aaOuSCqIHiBuz2Ms0kS78qzHG3OuGARsywMr5yEfWPpqf8Hw1ASyIvUXziQgbFLZmYIjqXFbvH/4S4MJ38pefVgi7"
 }

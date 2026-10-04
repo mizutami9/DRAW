@@ -10,6 +10,7 @@ namespace DrawBody.Prototype
         [SerializeField] private Button previousButton;
         [SerializeField] private Button nextButton;
 
+        private static int rememberedPage;
         private int currentPage;
 
         private void Awake()
@@ -24,7 +25,7 @@ namespace DrawBody.Prototype
                 nextButton.onClick.AddListener(Next);
             }
 
-            ShowPage(0);
+            ShowPage(rememberedPage);
         }
 
         private void OnEnable()
@@ -52,6 +53,7 @@ namespace DrawBody.Prototype
             }
 
             currentPage = Mathf.Clamp(index, 0, pages.Length - 1);
+            rememberedPage = currentPage;
             for (int i = 0; i < pages.Length; i++)
             {
                 if (pages[i] != null)

@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "DOCELOWE  {0:0}g (90g x PLAYERS)"
+      "value": "DOCELOWE  {0:0}g (70g x PLAYERS)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Zakończyć bieżący poziom i wrócić do wyboru poziomu?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Niedokończone zmiany nie zostaną zapisane. Wrócić bez zapisywania?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "WRÓĆ BEZ ZAPISYWANIA"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Przerysowana postać została zapisana."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Nie udało się zapisać. Naciśnij ponownie „GOTOWE”."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "WYBÓR POZIOMU"
     },
     {
       "key": "online_content_mismatch",
       "value": "Gra online jest niedostępna, ponieważ dane lub wersja gry nie są zgodne. Zweryfikuj pliki gry na Steam."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Utracono połączenie z sesją. Dołącz ponownie do pokoju."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "ZALECAMY TRYB WIELOOSOBOWY!" },
     { "key": "single_recommend_message", "value": "NICO DRAW daje najwięcej zabawy przy współpracy!\nSpróbujcie zagrać w 2–4 osoby!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Wyjść z NICO DRAW?" }
+    ,{ "key": "title_exit_confirm", "value": "Wyjść z NICO DRAW?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} używa już tej postaci. Wysłać prośbę o zamianę?" },
+    { "key": "draw_species_swap_send", "value": "WYŚLIJ PROŚBĘ" },
+    { "key": "background_word_push", "value": "PCHAJ!" }
   ]
 }

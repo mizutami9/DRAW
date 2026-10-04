@@ -1,0 +1,231 @@
+{
+  "source": "C:\\workSpace\\PICO\\NICO_DRAW_creator_outreach_FINAL_100PLUS.xlsx",
+  "checked_channels": 60,
+  "tab_errors": [
+    {
+      "url": "https://www.youtube.com/@Faye18VT",
+      "tab": "streams",
+      "error": "ERROR: [youtube:tab] @Faye18VT: This channel does not have a streams tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@南こうめ",
+      "tab": "videos",
+      "error": "ERROR: [youtube:tab] @�삱����: This channel does not have a videos tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@AkiraCayla",
+      "tab": "videos",
+      "error": "ERROR: [youtube:tab] @AkiraCayla: This channel does not have a videos tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@vividlyVODS",
+      "tab": "streams",
+      "error": "ou are on the latest version using  yt-dlp -U\nWARNING: [youtube:tab] Incomplete yt initial data received. Retrying (2/3)...\nWARNING: [youtube:tab] unable to extract yt initial data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\nWARNING: [youtube:tab] Incomplete yt initial data received. Retrying (3/3)...\nWARNING: [youtube:tab] unable to extract yt initial data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\nWARNING: [youtube:tab] Incomplete yt initial data received; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U. Giving up after 3 retries\nERROR: [youtube:tab] @vividlyVODS: This channel does not have a streams tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@春霞すのう_個人勢Vtuber",
+      "tab": "videos",
+      "error": "ERROR: [youtube:tab] @�t�����̂�_�l��Vtuber: This channel does not have a videos tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@Lofu66998",
+      "tab": "videos",
+      "error": "ERROR: [youtube:tab] @Lofu66998: This channel does not have a videos tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@shizuki-1",
+      "tab": "videos",
+      "error": "ERROR: [youtube:tab] @shizuki-1: This channel does not have a videos tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@ZAOsTwitchVODs",
+      "tab": "streams",
+      "error": "ERROR: [youtube:tab] @ZAOsTwitchVODs: This channel does not have a streams tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@nekomura_kinako",
+      "tab": "videos",
+      "error": "ERROR: [youtube:tab] @nekomura_kinako: This channel does not have a videos tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@桜庭犬愛",
+      "tab": "videos",
+      "error": "ERROR: [youtube:tab] @���댢��: This channel does not have a videos tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@olivehoodiesVODs",
+      "tab": "streams",
+      "error": "ERROR: [youtube:tab] @olivehoodiesVODs: This channel does not have a streams tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@EmunaBoo",
+      "tab": "streams",
+      "error": "ERROR: [youtube:tab] @EmunaBoo: This channel does not have a streams tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@SaphSaltspill",
+      "tab": "streams",
+      "error": "ERROR: [youtube:tab] @SaphSaltspill: This channel does not have a streams tab\n"
+    },
+    {
+      "url": "https://www.youtube.com/@BrilloG2",
+      "tab": "streams",
+      "error": "ERROR: [youtube:tab] @BrilloG2: This channel does not have a streams tab\n"
+    }
+  ],
+  "enriched_count": 6,
+  "enriched": [
+    {
+      "no": 39,
+      "priority": "B",
+      "name": "Amelie Kanon / アメリー・カノン",
+      "language": "日本語",
+      "x_url": "https://x.com/ameliekanon",
+      "youtube_url": "https://www.youtube.com/@AmelieKanon",
+      "twitch_url": "https://www.twitch.tv/ameliekanon",
+      "last_active": "2026-10-02",
+      "games": "(タイトルから判断) 未確認",
+      "proofs": [
+        "https://www.youtube.com/watch?v=RwNffpo7OD8"
+      ],
+      "additional_proofs": [
+        {
+          "id": "s0CgoHjFRlY",
+          "url": "https://www.youtube.com/watch?v=s0CgoHjFRlY",
+          "title": "【参加型ゲーム】麻雀もめっちゃカメレオンもする（お休み前なのでいっぱい遊ぶ✊) When Life Gives You Two Games, Play Both 🎮🀄️【JP/EN VTuber】",
+          "duration": 41271,
+          "game": "MECCHA CHAMELEON",
+          "date": "2026-08-15"
+        }
+      ]
+    },
+    {
+      "no": 76,
+      "priority": "B",
+      "name": "Umiko Yukina",
+      "language": "英語",
+      "x_url": "https://x.com/Umiko_VT",
+      "youtube_url": "https://www.youtube.com/@umiko_VT",
+      "twitch_url": "https://twitch.tv/umiko_vt",
+      "last_active": "2026-10-03",
+      "games": "PEAK",
+      "proofs": [
+        "https://www.youtube.com/watch?v=OJx2XFCyGQw"
+      ],
+      "additional_proofs": [
+        {
+          "id": "b39ystU9uCo",
+          "url": "https://www.youtube.com/watch?v=b39ystU9uCo",
+          "title": "I'm Not Scared... I'm Not Scared... I'm Not Scared... I'm Not Scared... 【R.E.P.O Collab】",
+          "duration": 9653,
+          "game": "R.E.P.O.",
+          "date": "2026-09-18"
+        }
+      ]
+    },
+    {
+      "no": 107,
+      "priority": "B",
+      "name": "山猫たまき",
+      "language": "日本語",
+      "x_url": "https://x.com/Tamaki_yamacat3",
+      "youtube_url": "https://www.youtube.com/@TamakiYamaCat",
+      "twitch_url": "未確認",
+      "last_active": "2026-10-03",
+      "games": "PEAK",
+      "proofs": [
+        "https://www.youtube.com/watch?v=LHHzyhQXbh0"
+      ],
+      "additional_proofs": [
+        {
+          "id": "a7yWERmoUv0",
+          "url": "https://www.youtube.com/watch?v=a7yWERmoUv0",
+          "title": "【Keep Talking and Nobody Explodes】あせらないあせらない…ひとやすみひとやすｍ。。。【コラボ/新人Vtuber】",
+          "duration": 8079,
+          "game": "Keep Talking",
+          "date": "2026-09-02"
+        },
+        {
+          "id": "AsHyjW1ZcWE",
+          "url": "https://www.youtube.com/watch?v=AsHyjW1ZcWE",
+          "title": "【Keep Talking and Nobody Explodes】求：記憶力　出：感謝の気持ち【コラボ/新人Vtuber】",
+          "duration": 7651,
+          "game": "Keep Talking",
+          "date": "2026-08-19"
+        }
+      ]
+    },
+    {
+      "no": 112,
+      "priority": "B",
+      "name": "汐月Shizuki ",
+      "language": "繁体字中国語",
+      "x_url": "https://x.com/xun1942144/status/1972704152557154352",
+      "youtube_url": "https://www.youtube.com/@shizuki-1",
+      "twitch_url": "https://twitch.tv/shizuki0418",
+      "last_active": "2026-09-25",
+      "games": "MECCHA CHAMELEON",
+      "proofs": [
+        "https://www.youtube.com/watch?v=o_QRGiApM0k"
+      ],
+      "additional_proofs": [
+        {
+          "id": "yCkvJywxI8E",
+          "url": "https://www.youtube.com/watch?v=yCkvJywxI8E",
+          "title": "《Peak》好久沒來爬山拉!! Ft. @芙芙Fried_868",
+          "duration": 14488,
+          "game": "PEAK",
+          "date": "2026-10-03"
+        }
+      ]
+    },
+    {
+      "no": 118,
+      "priority": "B",
+      "name": "ZAO's Twitch VODs",
+      "language": "繁体字中国語",
+      "x_url": "https://x.com/ZAO526",
+      "youtube_url": "https://www.youtube.com/@ZAOsTwitchVODs",
+      "twitch_url": "https://twitch.tv/zao526",
+      "last_active": "2026-09-29",
+      "games": "PEAK",
+      "proofs": [
+        "https://www.youtube.com/watch?v=DZx0413wDtc"
+      ],
+      "additional_proofs": [
+        {
+          "id": "y9-ofWTBxwM",
+          "url": "https://www.youtube.com/watch?v=y9-ofWTBxwM",
+          "title": "ZAO｜8 . 27｜RV There Yet 兄弟們露營好像車子出了點問題？ ft. 鯨諾、賽特珞、好冷又好爽",
+          "duration": 8908,
+          "game": "RV There Yet?",
+          "date": "2026-08-29"
+        }
+      ]
+    },
+    {
+      "no": 127,
+      "priority": "B",
+      "name": "beathellscream",
+      "language": "英語",
+      "x_url": "未確認",
+      "youtube_url": "https://www.youtube.com/@beathellscream",
+      "twitch_url": "https://twitch.tv/beathellscream",
+      "last_active": "2026-09-26",
+      "games": "Lethal Company",
+      "proofs": [
+        "https://www.youtube.com/watch?v=DpB8iaZqmF4"
+      ],
+      "additional_proofs": [
+        {
+          "id": "HFeaGxLqEwk",
+          "url": "https://www.youtube.com/watch?v=HFeaGxLqEwk",
+          "title": "R.E.P.O with friends Episode 5",
+          "duration": 5223,
+          "game": "R.E.P.O.",
+          "date": "2026-09-21"
+        }
+      ]
+    }
+  ]
+}

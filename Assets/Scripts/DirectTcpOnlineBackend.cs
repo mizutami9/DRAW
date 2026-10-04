@@ -94,7 +94,7 @@ namespace DrawBody.Prototype
                 StageId = "1-1",
                 MaxPlayers = Mathf.Clamp(maxPlayers, 2, 4),
                 Mode = OnlineLobbyMode.Room,
-                Players = new[] { CreatePlayer(localPlayerId, PlayerNameSettings.CurrentName, true, false) }
+                Players = new[] { CreatePlayer(localPlayerId, PlayerNameSettings.CurrentName, true, false, 0) }
             };
 
             try
@@ -397,6 +397,12 @@ namespace DrawBody.Prototype
 
                 player.IsHost = false;
                 player.IsReady = false;
+                int existingSlot = FindPlayerSlot(player.PlayerId);
+                player.PlayerSlot = existingSlot >= 0 ? existingSlot : FindAvailablePlayerSlot();
+                if (player.PlayerSlot < 0)
+                {
+                    return;
+                }
                 MarkPeerPlayer(tcpClient, player.PlayerId);
                 AddOrReplacePlayer(player);
                 BroadcastLobby(LocalizationManager.Format("online_player_joined", player.DisplayName));
@@ -423,6 +429,12 @@ namespace DrawBody.Prototype
             else if (type == MessageBody)
             {
                 OnlineBodyData bodyData = JsonUtility.FromJson<OnlineBodyData>(payload);
+                string peerPlayerId = GetPeerPlayerId(tcpClient);
+                if (bodyData != null && !string.IsNullOrEmpty(peerPlayerId))
+                {
+                    bodyData.PlayerId = peerPlayerId;
+                    payload = JsonUtility.ToJson(bodyData);
+                }
                 BodyDataReceived?.Invoke(bodyData);
                 Broadcast(MessageBody, payload);
             }
@@ -437,6 +449,12 @@ namespace DrawBody.Prototype
             else if (type == MessageCarry)
             {
                 OnlineCarryData carryData = JsonUtility.FromJson<OnlineCarryData>(payload);
+                string peerPlayerId = GetPeerPlayerId(tcpClient);
+                if (carryData != null && !string.IsNullOrEmpty(peerPlayerId))
+                {
+                    carryData.CarrierPlayerId = peerPlayerId;
+                    payload = JsonUtility.ToJson(carryData);
+                }
                 CarryDataReceived?.Invoke(carryData);
                 Broadcast(MessageCarry, payload);
             }
@@ -465,6 +483,7 @@ namespace DrawBody.Prototype
                 // disconnects).  They update the roster, but must not demote the
                 // client out of Playing: gameplay HUDs key off that state.
                 OnlineConnectionState nextState = State == OnlineConnectionState.Playing
+                    || CurrentLobby != null && CurrentLobby.StageRevision > 0
                     ? OnlineConnectionState.Playing
                     : OnlineConnectionState.InLobby;
                 SetState(nextState, CurrentLobby, LocalizationManager.T("online_lobby_updated"));
@@ -515,6 +534,7 @@ namespace DrawBody.Prototype
 
         private void BroadcastLobby(string message)
         {
+            EnsureUniquePlayerSlots();
             Broadcast(MessageLobby, JsonUtility.ToJson(CurrentLobby));
             OnlineConnectionState nextState = State == OnlineConnectionState.Playing
                 ? OnlineConnectionState.Playing
@@ -572,6 +592,65 @@ namespace DrawBody.Prototype
             {
                 players.Add(player);
                 CurrentLobby.Players = players.ToArray();
+            }
+        }
+
+        private int FindPlayerSlot(string playerId)
+        {
+            if (CurrentLobby?.Players == null || string.IsNullOrEmpty(playerId)) return -1;
+            for (int i = 0; i < CurrentLobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo player = CurrentLobby.Players[i];
+                if (player != null && player.PlayerId == playerId) return player.PlayerSlot;
+            }
+            return -1;
+        }
+
+        private int FindAvailablePlayerSlot()
+        {
+            bool[] used = new bool[4];
+            if (CurrentLobby?.Players != null)
+            {
+                for (int i = 0; i < CurrentLobby.Players.Length; i++)
+                {
+                    int assigned = CurrentLobby.Players[i]?.PlayerSlot ?? -1;
+                    if (assigned >= 0 && assigned < used.Length) used[assigned] = true;
+                }
+            }
+            for (int slot = 0; slot < used.Length; slot++)
+                if (!used[slot]) return slot;
+            return -1;
+        }
+
+        private void EnsureUniquePlayerSlots()
+        {
+            if (!isHost || CurrentLobby?.Players == null) return;
+            bool[] used = new bool[4];
+            for (int i = 0; i < CurrentLobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo player = CurrentLobby.Players[i];
+                if (player == null || !player.IsHost) continue;
+                player.PlayerSlot = 0;
+                used[0] = true;
+                break;
+            }
+            for (int i = 0; i < CurrentLobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo player = CurrentLobby.Players[i];
+                if (player == null || player.IsHost) continue;
+                int assigned = player.PlayerSlot;
+                if (assigned < 0 || assigned >= used.Length || used[assigned])
+                {
+                    assigned = -1;
+                    for (int candidate = 0; candidate < used.Length; candidate++)
+                    {
+                        if (used[candidate]) continue;
+                        assigned = candidate;
+                        break;
+                    }
+                }
+                player.PlayerSlot = assigned;
+                if (assigned >= 0) used[assigned] = true;
             }
         }
 
@@ -720,14 +799,16 @@ namespace DrawBody.Prototype
             return address;
         }
 
-        private static OnlinePlayerInfo CreatePlayer(string playerId, string displayName, bool host, bool ready)
+        private static OnlinePlayerInfo CreatePlayer(
+            string playerId, string displayName, bool host, bool ready, int playerSlot = -1)
         {
             return new OnlinePlayerInfo
             {
                 PlayerId = playerId,
                 DisplayName = displayName,
                 IsHost = host,
-                IsReady = ready
+                IsReady = ready,
+                PlayerSlot = playerSlot
             };
         }
 

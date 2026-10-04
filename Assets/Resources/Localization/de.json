@@ -2686,7 +2686,7 @@
     },
     {
       "key": "grain_rain_target",
-      "value": "TARGET2  {0:0}g (90 g x SPIEL)"
+      "value": "TARGET2  {0:0}g (70 g x SPIEL)"
     },
     {
       "key": "grain_rain_ready",
@@ -4313,12 +4313,32 @@
       "value": "Das aktuelle Level beenden und zur Levelauswahl zurückkehren?"
     },
     {
+      "key": "draw_cancel_confirm_message",
+      "value": "Unvollständige Änderungen werden nicht gespeichert. Ohne Speichern zurückkehren?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "OHNE SPEICHERN ZURÜCK"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Die neu gezeichnete Figur wurde gespeichert."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Speichern fehlgeschlagen. Bitte erneut „FERTIG“ drücken."
+    },
+    {
       "key": "menu_stage_select_confirm_yes",
       "value": "LEVELAUSWAHL"
     },
     {
       "key": "online_content_mismatch",
       "value": "Online-Spiel ist nicht verfügbar, da Spieldaten oder Version nicht übereinstimmen. Überprüfe die Spieldateien in Steam."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Die Verbindung zur Sitzung wurde getrennt. Bitte tritt dem Raum erneut bei."
     },
     {
       "key": "online_host_disconnected",
@@ -4375,6 +4395,9 @@
     { "key": "single_recommend_title", "value": "MEHRSPIELER EMPFOHLEN!" },
     { "key": "single_recommend_message", "value": "NICO DRAW macht gemeinsam am meisten Spaß!\nProbiert es mit 2–4 Spielern aus!" },
     { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "NICO DRAW beenden?" }
+    ,{ "key": "title_exit_confirm", "value": "NICO DRAW beenden?" },
+    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} verwendet diese Figur bereits. Tauschanfrage senden?" },
+    { "key": "draw_species_swap_send", "value": "ANFRAGE SENDEN" },
+    { "key": "background_word_push", "value": "DRÜCKEN!" }
   ]
 }

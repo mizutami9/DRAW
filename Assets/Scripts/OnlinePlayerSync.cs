@@ -190,6 +190,7 @@ namespace DrawBody.Prototype
                 CarriedPlayerId = localCarry?.CurrentOnlineCarriedPlayerId,
                 CarryAction = localCarry?.CurrentOnlineCarryAction,
                 CarryOffset = localCarry != null ? localCarry.CurrentOnlineCarryOffset : Vector2.zero,
+                CarryEventSequence = localCarry?.CurrentOnlineCarryEventSequence ?? 0,
                 HumanCarryStruggling = localPlayer?.IsHumanCarryStruggling ?? false,
                 LastAppliedThrowCarrierId = lastAppliedLocalThrowCarrierId,
                 LastAppliedThrowSequence = lastAppliedLocalThrowSequence
@@ -241,11 +242,19 @@ namespace DrawBody.Prototype
             }
 
             stageManager.ApplyOnlineRemoteRedrawing(state.PlayerId, state.Redrawing);
+            stageManager.ApplyOnlineRemoteEliminationState(state.PlayerId, state.Eliminated);
+            if (state.Eliminated)
+            {
+                remoteTargets.Remove(state.PlayerId);
+                ApplyRemoteRespawnTransition(state);
+                return;
+            }
             stageManager.ReconcileOnlineCarryState(
                 state.PlayerId,
                 state.Redrawing ? null : state.CarriedPlayerId,
                 state.Redrawing ? string.Empty : state.CarryAction,
                 state.Redrawing ? Vector2.zero : state.CarryOffset,
+                state.CarryEventSequence,
                 onlineManager.LocalPlayerId,
                 state.Redrawing ? Vector2.zero : state.Velocity);
             PlayerController2D remotePlayer = stageManager.GetOnlinePlayerController(state.PlayerId);
@@ -467,6 +476,20 @@ namespace DrawBody.Prototype
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
         }
 
+        public bool HasAppliedRemoteBodyRevision(string playerId, int requiredRevision)
+        {
+            // Revision 0 is used by older/local debug backends. In that case the
+            // ready request itself remains the compatibility signal.
+            if (requiredRevision <= 0)
+            {
+                return true;
+            }
+
+            return !string.IsNullOrEmpty(playerId)
+                && lastRemoteBodyRevisions.TryGetValue(playerId, out int appliedRevision)
+                && appliedRevision >= requiredRevision;
+        }
+
         public void RequestLocalBodyResync(int attempts = 3)
         {
             RequestBodyResync(Mathf.Clamp(attempts, 1, 5));
@@ -506,6 +529,12 @@ namespace DrawBody.Prototype
 
             bool targetsLocalPlayer = carryData.TargetPlayerId == onlineManager.LocalPlayerId;
             bool isThrow = carryData.Action == "throw";
+            if (isThrow && targetsLocalPlayer && carryData.EventSequence > 0
+                && carryData.CarrierPlayerId == lastAppliedLocalThrowCarrierId
+                && carryData.EventSequence <= lastAppliedLocalThrowSequence)
+            {
+                return;
+            }
             if (isThrow && !targetsLocalPlayer)
             {
                 PredictRemoteThrow(carryData);
