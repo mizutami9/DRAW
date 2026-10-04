@@ -11,10 +11,11 @@ namespace DrawBody.Prototype
         private const string StageId = "8-3";
         private const string StateKind = "tilt_board_state";
         private const float RoundSeconds = 60f;
+        private const float CountdownSeconds = 3f;
         private const float BallRadius = 0.42f;
         private const float PlayerLaneWidth = 4.2f;
 
-        private enum BoardPhase { Active, RoundClear, Failed, Complete }
+        private enum BoardPhase { Active, RoundClear, Failed, Complete, Countdown }
 
         [System.Serializable]
         private sealed class NetworkState
@@ -24,6 +25,7 @@ namespace DrawBody.Prototype
             public int Phase;
             public int Variant;
             public float Remaining;
+            public float CountdownRemaining;
             public int FilledMask;
             public int SunkMask;
             public Vector2 MagneticField;
@@ -35,6 +37,7 @@ namespace DrawBody.Prototype
         {
             public Transform Transform;
             public SpriteRenderer Renderer;
+            public TiltBoardMagneticBallVisual MagneticVisual;
             public Vector2 Position;
             public Vector2 Velocity;
             public bool Sunk;
@@ -76,9 +79,11 @@ namespace DrawBody.Prototype
         private Transform boardFace;
         private TextMesh monitorMain;
         private TextMesh monitorSub;
+        private TextMesh countdownText;
         private Vector2 boardCenter = new Vector2(0f, -0.2f);
         private Vector2 magneticField;
         private float remaining;
+        private float countdownRemaining;
         private float transitionRemaining;
         private float nextBroadcastAt;
         private int round = 1;
@@ -155,14 +160,26 @@ namespace DrawBody.Prototype
 
             if (!HasAuthority)
             {
-                if (phase == BoardPhase.Active && !LocalMultiplayerDebugMode.NoTimeLimit)
+                if (phase == BoardPhase.Countdown)
+                    countdownRemaining = Mathf.Max(0f, countdownRemaining - Time.unscaledDeltaTime);
+                else if (phase == BoardPhase.Active && !LocalMultiplayerDebugMode.NoTimeLimit)
                     remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
+                RefreshMagneticVisuals();
                 RefreshMonitor();
                 return;
             }
 
             switch (phase)
             {
+                case BoardPhase.Countdown:
+                    countdownRemaining = Mathf.Max(0f, countdownRemaining - Time.unscaledDeltaTime);
+                    magneticField = Vector2.zero;
+                    if (countdownRemaining <= 0f)
+                    {
+                        phase = BoardPhase.Active;
+                        BroadcastState(true);
+                    }
+                    break;
                 case BoardPhase.Active:
                     if (!LocalMultiplayerDebugMode.NoTimeLimit)
                         remaining = Mathf.Max(0f, remaining - Time.unscaledDeltaTime);
@@ -181,6 +198,7 @@ namespace DrawBody.Prototype
                     break;
             }
 
+            RefreshMagneticVisuals();
             BroadcastState();
             RefreshMonitor();
         }
@@ -196,12 +214,14 @@ namespace DrawBody.Prototype
             round = Mathf.Clamp(nextRound, 1, 3);
             layoutVariant = Mathf.Abs(variant) % 6;
             playerCount = Mathf.Clamp(stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1, 1, 4);
-            phase = BoardPhase.Active;
+            phase = BoardPhase.Countdown;
             remaining = RoundSeconds;
+            countdownRemaining = CountdownSeconds;
             transitionRemaining = 0f;
             filledMask = 0;
             magneticField = Vector2.zero;
             BuildArena();
+            RefreshMagneticVisuals();
             StartCoroutine(PositionPlayersAfterBuild());
             BroadcastState(true);
             RefreshMonitor();
@@ -540,8 +560,15 @@ namespace DrawBody.Prototype
             };
             renderer.color = colors[index % colors.Length];
             renderer.sortingOrder = 22;
-            obj.AddComponent<TiltBoardMagneticBallVisual>().Configure(renderer.color);
-            balls.Add(new BallState { Transform = obj.transform, Renderer = renderer, Position = position });
+            TiltBoardMagneticBallVisual magneticVisual = obj.AddComponent<TiltBoardMagneticBallVisual>();
+            magneticVisual.Configure(renderer.color);
+            balls.Add(new BallState
+            {
+                Transform = obj.transform,
+                Renderer = renderer,
+                MagneticVisual = magneticVisual,
+                Position = position
+            });
         }
 
         private void CreateHole(Vector2 position, int index)
@@ -576,6 +603,10 @@ namespace DrawBody.Prototype
                 new Vector3(0f, 0.28f, -0.03f), 54, 0.115f, new Color(0.04f, 0.32f, 0.46f), 44);
             monitorSub = StageEscortController.CreateText(monitor.transform, "Sub",
                 new Vector3(0f, -0.35f, -0.04f), 42, 0.082f, new Color(0.65f, 0.2f, 0.06f), 45);
+            countdownText = StageEscortController.CreateText(arenaRoot, "Round Countdown",
+                new Vector3(boardCenter.x, boardCenter.y, -0.18f), 140, 0.48f,
+                new Color(0.05f, 0.32f, 0.46f, 0.96f), 60);
+            countdownText.gameObject.SetActive(false);
         }
 
         private void PreparePlayers()
@@ -612,8 +643,20 @@ namespace DrawBody.Prototype
                 PlayerAbilityController ability = players[i].GetComponent<PlayerAbilityController>();
                 float ink = ability != null ? Mathf.Max(0f, ability.CurrentProfile.TotalInk) : 0f;
                 if (magnetVisuals.TryGetValue(players[i], out TiltBoardMagnetVisual magnet))
-                    magnet.SetStrength(Mathf.Clamp01(ink / 500f));
-                EnsureMagneticLinks(players[i], assignedEdges[players[i]], ink);
+                    magnet.SetStrength(phase == BoardPhase.Active ? Mathf.Clamp01(ink / 500f) : 0f);
+                EnsureMagneticLinks(
+                    players[i],
+                    assignedEdges[players[i]],
+                    phase == BoardPhase.Active ? ink : 0f);
+            }
+        }
+
+        private void RefreshMagneticVisuals()
+        {
+            bool active = phase == BoardPhase.Active;
+            for (int i = 0; i < balls.Count; i++)
+            {
+                balls[i].MagneticVisual?.SetMagnetismActive(active);
             }
         }
 
@@ -818,6 +861,18 @@ namespace DrawBody.Prototype
             if (monitorMain == null || monitorSub == null) return;
             switch (phase)
             {
+                case BoardPhase.Countdown:
+                    int count = Mathf.Clamp(Mathf.CeilToInt(countdownRemaining), 1, 3);
+                    monitorMain.text = LocalizationManager.Format("tilt_board_countdown", round, count);
+                    monitorSub.text = LocalizationManager.T("tilt_board_countdown_hint");
+                    if (countdownText != null)
+                    {
+                        countdownText.gameObject.SetActive(true);
+                        countdownText.text = count.ToString();
+                        float pulse = 1f + Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f) * 0.08f;
+                        countdownText.transform.localScale = Vector3.one * pulse;
+                    }
+                    break;
                 case BoardPhase.Active:
                     monitorMain.text = LocalizationManager.Format("tilt_board_monitor", round, remaining);
                     monitorSub.text = round == 2
@@ -832,6 +887,10 @@ namespace DrawBody.Prototype
                     monitorMain.text = LocalizationManager.T("tilt_board_timeout");
                     monitorSub.text = LocalizationManager.T("tilt_board_hint");
                     break;
+            }
+            if (phase != BoardPhase.Countdown && countdownText != null)
+            {
+                countdownText.gameObject.SetActive(false);
             }
         }
 
@@ -1086,6 +1145,7 @@ namespace DrawBody.Prototype
                 Phase = (int)phase,
                 Variant = layoutVariant,
                 Remaining = remaining,
+                CountdownRemaining = countdownRemaining,
                 FilledMask = filledMask,
                 SunkMask = sunkMask,
                 MagneticField = magneticField,
@@ -1129,6 +1189,7 @@ namespace DrawBody.Prototype
             }
             phase = incomingPhase;
             remaining = state.Remaining;
+            countdownRemaining = state.CountdownRemaining;
             filledMask = state.FilledMask;
             magneticField = state.MagneticField;
             for (int i = 0; i < balls.Count && state.Balls != null && i < state.Balls.Length; i++)
@@ -1201,6 +1262,7 @@ namespace DrawBody.Prototype
                 line.startColor = color;
                 line.endColor = color;
                 line.sortingOrder = 28;
+                line.enabled = false;
                 float radius = 0.7f + ring * 0.28f;
                 for (int i = 0; i < line.positionCount; i++)
                 {
@@ -1214,6 +1276,11 @@ namespace DrawBody.Prototype
         public void SetStrength(float value)
         {
             strength = Mathf.Clamp01(value);
+            bool visible = strength > 0.02f;
+            for (int i = 0; i < arcs.Count; i++)
+            {
+                if (arcs[i] != null) arcs[i].enabled = visible;
+            }
         }
 
         private void LateUpdate()
@@ -1268,6 +1335,11 @@ namespace DrawBody.Prototype
                     line.SetPosition(i, new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f));
                 }
             }
+        }
+
+        public void SetMagnetismActive(bool active)
+        {
+            if (effectRoot != null) effectRoot.gameObject.SetActive(active);
         }
 
         private void Update()
