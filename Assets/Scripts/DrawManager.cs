@@ -11,6 +11,7 @@ namespace DrawBody.Prototype
         public const float TeamInkPerAdditionalPlayer = 400f;
         private const float TurtleGameplayCoordinateScale = 3f;
         private const float SlimeGameplayCoordinateScale = 5f;
+        private const float ValidationAlarmDisplaySeconds = 2f;
         public const int BodyCoordinateVersion = 3;
 
         public enum BodyPart
@@ -87,6 +88,7 @@ namespace DrawBody.Prototype
         private Text teamInkValueText;
         private Text personalInkLabelText;
         private Text teamInkLabelText;
+        private Text teamInkBreakdownText;
         private Image teamInkGaugeFill;
         private Text abilityTitleText;
         private Text abilityEffectText;
@@ -152,6 +154,7 @@ namespace DrawBody.Prototype
         private bool hasClearedPartUndo;
         private int onlineBodyRevision;
         private bool lastUniqueSpeciesConfirmAllowed = true;
+        private float validationAlarmUntil;
 
         public event System.Action<BodyPart> CurrentPartChanged;
         public event System.Action<Species> CurrentSpeciesChanged;
@@ -453,6 +456,7 @@ namespace DrawBody.Prototype
             teamInkValueText = teamValue != null ? teamValue.GetComponent<Text>() : null;
             personalInkLabelText = personalLabel != null ? personalLabel.GetComponent<Text>() : null;
             teamInkLabelText = teamLabel != null ? teamLabel.GetComponent<Text>() : null;
+            teamInkBreakdownText = FindRect("TeamInkBreakdown")?.GetComponent<Text>();
             teamInkGaugeFill = teamFill != null ? teamFill.GetComponent<Image>() : null;
             abilityTitleText = FindRect("AbilityTitleText")?.GetComponent<Text>();
             abilityEffectText = FindRect("AbilityEffectText")?.GetComponent<Text>();
@@ -601,6 +605,12 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (validationAlarmUntil > 0f && Time.unscaledTime >= validationAlarmUntil)
+            {
+                validationAlarmUntil = 0f;
+                RefreshConnectionMessage();
+            }
+
             if (validationBanner != null && validationBanner.activeSelf)
             {
                 validationBanner.transform.SetAsLastSibling();
@@ -654,6 +664,7 @@ namespace DrawBody.Prototype
             }
             else
             {
+                validationAlarmUntil = 0f;
                 UpdateConnectionMarker();
                 SetMessage(string.Empty);
             }
@@ -2107,6 +2118,13 @@ namespace DrawBody.Prototype
                 teamInkValueText.text = $"{teamInk:0.#} / {teamLimit:0}";
                 teamInkValueText.color = teamOver ? warningText : normalText;
             }
+            if (teamInkBreakdownText != null)
+            {
+                teamInkBreakdownText.text = stageManager != null
+                    ? stageManager.GetInkUsageBreakdown(totalInk)
+                    : string.Empty;
+                teamInkBreakdownText.color = teamOver ? warningText : normalText;
+            }
 
             if (inkText != null)
             {
@@ -2579,6 +2597,23 @@ namespace DrawBody.Prototype
         private void SetMessage(string message, bool alarm = false)
         {
             bool showAlarm = active && alarm && !string.IsNullOrEmpty(message);
+            if (showAlarm)
+            {
+                // Validation failures used to be replaced immediately by the
+                // normal connection hint that runs after the same button input.
+                // Keep the actionable warning readable even while offline play
+                // is paused; unscaled time also behaves consistently online.
+                validationAlarmUntil = Time.unscaledTime + ValidationAlarmDisplaySeconds;
+            }
+            else if (active && validationAlarmUntil > Time.unscaledTime)
+            {
+                return;
+            }
+            else
+            {
+                validationAlarmUntil = 0f;
+            }
+
             EnsureValidationBanner();
             if (messageText != null)
             {

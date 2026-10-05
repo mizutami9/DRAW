@@ -98,6 +98,8 @@ namespace DrawBody.Prototype
         public event Action<OnlineCarryData> CarryDataReceived;
         public event Action<OnlineGimmickData> GimmickDataReceived;
         private static int nextLocalBodyRevision;
+        private string localBodyHash = string.Empty;
+        private string localBodySpecies = string.Empty;
 
         /// <summary>
         /// Latest body revision published by this client. Ready-room messages use
@@ -105,6 +107,8 @@ namespace DrawBody.Prototype
         /// redraw completion and body packets arrive on different channels.
         /// </summary>
         public int LocalBodyRevision => nextLocalBodyRevision;
+        public string LocalBodyHash => localBodyHash;
+        public string LocalBodySpecies => localBodySpecies;
         public OnlineConnectionState State => backend != null ? backend.State : OnlineConnectionState.Offline;
         public OnlineLobbyInfo CurrentLobby => backend != null ? backend.CurrentLobby : null;
         public string LocalPlayerId => backend != null ? backend.LocalPlayerId : string.Empty;
@@ -156,6 +160,14 @@ namespace DrawBody.Prototype
             }
 
             return total;
+        }
+
+        public float GetConfirmedInkForPlayer(string playerId)
+        {
+            return !string.IsNullOrEmpty(playerId)
+                && confirmedInkByPlayer.TryGetValue(playerId, out float ink)
+                    ? ink
+                    : 0f;
         }
 
         public bool IsHostPlayer(string playerId)
@@ -625,6 +637,12 @@ namespace DrawBody.Prototype
                 nextLocalBodyRevision = bodyData.Revision;
             }
             bodyData.ContentFingerprint = ContentIntegrityVerifier.Fingerprint;
+            bodyData.BodyHash = ContentIntegrityVerifier.HashString(bodyData.Json ?? string.Empty);
+            localBodyHash = bodyData.BodyHash;
+            SerializableBodyDrawing serializedBody = !string.IsNullOrEmpty(bodyData.Json)
+                ? JsonUtility.FromJson<SerializableBodyDrawing>(bodyData.Json)
+                : null;
+            localBodySpecies = serializedBody?.Species ?? string.Empty;
             if (LocalMultiplayerDebugMode.Enabled)
             {
                 Debug.Log($"[PICO BODY] SEND id={bodyData.PlayerId} rev={bodyData.Revision} bytes={bodyData.Json?.Length ?? 0}");

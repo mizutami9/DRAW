@@ -31,6 +31,7 @@ namespace DrawBody.Prototype
         private const string RandomMatchAttributeValue = "drawbody-random-v1";
         private const string RoomCodeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const int RoomCodeMaxCreateAttempts = 5;
+        private const int RoomCreateTransientRetries = 4;
         private const int RandomMatchSearchRetries = 3;
         private const int BodyChunkRawBytes = 700;
         private const byte ReliableChannel = 0;
@@ -100,6 +101,13 @@ namespace DrawBody.Prototype
         private int lastAppliedRetryRevision = -1;
         private int randomMatchOperation;
         private int roomJoinOperation;
+        private int roomCreateOperation;
+        private int scheduledRoomCreateOperation;
+        private int scheduledRoomCreateRetries;
+        private string scheduledRoomCreateName;
+        private int scheduledRoomCreateMaxPlayers;
+        private bool scheduledRoomCreatePrivate;
+        private float scheduledRoomCreateAt = -1f;
         private int scheduledRandomSearchOperation;
         private int scheduledRandomSearchRetries;
         private float scheduledRandomSearchAt = -1f;
@@ -204,6 +212,7 @@ namespace DrawBody.Prototype
             }
             TickSessionRecovery();
             TickRandomMatchSearch();
+            TickRoomCreateRetry();
         }
 
         public void Shutdown()
@@ -261,6 +270,8 @@ namespace DrawBody.Prototype
             if (!RequireLoggedIn()) return;
 
             int operation = ++randomMatchOperation;
+            roomCreateOperation++;
+            CancelScheduledRoomCreate();
             CancelScheduledRandomSearch();
             ResetLobbyConnectionForJoin(false);
             SetState(OnlineConnectionState.Matching, null, LocalizationManager.T("multi_matching"));
@@ -537,9 +548,11 @@ namespace DrawBody.Prototype
 
             randomMatchOperation++;
             roomJoinOperation++;
+            int operation = ++roomCreateOperation;
             authenticationRecoveryAttempts = 0;
             pendingAuthenticationRecovery = null;
             CancelScheduledRandomSearch();
+            CancelScheduledRoomCreate();
             CloseP2PConnections();
             isHost = true;
             hostPeer = null;
@@ -554,18 +567,31 @@ namespace DrawBody.Prototype
             localMembershipMissingRefreshes = 0;
             hostRoomCode = string.Empty;
             ResetSessionTracking();
-            TryCreateRoomWithUniqueCode(roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts);
+            SetState(OnlineConnectionState.Matching, null, LocalizationManager.T("multi_connecting"));
+            TryCreateRoomWithUniqueCode(
+                roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts,
+                operation, RoomCreateTransientRetries);
         }
 
-        private void TryCreateRoomWithUniqueCode(string roomName, int maxPlayers, bool isPrivate, int attemptsRemaining)
+        private void TryCreateRoomWithUniqueCode(
+            string roomName,
+            int maxPlayers,
+            bool isPrivate,
+            int attemptsRemaining,
+            int operation,
+            int transientRetriesRemaining)
         {
+            if (operation != roomCreateOperation || shuttingDown) return;
             string roomCode = GenerateRoomCode();
 
             FindLobbyIdByRoomCode(roomCode, (searchResult, existingLobbyId) =>
             {
+                if (operation != roomCreateOperation || shuttingDown) return;
                 if (searchResult == Result.Success && !string.IsNullOrEmpty(existingLobbyId) && attemptsRemaining > 1)
                 {
-                    TryCreateRoomWithUniqueCode(roomName, maxPlayers, isPrivate, attemptsRemaining - 1);
+                    TryCreateRoomWithUniqueCode(
+                        roomName, maxPlayers, isPrivate, attemptsRemaining - 1,
+                        operation, transientRetriesRemaining);
                     return;
                 }
 
@@ -579,8 +605,16 @@ namespace DrawBody.Prototype
                 {
                     if (TryRecoverAuthentication(searchResult, () =>
                         TryCreateRoomWithUniqueCode(
-                            roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts)))
+                            roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts,
+                            operation, transientRetriesRemaining)))
                     {
+                        return;
+                    }
+                    if (transientRetriesRemaining > 0)
+                    {
+                        ScheduleRoomCreateRetry(
+                            roomName, maxPlayers, isPrivate, operation,
+                            transientRetriesRemaining - 1);
                         return;
                     }
                     SetState(OnlineConnectionState.Error, null, LocalizationManager.Format("online_eos_room_code_search_failed", searchResult));
@@ -605,12 +639,33 @@ namespace DrawBody.Prototype
                     string createdLobbyId = data.LobbyId;
                     Enqueue(() =>
                     {
+                        if (operation != roomCreateOperation || shuttingDown)
+                        {
+                            if (resultCode == Result.Success && !string.IsNullOrEmpty(createdLobbyId))
+                            {
+                                LeaveLobbyOptions staleLeave = new LeaveLobbyOptions
+                                {
+                                    LocalUserId = localUserId,
+                                    LobbyId = createdLobbyId
+                                };
+                                lobbyInterface.LeaveLobby(ref staleLeave, null, (ref LeaveLobbyCallbackInfo _) => { });
+                            }
+                            return;
+                        }
                         if (resultCode != Result.Success)
                         {
                             if (TryRecoverAuthentication(resultCode, () =>
                                 TryCreateRoomWithUniqueCode(
-                                    roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts)))
+                                    roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts,
+                                    operation, transientRetriesRemaining)))
                             {
+                                return;
+                            }
+                            if (transientRetriesRemaining > 0)
+                            {
+                                ScheduleRoomCreateRetry(
+                                    roomName, maxPlayers, isPrivate, operation,
+                                    transientRetriesRemaining - 1);
                                 return;
                             }
                             SetState(OnlineConnectionState.Error, null, LocalizationManager.Format("online_eos_create_lobby_failed", resultCode));
@@ -634,6 +689,54 @@ namespace DrawBody.Prototype
             });
         }
 
+        private void ScheduleRoomCreateRetry(
+            string roomName,
+            int maxPlayers,
+            bool isPrivate,
+            int operation,
+            int retriesRemaining)
+        {
+            if (operation != roomCreateOperation) return;
+            int completedRetries = RoomCreateTransientRetries - retriesRemaining;
+            float delay = Mathf.Min(6f, Mathf.Pow(2f, Mathf.Max(0, completedRetries - 1)));
+            scheduledRoomCreateOperation = operation;
+            scheduledRoomCreateRetries = retriesRemaining;
+            scheduledRoomCreateName = roomName;
+            scheduledRoomCreateMaxPlayers = maxPlayers;
+            scheduledRoomCreatePrivate = isPrivate;
+            scheduledRoomCreateAt = Time.unscaledTime + delay;
+            SetState(
+                OnlineConnectionState.Matching,
+                null,
+                LocalizationManager.Format(
+                    "online_eos_room_create_retry",
+                    Mathf.CeilToInt(delay),
+                    retriesRemaining + 1));
+        }
+
+        private void TickRoomCreateRetry()
+        {
+            if (scheduledRoomCreateAt < 0f || Time.unscaledTime < scheduledRoomCreateAt) return;
+            int operation = scheduledRoomCreateOperation;
+            int retriesRemaining = scheduledRoomCreateRetries;
+            string roomName = scheduledRoomCreateName;
+            int maxPlayers = scheduledRoomCreateMaxPlayers;
+            bool isPrivate = scheduledRoomCreatePrivate;
+            CancelScheduledRoomCreate();
+            if (operation != roomCreateOperation || shuttingDown) return;
+            TryCreateRoomWithUniqueCode(
+                roomName, maxPlayers, isPrivate, RoomCodeMaxCreateAttempts,
+                operation, retriesRemaining);
+        }
+
+        private void CancelScheduledRoomCreate()
+        {
+            scheduledRoomCreateAt = -1f;
+            scheduledRoomCreateOperation = 0;
+            scheduledRoomCreateRetries = 0;
+            scheduledRoomCreateName = null;
+        }
+
         public void JoinRoom(string roomId)
         {
             if (!RequireLoggedIn())
@@ -642,6 +745,8 @@ namespace DrawBody.Prototype
             }
 
             randomMatchOperation++;
+            roomCreateOperation++;
+            CancelScheduledRoomCreate();
             int operation = ++roomJoinOperation;
             authenticationRecoveryAttempts = 0;
             CancelScheduledRandomSearch();
@@ -712,7 +817,9 @@ namespace DrawBody.Prototype
         {
             randomMatchOperation++;
             roomJoinOperation++;
+            roomCreateOperation++;
             CancelScheduledRandomSearch();
+            CancelScheduledRoomCreate();
             if (lobbyInterface != null && localUserId != null && !string.IsNullOrEmpty(lobbyId))
             {
                 LeaveLobbyOptions options = new LeaveLobbyOptions { LocalUserId = localUserId, LobbyId = lobbyId };
@@ -929,7 +1036,8 @@ namespace DrawBody.Prototype
                 || gimmickData.Kind == "mirror_brawl_fakes"
                 || gimmickData.Kind == "flying_boss_state"
                 || gimmickData.Kind == "flying_boss_pad"
-                || gimmickData.Kind == "ricochet_breaker_state";
+                || gimmickData.Kind == "ricochet_breaker_state"
+                || gimmickData.Kind == "laser_relay_state";
             if (isHost && realtimeTransform)
             {
                 BroadcastRealtimeGimmick(payload);

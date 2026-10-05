@@ -30,6 +30,8 @@ namespace DrawBody.Prototype
         {
             if (string.Equals(stageId, "2-3", StringComparison.OrdinalIgnoreCase))
                 return StageSpeciesMask.Cat;
+            if (string.Equals(stageId, "5-3", StringComparison.OrdinalIgnoreCase))
+                return StageSpeciesMask.Slime;
             if (string.Equals(stageId, "11-3", StringComparison.OrdinalIgnoreCase))
                 return StageSpeciesMask.Human;
             return GetAllowedForWorld(GetWorldNumber(stageId));

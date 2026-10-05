@@ -34,7 +34,7 @@ namespace DrawBody.Prototype
         private int lastReceivedSequence;
         private bool cleared;
         private bool built;
-        private string stageId = "5-3";
+        private string stageId = "10-2";
         private float failureBottomY = -6.1f;
         private float failureLeftX = -16.5f;
         private Vector2 replicaTarget;
@@ -257,8 +257,8 @@ namespace DrawBody.Prototype
 
             GameObject runtime = new GameObject(stageId + " Escort Runtime UI");
             runtime.transform.SetParent(transform, false);
-            // Stages 5-3 and 10-2 communicate through the friend, goal and hazards;
-            // extra status monitors only obscure their routes.
+            // The course communicates through the friend, goal and hazards;
+            // extra status monitors only obscure its route.
         }
 
         private void CreatePlayerOnlyFloor(Transform parent)

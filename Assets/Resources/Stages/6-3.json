@@ -3,7 +3,7 @@
     "displayName":  "Stage 6-3 Aquarium Seal",
     "backgroundColorHex":  "#DDF5F2",
     "ruleMode":  0,
-    "timeLimitSeconds":  120.0,
+    "timeLimitSeconds":  60.0,
     "collectionTarget":  0,
     "requiredCollectionCount":  0,
     "objects":  [

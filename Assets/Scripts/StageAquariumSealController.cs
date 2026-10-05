@@ -9,9 +9,7 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "6-3";
         private const string StateKind = "aquarium_seal_state";
-        private const float RoundOneSeconds = 90f;
-        private const float RoundTwoSeconds = 120f;
-        private const float RoundThreeSeconds = 150f;
+        private const float SecondsPerPlayer = 60f;
         private const float ClearHoldSeconds = 0.65f;
         private const float BoxPreviewSeconds = 1.35f;
         private const float BoxCooldownSeconds = 0.55f;
@@ -227,7 +225,7 @@ namespace DrawBody.Prototype
                 ? synchronizedAttempt
                 : roundAttempt + 1;
             phase = SealPhase.Active;
-            remaining = GetRoundSeconds(round);
+            remaining = GetRoundSeconds();
             roundReadyAt = Time.unscaledTime + 4f;
             transitionRemaining = 0f;
             allSealedTime = 0f;
@@ -246,14 +244,9 @@ namespace DrawBody.Prototype
             RefreshMonitor();
         }
 
-        private static float GetRoundSeconds(int targetRound)
+        private float GetRoundSeconds()
         {
-            switch (targetRound)
-            {
-                case 2: return RoundTwoSeconds;
-                case 3: return RoundThreeSeconds;
-                default: return RoundOneSeconds;
-            }
+            return GetPlayerCount() * SecondsPerPlayer;
         }
 
         private void BuildArena()

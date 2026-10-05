@@ -51,6 +51,7 @@ namespace DrawBody.Prototype
         public string PlayerId;
         public string ContentFingerprint;
         public int Revision;
+        public string BodyHash;
         public string Json;
     }
 
@@ -96,6 +97,9 @@ namespace DrawBody.Prototype
         public string DisplayName;
         public int Sequence;
         public int PlayerSlot;
+        public int BodyRevision;
+        public string BodyHash;
+        public string BodySpecies;
         public Vector2 Position;
         public Vector2 Velocity;
         public float Rotation;

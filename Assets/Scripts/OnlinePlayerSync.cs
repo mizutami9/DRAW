@@ -12,6 +12,11 @@ namespace DrawBody.Prototype
         [SerializeField] private float remoteSmoothRate = 18f;
         [SerializeField] private float remotePredictionSeconds = 0.075f;
         [SerializeField] private float remoteSnapDistance = 1.75f;
+        [SerializeField] private float participantMinInterpolationDelay = 0.05f;
+        [SerializeField] private float participantMaxInterpolationDelay = 0.1f;
+
+        private const int MaxRemoteSnapshots = 12;
+        private const float MaxBufferedExtrapolation = 0.08f;
 
         private float nextSendTime;
         private int nextStateSequence;
@@ -35,6 +40,12 @@ namespace DrawBody.Prototype
             new Dictionary<string, float>();
         private readonly Dictionary<string, string> lastRemoteBodyJson =
             new Dictionary<string, string>();
+        private readonly Dictionary<string, string> lastRemoteBodyHashes =
+            new Dictionary<string, string>();
+        private readonly Dictionary<string, string> lastRemoteBodySpecies =
+            new Dictionary<string, string>();
+        private readonly Dictionary<string, float> nextRemoteBodyRequestAt =
+            new Dictionary<string, float>();
         private readonly Dictionary<string, PendingRemoteThrow> pendingRemoteThrows =
             new Dictionary<string, PendingRemoteThrow>();
         private readonly Dictionary<string, RemoteThrowStamp> lastPredictedRemoteThrows =
@@ -54,6 +65,18 @@ namespace DrawBody.Prototype
             public bool Grounded;
             public float ReceivedAt;
             public string SlimeAttachedToPlayerId;
+            public float SmoothedReceiveInterval = 1f / 30f;
+            public float SmoothedReceiveJitter;
+            public readonly List<RemoteSnapshot> Snapshots = new List<RemoteSnapshot>(MaxRemoteSnapshots);
+        }
+
+        private sealed class RemoteSnapshot
+        {
+            public Vector2 Position;
+            public Vector2 Velocity;
+            public float Rotation;
+            public bool Grounded;
+            public float ReceivedAt;
         }
 
         private sealed class PendingRemoteThrow
@@ -93,6 +116,7 @@ namespace DrawBody.Prototype
                 onlineManager.PlayerStateReceived += ApplyRemoteState;
                 onlineManager.BodyDataReceived += ApplyRemoteBodyData;
                 onlineManager.CarryDataReceived += ApplyRemoteCarryData;
+                onlineManager.GimmickDataReceived += ApplyBodyResyncRequest;
             }
 
             if (onlineManager != null
@@ -112,6 +136,7 @@ namespace DrawBody.Prototype
                 onlineManager.PlayerStateReceived -= ApplyRemoteState;
                 onlineManager.BodyDataReceived -= ApplyRemoteBodyData;
                 onlineManager.CarryDataReceived -= ApplyRemoteCarryData;
+                onlineManager.GimmickDataReceived -= ApplyBodyResyncRequest;
             }
         }
 
@@ -163,6 +188,9 @@ namespace DrawBody.Prototype
                 Sequence = ++nextStateSequence,
                 PlayerSlot = PlayerColorPalette.GetLobbyPlayerSlot(
                     onlineManager.CurrentLobby, onlineManager.LocalPlayerId),
+                BodyRevision = onlineManager.LocalBodyRevision,
+                BodyHash = onlineManager.LocalBodyHash,
+                BodySpecies = onlineManager.LocalBodySpecies,
                 Position = localTransform.position,
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
                 Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
@@ -223,6 +251,7 @@ namespace DrawBody.Prototype
                 lastRemoteSequences[state.PlayerId] = state.Sequence;
             }
             lastRemoteStateReceivedAt[state.PlayerId] = Time.unscaledTime;
+            EnsureRemoteBodyMatchesState(state);
 
             if (pendingRemoteThrows.TryGetValue(state.PlayerId, out PendingRemoteThrow pendingThrow))
             {
@@ -282,7 +311,13 @@ namespace DrawBody.Prototype
                 state.EmoteId,
                 state.EmoteSequence,
                 state.EmoteRemaining);
-            stageManager.ApplyOnlinePlayerColor(state.PlayerId, state.PlayerSlot);
+            int canonicalPlayerSlot = PlayerColorPalette.GetLobbyPlayerSlot(
+                onlineManager.CurrentLobby,
+                state.PlayerId);
+            int resolvedPlayerSlot = canonicalPlayerSlot >= 0
+                ? canonicalPlayerSlot
+                : Mathf.Clamp(state.PlayerSlot, 0, 3);
+            stageManager.ApplyOnlinePlayerColor(state.PlayerId, resolvedPlayerSlot);
             ApplyRemoteRespawnTransition(state);
             if (stageManager.IsOnlineRemotePlayerHeldByLocal(state.PlayerId))
             {
@@ -290,19 +325,22 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            remoteTargets[state.PlayerId] = new RemoteTarget
+            if (!remoteTargets.TryGetValue(state.PlayerId, out RemoteTarget target))
             {
-                Position = state.Position,
-                Velocity = state.Velocity,
-                Rotation = state.Rotation,
-                FacingDirection = state.FacingDirection,
-                PlayerSlot = state.PlayerSlot,
-                Redrawing = state.Redrawing,
-                TurtleShelled = !state.Redrawing && state.TurtleShelled,
-                Grounded = !state.Redrawing && state.Grounded,
-                ReceivedAt = Time.unscaledTime,
-                SlimeAttachedToPlayerId = state.Redrawing ? null : state.SlimeAttachedToPlayerId
-            };
+                target = new RemoteTarget();
+                remoteTargets[state.PlayerId] = target;
+            }
+            target.Position = state.Position;
+            target.Velocity = state.Velocity;
+            target.Rotation = state.Rotation;
+            target.FacingDirection = state.FacingDirection;
+            target.PlayerSlot = resolvedPlayerSlot;
+            target.Redrawing = state.Redrawing;
+            target.TurtleShelled = !state.Redrawing && state.TurtleShelled;
+            target.Grounded = !state.Redrawing && state.Grounded;
+            target.ReceivedAt = Time.unscaledTime;
+            target.SlimeAttachedToPlayerId = state.Redrawing ? null : state.SlimeAttachedToPlayerId;
+            AppendRemoteSnapshot(target);
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
         }
 
@@ -344,6 +382,8 @@ namespace DrawBody.Prototype
             }
 
             float t = 1f - Mathf.Exp(-remoteSmoothRate * Time.unscaledDeltaTime);
+            bool isParticipantClient = stageManager.IsOnlineStageActive
+                && !stageManager.IsOnlineStageHost;
             foreach (KeyValuePair<string, RemoteTarget> pair in remoteTargets)
             {
                 if (stageManager.IsOnlineRemotePlayerHeldByLocal(pair.Key))
@@ -351,27 +391,50 @@ namespace DrawBody.Prototype
                     continue;
                 }
                 Transform remoteTransform = stageManager.GetOnlinePlayerTransform(pair.Key);
-                float stateAge = Mathf.Clamp(
-                    Time.unscaledTime - pair.Value.ReceivedAt,
-                    0f,
-                    0.12f);
-                float predictionTime = Mathf.Min(remotePredictionSeconds, 0.04f) + stateAge;
-                Vector2 predictionVelocity = pair.Value.Velocity;
-                // A grounded packet can still contain the last downward physics
-                // velocity. Extrapolating it is what made remote players appear
-                // buried in the floor immediately after landing.
-                if (pair.Value.Grounded && predictionVelocity.y <= 0.5f)
-                    predictionVelocity.y = 0f;
-                Vector2 predictedPosition = pair.Value.Position
-                    + predictionVelocity * Mathf.Clamp(predictionTime, 0f, 0.12f);
-                Vector2 position = remoteTransform != null
-                    ? Vector2.Distance(remoteTransform.position, predictedPosition) >= remoteSnapDistance
-                        ? predictedPosition
-                        : Vector2.Lerp(remoteTransform.position, predictedPosition, t)
-                    : predictedPosition;
-                if (remoteTransform != null && pair.Value.Grounded)
+                Vector2 position;
+                Vector2 animationVelocity;
+                float rotation;
+                bool grounded;
+                bool useBufferedInterpolation = isParticipantClient && !IsLobbyHostPlayer(pair.Key);
+                if (useBufferedInterpolation
+                    && TryGetBufferedPose(pair.Value, out Vector2 bufferedPosition,
+                        out Vector2 bufferedVelocity, out float bufferedRotation,
+                        out bool bufferedGrounded))
                 {
-                    float groundedY = pair.Value.Position.y;
+                    position = bufferedPosition;
+                    animationVelocity = bufferedVelocity;
+                    rotation = bufferedRotation;
+                    grounded = bufferedGrounded;
+                }
+                else
+                {
+                    float stateAge = Mathf.Clamp(
+                        Time.unscaledTime - pair.Value.ReceivedAt,
+                        0f,
+                        0.12f);
+                    float predictionTime = Mathf.Min(remotePredictionSeconds, 0.04f) + stateAge;
+                    Vector2 predictionVelocity = pair.Value.Velocity;
+                    // A grounded packet can still contain the last downward physics
+                    // velocity. Extrapolating it is what made remote players appear
+                    // buried in the floor immediately after landing.
+                    if (pair.Value.Grounded && predictionVelocity.y <= 0.5f)
+                        predictionVelocity.y = 0f;
+                    Vector2 predictedPosition = pair.Value.Position
+                        + predictionVelocity * Mathf.Clamp(predictionTime, 0f, 0.12f);
+                    position = remoteTransform != null
+                        ? Vector2.Distance(remoteTransform.position, predictedPosition) >= remoteSnapDistance
+                            ? predictedPosition
+                            : Vector2.Lerp(remoteTransform.position, predictedPosition, t)
+                        : predictedPosition;
+                    animationVelocity = pair.Value.Velocity;
+                    rotation = remoteTransform != null
+                        ? Mathf.LerpAngle(remoteTransform.eulerAngles.z, pair.Value.Rotation, t)
+                        : pair.Value.Rotation;
+                    grounded = pair.Value.Grounded;
+                }
+                if (remoteTransform != null && grounded)
+                {
+                    float groundedY = position.y;
                     float currentY = remoteTransform.position.y;
                     if (currentY < groundedY - 0.025f)
                     {
@@ -384,10 +447,7 @@ namespace DrawBody.Prototype
                         if (Mathf.Abs(position.y - groundedY) < 0.012f) position.y = groundedY;
                     }
                 }
-                float rotation = remoteTransform != null
-                    ? Mathf.LerpAngle(remoteTransform.eulerAngles.z, pair.Value.Rotation, t)
-                    : pair.Value.Rotation;
-                stageManager.ApplyOnlineRemoteState(pair.Key, position, pair.Value.Velocity, rotation);
+                stageManager.ApplyOnlineRemoteState(pair.Key, position, animationVelocity, rotation);
                 if (remoteTransform != null)
                 {
                     PlayerController2D remotePlayer = remoteTransform.GetComponent<PlayerController2D>();
@@ -399,6 +459,122 @@ namespace DrawBody.Prototype
                     remoteTransform.GetComponent<PlayerCarryController>()?.ApplyRemoteSlimeAttachment(attachmentTarget);
                 }
             }
+        }
+
+        private bool IsLobbyHostPlayer(string playerId)
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null || string.IsNullOrEmpty(playerId)) return false;
+            for (int i = 0; i < players.Length; i++)
+                if (players[i] != null && players[i].PlayerId == playerId)
+                    return players[i].IsHost;
+            return false;
+        }
+
+        private void AppendRemoteSnapshot(RemoteTarget target)
+        {
+            if (target == null) return;
+            List<RemoteSnapshot> snapshots = target.Snapshots;
+            if (snapshots.Count > 0)
+            {
+                RemoteSnapshot previous = snapshots[snapshots.Count - 1];
+                float elapsed = Mathf.Clamp(target.ReceivedAt - previous.ReceivedAt, 0.001f, 0.5f);
+                float receiveDeviation = Mathf.Abs(elapsed - target.SmoothedReceiveInterval);
+                target.SmoothedReceiveInterval = Mathf.Lerp(
+                    target.SmoothedReceiveInterval,
+                    elapsed,
+                    0.12f);
+                target.SmoothedReceiveJitter = Mathf.Lerp(
+                    target.SmoothedReceiveJitter,
+                    receiveDeviation,
+                    0.2f);
+                float expectedTravel = Mathf.Max(
+                    remoteSnapDistance,
+                    (previous.Velocity.magnitude + target.Velocity.magnitude)
+                        * 0.5f * elapsed + 0.75f);
+                if (Vector2.Distance(previous.Position, target.Position) >= expectedTravel)
+                {
+                    // Respawns, round changes and other teleports must not glide
+                    // through the level merely because normal movement is buffered.
+                    // A high-speed throw is expected travel, not a teleport.
+                    snapshots.Clear();
+                }
+            }
+            snapshots.Add(new RemoteSnapshot
+            {
+                Position = target.Position,
+                Velocity = target.Velocity,
+                Rotation = target.Rotation,
+                Grounded = target.Grounded,
+                ReceivedAt = target.ReceivedAt
+            });
+            while (snapshots.Count > MaxRemoteSnapshots) snapshots.RemoveAt(0);
+        }
+
+        private bool TryGetBufferedPose(
+            RemoteTarget target,
+            out Vector2 position,
+            out Vector2 velocity,
+            out float rotation,
+            out bool grounded)
+        {
+            position = target != null ? target.Position : Vector2.zero;
+            velocity = target != null ? target.Velocity : Vector2.zero;
+            rotation = target != null ? target.Rotation : 0f;
+            grounded = target != null && target.Grounded;
+            if (target == null || target.Snapshots.Count == 0) return false;
+
+            List<RemoteSnapshot> snapshots = target.Snapshots;
+            float minimumDelay = Mathf.Clamp(participantMinInterpolationDelay, 0.03f, 0.1f);
+            float maximumDelay = Mathf.Clamp(
+                participantMaxInterpolationDelay,
+                minimumDelay,
+                0.2f);
+            float adaptiveDelay = Mathf.Clamp(
+                Mathf.Max(minimumDelay, target.SmoothedReceiveInterval * 1.5f)
+                    + target.SmoothedReceiveJitter * 2f,
+                minimumDelay,
+                maximumDelay);
+            float renderAt = Time.unscaledTime - adaptiveDelay;
+            while (snapshots.Count > 2 && snapshots[1].ReceivedAt <= renderAt)
+                snapshots.RemoveAt(0);
+
+            if (renderAt <= snapshots[0].ReceivedAt)
+            {
+                RemoteSnapshot earliest = snapshots[0];
+                position = earliest.Position;
+                velocity = earliest.Velocity;
+                rotation = earliest.Rotation;
+                grounded = earliest.Grounded;
+                return true;
+            }
+
+            if (snapshots.Count >= 2
+                && snapshots[0].ReceivedAt <= renderAt
+                && renderAt <= snapshots[1].ReceivedAt)
+            {
+                RemoteSnapshot from = snapshots[0];
+                RemoteSnapshot to = snapshots[1];
+                float duration = Mathf.Max(0.0001f, to.ReceivedAt - from.ReceivedAt);
+                float amount = Mathf.Clamp01((renderAt - from.ReceivedAt) / duration);
+                position = Vector2.Lerp(from.Position, to.Position, amount);
+                velocity = Vector2.Lerp(from.Velocity, to.Velocity, amount);
+                rotation = Mathf.LerpAngle(from.Rotation, to.Rotation, amount);
+                grounded = amount < 0.5f ? from.Grounded : to.Grounded;
+                return true;
+            }
+
+            RemoteSnapshot latest = snapshots[snapshots.Count - 1];
+            velocity = latest.Velocity;
+            grounded = latest.Grounded;
+            if (grounded && velocity.y <= 0.5f) velocity.y = 0f;
+            float extrapolation = Mathf.Clamp(
+                renderAt - latest.ReceivedAt,
+                0f,
+                MaxBufferedExtrapolation);
+            position = latest.Position + velocity * extrapolation;
+            rotation = latest.Rotation;
+            return true;
         }
 
         private void ApplyRemoteBodyData(OnlineBodyData bodyData)
@@ -429,6 +605,9 @@ namespace DrawBody.Prototype
                         bodyData.Revision);
                 }
                 lastRemoteBodyReceivedAt[bodyData.PlayerId] = Time.unscaledTime;
+                CacheRemoteBodyIdentity(bodyData);
+                stageManager.GetOnlinePlayerTransform(bodyData.PlayerId)
+                    ?.GetComponent<BodyBuilder>()?.SetNetworkBodyReady(true);
                 if (LocalMultiplayerDebugMode.Enabled)
                     Debug.Log($"[PICO BODY] DEDUPE id={bodyData.PlayerId} rev={bodyData.Revision}");
                 return;
@@ -471,6 +650,7 @@ namespace DrawBody.Prototype
                 lastRemoteBodyRevisions[bodyData.PlayerId] = bodyData.Revision;
             lastRemoteBodyReceivedAt[bodyData.PlayerId] = Time.unscaledTime;
             lastRemoteBodyJson[bodyData.PlayerId] = bodyData.Json;
+            CacheRemoteBodyIdentity(bodyData);
             if (LocalMultiplayerDebugMode.Enabled)
                 Debug.Log($"[PICO BODY] APPLIED id={bodyData.PlayerId} rev={bodyData.Revision} bytes={bodyData.Json.Length}");
             ApplyLobbyColors(onlineManager.State, onlineManager.CurrentLobby, string.Empty);
@@ -583,7 +763,7 @@ namespace DrawBody.Prototype
             float rotation = previous != null ? previous.Rotation : remoteTransform.eulerAngles.z;
             int facing = previous != null ? previous.FacingDirection : 1;
             int slot = previous != null ? previous.PlayerSlot : 0;
-            remoteTargets[carryData.TargetPlayerId] = new RemoteTarget
+            RemoteTarget predictedThrow = new RemoteTarget
             {
                 Position = carryData.ReleasePosition,
                 Velocity = carryData.ReleaseVelocity,
@@ -596,6 +776,8 @@ namespace DrawBody.Prototype
                 ReceivedAt = Time.unscaledTime,
                 SlimeAttachedToPlayerId = null
             };
+            remoteTargets[carryData.TargetPlayerId] = predictedThrow;
+            AppendRemoteSnapshot(predictedThrow);
             stageManager.ApplyOnlineRemoteState(
                 carryData.TargetPlayerId,
                 carryData.ReleasePosition,
@@ -668,6 +850,9 @@ namespace DrawBody.Prototype
                 lastRemoteBodyRevisions.Clear();
                 lastRemoteBodyReceivedAt.Clear();
                 lastRemoteBodyJson.Clear();
+                lastRemoteBodyHashes.Clear();
+                lastRemoteBodySpecies.Clear();
+                nextRemoteBodyRequestAt.Clear();
                 pendingRemoteBodyData.Clear();
                 pendingRemoteThrows.Clear();
                 lastPredictedRemoteThrows.Clear();
@@ -697,6 +882,9 @@ namespace DrawBody.Prototype
                 lastRemoteBodyRevisions.Remove(id);
                 lastRemoteBodyReceivedAt.Remove(id);
                 lastRemoteBodyJson.Remove(id);
+                lastRemoteBodyHashes.Remove(id);
+                lastRemoteBodySpecies.Remove(id);
+                nextRemoteBodyRequestAt.Remove(id);
                 pendingRemoteBodyData.Remove(id);
                 pendingRemoteThrows.Remove(id);
                 lastPredictedRemoteThrows.Remove(id);
@@ -748,6 +936,65 @@ namespace DrawBody.Prototype
             nextBodyResyncTime = Mathf.Min(
                 nextBodyResyncTime > 0f ? nextBodyResyncTime : float.PositiveInfinity,
                 Time.unscaledTime + 0.25f);
+        }
+
+        private void EnsureRemoteBodyMatchesState(OnlinePlayerState state)
+        {
+            if (state == null || string.IsNullOrEmpty(state.PlayerId) || state.BodyRevision <= 0)
+            {
+                return;
+            }
+
+            bool missingRevision = !lastRemoteBodyRevisions.TryGetValue(state.PlayerId, out int revision)
+                || revision < state.BodyRevision;
+            bool wrongHash = !string.IsNullOrEmpty(state.BodyHash)
+                && (!lastRemoteBodyHashes.TryGetValue(state.PlayerId, out string hash)
+                    || !string.Equals(hash, state.BodyHash, System.StringComparison.Ordinal));
+            bool wrongSpecies = !string.IsNullOrEmpty(state.BodySpecies)
+                && (!lastRemoteBodySpecies.TryGetValue(state.PlayerId, out string species)
+                    || !string.Equals(species, state.BodySpecies, System.StringComparison.OrdinalIgnoreCase));
+            if (!missingRevision && !wrongHash && !wrongSpecies)
+            {
+                return;
+            }
+
+            if (nextRemoteBodyRequestAt.TryGetValue(state.PlayerId, out float nextRequest)
+                && Time.unscaledTime < nextRequest)
+            {
+                return;
+            }
+
+            nextRemoteBodyRequestAt[state.PlayerId] = Time.unscaledTime + 1.5f;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                Kind = "body_resync_request",
+                ObjectId = state.PlayerId
+            });
+        }
+
+        private void ApplyBodyResyncRequest(OnlineGimmickData data)
+        {
+            if (data == null || onlineManager == null
+                || data.Kind != "body_resync_request"
+                || data.ObjectId != onlineManager.LocalPlayerId)
+            {
+                return;
+            }
+
+            RequestBodyResync(3);
+        }
+
+        private void CacheRemoteBodyIdentity(OnlineBodyData bodyData)
+        {
+            if (bodyData == null || string.IsNullOrEmpty(bodyData.PlayerId)) return;
+            string hash = !string.IsNullOrEmpty(bodyData.BodyHash)
+                ? bodyData.BodyHash
+                : ContentIntegrityVerifier.HashString(bodyData.Json ?? string.Empty);
+            lastRemoteBodyHashes[bodyData.PlayerId] = hash;
+            SerializableBodyDrawing serialized = !string.IsNullOrEmpty(bodyData.Json)
+                ? JsonUtility.FromJson<SerializableBodyDrawing>(bodyData.Json)
+                : null;
+            lastRemoteBodySpecies[bodyData.PlayerId] = serialized?.Species ?? string.Empty;
         }
 
         private void DetectLocalSpeciesChange()

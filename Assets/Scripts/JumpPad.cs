@@ -131,6 +131,9 @@ namespace DrawBody.Prototype
                 // skip multiple tiers and defeat that layout.
                 speciesMultiplier = 1f;
             }
+            Vector2 launchDirection = transform.up;
+            if (launchDirection.sqrMagnitude < 0.001f) launchDirection = Vector2.up;
+            launchDirection.Normalize();
             Vector2 velocity = rb.linearVelocity;
             PlayerCarryController launchCarry = player != null
                 ? player.GetComponent<PlayerCarryController>()
@@ -140,9 +143,14 @@ namespace DrawBody.Prototype
                 // Bird -> player -> held item can touch the pad through several
                 // kinematic colliders in one physics step. Keep the launch rooted
                 // in the bird and discard large sideways collision impulses.
-                velocity.x = Mathf.Clamp(velocity.x * 0.2f, -4f, 4f);
+                Vector2 tangent = new Vector2(-launchDirection.y, launchDirection.x);
+                float tangentSpeed = Mathf.Clamp(Vector2.Dot(velocity, tangent) * 0.2f, -4f, 4f);
+                velocity = tangent * tangentSpeed + launchDirection * Vector2.Dot(velocity, launchDirection);
             }
-            velocity.y = Mathf.Max(velocity.y, launchVelocity * speciesMultiplier);
+            float currentLaunchSpeed = Vector2.Dot(velocity, launchDirection);
+            float targetLaunchSpeed = launchVelocity * speciesMultiplier;
+            if (currentLaunchSpeed < targetLaunchSpeed)
+                velocity += launchDirection * (targetLaunchSpeed - currentLaunchSpeed);
             rb.linearVelocity = velocity;
             bounceTimer = 0.22f;
             GameSfx.PlayAt(SfxId.JumpPadLaunch, transform.position, speciesMultiplier > 1f ? 1.15f : 1f);

@@ -104,7 +104,8 @@ namespace DrawBody.Prototype
 
                 ClearCharacterGraphic graphic = characterObject.GetComponent<ClearCharacterGraphic>();
                 graphic.raycastTarget = false;
-                if (!graphic.Capture(builder))
+                Color playerColor = stageManager.GetClearCelebrationPlayerColor(player, i);
+                if (!graphic.Capture(builder, playerColor))
                 {
                     Destroy(characterObject);
                     continue;
@@ -340,7 +341,7 @@ namespace DrawBody.Prototype
         private float walkPhase;
         private int facing = 1;
 
-        public bool Capture(BodyBuilder builder)
+        public bool Capture(BodyBuilder builder, Color playerColor)
         {
             strokes.Clear();
             Transform root = builder != null ? builder.CelebrationVisualRoot : null;
@@ -409,7 +410,7 @@ namespace DrawBody.Prototype
                 });
             }
 
-            color = builder.PlayerColor;
+            color = playerColor;
             SetVerticesDirty();
             return true;
         }

@@ -3,8 +3,13 @@ using UnityEngine;
 
 namespace DrawBody.Prototype
 {
+    public interface IStageValueCrateOwner
+    {
+        void RequestBreak(StageValueCrate crate, Vector2 hitPoint);
+    }
+
     [DisallowMultipleComponent]
-    public sealed class StageValueCoinChallengeController : MonoBehaviour
+    public sealed class StageValueCoinChallengeController : MonoBehaviour, IStageValueCrateOwner
     {
         private const string StageId = "12-1";
         private const string BreakKind = "value_crate_break";
@@ -591,13 +596,13 @@ namespace DrawBody.Prototype
 
     public sealed class StageValueCrate : MonoBehaviour
     {
-        private StageValueCoinChallengeController owner;
+        private IStageValueCrateOwner owner;
         private float nextImpactSfxAt;
         public string CrateId { get; private set; }
         public int Value { get; private set; }
         public bool IsBroken { get; private set; }
 
-        public void Configure(StageValueCoinChallengeController challenge, string crateId, int value)
+        public void Configure(IStageValueCrateOwner challenge, string crateId, int value)
         {
             owner = challenge;
             CrateId = crateId;

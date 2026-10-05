@@ -33,9 +33,9 @@ namespace DrawBody.Prototype
             horizontalLimit = Mathf.Max(5f, halfWidth);
             minimumY = minY;
             maximumY = maxY;
-            if (bombChannel == null)
+            if (bombChannel == null || bombChannel.Root == null)
                 bombChannel = CreateChannel("Bomb Trajectory Preview", new Color(1f, 0.38f, 0.08f, 0.86f));
-            if (missileChannel == null)
+            if (missileChannel == null || missileChannel.Root == null)
                 missileChannel = CreateChannel("Missile Trajectory Preview", new Color(0.12f, 0.72f, 1f, 0.86f));
         }
 
@@ -86,7 +86,7 @@ namespace DrawBody.Prototype
             Vector2 initialVelocity,
             bool ballistic)
         {
-            if (channel == null) return;
+            if (channel == null || channel.Root == null || channel.Impact == null) return;
             SetVisible(channel, true);
             Vector2 position = origin;
             Vector2 velocity = initialVelocity;
@@ -108,14 +108,18 @@ namespace DrawBody.Prototype
                 }
 
                 SpriteRenderer dot = channel.Dots[dotIndex++];
-                dot.transform.position = new Vector3(nextPosition.x, nextPosition.y, -0.46f);
-                dot.enabled = true;
+                if (dot != null)
+                {
+                    dot.transform.position = new Vector3(nextPosition.x, nextPosition.y, -0.46f);
+                    dot.enabled = true;
+                }
                 position = nextPosition;
                 velocity = nextVelocity;
                 if (Mathf.Abs(position.x) > horizontalLimit || position.y < minimumY || position.y > maximumY) break;
             }
 
-            for (int i = dotIndex; i < channel.Dots.Count; i++) channel.Dots[i].enabled = false;
+            for (int i = dotIndex; i < channel.Dots.Count; i++)
+                if (channel.Dots[i] != null) channel.Dots[i].enabled = false;
             channel.Impact.gameObject.SetActive(impacted);
             if (!impacted) return;
             channel.Impact.transform.position = new Vector3(impactPoint.x, impactPoint.y, -0.45f);

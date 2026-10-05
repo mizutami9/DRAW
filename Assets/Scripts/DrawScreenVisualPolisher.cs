@@ -212,17 +212,21 @@ namespace DrawBody.Prototype
             SetTopRect(personalValue.rectTransform, new Vector2(162f, -32f), new Vector2(118f, 22f), new Vector2(0f, 1f));
 
             Text teamLabel = EnsureLabel(inkCard, "TeamInkLabel", "TEAM", 13, TextAnchor.MiddleLeft);
-            SetTopRect(teamLabel.rectTransform, new Vector2(12f, -79f), new Vector2(150f, 22f), new Vector2(0f, 1f));
+            SetTopRect(teamLabel.rectTransform, new Vector2(12f, -75f), new Vector2(150f, 20f), new Vector2(0f, 1f));
             Text teamValue = EnsureLabel(inkCard, "TeamInkValue", "0 / 350", 14, TextAnchor.MiddleRight);
-            SetTopRect(teamValue.rectTransform, new Vector2(162f, -79f), new Vector2(118f, 22f), new Vector2(0f, 1f));
+            SetTopRect(teamValue.rectTransform, new Vector2(162f, -75f), new Vector2(118f, 20f), new Vector2(0f, 1f));
+            Text teamBreakdown = EnsureLabel(
+                inkCard, "TeamInkBreakdown", string.Empty, 10, TextAnchor.MiddleCenter);
+            SetTopRect(teamBreakdown.rectTransform, new Vector2(10f, -94f), new Vector2(272f, 16f), new Vector2(0f, 1f));
             RectTransform teamGauge = EnsureGauge(inkCard, "TeamInkGaugeBack", "TeamInkGaugeFill");
-            SetTopRect(teamGauge, new Vector2(12f, -107f), new Vector2(268f, 12f), new Vector2(0f, 1f));
+            SetTopRect(teamGauge, new Vector2(12f, -113f), new Vector2(268f, 10f), new Vector2(0f, 1f));
             ConfigureStraightGauge(teamGauge, "TeamInkGaugeFill");
 
             ConfigureContainedText(personalLabel, 9, 13, TextAnchor.MiddleLeft);
             ConfigureContainedText(personalValue, 10, 14, TextAnchor.MiddleRight);
             ConfigureContainedText(teamLabel, 9, 13, TextAnchor.MiddleLeft);
             ConfigureContainedText(teamValue, 10, 14, TextAnchor.MiddleRight);
+            ConfigureContainedText(teamBreakdown, 8, 10, TextAnchor.MiddleCenter);
 
             if (personalValue != null)
             {

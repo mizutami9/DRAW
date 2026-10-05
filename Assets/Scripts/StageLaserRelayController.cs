@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace DrawBody.Prototype
 {
+    [DefaultExecutionOrder(100)]
     [DisallowMultipleComponent]
     public sealed class StageLaserRelayController : MonoBehaviour
     {
@@ -24,6 +25,7 @@ namespace DrawBody.Prototype
         private const float BoxPreviewSeconds = 1.35f;
         private const float BoxCooldownSeconds = 0.55f;
         private const float GoalChargeSeconds = 1.2f;
+        private const float BeamPointNetworkScale = 100f;
 
         private static readonly Vector2[] BoxSizes =
         {
@@ -44,8 +46,19 @@ namespace DrawBody.Prototype
             public float Remaining;
             public int GoalMask;
             public float[] GoalCharges;
+            public BeamNetworkState[] BeamPaths;
             public int PreviewIndex;
             public bool ButtonPressed;
+        }
+
+        [System.Serializable]
+        private sealed class BeamNetworkState
+        {
+            public string PackedPoints;
+            public int PointCount;
+            public int ReflectionCount;
+            public bool RouteValid;
+            public int ReachedGoalIndex = -1;
         }
 
         private sealed class BeamState
@@ -60,6 +73,9 @@ namespace DrawBody.Prototype
             public readonly List<SpriteRenderer> ReflectionMarks = new List<SpriteRenderer>(4);
             public readonly List<Vector3> Points = new List<Vector3>(7);
             public readonly HashSet<PlayerController2D> ReflectedPlayers = new HashSet<PlayerController2D>();
+            public Vector2[] NetworkTargetPoints;
+            public int ReflectionCount;
+            public bool HasNetworkPath;
             public bool RouteValid;
             public int ReachedGoalIndex = -1;
         }
@@ -190,7 +206,8 @@ namespace DrawBody.Prototype
             if (!initialized || stageManager == null || stageManager.CurrentStageId != StageId) return;
             ConfigureCamera();
             RefreshPlayerOrder();
-            TraceAllBeams();
+            if (HasAuthority) TraceAllBeams();
+            else RenderNetworkBeams();
             AnimateBeamEffects();
 
             float countdownRemaining = roundReadyAt - Time.unscaledTime;
@@ -202,6 +219,7 @@ namespace DrawBody.Prototype
             else if (phase == RelayPhase.Active && countdownRemaining > 0f)
             {
                 countdownPresenter?.Show(countdownRemaining);
+                if (HasAuthority) BroadcastState();
                 RefreshMonitor();
                 return;
             }
@@ -851,6 +869,10 @@ namespace DrawBody.Prototype
 
         private void TraceAllBeams()
         {
+            // Body animation and remote-player interpolation both move child
+            // colliders during Update. Resolve those transforms before the host
+            // computes the authoritative reflection path for this frame.
+            Physics2D.SyncTransforms();
             for (int i = 0; i < beams.Count; i++) TraceBeam(beams[i]);
         }
 
@@ -858,6 +880,7 @@ namespace DrawBody.Prototype
         {
             beam.Points.Clear();
             beam.Points.Add(beam.Origin);
+            beam.ReflectionCount = 0;
             beam.RouteValid = true;
             beam.ReachedGoalIndex = -1;
             beam.ReflectedPlayers.Clear();
@@ -906,6 +929,7 @@ namespace DrawBody.Prototype
                 beam.Points.Add(playerHit.point);
                 beam.ReflectedPlayers.Add(hitPlayer);
                 reflectionCount++;
+                beam.ReflectionCount = reflectionCount;
 
                 if (markCount < beam.ReflectionMarks.Count)
                 {
@@ -925,6 +949,41 @@ namespace DrawBody.Prototype
             for (int i = markCount; i < beam.ReflectionMarks.Count; i++)
                 beam.ReflectionMarks[i].gameObject.SetActive(false);
             ApplyBeamLine(beam);
+        }
+
+        private void RenderNetworkBeams()
+        {
+            float blend = 1f - Mathf.Exp(-24f * Time.unscaledDeltaTime);
+            for (int i = 0; i < beams.Count; i++)
+            {
+                BeamState beam = beams[i];
+                Vector2[] target = beam.NetworkTargetPoints;
+                if (!beam.HasNetworkPath || target == null || target.Length < 2) continue;
+
+                if (beam.Points.Count != target.Length)
+                {
+                    beam.Points.Clear();
+                    for (int point = 0; point < target.Length; point++)
+                        beam.Points.Add(target[point]);
+                }
+                else
+                {
+                    for (int point = 0; point < target.Length; point++)
+                        beam.Points[point] = Vector3.Lerp(beam.Points[point], target[point], blend);
+                }
+
+                int visibleMarks = Mathf.Min(
+                    beam.ReflectionMarks.Count,
+                    Mathf.Min(beam.ReflectionCount, beam.Points.Count - 1));
+                for (int markIndex = 0; markIndex < beam.ReflectionMarks.Count; markIndex++)
+                {
+                    SpriteRenderer mark = beam.ReflectionMarks[markIndex];
+                    bool visible = markIndex < visibleMarks;
+                    mark.gameObject.SetActive(visible);
+                    if (visible) mark.transform.position = beam.Points[markIndex + 1];
+                }
+                ApplyBeamLine(beam);
+            }
         }
 
         private static bool TryFindNearestPlayerHit(
@@ -1310,6 +1369,7 @@ namespace DrawBody.Prototype
                 Sequence = ++sequence, Round = round, Attempt = roundAttempt, Phase = (int)phase,
                 Remaining = remaining, GoalMask = goalMask,
                 GoalCharges = GetGoalCharges(),
+                BeamPaths = GetBeamPaths(),
                 PreviewIndex = previewIndex, ButtonPressed = buttonPressed
             };
             onlineManager.SendGimmickData(new OnlineGimmickData
@@ -1356,6 +1416,7 @@ namespace DrawBody.Prototype
             if (state.GoalCharges != null)
                 for (int i = 0; i < goals.Count && i < state.GoalCharges.Length; i++)
                     goals[i].Charge = Mathf.Clamp01(state.GoalCharges[i]);
+            ApplyNetworkBeamPaths(state.BeamPaths);
             previewIndex = Mathf.Clamp(state.PreviewIndex, 0, BoxSizes.Length - 1);
             buttonPressed = state.ButtonPressed;
             RefreshBoxStationVisual();
@@ -1383,6 +1444,108 @@ namespace DrawBody.Prototype
             float[] values = new float[goals.Count];
             for (int i = 0; i < goals.Count; i++) values[i] = goals[i].Charge;
             return values;
+        }
+
+        private BeamNetworkState[] GetBeamPaths()
+        {
+            BeamNetworkState[] paths = new BeamNetworkState[beams.Count];
+            for (int i = 0; i < beams.Count; i++)
+            {
+                BeamState beam = beams[i];
+                paths[i] = new BeamNetworkState
+                {
+                    PackedPoints = PackBeamPoints(beam.Points),
+                    PointCount = beam.Points.Count,
+                    ReflectionCount = beam.ReflectionCount,
+                    RouteValid = beam.RouteValid,
+                    ReachedGoalIndex = beam.ReachedGoalIndex
+                };
+            }
+            return paths;
+        }
+
+        private void ApplyNetworkBeamPaths(BeamNetworkState[] paths)
+        {
+            if (paths == null) return;
+            int count = Mathf.Min(beams.Count, paths.Length);
+            for (int i = 0; i < count; i++)
+            {
+                BeamNetworkState path = paths[i];
+                if (path == null || path.PointCount < 2 || path.PointCount > 14
+                    || !TryUnpackBeamPoints(path.PackedPoints, path.PointCount, out Vector2[] points))
+                    continue;
+                bool valid = true;
+                for (int point = 0; point < points.Length; point++)
+                {
+                    Vector2 value = points[point];
+                    if (float.IsNaN(value.x) || float.IsInfinity(value.x)
+                        || float.IsNaN(value.y) || float.IsInfinity(value.y)
+                        || Mathf.Abs(value.x) > 200f || Mathf.Abs(value.y) > 200f)
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (!valid) continue;
+
+                BeamState beam = beams[i];
+                beam.NetworkTargetPoints = points;
+                beam.ReflectionCount = Mathf.Clamp(
+                    path.ReflectionCount, 0, beam.NetworkTargetPoints.Length - 1);
+                beam.RouteValid = path.RouteValid;
+                beam.ReachedGoalIndex = path.ReachedGoalIndex >= 0
+                    && path.ReachedGoalIndex < goals.Count
+                        ? path.ReachedGoalIndex
+                        : -1;
+                beam.HasNetworkPath = true;
+            }
+        }
+
+        private static string PackBeamPoints(List<Vector3> points)
+        {
+            if (points == null || points.Count == 0) return string.Empty;
+            byte[] bytes = new byte[points.Count * 4];
+            for (int i = 0; i < points.Count; i++)
+            {
+                short x = (short)Mathf.Clamp(
+                    Mathf.RoundToInt(points[i].x * BeamPointNetworkScale),
+                    short.MinValue,
+                    short.MaxValue);
+                short y = (short)Mathf.Clamp(
+                    Mathf.RoundToInt(points[i].y * BeamPointNetworkScale),
+                    short.MinValue,
+                    short.MaxValue);
+                ushort packedX = unchecked((ushort)x);
+                ushort packedY = unchecked((ushort)y);
+                int offset = i * 4;
+                bytes[offset] = (byte)(packedX & 0xff);
+                bytes[offset + 1] = (byte)(packedX >> 8);
+                bytes[offset + 2] = (byte)(packedY & 0xff);
+                bytes[offset + 3] = (byte)(packedY >> 8);
+            }
+            return System.Convert.ToBase64String(bytes);
+        }
+
+        private static bool TryUnpackBeamPoints(string packed, int pointCount, out Vector2[] points)
+        {
+            points = null;
+            if (string.IsNullOrEmpty(packed) || pointCount < 2 || pointCount > 14) return false;
+            byte[] bytes;
+            try { bytes = System.Convert.FromBase64String(packed); }
+            catch (System.FormatException) { return false; }
+            if (bytes.Length != pointCount * 4) return false;
+
+            points = new Vector2[pointCount];
+            for (int i = 0; i < pointCount; i++)
+            {
+                int offset = i * 4;
+                short x = unchecked((short)(bytes[offset] | bytes[offset + 1] << 8));
+                short y = unchecked((short)(bytes[offset + 2] | bytes[offset + 3] << 8));
+                points[i] = new Vector2(
+                    x / BeamPointNetworkScale,
+                    y / BeamPointNetworkScale);
+            }
+            return true;
         }
     }
 

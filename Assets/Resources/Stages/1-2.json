@@ -3173,7 +3173,7 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
-            "actionStrength": 500.0,
+            "actionStrength": 300.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,
@@ -3623,7 +3623,7 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": false,
-            "actionStrength": 500.0,
+            "actionStrength": 300.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 0,
@@ -4692,6 +4692,31 @@
             "size": {
                 "x": 27.5,
                 "y": 2.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_redraw_floor_no135_1_2",
+            "type": 261,
+            "position": {
+                "x": 0.25,
+                "y": -33.32
+            },
+            "size": {
+                "x": 10.0,
+                "y": 6.0
             },
             "rotation": 0.0,
             "pathPoints": [],

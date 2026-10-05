@@ -1120,6 +1120,13 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingDrawnEscort);
             }
 
+            StageSlimeCrateChallengeController existingSlimeCrate =
+                stageRoot.GetComponent<StageSlimeCrateChallengeController>();
+            if (existingSlimeCrate != null)
+            {
+                DestroyComponentNow(existingSlimeCrate);
+            }
+
             StageBalloonGalleryController existingBalloonGallery =
                 stageRoot.GetComponent<StageBalloonGalleryController>();
             if (existingBalloonGallery != null)
@@ -1157,7 +1164,7 @@ namespace DrawBody.Prototype
             }
             if (data != null && data.id == "5-3")
             {
-                stageRoot.gameObject.AddComponent<StageDrawnEscortChallengeController>();
+                stageRoot.gameObject.AddComponent<StageSlimeCrateChallengeController>();
             }
             if (data != null && data.id == "10-2")
             {

@@ -46,6 +46,7 @@ namespace DrawBody.Prototype
         private bool bodyAnimationWasActive;
         private bool remoteAnimationVelocityEnabled;
         private Vector2 remoteAnimationVelocity;
+        private bool networkBodyReady = true;
         public Transform CelebrationVisualRoot => bodyRoot;
 
         private struct GeneratedSegment
@@ -197,6 +198,7 @@ namespace DrawBody.Prototype
 
             ApplyFacing();
             ApplyPlayerColor();
+            ApplyNetworkBodyVisibility();
             playerController?.InvalidateBodyColliderCache();
 
             // Drawn species use very different local extents. Rebuilding around
@@ -674,6 +676,31 @@ namespace DrawBody.Prototype
         public Color PlayerColor => playerColor;
         public DrawManager.Species BuiltSpecies => builtSpecies;
 
+        public void SetNetworkBodyReady(bool ready)
+        {
+            networkBodyReady = ready;
+            ApplyNetworkBodyVisibility();
+            playerController?.InvalidateBodyColliderCache();
+            Physics2D.SyncTransforms();
+        }
+
+        private void ApplyNetworkBodyVisibility()
+        {
+            if (bodyRoot != null)
+            {
+                bodyRoot.gameObject.SetActive(networkBodyReady);
+            }
+
+            if (!networkBodyReady)
+            {
+                if (fallbackCollider != null) fallbackCollider.enabled = false;
+                if (fallbackRenderer != null) fallbackRenderer.enabled = false;
+                return;
+            }
+
+            RestoreBuiltBodyFallbackState();
+        }
+
         public float GetRuntimeStrokeWidthInDrawingUnits(float sourceStrokeWidth)
         {
             return GetRuntimeStrokeWidth(sourceStrokeWidth) * pixelsPerWorldUnit;
@@ -967,6 +994,7 @@ namespace DrawBody.Prototype
             RestoreGeneratedSegmentGeometry();
             ApplyFacing();
             RestoreBuiltBodyFallbackState();
+            ApplyNetworkBodyVisibility();
             playerController?.InvalidateBodyColliderCache();
             Physics2D.SyncTransforms();
         }
