@@ -12,6 +12,7 @@ namespace DrawBody.Prototype
         private const float TurtleGameplayCoordinateScale = 3f;
         private const float SlimeGameplayCoordinateScale = 5f;
         private const float ValidationAlarmDisplaySeconds = 2f;
+        private const float StartPointHintDisplaySeconds = 2f;
         public const int BodyCoordinateVersion = 3;
 
         public enum BodyPart
@@ -103,6 +104,7 @@ namespace DrawBody.Prototype
         private Image abilityHeaderImage;
         [SerializeField] private Text partText;
         [SerializeField] private Text messageText;
+        private Text startPointHintText;
         private GameObject validationBanner;
         private Text validationBannerText;
         private Button decideButton;
@@ -155,6 +157,7 @@ namespace DrawBody.Prototype
         private int onlineBodyRevision;
         private bool lastUniqueSpeciesConfirmAllowed = true;
         private float validationAlarmUntil;
+        private float startPointHintUntil;
 
         public event System.Action<BodyPart> CurrentPartChanged;
         public event System.Action<Species> CurrentSpeciesChanged;
@@ -358,6 +361,7 @@ namespace DrawBody.Prototype
             }
 
             polisher?.Polish();
+            EnsureStartPointHint();
             ApplyResponsiveWorkspaceLayout();
             ResolveInkUi();
         }
@@ -395,6 +399,8 @@ namespace DrawBody.Prototype
                 drawArea.anchoredPosition = new Vector2(-230f, workspaceCenterY);
                 drawArea.localScale = Vector3.one * workspaceScale;
             }
+
+            LayoutStartPointHint(workspaceCenterY, workspaceScale);
 
             if (previewRoot != null && previewRoot.parent is RectTransform previewArea)
             {
@@ -611,6 +617,11 @@ namespace DrawBody.Prototype
                 RefreshConnectionMessage();
             }
 
+            if (startPointHintUntil > 0f && Time.unscaledTime >= startPointHintUntil)
+            {
+                HideStartPointHint();
+            }
+
             if (validationBanner != null && validationBanner.activeSelf)
             {
                 validationBanner.transform.SetAsLastSibling();
@@ -665,6 +676,7 @@ namespace DrawBody.Prototype
             else
             {
                 validationAlarmUntil = 0f;
+                HideStartPointHint();
                 UpdateConnectionMarker();
                 SetMessage(string.Empty);
             }
@@ -1576,6 +1588,7 @@ namespace DrawBody.Prototype
                     if (!CanStartStroke(point, out Vector2 startPoint))
                     {
                         drawing = false;
+                        ShowStartPointHint();
                         RefreshConnectionMessage();
                         return;
                     }
@@ -2636,6 +2649,87 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void EnsureStartPointHint()
+        {
+            if (startPointHintText != null || drawPanel == null)
+            {
+                return;
+            }
+
+            Transform existing = drawPanel.transform.Find("DrawStartPointHint");
+            if (existing != null)
+            {
+                startPointHintText = existing.GetComponent<Text>();
+            }
+
+            if (startPointHintText == null)
+            {
+                GameObject hintObject = new GameObject(
+                    "DrawStartPointHint",
+                    typeof(RectTransform),
+                    typeof(CanvasRenderer),
+                    typeof(Text));
+                hintObject.transform.SetParent(drawPanel.transform, false);
+                startPointHintText = hintObject.GetComponent<Text>();
+            }
+
+            Text template = messageText != null ? messageText : drawPanel.GetComponentInChildren<Text>(true);
+            startPointHintText.font = template != null
+                ? template.font
+                : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            startPointHintText.fontSize = 14;
+            startPointHintText.alignment = TextAnchor.MiddleCenter;
+            startPointHintText.color = new Color(0.45f, 0.23f, 0.12f, 0.95f);
+            startPointHintText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            startPointHintText.verticalOverflow = VerticalWrapMode.Truncate;
+            startPointHintText.resizeTextForBestFit = true;
+            startPointHintText.resizeTextMinSize = 10;
+            startPointHintText.resizeTextMaxSize = 14;
+            startPointHintText.raycastTarget = false;
+            startPointHintText.gameObject.SetActive(false);
+        }
+
+        private void LayoutStartPointHint(float workspaceCenterY, float workspaceScale)
+        {
+            EnsureStartPointHint();
+            if (startPointHintText == null)
+            {
+                return;
+            }
+
+            RectTransform rect = startPointHintText.rectTransform;
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(
+                -230f,
+                workspaceCenterY - drawAreaSquareSize * workspaceScale * 0.5f - 6f);
+            rect.sizeDelta = new Vector2(Mathf.Max(300f, drawAreaSquareSize * workspaceScale + 80f), 30f);
+        }
+
+        private void ShowStartPointHint()
+        {
+            EnsureStartPointHint();
+            if (startPointHintText == null)
+            {
+                return;
+            }
+
+            startPointHintText.text = LocalizationManager.Format("msg_start_at_marker", GetPartLabel(currentPart));
+            startPointHintText.gameObject.SetActive(true);
+            startPointHintText.transform.SetAsLastSibling();
+            startPointHintUntil = Time.unscaledTime + StartPointHintDisplaySeconds;
+        }
+
+        private void HideStartPointHint()
+        {
+            startPointHintUntil = 0f;
+            if (startPointHintText != null)
+            {
+                startPointHintText.gameObject.SetActive(false);
+            }
+        }
+
         private void EnsureValidationBanner()
         {
             if (validationBanner != null || drawPanel == null) return;
@@ -3209,7 +3303,6 @@ namespace DrawBody.Prototype
             Vector2 required = GetRequiredLocalStartPoint(currentPart);
             if (Vector2.Distance(point, required) > startPointSnapRadius)
             {
-                SetMessage(LocalizationManager.Format("msg_start_at_marker", GetPartLabel(currentPart)));
                 return false;
             }
 
@@ -3917,6 +4010,10 @@ namespace DrawBody.Prototype
         {
             RefreshInkText();
             RefreshConnectionMessage();
+            if (startPointHintText != null && startPointHintText.gameObject.activeSelf)
+            {
+                startPointHintText.text = LocalizationManager.Format("msg_start_at_marker", GetPartLabel(currentPart));
+            }
         }
     }
 }
