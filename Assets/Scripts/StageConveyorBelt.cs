@@ -17,7 +17,7 @@ namespace DrawBody.Prototype
         {
             marker = GetComponent<StageEditorObject>();
             speed = marker != null && marker.actionStrength > 0f
-                ? Mathf.Clamp(marker.actionStrength, 0.5f, 10f)
+                ? Mathf.Clamp(marker.actionStrength, 0.5f, 30f)
                 : 3f;
             direction = marker != null && Mathf.Cos(marker.movementAngle * Mathf.Deg2Rad) < 0f
                 ? -1f

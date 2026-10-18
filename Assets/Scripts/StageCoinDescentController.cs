@@ -220,7 +220,7 @@ namespace DrawBody.Prototype
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             for (int i = 0; i < players.Length; i++)
-                if (players[i] != null && (players[i].transform.position.y < BottomY || Mathf.Abs(players[i].transform.position.x) > 11f))
+                if (players[i] != null && (players[i].transform.position.y < BottomY || Mathf.Abs(players[i].transform.position.x) > 20.5f))
                     RequestElimination(players[i]);
         }
 

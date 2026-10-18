@@ -1136,6 +1136,7 @@ namespace DrawBody.Prototype
             expectedKey.position = transform.position;
             expectedKey.rotation = transform.rotation;
             expectedKey.localScale *= 0.82f;
+            StageInsertedKeyTurnAnimation.Play(expectedKey, transform);
             if (expectedKey.GetComponent<StagePoseCharacterKey>() != null)
             {
                 Renderer[] insertedRenderers = expectedKey.GetComponentsInChildren<Renderer>(true);

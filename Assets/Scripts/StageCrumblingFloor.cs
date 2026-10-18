@@ -46,12 +46,12 @@ namespace DrawBody.Prototype
 
             BoxCollider2D box = GetComponent<BoxCollider2D>();
             crackDuration = marker != null && marker.actionStrength > 0f
-                ? Mathf.Clamp(marker.actionStrength, 0.1f, 5f)
+                ? Mathf.Clamp(marker.actionStrength, 0.1f, 10f)
                 : 0.4f;
             Vector2 floorSize = box != null ? box.size : new Vector2(3f, 0.5f);
             cracks = CreateCracks(floorSize);
             CreateCountdownDisplay(floorSize);
-            SetCrackAlpha(0.2f);
+            SetCrackAlpha(0.68f);
             RefreshCountdownText();
         }
 
@@ -184,7 +184,7 @@ namespace DrawBody.Prototype
         {
             RefreshCountdownText();
             float crackProgress = Mathf.Clamp01(elapsed / Mathf.Max(0.01f, crackDuration));
-            SetCrackAlpha(Mathf.Lerp(0.2f, 1f, crackProgress));
+            SetCrackAlpha(Mathf.Lerp(0.68f, 1f, crackProgress));
 
             if (elapsed < crackDuration)
             {
@@ -401,22 +401,32 @@ namespace DrawBody.Prototype
             Material material = existing != null
                 ? existing.sharedMaterial
                 : DoodleRuntimeAssets.LineMaterial;
-            LineRenderer[] result = new LineRenderer[3];
+            int crackCount = Mathf.Clamp(Mathf.CeilToInt(size.x / 3.5f), 3, 40);
+            LineRenderer[] result = new LineRenderer[crackCount];
+            float horizontalMargin = Mathf.Min(0.8f, size.x * 0.15f);
             for (int i = 0; i < result.Length; i++)
             {
-                float x = Mathf.Lerp(-size.x * 0.3f, size.x * 0.3f, i / 2f);
+                float ratio = result.Length > 1 ? i / (float)(result.Length - 1) : 0.5f;
+                float x = Mathf.Lerp(
+                    -size.x * 0.5f + horizontalMargin,
+                    size.x * 0.5f - horizontalMargin,
+                    ratio);
+                float direction = i % 2 == 0 ? 1f : -1f;
                 GameObject crackObject = new GameObject("Crumbling Crack " + (i + 1));
                 crackObject.transform.SetParent(transform, false);
                 LineRenderer line = crackObject.AddComponent<LineRenderer>();
                 line.useWorldSpace = false;
-                line.positionCount = 4;
-                line.SetPosition(0, new Vector3(x - 0.08f, size.y * 0.48f, -0.08f));
-                line.SetPosition(1, new Vector3(x + 0.06f, size.y * 0.14f, -0.08f));
-                line.SetPosition(2, new Vector3(x - 0.04f, -size.y * 0.12f, -0.08f));
-                line.SetPosition(3, new Vector3(x + 0.08f, -size.y * 0.48f, -0.08f));
-                line.startWidth = 0.035f;
-                line.endWidth = 0.035f;
+                line.positionCount = 6;
+                line.SetPosition(0, new Vector3(x - 0.16f * direction, size.y * 0.49f, -0.08f));
+                line.SetPosition(1, new Vector3(x + 0.12f * direction, size.y * 0.29f, -0.08f));
+                line.SetPosition(2, new Vector3(x - 0.10f * direction, size.y * 0.1f, -0.08f));
+                line.SetPosition(3, new Vector3(x + 0.15f * direction, -size.y * 0.08f, -0.08f));
+                line.SetPosition(4, new Vector3(x - 0.08f * direction, -size.y * 0.28f, -0.08f));
+                line.SetPosition(5, new Vector3(x + 0.14f * direction, -size.y * 0.49f, -0.08f));
+                line.startWidth = 0.075f;
+                line.endWidth = 0.06f;
                 line.numCapVertices = 4;
+                line.numCornerVertices = 2;
                 line.material = material;
                 line.sortingOrder = 20;
                 result[i] = line;
@@ -431,7 +441,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            Color color = new Color(0.36f, 0.12f, 0.08f, Mathf.Clamp01(alpha));
+            Color color = new Color(0.22f, 0.045f, 0.025f, Mathf.Clamp01(alpha));
             for (int i = 0; i < cracks.Length; i++)
             {
                 if (cracks[i] != null)

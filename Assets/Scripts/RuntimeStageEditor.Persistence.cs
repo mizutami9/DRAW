@@ -143,7 +143,9 @@ namespace DrawBody.Prototype
                     displayName = string.IsNullOrEmpty(loaded.displayName) ? displayName : loaded.displayName;
                     stageBackgroundColor = StageBackgroundAppearance.Parse(loaded.backgroundColorHex);
                     stageRuleMode = loaded.ruleMode;
-                    stageTimeLimitSeconds = Mathf.Clamp(loaded.timeLimitSeconds > 0f ? loaded.timeLimitSeconds : 60f, 5f, 1800f);
+                    stageTimeLimitSeconds = loaded.id == "9-2" && loaded.timeLimitSeconds <= 0f
+                        ? 0f
+                        : Mathf.Clamp(loaded.timeLimitSeconds > 0f ? loaded.timeLimitSeconds : 60f, 5f, 1800f);
                     stageCollectionTarget = loaded.collectionTarget == StageObjectType.CollectibleCoin
                         || loaded.collectionTarget == StageObjectType.CollectibleStar
                             ? loaded.collectionTarget
@@ -155,6 +157,14 @@ namespace DrawBody.Prototype
                         {
                             objects.Add(CloneData(loaded.objects[i]));
                         }
+                    }
+                    if (loaded.id == "9-2")
+                    {
+                        StageLoader.PopulateStage92CoinField(objects);
+                    }
+                    if (loaded.id == "3-1")
+                    {
+                        StageLoader.PopulateStage31CoopCourse(objects);
                     }
                 }
             }
@@ -187,12 +197,22 @@ namespace DrawBody.Prototype
             EnsureUniqueObjectIds();
             ClearEditorObjects();
             EnsureReferences();
+            objectFactory?.ConfigureStageVisualTheme(stageId, editorRoot);
             objectFactory?.FitSeparateBridges(objects);
+            if (stageId == "3-1")
+            {
+                // FitSeparateBridges and per-object snapping run after loading.
+                // Reassert the authored inner-face seams before constructing
+                // the editor preview so it matches gameplay exactly.
+                StageLoader.NormalizeStage31FrameSeams(objects);
+            }
             for (int i = 0; i < objects.Count; i++)
             {
                 StageObjectData data = objects[i];
                 if (snapToGrid
                     && data != null
+                    && !(stageId == "3-1"
+                        && StageLoader.IsStage31FrameSeamObject(data.objectId))
                     && data.keepSeparate
                     && data.type == StageObjectType.Platform
                     && data.size.x > data.size.y * 1.5f)
@@ -203,6 +223,11 @@ namespace DrawBody.Prototype
                 }
 
                 CreateEditorObject(data);
+            }
+
+            if (stageId == "9-2")
+            {
+                objectFactory?.CreateNightCityStageBackdrop(stageId, objects, editorRoot);
             }
 
             RefreshBridgeConnectionVisuals();

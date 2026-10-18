@@ -13,6 +13,7 @@ namespace DrawBody.Prototype
         private const string GimmickKindSessionEnded = "session_ended";
         private const string GimmickKindCollectRequest = "collect_request";
         private const string GimmickKindCollectState = "collect_state";
+        private const string GimmickKindCollectSnapshot = "collect_snapshot";
         private const string GimmickKindChallengeFailed = "challenge_failed";
         private const string GimmickKindSpeciesSwapRequest = "species_swap_request";
         private const string GimmickKindSpeciesSwapResponse = "species_swap_response";
@@ -144,6 +145,7 @@ namespace DrawBody.Prototype
         private Vector3 primaryChallengeStartPosition;
         private Vector3 secondaryChallengeStartPosition;
         public bool IsTimedCollectionChallenge => stageRuleMode == StageRuleMode.TimedCollection;
+        public bool IsUntimedCollectionChallenge => IsTimedCollectionChallenge && currentStageId == "9-2";
         public bool IsSurvivalChallenge => stageRuleMode == StageRuleMode.Survival;
         private bool UsesEliminationController => IsSurvivalChallenge
             || currentStageId == "9-2"
@@ -263,6 +265,14 @@ namespace DrawBody.Prototype
             public int Count;
             public float RemainingSeconds;
             public bool PlayFeedback;
+        }
+
+        [System.Serializable]
+        private sealed class CollectionSnapshotState
+        {
+            public string[] CollectibleIds;
+            public int Count;
+            public float RemainingSeconds;
         }
 
         private void Awake()
@@ -997,7 +1007,11 @@ namespace DrawBody.Prototype
                 ? data.collectionTarget
                 : StageObjectType.CollectibleFish;
             challengeRemaining = Mathf.Clamp(data != null ? data.timeLimitSeconds : 60f, 5f, 1800f);
-            if (data != null && data.id == "2-2")
+            if (data != null && data.id == "9-2")
+            {
+                challengeRemaining = 0f;
+            }
+            else if (data != null && data.id == "2-2")
             {
                 int playerCount = Mathf.Clamp(GetInkBudgetPlayerCount(), 1, 4);
                 challengeRemaining = playerCount >= 3 ? 45f : 60f;
@@ -1033,6 +1047,11 @@ namespace DrawBody.Prototype
             requiredCollectionCount = configuredCount > 0
                 ? Mathf.Clamp(configuredCount, 1, 2000)
                 : totalCollectionTargetCount;
+            if (data != null && data.id == "9-2")
+            {
+                int playerCount = Mathf.Clamp(GetInkBudgetPlayerCount(), 1, 4);
+                requiredCollectionCount = Mathf.Min(totalCollectionTargetCount, playerCount * 150);
+            }
             requiredCollectionCount = Mathf.Max(1, requiredCollectionCount);
             uiManager?.SetChallengeHud(
                 stageRuleMode == StageRuleMode.TimedCollection,
@@ -1050,7 +1069,6 @@ namespace DrawBody.Prototype
                 || stageRuleMode == StageRuleMode.BlockBreaker
                 || currentStageId == "2-2"
                 || currentStageId == "2-3"
-                || currentStageId == "7-1"
                 || currentStageId == "9-2"
                 || currentStageId == "9-3"
                 || currentStageId == "10-1"
@@ -1117,7 +1135,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (!LocalMultiplayerDebugMode.NoTimeLimit)
+            if (!IsUntimedCollectionChallenge && !LocalMultiplayerDebugMode.NoTimeLimit)
                 challengeRemaining = Mathf.Max(0f, challengeRemaining - Time.unscaledDeltaTime);
             uiManager?.SetChallengeHud(true, challengeRemaining, collectionTarget, collectedCount, requiredCollectionCount, false);
             if (IsOnlineInStage() && IsLocalOnlineHost(onlineManager.CurrentLobby)
@@ -1126,7 +1144,8 @@ namespace DrawBody.Prototype
                 nextChallengeSyncAt = Time.unscaledTime + 1f;
                 BroadcastCollectionSnapshot();
             }
-            if (LocalMultiplayerDebugMode.NoTimeLimit
+            if (IsUntimedCollectionChallenge
+                || LocalMultiplayerDebugMode.NoTimeLimit
                 || challengeRemaining > 0f
                 || (IsOnlineInStage() && !IsLocalOnlineHost(onlineManager.CurrentLobby)))
             {
@@ -1197,33 +1216,46 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (collectedObjectIds.Count == 0)
+            CollectionSnapshotState state = new CollectionSnapshotState
             {
-                SendCollectionSnapshotEntry(string.Empty);
-                return;
-            }
-
-            foreach (string objectId in collectedObjectIds)
-            {
-                SendCollectionSnapshotEntry(objectId);
-            }
-        }
-
-        private void SendCollectionSnapshotEntry(string objectId)
-        {
-            CollectionState state = new CollectionState
-            {
-                CollectibleId = objectId,
+                CollectibleIds = new List<string>(collectedObjectIds).ToArray(),
                 Count = collectedCount,
-                RemainingSeconds = challengeRemaining,
-                PlayFeedback = false
+                RemainingSeconds = challengeRemaining
             };
             onlineManager.SendGimmickData(new OnlineGimmickData
             {
                 ObjectId = currentStageId,
-                Kind = GimmickKindCollectState,
+                Kind = GimmickKindCollectSnapshot,
                 Json = JsonUtility.ToJson(state)
             });
+        }
+
+        private void ApplyCollectionSnapshot(CollectionSnapshotState state)
+        {
+            if (state == null)
+            {
+                return;
+            }
+
+            if (state.CollectibleIds != null)
+            {
+                for (int i = 0; i < state.CollectibleIds.Length; i++)
+                {
+                    string objectId = state.CollectibleIds[i];
+                    if (string.IsNullOrEmpty(objectId) || !collectedObjectIds.Add(objectId))
+                    {
+                        continue;
+                    }
+
+                    FindCollectible(objectId)?.ApplyCollected(null, false);
+                }
+            }
+            collectedCount = Mathf.Max(collectedCount, state.Count);
+            if (state.RemainingSeconds > 0f)
+            {
+                challengeRemaining = state.RemainingSeconds;
+            }
+            uiManager?.SetChallengeHud(true, challengeRemaining, collectionTarget, collectedCount, requiredCollectionCount, false);
         }
 
         private void ApplyChallengeFailed()
@@ -1264,12 +1296,14 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bool firstPlayerWins = currentStageId == "10-1" || currentStageId == "11-1";
-            if (firstPlayerWins)
+            if (currentStageId == "10-1")
             {
                 StageIceSpeedrunController speedrun = Object.FindFirstObjectByType<StageIceSpeedrunController>();
-                if (speedrun != null && !speedrun.CanFinish) return;
+                speedrun?.SetPlayerGoalState(goalPlayer, inside);
+                return;
             }
+
+            bool firstPlayerWins = currentStageId == "11-1";
 
             if (IsOnlineInStage())
             {
@@ -1466,11 +1500,10 @@ namespace DrawBody.Prototype
                 PlayerGoalState goalState = JsonUtility.FromJson<PlayerGoalState>(data.Json);
                 bool inside = goalState != null && goalState.Inside;
                 SetOnlineGoalState(data.PlayerId, inside);
-                if ((currentStageId == "10-1" || currentStageId == "11-1") && inside
+                if (currentStageId == "11-1" && inside
                     && IsLocalOnlineHost(onlineManager.CurrentLobby))
                 {
-                    StageIceSpeedrunController speedrun = Object.FindFirstObjectByType<StageIceSpeedrunController>();
-                    if (speedrun == null || speedrun.CanFinish) ClearStage();
+                    ClearStage();
                 }
                 else TryClearWhenAllOnlinePlayersAtGoal();
             }
@@ -1502,6 +1535,10 @@ namespace DrawBody.Prototype
                 {
                     ApplyCollectibleState(state);
                 }
+            }
+            else if (data.Kind == GimmickKindCollectSnapshot && IsOnlineHostPlayer(data.PlayerId))
+            {
+                ApplyCollectionSnapshot(JsonUtility.FromJson<CollectionSnapshotState>(data.Json));
             }
             else if (data.Kind == GimmickKindChallengeFailed && IsOnlineHostPlayer(data.PlayerId))
             {
@@ -1924,6 +1961,8 @@ namespace DrawBody.Prototype
             Object.FindFirstObjectByType<StageSlimeCrateChallengeController>()
                 ?.EnsureInitializedForPlay();
             Object.FindFirstObjectByType<StageAquariumSealController>()
+                ?.EnsureInitializedForPlay();
+            Object.FindFirstObjectByType<Stage71PoseRoomsController>()
                 ?.EnsureInitializedForPlay();
             Object.FindFirstObjectByType<StageTiltBoardController>()
                 ?.EnsureInitializedForPlay();
@@ -4620,21 +4659,22 @@ namespace DrawBody.Prototype
             targetPlayer.transform.localScale = state.OriginalScale;
             Vector3 respawnDestination = targetPlayer.transform.position;
             Vector3 respawnOffset;
-            bool nearestRedrawResolved = false;
-            Vector3 nearestRedraw;
+            bool checkpointResolved = false;
+            Vector3 visitedRedraw;
             if (IsChallengeReadyRoomActive
                 && challengeReadyRoom.TryGetAssignedRespawnPosition(targetPlayer, out Vector3 assignedRoomRespawn))
             {
                 respawnDestination = assignedRoomRespawn;
-                nearestRedrawResolved = true;
+                checkpointResolved = true;
             }
             else if (!RequiresChallengeReadyRoom()
-                && StageRedrawZone.TryGetNearestRespawnPoint(state.DeathPosition, out nearestRedraw))
+                && StageRedrawZone.TryGetLastVisitedRespawnPoint(
+                    targetPlayer, state.DeathPosition, out visitedRedraw))
             {
-                nearestRedrawResolved = TryPlaceAtSafeSpawn(
-                    targetPlayer, nearestRedraw, out respawnDestination);
+                checkpointResolved = TryPlaceAtSafeSpawn(
+                    targetPlayer, visitedRedraw, out respawnDestination);
             }
-            if (nearestRedrawResolved)
+            if (checkpointResolved)
             {
                 respawnOffset = spawnPoint != null
                     ? respawnDestination - spawnPoint.position
@@ -4656,7 +4696,7 @@ namespace DrawBody.Prototype
                     ? spawnPoint.position + respawnOffset
                     : targetPlayer.transform.position;
             }
-            if (!nearestRedrawResolved && spawnPoint != null
+            if (!checkpointResolved && spawnPoint != null
                 && TryPlaceAtSafeSpawn(targetPlayer, respawnDestination, out Vector3 safeRespawn))
             {
                 respawnDestination = safeRespawn;

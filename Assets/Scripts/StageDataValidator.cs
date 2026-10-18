@@ -91,7 +91,7 @@ namespace DrawBody.Prototype
 
             if (spawnCount == 0 && stage.id != "1-0")
                 issues.Add(new StageValidationIssue(StageValidationSeverity.Warning, null, "No Spawn object is defined."));
-            if (stage.ruleMode != StageRuleMode.Normal && stage.timeLimitSeconds <= 0f)
+            if (stage.ruleMode != StageRuleMode.Normal && stage.id != "9-2" && stage.timeLimitSeconds <= 0f)
                 issues.Add(new StageValidationIssue(StageValidationSeverity.Error, null, "Timed stage must have a positive time limit."));
             if (stage.ruleMode == StageRuleMode.TimedCollection && stage.requiredCollectionCount < 0)
                 issues.Add(new StageValidationIssue(StageValidationSeverity.Error, null, "Collection target must be greater than zero."));

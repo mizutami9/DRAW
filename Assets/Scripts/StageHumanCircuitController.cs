@@ -20,6 +20,11 @@ namespace DrawBody.Prototype
         private const float BoxButtonCooldown = 0.45f;
         private const float TerminalContactDistance = 0.5f;
         private const float PlayerContactDistance = 0.16f;
+        private const float RoomHalfWidth = 21f;
+        private const float FloorY = -7.55f;
+        private const float CeilingY = 8.45f;
+        private const float RoundTransitionSeconds = 1.5f;
+        private static readonly float[] RoomCenters = { 0f, 26f, 55f, 85f, 120f };
 
         [System.Serializable]
         private sealed class NetworkState
@@ -29,6 +34,8 @@ namespace DrawBody.Prototype
             public float RelayProgress;
             public int BoxPreviewPacked;
             public int BoxPressedMask;
+            public int CurrentRound;
+            public float TransitionRemaining;
         }
 
         [System.Serializable]
@@ -168,6 +175,7 @@ namespace DrawBody.Prototype
             public readonly List<Transform> RelayPulses = new List<Transform>();
             public readonly List<Vector2> RelayStarts = new List<Vector2>();
             public readonly List<Vector2> RelayEnds = new List<Vector2>();
+            public Transform Root;
         }
 
         private sealed class PlayerShape
@@ -235,6 +243,11 @@ namespace DrawBody.Prototype
 
         private readonly List<RoomCircuit> rooms = new List<RoomCircuit>(5);
         private readonly List<BoxStation> boxStations = new List<BoxStation>(5);
+        private readonly List<GameObject>[] roundObjects =
+        {
+            new List<GameObject>(), new List<GameObject>(), new List<GameObject>(),
+            new List<GameObject>(), new List<GameObject>()
+        };
         private readonly List<PlayerShape> playerShapes = new List<PlayerShape>(4);
         private readonly Dictionary<PlayerController2D, PlayerElectricVisual> playerEffects =
             new Dictionary<PlayerController2D, PlayerElectricVisual>();
@@ -243,6 +256,7 @@ namespace DrawBody.Prototype
         private readonly Queue<PlayerController2D> playerQueue = new Queue<PlayerController2D>();
 
         private StageManager stageManager;
+        private StageLoader stageLoader;
         private OnlineManager onlineManager;
         private AudioSource audioSource;
         private bool previewOnly;
@@ -258,6 +272,19 @@ namespace DrawBody.Prototype
         private float nextCompleteRequestAt;
         private int boxPreviewStep;
         private int boxPressedMask;
+        private int currentRound;
+        private int activeBuildRoomIndex;
+        private Transform activeBuildRoot;
+        private bool transitioning;
+        private float transitionEndsAt;
+        private Transform roomShell;
+        private TextMesh monitorText;
+        private Camera gameCamera;
+        private CameraFollow2D cameraFollow;
+        private Vector3 previousCameraPosition;
+        private float previousCameraSize;
+        private bool previousCameraFollowEnabled;
+        private bool cameraCaptured;
 
         private static readonly Vector2[] BoxSizes =
         {
@@ -285,6 +312,7 @@ namespace DrawBody.Prototype
         {
             previewOnly = creatingEditorPreview;
             stageManager = Object.FindFirstObjectByType<StageManager>();
+            stageLoader = Object.FindFirstObjectByType<StageLoader>();
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             if (previewOnly)
             {
@@ -310,6 +338,7 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            if (!previewOnly) RestoreCamera();
         }
 
         private void Start()
@@ -324,8 +353,11 @@ namespace DrawBody.Prototype
 
             playerCount = Mathf.Clamp(stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1, 1, 4);
             BuildStageCircuits();
+            PrepareSequentialStage();
             BuildBoxStations();
             for (int i = 0; i < rooms.Count; i++) rooms[i].Completed = (completedMask & (1 << i)) != 0;
+            CaptureCamera();
+            ActivateRound(0, false);
             BroadcastState(true);
         }
 
@@ -340,17 +372,29 @@ namespace DrawBody.Prototype
             }
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
 
+            ConfigureCamera();
             motionClock += Time.deltaTime;
             UpdateMovingGaps();
             UpdateDoors();
             UpdateBoxStations();
 
-            if (HasAuthority && Time.unscaledTime >= nextContactAt)
+            if (HasAuthority && transitioning && Time.unscaledTime >= transitionEndsAt)
+            {
+                if (currentRound >= rooms.Count - 1)
+                {
+                    stageManager.ClearStage();
+                    enabled = false;
+                    return;
+                }
+                ActivateRound(currentRound + 1, true);
+            }
+
+            if (!transitioning && HasAuthority && Time.unscaledTime >= nextContactAt)
             {
                 nextContactAt = Time.unscaledTime + ContactInterval;
                 EvaluateActiveRoom(ContactInterval);
             }
-            else if (!HasAuthority && Time.unscaledTime >= nextContactAt)
+            else if (!transitioning && !HasAuthority && Time.unscaledTime >= nextContactAt)
             {
                 nextContactAt = Time.unscaledTime + ContactInterval;
                 EvaluateClientPresentation();
@@ -379,7 +423,6 @@ namespace DrawBody.Prototype
                     rooms[i].DoorBaseScale = rooms[i].Door.transform.localScale;
                     rooms[i].DoorColliders = rooms[i].Door.GetComponentsInChildren<Collider2D>(true);
                 }
-                CreateRoomSign(i);
             }
         }
 
@@ -408,6 +451,165 @@ namespace DrawBody.Prototype
                 boxStations.Add(station);
             }
             nextBoxPreviewAt = Time.unscaledTime + BoxPreviewInterval;
+        }
+
+        private void PrepareSequentialStage()
+        {
+            StageEditorObject[] authored = GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < authored.Length; i++)
+            {
+                StageEditorObject item = authored[i];
+                if (item == null) continue;
+                int round = ClassifyAuthoredObject(item);
+                item.gameObject.SetActive(false);
+                if (round < 0) continue;
+                Vector3 position = item.transform.position;
+                position.x -= RoomCenters[round];
+                if ((item.objectId ?? string.Empty).StartsWith(
+                    "13-3_box_generator_", System.StringComparison.Ordinal))
+                {
+                    position.x = 16.4f;
+                    position.y = 6.1f;
+                }
+                else if ((item.objectId ?? string.Empty).StartsWith(
+                    "13-3_box_button_", System.StringComparison.Ordinal))
+                {
+                    position.x = 18.3f;
+                    position.y = FloorY + 0.45f;
+                }
+                item.transform.position = position;
+                roundObjects[round].Add(item.gameObject);
+            }
+
+            GameObject shell = new GameObject("13-3 Sequential Circuit Room");
+            shell.transform.SetParent(transform, false);
+            roomShell = shell.transform;
+            StageEscortController.AddFilledRect(roomShell, "Room Paper",
+                new Vector2(0f, (FloorY + CeilingY) * 0.5f),
+                new Vector2(RoomHalfWidth * 2f, CeilingY - FloorY),
+                new Color(0.88f, 0.96f, 1f, 0.3f), -55);
+            for (int i = 0; i < 14; i++)
+            {
+                float y = FloorY + 1f + i * 1.05f;
+                StageGun.AddLine(roomShell, "Notebook Line " + i,
+                    new[] { new Vector2(-20.5f, y), new Vector2(20.5f, y) },
+                    0.025f, new Color(0.2f, 0.65f, 0.92f, 0.16f), -50);
+            }
+            CreateRoomSolid("Circuit Floor", new Vector2(0f, FloorY), new Vector2(42f, 0.9f));
+            CreateRoomSolid("Circuit Ceiling", new Vector2(0f, CeilingY), new Vector2(42f, 0.9f));
+            float wallY = (FloorY + CeilingY) * 0.5f;
+            CreateRoomSolid("Circuit Left Wall", new Vector2(-RoomHalfWidth, wallY), new Vector2(0.9f, 16.9f));
+            CreateRoomSolid("Circuit Right Wall", new Vector2(RoomHalfWidth, wallY), new Vector2(0.9f, 16.9f));
+            CreateMonitor();
+        }
+
+        private static int ClassifyAuthoredObject(StageEditorObject item)
+        {
+            string id = item.objectId ?? string.Empty;
+            if (item.type == StageObjectType.RedrawZone)
+            {
+                float x = item.transform.position.x;
+                if (x < 12f) return 0;
+                if (x < 40f) return 1;
+                if (x < 70f) return 2;
+                if (x < 101f) return 3;
+                return 4;
+            }
+            for (int round = 0; round < 5; round++)
+            {
+                int number = round + 1;
+                if (id == "13-3_box_generator_" + number || id == "13-3_box_button_" + number)
+                    return round;
+                if (round > 0 && id.StartsWith("13-3_room" + number + "_", System.StringComparison.Ordinal))
+                    return round;
+            }
+            return -1;
+        }
+
+        private void CreateRoomSolid(string name, Vector2 position, Vector2 size)
+        {
+            GameObject solid = new GameObject(name);
+            solid.transform.SetParent(roomShell, false);
+            solid.transform.position = position;
+            solid.layer = 6;
+            solid.tag = "Ground";
+            BoxCollider2D collider = solid.AddComponent<BoxCollider2D>();
+            collider.size = size;
+            StageEscortController.AddFilledRect(solid.transform, "Crayon Fill", Vector2.zero, size,
+                new Color(0.73f, 0.65f, 0.53f, 0.95f), 2);
+            Vector2 half = size * 0.5f;
+            StageGun.AddLine(solid.transform, "Pencil Outline", new[]
+            {
+                new Vector2(-half.x, -half.y), new Vector2(-half.x, half.y),
+                new Vector2(half.x, half.y), new Vector2(half.x, -half.y),
+                new Vector2(-half.x, -half.y)
+            }, 0.055f, new Color(0.2f, 0.15f, 0.1f, 0.9f), 4);
+        }
+
+        private void CreateMonitor()
+        {
+            GameObject monitor = new GameObject("Circuit Stage Monitor");
+            monitor.transform.SetParent(roomShell, false);
+            monitor.transform.position = new Vector3(0f, 7.25f, 0f);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(11.5f, 1.65f), 40);
+            monitorText = StageEscortController.CreateText(monitor.transform, "Stage Text",
+                new Vector3(0f, 0f, -0.05f), 56, 0.135f,
+                new Color(0.04f, 0.16f, 0.23f, 1f), 44);
+        }
+
+        private void ActivateRound(int round, bool broadcast)
+        {
+            currentRound = Mathf.Clamp(round, 0, rooms.Count - 1);
+            transitioning = false;
+            transitionEndsAt = 0f;
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                bool active = i == currentRound;
+                if (rooms[i].Root != null) rooms[i].Root.gameObject.SetActive(active);
+                for (int j = 0; j < roundObjects[i].Count; j++)
+                    if (roundObjects[i][j] != null) roundObjects[i][j].SetActive(active);
+            }
+            for (int i = 0; i < boxStations.Count; i++) boxStations[i].Dropper?.ClearSpawnedBoxes();
+
+            Vector2 spawn = new Vector2(-19f, FloorY + 1.3f);
+            stageLoader?.SetRuntimeSpawnPosition(spawn);
+            StartCoroutine(PositionPlayersAfterRoundChange(spawn));
+            RefreshMonitor();
+            if (broadcast) BroadcastState(true);
+        }
+
+        private IEnumerator PositionPlayersAfterRoundChange(Vector2 spawn)
+        {
+            yield return null;
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+            int placed = 0;
+            for (int i = 0; i < players.Length; i++)
+            {
+                PlayerController2D player = players[i];
+                if (IsOnline && stageManager != null && player.transform != stageManager.ActivePlayerTransform) continue;
+                Vector2 position = spawn + Vector2.right * (placed * 1.15f);
+                Rigidbody2D body = player.GetComponent<Rigidbody2D>();
+                if (body != null)
+                {
+                    body.position = position;
+                    body.linearVelocity = Vector2.zero;
+                    body.angularVelocity = 0f;
+                }
+                else player.transform.position = position;
+                player.ResetMotion();
+                stageManager?.RecordAssignedPlayerStart(player, position);
+                placed++;
+            }
+            Physics2D.SyncTransforms();
+        }
+
+        private void RefreshMonitor()
+        {
+            if (monitorText == null) return;
+            monitorText.text = transitioning
+                ? LocalizationManager.Format("pose_rooms_round_clear", currentRound + 1)
+                : LocalizationManager.Format("grain_rain_round", currentRound + 1, rooms.Count);
         }
 
         private RoomCircuit BuildRoomOne()
@@ -481,8 +683,8 @@ namespace DrawBody.Prototype
             for (int i = 0; i < 3; i++)
             {
                 room.Paths.Add(CreatePath(source, ends[i], new List<Vector2> { center }, directions[i]));
-                room.RelayStarts.Add(source);
-                room.RelayEnds.Add(ends[i]);
+                room.RelayStarts.Add(MapPoint(source));
+                room.RelayEnds.Add(MapPoint(ends[i]));
                 room.RelayPulses.Add(CreateRelayPulse(source, i));
             }
             return room;
@@ -491,8 +693,8 @@ namespace DrawBody.Prototype
         private Transform CreateRelayPulse(Vector2 position, int index)
         {
             GameObject pulse = new GameObject("Relay Spark");
-            pulse.transform.SetParent(transform, false);
-            pulse.transform.position = position;
+            pulse.transform.SetParent(GetBuildRoot(), false);
+            pulse.transform.position = MapPoint(position);
             pulse.transform.localScale = Vector3.one * 0.72f;
             SpriteRenderer renderer = pulse.AddComponent<SpriteRenderer>();
             renderer.sprite = DoodleRuntimeAssets.CircleSprite;
@@ -508,27 +710,24 @@ namespace DrawBody.Prototype
 
         private RoomCircuit NewRoom(int index, Vector2 source)
         {
-            RoomCircuit room = new RoomCircuit { Index = index };
+            activeBuildRoomIndex = index;
+            GameObject root = new GameObject("Circuit Stage " + (index + 1));
+            root.transform.SetParent(transform, false);
+            activeBuildRoot = root.transform;
+            RoomCircuit room = new RoomCircuit { Index = index, Root = root.transform };
             CreatePowerSource(source, index);
-            Vector2 statusPosition = index == 0 ? new Vector2(8.4f, 6.55f)
-                : index == 1 ? new Vector2(37f, 6.55f)
-                : index == 2 ? new Vector2(66.8f, 6.55f)
-                : index == 3 ? new Vector2(96.5f, 6.55f)
-                : new Vector2(136.5f, 6.55f);
-            room.Status = StageEscortController.CreateText(transform, "Circuit Status " + index,
-                new Vector3(statusPosition.x, statusPosition.y, -0.45f), 54, 0.12f,
-                new Color(0.2f, 0.95f, 1f, 1f), 42);
-            room.Status.text = string.Empty;
             return room;
         }
 
         private CircuitPath CreatePath(Vector2 source, Vector2 bulbPosition, List<Vector2> gapCenters, Vector2 direction)
         {
             CircuitPath path = new CircuitPath();
+            source = MapPoint(source);
+            bulbPosition = MapPoint(bulbPosition);
             float halfGap = playerCount >= 3 ? 1.25f : 1.45f;
             for (int i = 0; i < gapCenters.Count; i++)
             {
-                Vector2 center = gapCenters[i];
+                Vector2 center = MapPoint(gapCenters[i]);
                 Vector2 left = center - direction * halfGap;
                 Vector2 right = center + direction * halfGap;
                 path.Gaps.Add(new Gap
@@ -556,7 +755,7 @@ namespace DrawBody.Prototype
         private Terminal CreateTerminal(Vector2 position)
         {
             GameObject core = new GameObject("Broken Wire Terminal");
-            core.transform.SetParent(transform, false);
+            core.transform.SetParent(GetBuildRoot(), false);
             core.transform.position = new Vector3(position.x, position.y, -0.28f);
             SpriteRenderer coreRenderer = core.AddComponent<SpriteRenderer>();
             Sprite terminalSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/circuit-terminal");
@@ -567,7 +766,7 @@ namespace DrawBody.Prototype
             coreRenderer.sortingOrder = 25;
 
             GameObject halo = new GameObject("Terminal Glow");
-            halo.transform.SetParent(transform, false);
+            halo.transform.SetParent(GetBuildRoot(), false);
             halo.transform.position = new Vector3(position.x, position.y, -0.27f);
             halo.transform.localScale = Vector3.one * 0.95f;
             SpriteRenderer haloRenderer = halo.AddComponent<SpriteRenderer>();
@@ -608,7 +807,7 @@ namespace DrawBody.Prototype
             bool usesStart, bool usesEnd)
         {
             GameObject root = new GameObject("Circuit Wire");
-            root.transform.SetParent(transform, false);
+            root.transform.SetParent(GetBuildRoot(), false);
             LineRenderer dark = root.AddComponent<LineRenderer>();
             ConfigureLine(dark, 0.19f, new Color(0.08f, 0.09f, 0.11f, 1f), 20);
             GameObject pencilObject = new GameObject("Colored Pencil Wire");
@@ -651,7 +850,7 @@ namespace DrawBody.Prototype
         private BulbVisual CreateBulb(Vector2 position)
         {
             GameObject halo = new GameObject("Bulb Halo");
-            halo.transform.SetParent(transform, false);
+            halo.transform.SetParent(GetBuildRoot(), false);
             halo.transform.position = new Vector3(position.x, position.y, -0.22f);
             halo.transform.localScale = Vector3.one * 2.6f;
             SpriteRenderer haloRenderer = halo.AddComponent<SpriteRenderer>();
@@ -660,7 +859,7 @@ namespace DrawBody.Prototype
             haloRenderer.enabled = false;
 
             GameObject glass = new GameObject("Large Circuit Bulb");
-            glass.transform.SetParent(transform, false);
+            glass.transform.SetParent(GetBuildRoot(), false);
             glass.transform.position = new Vector3(position.x, position.y, -0.3f);
             SpriteRenderer glassRenderer = glass.AddComponent<SpriteRenderer>();
             Sprite bulbSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/circuit-bulb");
@@ -675,7 +874,7 @@ namespace DrawBody.Prototype
             }
 
             GameObject filamentObject = new GameObject("Bulb Filament");
-            filamentObject.transform.SetParent(transform, false);
+            filamentObject.transform.SetParent(GetBuildRoot(), false);
             LineRenderer filament = filamentObject.AddComponent<LineRenderer>();
             ConfigureLine(filament, 0.07f, Color.black, 30);
             filament.positionCount = 4;
@@ -690,8 +889,9 @@ namespace DrawBody.Prototype
 
         private void CreatePowerSource(Vector2 position, int roomIndex)
         {
+            position = MapPoint(position);
             GameObject root = new GameObject("Power Source Room " + (roomIndex + 1));
-            root.transform.SetParent(transform, false);
+            root.transform.SetParent(GetBuildRoot(), false);
             root.transform.position = new Vector3(position.x, position.y, -0.28f);
             Sprite powerSprite = Resources.Load<Sprite>("StageObjects/NicoDraw/circuit-power-source");
             if (powerSprite != null)
@@ -721,6 +921,19 @@ namespace DrawBody.Prototype
                 Mathf.Max(0.001f, worldSize.x) / sprite.bounds.size.x,
                 Mathf.Max(0.001f, worldSize.y) / sprite.bounds.size.y,
                 1f);
+        }
+
+        private Transform GetBuildRoot()
+        {
+            return activeBuildRoot != null ? activeBuildRoot : transform;
+        }
+
+        private Vector2 MapPoint(Vector2 point)
+        {
+            if (previewOnly) return point;
+            int index = Mathf.Clamp(activeBuildRoomIndex, 0, RoomCenters.Length - 1);
+            point.x -= RoomCenters[index];
+            return point;
         }
 
         private void CreateRoomSign(int roomIndex)
@@ -798,6 +1011,12 @@ namespace DrawBody.Prototype
             for (int i = 0; i < boxStations.Count; i++)
             {
                 BoxStation station = boxStations[i];
+                if (i != currentRound)
+                {
+                    station.Pressed = false;
+                    RefreshBoxButtonVisual(station, false);
+                    continue;
+                }
                 bool pressed = HasAuthority ? IsPlayerPressing(station.ButtonCollider) : (boxPressedMask & (1 << i)) != 0;
                 if (HasAuthority && pressed) pressedMask |= 1 << i;
                 if (HasAuthority && pressed && !station.Pressed && Time.unscaledTime >= station.NextDispenseAt)
@@ -852,7 +1071,7 @@ namespace DrawBody.Prototype
         private void EvaluateActiveRoom(float deltaTime)
         {
             energizedPlayers.Clear();
-            int roomIndex = FirstIncompleteRoom();
+            int roomIndex = currentRound;
             if (roomIndex < 0) return;
             BuildPlayerShapes();
             RoomCircuit room = rooms[roomIndex];
@@ -880,7 +1099,7 @@ namespace DrawBody.Prototype
         private void EvaluateClientPresentation()
         {
             energizedPlayers.Clear();
-            int roomIndex = FirstIncompleteRoom();
+            int roomIndex = currentRound;
             if (roomIndex < 0) return;
             BuildPlayerShapes();
             RoomCircuit room = rooms[roomIndex];
@@ -1139,15 +1358,19 @@ namespace DrawBody.Prototype
             if (rooms[index].Status != null) rooms[index].Status.text = LocalizationManager.T("human_circuit_powered");
             PlaySuccess();
             StartCoroutine(SuccessFlash(index));
+            transitioning = true;
+            transitionEndsAt = Time.unscaledTime + RoundTransitionSeconds;
+            RefreshMonitor();
             BroadcastState(true);
         }
 
         private IEnumerator SuccessFlash(int roomIndex)
         {
-            float[] centers = { 0f, 26f, 55f, 85f, 120f };
             GameObject flash = new GameObject("Circuit Success Flash");
-            flash.transform.SetParent(transform, false);
-            flash.transform.position = new Vector3(centers[roomIndex], 0f, -0.18f);
+            Transform parent = roomIndex >= 0 && roomIndex < rooms.Count ? rooms[roomIndex].Root : transform;
+            flash.transform.SetParent(parent, false);
+            float centerX = previewOnly ? RoomCenters[Mathf.Clamp(roomIndex, 0, RoomCenters.Length - 1)] : 0f;
+            flash.transform.position = new Vector3(centerX, 0f, -0.18f);
             SpriteRenderer renderer = flash.AddComponent<SpriteRenderer>();
             renderer.sprite = DoodleRuntimeAssets.CircleSprite;
             renderer.sortingOrder = 45;
@@ -1297,7 +1520,11 @@ namespace DrawBody.Prototype
                 CompletedMask = completedMask,
                 RelayProgress = rooms.Count > 4 ? rooms[4].RelayProgress : 0f,
                 BoxPreviewPacked = PackBoxPreviews(),
-                BoxPressedMask = boxPressedMask
+                BoxPressedMask = boxPressedMask,
+                CurrentRound = currentRound,
+                TransitionRemaining = transitioning
+                    ? Mathf.Max(0.01f, transitionEndsAt - Time.unscaledTime)
+                    : 0f
             };
             onlineManager.SendGimmickData(new OnlineGimmickData
             {
@@ -1314,7 +1541,7 @@ namespace DrawBody.Prototype
             {
                 if (!HasAuthority || !IsOnline) return;
                 CompleteRequest request = JsonUtility.FromJson<CompleteRequest>(data.Json);
-                if (request != null && request.RoomIndex == FirstIncompleteRoom()
+                if (request != null && request.RoomIndex == currentRound
                     && request.RoomIndex >= 0 && request.RoomIndex < rooms.Count)
                 {
                     CompleteRoom(request.RoomIndex);
@@ -1339,6 +1566,11 @@ namespace DrawBody.Prototype
                     StartCoroutine(SuccessFlash(i));
                 }
             }
+            if (state.CurrentRound != currentRound)
+                ActivateRound(state.CurrentRound, false);
+            transitioning = state.TransitionRemaining > 0f;
+            transitionEndsAt = Time.unscaledTime + Mathf.Max(0f, state.TransitionRemaining);
+            RefreshMonitor();
             if (rooms.Count > 4) rooms[4].RelayProgress = state.RelayProgress;
             ApplyBoxPreviews(state.BoxPreviewPacked);
             if (hadNetworkState)
@@ -1382,6 +1614,37 @@ namespace DrawBody.Prototype
             for (int i = 0; i < roster.Length; i++)
                 if (roster[i] != null && roster[i].IsHost && roster[i].PlayerId == id) return true;
             return false;
+        }
+
+        private void CaptureCamera()
+        {
+            if (cameraCaptured) return;
+            gameCamera = Camera.main;
+            if (gameCamera == null) return;
+            cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
+            cameraCaptured = true;
+            previousCameraPosition = gameCamera.transform.position;
+            previousCameraSize = gameCamera.orthographicSize;
+            previousCameraFollowEnabled = cameraFollow != null && cameraFollow.enabled;
+        }
+
+        private void ConfigureCamera()
+        {
+            if (!cameraCaptured) CaptureCamera();
+            if (gameCamera == null) return;
+            if (cameraFollow != null) cameraFollow.enabled = false;
+            gameCamera.transform.position = new Vector3(0f, (FloorY + CeilingY) * 0.5f, -10f);
+            gameCamera.orthographicSize = Mathf.Max(8.45f,
+                (RoomHalfWidth + 0.55f) / Mathf.Max(0.1f, gameCamera.aspect));
+        }
+
+        private void RestoreCamera()
+        {
+            if (!cameraCaptured || gameCamera == null) return;
+            gameCamera.transform.position = previousCameraPosition;
+            gameCamera.orthographicSize = previousCameraSize;
+            if (cameraFollow != null) cameraFollow.enabled = previousCameraFollowEnabled;
+            cameraCaptured = false;
         }
 
         private void PlayZap()

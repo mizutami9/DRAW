@@ -146,7 +146,8 @@ namespace DrawBody.Prototype
 
             challengeCountdownText.text = value ?? string.Empty;
             bool timeUp = string.Equals(value, LocalizationManager.T("challenge_time_up"), System.StringComparison.Ordinal)
-                || string.Equals(value, LocalizationManager.T("game_over"), System.StringComparison.Ordinal);
+                || !string.IsNullOrEmpty(value)
+                    && value.StartsWith(LocalizationManager.T("game_over"), System.StringComparison.Ordinal);
             bool start = string.Equals(value, LocalizationManager.T("survival_start"), System.StringComparison.Ordinal);
             challengeCountdownText.color = timeUp
                 ? new Color(1f, 0.2f, 0.12f, 1f)

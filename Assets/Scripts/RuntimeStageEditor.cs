@@ -129,11 +129,14 @@ namespace DrawBody.Prototype
                         ? "stage_rule_block_breaker"
                     : "stage_rule_normal");
         public string StageCollectionTargetLabel => LocalizationManager.T(StageObjectCatalog.GetObjectKey(stageCollectionTarget));
-        public string StageTimeLimitLabel => LocalizationManager.Format("stage_rule_seconds", stageTimeLimitSeconds);
+        public string StageTimeLimitLabel => IsUntimedCollectionRule
+            ? LocalizationManager.T("challenge_no_time_limit")
+            : LocalizationManager.Format("stage_rule_seconds", stageTimeLimitSeconds);
         public string StageRequiredCountLabel => stageRequiredCollectionCount <= 0
             ? LocalizationManager.T("stage_rule_all")
             : LocalizationManager.Format("stage_rule_count", stageRequiredCollectionCount);
         public bool IsTimedCollectionRule => stageRuleMode == StageRuleMode.TimedCollection;
+        public bool IsUntimedCollectionRule => IsTimedCollectionRule && stageId == "9-2";
         public bool IsSurvivalRule => stageRuleMode == StageRuleMode.Survival;
         public bool IsBlockBreakerRule => stageRuleMode == StageRuleMode.BlockBreaker;
         public float StageTimeLimitSeconds => stageTimeLimitSeconds;
@@ -230,10 +233,12 @@ namespace DrawBody.Prototype
                 ? 0.5f
                 : SelectedIsMovingPlatform || SelectedIsMovingSpikePlanet || SelectedIsElevator ? 1f : 5f;
         public float SelectedActionStrengthMaximum => SelectedIsCrumblingFloor
-            ? 5f
+            ? 10f
             : SelectedIsBombWall || SelectedIsBulletWall
                 ? 50f
-            : SelectedIsConveyor || SelectedIsDropper || SelectedIsEnemyBomber || SelectedIsBeamEmitter || SelectedIsMissileLauncher
+            : SelectedIsConveyor
+                ? 30f
+            : SelectedIsDropper || SelectedIsEnemyBomber || SelectedIsBeamEmitter || SelectedIsMissileLauncher
                 ? 10f
                 : SelectedIsMovingPlatform || SelectedIsMovingSpikePlanet ? 100f : SelectedIsElevator ? 30f : SelectedIsJumpPad ? 120f : 60f;
         public bool SelectedSupportsWeightThreshold => selectedData != null && selectedData.type == StageObjectType.InkScale;

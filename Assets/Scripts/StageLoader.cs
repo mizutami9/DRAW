@@ -301,6 +301,12 @@ namespace DrawBody.Prototype
             }
 
             EnsureReferences();
+            if (data.id == "9-2")
+            {
+                List<StageObjectData> expandedObjects = new List<StageObjectData>(data.objects ?? System.Array.Empty<StageObjectData>());
+                PopulateStage92CoinField(expandedObjects);
+                data.objects = expandedObjects.ToArray();
+            }
             StagePoseTowerRandomizer.Prepare(data);
             CurrentStageData = data;
             StageObjectData[] runtimeObjects = BuildRuntimeStageObjects(data);
@@ -334,11 +340,11 @@ namespace DrawBody.Prototype
                     continue;
                 }
 
-                if (data.id == "9-2"
-                    && playerCount < 3
-                    && !string.IsNullOrEmpty(obj.objectId)
-                    && obj.objectId.StartsWith("9-2_coin_extra_"))
+                if (data.id == "14-1" && !string.IsNullOrEmpty(obj.objectId)
+                    && obj.objectId.StartsWith("14-1-layout-", System.StringComparison.Ordinal))
                 {
+                    // Editor-only preview records. The survival controller builds
+                    // the synchronized moving seesaw at runtime.
                     continue;
                 }
 
@@ -368,6 +374,9 @@ namespace DrawBody.Prototype
             objectFactory.CreateNightCityStageBackdrop(data.id, runtimeObjects, stageRoot);
             objectFactory.CreateFactoryStageBackdrop(data.id, runtimeObjects, stageRoot);
             objectFactory.CreateSpaceStageBackdrop(data.id, runtimeObjects, stageRoot);
+            objectFactory.CreateSnowfieldStageBackdrop(data.id, runtimeObjects, stageRoot);
+            objectFactory.CreateAmusementParkStageBackdrop(data.id, runtimeObjects, stageRoot);
+            objectFactory.CreateCompetitionArenaStageBackdrop(data.id, runtimeObjects, stageRoot);
             AddNatureStageVines(data.id, runtimeObjects);
 
             ConfigureStageGimmicks(data);
@@ -383,29 +392,256 @@ namespace DrawBody.Prototype
             List<StageObjectData> objects = data.objects != null
                 ? new List<StageObjectData>(data.objects)
                 : new List<StageObjectData>();
+            if (data.id == "3-1")
+            {
+                PopulateStage31CoopCourse(objects);
+            }
+
+            bool hasNatureDecoration = false;
             for (int i = 0; i < objects.Count; i++)
             {
                 if (objects[i] != null
                     && !string.IsNullOrEmpty(objects[i].objectId)
                     && objects[i].objectId.StartsWith("nature-", System.StringComparison.Ordinal))
                 {
-                    return objects.ToArray();
+                    hasNatureDecoration = true;
+                    break;
                 }
             }
 
-            if (data.id == "1-1")
+            if (!hasNatureDecoration && data.id == "1-1")
             {
                 AppendStage11Nature(objects);
             }
-            else if (data.id == "2-1")
+            else if (!hasNatureDecoration && data.id == "2-1")
             {
                 AppendStage21Nature(objects);
             }
-            else
+            else if (!hasNatureDecoration)
             {
                 AppendStage31Nature(objects);
             }
             return objects.ToArray();
+        }
+
+        public static void PopulateStage31CoopCourse(List<StageObjectData> objects)
+        {
+            const string coursePrefix = "3-1-coop-";
+            bool hasSavedCourse = false;
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] != null
+                    && !string.IsNullOrEmpty(objects[i].objectId)
+                    && objects[i].objectId.StartsWith(coursePrefix, System.StringComparison.Ordinal))
+                {
+                    hasSavedCourse = true;
+                    break;
+                }
+            }
+            if (hasSavedCourse)
+            {
+                // Keep authored placements, but repair the exact seams that
+                // make up the 3-1 outer frame. Runtime-editor connected rects
+                // can otherwise preserve an older edge even after the visible
+                // object's center/size was changed.
+                NormalizeStage31FrameSeams(objects);
+                return;
+            }
+
+            // Keep the existing descent down to the former jump-pad room, then
+            // discard that room and every older floor below it.  The replacement
+            // course travels to the right from the same arrival height.
+            for (int i = objects.Count - 1; i >= 0; i--)
+            {
+                StageObjectData item = objects[i];
+                if (item == null
+                    || item.type == StageObjectType.StageBoundary
+                    || item.position.y <= -33.5f)
+                {
+                    objects.RemoveAt(i);
+                }
+            }
+
+            AddStage31Object(objects, coursePrefix + "boundary", StageObjectType.StageBoundary,
+                new Vector2(65f, -11f), new Vector2(166f, 88f));
+
+            // Redraw/rest area at the entrance to the new horizontal route.
+            AddStage31Object(objects, coursePrefix + "start-floor", StageObjectType.Platform,
+                new Vector2(4f, -40.5f), new Vector2(18f, 1.25f));
+            AddStage31Object(objects, coursePrefix + "redraw", StageObjectType.RedrawZone,
+                new Vector2(4f, -38.65f), new Vector2(16.5f, 2.5f));
+
+            // Section 1: the bird is thrown to this high ledge and switches on
+            // the valley wind.  The broad landing bank also gives it enough
+            // height and runway to glide back to the left bank.
+            AddStage31Object(objects, coursePrefix + "bank-one-right", StageObjectType.Platform,
+                new Vector2(45.5f, -40.5f), new Vector2(18f, 1.25f));
+            AddStage31Object(objects, coursePrefix + "bird-button-ledge", StageObjectType.Platform,
+                new Vector2(42f, -31.5f), new Vector2(9f, 0.8f));
+            AddStage31Object(objects, coursePrefix + "bird-button", StageObjectType.Button,
+                new Vector2(44f, -30.75f), new Vector2(2.2f, 1.15f));
+            StageObjectData valleyWind = AddStage31Object(objects, coursePrefix + "valley-wind",
+                StageObjectType.UpdraftZone, new Vector2(25f, -32.5f), new Vector2(7.5f, 16f));
+            valleyWind.actionStrength = 3.8f;
+            AddStage31Object(objects, coursePrefix + "section-one-gate", StageObjectType.Door,
+                new Vector2(56f, -36.5f), new Vector2(1.6f, 15f));
+
+            // Section 2: the human remains in the lower control lane while the
+            // bird crosses the three alternating wind columns overhead.
+            AddStage31Object(objects, coursePrefix + "control-floor", StageObjectType.Platform,
+                new Vector2(91.5f, -44f), new Vector2(71f, 1.25f));
+            AddStage31Object(objects, coursePrefix + "air-start", StageObjectType.Platform,
+                new Vector2(64f, -34f), new Vector2(11f, 0.8f));
+            AddStage31Object(objects, coursePrefix + "blue-button", StageObjectType.Button,
+                new Vector2(61.5f, -42.995f), new Vector2(2.2f, 1.15f));
+            AddStage31Object(objects, coursePrefix + "red-button", StageObjectType.Button,
+                new Vector2(65.5f, -42.995f), new Vector2(2.2f, 1.15f));
+            AddStage31Object(objects, coursePrefix + "green-button", StageObjectType.Button,
+                new Vector2(69.5f, -42.995f), new Vector2(2.2f, 1.15f));
+
+            Vector2[] windPositions =
+            {
+                new Vector2(74f, -35.5f),
+                new Vector2(94f, -32.5f),
+                new Vector2(114f, -29.5f)
+            };
+            for (int i = 0; i < windPositions.Length; i++)
+            {
+                StageObjectData wind = AddStage31Object(objects, coursePrefix + "relay-wind-" + (i + 1),
+                    StageObjectType.UpdraftZone, windPositions[i], new Vector2(6f, 15f));
+                wind.actionStrength = 3.6f;
+            }
+
+            AddStage31Object(objects, coursePrefix + "obstacle-a", StageObjectType.Platform,
+                new Vector2(84f, -29f), new Vector2(7f, 0.75f));
+            AddStage31Object(objects, coursePrefix + "spike-a", StageObjectType.Spike,
+                new Vector2(84f, -29.85f), new Vector2(5.5f, 1.25f), 180f);
+            AddStage31Object(objects, coursePrefix + "obstacle-b", StageObjectType.Platform,
+                new Vector2(103f, -36.5f), new Vector2(7f, 0.75f));
+            AddStage31Object(objects, coursePrefix + "spike-b", StageObjectType.Spike,
+                new Vector2(103f, -35.65f), new Vector2(5.5f, 1.25f));
+            AddStage31Object(objects, coursePrefix + "obstacle-c", StageObjectType.Platform,
+                new Vector2(119f, -25.5f), new Vector2(7f, 0.75f));
+            AddStage31Object(objects, coursePrefix + "spike-c", StageObjectType.Spike,
+                new Vector2(119f, -26.35f), new Vector2(5.5f, 1.25f), 180f);
+
+            AddStage31Object(objects, coursePrefix + "bird-goal-ledge", StageObjectType.Platform,
+                new Vector2(125f, -22.5f), new Vector2(10f, 0.8f));
+            AddStage31Object(objects, coursePrefix + "bird-goal-button", StageObjectType.Button,
+                new Vector2(126.5f, -21.75f), new Vector2(2.2f, 1.15f));
+            AddStage31Object(objects, coursePrefix + "human-door", StageObjectType.Door,
+                new Vector2(122f, -36.5f), new Vector2(1.6f, 15f));
+            AddStage31Object(objects, coursePrefix + "finish-floor", StageObjectType.Platform,
+                new Vector2(137.125f, -44f), new Vector2(20.25f, 1.25f));
+            AddStage31Object(objects, coursePrefix + "goal", StageObjectType.Goal,
+                new Vector2(144f, -38.5f), new Vector2(2.5f, 3.5f));
+            NormalizeStage31FrameSeams(objects);
+        }
+
+        internal static void NormalizeStage31FrameSeams(List<StageObjectData> objects)
+        {
+            SetStage31Rect(objects, "Platform_Start", new Vector2(-10.375f, 18.725f),
+                new Vector2(18.75f, 0.45f));
+            SetStage31Rect(objects, "obj_57b5b7d7369b4f66", new Vector2(-4.875f, -17f),
+                new Vector2(29.75f, 0.45f));
+            SetStage31Rect(objects, "obj_b2c0a6c674ed464e", new Vector2(28.875f, -17f),
+                new Vector2(17.75f, 0.45f));
+            SetStage31Rect(objects, "obj_c86860eaadb94522", new Vector2(17.125f, -28.5f),
+                new Vector2(73.75f, 1.5f));
+            SetStage31Rect(objects, "3-1-coop-start-floor", new Vector2(-6f, -40.925f),
+                new Vector2(27.5f, 1.25f));
+            SetStage31Rect(objects, "3-1-coop-control-floor", new Vector2(90.75f, -44f),
+                new Vector2(72.5f, 1.25f));
+            SetStage31Rect(objects, "3-1-coop-finish-floor", new Vector2(137.125f, -44f),
+                new Vector2(20.25f, 1.25f));
+
+            AlignStage31SpikeRow(objects, -16.025f, -20f, 15f, -19.75f, 10f, -16.025f);
+            AlignStage31SpikeRow(objects, -16.025f, 15f, 40f, 20f, 37.75f, -16.025f);
+            // Keep the left side intentionally open: this is the route used to
+            // enter from below the updraft room. Only the supporting floor
+            // reaches the boundary wall.
+            AlignStage31SpikeRow(objects, -27f, -25f, 40f, -2.6f, 37.75f, -27f);
+        }
+
+        internal static bool IsStage31FrameSeamObject(string objectId)
+        {
+            return objectId == "Platform_Start"
+                || objectId == "obj_57b5b7d7369b4f66"
+                || objectId == "obj_b2c0a6c674ed464e"
+                || objectId == "obj_c86860eaadb94522"
+                || objectId == "3-1-coop-start-floor"
+                || objectId == "3-1-coop-control-floor"
+                || objectId == "3-1-coop-finish-floor";
+        }
+
+        private static void SetStage31Rect(
+            List<StageObjectData> objects,
+            string objectId,
+            Vector2 position,
+            Vector2 size)
+        {
+            for (int i = 0; i < objects.Count; i++)
+            {
+                StageObjectData item = objects[i];
+                if (item == null || item.objectId != objectId) continue;
+                item.position = position;
+                item.size = size;
+                item.rotation = 0f;
+                item.pathPoints = System.Array.Empty<Vector2>();
+                item.connectedRects = System.Array.Empty<StageRectPartData>();
+                return;
+            }
+        }
+
+        private static void AlignStage31SpikeRow(
+            List<StageObjectData> objects,
+            float sourceY,
+            float sourceMinX,
+            float sourceMaxX,
+            float left,
+            float right,
+            float alignedY)
+        {
+            List<StageObjectData> row = new List<StageObjectData>();
+            for (int i = 0; i < objects.Count; i++)
+            {
+                StageObjectData item = objects[i];
+                if (item == null || item.type != StageObjectType.Spike
+                    || Mathf.Abs(item.rotation) > 0.5f
+                    || Mathf.Abs(item.position.y - sourceY) > 0.6f
+                    || item.position.x < sourceMinX || item.position.x >= sourceMaxX)
+                {
+                    continue;
+                }
+                row.Add(item);
+            }
+            row.Sort((a, b) => a.position.x.CompareTo(b.position.x));
+            if (row.Count == 0) return;
+
+            float width = (right - left) / row.Count;
+            for (int i = 0; i < row.Count; i++)
+            {
+                row[i].position = new Vector2(left + (i + 0.5f) * width, alignedY);
+                row[i].size = new Vector2(width, 1.5f);
+                row[i].connectedRects = System.Array.Empty<StageRectPartData>();
+            }
+        }
+
+        private static StageObjectData AddStage31Object(
+            List<StageObjectData> objects,
+            string objectId,
+            StageObjectType type,
+            Vector2 position,
+            Vector2 size,
+            float rotation = 0f)
+        {
+            StageObjectData item = StageObjectFactory.CreateDefaultData(type, position);
+            item.objectId = objectId;
+            item.size = size;
+            item.rotation = rotation;
+            item.keepSeparate = true;
+            objects.Add(item);
+            return item;
         }
 
         private static void AppendStage11Nature(List<StageObjectData> objects)
@@ -460,8 +696,9 @@ namespace DrawBody.Prototype
             Vector2[] mountainPositions =
             {
                 new Vector2(4f, 20.5f), new Vector2(29f, 14.5f), new Vector2(6f, -5f),
-                new Vector2(29f, -18.5f), new Vector2(5f, -31.5f), new Vector2(29f, -44f),
-                new Vector2(-4f, -56.5f)
+                new Vector2(29f, -18.5f), new Vector2(6f, -35f), new Vector2(35f, -35f),
+                new Vector2(64f, -35f), new Vector2(92f, -35f), new Vector2(120f, -35f),
+                new Vector2(145f, -35f)
             };
             for (int i = 0; i < mountainPositions.Length; i++)
             {
@@ -470,18 +707,18 @@ namespace DrawBody.Prototype
             AddNatureDecoration(objects, "3-1", "tree-a", StageObjectType.BackgroundTree, new Vector2(-9f, 20.5f), new Vector2(3.8f, 4.5f), true);
             AddNatureDecoration(objects, "3-1", "tree-b", StageObjectType.BackgroundTree, new Vector2(31f, 10f), new Vector2(3.8f, 4.5f), true);
             AddNatureDecoration(objects, "3-1", "tree-c", StageObjectType.BackgroundTree, new Vector2(-7f, -10f), new Vector2(3.6f, 4.2f), true);
-            AddNatureDecoration(objects, "3-1", "tree-d", StageObjectType.BackgroundTree, new Vector2(32f, -32f), new Vector2(3.8f, 4.5f), true);
-            AddNatureDecoration(objects, "3-1", "tree-e", StageObjectType.BackgroundTree, new Vector2(-12f, -53f), new Vector2(3.8f, 4.5f), true);
+            AddNatureDecoration(objects, "3-1", "tree-d", StageObjectType.BackgroundTree, new Vector2(52f, -35.5f), new Vector2(3.8f, 4.5f), true);
+            AddNatureDecoration(objects, "3-1", "tree-e", StageObjectType.BackgroundTree, new Vector2(132f, -35.5f), new Vector2(3.8f, 4.5f), true);
 
             AddNatureDecoration(objects, "3-1", "grass-01", StageObjectType.BackgroundGrass, new Vector2(-10.2f, 18.94f), new Vector2(1.1f, 0.55f));
             AddNatureDecoration(objects, "3-1", "flower-01", StageObjectType.BackgroundFlower, new Vector2(-2.2f, 18.94f), new Vector2(0.52f, 0.7f));
             AddNatureDecoration(objects, "3-1", "bush-01", StageObjectType.BackgroundBush, new Vector2(9.5f, 14.43f), new Vector2(1.15f, 0.76f));
             AddNatureDecoration(objects, "3-1", "grass-02", StageObjectType.BackgroundGrass, new Vector2(13f, 14.43f), new Vector2(0.95f, 0.48f));
             AddNatureDecoration(objects, "3-1", "grass-03", StageObjectType.BackgroundGrass, new Vector2(31.5f, -2.015f), new Vector2(1.05f, 0.52f));
-            AddNatureDecoration(objects, "3-1", "flower-02", StageObjectType.BackgroundTulip, new Vector2(9.8f, -34.015f), new Vector2(0.52f, 0.7f));
-            AddNatureDecoration(objects, "3-1", "grass-04", StageObjectType.BackgroundGrass, new Vector2(0.3f, -38.015f), new Vector2(0.95f, 0.48f));
-            AddNatureDecoration(objects, "3-1", "mushroom-01", StageObjectType.BackgroundMushroom, new Vector2(26f, -40.29f), new Vector2(0.62f, 0.56f));
-            AddNatureDecoration(objects, "3-1", "grass-05", StageObjectType.BackgroundGrass, new Vector2(-16.7f, -63.015f), new Vector2(1.05f, 0.52f));
+            AddNatureDecoration(objects, "3-1", "flower-02", StageObjectType.BackgroundTulip, new Vector2(5f, -39.81f), new Vector2(0.52f, 0.7f));
+            AddNatureDecoration(objects, "3-1", "grass-04", StageObjectType.BackgroundGrass, new Vector2(48f, -39.81f), new Vector2(0.95f, 0.48f));
+            AddNatureDecoration(objects, "3-1", "mushroom-01", StageObjectType.BackgroundMushroom, new Vector2(72f, -43.31f), new Vector2(0.62f, 0.56f));
+            AddNatureDecoration(objects, "3-1", "grass-05", StageObjectType.BackgroundGrass, new Vector2(137f, -39.81f), new Vector2(1.05f, 0.52f));
         }
 
         private static void AddNatureDecoration(
@@ -537,11 +774,11 @@ namespace DrawBody.Prototype
                 AddNatureVine(new Vector2(31f, 30.2f), 1.25f, ref seed);
                 AddNatureVine(new Vector2(-9f, 18.48f), 1.2f, ref seed);
                 AddNatureVine(new Vector2(30f, -2.47f), 1.55f, ref seed);
-                AddNatureVine(new Vector2(27f, -40.74f), 1.45f, ref seed);
+                AddNatureVine(new Vector2(55f, -24f), 1.45f, ref seed);
                 AddNatureWallVine(new Vector2(-2.84f, 13.45f), 3.8f, ref seed);
                 AddNatureWallVine(new Vector2(14.16f, -1.8f), 5.7f, ref seed);
                 AddNatureWallVine(new Vector2(23.34f, 4.2f), 5.8f, ref seed);
-                AddNatureWallVine(new Vector2(13.12f, -47f), 3.1f, ref seed);
+                AddNatureWallVine(new Vector2(121.2f, -40f), 3.1f, ref seed);
             }
             else if (IsAdditionalNatureStage(stageId))
             {
@@ -752,7 +989,8 @@ namespace DrawBody.Prototype
 
         private static bool IsAdditionalNatureStage(string stageId)
         {
-            return stageId == "5-2"
+            return stageId == "1-3"
+                || stageId == "5-2"
                 || stageId == "7-2"
                 || stageId == "10-2"
                 || stageId == "14-2";
@@ -934,6 +1172,12 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingSyncManager);
             }
 
+            Stage41CoopRunController existingStage41 = stageRoot.GetComponent<Stage41CoopRunController>();
+            if (existingStage41 != null)
+            {
+                DestroyComponentNow(existingStage41);
+            }
+
             StageEliminationChallengeController existingSurvival = stageRoot.GetComponent<StageEliminationChallengeController>();
             if (existingSurvival != null)
             {
@@ -1033,11 +1277,11 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingRicochetEnemy);
             }
 
-            StageWindSpeedrunController existingWindSpeedrun =
-                stageRoot.GetComponent<StageWindSpeedrunController>();
-            if (existingWindSpeedrun != null)
+            StageIcicleSeesawSurvivalController existingIcicleSeesaw =
+                stageRoot.GetComponent<StageIcicleSeesawSurvivalController>();
+            if (existingIcicleSeesaw != null)
             {
-                DestroyComponentNow(existingWindSpeedrun);
+                DestroyComponentNow(existingIcicleSeesaw);
             }
 
             StageUmbrellaRainController existingUmbrellaRain =
@@ -1148,6 +1392,20 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingCatEscape);
             }
 
+            Stage71PoseRoomsController existingPoseRooms =
+                stageRoot.GetComponent<Stage71PoseRoomsController>();
+            if (existingPoseRooms != null)
+            {
+                DestroyComponentNow(existingPoseRooms);
+            }
+
+            Stage31UpdraftRelayController existingStage31Relay =
+                stageRoot.GetComponent<Stage31UpdraftRelayController>();
+            if (existingStage31Relay != null)
+            {
+                DestroyComponentNow(existingStage31Relay);
+            }
+
             stageRoot.gameObject.AddComponent<StageGimmickSyncManager>();
             stageRoot.gameObject.AddComponent<StageGimmickLinkController>();
             if (data != null && data.id == "1-2")
@@ -1157,6 +1415,14 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "3-2")
             {
                 stageRoot.gameObject.AddComponent<StageBalloonCourseController>();
+            }
+            if (data != null && data.id == "3-1")
+            {
+                stageRoot.gameObject.AddComponent<Stage31UpdraftRelayController>();
+            }
+            if (data != null && data.id == "4-1")
+            {
+                stageRoot.gameObject.AddComponent<Stage41CoopRunController>();
             }
             if (data != null && data.id == "2-3")
             {
@@ -1178,6 +1444,10 @@ namespace DrawBody.Prototype
             if (data != null && data.id == "6-3")
             {
                 stageRoot.gameObject.AddComponent<StageAquariumSealController>();
+            }
+            if (data != null && data.id == "7-1")
+            {
+                stageRoot.gameObject.AddComponent<Stage71PoseRoomsController>();
             }
             if (data != null && data.id == "7-2")
             {
@@ -1247,7 +1517,9 @@ namespace DrawBody.Prototype
             }
             if (data != null && data.id == "14-1")
             {
-                stageRoot.gameObject.AddComponent<StageWindSpeedrunController>();
+                StageIcicleSeesawSurvivalController survival =
+                    stageRoot.gameObject.AddComponent<StageIcicleSeesawSurvivalController>();
+                survival.Configure(data.timeLimitSeconds);
             }
             if (data != null && data.id == "14-2")
             {
@@ -1271,7 +1543,7 @@ namespace DrawBody.Prototype
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {
-                if (data.id == "8-3" || data.id == "9-1" || data.id == "13-1" || data.id == "14-3" || data.id == "15-1" || data.id == "15-2" || data.id == "15-3")
+                if (data.id == "8-3" || data.id == "9-1" || data.id == "13-1" || data.id == "14-1" || data.id == "14-3" || data.id == "15-1" || data.id == "15-2" || data.id == "15-3")
                 {
                     // The stage-specific controller owns its timer, elimination and retry flow.
                 }
@@ -1354,6 +1626,114 @@ namespace DrawBody.Prototype
                     objectFactory = gameObject.AddComponent<StageObjectFactory>();
                 }
             }
+        }
+
+        internal static void PopulateStage92CoinField(List<StageObjectData> objects)
+        {
+            if (objects == null)
+            {
+                return;
+            }
+
+            bool expandHorizontalLayout = objects.Exists(item => item != null
+                && item.objectId == "9-2_boundary"
+                && item.size.x < 30f);
+
+            for (int i = objects.Count - 1; i >= 0; i--)
+            {
+                StageObjectData item = objects[i];
+                if (item == null)
+                {
+                    continue;
+                }
+
+                switch (item.objectId)
+                {
+                    case "9-2_boundary":
+                        item.size = new Vector2(38f, 160f);
+                        break;
+                    case "9-2_start_floor":
+                        item.size = new Vector2(37.35f, item.size.y);
+                        break;
+                    case "9-2_gun_01":
+                        item.position = new Vector2(-2.7f, item.position.y);
+                        break;
+                    case "9-2_gun_02":
+                        item.position = new Vector2(2.7f, item.position.y);
+                        break;
+                    case "9-2_clock_top":
+                        item.position = new Vector2(0f, 0.8f);
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(item.objectId)
+                    && item.objectId.StartsWith("9-2_wall_spikes_", System.StringComparison.Ordinal))
+                {
+                    item.position = new Vector2(item.objectId.Contains("_l") ? -18.05f : 18.05f, item.position.y);
+                }
+                else if (!string.IsNullOrEmpty(item.objectId)
+                    && item.objectId.StartsWith("9-2_clock_l", System.StringComparison.Ordinal))
+                {
+                    item.position = new Vector2(0f, item.position.y);
+                }
+                else if (!string.IsNullOrEmpty(item.objectId)
+                    && item.objectId.StartsWith("9-2_clock_r", System.StringComparison.Ordinal))
+                {
+                    item.position = new Vector2(0f, item.position.y);
+                }
+
+                if (expandHorizontalLayout && !string.IsNullOrEmpty(item.objectId))
+                {
+                    if (item.objectId.StartsWith("9-2_spike_ball_", System.StringComparison.Ordinal)
+                        || item.objectId.StartsWith("9-2_enemy_", System.StringComparison.Ordinal))
+                    {
+                        item.position = new Vector2(item.position.x * 2f, item.position.y);
+                    }
+                    else if (item.objectId.StartsWith("9-2_moving_spike_", System.StringComparison.Ordinal))
+                    {
+                        item.actionStrength *= 2f;
+                    }
+                }
+
+                if (item != null
+                    && item.type == StageObjectType.CollectibleCoin
+                    && !string.IsNullOrEmpty(item.objectId)
+                    && item.objectId.StartsWith("9-2_coin_", System.StringComparison.Ordinal))
+                {
+                    objects.RemoveAt(i);
+                }
+            }
+
+            const int coinCount = 1000;
+            for (int index = 1; index <= coinCount; index++)
+            {
+                float x01 = Halton(index, 2);
+                float y01 = Halton(index, 3);
+                float diameter = 0.68f + (index % 5) * 0.035f;
+                objects.Add(new StageObjectData
+                {
+                    objectId = $"9-2_coin_{index:0000}",
+                    type = StageObjectType.CollectibleCoin,
+                    position = new Vector2(
+                        Mathf.Lerp(-17.2f, 17.2f, x01),
+                        Mathf.Lerp(-5f, -155.5f, y01)),
+                    size = new Vector2(diameter, diameter),
+                    rotation = (index * 37) % 360
+                });
+            }
+        }
+
+        private static float Halton(int index, int numberBase)
+        {
+            float result = 0f;
+            float fraction = 1f / numberBase;
+            while (index > 0)
+            {
+                result += fraction * (index % numberBase);
+                index /= numberBase;
+                fraction /= numberBase;
+            }
+            return result;
         }
 
         private void ClearStageRoot()

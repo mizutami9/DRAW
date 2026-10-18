@@ -47,6 +47,21 @@ namespace DrawBody.Prototype
         private static readonly Color SpaceTerrainAccentColor = new Color(0.27f, 0.4f, 0.57f, 0.82f);
         private static readonly Color SpaceTerrainGlowColor = new Color(0.26f, 0.78f, 1f, 0.84f);
         private static readonly Color SpaceBackdropColor = new Color(0.035f, 0.055f, 0.17f, 0.94f);
+        private static readonly Color SnowfieldTerrainPaperColor = new Color(0.91f, 0.965f, 0.985f, 1f);
+        private static readonly Color SnowfieldTerrainStrokeColor = new Color(0.16f, 0.46f, 0.67f, 0.98f);
+        private static readonly Color SnowfieldTerrainAccentColor = new Color(0.42f, 0.76f, 0.91f, 0.72f);
+        private static readonly Color SnowfieldSkyColor = new Color(0.72f, 0.88f, 0.95f, 0.36f);
+        private static readonly Color AmusementCreamColor = new Color(1f, 0.91f, 0.67f, 1f);
+        private static readonly Color AmusementBlueColor = new Color(0.48f, 0.79f, 0.91f, 1f);
+        private static readonly Color AmusementYellowColor = new Color(1f, 0.76f, 0.24f, 1f);
+        private static readonly Color AmusementOutlineColor = new Color(0.25f, 0.29f, 0.31f, 0.96f);
+        private static readonly Color AmusementSkyColor = new Color(0.82f, 0.94f, 0.97f, 0.34f);
+        private static readonly Color ArenaStoneColor = new Color(0.76f, 0.7f, 0.59f, 1f);
+        private static readonly Color ArenaStoneGrayColor = new Color(0.58f, 0.61f, 0.61f, 1f);
+        private static readonly Color ArenaBlueStoneColor = new Color(0.26f, 0.62f, 0.86f, 1f);
+        private static readonly Color ArenaSandColor = new Color(0.91f, 0.76f, 0.47f, 1f);
+        private static readonly Color ArenaOutlineColor = new Color(0.24f, 0.27f, 0.28f, 0.96f);
+        private static readonly Color ArenaSkyColor = new Color(0.72f, 0.9f, 0.97f, 0.3f);
         private Transform visualThemeRoot;
         private string visualThemeStageId;
 
@@ -162,7 +177,12 @@ namespace DrawBody.Prototype
             AddFactoryBackdrop(backdrop.transform, bounds, seed, !keepArenaInteriorClear);
             if (!keepArenaInteriorClear)
             {
-                AddFactoryInfrastructure(backdrop.transform, bounds, objects, stageId, seed + 4513);
+                // 13-3's authored objects still retain the legacy five-room
+                // coordinates for editing. Its runtime backdrop belongs to the
+                // single sequential room and must not trace that old strip.
+                IList<StageObjectData> infrastructureObjects = stageId == "13-3" ? null : objects;
+                AddFactoryInfrastructure(
+                    backdrop.transform, bounds, infrastructureObjects, stageId, seed + 4513);
             }
         }
 
@@ -190,6 +210,83 @@ namespace DrawBody.Prototype
             int seed = GetStableNatureVisualSeed(stageId + "|space-backdrop");
             AddSpaceBackdrop(backdrop.transform, bounds, seed);
             AddSpaceInfrastructure(backdrop.transform, bounds, objects, stageId, seed + 6173);
+        }
+
+        public void CreateSnowfieldStageBackdrop(
+            string stageId,
+            IList<StageObjectData> objects,
+            Transform parent)
+        {
+            if (parent == null || !IsSnowfieldStageId(stageId))
+            {
+                return;
+            }
+
+            Transform existing = parent.Find("Snowfield Stage Backdrop");
+            if (existing != null)
+            {
+                DestroyImmediate(existing.gameObject);
+            }
+
+            Rect bounds = GetSnowfieldBackdropBounds(stageId, objects);
+            GameObject backdrop = new GameObject("Snowfield Stage Backdrop");
+            backdrop.transform.SetParent(parent, false);
+            backdrop.transform.localPosition = Vector3.zero;
+
+            int seed = GetStableNatureVisualSeed(stageId + "|snowfield-backdrop");
+            AddSnowfieldBackdrop(backdrop.transform, bounds, seed);
+        }
+
+        public void CreateAmusementParkStageBackdrop(
+            string stageId,
+            IList<StageObjectData> objects,
+            Transform parent)
+        {
+            if (parent == null || !IsAmusementParkStageId(stageId))
+            {
+                return;
+            }
+
+            Transform existing = parent.Find("Amusement Park Stage Backdrop");
+            if (existing != null)
+            {
+                DestroyImmediate(existing.gameObject);
+            }
+
+            Rect bounds = GetAmusementParkBackdropBounds(stageId, objects);
+            GameObject backdrop = new GameObject("Amusement Park Stage Backdrop");
+            backdrop.transform.SetParent(parent, false);
+            backdrop.transform.localPosition = Vector3.zero;
+            AddAmusementParkBackdrop(
+                backdrop.transform,
+                bounds,
+                GetStableNatureVisualSeed(stageId + "|amusement-park-backdrop"));
+        }
+
+        public void CreateCompetitionArenaStageBackdrop(
+            string stageId,
+            IList<StageObjectData> objects,
+            Transform parent)
+        {
+            if (parent == null || !IsCompetitionArenaStageId(stageId))
+            {
+                return;
+            }
+
+            Transform existing = parent.Find("Competition Arena Stage Backdrop");
+            if (existing != null)
+            {
+                DestroyImmediate(existing.gameObject);
+            }
+
+            Rect bounds = GetCompetitionArenaBackdropBounds(stageId, objects);
+            GameObject backdrop = new GameObject("Competition Arena Stage Backdrop");
+            backdrop.transform.SetParent(parent, false);
+            backdrop.transform.localPosition = Vector3.zero;
+            AddCompetitionArenaBackdrop(
+                backdrop.transform,
+                bounds,
+                GetStableNatureVisualSeed(stageId + "|competition-arena-backdrop"));
         }
 
         public GameObject Create(StageObjectData data, Transform parent)
@@ -652,7 +749,12 @@ namespace DrawBody.Prototype
 
             StageEnemyCharacter enemy = obj.AddComponent<StageEnemyCharacter>();
             float facing = Mathf.Cos(data.rotation * Mathf.Deg2Rad);
-            enemy.Configure(data.type, size, data.movementSpeed > 0f ? data.movementSpeed : 0f, facing);
+            enemy.Configure(
+                data.type,
+                size,
+                data.movementSpeed > 0f ? data.movementSpeed : 0f,
+                facing,
+                data.objectId);
             AddEditorMetadata(obj, data);
             return obj;
         }
@@ -713,6 +815,9 @@ namespace DrawBody.Prototype
             bool useNightCityTerrainStyle = UsesNightCityStageTheme(parent);
             bool useFactoryTerrainStyle = UsesFactoryStageTheme(parent);
             bool useSpaceTerrainStyle = UsesSpaceStageTheme(parent);
+            bool useSnowfieldTerrainStyle = UsesSnowfieldStageTheme(parent);
+            bool useAmusementParkTerrainStyle = UsesAmusementParkStageTheme(parent);
+            bool useCompetitionArenaTerrainStyle = UsesCompetitionArenaStageTheme(parent);
             Color stroke = useCaveTerrainStyle
                 ? CaveTerrainStrokeColor
                 : useUnderwaterTerrainStyle
@@ -723,9 +828,75 @@ namespace DrawBody.Prototype
                     ? FactoryTerrainStrokeColor
                 : useSpaceTerrainStyle
                     ? SpaceTerrainStrokeColor
+                : useSnowfieldTerrainStyle
+                    ? SnowfieldTerrainStrokeColor
+                : useAmusementParkTerrainStyle
+                    ? AmusementOutlineColor
+                : useCompetitionArenaTerrainStyle
+                    ? ArenaOutlineColor
                 : useNatureTerrainStyle
                     ? TitleTerrainStrokeColor
                     : new Color(0.16f, 0.17f, 0.2f, 1f);
+
+            if (data.objectId == "3-1-coop-boundary")
+            {
+                // Keep the original upper room narrow, then open the frame to
+                // the right only where the new horizontal course begins.
+                const float upperLeft = -20.5f;
+                const float upperRight = 38.5f;
+                const float upperTop = 30.5f;
+                const float lowerCeiling = -15.5f;
+                // End at the old transition floor.  The bird can pass beneath
+                // this wall toward the new button ledge without clipping it.
+                const float upperOpeningBottom = -27.75f;
+                const float lowerBottom = -52f;
+                const float lowerRight = 148f;
+                float halfThickness = thickness * 0.5f;
+                float upperLeftInner = upperLeft + halfThickness;
+                float upperRightInner = upperRight - halfThickness;
+                float upperCeilingInnerY = upperTop - halfThickness;
+                float lowerRightInner = lowerRight - halfThickness;
+                float lowerCeilingInnerY = lowerCeiling - halfThickness;
+                CreateBoundarySide(
+                    "Boundary Ceiling",
+                    new Vector2((upperLeftInner + upperRightInner) * 0.5f - data.position.x,
+                        upperTop - data.position.y),
+                    new Vector2(upperRightInner - upperLeftInner, thickness),
+                    stroke,
+                    root.transform);
+                CreateBoundarySide(
+                    "Boundary Left Wall",
+                    new Vector2(upperLeft - data.position.x,
+                        (upperCeilingInnerY + lowerBottom) * 0.5f - data.position.y),
+                    new Vector2(thickness, upperCeilingInnerY - lowerBottom),
+                    stroke,
+                    root.transform);
+                CreateBoundarySide(
+                    "Boundary Upper Right Wall",
+                    new Vector2(upperRight - data.position.x,
+                        (upperCeilingInnerY + upperOpeningBottom) * 0.5f - data.position.y),
+                    new Vector2(thickness, upperCeilingInnerY - upperOpeningBottom),
+                    stroke,
+                    root.transform);
+                CreateBoundarySide(
+                    "Boundary Lower Ceiling",
+                    new Vector2((upperRight + halfThickness + lowerRightInner) * 0.5f - data.position.x,
+                        lowerCeiling - data.position.y),
+                    new Vector2(lowerRightInner - (upperRight + halfThickness), thickness),
+                    stroke,
+                    root.transform);
+                CreateBoundarySide(
+                    "Boundary Right Wall",
+                    new Vector2(lowerRight - data.position.x,
+                        (lowerCeilingInnerY + lowerBottom) * 0.5f - data.position.y),
+                    new Vector2(thickness, lowerCeilingInnerY - lowerBottom),
+                    stroke,
+                    root.transform);
+                data.size = new Vector2(width, height);
+                data.pathThickness = storedThickness;
+                AddEditorMetadata(root, data);
+                return root;
+            }
 
             CreateBoundarySide(
                 "Boundary Ceiling",
@@ -751,7 +922,7 @@ namespace DrawBody.Prototype
                 stroke,
                 root.transform);
 
-            if (useNatureTerrainStyle || useCaveTerrainStyle || useUnderwaterTerrainStyle || useNightCityTerrainStyle || useFactoryTerrainStyle || useSpaceTerrainStyle)
+            if (useNatureTerrainStyle || useCaveTerrainStyle || useUnderwaterTerrainStyle || useNightCityTerrainStyle || useFactoryTerrainStyle || useSpaceTerrainStyle || useSnowfieldTerrainStyle || useAmusementParkTerrainStyle || useCompetitionArenaTerrainStyle)
             {
                 float seamY = height * 0.5f - storedThickness;
                 float leftX = -width * 0.5f + storedThickness - thickness * 0.5f;
@@ -766,7 +937,10 @@ namespace DrawBody.Prototype
                     useUnderwaterTerrainStyle,
                     useNightCityTerrainStyle,
                     useFactoryTerrainStyle,
-                    useSpaceTerrainStyle);
+                    useSpaceTerrainStyle,
+                    useSnowfieldTerrainStyle,
+                    useAmusementParkTerrainStyle,
+                    useCompetitionArenaTerrainStyle);
                 AddTerrainSeamMask(
                     root.transform,
                     false,
@@ -777,7 +951,10 @@ namespace DrawBody.Prototype
                     useUnderwaterTerrainStyle,
                     useNightCityTerrainStyle,
                     useFactoryTerrainStyle,
-                    useSpaceTerrainStyle);
+                    useSpaceTerrainStyle,
+                    useSnowfieldTerrainStyle,
+                    useAmusementParkTerrainStyle,
+                    useCompetitionArenaTerrainStyle);
             }
 
             data.size = new Vector2(width, height);
@@ -942,6 +1119,10 @@ namespace DrawBody.Prototype
             bool useNightCityTerrainStyle = UsesNightCityStageTheme(parent);
             bool useFactoryTerrainStyle = UsesFactoryStageTheme(parent);
             bool useSpaceTerrainStyle = UsesSpaceStageTheme(parent);
+            bool useSnowfieldTerrainStyle = UsesSnowfieldStageTheme(parent);
+            bool useAmusementParkTerrainStyle = UsesAmusementParkStageTheme(parent);
+            bool useCompetitionArenaTerrainStyle = UsesCompetitionArenaStageTheme(parent);
+            bool isBoundaryCeiling = name.IndexOf("Ceiling", StringComparison.Ordinal) >= 0;
             if (useCaveTerrainStyle)
             {
                 AddSolidPaperBase(side.transform, size, CaveTerrainPaperColor);
@@ -961,6 +1142,21 @@ namespace DrawBody.Prototype
             else if (useSpaceTerrainStyle)
             {
                 AddSolidPaperBase(side.transform, size, SpaceTerrainPaperColor);
+            }
+            else if (useSnowfieldTerrainStyle)
+            {
+                AddSolidPaperBase(side.transform, size, SnowfieldTerrainPaperColor);
+            }
+            else if (useAmusementParkTerrainStyle)
+            {
+                AddSolidPaperBase(
+                    side.transform,
+                    size,
+                    isBoundaryCeiling ? AmusementCreamColor : AmusementBlueColor);
+            }
+            else if (useCompetitionArenaTerrainStyle)
+            {
+                AddSolidPaperBase(side.transform, size, ArenaStoneGrayColor);
             }
             else if (useNatureTerrainStyle)
             {
@@ -992,13 +1188,29 @@ namespace DrawBody.Prototype
             {
                 AddSpaceTerrainFill(side.transform, size, visualSeed);
             }
+            else if (useSnowfieldTerrainStyle)
+            {
+                AddSnowfieldTerrainFill(side.transform, size, visualSeed, !isBoundaryCeiling);
+            }
+            else if (useAmusementParkTerrainStyle)
+            {
+                AddAmusementParkBoundaryFill(side.transform, size, name, visualSeed);
+            }
+            else if (useCompetitionArenaTerrainStyle)
+            {
+                AddCompetitionArenaStoneFill(side.transform, size, ArenaStoneGrayColor, visualSeed, true);
+                if (isBoundaryCeiling)
+                {
+                    AddCompetitionArenaCornerLights(side.transform, size);
+                }
+            }
             else if (useNatureTerrainStyle)
             {
                 AddNatureTerrainFill(
                     side.transform,
                     size,
                     stroke,
-                    name != "Boundary Ceiling",
+                    !isBoundaryCeiling,
                     visualSeed);
             }
             else
@@ -1013,7 +1225,7 @@ namespace DrawBody.Prototype
             else if (useUnderwaterTerrainStyle)
             {
                 AddUnderwaterTerrainBoxOutline(side.transform, size, UnderwaterRockStrokeColor);
-                if (string.Equals(name, "Boundary Ceiling", StringComparison.Ordinal))
+                if (isBoundaryCeiling)
                 {
                     AddUnderwaterRockUnderside(side.transform, size, visualSeed + 701);
                 }
@@ -1029,6 +1241,28 @@ namespace DrawBody.Prototype
             else if (useSpaceTerrainStyle)
             {
                 AddSpaceTerrainBoxOutline(side.transform, size, visualSeed);
+            }
+            else if (useSnowfieldTerrainStyle)
+            {
+                AddSnowfieldTerrainBoxOutline(side.transform, size);
+            }
+            else if (useAmusementParkTerrainStyle)
+            {
+                AddSolidStraightBoxOutline(
+                    side.transform,
+                    size,
+                    AmusementOutlineColor,
+                    new Color(0.58f, 0.42f, 0.25f, 0.38f),
+                    0.06f);
+            }
+            else if (useCompetitionArenaTerrainStyle)
+            {
+                AddSolidStraightBoxOutline(
+                    side.transform,
+                    size,
+                    ArenaOutlineColor,
+                    new Color(0.7f, 0.72f, 0.7f, 0.36f),
+                    0.065f);
             }
             else if (useNatureTerrainStyle)
             {
@@ -1058,6 +1292,9 @@ namespace DrawBody.Prototype
             bool useNightCityTerrainStyle = UsesNightCityTerrainStyle(data, parent);
             bool useFactoryTerrainStyle = UsesFactoryTerrainStyle(data, parent);
             bool useSpaceTerrainStyle = UsesSpaceTerrainStyle(data, parent);
+            bool useSnowfieldTerrainStyle = UsesSnowfieldTerrainStyle(data, parent);
+            bool useAmusementParkTerrainStyle = UsesAmusementParkTerrainStyle(data, parent);
+            bool useCompetitionArenaTerrainStyle = UsesCompetitionArenaTerrainStyle(data, parent);
             bool useUnderwaterSandBody = useUnderwaterTerrainStyle && IsUnderwaterMainSandFloor(data);
             bool addUnderwaterSandCap = useUnderwaterTerrainStyle
                 && !useUnderwaterSandBody
@@ -1072,6 +1309,12 @@ namespace DrawBody.Prototype
                     ? FactoryTerrainStrokeColor
                 : useSpaceTerrainStyle
                     ? SpaceTerrainStrokeColor
+                : useSnowfieldTerrainStyle
+                    ? SnowfieldTerrainStrokeColor
+                : useAmusementParkTerrainStyle
+                    ? AmusementBlueColor
+                : useCompetitionArenaTerrainStyle
+                    ? ArenaOutlineColor
                 : useNatureTerrainStyle
                     ? TitleTerrainStrokeColor
                     : GetObjectColor(data.type);
@@ -1138,6 +1381,18 @@ namespace DrawBody.Prototype
             {
                 AddSolidPaperBase(obj.transform, data.size, SpaceTerrainPaperColor);
             }
+            else if (useSnowfieldTerrainStyle)
+            {
+                AddSolidPaperBase(obj.transform, data.size, SnowfieldTerrainPaperColor);
+            }
+            else if (useAmusementParkTerrainStyle)
+            {
+                AddSolidPaperBase(obj.transform, data.size, AmusementBlueColor);
+            }
+            else if (useCompetitionArenaTerrainStyle)
+            {
+                AddSolidPaperBase(obj.transform, data.size, GetCompetitionArenaPaperColor(data));
+            }
             else if (useNatureTerrainStyle)
             {
                 AddSolidPaperBase(obj.transform, data.size, TitleTerrainPaperColor);
@@ -1182,6 +1437,18 @@ namespace DrawBody.Prototype
             else if (useSpaceTerrainStyle)
             {
                 AddSpaceTerrainFill(obj.transform, data.size, visualSeed);
+            }
+            else if (useSnowfieldTerrainStyle)
+            {
+                AddSnowfieldTerrainFill(obj.transform, data.size, visualSeed, true);
+            }
+            else if (useAmusementParkTerrainStyle)
+            {
+                AddAmusementParkTerrainFill(obj.transform, data.size, visualSeed);
+            }
+            else if (useCompetitionArenaTerrainStyle)
+            {
+                AddCompetitionArenaTerrainFill(obj.transform, data, visualSeed);
             }
             else if (useNatureTerrainStyle)
             {
@@ -1233,6 +1500,28 @@ namespace DrawBody.Prototype
                 else if (useSpaceTerrainStyle)
                 {
                     AddSpaceTerrainBoxOutline(obj.transform, data.size, visualSeed);
+                }
+                else if (useSnowfieldTerrainStyle)
+                {
+                    AddSnowfieldTerrainBoxOutline(obj.transform, data.size);
+                }
+                else if (useAmusementParkTerrainStyle)
+                {
+                    AddSolidStraightBoxOutline(
+                        obj.transform,
+                        data.size,
+                        AmusementOutlineColor,
+                        new Color(0.96f, 0.67f, 0.2f, 0.45f),
+                        0.06f);
+                }
+                else if (useCompetitionArenaTerrainStyle)
+                {
+                    AddSolidStraightBoxOutline(
+                        obj.transform,
+                        data.size,
+                        ArenaOutlineColor,
+                        new Color(0.75f, 0.72f, 0.62f, 0.38f),
+                        0.06f);
                 }
                 else if (useNatureTerrainStyle)
                 {
@@ -1427,6 +1716,377 @@ namespace DrawBody.Prototype
             Vector3[] accentOutline = new Vector3[outline.Length];
             for (int i = 0; i < outline.Length; i++) accentOutline[i] = outline[i] + accent;
             AddDoodleLine("Solid Straight Accent", parent, accentOutline, accentColor, outlineWidth * 0.47f, 11);
+        }
+
+        private static void AddSnowfieldTerrainFill(
+            Transform parent,
+            Vector2 size,
+            int seed,
+            bool addSnowCap)
+        {
+            AddSolidPencilFill(parent, size, SnowfieldTerrainStrokeColor);
+
+            uint state = CreateCaveVisualState(seed + 1847);
+            List<Vector3> hatchVertices = new List<Vector3>();
+            List<Color> hatchColors = new List<Color>();
+            List<int> hatchTriangles = new List<int>();
+            int hatchCount = Mathf.Clamp(Mathf.CeilToInt(size.x * size.y / 1.8f), 4, 56);
+            for (int i = 0; i < hatchCount; i++)
+            {
+                float x = CaveVisualRange(ref state, -size.x * 0.46f, size.x * 0.46f);
+                float y = CaveVisualRange(ref state, -size.y * 0.44f, size.y * 0.44f);
+                float length = CaveVisualRange(ref state, 0.16f, 0.42f);
+                AppendPencilQuad(
+                    hatchVertices,
+                    hatchColors,
+                    hatchTriangles,
+                    new Vector2(x - length * 0.5f, y - length * 0.22f),
+                    new Vector2(x + length * 0.5f, y + length * 0.22f),
+                    CaveVisualRange(ref state, 0.012f, 0.026f),
+                    new Color(0.36f, 0.72f, 0.9f, CaveVisualRange(ref state, 0.14f, 0.28f)));
+            }
+            CreatePencilMesh(
+                parent,
+                "Ice Blue Pencil Hatch Mesh",
+                hatchVertices,
+                hatchColors,
+                hatchTriangles,
+                10);
+
+            if (addSnowCap)
+            {
+                float capHeight = Mathf.Clamp(size.y * 0.2f, 0.12f, 0.34f);
+                GameObject cap = new GameObject("Soft Snow Cap");
+                cap.transform.SetParent(parent, false);
+                cap.transform.localPosition = new Vector3(0f, size.y * 0.5f - capHeight * 0.42f, -0.02f);
+                cap.transform.localScale = new Vector3(Mathf.Max(0.1f, size.x - 0.05f), capHeight, 1f);
+                SpriteRenderer capRenderer = cap.AddComponent<SpriteRenderer>();
+                capRenderer.sprite = GetSquareSprite();
+                capRenderer.color = new Color(0.96f, 0.99f, 1f, 0.96f);
+                capRenderer.sortingOrder = 13;
+
+                int segments = Mathf.Clamp(Mathf.CeilToInt(size.x / 0.7f), 5, 48);
+                Vector3[] ridge = new Vector3[segments + 1];
+                for (int point = 0; point <= segments; point++)
+                {
+                    float t = point / (float)segments;
+                    float x = Mathf.Lerp(-size.x * 0.5f, size.x * 0.5f, t);
+                    float wobble = Mathf.Sin(point * 1.91f + seed * 0.013f) * Mathf.Min(0.045f, capHeight * 0.18f);
+                    ridge[point] = new Vector3(x, size.y * 0.5f - capHeight * 0.1f + wobble, 0f);
+                }
+                AddDoodleLine(
+                    "Snow Cap Blue Pencil Edge",
+                    parent,
+                    ridge,
+                    new Color(0.28f, 0.66f, 0.86f, 0.82f),
+                    0.045f,
+                    15);
+            }
+        }
+
+        private static void AddSnowfieldTerrainBoxOutline(Transform parent, Vector2 size)
+        {
+            AddSolidStraightBoxOutline(
+                parent,
+                size,
+                SnowfieldTerrainStrokeColor,
+                SnowfieldTerrainAccentColor,
+                0.062f);
+        }
+
+        private static void AddAmusementParkTerrainFill(Transform parent, Vector2 size, int seed)
+        {
+            AddSolidPencilFill(parent, size, AmusementBlueColor, 4, 0.82f);
+
+            float tileHeight = Mathf.Clamp(size.y * 0.32f, 0.16f, 0.38f);
+            GameObject surface = new GameObject("Cream Tile Surface");
+            surface.transform.SetParent(parent, false);
+            surface.transform.localPosition = new Vector3(0f, size.y * 0.5f - tileHeight * 0.5f, -0.02f);
+            surface.transform.localScale = new Vector3(Mathf.Max(0.1f, size.x - 0.04f), tileHeight, 1f);
+            SpriteRenderer surfaceRenderer = surface.AddComponent<SpriteRenderer>();
+            surfaceRenderer.sprite = GetSquareSprite();
+            surfaceRenderer.color = AmusementCreamColor;
+            surfaceRenderer.sortingOrder = 13;
+
+            int tileCount = Mathf.Clamp(Mathf.RoundToInt(size.x / 1.7f), 1, 48);
+            for (int tile = 1; tile < tileCount; tile++)
+            {
+                float x = Mathf.Lerp(-size.x * 0.5f, size.x * 0.5f, tile / (float)tileCount);
+                AddDoodleLine(
+                    "Cream Tile Joint",
+                    parent,
+                    new[]
+                    {
+                        new Vector3(x, size.y * 0.5f - tileHeight, 0f),
+                        new Vector3(x, size.y * 0.5f, 0f)
+                    },
+                    new Color(0.64f, 0.49f, 0.31f, 0.42f),
+                    0.025f,
+                    14);
+            }
+
+            if (size.y >= 0.55f && size.x >= 3f)
+            {
+                int starCount = Mathf.Clamp(Mathf.FloorToInt(size.x / 5.5f), 1, 16);
+                for (int star = 0; star < starCount; star++)
+                {
+                    float x = Mathf.Lerp(
+                        -size.x * 0.5f + 1.3f,
+                        size.x * 0.5f - 1.3f,
+                        starCount == 1 ? 0.5f : star / (float)(starCount - 1));
+                    AddAmusementStar(
+                        parent,
+                        new Vector2(x, -size.y * 0.12f),
+                        Mathf.Clamp(size.y * 0.24f, 0.13f, 0.28f),
+                        new Color(1f, 0.77f, 0.2f, 0.88f),
+                        15,
+                        seed + star * 31);
+                }
+            }
+        }
+
+        private static void AddAmusementParkBoundaryFill(
+            Transform parent,
+            Vector2 size,
+            string sideName,
+            int seed)
+        {
+            if (sideName == "Boundary Ceiling")
+            {
+                AddSolidPencilFill(parent, size, AmusementCreamColor, 4, 0.78f);
+                int grainCount = Mathf.Clamp(Mathf.CeilToInt(size.x / 3.2f), 4, 64);
+                for (int grain = 0; grain < grainCount; grain++)
+                {
+                    float x = Mathf.Lerp(-size.x * 0.48f, size.x * 0.48f, (grain + 0.5f) / grainCount);
+                    float y = Mathf.Sin(grain * 1.73f + seed * 0.001f) * size.y * 0.16f;
+                    AddDoodleLine(
+                        "Cream Wood Grain",
+                        parent,
+                        new[] { new Vector3(x - 0.45f, y, 0f), new Vector3(x + 0.45f, y + 0.025f, 0f) },
+                        new Color(0.62f, 0.43f, 0.25f, 0.24f),
+                        0.022f,
+                        11);
+                }
+                AddAmusementBulbRow(parent, size.x, -size.y * 0.37f, 16);
+                return;
+            }
+
+            int stripeCount = Mathf.Clamp(Mathf.CeilToInt(size.x / 0.34f), 2, 10);
+            float stripeWidth = size.x / stripeCount;
+            for (int stripe = 0; stripe < stripeCount; stripe++)
+            {
+                GameObject stripeObject = new GameObject("Pastel Wall Stripe");
+                stripeObject.transform.SetParent(parent, false);
+                stripeObject.transform.localPosition = new Vector3(
+                    -size.x * 0.5f + stripeWidth * (stripe + 0.5f),
+                    0f,
+                    -0.01f);
+                stripeObject.transform.localScale = new Vector3(stripeWidth + 0.015f, size.y - 0.04f, 1f);
+                SpriteRenderer renderer = stripeObject.AddComponent<SpriteRenderer>();
+                renderer.sprite = GetSquareSprite();
+                renderer.color = stripe % 2 == 0
+                    ? new Color(0.62f, 0.87f, 0.95f, 0.92f)
+                    : new Color(1f, 0.88f, 0.49f, 0.9f);
+                renderer.sortingOrder = 10;
+            }
+        }
+
+        private static void AddAmusementBulbRow(
+            Transform parent,
+            float width,
+            float y,
+            int sortingOrder,
+            float centerX = 0f)
+        {
+            int count = Mathf.Clamp(Mathf.RoundToInt(width / 1.35f), 3, 64);
+            for (int bulb = 0; bulb < count; bulb++)
+            {
+                float x = centerX + Mathf.Lerp(
+                    -width * 0.46f,
+                    width * 0.46f,
+                    count == 1 ? 0.5f : bulb / (float)(count - 1));
+                GameObject light = new GameObject("Small Carnival Bulb");
+                light.transform.SetParent(parent, false);
+                light.transform.localPosition = new Vector3(x, y, -0.03f);
+                light.transform.localScale = Vector3.one * (bulb % 3 == 0 ? 0.19f : 0.16f);
+                SpriteRenderer renderer = light.AddComponent<SpriteRenderer>();
+                renderer.sprite = GetCircleSprite();
+                renderer.color = bulb % 3 == 0
+                    ? new Color(1f, 0.56f, 0.38f, 0.96f)
+                    : bulb % 3 == 1
+                        ? new Color(1f, 0.84f, 0.25f, 0.98f)
+                        : new Color(0.42f, 0.82f, 0.96f, 0.96f);
+                renderer.sortingOrder = sortingOrder;
+            }
+        }
+
+        private static void AddAmusementStar(
+            Transform parent,
+            Vector2 center,
+            float radius,
+            Color color,
+            int sortingOrder,
+            int seed)
+        {
+            Vector3[] points = new Vector3[11];
+            float rotation = -90f + Mathf.Sin(seed * 0.017f) * 4f;
+            for (int point = 0; point < 10; point++)
+            {
+                float pointRadius = (point & 1) == 0 ? radius : radius * 0.43f;
+                float radians = (rotation + point * 36f) * Mathf.Deg2Rad;
+                points[point] = new Vector3(
+                    center.x + Mathf.Cos(radians) * pointRadius,
+                    center.y + Mathf.Sin(radians) * pointRadius,
+                    0f);
+            }
+            points[10] = points[0];
+            AddDoodleLine("Yellow Carnival Star", parent, points, color, 0.045f, sortingOrder);
+        }
+
+        private static Color GetCompetitionArenaPaperColor(StageObjectData data)
+        {
+            if (IsCompetitionArenaBottomFloor(data)) return ArenaSandColor;
+            if (IsCompetitionArenaCeiling(data)) return ArenaStoneGrayColor;
+            if (data != null && data.type == StageObjectType.Wall) return ArenaStoneColor;
+            return ArenaBlueStoneColor;
+        }
+
+        private static bool IsCompetitionArenaBottomFloor(StageObjectData data)
+        {
+            return data != null
+                && !string.IsNullOrEmpty(data.objectId)
+                && data.objectId.IndexOf("outer_bottom", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static bool IsCompetitionArenaCeiling(StageObjectData data)
+        {
+            if (data == null || string.IsNullOrEmpty(data.objectId)) return false;
+            return data.objectId.IndexOf("outer_top", StringComparison.OrdinalIgnoreCase) >= 0
+                || data.objectId.IndexOf("top_frame", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static void AddCompetitionArenaTerrainFill(
+            Transform parent,
+            StageObjectData data,
+            int seed)
+        {
+            Color fill = GetCompetitionArenaPaperColor(data);
+            if (IsCompetitionArenaBottomFloor(data))
+            {
+                AddSolidPencilFill(parent, data.size, ArenaSandColor, 4, 0.72f);
+                uint state = CreateCaveVisualState(seed + 7919);
+                int grainCount = Mathf.Clamp(Mathf.CeilToInt(data.size.x * data.size.y * 0.7f), 8, 70);
+                for (int grain = 0; grain < grainCount; grain++)
+                {
+                    Vector2 center = new Vector2(
+                        CaveVisualRange(ref state, -data.size.x * 0.47f, data.size.x * 0.47f),
+                        CaveVisualRange(ref state, -data.size.y * 0.4f, data.size.y * 0.4f));
+                    AddDoodleLine(
+                        "Arena Sand Grain",
+                        parent,
+                        new[] { (Vector3)center, (Vector3)(center + new Vector2(0.08f, 0.025f)) },
+                        new Color(0.63f, 0.43f, 0.18f, 0.28f),
+                        0.016f,
+                        10);
+                }
+                AddCompetitionArenaStoneJoints(parent, data.size, seed, new Color(0.46f, 0.38f, 0.27f, 0.26f));
+                return;
+            }
+
+            AddCompetitionArenaStoneFill(
+                parent,
+                data.size,
+                fill,
+                seed,
+                data.type == StageObjectType.Wall || IsCompetitionArenaCeiling(data));
+            if (IsCompetitionArenaCeiling(data))
+            {
+                AddCompetitionArenaCornerLights(parent, data.size);
+            }
+        }
+
+        private static void AddCompetitionArenaStoneFill(
+            Transform parent,
+            Vector2 size,
+            Color color,
+            int seed,
+            bool heavyStone)
+        {
+            AddSolidPencilFill(parent, size, color, 4, heavyStone ? 0.76f : 0.88f);
+            AddCompetitionArenaStoneJoints(
+                parent,
+                size,
+                seed,
+                new Color(ArenaOutlineColor.r, ArenaOutlineColor.g, ArenaOutlineColor.b, heavyStone ? 0.32f : 0.24f));
+        }
+
+        private static void AddCompetitionArenaStoneJoints(
+            Transform parent,
+            Vector2 size,
+            int seed,
+            Color color,
+            int sortingOrder = 11)
+        {
+            float rowHeight = Mathf.Clamp(size.y > size.x ? 1.35f : 0.62f, 0.42f, 1.45f);
+            int rows = Mathf.Clamp(Mathf.CeilToInt(size.y / rowHeight), 1, 42);
+            for (int row = 1; row < rows; row++)
+            {
+                float y = Mathf.Lerp(-size.y * 0.5f, size.y * 0.5f, row / (float)rows);
+                AddDoodleLine(
+                    "Arena Stone Horizontal Joint",
+                    parent,
+                    new[] { new Vector3(-size.x * 0.5f, y, 0f), new Vector3(size.x * 0.5f, y, 0f) },
+                    color,
+                    0.025f,
+                    sortingOrder);
+            }
+
+            float columnWidth = size.y > size.x ? Mathf.Max(0.22f, size.x * 0.5f) : 1.65f;
+            int columns = Mathf.Clamp(Mathf.CeilToInt(size.x / columnWidth), 1, 48);
+            for (int column = 1; column < columns; column++)
+            {
+                float x = Mathf.Lerp(-size.x * 0.5f, size.x * 0.5f, column / (float)columns);
+                float offset = ((column + seed) & 1) == 0 ? rowHeight * 0.22f : -rowHeight * 0.22f;
+                AddDoodleLine(
+                    "Arena Stone Vertical Joint",
+                    parent,
+                    new[]
+                    {
+                        new Vector3(x, -size.y * 0.5f, 0f),
+                        new Vector3(x + Mathf.Sin(column * 1.9f + seed * 0.001f) * 0.025f, size.y * 0.5f + offset * 0.02f, 0f)
+                    },
+                    color,
+                    0.022f,
+                    sortingOrder);
+            }
+        }
+
+        private static void AddCompetitionArenaCornerLights(Transform parent, Vector2 size)
+        {
+            for (int side = -1; side <= 1; side += 2)
+            {
+                float x = side * (size.x * 0.5f - Mathf.Min(1.1f, size.x * 0.18f));
+                AddDoodleLine(
+                    "Arena Spotlight Bracket",
+                    parent,
+                    new[]
+                    {
+                        new Vector3(x - side * 0.28f, -size.y * 0.2f, 0f),
+                        new Vector3(x, -size.y * 0.48f, 0f),
+                        new Vector3(x + side * 0.3f, -size.y * 0.28f, 0f)
+                    },
+                    ArenaOutlineColor,
+                    0.06f,
+                    16);
+                GameObject light = new GameObject("Arena Corner Light");
+                light.transform.SetParent(parent, false);
+                light.transform.localPosition = new Vector3(x, -size.y * 0.42f, -0.03f);
+                light.transform.localScale = Vector3.one * 0.28f;
+                SpriteRenderer renderer = light.AddComponent<SpriteRenderer>();
+                renderer.sprite = GetCircleSprite();
+                renderer.color = new Color(1f, 0.84f, 0.35f, 0.96f);
+                renderer.sortingOrder = 17;
+            }
         }
 
         private static void AddNatureTerrainBoxOutline(Transform parent, Vector2 size)
@@ -1925,7 +2585,10 @@ namespace DrawBody.Prototype
             bool useUnderwaterTerrainStyle = false,
             bool useNightCityTerrainStyle = false,
             bool useFactoryTerrainStyle = false,
-            bool useSpaceTerrainStyle = false)
+            bool useSpaceTerrainStyle = false,
+            bool useSnowfieldTerrainStyle = false,
+            bool useAmusementParkTerrainStyle = false,
+            bool useCompetitionArenaTerrainStyle = false)
         {
             float visibleLength = Mathf.Max(0.04f, length - 0.07f);
             GameObject mask = new GameObject("Connected Terrain Seam Mask");
@@ -1944,6 +2607,12 @@ namespace DrawBody.Prototype
                     ? FactoryTerrainPaperColor
                 : useSpaceTerrainStyle
                     ? SpaceTerrainPaperColor
+                : useSnowfieldTerrainStyle
+                    ? SnowfieldTerrainPaperColor
+                : useAmusementParkTerrainStyle
+                    ? AmusementBlueColor
+                : useCompetitionArenaTerrainStyle
+                    ? ArenaStoneColor
                 : useNatureTerrainStyle
                     ? TitleTerrainPaperColor
                     : new Color(0.985f, 0.975f, 0.93f, 1f);
@@ -1959,6 +2628,12 @@ namespace DrawBody.Prototype
                     ? new Color(FactoryTerrainStrokeColor.r, FactoryTerrainStrokeColor.g, FactoryTerrainStrokeColor.b, 0.4f)
                 : useSpaceTerrainStyle
                     ? new Color(SpaceTerrainStrokeColor.r, SpaceTerrainStrokeColor.g, SpaceTerrainStrokeColor.b, 0.42f)
+                : useSnowfieldTerrainStyle
+                    ? new Color(SnowfieldTerrainStrokeColor.r, SnowfieldTerrainStrokeColor.g, SnowfieldTerrainStrokeColor.b, 0.3f)
+                : useAmusementParkTerrainStyle
+                    ? new Color(AmusementBlueColor.r, AmusementBlueColor.g, AmusementBlueColor.b, 0.32f)
+                : useCompetitionArenaTerrainStyle
+                    ? new Color(ArenaOutlineColor.r, ArenaOutlineColor.g, ArenaOutlineColor.b, 0.3f)
                 : useNatureTerrainStyle
                     ? new Color(TitleTerrainStrokeColor.r, TitleTerrainStrokeColor.g, TitleTerrainStrokeColor.b, 0.3f)
                     : new Color(0.22f, 0.2f, 0.16f, 0.22f);
@@ -3278,8 +3953,10 @@ namespace DrawBody.Prototype
                 gaugeWidth,
                 readyLampSize,
                 data.actionStrength,
-                data.spawnPattern == 1,
-                data.spawnBoxSize);
+                (data.spawnPattern & 1) != 0,
+                data.spawnBoxSize,
+                (data.spawnPattern & 2) != 0 ? 0.82f : 0.14f,
+                (data.spawnPattern & 4) != 0);
             AddEditorMetadata(obj, data);
             return obj;
         }
@@ -3538,7 +4215,16 @@ namespace DrawBody.Prototype
                     : data.type == StageObjectType.Barrel ? 4f : 2.5f;
             rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
             rb.interpolation = RigidbodyInterpolation2D.None;
-            rb.sleepMode = RigidbodySleepMode2D.StartAsleep;
+            bool iceRaceCrate = !string.IsNullOrEmpty(data.objectId)
+                && data.objectId.StartsWith("10-1-lane-", StringComparison.Ordinal)
+                && (data.type == StageObjectType.WoodBox
+                    || data.type == StageObjectType.IronBox
+                    || data.type == StageObjectType.TriangleBox
+                    || data.type == StageObjectType.RubberBox);
+            rb.gravityScale = iceRaceCrate ? 1.15f : 1f;
+            rb.sleepMode = iceRaceCrate
+                ? RigidbodySleepMode2D.StartAwake
+                : RigidbodySleepMode2D.StartAsleep;
             rb.linearDamping = 0.12f;
             rb.angularDamping = 0.18f;
             obj.AddComponent<CarryableObject>();
@@ -4810,8 +5496,16 @@ namespace DrawBody.Prototype
             root.transform.position = data.position;
             root.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
 
+            bool solidStage41DriveButton = data.objectId == "4-1-coop-drive-button";
             Vector2 baseSize = new Vector2(data.size.x, data.size.y * 0.34f);
-            GameObject baseBox = CreateBox("Button Base", Vector2.zero, baseSize, new Color(0.08f, 0.08f, 0.08f, 0.04f), root.transform);
+            GameObject baseBox = CreateBox(
+                "Button Base",
+                Vector2.zero,
+                baseSize,
+                solidStage41DriveButton
+                    ? new Color(0.3f, 0.28f, 0.22f, 0.96f)
+                    : new Color(0.08f, 0.08f, 0.08f, 0.04f),
+                root.transform);
             baseBox.transform.localPosition = new Vector3(0f, -data.size.y * 0.16f, 0f);
             AddPencilFillLocal(baseBox.transform, baseSize, new Color(0.08f, 0.08f, 0.08f));
             AddSketchBoxOutline(baseBox.transform, baseSize, Color.black, 0.045f);
@@ -4819,7 +5513,19 @@ namespace DrawBody.Prototype
             bool simultaneous = data.type == StageObjectType.SimultaneousButton;
             bool hold = data.type == StageObjectType.HoldButton;
             bool escortFriend = data.type == StageObjectType.EscortFriendButton;
-            Color capColor = escortFriend
+            bool stage31BlueButton = !string.IsNullOrEmpty(data.objectId)
+                && data.objectId == "3-1-coop-blue-button";
+            bool stage31RedButton = !string.IsNullOrEmpty(data.objectId)
+                && data.objectId == "3-1-coop-red-button";
+            bool stage31GreenButton = !string.IsNullOrEmpty(data.objectId)
+                && data.objectId == "3-1-coop-green-button";
+            Color capColor = stage31BlueButton
+                ? new Color(0.12f, 0.52f, 0.95f)
+                : stage31RedButton
+                    ? new Color(0.95f, 0.18f, 0.16f)
+                : stage31GreenButton
+                    ? new Color(0.12f, 0.72f, 0.28f)
+                : escortFriend
                 ? new Color(0.16f, 0.78f, 0.9f)
                 : simultaneous
                 ? new Color(0.1f, 0.48f, 0.95f)
@@ -4831,7 +5537,7 @@ namespace DrawBody.Prototype
                 "Button Cap",
                 Vector2.zero,
                 capSize,
-                new Color(capColor.r, capColor.g, capColor.b, 0.2f),
+                new Color(capColor.r, capColor.g, capColor.b, solidStage41DriveButton ? 0.92f : 0.2f),
                 root.transform);
             cap.transform.localPosition = new Vector3(0f, data.size.y * 0.12f, -0.02f);
             AddPencilFillLocal(cap.transform, capSize, capColor);
@@ -4873,20 +5579,33 @@ namespace DrawBody.Prototype
 
         private GameObject CreateGoal(StageObjectData data, Transform parent)
         {
+            bool iceRaceGoal = !string.IsNullOrEmpty(data.objectId)
+                && data.objectId.StartsWith("10-1-lane-", StringComparison.Ordinal);
             GameObject obj = new GameObject(data.objectId);
             obj.name = "Goal";
             obj.transform.SetParent(parent, false);
             obj.transform.position = data.position;
-            obj.transform.localScale = new Vector3(data.size.x, data.size.y, 1f);
+            obj.transform.localScale = iceRaceGoal
+                ? Vector3.one
+                : new Vector3(data.size.x, data.size.y, 1f);
             obj.layer = goalLayer;
             obj.tag = "Goal";
             obj.transform.rotation = Quaternion.Euler(0f, 0f, data.rotation);
 
             BoxCollider2D collider = obj.AddComponent<BoxCollider2D>();
-            collider.size = new Vector2(2.2f, 0.86f);
-            collider.offset = new Vector2(0f, -0.02f);
+            collider.size = iceRaceGoal
+                ? new Vector2(Mathf.Max(2.4f, data.size.x), Mathf.Max(3f, data.size.y))
+                : new Vector2(2.2f, 0.86f);
+            collider.offset = iceRaceGoal ? Vector2.zero : new Vector2(0f, -0.02f);
             collider.isTrigger = true;
             obj.AddComponent<Goal>();
+
+            if (iceRaceGoal)
+            {
+                BuildIceRaceFinishGate(obj.transform, data.size);
+                AddEditorMetadata(obj, data);
+                return obj;
+            }
 
             // Goal artwork is scenery behind the character. Keeping it below
             // the body stroke order (10) prevents the doorway from covering a
@@ -4950,6 +5669,59 @@ namespace DrawBody.Prototype
             }, new Color(0.2f, 0.75f, 1f, 0.42f), 0.022f, 6);
             AddEditorMetadata(obj, data);
             return obj;
+        }
+
+        private static void BuildIceRaceFinishGate(Transform parent, Vector2 requestedSize)
+        {
+            float height = Mathf.Max(4.8f, requestedSize.y);
+            float openingWidth = Mathf.Max(3.2f, requestedSize.x + 1.8f);
+            float tile = 0.48f;
+            Color paperWhite = new Color(0.96f, 0.97f, 0.94f, 1f);
+            Color pencilBlack = new Color(0.08f, 0.09f, 0.1f, 1f);
+
+            int verticalTiles = Mathf.Max(4, Mathf.CeilToInt(height / tile));
+            float actualHeight = verticalTiles * tile;
+            for (int side = 0; side < 2; side++)
+            {
+                float x = (side == 0 ? -1f : 1f) * openingWidth * 0.5f;
+                for (int y = 0; y < verticalTiles; y++)
+                {
+                    CreateFinishTile(parent, "Finish Post", new Vector2(x, -actualHeight * 0.5f + tile * (y + 0.5f)),
+                        new Vector2(tile, tile), (y + side) % 2 == 0 ? paperWhite : pencilBlack);
+                }
+            }
+
+            int horizontalTiles = Mathf.Max(5, Mathf.CeilToInt(openingWidth / tile) + 1);
+            float actualWidth = horizontalTiles * tile;
+            for (int x = 0; x < horizontalTiles; x++)
+            {
+                for (int row = 0; row < 2; row++)
+                {
+                    CreateFinishTile(parent, "Finish Banner",
+                        new Vector2(-actualWidth * 0.5f + tile * (x + 0.5f), actualHeight * 0.5f - tile * (row + 0.5f)),
+                        new Vector2(tile, tile), (x + row) % 2 == 0 ? paperWhite : pencilBlack);
+                }
+            }
+
+            AddDoodleLine("Finish Gate Outline", parent, new[]
+            {
+                new Vector3(-openingWidth * 0.5f - tile * 0.52f, -actualHeight * 0.5f, 0f),
+                new Vector3(-openingWidth * 0.5f - tile * 0.52f, actualHeight * 0.5f, 0f),
+                new Vector3(openingWidth * 0.5f + tile * 0.52f, actualHeight * 0.5f, 0f),
+                new Vector3(openingWidth * 0.5f + tile * 0.52f, -actualHeight * 0.5f, 0f)
+            }, new Color(0.04f, 0.04f, 0.05f, 0.92f), 0.055f, 8);
+        }
+
+        private static void CreateFinishTile(Transform parent, string name, Vector2 position, Vector2 size, Color color)
+        {
+            GameObject tile = new GameObject(name);
+            tile.transform.SetParent(parent, false);
+            tile.transform.localPosition = new Vector3(position.x, position.y, -0.025f);
+            tile.transform.localScale = new Vector3(size.x, size.y, 1f);
+            SpriteRenderer renderer = tile.AddComponent<SpriteRenderer>();
+            renderer.sprite = GetSquareSprite();
+            renderer.color = color;
+            renderer.sortingOrder = 6;
         }
 
         private GameObject CreateMarker(StageObjectData data, Transform parent, Color color)
@@ -5261,11 +6033,15 @@ namespace DrawBody.Prototype
 
             Font font = GetMonitorFont();
             bool compactClock = size.y < 1.45f;
-            float characterSize = (compactClock ? 0.067f : 0.075f) * clockScale;
+            bool iceRaceMonitor = !string.IsNullOrEmpty(data.objectId)
+                && data.objectId.StartsWith("10-1-lane-", StringComparison.Ordinal);
+            if (iceRaceMonitor) ledRenderer.color = new Color(0.12f, 0.14f, 0.16f, 1f);
+            float characterSize = (iceRaceMonitor ? 0.036f : compactClock ? 0.067f : 0.075f) * clockScale;
             float digitsY = compactClock ? size.y * 0.075f : -size.y * 0.075f;
             float progressY = compactClock ? -size.y * 0.275f : -size.y * 0.32f;
             if (!compactClock && (string.IsNullOrEmpty(data.objectId)
-                || !data.objectId.StartsWith("9-2_", System.StringComparison.Ordinal)))
+                || !data.objectId.StartsWith("9-2_", System.StringComparison.Ordinal)
+                    && !iceRaceMonitor))
             {
                 CreateClockText(
                     obj.transform,
@@ -5277,33 +6053,39 @@ namespace DrawBody.Prototype
                     new Vector3(0f, size.y * 0.3f, -0.065f),
                     "TIME");
             }
+            string previewDigits = iceRaceMonitor
+                ? LocalizationManager.Format("ice_race_rule", "4:00.0")
+                : "01:00.0";
+            string previewProgress = iceRaceMonitor
+                ? "P1 --   P2 --   P3 --   P4 --"
+                : "FISH  0 / 0";
             TextMesh shadow = CreateClockText(
                 obj.transform,
                 "Clock Shadow",
                 font,
                 characterSize,
-                new Color(0.18f, 0.27f, 0.3f, 0.28f),
+                iceRaceMonitor ? Color.clear : new Color(0.18f, 0.27f, 0.3f, 0.28f),
                 -20,
                 new Vector3(0.02f * clockScale, digitsY - 0.02f * clockScale, -0.07f),
-                "01:00.0");
+                previewDigits);
             TextMesh digits = CreateClockText(
                 obj.transform,
                 "Clock Digits",
                 font,
                 characterSize,
-                new Color(0.04f, 0.43f, 0.58f, 1f),
+                iceRaceMonitor ? graphite : new Color(0.04f, 0.43f, 0.58f, 1f),
                 -19,
                 new Vector3(0f, digitsY, -0.08f),
-                "01:00.0");
+                previewDigits);
             TextMesh progress = CreateClockText(
                 obj.transform,
                 "Clock Fish Progress",
                 font,
                 (compactClock ? 0.024f : 0.029f) * clockScale,
-                new Color(0.1f, 0.28f, 0.5f, 1f),
+                iceRaceMonitor ? graphite : new Color(0.1f, 0.28f, 0.5f, 1f),
                 -19,
                 new Vector3(0f, progressY, -0.08f),
-                "FISH  0 / 0");
+                previewProgress);
 
             StageChallengeClock clock = obj.AddComponent<StageChallengeClock>();
             clock.Configure(digits, shadow, progress, ledRenderer, 60f);
@@ -5448,7 +6230,10 @@ namespace DrawBody.Prototype
                     || data.type == StageObjectType.Wall
                     || data.type == StageObjectType.FallingFloor
                     || data.type == StageObjectType.BreakableWall
-                    || data.type == StageObjectType.BulletBreakableWall)
+                    || data.type == StageObjectType.BulletBreakableWall
+                    || (data.type == StageObjectType.Door
+                        && !string.IsNullOrEmpty(data.objectId)
+                        && data.objectId.StartsWith("3-1-coop-", StringComparison.Ordinal)))
                 && ((!string.IsNullOrEmpty(data.objectId)
                         && data.objectId.StartsWith("title-playground-", StringComparison.Ordinal))
                     || UsesNatureStageTheme(parent));
@@ -5489,6 +6274,30 @@ namespace DrawBody.Prototype
                 && (IsCaveTerrainType(data.type)
                     || data.type == StageObjectType.EscortPlayerOneWayFloor)
                 && UsesSpaceStageTheme(parent);
+        }
+
+        private bool UsesSnowfieldTerrainStyle(StageObjectData data, Transform parent)
+        {
+            return data != null
+                && (IsCaveTerrainType(data.type)
+                    || data.type == StageObjectType.IceFloor
+                    || data.type == StageObjectType.SlipperySlope)
+                && UsesSnowfieldStageTheme(parent);
+        }
+
+        private bool UsesAmusementParkTerrainStyle(StageObjectData data, Transform parent)
+        {
+            return data != null
+                && (IsCaveTerrainType(data.type)
+                    || data.type == StageObjectType.RotatingPlatform)
+                && UsesAmusementParkStageTheme(parent);
+        }
+
+        private bool UsesCompetitionArenaTerrainStyle(StageObjectData data, Transform parent)
+        {
+            return data != null
+                && IsCaveTerrainType(data.type)
+                && UsesCompetitionArenaStageTheme(parent);
         }
 
         private static bool IsCaveTerrainType(StageObjectType type)
@@ -5566,10 +6375,42 @@ namespace DrawBody.Prototype
             return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
         }
 
+        private bool UsesSnowfieldStageTheme(Transform parent)
+        {
+            if (parent == null || visualThemeRoot == null || !IsSnowfieldStageId(visualThemeStageId))
+            {
+                return false;
+            }
+
+            return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
+        }
+
+        private bool UsesAmusementParkStageTheme(Transform parent)
+        {
+            if (parent == null || visualThemeRoot == null || !IsAmusementParkStageId(visualThemeStageId))
+            {
+                return false;
+            }
+
+            return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
+        }
+
+        private bool UsesCompetitionArenaStageTheme(Transform parent)
+        {
+            if (parent == null || visualThemeRoot == null || !IsCompetitionArenaStageId(visualThemeStageId))
+            {
+                return false;
+            }
+
+            return parent == visualThemeRoot || parent.IsChildOf(visualThemeRoot);
+        }
+
         private static bool IsNatureStageId(string stageId)
         {
             return stageId == "1-1"
+                || stageId == "1-3"
                 || stageId == "2-1"
+                || stageId == "2-3"
                 || stageId == "3-1"
                 || stageId == "5-2"
                 || stageId == "7-2"
@@ -5595,6 +6436,7 @@ namespace DrawBody.Prototype
             return stageId == "3-3"
                 || stageId == "5-1"
                 || stageId == "6-1"
+                || stageId == "9-2"
                 || stageId == "12-3"
                 || stageId == "13-1";
         }
@@ -5603,6 +6445,7 @@ namespace DrawBody.Prototype
         {
             return stageId == "4-1"
                 || stageId == "4-2"
+                || stageId == "5-3"
                 || stageId == "6-2"
                 || stageId == "7-3"
                 || stageId == "8-1"
@@ -5621,6 +6464,21 @@ namespace DrawBody.Prototype
                 || stageId == "15-1"
                 || stageId == "15-2"
                 || stageId == "15-3";
+        }
+
+        private static bool IsSnowfieldStageId(string stageId)
+        {
+            return stageId == "10-1" || stageId == "14-1";
+        }
+
+        private static bool IsAmusementParkStageId(string stageId)
+        {
+            return stageId == "7-1" || stageId == "11-1";
+        }
+
+        private static bool IsCompetitionArenaStageId(string stageId)
+        {
+            return stageId == "8-2" || stageId == "8-3" || stageId == "13-2";
         }
 
         private static bool IsUnderwaterHorizontalPlatform(StageObjectData data)
@@ -6372,6 +7230,847 @@ namespace DrawBody.Prototype
                 detailBounds.yMin - 24f,
                 detailBounds.xMax + 72f,
                 detailBounds.yMax + 24f);
+        }
+
+        private static Rect GetSnowfieldBackdropBounds(
+            string stageId,
+            IList<StageObjectData> objects)
+        {
+            if (stageId == "10-1")
+            {
+                return Rect.MinMaxRect(-142f, -78f, 214f, 36f);
+            }
+
+            if (stageId == "14-1")
+            {
+                return Rect.MinMaxRect(-22f, -10f, 22f, 15f);
+            }
+
+            return GetCaveBackdropBounds(objects);
+        }
+
+        private static void AddSnowfieldBackdrop(Transform parent, Rect bounds, int seed)
+        {
+            Rect colorBounds = GetBackdropColorFillBounds(bounds);
+            GameObject wash = new GameObject("Snowfield Pale Blue Pencil Wash");
+            wash.transform.SetParent(parent, false);
+            wash.transform.localPosition = new Vector3(colorBounds.center.x, colorBounds.center.y, 0f);
+            wash.transform.localScale = new Vector3(colorBounds.width, colorBounds.height, 1f);
+            SpriteRenderer washRenderer = wash.AddComponent<SpriteRenderer>();
+            washRenderer.sprite = GetSquareSprite();
+            washRenderer.color = SnowfieldSkyColor;
+            washRenderer.sortingOrder = -99;
+
+            uint state = CreateCaveVisualState(seed);
+            int skyStrokeCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 72f), 48, 210);
+            for (int i = 0; i < skyStrokeCount; i++)
+            {
+                Vector2 from = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin, bounds.xMax),
+                    CaveVisualRange(ref state, bounds.yMin, bounds.yMax));
+                float length = CaveVisualRange(ref state, 0.8f, 3.2f);
+                Vector2 to = from + new Vector2(length, length * CaveVisualRange(ref state, 0.05f, 0.16f));
+                AddDoodleLine(
+                    "Cold Sky Pencil Stroke",
+                    parent,
+                    new[] { (Vector3)from, (Vector3)to },
+                    new Color(0.36f, 0.67f, 0.82f, CaveVisualRange(ref state, 0.035f, 0.085f)),
+                    CaveVisualRange(ref state, 0.012f, 0.026f),
+                    -98);
+            }
+
+            int scenicBandCount = Mathf.Clamp(Mathf.CeilToInt(bounds.height / 25f), 1, 5);
+            float bandSpacing = bounds.height / scenicBandCount;
+            for (int band = 0; band < scenicBandCount; band++)
+            {
+                float baseline = bounds.yMin + bandSpacing * (band + 0.16f);
+                AddSnowfieldHorizon(parent, bounds, baseline, ref state, band);
+            }
+
+            int flakeCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 85f), 20, 130);
+            for (int flake = 0; flake < flakeCount; flake++)
+            {
+                Vector2 position = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin + 1f, bounds.xMax - 1f),
+                    CaveVisualRange(ref state, bounds.yMin + 2f, bounds.yMax - 1f));
+                float size = CaveVisualRange(ref state, 0.18f, 0.48f);
+                AddSnowfieldBackdropSprite(
+                    parent,
+                    "snow-crystal",
+                    "Background Snow Crystal",
+                    position,
+                    new Vector2(size, size),
+                    CaveVisualRange(ref state, -18f, 18f),
+                    new Color(0.55f, 0.82f, 0.94f, CaveVisualRange(ref state, 0.24f, 0.5f)),
+                    -88);
+            }
+        }
+
+        private static void AddSnowfieldHorizon(
+            Transform parent,
+            Rect bounds,
+            float baseline,
+            ref uint state,
+            int band)
+        {
+            int mountainCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 32f), 2, 14);
+            float mountainSpacing = bounds.width / mountainCount;
+            for (int mountain = 0; mountain < mountainCount; mountain++)
+            {
+                float x = bounds.xMin + mountainSpacing * (mountain + 0.5f)
+                    + CaveVisualRange(ref state, -mountainSpacing * 0.18f, mountainSpacing * 0.18f);
+                Vector2 size = new Vector2(
+                    CaveVisualRange(ref state, 8f, 14f),
+                    CaveVisualRange(ref state, 3.4f, 6.6f));
+                AddSnowfieldBackdropSprite(
+                    parent,
+                    "mountain",
+                    "Distant Snow Mountain",
+                    new Vector2(x, baseline + size.y * 0.35f),
+                    size,
+                    CaveVisualRange(ref state, -2.5f, 2.5f),
+                    new Color(0.58f, 0.75f, 0.84f, band % 2 == 0 ? 0.42f : 0.3f),
+                    -94 + band % 2);
+            }
+
+            int ridgeSegments = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 2.8f), 12, 128);
+            Vector3[] ridge = new Vector3[ridgeSegments + 1];
+            for (int point = 0; point <= ridgeSegments; point++)
+            {
+                float t = point / (float)ridgeSegments;
+                float x = Mathf.Lerp(bounds.xMin, bounds.xMax, t);
+                float y = baseline
+                    + Mathf.Sin(t * Mathf.PI * 7f + band * 1.7f) * 0.33f
+                    + Mathf.Sin(t * Mathf.PI * 17f + band * 0.8f) * 0.12f;
+                ridge[point] = new Vector3(x, y, 0f);
+            }
+            AddDoodleLine(
+                "Rolling Snowbank Blue Edge",
+                parent,
+                ridge,
+                new Color(0.38f, 0.7f, 0.84f, 0.44f),
+                0.07f,
+                -90);
+
+            int treeCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 24f), 2, 18);
+            for (int tree = 0; tree < treeCount; tree++)
+            {
+                float x = Mathf.Lerp(bounds.xMin + 2f, bounds.xMax - 2f, (tree + 0.5f) / treeCount)
+                    + CaveVisualRange(ref state, -1.6f, 1.6f);
+                float height = CaveVisualRange(ref state, 1.5f, 3f);
+                AddSnowfieldBackdropSprite(
+                    parent,
+                    "tree",
+                    "Snowy Pine",
+                    new Vector2(x, baseline + height * 0.47f),
+                    new Vector2(height * 0.62f, height),
+                    CaveVisualRange(ref state, -3f, 3f),
+                    new Color(0.35f, 0.58f, 0.58f, 0.5f),
+                    -89);
+            }
+
+            if (band % 2 == 0)
+            {
+                float snowmanHeight = CaveVisualRange(ref state, 1.25f, 1.75f);
+                AddSnowfieldBackdropSprite(
+                    parent,
+                    "snowman",
+                    "Distant Snowman",
+                    new Vector2(
+                        CaveVisualRange(ref state, bounds.xMin + bounds.width * 0.18f, bounds.xMax - bounds.width * 0.18f),
+                        baseline + snowmanHeight * 0.46f),
+                    new Vector2(snowmanHeight * 0.72f, snowmanHeight),
+                    CaveVisualRange(ref state, -4f, 4f),
+                    new Color(0.82f, 0.93f, 0.97f, 0.66f),
+                    -87);
+            }
+        }
+
+        private static void AddSnowfieldBackdropSprite(
+            Transform parent,
+            string resourceName,
+            string objectName,
+            Vector2 position,
+            Vector2 worldSize,
+            float rotation,
+            Color color,
+            int sortingOrder)
+        {
+            Sprite sprite = Resources.Load<Sprite>("StageDecorations/CrayonSet/" + resourceName);
+            if (sprite == null)
+            {
+                return;
+            }
+
+            GameObject root = new GameObject(objectName);
+            root.transform.SetParent(parent, false);
+            root.transform.localPosition = new Vector3(position.x, position.y, 0f);
+            root.transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            Vector2 sourceSize = sprite.bounds.size;
+            root.transform.localScale = new Vector3(
+                sourceSize.x > 0.001f ? worldSize.x / sourceSize.x : 1f,
+                sourceSize.y > 0.001f ? worldSize.y / sourceSize.y : 1f,
+                1f);
+            SpriteRenderer renderer = root.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = color;
+            renderer.sortingOrder = sortingOrder;
+        }
+
+        private static Rect GetAmusementParkBackdropBounds(
+            string stageId,
+            IList<StageObjectData> objects)
+        {
+            if (stageId == "7-1")
+            {
+                return Rect.MinMaxRect(-15.2f, -5.3f, 15.2f, 6.8f);
+            }
+
+            if (stageId == "11-1")
+            {
+                return Rect.MinMaxRect(-46f, -22f, 206f, 58f);
+            }
+
+            return GetCaveBackdropBounds(objects);
+        }
+
+        private static void AddAmusementParkBackdrop(Transform parent, Rect bounds, int seed)
+        {
+            Rect colorBounds = GetBackdropColorFillBounds(bounds);
+            AddAmusementPanel(
+                parent,
+                "Amusement Pale Sky Paper",
+                colorBounds.center,
+                colorBounds.size,
+                AmusementSkyColor,
+                -99);
+
+            uint state = CreateCaveVisualState(seed);
+            int skyLineCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 95f), 24, 150);
+            for (int line = 0; line < skyLineCount; line++)
+            {
+                Vector2 from = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin, bounds.xMax),
+                    CaveVisualRange(ref state, bounds.yMin, bounds.yMax));
+                float length = CaveVisualRange(ref state, 0.7f, 2.4f);
+                AddDoodleLine(
+                    "Amusement Sky Pencil Stroke",
+                    parent,
+                    new[] { (Vector3)from, (Vector3)(from + new Vector2(length, length * 0.08f)) },
+                    new Color(0.38f, 0.72f, 0.84f, CaveVisualRange(ref state, 0.035f, 0.085f)),
+                    0.018f,
+                    -98);
+            }
+
+            int scenicBands = Mathf.Clamp(Mathf.CeilToInt(bounds.height / 27f), 1, 3);
+            float bandHeight = bounds.height / scenicBands;
+            for (int band = 0; band < scenicBands; band++)
+            {
+                float baseline = bounds.yMin + bandHeight * (band + 0.18f);
+                AddAmusementParkRideBand(parent, bounds, baseline, band, ref state);
+            }
+
+            AddAmusementParkFrame(parent, bounds, ref state);
+        }
+
+        private static void AddAmusementParkRideBand(
+            Transform parent,
+            Rect bounds,
+            float baseline,
+            int band,
+            ref uint state)
+        {
+            int rideCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 34f), 1, 9);
+            float spacing = bounds.width / rideCount;
+            Color pink = new Color(0.95f, 0.49f, 0.56f, 0.34f);
+            Color blue = new Color(0.28f, 0.68f, 0.84f, 0.34f);
+            Color yellow = new Color(0.96f, 0.7f, 0.18f, 0.36f);
+            for (int ride = 0; ride < rideCount; ride++)
+            {
+                float centerX = bounds.xMin + spacing * (ride + 0.5f);
+                float centerY = baseline + CaveVisualRange(ref state, 2.5f, 4.2f);
+                if ((ride + band) % 3 == 0)
+                {
+                    float radius = CaveVisualRange(ref state, 2.2f, 3.5f);
+                    AddDoodleCircleAt(parent, new Vector2(centerX, centerY), radius, pink, 0.07f, -86);
+                    for (int spoke = 0; spoke < 8; spoke++)
+                    {
+                        float angle = spoke * Mathf.PI * 0.25f;
+                        AddDoodleLine(
+                            "Ferris Wheel Spoke",
+                            parent,
+                            new[]
+                            {
+                                new Vector3(centerX, centerY, 0f),
+                                new Vector3(centerX + Mathf.Cos(angle) * radius, centerY + Mathf.Sin(angle) * radius, 0f)
+                            },
+                            blue,
+                            0.045f,
+                            -87);
+                    }
+                    AddDoodleLine(
+                        "Ferris Wheel Stand",
+                        parent,
+                        new[]
+                        {
+                            new Vector3(centerX, centerY, 0f),
+                            new Vector3(centerX - radius * 0.55f, baseline, 0f),
+                            new Vector3(centerX, centerY, 0f),
+                            new Vector3(centerX + radius * 0.55f, baseline, 0f)
+                        },
+                        AmusementOutlineColor * 0.32f,
+                        0.065f,
+                        -88);
+                }
+                else if ((ride + band) % 3 == 1)
+                {
+                    float halfWidth = Mathf.Min(spacing * 0.33f, 4.2f);
+                    float height = CaveVisualRange(ref state, 2.5f, 4.1f);
+                    AddDoodleLine(
+                        "Carousel Tent",
+                        parent,
+                        new[]
+                        {
+                            new Vector3(centerX - halfWidth, baseline + height * 0.5f, 0f),
+                            new Vector3(centerX, baseline + height, 0f),
+                            new Vector3(centerX + halfWidth, baseline + height * 0.5f, 0f),
+                            new Vector3(centerX + halfWidth * 0.82f, baseline, 0f),
+                            new Vector3(centerX - halfWidth * 0.82f, baseline, 0f),
+                            new Vector3(centerX - halfWidth, baseline + height * 0.5f, 0f)
+                        },
+                        pink,
+                        0.075f,
+                        -86);
+                    for (int pole = -2; pole <= 2; pole++)
+                    {
+                        float x = centerX + pole * halfWidth * 0.31f;
+                        AddDoodleLine(
+                            "Carousel Pole",
+                            parent,
+                            new[] { new Vector3(x, baseline, 0f), new Vector3(x, baseline + height * 0.52f, 0f) },
+                            yellow,
+                            0.035f,
+                            -87);
+                    }
+                }
+                else
+                {
+                    AddAmusementBackdropSprite(
+                        parent,
+                        "balloon",
+                        "Distant Carnival Balloon",
+                        new Vector2(centerX, centerY + 0.8f),
+                        new Vector2(1.2f, 1.8f),
+                        CaveVisualRange(ref state, -5f, 5f),
+                        new Color(0.95f, 0.57f, 0.66f, 0.46f),
+                        -86);
+                }
+            }
+
+            int coasterPoints = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 3f), 12, 100);
+            Vector3[] coaster = new Vector3[coasterPoints];
+            for (int point = 0; point < coasterPoints; point++)
+            {
+                float t = point / (float)(coasterPoints - 1);
+                coaster[point] = new Vector3(
+                    Mathf.Lerp(bounds.xMin, bounds.xMax, t),
+                    baseline + 1.1f + Mathf.Sin(t * Mathf.PI * 9f + band) * 1.25f
+                        + Mathf.Sin(t * Mathf.PI * 21f) * 0.28f,
+                    0f);
+            }
+            AddDoodleLine("Roller Coaster Track", parent, coaster, pink, 0.08f, -89);
+        }
+
+        private static void AddAmusementParkFrame(Transform parent, Rect bounds, ref uint state)
+        {
+            const float sideWidth = 0.95f;
+            const float topHeight = 0.78f;
+            const float bottomHeight = 1.05f;
+            AddAmusementPanel(
+                parent,
+                "Cream Wooden Ceiling Frame",
+                new Vector2(bounds.center.x, bounds.yMax - topHeight * 0.5f),
+                new Vector2(bounds.width, topHeight),
+                new Color(1f, 0.9f, 0.66f, 0.9f),
+                -62);
+            AddAmusementPanel(
+                parent,
+                "Pastel Blue Floor Fascia",
+                new Vector2(bounds.center.x, bounds.yMin + bottomHeight * 0.5f),
+                new Vector2(bounds.width, bottomHeight),
+                new Color(0.43f, 0.76f, 0.9f, 0.88f),
+                -62);
+
+            int wallStripeCount = Mathf.Clamp(Mathf.CeilToInt(bounds.height / 1.25f), 5, 56);
+            float stripeHeight = bounds.height / wallStripeCount;
+            for (int side = -1; side <= 1; side += 2)
+            {
+                float x = side < 0 ? bounds.xMin + sideWidth * 0.5f : bounds.xMax - sideWidth * 0.5f;
+                for (int stripe = 0; stripe < wallStripeCount; stripe++)
+                {
+                    AddAmusementPanel(
+                        parent,
+                        "Pastel Striped Side Wall",
+                        new Vector2(x, bounds.yMin + stripeHeight * (stripe + 0.5f)),
+                        new Vector2(sideWidth, stripeHeight + 0.025f),
+                        stripe % 2 == 0
+                            ? new Color(0.58f, 0.85f, 0.95f, 0.9f)
+                            : new Color(1f, 0.84f, 0.38f, 0.88f),
+                        -60);
+                }
+            }
+
+            AddAmusementBulbRow(
+                parent,
+                bounds.width,
+                bounds.yMax - topHeight * 0.72f,
+                -54,
+                bounds.center.x);
+            AddAmusementBunting(parent, bounds, bounds.yMax - topHeight - 0.15f, ref state);
+
+            int starCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 5f), 4, 44);
+            for (int star = 0; star < starCount; star++)
+            {
+                float x = Mathf.Lerp(bounds.xMin + 1.5f, bounds.xMax - 1.5f, (star + 0.5f) / starCount);
+                AddAmusementStar(
+                    parent,
+                    new Vector2(x, bounds.yMin + bottomHeight * 0.48f),
+                    0.22f,
+                    new Color(1f, 0.76f, 0.2f, 0.72f),
+                    -53,
+                    star * 43);
+            }
+        }
+
+        private static void AddAmusementBunting(
+            Transform parent,
+            Rect bounds,
+            float y,
+            ref uint state)
+        {
+            AddDoodleLine(
+                "Carnival Bunting Cord",
+                parent,
+                new[] { new Vector3(bounds.xMin + 0.5f, y, 0f), new Vector3(bounds.xMax - 0.5f, y, 0f) },
+                new Color(0.34f, 0.29f, 0.24f, 0.58f),
+                0.035f,
+                -52);
+            int flagCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 1.8f), 5, 80);
+            Color[] colors =
+            {
+                new Color(0.96f, 0.42f, 0.46f, 0.72f),
+                new Color(0.35f, 0.72f, 0.9f, 0.72f),
+                new Color(1f, 0.72f, 0.2f, 0.75f)
+            };
+            for (int flag = 0; flag < flagCount; flag++)
+            {
+                float x = Mathf.Lerp(bounds.xMin + 0.75f, bounds.xMax - 0.75f, (flag + 0.5f) / flagCount);
+                float width = CaveVisualRange(ref state, 0.38f, 0.58f);
+                float drop = CaveVisualRange(ref state, 0.48f, 0.78f);
+                AddDoodleLine(
+                    "Triangle Carnival Flag",
+                    parent,
+                    new[]
+                    {
+                        new Vector3(x - width * 0.5f, y, 0f),
+                        new Vector3(x, y - drop, 0f),
+                        new Vector3(x + width * 0.5f, y, 0f),
+                        new Vector3(x - width * 0.5f, y, 0f)
+                    },
+                    colors[flag % colors.Length],
+                    0.055f,
+                    -51);
+            }
+        }
+
+        private static void AddAmusementPanel(
+            Transform parent,
+            string name,
+            Vector2 position,
+            Vector2 size,
+            Color color,
+            int sortingOrder)
+        {
+            GameObject panel = new GameObject(name);
+            panel.transform.SetParent(parent, false);
+            panel.transform.localPosition = new Vector3(position.x, position.y, 0f);
+            panel.transform.localScale = new Vector3(size.x, size.y, 1f);
+            SpriteRenderer renderer = panel.AddComponent<SpriteRenderer>();
+            renderer.sprite = GetSquareSprite();
+            renderer.color = color;
+            renderer.sortingOrder = sortingOrder;
+        }
+
+        private static void AddAmusementBackdropSprite(
+            Transform parent,
+            string resourceName,
+            string objectName,
+            Vector2 position,
+            Vector2 worldSize,
+            float rotation,
+            Color color,
+            int sortingOrder)
+        {
+            Sprite sprite = Resources.Load<Sprite>("StageDecorations/CrayonSet/" + resourceName);
+            if (sprite == null) return;
+
+            GameObject root = new GameObject(objectName);
+            root.transform.SetParent(parent, false);
+            root.transform.localPosition = new Vector3(position.x, position.y, 0f);
+            root.transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            Vector2 sourceSize = sprite.bounds.size;
+            root.transform.localScale = new Vector3(
+                sourceSize.x > 0.001f ? worldSize.x / sourceSize.x : 1f,
+                sourceSize.y > 0.001f ? worldSize.y / sourceSize.y : 1f,
+                1f);
+            SpriteRenderer renderer = root.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = color;
+            renderer.sortingOrder = sortingOrder;
+        }
+
+        private static Rect GetCompetitionArenaBackdropBounds(
+            string stageId,
+            IList<StageObjectData> objects)
+        {
+            if (stageId == "8-2" || stageId == "13-2")
+            {
+                return Rect.MinMaxRect(-17.5f, -10.2f, 17.5f, 12.4f);
+            }
+
+            if (stageId == "8-3")
+            {
+                return Rect.MinMaxRect(-22f, -16f, 22f, 20f);
+            }
+
+            return GetCaveBackdropBounds(objects);
+        }
+
+        private static void AddCompetitionArenaBackdrop(Transform parent, Rect bounds, int seed)
+        {
+            Rect colorBounds = GetBackdropColorFillBounds(bounds);
+            AddAmusementPanel(
+                parent,
+                "Arena Pale Blue Sky",
+                colorBounds.center,
+                colorBounds.size,
+                ArenaSkyColor,
+                -99);
+
+            uint state = CreateCaveVisualState(seed);
+            float arcadeBaseline = bounds.yMin + bounds.height * 0.2f;
+            AddCompetitionArenaSeating(parent, bounds, arcadeBaseline, ref state);
+            AddCompetitionArenaArcade(parent, bounds, arcadeBaseline, ref state);
+            AddCompetitionArenaFlags(parent, bounds, arcadeBaseline, ref state);
+            AddCompetitionArenaArchitecture(parent, bounds, ref state);
+
+            int cloudCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 11f), 3, 8);
+            for (int cloud = 0; cloud < cloudCount; cloud++)
+            {
+                float x = Mathf.Lerp(bounds.xMin + 2f, bounds.xMax - 2f, (cloud + 0.5f) / cloudCount);
+                float y = CaveVisualRange(ref state, arcadeBaseline + 4.2f, bounds.yMax - 2.2f);
+                AddAmusementBackdropSprite(
+                    parent,
+                    "cloud",
+                    "Faint Arena Cloud",
+                    new Vector2(x, y),
+                    new Vector2(CaveVisualRange(ref state, 2.1f, 3.8f), CaveVisualRange(ref state, 0.7f, 1.3f)),
+                    CaveVisualRange(ref state, -3f, 3f),
+                    new Color(0.94f, 0.98f, 1f, 0.46f),
+                    -92);
+            }
+
+            AddCompetitionArenaConfetti(parent, bounds, ref state);
+        }
+
+        private static void AddCompetitionArenaSeating(
+            Transform parent,
+            Rect bounds,
+            float baseline,
+            ref uint state)
+        {
+            Vector2 center = new Vector2(bounds.center.x, baseline - 4.2f);
+            Color stoneLine = new Color(0.48f, 0.43f, 0.36f, 0.32f);
+            Color[] crowdColors =
+            {
+                new Color(0.91f, 0.3f, 0.3f, 0.48f),
+                new Color(0.2f, 0.58f, 0.91f, 0.48f),
+                new Color(0.98f, 0.74f, 0.2f, 0.5f),
+                new Color(0.37f, 0.7f, 0.42f, 0.42f)
+            };
+
+            for (int row = 0; row < 3; row++)
+            {
+                float radiusX = bounds.width * (0.48f - row * 0.035f);
+                float radiusY = bounds.height * (0.48f - row * 0.055f);
+                const int arcPoints = 42;
+                Vector3[] arc = new Vector3[arcPoints];
+                for (int point = 0; point < arcPoints; point++)
+                {
+                    float t = point / (float)(arcPoints - 1);
+                    float angle = Mathf.Lerp(18f, 162f, t) * Mathf.Deg2Rad;
+                    arc[point] = new Vector3(
+                        center.x + Mathf.Cos(angle) * radiusX,
+                        center.y + Mathf.Sin(angle) * radiusY,
+                        0f);
+                }
+                AddDoodleLine("Arena Seating Row", parent, arc, stoneLine, 0.085f, -88 + row);
+
+                int spectatorCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 1.3f), 18, 42);
+                for (int spectator = 0; spectator < spectatorCount; spectator++)
+                {
+                    float t = (spectator + 0.5f) / spectatorCount;
+                    float angle = Mathf.Lerp(22f, 158f, t) * Mathf.Deg2Rad;
+                    Vector2 position = new Vector2(
+                        center.x + Mathf.Cos(angle) * radiusX,
+                        center.y + Mathf.Sin(angle) * radiusY + CaveVisualRange(ref state, -0.12f, 0.12f));
+                    GameObject dot = new GameObject("Arena Spectator");
+                    dot.transform.SetParent(parent, false);
+                    dot.transform.localPosition = new Vector3(position.x, position.y, 0f);
+                    dot.transform.localScale = Vector3.one * CaveVisualRange(ref state, 0.11f, 0.19f);
+                    SpriteRenderer renderer = dot.AddComponent<SpriteRenderer>();
+                    renderer.sprite = GetCircleSprite();
+                    renderer.color = crowdColors[(spectator + row) % crowdColors.Length];
+                    renderer.sortingOrder = -84 + row;
+                }
+            }
+        }
+
+        private static void AddCompetitionArenaArcade(
+            Transform parent,
+            Rect bounds,
+            float baseline,
+            ref uint state)
+        {
+            AddAmusementPanel(
+                parent,
+                "Arena Beige Stone Arcade",
+                new Vector2(bounds.center.x, baseline - 1.35f),
+                new Vector2(bounds.width - 1.5f, 2.8f),
+                new Color(0.78f, 0.7f, 0.56f, 0.36f),
+                -93);
+            int archCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 3.4f), 8, 18);
+            float archWidth = (bounds.width - 2f) / archCount;
+            for (int arch = 0; arch < archCount; arch++)
+            {
+                float centerX = bounds.xMin + 1f + archWidth * (arch + 0.5f);
+                float radius = archWidth * 0.34f;
+                const int points = 12;
+                Vector3[] line = new Vector3[points + 2];
+                line[0] = new Vector3(centerX - radius, baseline - 2.4f, 0f);
+                line[1] = new Vector3(centerX - radius, baseline - 0.7f, 0f);
+                for (int point = 0; point < points; point++)
+                {
+                    float angle = Mathf.Lerp(180f, 0f, point / (float)(points - 1)) * Mathf.Deg2Rad;
+                    line[point + 2] = new Vector3(
+                        centerX + Mathf.Cos(angle) * radius,
+                        baseline - 0.7f + Mathf.Sin(angle) * radius,
+                        0f);
+                }
+                AddDoodleLine(
+                    "Arena Stone Arch",
+                    parent,
+                    line,
+                    new Color(0.39f, 0.36f, 0.31f, 0.48f),
+                    0.055f,
+                    -82);
+                AddDoodleLine(
+                    "Arena Arch Right Pillar",
+                    parent,
+                    new[]
+                    {
+                        new Vector3(centerX + radius, baseline - 0.7f, 0f),
+                        new Vector3(centerX + radius, baseline - 2.4f, 0f)
+                    },
+                    new Color(0.39f, 0.36f, 0.31f, 0.48f),
+                    0.055f,
+                    -82);
+            }
+        }
+
+        private static void AddCompetitionArenaFlags(
+            Transform parent,
+            Rect bounds,
+            float baseline,
+            ref uint state)
+        {
+            int flagCount = Mathf.Clamp(Mathf.RoundToInt(bounds.width / 6.5f), 4, 8);
+            for (int flag = 0; flag < flagCount; flag++)
+            {
+                float x = Mathf.Lerp(bounds.xMin + 3f, bounds.xMax - 3f, flagCount == 1 ? 0.5f : flag / (float)(flagCount - 1));
+                float y = baseline + 2.6f + Mathf.Sin(flag * 1.8f) * 0.7f;
+                Color flagColor = (flag & 1) == 0
+                    ? new Color(0.82f, 0.2f, 0.26f, 0.58f)
+                    : new Color(0.16f, 0.46f, 0.82f, 0.58f);
+                AddAmusementPanel(
+                    parent,
+                    "Arena Hanging Flag",
+                    new Vector2(x, y),
+                    new Vector2(0.72f, 2.25f),
+                    flagColor,
+                    -78);
+                AddCompetitionArenaCrown(
+                    parent,
+                    new Vector2(x, y + 0.05f),
+                    0.24f,
+                    new Color(1f, 0.78f, 0.18f, 0.78f),
+                    -76);
+            }
+        }
+
+        private static void AddCompetitionArenaArchitecture(
+            Transform parent,
+            Rect bounds,
+            ref uint state)
+        {
+            AddAmusementPanel(
+                parent,
+                "Gray Stone Ceiling Beam",
+                new Vector2(bounds.center.x, bounds.yMax - 0.42f),
+                new Vector2(bounds.width, 0.84f),
+                new Color(0.56f, 0.58f, 0.57f, 0.72f),
+                -64);
+            GameObject beamDetails = new GameObject("Gray Stone Ceiling Joints");
+            beamDetails.transform.SetParent(parent, false);
+            beamDetails.transform.localPosition = new Vector3(bounds.center.x, bounds.yMax - 0.42f, 0f);
+            AddCompetitionArenaStoneJoints(
+                beamDetails.transform,
+                new Vector2(bounds.width, 0.84f),
+                271,
+                new Color(0.24f, 0.27f, 0.28f, 0.28f),
+                -61);
+
+            const float columnWidth = 1.05f;
+            for (int side = -1; side <= 1; side += 2)
+            {
+                float x = side < 0 ? bounds.xMin + columnWidth * 0.5f : bounds.xMax - columnWidth * 0.5f;
+                AddAmusementPanel(
+                    parent,
+                    "Arena Outer Stone Column",
+                    new Vector2(x, bounds.center.y),
+                    new Vector2(columnWidth, bounds.height),
+                    new Color(0.7f, 0.66f, 0.57f, 0.75f),
+                    -63);
+                GameObject columnDetails = new GameObject("Arena Outer Column Joints");
+                columnDetails.transform.SetParent(parent, false);
+                columnDetails.transform.localPosition = new Vector3(x, bounds.center.y, 0f);
+                AddCompetitionArenaStoneJoints(
+                    columnDetails.transform,
+                    new Vector2(columnWidth, bounds.height),
+                    317 + side,
+                    new Color(0.3f, 0.3f, 0.28f, 0.3f),
+                    -60);
+            }
+
+            AddCompetitionArenaSpotlight(parent, bounds, -1);
+            AddCompetitionArenaSpotlight(parent, bounds, 1);
+
+            Vector2 plaqueCenter = new Vector2(bounds.center.x, bounds.yMax - 1.25f);
+            AddAmusementPanel(
+                parent,
+                "Central Crown Score Plaque",
+                plaqueCenter,
+                new Vector2(3.7f, 1.35f),
+                new Color(0.24f, 0.55f, 0.82f, 0.74f),
+                -57);
+            AddCompetitionArenaCrown(
+                parent,
+                plaqueCenter,
+                0.48f,
+                new Color(1f, 0.77f, 0.18f, 0.9f),
+                -55);
+        }
+
+        private static void AddCompetitionArenaSpotlight(Transform parent, Rect bounds, int side)
+        {
+            Vector2 mount = new Vector2(
+                side < 0 ? bounds.xMin + 2.2f : bounds.xMax - 2.2f,
+                bounds.yMax - 0.75f);
+            Vector2 target = new Vector2(mount.x + side * 2.2f, mount.y - 3.4f);
+            AddDoodleLine(
+                "Arena Ceiling Spotlight",
+                parent,
+                new[]
+                {
+                    new Vector3(mount.x - side * 0.42f, mount.y + 0.12f, 0f),
+                    new Vector3(mount.x, mount.y - 0.35f, 0f),
+                    new Vector3(mount.x + side * 0.5f, mount.y - 0.08f, 0f)
+                },
+                ArenaOutlineColor,
+                0.075f,
+                -54);
+            AddDoodleLine(
+                "Arena Spotlight Beam",
+                parent,
+                new[]
+                {
+                    new Vector3(mount.x, mount.y - 0.25f, 0f),
+                    new Vector3(target.x, target.y, 0f)
+                },
+                new Color(1f, 0.84f, 0.38f, 0.22f),
+                0.15f,
+                -70);
+        }
+
+        private static void AddCompetitionArenaCrown(
+            Transform parent,
+            Vector2 center,
+            float size,
+            Color color,
+            int sortingOrder)
+        {
+            AddDoodleLine(
+                "Arena Crown Emblem",
+                parent,
+                new[]
+                {
+                    new Vector3(center.x - size, center.y - size * 0.45f, 0f),
+                    new Vector3(center.x - size * 0.82f, center.y + size * 0.6f, 0f),
+                    new Vector3(center.x - size * 0.28f, center.y + size * 0.05f, 0f),
+                    new Vector3(center.x, center.y + size * 0.78f, 0f),
+                    new Vector3(center.x + size * 0.28f, center.y + size * 0.05f, 0f),
+                    new Vector3(center.x + size * 0.82f, center.y + size * 0.6f, 0f),
+                    new Vector3(center.x + size, center.y - size * 0.45f, 0f),
+                    new Vector3(center.x - size, center.y - size * 0.45f, 0f)
+                },
+                color,
+                Mathf.Max(0.035f, size * 0.13f),
+                sortingOrder);
+        }
+
+        private static void AddCompetitionArenaConfetti(
+            Transform parent,
+            Rect bounds,
+            ref uint state)
+        {
+            Color[] colors =
+            {
+                new Color(0.9f, 0.25f, 0.3f, 0.56f),
+                new Color(0.19f, 0.56f, 0.9f, 0.56f),
+                new Color(1f, 0.73f, 0.18f, 0.62f)
+            };
+            int count = Mathf.Clamp(Mathf.RoundToInt(bounds.width * bounds.height / 38f), 14, 42);
+            for (int piece = 0; piece < count; piece++)
+            {
+                Vector2 center = new Vector2(
+                    CaveVisualRange(ref state, bounds.xMin + 1.2f, bounds.xMax - 1.2f),
+                    CaveVisualRange(ref state, bounds.yMin + 1.5f, bounds.yMax - 1.5f));
+                float size = CaveVisualRange(ref state, 0.07f, 0.14f);
+                AddDoodleLine(
+                    "Arena Confetti Diamond",
+                    parent,
+                    new[]
+                    {
+                        new Vector3(center.x, center.y + size, 0f),
+                        new Vector3(center.x + size * 0.65f, center.y, 0f),
+                        new Vector3(center.x, center.y - size, 0f),
+                        new Vector3(center.x - size * 0.65f, center.y, 0f),
+                        new Vector3(center.x, center.y + size, 0f)
+                    },
+                    colors[piece % colors.Length],
+                    0.025f,
+                    -50);
+            }
         }
 
         private static void AddSpaceBackdrop(Transform parent, Rect bounds, int seed)
@@ -7610,6 +9309,10 @@ namespace DrawBody.Prototype
             // stable visual canvas instead of relying on their nearly-empty JSON.
             switch (stageId)
             {
+                case "5-3":
+                    return objects != null && objects.Count > 0
+                        ? GetCaveBackdropBounds(objects)
+                        : Rect.MinMaxRect(-18.5f, -11.9f, 18.5f, 11.9f);
                 case "6-2":
                     return Rect.MinMaxRect(-18f, -7f, 18f, 11f);
                 case "8-1":
@@ -7620,7 +9323,9 @@ namespace DrawBody.Prototype
                 case "11-3":
                     return Rect.MinMaxRect(-22f, -7f, 22f, 12f);
                 case "13-3":
-                    return Rect.MinMaxRect(-18f, -13f, 148f, 15f);
+                    // 13-3 now reuses one sequential circuit room instead of
+                    // laying five rooms out across a 160-unit-wide strip.
+                    return Rect.MinMaxRect(-22.5f, -9.5f, 22.5f, 10.5f);
                 case "14-3":
                     return Rect.MinMaxRect(-24f, -12f, 31f, 13f);
                 default:

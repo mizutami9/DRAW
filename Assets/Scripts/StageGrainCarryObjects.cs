@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -1230,18 +1231,46 @@ namespace DrawBody.Prototype
 
     public sealed class StageGrainCarryController : MonoBehaviour
     {
+        private const string StageId = "7-2";
         private const string DepositKind = "grain_carry_deposit";
         private const string ResetKind = "grain_carry_reset";
         private const string ScaleStateKind = "grain_carry_scale_state";
+        private const string RoundStateKind = "grain_carry_round_state";
+        private const float RoomHalfWidth = 19f;
+        private const float FloorY = -3f;
+        private const float BottomY = FloorY;
+        private const float CeilingY = 9f;
+        private const float RoundTransitionSeconds = 1.65f;
         private float nextPlayerScan;
         private readonly Dictionary<string, StageGrainScale> scales = new Dictionary<string, StageGrainScale>();
         private readonly Dictionary<string, float> pendingDeposits = new Dictionary<string, float>();
         private readonly Dictionary<string, float> nextScaleBroadcastAt = new Dictionary<string, float>();
+        private readonly List<GameObject>[] roundObjects =
+        {
+            new List<GameObject>(), new List<GameObject>(), new List<GameObject>()
+        };
+        private readonly GameObject[] roundFloors = new GameObject[3];
         private float nextDepositSendAt;
         private float nextFullStateBroadcastAt;
+        private float nextRoundStateBroadcastAt;
+        private float transitionEndsAt;
+        private int currentRound;
+        private int roundStateSequence;
+        private int receivedRoundStateSequence;
+        private bool transitioning;
         private OnlineManager onlineManager;
         private StageManager stageManager;
+        private StageLoader stageLoader;
         private StageGimmickSyncManager syncManager;
+        private Camera gameCamera;
+        private CameraFollow2D cameraFollow;
+        private Transform roomRoot;
+        private TextMesh roundLabel;
+        private Vector3 previousCameraPosition;
+        private float previousCameraSize;
+        private bool previousCameraFollowEnabled;
+        private bool cameraCaptured;
+        private bool initialized;
 
         [System.Serializable]
         private sealed class GrainDepositMessage
@@ -1263,20 +1292,46 @@ namespace DrawBody.Prototype
             public string ScaleId;
         }
 
+        [System.Serializable]
+        private sealed class GrainRoundState
+        {
+            public int Sequence;
+            public int Round;
+            public bool Transitioning;
+            public float TransitionRemaining;
+        }
+
+        private bool IsOnline => syncManager != null && syncManager.IsOnlineActive;
+        private bool HasAuthority => !IsOnline || syncManager.IsHost;
+
         private void Start()
         {
             onlineManager = Object.FindFirstObjectByType<OnlineManager>();
             stageManager = Object.FindFirstObjectByType<StageManager>();
+            stageLoader = Object.FindFirstObjectByType<StageLoader>();
             syncManager = GetComponent<StageGimmickSyncManager>();
             if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
             StageGrainScale[] found = GetComponentsInChildren<StageGrainScale>(true);
             for (int i = 0; i < found.Length; i++) scales[found[i].ObjectId] = found[i];
+            TryInitializeForPlay();
+        }
+
+        private void TryInitializeForPlay()
+        {
+            if (initialized) return;
+            RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
+            if (editor != null && editor.IsEditing) return;
+            initialized = true;
+            PrepareSequentialRooms();
+            CaptureCamera();
+            ActivateRound(0, true);
             EnsurePlayerCarriers(true);
         }
 
         private void OnDestroy()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            RestoreCamera();
             StageGrainCarrier[] carriers = Object.FindObjectsByType<StageGrainCarrier>(FindObjectsSortMode.None);
             for (int i = 0; i < carriers.Length; i++)
             {
@@ -1288,13 +1343,37 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
+            if (!initialized)
+            {
+                TryInitializeForPlay();
+                if (!initialized) return;
+            }
+            ConfigureCamera();
             FlushPendingDeposits();
+            if (HasAuthority && !transitioning && GetActiveScale()?.Completed == true)
+            {
+                transitioning = true;
+                transitionEndsAt = Time.unscaledTime + RoundTransitionSeconds;
+                BroadcastRoundState(true);
+                RefreshRoundLabel();
+            }
+            if (HasAuthority && transitioning && Time.unscaledTime >= transitionEndsAt)
+            {
+                if (currentRound >= 2)
+                {
+                    stageManager?.ClearStage();
+                    enabled = false;
+                    return;
+                }
+                ActivateRound(currentRound + 1, true);
+            }
             if (syncManager != null && syncManager.IsOnlineActive && syncManager.IsHost
                 && Time.unscaledTime >= nextFullStateBroadcastAt)
             {
                 nextFullStateBroadcastAt = Time.unscaledTime + 0.75f;
                 foreach (StageGrainScale scale in scales.Values)
                     BroadcastScaleState(scale, true);
+                BroadcastRoundState(true);
             }
             if (Time.unscaledTime < nextPlayerScan) return;
             nextPlayerScan = Time.unscaledTime + 1f;
@@ -1340,7 +1419,7 @@ namespace DrawBody.Prototype
             {
                 onlineManager?.SendGimmickData(new OnlineGimmickData
                 {
-                    ObjectId = "7-2",
+                    ObjectId = StageId,
                     Kind = ResetKind,
                     Json = JsonUtility.ToJson(new GrainScaleReset { ScaleId = scale.ObjectId })
                 });
@@ -1359,7 +1438,7 @@ namespace DrawBody.Prototype
 
         private void HandleNetworkData(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != "7-2") return;
+            if (data == null || data.ObjectId != StageId) return;
             if (data.Kind == DepositKind && syncManager != null && syncManager.IsHost)
             {
                 GrainDepositMessage deposit = JsonUtility.FromJson<GrainDepositMessage>(data.Json);
@@ -1396,6 +1475,16 @@ namespace DrawBody.Prototype
                 if (state != null && scales.TryGetValue(state.ScaleId, out StageGrainScale scale))
                     scale.ApplyMeasuredGrams(state.Grams);
             }
+            else if (data.Kind == RoundStateKind && IsOnline && !HasAuthority && IsHost(data.PlayerId))
+            {
+                GrainRoundState state = JsonUtility.FromJson<GrainRoundState>(data.Json);
+                if (state == null || state.Sequence <= receivedRoundStateSequence) return;
+                receivedRoundStateSequence = state.Sequence;
+                if (state.Round != currentRound) ActivateRound(state.Round, false);
+                transitioning = state.Transitioning;
+                transitionEndsAt = Time.unscaledTime + Mathf.Max(0f, state.TransitionRemaining);
+                RefreshRoundLabel();
+            }
         }
 
         private void BroadcastScaleState(StageGrainScale scale, bool force = false)
@@ -1406,7 +1495,7 @@ namespace DrawBody.Prototype
             nextScaleBroadcastAt[scale.ObjectId] = Time.unscaledTime + 0.15f;
             onlineManager?.SendGimmickData(new OnlineGimmickData
             {
-                ObjectId = "7-2",
+                ObjectId = StageId,
                 Kind = ScaleStateKind,
                 Json = JsonUtility.ToJson(new GrainScaleState { ScaleId = scale.ObjectId, Grams = scale.MeasuredGrams })
             });
@@ -1421,7 +1510,7 @@ namespace DrawBody.Prototype
                 if (pair.Value <= 0f) continue;
                 onlineManager?.SendGimmickData(new OnlineGimmickData
                 {
-                    ObjectId = "7-2",
+                    ObjectId = StageId,
                     Kind = DepositKind,
                     Json = JsonUtility.ToJson(new GrainDepositMessage
                     {
@@ -1431,6 +1520,301 @@ namespace DrawBody.Prototype
                 });
             }
             pendingDeposits.Clear();
+        }
+
+        private void PrepareSequentialRooms()
+        {
+            StageEditorObject[] objects = GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageEditorObject item = objects[i];
+                if (item == null) continue;
+                int room = ClassifyRoundObject(item);
+                item.gameObject.SetActive(false);
+                if (room < 0) continue;
+                RemapObjectPosition(item, room);
+                roundObjects[room].Add(item.gameObject);
+            }
+
+            GameObject arena = new GameObject("7-2 Sequential Grain Room");
+            arena.transform.SetParent(transform, false);
+            roomRoot = arena.transform;
+            BuildRoomShell();
+            BuildRoundFloors();
+            CreateMonitor();
+        }
+
+        private static int ClassifyRoundObject(StageEditorObject item)
+        {
+            string id = item.objectId ?? string.Empty;
+            if (item.type == StageObjectType.GrainGate) return -1;
+            if (item.type == StageObjectType.RedrawZone)
+                return item.transform.position.x < -20f ? 0 : item.transform.position.x < 5f ? 1 : 2;
+            if (item.type == StageObjectType.BeamEmitter) return 2;
+            if (id.Contains("_human"))
+                return item.type == StageObjectType.Platform ? -1 : 0;
+            if (id.Contains("spike_gap") && id != "7-2_spike_gap_2") return -1;
+            if (id.Contains("enemy_bird") && id != "7-2_enemy_bird_2") return -1;
+            if (id.Contains("_bird") || id.Contains("spike_gap"))
+                return item.type == StageObjectType.Platform ? -1 : 1;
+            if (id.Contains("_turtle"))
+                return item.type == StageObjectType.Platform ? -1 : 2;
+            return -1;
+        }
+
+        private static void RemapObjectPosition(StageEditorObject item, int room)
+        {
+            float sourceMin = room == 0 ? -35.15f : room == 1 ? -9.65f : 14.95f;
+            float sourceMax = room == 0 ? -11.35f : room == 1 ? 12.05f : 34.6f;
+            Transform target = item.transform;
+            float normalized = Mathf.InverseLerp(sourceMin, sourceMax, target.position.x);
+            Vector3 position = target.position;
+            position.x = Mathf.Lerp(-16.7f, 17.2f, normalized);
+            float floorTop = FloorY + 0.375f;
+            if (item.type == StageObjectType.RedrawZone)
+            {
+                // The redraw artwork is drawn at local y=-0.5 and the authored
+                // trigger is five units tall. This places the crayon band flush
+                // with the common floor while keeping the full trigger height.
+                position.y = floorTop - 0.32f + item.size.y * 0.5f;
+            }
+            else if (item.type == StageObjectType.WoodBox
+                || item.type == StageObjectType.IronBox
+                || item.type == StageObjectType.Ball
+                || item.type == StageObjectType.Barrel
+                || item.type == StageObjectType.TriangleBox)
+            {
+                position.y = floorTop + item.size.y * 0.5f;
+            }
+            else if (item.type == StageObjectType.JumpPad)
+            {
+                position.y = floorTop + item.size.y * 0.5f;
+            }
+            else if (item.type == StageObjectType.Spike)
+            {
+                position.y = floorTop + item.size.y * 0.5f;
+            }
+            target.position = position;
+
+            if (item.type == StageObjectType.GrainScale)
+            {
+                const float widthScale = 1.55f;
+                Vector3 scale = target.localScale;
+                scale.x *= widthScale;
+                target.localScale = scale;
+                Transform display = target.Find("Grain Weight Display");
+                if (display != null)
+                {
+                    Vector3 displayScale = display.localScale;
+                    displayScale.x /= widthScale;
+                    display.localScale = displayScale;
+                }
+            }
+        }
+
+        private void BuildRoomShell()
+        {
+            StageEscortController.AddFilledRect(roomRoot, "Room Paper",
+                new Vector2(0f, (BottomY + CeilingY) * 0.5f),
+                new Vector2(RoomHalfWidth * 2f, CeilingY - BottomY),
+                new Color(0.88f, 0.96f, 1f, 0.3f), -55);
+            for (int i = 0; i < 12; i++)
+            {
+                float y = BottomY + 0.9f + i * 1.05f;
+                StageGun.AddLine(roomRoot, "Notebook Line " + i,
+                    new[] { new Vector2(-18.5f, y), new Vector2(18.5f, y) },
+                    0.025f, new Color(0.2f, 0.65f, 0.92f, 0.17f), -50);
+            }
+            CreateSolid("Room Ceiling", new Vector2(0f, CeilingY), new Vector2(38f, 0.65f));
+            float wallHeight = CeilingY - FloorY + 0.65f;
+            float wallY = (CeilingY + FloorY) * 0.5f;
+            CreateSolid("Room Left Wall", new Vector2(-RoomHalfWidth, wallY), new Vector2(0.65f, wallHeight));
+            CreateSolid("Room Right Wall", new Vector2(RoomHalfWidth, wallY), new Vector2(0.65f, wallHeight));
+        }
+
+        private void BuildRoundFloors()
+        {
+            roundFloors[0] = CreateFloorRoot("Human Floor");
+            CreateSolid("Human Main Floor", new Vector2(0f, FloorY), new Vector2(37.4f, 0.75f), roundFloors[0].transform);
+
+            roundFloors[1] = CreateFloorRoot("Bird Floor");
+            CreateSolid("Bird Main Floor", new Vector2(0f, FloorY), new Vector2(37.4f, 0.75f), roundFloors[1].transform);
+
+            roundFloors[2] = CreateFloorRoot("Turtle Floor");
+            CreateSolid("Turtle Main Floor", new Vector2(0f, FloorY), new Vector2(37.4f, 0.75f), roundFloors[2].transform);
+        }
+
+        private void CreateMonitor()
+        {
+            GameObject monitor = new GameObject("Grain Carry Monitor");
+            monitor.transform.SetParent(roomRoot, false);
+            monitor.transform.position = new Vector3(0f, 7.55f, 0f);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(12.8f, 2.25f), 23);
+            roundLabel = StageEscortController.CreateText(monitor.transform, "Round Label",
+                new Vector3(0f, 0f, -0.05f), 58, 0.145f,
+                new Color(0.04f, 0.16f, 0.23f, 1f), 28);
+        }
+
+        private GameObject CreateFloorRoot(string name)
+        {
+            GameObject root = new GameObject(name);
+            root.transform.SetParent(roomRoot, false);
+            return root;
+        }
+
+        private void CreateSolid(string name, Vector2 position, Vector2 size, Transform parent = null)
+        {
+            GameObject solid = new GameObject(name);
+            solid.transform.SetParent(parent != null ? parent : roomRoot, false);
+            solid.transform.position = position;
+            solid.layer = 6;
+            solid.tag = "Ground";
+            BoxCollider2D collider = solid.AddComponent<BoxCollider2D>();
+            collider.size = size;
+            StageEscortController.AddFilledRect(solid.transform, "Crayon Fill", Vector2.zero, size,
+                new Color(0.73f, 0.65f, 0.53f, 0.95f), 2);
+            Vector2 half = size * 0.5f;
+            StageGun.AddLine(solid.transform, "Pencil Outline", new[]
+            {
+                new Vector2(-half.x, -half.y), new Vector2(-half.x, half.y),
+                new Vector2(half.x, half.y), new Vector2(half.x, -half.y),
+                new Vector2(-half.x, -half.y)
+            }, 0.055f, new Color(0.2f, 0.15f, 0.1f, 0.9f), 4);
+        }
+
+        private void ActivateRound(int round, bool broadcast)
+        {
+            currentRound = Mathf.Clamp(round, 0, 2);
+            transitioning = false;
+            transitionEndsAt = 0f;
+            pendingDeposits.Clear();
+            ClearLooseGrains();
+
+            for (int r = 0; r < roundObjects.Length; r++)
+            {
+                bool active = r == currentRound;
+                for (int i = 0; i < roundObjects[r].Count; i++)
+                    if (roundObjects[r][i] != null) roundObjects[r][i].SetActive(active);
+                if (roundFloors[r] != null) roundFloors[r].SetActive(active);
+            }
+
+            Vector2 spawn = new Vector2(-16.2f, FloorY + 1.3f);
+            stageLoader?.SetRuntimeSpawnPosition(spawn);
+            StartCoroutine(PositionPlayersAfterRoundChange(spawn));
+            RefreshRoundLabel();
+            if (broadcast) BroadcastRoundState(true);
+        }
+
+        private IEnumerator PositionPlayersAfterRoundChange(Vector2 spawn)
+        {
+            yield return null;
+            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+            int placed = 0;
+            for (int i = 0; i < players.Length; i++)
+            {
+                PlayerController2D player = players[i];
+                if (IsOnline && stageManager != null && player.transform != stageManager.ActivePlayerTransform) continue;
+                Vector2 position = spawn + Vector2.right * (placed * 1.1f);
+                Rigidbody2D body = player.GetComponent<Rigidbody2D>();
+                if (body != null)
+                {
+                    body.position = position;
+                    body.linearVelocity = Vector2.zero;
+                    body.angularVelocity = 0f;
+                }
+                else player.transform.position = position;
+                player.ResetMotion();
+                stageManager?.RecordAssignedPlayerStart(player, position);
+                placed++;
+            }
+            Physics2D.SyncTransforms();
+        }
+
+        private static void ClearLooseGrains()
+        {
+            List<StageGrainParticle> grains = new List<StageGrainParticle>();
+            foreach (StageGrainParticle grain in StageGrainParticle.All)
+                if (grain != null) grains.Add(grain);
+            for (int i = 0; i < grains.Count; i++) grains[i].Consume();
+            foreach (StageGrainCarrier carrier in StageGrainCarrier.All)
+                if (carrier != null) carrier.SetGrams(0f);
+        }
+
+        private StageGrainScale GetActiveScale()
+        {
+            string id = currentRound == 0 ? "7-2_scale_human"
+                : currentRound == 1 ? "7-2_scale_bird" : "7-2_scale_turtle";
+            scales.TryGetValue(id, out StageGrainScale scale);
+            return scale;
+        }
+
+        private void RefreshRoundLabel()
+        {
+            if (roundLabel == null) return;
+            roundLabel.text = transitioning
+                ? LocalizationManager.Format("pose_rooms_round_clear", currentRound + 1)
+                : LocalizationManager.Format("grain_rain_round", currentRound + 1, 3);
+        }
+
+        private void BroadcastRoundState(bool force = false)
+        {
+            if (!IsOnline || !HasAuthority || onlineManager == null
+                || !force && Time.unscaledTime < nextRoundStateBroadcastAt) return;
+            nextRoundStateBroadcastAt = Time.unscaledTime + 0.5f;
+            GrainRoundState state = new GrainRoundState
+            {
+                Sequence = ++roundStateSequence,
+                Round = currentRound,
+                Transitioning = transitioning,
+                TransitionRemaining = transitioning ? Mathf.Max(0f, transitionEndsAt - Time.unscaledTime) : 0f
+            };
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = RoundStateKind,
+                Json = JsonUtility.ToJson(state)
+            });
+        }
+
+        private bool IsHost(string playerId)
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null) return false;
+            for (int i = 0; i < players.Length; i++)
+                if (players[i] != null && players[i].IsHost && players[i].PlayerId == playerId) return true;
+            return false;
+        }
+
+        private void CaptureCamera()
+        {
+            if (cameraCaptured) return;
+            gameCamera = Camera.main;
+            if (gameCamera == null) return;
+            cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
+            cameraCaptured = true;
+            previousCameraPosition = gameCamera.transform.position;
+            previousCameraSize = gameCamera.orthographicSize;
+            previousCameraFollowEnabled = cameraFollow != null && cameraFollow.enabled;
+        }
+
+        private void ConfigureCamera()
+        {
+            if (!cameraCaptured) CaptureCamera();
+            if (gameCamera == null) return;
+            if (cameraFollow != null) cameraFollow.enabled = false;
+            gameCamera.transform.position = new Vector3(0f, (FloorY + CeilingY) * 0.5f, -10f);
+            gameCamera.orthographicSize = Mathf.Max(7.65f,
+                (RoomHalfWidth + 0.55f) / Mathf.Max(0.1f, gameCamera.aspect));
+        }
+
+        private void RestoreCamera()
+        {
+            if (!cameraCaptured || gameCamera == null) return;
+            gameCamera.transform.position = previousCameraPosition;
+            gameCamera.orthographicSize = previousCameraSize;
+            if (cameraFollow != null) cameraFollow.enabled = previousCameraFollowEnabled;
+            cameraCaptured = false;
         }
     }
 }

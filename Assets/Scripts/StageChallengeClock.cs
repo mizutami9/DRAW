@@ -12,6 +12,10 @@ namespace DrawBody.Prototype
         private StageManager stageManager;
         private RuntimeStageEditor stageEditor;
         private float previewSeconds = 60f;
+        private float digitsCharacterSize;
+        private float shadowCharacterSize;
+        private Vector3 progressLocalPosition;
+        private Vector3 digitsLocalPosition;
 
         public void Configure(
             TextMesh targetDigits,
@@ -25,6 +29,10 @@ namespace DrawBody.Prototype
             progress = targetProgress;
             statusLed = targetStatusLed;
             previewSeconds = Mathf.Max(0f, defaultSeconds);
+            digitsCharacterSize = digits != null ? digits.characterSize : 0f;
+            shadowCharacterSize = shadow != null ? shadow.characterSize : 0f;
+            progressLocalPosition = progress != null ? progress.transform.localPosition : Vector3.zero;
+            digitsLocalPosition = digits != null ? digits.transform.localPosition : Vector3.zero;
         }
 
         private void Start()
@@ -44,15 +52,21 @@ namespace DrawBody.Prototype
             bool activeRule = editing
                 ? stageEditor.IsTimedCollectionRule
                 : stageManager != null && stageManager.IsTimedCollectionChallenge;
-            bool urgent = activeRule && !starting && seconds <= 10f;
+            bool untimed = editing
+                ? stageEditor.IsUntimedCollectionRule
+                : stageManager != null && stageManager.IsUntimedCollectionChallenge;
+            bool urgent = activeRule && !untimed && !starting && seconds <= 10f;
             bool showColon = editing || Mathf.FloorToInt(Time.unscaledTime * 2f) % 2 == 0;
-            string value = starting
-                ? stageManager.ChallengeStartCountdownText
-                : timeUp
-                    ? stageManager.ChallengeFailureDisplayText
-                    : activeRule ? FormatTime(seconds, showColon) : "--:--.-";
+            string value = untimed
+                ? string.Empty
+                : starting
+                    ? stageManager.ChallengeStartCountdownText
+                    : timeUp
+                        ? stageManager.ChallengeFailureDisplayText
+                        : activeRule ? FormatTime(seconds, showColon) : "--:--.-";
             if (digits != null)
             {
+                digits.characterSize = digitsCharacterSize * Mathf.Min(1f, 7f / Mathf.Max(7, value.Length));
                 digits.text = value;
                 digits.color = starting
                     ? new Color(1f, 0.78f, 0.16f, 1f)
@@ -64,6 +78,7 @@ namespace DrawBody.Prototype
             }
             if (shadow != null)
             {
+                shadow.characterSize = shadowCharacterSize * Mathf.Min(1f, 7f / Mathf.Max(7, value.Length));
                 shadow.text = value;
             }
             if (statusLed != null)
@@ -80,6 +95,7 @@ namespace DrawBody.Prototype
             }
             if (progress != null)
             {
+                progress.transform.localPosition = untimed ? digitsLocalPosition : progressLocalPosition;
                 StageObjectType target = editing && stageEditor != null
                     ? stageEditor.StageCollectionTarget
                     : stageManager != null

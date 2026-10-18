@@ -11,6 +11,7 @@ namespace DrawBody.Prototype
         private const float PulseDuration = 0.28f;
 
         private readonly HashSet<PlayerController2D> hitPlayers = new HashSet<PlayerController2D>();
+        private readonly SpriteRenderer[] streamPackets = new SpriteRenderer[6];
         private Transform muzzle;
         private LineRenderer beamLine;
         private Transform chargeFill;
@@ -21,10 +22,15 @@ namespace DrawBody.Prototype
         private float readyLampBaseSize = 0.13f;
         private float interval = 2f;
         private float beamRange = MaximumRange;
+        private float beamWidth = 0.14f;
         private float nextShotTime;
         private float hideTime;
         private bool linkedMode;
         private bool piercesTerrain;
+        private bool continuousBeam;
+        private float nextContinuousHitReset;
+        private float currentBeamDistance;
+        private SpriteRenderer muzzleFlash;
 
         public void Configure(
             Transform beamMuzzle,
@@ -36,7 +42,9 @@ namespace DrawBody.Prototype
             float lampBaseSize,
             float seconds,
             bool terrainPiercing,
-            float configuredRange)
+            float configuredRange,
+            float configuredBeamWidth,
+            bool continuous)
         {
             muzzle = beamMuzzle;
             beamLine = line;
@@ -47,9 +55,16 @@ namespace DrawBody.Prototype
             readyLampBaseSize = Mathf.Max(0.08f, lampBaseSize);
             interval = Mathf.Clamp(seconds > 0f ? seconds : 2f, 0.5f, 10f);
             piercesTerrain = terrainPiercing;
+            continuousBeam = continuous;
             beamRange = configuredRange > 0f
                 ? Mathf.Clamp(configuredRange, 1f, MaximumRange)
                 : MaximumRange;
+            beamWidth = Mathf.Clamp(configuredBeamWidth > 0f ? configuredBeamWidth : 0.14f, 0.08f, 1.2f);
+            if (beamLine != null)
+            {
+                beamLine.startWidth = beamWidth;
+                beamLine.endWidth = beamWidth * 0.72f;
+            }
         }
 
         private void Start()
@@ -63,12 +78,38 @@ namespace DrawBody.Prototype
 
             stageManager = FindFirstObjectByType<StageManager>();
             nextShotTime = Time.time + interval;
-            SetBeamVisible(false);
-            UpdateChargeVisual(0f);
+            if (continuousBeam)
+            {
+                CreateContinuousVisuals();
+                nextContinuousHitReset = Time.time + 0.35f;
+                SetBeamVisible(true);
+                UpdateChargeVisual(1f);
+                UpdateActiveBeam();
+                UpdateContinuousVisuals();
+            }
+            else
+            {
+                SetBeamVisible(false);
+                UpdateChargeVisual(0f);
+            }
         }
 
         private void Update()
         {
+            if (continuousBeam)
+            {
+                if (Time.time >= nextContinuousHitReset)
+                {
+                    nextContinuousHitReset = Time.time + 0.35f;
+                    hitPlayers.Clear();
+                }
+                SetBeamVisible(true);
+                UpdateChargeVisual(1f);
+                UpdateActiveBeam();
+                UpdateContinuousVisuals();
+                return;
+            }
+
             if (beamLine != null && beamLine.enabled)
             {
                 if (Time.time >= hideTime)
@@ -137,7 +178,9 @@ namespace DrawBody.Prototype
 
             Vector2 origin = muzzle.position;
             Vector2 direction = transform.right.normalized;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, beamRange);
+            RaycastHit2D[] hits = beamWidth > 0.2f
+                ? Physics2D.CircleCastAll(origin, beamWidth * 0.45f, direction, beamRange)
+                : Physics2D.RaycastAll(origin, direction, beamRange);
             Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
 
             float beamDistance = beamRange;
@@ -211,10 +254,88 @@ namespace DrawBody.Prototype
 
             if (beamLine != null)
             {
+                currentBeamDistance = Mathf.Max(0.05f, beamDistance);
                 beamLine.SetPosition(0, origin);
-                beamLine.SetPosition(1, origin + direction * Mathf.Max(0.05f, beamDistance));
+                beamLine.SetPosition(1, origin + direction * currentBeamDistance);
                 beamLine.enabled = true;
             }
+        }
+
+        private void CreateContinuousVisuals()
+        {
+            if (muzzle == null || streamPackets[0] != null) return;
+            for (int i = 0; i < streamPackets.Length; i++)
+            {
+                GameObject packet = new GameObject($"Beam Stream Packet {i + 1}");
+                packet.transform.SetParent(transform, false);
+                SpriteRenderer renderer = packet.AddComponent<SpriteRenderer>();
+                renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+                renderer.color = i % 2 == 0
+                    ? new Color(1f, 0.9f, 0.32f, 0.96f)
+                    : new Color(1f, 0.34f, 0.08f, 0.92f);
+                renderer.sortingOrder = 42;
+                streamPackets[i] = renderer;
+            }
+
+            GameObject flash = new GameObject("Continuous Beam Muzzle Flash");
+            flash.transform.SetParent(muzzle, false);
+            flash.transform.localPosition = Vector3.zero;
+            muzzleFlash = flash.AddComponent<SpriteRenderer>();
+            muzzleFlash.sprite = DoodleRuntimeAssets.CircleSprite;
+            muzzleFlash.color = new Color(1f, 0.8f, 0.16f, 0.9f);
+            muzzleFlash.sortingOrder = 43;
+        }
+
+        private void UpdateContinuousVisuals()
+        {
+            if (muzzle == null || beamLine == null) return;
+            float visualTime = SharedVisualTime();
+            float rapidPulse = 0.5f + Mathf.Sin(visualTime * 18f + transform.position.x * 0.17f) * 0.5f;
+            float width = beamWidth * Mathf.Lerp(0.82f, 1.08f, rapidPulse);
+            beamLine.startWidth = width;
+            beamLine.endWidth = width * Mathf.Lerp(0.62f, 0.82f, rapidPulse);
+            beamLine.startColor = Color.Lerp(
+                new Color(1f, 0.12f, 0.04f, 0.92f),
+                new Color(1f, 0.78f, 0.16f, 1f),
+                rapidPulse);
+            beamLine.endColor = Color.Lerp(
+                new Color(1f, 0.05f, 0.02f, 0.82f),
+                new Color(1f, 0.38f, 0.06f, 0.96f),
+                rapidPulse);
+
+            Vector2 origin = muzzle.position;
+            Vector2 direction = transform.right.normalized;
+            float usableDistance = Mathf.Max(0.1f, currentBeamDistance - 0.15f);
+            for (int i = 0; i < streamPackets.Length; i++)
+            {
+                SpriteRenderer packet = streamPackets[i];
+                if (packet == null) continue;
+                float phase = Mathf.Repeat(visualTime * 2.35f + i / (float)streamPackets.Length, 1f);
+                packet.transform.position = origin + direction * (0.1f + phase * usableDistance);
+                packet.transform.rotation = transform.rotation;
+                float packetLength = beamWidth * Mathf.Lerp(1.05f, 1.65f, 1f - phase);
+                packet.transform.localScale = new Vector3(packetLength, beamWidth * 0.26f, 1f);
+                packet.color = i % 2 == 0
+                    ? new Color(1f, 0.94f, 0.45f, Mathf.Lerp(1f, 0.25f, phase))
+                    : new Color(1f, 0.3f, 0.06f, Mathf.Lerp(0.9f, 0.18f, phase));
+                packet.enabled = beamLine.enabled;
+            }
+
+            if (muzzleFlash != null)
+            {
+                float flashSize = beamWidth * Mathf.Lerp(0.75f, 1.35f, rapidPulse);
+                muzzleFlash.transform.localScale = new Vector3(flashSize * 0.7f, flashSize, 1f);
+                muzzleFlash.enabled = beamLine.enabled;
+            }
+        }
+
+        private static float SharedVisualTime()
+        {
+            // UTC keeps the cosmetic stream phase approximately aligned across
+            // clients. Gameplay does not depend on this value: continuous beams
+            // are active every frame on every peer.
+            long ticks = DateTime.UtcNow.Ticks % TimeSpan.TicksPerMinute;
+            return ticks / (float)TimeSpan.TicksPerSecond;
         }
 
         private void SetBeamVisible(bool visible)
@@ -223,6 +344,9 @@ namespace DrawBody.Prototype
             {
                 beamLine.enabled = visible;
             }
+            for (int i = 0; i < streamPackets.Length; i++)
+                if (streamPackets[i] != null) streamPackets[i].enabled = visible;
+            if (muzzleFlash != null) muzzleFlash.enabled = visible;
         }
 
         private static bool IsVisiblePlayerCollider(Collider2D collider)
@@ -264,7 +388,7 @@ namespace DrawBody.Prototype
             bool nearlyReady = normalized >= 0.82f;
             if (nearlyReady)
             {
-                float flash = 0.72f + (Mathf.Sin(Time.unscaledTime * 20f) + 1f) * 0.14f;
+                float flash = 0.72f + (Mathf.Sin(SharedVisualTime() * 20f) + 1f) * 0.14f;
                 color = Color.Lerp(color, Color.white, flash * 0.32f);
             }
 
@@ -279,7 +403,7 @@ namespace DrawBody.Prototype
                     : nearlyReady
                         ? color
                         : new Color(1f, 0.58f, 0.06f, 1f);
-                float pulse = nearlyReady ? 1f + Mathf.Sin(Time.unscaledTime * 20f) * 0.18f : 1f;
+                float pulse = nearlyReady ? 1f + Mathf.Sin(SharedVisualTime() * 20f) * 0.18f : 1f;
                 readyLamp.transform.localScale = Vector3.one * pulse * readyLampBaseSize;
             }
         }

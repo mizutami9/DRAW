@@ -19,6 +19,8 @@ namespace DrawBody.Prototype
         private float movementLimit = 6f;
         private float movementSpeed = 3.2f;
         private bool configured;
+        private bool hasPositionSample;
+        private Vector2 lastPositionSample;
 
         public Vector2 SurfaceVelocity { get; private set; }
 
@@ -34,6 +36,8 @@ namespace DrawBody.Prototype
             body = GetComponent<Rigidbody2D>();
             syncManager = GetComponentInParent<StageGimmickSyncManager>();
             startPosition = body != null ? body.position : (Vector2)transform.position;
+            lastPositionSample = startPosition;
+            hasPositionSample = true;
             configured = true;
         }
 
@@ -56,11 +60,27 @@ namespace DrawBody.Prototype
 
         private void FixedUpdate()
         {
-            if (!configured
-                || activeInputs.Count == 0
-                || syncManager != null && syncManager.ShouldAskHost)
+            if (!configured)
             {
                 SurfaceVelocity = Vector2.zero;
+                return;
+            }
+
+            Vector2 current = body != null ? body.position : (Vector2)transform.position;
+            if (syncManager != null && syncManager.ShouldAskHost)
+            {
+                SurfaceVelocity = hasPositionSample
+                    ? (current - lastPositionSample) / Mathf.Max(Time.fixedDeltaTime, 0.0001f)
+                    : Vector2.zero;
+                lastPositionSample = current;
+                hasPositionSample = true;
+                return;
+            }
+
+            if (activeInputs.Count == 0)
+            {
+                SurfaceVelocity = Vector2.zero;
+                lastPositionSample = current;
                 return;
             }
 
@@ -73,11 +93,11 @@ namespace DrawBody.Prototype
             if (input.sqrMagnitude < 0.001f)
             {
                 SurfaceVelocity = Vector2.zero;
+                lastPositionSample = current;
                 return;
             }
 
             input = input.normalized;
-            Vector2 current = body != null ? body.position : (Vector2)transform.position;
             Vector2 next = current + input * (movementSpeed * Time.fixedDeltaTime);
             Vector2 offset = next - startPosition;
             offset.x = Mathf.Clamp(offset.x, -movementLimit, movementLimit);
@@ -93,6 +113,7 @@ namespace DrawBody.Prototype
             {
                 transform.position = next;
             }
+            lastPositionSample = next;
         }
     }
 }

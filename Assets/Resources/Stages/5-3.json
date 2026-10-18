@@ -1,10 +1,10 @@
 {
   "id": "5-3",
   "displayName": "Stage 5-3 Slime Crate Rush",
-  "backgroundColorHex": "#E8FFF1",
+  "backgroundColorHex": "#D4D9DAFF",
   "ruleMode": 0,
-  "timeLimitSeconds": 30.0,
-  "collectionTarget": 57,
+  "timeLimitSeconds": 60.0,
+  "collectionTarget": 100,
   "requiredCollectionCount": 1,
   "objects": [
     {

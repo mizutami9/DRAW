@@ -2009,7 +2009,10 @@ namespace DrawBody.Prototype
             }
             if (descriptionText != null)
             {
-                string description = LocalizationManager.T(GetGameDescriptionKey());
+                int participantCount = Mathf.Max(1, IsOnline ? expectedIds.Count : offlinePlayers.Count);
+                string description = stageId == "10-1"
+                    ? LocalizationManager.Format("ready_room_game_10_1", participantCount)
+                    : LocalizationManager.T(GetGameDescriptionKey());
                 string clearConditionKey = GetClearConditionKey();
                 if (!string.IsNullOrEmpty(clearConditionKey))
                 {
@@ -2049,9 +2052,11 @@ namespace DrawBody.Prototype
                 case "8-1":
                 case "9-1":
                 case "11-2":
+                case "14-1":
                 case "14-3":
                     return "ready_room_clear_one_survivor";
                 case "10-1":
+                    return string.Empty;
                 case "11-1":
                     return "ready_room_clear_one_goal";
                 default:

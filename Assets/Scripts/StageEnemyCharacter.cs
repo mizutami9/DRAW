@@ -7,6 +7,7 @@ namespace DrawBody.Prototype
     [DisallowMultipleComponent]
     public sealed class StageEnemyCharacter : MonoBehaviour
     {
+        private readonly HashSet<PlayerController2D> temporarilyIgnoredPlayers = new HashSet<PlayerController2D>();
         private StageObjectType enemyType;
         private Vector2 enemySize;
         private float direction = 1f;
@@ -22,6 +23,7 @@ namespace DrawBody.Prototype
         private float flightHorizontalMax;
         private bool defeated;
         private bool stationaryTarget;
+        private bool piercesTurtleShell;
         private Rigidbody2D body;
         private Collider2D enemyCollider;
         private Transform visualRoot;
@@ -61,12 +63,20 @@ namespace DrawBody.Prototype
             }
         }
 
-        public void Configure(StageObjectType type, Vector2 size, float speedOverride, float initialFacing)
+        public void Configure(
+            StageObjectType type,
+            Vector2 size,
+            float speedOverride,
+            float initialFacing,
+            string objectId)
         {
             enemyType = type;
             enemySize = size;
             baseSpeed = speedOverride > 0f ? Mathf.Clamp(speedOverride, 0.5f, 8f) : DefaultSpeed(type);
             direction = Mathf.Abs(initialFacing) < 0.15f ? 1f : Mathf.Sign(initialFacing);
+            piercesTurtleShell = type == StageObjectType.EnemyFlyer
+                && !string.IsNullOrEmpty(objectId)
+                && objectId.StartsWith("4-1-coop-flyer-dropper_enemy_", System.StringComparison.Ordinal);
             BuildVisual();
         }
 
@@ -313,11 +323,17 @@ namespace DrawBody.Prototype
 
             if (player != null)
             {
-                if (player.IsTurtleShelled)
+                if (player.IsTurtleShelled && !piercesTurtleShell)
                 {
                     GameSfx.PlayAt(SfxId.EnemyShellBounce, collision.GetContact(0).point);
                     ReverseAwayFrom(player.transform.position.x);
                     return;
+                }
+                if (player.IsTurtleShelled && piercesTurtleShell)
+                {
+                    StartCoroutine(TemporarilyIgnorePlayer(player));
+                    if (body != null)
+                        body.linearVelocity = new Vector2(direction * baseSpeed, body.linearVelocity.y);
                 }
                 if (stageManager == null) stageManager = Object.FindFirstObjectByType<StageManager>();
                 if (stageManager == null || !stageManager.IsOnlineStageActive
@@ -352,7 +368,21 @@ namespace DrawBody.Prototype
             PlayerController2D player = collision != null && collision.collider != null
                 ? collision.collider.GetComponentInParent<PlayerController2D>()
                 : null;
-            if (player != null && player.IsTurtleShelled) ReverseAwayFrom(player.transform.position.x);
+            if (player != null && player.IsTurtleShelled && !piercesTurtleShell)
+                ReverseAwayFrom(player.transform.position.x);
+        }
+
+        private IEnumerator TemporarilyIgnorePlayer(PlayerController2D player)
+        {
+            if (enemyCollider == null || player == null || !temporarilyIgnoredPlayers.Add(player)) yield break;
+            Collider2D[] playerColliders = player.GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < playerColliders.Length; i++)
+                if (playerColliders[i] != null) Physics2D.IgnoreCollision(enemyCollider, playerColliders[i], true);
+            yield return new WaitForSeconds(0.45f);
+            if (enemyCollider == null) yield break;
+            for (int i = 0; i < playerColliders.Length; i++)
+                if (playerColliders[i] != null) Physics2D.IgnoreCollision(enemyCollider, playerColliders[i], false);
+            temporarilyIgnoredPlayers.Remove(player);
         }
 
         private void ReverseAwayFrom(float obstacleX)
@@ -443,7 +473,7 @@ namespace DrawBody.Prototype
 
         private bool TryBuildPencilSprite()
         {
-            string resourceName = EnemySpriteName(enemyType);
+            string resourceName = piercesTurtleShell ? "enemy-piercer-bee" : EnemySpriteName(enemyType);
             if (string.IsNullOrEmpty(resourceName)) return false;
 
             Sprite sprite = Resources.Load<Sprite>(EnemyArtRoot + resourceName);
@@ -457,7 +487,7 @@ namespace DrawBody.Prototype
             renderer.color = Color.white;
             renderer.sortingOrder = 36;
 
-            Vector2 target = EnemySpriteSize(enemyType);
+            Vector2 target = piercesTurtleShell ? new Vector2(1.62f, 1.08f) : EnemySpriteSize(enemyType);
             Vector2 bounds = sprite.bounds.size;
             spriteObject.transform.localScale = new Vector3(
                 target.x / Mathf.Max(0.01f, bounds.x),
@@ -466,7 +496,9 @@ namespace DrawBody.Prototype
             // The source textures deliberately keep transparent breathing room.
             // Compensate for that per silhouette so the visible drawing, rather
             // than the full 512 px texture rect, matches the configured collider.
-            Vector2 contentCoverage = EnemySpriteContentCoverage(enemyType);
+            Vector2 contentCoverage = piercesTurtleShell
+                ? new Vector2(0.90625f, 0.679688f)
+                : EnemySpriteContentCoverage(enemyType);
             visualRootScale = new Vector2(
                 enemySize.x / Mathf.Max(0.01f, target.x * contentCoverage.x),
                 enemySize.y / Mathf.Max(0.01f, target.y * contentCoverage.y));

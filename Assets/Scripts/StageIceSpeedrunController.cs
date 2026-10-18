@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,367 +25,630 @@ namespace DrawBody.Prototype
         }
     }
 
+    /// <summary>
+    /// Host-authoritative, individual-lane team time trial for 10-1.
+    /// Every participant must finish; the sum of the individual finish times
+    /// must be no greater than one minute per participant.
+    /// </summary>
     [DisallowMultipleComponent]
     public sealed class StageIceSpeedrunController : MonoBehaviour
     {
         private const string StageId = "10-1";
-        private const string StateKind = "ice_speedrun_state";
-        private const string MissileKind = "ice_speedrun_missile";
+        private const string StateKind = "ice_race_state";
+        private const string FinishRequestKind = "ice_race_finish_request";
         private const float IntroSeconds = 3f;
         private const float RetryDelay = 3.5f;
+        private const float SecondsPerPlayer = 60f;
+        private const int MaxLanes = 4;
+        private const float FirstLaneTop = 18f;
+        private const float LaneSpacing = 23f;
+        private const float StartX = -123.6f;
 
-        [System.Serializable]
-        private sealed class SpeedrunState
+        [Serializable]
+        private sealed class RaceState
         {
-            public float Remaining;
+            public float Elapsed;
             public float IntroRemaining;
             public float StartFlashRemaining;
             public float RetryRemaining;
             public bool Started;
             public bool Failed;
+            public int PlayerCount;
+            public string[] PlayerIds;
+            public float[] FinishTimes;
         }
 
-        [System.Serializable]
-        private sealed class MissileState
-        {
-            public int Sequence;
-            public Vector2 Position;
-            public Vector2 Direction;
-            public float Speed;
-            public float Size;
-        }
-
-        private readonly List<TextMesh> clocks = new List<TextMesh>();
-        private readonly HashSet<int> receivedMissiles = new HashSet<int>();
+        private readonly string[] participantIds = new string[MaxLanes];
+        private readonly float[] finishTimes = new float[MaxLanes];
+        private readonly List<TextMesh> monitorTexts = new List<TextMesh>();
+        private readonly List<TextMesh> monitorSubTexts = new List<TextMesh>();
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageGimmickSyncManager syncManager;
-        private float remaining = 25f;
+        private UIManager uiManager;
+        private float elapsed;
         private float introRemaining = IntroSeconds;
         private float startFlashRemaining;
         private float retryRemaining;
         private float nextBroadcastAt;
-        private float nextMissileAt;
-        private int missileSequence;
-        private int missileVolleySequence;
-        private int activeMissileTierCount = 2;
-        private bool failed;
+        private int playerCount = 1;
         private bool started;
-        private bool locallyAppliedStart;
-        private bool locallyAppliedFailure;
+        private bool failed;
+        private bool rosterReady;
+        private bool localFinishRequested;
 
-        public bool CanFinish => started && !failed && remaining > 0f;
-        private bool HasAuthority => syncManager == null || !syncManager.IsOnlineActive || syncManager.IsHost;
+        public bool CanFinish => started && !failed;
+        private bool IsOnline => syncManager != null && syncManager.IsOnlineActive;
+        private bool HasAuthority => !IsOnline || syncManager.IsHost;
 
-        public void Configure(float seconds)
-        {
-            remaining = Mathf.Clamp(seconds > 0f ? seconds : 25f, 5f, 120f);
-        }
+        // Retained for StageLoader/backward compatibility. This race has no
+        // single global time limit; its limit is evaluated from the finish sum.
+        public void Configure(float unusedSeconds) { }
 
         private void Awake()
         {
-            stageManager = Object.FindFirstObjectByType<StageManager>();
-            onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            stageManager = FindFirstObjectByType<StageManager>();
+            onlineManager = FindFirstObjectByType<OnlineManager>();
             syncManager = GetComponent<StageGimmickSyncManager>();
+            uiManager = FindFirstObjectByType<UIManager>();
+            ResetFinishTimes();
         }
 
         private void OnEnable()
         {
-            if (onlineManager == null) onlineManager = Object.FindFirstObjectByType<OnlineManager>();
+            if (onlineManager == null) onlineManager = FindFirstObjectByType<OnlineManager>();
             if (onlineManager != null) onlineManager.GimmickDataReceived += HandleNetworkData;
         }
 
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            uiManager?.SetChallengeCountdown(false, string.Empty);
         }
 
         private void Start()
         {
-            RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
+            RuntimeStageEditor editor = FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing)
             {
                 enabled = false;
                 return;
             }
-            int playerCount = Mathf.Clamp(
-                stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1,
-                1,
-                4);
-            activeMissileTierCount = Mathf.Clamp(Mathf.CeilToInt(6f * playerCount / 4f), 1, 6);
-            BuildClocks();
-            SetAllPlayerControls(false);
-            RefreshClocks();
+
+            BuildParticipantRoster();
+            ConfigureActiveLanes();
+            BuildMonitors();
+            PositionLocalPlayersAtStarts();
+            SetLocalControls(false);
+            RefreshMonitors();
         }
 
         private void Update()
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            if (!rosterReady) BuildParticipantRoster();
+
             if (!stageManager.IsGameplayActive)
             {
-                RefreshClocks();
+                if (!started) PositionLocalPlayersAtStarts();
+                RefreshMonitors();
                 return;
             }
 
-            if (!started) SetAllPlayerControls(false);
+            if (!started)
+            {
+                PositionLocalPlayersAtStarts();
+                SetLocalControls(false);
+            }
 
             if (HasAuthority)
             {
-                if (!started)
+                UpdateAuthoritativeRace();
+            }
+            else if (started && !failed)
+            {
+                // Extrapolate between host snapshots so the monitor does not
+                // visibly tick at the network snapshot frequency.
+                elapsed += Time.deltaTime;
+                startFlashRemaining = Mathf.Max(0f, startFlashRemaining - Time.deltaTime);
+                ApplyLocalControlState();
+            }
+
+            RefreshMonitors();
+        }
+
+        public void SetPlayerGoalState(PlayerController2D goalPlayer, bool inside)
+        {
+            if (!inside || goalPlayer == null || !started || failed) return;
+
+            if (IsOnline)
+            {
+                if (stageManager == null || goalPlayer.transform != stageManager.ActivePlayerTransform
+                    || onlineManager == null || string.IsNullOrEmpty(onlineManager.LocalPlayerId)
+                    || localFinishRequested)
+                    return;
+
+                localFinishRequested = true;
+                goalPlayer.ResetMotion();
+                goalPlayer.SetControlsEnabled(false);
+                if (HasAuthority)
                 {
-                    introRemaining = Mathf.Max(0f, introRemaining - Time.deltaTime);
-                    if (introRemaining <= 0f)
-                    {
-                        started = true;
-                        startFlashRemaining = 0.7f;
-                        nextMissileAt = Time.time + 1.2f;
-                        ApplyStartLocally();
-                        Broadcast(true);
-                    }
-                }
-                else if (!failed)
-                {
-                    startFlashRemaining = Mathf.Max(0f, startFlashRemaining - Time.deltaTime);
-                    if (!LocalMultiplayerDebugMode.NoTimeLimit)
-                        remaining = Mathf.Max(0f, remaining - Time.deltaTime);
-                    if (Time.time >= nextMissileAt) FireMissileVolley();
-                    if (!LocalMultiplayerDebugMode.NoTimeLimit && remaining <= 0f)
-                    {
-                        failed = true;
-                        retryRemaining = RetryDelay;
-                        ApplyFailureLocally();
-                        Broadcast(true);
-                    }
+                    RecordFinish(onlineManager.LocalPlayerId);
                 }
                 else
                 {
-                    retryRemaining = Mathf.Max(0f, retryRemaining - Time.deltaTime);
-                    if (retryRemaining <= 0f) stageManager.Retry();
+                    onlineManager.SendGimmickData(new OnlineGimmickData
+                    {
+                        ObjectId = StageId,
+                        Kind = FinishRequestKind,
+                        Json = "{}"
+                    });
                 }
-                Broadcast(false);
-            }
-            else if (started && !locallyAppliedStart)
-            {
-                ApplyStartLocally();
-            }
-            if (!HasAuthority && failed)
-            {
-                ApplyFailureLocally();
+                return;
             }
 
-            RefreshClocks();
+            string id = GetOfflinePlayerId(goalPlayer);
+            if (!string.IsNullOrEmpty(id)) RecordFinish(id);
         }
 
-        private void ApplyStartLocally()
+        private void UpdateAuthoritativeRace()
         {
-            if (locallyAppliedStart) return;
-            locallyAppliedStart = true;
-            SetAllPlayerControls(true);
+            if (!started)
+            {
+                introRemaining = Mathf.Max(0f, introRemaining - Time.deltaTime);
+                if (introRemaining <= 0f)
+                {
+                    started = true;
+                    elapsed = 0f;
+                    startFlashRemaining = 0.8f;
+                    ApplyLocalControlState();
+                    Broadcast(true);
+                }
+            }
+            else if (!failed)
+            {
+                elapsed += Time.deltaTime;
+                startFlashRemaining = Mathf.Max(0f, startFlashRemaining - Time.deltaTime);
+                ApplyLocalControlState();
+            }
+            else
+            {
+                retryRemaining = Mathf.Max(0f, retryRemaining - Time.deltaTime);
+                ShowFailureOverlay();
+                if (retryRemaining <= 0f) stageManager.Retry();
+            }
+            Broadcast(false);
         }
 
-        private void SetAllPlayerControls(bool enabled)
+        private void BuildParticipantRoster()
         {
-            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
-            Transform activePlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            Array.Clear(participantIds, 0, participantIds.Length);
+            if (IsOnline && onlineManager != null)
+            {
+                OnlineLobbyInfo lobby = onlineManager.CurrentLobby;
+                if (lobby == null || lobby.Players == null || lobby.Players.Length == 0) return;
+                for (int i = 0; i < lobby.Players.Length; i++)
+                {
+                    OnlinePlayerInfo member = lobby.Players[i];
+                    if (member == null || string.IsNullOrEmpty(member.PlayerId)) continue;
+                    int lane = PlayerColorPalette.GetLobbyPlayerSlot(lobby, member.PlayerId);
+                    if (lane < 0 || lane >= MaxLanes || !string.IsNullOrEmpty(participantIds[lane]))
+                        lane = FindFreeLane();
+                    if (lane >= 0) participantIds[lane] = member.PlayerId;
+                }
+            }
+            else
+            {
+                int count = Mathf.Clamp(stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1, 1, MaxLanes);
+                for (int i = 0; i < count; i++) participantIds[i] = "local-" + (i + 1);
+            }
+
+            playerCount = CountParticipants();
+            rosterReady = playerCount > 0;
+        }
+
+        private int FindFreeLane()
+        {
+            for (int i = 0; i < participantIds.Length; i++)
+                if (string.IsNullOrEmpty(participantIds[i])) return i;
+            return -1;
+        }
+
+        private int CountParticipants()
+        {
+            int count = 0;
+            for (int i = 0; i < participantIds.Length; i++)
+                if (!string.IsNullOrEmpty(participantIds[i])) count++;
+            return Mathf.Max(1, count);
+        }
+
+        private void ConfigureActiveLanes()
+        {
+            StageEditorObject[] objects = GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < objects.Length; i++)
+            {
+                int lane = ParseLane(objects[i] != null ? objects[i].objectId : null);
+                if (lane >= 0) objects[i].gameObject.SetActive(!string.IsNullOrEmpty(participantIds[lane]));
+            }
+        }
+
+        private static int ParseLane(string objectId)
+        {
+            const string prefix = "10-1-lane-";
+            if (string.IsNullOrEmpty(objectId) || !objectId.StartsWith(prefix, StringComparison.Ordinal)
+                || objectId.Length <= prefix.Length)
+                return -1;
+            int lane = objectId[prefix.Length] - '1';
+            return lane >= 0 && lane < MaxLanes ? lane : -1;
+        }
+
+        private void PositionLocalPlayersAtStarts()
+        {
+            if (stageManager == null) return;
+            PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsSortMode.InstanceID);
             for (int i = 0; i < players.Length; i++)
             {
-                if (!enabled)
+                PlayerController2D current = players[i];
+                if (current == null || !current.gameObject.activeInHierarchy) continue;
+                int lane = GetPlayerLane(current);
+                if (lane < 0) continue;
+                float destinationY = GetLaneTop(lane) + 0.06f;
+                if (TryGetPlayerBottom(current, out float currentBottom))
+                    destinationY = current.transform.position.y + destinationY - currentBottom;
+                else
+                    destinationY += 0.65f;
+                Vector3 destination = new Vector3(StartX, destinationY, current.transform.position.z);
+                Rigidbody2D body = current.GetComponent<Rigidbody2D>();
+                if (body != null)
                 {
-                    players[i].ResetMotion();
-                    players[i].SetControlsEnabled(false);
+                    body.position = destination;
+                    body.linearVelocity = Vector2.zero;
+                    body.angularVelocity = 0f;
                 }
-                else if (players[i].transform == activePlayer)
-                {
-                    players[i].SetControlsEnabled(true);
-                }
+                else current.transform.position = destination;
+                current.ResetMotion();
+                stageManager.RecordAssignedPlayerStart(current, destination);
             }
         }
 
-        private void ApplyFailureLocally()
+        private static bool TryGetPlayerBottom(PlayerController2D player, out float bottom)
         {
-            if (locallyAppliedFailure) return;
-            locallyAppliedFailure = true;
-            SetAllPlayerControls(false);
+            bottom = player != null ? player.transform.position.y : 0f;
+            if (player == null) return false;
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>();
+            bool found = false;
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D current = colliders[i];
+                if (current == null || !current.enabled || current.isTrigger) continue;
+                if (!found || current.bounds.min.y < bottom) bottom = current.bounds.min.y;
+                found = true;
+            }
+            return found;
+        }
+
+        private int GetPlayerLane(PlayerController2D current)
+        {
+            if (IsOnline)
+            {
+                if (current.transform != stageManager.ActivePlayerTransform) return -1;
+                return FindParticipant(onlineManager != null ? onlineManager.LocalPlayerId : null);
+            }
+            if (current == stageManager.RemotePlayerController) return FindParticipant("local-2");
+            if (current.transform == stageManager.ActivePlayerTransform || current != stageManager.RemotePlayerController)
+                return FindParticipant("local-1");
+            return -1;
+        }
+
+        private string GetOfflinePlayerId(PlayerController2D current)
+        {
+            if (stageManager == null || current == null) return null;
+            return current == stageManager.RemotePlayerController ? "local-2" : "local-1";
+        }
+
+        private void RecordFinish(string playerId)
+        {
+            if (!HasAuthority || string.IsNullOrEmpty(playerId)) return;
+            int lane = FindParticipant(playerId);
+            if (lane < 0 || finishTimes[lane] >= 0f) return;
+            finishTimes[lane] = elapsed;
+            FreezeFinishedLocalPlayer(lane);
+            Broadcast(true);
+
+            if (!AllParticipantsFinished()) return;
+            float total = GetFinishedTotal();
+            if (total <= playerCount * SecondsPerPlayer + 0.001f)
+            {
+                stageManager.ClearStage();
+            }
+            else
+            {
+                failed = true;
+                retryRemaining = RetryDelay;
+                SetLocalControls(false);
+                ShowFailureOverlay();
+                Broadcast(true);
+            }
+        }
+
+        private void FreezeFinishedLocalPlayer(int finishedLane)
+        {
+            PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsSortMode.InstanceID);
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (GetPlayerLane(players[i]) != finishedLane) continue;
+                players[i].ResetMotion();
+                players[i].SetControlsEnabled(false);
+                if (!IsOnline && players[i].transform == stageManager.ActivePlayerTransform && !AllParticipantsFinished())
+                    stageManager.SwitchCharacter();
+            }
+            ApplyLocalControlState();
+        }
+
+        private void SetLocalControls(bool value)
+        {
+            PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == null) continue;
+                if (!value) players[i].ResetMotion();
+                players[i].SetControlsEnabled(value && players[i].transform == stageManager.ActivePlayerTransform);
+            }
+        }
+
+        private void ApplyLocalControlState()
+        {
+            if (!started || failed)
+            {
+                SetLocalControls(false);
+                return;
+            }
+            PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
+            for (int i = 0; i < players.Length; i++)
+            {
+                int lane = GetPlayerLane(players[i]);
+                bool canMove = lane >= 0 && finishTimes[lane] < 0f
+                    && players[i].transform == stageManager.ActivePlayerTransform;
+                players[i].SetControlsEnabled(canMove);
+            }
         }
 
         private void HandleNetworkData(OnlineGimmickData data)
         {
             if (data == null || data.ObjectId != StageId) return;
-            if (data.Kind == MissileKind)
+            if (data.Kind == FinishRequestKind && HasAuthority)
             {
-                if (!HasAuthority) ApplyMissile(JsonUtility.FromJson<MissileState>(data.Json));
+                RecordFinish(data.PlayerId);
                 return;
             }
             if (data.Kind != StateKind || HasAuthority) return;
-            SpeedrunState snapshot = JsonUtility.FromJson<SpeedrunState>(data.Json);
-            if (snapshot == null) return;
-            remaining = snapshot.Remaining;
-            introRemaining = snapshot.IntroRemaining;
-            startFlashRemaining = snapshot.StartFlashRemaining;
-            retryRemaining = snapshot.RetryRemaining;
-            started = snapshot.Started;
-            failed = snapshot.Failed;
-            if (started) ApplyStartLocally();
-            else SetAllPlayerControls(false);
-            if (failed) ApplyFailureLocally();
-        }
 
-        private void FireMissileVolley()
-        {
-            // U-turn 5 onward is always under fire. Deeper tiers deliberately fire more often.
-            float[] tierY = { -34.5f, -42.4f, -50.3f, -58.2f, -66.1f, -74.0f };
-            int[] cadence = { 4, 3, 2, 1, 1, 1 };
-            int[] shotCount = { 1, 1, 1, 1, 2, 3 };
-            int volley = missileVolleySequence++;
-            for (int tier = 0; tier < tierY.Length; tier++)
-            {
-                if (!IsMissileTierEnabled(tier, tierY.Length)) continue;
-                if (volley % cadence[tier] != 0) continue;
-                for (int shot = 0; shot < shotCount[tier]; shot++)
-                {
-                    float spread = shotCount[tier] <= 1
-                        ? ((volley + tier) % 2 == 0 ? -1.05f : 1.05f)
-                        : Mathf.Lerp(-1.45f, 1.45f, shot / (float)(shotCount[tier] - 1));
-                    SpawnMissile(tierY[tier] + spread, tier, shot);
-                }
-            }
-            nextMissileAt = Time.time + 1.25f;
-        }
-
-        private bool IsMissileTierEnabled(int tier, int totalTierCount)
-        {
-            if (activeMissileTierCount >= totalTierCount) return true;
-            if (activeMissileTierCount <= 1) return tier == totalTierCount / 2;
-            for (int i = 0; i < activeMissileTierCount; i++)
-            {
-                int selected = Mathf.RoundToInt(i * (totalTierCount - 1f) / (activeMissileTierCount - 1f));
-                if (tier == selected) return true;
-            }
-            return false;
-        }
-
-        private void SpawnMissile(float y, int tier, int shot)
-        {
-            int shotIndex = missileSequence;
-            bool fromLeft = (shotIndex + tier + shot) % 2 == 0;
-            MissileState state = new MissileState
-            {
-                Sequence = ++missileSequence,
-                Position = new Vector2(fromLeft ? -9.3f : 9.3f, y),
-                Direction = fromLeft ? Vector2.right : Vector2.left,
-                Speed = 6.8f + tier * 0.38f,
-                Size = Mathf.Lerp(0.72f, 1.0f, tier / 5f)
-            };
-            ApplyMissile(state);
-            if (syncManager != null && syncManager.IsOnlineActive && onlineManager != null)
-            {
-                onlineManager.SendGimmickData(new OnlineGimmickData
-                {
-                    ObjectId = StageId,
-                    Kind = MissileKind,
-                    Json = JsonUtility.ToJson(state)
-                });
-            }
-        }
-
-        private void ApplyMissile(MissileState state)
-        {
-            if (state == null || !receivedMissiles.Add(state.Sequence)) return;
-            StageMissileProjectile.Create(
-                transform,
-                transform,
-                state.Position,
-                state.Direction,
-                state.Speed,
-                true,
-                state.Size);
-            GameSfx.PlayAt(SfxId.CannonFire, state.Position, 0.72f);
+            RaceState state = JsonUtility.FromJson<RaceState>(data.Json);
+            if (state == null) return;
+            elapsed = state.Elapsed;
+            introRemaining = state.IntroRemaining;
+            startFlashRemaining = state.StartFlashRemaining;
+            retryRemaining = state.RetryRemaining;
+            started = state.Started;
+            failed = state.Failed;
+            playerCount = Mathf.Clamp(state.PlayerCount, 1, MaxLanes);
+            CopyArray(state.PlayerIds, participantIds, null);
+            CopyArray(state.FinishTimes, finishTimes, -1f);
+            rosterReady = true;
+            ConfigureActiveLanes();
+            if (monitorTexts.Count == 0) BuildMonitors();
+            int localLane = FindParticipant(onlineManager != null ? onlineManager.LocalPlayerId : null);
+            localFinishRequested = localLane >= 0 && finishTimes[localLane] >= 0f;
+            ApplyLocalControlState();
+            if (failed) ShowFailureOverlay();
         }
 
         private void Broadcast(bool force)
         {
-            if (syncManager == null || !syncManager.IsOnlineActive || !syncManager.IsHost || onlineManager == null) return;
+            if (!IsOnline || !HasAuthority || onlineManager == null) return;
             if (!force && Time.unscaledTime < nextBroadcastAt) return;
-            nextBroadcastAt = Time.unscaledTime + 0.18f;
+            nextBroadcastAt = Time.unscaledTime + 0.15f;
             onlineManager.SendGimmickData(new OnlineGimmickData
             {
                 ObjectId = StageId,
                 Kind = StateKind,
-                Json = JsonUtility.ToJson(new SpeedrunState
+                Json = JsonUtility.ToJson(new RaceState
                 {
-                    Remaining = remaining,
+                    Elapsed = elapsed,
                     IntroRemaining = introRemaining,
                     StartFlashRemaining = startFlashRemaining,
                     RetryRemaining = retryRemaining,
                     Started = started,
-                    Failed = failed
+                    Failed = failed,
+                    PlayerCount = playerCount,
+                    PlayerIds = (string[])participantIds.Clone(),
+                    FinishTimes = (float[])finishTimes.Clone()
                 })
             });
         }
 
-        private void BuildClocks()
+        private void BuildMonitors()
         {
-            Vector2[] positions =
+            for (int i = monitorTexts.Count - 1; i >= 0; i--)
+                if (monitorTexts[i] != null) Destroy(monitorTexts[i].gameObject);
+            for (int i = monitorSubTexts.Count - 1; i >= 0; i--)
+                if (monitorSubTexts[i] != null) Destroy(monitorSubTexts[i].gameObject);
+            monitorTexts.Clear();
+            monitorSubTexts.Clear();
+
+            StageEditorObject[] authoredObjects = GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < authoredObjects.Length; i++)
             {
-                new Vector2(0f, 1.2f), new Vector2(0f, -9.8f),
-                new Vector2(0f, -17.8f), new Vector2(0f, -25.8f),
-                new Vector2(0f, -41.5f), new Vector2(0f, -57.2f),
-                new Vector2(0f, -72.9f), new Vector2(0f, -77.5f)
-            };
-            for (int i = 0; i < positions.Length; i++)
+                StageEditorObject marker = authoredObjects[i];
+                if (marker == null || !marker.gameObject.activeInHierarchy
+                    || marker.type != StageObjectType.ChallengeClock
+                    || string.IsNullOrEmpty(marker.objectId)
+                    || !marker.objectId.StartsWith("10-1-lane-", StringComparison.Ordinal))
+                    continue;
+                StageChallengeClock clock = marker.GetComponent<StageChallengeClock>();
+                if (clock != null) clock.enabled = false;
+                DoodleMonitorTextReadability readability = marker.GetComponent<DoodleMonitorTextReadability>();
+                if (readability != null) readability.enabled = false;
+                TextMesh[] oldTexts = marker.GetComponentsInChildren<TextMesh>(true);
+                for (int textIndex = 0; textIndex < oldTexts.Length; textIndex++)
+                {
+                    MeshRenderer oldRenderer = oldTexts[textIndex].GetComponent<MeshRenderer>();
+                    if (oldRenderer != null) oldRenderer.enabled = false;
+                    oldTexts[textIndex].gameObject.SetActive(false);
+                }
+                CreateMonitorTexts(marker.transform);
+            }
+            if (monitorTexts.Count > 0) return;
+
+            float[] xPositions = { -113f, 20f, 75f, 191f };
+            for (int lane = 0; lane < MaxLanes; lane++)
             {
-                GameObject monitor = new GameObject("10-1 Speed Clock " + i);
-                monitor.transform.SetParent(transform, false);
-                monitor.transform.position = new Vector3(positions[i].x, positions[i].y, 0.3f);
-                DoodleMonitorVisuals.Build(monitor.transform,
-                    new Vector2(i == 0 ? 7.2f : 4.4f, i == 0 ? 1.9f : 1.45f), 1);
-                TextMesh clock = CreateText(monitor.transform, i == 0 ? 0.18f : 0.13f, 7);
-                clocks.Add(clock);
+                if (string.IsNullOrEmpty(participantIds[lane])) continue;
+                for (int station = 0; station < xPositions.Length; station++)
+                {
+                    GameObject monitor = new GameObject("10-1 Race Monitor L" + (lane + 1) + "-" + station);
+                    monitor.transform.SetParent(transform, false);
+                    monitor.transform.position = new Vector3(xPositions[station], GetLaneTop(lane) + 5.2f, 0.3f);
+                    DoodleMonitorVisuals.Build(monitor.transform, new Vector2(8.5f, 2.2f), 1);
+                    CreateMonitorTexts(monitor.transform);
+                }
             }
         }
 
-        private void RefreshClocks()
+        private void RefreshMonitors()
         {
             string value;
+            string subValue;
+            Color color;
             if (!started)
-                value = Mathf.Max(1, Mathf.CeilToInt(introRemaining)).ToString();
-            else if (startFlashRemaining > 0f)
-                value = LocalizationManager.T("ice_speedrun_start");
-            else if (failed)
-                value = LocalizationManager.Format("ice_speedrun_time_up", Mathf.CeilToInt(retryRemaining));
-            else
-                value = remaining.ToString("00.0");
-            Color color = failed
-                ? new Color(1f, 0.28f, 0.18f)
-                : !started || startFlashRemaining > 0f
-                    ? new Color(1f, 0.82f, 0.2f)
-                    : remaining <= 5f ? new Color(1f, 0.7f, 0.12f) : new Color(0.2f, 0.95f, 1f);
-            for (int i = 0; i < clocks.Count; i++)
             {
-                if (clocks[i] == null) continue;
-                clocks[i].text = value;
-                clocks[i].color = color;
+                value = Mathf.Max(1, Mathf.CeilToInt(introRemaining)).ToString();
+                subValue = string.Empty;
+                color = new Color(0.08f, 0.09f, 0.1f);
+            }
+            else if (startFlashRemaining > 0f)
+            {
+                value = LocalizationManager.T("ice_speedrun_start");
+                subValue = string.Empty;
+                color = new Color(0.08f, 0.09f, 0.1f);
+            }
+            else if (failed)
+            {
+                value = LocalizationManager.T("game_over") + "  "
+                    + LocalizationManager.Format("ice_race_team", FormatTime(GetFinishedTotal()), FormatTime(playerCount * SecondsPerPlayer));
+                subValue = LocalizationManager.Format("ice_race_retry", Mathf.CeilToInt(retryRemaining));
+                color = new Color(0.08f, 0.09f, 0.1f);
+            }
+            else
+            {
+                value = LocalizationManager.Format("ice_race_team", FormatTime(GetProjectedTotal()), FormatTime(playerCount * SecondsPerPlayer));
+                subValue = BuildPlayerTimes();
+                color = new Color(0.08f, 0.09f, 0.1f);
+            }
+
+            for (int i = 0; i < monitorTexts.Count; i++)
+            {
+                if (monitorTexts[i] == null) continue;
+                monitorTexts[i].text = value;
+                monitorTexts[i].color = color;
+            }
+            for (int i = 0; i < monitorSubTexts.Count; i++)
+            {
+                if (monitorSubTexts[i] == null) continue;
+                monitorSubTexts[i].text = subValue;
+                monitorSubTexts[i].color = color;
             }
         }
 
-        private static TextMesh CreateText(Transform parent, float size, int order)
+        private string BuildPlayerTimes()
         {
-            GameObject obj = new GameObject("Clock Text");
-            obj.transform.SetParent(parent, false);
-            obj.transform.localPosition = new Vector3(0f, -0.08f, -0.08f);
-            TextMesh text = obj.AddComponent<TextMesh>();
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.fontSize = 64;
-            text.characterSize = size;
-            Font font = DoodleRuntimeAssets.HandwrittenFont;
-            if (font != null)
+            List<string> values = new List<string>();
+            for (int lane = 0; lane < MaxLanes; lane++)
             {
-                text.font = font;
-                obj.GetComponent<MeshRenderer>().sharedMaterial = font.material;
+                if (string.IsNullOrEmpty(participantIds[lane])) continue;
+                float value = finishTimes[lane] >= 0f ? finishTimes[lane] : elapsed;
+                string suffix = finishTimes[lane] >= 0f ? "  OK" : string.Empty;
+                values.Add("P" + (lane + 1) + " " + FormatTime(value) + suffix);
             }
-            obj.GetComponent<MeshRenderer>().sortingOrder = order;
-            return text;
+            if (values.Count <= 2) return string.Join("     ", values);
+            int split = (values.Count + 1) / 2;
+            return string.Join("     ", values.GetRange(0, split).ToArray())
+                + "\n" + string.Join("     ", values.GetRange(split, values.Count - split).ToArray());
+        }
+
+        private float GetFinishedTotal()
+        {
+            float total = 0f;
+            for (int i = 0; i < MaxLanes; i++)
+                if (!string.IsNullOrEmpty(participantIds[i]) && finishTimes[i] >= 0f) total += finishTimes[i];
+            return total;
+        }
+
+        private void ShowFailureOverlay()
+        {
+            if (uiManager == null) uiManager = FindFirstObjectByType<UIManager>();
+            uiManager?.SetChallengeCountdown(true,
+                LocalizationManager.Format("ice_race_game_over",
+                    FormatTime(GetFinishedTotal()),
+                    FormatTime(playerCount * SecondsPerPlayer)));
+        }
+
+        private float GetProjectedTotal()
+        {
+            float total = 0f;
+            for (int i = 0; i < MaxLanes; i++)
+            {
+                if (string.IsNullOrEmpty(participantIds[i])) continue;
+                total += finishTimes[i] >= 0f ? finishTimes[i] : elapsed;
+            }
+            return total;
+        }
+
+        private bool AllParticipantsFinished()
+        {
+            for (int i = 0; i < MaxLanes; i++)
+                if (!string.IsNullOrEmpty(participantIds[i]) && finishTimes[i] < 0f) return false;
+            return true;
+        }
+
+        private int FindParticipant(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return -1;
+            for (int i = 0; i < participantIds.Length; i++)
+                if (participantIds[i] == id) return i;
+            return -1;
+        }
+
+        private void ResetFinishTimes()
+        {
+            for (int i = 0; i < finishTimes.Length; i++) finishTimes[i] = -1f;
+        }
+
+        private static void CopyArray<T>(T[] source, T[] destination, T fallback)
+        {
+            for (int i = 0; i < destination.Length; i++)
+                destination[i] = source != null && i < source.Length ? source[i] : fallback;
+        }
+
+        private static float GetLaneTop(int lane) => FirstLaneTop - lane * LaneSpacing;
+
+        private static string FormatTime(float seconds)
+        {
+            seconds = Mathf.Max(0f, seconds);
+            int minutes = Mathf.FloorToInt(seconds / 60f);
+            float remainder = seconds - minutes * 60f;
+            return minutes + ":" + remainder.ToString("00.0");
+        }
+
+        private void CreateMonitorTexts(Transform parent)
+        {
+            Color graphite = new Color(0.08f, 0.09f, 0.1f);
+            monitorTexts.Add(StageEscortController.CreateText(
+                parent, "Race Total", new Vector3(0f, 0.34f, -0.08f),
+                60, 0.075f, graphite, 7));
+            monitorSubTexts.Add(StageEscortController.CreateText(
+                parent, "Player Times", new Vector3(0f, -0.42f, -0.08f),
+                48, 0.052f, graphite, 7));
         }
     }
 }

@@ -109,6 +109,7 @@ NICO DRAWのゲーム内で使う2Dスプライト。
 - Jumper enemy: orange scribble mass on two loose springs.
 - Charger enemy: red racing knot with a blunt spike and trailing scratches.
 - Flyer enemy: blue knot with mismatched leaf-like wings.
+- Stage 4-1 piercing bee: faceless mustard/orange pencil knot with charcoal bands, mismatched pale wings and one oversized graphite stinger. It uses `enemy-piercer-bee.png`; the stage-specific collision rule passes through and defeats a shelled turtle instead of bouncing.
 - Zigzag flyer: hot-pink knot with lightning-shaped wings and tail.
 - Orbit flyer: teal scribble ball crossed by one crooked loop.
 - Shooter enemy: moss-green knot with a rough cardboard-tube cannon.
@@ -129,6 +130,7 @@ NICO DRAWのゲーム内で使う2Dスプライト。
 - Circuit bulb: old incandescent bulb with a visible filament and charcoal screw base. Tint, halo and filament light remain live code overlays.
 - Circuit wire: not a fixed sprite; it uses graphite outer stroke, colored-pencil core and a powered glow so moving terminals and partial conduction remain accurate.
 - Start marker: a chunky blue check-pattern flag with a graphite pole and grounded base. The spawn trigger remains separate.
+- Stage 14-1 icicle seesaw: `stage-14-1-seesaw-plank.png`, `stage-14-1-seesaw-pivot.png` and `stage-14-1-icicle.png` provide the child-drawn board, support and falling hazard. Accumulating snow is drawn as individual code-generated pencil dots like stage 9-3; rotation, collision, exact impact-point freezing and blizzard force remain controller-owned.
 - Stage 14-2 umbrella: a wide blue/cyan colored-pencil canopy with ribs, scalloped edge and full crooked handle. Rain shelter width remains controller-owned.
 - Stage 14-3 shield button: pale metal pencil button that is tinted by its current link color, turns green and depresses briefly when activated.
 - Stage 14-3 temporary steel shield: gray paper-steel fill, dark outline and colored diagonal pencil strokes; its one-second active state remains authoritative gameplay state.

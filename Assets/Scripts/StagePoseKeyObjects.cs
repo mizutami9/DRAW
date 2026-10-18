@@ -270,6 +270,18 @@ namespace DrawBody.Prototype
                 new Vector2(0f, 0.42f), new Vector2(0f, 0.72f),
                 new Vector2(-0.14f, 0.58f), new Vector2(0f, 0.72f), new Vector2(0.14f, 0.58f)
             }, 0.07f, new Color(0.1f, 0.65f, 1f, 0.95f), 14);
+            // A deliberately uneven crayon funnel makes the device read as an
+            // upward-facing fan/nozzle even before the wind ribbons animate.
+            StageGun.AddLine(fan.transform, "Fan Upward Nozzle", new[]
+            {
+                new Vector2(-0.38f, 0.31f), new Vector2(-0.2f, 0.57f),
+                new Vector2(0.2f, 0.57f), new Vector2(0.4f, 0.3f)
+            }, 0.075f, ink, 13);
+            StageGun.AddLine(fan.transform, "Fan Nozzle Crayon", new[]
+            {
+                new Vector2(-0.29f, 0.37f), new Vector2(0.27f, 0.45f),
+                new Vector2(-0.18f, 0.5f), new Vector2(0.18f, 0.53f)
+            }, 0.055f, new Color(0.24f, 0.72f, 0.96f, 0.82f), 12);
         }
 
         private static GameObject CreateRoot(StageObjectData data, Transform parent, string name)
@@ -316,21 +328,52 @@ namespace DrawBody.Prototype
             {
                 AddCircle(parent, "Bird Body", new Vector2(0f, -0.02f), new Vector2(0.62f, 0.42f), color, 23);
                 AddCircle(parent, "Bird Head", new Vector2(0.23f, 0.22f), new Vector2(0.32f, 0.32f), color, 24);
-                float wing = 0.18f + (pose % 6) * 0.065f;
-                StageGun.AddLine(parent, "Bird Wings", new[] { new Vector2(-0.05f, 0.02f), new Vector2(-0.42f, wing), new Vector2(-0.2f, -0.08f), new Vector2(0.12f, 0.04f), new Vector2(0.46f, wing * 0.8f) }, width, color, 25);
+                float leftWingAngle = Mathf.Lerp(125f, 235f, (pose % 6) / 5f) * Mathf.Deg2Rad;
+                float rightWingAngle = Mathf.Lerp(55f, -55f, (pose / 6) / 4f) * Mathf.Deg2Rad;
+                Vector2 leftWingRoot = new Vector2(-0.09f, 0.02f);
+                Vector2 rightWingRoot = new Vector2(0.09f, 0.02f);
+                Vector2 leftWingTip = leftWingRoot + new Vector2(
+                    Mathf.Cos(leftWingAngle), Mathf.Sin(leftWingAngle)) * 0.57f;
+                Vector2 rightWingTip = rightWingRoot + new Vector2(
+                    Mathf.Cos(rightWingAngle), Mathf.Sin(rightWingAngle)) * 0.57f;
+                StageGun.AddLine(parent, "Bird Left Wing",
+                    new[] { leftWingRoot, leftWingTip }, width * 1.12f, color, 25);
+                StageGun.AddLine(parent, "Bird Right Wing",
+                    new[] { rightWingRoot, rightWingTip }, width * 1.12f, color, 25);
                 StageGun.AddLine(parent, "Bird Beak", new[] { new Vector2(0.37f, 0.24f), new Vector2(0.58f, 0.17f), new Vector2(0.38f, 0.11f) }, width * 0.75f, color, 25);
-                StageGun.AddLine(parent, "Bird Tail", new[] { new Vector2(-0.29f, -0.08f), new Vector2(-0.52f - legSpread, -0.22f), new Vector2(-0.42f, 0.02f) }, width, color, 24);
+                StageGun.AddLine(parent, "Bird Tail", new[] { new Vector2(-0.29f, -0.08f), new Vector2(-0.55f, -0.24f), new Vector2(-0.42f, 0.02f) }, width, color, 24);
+                StageGun.AddLine(parent, "Bird Left Foot",
+                    new[] { new Vector2(-0.1f, -0.2f), new Vector2(-0.14f, -0.42f) },
+                    width * 0.72f, color, 24);
+                StageGun.AddLine(parent, "Bird Right Foot",
+                    new[] { new Vector2(0.12f, -0.2f), new Vector2(0.17f, -0.42f) },
+                    width * 0.72f, color, 24);
             }
             else
             {
                 AddCircle(parent, "Turtle Shell", new Vector2(0f, -0.02f), new Vector2(0.68f, 0.55f), color, 23);
-                AddCircle(parent, "Turtle Head", new Vector2(0.42f, 0.1f + (pose % 3) * 0.06f), new Vector2(0.27f, 0.25f), color, 24);
-                float legY = -0.27f;
-                float reach = 0.34f + (pose % 5) * 0.035f;
-                StageGun.AddLine(parent, "Turtle Limbs", new[] { new Vector2(-0.2f, legY), new Vector2(-reach, -0.48f), new Vector2(0.2f, legY), new Vector2(reach, -0.48f) }, width, color, 24);
+                AddCircle(parent, "Turtle Head", new Vector2(0.43f, 0.1f), new Vector2(0.27f, 0.25f), color, 24);
+                float rearLimbAngle = Mathf.Lerp(125f, 235f, (pose % 6) / 5f) * Mathf.Deg2Rad;
+                float frontLimbAngle = Mathf.Lerp(55f, -55f, (pose / 6) / 4f) * Mathf.Deg2Rad;
+                Vector2 rearRoot = new Vector2(-0.19f, -0.05f);
+                Vector2 frontRoot = new Vector2(0.19f, -0.05f);
+                Vector2 rearTip = rearRoot + new Vector2(
+                    Mathf.Cos(rearLimbAngle), Mathf.Sin(rearLimbAngle)) * 0.5f;
+                Vector2 frontTip = frontRoot + new Vector2(
+                    Mathf.Cos(frontLimbAngle), Mathf.Sin(frontLimbAngle)) * 0.5f;
+                StageGun.AddLine(parent, "Turtle Rear Limb",
+                    new[] { rearRoot, rearTip }, width * 1.08f, color, 24);
+                StageGun.AddLine(parent, "Turtle Front Limb",
+                    new[] { frontRoot, frontTip }, width * 1.08f, color, 24);
+                StageGun.AddLine(parent, "Turtle Rear Lower Foot",
+                    new[] { new Vector2(-0.19f, -0.19f), new Vector2(-0.32f, -0.45f) },
+                    width * 0.82f, color, 24);
+                StageGun.AddLine(parent, "Turtle Front Lower Foot",
+                    new[] { new Vector2(0.19f, -0.19f), new Vector2(0.32f, -0.45f) },
+                    width * 0.82f, color, 24);
                 StageGun.AddLine(parent, "Shell Pattern", new[] { new Vector2(-0.25f, 0f), new Vector2(0f, 0.2f), new Vector2(0.25f, 0f), new Vector2(0f, -0.2f), new Vector2(-0.25f, 0f) }, width * 0.65f, color * new Color(0.62f, 0.62f, 0.62f, 1f), 25);
             }
-            DrawIdentityMarks(parent, pose, color, silhouette);
+            if (species == 0) DrawIdentityMarks(parent, pose, color, silhouette);
         }
 
         private static void DrawIdentityMarks(Transform parent, int pose, Color color, bool silhouette)
@@ -465,6 +508,9 @@ namespace DrawBody.Prototype
         private readonly Dictionary<int, float> birdHoverPhases = new Dictionary<int, float>();
         private readonly List<Collider2D> overlapResults = new List<Collider2D>(128);
         private LineRenderer[] windRibbons;
+        private Vector3[] windRibbonOrigins;
+        private Transform[] fanBlades;
+        private Transform[] fanArrows;
         private Collider2D zoneCollider;
         private PlayerController2D[] playerCache = System.Array.Empty<PlayerController2D>();
         private float nextPlayerRefresh;
@@ -500,6 +546,22 @@ namespace DrawBody.Prototype
         {
             zoneCollider = GetComponent<Collider2D>();
             windRibbons = GetComponentsInChildren<LineRenderer>(true);
+            windRibbonOrigins = new Vector3[windRibbons.Length];
+            for (int i = 0; i < windRibbons.Length; i++)
+                windRibbonOrigins[i] = windRibbons[i] != null
+                    ? windRibbons[i].transform.localPosition : Vector3.zero;
+            List<Transform> blades = new List<Transform>();
+            List<Transform> arrows = new List<Transform>();
+            Transform[] children = GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < children.Length; i++)
+            {
+                Transform child = children[i];
+                if (child == null) continue;
+                if (child.name == "Fan Blades") blades.Add(child);
+                else if (child.name == "Fan Up Arrow") arrows.Add(child);
+            }
+            fanBlades = blades.ToArray();
+            fanArrows = arrows.ToArray();
         }
 
         private void Update()
@@ -509,11 +571,32 @@ namespace DrawBody.Prototype
             {
                 LineRenderer ribbon = windRibbons[i];
                 if (ribbon == null || !ribbon.gameObject.name.StartsWith("Updraft Wind Ribbon")) continue;
-                float alpha = 0.48f + Mathf.PingPong(Time.time * 0.55f + i * 0.17f, 0.36f);
+                float phase = Mathf.Repeat(Time.time * 0.68f + i * 0.083f, 1f);
+                float wave = Mathf.Sin(Time.time * 2.6f + i * 0.72f);
+                float alpha = Mathf.Lerp(0.25f, 0.86f, 1f - phase);
                 Color color = new Color(0.22f, 0.78f, 1f, alpha);
                 ribbon.startColor = color;
                 ribbon.endColor = new Color(color.r, color.g, color.b, alpha * 0.4f);
+                Vector3 origin = windRibbonOrigins != null && i < windRibbonOrigins.Length
+                    ? windRibbonOrigins[i] : Vector3.zero;
+                ribbon.transform.localPosition = origin
+                    + new Vector3(wave * 0.012f, Mathf.Lerp(-0.07f, 0.12f, phase), 0f);
+                ribbon.transform.localScale = new Vector3(
+                    0.9f + wave * 0.08f,
+                    0.72f + phase * 0.42f,
+                    1f);
             }
+            if (fanBlades != null)
+                for (int i = 0; i < fanBlades.Length; i++)
+                    if (fanBlades[i] != null)
+                        fanBlades[i].Rotate(0f, 0f, -260f * Time.deltaTime, Space.Self);
+            if (fanArrows != null)
+                for (int i = 0; i < fanArrows.Length; i++)
+                    if (fanArrows[i] != null)
+                        fanArrows[i].localPosition = new Vector3(
+                            0f,
+                            Mathf.Sin(Time.time * 4.2f + i * 0.8f) * 0.055f,
+                            fanArrows[i].localPosition.z);
         }
 
         private void FixedUpdate()
@@ -692,6 +775,9 @@ namespace DrawBody.Prototype
     {
         private static readonly System.Collections.Generic.HashSet<StageRedrawZone> ActiveZones
             = new System.Collections.Generic.HashSet<StageRedrawZone>();
+        private static readonly System.Collections.Generic.Dictionary<PlayerController2D, StageRedrawZone>
+            LastVisitedZoneByPlayer
+                = new System.Collections.Generic.Dictionary<PlayerController2D, StageRedrawZone>();
 
         private Collider2D zoneCollider;
 
@@ -733,8 +819,18 @@ namespace DrawBody.Prototype
         private float nextFloorParticleBurstAt;
 
         private void OnEnable()  => ActiveZones.Add(this);
-        private void OnDisable() => ActiveZones.Remove(this);
-        private void OnDestroy() => ActiveZones.Remove(this);
+
+        private void OnDisable()
+        {
+            ActiveZones.Remove(this);
+            RemoveCheckpointReferences();
+        }
+
+        private void OnDestroy()
+        {
+            ActiveZones.Remove(this);
+            RemoveCheckpointReferences();
+        }
 
         private void Start()
         {
@@ -744,6 +840,30 @@ namespace DrawBody.Prototype
         // ─── 静的API ───
 
         public static bool HasActiveZones() => ActiveZones.Count > 0;
+
+        /// <summary>
+        /// Returns the last redraw zone that this particular player actually
+        /// entered.  Online hazard respawns are performed only by the owning
+        /// client, so keeping the checkpoint on the player instance also keeps
+        /// every peer's checkpoint independent without trusting a remote proxy.
+        /// </summary>
+        public static bool TryGetLastVisitedRespawnPoint(
+            PlayerController2D player,
+            Vector2 from,
+            out Vector3 point)
+        {
+            point = default;
+            if (player == null
+                || !LastVisitedZoneByPlayer.TryGetValue(player, out StageRedrawZone zone)
+                || zone == null
+                || !zone.isActiveAndEnabled)
+            {
+                if (player != null) LastVisitedZoneByPlayer.Remove(player);
+                return false;
+            }
+
+            return zone.TryGetRespawnPoint(from, out point);
+        }
 
         public static bool TryGetNearestRespawnPoint(Vector2 from, out Vector3 point)
         {
@@ -771,6 +891,59 @@ namespace DrawBody.Prototype
                 found = true;
             }
             return found;
+        }
+
+        private bool TryGetRespawnPoint(Vector2 from, out Vector3 point)
+        {
+            point = default;
+            Collider2D col = zoneCollider != null ? zoneCollider : GetComponent<Collider2D>();
+            if (col == null || !col.enabled || !col.gameObject.activeInHierarchy) return false;
+
+            Bounds bounds = col.bounds;
+            Vector2 nearest = col.ClosestPoint(from);
+            float inset = Mathf.Min(0.35f, bounds.extents.x * 0.25f);
+            float minX = bounds.min.x + inset;
+            float maxX = bounds.max.x - inset;
+            float x = minX <= maxX ? Mathf.Clamp(nearest.x, minX, maxX) : bounds.center.x;
+            point = new Vector3(x, bounds.min.y + 0.08f, transform.position.z);
+            return true;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other) => RecordVisit(other);
+        private void OnTriggerStay2D(Collider2D other) => RecordVisit(other);
+
+        private void RecordVisit(Collider2D other)
+        {
+            if (other == null) return;
+            PlayerController2D player = other.GetComponentInParent<PlayerController2D>();
+            if (player == null) return;
+
+            // A hand-drawn body can have long limbs made from many child
+            // colliders.  Touching a later zone with only a limb must not move
+            // the checkpoint; require the player's root to enter the zone.
+            Vector2 playerPosition = player.transform.position;
+            Collider2D col = zoneCollider != null ? zoneCollider : GetComponent<Collider2D>();
+            bool rootInside = col != null && col.OverlapPoint(playerPosition);
+            if (!rootInside)
+            {
+                Vector3 localPosition = transform.InverseTransformPoint(playerPosition);
+                rootInside = Mathf.Abs(localPosition.x) <= 0.55f
+                    && Mathf.Abs(localPosition.y) <= 0.55f;
+            }
+            if (rootInside) LastVisitedZoneByPlayer[player] = this;
+        }
+
+        private void RemoveCheckpointReferences()
+        {
+            if (LastVisitedZoneByPlayer.Count == 0) return;
+            var stalePlayers = new System.Collections.Generic.List<PlayerController2D>();
+            foreach (var pair in LastVisitedZoneByPlayer)
+            {
+                if (pair.Key == null || pair.Value == null || pair.Value == this)
+                    stalePlayers.Add(pair.Key);
+            }
+            for (int i = 0; i < stalePlayers.Count; i++)
+                LastVisitedZoneByPlayer.Remove(stalePlayers[i]);
         }
 
         public static bool IsPlayerInZone(PlayerController2D player)

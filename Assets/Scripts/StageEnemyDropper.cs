@@ -6,7 +6,7 @@ namespace DrawBody.Prototype
     [DisallowMultipleComponent]
     public sealed class StageEnemyDropper : MonoBehaviour, IStageLinkActivatable
     {
-        private const int MaximumLiveEnemies = 14;
+        private const int DefaultMaximumLiveEnemies = 14;
 
         private readonly Queue<GameObject> spawnedEnemies = new Queue<GameObject>();
         private StageObjectFactory factory;
@@ -17,6 +17,7 @@ namespace DrawBody.Prototype
         private Vector2 deviceSize;
         private float interval;
         private int enemyPattern;
+        private int maximumLiveEnemies = DefaultMaximumLiveEnemies;
         private float enemySize;
         private int sequence;
         private float nextSpawnTime;
@@ -41,6 +42,16 @@ namespace DrawBody.Prototype
         private void Start()
         {
             marker = GetComponent<StageEditorObject>();
+            // Enemy droppers normally retain the legacy cap. A positive
+            // movementSpeed is reserved as an authored per-dropper live cap
+            // for stages that intentionally need only a few active enemies.
+            if (marker != null && marker.movementSpeed > 0f)
+            {
+                maximumLiveEnemies = Mathf.Clamp(
+                    Mathf.RoundToInt(marker.movementSpeed),
+                    1,
+                    DefaultMaximumLiveEnemies);
+            }
             syncManager = Object.FindFirstObjectByType<StageGimmickSyncManager>();
             visualAnimator = GetComponent<StageDropperVisualAnimator>();
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
@@ -122,7 +133,7 @@ namespace DrawBody.Prototype
             GameSfx.PlayAt(SfxId.CannonFire, position, 0.52f);
 
             spawnedEnemies.Enqueue(enemy);
-            while (spawnedEnemies.Count > MaximumLiveEnemies)
+            while (spawnedEnemies.Count > maximumLiveEnemies)
             {
                 GameObject oldest = spawnedEnemies.Dequeue();
                 if (oldest == null) continue;

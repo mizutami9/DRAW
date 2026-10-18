@@ -74,6 +74,7 @@ namespace DrawBody.Prototype
         private bool turtleTurnHeld;
         private Vector2 groundNormal = Vector2.up;
         private bool groundedOnIce;
+        private bool groundedOnRaceIce;
         private Vector2 supportVelocity;
         private Rigidbody2D supportBody;
         private float supportNormalScore;
@@ -97,6 +98,7 @@ namespace DrawBody.Prototype
         private bool friendCarried;
         private bool humanCarryStruggling;
         private float weaponRecoilMomentumUntil = -100f;
+        private float environmentalPushUntil = -100f;
         private bool remoteActionStateEnabled;
         private bool remoteGrounded;
         private bool remoteWallSticking;
@@ -156,6 +158,16 @@ namespace DrawBody.Prototype
                 weaponRecoilMomentumUntil,
                 Time.fixedTime + (velocityChange.magnitude > 28f ? 0.72f : 0.48f));
             IsGrounded = false;
+        }
+
+        public void ApplyEnvironmentalPush(Vector2 velocityChange, float steeringDelay = 0.1f)
+        {
+            if (rb == null || rb.bodyType != RigidbodyType2D.Dynamic
+                || velocityChange.sqrMagnitude < 0.000001f) return;
+            rb.linearVelocity += velocityChange;
+            environmentalPushUntil = Mathf.Max(
+                environmentalPushUntil,
+                Time.fixedTime + Mathf.Clamp(steeringDelay, 0.04f, 0.3f));
         }
 
         public void SetScriptedInput(float horizontal, bool jumpHeld, bool jumpPressed = false)
@@ -616,6 +628,7 @@ namespace DrawBody.Prototype
             lastJumpPressedAt = -100f;
             scriptedJumpPressed = false;
             weaponRecoilMomentumUntil = -100f;
+            environmentalPushUntil = -100f;
             wallJumpControlLockUntil = -100f;
             wallJumpMomentumUntil = -100f;
             wallJumpSourceSide = 0;
@@ -780,6 +793,7 @@ namespace DrawBody.Prototype
 
             bool overlapsGroundCandidate = HasExternalOverlap(probeCenter, probeSize);
             groundedOnIce = false;
+            groundedOnRaceIce = false;
             groundNormal = Vector2.up;
             IsGrounded = overlapsGroundCandidate && TryFindGroundSupport(probeSize, out groundNormal);
             if (IsGrounded)
@@ -825,6 +839,15 @@ namespace DrawBody.Prototype
         {
             if (Time.fixedTime < weaponRecoilMomentumUntil)
             {
+                return;
+            }
+            if (Time.fixedTime < environmentalPushUntil)
+            {
+                float desiredX = horizontalInput * moveSpeed * EffectiveMoveSpeedMultiplier;
+                float softenedSteering = acceleration * 0.08f * Time.fixedDeltaTime;
+                rb.linearVelocity = new Vector2(
+                    Mathf.MoveTowards(rb.linearVelocity.x, desiredX, softenedSteering),
+                    rb.linearVelocity.y);
                 return;
             }
             if (Time.fixedTime < wallJumpControlLockUntil)
@@ -885,9 +908,18 @@ namespace DrawBody.Prototype
                 bool reversing = !noInput
                     && Mathf.Abs(rb.linearVelocity.x) > 0.05f
                     && Mathf.Sign(targetSpeed) != Mathf.Sign(rb.linearVelocity.x);
-                rate = noInput
-                    ? deceleration * 0.015f
-                    : reversing ? acceleration * 0.16f : acceleration * 0.48f;
+                if (groundedOnRaceIce)
+                {
+                    rate = noInput
+                        ? deceleration * 0.006f
+                        : reversing ? acceleration * 0.10f : acceleration * 0.40f;
+                }
+                else
+                {
+                    rate = noInput
+                        ? deceleration * 0.015f
+                        : reversing ? acceleration * 0.16f : acceleration * 0.48f;
+                }
             }
             else
             {
@@ -944,11 +976,23 @@ namespace DrawBody.Prototype
                 supportNormalScore = normal.y;
                 supportBody = otherBody != rb ? otherBody : null;
                 StageConveyorBelt conveyor = collision.collider.GetComponentInParent<StageConveyorBelt>();
-                supportVelocity = conveyor != null
-                    ? conveyor.SurfaceVelocity
-                    : otherBody != null && otherBody != rb
-                        ? otherBody.GetPointVelocity(contact.point)
-                        : Vector2.zero;
+                DirectionalMovingPlatform directionalPlatform =
+                    collision.collider.GetComponentInParent<DirectionalMovingPlatform>();
+                AutomaticMovingPlatform automaticPlatform =
+                    collision.collider.GetComponentInParent<AutomaticMovingPlatform>();
+                Vector2 bodySupportVelocity = otherBody != null && otherBody != rb
+                    ? otherBody.GetPointVelocity(contact.point)
+                    : Vector2.zero;
+                if (conveyor != null)
+                    supportVelocity = conveyor.SurfaceVelocity;
+                else if (directionalPlatform != null
+                    && directionalPlatform.SurfaceVelocity.sqrMagnitude > 0.0001f)
+                    supportVelocity = directionalPlatform.SurfaceVelocity;
+                else if (automaticPlatform != null
+                    && automaticPlatform.SurfaceVelocity.sqrMagnitude > 0.0001f)
+                    supportVelocity = automaticPlatform.SurfaceVelocity;
+                else
+                    supportVelocity = bodySupportVelocity;
                 supportSampleFixedTime = Time.fixedTime;
             }
         }
@@ -1016,7 +1060,6 @@ namespace DrawBody.Prototype
                     if (hit.collider == null
                         || hit.collider.attachedRigidbody == rb
                         || hit.distance <= 0.001f
-                        || hit.distance >= bestDistance
                         || hit.normal.y <= 0.2f)
                     {
                         continue;
@@ -1027,9 +1070,28 @@ namespace DrawBody.Prototype
                         continue;
                     }
 
+                    StageIceSurface iceSurface = hit.collider.GetComponentInParent<StageIceSurface>();
+                    bool hitIce = iceSurface != null && iceSurface.enabled;
+                    StageEditorObject iceMarker = hit.collider.GetComponentInParent<StageEditorObject>();
+                    bool hitRaceIce = hitIce && iceMarker != null
+                        && !string.IsNullOrEmpty(iceMarker.objectId)
+                        && iceMarker.objectId.StartsWith("10-1-lane-", System.StringComparison.Ordinal);
+                    // An ice overlay may deliberately share the exact surface
+                    // height of its base floor. Treat coplanar hits as the same
+                    // support so the ice works without raising the character.
+                    if (hit.distance > bestDistance + 0.01f) continue;
+                    if (hit.distance >= bestDistance)
+                    {
+                        if (hitIce) groundedOnIce = true;
+                        if (hitRaceIce) groundedOnRaceIce = true;
+                        continue;
+                    }
+
+                    bool nearlySameSurface = bestDistance - hit.distance <= 0.01f;
                     bestDistance = hit.distance;
                     normal = hit.normal;
-                    groundedOnIce = hit.collider.GetComponentInParent<StageIceSurface>() != null;
+                    groundedOnIce = hitIce || nearlySameSurface && groundedOnIce;
+                    groundedOnRaceIce = hitRaceIce || nearlySameSurface && groundedOnRaceIce;
                 }
             }
 
