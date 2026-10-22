@@ -719,6 +719,8 @@ namespace DrawBody.Prototype
 
         private bool AreAllPlayersEliminated()
         {
+            if (IsOnlineActive())
+                return onlineManager != null && onlineManager.AreAllCurrentLobbyPlayersIn(eliminatedIds);
             if (participantIds.Count == 0) return false;
             foreach (string id in participantIds) if (!eliminatedIds.Contains(id)) return false;
             return true;
@@ -755,7 +757,8 @@ namespace DrawBody.Prototype
             else if (data.Kind == KindEnemyDefeatRequest && HasAuthority())
             {
                 EnemyState state = JsonUtility.FromJson<EnemyState>(data.Json);
-                if (state != null && enemies.ContainsKey(state.EnemyId)) NotifyEnemyDefeated(state.EnemyId);
+                if (state != null && CanAcceptEnemyDefeatRequest(data.PlayerId, state.EnemyId))
+                    NotifyEnemyDefeated(state.EnemyId);
             }
             else if (data.Kind == KindEliminateRequest && HasAuthority())
             {
@@ -767,6 +770,22 @@ namespace DrawBody.Prototype
                 PlayerState state = JsonUtility.FromJson<PlayerState>(data.Json);
                 if (state != null) ApplyElimination(state.PlayerId);
             }
+        }
+
+        private bool CanAcceptEnemyDefeatRequest(string playerId, string enemyId)
+        {
+            if (phase != ChallengePhase.Playing || string.IsNullOrEmpty(playerId)
+                || string.IsNullOrEmpty(enemyId) || eliminatedIds.Contains(playerId)
+                || !enemies.TryGetValue(enemyId, out StageBlockBreakerEnemy enemy) || enemy == null)
+                return false;
+            PlayerController2D player = ResolvePlayer(playerId);
+            if (player == null || !player.gameObject.activeInHierarchy) return false;
+            PlayerAbilityController ability = player.GetComponent<PlayerAbilityController>();
+            if (ability == null || ability.CurrentProfile.Species != DrawManager.Species.Cat) return false;
+            float range = PlayerController2D.CalculateCatScratchRangeMultiplier(
+                ability.CurrentProfile.CatFrontLegInk);
+            float allowedDistance = 2.8f + range * 2.2f;
+            return Vector2.Distance(player.transform.position, enemy.transform.position) <= allowedDistance;
         }
 
         private void BroadcastState(bool force = false)

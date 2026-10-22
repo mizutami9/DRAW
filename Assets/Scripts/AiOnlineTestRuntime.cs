@@ -61,6 +61,10 @@ namespace DrawBody.Prototype
             public int stalls;
             public int exceptions;
             public int suspiciousPhysicsEvents;
+            public float networkRoundTripMs;
+            public int inboundPackets;
+            public int simulatedPacketDrops;
+            public int networkCorrections;
             public string currentObjective;
             public string lastAction;
             public string[] passedChecks;
@@ -2258,6 +2262,10 @@ namespace DrawBody.Prototype
                 stalls = stalls,
                 exceptions = exceptions,
                 suspiciousPhysicsEvents = suspiciousPhysicsEvents,
+                networkRoundTripMs = onlineManager != null ? onlineManager.LastNetworkRoundTripMs : -1f,
+                inboundPackets = onlineManager != null ? onlineManager.InboundPacketCount : 0,
+                simulatedPacketDrops = onlineManager != null ? onlineManager.SimulatedDropCount : 0,
+                networkCorrections = onlineManager != null ? onlineManager.NetworkCorrectionCount : 0,
                 currentObjective = objective?.name,
                 lastAction = lastAction,
                 passedChecks = smokePassedChecks.ToArray(),
@@ -2314,6 +2322,10 @@ namespace DrawBody.Prototype
                 stalls = stalls,
                 exceptions = exceptions,
                 suspiciousPhysicsEvents = suspiciousPhysicsEvents,
+                networkRoundTripMs = onlineManager != null ? onlineManager.LastNetworkRoundTripMs : -1f,
+                inboundPackets = onlineManager != null ? onlineManager.InboundPacketCount : 0,
+                simulatedPacketDrops = onlineManager != null ? onlineManager.SimulatedDropCount : 0,
+                networkCorrections = onlineManager != null ? onlineManager.NetworkCorrectionCount : 0,
                 currentObjective = objective?.name,
                 lastAction = lastAction,
                 passedChecks = smokePassedChecks.ToArray(),
@@ -2403,7 +2415,8 @@ namespace DrawBody.Prototype
                     {
                         Collider2D collider = colliders[colliderIndex];
                         if (collider != null && collider.enabled && collider.gameObject.activeInHierarchy
-                            && !collider.isTrigger)
+                            && !collider.isTrigger
+                            && (collider.attachedRigidbody == null || collider.attachedRigidbody.simulated))
                         {
                             activeSolidColliders++;
                         }

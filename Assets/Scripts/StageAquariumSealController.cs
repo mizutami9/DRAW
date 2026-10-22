@@ -9,6 +9,8 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "6-3";
         private const string StateKind = "aquarium_seal_state";
+        private const string ContactKind = "aquarium_seal_contact";
+        private const float ContactStateTimeout = 0.65f;
         private const float SecondsPerPlayer = 60f;
         private const float ClearHoldSeconds = 0.65f;
         private const float BoxPreviewSeconds = 1.35f;
@@ -52,6 +54,17 @@ namespace DrawBody.Prototype
             public int PreviewIndex;
             public bool ButtonPressed;
             public float WaterDepth;
+        }
+
+        [System.Serializable]
+        private sealed class PlayerContactState
+        {
+            public int Sequence;
+            public int Round;
+            public int Attempt;
+            public int HoleMask;
+            public bool ButtonPressed;
+            public Vector2 PlayerPosition;
         }
 
         private sealed class HoleVisual
@@ -111,6 +124,12 @@ namespace DrawBody.Prototype
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
+        private readonly Dictionary<string, PlayerContactState> remoteContacts =
+            new Dictionary<string, PlayerContactState>();
+        private readonly Dictionary<string, int> remoteContactSequences = new Dictionary<string, int>();
+        private readonly Dictionary<string, float> remoteContactTimes = new Dictionary<string, float>();
+        private float nextContactAt;
+        private int localContactSequence;
 
         private void Awake()
         {
@@ -171,6 +190,11 @@ namespace DrawBody.Prototype
             AnimateAquarium();
             ConfigureAquariumCamera();
             ApplyControls();
+            if (!HasAuthority && phase == SealPhase.Active && Time.unscaledTime >= nextContactAt)
+            {
+                nextContactAt = Time.unscaledTime + 0.08f;
+                SendLocalContactState();
+            }
             float countdownRemaining = roundReadyAt - Time.unscaledTime;
             if (phase == SealPhase.Failed)
             {
@@ -236,6 +260,9 @@ namespace DrawBody.Prototype
             sealedMask = 0;
             previewIndex = (round - 1) % BoxSizes.Length;
             buttonPressed = false;
+            remoteContacts.Clear();
+            remoteContactTimes.Clear();
+            remoteContactSequences.Clear();
             nextPreviewAt = Time.unscaledTime + BoxPreviewSeconds;
             nextBoxAt = 0f;
             BuildArena();
@@ -1627,7 +1654,9 @@ namespace DrawBody.Prototype
                 previewIndex = (previewIndex + 1) % BoxSizes.Length;
             }
 
-            bool pressed = IsPlayerPressing(boxButton);
+            bool pressed = !IsOnline
+                ? IsPlayerPressing(boxButton)
+                : IsLocalPlayerPressing(boxButton) || IsAnyRemoteButtonPressed();
             if (pressed && !buttonPressed && Time.unscaledTime >= nextBoxAt)
             {
                 nextBoxAt = Time.unscaledTime + BoxCooldownSeconds;
@@ -1658,6 +1687,36 @@ namespace DrawBody.Prototype
             return false;
         }
 
+        private bool IsLocalPlayerPressing(Collider2D button)
+        {
+            PlayerController2D local = stageManager != null && stageManager.ActivePlayerTransform != null
+                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
+                : null;
+            return IsPlayerPressing(local, button);
+        }
+
+        private static bool IsPlayerPressing(PlayerController2D player, Collider2D button)
+        {
+            if (player == null || button == null || !button.enabled) return false;
+            Bounds bounds = button.bounds;
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(false);
+            for (int i = 0; i < colliders.Length; i++)
+                if (colliders[i] != null && colliders[i].enabled && !colliders[i].isTrigger
+                    && colliders[i].bounds.Intersects(bounds)) return true;
+            return false;
+        }
+
+        private bool IsAnyRemoteButtonPressed()
+        {
+            foreach (KeyValuePair<string, PlayerContactState> pair in remoteContacts)
+                if (pair.Value != null && pair.Value.Round == round && pair.Value.Attempt == roundAttempt
+                    && pair.Value.ButtonPressed
+                    && remoteContactTimes.TryGetValue(pair.Key, out float receivedAt)
+                    && Time.unscaledTime - receivedAt <= ContactStateTimeout
+                    && stageManager.GetOnlinePlayerController(pair.Key) != null) return true;
+            return false;
+        }
+
         private void RefreshBoxStationVisual()
         {
             if (buttonCap != null)
@@ -1684,10 +1743,21 @@ namespace DrawBody.Prototype
         private void EvaluateHoles()
         {
             int nextMask = 0;
+            PlayerController2D local = stageManager != null && stageManager.ActivePlayerTransform != null
+                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
+                : null;
             for (int i = 0; i < holes.Count; i++)
             {
-                if (IsHoleCoveredByPlayer(holes[i].Center)) nextMask |= 1 << i;
+                if (!IsOnline ? IsHoleCoveredByPlayer(holes[i].Center)
+                    : IsHoleCoveredByPlayer(local, holes[i].Center)) nextMask |= 1 << i;
             }
+            if (IsOnline)
+                foreach (KeyValuePair<string, PlayerContactState> pair in remoteContacts)
+                    if (pair.Value != null && pair.Value.Round == round && pair.Value.Attempt == roundAttempt
+                        && remoteContactTimes.TryGetValue(pair.Key, out float receivedAt)
+                        && Time.unscaledTime - receivedAt <= ContactStateTimeout
+                        && stageManager.GetOnlinePlayerController(pair.Key) != null)
+                        nextMask |= pair.Value.HoleMask;
             sealedMask = nextMask;
             ApplyHoleVisuals();
             EmitLeakingWater();
@@ -1727,6 +1797,43 @@ namespace DrawBody.Prototype
                 }
             }
             return false;
+        }
+
+        private static bool IsHoleCoveredByPlayer(PlayerController2D player, Vector2 center)
+        {
+            if (player == null) return false;
+            BodyBuilder body = player.GetComponent<BodyBuilder>();
+            if (body != null) return body.CoversWorldPoint(center, 0.1f);
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(false);
+            for (int i = 0; i < colliders.Length; i++)
+                if (colliders[i] != null && colliders[i].enabled && !colliders[i].isTrigger
+                    && Vector2.Distance(colliders[i].ClosestPoint(center), center) <= 0.1f) return true;
+            return false;
+        }
+
+        private void SendLocalContactState()
+        {
+            PlayerController2D local = stageManager.ActivePlayerTransform != null
+                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
+                : null;
+            if (local == null || onlineManager == null) return;
+            int mask = 0;
+            for (int i = 0; i < holes.Count; i++)
+                if (IsHoleCoveredByPlayer(local, holes[i].Center)) mask |= 1 << i;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = ContactKind,
+                Json = JsonUtility.ToJson(new PlayerContactState
+                {
+                    Sequence = ++localContactSequence,
+                    Round = round,
+                    Attempt = roundAttempt,
+                    HoleMask = mask,
+                    ButtonPressed = IsPlayerPressing(local, boxButton),
+                    PlayerPosition = local.transform.position
+                })
+            });
         }
 
         private void ApplyHoleVisuals()
@@ -2041,8 +2148,31 @@ namespace DrawBody.Prototype
 
         private void HandleNetworkState(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId || data.Kind != StateKind
-                || HasAuthority || !IsHost(data.PlayerId)) return;
+            if (data == null || data.ObjectId != StageId) return;
+            if (data.Kind == ContactKind && HasAuthority)
+            {
+                PlayerContactState contact = JsonUtility.FromJson<PlayerContactState>(data.Json);
+                PlayerController2D player = stageManager.GetOnlinePlayerController(data.PlayerId);
+                if (contact == null || player == null || contact.Round != round
+                    || contact.Attempt != roundAttempt
+                    || Vector2.Distance(player.transform.position, contact.PlayerPosition) > 4f) return;
+                if (remoteContactSequences.TryGetValue(data.PlayerId, out int appliedSequence)
+                    && contact.Sequence <= appliedSequence) return;
+                remoteContactSequences[data.PlayerId] = contact.Sequence;
+                int validMask = 0;
+                for (int i = 0; i < holes.Count; i++)
+                    if ((contact.HoleMask & (1 << i)) != 0
+                        && Vector2.Distance(contact.PlayerPosition, holes[i].Center) <= 7f)
+                        validMask |= 1 << i;
+                contact.HoleMask = validMask;
+                if (contact.ButtonPressed && boxButton != null
+                    && Vector2.Distance(boxButton.ClosestPoint(contact.PlayerPosition), contact.PlayerPosition) > 1.5f)
+                    contact.ButtonPressed = false;
+                remoteContacts[data.PlayerId] = contact;
+                remoteContactTimes[data.PlayerId] = Time.unscaledTime;
+                return;
+            }
+            if (data.Kind != StateKind || HasAuthority || !IsHost(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= receivedSequence) return;
             bool hadNetworkState = receivedSequence > 0;

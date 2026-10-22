@@ -431,6 +431,7 @@ namespace DrawBody.Prototype
                 stageSelectRemoteWaiting = false;
             }
 
+            bool rosterMembershipChanged = HasOnlineRosterMembershipChanged(lobby);
             UpdateOnlineLobbyRoster(lobby);
 
             // Offline co-op can leave the secondary character selected. Once an
@@ -442,6 +443,18 @@ namespace DrawBody.Prototype
             }
 
             bool localHost = IsLocalOnlineHost(lobby);
+            if (state == OnlineConnectionState.Playing
+                && localHost
+                && rosterMembershipChanged
+                && RequiresRosterDependentStageRestart(currentStageId))
+            {
+                // These arenas bake player count/slots into lanes, rooms, boss
+                // forms or difficulty during initialization. Rebuilding through
+                // the existing authoritative retry path is safer than mutating
+                // only the count and leaving incompatible runtime objects alive.
+                ScheduleFullStageRetry();
+                return;
+            }
             if (state == OnlineConnectionState.Playing && !localHost)
             {
                 string desiredStage = DemoAccessPolicy.NormalizeStageId(
@@ -518,8 +531,48 @@ namespace DrawBody.Prototype
             }
         }
 
+        private bool HasOnlineRosterMembershipChanged(OnlineLobbyInfo lobby)
+        {
+            OnlinePlayerInfo[] players = lobby?.Players;
+            if (players == null || knownOnlineLobbyPlayers.Count == 0) return false;
+            int validCount = 0;
+            for (int i = 0; i < players.Length; i++)
+            {
+                string id = players[i]?.PlayerId;
+                if (string.IsNullOrEmpty(id)) continue;
+                validCount++;
+                if (!knownOnlineLobbyPlayers.ContainsKey(id)) return true;
+            }
+            return validCount != knownOnlineLobbyPlayers.Count;
+        }
+
+        private static bool RequiresRosterDependentStageRestart(string stageId)
+        {
+            switch (stageId)
+            {
+                case "2-3":  // per-player chase lanes
+                case "5-3":  // player-count crate arena
+                case "8-3":  // player-count tilt-board layout
+                case "9-3":  // ready rooms and rain density
+                case "10-1": // per-player ice lanes and team time
+                case "10-3": // player-count ricochet rooms
+                case "13-3": // per-player circuit rooms
+                case "14-3": // linked rooms / laser relay
+                case "15-1": // flying boss pads and HP
+                case "15-3": // mimic forms and HP
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public void EnterTitle()
         {
+            if (currentStageId != "title")
+            {
+                Debug.LogWarning($"[PICO STAGE] EnterTitle requested from stage={currentStageId} " +
+                    $"onlineState={onlineManager?.State} lobby={onlineManager?.CurrentLobby?.LobbyId ?? "none"}.");
+            }
             StopTrailerDemo();
             StopSteamHeaderCapture();
             ResetSpeciesSwapState();
@@ -1481,7 +1534,11 @@ namespace DrawBody.Prototype
                         source.GetComponent<PlayerCarryController>()?.PlayRemoteSlimeSpikeEffect(effect.Direction);
                 }
             }
-            else if (data.Kind == GimmickKindClearRequest && IsLocalOnlineHost(onlineManager.CurrentLobby))
+            else if (data.Kind == GimmickKindClearRequest
+                && data.ObjectId == currentStageId
+                && stageStarted
+                && !cleared
+                && IsLocalOnlineHost(onlineManager.CurrentLobby))
             {
                 ClearStage();
             }
@@ -1499,6 +1556,7 @@ namespace DrawBody.Prototype
             {
                 PlayerGoalState goalState = JsonUtility.FromJson<PlayerGoalState>(data.Json);
                 bool inside = goalState != null && goalState.Inside;
+                if (inside && !CanOnlinePlayerEnterGoal(data.PlayerId)) return;
                 SetOnlineGoalState(data.PlayerId, inside);
                 if (currentStageId == "11-1" && inside
                     && IsLocalOnlineHost(onlineManager.CurrentLobby))
@@ -1524,7 +1582,13 @@ namespace DrawBody.Prototype
                 lastAppliedOnlineRetryRevision = retryRevision;
                 ApplyFullStageRetry();
             }
-            else if (data.Kind == GimmickKindCollectRequest && IsLocalOnlineHost(onlineManager.CurrentLobby))
+            else if (data.Kind == GimmickKindCollectRequest
+                && data.ObjectId != null
+                && stageStarted
+                && !cleared
+                && stageRuleMode == StageRuleMode.TimedCollection
+                && IsLocalOnlineHost(onlineManager.CurrentLobby)
+                && CanOnlinePlayerCollect(data.PlayerId, data.ObjectId))
             {
                 ApplyCollectible(data.ObjectId, true, data.PlayerId);
             }
@@ -1560,6 +1624,7 @@ namespace DrawBody.Prototype
             {
                 SlimeBoxBreakMessage request = JsonUtility.FromJson<SlimeBoxBreakMessage>(data.Json);
                 if (request != null && request.StageId == currentStageId
+                    && CanOnlinePlayerBreakSlimeBox(data.PlayerId, request.ObjectId)
                     && ApplySlimeBoxBreak(request.ObjectId, request.HitPoint))
                 {
                     BroadcastSlimeBoxBreak(request.ObjectId, request.HitPoint);
@@ -2006,6 +2071,8 @@ namespace DrawBody.Prototype
             Object.FindFirstObjectByType<StageFlyingPlatformBossController>()
                 ?.EnsureInitializedForPlay();
             Object.FindFirstObjectByType<StageMirrorFinalBossController>()
+                ?.EnsureInitializedForPlay();
+            Object.FindFirstObjectByType<StageCosmicMimicBossController>()
                 ?.EnsureInitializedForPlay();
             SetActivePlayer(IsOnlineInStage() && primaryPlayer != null
                 ? primaryPlayer
@@ -4871,6 +4938,84 @@ namespace DrawBody.Prototype
             GameSfx.Play(SfxId.CrateBreak, 1.5f);
             target.gameObject.SetActive(false);
             return true;
+        }
+
+        private bool CanOnlinePlayerCollect(string playerId, string objectId)
+        {
+            PlayerController2D collector = GetOnlinePlayerController(playerId);
+            if (collector == null || string.IsNullOrEmpty(objectId)) return false;
+            StageCollectible[] collectibles = Object.FindObjectsByType<StageCollectible>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < collectibles.Length; i++)
+            {
+                StageCollectible collectible = collectibles[i];
+                if (collectible == null || collectible.ObjectId != objectId) continue;
+                return GetClosestColliderDistance(collector.transform, collectible.transform)
+                    <= GetLagCompensatedInteractionDistance(collector, 1.75f);
+            }
+            return false;
+        }
+
+        private bool CanOnlinePlayerEnterGoal(string playerId)
+        {
+            PlayerController2D candidate = GetOnlinePlayerController(playerId);
+            if (candidate == null) return false;
+            Goal[] goals = Object.FindObjectsByType<Goal>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < goals.Length; i++)
+                if (goals[i] != null
+                    && GetClosestColliderDistance(candidate.transform, goals[i].transform)
+                        <= GetLagCompensatedInteractionDistance(candidate, 2.5f))
+                    return true;
+            return false;
+        }
+
+        private bool CanOnlinePlayerBreakSlimeBox(string playerId, string objectId)
+        {
+            PlayerController2D attacker = GetOnlinePlayerController(playerId);
+            if (attacker == null || attacker.CurrentSpecies != DrawManager.Species.Slime
+                || string.IsNullOrEmpty(objectId)) return false;
+            StageEditorObject[] objects = Object.FindObjectsByType<StageEditorObject>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageEditorObject target = objects[i];
+                if (target == null || target.objectId != objectId || !IsSlimeBreakableBox(target.type)) continue;
+                return GetClosestColliderDistance(attacker.transform, target.transform)
+                    <= GetLagCompensatedInteractionDistance(attacker, 6f);
+            }
+            return false;
+        }
+
+        private static float GetClosestColliderDistance(Transform first, Transform second)
+        {
+            if (first == null || second == null) return float.PositiveInfinity;
+            Collider2D[] firstColliders = first.GetComponentsInChildren<Collider2D>(false);
+            Collider2D[] secondColliders = second.GetComponentsInChildren<Collider2D>(false);
+            float closest = Vector2.Distance(first.position, second.position);
+            for (int i = 0; i < firstColliders.Length; i++)
+            {
+                Collider2D a = firstColliders[i];
+                if (a == null || !a.enabled || a.isTrigger) continue;
+                for (int j = 0; j < secondColliders.Length; j++)
+                {
+                    Collider2D b = secondColliders[j];
+                    if (b == null || !b.enabled || b.isTrigger) continue;
+                    closest = Mathf.Min(closest, Mathf.Max(0f, a.Distance(b).distance));
+                }
+            }
+            return closest;
+        }
+
+        private static float GetLagCompensatedInteractionDistance(
+            PlayerController2D player,
+            float baseDistance)
+        {
+            Rigidbody2D body = player != null ? player.GetComponent<Rigidbody2D>() : null;
+            float speed = body != null ? body.linearVelocity.magnitude : 0f;
+            // Player snapshots arrive at 30 Hz and are predicted on the host.
+            // Keep a bounded reserve for RTT/jitter without allowing requests
+            // from the other side of a room.
+            return baseDistance + Mathf.Min(2.5f, speed * 0.22f);
         }
 
         private static bool IsSlimeBreakableBox(StageObjectType type)

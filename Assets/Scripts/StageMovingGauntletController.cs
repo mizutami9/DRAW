@@ -446,13 +446,15 @@ namespace DrawBody.Prototype
                 : data.PlayerId;
             if (string.IsNullOrEmpty(playerId)) return;
 
-            if (data.Kind == EliminationRequestKind && HasAuthority)
+            if (data.Kind == EliminationRequestKind && HasAuthority
+                && playerId == data.PlayerId)
             {
                 ApplyElimination(playerId);
                 SendElimination(EliminationStateKind, playerId);
                 CheckForAllPlayersEliminated();
             }
-            else if (data.Kind == EliminationStateKind && !HasAuthority)
+            else if (data.Kind == EliminationStateKind && !HasAuthority
+                && onlineManager != null && onlineManager.IsHostPlayer(data.PlayerId))
             {
                 ApplyElimination(playerId);
             }
@@ -461,6 +463,14 @@ namespace DrawBody.Prototype
         private void CheckForAllPlayersEliminated()
         {
             if (retryQueued || !HasAuthority || stageManager == null) return;
+            if (stageManager.IsOnlineStageActive)
+            {
+                if (onlineManager == null
+                    || !onlineManager.AreAllCurrentLobbyPlayersIn(eliminatedPlayerIds)) return;
+                retryQueued = true;
+                StartCoroutine(ReturnToReadyRoomAfterDelay());
+                return;
+            }
             int expected = Mathf.Max(1, stageManager.GetInkBudgetPlayerCount());
             if (eliminatedPlayerIds.Count < expected) return;
             retryQueued = true;

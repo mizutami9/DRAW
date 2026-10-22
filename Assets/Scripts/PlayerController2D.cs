@@ -48,6 +48,7 @@ namespace DrawBody.Prototype
         private float lastJumpPressedAt = -100f;
         private bool controlsEnabled = true;
         private float jumpMultiplier = 1f;
+        private float stageAirJumpStrength = -1f;
         private float moveSpeedMultiplier = 1f;
         private float temporarySpeedMultiplier = 1f;
         private float temporarySpeedRemaining;
@@ -158,6 +159,13 @@ namespace DrawBody.Prototype
                 weaponRecoilMomentumUntil,
                 Time.fixedTime + (velocityChange.magnitude > 28f ? 0.72f : 0.48f));
             IsGrounded = false;
+        }
+
+        public void RollbackWeaponRecoil(Vector2 appliedVelocityChange)
+        {
+            if (rb == null || rb.bodyType != RigidbodyType2D.Dynamic
+                || appliedVelocityChange.sqrMagnitude < 0.01f) return;
+            rb.linearVelocity -= appliedVelocityChange;
         }
 
         public void ApplyEnvironmentalPush(Vector2 velocityChange, float steeringDelay = 0.1f)
@@ -271,6 +279,11 @@ namespace DrawBody.Prototype
         public void SetJumpMultiplier(float multiplier)
         {
             jumpMultiplier = Mathf.Max(0.1f, multiplier);
+        }
+
+        public void SetStageAirJumpStrength(float strength)
+        {
+            stageAirJumpStrength = strength > 0f ? strength : -1f;
         }
 
         public static float CalculateBirdGlideFallSpeed(float wingInk)
@@ -622,8 +635,19 @@ namespace DrawBody.Prototype
                 && controlsEnabled
                 && !scriptedInputEnabled
                 && Input.GetKey(KeyCode.Space);
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
+            // Online body rebuilds can destroy the old Rigidbody2D one frame
+            // before carry cleanup releases its cached PlayerController2D.
+            // Motion reset must still clear controller state without touching
+            // that destroyed native component.
+            if (rb == null)
+            {
+                rb = GetComponent<Rigidbody2D>();
+            }
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+            }
             horizontalInput = 0f;
             lastJumpPressedAt = -100f;
             scriptedJumpPressed = false;
@@ -1126,6 +1150,24 @@ namespace DrawBody.Prototype
         {
             bool canUseCoyoteTime = Time.time - lastGroundedAt <= coyoteTime;
             bool hasBufferedJump = Time.time - lastJumpPressedAt <= jumpBufferTime;
+
+            // Stage 15-3 uses swimming-like movement. This override deliberately
+            // runs before wall/floor checks so every press gives a small impulse,
+            // while repeated presses are capped instead of launching the body.
+            if (stageAirJumpStrength > 0f && hasBufferedJump)
+            {
+                float nextY = Mathf.Clamp(
+                    Mathf.Max(0f, rb.linearVelocity.y) + stageAirJumpStrength,
+                    stageAirJumpStrength,
+                    stageAirJumpStrength * 2.2f);
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, nextY);
+                PlayJumpSound();
+                lastJumpPressedAt = -100f;
+                lastGroundedAt = -100f;
+                jumpProtectionUntil = -100f;
+                IsGrounded = false;
+                return;
+            }
 
             bool canWallJump = HasSlimeWallGrip()
                 && lastWallSide != 0

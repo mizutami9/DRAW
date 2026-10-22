@@ -487,9 +487,9 @@ namespace DrawBody.Prototype
             display = label.AddComponent<TextMesh>();
             display.anchor = TextAnchor.MiddleCenter;
             display.alignment = TextAlignment.Center;
-            display.fontSize = 44;
-            display.characterSize = 0.052f;
-            display.color = new Color(0.35f, 1f, 0.76f);
+            display.fontSize = 64;
+            display.characterSize = 0.088f;
+            display.color = new Color(0.7f, 1f, 0.87f);
             TextMesh reference = null;
             TextMesh[] textMeshes = Object.FindObjectsByType<TextMesh>(FindObjectsSortMode.None);
             for (int i = 0; i < textMeshes.Length; i++)
@@ -690,11 +690,17 @@ namespace DrawBody.Prototype
         private float grams = 10f;
 
         public float Grams => grams;
+        public int NetworkSequence { get; private set; }
         public bool IsInsideCarrier => insideCarrier;
         public bool IsOnGround => floorContactStartedAt >= 0f
             && Time.time - lastFloorContactAt <= 0.15f;
         public Vector2 Velocity => body != null ? body.linearVelocity : Vector2.zero;
         public static IEnumerable<StageGrainParticle> All => ActiveParticles;
+
+        public void SetNetworkSequence(int value)
+        {
+            NetworkSequence = Mathf.Max(0, value);
+        }
 
         public void Configure(DrawManager.Species species, Vector2 initialVelocity)
         {
@@ -1539,6 +1545,9 @@ namespace DrawBody.Prototype
             GameObject arena = new GameObject("7-2 Sequential Grain Room");
             arena.transform.SetParent(transform, false);
             roomRoot = arena.transform;
+
+            Transform editorBackdrop = transform.Find("Amusement Park Stage Backdrop");
+            if (editorBackdrop != null) editorBackdrop.gameObject.SetActive(false);
             BuildRoomShell();
             BuildRoundFloors();
             CreateMonitor();
@@ -1577,6 +1586,15 @@ namespace DrawBody.Prototype
                 // trigger is five units tall. This places the crayon band flush
                 // with the common floor while keeping the full trigger height.
                 position.y = floorTop - 0.32f + item.size.y * 0.5f;
+                // Clamp the complete crayon strip, not just its pivot, inside
+                // the runtime floor. This prevents round one's strip and end
+                // crayons from protruding through the left wall.
+                float halfVisualWidth = item.size.x * 0.5f + 0.04f;
+                float floorHalfWidth = RoomHalfWidth - 0.325f;
+                position.x = Mathf.Clamp(
+                    position.x,
+                    -floorHalfWidth + halfVisualWidth,
+                    floorHalfWidth - halfVisualWidth);
             }
             else if (item.type == StageObjectType.WoodBox
                 || item.type == StageObjectType.IronBox
@@ -1617,7 +1635,10 @@ namespace DrawBody.Prototype
             StageEscortController.AddFilledRect(roomRoot, "Room Paper",
                 new Vector2(0f, (BottomY + CeilingY) * 0.5f),
                 new Vector2(RoomHalfWidth * 2f, CeilingY - BottomY),
-                new Color(0.88f, 0.96f, 1f, 0.3f), -55);
+                new Color(0.88f, 0.96f, 1f, 0.3f), -94);
+
+            StageObjectFactory themeFactory = Object.FindFirstObjectByType<StageObjectFactory>();
+            themeFactory?.CreateAmusementParkStageBackdrop(StageId, null, roomRoot);
             for (int i = 0; i < 12; i++)
             {
                 float y = BottomY + 0.9f + i * 1.05f;
@@ -1625,23 +1646,26 @@ namespace DrawBody.Prototype
                     new[] { new Vector2(-18.5f, y), new Vector2(18.5f, y) },
                     0.025f, new Color(0.2f, 0.65f, 0.92f, 0.17f), -50);
             }
-            CreateSolid("Room Ceiling", new Vector2(0f, CeilingY), new Vector2(38f, 0.65f));
+            const float wallThickness = 0.65f;
+            CreateSolid("Room Ceiling", new Vector2(0f, CeilingY),
+                new Vector2(RoomHalfWidth * 2f + wallThickness, wallThickness));
             float wallHeight = CeilingY - FloorY + 0.65f;
             float wallY = (CeilingY + FloorY) * 0.5f;
-            CreateSolid("Room Left Wall", new Vector2(-RoomHalfWidth, wallY), new Vector2(0.65f, wallHeight));
-            CreateSolid("Room Right Wall", new Vector2(RoomHalfWidth, wallY), new Vector2(0.65f, wallHeight));
+            CreateSolid("Room Left Wall", new Vector2(-RoomHalfWidth, wallY), new Vector2(wallThickness, wallHeight));
+            CreateSolid("Room Right Wall", new Vector2(RoomHalfWidth, wallY), new Vector2(wallThickness, wallHeight));
         }
 
         private void BuildRoundFloors()
         {
             roundFloors[0] = CreateFloorRoot("Human Floor");
-            CreateSolid("Human Main Floor", new Vector2(0f, FloorY), new Vector2(37.4f, 0.75f), roundFloors[0].transform);
+            const float floorWidth = RoomHalfWidth * 2f - 0.65f;
+            CreateSolid("Human Main Floor", new Vector2(0f, FloorY), new Vector2(floorWidth, 0.75f), roundFloors[0].transform);
 
             roundFloors[1] = CreateFloorRoot("Bird Floor");
-            CreateSolid("Bird Main Floor", new Vector2(0f, FloorY), new Vector2(37.4f, 0.75f), roundFloors[1].transform);
+            CreateSolid("Bird Main Floor", new Vector2(0f, FloorY), new Vector2(floorWidth, 0.75f), roundFloors[1].transform);
 
             roundFloors[2] = CreateFloorRoot("Turtle Floor");
-            CreateSolid("Turtle Main Floor", new Vector2(0f, FloorY), new Vector2(37.4f, 0.75f), roundFloors[2].transform);
+            CreateSolid("Turtle Main Floor", new Vector2(0f, FloorY), new Vector2(floorWidth, 0.75f), roundFloors[2].transform);
         }
 
         private void CreateMonitor()
@@ -1671,8 +1695,15 @@ namespace DrawBody.Prototype
             solid.tag = "Ground";
             BoxCollider2D collider = solid.AddComponent<BoxCollider2D>();
             collider.size = size;
-            StageEscortController.AddFilledRect(solid.transform, "Crayon Fill", Vector2.zero, size,
-                new Color(0.73f, 0.65f, 0.53f, 0.95f), 2);
+            if (name.Contains("Floor"))
+                Stage71PoseRoomsController.AddAmusementFloorVisual(solid.transform, size);
+            else if (name.Contains("Ceiling"))
+                Stage71PoseRoomsController.AddAmusementCeilingVisual(solid.transform, size);
+            else if (name.Contains("Wall"))
+                Stage71PoseRoomsController.AddAmusementWallVisual(solid.transform, size);
+            else
+                StageEscortController.AddFilledRect(solid.transform, "Crayon Fill", Vector2.zero, size,
+                    new Color(0.73f, 0.65f, 0.53f, 0.95f), 2);
             Vector2 half = size * 0.5f;
             StageGun.AddLine(solid.transform, "Pencil Outline", new[]
             {

@@ -123,7 +123,8 @@ namespace DrawBody.Prototype
             AddTitleObject(objects, StageObjectType.BulletBreakableWall, new Vector2(11.2f, 4f), new Vector2(0.65f, 3.2f));
             // Feed occasional moving targets onto the right shelf without
             // filling the open play space in the middle of the title room.
-            AddTitleObject(objects, StageObjectType.EnemyDropper, new Vector2(8.6f, 5.85f), new Vector2(1.8f, 1.35f), 5.5f);
+            AddTitleObject(objects, StageObjectType.EnemyDropper, new Vector2(8.6f, 5.85f),
+                new Vector2(1.8f, 1.35f), 5.5f, 3f);
 
             StageData titlePlayground = new StageData
             {
@@ -225,7 +226,8 @@ namespace DrawBody.Prototype
             StageObjectType type,
             Vector2 position,
             Vector2 size,
-            float actionStrength = -1f)
+            float actionStrength = -1f,
+            float maximumLiveEnemies = -1f)
         {
             StageObjectData data = StageObjectFactory.CreateDefaultData(type, position);
             data.objectId = $"title-playground-{objects.Count:D2}-{type}";
@@ -233,6 +235,12 @@ namespace DrawBody.Prototype
             if (actionStrength >= 0f)
             {
                 data.actionStrength = actionStrength;
+            }
+            if (type == StageObjectType.EnemyDropper && maximumLiveEnemies > 0f)
+            {
+                // StageEnemyDropper reserves movementSpeed as its authored
+                // simultaneous-enemy cap. Keep the title playground light.
+                data.movementSpeed = maximumLiveEnemies;
             }
             objects.Add(data);
         }
@@ -546,8 +554,9 @@ namespace DrawBody.Prototype
                 new Vector2(29.75f, 0.45f));
             SetStage31Rect(objects, "obj_b2c0a6c674ed464e", new Vector2(28.875f, -17f),
                 new Vector2(17.75f, 0.45f));
-            SetStage31Rect(objects, "obj_c86860eaadb94522", new Vector2(17.125f, -28.5f),
-                new Vector2(73.75f, 1.5f));
+            // Floor 67 (obj_c868...) is intentionally editable. Its left edge
+            // controls the entrance gap into this spike section, so never
+            // replace its saved position/width with an old full-width seam.
             SetStage31Rect(objects, "3-1-coop-start-floor", new Vector2(-6f, -40.925f),
                 new Vector2(27.5f, 1.25f));
             SetStage31Rect(objects, "3-1-coop-control-floor", new Vector2(90.75f, -44f),
@@ -568,7 +577,6 @@ namespace DrawBody.Prototype
             return objectId == "Platform_Start"
                 || objectId == "obj_57b5b7d7369b4f66"
                 || objectId == "obj_b2c0a6c674ed464e"
-                || objectId == "obj_c86860eaadb94522"
                 || objectId == "3-1-coop-start-floor"
                 || objectId == "3-1-coop-control-floor"
                 || objectId == "3-1-coop-finish-floor";
@@ -1325,6 +1333,13 @@ namespace DrawBody.Prototype
                 DestroyComponentNow(existingMirrorBoss);
             }
 
+            StageCosmicMimicBossController existingCosmicBoss =
+                stageRoot.GetComponent<StageCosmicMimicBossController>();
+            if (existingCosmicBoss != null)
+            {
+                DestroyComponentNow(existingCosmicBoss);
+            }
+
             StageValueCoinChallengeController existingValueCoinChallenge = stageRoot.GetComponent<StageValueCoinChallengeController>();
             if (existingValueCoinChallenge != null)
             {
@@ -1539,7 +1554,7 @@ namespace DrawBody.Prototype
             }
             if (data != null && data.id == "15-3")
             {
-                stageRoot.gameObject.AddComponent<StageMirrorFinalBossController>();
+                stageRoot.gameObject.AddComponent<StageCosmicMimicBossController>();
             }
             if (data != null && data.ruleMode == StageRuleMode.Survival)
             {

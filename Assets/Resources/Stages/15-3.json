@@ -1,12 +1,14 @@
 {
   "id":"15-3",
-  "displayName":"Stage 15-3 Mirror Final Boss",
-  "backgroundColorHex":"#101A3DFF",
+  "displayName":"Stage 15-3 Cosmic Mimic",
+  "backgroundColorHex":"#091333FF",
   "ruleMode":2,
   "timeLimitSeconds":0.0,
   "collectionTarget":0,
   "requiredCollectionCount":0,
   "objects":[
-    {"objectId":"15-3_spawn","type":2,"position":{"x":-5.4,"y":-2.9},"size":{"x":0.7,"y":0.7},"rotation":0.0}
+    {"objectId":"15-3_spawn","type":2,"position":{"x":-10.5,"y":-4.5},"size":{"x":0.7,"y":0.7},"rotation":0.0},
+    {"objectId":"15-3_boundary","type":151,"position":{"x":0.0,"y":0.0},"size":{"x":39.0,"y":21.0},"rotation":0.0},
+    {"objectId":"15-3_floor","type":0,"position":{"x":0.0,"y":-10.0},"size":{"x":39.0,"y":1.0},"rotation":0.0}
   ]
 }

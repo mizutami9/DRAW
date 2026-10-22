@@ -3973,7 +3973,8 @@ namespace DrawBody.Prototype
             float total = 0f;
             foreach (BodyPart part in GetCurrentParts())
             {
-                total += drawings[part].UsedInk;
+                if (drawings.TryGetValue(part, out PartDrawing drawing) && drawing != null)
+                    total += drawing.UsedInk;
             }
 
             return total;

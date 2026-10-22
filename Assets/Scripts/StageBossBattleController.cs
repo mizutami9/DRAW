@@ -287,6 +287,8 @@ namespace DrawBody.Prototype
 
         private bool AreAllPlayersEliminated()
         {
+            if (IsOnline)
+                return onlineManager != null && onlineManager.AreAllCurrentLobbyPlayersIn(eliminatedIds);
             if (participantIds.Count == 0) return false;
             foreach (string id in participantIds)
                 if (!eliminatedIds.Contains(id)) return false;
@@ -1304,7 +1306,10 @@ namespace DrawBody.Prototype
             if (message.Kind == EliminateRequestKind && HasAuthority)
             {
                 PlayerState request = JsonUtility.FromJson<PlayerState>(message.Json);
-                if (request != null && !string.IsNullOrEmpty(request.PlayerId))
+                if (request != null && !string.IsNullOrEmpty(request.PlayerId)
+                    && request.PlayerId == message.PlayerId
+                    && ResolvePlayer(request.PlayerId) != null
+                    && !eliminatedIds.Contains(request.PlayerId))
                 {
                     ApplyElimination(request.PlayerId);
                     BroadcastState(true);

@@ -6413,7 +6413,6 @@ namespace DrawBody.Prototype
                 || stageId == "2-3"
                 || stageId == "3-1"
                 || stageId == "5-2"
-                || stageId == "7-2"
                 || stageId == "10-2"
                 || stageId == "14-2";
         }
@@ -6473,7 +6472,7 @@ namespace DrawBody.Prototype
 
         private static bool IsAmusementParkStageId(string stageId)
         {
-            return stageId == "7-1" || stageId == "11-1";
+            return stageId == "7-1" || stageId == "7-2" || stageId == "11-1";
         }
 
         private static bool IsCompetitionArenaStageId(string stageId)
@@ -7426,6 +7425,15 @@ namespace DrawBody.Prototype
                 return Rect.MinMaxRect(-15.2f, -5.3f, 15.2f, 6.8f);
             }
 
+            if (stageId == "7-2")
+            {
+                // Editing keeps the original three rooms side by side, while
+                // play remaps each one into a single sequential room.
+                return objects != null && objects.Count > 0
+                    ? Rect.MinMaxRect(-41f, -7f, 41f, 11f)
+                    : Rect.MinMaxRect(-19.5f, -3.5f, 19.5f, 9.5f);
+            }
+
             if (stageId == "11-1")
             {
                 return Rect.MinMaxRect(-46f, -22f, 206f, 58f);
@@ -7467,6 +7475,7 @@ namespace DrawBody.Prototype
             for (int band = 0; band < scenicBands; band++)
             {
                 float baseline = bounds.yMin + bandHeight * (band + 0.18f);
+                AddAmusementParkSkyDetails(parent, bounds, baseline, bandHeight, band, ref state);
                 AddAmusementParkRideBand(parent, bounds, baseline, band, ref state);
             }
 
@@ -7480,11 +7489,15 @@ namespace DrawBody.Prototype
             int band,
             ref uint state)
         {
-            int rideCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 34f), 1, 9);
+            // A room-sized arena still needs all three iconic silhouettes. The
+            // old 34-unit spacing produced only one Ferris wheel in 7-1, often
+            // directly behind the monitor, and looked like the plain backdrop.
+            int rideCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 15f), 3, 18);
             float spacing = bounds.width / rideCount;
-            Color pink = new Color(0.95f, 0.49f, 0.56f, 0.34f);
-            Color blue = new Color(0.28f, 0.68f, 0.84f, 0.34f);
-            Color yellow = new Color(0.96f, 0.7f, 0.18f, 0.36f);
+            Color pink = new Color(0.95f, 0.49f, 0.56f, 0.52f);
+            Color blue = new Color(0.28f, 0.68f, 0.84f, 0.49f);
+            Color yellow = new Color(0.96f, 0.7f, 0.18f, 0.52f);
+            Color graphite = new Color(0.25f, 0.29f, 0.31f, 0.4f);
             for (int ride = 0; ride < rideCount; ride++)
             {
                 float centerX = bounds.xMin + spacing * (ride + 0.5f);
@@ -7507,6 +7520,18 @@ namespace DrawBody.Prototype
                             blue,
                             0.045f,
                             -87);
+
+                        Vector2 cabinPosition = new Vector2(
+                            centerX + Mathf.Cos(angle) * radius,
+                            centerY + Mathf.Sin(angle) * radius);
+                        Color cabinColor = spoke % 3 == 0 ? yellow : spoke % 2 == 0 ? blue : pink;
+                        AddAmusementPanel(
+                            parent,
+                            "Ferris Wheel Gondola",
+                            cabinPosition,
+                            new Vector2(0.42f, 0.32f),
+                            cabinColor,
+                            -84);
                     }
                     AddDoodleLine(
                         "Ferris Wheel Stand",
@@ -7518,7 +7543,7 @@ namespace DrawBody.Prototype
                             new Vector3(centerX, centerY, 0f),
                             new Vector3(centerX + radius * 0.55f, baseline, 0f)
                         },
-                        AmusementOutlineColor * 0.32f,
+                        graphite,
                         0.065f,
                         -88);
                 }
@@ -7579,6 +7604,70 @@ namespace DrawBody.Prototype
                     0f);
             }
             AddDoodleLine("Roller Coaster Track", parent, coaster, pink, 0.08f, -89);
+
+            int supportStep = Mathf.Max(2, coasterPoints / Mathf.Max(5, rideCount * 2));
+            for (int point = supportStep; point < coasterPoints - 1; point += supportStep)
+            {
+                AddDoodleLine(
+                    "Roller Coaster Support",
+                    parent,
+                    new[]
+                    {
+                        coaster[point],
+                        new Vector3(coaster[point].x, baseline, 0f)
+                    },
+                    graphite,
+                    0.035f,
+                    -90);
+            }
+        }
+
+        private static void AddAmusementParkSkyDetails(
+            Transform parent,
+            Rect bounds,
+            float baseline,
+            float bandHeight,
+            int band,
+            ref uint state)
+        {
+            int cloudCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 18f), 2, 16);
+            float cloudSpacing = bounds.width / cloudCount;
+            for (int cloud = 0; cloud < cloudCount; cloud++)
+            {
+                float x = bounds.xMin + cloudSpacing * (cloud + 0.5f)
+                    + CaveVisualRange(ref state, -cloudSpacing * 0.16f, cloudSpacing * 0.16f);
+                float y = baseline + bandHeight * CaveVisualRange(ref state, 0.58f, 0.82f);
+                float width = CaveVisualRange(ref state, 1.7f, 2.8f);
+                AddAmusementBackdropSprite(
+                    parent,
+                    "cloud",
+                    "Distant Carnival Cloud",
+                    new Vector2(x, y),
+                    new Vector2(width, width * 0.55f),
+                    CaveVisualRange(ref state, -3f, 3f),
+                    new Color(0.66f, 0.84f, 0.94f, 0.34f),
+                    -92);
+            }
+
+            // A small fairytale tower between the rides makes the area read as
+            // an amusement park even when the moving actors cover one ride.
+            int castleCount = Mathf.Clamp(Mathf.CeilToInt(bounds.width / 42f), 1, 7);
+            float castleSpacing = bounds.width / castleCount;
+            for (int castle = 0; castle < castleCount; castle++)
+            {
+                float x = bounds.xMin + castleSpacing * (castle + 0.5f)
+                    + CaveVisualRange(ref state, -castleSpacing * 0.12f, castleSpacing * 0.12f);
+                float height = CaveVisualRange(ref state, 2.3f, 3.3f);
+                AddAmusementBackdropSprite(
+                    parent,
+                    "castle",
+                    "Distant Carnival Castle",
+                    new Vector2(x, baseline + height * 0.48f),
+                    new Vector2(height * 0.82f, height),
+                    0f,
+                    new Color(0.95f, 0.67f, 0.37f, 0.36f),
+                    -91);
+            }
         }
 
         private static void AddAmusementParkFrame(Transform parent, Rect bounds, ref uint state)

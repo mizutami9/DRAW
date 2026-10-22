@@ -1177,7 +1177,8 @@ namespace DrawBody.Prototype
                 Vector2 predicted = replicaTarget + replicaVelocity * age;
                 float blend = 1f - Mathf.Exp(-24f * Time.fixedUnscaledDeltaTime);
                 body.position = Vector2.Lerp(body.position, predicted, blend);
-                if (owner != null) TrySweepPlayer(start, body.position - start, true);
+                if (owner != null || enemyOwner != null)
+                    TrySweepPlayer(start, body.position - start, true);
                 return;
             }
             float speed = body.linearVelocity.magnitude;
@@ -1309,7 +1310,9 @@ namespace DrawBody.Prototype
                     if (!ApplyPlayerReflection(player, point, normal, incoming, false)) return false;
                     lastLocalReflectionRequestAt = Time.unscaledTime;
                     owner?.RequestLocalPlayerReflection(this, point, normal, incoming);
+                    enemyOwner?.RequestLocalPlayerReflection(this, point, normal, incoming);
                     owner?.NotifyPlayerReflection(point);
+                    enemyOwner?.NotifyPlayerReflection(point);
                     return true;
                 }
 

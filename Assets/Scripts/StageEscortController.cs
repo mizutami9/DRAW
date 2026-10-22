@@ -907,6 +907,8 @@ namespace DrawBody.Prototype
         private float walkPhase;
         private float nextSpeechAt;
         private float speechRemaining;
+        private Collider2D pendingObstacle;
+        private float pendingObstacleSince;
 
         public Rigidbody2D Body => body;
         public Collider2D Hitbox => hitbox;
@@ -1005,16 +1007,42 @@ namespace DrawBody.Prototype
             Collider2D other = collision.collider == hitbox ? collision.otherCollider : collision.collider;
             if (other == null || other.GetComponentInParent<PlayerController2D>() != null) return;
 
-            // Ordinary support from below is safe. A side impact, something landing
-            // on the friend, or a wall/box blocking its route defeats it.
-            for (int i = 0; i < collision.contactCount; i++)
+            if (!HasUnsafeObstacleContact(collision)) return;
+            pendingObstacle = other;
+            pendingObstacleSince = Time.time;
+        }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            if (!authoritative || defeated || !defeatOnObstacleCollision || collision == null) return;
+            Collider2D other = collision.collider == hitbox ? collision.otherCollider : collision.collider;
+            if (other == null || other.GetComponentInParent<PlayerController2D>() != null
+                || !HasUnsafeObstacleContact(collision))
             {
-                if (collision.GetContact(i).normal.y < 0.55f)
-                {
-                    Defeat();
-                    return;
-                }
+                if (other == pendingObstacle) pendingObstacle = null;
+                return;
             }
+            if (pendingObstacle != other)
+            {
+                pendingObstacle = other;
+                pendingObstacleSince = Time.time;
+                return;
+            }
+            if (Time.time - pendingObstacleSince >= 0.16f) Defeat();
+        }
+
+        private void OnCollisionExit2D(Collision2D collision)
+        {
+            if (collision == null || pendingObstacle == null) return;
+            Collider2D other = collision.collider == hitbox ? collision.otherCollider : collision.collider;
+            if (other == pendingObstacle) pendingObstacle = null;
+        }
+
+        private static bool HasUnsafeObstacleContact(Collision2D collision)
+        {
+            for (int i = 0; i < collision.contactCount; i++)
+                if (collision.GetContact(i).normal.y < 0.55f) return true;
+            return false;
         }
 
         private void RefreshIgnoredPlayerCollisions()

@@ -532,7 +532,8 @@ namespace DrawBody.Prototype
             if (message.Kind == CollectRequestKind && HasAuthority)
             {
                 ItemMessage request = JsonUtility.FromJson<ItemMessage>(message.Json);
-                if (request != null) ApplyCollect(request.Id, true);
+                if (request != null && CanPlayerCollect(message.PlayerId, request.Id))
+                    ApplyCollect(request.Id, true);
                 return;
             }
             if (HasAuthority || onlineManager == null || !onlineManager.IsHostPlayer(message.PlayerId)) return;
@@ -567,6 +568,36 @@ namespace DrawBody.Prototype
                 if (playFeedback) GameSfx.PlayAt(SfxId.CoinCollect, soundPosition, 0.82f);
             }
             coins.Remove(coinId);
+        }
+
+        private bool CanPlayerCollect(string playerId, string coinId)
+        {
+            if (phase != 0 || stageManager == null || string.IsNullOrEmpty(playerId)
+                || string.IsNullOrEmpty(coinId)
+                || !coins.TryGetValue(coinId, out StageValueCoin coin)
+                || coin == null || !coin.gameObject.activeInHierarchy)
+                return false;
+            PlayerController2D player = stageManager.GetOnlinePlayerController(playerId);
+            if (player == null) return false;
+            Collider2D[] playerColliders = player.GetComponentsInChildren<Collider2D>(false);
+            Collider2D[] coinColliders = coin.GetComponentsInChildren<Collider2D>(false);
+            float closest = Vector2.Distance(player.transform.position, coin.transform.position);
+            for (int i = 0; i < playerColliders.Length; i++)
+            {
+                Collider2D a = playerColliders[i];
+                if (a == null || !a.enabled) continue;
+                for (int j = 0; j < coinColliders.Length; j++)
+                {
+                    Collider2D b = coinColliders[j];
+                    if (b == null || !b.enabled) continue;
+                    closest = Mathf.Min(closest, Mathf.Max(0f, a.Distance(b).distance));
+                }
+            }
+            Rigidbody2D body = player.GetComponent<Rigidbody2D>();
+            float lagAllowance = body != null
+                ? Mathf.Min(2.5f, body.linearVelocity.magnitude * 0.22f)
+                : 0f;
+            return closest <= 1.75f + lagAllowance;
         }
 
         private void ApplySnapshot(ChallengeSnapshot snapshot)

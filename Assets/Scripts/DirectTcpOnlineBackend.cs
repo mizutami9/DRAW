@@ -30,7 +30,7 @@ namespace DrawBody.Prototype
         private TcpClient client;
         private Thread acceptThread;
         private bool isHost;
-        private bool running;
+        private volatile bool running;
         private int stageRevision;
 
         public DirectTcpOnlineBackend(int port)
@@ -130,7 +130,7 @@ namespace DrawBody.Prototype
             {
                 client = new TcpClient { NoDelay = true };
                 client.Connect(parts[0], remotePort);
-                StartReadLoop(client);
+                StartReadLoop(client, false);
                 Send(client, MessageHello, JsonUtility.ToJson(CreatePlayer(localPlayerId, PlayerNameSettings.CurrentName, false, false)));
 
                 CurrentLobby = new OnlineLobbyInfo
@@ -153,6 +153,8 @@ namespace DrawBody.Prototype
 
         public void LeaveLobby()
         {
+            Debug.Log($"[PICO DIRECT] LeaveLobby state={State} host={isHost} " +
+                $"players={CurrentLobby?.Players?.Length ?? 0}");
             CloseSockets();
             CurrentLobby = null;
             SetState(OnlineConnectionState.Online, null, LocalizationManager.T("online_left_lobby"));
@@ -314,7 +316,7 @@ namespace DrawBody.Prototype
                         peers.Add(new ClientPeer { Client = accepted });
                     }
 
-                    StartReadLoop(accepted);
+                    StartReadLoop(accepted, true);
                 }
                 catch
                 {
@@ -326,14 +328,19 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void StartReadLoop(TcpClient tcpClient)
+        private void StartReadLoop(TcpClient tcpClient, bool readerIsHost)
         {
-            Thread thread = new Thread(() => ReadLoop(tcpClient)) { IsBackground = true };
+            // Capture the role for this socket. The backend instance can leave a
+            // room and immediately create/join another one before an old read
+            // thread exits; consulting the mutable isHost field at that point
+            // can route the old disconnect down the wrong path.
+            Thread thread = new Thread(() => ReadLoop(tcpClient, readerIsHost)) { IsBackground = true };
             thread.Start();
         }
 
-        private void ReadLoop(TcpClient tcpClient)
+        private void ReadLoop(TcpClient tcpClient, bool readerIsHost)
         {
+            string readError = null;
             try
             {
                 using (StreamReader reader = new StreamReader(tcpClient.GetStream(), Encoding.UTF8))
@@ -350,14 +357,49 @@ namespace DrawBody.Prototype
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                readError = ex.Message;
             }
 
-            if (isHost)
+            if (!string.IsNullOrEmpty(readError))
             {
-                Enqueue(() => RemovePeer(tcpClient));
+                string capturedError = readError;
+                Enqueue(() => Debug.LogWarning($"[PICO DIRECT] Read loop ended: {capturedError}"));
             }
+
+            if (readerIsHost)
+            {
+                string reason = string.IsNullOrEmpty(readError)
+                    ? "host_read_eof"
+                    : "host_read_error: " + readError;
+                Enqueue(() => RemovePeer(tcpClient, reason));
+            }
+            else
+            {
+                // A participant's read loop ending means the authoritative host
+                // connection was lost. Intentional LeaveLobby/Shutdown sets
+                // running=false before closing the socket, so the main-thread
+                // guard below keeps those paths from being reported as errors.
+                Enqueue(() => HandleServerDisconnected(tcpClient));
+            }
+        }
+
+        private void HandleServerDisconnected(TcpClient disconnectedClient)
+        {
+            if (!running || isHost || disconnectedClient == null
+                || !ReferenceEquals(client, disconnectedClient))
+            {
+                return;
+            }
+
+            Debug.LogWarning($"[PICO DIRECT] Host connection ended while state={State}.");
+            running = false;
+            try { disconnectedClient.Close(); } catch { }
+            client = null;
+            CurrentLobby = null;
+            SetState(OnlineConnectionState.Error, null,
+                LocalizationManager.T("online_host_disconnected"));
         }
 
         private void HandleLine(TcpClient tcpClient, string line)
@@ -401,9 +443,13 @@ namespace DrawBody.Prototype
                 player.PlayerSlot = existingSlot >= 0 ? existingSlot : FindAvailablePlayerSlot();
                 if (player.PlayerSlot < 0)
                 {
+                    RemovePeer(tcpClient, "lobby_full");
                     return;
                 }
-                MarkPeerPlayer(tcpClient, player.PlayerId);
+                // The socket may already have failed while this Hello was queued
+                // for the main thread. Never create a roster member without a
+                // live peer behind it.
+                if (!MarkPeerPlayer(tcpClient, player.PlayerId)) return;
                 AddOrReplacePlayer(player);
                 BroadcastLobby(LocalizationManager.Format("online_player_joined", player.DisplayName));
             }
@@ -468,8 +514,21 @@ namespace DrawBody.Prototype
                     payload = JsonUtility.ToJson(gimmickData);
                 }
                 GimmickDataReceived?.Invoke(gimmickData);
-                Broadcast(MessageGimmick, payload);
+                // Host-only commands are consumed above and their authoritative
+                // result is broadcast separately. Relaying the original request
+                // made DirectTcp behave differently from EOS and could replay a
+                // participant request on every other client.
+                if (gimmickData != null && ShouldRelayParticipantGimmick(gimmickData.Kind))
+                    Broadcast(MessageGimmick, payload);
             }
+        }
+
+        private static bool ShouldRelayParticipantGimmick(string kind)
+        {
+            if (string.IsNullOrEmpty(kind)) return false;
+            if (kind == "species_swap_request" || kind == "body_resync_request") return true;
+            return !kind.EndsWith("_request", StringComparison.Ordinal)
+                && kind != "tilt_board_magnet_input";
         }
 
         private void HandleClientMessage(string type, string payload)
@@ -544,22 +603,36 @@ namespace DrawBody.Prototype
 
         private void Broadcast(string type, string payload)
         {
+            List<TcpClient> failedClients = null;
             lock (peers)
             {
                 for (int i = peers.Count - 1; i >= 0; i--)
                 {
+                    // Do not stream gameplay to a newly accepted socket before
+                    // its Hello has been consumed. If that unregistered send
+                    // fails, the queued Hello could otherwise add a ghost player.
+                    if (string.IsNullOrEmpty(peers[i].PlayerId)) continue;
                     if (!Send(peers[i].Client, type, payload))
                     {
-                        peers.RemoveAt(i);
+                        // Do not remove the peer here. RemovePeer also owns the
+                        // player-id/roster cleanup; deleting only this list entry
+                        // first leaves a disconnected avatar in CurrentLobby.
+                        failedClients ??= new List<TcpClient>();
+                        failedClients.Add(peers[i].Client);
                     }
                 }
             }
+
+            if (failedClients == null) return;
+            for (int i = 0; i < failedClients.Count; i++)
+                RemovePeer(failedClients[i], "broadcast_send_failed");
         }
 
         private static bool Send(TcpClient tcpClient, string type, string payload)
         {
             if (tcpClient == null || !tcpClient.Connected)
             {
+                Debug.LogWarning($"[PICO DIRECT] Send rejected type={type}: socket is not connected.");
                 return false;
             }
 
@@ -569,8 +642,9 @@ namespace DrawBody.Prototype
                 tcpClient.GetStream().Write(bytes, 0, bytes.Length);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.LogWarning($"[PICO DIRECT] Send failed type={type}: {ex.Message}");
                 return false;
             }
         }
@@ -671,7 +745,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void MarkPeerPlayer(TcpClient tcpClient, string playerId)
+        private bool MarkPeerPlayer(TcpClient tcpClient, string playerId)
         {
             lock (peers)
             {
@@ -680,10 +754,11 @@ namespace DrawBody.Prototype
                     if (peers[i].Client == tcpClient)
                     {
                         peers[i].PlayerId = playerId;
-                        return;
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
         private string GetPeerPlayerId(TcpClient tcpClient)
@@ -702,7 +777,7 @@ namespace DrawBody.Prototype
             return null;
         }
 
-        private void RemovePeer(TcpClient tcpClient)
+        private void RemovePeer(TcpClient tcpClient, string reason = "unspecified")
         {
             string playerId = null;
             lock (peers)
@@ -717,6 +792,10 @@ namespace DrawBody.Prototype
                     }
                 }
             }
+
+            Debug.LogWarning($"[PICO DIRECT] RemovePeer reason={reason} " +
+                $"player={playerId ?? "unregistered"} remainingPeers={peers.Count}.");
+            try { tcpClient?.Close(); } catch { }
 
             if (!string.IsNullOrEmpty(playerId) && CurrentLobby != null && CurrentLobby.Players != null)
             {

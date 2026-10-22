@@ -47,6 +47,7 @@ namespace DrawBody.Prototype
         [Serializable]
         private sealed class RaceState
         {
+            public int Sequence;
             public float Elapsed;
             public float IntroRemaining;
             public float StartFlashRemaining;
@@ -71,6 +72,8 @@ namespace DrawBody.Prototype
         private float startFlashRemaining;
         private float retryRemaining;
         private float nextBroadcastAt;
+        private int stateSequence;
+        private int receivedStateSequence;
         private int playerCount = 1;
         private bool started;
         private bool failed;
@@ -357,7 +360,7 @@ namespace DrawBody.Prototype
 
             if (!AllParticipantsFinished()) return;
             float total = GetFinishedTotal();
-            if (total <= playerCount * SecondsPerPlayer + 0.001f)
+            if (total <= GetScoredPlayerCount() * SecondsPerPlayer + 0.001f)
             {
                 stageManager.ClearStage();
             }
@@ -418,13 +421,15 @@ namespace DrawBody.Prototype
             if (data == null || data.ObjectId != StageId) return;
             if (data.Kind == FinishRequestKind && HasAuthority)
             {
-                RecordFinish(data.PlayerId);
+                if (CanAcceptRemoteFinish(data.PlayerId)) RecordFinish(data.PlayerId);
                 return;
             }
-            if (data.Kind != StateKind || HasAuthority) return;
+            if (data.Kind != StateKind || HasAuthority || onlineManager == null
+                || !onlineManager.IsHostPlayer(data.PlayerId)) return;
 
             RaceState state = JsonUtility.FromJson<RaceState>(data.Json);
-            if (state == null) return;
+            if (state == null || state.Sequence <= receivedStateSequence) return;
+            receivedStateSequence = state.Sequence;
             elapsed = state.Elapsed;
             introRemaining = state.IntroRemaining;
             startFlashRemaining = state.StartFlashRemaining;
@@ -454,6 +459,7 @@ namespace DrawBody.Prototype
                 Kind = StateKind,
                 Json = JsonUtility.ToJson(new RaceState
                 {
+                    Sequence = ++stateSequence,
                     Elapsed = elapsed,
                     IntroRemaining = introRemaining,
                     StartFlashRemaining = startFlashRemaining,
@@ -465,6 +471,32 @@ namespace DrawBody.Prototype
                     FinishTimes = (float[])finishTimes.Clone()
                 })
             });
+        }
+
+        private bool CanAcceptRemoteFinish(string playerId)
+        {
+            if (!started || failed || stageManager == null || string.IsNullOrEmpty(playerId)) return false;
+            int lane = FindParticipant(playerId);
+            if (lane < 0 || finishTimes[lane] >= 0f) return false;
+            PlayerController2D player = stageManager.GetOnlinePlayerController(playerId);
+            if (player == null) return false;
+
+            Vector2 position = player.transform.position;
+            string expectedId = "10-1-lane-" + (lane + 1) + "-goal";
+            StageEditorObject[] objects = UnityEngine.Object.FindObjectsByType<StageEditorObject>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < objects.Length; i++)
+            {
+                StageEditorObject marker = objects[i];
+                if (marker == null || marker.objectId != expectedId) continue;
+                Collider2D goalCollider = marker.GetComponent<Collider2D>();
+                if (goalCollider == null) goalCollider = marker.GetComponentInChildren<Collider2D>();
+                if (goalCollider == null) return Vector2.Distance(position, marker.transform.position) <= 3.5f;
+                // The host sees a delayed replica of the remote player, so allow
+                // one short movement window beyond the trigger itself.
+                return Vector2.Distance(goalCollider.ClosestPoint(position), position) <= 6f;
+            }
+            return false;
         }
 
         private void BuildMonitors()
@@ -535,13 +567,13 @@ namespace DrawBody.Prototype
             else if (failed)
             {
                 value = LocalizationManager.T("game_over") + "  "
-                    + LocalizationManager.Format("ice_race_team", FormatTime(GetFinishedTotal()), FormatTime(playerCount * SecondsPerPlayer));
+                    + LocalizationManager.Format("ice_race_team", FormatTime(GetFinishedTotal()), FormatTime(GetScoredPlayerCount() * SecondsPerPlayer));
                 subValue = LocalizationManager.Format("ice_race_retry", Mathf.CeilToInt(retryRemaining));
                 color = new Color(0.08f, 0.09f, 0.1f);
             }
             else
             {
-                value = LocalizationManager.Format("ice_race_team", FormatTime(GetProjectedTotal()), FormatTime(playerCount * SecondsPerPlayer));
+                value = LocalizationManager.Format("ice_race_team", FormatTime(GetProjectedTotal()), FormatTime(GetScoredPlayerCount() * SecondsPerPlayer));
                 subValue = BuildPlayerTimes();
                 color = new Color(0.08f, 0.09f, 0.1f);
             }
@@ -565,7 +597,7 @@ namespace DrawBody.Prototype
             List<string> values = new List<string>();
             for (int lane = 0; lane < MaxLanes; lane++)
             {
-                if (string.IsNullOrEmpty(participantIds[lane])) continue;
+                if (!IsScoredParticipant(lane)) continue;
                 float value = finishTimes[lane] >= 0f ? finishTimes[lane] : elapsed;
                 string suffix = finishTimes[lane] >= 0f ? "  OK" : string.Empty;
                 values.Add("P" + (lane + 1) + " " + FormatTime(value) + suffix);
@@ -580,7 +612,7 @@ namespace DrawBody.Prototype
         {
             float total = 0f;
             for (int i = 0; i < MaxLanes; i++)
-                if (!string.IsNullOrEmpty(participantIds[i]) && finishTimes[i] >= 0f) total += finishTimes[i];
+                if (IsScoredParticipant(i) && finishTimes[i] >= 0f) total += finishTimes[i];
             return total;
         }
 
@@ -590,7 +622,7 @@ namespace DrawBody.Prototype
             uiManager?.SetChallengeCountdown(true,
                 LocalizationManager.Format("ice_race_game_over",
                     FormatTime(GetFinishedTotal()),
-                    FormatTime(playerCount * SecondsPerPlayer)));
+                    FormatTime(GetScoredPlayerCount() * SecondsPerPlayer)));
         }
 
         private float GetProjectedTotal()
@@ -598,7 +630,7 @@ namespace DrawBody.Prototype
             float total = 0f;
             for (int i = 0; i < MaxLanes; i++)
             {
-                if (string.IsNullOrEmpty(participantIds[i])) continue;
+                if (!IsScoredParticipant(i)) continue;
                 total += finishTimes[i] >= 0f ? finishTimes[i] : elapsed;
             }
             return total;
@@ -606,9 +638,30 @@ namespace DrawBody.Prototype
 
         private bool AllParticipantsFinished()
         {
+            bool found = false;
             for (int i = 0; i < MaxLanes; i++)
-                if (!string.IsNullOrEmpty(participantIds[i]) && finishTimes[i] < 0f) return false;
-            return true;
+            {
+                if (!IsScoredParticipant(i)) continue;
+                found = true;
+                if (finishTimes[i] < 0f) return false;
+            }
+            return found;
+        }
+
+        private bool IsScoredParticipant(int lane)
+        {
+            if (lane < 0 || lane >= participantIds.Length
+                || string.IsNullOrEmpty(participantIds[lane])) return false;
+            return !IsOnline || onlineManager != null
+                && onlineManager.IsCurrentLobbyPlayer(participantIds[lane]);
+        }
+
+        private int GetScoredPlayerCount()
+        {
+            int count = 0;
+            for (int i = 0; i < MaxLanes; i++)
+                if (IsScoredParticipant(i)) count++;
+            return Mathf.Max(1, count);
         }
 
         private int FindParticipant(string id)

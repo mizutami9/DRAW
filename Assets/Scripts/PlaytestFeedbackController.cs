@@ -233,7 +233,29 @@ namespace DrawBody.Prototype
         public void SetClearContext(bool isCleared, string nextStageId)
         {
             showClearFeedback = isCleared && string.IsNullOrEmpty(nextStageId);
+            LayoutFinalClearButtons(showClearFeedback);
             RefreshVisibility();
+        }
+
+        private void LayoutFinalClearButtons(bool finalStage)
+        {
+            RectTransform feedbackRect = clearButton != null ? clearButton.GetComponent<RectTransform>() : null;
+            RectTransform wishlistRect = clearWishlistButton != null ? clearWishlistButton.GetComponent<RectTransform>() : null;
+            RectTransform backRect = clearPanel != null
+                ? clearPanel.transform.Find("StageClearResult/BackToStageSelectButton") as RectTransform
+                : null;
+            if (finalStage)
+            {
+                if (feedbackRect != null) { feedbackRect.anchoredPosition = new Vector2(-270f, -144f); feedbackRect.sizeDelta = new Vector2(230f, 46f); }
+                if (wishlistRect != null) { wishlistRect.anchoredPosition = new Vector2(0f, -144f); wishlistRect.sizeDelta = new Vector2(230f, 46f); }
+                if (backRect != null) { backRect.anchoredPosition = new Vector2(270f, -144f); backRect.sizeDelta = new Vector2(230f, 60f); }
+            }
+            else
+            {
+                if (feedbackRect != null) { feedbackRect.anchoredPosition = new Vector2(-145f, -144f); feedbackRect.sizeDelta = new Vector2(270f, 38f); }
+                if (wishlistRect != null) { wishlistRect.anchoredPosition = new Vector2(145f, -144f); wishlistRect.sizeDelta = new Vector2(270f, 42f); }
+                if (backRect != null) { backRect.anchoredPosition = new Vector2(155f, -142f); backRect.sizeDelta = new Vector2(270f, 82f); }
+            }
         }
 
         public void BringClearButtonForward()

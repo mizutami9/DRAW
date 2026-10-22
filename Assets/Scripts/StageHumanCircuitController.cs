@@ -1542,7 +1542,8 @@ namespace DrawBody.Prototype
                 if (!HasAuthority || !IsOnline) return;
                 CompleteRequest request = JsonUtility.FromJson<CompleteRequest>(data.Json);
                 if (request != null && request.RoomIndex == currentRound
-                    && request.RoomIndex >= 0 && request.RoomIndex < rooms.Count)
+                    && request.RoomIndex >= 0 && request.RoomIndex < rooms.Count
+                    && CanAcceptRoomCompletion(data.PlayerId, request.RoomIndex))
                 {
                     CompleteRoom(request.RoomIndex);
                 }
@@ -1585,6 +1586,23 @@ namespace DrawBody.Prototype
                 }
             }
             boxPressedMask = state.BoxPressedMask;
+        }
+
+        private bool CanAcceptRoomCompletion(string playerId, int roomIndex)
+        {
+            if (transitioning || stageManager == null || string.IsNullOrEmpty(playerId)
+                || stageManager.GetOnlinePlayerController(playerId) == null
+                || roomIndex < 0 || roomIndex >= rooms.Count || roomIndex == 4)
+                return false;
+            BuildPlayerShapes();
+            RoomCircuit room = rooms[roomIndex];
+            bool allPaths = room.Paths.Count > 0;
+            for (int i = 0; i < room.Paths.Count; i++)
+            {
+                EvaluateSequentialPath(room.Paths[i]);
+                allPaths &= room.Paths[i].Complete;
+            }
+            return allPaths;
         }
 
         private int PackBoxPreviews()

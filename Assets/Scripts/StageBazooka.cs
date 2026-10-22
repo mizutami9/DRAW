@@ -13,6 +13,7 @@ namespace DrawBody.Prototype
         private float nextFireAt;
 
         public PlayerCarryController Holder => holder;
+        public Vector2 MuzzleWorldPosition => transform.TransformPoint(new Vector2(0.58f, 0.08f));
 
         public static GameObject CreateObject(StageObjectData data, Transform parent, int pushableLayer)
         {
@@ -91,7 +92,7 @@ namespace DrawBody.Prototype
         public void TryFire(Vector2 aimWorld)
         {
             if (holder == null || Time.time < nextFireAt) return;
-            Vector2 origin = transform.TransformPoint(new Vector2(0.58f, 0.08f));
+            Vector2 origin = MuzzleWorldPosition;
             Vector2 direction = (aimWorld - origin).normalized;
             if (direction.sqrMagnitude < 0.1f) return;
             nextFireAt = Time.time + FireInterval;
@@ -121,16 +122,21 @@ namespace DrawBody.Prototype
 
     public sealed class StageBazookaSystem : MonoBehaviour
     {
+        private const float RecoilVelocity = 13.5f;
+        private const float DownwardShotVerticalRecoilMultiplier = 4f;
         private const string SystemId = "stage_bazooka_system";
         private const string FireRequestKind = "bazooka_fire_request";
         private const string FireKind = "bazooka_fire";
+        private const string FireRejectedKind = "bazooka_fire_rejected";
         private const string SnapshotKind = "bazooka_rocket_snapshot";
 
         [System.Serializable]
         private sealed class FireData
         {
             public int Sequence;
+            public int RequestSequence;
             public string WeaponId;
+            public string ShooterPlayerId;
             public Vector2 Origin;
             public Vector2 Direction;
             public string RecoilTargetId;
@@ -151,13 +157,26 @@ namespace DrawBody.Prototype
             public RocketState[] Rockets;
         }
 
+        private sealed class PredictedRecoil
+        {
+            public Vector2 VelocityChange;
+            public float ExpiresAt;
+        }
+
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private int sequence;
+        private int nextLocalFireRequestSequence;
         private int lastSequence;
         private float nextSnapshotAt;
         private readonly System.Collections.Generic.Dictionary<int, StageBazookaRocket> rockets =
             new System.Collections.Generic.Dictionary<int, StageBazookaRocket>();
+        private readonly System.Collections.Generic.Dictionary<string, float> nextAcceptedShotAt =
+            new System.Collections.Generic.Dictionary<string, float>();
+        private readonly System.Collections.Generic.HashSet<int> predictedLocalFeedback =
+            new System.Collections.Generic.HashSet<int>();
+        private readonly System.Collections.Generic.Dictionary<int, PredictedRecoil> predictedLocalRecoil =
+            new System.Collections.Generic.Dictionary<int, PredictedRecoil>();
 
         public bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -186,26 +205,50 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            predictedLocalFeedback.Clear();
+            predictedLocalRecoil.Clear();
         }
 
         private void Update()
         {
-            if (!IsOnline || !HasAuthority || Time.unscaledTime < nextSnapshotAt) return;
-            nextSnapshotAt = Time.unscaledTime + 0.75f;
-            BroadcastRocketSnapshot();
+            if (IsOnline && !HasAuthority) RollbackExpiredPredictions();
+            if (IsOnline && HasAuthority && Time.unscaledTime >= nextSnapshotAt)
+            {
+                nextSnapshotAt = Time.unscaledTime + 0.75f;
+                BroadcastRocketSnapshot();
+            }
         }
 
         public void RequestFire(string weaponId, Vector2 origin, Vector2 direction, string recoilTargetId, Vector2 recoil)
         {
             FireData data = new FireData
             {
+                RequestSequence = ++nextLocalFireRequestSequence,
                 WeaponId = weaponId,
                 Origin = origin,
                 Direction = direction.normalized,
                 RecoilTargetId = recoilTargetId,
                 Recoil = recoil
             };
-            if (IsOnline && !HasAuthority) { Send(FireRequestKind, data); return; }
+            if (IsOnline && !HasAuthority)
+            {
+                if (predictedLocalFeedback.Count > 64) predictedLocalFeedback.Clear();
+                if (predictedLocalRecoil.Count > 64) RollbackAllPredictions();
+                predictedLocalFeedback.Add(data.RequestSequence);
+                PlayFireFeedback(data.Origin, data.Direction);
+                if (!string.IsNullOrEmpty(data.RecoilTargetId)
+                    && data.RecoilTargetId == onlineManager?.LocalPlayerId)
+                {
+                    predictedLocalRecoil[data.RequestSequence] = new PredictedRecoil
+                    {
+                        VelocityChange = data.Recoil,
+                        ExpiresAt = Time.unscaledTime + 2.5f
+                    };
+                    ApplyRecoilToLocalPlayer(data.RecoilTargetId, data.Recoil);
+                }
+                Send(FireRequestKind, data);
+                return;
+            }
             ConfirmFire(data);
         }
 
@@ -214,7 +257,7 @@ namespace DrawBody.Prototype
             data.Sequence = ++sequence;
             StageBazookaRocket.Create(transform, this, data.Sequence, data.Origin, data.Direction, true);
             ApplyRecoilToLocalPlayer(data.RecoilTargetId, data.Recoil);
-            GameSfx.PlayAt(SfxId.CannonFire, data.Origin, 1.15f);
+            PlayFireFeedback(data.Origin, data.Direction);
             if (IsOnline) Send(FireKind, data);
         }
 
@@ -224,7 +267,13 @@ namespace DrawBody.Prototype
             if (message.Kind == FireRequestKind && HasAuthority)
             {
                 FireData request = JsonUtility.FromJson<FireData>(message.Json);
-                if (request != null) ConfirmFire(request);
+                if (request != null && TryValidateFireRequest(request, message.PlayerId))
+                    ConfirmFire(request);
+                else if (request != null)
+                {
+                    request.ShooterPlayerId = message.PlayerId;
+                    Send(FireRejectedKind, request);
+                }
             }
             else if (message.Kind == FireKind && !HasAuthority && IsHost(message.PlayerId))
             {
@@ -232,13 +281,95 @@ namespace DrawBody.Prototype
                 if (data == null || data.Sequence <= lastSequence) return;
                 lastSequence = data.Sequence;
                 StageBazookaRocket.Create(transform, this, data.Sequence, data.Origin, data.Direction, false);
-                ApplyRecoilToLocalPlayer(data.RecoilTargetId, data.Recoil);
-                GameSfx.PlayAt(SfxId.CannonFire, data.Origin, 1.15f);
+                bool predictedFeedback = data.ShooterPlayerId == onlineManager?.LocalPlayerId
+                    && data.RequestSequence > 0
+                    && predictedLocalFeedback.Remove(data.RequestSequence);
+                bool recoilAlreadyApplied = data.RequestSequence > 0
+                    && predictedLocalRecoil.Remove(data.RequestSequence);
+                if (!recoilAlreadyApplied)
+                    ApplyRecoilToLocalPlayer(data.RecoilTargetId, data.Recoil);
+                if (!predictedFeedback) PlayFireFeedback(data.Origin, data.Direction);
+            }
+            else if (message.Kind == FireRejectedKind && !HasAuthority && IsHost(message.PlayerId))
+            {
+                FireData data = JsonUtility.FromJson<FireData>(message.Json);
+                if (data == null || data.ShooterPlayerId != onlineManager?.LocalPlayerId
+                    || data.RequestSequence <= 0) return;
+                predictedLocalFeedback.Remove(data.RequestSequence);
+                RollbackPrediction(data.RequestSequence);
             }
             else if (message.Kind == SnapshotKind && !HasAuthority && IsHost(message.PlayerId))
             {
                 ApplyRocketSnapshot(JsonUtility.FromJson<RocketSnapshot>(message.Json));
             }
+        }
+
+        private bool TryValidateFireRequest(FireData data, string senderPlayerId)
+        {
+            if (data == null || string.IsNullOrEmpty(senderPlayerId)
+                || string.IsNullOrEmpty(data.WeaponId) || data.Direction.sqrMagnitude < 0.25f
+                || stageManager == null) return false;
+            PlayerController2D player = stageManager.GetOnlinePlayerController(senderPlayerId);
+            if (player == null) return false;
+
+            StageBazooka[] weapons = GetComponentsInChildren<StageBazooka>(true);
+            StageBazooka weapon = null;
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                StageEditorObject marker = weapons[i] != null
+                    ? weapons[i].GetComponent<StageEditorObject>() : null;
+                if (marker != null && marker.objectId == data.WeaponId)
+                {
+                    weapon = weapons[i];
+                    break;
+                }
+            }
+            if (weapon == null || !weapon.gameObject.activeInHierarchy) return false;
+
+            StageGimmickSyncManager sync = GetComponent<StageGimmickSyncManager>();
+            bool owned = sync != null
+                && sync.TryGetObjectOwnerPlayerId(weapon.transform, out string ownerId)
+                && ownerId == senderPlayerId;
+            bool held = weapon.Holder != null
+                && weapon.Holder.GetComponent<PlayerController2D>() == player;
+            Rigidbody2D playerBody = player.GetComponent<Rigidbody2D>();
+            float lagAllowance = playerBody != null
+                ? Mathf.Min(2.5f, playerBody.linearVelocity.magnitude * 0.22f)
+                : 0f;
+            if (!owned && !held
+                && Vector2.Distance(player.transform.position, weapon.transform.position) > 2.5f + lagAllowance)
+                return false;
+
+            string cooldownKey = senderPlayerId + ":" + data.WeaponId;
+            if (nextAcceptedShotAt.TryGetValue(cooldownKey, out float nextAt)
+                && Time.unscaledTime < nextAt) return false;
+            nextAcceptedShotAt[cooldownKey] = Time.unscaledTime + 0.82f;
+
+            Vector2 direction = data.Direction.normalized;
+            PlayerCarryController carry = player.GetComponent<PlayerCarryController>();
+            bool carried = carry != null && carry.IsCarriedForWeaponRecoil();
+            float multiplier = carried ? 5f : 1f;
+            Vector2 recoil = -direction * (RecoilVelocity * multiplier);
+            if (direction.y < 0f) recoil.y *= DownwardShotVerticalRecoilMultiplier;
+            data.Origin = weapon.MuzzleWorldPosition;
+            data.Direction = direction;
+            data.ShooterPlayerId = senderPlayerId;
+            data.RecoilTargetId = carry != null
+                ? carry.GetWeaponRecoilTargetOnlineId()
+                : senderPlayerId;
+            data.Recoil = recoil;
+            return true;
+        }
+
+        private static void PlayFireFeedback(Vector2 origin, Vector2 direction)
+        {
+            GameSfx.PlayAt(SfxId.CannonFire, origin, 1.15f);
+            GameObject flash = StageGun.CreateSprite(null, "Bazooka Muzzle Flash", Vector2.zero,
+                new Vector2(0.82f, 0.42f), new Color(1f, 0.52f, 0.08f, 0.94f), 61);
+            flash.transform.position = origin;
+            flash.transform.rotation = Quaternion.Euler(0f, 0f,
+                Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            Object.Destroy(flash, 0.1f);
         }
 
         internal void RegisterRocket(int rocketSequence, StageBazookaRocket rocket)
@@ -300,6 +431,35 @@ namespace DrawBody.Prototype
                 || playerId != onlineManager.LocalPlayerId || recoil.sqrMagnitude < 0.01f) return;
             Transform local = stageManager != null ? stageManager.ActivePlayerTransform : null;
             local?.GetComponent<PlayerCarryController>()?.ApplyDirectWeaponRecoil(recoil);
+        }
+
+        private void RollbackPrediction(int requestSequence)
+        {
+            if (!predictedLocalRecoil.TryGetValue(requestSequence, out PredictedRecoil prediction)) return;
+            predictedLocalRecoil.Remove(requestSequence);
+            Transform local = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            local?.GetComponent<PlayerCarryController>()
+                ?.RollbackDirectWeaponRecoil(prediction.VelocityChange);
+            onlineManager?.RecordNetworkCorrection();
+        }
+
+        private void RollbackExpiredPredictions()
+        {
+            if (predictedLocalRecoil.Count == 0) return;
+            var expired = new System.Collections.Generic.List<int>();
+            foreach (System.Collections.Generic.KeyValuePair<int, PredictedRecoil> pair in predictedLocalRecoil)
+                if (pair.Value == null || Time.unscaledTime >= pair.Value.ExpiresAt) expired.Add(pair.Key);
+            for (int i = 0; i < expired.Count; i++)
+            {
+                predictedLocalFeedback.Remove(expired[i]);
+                RollbackPrediction(expired[i]);
+            }
+        }
+
+        private void RollbackAllPredictions()
+        {
+            var pending = new System.Collections.Generic.List<int>(predictedLocalRecoil.Keys);
+            for (int i = 0; i < pending.Count; i++) RollbackPrediction(pending[i]);
         }
 
         private void Send<T>(string kind, T data)

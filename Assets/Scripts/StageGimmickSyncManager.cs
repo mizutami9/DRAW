@@ -57,7 +57,9 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, BombWallDamageState> bombWallDamageStates =
             new Dictionary<string, BombWallDamageState>();
         private readonly HashSet<string> armedPickupBombs = new HashSet<string>();
+        private readonly Dictionary<string, string> bombArmedByPlayerId = new Dictionary<string, string>();
         private readonly HashSet<string> defeatedPlacedEnemies = new HashSet<string>();
+        private readonly Dictionary<string, string> heldButtonRequesters = new Dictionary<string, string>();
         private StageGimmickLinkController linkController;
         private StageObjectFactory objectFactory;
         private string trustedHostPlayerId;
@@ -847,7 +849,7 @@ namespace DrawBody.Prototype
 
             if (data.Kind == KindLinkRequest)
             {
-                if (IsHost)
+                if (IsHost && CanPlayerAffectObject(data.PlayerId, data.ObjectId, 3.5f, true))
                 {
                     LinkActivationRequestState state = JsonUtility.FromJson<LinkActivationRequestState>(data.Json);
                     ResolveLinkController()?.HandleActivationRequest(
@@ -860,6 +862,7 @@ namespace DrawBody.Prototype
 
             if (data.Kind == KindLinkState)
             {
+                if (IsHost || !IsLobbyHost(data.PlayerId)) return;
                 OnlineLinkGimmickState state = JsonUtility.FromJson<OnlineLinkGimmickState>(data.Json);
                 ResolveLinkController()?.ApplyNetworkState(data.ObjectId, state);
                 return;
@@ -871,16 +874,24 @@ namespace DrawBody.Prototype
                 {
                     HeldButtonState state =
                         JsonUtility.FromJson<HeldButtonState>(data.Json);
-                    ResolveLinkController()?.HandleHeldButtonRequest(
-                        data.ObjectId,
-                        state != null && state.Held);
+                    bool held = state != null && state.Held;
+                    bool accepted = held
+                        ? CanPlayerAffectObject(data.PlayerId, data.ObjectId, 3.5f, true)
+                        : heldButtonRequesters.TryGetValue(data.ObjectId, out string requester)
+                            && requester == data.PlayerId;
+                    if (accepted)
+                    {
+                        if (held) heldButtonRequesters[data.ObjectId] = data.PlayerId;
+                        else heldButtonRequesters.Remove(data.ObjectId);
+                        ResolveLinkController()?.HandleHeldButtonRequest(data.ObjectId, held);
+                    }
                 }
                 return;
             }
 
             if (data.Kind == KindCrumblingFloorRequest)
             {
-                if (IsHost)
+                if (IsHost && CanPlayerAffectObject(data.PlayerId, data.ObjectId, 2.75f, false))
                 {
                     ActivateCrumblingFloor(data.ObjectId, true);
                 }
@@ -889,6 +900,7 @@ namespace DrawBody.Prototype
 
             if (data.Kind == KindCrumblingFloorState)
             {
+                if (IsHost || !IsLobbyHost(data.PlayerId)) return;
                 if (!crumblingFloors.TryGetValue(data.ObjectId, out StageCrumblingFloor floor))
                 {
                     RebuildCrumblingFloorEntries();
@@ -977,9 +989,10 @@ namespace DrawBody.Prototype
 
             if (data.Kind == KindBombArmRequest)
             {
-                if (IsHost)
+                if (IsHost && CanPlayerAffectObject(data.PlayerId, data.ObjectId, 3.5f, true))
                 {
                     ApplyBombArm(data.ObjectId);
+                    bombArmedByPlayerId[data.ObjectId] = data.PlayerId;
                     SendBombArmState(data.ObjectId);
                 }
                 return;
@@ -997,13 +1010,15 @@ namespace DrawBody.Prototype
 
             if (data.Kind == KindBombDetonateRequest)
             {
-                if (IsHost) DetonateBombById(data.ObjectId);
+                if (IsHost && bombArmedByPlayerId.TryGetValue(data.ObjectId, out string armer)
+                    && armer == data.PlayerId)
+                    DetonateBombById(data.ObjectId);
                 return;
             }
 
             if (data.Kind == KindPlacedEnemyDefeatRequest)
             {
-                if (IsHost)
+                if (IsHost && CanPlayerAffectObject(data.PlayerId, data.ObjectId, 8f, false))
                 {
                     ApplyPlacedEnemyDefeat(data.ObjectId);
                     SendPlacedEnemyDefeatState(data.ObjectId);
@@ -1102,9 +1117,73 @@ namespace DrawBody.Prototype
 
             if (data.Kind == KindOwnershipState)
             {
+                if (IsHost || !IsLobbyHost(data.PlayerId)) return;
                 OwnershipState state = JsonUtility.FromJson<OwnershipState>(data.Json);
                 ApplyOwnershipState(data.ObjectId, state);
             }
+        }
+
+        private bool CanPlayerAffectObject(
+            string playerId,
+            string objectId,
+            float allowedDistance,
+            bool allowOwnedObject)
+        {
+            if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
+            PlayerController2D player = stageManager != null
+                ? stageManager.GetOnlinePlayerController(playerId)
+                : null;
+            if (player == null || string.IsNullOrEmpty(objectId)) return false;
+
+            if (allowOwnedObject)
+            {
+                string prefix = objectId + "/";
+                foreach (KeyValuePair<string, string> pair in ownersByObjectId)
+                    if (pair.Value == playerId
+                        && (pair.Key == objectId
+                            || pair.Key.StartsWith(prefix, System.StringComparison.Ordinal)))
+                        return true;
+            }
+
+            Transform target = FindInteractionTarget(objectId);
+            if (target == null) return false;
+            Collider2D[] playerColliders = player.GetComponentsInChildren<Collider2D>(false);
+            Collider2D[] targetColliders = target.GetComponentsInChildren<Collider2D>(false);
+            float closest = Vector2.Distance(player.transform.position, target.position);
+            for (int i = 0; i < playerColliders.Length; i++)
+            {
+                Collider2D a = playerColliders[i];
+                if (a == null || !a.enabled || a.isTrigger) continue;
+                for (int j = 0; j < targetColliders.Length; j++)
+                {
+                    Collider2D b = targetColliders[j];
+                    if (b == null || !b.enabled) continue;
+                    closest = Mathf.Min(closest, Mathf.Max(0f, a.Distance(b).distance));
+                }
+            }
+            Rigidbody2D playerBody = player.GetComponent<Rigidbody2D>();
+            float lagAllowance = playerBody != null
+                ? Mathf.Min(2.5f, playerBody.linearVelocity.magnitude * 0.22f)
+                : 0f;
+            return closest <= allowedDistance + lagAllowance;
+        }
+
+        private Transform FindInteractionTarget(string objectId)
+        {
+            StageEditorObject[] objects = GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < objects.Length; i++)
+                if (objects[i] != null && objects[i].objectId == objectId)
+                    return objects[i].transform;
+            if (crumblingFloors.TryGetValue(objectId, out StageCrumblingFloor floor) && floor != null)
+                return floor.transform;
+            StageBomb[] bombs = Object.FindObjectsByType<StageBomb>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < bombs.Length; i++)
+                if (bombs[i] != null && bombs[i].ObjectId == objectId) return bombs[i].transform;
+            StageEnemyCharacter[] enemies = Object.FindObjectsByType<StageEnemyCharacter>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < enemies.Length; i++)
+                if (enemies[i] != null && enemies[i].ObjectId == objectId) return enemies[i].transform;
+            return null;
         }
 
         private bool IsObjectFromDifferentStage(string objectId)
@@ -1836,6 +1915,7 @@ namespace DrawBody.Prototype
             dropperBoxStates.Remove(objectId);
             dropperBoxes.Remove(objectId);
             armedPickupBombs.Remove(objectId);
+            bombArmedByPlayerId.Remove(objectId);
         }
 
         private void ApplyBombArm(string objectId)

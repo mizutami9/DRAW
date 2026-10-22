@@ -9,9 +9,15 @@ namespace DrawBody.Prototype
     public static class LocalMultiplayerDebugMode
     {
         private static readonly bool noTimeLimit = DetectLocalRegressionLaunch();
+        private static readonly int simulatedLatencyMs = ReadIntArgument("-pico-net-latency-ms", 0, 1000);
+        private static readonly float simulatedLossPercent = ReadIntArgument("-pico-net-loss-percent", 0, 50);
+        private static readonly bool networkMonitor = HasArgument("-pico-net-monitor");
 
         public static bool NoTimeLimit => noTimeLimit;
-        public static bool Enabled => noTimeLimit;
+        public static bool Enabled => noTimeLimit || simulatedLatencyMs > 0 || simulatedLossPercent > 0f;
+        public static float SimulatedLatencySeconds => simulatedLatencyMs / 1000f;
+        public static float SimulatedLoss01 => simulatedLossPercent / 100f;
+        public static bool NetworkMonitor => networkMonitor;
 
         private static bool DetectLocalRegressionLaunch()
         {
@@ -23,6 +29,30 @@ namespace DrawBody.Prototype
                 if (string.Equals(
                     arg, "-pico-debug-no-time-limit", StringComparison.OrdinalIgnoreCase)) return true;
             }
+            return false;
+        }
+
+        private static int ReadIntArgument(string key, int minimum, int maximum)
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            string prefix = key + "=";
+            if (args == null) return minimum;
+            for (int i = 0; i < args.Length; i++)
+            {
+                string arg = args[i];
+                if (arg != null && arg.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                    && int.TryParse(arg.Substring(prefix.Length), out int value))
+                    return Mathf.Clamp(value, minimum, maximum);
+            }
+            return minimum;
+        }
+
+        private static bool HasArgument(string key)
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            if (args == null) return false;
+            for (int i = 0; i < args.Length; i++)
+                if (string.Equals(args[i], key, StringComparison.OrdinalIgnoreCase)) return true;
             return false;
         }
     }
@@ -65,6 +95,9 @@ namespace DrawBody.Prototype
 
     public sealed class OnlineManager : MonoBehaviour
     {
+        private const string DiagnosticObjectId = "__network_diagnostics";
+        private const string DiagnosticPingRequestKind = "network_diagnostic_ping_request";
+        private const string DiagnosticPingReplyKind = "network_diagnostic_ping_reply";
         [SerializeField] private OnlineBackendMode backendMode = OnlineBackendMode.Eos;
         [SerializeField] private bool autoLogin = true;
         [SerializeField] private bool allowEosInEditor = false;
@@ -77,6 +110,27 @@ namespace DrawBody.Prototype
         private string knownHostPlayerId;
         private LocalRegressionOptions localRegression;
         private bool integrityErrorReported;
+        private readonly List<ScheduledInboundPacket> scheduledInboundPackets =
+            new List<ScheduledInboundPacket>();
+        private readonly Dictionary<int, float> pendingDiagnosticPings = new Dictionary<int, float>();
+        private int nextDiagnosticPingToken;
+        private float nextDiagnosticPingAt;
+        private int inboundPacketCount;
+        private int simulatedDropCount;
+        private int networkCorrectionCount;
+
+        [Serializable]
+        private sealed class NetworkDiagnosticPing
+        {
+            public int Token;
+            public string TargetPlayerId;
+        }
+
+        private sealed class ScheduledInboundPacket
+        {
+            public float DeliverAt;
+            public Action Deliver;
+        }
 
         private sealed class LocalRegressionOptions
         {
@@ -114,6 +168,15 @@ namespace DrawBody.Prototype
         public string LocalPlayerId => backend != null ? backend.LocalPlayerId : string.Empty;
         public OnlineBackendMode EffectiveBackendMode => effectiveBackendMode;
         public bool IsLocalRegressionActive => localRegression != null;
+        public float LastNetworkRoundTripMs { get; private set; } = -1f;
+        public int InboundPacketCount => inboundPacketCount;
+        public int SimulatedDropCount => simulatedDropCount;
+        public int NetworkCorrectionCount => networkCorrectionCount;
+
+        public void RecordNetworkCorrection()
+        {
+            networkCorrectionCount++;
+        }
 
         public int GetInkBudgetPlayerCount()
         {
@@ -187,6 +250,37 @@ namespace DrawBody.Prototype
             return playerId == knownHostPlayerId;
         }
 
+        /// <summary>
+        /// Uses the live authoritative roster rather than a stage's start-time
+        /// participant cache. This keeps elimination/finish rules valid after a
+        /// participant leaves or joins an in-progress room.
+        /// </summary>
+        public bool IsCurrentLobbyPlayer(string playerId)
+        {
+            if (string.IsNullOrEmpty(playerId)) return false;
+            OnlinePlayerInfo[] players = CurrentLobby?.Players;
+            if (players == null) return false;
+            for (int i = 0; i < players.Length; i++)
+                if (players[i] != null && players[i].PlayerId == playerId) return true;
+            return false;
+        }
+
+        public bool AreAllCurrentLobbyPlayersIn(ICollection<string> playerIds)
+        {
+            if (playerIds == null) return false;
+            OnlinePlayerInfo[] players = CurrentLobby?.Players;
+            if (players == null || players.Length == 0) return false;
+            int activePlayers = 0;
+            for (int i = 0; i < players.Length; i++)
+            {
+                string playerId = players[i]?.PlayerId;
+                if (string.IsNullOrEmpty(playerId)) continue;
+                activePlayers++;
+                if (!playerIds.Contains(playerId)) return false;
+            }
+            return activePlayers > 0;
+        }
+
         private void Awake()
         {
             // The host owns the simulation. Window focus must not freeze the
@@ -227,6 +321,12 @@ namespace DrawBody.Prototype
             backend.CarryDataReceived += OnBackendCarryDataReceived;
             backend.GimmickDataReceived += OnBackendGimmickDataReceived;
             backend.Initialize();
+            if (LocalMultiplayerDebugMode.SimulatedLatencySeconds > 0f
+                || LocalMultiplayerDebugMode.SimulatedLoss01 > 0f)
+            {
+                Debug.Log($"[PICO NET SIM] latency={LocalMultiplayerDebugMode.SimulatedLatencySeconds * 1000f:0}ms "
+                    + $"loss={LocalMultiplayerDebugMode.SimulatedLoss01 * 100f:0}%");
+            }
         }
 
         private void Start()
@@ -334,14 +434,30 @@ namespace DrawBody.Prototype
                 JoinRoom(joinTarget);
                 float attemptDeadline = Time.unscaledTime + 1.5f;
                 while (State != OnlineConnectionState.InLobby
+                    && State != OnlineConnectionState.Playing
                     && State != OnlineConnectionState.Error
                     && Time.unscaledTime < attemptDeadline)
                     yield return null;
-                if (State == OnlineConnectionState.InLobby)
+                // A participant joining an already-running Direct room receives
+                // the lobby snapshot with a positive StageRevision and moves
+                // straight to Playing. Treat that as a successful join too;
+                // retrying JoinRoom would close the healthy stage connection.
+                if (State == OnlineConnectionState.InLobby
+                    || State == OnlineConnectionState.Playing)
                 {
                     if (localRegression.AiTest) yield return new WaitForSecondsRealtime(2f);
-                    ToggleReady();
-                    Debug.Log("[PICO REGRESSION] Joined local room and marked READY.");
+                    // READY belongs to the pre-game lobby. A late participant is
+                    // already in Playing and must not mutate lobby readiness after
+                    // StageManager has loaded the running stage.
+                    if (State == OnlineConnectionState.InLobby)
+                    {
+                        ToggleReady();
+                        Debug.Log("[PICO REGRESSION] Joined local room and marked READY.");
+                    }
+                    else
+                    {
+                        Debug.Log("[PICO REGRESSION] Joined the running stage without changing READY.");
+                    }
                     yield break;
                 }
                 Login();
@@ -452,6 +568,42 @@ namespace DrawBody.Prototype
             if (!shuttingDown)
             {
                 backend?.Tick();
+                FlushScheduledInboundPackets();
+                UpdateNetworkDiagnostics();
+            }
+        }
+
+        private bool TryScheduleInbound(Action deliver, bool allowSimulatedLoss)
+        {
+            if (deliver == null) return true;
+            if (allowSimulatedLoss && LocalMultiplayerDebugMode.SimulatedLoss01 > 0f
+                && UnityEngine.Random.value < LocalMultiplayerDebugMode.SimulatedLoss01)
+            {
+                simulatedDropCount++;
+                return true;
+            }
+            float delay = LocalMultiplayerDebugMode.SimulatedLatencySeconds;
+            if (delay <= 0f) return false;
+            scheduledInboundPackets.Add(new ScheduledInboundPacket
+            {
+                DeliverAt = Time.unscaledTime + delay,
+                Deliver = deliver
+            });
+            return true;
+        }
+
+        private void FlushScheduledInboundPackets()
+        {
+            for (int i = 0; i < scheduledInboundPackets.Count;)
+            {
+                ScheduledInboundPacket packet = scheduledInboundPackets[i];
+                if (packet != null && Time.unscaledTime < packet.DeliverAt)
+                {
+                    i++;
+                    continue;
+                }
+                scheduledInboundPackets.RemoveAt(i);
+                packet.Deliver?.Invoke();
             }
         }
 
@@ -792,6 +944,13 @@ namespace DrawBody.Prototype
 
         private void OnBackendPlayerStateReceived(OnlinePlayerState playerState)
         {
+            inboundPacketCount++;
+            if (TryScheduleInbound(() => DeliverBackendPlayerState(playerState), true)) return;
+            DeliverBackendPlayerState(playerState);
+        }
+
+        private void DeliverBackendPlayerState(OnlinePlayerState playerState)
+        {
             if (playerState == null || !AcceptRemoteContent(playerState.ContentFingerprint)
                 || !IsSanePlayerState(playerState) || !IsCurrentStageSession(
                     playerState.StageId, playerState.StageRevision, playerState.RetryRevision, false))
@@ -803,6 +962,7 @@ namespace DrawBody.Prototype
 
         private void OnBackendBodyDataReceived(OnlineBodyData bodyData)
         {
+            inboundPacketCount++;
             bool contentAccepted = bodyData != null && AcceptRemoteContent(bodyData.ContentFingerprint);
             bool sane = bodyData != null && IsSaneBodyData(bodyData);
             if (LocalMultiplayerDebugMode.Enabled)
@@ -875,6 +1035,7 @@ namespace DrawBody.Prototype
 
         private void OnBackendCarryDataReceived(OnlineCarryData carryData)
         {
+            inboundPacketCount++;
             if (carryData == null || !AcceptRemoteContent(carryData.ContentFingerprint)
                 || !IsSaneVector(carryData.ReleaseVelocity, 1000f)
                 || !IsSaneVector(carryData.ReleasePosition, 10000f)
@@ -889,6 +1050,19 @@ namespace DrawBody.Prototype
 
         private void OnBackendGimmickDataReceived(OnlineGimmickData gimmickData)
         {
+            inboundPacketCount++;
+            bool realtime = gimmickData != null && !string.IsNullOrEmpty(gimmickData.Kind)
+                && (gimmickData.Kind == "transform"
+                    || gimmickData.Kind.EndsWith("_state", StringComparison.Ordinal)
+                    || gimmickData.Kind.EndsWith("_snapshot", StringComparison.Ordinal)
+                    || gimmickData.Kind.EndsWith("_input", StringComparison.Ordinal)
+                    || gimmickData.Kind.EndsWith("_contact", StringComparison.Ordinal));
+            if (TryScheduleInbound(() => DeliverBackendGimmickData(gimmickData), realtime)) return;
+            DeliverBackendGimmickData(gimmickData);
+        }
+
+        private void DeliverBackendGimmickData(OnlineGimmickData gimmickData)
+        {
             bool isRetry = gimmickData != null && gimmickData.Kind == "stage_retry";
             if (gimmickData == null || !AcceptRemoteContent(gimmickData.ContentFingerprint)
                 || (gimmickData.Json != null && gimmickData.Json.Length > 1024 * 1024)
@@ -897,7 +1071,72 @@ namespace DrawBody.Prototype
             {
                 return;
             }
+            if (HandleNetworkDiagnostic(gimmickData)) return;
             GimmickDataReceived?.Invoke(gimmickData);
+        }
+
+        private void UpdateNetworkDiagnostics()
+        {
+            if (!LocalMultiplayerDebugMode.NetworkMonitor || CurrentLobby == null
+                || string.IsNullOrEmpty(LocalPlayerId) || IsHostPlayer(LocalPlayerId)
+                || Time.unscaledTime < nextDiagnosticPingAt) return;
+            nextDiagnosticPingAt = Time.unscaledTime + 2f;
+            int token = ++nextDiagnosticPingToken;
+            pendingDiagnosticPings[token] = Time.unscaledTime;
+            if (pendingDiagnosticPings.Count > 16)
+            {
+                var stale = new List<int>();
+                foreach (KeyValuePair<int, float> pair in pendingDiagnosticPings)
+                    if (Time.unscaledTime - pair.Value > 10f) stale.Add(pair.Key);
+                for (int i = 0; i < stale.Count; i++) pendingDiagnosticPings.Remove(stale[i]);
+            }
+            SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = DiagnosticObjectId,
+                Kind = DiagnosticPingRequestKind,
+                Json = JsonUtility.ToJson(new NetworkDiagnosticPing { Token = token })
+            });
+        }
+
+        private bool HandleNetworkDiagnostic(OnlineGimmickData data)
+        {
+            if (data == null || data.ObjectId != DiagnosticObjectId) return false;
+            NetworkDiagnosticPing ping = JsonUtility.FromJson<NetworkDiagnosticPing>(data.Json);
+            if (ping == null || ping.Token <= 0) return true;
+            if (data.Kind == DiagnosticPingRequestKind && IsHostPlayer(LocalPlayerId))
+            {
+                ping.TargetPlayerId = data.PlayerId;
+                SendGimmickData(new OnlineGimmickData
+                {
+                    ObjectId = DiagnosticObjectId,
+                    Kind = DiagnosticPingReplyKind,
+                    Json = JsonUtility.ToJson(ping)
+                });
+                return true;
+            }
+            if (data.Kind == DiagnosticPingReplyKind && IsHostPlayer(data.PlayerId)
+                && ping.TargetPlayerId == LocalPlayerId
+                && pendingDiagnosticPings.TryGetValue(ping.Token, out float sentAt))
+            {
+                pendingDiagnosticPings.Remove(ping.Token);
+                LastNetworkRoundTripMs = Mathf.Max(0f, (Time.unscaledTime - sentAt) * 1000f);
+            }
+            return true;
+        }
+
+        private void OnGUI()
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (!LocalMultiplayerDebugMode.NetworkMonitor) return;
+            GUI.Box(new Rect(8f, 8f, 290f, 70f), string.Empty);
+            string role = IsHostPlayer(LocalPlayerId) ? "HOST" : "CLIENT";
+            string rtt = LastNetworkRoundTripMs >= 0f ? $"{LastNetworkRoundTripMs:0}ms" : "--";
+            GUI.Label(new Rect(18f, 14f, 270f, 20f), $"NET {role}  RTT {rtt}");
+            GUI.Label(new Rect(18f, 34f, 270f, 20f),
+                $"RX {InboundPacketCount}  DROP {SimulatedDropCount}  CORR {NetworkCorrectionCount}");
+            GUI.Label(new Rect(18f, 54f, 270f, 20f),
+                $"SIM {LocalMultiplayerDebugMode.SimulatedLatencySeconds * 1000f:0}ms / {LocalMultiplayerDebugMode.SimulatedLoss01 * 100f:0}%");
+#endif
         }
 
         private bool CanUseOnline()

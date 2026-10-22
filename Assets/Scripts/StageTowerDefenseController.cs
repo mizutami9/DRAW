@@ -778,15 +778,18 @@ namespace DrawBody.Prototype
             if (data.Kind == ButtonRequestKind && HasAuthority)
             {
                 ButtonRequest request = JsonUtility.FromJson<ButtonRequest>(data.Json);
-                if (request != null) ActivateButton(request.Left);
+                if (request != null && CanAcceptButtonRequest(data.PlayerId, request.Left))
+                    ActivateButton(request.Left);
                 return;
             }
-            if (data.Kind == EnemyStateKind && !HasAuthority)
+            if (data.Kind == EnemyStateKind && !HasAuthority && onlineManager != null
+                && onlineManager.IsHostPlayer(data.PlayerId))
             {
                 ReceiveEnemyBatch(JsonUtility.FromJson<EnemyBatch>(data.Json));
                 return;
             }
-            if (data.Kind != StateKind || HasAuthority) return;
+            if (data.Kind != StateKind || HasAuthority || onlineManager == null
+                || !onlineManager.IsHostPlayer(data.PlayerId)) return;
             DefenseState state = JsonUtility.FromJson<DefenseState>(data.Json);
             if (state == null || state.Sequence <= lastStateSequence) return;
             lastStateSequence = state.Sequence;
@@ -805,6 +808,15 @@ namespace DrawBody.Prototype
                 if (matchState == MatchState.Failed) ally?.PlayDefeat();
                 else if (matchState == MatchState.Clear) ally?.PlayClearFlight();
             }
+        }
+
+        private bool CanAcceptButtonRequest(string playerId, bool left)
+        {
+            if (matchState != MatchState.Playing || stageManager == null
+                || string.IsNullOrEmpty(playerId)) return false;
+            PlayerController2D player = stageManager.GetOnlinePlayerController(playerId);
+            StageTowerDefenseButton button = left ? leftButton : rightButton;
+            return player != null && button != null && button.IsPlayerNear(player.transform.position);
         }
 
         private void ReceiveEnemyBatch(EnemyBatch batch)
@@ -1070,6 +1082,15 @@ namespace DrawBody.Prototype
                 }
                 if (glow != null) glow.color = new Color(0.15f, 0.95f, 0.68f, 0.72f);
             }
+        }
+
+        public bool IsPlayerNear(Vector2 position)
+        {
+            Collider2D trigger = GetComponent<Collider2D>();
+            if (trigger == null) return Vector2.Distance(position, transform.position) <= 2.5f;
+            Vector2 closest = trigger.ClosestPoint(position);
+            // Remote transforms trail the owner slightly on poor connections.
+            return Vector2.Distance(closest, position) <= 2.5f;
         }
     }
 

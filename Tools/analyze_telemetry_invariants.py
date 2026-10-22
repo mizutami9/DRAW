@@ -172,6 +172,10 @@ def analyze_telemetry_run(run_dir):
             if revision != active_roster_revision:
                 active_roster_revision = revision
                 roster_revision_started_at = elapsed
+                # Slot assignment is allowed to be recomputed when the visible
+                # lobby roster changes (for example, while the fourth client is
+                # still joining). Drift is only suspicious inside one revision.
+                slot_history.clear()
             frame["_rosterAge"] = max(0.0, elapsed - roster_revision_started_at)
             if not isinstance(revision, int) or revision <= 0 or not signature:
                 add_anomaly(anomalies, "Roster Version Missing", frame, client_name, "ALL",
@@ -285,6 +289,7 @@ def analyze_telemetry_run(run_dir):
             if other_name == reference_name:
                 continue
             position_disagreement_since = {}
+            species_disagreement_since = {}
             for reference in reference_frames:
                 timestamp = reference.get("_utc")
                 if timestamp is None or reference.get("stage") in ("title", "unknown"):
@@ -335,6 +340,7 @@ def analyze_telemetry_run(run_dir):
                             or reference_player.get("species") == "Missing"
                             or other_player.get("species") == "Missing"):
                         position_disagreement_since.pop(player_id, None)
+                        species_disagreement_since.pop(player_id, None)
                         continue
                     reference_position = reference_player.get("position", {"x": 0.0, "y": 0.0})
                     other_position = other_player.get("position", {"x": 0.0, "y": 0.0})
@@ -364,10 +370,17 @@ def analyze_telemetry_run(run_dir):
                     else:
                         position_disagreement_since.pop(player_id, None)
                     if reference_player.get("species") != other_player.get("species"):
-                        add_anomaly(
-                            anomalies, "Species / Avatar Desync", reference,
-                            f"{reference_name} vs {other_name}", player_id,
-                            f"Species are {reference_player.get('species')} and {other_player.get('species')}")
+                        species_disagreement_since.setdefault(player_id, timestamp)
+                        species_disagreement_duration = timestamp - species_disagreement_since[player_id]
+                        if species_disagreement_duration >= 2.0:
+                            add_anomaly(
+                                anomalies, "Species / Avatar Desync", reference,
+                                f"{reference_name} vs {other_name}", player_id,
+                                f"Species are {reference_player.get('species')} and "
+                                f"{other_player.get('species')} for "
+                                f"{species_disagreement_duration:.1f}s")
+                    else:
+                        species_disagreement_since.pop(player_id, None)
 
                 for slot in set(reference_by_slot).intersection(other_by_slot):
                     reference_owners = set(reference_by_slot[slot])

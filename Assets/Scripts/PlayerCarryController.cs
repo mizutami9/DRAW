@@ -715,6 +715,20 @@ namespace DrawBody.Prototype
                 targetBody.linearVelocity + velocityChange, speedLimit);
         }
 
+        public void RollbackDirectWeaponRecoil(Vector2 appliedVelocityChange)
+        {
+            PlayerCarryController recoilTarget = FindCarrierOfThisPlayer() ?? this;
+            Rigidbody2D targetBody = recoilTarget.playerBody;
+            if (targetBody == null || targetBody.bodyType != RigidbodyType2D.Dynamic) return;
+            PlayerController2D targetController = recoilTarget.playerController;
+            if (targetController != null)
+            {
+                targetController.RollbackWeaponRecoil(appliedVelocityChange);
+                return;
+            }
+            targetBody.linearVelocity -= appliedVelocityChange;
+        }
+
         private PlayerCarryController FindCarrierOfThisPlayer()
         {
             PlayerCarryController[] carriers = FindObjectsByType<PlayerCarryController>(FindObjectsSortMode.None);
@@ -1930,6 +1944,7 @@ namespace DrawBody.Prototype
             heldPlayerPreviousControlsEnabled = false;
             heldBody = null;
             heldOnlinePlayerId = null;
+            heldPlayerCarryProxy = null;
             hasDisplayedThrowDirection = false;
             heldColliders.Clear();
             heldColliderSet.Clear();

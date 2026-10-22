@@ -257,6 +257,11 @@ namespace DrawBody.Prototype
             arenaRoot = arena.transform;
 
             CreateBackground();
+            // The controller removes the editable preview objects when play
+            // begins, which also removes StageLoader's shared backdrop. Rebuild
+            // it inside every randomized room so the carnival scenery survives
+            // round changes as well as retries.
+            factory?.CreateAmusementParkStageBackdrop(StageId, null, arenaRoot);
             CreateRoomBoundary();
             CreateMonitor();
             CreatePoseKeys();
@@ -273,7 +278,10 @@ namespace DrawBody.Prototype
             Color paper = new Color(0.8f, 0.94f, 0.98f, 0.24f);
             StageEscortController.AddFilledRect(arenaRoot, "Room Paper",
                 new Vector2(0f, (FloorY + CeilingY) * 0.5f),
-                new Vector2(RoomHalfWidth * 2f, CeilingY - FloorY), paper, -55);
+                // Keep the room tint behind the shared amusement-park scenery.
+                // At -55 it covered the Ferris wheel, carousel and coaster, so
+                // only the themed frame remained visible in 7-1.
+                new Vector2(RoomHalfWidth * 2f, CeilingY - FloorY), paper, -94);
 
             Color pencil = new Color(0.24f, 0.66f, 0.84f, 0.15f);
             for (int i = 0; i < 9; i++)
@@ -286,8 +294,11 @@ namespace DrawBody.Prototype
 
         private void CreateRoomBoundary()
         {
-            CreateSolid("Pose Room Floor", new Vector2(0f, FloorY), new Vector2(28.5f, 0.72f));
-            CreateSolid("Pose Room Ceiling", new Vector2(0f, CeilingY), new Vector2(28.5f, 0.62f));
+            const float wallThickness = 0.62f;
+            CreateSolid("Pose Room Floor", new Vector2(0f, FloorY),
+                new Vector2(RoomHalfWidth * 2f - wallThickness, 0.72f));
+            CreateSolid("Pose Room Ceiling", new Vector2(0f, CeilingY),
+                new Vector2(RoomHalfWidth * 2f + wallThickness, wallThickness));
             CreateSolid("Pose Room Left Wall", new Vector2(-RoomHalfWidth, 0.7f), new Vector2(0.62f, 10.8f));
             CreateSolid("Pose Room Right Wall", new Vector2(RoomHalfWidth, 0.7f), new Vector2(0.62f, 10.8f));
         }
@@ -331,7 +342,7 @@ namespace DrawBody.Prototype
             }, 0.06f, new Color(0.2f, 0.15f, 0.1f, 0.9f), 4);
         }
 
-        private static void AddAmusementFloorVisual(Transform parent, Vector2 size)
+        internal static void AddAmusementFloorVisual(Transform parent, Vector2 size)
         {
             StageEscortController.AddFilledRect(
                 parent, "Pastel Blue Floor Side", Vector2.zero, size,
@@ -361,7 +372,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static void AddAmusementCeilingVisual(Transform parent, Vector2 size)
+        internal static void AddAmusementCeilingVisual(Transform parent, Vector2 size)
         {
             StageEscortController.AddFilledRect(
                 parent, "Cream Wooden Ceiling", Vector2.zero, size,
@@ -394,7 +405,7 @@ namespace DrawBody.Prototype
             }
         }
 
-        private static void AddAmusementWallVisual(Transform parent, Vector2 size)
+        internal static void AddAmusementWallVisual(Transform parent, Vector2 size)
         {
             int stripeCount = 3;
             float stripeWidth = size.x / stripeCount;

@@ -13,6 +13,7 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "3-1";
         private const string StateKind = "stage31_updraft_state";
+        private const string ButtonRequestKind = "stage31_updraft_button_request";
         private const float StateInterval = 0.2f;
 
         [System.Serializable]
@@ -23,6 +24,13 @@ namespace DrawBody.Prototype
             public bool SectionOneOpen;
             public int ActiveRelayWind;
             public bool HumanDoorOpen;
+        }
+
+        [System.Serializable]
+        private sealed class ButtonRequest
+        {
+            public int Button;
+            public Vector2 PlayerPosition;
         }
 
         private sealed class ButtonVisual
@@ -65,6 +73,8 @@ namespace DrawBody.Prototype
         private int lastReceivedSequence;
         private float nextStateAt;
         private bool ready;
+        private float nextLocalButtonRequestAt;
+        private readonly Dictionary<string, float> lastButtonRequestAt = new Dictionary<string, float>();
 
         private void Awake()
         {
@@ -121,6 +131,28 @@ namespace DrawBody.Prototype
             SetButtonVisual(redButton, redPressed || activeRelayWind == 2);
             SetButtonVisual(greenButton, greenPressed || activeRelayWind == 3);
             SetButtonVisual(birdGoalButton, birdGoalPressed || humanDoorOpen);
+
+            if (!HasAuthority() && Time.unscaledTime >= nextLocalButtonRequestAt)
+            {
+                PlayerController2D local = stageManager.ActivePlayerTransform != null
+                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
+                    : null;
+                int requested = GetPressedButton(local);
+                if (requested >= 0)
+                {
+                    nextLocalButtonRequestAt = Time.unscaledTime + 0.18f;
+                    onlineManager?.SendGimmickData(new OnlineGimmickData
+                    {
+                        ObjectId = StageId,
+                        Kind = ButtonRequestKind,
+                        Json = JsonUtility.ToJson(new ButtonRequest
+                        {
+                            Button = requested,
+                            PlayerPosition = local.transform.position
+                        })
+                    });
+                }
+            }
 
             if (HasAuthority())
             {
@@ -351,6 +383,39 @@ namespace DrawBody.Prototype
             return false;
         }
 
+        private int GetPressedButton(PlayerController2D player)
+        {
+            if (IsPlayerPressingButton(player, valleyButton, DrawManager.Species.Bird)) return 0;
+            if (IsPlayerPressingButton(player, blueButton, DrawManager.Species.Human)) return 1;
+            if (IsPlayerPressingButton(player, redButton, DrawManager.Species.Human)) return 2;
+            if (IsPlayerPressingButton(player, greenButton, DrawManager.Species.Human)) return 3;
+            if (IsPlayerPressingButton(player, birdGoalButton, DrawManager.Species.Bird)) return 4;
+            return -1;
+        }
+
+        private static bool IsPlayerPressingButton(
+            PlayerController2D player, Transform button, DrawManager.Species species)
+        {
+            if (player == null || button == null || !button.gameObject.activeInHierarchy) return false;
+            PlayerAbilityController ability = player.GetComponent<PlayerAbilityController>();
+            Collider2D buttonCollider = button.GetComponent<Collider2D>();
+            if (ability == null || ability.CurrentProfile.Species != species || buttonCollider == null) return false;
+            Bounds bounds = buttonCollider.bounds;
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(false);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger) continue;
+                Bounds body = collider.bounds;
+                if (bounds.Intersects(body)
+                    || body.max.x >= bounds.min.x + 0.06f
+                        && body.min.x <= bounds.max.x - 0.06f
+                        && body.min.y >= bounds.min.y - 0.18f
+                        && body.min.y <= bounds.max.y + 0.65f) return true;
+            }
+            return false;
+        }
+
         private bool AreHumanAndBirdOnFirstRightBank()
         {
             bool human = false;
@@ -400,8 +465,21 @@ namespace DrawBody.Prototype
 
         private void HandleNetworkData(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId || data.Kind != StateKind
-                || HasAuthority() || !IsHostPlayer(data.PlayerId))
+            if (data == null || data.ObjectId != StageId) return;
+            if (data.Kind == ButtonRequestKind && HasAuthority())
+            {
+                ButtonRequest request = JsonUtility.FromJson<ButtonRequest>(data.Json);
+                PlayerController2D player = stageManager.GetOnlinePlayerController(data.PlayerId);
+                if (request == null || player == null
+                    || !ValidateButtonRequest(player, request)) return;
+                string key = data.PlayerId + ":" + request.Button;
+                if (lastButtonRequestAt.TryGetValue(key, out float last)
+                    && Time.unscaledTime - last < 0.15f) return;
+                lastButtonRequestAt[key] = Time.unscaledTime;
+                ApplyRequestedButton(request.Button);
+                return;
+            }
+            if (data.Kind != StateKind || HasAuthority() || !IsHostPlayer(data.PlayerId))
             {
                 return;
             }
@@ -413,6 +491,54 @@ namespace DrawBody.Prototype
             activeRelayWind = Mathf.Clamp(state.ActiveRelayWind, 0, 3);
             humanDoorOpen = state.HumanDoorOpen;
             ApplyStateVisuals();
+        }
+
+        private bool ValidateButtonRequest(PlayerController2D player, ButtonRequest request)
+        {
+            Transform button = request.Button == 0 ? valleyButton
+                : request.Button == 1 ? blueButton
+                : request.Button == 2 ? redButton
+                : request.Button == 3 ? greenButton
+                : request.Button == 4 ? birdGoalButton
+                : null;
+            DrawManager.Species expected = request.Button == 0 || request.Button == 4
+                ? DrawManager.Species.Bird
+                : DrawManager.Species.Human;
+            PlayerAbilityController ability = player.GetComponent<PlayerAbilityController>();
+            Collider2D collider = button != null ? button.GetComponent<Collider2D>() : null;
+            if (button == null || collider == null || ability == null
+                || ability.CurrentProfile.Species != expected
+                || Vector2.Distance(player.transform.position, request.PlayerPosition) > 3.5f) return false;
+            return Vector2.Distance(collider.ClosestPoint(request.PlayerPosition), request.PlayerPosition) <= 0.85f;
+        }
+
+        private void ApplyRequestedButton(int button)
+        {
+            bool changed = false;
+            Transform source = null;
+            if (button == 0 && !valleyWindOn)
+            {
+                valleyWindOn = true;
+                source = valleyButton;
+                changed = true;
+            }
+            else if (button >= 1 && button <= 3 && activeRelayWind != button)
+            {
+                activeRelayWind = button;
+                source = button == 1 ? blueButton : button == 2 ? redButton : greenButton;
+                changed = true;
+            }
+            else if (button == 4 && activeRelayWind == 3 && !humanDoorOpen)
+            {
+                humanDoorOpen = true;
+                source = birdGoalButton;
+                changed = true;
+                GameSfx.PlayAt(SfxId.DoorOpen, humanDoor.position);
+            }
+            if (!changed) return;
+            PlaySwitch(source);
+            ApplyStateVisuals();
+            BroadcastState(true);
         }
 
         private void BroadcastState(bool force = false)

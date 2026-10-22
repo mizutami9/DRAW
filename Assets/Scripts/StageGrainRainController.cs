@@ -8,6 +8,7 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "9-3";
         private const string StateKind = "grain_rain_state";
+        private const string CarryStateKind = "grain_rain_carry_state";
         private const int TotalRounds = 3;
         private const float IntroSeconds = 7f;
         private const float RainSeconds = 10f;
@@ -34,7 +35,9 @@ namespace DrawBody.Prototype
         [System.Serializable]
         private sealed class RainState
         {
+            public int Sequence;
             public int Round;
+            public int Attempt;
             public int State;
             public int SpawnSequence;
             public int ForecastSequence;
@@ -44,6 +47,17 @@ namespace DrawBody.Prototype
             public float MeasuredGrams;
             public float TargetGrams;
             public bool Success;
+        }
+
+        [System.Serializable]
+        private sealed class CarryState
+        {
+            public int Sequence;
+            public int Round;
+            public int Attempt;
+            public string PackedSequences;
+            [System.NonSerialized]
+            public float ReceivedAt;
         }
 
         private StageManager stageManager;
@@ -74,10 +88,17 @@ namespace DrawBody.Prototype
         private int localForecastSequence;
         private int thirdRoundSpawnBase;
         private int round = 1;
+        private int roundAttempt;
+        private int stateSequence;
+        private int receivedStateSequence;
         private int playerCount = 1;
         private float nextForecastAt;
         private float forecastBurstAt = -1f;
         private readonly List<GameObject> forecastMarkers = new List<GameObject>();
+        private readonly Dictionary<string, CarryState> remoteCarryStates = new Dictionary<string, CarryState>();
+        private readonly Dictionary<string, int> remoteCarrySequences = new Dictionary<string, int>();
+        private float nextCarryStateAt;
+        private int localCarryStateSequence;
 
         private bool HasAuthority => syncManager == null || !syncManager.IsOnlineActive || syncManager.IsHost;
 
@@ -135,6 +156,12 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
             EnsureCarriers(false);
+            if (!HasAuthority && (state == RoundState.Rain || state == RoundState.Settle)
+                && Time.unscaledTime >= nextCarryStateAt)
+            {
+                nextCarryStateAt = Time.unscaledTime + 0.12f;
+                SendLocalCarryState();
+            }
             if (state == RoundState.Intro) countdownPresenter?.Show(remaining);
             else if (state == RoundState.Result && !success) countdownPresenter?.ShowGameOver();
             else countdownPresenter?.Hide();
@@ -233,6 +260,7 @@ namespace DrawBody.Prototype
         private void BeginRound(int nextRound)
         {
             round = Mathf.Clamp(nextRound, 1, TotalRounds);
+            roundAttempt++;
             state = RoundState.Intro;
             remaining = 4f;
             resultRemaining = 0f;
@@ -245,6 +273,8 @@ namespace DrawBody.Prototype
             ClearForecastMarkers();
             ClearParticles();
             EnsureCarriers(true);
+            remoteCarryStates.Clear();
+            remoteCarrySequences.Clear();
             BroadcastState(true);
         }
 
@@ -368,6 +398,7 @@ namespace DrawBody.Prototype
             }
             StageGrainParticle particle = renderer.gameObject.AddComponent<StageGrainParticle>();
             particle.Configure(DrawManager.Species.Human, new Vector2(drift, -fallSpeed), grams, gravity, true);
+            particle.SetNetworkSequence(sequence);
             if (round == 2)
             {
                 // The blizzard enters horizontally, but once a grain actually
@@ -442,8 +473,23 @@ namespace DrawBody.Prototype
             BroadcastState(true);
         }
 
-        private static float GetCurrentlyCarriedGrams()
+        private float GetCurrentlyCarriedGrams()
         {
+            if (syncManager != null && syncManager.IsOnlineActive && syncManager.IsHost)
+            {
+                HashSet<int> uniqueSequences = GetLocalCarriedParticleSequences();
+                foreach (KeyValuePair<string, CarryState> pair in remoteCarryStates)
+                {
+                    if (stageManager.GetOnlinePlayerController(pair.Key) == null
+                        || pair.Value == null
+                        || Time.unscaledTime - pair.Value.ReceivedAt > 0.75f) continue;
+                    AddPackedSequences(pair.Value.PackedSequences, authoritativeSpawnSequence, uniqueSequences);
+                }
+                float total = 0f;
+                foreach (int sequence in uniqueSequences) total += GetGramsForSequence(sequence);
+                return total;
+            }
+
             float grams = 0f;
             foreach (StageGrainParticle particle in StageGrainParticle.All)
             {
@@ -462,14 +508,95 @@ namespace DrawBody.Prototype
             return grams;
         }
 
+        private HashSet<int> GetLocalCarriedParticleSequences()
+        {
+            Transform active = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            StageGrainCarrier carrier = active != null ? active.GetComponent<StageGrainCarrier>() : null;
+            HashSet<int> sequences = new HashSet<int>();
+            if (carrier == null) return sequences;
+            foreach (StageGrainParticle particle in StageGrainParticle.All)
+                if (particle != null && particle.NetworkSequence > 0
+                    && particle.IsContainedByForMeasurement(carrier))
+                    sequences.Add(particle.NetworkSequence);
+            return sequences;
+        }
+
+        private string PackLocalCarriedParticleSequences()
+        {
+            int byteCount = Mathf.Max(0, (authoritativeSpawnSequence + 7) / 8);
+            if (byteCount == 0) return string.Empty;
+            byte[] bits = new byte[byteCount];
+            foreach (int sequence in GetLocalCarriedParticleSequences())
+            {
+                int index = sequence - 1;
+                if (index < 0 || index >= byteCount * 8) continue;
+                bits[index >> 3] |= (byte)(1 << (index & 7));
+            }
+            return System.Convert.ToBase64String(bits);
+        }
+
+        private static void AddPackedSequences(string packed, int maximumSequence, HashSet<int> target)
+        {
+            if (string.IsNullOrEmpty(packed) || target == null || maximumSequence <= 0) return;
+            byte[] bits;
+            try { bits = System.Convert.FromBase64String(packed); }
+            catch (System.FormatException) { return; }
+            int count = Mathf.Min(maximumSequence, bits.Length * 8);
+            for (int index = 0; index < count; index++)
+                if ((bits[index >> 3] & 1 << (index & 7)) != 0) target.Add(index + 1);
+        }
+
+        private static float GetGramsForSequence(int sequence)
+        {
+            System.Random random = new System.Random(930031 + sequence * 7919);
+            float roll = (float)random.NextDouble();
+            return roll < 0.52f ? 3f : roll < 0.78f ? 6f : roll < 0.91f ? 12f : roll < 0.98f ? 20f : 40f;
+        }
+
+        private void SendLocalCarryState()
+        {
+            if (onlineManager == null) return;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = CarryStateKind,
+                Json = JsonUtility.ToJson(new CarryState
+                {
+                    Sequence = ++localCarryStateSequence,
+                    Round = round,
+                    Attempt = roundAttempt,
+                    PackedSequences = PackLocalCarriedParticleSequences()
+                })
+            });
+        }
+
         private void HandleNetworkData(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId || data.Kind != StateKind || HasAuthority) return;
+            if (data == null || data.ObjectId != StageId) return;
+            if (data.Kind == CarryStateKind && HasAuthority)
+            {
+                CarryState carry = JsonUtility.FromJson<CarryState>(data.Json);
+                if (carry != null && carry.Round == round && carry.Attempt == roundAttempt
+                    && !string.IsNullOrEmpty(data.PlayerId)
+                    && stageManager.GetOnlinePlayerController(data.PlayerId) != null)
+                {
+                    if (remoteCarrySequences.TryGetValue(data.PlayerId, out int appliedSequence)
+                        && carry.Sequence <= appliedSequence) return;
+                    remoteCarrySequences[data.PlayerId] = carry.Sequence;
+                    carry.ReceivedAt = Time.unscaledTime;
+                    remoteCarryStates[data.PlayerId] = carry;
+                }
+                return;
+            }
+            if (data.Kind != StateKind || HasAuthority || onlineManager == null
+                || !onlineManager.IsHostPlayer(data.PlayerId)) return;
             RainState snapshot = JsonUtility.FromJson<RainState>(data.Json);
-            if (snapshot == null) return;
-            if (snapshot.Round != round)
+            if (snapshot == null || snapshot.Sequence <= receivedStateSequence) return;
+            receivedStateSequence = snapshot.Sequence;
+            if (snapshot.Round != round || snapshot.Attempt != roundAttempt)
             {
                 round = Mathf.Clamp(snapshot.Round, 1, TotalRounds);
+                roundAttempt = snapshot.Attempt;
                 ClearParticles();
                 ClearForecastMarkers();
                 EnsureCarriers(true);
@@ -493,7 +620,9 @@ namespace DrawBody.Prototype
             nextBroadcastAt = Time.unscaledTime + 0.18f;
             RainState snapshot = new RainState
             {
+                Sequence = ++stateSequence,
                 Round = round,
+                Attempt = roundAttempt,
                 State = (int)state,
                 SpawnSequence = authoritativeSpawnSequence,
                 ForecastSequence = authoritativeForecastSequence,

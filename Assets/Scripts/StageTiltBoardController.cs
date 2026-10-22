@@ -10,6 +10,7 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "8-3";
         private const string StateKind = "tilt_board_state";
+        private const string MagnetInputKind = "tilt_board_magnet_input";
         private const float RoundSeconds = 60f;
         private const float CountdownSeconds = 3f;
         private const float BallRadius = 0.42f;
@@ -31,6 +32,15 @@ namespace DrawBody.Prototype
             public Vector2 MagneticField;
             public Vector2[] Balls;
             public Vector2[] Velocities;
+        }
+
+        [System.Serializable]
+        private sealed class MagnetInputState
+        {
+            public int Sequence;
+            public int Round;
+            public int Variant;
+            public Vector2 Position;
         }
 
         private sealed class BallState
@@ -69,6 +79,10 @@ namespace DrawBody.Prototype
             new Dictionary<PlayerController2D, TiltBoardMagnetVisual>();
         private readonly List<TiltBoardMagneticLinkVisual> magneticLinks =
             new List<TiltBoardMagneticLinkVisual>(12);
+        private readonly Dictionary<string, MagnetInputState> remoteMagnetInputs =
+            new Dictionary<string, MagnetInputState>();
+        private readonly Dictionary<string, float> remoteMagnetInputTimes = new Dictionary<string, float>();
+        private readonly Dictionary<string, int> remoteMagnetInputSequences = new Dictionary<string, int>();
 
         private StageManager stageManager;
         private StageLoader stageLoader;
@@ -98,6 +112,8 @@ namespace DrawBody.Prototype
         private Vector3 previousCameraPosition;
         private float previousCameraSize;
         private BoardPhase phase;
+        private float nextMagnetInputAt;
+        private int localMagnetInputSequence;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -157,6 +173,12 @@ namespace DrawBody.Prototype
             ConfigureCamera();
             PreparePlayers();
             AnimateBoard();
+
+            if (!HasAuthority && phase == BoardPhase.Active && Time.unscaledTime >= nextMagnetInputAt)
+            {
+                nextMagnetInputAt = Time.unscaledTime + 0.05f;
+                SendLocalMagnetInput();
+            }
 
             if (!HasAuthority)
             {
@@ -220,6 +242,9 @@ namespace DrawBody.Prototype
             transitionRemaining = 0f;
             filledMask = 0;
             magneticField = Vector2.zero;
+            remoteMagnetInputs.Clear();
+            remoteMagnetInputTimes.Clear();
+            remoteMagnetInputSequences.Clear();
             BuildArena();
             RefreshMagneticVisuals();
             StartCoroutine(PositionPlayersAfterBuild());
@@ -736,24 +761,54 @@ namespace DrawBody.Prototype
             magneticField = Vector2.MoveTowards(magneticField, target, Time.deltaTime * 2.4f);
         }
 
-        private static Vector2 CalculateMagneticForce(Vector2 point)
+        private Vector2 CalculateMagneticForce(Vector2 point)
         {
+            if (IsOnline && HasAuthority)
+            {
+                Vector2 onlineForce = Vector2.zero;
+                PlayerController2D local = stageManager.ActivePlayerTransform != null
+                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
+                    : null;
+                if (local != null) onlineForce += CalculatePlayerMagneticForce(local.transform.position,
+                    GetPlayerInk(local), point);
+                foreach (KeyValuePair<string, MagnetInputState> pair in remoteMagnetInputs)
+                {
+                    PlayerController2D player = stageManager.GetOnlinePlayerController(pair.Key);
+                    float age = remoteMagnetInputTimes.TryGetValue(pair.Key, out float receivedAt)
+                        ? Time.unscaledTime - receivedAt
+                        : float.PositiveInfinity;
+                    if (player == null || pair.Value == null || pair.Value.Round != round
+                        || pair.Value.Variant != layoutVariant || age > 0.75f) continue;
+                    float freshness = age <= 0.4f ? 1f : Mathf.InverseLerp(0.75f, 0.4f, age);
+                    onlineForce += CalculatePlayerMagneticForce(
+                        pair.Value.Position, GetPlayerInk(player), point) * freshness;
+                }
+                return Vector2.ClampMagnitude(onlineForce, 1.6f);
+            }
+
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             Vector2 force = Vector2.zero;
             for (int i = 0; i < players.Length; i++)
             {
-                PlayerAbilityController ability = players[i].GetComponent<PlayerAbilityController>();
-                float ink = ability != null ? Mathf.Max(0f, ability.CurrentProfile.TotalInk) : 0f;
-                Vector2 delta = (Vector2)players[i].transform.position - point;
-                float distance = Mathf.Max(0.8f, delta.magnitude);
-                // INK is deliberately dominant. Direction depends on where the
-                // character stands, but proximity never lets a light character
-                // overpower a distant high-INK character.
-                float inkStrength = Mathf.Pow(ink / 350f, 2.35f);
-                force += delta / distance * inkStrength;
+                force += CalculatePlayerMagneticForce(players[i].transform.position,
+                    GetPlayerInk(players[i]), point);
             }
             return Vector2.ClampMagnitude(force, 1.6f);
+        }
+
+        private static float GetPlayerInk(PlayerController2D player)
+        {
+            PlayerAbilityController ability = player != null ? player.GetComponent<PlayerAbilityController>() : null;
+            return ability != null ? Mathf.Max(0f, ability.CurrentProfile.TotalInk) : 0f;
+        }
+
+        private static Vector2 CalculatePlayerMagneticForce(Vector2 position, float ink, Vector2 point)
+        {
+            Vector2 delta = position - point;
+            float distance = Mathf.Max(0.8f, delta.magnitude);
+            float inkStrength = Mathf.Pow(ink / 350f, 2.35f);
+            return delta / distance * inkStrength;
         }
 
         private void SimulateBalls(float deltaTime)
@@ -1162,8 +1217,21 @@ namespace DrawBody.Prototype
 
         private void HandleNetworkState(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId || data.Kind != StateKind
-                || HasAuthority || !IsHost(data.PlayerId)) return;
+            if (data == null || data.ObjectId != StageId) return;
+            if (data.Kind == MagnetInputKind && HasAuthority)
+            {
+                MagnetInputState input = JsonUtility.FromJson<MagnetInputState>(data.Json);
+                PlayerController2D player = stageManager.GetOnlinePlayerController(data.PlayerId);
+                if (input == null || player == null || input.Round != round || input.Variant != layoutVariant
+                    || Vector2.Distance(player.transform.position, input.Position) > 5f) return;
+                if (remoteMagnetInputSequences.TryGetValue(data.PlayerId, out int appliedSequence)
+                    && input.Sequence <= appliedSequence) return;
+                remoteMagnetInputSequences[data.PlayerId] = input.Sequence;
+                remoteMagnetInputs[data.PlayerId] = input;
+                remoteMagnetInputTimes[data.PlayerId] = Time.unscaledTime;
+                return;
+            }
+            if (data.Kind != StateKind || HasAuthority || !IsHost(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= receivedSequence) return;
             bool hadNetworkState = receivedSequence > 0;
@@ -1211,6 +1279,24 @@ namespace DrawBody.Prototype
                     : new Color(0.05f, 0.24f, 0.3f, 0.92f);
             }
             RefreshMonitor();
+        }
+
+        private void SendLocalMagnetInput()
+        {
+            Transform active = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            if (active == null || onlineManager == null) return;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = MagnetInputKind,
+                Json = JsonUtility.ToJson(new MagnetInputState
+                {
+                    Sequence = ++localMagnetInputSequence,
+                    Round = round,
+                    Variant = layoutVariant,
+                    Position = active.position
+                })
+            });
         }
 
         private bool IsHost(string playerId)

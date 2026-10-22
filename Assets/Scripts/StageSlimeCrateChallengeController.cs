@@ -899,6 +899,8 @@ namespace DrawBody.Prototype
 
         private bool AreAllPlayersEliminated()
         {
+            if (IsOnline)
+                return onlineManager != null && onlineManager.AreAllCurrentLobbyPlayersIn(eliminatedIds);
             if (participantIds.Count == 0) RefreshParticipants();
             if (participantIds.Count == 0) return false;
             for (int i = 0; i < participantIds.Count; i++)
@@ -1061,7 +1063,8 @@ namespace DrawBody.Prototype
             {
                 BreakMessage request = JsonUtility.FromJson<BreakMessage>(data.Json);
                 if (request != null && request.Round == round && request.Attempt == roundAttempt
-                    && IsCurrentRoundCrate(request.CrateId))
+                    && IsCurrentRoundCrate(request.CrateId)
+                    && CanPlayerBreakCrate(data.PlayerId, request.CrateId))
                     ApplyBreak(request.CrateId, request.HitPoint, true);
                 return;
             }
@@ -1161,6 +1164,36 @@ namespace DrawBody.Prototype
             return !string.IsNullOrEmpty(id)
                 && id.StartsWith(RoundObjectPrefix + "_crate_", System.StringComparison.Ordinal)
                 && crates.ContainsKey(id);
+        }
+
+        private bool CanPlayerBreakCrate(string playerId, string crateId)
+        {
+            if (stageManager == null || string.IsNullOrEmpty(playerId)
+                || !crates.TryGetValue(crateId, out StageValueCrate crate)
+                || crate == null || crate.IsBroken) return false;
+            PlayerController2D player = stageManager.GetOnlinePlayerController(playerId);
+            if (player == null || player.CurrentSpecies != DrawManager.Species.Slime) return false;
+            Collider2D[] playerColliders = player.GetComponentsInChildren<Collider2D>(false);
+            Collider2D[] crateColliders = crate.GetComponentsInChildren<Collider2D>(false);
+            float closest = Vector2.Distance(player.transform.position, crate.transform.position);
+            for (int i = 0; i < playerColliders.Length; i++)
+            {
+                Collider2D a = playerColliders[i];
+                if (a == null || !a.enabled || a.isTrigger) continue;
+                for (int j = 0; j < crateColliders.Length; j++)
+                {
+                    Collider2D b = crateColliders[j];
+                    if (b == null || !b.enabled || b.isTrigger) continue;
+                    closest = Mathf.Min(closest, Mathf.Max(0f, a.Distance(b).distance));
+                }
+            }
+            // Slime spikes scale with the drawing, so leave enough tolerance for
+            // a long legitimate spike while still rejecting arena-wide requests.
+            Rigidbody2D body = player.GetComponent<Rigidbody2D>();
+            float lagAllowance = body != null
+                ? Mathf.Min(2.5f, body.linearVelocity.magnitude * 0.22f)
+                : 0f;
+            return closest <= 7f + lagAllowance;
         }
 
         private void Send<T>(string kind, T value)

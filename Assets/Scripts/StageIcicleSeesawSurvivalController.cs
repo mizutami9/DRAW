@@ -998,6 +998,8 @@ namespace DrawBody.Prototype
 
         private bool AreAllEliminated()
         {
+            if (IsOnline)
+                return onlineManager != null && onlineManager.AreAllCurrentLobbyPlayersIn(eliminated);
             if (participants.Count == 0) return false;
             foreach (string id in participants)
                 if (!eliminated.Contains(id)) return false;

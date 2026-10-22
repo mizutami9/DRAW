@@ -8,6 +8,7 @@ namespace DrawBody.Prototype
     {
         private const string StageId = "13-2";
         private const string StateKind = "ricochet_enemy_state";
+        private const string ReflectionRequestKind = "ricochet_enemy_reflection_request";
         private const float OuterHalfWidth = 15.5f;
         private const float OuterHalfHeight = 9f;
         private const float InnerHalfWidth = 12.35f;
@@ -17,6 +18,9 @@ namespace DrawBody.Prototype
         private const float MaximumBallSpeedMultiplier = 1.22f;
         private const float InitialServeCountdownSeconds = 10f;
         private const float ServeCountdownSeconds = 3f;
+        private const float ReflectionRequestCooldown = 0.28f;
+        private const float ReflectionRequestPlayerTolerance = 1.1f;
+        private const float ReflectionRequestTravelAllowance = 0.35f;
 
         private enum Phase { Intro, Serve, Playing, Intermission, Failed, Clear }
 
@@ -50,8 +54,22 @@ namespace DrawBody.Prototype
             public EnemyState[] Enemies;
         }
 
+        [System.Serializable]
+        private sealed class ReflectionRequest
+        {
+            public int Sequence;
+            public int BallGeneration;
+            public Vector2 Point;
+            public Vector2 Normal;
+            public Vector2 IncomingVelocity;
+        }
+
         private readonly Dictionary<string, StageRicochetEnemyTarget> enemies =
             new Dictionary<string, StageRicochetEnemyTarget>();
+        private readonly Dictionary<string, float> lastAcceptedReflectionAt =
+            new Dictionary<string, float>();
+        private readonly Dictionary<string, int> lastReflectionRequestSequence =
+            new Dictionary<string, int>();
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private StageObjectFactory factory;
@@ -67,6 +85,7 @@ namespace DrawBody.Prototype
         private int ballGeneration;
         private int sequence;
         private int lastSequence;
+        private int reflectionRequestSequence;
         private float phaseRemaining = 3f;
         private float playingElapsed;
         private float nextBallAt;
@@ -172,6 +191,7 @@ namespace DrawBody.Prototype
             {
                 playingElapsed += Time.deltaTime;
                 ball?.SetCruiseSpeed(GetCurrentBallSpeed());
+                ball?.RecoverMissedSideWall(InnerHalfWidth, InnerHalfHeight, 0.62f);
                 if (ball != null && (Mathf.Abs(ball.transform.position.x) > OuterHalfWidth + 3f
                     || Mathf.Abs(ball.transform.position.y) > OuterHalfHeight + 3f))
                 {
@@ -250,6 +270,90 @@ namespace DrawBody.Prototype
         {
             GameSfx.PlayAt(SfxId.Ricochet, point, 0.92f);
             StageRicochetImpactPulse.Create(transform, point);
+        }
+
+        internal void RequestLocalPlayerReflection(
+            StageRicochetBall target,
+            Vector2 point,
+            Vector2 normal,
+            Vector2 incomingVelocity)
+        {
+            if (!IsOnline() || HasAuthority || phase != Phase.Playing
+                || onlineManager == null || target == null || target != ball
+                || ballGeneration <= 0) return;
+
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = ReflectionRequestKind,
+                Json = JsonUtility.ToJson(new ReflectionRequest
+                {
+                    Sequence = ++reflectionRequestSequence,
+                    BallGeneration = ballGeneration,
+                    Point = point,
+                    Normal = normal,
+                    IncomingVelocity = incomingVelocity
+                })
+            });
+        }
+
+        private void HandleReflectionRequest(string playerId, ReflectionRequest request)
+        {
+            if (!HasAuthority || phase != Phase.Playing || request == null
+                || string.IsNullOrEmpty(playerId) || !IsLobbyPlayer(playerId)
+                || ball == null || request.BallGeneration != ballGeneration
+                || request.Normal.sqrMagnitude < 0.25f
+                || request.IncomingVelocity.sqrMagnitude < 0.25f) return;
+
+            string cooldownKey = playerId + ":" + ballGeneration;
+            if (request.Sequence <= 0
+                || lastReflectionRequestSequence.TryGetValue(cooldownKey, out int lastRequestSequence)
+                    && request.Sequence <= lastRequestSequence) return;
+            lastReflectionRequestSequence[cooldownKey] = request.Sequence;
+            if (lastAcceptedReflectionAt.TryGetValue(cooldownKey, out float lastAccepted)
+                && Time.unscaledTime - lastAccepted < ReflectionRequestCooldown) return;
+
+            PlayerController2D player = stageManager != null
+                ? stageManager.GetOnlinePlayerController(playerId)
+                : null;
+            if (player == null
+                || !IsPointNearPlayer(player, request.Point, ReflectionRequestPlayerTolerance)) return;
+
+            Rigidbody2D body = ball.Body;
+            Vector2 currentVelocity = body != null ? body.linearVelocity : Vector2.zero;
+            float speed = Mathf.Max(0.5f, currentVelocity.magnitude);
+            float allowedDistance = ReflectionRequestPlayerTolerance
+                + speed * ReflectionRequestTravelAllowance;
+            if (Vector2.Distance(ball.transform.position, request.Point) > allowedDistance) return;
+
+            Vector2 currentDirection = currentVelocity.sqrMagnitude > 0.1f
+                ? currentVelocity.normalized
+                : request.IncomingVelocity.normalized;
+            if (Vector2.Dot(currentDirection, request.IncomingVelocity.normalized) < 0.15f) return;
+
+            if (!ball.ApplyReportedPlayerReflection(
+                    player,
+                    request.Point,
+                    request.Normal,
+                    currentDirection * speed)) return;
+
+            lastAcceptedReflectionAt[cooldownKey] = Time.unscaledTime;
+            NotifyPlayerReflection(request.Point);
+            BroadcastState(true);
+        }
+
+        private static bool IsPointNearPlayer(PlayerController2D player, Vector2 point, float tolerance)
+        {
+            if (player == null) return false;
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled) continue;
+                if (collider.isTrigger && collider.GetComponent<LineRenderer>() == null) continue;
+                if (Vector2.Distance(collider.ClosestPoint(point), point) <= tolerance) return true;
+            }
+            return false;
         }
 
         private void CompleteRound()
@@ -427,7 +531,7 @@ namespace DrawBody.Prototype
         private void BroadcastState(bool force = false)
         {
             if (!IsOnline() || !HasAuthority || !force && Time.unscaledTime < nextStateAt) return;
-            nextStateAt = Time.unscaledTime + 0.1f;
+            nextStateAt = Time.unscaledTime + 0.05f;
             List<EnemyState> states = new List<EnemyState>();
             foreach (StageRicochetEnemyTarget enemy in enemies.Values)
             {
@@ -459,7 +563,14 @@ namespace DrawBody.Prototype
 
         private void HandleNetworkData(OnlineGimmickData data)
         {
-            if (data == null || data.ObjectId != StageId || data.Kind != StateKind || HasAuthority || !IsHost(data.PlayerId)) return;
+            if (data == null || data.ObjectId != StageId) return;
+            if (data.Kind == ReflectionRequestKind)
+            {
+                if (HasAuthority)
+                    HandleReflectionRequest(data.PlayerId, JsonUtility.FromJson<ReflectionRequest>(data.Json));
+                return;
+            }
+            if (data.Kind != StateKind || HasAuthority || !IsHost(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= lastSequence) return;
             lastSequence = state.Sequence;
@@ -519,6 +630,15 @@ namespace DrawBody.Prototype
             if (players == null) return false;
             for (int i = 0; i < players.Length; i++)
                 if (players[i] != null && players[i].IsHost && players[i].PlayerId == id) return true;
+            return false;
+        }
+
+        private bool IsLobbyPlayer(string id)
+        {
+            OnlinePlayerInfo[] players = onlineManager?.CurrentLobby?.Players;
+            if (players == null || string.IsNullOrEmpty(id)) return false;
+            for (int i = 0; i < players.Length; i++)
+                if (players[i] != null && players[i].PlayerId == id) return true;
             return false;
         }
 

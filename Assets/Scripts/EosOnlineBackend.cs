@@ -1031,18 +1031,12 @@ namespace DrawBody.Prototype
                 return;
             }
             string payload = JsonUtility.ToJson(gimmickData);
-            bool realtimeTransform = gimmickData.Kind == "transform"
-                || gimmickData.Kind == "mirror_brawl_state"
-                || gimmickData.Kind == "mirror_brawl_fakes"
-                || gimmickData.Kind == "flying_boss_state"
-                || gimmickData.Kind == "flying_boss_pad"
-                || gimmickData.Kind == "ricochet_breaker_state"
-                || gimmickData.Kind == "laser_relay_state";
-            if (isHost && realtimeTransform)
+            bool realtimeGimmick = IsRealtimeGimmickKind(gimmickData.Kind);
+            if (isHost && realtimeGimmick)
             {
                 BroadcastRealtimeGimmick(payload);
             }
-            else if (!isHost && realtimeTransform)
+            else if (!isHost && realtimeGimmick)
             {
                 SendRealtimeGimmickToHost(payload);
             }
@@ -1054,6 +1048,58 @@ namespace DrawBody.Prototype
             {
                 SendReliableGimmickToHost(payload);
             }
+        }
+
+        private static bool IsRealtimeGimmickKind(string kind)
+        {
+            return kind == "transform"
+                || kind == "mirror_brawl_state"
+                || kind == "mirror_brawl_fakes"
+                || kind == "cosmic_mimic_state"
+                || kind == "flying_boss_state"
+                || kind == "flying_boss_pad"
+                || kind == "ricochet_breaker_state"
+                || kind == "ricochet_enemy_state"
+                || kind == "gun_bullet_snapshot"
+                || kind == "balloon_gallery_state"
+                || kind == "cat_escape_state"
+                || kind == "pose_rooms_state"
+                || kind == "ice_race_state"
+                || kind == "escort_state"
+                || kind == "timed_goal_state"
+                || kind == "tower_defense_state"
+                || kind == "tower_defense_enemy_state"
+                || kind == "umbrella_rain_state"
+                || kind == "side_boss_state"
+                || kind == "boss_state"
+                || kind == "jump_rope_state"
+                || kind == "pillar_survival_state"
+                || kind == "slime_missile_state"
+                || kind == "coin_descent_state"
+                || kind == "survival_state"
+                || kind == "block_breaker_state"
+                || kind == "human_circuit_state"
+                || kind == "icicle_seesaw_state"
+                || kind == "stage31_updraft_state"
+                || kind == "aquarium_seal_state"
+                || kind == "aquarium_seal_contact"
+                || kind == "grain_rain_state"
+                || kind == "grain_rain_carry_state"
+                || kind == "tilt_board_state"
+                || kind == "tilt_board_magnet_input"
+                || kind == "laser_relay_state"
+                || kind == "laser_relay_reflection_request";
+        }
+
+        private static bool ShouldRelayParticipantGimmick(string kind)
+        {
+            if (string.IsNullOrEmpty(kind)) return false;
+            // These two requests deliberately target another participant and
+            // therefore still pass through the host. Every other *_request is a
+            // host command whose confirmed result is sent separately.
+            if (kind == "species_swap_request" || kind == "body_resync_request") return true;
+            return !kind.EndsWith("_request", StringComparison.Ordinal)
+                && kind != "tilt_board_magnet_input";
         }
 
         private void LoginWithDeviceId()
@@ -2182,9 +2228,9 @@ namespace DrawBody.Prototype
                     payload = JsonUtility.ToJson(gimmickData);
                 }
                 GimmickDataReceived?.Invoke(gimmickData);
-                if (isHost)
+                if (isHost && gimmickData != null && ShouldRelayParticipantGimmick(gimmickData.Kind))
                 {
-                    if (gimmickData != null && gimmickData.Kind == "transform")
+                    if (IsRealtimeGimmickKind(gimmickData.Kind))
                     {
                         BroadcastRealtimeGimmick(payload, peer);
                     }

@@ -18,7 +18,11 @@ param(
     [switch]$SkipRedraw,
     [switch]$LateJoin,
     [ValidateRange(0.1, 10.0)]
-    [double]$PositionTolerance = 1.75
+    [double]$PositionTolerance = 1.75,
+    [ValidateRange(0, 1000)]
+    [int]$LatencyMs = 0,
+    [ValidateRange(0, 50)]
+    [int]$LossPercent = 0
 )
 
 $ErrorActionPreference = "Stop"
@@ -47,6 +51,9 @@ $common = @(
     "-pico-regression-port=$Port",
     "-pico-regression-players=$Players",
     "-pico-regression-stage=$Stage",
+    "-pico-net-latency-ms=$LatencyMs",
+    "-pico-net-loss-percent=$LossPercent",
+    "-pico-net-monitor",
     "-pico-debug-no-time-limit",
     "-screen-width", "800", "-screen-height", "450", "-screen-fullscreen", "0"
 )
@@ -224,6 +231,8 @@ $summary = [ordered]@{
     stage = $Stage
     players = $Players
     transport = $Transport
+    simulatedLatencyMs = $LatencyMs
+    simulatedLossPercent = $LossPercent
     redrawMode = $modeLabel
     result = if ($passed) { "PASS" } else { "FAIL" }
     maxPositionDesync = [Math]::Round($maxPositionDesync, 4)
@@ -231,6 +240,9 @@ $summary = [ordered]@{
     speciesMismatches = $speciesMismatches
     invariantViolations = $invariantViolations
     invariantAuditError = $invariantAuditError
+    maxMeasuredRoundTripMs = [Math]::Round([double](($reports | Measure-Object -Property networkRoundTripMs -Maximum).Maximum), 2)
+    simulatedPacketDrops = [int](($reports | Measure-Object -Property simulatedPacketDrops -Sum).Sum)
+    networkCorrections = [int](($reports | Measure-Object -Property networkCorrections -Sum).Sum)
     reports = $reports
     logErrors = @($logErrors | ForEach-Object Line)
 }
@@ -246,6 +258,7 @@ $markdown = @"
 Stage: $Stage  
 Players: $Players  
 Transport: $Transport (four independent demo client processes)
+Simulated network: ${LatencyMs}ms latency / ${LossPercent}% realtime packet loss
 Redraw mode: $modeLabel
 Result: $(if ($passed) { "PASS" } else { "FAIL" })
 
@@ -256,6 +269,9 @@ Maximum position disagreement: $([Math]::Round($maxPositionDesync, 4))
 Position tolerance: $PositionTolerance
 Species mismatches: $speciesMismatches  
 Telemetry invariant violations: $invariantViolations
+Maximum measured RTT: $([Math]::Round([double](($reports | Measure-Object -Property networkRoundTripMs -Maximum).Maximum), 2))ms
+Simulated packet drops: $([int](($reports | Measure-Object -Property simulatedPacketDrops -Sum).Sum))
+Network corrections: $([int](($reports | Measure-Object -Property networkCorrections -Sum).Sum))
 $(if ($invariantDetails.Count -gt 0) { "Invariant violations detail:`n$($invariantDetails -join "`n")`n" })
 Artifacts: $runDirectory
 "@

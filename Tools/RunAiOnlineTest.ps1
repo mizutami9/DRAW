@@ -9,6 +9,10 @@ param(
     [int]$Port = 18777,
     [ValidateRange(1, 120)]
     [int]$TimeoutMinutes = 12,
+    [ValidateRange(0, 1000)]
+    [int]$LatencyMs = 0,
+    [ValidateRange(0, 50)]
+    [int]$LossPercent = 0,
     [switch]$KeepWindows
 )
 
@@ -36,6 +40,9 @@ $common = @(
     "-pico-regression-port=$Port",
     "-pico-regression-players=$Players",
     "-pico-regression-stage=$Stage",
+    "-pico-net-latency-ms=$LatencyMs",
+    "-pico-net-loss-percent=$LossPercent",
+    "-pico-net-monitor",
     "-pico-debug-no-time-limit",
     "-screen-width", "960",
     "-screen-height", "540",
@@ -137,6 +144,8 @@ $summary = [ordered]@{
     stage = $Stage
     players = $Players
     transport = $Transport
+    simulatedLatencyMs = $LatencyMs
+    simulatedLossPercent = $LossPercent
     result = $result
     clearTimeSeconds = [Math]::Round($clearSeconds, 2)
     deaths = $deathCount
@@ -145,6 +154,9 @@ $summary = [ordered]@{
     identityCollisions = $identityCollisions
     exceptions = $exceptionCount
     suspiciousPhysicsEvents = $physicsCount
+    maxMeasuredRoundTripMs = [Math]::Round([double](($reports | Measure-Object -Property networkRoundTripMs -Maximum).Maximum), 2)
+    simulatedPacketDrops = [int](($reports | Measure-Object -Property simulatedPacketDrops -Sum).Sum)
+    networkCorrections = [int](($reports | Measure-Object -Property networkCorrections -Sum).Sum)
     timedOut = $timedOut
     clients = $reports
 }
@@ -161,6 +173,7 @@ $markdown = @"
 Stage: $Stage  
 Players: $Players  
 Transport: $Transport  
+Simulated network: ${LatencyMs}ms latency / ${LossPercent}% realtime packet loss
 Result: $result
 
 Clear Time: $([Math]::Round($clearSeconds, 2))s  
@@ -171,6 +184,9 @@ Network desync: $desyncs
 Identity collisions: $identityCollisions  
 Exceptions: $exceptionCount  
 Suspicious physics events: $physicsCount
+Maximum measured RTT: $([Math]::Round([double](($reports | Measure-Object -Property networkRoundTripMs -Maximum).Maximum), 2))ms
+Simulated packet drops: $([int](($reports | Measure-Object -Property simulatedPacketDrops -Sum).Sum))
+Network corrections: $([int](($reports | Measure-Object -Property networkCorrections -Sum).Sum))
 
 $($clientLines -join "  `n")
 

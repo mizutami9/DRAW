@@ -26,7 +26,7 @@ namespace DrawBody.Prototype
         private enum BattlePhase { Ready, Fighting, Defeated, Failed }
         private enum AttackType { Dash, Beam, Homing, Chase, Suction }
 
-        [System.Serializable] private sealed class PadMessage { public int Room; public Vector2 Position; }
+        [System.Serializable] private sealed class PadMessage { public int Sequence; public int Room; public Vector2 Position; }
         [System.Serializable] private sealed class ShotRequest { public Vector2 Direction; }
         [System.Serializable] private sealed class EliminationMessage { public string PlayerId; }
         [System.Serializable]
@@ -130,6 +130,8 @@ namespace DrawBody.Prototype
         private float nextAttackAt;
         private float nextStateAt;
         private float nextPadSendAt;
+        private int localPadSequence;
+        private readonly int[] receivedPadSequences = new int[4];
         private float nextPressureHomingAt;
         private float lastDashAt = -100f;
         private bool attackRunning;
@@ -425,7 +427,12 @@ namespace DrawBody.Prototype
             if (IsOnline && !HasAuthority && Time.unscaledTime >= nextPadSendAt)
             {
                 nextPadSendAt = Time.unscaledTime + 0.05f;
-                Send(PadKind, new PadMessage { Room = localRoom, Position = pad.Position });
+                Send(PadKind, new PadMessage
+                {
+                    Sequence = ++localPadSequence,
+                    Room = localRoom,
+                    Position = pad.Position
+                });
             }
             if (Input.GetMouseButtonDown(0) && phase == BattlePhase.Fighting)
             {
@@ -1029,6 +1036,8 @@ namespace DrawBody.Prototype
 
         private bool AreAllEliminated()
         {
+            if (IsOnline)
+                return onlineManager != null && onlineManager.AreAllCurrentLobbyPlayersIn(eliminated);
             for (int i = 0; i < playerCount; i++) if (!eliminated.Contains(roomPlayerIds[i])) return false;
             return true;
         }
@@ -1111,7 +1120,12 @@ namespace DrawBody.Prototype
             {
                 PadMessage pad = JsonUtility.FromJson<PadMessage>(data.Json);
                 int room = FindRoom(data.PlayerId);
-                if (pad != null && room == pad.Room && room >= 0) pads[room].SetNetworkTarget(ClampPadPosition(pad.Position));
+                if (pad != null && room == pad.Room && room >= 0 && room < receivedPadSequences.Length
+                    && pad.Sequence > receivedPadSequences[room])
+                {
+                    receivedPadSequences[room] = pad.Sequence;
+                    pads[room].SetNetworkTarget(ClampPadPosition(pad.Position));
+                }
             }
             else if (data.Kind == ShotRequestKind && HasAuthority)
             {

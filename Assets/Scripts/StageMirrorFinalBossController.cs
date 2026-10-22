@@ -682,6 +682,8 @@ namespace DrawBody.Prototype
 
         private bool AreAllRealPlayersEliminated()
         {
+            if (IsOnline)
+                return onlineManager != null && onlineManager.AreAllCurrentLobbyPlayersIn(eliminatedPlayers);
             int present = 0;
             for (int i = 0; i < playerCount; i++)
                 if (!string.IsNullOrEmpty(roomPlayerIds[i])) { present++; if (!eliminatedPlayers.Contains(roomPlayerIds[i])) return false; }

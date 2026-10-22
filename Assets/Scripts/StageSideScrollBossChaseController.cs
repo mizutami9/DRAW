@@ -1064,6 +1064,8 @@ namespace DrawBody.Prototype
 
         private bool AreAllEliminated()
         {
+            if (stageManager.IsOnlineStageActive)
+                return onlineManager != null && onlineManager.AreAllCurrentLobbyPlayersIn(eliminated);
             if (participants.Count == 0) return false;
             foreach (string id in participants) if (!eliminated.Contains(id)) return false;
             return true;
@@ -1182,7 +1184,8 @@ namespace DrawBody.Prototype
             else if (data.Kind == WeaponRequestKind && HasAuthority)
             {
                 WeaponRequest request = JsonUtility.FromJson<WeaponRequest>(data.Json);
-                if (request != null && !string.IsNullOrEmpty(data.PlayerId) && !eliminated.Contains(data.PlayerId)) ActivateCounterWeapon(request.Index);
+                if (request != null && CanAcceptWeaponRequest(data.PlayerId, request.Index))
+                    ActivateCounterWeapon(request.Index);
             }
             else if (data.Kind == EliminateRequestKind && HasAuthority)
             {
@@ -1193,6 +1196,16 @@ namespace DrawBody.Prototype
             {
                 EliminationState state = JsonUtility.FromJson<EliminationState>(data.Json); if (state != null) ApplyElimination(state.PlayerId);
             }
+        }
+
+        private bool CanAcceptWeaponRequest(string playerId, int weaponIndex)
+        {
+            if (phase != Phase.Running || string.IsNullOrEmpty(playerId)
+                || eliminated.Contains(playerId) || weaponIndex < 0 || weaponIndex >= weapons.Count
+                || activatedWeapons[weaponIndex] || weapons[weaponIndex] == null) return false;
+            PlayerController2D player = ResolvePlayer(playerId);
+            return IsLiving(player)
+                && Vector2.Distance(player.transform.position, weapons[weaponIndex].transform.position) <= 3.5f;
         }
 
         private void Send(string kind, object state)
