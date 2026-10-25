@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D veya Sol Çubuk: Boşluk Taşı/A: Atlama F/X: Yetenek Tıklaması/RT: Eylem Seçimi: Yeniden Çiz Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "SOL ÇUBUK: İMLEÇ RT: ÇİZ / SEÇ LT: SİL CREATE / VIEW: KAPAT"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "SPEED RUN. BÜTÜNÜ BÜYÜ BÜYÜ BÜYÜ BÜTÜNÜ BÜTÜNÜ BÜTÜNÜ"
+      "value": "ZAMAN SALDIRISI. HERKESİN BİRLEŞİK BİTİŞ SÜRESİ {0} DAKİKA İÇERİSİNDE OLURSA TEMİZ OLUN."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "KOŞ."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "Karakter değiştir"
+      "key": "gameplay_control_switch",
+      "value": "Karakter değiştir"
     },
     {
-        "key":  "feedback_button",
-        "value":  "GERİ BİLDİRİM / HATA BİLDİR"
+      "key": "feedback_button",
+      "value": "GERİ BİLDİRİM / HATA BİLDİR"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "Oynadığınız için teşekkürler!\nGeri bildirim / Hata bildir"
+      "key": "feedback_clear_button",
+      "value": "Oynadığınız için teşekkürler!\nGeri bildirim / Hata bildir"
     },
-    { "key": "option_complete", "value": "TAMAM" },
-    { "key": "option_screen_mode_format", "value": "EKRAN: {0}" },
-    { "key": "option_resolution_format", "value": "ÇÖZÜNÜRLÜK: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "TAM EKRAN" },
-    { "key": "option_windowed", "value": "PENCERE MODU" },
-    { "key": "online_steam_not_running", "value": "Steam’i başlatın, ardından NICO DRAW’u Steam Kitaplığınızdan açın." },
-    { "key": "online_steam_ticket_failed", "value": "Steam kimlik doğrulama bileti alınamadı: {0}" },
-    { "key": "wishlist_button", "value": "İSTEK LİSTESİ" },
-    { "key": "single_recommend_title", "value": "ÇOK OYUNCULU MOD ÖNERİLİR!" },
-    { "key": "single_recommend_message", "value": "NICO DRAW birlikte çalışırken daha eğlenceli!\n2–4 oyuncuyla oynamayı deneyin!" },
-    { "key": "single_recommend_ok", "value": "TAMAM" }
-    ,{ "key": "title_exit_confirm", "value": "NICO DRAW'dan çıkılsın mı?" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} bu karakteri kullanıyor. Takas isteği gönderilsin mi?" },
-    { "key": "draw_species_swap_send", "value": "İSTEK GÖNDER" },
-    { "key": "background_word_push", "value": "İT!" }
+    {
+      "key": "option_complete",
+      "value": "TAMAM"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "EKRAN: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "ÇÖZÜNÜRLÜK: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "TAM EKRAN"
+    },
+    {
+      "key": "option_windowed",
+      "value": "PENCERE MODU"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Steam’i başlatın, ardından NICO DRAW’u Steam Kitaplığınızdan açın."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Steam kimlik doğrulama bileti alınamadı: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "İSTEK LİSTESİ"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "ÇOK OYUNCULU MOD ÖNERİLİR!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW birlikte çalışırken daha eğlenceli!\n2–4 oyuncuyla oynamayı deneyin!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "TAMAM"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "NICO DRAW'dan çıkılsın mı?"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} bu karakteri kullanıyor. Takas isteği gönderilsin mi?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "İSTEK GÖNDER"
+    },
+    {
+      "key": "background_word_push",
+      "value": "İT!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "ÇAPRAZ TUT / A: KAYMA KARE / X: TUTA"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "KARE / X: KAZIMA / KUTMA"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "KARE / X: AT"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "KARE / X: SAĞ ÇUBUĞA DOĞRU ÇUBUK"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "ÇAPRAZ TUT / A: KABUK TUTMA KARE / X: 90° DÖNÜŞ"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "ÇAPRAZ TUTUN: KAYMA KARE: KUTUN"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "KARE: KAZIMA / KAPMA"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "KARE: AT"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "KARE: SAĞ ÇUBUĞA DOĞRU ÇUBUK"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "ÇAPRAZ TUTUN: KABUK TUTMA KARE: 90° DÖNÜN"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "A'YA BASILI TUT: KAYAR X: TUTA"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: KAZIMA / KUTMA"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: AT"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SAĞ ÇUBUĞA DOĞRU ÇUBUĞA ÇIKIN"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "A TUTUN: KABUK TUTUN X: 90° DÖNÜN"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "ZAMAN SINIRI YOK"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "DEMOYA DAHİL DEĞİLDİR"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "SOL ÇUBUK: RT / A / B'yi TAŞI: ÇİZ VE SEÇ LT: SİL"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: ÇİZİM MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: ÇEK MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / SEÇ: ÇİZ MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: ÇİZİM MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: ÇEK MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: ÇİZİM MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: ÇEK MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "S: KARAKTERİ DEĞİŞTİRİN"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "ÜÇGEN / Y: ANAHTAR KARAKTERİ"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "ÜÇGEN: ANAHTAR KARAKTERİ"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: KARAKTER DEĞİŞTİR"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TAKIM TOPLAM BİTTİ"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "OYUN BİTTİ\nTOPLAM {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "{0} İÇİNDE YENİDEN DENE"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "TOPLAM {0} İÇERİSİNİ TEMİZLEYİN"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "TOPLAM {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Otomatik (klavye / oyun kumandası)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Oyun kumandası (bağlantısı kesildi)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Klavye + Fare"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD'İN BAĞLANTISI KESİLDİ. AYNI OYNATICIYI GERİ YÜKLEMEK İÇİN YENİDEN BAĞLAYIN."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD YENİDEN BAĞLANDI."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "KLAVYE/FARE P1'DEN ÇIKTI. P1'İ TALEP ETMEK İÇİN BİR KONTROL DÜĞMESİNE BASIN."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "ATANMAYAN PAD: START KATILMAK İÇİN / KLAVYE: ENTER KATILMAK İÇİN, BACKSPACE ÇIKMAK İÇİN / P2: AYRILMAK İÇİN SEÇ + B"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} KATILDI ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} SOL."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "CİHAZ BAŞINA EN FAZLA 2 OYUNCU VE ODADA TOPLAM 4 OYUNCU."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "ODA DOLU (4 OYUNCU). EKSTRA YEREL OYUNCU KALDIRILDI."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 {0}'A GEÇTİ."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 OYUNCU HAZIR"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: KATILIN"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "KATILMAK İÇİN HERHANGİ BİR KONTROL DÜĞMESİNE BASIN"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "YEREL OYUN {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "SAHNEYE BAŞLAMADAN ÖNCE YEREL OYUNCULARI EKLEYİN VEYA KALDIRIN."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PED {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "OYUNCULAR {0}/2\nKLAVYE: ENTER KATILMAK İÇİN / BACKSPACE ÇIKMAK İÇİN\nKONTROLÖR: START KATILMAK İÇİN / ÇIKMAK İÇİN B'Yİ BASILI TUTUN"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "YEREL OYUNCULAR {0}/2 BAĞLI PEDLER {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Oda oluşturma işlemi başarısız oldu. {0} saniye içinde yeniden deneniyor ({1} deneme kaldı)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "YÜZEN KUŞLAR ARASINDA UYGUN POZU BULUN!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "UYGUN İNSAN POZİSİNİ ANAHTAR DELİĞİNE KOYUN!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "YUVARLAK {0}/3 {1:0.0}s SOL"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "BU TURU YENİDEN DENEYİYORUM"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "YUVARLAK {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "YUVARLAK {0} TEMİZ!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "ZAMAN DOLDU!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "KAPLUMBAĞAYI YAYLARLA DOLU ODADA TAŞIYIN!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "HERKESİN BİRLEŞİK BİTİŞ SÜRESİ OYUNCU BAŞINA 1 DAKİKA İÇERİSİNDE OLDUĞUNU AÇIKLAYIN."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "HER YER TEMİZ!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "KÜÇÜK KASALARI KIRIN!  DÜŞMANLARI İZLEYİN!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "Sümük Dikeniyle Sandıkları Kırın!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "YUVARLAK {0}/3 KASALAR {1}/{2} {3} SOL"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "OYUN BİTTİ YENİDEN DENEME TURU {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "YUVARLAK {0} TEMİZ!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Seyirci: {0} ← / → ile geçiş yapın"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "{0}/3 YUVARLAK {1}'DA BAŞLIYOR"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "GERİ SAYIM SIRASINDA ŞERİDİNİZDE HAREKET EDEBİLİRSİNİZ"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "YEREL İŞBİRLİĞİ SIRASINDA BAŞLIK ÇEKİLİŞİ YAPILMAZ. ÖNCE 1 OYUNCUYA DÖNÜN."
+    }
   ]
 }

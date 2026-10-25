@@ -20,10 +20,12 @@ namespace DrawBody.Prototype
 
         private float nextSendTime;
         private int nextStateSequence;
+        private readonly Dictionary<string, int> localStateSequences = new Dictionary<string, int>();
         private float nextBodyResyncTime;
         private bool bodyResyncPending;
         private int bodyResyncAttempts;
-        private DrawManager.Species? lastLocalSpecies;
+        private readonly Dictionary<string, DrawManager.Species> lastLocalSpeciesByPlayer =
+            new Dictionary<string, DrawManager.Species>();
         private OnlineConnectionState lastBodySyncConnectionState = OnlineConnectionState.Offline;
         private string lastBodySyncRoster = string.Empty;
         private OnlineLobbyInfo pendingRosterLobby;
@@ -50,8 +52,10 @@ namespace DrawBody.Prototype
             new Dictionary<string, PendingRemoteThrow>();
         private readonly Dictionary<string, RemoteThrowStamp> lastPredictedRemoteThrows =
             new Dictionary<string, RemoteThrowStamp>();
-        private string lastAppliedLocalThrowCarrierId;
-        private int lastAppliedLocalThrowSequence;
+        private readonly Dictionary<string, string> lastAppliedLocalThrowCarrierIds =
+            new Dictionary<string, string>();
+        private readonly Dictionary<string, int> lastAppliedLocalThrowSequences =
+            new Dictionary<string, int>();
 
         private sealed class RemoteTarget
         {
@@ -171,31 +175,50 @@ namespace DrawBody.Prototype
             }
 
             nextSendTime = Time.unscaledTime + 1f / Mathf.Max(1f, sendRate);
-            Transform localTransform = stageManager.ActivePlayerTransform;
-            if (localTransform == null)
-            {
-                return;
-            }
-
-            Rigidbody2D body = stageManager.ActivePlayerBody;
-            PlayerController2D localPlayer = localTransform.GetComponent<PlayerController2D>();
-            PlayerCarryController localCarry = localTransform.GetComponent<PlayerCarryController>();
             if (emoteController == null) emoteController = FindFirstObjectByType<PlayerEmoteController>();
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int localIndex = 0; localIndex < localPlayers.Count; localIndex++)
+            {
+                PlayerController2D localPlayer = localPlayers[localIndex];
+                if (localPlayer == null) continue;
+                SendOneLocalState(localPlayer, localIndex);
+            }
+        }
+
+        private void SendOneLocalState(PlayerController2D localPlayer, int localIndex)
+        {
+            Transform localTransform = localPlayer.transform;
+            Rigidbody2D body = localPlayer.GetComponent<Rigidbody2D>();
+            PlayerCarryController localCarry = localPlayer.GetComponent<PlayerCarryController>();
+            string connectionId = onlineManager.LocalPlayerId;
+            string gamePlayerId = OnlinePlayerIdentity.Compose(connectionId, localIndex);
+            lastAppliedLocalThrowCarrierIds.TryGetValue(gamePlayerId, out string appliedThrowCarrierId);
+            lastAppliedLocalThrowSequences.TryGetValue(gamePlayerId, out int appliedThrowSequence);
+            int sequence = localStateSequences.TryGetValue(gamePlayerId, out int previous)
+                ? previous + 1
+                : ++nextStateSequence;
+            localStateSequences[gamePlayerId] = sequence;
+            LocalCoopSessionManager localCoop = stageManager.GetComponent<LocalCoopSessionManager>();
+            int baseSlot = PlayerColorPalette.GetLobbyPlayerSlot(onlineManager.CurrentLobby, connectionId);
             onlineManager.SendPlayerState(new OnlinePlayerState
             {
-                PlayerId = onlineManager.LocalPlayerId,
-                DisplayName = PlayerNameSettings.CurrentName,
-                Sequence = ++nextStateSequence,
-                PlayerSlot = PlayerColorPalette.GetLobbyPlayerSlot(
-                    onlineManager.CurrentLobby, onlineManager.LocalPlayerId),
-                BodyRevision = onlineManager.LocalBodyRevision,
-                BodyHash = onlineManager.LocalBodyHash,
-                BodySpecies = onlineManager.LocalBodySpecies,
+                PlayerId = gamePlayerId,
+                ConnectionId = connectionId,
+                LocalPlayerIndex = localIndex,
+                InputDevice = localPlayer.InputBinding != null ? localPlayer.InputBinding.DeviceDisplayName : string.Empty,
+                DisplayName = localIndex == 0 ? PlayerNameSettings.CurrentName : $"{PlayerNameSettings.CurrentName} P{localIndex + 1}",
+                Sequence = sequence,
+                PlayerSlot = Mathf.Clamp(baseSlot + localIndex, 0, 3),
+                BodyRevision = onlineManager.GetLocalBodyRevision(gamePlayerId),
+                BodyHash = onlineManager.GetLocalBodyHash(gamePlayerId),
+                BodySpecies = onlineManager.GetLocalBodySpecies(gamePlayerId),
                 Position = localTransform.position,
                 Velocity = body != null ? body.linearVelocity : Vector2.zero,
                 Rotation = body != null ? body.rotation : localTransform.eulerAngles.z,
                 FacingDirection = localPlayer != null ? localPlayer.FacingDirection : 1,
-                Redrawing = stageManager.IsDrawingMode,
+                Redrawing = localCoop != null && localCoop.LocalPlayerCount > 1
+                    ? localCoop.IsPlayerDrawing(localPlayer)
+                    : stageManager.IsDrawingMode,
                 Respawning = stageManager.IsPlayerRespawning(localPlayer),
                 Eliminated = stageManager.IsPlayerEliminated(localPlayer),
                 TurtleShelled = localPlayer?.IsTurtleShelled ?? false,
@@ -220,8 +243,8 @@ namespace DrawBody.Prototype
                 CarryOffset = localCarry != null ? localCarry.CurrentOnlineCarryOffset : Vector2.zero,
                 CarryEventSequence = localCarry?.CurrentOnlineCarryEventSequence ?? 0,
                 HumanCarryStruggling = localPlayer?.IsHumanCarryStruggling ?? false,
-                LastAppliedThrowCarrierId = lastAppliedLocalThrowCarrierId,
-                LastAppliedThrowSequence = lastAppliedLocalThrowSequence
+                LastAppliedThrowCarrierId = appliedThrowCarrierId,
+                LastAppliedThrowSequence = appliedThrowSequence
             });
         }
 
@@ -232,7 +255,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (state.PlayerId == onlineManager.LocalPlayerId)
+            if (OnlinePlayerIdentity.IsOwnedByConnection(state.PlayerId, onlineManager.LocalPlayerId))
             {
                 return;
             }
@@ -278,13 +301,18 @@ namespace DrawBody.Prototype
                 ApplyRemoteRespawnTransition(state);
                 return;
             }
+            string localCarryTargetId = OnlinePlayerIdentity.IsOwnedByConnection(
+                    state.CarriedPlayerId, onlineManager.LocalPlayerId)
+                ? state.CarriedPlayerId
+                : stageManager.GetOnlineCarriedLocalPlayerId(state.PlayerId)
+                    ?? onlineManager.LocalPlayerId;
             stageManager.ReconcileOnlineCarryState(
                 state.PlayerId,
                 state.Redrawing ? null : state.CarriedPlayerId,
                 state.Redrawing ? string.Empty : state.CarryAction,
                 state.Redrawing ? Vector2.zero : state.CarryOffset,
                 state.CarryEventSequence,
-                onlineManager.LocalPlayerId,
+                localCarryTargetId,
                 state.Redrawing ? Vector2.zero : state.Velocity);
             PlayerController2D remotePlayer = stageManager.GetOnlinePlayerController(state.PlayerId);
             remotePlayer?.ApplyRemoteFacingDirection(state.FacingDirection);
@@ -584,7 +612,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (bodyData.PlayerId == onlineManager.LocalPlayerId)
+            if (OnlinePlayerIdentity.IsOwnedByConnection(bodyData.PlayerId, onlineManager.LocalPlayerId))
             {
                 if (LocalMultiplayerDebugMode.Enabled)
                     Debug.Log($"[PICO BODY] IGNORE SELF id={bodyData.PlayerId} rev={bodyData.Revision}");
@@ -707,11 +735,16 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bool targetsLocalPlayer = carryData.TargetPlayerId == onlineManager.LocalPlayerId;
+            bool targetsLocalPlayer = OnlinePlayerIdentity.IsOwnedByConnection(
+                carryData.TargetPlayerId, onlineManager.LocalPlayerId);
             bool isThrow = carryData.Action == "throw";
+            lastAppliedLocalThrowCarrierIds.TryGetValue(
+                carryData.TargetPlayerId, out string lastThrowCarrierId);
+            lastAppliedLocalThrowSequences.TryGetValue(
+                carryData.TargetPlayerId, out int lastThrowSequence);
             if (isThrow && targetsLocalPlayer && carryData.EventSequence > 0
-                && carryData.CarrierPlayerId == lastAppliedLocalThrowCarrierId
-                && carryData.EventSequence <= lastAppliedLocalThrowSequence)
+                && carryData.CarrierPlayerId == lastThrowCarrierId
+                && carryData.EventSequence <= lastThrowSequence)
             {
                 return;
             }
@@ -720,11 +753,11 @@ namespace DrawBody.Prototype
                 PredictRemoteThrow(carryData);
             }
 
-            stageManager.ApplyOnlineCarryData(carryData, onlineManager.LocalPlayerId);
+            stageManager.ApplyOnlineCarryData(carryData, carryData.TargetPlayerId);
             if (isThrow && targetsLocalPlayer)
             {
-                lastAppliedLocalThrowCarrierId = carryData.CarrierPlayerId;
-                lastAppliedLocalThrowSequence = carryData.EventSequence;
+                lastAppliedLocalThrowCarrierIds[carryData.TargetPlayerId] = carryData.CarrierPlayerId;
+                lastAppliedLocalThrowSequences[carryData.TargetPlayerId] = carryData.EventSequence;
                 // Do not wait up to one normal 30 Hz interval before telling the
                 // other peers that the carried owner has started its flight.
                 SendLocalState(true);
@@ -866,7 +899,8 @@ namespace DrawBody.Prototype
                 for (int i = 0; i < lobby.Players.Length; i++)
                 {
                     string id = lobby.Players[i]?.PlayerId;
-                    if (!string.IsNullOrEmpty(id) && id != localPlayerId) active.Add(id);
+                    if (!string.IsNullOrEmpty(id)
+                        && !OnlinePlayerIdentity.IsOwnedByConnection(id, localPlayerId)) active.Add(id);
                 }
             }
             List<string> removed = new List<string>();
@@ -976,12 +1010,12 @@ namespace DrawBody.Prototype
         {
             if (data == null || onlineManager == null
                 || data.Kind != "body_resync_request"
-                || data.ObjectId != onlineManager.LocalPlayerId)
+                || !OnlinePlayerIdentity.IsOwnedByConnection(data.ObjectId, onlineManager.LocalPlayerId))
             {
                 return;
             }
 
-            RequestBodyResync(3);
+            stageManager?.SendLocalOnlineBodyData(data.ObjectId);
         }
 
         private void CacheRemoteBodyIdentity(OnlineBodyData bodyData)
@@ -999,20 +1033,33 @@ namespace DrawBody.Prototype
 
         private void DetectLocalSpeciesChange()
         {
-            Transform local = stageManager != null ? stageManager.ActivePlayerTransform : null;
-            BodyBuilder builder = local != null ? local.GetComponent<BodyBuilder>() : null;
-            if (builder == null) return;
+            if (stageManager == null || onlineManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            bool changed = false;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                BodyBuilder builder = local != null ? local.GetComponent<BodyBuilder>() : null;
+                if (builder == null) continue;
+                string gamePlayerId = OnlinePlayerIdentity.Compose(onlineManager.LocalPlayerId, i);
+                DrawManager.Species species = builder.BuiltSpecies;
+                if (lastLocalSpeciesByPlayer.TryGetValue(gamePlayerId, out DrawManager.Species previous)
+                    && previous == species) continue;
+                lastLocalSpeciesByPlayer[gamePlayerId] = species;
+                changed = true;
+            }
 
-            DrawManager.Species species = builder.BuiltSpecies;
-            if (lastLocalSpecies.HasValue && lastLocalSpecies.Value == species) return;
-            lastLocalSpecies = species;
-            RequestBodyResync(3);
+            if (changed) RequestBodyResync(3);
         }
 
         private void FlushPendingBodyResync()
         {
+            LocalCoopSessionManager localCoop = stageManager != null
+                ? stageManager.GetComponent<LocalCoopSessionManager>()
+                : null;
             if (!bodyResyncPending
                 || stageManager != null && stageManager.IsDrawingMode
+                || localCoop != null && localCoop.AnyDrawingSessionActive
                 || Time.unscaledTime < nextBodyResyncTime)
             {
                 return;

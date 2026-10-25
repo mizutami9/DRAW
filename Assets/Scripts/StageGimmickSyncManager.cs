@@ -255,7 +255,7 @@ namespace DrawBody.Prototype
                 SyncTransformEntry entry = pair.Value;
                 ownersByObjectId.TryGetValue(pair.Key, out string ownerId);
                 bool remotelyOwned = !string.IsNullOrEmpty(ownerId)
-                    && ownerId != onlineManager.LocalPlayerId;
+                    && !OnlinePlayerIdentity.IsOwnedByConnection(ownerId, onlineManager.LocalPlayerId);
                 bool waitingForLocalReleaseConfirmation = pendingLocalReleases.ContainsKey(pair.Key);
                 // On a participant machine every unheld rigidbody is driven by
                 // the host. Letting the local physics simulation run between
@@ -827,7 +827,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (onlineManager != null && data.PlayerId == onlineManager.LocalPlayerId)
+            if (onlineManager != null
+                && OnlinePlayerIdentity.IsOwnedByConnection(data.PlayerId, onlineManager.LocalPlayerId))
             {
                 return;
             }

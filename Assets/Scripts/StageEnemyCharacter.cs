@@ -274,11 +274,10 @@ namespace DrawBody.Prototype
             PlayerController2D nearest = null;
             float best = range * range;
             bool online = stageManager != null && stageManager.IsOnlineStageActive;
-            Transform local = stageManager != null ? stageManager.ActivePlayerTransform : null;
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
-                if (player == null || online && player.transform != local) continue;
+                if (player == null || online && !stageManager.IsLocallyControlledPlayer(player)) continue;
                 Vector2 delta = player.transform.position - transform.position;
                 if (requireSimilarHeight && Mathf.Abs(delta.y) > 1.7f) continue;
                 float sqr = delta.sqrMagnitude;
@@ -337,7 +336,7 @@ namespace DrawBody.Prototype
                 }
                 if (stageManager == null) stageManager = Object.FindFirstObjectByType<StageManager>();
                 if (stageManager == null || !stageManager.IsOnlineStageActive
-                    || player.transform == stageManager.ActivePlayerTransform)
+                    || stageManager.IsLocallyControlledPlayer(player))
                     stageManager?.RespawnFromHazard(player);
                 return;
             }
@@ -773,7 +772,8 @@ namespace DrawBody.Prototype
                 if (!player.IsTurtleShelled)
                 {
                     StageManager manager = Object.FindFirstObjectByType<StageManager>();
-                    if (manager == null || !manager.IsOnlineStageActive || player.transform == manager.ActivePlayerTransform)
+                    if (manager == null || !manager.IsOnlineStageActive
+                        || manager.IsLocallyControlledPlayer(player))
                         manager?.RespawnFromHazard(player);
                 }
                 Destroy(gameObject);

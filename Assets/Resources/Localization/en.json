@@ -258,11 +258,11 @@
                     },
                     {
                         "key":  "status_play",
-                        "value":  ""
+                        "value":  "A/D or Left Stick: Move   Space/A: Jump   F/X: Ability   Click/RT: Action   Select: Redraw   Start: Menu"
                     },
                     {
                         "key":  "status_draw",
-                        "value":  ""
+                        "value":  "LEFT STICK: CURSOR   RT: DRAW / SELECT   LT: ERASE   CREATE / VIEW: CLOSE"
                     },
                     {
                         "key":  "status_clear",
@@ -686,7 +686,27 @@
                     },
                     {
                         "key":  "title_single",
-                        "value":  "SINGLE"
+                        "value":  "LOCAL"
+                    },
+                    {
+                        "key":  "local_roster_status",
+                        "value":  "PLAYERS {0}/2\nKEYBOARD: ENTER TO JOIN / BACKSPACE TO LEAVE\nCONTROLLER: START TO JOIN / HOLD B TO LEAVE"
+                    },
+                    {
+                        "key":  "local_primary_device_claimed",
+                        "value":  "P1 SWITCHED TO {0}."
+                    },
+                    {
+                        "key":  "local_keyboard_released",
+                        "value":  "KEYBOARD/MOUSE RELEASED FROM P1. PRESS A CONTROLLER BUTTON TO CLAIM P1."
+                    },
+                    {
+                        "key":  "local_player_left",
+                        "value":  "P{0} LEFT."
+                    },
+                    {
+                        "key":  "title_draw_unavailable_local_coop",
+                        "value":  "TITLE DRAW IS UNAVAILABLE DURING LOCAL CO-OP. RETURN TO 1 PLAYER FIRST."
                     },
                     {
                         "key":  "title_multi",
@@ -1744,6 +1764,29 @@
         "key":  "gameplay_control_switch",
         "value":  "Switch Character"
     },
+    { "key": "ability_control_pad_human", "value": "SQUARE / X: THROW" },
+    { "key": "ability_control_pad_cat", "value": "SQUARE / X: SCRATCH / GRAB" },
+    { "key": "ability_control_pad_bird", "value": "HOLD CROSS / A: GLIDE  SQUARE / X: GRAB" },
+    { "key": "ability_control_pad_turtle", "value": "HOLD CROSS / A: SHELL  HOLD SQUARE / X: TURN 90°" },
+    { "key": "ability_control_pad_slime", "value": "SQUARE / X: SPIKE TOWARD RIGHT STICK" },
+    { "key": "gameplay_control_pad_switch", "value": "TRIANGLE / Y: SWITCH CHARACTER" },
+    { "key": "gameplay_control_keyboard_switch", "value": "Q: SWITCH CHARACTER" },
+    { "key": "gameplay_actions_pad", "value": "CREATE / SELECT: DRAW MENU\nOPTIONS / START: MENU" },
+    { "key": "gameplay_actions_keyboard", "value": "TAB: DRAW MENU\nESC: MENU" },
+    { "key": "ability_control_ps_human", "value": "SQUARE: THROW" },
+    { "key": "ability_control_ps_cat", "value": "SQUARE: SCRATCH / GRAB" },
+    { "key": "ability_control_ps_bird", "value": "HOLD CROSS: GLIDE  SQUARE: GRAB" },
+    { "key": "ability_control_ps_turtle", "value": "HOLD CROSS: SHELL  HOLD SQUARE: TURN 90°" },
+    { "key": "ability_control_ps_slime", "value": "SQUARE: SPIKE TOWARD RIGHT STICK" },
+    { "key": "ability_control_xbox_human", "value": "X: THROW" },
+    { "key": "ability_control_xbox_cat", "value": "X: SCRATCH / GRAB" },
+    { "key": "ability_control_xbox_bird", "value": "HOLD A: GLIDE  X: GRAB" },
+    { "key": "ability_control_xbox_turtle", "value": "HOLD A: SHELL  HOLD X: TURN 90°" },
+    { "key": "ability_control_xbox_slime", "value": "X: SPIKE TOWARD RIGHT STICK" },
+    { "key": "gameplay_control_ps_switch", "value": "TRIANGLE: SWITCH CHARACTER" },
+    { "key": "gameplay_control_xbox_switch", "value": "Y: SWITCH CHARACTER" },
+    { "key": "gameplay_actions_ps", "value": "CREATE: DRAW MENU\nOPTIONS: MENU" },
+    { "key": "gameplay_actions_xbox", "value": "VIEW: DRAW MENU\nMENU: MENU" },
     {
         "key":  "feedback_button",
         "value":  "FEEDBACK / BUG REPORT"

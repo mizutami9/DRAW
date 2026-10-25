@@ -191,7 +191,8 @@ namespace DrawBody.Prototype
                 PlayerController2D player = ResolvePlayer(roomPlayerIds[i]); if (player == null) continue;
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>(); if (body != null) { body.simulated = true; body.linearVelocity = Vector2.zero; }
                 SetPlayerVisible(player, true);
-                if (stageManager != null && stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
+                if (stageManager != null && stageManager.IsLocallyControlledPlayer(player))
+                    player.SetControlsEnabled(stageManager.ShouldEnableLocalGameplayControls);
             }
             eliminatedPlayers.Clear();
         }
@@ -432,7 +433,7 @@ namespace DrawBody.Prototype
             string playerId = ResolvePlayerId(player);
             if (IsOnline && !HasAuthority)
             {
-                Send(MachineRequestKind, new MachineRequest { Machine = machineIndex });
+                SendAsPlayer(MachineRequestKind, new MachineRequest { Machine = machineIndex }, playerId);
                 return;
             }
             UseMachine(machineIndex, playerId, null);
@@ -479,17 +480,29 @@ namespace DrawBody.Prototype
 
         private void UpdateLocalMissileInput()
         {
-            if (battleState != BattleState.Fighting || !Input.GetMouseButtonDown(0)) return;
-            PlayerController2D player = stageManager != null && stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            string id = ResolvePlayerId(player);
-            if (player == null || string.IsNullOrEmpty(id) || !realMissileAmmo.TryGetValue(id, out int ammo) || ammo <= 0) return;
-            Vector3 mouse = gameCamera != null ? gameCamera.ScreenToWorldPoint(Input.mousePosition) : player.transform.position + Vector3.right;
-            Vector2 direction = ((Vector2)mouse - (Vector2)player.transform.position).normalized;
-            if (direction.sqrMagnitude < 0.1f) direction = Vector2.right;
-            if (IsOnline && !HasAuthority) Send(MissileRequestKind, new MissileRequest { Direction = direction });
-            else FireRealMissile(id, direction);
-            realMissileAmmo[id] = ammo - 1;
+            if (battleState != BattleState.Fighting) return;
+            if (stageManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D player = localPlayers[i];
+                LocalPlayerInputBinding binding = player != null ? player.InputBinding : null;
+                if (binding == null || !binding.PrimaryPressed()) continue;
+                string id = ResolvePlayerId(player);
+                if (string.IsNullOrEmpty(id) || !realMissileAmmo.TryGetValue(id, out int ammo) || ammo <= 0) continue;
+                Vector2 padAim = binding.ReadAim();
+                Vector3 mouse = binding.UsesLegacyKeyboardMouse && gameCamera != null
+                    ? gameCamera.ScreenToWorldPoint(Input.mousePosition)
+                    : player.transform.position + Vector3.right;
+                Vector2 direction = padAim.sqrMagnitude > 0.1f
+                    ? padAim.normalized
+                    : ((Vector2)mouse - (Vector2)player.transform.position).normalized;
+                if (direction.sqrMagnitude < 0.1f) direction = Vector2.right;
+                if (IsOnline && !HasAuthority)
+                    SendAsPlayer(MissileRequestKind, new MissileRequest { Direction = direction }, id);
+                else FireRealMissile(id, direction);
+                realMissileAmmo[id] = ammo - 1;
+            }
         }
 
         private void FireRealMissile(string playerId, Vector2 direction)
@@ -568,7 +581,8 @@ namespace DrawBody.Prototype
                 bestDistance = delta.magnitude; best = fake;
             }
             if (best == null) return false;
-            if (IsOnline && !HasAuthority) Send(ScratchRequestKind, new ScratchRequest { FakeId = best.FakeId });
+            if (IsOnline && !HasAuthority)
+                SendAsPlayer(ScratchRequestKind, new ScratchRequest { FakeId = best.FakeId }, ResolvePlayerId(player));
             else best.TakeDamage(1, player.transform.position);
             return true;
         }
@@ -662,7 +676,7 @@ namespace DrawBody.Prototype
             string playerId = ResolvePlayerId(target);
             if (IsOnline && !HasAuthority)
             {
-                Send(RealHitKind, new RealHitState { PlayerId = playerId });
+                SendAsPlayer(RealHitKind, new RealHitState { PlayerId = playerId }, playerId);
                 return;
             }
             EliminateReal(playerId, target);
@@ -773,7 +787,7 @@ namespace DrawBody.Prototype
                     body.angularVelocity = 0f;
                 }
                 SetPlayerVisible(player, true);
-                if (stageManager.ActivePlayerTransform == player.transform)
+                if (stageManager.IsLocallyControlledPlayer(player))
                     player.SetControlsEnabled(true);
             }
             eliminatedPlayers.Clear();
@@ -1270,7 +1284,7 @@ namespace DrawBody.Prototype
                 PlayerController2D player = ResolvePlayer(roomPlayerIds[i]); if (player == null) continue;
                 player.transform.position = new Vector2(-4.5f + i * 3f, LowerFloorY + 1.3f);
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>(); if (body != null) body.linearVelocity = Vector2.zero;
-                if (stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
+                if (stageManager.IsLocallyControlledPlayer(player)) player.SetControlsEnabled(true);
             }
             Physics2D.SyncTransforms();
             for (int i = 0; i < playerCount; i++)
@@ -1426,7 +1440,7 @@ namespace DrawBody.Prototype
                     eliminatedPlayers.Remove(id); Rigidbody2D restoredBody = player.GetComponent<Rigidbody2D>();
                     if (restoredBody != null) { restoredBody.simulated = true; restoredBody.linearVelocity = Vector2.zero; restoredBody.angularVelocity = 0f; }
                     SetPlayerVisible(player, true);
-                    if (stageManager.ActivePlayerTransform == player.transform) player.SetControlsEnabled(true);
+                    if (stageManager.IsLocallyControlledPlayer(player)) player.SetControlsEnabled(true);
                     continue;
                 }
                 eliminatedPlayers.Add(id); player.SetControlsEnabled(false);
@@ -1508,6 +1522,18 @@ namespace DrawBody.Prototype
         private void Send(string kind, object value)
         {
             if (onlineManager != null) onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = StageId, Kind = kind, Json = JsonUtility.ToJson(value) });
+        }
+
+        private void SendAsPlayer(string kind, object value, string gamePlayerId)
+        {
+            if (onlineManager == null || string.IsNullOrEmpty(gamePlayerId)) return;
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = kind,
+                PlayerId = gamePlayerId,
+                Json = JsonUtility.ToJson(value)
+            });
         }
 
         private int[] GetRealAmmo()

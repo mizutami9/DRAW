@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D eller venstre pind: Flyt mellemrum/A: Hop F/X: Evne Klik/RT: Handling Vælg: Tegn igen Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "VENSTRE STIK: MARKØR RT: TEGNING / VÆLG LT: SLET CREATE / VIEW: LUK"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "- Hvad er det? Reach the goal before time run out."
+      "value": "TIDSANgreb. TRYD OM ALLES SAMLEDE SLUTTID ER INDEN FOR {0} MINUTTER."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "LØB."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "Skift figur"
+      "key": "gameplay_control_switch",
+      "value": "Skift figur"
     },
     {
-        "key":  "feedback_button",
-        "value":  "FEEDBACK / RAPPORTÉR FEJL"
+      "key": "feedback_button",
+      "value": "FEEDBACK / RAPPORTÉR FEJL"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "Tak fordi du spillede!\nFeedback / Rapportér fejl"
+      "key": "feedback_clear_button",
+      "value": "Tak fordi du spillede!\nFeedback / Rapportér fejl"
     },
-    { "key": "option_complete", "value": "FÆRDIG" },
-    { "key": "option_screen_mode_format", "value": "VISNING: {0}" },
-    { "key": "option_resolution_format", "value": "OPLØSNING: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "FULD SKÆRM" },
-    { "key": "option_windowed", "value": "VINDUESTILSTAND" },
-    { "key": "online_steam_not_running", "value": "Start Steam, og åbn derefter NICO DRAW fra dit Steam-bibliotek." },
-    { "key": "online_steam_ticket_failed", "value": "Kunne ikke hente en Steam-godkendelsesbillet: {0}" },
-    { "key": "wishlist_button", "value": "ØNSKELISTE" },
-    { "key": "single_recommend_title", "value": "FLERE SPILLERE ANBEFALES!" },
-    { "key": "single_recommend_message", "value": "NICO DRAW er sjovest, når I samarbejder!\nPrøv at spille med 2–4 spillere!" },
-    { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Afslut NICO DRAW?" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} bruger allerede denne figur. Send en bytteanmodning?" },
-    { "key": "draw_species_swap_send", "value": "SEND ANMODNING" },
-    { "key": "background_word_push", "value": "SKUB!" }
+    {
+      "key": "option_complete",
+      "value": "FÆRDIG"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "VISNING: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "OPLØSNING: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "FULD SKÆRM"
+    },
+    {
+      "key": "option_windowed",
+      "value": "VINDUESTILSTAND"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Start Steam, og åbn derefter NICO DRAW fra dit Steam-bibliotek."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Kunne ikke hente en Steam-godkendelsesbillet: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "ØNSKELISTE"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "FLERE SPILLERE ANBEFALES!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW er sjovest, når I samarbejder!\nPrøv at spille med 2–4 spillere!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OK"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Afslut NICO DRAW?"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} bruger allerede denne figur. Send en bytteanmodning?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "SEND ANMODNING"
+    },
+    {
+      "key": "background_word_push",
+      "value": "SKUB!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "HOLD KRYDS / A: GLIDE FIRKANT / X: GRAB"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "FIRKANT / X: RIDS / GRAB"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "FIRKANT / X: KAST"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "FIRKANT / X: PIG MOD HØJRE STIK"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "HOLD CROSS / A: SHELL HOLD-FIRAD / X: DREJ 90°"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "HOLD KRYS: GLIDE FIRKANT: GRIP"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "FIRKANT: RIDS / GRAB"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "FIRKANT: KASTE"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "FIRKANT: PIG MOD HØJRE STIK"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "HOLD KRYS: SKAL HOLD FIRKANT: DREJ 90°"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "HOLD A: GLIDE X: GRIP"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: RIDS / GRAB"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: KASTE"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: PIG MOD HØJRE STIK"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "HOLD A: SKAL HOLD X: DREJ 90°"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "INGEN TIDSBEGRÆNSNING"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "IKKE MED I DEMO"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "VENSTRE STIK: FLYT RT / A / B: TEGN OG VÆLG LT: SLET"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: TEGNING MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: TEGNING MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / SELECT: DRAW MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: TEGNING MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: TEGNING MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: TEGNING MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: TEGNING MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Q: SKIFT KARAKTER"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "TREKANT / Y: SWITCH KARAKTER"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "TREKANT: SWITCH KARAKTER"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: SKIFT KARAKTER"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "HOLDET TOTAL OVER"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "SPIL OVER\nTOTAL {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "PRØV IGEN OM {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "SLET INDEN FOR {0} I ALT"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "I ALT {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automatisk (tastatur/gamepad)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (afbrudt)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Tastatur + mus"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD AFBRUDT. TILSLUT DEN GEN FOR AT GENDANNELSE AF SAMME AFSPILLER."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD FORBINDET GEN."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "TASTATUR/MUS LØSES FRA P1. TRYK PÅ EN KONTROLKNAP FOR AT GØRE P1."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "UTIDSIGNET PAD: START FOR AT JOIN / KEYBOARD: ENTER TO JOIN, BACKSPACE TO LEAVE / P2: VÆLG + B FOR AT FORLADE"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} TILSLUTTEDE ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} VENSTRE."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "OP TIL 2 SPILLERE PR. ENHED OG 4 SPILLERE I alt i rummet."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "VÆRELSET ER FULDT (4 SPILLERE). DEN EKSTRA LOKALE SPILLER BLEV FJERNET."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 SKIFTET TIL {0}."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 SPILLERE KLAR"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: JOIN"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "TRYK PÅ ENHVER KONTROLKNAP FOR AT TILMELDE"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "LOKAL PLAY {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "TILFØJ ELLER FJERN LOKALE SPILLERE FØR DU STARTER SCAPEN."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PAD {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "SPILLERE {0}/2\nKEYBOARD: ENTER TIL AT JOIN / BACKSPACE FOR AT FORLADE\nCONTROLLER: START FOR AT JOIN / HOLD B FOR AT FORLADE"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "LOKALE SPILLERE {0}/2 TILSLUTTEDE PADS {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Oprettelse af lokale mislykkedes. Prøver igen om {0} s ({1} forsøg tilbage)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "FIND DEN MASSENDE POSERING BLANDT DE FLYDENDE FUGE!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "SÆT DEN MATCHENDE MENNESKEPOSITION I NØGLEHULET!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "RUND {0}/3 {1:0.0}s VENSTRE"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "PRØVER IGEN DENNE RUNDE"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "RUNDE {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "RUNDT {0} KLAR!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "TID OP!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "BÆR skildpadden GENNEM RUMMET FULDT AF FJÆRE!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "TRYD OM ALLES SAMLEDE SLUTTID ER INDEN FOR 1 MINUT PR. SPILLER."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "ALLE RUNDE KLAR!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "KNÆK DE SMÅ KASSER!  SE FJENDENE!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "KNÆK KASSENE MED SLIMSPIKEN!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "RUNDE {0}/3 KASSER {1}/{2} {3}s VENSTRE"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "SPIL OVER FORSØGER RUNDE IGEN {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "RUNDT {0} KLAR!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Tilskuer: {0} Skift med ← / →"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "RUNDE {0}/3 STARTER I {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "DU KAN BEVÆRE DU INDEN FOR DIN BÅNE UNDER NEDTÆKLING"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "TITLETRÆKNING ER IKKE TILGÆNGELIG UNDER LOKAL CO-OP. TILBAGE TIL 1 SPILLER FØRST."
+    }
   ]
 }

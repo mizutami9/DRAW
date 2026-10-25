@@ -590,7 +590,7 @@ namespace DrawBody.Prototype
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
-                if (IsOnline && player.transform != stageManager.ActivePlayerTransform) continue;
+                if (IsOnline && !stageManager.IsLocallyControlledPlayer(player)) continue;
                 Vector2 position = new Vector2(-12.35f + placed * 1.15f, FloorY + 1.35f);
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
                 if (body != null)
@@ -615,7 +615,7 @@ namespace DrawBody.Prototype
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             for (int i = 0; i < players.Length; i++)
             {
-                if (!IsOnline || players[i].transform == stageManager.ActivePlayerTransform)
+                if (!IsOnline || stageManager.IsLocallyControlledPlayer(players[i]))
                     players[i].SetControlsEnabled(controlsEnabled);
             }
         }

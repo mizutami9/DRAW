@@ -78,7 +78,7 @@ namespace DrawBody.Prototype
         private bool started;
         private bool failed;
         private bool rosterReady;
-        private bool localFinishRequested;
+        private readonly HashSet<string> localFinishRequested = new HashSet<string>();
 
         public bool CanFinish => started && !failed;
         private bool IsOnline => syncManager != null && syncManager.IsOnlineActive;
@@ -166,17 +166,18 @@ namespace DrawBody.Prototype
 
             if (IsOnline)
             {
-                if (stageManager == null || goalPlayer.transform != stageManager.ActivePlayerTransform
-                    || onlineManager == null || string.IsNullOrEmpty(onlineManager.LocalPlayerId)
-                    || localFinishRequested)
+                string gamePlayerId = stageManager != null ? stageManager.GetOnlinePlayerId(goalPlayer) : null;
+                if (stageManager == null || !stageManager.IsLocallyControlledPlayer(goalPlayer)
+                    || onlineManager == null || string.IsNullOrEmpty(gamePlayerId)
+                    || localFinishRequested.Contains(gamePlayerId))
                     return;
 
-                localFinishRequested = true;
+                localFinishRequested.Add(gamePlayerId);
                 goalPlayer.ResetMotion();
                 goalPlayer.SetControlsEnabled(false);
                 if (HasAuthority)
                 {
-                    RecordFinish(onlineManager.LocalPlayerId);
+                    RecordFinish(gamePlayerId);
                 }
                 else
                 {
@@ -184,6 +185,7 @@ namespace DrawBody.Prototype
                     {
                         ObjectId = StageId,
                         Kind = FinishRequestKind,
+                        PlayerId = gamePlayerId,
                         Json = "{}"
                     });
                 }
@@ -334,19 +336,19 @@ namespace DrawBody.Prototype
         {
             if (IsOnline)
             {
-                if (current.transform != stageManager.ActivePlayerTransform) return -1;
-                return FindParticipant(onlineManager != null ? onlineManager.LocalPlayerId : null);
+                if (!stageManager.IsLocallyControlledPlayer(current)) return -1;
+                return FindParticipant(stageManager.GetOnlinePlayerId(current));
             }
-            if (current == stageManager.RemotePlayerController) return FindParticipant("local-2");
-            if (current.transform == stageManager.ActivePlayerTransform || current != stageManager.RemotePlayerController)
-                return FindParticipant("local-1");
-            return -1;
+            if (!stageManager.IsLocallyControlledPlayer(current)) return -1;
+            int localIndex = stageManager.GetLocalPlayerIndex(current);
+            return FindParticipant("local-" + (localIndex + 1));
         }
 
         private string GetOfflinePlayerId(PlayerController2D current)
         {
             if (stageManager == null || current == null) return null;
-            return current == stageManager.RemotePlayerController ? "local-2" : "local-1";
+            if (!stageManager.IsLocallyControlledPlayer(current)) return null;
+            return "local-" + (stageManager.GetLocalPlayerIndex(current) + 1);
         }
 
         private void RecordFinish(string playerId)
@@ -395,7 +397,7 @@ namespace DrawBody.Prototype
             {
                 if (players[i] == null) continue;
                 if (!value) players[i].ResetMotion();
-                players[i].SetControlsEnabled(value && players[i].transform == stageManager.ActivePlayerTransform);
+                players[i].SetControlsEnabled(value && stageManager.IsLocallyControlledPlayer(players[i]));
             }
         }
 
@@ -411,7 +413,7 @@ namespace DrawBody.Prototype
             {
                 int lane = GetPlayerLane(players[i]);
                 bool canMove = lane >= 0 && finishTimes[lane] < 0f
-                    && players[i].transform == stageManager.ActivePlayerTransform;
+                    && stageManager.IsLocallyControlledPlayer(players[i]);
                 players[i].SetControlsEnabled(canMove);
             }
         }
@@ -442,8 +444,14 @@ namespace DrawBody.Prototype
             rosterReady = true;
             ConfigureActiveLanes();
             if (monitorTexts.Count == 0) BuildMonitors();
-            int localLane = FindParticipant(onlineManager != null ? onlineManager.LocalPlayerId : null);
-            localFinishRequested = localLane >= 0 && finishTimes[localLane] >= 0f;
+            localFinishRequested.Clear();
+            IReadOnlyList<PlayerController2D> locals = stageManager.LocalPlayers;
+            for (int i = 0; i < locals.Count; i++)
+            {
+                string id = stageManager.GetOnlinePlayerId(locals[i]);
+                int localLane = FindParticipant(id);
+                if (localLane >= 0 && finishTimes[localLane] >= 0f) localFinishRequested.Add(id);
+            }
             ApplyLocalControlState();
             if (failed) ShowFailureOverlay();
         }

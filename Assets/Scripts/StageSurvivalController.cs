@@ -193,14 +193,12 @@ namespace DrawBody.Prototype
 
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            Transform localOnlinePlayer = stageManager != null && stageManager.IsOnlineStageActive
-                ? stageManager.ActivePlayerTransform
-                : null;
             float floorTop = FloorY + 0.31f + 0.06f;
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
-                if (player == null || localOnlinePlayer != null && player.transform != localOnlinePlayer) continue;
+                if (player == null || stageManager != null && stageManager.IsOnlineStageActive
+                    && !stageManager.IsLocallyControlledPlayer(player)) continue;
 
                 Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(true);
                 float bottom = float.PositiveInfinity;
@@ -386,7 +384,7 @@ namespace DrawBody.Prototype
             if (IsOnlineActive())
             {
                 string localId = onlineManager != null ? onlineManager.LocalPlayerId : null;
-                if (playerId != localId)
+                if (!OnlinePlayerIdentity.IsOwnedByConnection(playerId, localId))
                 {
                     return;
                 }
@@ -1179,10 +1177,12 @@ namespace DrawBody.Prototype
             {
                 return;
             }
-            PlayerController2D active = stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
-            active?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode && !IsEliminated(active));
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                local?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode && !IsEliminated(local));
+            }
         }
 
         private bool IsEliminated(PlayerController2D player)

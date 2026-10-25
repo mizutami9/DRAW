@@ -73,7 +73,8 @@ namespace DrawBody.Prototype
         private int lastReceivedSequence;
         private float nextStateAt;
         private bool ready;
-        private float nextLocalButtonRequestAt;
+        private readonly Dictionary<string, float> nextLocalButtonRequestAt =
+            new Dictionary<string, float>();
         private readonly Dictionary<string, float> lastButtonRequestAt = new Dictionary<string, float>();
 
         private void Awake()
@@ -132,19 +133,25 @@ namespace DrawBody.Prototype
             SetButtonVisual(greenButton, greenPressed || activeRelayWind == 3);
             SetButtonVisual(birdGoalButton, birdGoalPressed || humanDoorOpen);
 
-            if (!HasAuthority() && Time.unscaledTime >= nextLocalButtonRequestAt)
+            if (!HasAuthority())
             {
-                PlayerController2D local = stageManager.ActivePlayerTransform != null
-                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                    : null;
-                int requested = GetPressedButton(local);
-                if (requested >= 0)
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
                 {
-                    nextLocalButtonRequestAt = Time.unscaledTime + 0.18f;
+                    PlayerController2D local = localPlayers[i];
+                    string gamePlayerId = stageManager.GetOnlinePlayerId(local);
+                    float nextRequest = nextLocalButtonRequestAt.TryGetValue(gamePlayerId, out float scheduled)
+                        ? scheduled
+                        : 0f;
+                    if (Time.unscaledTime < nextRequest) continue;
+                    int requested = GetPressedButton(local);
+                    if (requested < 0) continue;
+                    nextLocalButtonRequestAt[gamePlayerId] = Time.unscaledTime + 0.18f;
                     onlineManager?.SendGimmickData(new OnlineGimmickData
                     {
                         ObjectId = StageId,
                         Kind = ButtonRequestKind,
+                        PlayerId = gamePlayerId,
                         Json = JsonUtility.ToJson(new ButtonRequest
                         {
                             Button = requested,

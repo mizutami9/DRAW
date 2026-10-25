@@ -1689,10 +1689,11 @@ namespace DrawBody.Prototype
 
         private bool IsLocalPlayerPressing(Collider2D button)
         {
-            PlayerController2D local = stageManager != null && stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
-            return IsPlayerPressing(local, button);
+            if (stageManager == null) return false;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+                if (IsPlayerPressing(localPlayers[i], button)) return true;
+            return false;
         }
 
         private static bool IsPlayerPressing(PlayerController2D player, Collider2D button)
@@ -1743,13 +1744,12 @@ namespace DrawBody.Prototype
         private void EvaluateHoles()
         {
             int nextMask = 0;
-            PlayerController2D local = stageManager != null && stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
             for (int i = 0; i < holes.Count; i++)
             {
-                if (!IsOnline ? IsHoleCoveredByPlayer(holes[i].Center)
-                    : IsHoleCoveredByPlayer(local, holes[i].Center)) nextMask |= 1 << i;
+                bool covered = !IsOnline
+                    ? IsHoleCoveredByPlayer(holes[i].Center)
+                    : IsHoleCoveredByAnyLocalPlayer(holes[i].Center);
+                if (covered) nextMask |= 1 << i;
             }
             if (IsOnline)
                 foreach (KeyValuePair<string, PlayerContactState> pair in remoteContacts)
@@ -1811,29 +1811,42 @@ namespace DrawBody.Prototype
             return false;
         }
 
+        private bool IsHoleCoveredByAnyLocalPlayer(Vector2 center)
+        {
+            if (stageManager == null) return false;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+                if (IsHoleCoveredByPlayer(localPlayers[i], center)) return true;
+            return false;
+        }
+
         private void SendLocalContactState()
         {
-            PlayerController2D local = stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
-            if (local == null || onlineManager == null) return;
-            int mask = 0;
-            for (int i = 0; i < holes.Count; i++)
-                if (IsHoleCoveredByPlayer(local, holes[i].Center)) mask |= 1 << i;
-            onlineManager.SendGimmickData(new OnlineGimmickData
+            if (stageManager == null || onlineManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int localIndex = 0; localIndex < localPlayers.Count; localIndex++)
             {
-                ObjectId = StageId,
-                Kind = ContactKind,
-                Json = JsonUtility.ToJson(new PlayerContactState
+                PlayerController2D local = localPlayers[localIndex];
+                if (local == null) continue;
+                int mask = 0;
+                for (int i = 0; i < holes.Count; i++)
+                    if (IsHoleCoveredByPlayer(local, holes[i].Center)) mask |= 1 << i;
+                onlineManager.SendGimmickData(new OnlineGimmickData
                 {
-                    Sequence = ++localContactSequence,
-                    Round = round,
-                    Attempt = roundAttempt,
-                    HoleMask = mask,
-                    ButtonPressed = IsPlayerPressing(local, boxButton),
-                    PlayerPosition = local.transform.position
-                })
-            });
+                    ObjectId = StageId,
+                    Kind = ContactKind,
+                    PlayerId = stageManager.GetOnlinePlayerId(local),
+                    Json = JsonUtility.ToJson(new PlayerContactState
+                    {
+                        Sequence = ++localContactSequence,
+                        Round = round,
+                        Attempt = roundAttempt,
+                        HoleMask = mask,
+                        ButtonPressed = IsPlayerPressing(local, boxButton),
+                        PlayerPosition = local.transform.position
+                    })
+                });
+            }
         }
 
         private void ApplyHoleVisuals()
@@ -2008,10 +2021,9 @@ namespace DrawBody.Prototype
             bool enabled = phase == SealPhase.Active
                 && Time.unscaledTime >= roundReadyAt
                 && !stageManager.IsDrawingMode;
-            PlayerController2D local = stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
-            local?.SetControlsEnabled(enabled);
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+                localPlayers[i]?.SetControlsEnabled(enabled);
         }
 
         private IEnumerator PositionPlayersAfterStageSetup()
@@ -2025,7 +2037,7 @@ namespace DrawBody.Prototype
             for (int i = 0; i < activePlayers.Length; i++)
             {
                 PlayerController2D player = activePlayers[i];
-                if (IsOnline && player.transform != stageManager.ActivePlayerTransform) continue;
+                if (IsOnline && !stageManager.IsLocallyControlledPlayer(player)) continue;
                 int slot = ResolvePlayerSlot(player, i, total);
                 float t = (slot + 1f) / (total + 1f);
                 Vector2 position = new Vector2(Mathf.Lerp(-roomWidth * 0.32f, roomWidth * 0.32f, t), FloorY + 1.35f);

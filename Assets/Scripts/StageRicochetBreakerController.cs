@@ -888,9 +888,13 @@ namespace DrawBody.Prototype
         private void SetLocalControls(bool enabled)
         {
             if (stageManager == null) return;
-            PlayerController2D active = stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            if (active != null && active.gameObject.activeSelf) active.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                if (local != null && local.gameObject.activeSelf)
+                    local.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
+            }
         }
 
         private bool IsOnline() => stageManager != null && stageManager.IsOnlineStageActive;
@@ -1406,9 +1410,7 @@ namespace DrawBody.Prototype
         {
             if (player == null) return false;
             if (stageManager == null) stageManager = Object.FindFirstObjectByType<StageManager>();
-            return stageManager != null
-                && stageManager.ActivePlayerTransform != null
-                && player.transform == stageManager.ActivePlayerTransform;
+            return stageManager != null && stageManager.IsLocallyControlledPlayer(player);
         }
 
         private void IgnorePassThroughSurfaces()

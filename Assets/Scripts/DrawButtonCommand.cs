@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace DrawBody.Prototype
 {
     [RequireComponent(typeof(Button))]
-    public sealed class DrawButtonCommand : MonoBehaviour
+    public sealed class DrawButtonCommand : MonoBehaviour, IPointerClickHandler
     {
         public enum Command
         {
@@ -28,7 +29,9 @@ namespace DrawBody.Prototype
             }
 
             commandButton = GetComponent<Button>();
-            commandButton.onClick.AddListener(Execute);
+            // Commands are dispatched with the pointer position so two local
+            // DRAW viewports cannot both accept one hardware-mouse click.
+            commandButton.onClick.RemoveAllListeners();
         }
 
         private void Update()
@@ -43,6 +46,27 @@ namespace DrawBody.Prototype
                     commandButton.interactable = canConfirm;
                 }
             }
+        }
+
+        public void BindDrawManager(DrawManager manager)
+        {
+            drawManager = manager;
+        }
+
+        public void RebindForClonedSession(DrawManager manager)
+        {
+            drawManager = manager;
+            if (commandButton == null) commandButton = GetComponent<Button>();
+            // A cloned UnityEvent can retain the source panel's runtime target.
+            // The clone owns this command, so rebuild its event from scratch.
+            commandButton.onClick.RemoveAllListeners();
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData == null || drawManager == null
+                || !drawManager.OwnsScreenPoint(eventData.position)) return;
+            Execute();
         }
 
         private void Execute()

@@ -18,6 +18,7 @@ namespace DrawBody.Prototype
         private GameObject drawingPresetConfirmDialog;
         private GameObject drawingPresetPopup;
         private DrawManager drawManager;
+        private bool wideSplitLayout;
         private int pendingPresetSlot;
         private DrawManager.Species pendingPresetSpecies;
         private PresetAction pendingPresetAction;
@@ -31,13 +32,22 @@ namespace DrawBody.Prototype
         private void OnEnable()
         {
             LocalizationManager.LanguageChanged += RefreshLabels;
+            CharacterDrawingPresetStore.PresetsChanged += HandlePresetStoreChanged;
             ResolveDrawManager();
+            RectTransform panel = transform as RectTransform;
+            if (panel != null)
+            {
+                float anchorHeight = panel.anchorMax.y - panel.anchorMin.y;
+                if (anchorHeight > 0.01f && anchorHeight < 0.75f)
+                    wideSplitLayout = true;
+            }
             Polish();
         }
 
         private void OnDisable()
         {
             LocalizationManager.LanguageChanged -= RefreshLabels;
+            CharacterDrawingPresetStore.PresetsChanged -= HandlePresetStoreChanged;
             if (drawManager != null)
             {
                 drawManager.CurrentSpeciesChanged -= HandlePresetSpeciesChanged;
@@ -57,8 +67,193 @@ namespace DrawBody.Prototype
             }
 
             ApplyScrapbookVisuals();
+            if (wideSplitLayout) ApplyWideSplitLayout();
             RefreshLabels();
             ApplyTypography();
+        }
+
+        public void BindDrawManager(DrawManager manager)
+        {
+            if (drawManager != null && drawManager != manager)
+            {
+                drawManager.CurrentSpeciesChanged -= HandlePresetSpeciesChanged;
+                drawManager.SpeciesAvailabilityChanged -= HandlePresetSpeciesAvailabilityChanged;
+            }
+            drawManager = manager;
+            ResolveDrawManager();
+            CreateBrushPresetButtons(FindRect(transform, "BrushSizeChip"));
+            RefreshLabels();
+            RefreshPresetSlotVisuals();
+        }
+
+        public void ApplyViewportLayout(bool wideSplit)
+        {
+            wideSplitLayout = wideSplit;
+            // Restore the authored one-player layout before applying the compact
+            // two-player reflow. This also makes leaving local co-op reversible.
+            RebuildToolLayout();
+            ResetViewportScales();
+            ApplyScrapbookVisuals();
+            if (wideSplit) ApplyWideSplitLayout();
+            RectTransform root = transform as RectTransform;
+            RectTransform popup = FindRect(transform, "DrawingPresetPopupCard");
+            if (root != null && popup != null) FitDrawingPresetPopup(root, popup);
+        }
+
+        private void ResetViewportScales()
+        {
+            string[] names =
+            {
+                "DrawTitle", "DrawTitleGraphic", "DrawTitlePaintStroke", "PartButtonBar",
+                "DrawSpeciesPanel", "DrawArea", "PreviewArea", "PreviewTitle",
+                "PreviewTitlePaper", "SpeciesAbilityCard", "DrawingPresetCard",
+                "DrawToolPanel", "DecideButton", "CancelDrawButton"
+            };
+            for (int i = 0; i < names.Length; i++)
+            {
+                RectTransform rect = FindRect(transform, names[i]);
+                if (rect != null) rect.localScale = Vector3.one;
+            }
+            RectTransform title = FindRect(transform, "DrawTitle");
+            if (title != null) title.gameObject.SetActive(true);
+            RectTransform previewTitle = FindRect(transform, "PreviewTitle");
+            if (previewTitle != null) previewTitle.gameObject.SetActive(true);
+            RectTransform previewPaper = FindRect(transform, "PreviewTitlePaper");
+            if (previewPaper != null) previewPaper.gameObject.SetActive(true);
+            RectTransform gamepadHint = FindRect(transform, "DrawGamepadHint");
+            if (gamepadHint != null) gamepadHint.gameObject.SetActive(false);
+        }
+
+        private void ApplyWideSplitLayout()
+        {
+            RectTransform root = transform as RectTransform;
+            if (root == null) return;
+
+            // A top/bottom viewport is only about 180 reference pixels tall on
+            // a 16:9 Game view (CanvasScaler matches width). Build from the real
+            // rect instead of assuming that half of 720 remains 360 units tall.
+            float width = Mathf.Max(960f, root.rect.width);
+            float height = Mathf.Max(150f, root.rect.height);
+            float left = -width * 0.5f;
+            float contentHeight = Mathf.Max(136f, height - 12f);
+            float workspaceSize = Mathf.Clamp(contentHeight, 150f, 300f);
+
+            Hide(FindRect(root, "DrawTitle"));
+            Hide(FindRect(root, "DrawTitleGraphic"));
+            Hide(FindRect(root, "DrawTitlePaintStroke"));
+            Hide(FindRect(root, "PreviewTitle"));
+            Hide(FindRect(root, "PreviewTitlePaper"));
+
+            RectTransform species = FindRect(root, "DrawSpeciesPanel");
+            float railScale = Mathf.Clamp(contentHeight / 330f, 0.52f, 0.78f);
+            SetCenterRect(species, new Vector2(left + 27f, 0f), new Vector2(72f, 330f));
+            if (species != null) species.localScale = Vector3.one * railScale;
+
+            RectTransform draw = FindRect(root, "DrawArea");
+            // Drawing is the primary action. Keep its canvas at the visual center
+            // of each wide split viewport instead of pinning it to the far left.
+            float drawCenterX = 0f;
+            SetCenterRect(draw, new Vector2(drawCenterX, 0f), Vector2.one * workspaceSize);
+            if (draw != null) draw.localScale = Vector3.one;
+
+            RectTransform preview = FindRect(root, "PreviewArea");
+            float previewVisibleSize = Mathf.Min(172f, workspaceSize * 0.58f);
+            float previewScale = previewVisibleSize / 300f;
+            float previewCenterX = drawCenterX - workspaceSize * 0.5f - 10f
+                - previewVisibleSize * 0.5f;
+            SetCenterRect(preview, new Vector2(previewCenterX, 0f), new Vector2(300f, 300f));
+            if (preview != null) preview.localScale = Vector3.one * previewScale;
+
+            RectTransform ability = FindRect(root, "SpeciesAbilityCard");
+            float abilityScale = Mathf.Clamp(contentHeight / 250f, 0.50f, 0.58f);
+            float abilityWidth = 280f * abilityScale;
+            float abilityCenterX = previewCenterX - previewVisibleSize * 0.5f - 10f
+                - abilityWidth * 0.5f;
+            SetCenterRect(ability, new Vector2(abilityCenterX, 0f), new Vector2(280f, 250f));
+            if (ability != null) ability.localScale = Vector3.one * abilityScale;
+
+            float workspaceRight = drawCenterX + workspaceSize * 0.5f;
+            float rightStart = Mathf.Clamp(workspaceRight - left + 14f, width * 0.54f, width - 500f);
+            float rightWidth = Mathf.Max(490f, width - rightStart - 10f);
+            float actionWidth = Mathf.Clamp(rightWidth * 0.2f, 108f, 132f);
+            float toolWidth = rightWidth - actionWidth - 10f;
+            float toolHeight = Mathf.Max(158f, height - 66f);
+
+            RectTransform partBar = FindRect(root, "PartButtonBar");
+            float partScale = Mathf.Clamp(rightWidth / 900f, 0.58f, 0.76f);
+            SetCenterRect(partBar,
+                new Vector2(left + rightStart + rightWidth * 0.5f, height * 0.5f - 24f),
+                new Vector2(900f, 70f));
+            if (partBar != null) partBar.localScale = Vector3.one * partScale;
+
+            RectTransform tools = FindRect(root, "DrawToolPanel");
+            SetDockRect(tools, new Vector2(rightStart, 7f), new Vector2(toolWidth, toolHeight));
+            if (tools != null)
+            {
+                tools.localScale = Vector3.one;
+                LayoutWideToolChildren(tools, toolWidth, toolHeight);
+            }
+
+            float actionX = rightStart + toolWidth + 10f;
+            RectTransform preset = FindRect(root, "DrawingPresetCard");
+            SetDockRect(preset, new Vector2(actionX, height - 119f),
+                new Vector2(actionWidth, 46f));
+            if (preset != null)
+            {
+                preset.localScale = Vector3.one;
+                Button open = FindRect(preset, "DrawingPresetOpenButton")?.GetComponent<Button>();
+                ConfigureCompactAction(open != null ? open.transform as RectTransform : null, 6,
+                    new Color(0.5f, 0.82f, 0.96f, 1f));
+                SetButtonText(open, LocalizationManager.T("draw_preset_button"), 14);
+            }
+
+            RectTransform decide = FindRect(root, "DecideButton");
+            SetDockRect(decide, new Vector2(actionX, 88f), new Vector2(actionWidth, 72f));
+            RectTransform cancel = FindRect(root, "CancelDrawButton");
+            SetDockRect(cancel, new Vector2(actionX, 10f), new Vector2(actionWidth, 68f));
+            ConfigureLargeAction(decide, 12, new Color(0.35f, 0.88f, 0.47f, 1f));
+            ConfigureLargeAction(cancel, 15, new Color(1f, 0.43f, 0.36f, 1f));
+
+            Text hint = EnsureLabel(root, "DrawGamepadHint", string.Empty, 13,
+                TextAnchor.MiddleCenter);
+            SetDockRect(hint.rectTransform,
+                new Vector2(rightStart + 4f, height - 65f),
+                new Vector2(Mathf.Min(245f, toolWidth - 8f), 28f));
+            hint.text = LocalizationManager.T("draw_gamepad_pointer_hint");
+            hint.resizeTextForBestFit = true;
+            hint.resizeTextMinSize = 8;
+            hint.resizeTextMaxSize = 13;
+            hint.horizontalOverflow = HorizontalWrapMode.Wrap;
+            hint.verticalOverflow = VerticalWrapMode.Truncate;
+            hint.gameObject.SetActive(drawManager != null && drawManager.UsesGamepadInput);
+        }
+
+        private static void LayoutWideToolChildren(RectTransform tools, float width, float height)
+        {
+            RectTransform pen = FindRect(tools, "PenToolButton");
+            RectTransform eraser = FindRect(tools, "EraserToolButton");
+            RectTransform brush = FindRect(tools, "BrushSizeChip");
+            RectTransform ink = FindRect(tools, "InkStatusCard");
+            RectTransform history = FindRect(tools, "HistoryCard");
+
+            float topScale = Mathf.Clamp((width - 16f) / 538f, 0.62f, 0.82f);
+            float topHeight = 130f * topScale;
+            float topY = height - topHeight;
+            float penWidth = 134f * topScale;
+            float brushWidth = 270f * topScale;
+            SetDockRect(pen, new Vector2(0f, topY), new Vector2(134f, 130f));
+            SetDockRect(eraser, new Vector2(penWidth + 6f, topY), new Vector2(134f, 130f));
+            SetDockRect(brush, new Vector2(penWidth * 2f + 12f, topY), new Vector2(270f, 130f));
+            if (pen != null) pen.localScale = Vector3.one * topScale;
+            if (eraser != null) eraser.localScale = Vector3.one * topScale;
+            if (brush != null) brush.localScale = Vector3.one * topScale;
+
+            float bottomScale = Mathf.Clamp((width - 8f) / 464f, 0.68f, 0.92f);
+            float inkWidth = 292f * bottomScale;
+            SetDockRect(ink, Vector2.zero, new Vector2(292f, 130f));
+            SetDockRect(history, new Vector2(inkWidth + 8f, 0f), new Vector2(172f, 130f));
+            if (ink != null) ink.localScale = Vector3.one * bottomScale;
+            if (history != null) history.localScale = Vector3.one * bottomScale;
         }
 
         private void RebuildToolLayout()
@@ -275,7 +470,7 @@ namespace DrawBody.Prototype
 
         private void ApplyScrapbookVisuals()
         {
-            RectTransform root = FindRect(transform, "DrawPanel");
+            RectTransform root = transform as RectTransform;
             if (root == null)
             {
                 return;
@@ -684,16 +879,19 @@ namespace DrawBody.Prototype
         {
             if (rect == null) return;
             SetPaperButton(rect, color);
-            EnsureButtonIcon(rect, "ScrapbookActionIcon", iconIndex, new Vector2(27f, 0f),
-                new Vector2(34f, 34f), new Color(0.08f, 0.09f, 0.07f, 0.94f), false);
+            bool narrow = rect.rect.width > 0f && rect.rect.width < 155f;
+            EnsureButtonIcon(rect, "ScrapbookActionIcon", iconIndex,
+                new Vector2(narrow ? 22f : 27f, 0f),
+                new Vector2(narrow ? 27f : 34f, narrow ? 27f : 34f),
+                new Color(0.08f, 0.09f, 0.07f, 0.94f), false);
             Text label = rect.GetComponentInChildren<Text>(true);
             if (label != null)
             {
-                label.rectTransform.anchorMin = new Vector2(0.28f, 0f);
+                label.rectTransform.anchorMin = new Vector2(narrow ? 0.34f : 0.28f, 0f);
                 label.rectTransform.anchorMax = Vector2.one;
-                label.rectTransform.offsetMin = new Vector2(5f, 6f);
-                label.rectTransform.offsetMax = new Vector2(-12f, -6f);
-                ConfigureContainedText(label, 10, 19, TextAnchor.MiddleCenter);
+                label.rectTransform.offsetMin = new Vector2(4f, 6f);
+                label.rectTransform.offsetMax = new Vector2(-7f, -6f);
+                ConfigureContainedText(label, 9, narrow ? 16 : 19, TextAnchor.MiddleCenter);
                 label.transform.SetAsLastSibling();
             }
         }
@@ -826,8 +1024,14 @@ namespace DrawBody.Prototype
             SetButtonLabel("FullResetConfirmButton", LocalizationManager.T("draw_reset_confirm_yes"), 18);
             SetButtonLabel("FullResetCancelButton", LocalizationManager.T("draw_reset_confirm_no"), 18);
             RefreshPresetSlotVisuals();
-            SetButtonLabel("DecideButton", LocalizationManager.T("draw_finish") + "\nENTER", 19);
-            SetButtonLabel("CancelDrawButton", LocalizationManager.T("ui_back_esc"), 16);
+            bool gamepad = drawManager != null && drawManager.UsesGamepadInput;
+            SetButtonLabel("DecideButton", gamepad
+                ? LocalizationManager.T("draw_finish")
+                : LocalizationManager.T("draw_finish") + "\nENTER", 19);
+            SetButtonLabel("CancelDrawButton", gamepad
+                ? LocalizationManager.T("draw_preset_back")
+                : LocalizationManager.T("ui_back_esc"), 16);
+            SetPlainText("DrawGamepadHint", LocalizationManager.T("draw_gamepad_pointer_hint"));
             Text backLabel = FindRect(transform, "CancelDrawButton")?.GetComponentInChildren<Text>(true);
             if (backLabel != null)
             {
@@ -840,7 +1044,7 @@ namespace DrawBody.Prototype
 
         private void EnsureDrawTitlePaintStroke()
         {
-            RectTransform panel = FindRect(transform, "DrawPanel");
+            RectTransform panel = transform as RectTransform;
             RectTransform title = FindRect(transform, "DrawTitle");
             if (panel == null || title == null) return;
 
@@ -912,7 +1116,9 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            DrawManager drawManager = FindFirstObjectByType<DrawManager>();
+            DrawManager targetManager = drawManager != null
+                ? drawManager
+                : FindFirstObjectByType<DrawManager>();
             for (int i = 0; i < brushPresets.Length; i++)
             {
                 float preset = brushPresets[i];
@@ -971,7 +1177,7 @@ namespace DrawBody.Prototype
                 button.onClick.AddListener(() =>
                 {
                     selectedBrushPreset = preset;
-                    drawManager?.SetBrushSizePixels(preset);
+                    targetManager?.SetBrushSizePixels(preset);
                     ApplyBrushPresetSelection();
                 });
             }
@@ -1002,9 +1208,11 @@ namespace DrawBody.Prototype
 
             Image image = rect.GetComponent<Image>();
             DoodlePaperUi.Apply(image, new Color(1f, 0.72f, 0.62f, 1f));
-            Text label = EnsureLabel(rect, "Label", string.Empty, 13, TextAnchor.MiddleCenter);
+            Text label = EnsureLabel(rect, "Label", LocalizationManager.T("draw_reset_all"),
+                13, TextAnchor.MiddleCenter);
             Stretch(label.rectTransform);
             label.fontStyle = FontStyle.Bold;
+            label.raycastTarget = false;
 
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(OpenFullResetConfirmDialog);
@@ -1109,7 +1317,8 @@ namespace DrawBody.Prototype
 
         private void ConfirmFullReset()
         {
-            FindFirstObjectByType<DrawManager>()?.ResetAllToDefault();
+            (drawManager != null ? drawManager : FindFirstObjectByType<DrawManager>())
+                ?.ResetAllToDefault();
             CloseFullResetConfirmDialog();
         }
 
@@ -1266,7 +1475,9 @@ namespace DrawBody.Prototype
             const float verticalMargin = 12f;
             float widthScale = (root.rect.width - horizontalMargin * 2f) / PresetPopupWidth;
             float heightScale = (root.rect.height - verticalMargin * 2f) / PresetPopupHeight;
-            float scale = Mathf.Clamp(Mathf.Min(widthScale, heightScale), 0.72f, 1f);
+            // A two-player DRAW panel is 1280x360. Allow the preset sheet to
+            // shrink enough to remain completely inside that half-screen.
+            float scale = Mathf.Clamp(Mathf.Min(widthScale, heightScale), 0.45f, 1f);
             popup.localScale = Vector3.one * scale;
         }
 
@@ -1359,6 +1570,14 @@ namespace DrawBody.Prototype
 
         private void HandlePresetSpeciesChanged(DrawManager.Species species)
         {
+            RefreshPresetSlotVisuals();
+        }
+
+        private void HandlePresetStoreChanged()
+        {
+            // Presets are intentionally shared by both local players on this
+            // machine. Refresh both open DRAW panels immediately after either
+            // player registers a slot.
             RefreshPresetSlotVisuals();
         }
 
@@ -1631,7 +1850,7 @@ namespace DrawBody.Prototype
 
         private void StraightenDrawUi()
         {
-            RectTransform drawRoot = FindRect(transform, "DrawPanel");
+            RectTransform drawRoot = transform as RectTransform;
             HideLegacyDecoration(drawRoot);
             Hide(FindRect(transform, "DrawBackdrop"));
             Hide(FindRect(transform, "DrawCornerDoodles"));

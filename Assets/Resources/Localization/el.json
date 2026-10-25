@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D ή Left Stick: Move Space/A: Jump F/X: Aability Click/RT: Action Select: Redrawn Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "ΑΡΙΣΤΕΡΟ ΜΒΑΛΙ: ΔΕΡΜΕΑΣ RT: DRAW / SELECT LT: ERASE CREATE / VIEW: CLOSE"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "Γρήγορο τρέξιμο. Φώναξε τον στόχο πριν τελειώσει ο χρόνος."
+      "value": "ΕΠΙΘΕΣΗ ΧΡΟΝΟΥ. ΚΑΘΑΡΙΣΤΕ ΑΝ Ο ΣΥΝΔΥΑΣΜΕΝΟΣ ΧΡΟΝΟΣ ΤΕΡΜΑΤΙΣΜΟΥ ΟΛΩΝ ΕΙΝΑΙ ΣΕ {0} ΛΕΠΤΑ."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "ΤΡΕΞΕ."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "Αλλαγή χαρακτήρα"
+      "key": "gameplay_control_switch",
+      "value": "Αλλαγή χαρακτήρα"
     },
     {
-        "key":  "feedback_button",
-        "value":  "ΣΧΟΛΙΑ / ΑΝΑΦΟΡΑ ΣΦΑΛΜΑΤΟΣ"
+      "key": "feedback_button",
+      "value": "ΣΧΟΛΙΑ / ΑΝΑΦΟΡΑ ΣΦΑΛΜΑΤΟΣ"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "Ευχαριστούμε που παίξατε!\nΣχόλια / Αναφορά σφάλματος"
+      "key": "feedback_clear_button",
+      "value": "Ευχαριστούμε που παίξατε!\nΣχόλια / Αναφορά σφάλματος"
     },
-    { "key": "option_complete", "value": "ΤΕΛΟΣ" },
-    { "key": "option_screen_mode_format", "value": "ΟΘΟΝΗ: {0}" },
-    { "key": "option_resolution_format", "value": "ΑΝΑΛΥΣΗ: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "ΠΛΗΡΗΣ ΟΘΟΝΗ" },
-    { "key": "option_windowed", "value": "ΠΑΡΑΘΥΡΟ" },
-    { "key": "online_steam_not_running", "value": "Εκκινήστε το Steam και μετά το NICO DRAW από τη βιβλιοθήκη Steam." },
-    { "key": "online_steam_ticket_failed", "value": "Δεν ήταν δυνατή η λήψη εισιτηρίου ελέγχου ταυτότητας Steam: {0}" },
-    { "key": "wishlist_button", "value": "ΛΙΣΤΑ ΕΠΙΘΥΜΙΩΝ" },
-    { "key": "single_recommend_title", "value": "ΠΡΟΤΕΙΝΕΤΑΙ ΠΑΙΧΝΙΔΙ ΠΟΛΛΩΝ ΠΑΙΚΤΩΝ!" },
-    { "key": "single_recommend_message", "value": "Το NICO DRAW είναι καλύτερο με συνεργασία!\nΔοκιμάστε να παίξετε με 2–4 παίκτες!" },
-    { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Έξοδος από το NICO DRAW;" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "Ο/Η {0} χρησιμοποιεί ήδη αυτόν τον χαρακτήρα. Να σταλεί αίτημα ανταλλαγής;" },
-    { "key": "draw_species_swap_send", "value": "ΑΠΟΣΤΟΛΗ ΑΙΤΗΜΑΤΟΣ" },
-    { "key": "background_word_push", "value": "ΣΠΡΩΞΕ!" }
+    {
+      "key": "option_complete",
+      "value": "ΤΕΛΟΣ"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "ΟΘΟΝΗ: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "ΑΝΑΛΥΣΗ: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "ΠΛΗΡΗΣ ΟΘΟΝΗ"
+    },
+    {
+      "key": "option_windowed",
+      "value": "ΠΑΡΑΘΥΡΟ"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Εκκινήστε το Steam και μετά το NICO DRAW από τη βιβλιοθήκη Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Δεν ήταν δυνατή η λήψη εισιτηρίου ελέγχου ταυτότητας Steam: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "ΛΙΣΤΑ ΕΠΙΘΥΜΙΩΝ"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "ΠΡΟΤΕΙΝΕΤΑΙ ΠΑΙΧΝΙΔΙ ΠΟΛΛΩΝ ΠΑΙΚΤΩΝ!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "Το NICO DRAW είναι καλύτερο με συνεργασία!\nΔοκιμάστε να παίξετε με 2–4 παίκτες!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OK"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Έξοδος από το NICO DRAW;"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "Ο/Η {0} χρησιμοποιεί ήδη αυτόν τον χαρακτήρα. Να σταλεί αίτημα ανταλλαγής;"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "ΑΠΟΣΤΟΛΗ ΑΙΤΗΜΑΤΟΣ"
+    },
+    {
+      "key": "background_word_push",
+      "value": "ΣΠΡΩΞΕ!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "ΣΤΑΥΡΟΣ ΚΡΑΤΗΣΗΣ / Α: ΤΕΤΡΑΓΩΝΟ ΓΛΥΣΗΣ / Χ: ΑΡΠΑΞ"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "ΤΕΤΡΑΓΩΝΟ / Χ: ΣΚΡΑΤΣ / ΑΡΠΑ"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "ΤΕΤΡΑΓΩΝΟ / Χ: ΠΕΤΩ"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "ΤΕΤΡΑΓΩΝΟ / Χ: ΑΚΥΨΗ ΠΡΟΣ ΔΕΞΙ ΜΠΛΑΒΙ"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "ΣΤΑΥΡΟΣ ΚΡΑΤΗΣΗΣ / A: SHELL HOLD SQARE / X: στροφή 90°"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "ΣΤΑΥΡΟΣ ΚΡΑΤΗΣΗΣ: ΤΕΤΡΑΓΩΝΟ ΓΛΥΣΗΣ: ΑΡΠΑΞ"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "ΤΕΤΡΑΓΩΝΟ: ΣΚΡΑΤΣ / ΑΡΠΑ"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "ΤΕΤΡΑΓΩΝΟ: ΠΕΤΩ"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "ΤΕΤΡΑΓΩΝΟ: ΑΚΥΨΗ ΠΡΟΣ ΔΕΞΙ ΜΠΛΑΒΙ"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "ΣΤΑΥΡΟΣ ΚΡΑΤΗΣΗΣ: ΤΕΤΡΑΓΩΝΟ ΣΥΓΚΡΑΤΗΣΗΣ ΚΕΛΥΒΙΟΥ: ΣΤΡΟΦΗ 90°"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "ΚΡΑΤΗΣΤΕ Α: ΓΛΥΣΤΕ Χ: ΑΡΠΑΞΕ"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "Χ: ΣΚΡΑΤΣΤ / ΑΡΠΑΜΑ"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "Χ: ΠΕΤΑΝΕ"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: ΑΚΥΨΗ ΠΡΟΣ ΤΟ ΔΕΞΙ ΜΠΛΑΒΙ"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "HOLD A: SHELL HOLD X: ΣΤΡΟΦΗ 90°"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "ΧΩΡΙΣ ΧΡΟΝΙΚΟ ΟΡΙΟ"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "ΔΕΝ ΠΕΡΙΛΑΜΒΑΝΕΤΑΙ ΣΤΟ DEMO"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "ΑΡΙΣΤΕΡΟ ΜΠΛΑΚΙ: MOVE RT / A / B: DAW & SELECT LT: ERASE"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: ΚΛΗΡΩΣΗ MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: ΖΩΓΡΑΦΙΑ MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / SELECT: DRAW MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: ΚΛΗΡΩΣΗ MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: ΖΩΓΡΑΦΙΑ MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: ΚΛΗΡΩΣΗ MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: ΖΩΓΡΑΦΙΑ MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Ε: ΔΙΑΚΟΠΤΗΣ ΧΑΡΑΚΤΗΡΑ"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "ΤΡΙΓΩΝΟ / Υ: ΔΙΑΚΟΠΤΗΣ ΧΑΡΑΚΤΗΡΑ"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "ΤΡΙΓΩΝΟ: ΔΙΑΚΟΠΤΗΣ ΧΑΡΑΚΤΗΡΑ"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Υ: ΔΙΑΚΟΠΤΗΣ ΧΑΡΑΚΤΗΡΑ"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "ΟΜΑΔΑ ΣΥΝΟΛΟ ΤΕΛΕΙΩΣΗ"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "ΤΕΛΟΣ ΠΑΙΧΝΙΔΙΟΥ\nΣΥΝΟΛΟ {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "ΠΡΟΣΠΑΘΗΣΤΕ ΣΕ {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "ΚΑΘΑΡΙΣΜΟΣ ΕΝΤΟΣ {0} ΣΥΝΟΛΟ"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "ΣΥΝΟΛΟ {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Αυτόματο (πληκτρολόγιο / gamepad)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (αποσυνδεδεμένο)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Πληκτρολόγιο + Ποντίκι"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD ΑΠΟΣΥΝΔΕΣΗ. ΣΥΝΔΕΣΤΕ ΤΟ ΕΠΑΝΑΣΥΝΔΕΣΗ ΓΙΑ ΝΑ ΑΠΟΚΤΗΣΕΤΕ ΤΟ ΙΔΙΟ ΠΑΙΚΤΗ."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD ΕΠΑΝΑΣΥΝΔΕΣΜΕΝΟ."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "ΠΛΗΚΤΡΟΛΟΓΙΟ/ΠΟΝΤΙΚΙ ΚΥΚΛΟΦΟΡΗΘΗΚΕ ΑΠΟ P1. ΠΑΤΗΣΤΕ ΕΝΑ ΚΟΥΜΠΙ ΧΕΙΡΙΣΤΗΡΙΟΥ ΓΙΑ ΝΑ ΑΞΙΩΣΕΤΕ P1."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "ΜΗ ΣΗΜΕΙΩΜΕΝΟ ΕΠΙΛΟΓΙΟ: START ΓΙΑ ΣΥΜΜΕΤΟΧΗ / ΠΛΗΚΤΡΟΛΟΓΙΟ: ENTER ΓΙΑ ΣΥΜΜΕΤΟΧΗ, BACKSPACE ΓΙΑ ΑΠΟΧΩΡΗΣΗ / P2: ΕΠΙΛΟΓΗ + Β ΓΙΑ ΑΠΟΧΩΡΗΣΗ"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} JOINED ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} ΑΡΙΣΤΕΡΑ."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "ΕΩΣ 2 ΠΑΙΚΤΕΣ ΑΝΑ ΣΥΣΚΕΥΗ ΚΑΙ 4 ΠΑΙΚΤΕΣ ΣΥΝΟΛΟ ΣΤΟ ΔΩΜΑΤΙΟ."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "ΤΟ ΔΩΜΑΤΙΟ ΕΙΝΑΙ ΓΕΜΑΤΟ (4 ΠΑΙΚΤΕΣ). Ο ΕΠΙΠΛΕΟΝ ΤΟΠΙΚΟΣ ΠΑΙΚΤΗΣ ΑΦΑΙΡΕΘΗΚΕ."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 ΑΛΛΑΓΗ ΣΤΟ {0}."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 ΠΑΙΚΤΕΣ ΕΤΟΙΜΟΙ"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: ΕΓΓΡΑΦΕΙΤΕ"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "ΠΑΤΗΣΤΕ ΟΠΟΙΟΔΗΠΟΤΕ ΚΟΥΜΠΙ ΕΛΕΓΚΤΗ ΓΙΑ ΝΑ ΣΥΜΜΕΤΕΧΕΤΕ"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "ΤΟΠΙΚΟ ΠΑΙΧΝΙΔΙ {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "ΠΡΟΣΘΗΚΗ Ή ΑΦΑΙΡΕΣΤΕ ΤΟΠΙΚΟΥΣ ΠΑΙΚΤΕΣ ΠΡΙΝ ΞΕΚΙΝΗΣΕΤΕ ΤΟ ΣΤΑΔΙΟ."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PAD {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "ΠΑΙΚΤΕΣ {0}/2\nΠΛΗΚΤΡΟΛΟΓΙΟ: ENTER ΓΙΑ ΣΥΜΜΕΤΟΧΗ / BACKSPACE ΝΑ ΦΥΓΕΙΣ\nΕΛΕΓΚΤΗΣ: START ΓΙΑ ΝΑ ΣΥΜΜΕΤΕΧΕΤΕ / ΚΡΑΤΗΣΤΕ Β ΓΙΑ ΝΑ ΦΥΓΕΤΕ"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "ΤΟΠΙΚΟΙ ΠΑΙΚΤΕΣ {0}/2 ΣΥΝΔΕΔΕΜΕΝΑ PADS {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Η δημιουργία δωματίου απέτυχε. Επανάληψη σε {0}s (απομένουν {1} προσπάθειες)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "ΒΡΕΙΤΕ ΤΗΝ ΤΑΙΡΙΑΖΟΜΕΝΗ ΠΟΖ ΑΝΑΜΕΣΑ ΣΤΑ ΠΛΩΤΑ ΠΟΥΛΑ!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "ΒΑΛΤΕ ΤΗΝ ΑΝΤΙΣΤΟΙΧΗ ΑΝΘΡΩΠΙΝΗ ΠΟΣΑ ΣΤΗΝ ΚΛΕΙΔΟΤΡΥΠΑ!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "ΣΤΡΟΓΓΥΛΟΣ {0}/3 {1:0.0} ΑΡΙΣΤΕΡΑ"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "ΠΡΟΣΠΑΘΗΣΗ ΑΥΤΟΝ ΤΟΝ ΓΥΡΟ"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "ΣΤΡΟΓΓΥΛΟΣ {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "ΣΤΡΟΓΓΥΛΟΣ {0} ΚΑΘΑΡΙΣΜΟΣ!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "ΕΛΗΞΕ Ο ΧΡΟΝΟΣ!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "ΠΕΡΑΣΤΕ ΤΗ ΧΕΛΩΝΑ ΜΕΣΑ ΑΠΟ ΤΟ ΔΩΜΑΤΙΟ ΓΕΜΑΤΟ ΠΗΓΕΣ!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "ΣΑΦΑΙΡΟ ΑΝ Ο ΣΥΝΔΥΑΣΜΕΝΟΣ ΧΡΟΝΟΣ ΤΕΡΜΑΤΙΣΜΟΥ ΟΛΩΝ ΕΙΝΑΙ ΣΕ 1 ΛΕΠΤΟ ΑΝΑ ΠΑΙΚΤΗ."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "ΟΛΟΙ ΚΑΘΑΡΟΙ!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "ΣΠΑΣΕ ΤΑ ΜΙΚΡΑ ΚΟΥΦΙΑ!  ΠΡΟΣΟΧΗ ΤΟΥΣ ΕΧΘΡΟΥΣ!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "ΣΠΑΣΕ ΤΑ ΚΟΥΦΙΑ ΜΕ ΤΗ ΣΛΑΪΜΕΝΗ ΚΑΡΦΙΔΑ!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "ΣΤΡΟΓΓΥΛΟ {0}/3 ΚΟΥΦΙΑ {1}/{2} {3} ΑΡΙΣΤΕΡΑ"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "ΠΑΙΧΝΙΔΙ ΠΑΝΩ ΠΡΟΣΠΑΘΗΣΗ ΓΥΡΟΣ {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "ΣΤΡΟΓΓΥΛΟΣ {0} ΚΑΘΑΡΙΣΜΟΣ!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Spectating: {0} Εναλλαγή με ← / →"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "ΓΥΡΟΣ {0}/3 ΞΕΚΙΝΕΙ ΣΤΟ {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "ΜΠΟΡΕΙΤΕ ΝΑ ΚΙΝΗΘΕΙΤΕ ΕΝΤΟΣ ΤΗΣ Λωρίδας ΣΑΣ ΚΑΤΑ ΤΗΝ ΑΝΤΙΣΤΡΟΦΗ"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "Η ΚΛΗΡΩΣΗ ΤΙΤΛΩΝ ΕΙΝΑΙ ΔΕΝ ΔΙΑΘΕΣΙΜΗ ΚΑΤΑ ΤΗ ΔΙΑΡΚΕΙΑ ΤΗΣ ΤΟΠΙΚΗΣ ΣΥΝΕΡΓΑΣΙΑΣ. ΕΠΙΣΤΡΟΦΗ ΠΡΩΤΟΣ ΣΕ 1 ΠΑΙΚΤΗ."
+    }
   ]
 }

@@ -129,8 +129,8 @@ namespace DrawBody.Prototype
         private float readyRemaining = 3f;
         private float nextAttackAt;
         private float nextStateAt;
-        private float nextPadSendAt;
-        private int localPadSequence;
+        private readonly Dictionary<string, float> nextLocalPadSendAt = new Dictionary<string, float>();
+        private readonly Dictionary<string, int> localPadSequences = new Dictionary<string, int>();
         private readonly int[] receivedPadSequences = new int[4];
         private float nextPressureHomingAt;
         private float lastDashAt = -100f;
@@ -403,19 +403,33 @@ namespace DrawBody.Prototype
         private void UpdateLocalPadInput()
         {
             if (phase == BattlePhase.Defeated || phase == BattlePhase.Failed) return;
-            int localRoom = GetLocalRoom();
+            IReadOnlyList<PlayerController2D> locals = stageManager.LocalPlayers;
+            for (int i = 0; i < locals.Count; i++) UpdateLocalPadInputFor(locals[i]);
+        }
+
+        private void UpdateLocalPadInputFor(PlayerController2D localPlayer)
+        {
+            if (localPlayer == null) return;
+            string localPlayerId = IsOnline
+                ? stageManager.GetOnlinePlayerId(localPlayer)
+                : ResolvePlayerId(localPlayer);
+            int localRoom = FindRoom(localPlayerId);
             if (localRoom < 0 || localRoom >= playerCount || eliminated.Contains(roomPlayerIds[localRoom])) return;
             StageFlyingPlayerPad pad = pads[localRoom];
             if (pad == null) return;
-            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            LocalPlayerInputBinding binding = localPlayer != null ? localPlayer.InputBinding : null;
+            Vector2 input = binding != null ? binding.ReadMove() : Vector2.zero;
             if (input.sqrMagnitude > 1f) input.Normalize();
             pad.SetPosition(ClampPadPosition(pad.Position + input * 7f * Time.deltaTime));
             SyncMountedPlayer(localRoom);
 
-            Vector2 cursor = gameCamera != null
+            Vector2 padAim = binding != null ? binding.ReadAim() : Vector2.zero;
+            Vector2 cursor = binding != null && binding.UsesLegacyKeyboardMouse && gameCamera != null
                 ? (Vector2)gameCamera.ScreenToWorldPoint(Input.mousePosition)
                 : pad.Position + Vector2.right;
-            Vector2 aimDirection = (cursor - pad.Position).normalized;
+            Vector2 aimDirection = padAim.sqrMagnitude > 0.1f
+                ? padAim.normalized
+                : (cursor - pad.Position).normalized;
             if (aimDirection.sqrMagnitude < 0.5f) aimDirection = Vector2.right;
             if (aimLine != null)
             {
@@ -424,25 +438,32 @@ namespace DrawBody.Prototype
                 aimLine.SetPosition(1, pad.Position + aimDirection * 3.4f);
             }
 
-            if (IsOnline && !HasAuthority && Time.unscaledTime >= nextPadSendAt)
+            float nextSend = nextLocalPadSendAt.TryGetValue(localPlayerId, out float rememberedNext)
+                ? rememberedNext
+                : 0f;
+            if (IsOnline && !HasAuthority && Time.unscaledTime >= nextSend)
             {
-                nextPadSendAt = Time.unscaledTime + 0.05f;
+                nextLocalPadSendAt[localPlayerId] = Time.unscaledTime + 0.05f;
+                int nextSequence = localPadSequences.TryGetValue(localPlayerId, out int previousSequence)
+                    ? previousSequence + 1
+                    : 1;
+                localPadSequences[localPlayerId] = nextSequence;
                 Send(PadKind, new PadMessage
                 {
-                    Sequence = ++localPadSequence,
+                    Sequence = nextSequence,
                     Room = localRoom,
                     Position = pad.Position
-                });
+                }, localPlayerId);
             }
-            if (Input.GetMouseButtonDown(0) && phase == BattlePhase.Fighting)
+            if (binding != null && binding.PrimaryPressed() && phase == BattlePhase.Fighting)
             {
                 if (HasAuthority) TryFire(localRoom, aimDirection);
-                else Send(ShotRequestKind, new ShotRequest { Direction = aimDirection });
+                else Send(ShotRequestKind, new ShotRequest { Direction = aimDirection }, localPlayerId);
             }
-            if (Input.GetKeyDown(KeyCode.F) && phase == BattlePhase.Fighting)
+            if (binding != null && binding.AbilityPressed() && phase == BattlePhase.Fighting)
             {
                 if (HasAuthority) TryDropBomb(localRoom);
-                else Send(BombRequestKind, new PadMessage { Room = localRoom, Position = pad.Position });
+                else Send(BombRequestKind, new PadMessage { Room = localRoom, Position = pad.Position }, localPlayerId);
             }
         }
 
@@ -1042,7 +1063,6 @@ namespace DrawBody.Prototype
             return true;
         }
 
-        private int GetLocalRoom() => FindRoom(IsOnline ? onlineManager?.LocalPlayerId : roomPlayerIds[0]);
         private int FindRoom(string id) { for (int i = 0; i < playerCount; i++) if (roomPlayerIds[i] == id) return i; return -1; }
         private static Vector2 ClampPadPosition(Vector2 value) => new Vector2(Mathf.Clamp(value.x, -15.5f, 15.5f), Mathf.Clamp(value.y, -7.2f, 6.2f));
 
@@ -1094,11 +1114,14 @@ namespace DrawBody.Prototype
             if (state.RoomPlayerIds != null) System.Array.Copy(state.RoomPlayerIds, roomPlayerIds, Mathf.Min(4, state.RoomPlayerIds.Length));
             if (state.PadPositions != null)
             {
-                int localRoom = GetLocalRoom();
                 for (int i = 0; i < Mathf.Min(4, state.PadPositions.Length); i++)
                 {
                     if (pads[i] == null) continue;
-                    if (i == localRoom)
+                    bool locallyOwnedRoom = i < roomPlayerIds.Length && (IsOnline
+                        ? OnlinePlayerIdentity.IsOwnedByConnection(
+                            roomPlayerIds[i], onlineManager?.LocalPlayerId)
+                        : stageManager.IsLocallyControlledPlayer(ResolvePlayer(roomPlayerIds[i])));
+                    if (locallyOwnedRoom)
                     {
                         // The participant predicts their own craft locally. Only
                         // correct a genuine large divergence; applying every old
@@ -1149,10 +1172,16 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void Send(string kind, object state)
+        private void Send(string kind, object state, string sourcePlayerId = null)
         {
             if (onlineManager == null) return;
-            onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = StageId, Kind = kind, Json = JsonUtility.ToJson(state) });
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = StageId,
+                Kind = kind,
+                PlayerId = sourcePlayerId,
+                Json = JsonUtility.ToJson(state)
+            });
         }
 
         private void LockCamera()

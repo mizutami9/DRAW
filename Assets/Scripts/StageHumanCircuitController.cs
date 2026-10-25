@@ -587,7 +587,7 @@ namespace DrawBody.Prototype
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
-                if (IsOnline && stageManager != null && player.transform != stageManager.ActivePlayerTransform) continue;
+                if (IsOnline && stageManager != null && !stageManager.IsLocallyControlledPlayer(player)) continue;
                 Vector2 position = spawn + Vector2.right * (placed * 1.15f);
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
                 if (body != null)

@@ -80,6 +80,10 @@ namespace DrawBody.Prototype
             new Dictionary<string, float>();
         private readonly Dictionary<PlayerController2D, Vector3> returnPositions =
             new Dictionary<PlayerController2D, Vector3>();
+        private readonly Dictionary<string, bool> lastLocalReadyById =
+            new Dictionary<string, bool>();
+        private readonly Dictionary<string, float> nextLocalReadySendTimeById =
+            new Dictionary<string, float>();
 
         private StageManager stageManager;
         private OnlineManager onlineManager;
@@ -93,13 +97,11 @@ namespace DrawBody.Prototype
         private string localId;
         private bool configured;
         private bool launched;
-        private bool lastLocalReady;
         private float roomWidth = MinimumRoomWidth;
         private float roomHeight = MinimumRoomHeight;
         private float maximumBodyWidth = 1.5f;
         private float maximumBodyHeight = 2.5f;
         private float nextBodyFitScanTime;
-        private float nextLocalReadySendTime;
         private float nextSessionStateRequestTime;
         private float nextRegressionAutoReadyTime;
         private int decorationSeed;
@@ -202,19 +204,7 @@ namespace DrawBody.Prototype
                     // must not stop recovery when the later launch packet is lost.
                     if (!launched && Time.unscaledTime >= nextSessionStateRequestTime)
                         RequestHostSessionState();
-                    bool localOnButton = IsLocalPlayerOnAssignedButtonStable();
-                    if (!localOnButton) fitRejectedIds.Remove(localId);
-                    bool localReady = localOnButton && !fitRejectedIds.Contains(localId);
-                    bool readyChanged = localReady != lastLocalReady;
-                    if (readyChanged)
-                    {
-                        lastLocalReady = localReady;
-                    }
-                    if (readyChanged || Time.unscaledTime >= nextLocalReadySendTime)
-                    {
-                        nextLocalReadySendTime = Time.unscaledTime + ReadyStateResendInterval;
-                        SendReadyRequest(localReady);
-                    }
+                    RefreshParticipantLocalReadyState();
                 }
             }
             else
@@ -268,6 +258,9 @@ namespace DrawBody.Prototype
                     // makes P1/P2 rooms identical on every machine.
                     orderedRoster.Sort((left, right) =>
                     {
+                        if (left.PlayerSlot >= 0 && right.PlayerSlot >= 0
+                            && left.PlayerSlot != right.PlayerSlot)
+                            return left.PlayerSlot.CompareTo(right.PlayerSlot);
                         if (left.IsHost != right.IsHost) return left.IsHost ? -1 : 1;
                         return string.CompareOrdinal(left.PlayerId, right.PlayerId);
                     });
@@ -280,6 +273,13 @@ namespace DrawBody.Prototype
                     // before its own entry. Keep it out of P1's fallback room.
                     if (expectedIds.Count < 4) expectedIds.Add(localId);
                     else expectedIds[expectedIds.Count - 1] = localId;
+                }
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
+                {
+                    string gamePlayerId = stageManager.GetOnlinePlayerId(localPlayers[i]);
+                    if (string.IsNullOrEmpty(gamePlayerId) || expectedIds.Contains(gamePlayerId)) continue;
+                    if (expectedIds.Count < 4) expectedIds.Add(gamePlayerId);
                 }
 
                 // Only current lobby members may participate in room sizing and
@@ -367,7 +367,8 @@ namespace DrawBody.Prototype
             recommendationNoneText = null;
             readyIds.Clear();
             buttonArmedIds.Clear();
-            lastLocalReady = false;
+            lastLocalReadyById.Clear();
+            nextLocalReadySendTimeById.Clear();
             BuildRooms();
             UpdateReadyRoomCameraAnchor();
             PositionPlayersInRooms();
@@ -1470,10 +1471,13 @@ namespace DrawBody.Prototype
         {
             if (IsOnline)
             {
-                PlayerController2D local = stageManager.ActivePlayerTransform != null
-                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-                int room = expectedIds.IndexOf(localId);
-                if (room >= 0) PlacePlayer(local, room);
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
+                {
+                    PlayerController2D local = localPlayers[i];
+                    int room = expectedIds.IndexOf(stageManager.GetOnlinePlayerId(local));
+                    if (room >= 0) PlacePlayer(local, room);
+                }
                 return;
             }
 
@@ -1581,7 +1585,8 @@ namespace DrawBody.Prototype
             buttonArmedIds.Clear();
             remoteReadyRequestIds.Clear();
             remoteReadyBodyRevisions.Clear();
-            lastLocalReady = false;
+            lastLocalReadyById.Clear();
+            nextLocalReadySendTimeById.Clear();
             BuildRooms();
             UpdateReadyRoomCameraAnchor();
             RestoreRoomPlayerPlacements(placements);
@@ -1596,11 +1601,13 @@ namespace DrawBody.Prototype
 
             if (IsOnline)
             {
-                PlayerController2D local = stageManager.ActivePlayerTransform != null
-                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                    : null;
-                int room = expectedIds.IndexOf(localId);
-                CaptureRoomPlayerPlacement(local, room, playerBeingRedrawn, placements);
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
+                {
+                    PlayerController2D local = localPlayers[i];
+                    int room = expectedIds.IndexOf(stageManager.GetOnlinePlayerId(local));
+                    CaptureRoomPlayerPlacement(local, room, playerBeingRedrawn, placements);
+                }
                 return placements;
             }
 
@@ -1675,7 +1682,7 @@ namespace DrawBody.Prototype
             }
             player.ResetMotion();
             bool isControlledPlayer = stageManager != null
-                && player.transform == stageManager.ActivePlayerTransform;
+                && stageManager.IsLocallyControlledPlayer(player);
             player.SetControlsEnabled(isControlledPlayer);
             Physics2D.SyncTransforms();
         }
@@ -1684,7 +1691,8 @@ namespace DrawBody.Prototype
         {
             PlayerController2D local = stageManager.ActivePlayerTransform != null
                 ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            int room = expectedIds.IndexOf(localId);
+            string gamePlayerId = local != null ? stageManager.GetOnlinePlayerId(local) : localId;
+            int room = expectedIds.IndexOf(gamePlayerId);
             return local != null && room >= 0 && room < rooms.Count && IsPlayerPressingRoomButton(local, room);
         }
 
@@ -1692,9 +1700,10 @@ namespace DrawBody.Prototype
         {
             PlayerController2D local = stageManager.ActivePlayerTransform != null
                 ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            int room = expectedIds.IndexOf(localId);
+            string gamePlayerId = local != null ? stageManager.GetOnlinePlayerId(local) : localId;
+            int room = expectedIds.IndexOf(gamePlayerId);
             return local != null && room >= 0 && room < rooms.Count
-                && IsPlayerPressingRoomButtonStable(local, room, localId);
+                && IsPlayerPressingRoomButtonStable(local, room, gamePlayerId);
         }
 
         internal bool IsLocalPlayerOnAssignedButtonForTest()
@@ -1707,7 +1716,8 @@ namespace DrawBody.Prototype
             PlayerController2D local = stageManager != null && stageManager.ActivePlayerTransform != null
                 ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
                 : null;
-            int room = expectedIds.IndexOf(localId);
+            string gamePlayerId = local != null ? stageManager.GetOnlinePlayerId(local) : localId;
+            int room = expectedIds.IndexOf(gamePlayerId);
             if (local == null || room < 0 || room >= rooms.Count
                 || !TryGetSolidBounds(local, out Bounds bounds)) return false;
             Vector2 center = rooms[room].Center;
@@ -1844,7 +1854,7 @@ namespace DrawBody.Prototype
             {
                 string playerId = expectedIds[i];
                 PlayerController2D onlinePlayer = stageManager.GetOnlinePlayerController(playerId);
-                bool localPlayer = playerId == localId;
+                bool localPlayer = OnlinePlayerIdentity.IsOwnedByConnection(playerId, localId);
                 bool bodyRevisionApplied = localPlayer
                     || !remoteReadyBodyRevisions.TryGetValue(playerId, out int requiredRevision)
                     || onlinePlayerSync == null
@@ -1873,6 +1883,31 @@ namespace DrawBody.Prototype
                 BroadcastSnapshot(false);
             }
 
+        }
+
+        private void RefreshParticipantLocalReadyState()
+        {
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                if (local == null) continue;
+                string gamePlayerId = stageManager.GetOnlinePlayerId(local);
+                int room = expectedIds.IndexOf(gamePlayerId);
+                bool localOnButton = room >= 0 && room < rooms.Count
+                    && IsPlayerPressingRoomButtonStable(local, room, gamePlayerId);
+                if (!localOnButton) fitRejectedIds.Remove(gamePlayerId);
+                bool localReady = localOnButton && !fitRejectedIds.Contains(gamePlayerId);
+                bool hadPrevious = lastLocalReadyById.TryGetValue(gamePlayerId, out bool previousReady);
+                bool readyChanged = !hadPrevious || localReady != previousReady;
+                lastLocalReadyById[gamePlayerId] = localReady;
+                float nextSend = nextLocalReadySendTimeById.TryGetValue(gamePlayerId, out float scheduled)
+                    ? scheduled
+                    : 0f;
+                if (!readyChanged && Time.unscaledTime < nextSend) continue;
+                nextLocalReadySendTimeById[gamePlayerId] = Time.unscaledTime + ReadyStateResendInterval;
+                SendReadyRequest(gamePlayerId, localReady);
+            }
         }
 
         private bool IsPlayerPressingRoomButton(PlayerController2D player, int room)
@@ -1985,7 +2020,8 @@ namespace DrawBody.Prototype
             {
                 string id = IsOnline && i < expectedIds.Count ? expectedIds[i] : "offline-" + i;
                 bool ready = readyIds.Contains(id)
-                    || IsOnline && !HasAuthority && id == localId && lastLocalReady;
+                    || IsOnline && !HasAuthority
+                    && lastLocalReadyById.TryGetValue(id, out bool localReady) && localReady;
                 if (rooms[i].ButtonCap != null)
                 {
                     SpriteRenderer[] fills = rooms[i].ButtonCap.GetComponentsInChildren<SpriteRenderer>(true);
@@ -2064,20 +2100,21 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void SendReadyRequest(bool ready)
+        private void SendReadyRequest(string gamePlayerId, bool ready)
         {
-            if (onlineManager == null || string.IsNullOrEmpty(localId)) return;
+            if (onlineManager == null || string.IsNullOrEmpty(gamePlayerId)) return;
             onlineManager.SendGimmickData(new OnlineGimmickData
             {
                 ObjectId = stageId,
                 Kind = NetworkKind,
+                PlayerId = gamePlayerId,
                 Json = JsonUtility.ToJson(new ReadyMessage
                 {
                     IsRequest = true,
                     Ready = ready,
                     RoomWidth = roomWidth,
                     RoomHeight = roomHeight,
-                    BodyRevision = onlineManager.LocalBodyRevision
+                    BodyRevision = onlineManager.GetLocalBodyRevision(gamePlayerId)
                 })
             });
         }
@@ -2157,13 +2194,12 @@ namespace DrawBody.Prototype
                     if (!string.IsNullOrEmpty(message.ReadyIds[i])) readyIds.Add(message.ReadyIds[i]);
             }
             if (!string.IsNullOrEmpty(message.FitRejectedId)
-                && message.FitRejectedId == localId)
+                && OnlinePlayerIdentity.IsOwnedByConnection(message.FitRejectedId, localId))
             {
-                fitRejectedIds.Add(localId);
-                lastLocalReady = false;
-                PlayerController2D localPlayer = stageManager.ActivePlayerTransform != null
-                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                    : null;
+                string rejectedId = message.FitRejectedId;
+                fitRejectedIds.Add(rejectedId);
+                lastLocalReadyById[rejectedId] = false;
+                PlayerController2D localPlayer = stageManager.GetOnlinePlayerController(rejectedId);
                 stageManager.HandleChallengeStartFitRejected(localPlayer);
             }
             if (message.Launch) Launch();
@@ -2249,7 +2285,7 @@ namespace DrawBody.Prototype
             foreach (KeyValuePair<PlayerController2D, Vector3> entry in returnPositions)
             {
                 PlayerController2D player = entry.Key;
-                if (player == null || IsOnline && player.transform != stageManager.ActivePlayerTransform) continue;
+                if (player == null || IsOnline && !stageManager.IsLocallyControlledPlayer(player)) continue;
                 Vector3 destination = entry.Value;
                 stageManager.TryResolveChallengeStartPosition(player, entry.Value, out destination);
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
@@ -2263,7 +2299,7 @@ namespace DrawBody.Prototype
                 player.transform.position = destination;
                 player.ResetMotion();
                 bool isControlledPlayer = stageManager != null
-                    && player.transform == stageManager.ActivePlayerTransform;
+                    && stageManager.IsLocallyControlledPlayer(player);
                 player.SetControlsEnabled(isControlledPlayer);
                 stageManager.RecordAssignedPlayerStart(player, destination);
             }

@@ -282,7 +282,7 @@ namespace DrawBody.Prototype
                 logo.anchorMax = new Vector2(0.5f, 0f);
                 logo.pivot = new Vector2(0.5f, 0.5f);
                 logo.anchoredPosition = new Vector2(0f, signCenterY);
-                logo.sizeDelta = new Vector2(1320f, 420f);
+                logo.sizeDelta = new Vector2(1540f, 490f);
                 logo.localRotation = Quaternion.identity;
                 logo.localScale = Vector3.one * signScale;
                 EnsureTitleLogoMount(panel, logo);

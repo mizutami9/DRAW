@@ -58,7 +58,18 @@ namespace DrawBody.Prototype
                     stageManager?.OpenMultiMenu();
                     break;
                 case Command.Draw:
-                    stageManager?.EnterDrawingMode();
+                    LocalCoopSessionManager localCoop = stageManager != null
+                        ? stageManager.GetComponent<LocalCoopSessionManager>()
+                        : null;
+                    if (localCoop != null && localCoop.LocalPlayerCount > 1)
+                    {
+                        stageManager.ShowLocalCoopNotice(LocalizationManager.T(
+                            "title_draw_unavailable_local_coop"));
+                    }
+                    else
+                    {
+                        stageManager?.EnterDrawingMode();
+                    }
                     break;
                 case Command.Option:
                     stageManager?.OpenOptionMenu();

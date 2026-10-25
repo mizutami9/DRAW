@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D hoặc Gậy trái: Di ​​chuyển Space/A: Nhảy F/X: Nhấp chuột khả năng/RT: Chọn hành động: Vẽ lại Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "THANH TRÁI: CON TRỎ RT: VẼ / CHỌN LT: XÓA CREATE / VIEW: ĐÓNG"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "Chạy trốn. Đánh nhau trước khi thời gian trôi đi."
+      "value": "TẤN CÔNG THỜI GIAN. XÓA NẾU THỜI GIAN HOÀN THÀNH TỔNG HỢP CỦA MỌI NGƯỜI TRONG VÒNG {0} PHÚT."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "CHẠY."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "Đổi nhân vật"
+      "key": "gameplay_control_switch",
+      "value": "Đổi nhân vật"
     },
     {
-        "key":  "feedback_button",
-        "value":  "PHẢN HỒI / BÁO LỖI"
+      "key": "feedback_button",
+      "value": "PHẢN HỒI / BÁO LỖI"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "Cảm ơn bạn đã chơi!\nPhản hồi / Báo lỗi"
+      "key": "feedback_clear_button",
+      "value": "Cảm ơn bạn đã chơi!\nPhản hồi / Báo lỗi"
     },
-    { "key": "option_complete", "value": "HOÀN TẤT" },
-    { "key": "option_screen_mode_format", "value": "HIỂN THỊ: {0}" },
-    { "key": "option_resolution_format", "value": "ĐỘ PHÂN GIẢI: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "TOÀN MÀN HÌNH" },
-    { "key": "option_windowed", "value": "CHẾ ĐỘ CỬA SỔ" },
-    { "key": "online_steam_not_running", "value": "Hãy mở Steam, sau đó khởi chạy NICO DRAW từ Thư viện Steam." },
-    { "key": "online_steam_ticket_failed", "value": "Không thể lấy vé xác thực Steam: {0}" },
-    { "key": "wishlist_button", "value": "DANH SÁCH MONG MUỐN" },
-    { "key": "single_recommend_title", "value": "NÊN CHƠI NHIỀU NGƯỜI!" },
-    { "key": "single_recommend_message", "value": "NICO DRAW vui nhất khi mọi người cùng hợp tác!\nHãy thử chơi với 2–4 người!" },
-    { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Thoát NICO DRAW?" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} đang sử dụng nhân vật này. Gửi yêu cầu đổi nhân vật?" },
-    { "key": "draw_species_swap_send", "value": "GỬI YÊU CẦU" },
-    { "key": "background_word_push", "value": "ĐẨY!" }
+    {
+      "key": "option_complete",
+      "value": "HOÀN TẤT"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "HIỂN THỊ: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "ĐỘ PHÂN GIẢI: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "TOÀN MÀN HÌNH"
+    },
+    {
+      "key": "option_windowed",
+      "value": "CHẾ ĐỘ CỬA SỔ"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Hãy mở Steam, sau đó khởi chạy NICO DRAW từ Thư viện Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Không thể lấy vé xác thực Steam: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "DANH SÁCH MONG MUỐN"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "NÊN CHƠI NHIỀU NGƯỜI!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW vui nhất khi mọi người cùng hợp tác!\nHãy thử chơi với 2–4 người!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OK"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Thoát NICO DRAW?"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} đang sử dụng nhân vật này. Gửi yêu cầu đổi nhân vật?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "GỬI YÊU CẦU"
+    },
+    {
+      "key": "background_word_push",
+      "value": "ĐẨY!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "GIỮ CHÉO / A: GLIDE SQUARE / X: GRAB"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "VUÔNG/X: TRƯỚC/LẮP"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "VUÔNG/X:Ném"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "VUÔNG/X: TĂNG TAY VỀ PHÍM PHẢI"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "GIỮ CHÉO / A: SHELL HOLD SQUARE / X: TURN 90°"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "GIỮ CHÉO: LƯỚT VUÔNG: GRAB"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "VUÔNG: TRƯỚC/LẮP"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "VUÔNG: Ném"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "VUÔNG: SPIKE HƯỚNG DẪN PHẢI"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "GIỮ CHÉO: SHELL GIỮ VUÔNG: TURN 90°"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "GIỮ A: LƯỚT X: GRAB"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: TRÀO/LẮP"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: Ném"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: TĂNG VỀ PHÍA PHẢI"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "GIỮ A: VỎ GIỮ X: QUAY 90°"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "KHÔNG GIỚI HẠN THỜI GIAN"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "KHÔNG BAO GỒM TRONG DEMO"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "STICK TRÁI: DI CHUYỂN RT/A/B: DRAW & SELECT LT: XÓA"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: VẼ MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: VẼ MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE/CHỌN: VẼ MENU\nOPTIONS/START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: VẼ MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: VẼ MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: VẼ MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: VẼ MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Q: CHUYỂN ĐỔI NHÂN VẬT"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "TAM GIÁC/Y: CHUYỂN ĐỔI KÝ TỰ"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "TAM GIÁC: CHUYỂN ĐỔI NHÂN VẬT"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: CHUYỂN ĐỔI NHÂN VẬT"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TỔNG ĐỘI TRÊN"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "TRÒ CHƠI TRÊN\nTỔNG {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "THỬ LẠI TRONG {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "XÓA TRONG TỔNG {0}"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "TỔNG {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Tự động (bàn phím / gamepad)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Tay cầm chơi game (đã ngắt kết nối)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Bàn phím + Chuột"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} BÀN CHƠI TRÒ CHƠI ĐÃ NGẮT KẾT NỐI. KẾT NỐI LẠI ĐỂ KHÔI PHỤC CÙNG NGƯỜI CHƠI."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} ĐÃ KẾT NỐI BÀN CHƠI GAME."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "BÀN PHÍM/CHUỘT ĐƯỢC PHÁT HÀNH TỪ P1. NHẤN NÚT ĐIỀU KHIỂN ĐỂ YÊU CẦU P1."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "PAD CHƯA ĐƯỢC Gán: START ĐỂ THAM GIA / KEYBOARD: ENTER ĐỂ THAM GIA, BACKSPACE ĐỂ RỜI / P2: CHỌN + B ĐỂ RỜI"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} ĐÃ THAM GIA ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} TRÁI."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "TỐI ĐA 2 NGƯỜI CHƠI MỖI THIẾT BỊ VÀ TỔNG SỐ 4 NGƯỜI CHƠI TRONG PHÒNG."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "PHÒNG ĐẦY ĐỦ (4 NGƯỜI CHƠI). NGƯỜI CHƠI ĐỊA PHƯƠNG BỔ SUNG ĐÃ BỊ XÓA."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 CHUYỂN SANG {0}."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 NGƯỜI CHƠI SẴN SÀNG"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: THAM GIA"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "NHẤN BẤT CỨ NÚT ĐIỀU KHIỂN NÀO ĐỂ THAM GIA"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "CHƠI ĐỊA PHƯƠNG {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "THÊM HOẶC XÓA NGƯỜI CHƠI ĐỊA PHƯƠNG TRƯỚC KHI BẮT ĐẦU GIAI ĐOẠN."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "ĐỆM {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "NGƯỜI CHƠI {0}/2\nBàn phím: ENTER THAM GIA / BACKSPACE RỜI\nBỘ ĐIỀU KHIỂN: START THAM GIA / GIỮ B ĐỂ RỜI"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "NGƯỜI CHƠI ĐỊA PHƯƠNG {0}/2 BẢNG KẾT NỐI {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Tạo phòng không thành công. Sẽ thử lại sau {0} giây (còn lại {1} lần thử)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "TÌM TƯ THẾ PHÙ HỢP GIỮA CÁC CHIM NỔI!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "ĐẶT TƯ THẾ CON NGƯỜI PHÙ HỢP VÀO LỖ KHÓA!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "VÒNG {0}/3 {1:0.0} giây TRÁI"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "THỬ LẠI VÒNG NÀY"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "VÒNG {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "VÒNG {0} RÕ RÀNG!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "HẾT THỜI GIAN!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "MANG Rùa QUA PHÒNG ĐẦY XUÂN!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "RÕ RÀNG NẾU THỜI GIAN HOÀN THÀNH TỔNG HỢP CỦA MỌI NGƯỜI TRONG VÒNG 1 PHÚT CHO MỖI NGƯỜI CHƠI."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "TẤT CẢ CÁC VÒNG RÕ RÀNG!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "PHÁ VỠ CÁC THÙNG NHỎ!  XEM KẺ THÙ!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "PHÁ VỠ CÁC HỘP VỚI SLIME SPIKE!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "VÒNG {0}/3 THÙNG {1}/{2} {3} giây TRÁI"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "TRÒ CHƠI ĐANG THỬ LẠI VÒNG {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "VÒNG {0} RÕ RÀNG!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Đang xem: {0} Chuyển đổi bằng ← / →"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "VÒNG {0}/3 BẮT ĐẦU TRONG {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "BẠN CÓ THỂ DI CHUYỂN TRONG LÀN DA CỦA MÌNH TRONG KHI ĐẾM NGƯỢC"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "KHÔNG CÓ BÚT TIÊU ĐỀ TRONG KHI CO-OP ĐỊA PHƯƠNG. TRỞ VỀ 1 NGƯỜI CHƠI TRƯỚC."
+    }
   ]
 }

@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D або лівий джойстик: переміщення пробілу/A: стрибок F/X: клацання здібностей/RT: вибір дії: перемалювання Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "ЛІВИЙ СТИК: КУРСОР RT: НАМАЛЮВАННЯ / ВИБІР LT: СТИРАТИ CREATE / VIEW: ЗАКРИТИ"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "ПЕЧОВА РУН. ЗДОРОВ'Я ЗДОРОВ'Я."
+      "value": "АТАКА НА ЧАС. ОЧИСТИТИ, ЯКЩО СУМНИЙ ЧАС ЗАВЕРШЕННЯ КОЖНОГО ПЕРЕХОДИТЬ ДО {0} ХВИЛИН."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "БІЖИ."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "Змінити персонажа"
+      "key": "gameplay_control_switch",
+      "value": "Змінити персонажа"
     },
     {
-        "key":  "feedback_button",
-        "value":  "ВІДГУК / ПОВІДОМИТИ ПРО ПОМИЛКУ"
+      "key": "feedback_button",
+      "value": "ВІДГУК / ПОВІДОМИТИ ПРО ПОМИЛКУ"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "Дякуємо за гру!\nВідгук / Повідомити про помилку"
+      "key": "feedback_clear_button",
+      "value": "Дякуємо за гру!\nВідгук / Повідомити про помилку"
     },
-    { "key": "option_complete", "value": "ГОТОВО" },
-    { "key": "option_screen_mode_format", "value": "ЕКРАН: {0}" },
-    { "key": "option_resolution_format", "value": "РОЗДІЛЬНА ЗДАТНІСТЬ: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "НА ВЕСЬ ЕКРАН" },
-    { "key": "option_windowed", "value": "ВІКОННИЙ РЕЖИМ" },
-    { "key": "online_steam_not_running", "value": "Запустіть Steam, а потім відкрийте NICO DRAW із бібліотеки Steam." },
-    { "key": "online_steam_ticket_failed", "value": "Не вдалося отримати квиток автентифікації Steam: {0}" },
-    { "key": "wishlist_button", "value": "СПИСОК БАЖАНОГО" },
-    { "key": "single_recommend_title", "value": "РЕКОМЕНДОВАНО МУЛЬТИПЛЕЄР!" },
-    { "key": "single_recommend_message", "value": "У NICO DRAW найвеселіше грати разом!\nСпробуйте зіграти вдвох, утрьох або вчотирьох!" },
-    { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Вийти з NICO DRAW?" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} уже використовує цього персонажа. Надіслати запит на обмін?" },
-    { "key": "draw_species_swap_send", "value": "НАДІСЛАТИ ЗАПИТ" },
-    { "key": "background_word_push", "value": "ШТОВХАЙ!" }
+    {
+      "key": "option_complete",
+      "value": "ГОТОВО"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "ЕКРАН: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "РОЗДІЛЬНА ЗДАТНІСТЬ: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "НА ВЕСЬ ЕКРАН"
+    },
+    {
+      "key": "option_windowed",
+      "value": "ВІКОННИЙ РЕЖИМ"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Запустіть Steam, а потім відкрийте NICO DRAW із бібліотеки Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Не вдалося отримати квиток автентифікації Steam: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "СПИСОК БАЖАНОГО"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "РЕКОМЕНДОВАНО МУЛЬТИПЛЕЄР!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "У NICO DRAW найвеселіше грати разом!\nСпробуйте зіграти вдвох, утрьох або вчотирьох!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OK"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Вийти з NICO DRAW?"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} уже використовує цього персонажа. Надіслати запит на обмін?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "НАДІСЛАТИ ЗАПИТ"
+    },
+    {
+      "key": "background_word_push",
+      "value": "ШТОВХАЙ!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "ТРИМАТИ ХРЕСТ / A: КВАДРАТ КОВЗАННЯ / X: ХВАТИ"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "КВАДРАТ / X: ПОДРЯПАННЯ / ЗАХОПАННЯ"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "КВАДРАТ / Х: КИДОК"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "КВАДРАТ / X: ШИП НАПРАВЛЕНО НА ПРАВУ ПАЛИЦЮ"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "ТРИМАТИ ХРЕСТ / A: ТРИМАТИ КВАДРАТ / X: ПОВОРОТ НА 90°"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "ТРИМАТИ ХРЕСТ: КВИЗНУТИ КВАДРАТ: ХВАТИ"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "КВАДРАТ: ПОДРЯПАННЯ / ЗАХОПАННЯ"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "КВАДРАТ: КИНУТЬ"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "КВАДРАТ: ШИП НАПРАВЛЕНО ДО ПРАВОГО ПАЛИЦІ"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "ХРЕСТ ТРИМАТИСЯ: КВАДРАТ ТРИМАТИ МОДУЛЬ: ПОВОРОТ НА 90°"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "УТРИМАЙТЕ A: КОВЗАЙТЕ X: ХАПАЙТЕ"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: ПОДРЯПАТИ / ЗАХОПИТИ"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: КИНУТЬ"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: ШИП У БІРКУ ПРАВОГО ПАЛИЦІ"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "ТРИВАННЯ A: ТРИВАННЯ ОБОРЮЧАННЯ X: ПОВОРОТ НА 90°"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "БЕЗ ОБМЕЖЕНЬ ЧАСУ"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "НЕ ВКЛЮЧЕНО В ДЕМО"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "ЛІВИЙ СТИК: ПЕРЕМІЩЕННЯ RT / A / B: НАМАЛЮВАННЯ ТА ВИБІР LT: СТИРАННЯ"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: РОЗІГРАТИ MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: РОЗІГРАТИ MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / ВИБРАТИ: НАМАЛЮВАТИ MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: РОЗІГРАТИ MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: РОЗІГРАТИ MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: РОЗІГРАТИ MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: РОЗІГРАТИ MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Q: ЗМІНИТИ ХАРАКТЕР"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "ТРИКУТНИК / Y: ЗМІНИТИ СИМВОЛ"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "ТРИКУТНИК: ЗМІНИТИ СИМВОЛ"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: ЗМІНИТИ СИМВОЛ"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "РЕЗУЛЬТАТ КОМАНДИ БІЛЬШЕ"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "ГРУ ЗАВЕРШЕНО\nУСЬОГО {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "ПОВТОРИТИ ЧЕРЕЗ {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "ОЧИСТИТИ В МІЖ {0} РАЗОМ"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "РАЗОМ {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Автоматично (клавіатура / геймпад)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Геймпад (відключений)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Клавіатура + Миша"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} Геймпад ВІДКЛЮЧЕНО. ЗНОВУ ПІДКЛЮЧІТЬ ЙОГО, ЩОБ ВІДНОВИТИ ТОЙ ЖЕ ПРОГРАВНИК."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} Геймпад ПІД’ЄДНАНО."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "КЛАВІАТУРА/МИША ВИПУСКАЄТЬСЯ З P1. НАТИСНІТЬ КНОПКУ КОНТРОЛЕРУ, ЩОБ ЗАЯВИТИ P1."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "НЕПРИЗНАЧЕНА ПЛАСТИНА: START ЩОБ ПРИЄДНАТИСЯ / КЛАВІАТУРА: ENTER ЩОБ ПРИЄДНАТИСЯ, BACKSPACE ЩОБ ВИЙТИ / P2: ВИБІР + B, ЩОБ ВИЙШТИ"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} ПРИЄДНАНИЙ ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} ВЛІВО."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "ДО 2 ГРАВЦІВ НА КОЖНОМУ ПРИСТРОЇ І ВСЬОГО 4 ГРАВЦІ В КІМНАТІ."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "КІМНАТА ПОВНА (4 ГРАВЦЯ). ДОДАТКОВОГО ЛОКАЛЬНОГО ГРАВЦЯ ВИДАЛЕНО."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 ПЕРЕКЛЮЧЕНО НА {0}."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 ГРАВЦІ ГОТОВІ"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: ПРИЄДНАТИСЯ"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "НАТИСНІТЬ БУДЬ-ЯКУ КНОПКУ КОНТРОЛЕРУ, ЩОБ ПРИЄДНАТИСЯ"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "МІСЦЕВА ГРА {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "ДОДАВАЙТЕ АБО ВИДАЛЯЙТЕ МІСЦЕВИХ ГРАВЦІВ ПЕРЕД ПОЧАТКОМ ЕТАПІ."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PAD {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "ГРАВЦІ {0}/2\nКЛАВІАТУРА: ENTER ЩОБ ПРИЄДНАТИСЯ / BACKSPACE ЩОБ ВИЙТИ\nКОНТРОЛЕР: START ЩОБ ПРИЄДНАТИСЯ / УТРИМУЙТЕ B, ЩОБ ВИЙШТИ"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "МІСЦЕВІ ГРАВЦІ {0}/2 ПІДКЛЮЧЕНІ ПЕДИ {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Не вдалося створити кімнату. Повторна спроба входу {0}s ({1} залишилось спроб)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "ЗНАЙДИ ВІДПОВІДНУ ПОЗУ СЕРЕД ПЛАВАННЯ ПТАХІВ!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "ПОСТАВТЕ ВІДПОВІДНУ ПОЗУ ЛЮДИНИ В ЗАМОЧНУ ЩІРИНУ!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "КРУГЛИЙ {0}/3 {1:0.0} с ЛІВО"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "ПОВТОРНА СПРОБА ЦЬОГО РАУНДУ"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "КРУГЛО {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "КРУГЛО {0} ЧИСТО!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "ЧАС МІСЬКО!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "ПРОНЕСИ ЧЕРЕПАХУ КІМНАТОЮ, ПОВНОЮ ПРУЖИНАМИ!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "ЯСНО, ЯКЩО КОМБІНОВАНИЙ ЧАС ФІНІШУ КОЖНОГО ГРАВЦЯ В МЕЖАХ 1 ХВИЛИНИ."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "УСІ РАУНДИ ЧИСТО!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "РОЗБАЙТЕ ЯЩИКИ!  СТЕЖЕТЕ ВОРОГІВ!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "РОЗБИВАЙТЕ ЯЩИКИ ШИПОМ СЛИЗУ!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "КРУГЛИЙ {0}/3 ЯЩИКИ {1}/{2} {3}с ЛІВО"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "ГРА ЗАВЕРШЕНА ПОВТОРНА СПРОБА РАУНДУ {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "КРУГЛО {0} ЧИСТО!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Споглядання: {0} Перемикайтеся за допомогою ← / →"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "РАУНД {0}/3 ПОЧИНАЄТЬСЯ ЧЕРЕЗ {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "ВИ МОЖЕТЕ РУХАТИСЯ В МЕЖІ СВОЄЇ СМУГИ ПІД ЧАС ЗВОРОТНОГО ВІДЛІКУ"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "РОЗІГРАШ ТИТУЛУ НЕ ДОСТУПНИЙ ПІД ЧАС ЛОКАЛЬНОЇ СПІВРОБІТНИЦІ. СПОЧАТКУ ПОВЕРНІТЬСЯ ДО 1 ГРАВЦЯ."
+    }
   ]
 }

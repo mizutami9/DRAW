@@ -953,7 +953,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bodyData.PlayerId = LocalPlayerId;
+            if (string.IsNullOrEmpty(bodyData.PlayerId) || bodyData.PlayerId == "local") bodyData.PlayerId = LocalPlayerId;
             string payload = JsonUtility.ToJson(bodyData);
             if (isHost)
             {
@@ -976,7 +976,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            playerState.PlayerId = LocalPlayerId;
+            if (string.IsNullOrEmpty(playerState.PlayerId) || playerState.PlayerId == "local") playerState.PlayerId = LocalPlayerId;
             string payload = JsonUtility.ToJson(playerState);
             if (isHost)
             {
@@ -995,7 +995,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            carryData.CarrierPlayerId = LocalPlayerId;
+            if (string.IsNullOrEmpty(carryData.CarrierPlayerId) || carryData.CarrierPlayerId == "local") carryData.CarrierPlayerId = LocalPlayerId;
             string payload = JsonUtility.ToJson(carryData);
             if (isHost)
             {
@@ -1014,7 +1014,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            gimmickData.PlayerId = LocalPlayerId;
+            if (string.IsNullOrEmpty(gimmickData.PlayerId) || gimmickData.PlayerId == "local") gimmickData.PlayerId = LocalPlayerId;
             if (isHost && gimmickData.Kind == "stage_retry")
             {
                 // Deliver the retry itself over the reliable gimmick channel as
@@ -2186,7 +2186,9 @@ namespace DrawBody.Prototype
                 if (isHost && peer != null && state != null)
                 {
                     EnsureSessionPeer(peer);
-                    state.PlayerId = peer.ToString();
+                    string connectionId = peer.ToString();
+                    state.PlayerId = OnlinePlayerIdentity.ValidateOrPrimary(state.PlayerId, connectionId);
+                    state.ConnectionId = connectionId;
                     state.PlayerSlot = PlayerColorPalette.GetLobbyPlayerSlot(CurrentLobby, state.PlayerId);
                     payload = JsonUtility.ToJson(state);
                 }
@@ -2209,7 +2211,7 @@ namespace DrawBody.Prototype
                 OnlineCarryData carryData = JsonUtility.FromJson<OnlineCarryData>(payload);
                 if (isHost && peer != null && carryData != null)
                 {
-                    carryData.CarrierPlayerId = peer.ToString();
+                    carryData.CarrierPlayerId = OnlinePlayerIdentity.ValidateOrPrimary(carryData.CarrierPlayerId, peer.ToString());
                     payload = JsonUtility.ToJson(carryData);
                 }
                 CarryDataReceived?.Invoke(carryData);
@@ -2224,7 +2226,7 @@ namespace DrawBody.Prototype
                 if (isHost && peer != null && gimmickData != null)
                 {
                     EnsureSessionPeer(peer);
-                    gimmickData.PlayerId = peer.ToString();
+                    gimmickData.PlayerId = OnlinePlayerIdentity.ValidateOrPrimary(gimmickData.PlayerId, peer.ToString());
                     payload = JsonUtility.ToJson(gimmickData);
                 }
                 GimmickDataReceived?.Invoke(gimmickData);
@@ -2518,7 +2520,9 @@ namespace DrawBody.Prototype
             if (bodyData == null || string.IsNullOrEmpty(bodyData.PlayerId)) return;
             if (isHost && peer != null)
             {
-                bodyData.PlayerId = peer.ToString();
+                string connectionId = peer.ToString();
+                bodyData.PlayerId = OnlinePlayerIdentity.ValidateOrPrimary(bodyData.PlayerId, connectionId);
+                bodyData.ConnectionId = connectionId;
                 payload = JsonUtility.ToJson(bodyData);
             }
             BodyDataReceived?.Invoke(bodyData);

@@ -322,7 +322,7 @@ namespace DrawBody.Prototype
             if (room < 0 || buttonIndex / 4 != room || eliminated.Contains(playerId)) return;
             if (IsOnline && !HasAuthority)
             {
-                if (playerId != onlineManager?.LocalPlayerId) return;
+                if (!OnlinePlayerIdentity.IsOwnedByConnection(playerId, onlineManager?.LocalPlayerId)) return;
                 onlineManager.SendGimmickData(new OnlineGimmickData
                 {
                     ObjectId = StageId, Kind = ButtonRequestKind,
@@ -466,10 +466,13 @@ namespace DrawBody.Prototype
         {
             if (IsOnline)
             {
-                int room = FindRoom(onlineManager?.LocalPlayerId);
-                PlayerController2D local = stageManager.ActivePlayerTransform != null
-                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-                PlacePlayer(local, Mathf.Max(0, room));
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
+                {
+                    PlayerController2D local = localPlayers[i];
+                    int room = FindRoom(stageManager.GetOnlinePlayerId(local));
+                    if (room >= 0) PlacePlayer(local, room);
+                }
                 return;
             }
             for (int room = 0; room < occupiedRooms; room++) PlacePlayer(ResolvePlayer(roomPlayerIds[room]), room);
@@ -564,7 +567,7 @@ namespace DrawBody.Prototype
             if (string.IsNullOrEmpty(id) || eliminated.Contains(id)) return;
             if (IsOnline && !HasAuthority)
             {
-                if (id != onlineManager?.LocalPlayerId) return;
+                if (!OnlinePlayerIdentity.IsOwnedByConnection(id, onlineManager?.LocalPlayerId)) return;
                 onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = StageId, Kind = EliminateRequestKind, Json = JsonUtility.ToJson(new EliminationState { PlayerId = id }) });
                 return;
             }
@@ -642,8 +645,13 @@ namespace DrawBody.Prototype
 
         private void SetLocalControls(bool value)
         {
-            PlayerController2D active = stageManager?.ActivePlayerTransform != null ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            active?.SetControlsEnabled(value && !stageManager.IsDrawingMode && !IsEliminated(active));
+            if (stageManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                local?.SetControlsEnabled(value && !stageManager.IsDrawingMode && !IsEliminated(local));
+            }
         }
 
         private bool IsEliminated(PlayerController2D player)

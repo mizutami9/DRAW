@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D ou controle esquerdo: mover espaço/A: pular F/X: clique de habilidade/RT: seleção de ação: redesenhar Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "CONTROLE ESQUERDO: CURSOR RT: DRAW / SELECT LT: ERASE CREATE / VIEW: CLOSE"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "Corre. Alcance o objetivo antes que o tempo acabe."
+      "value": "ATAQUE DO TEMPO. ESCLARECE SE O TEMPO DE FINALIZAÇÃO COMBINADO DE TODOS ESTÁ DENTRO DE {0} MINUTOS."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "CORRE."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "Mudar personagem"
+      "key": "gameplay_control_switch",
+      "value": "Mudar personagem"
     },
     {
-        "key":  "feedback_button",
-        "value":  "COMENTÁRIOS / REPORTAR ERRO"
+      "key": "feedback_button",
+      "value": "COMENTÁRIOS / REPORTAR ERRO"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "Obrigado por jogar!\nComentários / Reportar erro"
+      "key": "feedback_clear_button",
+      "value": "Obrigado por jogar!\nComentários / Reportar erro"
     },
-    { "key": "option_complete", "value": "CONCLUÍDO" },
-    { "key": "option_screen_mode_format", "value": "ECRÃ: {0}" },
-    { "key": "option_resolution_format", "value": "RESOLUÇÃO: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "ECRÃ INTEIRO" },
-    { "key": "option_windowed", "value": "JANELA" },
-    { "key": "online_steam_not_running", "value": "Inicie o Steam e abra o NICO DRAW a partir da sua Biblioteca Steam." },
-    { "key": "online_steam_ticket_failed", "value": "Não foi possível obter um bilhete de autenticação do Steam: {0}" },
-    { "key": "wishlist_button", "value": "LISTA DE DESEJOS" },
-    { "key": "single_recommend_title", "value": "MULTIJOGADOR RECOMENDADO!" },
-    { "key": "single_recommend_message", "value": "NICO DRAW é ainda melhor em cooperação!\nExperimentem jogar com 2–4 jogadores!" },
-    { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Sair do NICO DRAW?" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} já está a usar esta personagem. Enviar um pedido de troca?" },
-    { "key": "draw_species_swap_send", "value": "ENVIAR PEDIDO" },
-    { "key": "background_word_push", "value": "EMPURRA!" }
+    {
+      "key": "option_complete",
+      "value": "CONCLUÍDO"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "ECRÃ: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "RESOLUÇÃO: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "ECRÃ INTEIRO"
+    },
+    {
+      "key": "option_windowed",
+      "value": "JANELA"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Inicie o Steam e abra o NICO DRAW a partir da sua Biblioteca Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Não foi possível obter um bilhete de autenticação do Steam: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "LISTA DE DESEJOS"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "MULTIJOGADOR RECOMENDADO!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW é ainda melhor em cooperação!\nExperimentem jogar com 2–4 jogadores!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OK"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Sair do NICO DRAW?"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} já está a usar esta personagem. Enviar um pedido de troca?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "ENVIAR PEDIDO"
+    },
+    {
+      "key": "background_word_push",
+      "value": "EMPURRA!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "SEGURAR CRUZ / A: DESLIZAR QUADRADO / X: AGARRAR"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "QUADRADO / X: RISCAR / AGARRAR"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "QUADRADO / X: LANÇAMENTO"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "QUADRADO / X: PONTO PARA A DIREITA"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "SEGURAR CRUZ / A: SHELL SEGURA QUADRADO / X: GIRAR 90°"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "SEGURAR CRUZ: DESLIZAR QUADRADO: AGARRAR"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "QUADRADO: RISCAR / AGARRAR"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "QUADRADO: LANÇAR"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "QUADRADO: PONTO PARA A DIREITA"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "SEGURAR CRUZ: CONCHA SEGURAR QUADRADO: GIRAR 90°"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "SEGURE A: DESLIZAR X: AGARRAR"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: RISCAR / AGARRAR"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: JOGAR"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: PONTO PARA A DIREITA"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "SEGURAR A: SEGURAR O SHELL X: GIRAR 90°"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "SEM LIMITE DE TEMPO"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "NÃO INCLUÍDO NA DEMO"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "CONTROLE ESQUERDO: MOVER RT / A / B: DESENHAR E SELECIONAR LT: APAGAR"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: DESENHO MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: DESENHO MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / SELECIONAR: DESENHAR MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: DESENHO MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: DESENHO MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: DESENHO MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: DESENHO MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "P: TROCAR DE PERSONAGEM"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "TRIÂNGULO / Y: TROCAR PERSONAGEM"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "TRIÂNGULO: TROCAR PERSONAGEM"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: TROCAR PERSONAGEM"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TOTAL DA EQUIPE ACABADO"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "FIM DE JOGO\nTOTAL {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "TENTE novamente em {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "LIMPAR EM {0} TOTAL"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "TOTAL {0}/{1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automático (teclado/gamepad)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (desconectado)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Teclado + Rato"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD DESCONECTADO. RECONECTE-O PARA RESTAURAR O MESMO JOGADOR."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD RECONECTADO."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "TECLADO/MOUSE LIBERADO DE P1. PRESSIONE UM BOTÃO DO CONTROLADOR PARA REIVINDICAR P1."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "PAD NÃO ATRIBUÍDO: START PARA ENTRAR / TECLADO: ENTER PARA ENTRAR, BACKSPACE PARA SAIR / P2: SELECIONE + B PARA SAIR"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} PARTICIPOU ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} ESQUERDA."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "ATÉ 2 JOGADORES POR DISPOSITIVO E 4 JOGADORES NO TOTAL NA SALA."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "A SALA ESTÁ CHEIA (4 JOGADORES). O JOGADOR LOCAL EXTRA FOI REMOVIDO."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 MUDOU PARA {0}."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 JOGADORES PRONTOS"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: JUNTE-SE"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "PRESSIONE QUALQUER BOTÃO DO CONTROLADOR PARA PARTICIPAR"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "JOGO LOCAL {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "ADICIONE OU REMOVA JOGADORES LOCAIS ANTES DE INICIAR A FASE."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PAD {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "JOGADORES {0}/2\nTECLADO: ENTER PARA ENTRAR / BACKSPACE PARA SAIR\nCONTROLADOR: START PARA ENTRAR / SEGURAR B PARA SAIR"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "JOGADORES LOCAIS {0}/2 PADS CONECTADOS {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Falha na criação da sala. Nova tentativa em {0}s ({1} tentativas restantes)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "ENCONTRE A POSIÇÃO QUE CORRESPONDE ENTRE OS PÁSSAROS FLUTUANTES!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "COLOQUE A POSIÇÃO HUMANA CORRESPONDENTE NO BURACO DA FECHADURA!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "RODADA {0}/3 {1:0.0}s RESTANTES"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "TENTANDO ESTA RODADA DE NOVO"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "RODADA {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "RODADA {0} LIMPA!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "ACABOU O TEMPO!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "CARREGUE A TARTARUGA PELA SALA CHEIA DE MOLAS!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "ESCLARECE SE O TEMPO DE FINALIZAÇÃO COMBINADO DE TODOS ESTÁ DENTRO DE 1 MINUTO POR JOGADOR."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "TODAS AS RODADAS ESTÃO LIBERADAS!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "QUEBRE AS PEQUENAS CAIXAS!  CUIDADO COM OS INIMIGOS!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "QUEBRE AS CAIXAS COM O SLIME SPIKE!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "REDONDA {0}/3 CAIXAS {1}/{2} {3}s ESQUERDAS"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "JOGO ACABADO, NOVA RODADA {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "RODADA {0} LIMPA!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Espectador: {0} Alternar com ← / →"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "RODADA {0}/3 COMEÇA EM {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "VOCÊ PODE SE MOVER NA SUA PISTA DURANTE A CONTAGEM REGRESSIVA"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "O SORTEIO DE TÍTULOS NÃO ESTÁ DISPONÍVEL DURANTE A COOPERAÇÃO LOCAL. VOLTE PARA 1 JOGADOR PRIMEIRO."
+    }
   ]
 }

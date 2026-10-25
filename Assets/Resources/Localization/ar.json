@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D أو الذراع اليسرى: تحريك مسافة/A: القفز F/X: القدرة النقر/RT: تحديد الإجراء: إعادة الرسم Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "العصا اليسرى: المؤشر RT: رسم / تحديد LT: مسح CREATE / VIEW: إغلاق"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "دق اعيدي النظر في الوقت المناسب"
+      "value": "هجوم الوقت. وضح ما إذا كان وقت الانتهاء المشترك للجميع في حدود {0} دقيقة."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "اركض."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "تبديل الشخصية"
+      "key": "gameplay_control_switch",
+      "value": "تبديل الشخصية"
     },
     {
-        "key":  "feedback_button",
-        "value":  "ملاحظات / الإبلاغ عن خطأ"
+      "key": "feedback_button",
+      "value": "ملاحظات / الإبلاغ عن خطأ"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "شكرًا للعب!\nملاحظات / الإبلاغ عن خطأ"
+      "key": "feedback_clear_button",
+      "value": "شكرًا للعب!\nملاحظات / الإبلاغ عن خطأ"
     },
-    { "key": "option_complete", "value": "تم" },
-    { "key": "option_screen_mode_format", "value": "العرض: {0}" },
-    { "key": "option_resolution_format", "value": "الدقة: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "ملء الشاشة" },
-    { "key": "option_windowed", "value": "وضع النافذة" },
-    { "key": "online_steam_not_running", "value": "شغّل Steam، ثم شغّل NICO DRAW من مكتبة Steam." },
-    { "key": "online_steam_ticket_failed", "value": "تعذر الحصول على تذكرة مصادقة Steam: {0}" },
-    { "key": "wishlist_button", "value": "قائمة الأمنيات" },
-    { "key": "single_recommend_title", "value": "يُنصح باللعب الجماعي!" },
-    { "key": "single_recommend_message", "value": "تكون NICO DRAW أكثر متعة عند التعاون معًا!\nجرّب اللعب مع 2–4 لاعبين!" },
-    { "key": "single_recommend_ok", "value": "حسنًا" }
-    ,{ "key": "title_exit_confirm", "value": "هل تريد الخروج من NICO DRAW؟" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} يستخدم هذه الشخصية بالفعل. هل تريد إرسال طلب تبديل؟" },
-    { "key": "draw_species_swap_send", "value": "إرسال الطلب" },
-    { "key": "background_word_push", "value": "ادفع!" }
+    {
+      "key": "option_complete",
+      "value": "تم"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "العرض: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "الدقة: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "ملء الشاشة"
+    },
+    {
+      "key": "option_windowed",
+      "value": "وضع النافذة"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "شغّل Steam، ثم شغّل NICO DRAW من مكتبة Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "تعذر الحصول على تذكرة مصادقة Steam: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "قائمة الأمنيات"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "يُنصح باللعب الجماعي!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "تكون NICO DRAW أكثر متعة عند التعاون معًا!\nجرّب اللعب مع 2–4 لاعبين!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "حسنًا"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "هل تريد الخروج من NICO DRAW؟"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} يستخدم هذه الشخصية بالفعل. هل تريد إرسال طلب تبديل؟"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "إرسال الطلب"
+    },
+    {
+      "key": "background_word_push",
+      "value": "ادفع!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "عقد متقاطع / A: مربع الانزلاق / X: الاستيلاء"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "مربع / X: خدش / انتزاع"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "مربع / X: رمي"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "المربع / X: انطلق نحو العصا اليمنى"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "عقد متقاطع / A: SHELL HOLD SQUARE / X: استدر بزاوية 90 درجة"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "عقد الصليب: مربع الإنزلاق: انتزاع"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "مربع: خدش / انتزاع"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "مربع: رمي"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "مربع: انطلق نحو العصا اليمنى"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "عقد متقاطع: شيل عقد مربع: استدر 90 درجة"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "عقد أ: الانزلاق X: انتزاع"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "عاشرًا: اخدش/امسك"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "عاشرا: رمي"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: انطلق نحو العصا اليمنى"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "عقد أ: عقد شيل X: دوران 90 درجة"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "لا يوجد حد زمني"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "غير مدرج في العرض التوضيحي"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "العصا اليسرى: حرك RT / A / B: ارسم وحدد LT: مسح"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: رسم MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: رسم MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / تحديد: رسم MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: رسم MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: رسم MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: رسم MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: رسم MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "س: تبديل الشخصية"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "المثلث / Y: تبديل الحرف"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "المثلث: تبديل الشخصية"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "ص: تبديل الشخصية"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "إجمالي الفريق أكثر"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "انتهت اللعبة\nالإجمالي {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "إعادة المحاولة في {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "واضح ضمن {0} الإجمالي"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "المجموع {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "تلقائي (لوحة المفاتيح / لوحة الألعاب)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "لوحة الألعاب (غير متصلة)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "لوحة المفاتيح + الفأرة"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "ص{0} تم قطع اتصال لوحة الألعاب. أعد توصيله لاستعادة نفس اللاعب."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "ص{0} إعادة توصيل لوحة الألعاب."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "تم إصدار لوحة المفاتيح/الماوس من P1. اضغط على زر وحدة التحكم للمطالبة بـ P1."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "لوحة غير مخصصة: START للانضمام / لوحة المفاتيح: ENTER للانضمام، BACKSPACE للمغادرة / P2: حدد + B للمغادرة"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "تم الانضمام إلى {0} ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "ف{0} يسار."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "ما يصل إلى لاعبين لكل جهاز و4 لاعبين إجمالاً في الغرفة."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "الغرفة ممتلئة (4 لاعبين). تمت إزالة اللاعب المحلي الإضافي."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "تم تحويل P1 إلى {0}."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 لاعبين جاهزين"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: انضم"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "اضغط على أي زر تحكم للانضمام"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "اللعب المحلي {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "قم بإضافة أو إزالة اللاعبين المحليين قبل بدء المرحلة."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "الوسادة {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "اللاعبون {0}/2\nلوحة المفاتيح: ENTER للانضمام / BACKSPACE للمغادرة\nوحدة التحكم: START للانضمام / اضغط مع الاستمرار على B للمغادرة"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "اللاعبون المحليون {0}/2 منصات متصلة {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "فشل إنشاء الغرفة. إعادة المحاولة في {0}ق ({1} المحاولات المتبقية)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "ابحث عن الوضعية المطابقة بين الطيور العائمة!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "ضع الوضع البشري المطابق في ثقب المفتاح!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "الجولة {0}/3 {1:0.0} ثانية لليسار"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "إعادة محاولة هذه الجولة"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "الجولة {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "جولة {0} واضحة!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "انتهى الوقت!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "احمل السلحفاة عبر الغرفة المليئة بالينابيع!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "قم بتوضيح ما إذا كان وقت الانتهاء المشترك للجميع هو في حدود دقيقة واحدة لكل لاعب."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "كل جولة واضحة!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "كسر الصناديق الصغيرة!  مشاهدة الأعداء!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "اكسر الصناديق باستخدام مسمار السلايم!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "جولة {0}/3 صناديق {1}/{2} {3} ثانية على اليسار"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "انتهت اللعبة من إعادة محاولة الجولة {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "جولة {0} واضحة!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "المشاهدة: {0} التبديل مع ← / →"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "الجولة {0}/3 تبدأ في {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "يمكنك التحرك داخل حارتك أثناء العد التنازلي"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "سحب اللقب غير متاح أثناء اللعب التعاوني المحلي. العودة إلى لاعب واحد أولا."
+    }
   ]
 }

@@ -101,7 +101,11 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            bool gameplayVisible = stageManager != null && stageManager.IsGameplayActive;
+            ResolveOnlineManager();
+            bool onlineGameplay = onlineManager != null
+                && onlineManager.State == OnlineConnectionState.Playing;
+            bool gameplayVisible = stageManager != null && stageManager.IsGameplayActive
+                && onlineGameplay;
             bool overlayShowing = uiManager != null && uiManager.IsGameplayOverlayShowing;
             bool paletteVisible = gameplayVisible;
             if (paletteCanvas != null)
@@ -147,6 +151,10 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            ResolveOnlineManager();
+            if (onlineManager == null || onlineManager.State != OnlineConnectionState.Playing)
+                return;
+
             Transform localPlayer = stageManager.ActivePlayerTransform;
             if (localPlayer != null) ShowBubble(localPlayer, id);
             localEmoteId = id;
@@ -154,7 +162,6 @@ namespace DrawBody.Prototype
             localEmoteUntil = Time.unscaledTime + DisplaySeconds;
             GameSfx.Play(SfxId.EmotePop);
 
-            ResolveOnlineManager();
             EmoteShown?.Invoke(onlineManager != null ? onlineManager.LocalPlayerId : string.Empty, id);
             if (onlineManager != null && onlineManager.State == OnlineConnectionState.Playing)
             {
@@ -187,7 +194,7 @@ namespace DrawBody.Prototype
         private void HandleNetworkEmote(OnlineGimmickData data)
         {
             if (data == null || data.Kind != NetworkKind || onlineManager == null
-                || data.PlayerId == onlineManager.LocalPlayerId
+                || OnlinePlayerIdentity.IsOwnedByConnection(data.PlayerId, onlineManager.LocalPlayerId)
                 || stageManager == null || data.ObjectId != stageManager.CurrentStageId)
             {
                 return;

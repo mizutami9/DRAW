@@ -68,7 +68,6 @@ namespace DrawBody.Prototype
         private float startCountdownRemaining = 3f;
         private float startFlashUntil;
         private bool startCountdownActive;
-        private PlayerController2D countdownPlayer;
 
         public bool HasAuthority => stageManager == null || !stageManager.IsOnlineStageActive || stageManager.IsOnlineStageHost;
 
@@ -90,7 +89,7 @@ namespace DrawBody.Prototype
         private void OnDisable()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
-            if (countdownPlayer != null) countdownPlayer.SetControlsEnabled(true);
+            SetLocalPlayerControls(true);
             uiManager?.SetChallengeCountdown(false, string.Empty);
         }
 
@@ -361,10 +360,7 @@ namespace DrawBody.Prototype
         {
             startCountdownRemaining = 3f;
             startCountdownActive = true;
-            countdownPlayer = stageManager != null && stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
-            countdownPlayer?.SetControlsEnabled(false);
+            SetLocalPlayerControls(false);
             uiManager?.SetChallengeCountdown(true, "3");
         }
 
@@ -382,7 +378,7 @@ namespace DrawBody.Prototype
 
                 startCountdownActive = false;
                 startFlashUntil = Time.unscaledTime + 0.65f;
-                countdownPlayer?.SetControlsEnabled(true);
+                SetLocalPlayerControls(true);
                 uiManager?.SetChallengeCountdown(true, LocalizationManager.T("survival_start"));
                 RefreshMonitors();
             }
@@ -392,6 +388,14 @@ namespace DrawBody.Prototype
                 uiManager?.SetChallengeCountdown(false, string.Empty);
             }
             return false;
+        }
+
+        private void SetLocalPlayerControls(bool enabled)
+        {
+            if (stageManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+                localPlayers[i]?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
         }
 
         private void ApplyBreak(string crateId, int value, Vector2 hitPoint, bool broadcast)

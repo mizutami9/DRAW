@@ -23,6 +23,22 @@ namespace DrawBody.Prototype
             Apply(slider.value);
         }
 
+        public void BindDrawManager(DrawManager manager)
+        {
+            drawManager = manager;
+            if (slider == null) slider = GetComponent<Slider>();
+            if (slider != null) Apply(slider.value);
+        }
+
+        public void RebindForClonedSession(DrawManager manager)
+        {
+            drawManager = manager;
+            if (slider == null) slider = GetComponent<Slider>();
+            slider.onValueChanged.RemoveAllListeners();
+            slider.onValueChanged.AddListener(Apply);
+            Apply(slider.value);
+        }
+
         private void Apply(float value)
         {
             drawManager?.SetBrushSizePixels(value);

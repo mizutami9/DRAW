@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D vagy bal oldali pálca: Mozgatás szóköz/A: Ugrás F/X: Képesség Kattintás/RT: Művelet kiválasztása: Újrarajzolás Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "BAL PÁRKA: KURSZOR RT: DRAW / SELECT LT: ERASE CREATE / VIEW: CLOSE"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "Speed Run. RÖVID MEG AZ IDŐT."
+      "value": "IDŐTÁMADÁS. TÖRLÉSE, HA MINDENKINEK A KOMBINÁLT FELÉPÍTÉSI IDŐ {0} PERCEN BELÜL VAN."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "FUSS."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "Karakterváltás"
+      "key": "gameplay_control_switch",
+      "value": "Karakterváltás"
     },
     {
-        "key":  "feedback_button",
-        "value":  "VISSZAJELZÉS / HIBAJELENTÉS"
+      "key": "feedback_button",
+      "value": "VISSZAJELZÉS / HIBAJELENTÉS"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "Köszönjük, hogy játszottál!\nVisszajelzés / Hibajelentés"
+      "key": "feedback_clear_button",
+      "value": "Köszönjük, hogy játszottál!\nVisszajelzés / Hibajelentés"
     },
-    { "key": "option_complete", "value": "KÉSZ" },
-    { "key": "option_screen_mode_format", "value": "KIJELZŐ: {0}" },
-    { "key": "option_resolution_format", "value": "FELBONTÁS: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "TELJES KÉPERNYŐ" },
-    { "key": "option_windowed", "value": "ABLAKOS MÓD" },
-    { "key": "online_steam_not_running", "value": "Indítsd el a Steamet, majd a Steam-könyvtárból a NICO DRAW játékot." },
-    { "key": "online_steam_ticket_failed", "value": "Nem sikerült Steam-hitelesítési jegyet kérni: {0}" },
-    { "key": "wishlist_button", "value": "KÍVÁNSÁGLISTA" },
-    { "key": "single_recommend_title", "value": "TÖBBJÁTÉKOS MÓD AJÁNLOTT!" },
-    { "key": "single_recommend_message", "value": "A NICO DRAW együttműködve a legszórakoztatóbb!\nPróbáljátok ki 2–4 játékossal!" },
-    { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Kilépsz a NICO DRAW-ból?" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} már ezt a karaktert használja. Küldesz cserekérelmet?" },
-    { "key": "draw_species_swap_send", "value": "KÉRELEM KÜLDÉSE" },
-    { "key": "background_word_push", "value": "TOLD!" }
+    {
+      "key": "option_complete",
+      "value": "KÉSZ"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "KIJELZŐ: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "FELBONTÁS: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "TELJES KÉPERNYŐ"
+    },
+    {
+      "key": "option_windowed",
+      "value": "ABLAKOS MÓD"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Indítsd el a Steamet, majd a Steam-könyvtárból a NICO DRAW játékot."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Nem sikerült Steam-hitelesítési jegyet kérni: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "KÍVÁNSÁGLISTA"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "TÖBBJÁTÉKOS MÓD AJÁNLOTT!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "A NICO DRAW együttműködve a legszórakoztatóbb!\nPróbáljátok ki 2–4 játékossal!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OK"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Kilépsz a NICO DRAW-ból?"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} már ezt a karaktert használja. Küldesz cserekérelmet?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "KÉRELEM KÜLDÉSE"
+    },
+    {
+      "key": "background_word_push",
+      "value": "TOLD!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "KERESZT TARTÁSA / A: CSÚSZTÁSI SZÖVEG / X: MEGFOGADÁS"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "SZÖVEG / X: KARCOLÁS / MEGRAGAD"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "NEGYED / X: DOBÁS"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "SZÖVEG / X: SZÜLÉS JOBBRA BOLT FELÉ"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "KERESZT TARTÁSA / A: SHELL HOLD SQUARE / X: FORDULAT 90°-kal"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "KERESZT TARTÁSA: CSÚSZTÁSI TERÜLET: FOGRA"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "SZÖVEG: KARMOZÁS / MEGRADÁS"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "TÉR: DOBÁS"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "SZÖVEG: TÜSKE JOBB BOLT FELÉ"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "KERESZT TARTÁSA: SHELL HOLD NEGYED: 90°-kal elfordítani"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "HOLD A: CSÚSZTÁS X: FOGRA"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: KAPCSOLAT / MEGRADÁS"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: DOBÁS"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SPIKE JOBB BOLT FELÉ"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "HOLD A: SHELL HOLD X: FORDULAT 90°-kal"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "NINCS IDŐKORLAT"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "NEM TARTALMAZZA A DEMÓBAN"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "BAL POSSZ: MOVE RT / A / B: DRAW & SELECT LT: ERASE"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: SORSOLÁS MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: RAJZ MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / KIVÁLASZTÁS: DRAW MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: SORSOLÁS MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: RAJZ MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: SORSOLÁS MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: RAJZ MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "K: KARAKTER VÁLTÁSA"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "HÁROMSZÖG / Y: VÁLTÓ KARAKTER"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "HÁROMSZÖG: VÁLTÓ KARAKTER"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: VÁLTÓ KARAKTER"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "CSAPAT ÖSSZESEN"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "JÁTÉK MŰKÖDÉSE\nÖSSZESEN {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "PRÓBÁLJON ÚJRA: {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "TÖRLÉS {0} ÖSSZESEN BELÜL"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "ÖSSZESEN {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automata (billentyűzet / játékvezérlő)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (lekapcsolva)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Billentyűzet + egér"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD LESZÁLLÍTOTT. A JÁTÉKOS VISSZAÁLLÍTÁSÁHOZ KAPCSOLJA ÚJRA."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD ÚJRA CSATLAKOZTATVA."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "BILLENTYŰZET/EGÉR KIADVA A P1-BŐL. NYOMJON MEG EGY VEZÉRLŐ GOMBOT A P1 IGÉNYLÉSÉHEZ."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "NÉLKÜLI PAD: START CSATLAKOZÁSHOZ / BILLENTYŰZET: ENTER CSATLAKOZÁS, BACKSPACE KIlépéshez / P2: KIVÁLASZTÁS + B A KIlépéshez"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} CSATLAKOZTATVA ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} BAL."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "ESZKÖZÖNKÉNT AKÁR 2 JÁTÉKOS ÉS ÖSSZESEN 4 JÁTÉKOS A SZOBÁBAN."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "A SZOBA MEGTELT (4 JÁTÉKOS). AZ EXTRA HELYI JÁTÉKOST eltávolítottuk."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 VÁLTVA A(z) {0}-RE."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 JÁTÉKOS KÉSZ"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: CSATLAKOZÁS"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "A CSATLAKOZÁSHOZ NYOMJON MEG BÁRMELY VEZÉRLŐ GOMBOT"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "HELYI JÁTÉK {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "HELYI JÁTÉKOSOK HOZZÁADÁSA VAGY ELTÁVOLÍTÁSA A SZAKASZ KEZDÉSE ELŐTT."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PAD {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "JÁTÉKOSOK {0}/2\nBILLENTYŰZET: ENTER CSATLAKOZÁS / BACKSPACE HAGYNI\nVEZÉRLŐ: START CSATLAKOZÁS / B-TARTÁS A KIlépéshez"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "HELYI JÁTÉKOSOK {0}/2 CSATLAKOZTATOTT PAD {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "A szoba létrehozása nem sikerült. Újra próbálkozás {0}s ({1} kísérlet maradt)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "TALÁLJA MEG A ISMERŐ PÓZOT A LEBESZŐ MADARAK KÖZÖTT!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "HELYEZD BE A TELJESÍTMÉNY EMBERI PÓZOT A KULCSLYUKBA!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "FORDULAT {0}/3. {1:0.0}s BAL"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "ÚJRAPRÓBÁLÁS EZNEK A KORDULÓBAN"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "FORDULÓ {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "{0}. KÖR TISZTA!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "IDŐ MEG!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "VIDD át A TEKNŐSBÉKÁT A RUGÓKKAL TELJES SZOBÁN!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "TÖRLÉS, HA MINDENKINEK A KOMBINÁLT FINISZ IDŐ JÁTÉKOSONKÉNT 1 PERCEN BELÜL VAN."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "MINDEN KÖR TISZTA!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "TÖRJÖK BE A KIS LÁKÁKAT!  FIGYELJ AZ ELLENSÉGEKRE!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "TÖRJI BE A LÁDÁKAT A NYÁKSZÜSÉVEL!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "KEREK, {0}/3. LEKEDA {1}/{2} {3} s BAL"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "A JÁTÉK VÉGE ÚJRAPRÓBÁLÁSI KÖRBE {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "{0}. KÖR TISZTA!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Spectating: {0} Váltás a ← / → gombbal"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "{0}/3. FORDULÓ: {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "A VISSZAMÉRÉS ALATT MOZGATHAT A SÁVÁN BELÜL"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "A CÍM SORSOLÁSA NEM ELÉRHETŐ A HELYI EGYÜTTMŰKÖDÉS ALATT. ELŐször VISSZA 1 JÁTÉKOSHOZ."
+    }
   ]
 }

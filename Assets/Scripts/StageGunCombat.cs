@@ -414,7 +414,8 @@ namespace DrawBody.Prototype
                 if (data == null || data.Sequence <= lastShotSequence) return;
                 lastShotSequence = data.Sequence;
                 StageGunBullet.Create(transform, this, data.Sequence, data.OwnerPlayerId, data.Origin, data.Direction, false);
-                bool predictedLocally = data.OwnerPlayerId == onlineManager?.LocalPlayerId
+                bool predictedLocally = OnlinePlayerIdentity.IsOwnedByConnection(
+                        data.OwnerPlayerId, onlineManager?.LocalPlayerId)
                     && data.RequestSequence > 0
                     && predictedLocalFireFeedback.Remove(data.RequestSequence);
                 if (!predictedLocally) PlayFireFeedback(data.Origin, data.Direction, 0.66f);
@@ -585,16 +586,26 @@ namespace DrawBody.Prototype
         }
 
         internal void RequestReflection(
-            int sequence, int requestSequence, Vector2 point, Vector2 normal, Vector2 incomingDirection)
+            int sequence, int requestSequence, Vector2 point, Vector2 normal,
+            Vector2 incomingDirection, string reflectingPlayerId)
         {
             if (!IsOnline() || HasAuthority() || sequence <= 0) return;
-            Send(ReflectRequestKind, new BulletReflectRequest
+            if (onlineManager == null || !OnlinePlayerIdentity.IsOwnedByConnection(
+                reflectingPlayerId, onlineManager.LocalPlayerId)) return;
+            BulletReflectRequest request = new BulletReflectRequest
             {
                 Sequence = sequence,
                 RequestSequence = requestSequence,
                 Point = point,
                 Normal = normal,
                 IncomingDirection = incomingDirection
+            };
+            onlineManager.SendGimmickData(new OnlineGimmickData
+            {
+                ObjectId = SystemId,
+                Kind = ReflectRequestKind,
+                PlayerId = reflectingPlayerId,
+                Json = JsonUtility.ToJson(request)
             });
         }
 
@@ -766,10 +777,6 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null || !stageManager.IsOnlineStageActive
                 || Time.unscaledTime - lastLocalReflectionAt < 0.2f) return false;
-            Transform active = stageManager.ActivePlayerTransform;
-            PlayerController2D localPlayer = active != null ? active.GetComponent<PlayerController2D>() : null;
-            if (localPlayer == null || stageManager.GetOnlinePlayerId(localPlayer) == ownerPlayerId) return false;
-
             RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, distance + 0.15f);
             System.Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
             for (int i = 0; i < hits.Length; i++)
@@ -778,7 +785,7 @@ namespace DrawBody.Prototype
                 if (collider == null || collider.GetComponentInParent<StageGun>() != null) continue;
                 if (collider.isTrigger) continue;
                 PlayerController2D hitPlayer = collider.GetComponentInParent<PlayerController2D>();
-                if (hitPlayer != localPlayer)
+                if (hitPlayer == null || !stageManager.IsLocallyControlledPlayer(hitPlayer))
                 {
                     StageRicochetBulletPassage passage = collider.GetComponentInParent<StageRicochetBulletPassage>();
                     PlatformEffector2D oneWay = collider.GetComponentInParent<PlatformEffector2D>();
@@ -786,6 +793,8 @@ namespace DrawBody.Prototype
                         continue;
                     return false;
                 }
+                string reflectingPlayerId = stageManager.GetOnlinePlayerId(hitPlayer);
+                if (reflectingPlayerId == ownerPlayerId) return false;
                 Vector2 incoming = direction;
                 Vector2 normal = hits[i].normal.sqrMagnitude > 0.2f
                     ? hits[i].normal.normalized
@@ -794,10 +803,10 @@ namespace DrawBody.Prototype
                 transform.position = hits[i].point + direction * ReflectionClearance;
                 transform.rotation = Quaternion.Euler(0f, 0f,
                     Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-                lastReflectPlayer = localPlayer;
+                lastReflectPlayer = hitPlayer;
                 lastLocalReflectionAt = Time.unscaledTime;
                 system?.RequestReflection(sequence, ++localReflectionRequestSequence,
-                    hits[i].point, normal, incoming);
+                    hits[i].point, normal, incoming, reflectingPlayerId);
                 ricochetChallenge.NotifyReflection(hits[i].point);
                 return true;
             }

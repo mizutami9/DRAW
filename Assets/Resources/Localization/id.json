@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D atau Tongkat Kiri: Pindahkan Spasi/A: Lompat F/X: Kemampuan Klik/RT: Pilihan Tindakan: Gambar Ulang Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "TONGKAT KIRI: KURSOR RT: GAMBAR / PILIH LT: HAPUS CREATE / VIEW: TUTUP"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "Jalan yang menyenangkan. Lihat para dewa sebelum keluar."
+      "value": "SERANGAN WAKTU. JELAS JIKA WAKTU SELESAI GABUNGAN SEMUA ORANG DALAM {0} MENIT."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "LARI."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "Ganti karakter"
+      "key": "gameplay_control_switch",
+      "value": "Ganti karakter"
     },
     {
-        "key":  "feedback_button",
-        "value":  "MASUKAN / LAPORKAN BUG"
+      "key": "feedback_button",
+      "value": "MASUKAN / LAPORKAN BUG"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "Terima kasih sudah bermain!\nMasukan / Laporkan bug"
+      "key": "feedback_clear_button",
+      "value": "Terima kasih sudah bermain!\nMasukan / Laporkan bug"
     },
-    { "key": "option_complete", "value": "SELESAI" },
-    { "key": "option_screen_mode_format", "value": "TAMPILAN: {0}" },
-    { "key": "option_resolution_format", "value": "RESOLUSI: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "LAYAR PENUH" },
-    { "key": "option_windowed", "value": "MODE JENDELA" },
-    { "key": "online_steam_not_running", "value": "Jalankan Steam, lalu buka NICO DRAW dari Pustaka Steam." },
-    { "key": "online_steam_ticket_failed", "value": "Tidak dapat memperoleh tiket autentikasi Steam: {0}" },
-    { "key": "wishlist_button", "value": "DAFTAR KEINGINAN" },
-    { "key": "single_recommend_title", "value": "MULTIPEMAIN DIREKOMENDASIKAN!" },
-    { "key": "single_recommend_message", "value": "NICO DRAW paling seru saat bermain bersama!\nCobalah bermain dengan 2–4 pemain!" },
-    { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "Keluar dari NICO DRAW?" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} sedang menggunakan karakter ini. Kirim permintaan tukar?" },
-    { "key": "draw_species_swap_send", "value": "KIRIM PERMINTAAN" },
-    { "key": "background_word_push", "value": "DORONG!" }
+    {
+      "key": "option_complete",
+      "value": "SELESAI"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "TAMPILAN: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "RESOLUSI: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "LAYAR PENUH"
+    },
+    {
+      "key": "option_windowed",
+      "value": "MODE JENDELA"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Jalankan Steam, lalu buka NICO DRAW dari Pustaka Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Tidak dapat memperoleh tiket autentikasi Steam: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "DAFTAR KEINGINAN"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "MULTIPEMAIN DIREKOMENDASIKAN!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW paling seru saat bermain bersama!\nCobalah bermain dengan 2–4 pemain!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OK"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Keluar dari NICO DRAW?"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} sedang menggunakan karakter ini. Kirim permintaan tukar?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "KIRIM PERMINTAAN"
+    },
+    {
+      "key": "background_word_push",
+      "value": "DORONG!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "TAHAN SILANG / A : GLIDE SQUARE / X : GRAB"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "KOTAK / X : Gores / GRAB"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "KOTAK / X : MEMBUAT"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "KOTAK / X : SPIKE KE arah STICK KANAN"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "TAHAN SILANG / A: SHELL HOLD KOTAK / X: PUTAR 90°"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "TAHAN SALIB: GLIDE SQUARE: GRAB"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "KOTAK : GORES / GRAB"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "KOTAK: MEMBUAT"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "KOTAK: SPIKE MENUJU STICK KANAN"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "TAHAN SILANG: SHELL TAHAN KOTAK: PUTAR 90°"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "TAHAN A: MELUNCUR X: GRAB"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X : Gores / GRAB"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: BUANG"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SPIKE MENUJU STICK KANAN"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "TAHAN A: TAHAN SHELL X: PUTAR 90°"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "TANPA BATAS WAKTU"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "TIDAK TERMASUK DALAM DEMO"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "TONGKAT KIRI: PINDAHKAN RT/A/B: GAMBAR & PILIH LT: HAPUS"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: GAMBAR MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: GAMBAR MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / PILIH: GAMBAR MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: GAMBAR MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: GAMBAR MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: GAMBAR MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: GAMBAR MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Q: MENGGANTI KARAKTER"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "SEGITIGA / Y : SWITCH KARAKTER"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "SEGITIGA: SWITCH KARAKTER"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y : GANTI KARAKTER"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TOTAL TIM BERAKHIR"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "PERMAINAN BERAKHIR\nJUMLAH {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "COBA LAGI DI {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "HAPUS DALAM {0} TOTAL"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "JUMLAH {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Otomatis (keyboard/gamepad)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (terputus)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Papan Ketik + Tikus"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD TERHUBUNG. HUBUNGKAN KEMBALI UNTUK MEMULIHKAN PEMAIN YANG SAMA."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD TERHUBUNG KEMBALI."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "KEYBOARD/MOUSE DITERBITKAN DARI P1. TEKAN TOMBOL KONTROLER UNTUK KLAIM P1."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "PAD YANG TIDAK DITETAPKAN: START UNTUK BERGABUNG / KEYBOARD: ENTER UNTUK BERGABUNG, BACKSPACE UNTUK KELUAR / P2: PILIH + B UNTUK KELUAR"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} BERGABUNG ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} KIRI."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "HINGGA 2 PEMAIN PER PERANGKAT DAN TOTAL 4 PEMAIN DALAM RUANG."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "RUANG PENUH (4 PEMAIN). PEMAIN LOKAL EKSTRA DIHAPUS."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 BERALIH KE {0}."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 PEMAIN SIAP"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: GABUNG"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "TEKAN TOMBOL KONTROLER APA PUN UNTUK BERGABUNG"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "MAIN LOKAL {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "TAMBAHKAN ATAU HAPUS PEMAIN LOKAL SEBELUM MEMULAI TAHAP."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PAD {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "PEMAIN {0}/2\nKEYBOARD: ENTER UNTUK BERGABUNG / BACKSPACE UNTUK KELUAR\nCONTROLLER: START UNTUK BERGABUNG / TAHAN B UNTUK KELUAR"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "PEMAIN LOKAL {0}/2 PADS TERHUBUNG {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Pembuatan ruang gagal. Mencoba lagi {0}S ({1} upaya tersisa)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "TEMUKAN POSE YANG COCOK DI ANTARA BURUNG TERAPUNG!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "MASUKKAN POSE MANUSIA YANG COCOK KE DALAM LUBANG KUNCI!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "PUTARAN {0}/3 {1:0.0} KIRI"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "COBA LAGI PUTARAN INI"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "PUTARAN {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "PUTARAN {0} JELAS!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "WAKTU HABIS!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "BAWA PENYU MELALUI RUANG YANG PENUH MATA MATA!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "JELAS JIKA WAKTU SELESAI GABUNGAN SEMUA ORANG DALAM 1 MENIT PER PEMAIN."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "SEMUA PUTARAN JELAS!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "Hancurkan peti kecil!  PERHATIKAN MUSUH!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "HANCURKAN KOTAK DENGAN SLIME SPIKE!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "PUTARAN {0}/3 CRATES {1}/{2} {3} KIRI"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "PERMAINAN LEBIH DARI COBA ULANG PUTARAN {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "PUTARAN {0} JELAS!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Menonton: {0} Ganti dengan ← / →"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "PUTARAN {0}/3 DIMULAI PADA {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "ANDA DAPAT BERGERAK DALAM JALUR ANDA SELAMA HITUNG MUNDUR"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "TITLE DRAW TIDAK TERSEDIA SELAMA CO-OP LOKAL. KEMBALI KE 1 PEMAIN DULU."
+    }
   ]
 }

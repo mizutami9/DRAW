@@ -356,7 +356,6 @@ namespace DrawBody.Prototype
             HashSet<PlayerController2D> affectedPlayers = new HashSet<PlayerController2D>();
             StageManager stageManager = Object.FindFirstObjectByType<StageManager>();
             bool online = syncManager != null && syncManager.IsOnlineActive;
-            Transform localPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
             bool canSimulateWorldBodies = !online || syncManager.IsHost;
             for (int i = 0; i < BlastHits.Count; i++)
             {
@@ -370,7 +369,7 @@ namespace DrawBody.Prototype
                 if (player != null
                     && affectedPlayers.Add(player)
                     && !player.IsInvulnerable
-                    && (!online || player.transform == localPlayer))
+                    && (!online || stageManager != null && stageManager.IsLocallyControlledPlayer(player)))
                 {
                     stageManager?.RespawnFromHazard(player);
                 }

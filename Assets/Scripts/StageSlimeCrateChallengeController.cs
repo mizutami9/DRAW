@@ -304,7 +304,8 @@ namespace DrawBody.Prototype
 
             if (IsOnline)
             {
-                if (onlineManager == null || id != onlineManager.LocalPlayerId) return;
+                if (onlineManager == null
+                    || !OnlinePlayerIdentity.IsOwnedByConnection(id, onlineManager.LocalPlayerId)) return;
                 if (!HasAuthority)
                 {
                     if (!pendingEliminationIds.Add(id)) return;
@@ -889,7 +890,7 @@ namespace DrawBody.Prototype
             {
                 PlayerController2D player = players[i];
                 if (player == null) continue;
-                if (IsOnline && player.transform != stageManager.ActivePlayerTransform) continue;
+                if (IsOnline && !stageManager.IsLocallyControlledPlayer(player)) continue;
                 Vector2 position = player.transform.position;
                 if (position.y < ArenaBottom - 2f || position.y > ArenaTop + 2f
                     || Mathf.Abs(position.x) > ArenaHalfWidth + 2f)
@@ -961,22 +962,28 @@ namespace DrawBody.Prototype
 
         private void ApplyLocalControls()
         {
-            PlayerController2D active = stageManager != null && stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
-            if (active == null || !active.gameObject.activeSelf) return;
+            if (stageManager == null) return;
             bool canMove = phase == ChallengePhase.Countdown || phase == ChallengePhase.Playing;
-            active.SetControlsEnabled(canMove && !stageManager.IsDrawingMode
-                && !eliminatedIds.Contains(ResolvePlayerId(active)));
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                if (local == null || !local.gameObject.activeSelf) continue;
+                local.SetControlsEnabled(canMove && !stageManager.IsDrawingMode
+                    && !eliminatedIds.Contains(ResolvePlayerId(local)));
+            }
         }
 
         private void SetLocalControls(bool enabled)
         {
-            PlayerController2D active = stageManager != null && stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
-            if (active != null && active.gameObject.activeSelf)
-                active.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
+            if (stageManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                if (local != null && local.gameObject.activeSelf)
+                    local.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
+            }
         }
 
         private void ShowCountdown()

@@ -1,70 +1,70 @@
 {
     "SchemaVersion": 1,
-    "ProductVersion": "0.1.0-demo.2",
+    "ProductVersion": "0.1.0-demo.4",
     "Entries": [
         {
             "ResourcePath": "Localization/ar",
-            "Sha256": "c3ac89a51e05e5dde210bc231ff890320e998cb7a11a7fa885c819ce03197e27"
+            "Sha256": "c032d65162f1a844cc934e92d9500aea043bdade93f9ade1a8d5f37023139911"
         },
         {
             "ResourcePath": "Localization/bg",
-            "Sha256": "0b34cddd21e216a4cab69d015c32d7dad646de78dab9a88c6a672ed8e1fbb6ee"
+            "Sha256": "f4dbffb306b8955a2af67381f3f52653c307f063522ade9095c2667ca4eee932"
         },
         {
             "ResourcePath": "Localization/cs",
-            "Sha256": "5b612a670f8a2620f3567a1ad85103ca5ec0f023f825e63b0be1e5bd9307499e"
+            "Sha256": "30686eccc5c9917d8f6d94f1eca06fa3aabff49e914b531c3219f74980a0cba7"
         },
         {
             "ResourcePath": "Localization/da",
-            "Sha256": "826fad5d7afa9b1d1f0c449ae5030efe3b4dfe637d120d15755784ae55c26f5b"
+            "Sha256": "4c7bedc2a4a3a27aa30015f656c5c3ae2a8c600af57fc6800b7caf526f60f02c"
         },
         {
             "ResourcePath": "Localization/de",
-            "Sha256": "3dca38757a09029a74aa905d350799fba230564c952561de8c9cd01a76571b2a"
+            "Sha256": "6b87acb7b18f10cf85a92ce1c578e80b79fdbf6b7f0389042680f8d29614c3d2"
         },
         {
             "ResourcePath": "Localization/el",
-            "Sha256": "67e5082fe86b71682843e01be655926d39ce0460373d82b0ef03a238126638e2"
+            "Sha256": "dac3c0331d2926cef1ef54b4dc73c8bc371bcc0fc9267e5d5e1ab44731f81c3b"
         },
         {
             "ResourcePath": "Localization/en",
-            "Sha256": "1a7197f9ae275ee2a479e9ff5faed37a96b5d18e283cd31a518711305a46250b"
+            "Sha256": "a87a779867df4c133fc2604b6bc83f940396a52f1555fb8273685dd589d27b42"
         },
         {
             "ResourcePath": "Localization/es",
-            "Sha256": "b9d4b86b046361f1738d05b3a24569af50f478a604ac6651b75c25d6eae8c9c2"
+            "Sha256": "bd41cc309812c791acd42e7a6bb6cfe4e398b8bc33efbe4a4d0322cd7e33ba52"
         },
         {
             "ResourcePath": "Localization/es-419",
-            "Sha256": "cef4778cf7b6af2a016229aa9939002bb1bdd33c867c299d250a63421bf264c7"
+            "Sha256": "f1ee741d609c9762cf0424979816cc491e5b1d9af2bf6f61ece4ed53abee0bfa"
         },
         {
             "ResourcePath": "Localization/fi",
-            "Sha256": "ee48ae1b50ba95226adaa9dbcd0964b1c623c8e4fc7c72d700c86250d36ab50f"
+            "Sha256": "59d631bf7327fcfa96bc232e79785e6176d8bd69e0e8181d2cea467fdea84b5a"
         },
         {
             "ResourcePath": "Localization/fr",
-            "Sha256": "2c7624c8708d94cba0293ff0e9908db25b2ff4bd768fdab21d51726299978c45"
+            "Sha256": "589b5fe6e909bc28b2a833072311702fa3ae6d6e09fcd5750377d610627ff654"
         },
         {
             "ResourcePath": "Localization/hu",
-            "Sha256": "81974f790cc416952caaa54d74c7adbdc9a28eba881453c324b2b897b6393f6e"
+            "Sha256": "c5082829831a0effb9290d307a27677c7144e319f47d1769211513767d73c581"
         },
         {
             "ResourcePath": "Localization/id",
-            "Sha256": "c5e0842fac5dd9f5a67acdfe9526e06ee400251bc8d7ba5b82208385a95350f7"
+            "Sha256": "2c3296513b8d2aa8df50d41f39262ca3d8cd9aea82126b2cf359cd3b2c56e4cc"
         },
         {
             "ResourcePath": "Localization/it",
-            "Sha256": "8a4777a8f7f9ad96a8ec56ecf6d6756d5506918d03bd9b93c7270d8ba48ee239"
+            "Sha256": "38fec84e8c934c44dfd077d2dca5945d23d7fdc3c6766060ea9f7fb9762eba20"
         },
         {
             "ResourcePath": "Localization/ja",
-            "Sha256": "e3e2f632cea6cc41ab2c882a82f7a87860c268858b6a69ba61b5bbc4180a1830"
+            "Sha256": "7349343dc2c2072b76c0550aeff542179f43e5784a9dc2a854a07495781ed473"
         },
         {
             "ResourcePath": "Localization/ko",
-            "Sha256": "4edc060121e8f4860c59149431966fd9c75269ac8616bd5acb3dd4a4bd999fe9"
+            "Sha256": "b08675a2ca1e896714d2a3bb6b58b1340630859a788f75d6f3dfe32327cdffb6"
         },
         {
             "ResourcePath": "Localization/languages",
@@ -72,31 +72,31 @@
         },
         {
             "ResourcePath": "Localization/nl",
-            "Sha256": "c0ea9cad6fc826812d5c79877511590fd014fecd8f02a5e40e953c6e5386da63"
+            "Sha256": "a4e0210b3c116d83d6c08bb0147864d04d1cf83f7aab42f3b2fdaf7501f5321c"
         },
         {
             "ResourcePath": "Localization/no",
-            "Sha256": "5e673c93a898197c5b55428ae49f0114c3a2e255180c91287aeac0e07a9fbcfb"
+            "Sha256": "61d04166093f947c242583dd8856a10e2ac162fe0f1ebe37b9675ec6aa72ce08"
         },
         {
             "ResourcePath": "Localization/pl",
-            "Sha256": "545cfde16701715bf1d8a255c70ae8c4511c2777bed4e0f3527a2e229d5520df"
+            "Sha256": "0f9f862fb27ae7b2ce00b2d36f1bb0f1d733683ecf7355be2d62f865bc3539af"
         },
         {
             "ResourcePath": "Localization/pt-BR",
-            "Sha256": "883e08f0326b1c22cb97a1e342467df1237423f0049347dd332055c3d718dcd8"
+            "Sha256": "b9537325fa3d3eddc0b16c07bdb92639c91875440cfe68f44ad236452953a6ef"
         },
         {
             "ResourcePath": "Localization/pt-PT",
-            "Sha256": "063e58e1130bb3abe54d56adc5457d32851d9ca7f166c0f64b0a7f7216d63f92"
+            "Sha256": "06158d3312baf7fa27a02c229b9031d5ea8b7523df48f8901ea9eadb421cf7c4"
         },
         {
             "ResourcePath": "Localization/ro",
-            "Sha256": "9a7b8947bab1fbb5f195bc783965b63fc480b47bc5ba49b010a3f09d1e6285df"
+            "Sha256": "c41e02bcbfd2540b8fab9c08c0e832940bd4334326ccbf6c728f6ed09864969b"
         },
         {
             "ResourcePath": "Localization/ru",
-            "Sha256": "b6059267f8badd1e2df57b690ff7540c7de7b72a40b97fd449ac7b626d0f79a1"
+            "Sha256": "2c957e1963dec143ad25401f1794be01065a0973e82be023f079edd418d26cbd"
         },
         {
             "ResourcePath": "Localization/stage_decorations_en",
@@ -108,31 +108,31 @@
         },
         {
             "ResourcePath": "Localization/sv",
-            "Sha256": "9affbad9a58954a6e6c5e2a8c688ca63613b5abf48759d8fbcd52b64ed072745"
+            "Sha256": "8e3d3d11a46560c4b5dd080d7fd81ba31976dc9527489383ab9318df413c7677"
         },
         {
             "ResourcePath": "Localization/th",
-            "Sha256": "c34b32ed63d482235c7d57ee08b3960221e80a53059b5e28b7ada7b108f38911"
+            "Sha256": "a30924f9587c1ec583bcae02c9c9ba0d7bda39c9bdc37d5c10b4f3c89b76e6e7"
         },
         {
             "ResourcePath": "Localization/tr",
-            "Sha256": "33fe56bf9cc2d5012e63075a08315bec84e92721bfca21eb4bc8a67072a14269"
+            "Sha256": "da4ae0a65783ae7fc5744db04df34af0a21369e4ae173d69643d8687a5b88040"
         },
         {
             "ResourcePath": "Localization/uk",
-            "Sha256": "c1cdf7ba9b879fd6f98e948954e12cbdf9ecfef6ccf93fd7844d21f8b9800a83"
+            "Sha256": "f0924045d56da1c01068a7723c1d38aec16b51f4142351504a555e89784a2744"
         },
         {
             "ResourcePath": "Localization/vi",
-            "Sha256": "c2b17e6fc071750b7bf0833d52e6aee2cc1874513948c2df104b4bac37f02d26"
+            "Sha256": "32e2ef406d68a92ff6195f4c7ccc33f780c773a95a3a11bbb1e070066724a38a"
         },
         {
             "ResourcePath": "Localization/zh-CN",
-            "Sha256": "baa2563cf640bf512f619ec3c05905b04059d64116417e5cb496103f51b4a422"
+            "Sha256": "0afb623b4111f0e019388b0bde9ea0608fa0c615eef229b0a7244083705c08d3"
         },
         {
             "ResourcePath": "Localization/zh-TW",
-            "Sha256": "9d9606b66afdf6e10544ab4c88f01cd696f19c1d4a9401c1b524698d0dc51c66"
+            "Sha256": "156e6c6ce94a105a1b93f598b1aef9ebbfa3f982977866b81d0a9ed55102b284"
         },
         {
             "ResourcePath": "Stages/1-1",
@@ -315,5 +315,5 @@
             "Sha256": "3919552c7564889f680db2bab1fdd01ae59c8891dc9005642d76a92f28863f62"
         }
     ],
-    "Signature": "txamtdWuboi3gAT8rV2v55qZ+dL4JtflmcBr9cficRU/1ux1SMrh8uEDYhTb3JUw9tAzZ+GI6T3q+TcW19B9t5Wo0HjfOCyOO4ClYWBFzHTiooPNbyoFTpPki332hceWdgf5IkHvqDFcUQm4S8TalZ9qUuhc0BraYFWyOcbgT4YfoqxYLYcpw8oPlsSYvCQLEdjJT3Vog/NQUbz5slLext6aZArM0NYRO+bMPaC4OO6l3olsajfDjZkder9iFg1JYZkJg2UATFnhtY9IKXSCBycCxe0O0RzUanFEWigxJgDWCYgvZ53vVORFBKplO1FEdjt+nvO4NGmIY9pcByGjer9v9ppZPj9i27ud8ohP7GOsHldfBvsTFlRWNbP5eYuEwxWai19i2SOmGQdO/llg3kwJ2f50c7Cf2jOrfVSYK+QfNDa+vJEthX+jCBrsksbd3p78KxKXGf6XGq5oCwL3/f1F9LKnlR+FCz+Y9YxpuNubU40Z+QeOeWD5bY8yI7LE"
+    "Signature": "705vVP2urMnSI/9VEavnpzexww3HeRBX7BKxLMDCtOFT2WqCTqLJ5nYJS0q+9XwKhU1LbDiCItIt9d7aJ5NIdVPvcFmR6D4grxLJNDYHkffGUjXM6W3oLAlbMswR96NYHIw5XJKbM/ZqryQG8vebcsmCFoMaeVw+hsAXctvKI5CWikQAf7UblL93VVjlYwtzbGDBsioygv58MEXrAtEaCaENqMmSRa6fuUyHOj0zCufPwf9pNDzejn6J8dZrXycpS3AvIGk8yS6+pC4cjt6+nbFkXvZ7D60mHRh62yCup+yy+V0w7E3134nJyaqQA68buQTXqDeLzaZE5+uwXDET5gT0xvK2dYSd/1AtMiDJy1Vs8EsTHQRoCk/gL9uZXKDugxaoL9vBtuic4Jo8Hkte7KDfEfi8t3IAPtmz+3o5Ui9HhMhvy+mwipFDmIRX3Ws8SLBWbj4ptQYYWhuXqF3Y1VPvm9zffONj7g8oAqBiRaMJm1fuAH2zI6MEW3Foqp4V"
 }

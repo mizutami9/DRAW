@@ -713,22 +713,21 @@ namespace DrawBody.Prototype
 
         private void MoveActivePlayer()
         {
-            Transform active = stageManager != null ? stageManager.ActivePlayerTransform : null;
-            if (active == null || stageManager.IsDrawingMode) return;
-            Rigidbody2D body = active.GetComponent<Rigidbody2D>();
-            if (body == null) return;
-
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = 0f;
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) vertical += 1f;
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) vertical -= 1f;
-            Vector2 input = new Vector2(horizontal, vertical);
-            Vector2 candidate = body.position + input.normalized * (5.2f * Time.fixedDeltaTime);
-            PlayerController2D controller = active.GetComponent<PlayerController2D>();
-            if (controller != null && assignedEdges.TryGetValue(controller, out int edge))
-                body.position = ClampToAssignedLane(candidate, edge, controller);
-            body.linearVelocity = Vector2.zero;
-            body.angularVelocity = 0f;
+            if (stageManager == null || stageManager.IsDrawingMode) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D controller = localPlayers[i];
+                Rigidbody2D body = controller != null ? controller.GetComponent<Rigidbody2D>() : null;
+                if (body == null) continue;
+                LocalPlayerInputBinding binding = controller.InputBinding;
+                Vector2 input = binding != null ? binding.ReadMove() : Vector2.zero;
+                Vector2 candidate = body.position + input.normalized * (5.2f * Time.fixedDeltaTime);
+                if (assignedEdges.TryGetValue(controller, out int edge))
+                    body.position = ClampToAssignedLane(candidate, edge, controller);
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+            }
         }
 
         private IEnumerator PositionPlayersAfterBuild()
@@ -766,11 +765,13 @@ namespace DrawBody.Prototype
             if (IsOnline && HasAuthority)
             {
                 Vector2 onlineForce = Vector2.zero;
-                PlayerController2D local = stageManager.ActivePlayerTransform != null
-                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                    : null;
-                if (local != null) onlineForce += CalculatePlayerMagneticForce(local.transform.position,
-                    GetPlayerInk(local), point);
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
+                {
+                    PlayerController2D local = localPlayers[i];
+                    if (local != null) onlineForce += CalculatePlayerMagneticForce(
+                        local.transform.position, GetPlayerInk(local), point);
+                }
                 foreach (KeyValuePair<string, MagnetInputState> pair in remoteMagnetInputs)
                 {
                     PlayerController2D player = stageManager.GetOnlinePlayerController(pair.Key);
@@ -1175,8 +1176,12 @@ namespace DrawBody.Prototype
                 if (entry.Key != null) entry.Key.gravityScale = entry.Value;
             }
             originalGravity.Clear();
-            Transform active = stageManager != null ? stageManager.ActivePlayerTransform : null;
-            if (active != null) active.GetComponent<PlayerController2D>()?.SetControlsEnabled(true);
+            if (stageManager != null)
+            {
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
+                    localPlayers[i]?.SetControlsEnabled(stageManager.ShouldEnableLocalGameplayControls);
+            }
         }
 
         private void BroadcastState(bool force = false)
@@ -1283,20 +1288,26 @@ namespace DrawBody.Prototype
 
         private void SendLocalMagnetInput()
         {
-            Transform active = stageManager != null ? stageManager.ActivePlayerTransform : null;
-            if (active == null || onlineManager == null) return;
-            onlineManager.SendGimmickData(new OnlineGimmickData
+            if (stageManager == null || onlineManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
             {
-                ObjectId = StageId,
-                Kind = MagnetInputKind,
-                Json = JsonUtility.ToJson(new MagnetInputState
+                PlayerController2D local = localPlayers[i];
+                if (local == null) continue;
+                onlineManager.SendGimmickData(new OnlineGimmickData
                 {
-                    Sequence = ++localMagnetInputSequence,
-                    Round = round,
-                    Variant = layoutVariant,
-                    Position = active.position
-                })
-            });
+                    ObjectId = StageId,
+                    Kind = MagnetInputKind,
+                    PlayerId = stageManager.GetOnlinePlayerId(local),
+                    Json = JsonUtility.ToJson(new MagnetInputState
+                    {
+                        Sequence = ++localMagnetInputSequence,
+                        Round = round,
+                        Variant = layoutVariant,
+                        Position = local.transform.position
+                    })
+                });
+            }
         }
 
         private bool IsHost(string playerId)

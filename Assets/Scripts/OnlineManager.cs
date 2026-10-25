@@ -98,6 +98,7 @@ namespace DrawBody.Prototype
         private const string DiagnosticObjectId = "__network_diagnostics";
         private const string DiagnosticPingRequestKind = "network_diagnostic_ping_request";
         private const string DiagnosticPingReplyKind = "network_diagnostic_ping_reply";
+        public const string LocalGamePlayerRejectedKind = "local_game_player_rejected";
         [SerializeField] private OnlineBackendMode backendMode = OnlineBackendMode.Eos;
         [SerializeField] private bool autoLogin = true;
         [SerializeField] private bool allowEosInEditor = false;
@@ -113,6 +114,12 @@ namespace DrawBody.Prototype
         private readonly List<ScheduledInboundPacket> scheduledInboundPackets =
             new List<ScheduledInboundPacket>();
         private readonly Dictionary<int, float> pendingDiagnosticPings = new Dictionary<int, float>();
+        private readonly Dictionary<string, float> rejectedGamePlayerUntil =
+            new Dictionary<string, float>();
+        private readonly Dictionary<string, OnlinePlayerInfo> rememberedVirtualPlayers =
+            new Dictionary<string, OnlinePlayerInfo>();
+        private readonly Dictionary<string, float> rememberedVirtualPlayerSeenAt =
+            new Dictionary<string, float>();
         private int nextDiagnosticPingToken;
         private float nextDiagnosticPingAt;
         private int inboundPacketCount;
@@ -154,6 +161,9 @@ namespace DrawBody.Prototype
         private static int nextLocalBodyRevision;
         private string localBodyHash = string.Empty;
         private string localBodySpecies = string.Empty;
+        private readonly Dictionary<string, int> localBodyRevisionByPlayer = new Dictionary<string, int>();
+        private readonly Dictionary<string, string> localBodyHashByPlayer = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> localBodySpeciesByPlayer = new Dictionary<string, string>();
 
         /// <summary>
         /// Latest body revision published by this client. Ready-room messages use
@@ -163,6 +173,12 @@ namespace DrawBody.Prototype
         public int LocalBodyRevision => nextLocalBodyRevision;
         public string LocalBodyHash => localBodyHash;
         public string LocalBodySpecies => localBodySpecies;
+        public int GetLocalBodyRevision(string playerId) => !string.IsNullOrEmpty(playerId)
+            && localBodyRevisionByPlayer.TryGetValue(playerId, out int value) ? value : LocalBodyRevision;
+        public string GetLocalBodyHash(string playerId) => !string.IsNullOrEmpty(playerId)
+            && localBodyHashByPlayer.TryGetValue(playerId, out string value) ? value : LocalBodyHash;
+        public string GetLocalBodySpecies(string playerId) => !string.IsNullOrEmpty(playerId)
+            && localBodySpeciesByPlayer.TryGetValue(playerId, out string value) ? value : LocalBodySpecies;
         public OnlineConnectionState State => backend != null ? backend.State : OnlineConnectionState.Offline;
         public OnlineLobbyInfo CurrentLobby => backend != null ? backend.CurrentLobby : null;
         public string LocalPlayerId => backend != null ? backend.LocalPlayerId : string.Empty;
@@ -200,7 +216,11 @@ namespace DrawBody.Prototype
 
         public float GetConfirmedInkExcludingLocal()
         {
-            string localPlayerId = LocalPlayerId;
+            return GetConfirmedInkExcludingPlayer(LocalPlayerId);
+        }
+
+        public float GetConfirmedInkExcludingPlayer(string excludedGamePlayerId)
+        {
             float total = 0f;
             OnlinePlayerInfo[] players = CurrentLobby != null ? CurrentLobby.Players : null;
             if (players == null)
@@ -211,7 +231,8 @@ namespace DrawBody.Prototype
             for (int i = 0; i < players.Length; i++)
             {
                 OnlinePlayerInfo player = players[i];
-                if (player == null || string.IsNullOrEmpty(player.PlayerId) || player.PlayerId == localPlayerId)
+                if (player == null || string.IsNullOrEmpty(player.PlayerId)
+                    || player.PlayerId == excludedGamePlayerId)
                 {
                     continue;
                 }
@@ -739,6 +760,12 @@ namespace DrawBody.Prototype
             backend?.SetReady(!currentReady);
         }
 
+        public void SetLocalReady(bool ready)
+        {
+            if (shuttingDown || CurrentLobby == null) return;
+            backend?.SetReady(ready);
+        }
+
         public void StartGame(string stageId)
         {
             if (shuttingDown || !CanUseOnline())
@@ -776,25 +803,31 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bodyData.PlayerId = string.IsNullOrEmpty(LocalPlayerId) ? "local" : LocalPlayerId;
+            string connectionId = string.IsNullOrEmpty(LocalPlayerId) ? "local" : LocalPlayerId;
+            if (string.IsNullOrEmpty(bodyData.PlayerId) || bodyData.PlayerId == "local")
+                bodyData.PlayerId = connectionId;
+            bodyData.ConnectionId = connectionId;
             // DrawManager can be recreated or reinitialized while OnlineManager and
             // the lobby stay alive. Keep the revision monotonic for the whole
             // connection so a redraw is never mistaken for an older body.
-            if (bodyData.Revision <= nextLocalBodyRevision)
+            int previousRevision = localBodyRevisionByPlayer.TryGetValue(bodyData.PlayerId, out int rememberedRevision)
+                ? rememberedRevision
+                : 0;
+            if (bodyData.Revision <= previousRevision)
             {
-                bodyData.Revision = ++nextLocalBodyRevision;
+                bodyData.Revision = previousRevision + 1;
             }
-            else
-            {
-                nextLocalBodyRevision = bodyData.Revision;
-            }
+            localBodyRevisionByPlayer[bodyData.PlayerId] = bodyData.Revision;
+            nextLocalBodyRevision = Mathf.Max(nextLocalBodyRevision, bodyData.Revision);
             bodyData.ContentFingerprint = ContentIntegrityVerifier.Fingerprint;
             bodyData.BodyHash = ContentIntegrityVerifier.HashString(bodyData.Json ?? string.Empty);
             localBodyHash = bodyData.BodyHash;
+            localBodyHashByPlayer[bodyData.PlayerId] = bodyData.BodyHash;
             SerializableBodyDrawing serializedBody = !string.IsNullOrEmpty(bodyData.Json)
                 ? JsonUtility.FromJson<SerializableBodyDrawing>(bodyData.Json)
                 : null;
             localBodySpecies = serializedBody?.Species ?? string.Empty;
+            localBodySpeciesByPlayer[bodyData.PlayerId] = localBodySpecies;
             if (LocalMultiplayerDebugMode.Enabled)
             {
                 Debug.Log($"[PICO BODY] SEND id={bodyData.PlayerId} rev={bodyData.Revision} bytes={bodyData.Json?.Length ?? 0}");
@@ -821,6 +854,11 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            string connectionId = string.IsNullOrEmpty(LocalPlayerId) ? "local" : LocalPlayerId;
+            if (string.IsNullOrEmpty(playerState.PlayerId) || playerState.PlayerId == "local")
+                playerState.PlayerId = connectionId;
+            playerState.ConnectionId = connectionId;
+            if (!EnsureGamePlayerInLobby(playerState)) return;
             StampStageSession(playerState);
             backend?.SendPlayerState(playerState);
         }
@@ -833,7 +871,8 @@ namespace DrawBody.Prototype
             }
 
             StampStageSession(carryData);
-            carryData.CarrierPlayerId = LocalPlayerId;
+            if (string.IsNullOrEmpty(carryData.CarrierPlayerId) || carryData.CarrierPlayerId == "local")
+                carryData.CarrierPlayerId = LocalPlayerId;
             // Apply carry prediction on the sender immediately as well. Some
             // backends echo messages while the local TCP host does not, so relying
             // on a round trip makes throw responsiveness depend on who is hosting.
@@ -848,8 +887,72 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            if (string.IsNullOrEmpty(gimmickData.PlayerId))
+            {
+                string claimedActor = ExtractJsonStringField(
+                    gimmickData.Json,
+                    "PlayerId", "SourcePlayerId", "CollectorId", "RequesterId",
+                    "ShooterPlayerId", "OwnerPlayerId");
+                if (OnlinePlayerIdentity.IsOwnedByConnection(claimedActor, LocalPlayerId))
+                    gimmickData.PlayerId = claimedActor;
+            }
             StampStageSession(gimmickData);
             backend?.SendGimmickData(gimmickData);
+        }
+
+        private static string ExtractJsonStringField(string json, params string[] fieldNames)
+        {
+            if (string.IsNullOrEmpty(json) || fieldNames == null) return null;
+            for (int i = 0; i < fieldNames.Length; i++)
+            {
+                string marker = "\"" + fieldNames[i] + "\":\"";
+                int start = json.IndexOf(marker, StringComparison.Ordinal);
+                if (start < 0) continue;
+                start += marker.Length;
+                int end = json.IndexOf('"', start);
+                if (end > start) return json.Substring(start, end - start);
+            }
+            return null;
+        }
+
+        public void AnnounceLocalGamePlayerLeft(string gamePlayerId)
+        {
+            if (!OnlinePlayerIdentity.IsOwnedByConnection(gamePlayerId, LocalPlayerId)
+                || gamePlayerId == LocalPlayerId) return;
+            SendGimmickData(new OnlineGimmickData
+            {
+                PlayerId = LocalPlayerId,
+                Kind = "local_game_player_left",
+                ObjectId = gamePlayerId
+            });
+            RemoveVirtualGamePlayer(gamePlayerId);
+        }
+
+        private bool RemoveVirtualGamePlayer(string gamePlayerId)
+        {
+            rememberedVirtualPlayers.Remove(gamePlayerId);
+            rememberedVirtualPlayerSeenAt.Remove(gamePlayerId);
+            OnlineLobbyInfo lobby = CurrentLobby;
+            if (lobby?.Players == null || string.IsNullOrEmpty(gamePlayerId)) return false;
+            List<OnlinePlayerInfo> remaining = new List<OnlinePlayerInfo>();
+            bool removed = false;
+            for (int i = 0; i < lobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo candidate = lobby.Players[i];
+                if (candidate != null && candidate.PlayerId == gamePlayerId
+                    && candidate.LocalPlayerIndex > 0)
+                {
+                    removed = true;
+                    continue;
+                }
+                if (candidate != null) remaining.Add(candidate);
+            }
+            if (!removed) return false;
+            lobby.Players = remaining.ToArray();
+            confirmedInkByPlayer.Remove(gamePlayerId);
+            NormalizeGamePlayerSlots(lobby);
+            StateChanged?.Invoke(State, lobby, LocalizationManager.T("online_lobby_members_updated"));
+            return true;
         }
 
         private void StampStageSession(OnlineInputData data)
@@ -925,6 +1028,8 @@ namespace DrawBody.Prototype
 
         private void OnBackendStateChanged(OnlineConnectionState state, OnlineLobbyInfo lobby, string message)
         {
+            MergeRememberedVirtualPlayers(lobby);
+            SyncVirtualPlayerMetadata(lobby);
             if (lobby?.Players != null)
             {
                 for (int i = 0; i < lobby.Players.Length; i++)
@@ -937,9 +1042,83 @@ namespace DrawBody.Prototype
                     }
                 }
             }
-            if (lobby == null) knownHostPlayerId = null;
+            if (lobby == null)
+            {
+                knownHostPlayerId = null;
+                rememberedVirtualPlayers.Clear();
+                rememberedVirtualPlayerSeenAt.Clear();
+            }
+            if (lobby != null && IsHostPlayer(LocalPlayerId))
+                EnforceAuthoritativeGamePlayerLimit(lobby);
             PruneConfirmedInk(lobby);
             StateChanged?.Invoke(state, lobby, message);
+        }
+
+        private static void SyncVirtualPlayerMetadata(OnlineLobbyInfo lobby)
+        {
+            if (lobby?.Players == null) return;
+            for (int i = 0; i < lobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo virtualPlayer = lobby.Players[i];
+                if (virtualPlayer == null || virtualPlayer.LocalPlayerIndex <= 0
+                    || string.IsNullOrEmpty(virtualPlayer.ConnectionId)) continue;
+                for (int j = 0; j < lobby.Players.Length; j++)
+                {
+                    OnlinePlayerInfo connectionPlayer = lobby.Players[j];
+                    if (connectionPlayer == null
+                        || connectionPlayer.PlayerId != virtualPlayer.ConnectionId) continue;
+                    virtualPlayer.IsReady = connectionPlayer.IsReady;
+                    virtualPlayer.IsHost = false;
+                    break;
+                }
+            }
+            NormalizeGamePlayerSlots(lobby);
+        }
+
+        private void MergeRememberedVirtualPlayers(OnlineLobbyInfo lobby)
+        {
+            if (lobby?.Players == null || rememberedVirtualPlayers.Count == 0) return;
+            HashSet<string> physicalConnections = new HashSet<string>();
+            HashSet<string> listedIds = new HashSet<string>();
+            List<OnlinePlayerInfo> merged = new List<OnlinePlayerInfo>();
+            for (int i = 0; i < lobby.Players.Length; i++)
+            {
+                OnlinePlayerInfo candidate = lobby.Players[i];
+                if (candidate == null || string.IsNullOrEmpty(candidate.PlayerId)) continue;
+                merged.Add(candidate);
+                listedIds.Add(candidate.PlayerId);
+                if (candidate.LocalPlayerIndex <= 0) physicalConnections.Add(candidate.PlayerId);
+            }
+
+            List<string> expired = null;
+            foreach (KeyValuePair<string, OnlinePlayerInfo> pair in rememberedVirtualPlayers)
+            {
+                OnlinePlayerInfo remembered = pair.Value;
+                bool connectionPresent = remembered != null
+                    && physicalConnections.Contains(remembered.ConnectionId);
+                bool recent = rememberedVirtualPlayerSeenAt.TryGetValue(pair.Key, out float seenAt)
+                    && Time.unscaledTime - seenAt <= 15f;
+                if (!connectionPresent || !recent)
+                {
+                    expired ??= new List<string>();
+                    expired.Add(pair.Key);
+                    continue;
+                }
+                if (!listedIds.Contains(pair.Key))
+                {
+                    merged.Add(remembered);
+                    listedIds.Add(pair.Key);
+                }
+            }
+            if (expired != null)
+            {
+                for (int i = 0; i < expired.Count; i++)
+                {
+                    rememberedVirtualPlayers.Remove(expired[i]);
+                    rememberedVirtualPlayerSeenAt.Remove(expired[i]);
+                }
+            }
+            lobby.Players = merged.ToArray();
         }
 
         private void OnBackendPlayerStateReceived(OnlinePlayerState playerState)
@@ -957,7 +1136,171 @@ namespace DrawBody.Prototype
             {
                 return;
             }
+            if (!EnsureGamePlayerInLobby(playerState)) return;
             PlayerStateReceived?.Invoke(playerState);
+        }
+
+        private bool EnsureGamePlayerInLobby(OnlinePlayerState state)
+        {
+            OnlineLobbyInfo lobby = CurrentLobby;
+            if (state == null || lobby == null || string.IsNullOrEmpty(state.PlayerId)) return state != null;
+            string connectionId = string.IsNullOrEmpty(state.ConnectionId)
+                ? state.PlayerId
+                : state.ConnectionId;
+            if (state.LocalPlayerIndex < 0
+                || state.LocalPlayerIndex >= StageManager.MaxLocalPlayersPerConnection
+                || OnlinePlayerIdentity.Compose(connectionId, state.LocalPlayerIndex) != state.PlayerId)
+                return false;
+            if (IsHostPlayer(LocalPlayerId)) EnforceAuthoritativeGamePlayerLimit(lobby);
+            if (rejectedGamePlayerUntil.TryGetValue(state.PlayerId, out float rejectedUntil))
+            {
+                if (Time.unscaledTime < rejectedUntil) return false;
+                rejectedGamePlayerUntil.Remove(state.PlayerId);
+            }
+            OnlinePlayerInfo[] existing = lobby.Players ?? System.Array.Empty<OnlinePlayerInfo>();
+            for (int i = 0; i < existing.Length; i++)
+            {
+                if (existing[i] == null || existing[i].PlayerId != state.PlayerId) continue;
+                NormalizeGamePlayerSlots(lobby);
+                state.PlayerSlot = existing[i].PlayerSlot;
+                bool metadataChanged = existing[i].InputDevice != state.InputDevice;
+                existing[i].InputDevice = state.InputDevice;
+                if (!string.IsNullOrEmpty(state.DisplayName)
+                    && existing[i].DisplayName != state.DisplayName)
+                {
+                    existing[i].DisplayName = state.DisplayName;
+                    metadataChanged = true;
+                }
+                if (state.LocalPlayerIndex > 0)
+                {
+                    rememberedVirtualPlayers[state.PlayerId] = existing[i];
+                    rememberedVirtualPlayerSeenAt[state.PlayerId] = Time.unscaledTime;
+                }
+                SyncVirtualPlayerMetadata(lobby);
+                if (metadataChanged)
+                {
+                    StateChanged?.Invoke(State, lobby,
+                        LocalizationManager.T("online_lobby_members_updated"));
+                }
+                return true;
+            }
+            int playerLimit = Mathf.Clamp(lobby.MaxPlayers, 1, 4);
+            if (existing.Length >= playerLimit)
+            {
+                if (IsHostPlayer(LocalPlayerId)) RejectGamePlayer(state.PlayerId);
+                return false;
+            }
+
+            OnlinePlayerInfo connectionPlayer = null;
+            for (int i = 0; i < existing.Length; i++)
+            {
+                if (existing[i] != null && existing[i].PlayerId == connectionId)
+                {
+                    connectionPlayer = existing[i];
+                    break;
+                }
+            }
+            OnlinePlayerInfo virtualPlayer = new OnlinePlayerInfo
+            {
+                PlayerId = state.PlayerId,
+                ConnectionId = connectionId,
+                LocalPlayerIndex = state.LocalPlayerIndex,
+                InputDevice = state.InputDevice,
+                DisplayName = state.DisplayName,
+                IsHost = connectionPlayer != null && connectionPlayer.IsHost && state.LocalPlayerIndex == 0,
+                IsReady = connectionPlayer == null || connectionPlayer.IsReady,
+                PlayerSlot = state.PlayerSlot
+            };
+            OnlinePlayerInfo[] expanded = new OnlinePlayerInfo[existing.Length + 1];
+            System.Array.Copy(existing, expanded, existing.Length);
+            expanded[existing.Length] = virtualPlayer;
+            lobby.Players = expanded;
+            if (state.LocalPlayerIndex > 0)
+            {
+                rememberedVirtualPlayers[state.PlayerId] = virtualPlayer;
+                rememberedVirtualPlayerSeenAt[state.PlayerId] = Time.unscaledTime;
+            }
+            NormalizeGamePlayerSlots(lobby);
+            state.PlayerSlot = virtualPlayer.PlayerSlot;
+            StateChanged?.Invoke(State, lobby, LocalizationManager.T("online_lobby_members_updated"));
+            return true;
+        }
+
+        private void EnforceAuthoritativeGamePlayerLimit(OnlineLobbyInfo lobby)
+        {
+            if (lobby?.Players == null) return;
+            int limit = Mathf.Clamp(lobby.MaxPlayers, 1, 4);
+            while (lobby.Players.Length > limit)
+            {
+                OnlinePlayerInfo reject = null;
+                // Physical connections remain usable; an extra local seat is
+                // the reversible part of a simultaneous join race.
+                for (int i = lobby.Players.Length - 1; i >= 0; i--)
+                {
+                    OnlinePlayerInfo candidate = lobby.Players[i];
+                    if (candidate != null && candidate.LocalPlayerIndex > 0)
+                    {
+                        reject = candidate;
+                        break;
+                    }
+                }
+                if (reject == null || string.IsNullOrEmpty(reject.PlayerId)) break;
+                RejectGamePlayer(reject.PlayerId);
+            }
+        }
+
+        private void RejectGamePlayer(string gamePlayerId)
+        {
+            if (string.IsNullOrEmpty(gamePlayerId)) return;
+            bool firstRejection = !rejectedGamePlayerUntil.TryGetValue(gamePlayerId, out float until)
+                || Time.unscaledTime >= until;
+            rejectedGamePlayerUntil[gamePlayerId] = Time.unscaledTime + 2.5f;
+            RemoveVirtualGamePlayer(gamePlayerId);
+            if (!firstRejection || !IsHostPlayer(LocalPlayerId)) return;
+
+            OnlineGimmickData rejection = new OnlineGimmickData
+            {
+                PlayerId = LocalPlayerId,
+                Kind = LocalGamePlayerRejectedKind,
+                ObjectId = gamePlayerId
+            };
+            // The backend normally does not echo the host's own packet. Apply
+            // locally first so an over-cap local P2 is removed as well.
+            GimmickDataReceived?.Invoke(rejection);
+            SendGimmickData(rejection);
+        }
+
+        private static void NormalizeGamePlayerSlots(OnlineLobbyInfo lobby)
+        {
+            if (lobby?.Players == null) return;
+            string hostConnectionId = null;
+            for (int i = 0; i < lobby.Players.Length; i++)
+                if (lobby.Players[i] != null && lobby.Players[i].IsHost)
+                {
+                    hostConnectionId = lobby.Players[i].PlayerId;
+                    break;
+                }
+            List<OnlinePlayerInfo> ordered = new List<OnlinePlayerInfo>();
+            for (int i = 0; i < lobby.Players.Length; i++)
+                if (lobby.Players[i] != null && !string.IsNullOrEmpty(lobby.Players[i].PlayerId))
+                    ordered.Add(lobby.Players[i]);
+            ordered.Sort((left, right) =>
+            {
+                string leftConnection = string.IsNullOrEmpty(left.ConnectionId)
+                    ? left.PlayerId
+                    : left.ConnectionId;
+                string rightConnection = string.IsNullOrEmpty(right.ConnectionId)
+                    ? right.PlayerId
+                    : right.ConnectionId;
+                bool leftHostGroup = leftConnection == hostConnectionId;
+                bool rightHostGroup = rightConnection == hostConnectionId;
+                if (leftHostGroup != rightHostGroup) return leftHostGroup ? -1 : 1;
+                int connectionOrder = string.CompareOrdinal(leftConnection, rightConnection);
+                if (connectionOrder != 0) return connectionOrder;
+                int localOrder = left.LocalPlayerIndex.CompareTo(right.LocalPlayerIndex);
+                return localOrder != 0 ? localOrder : string.CompareOrdinal(left.PlayerId, right.PlayerId);
+            });
+            for (int i = 0; i < ordered.Count; i++) ordered[i].PlayerSlot = Mathf.Clamp(i, 0, 3);
         }
 
         private void OnBackendBodyDataReceived(OnlineBodyData bodyData)
@@ -965,11 +1308,19 @@ namespace DrawBody.Prototype
             inboundPacketCount++;
             bool contentAccepted = bodyData != null && AcceptRemoteContent(bodyData.ContentFingerprint);
             bool sane = bodyData != null && IsSaneBodyData(bodyData);
+            bool validOwner = bodyData != null
+                && !string.IsNullOrEmpty(bodyData.ConnectionId)
+                && bodyData.LocalPlayerIndex >= 0
+                && bodyData.LocalPlayerIndex < StageManager.MaxLocalPlayersPerConnection
+                && OnlinePlayerIdentity.Compose(bodyData.ConnectionId, bodyData.LocalPlayerIndex)
+                    == bodyData.PlayerId;
             if (LocalMultiplayerDebugMode.Enabled)
             {
                 Debug.Log($"[PICO BODY] RECEIVE id={bodyData?.PlayerId ?? "<null>"} rev={bodyData?.Revision ?? 0} bytes={bodyData?.Json?.Length ?? 0} content={contentAccepted} sane={sane}");
             }
-            if (bodyData == null || !contentAccepted || !sane)
+            if (bodyData == null || !contentAccepted || !sane || !validOwner
+                || rejectedGamePlayerUntil.TryGetValue(bodyData.PlayerId, out float rejectedUntil)
+                    && Time.unscaledTime < rejectedUntil)
             {
                 return;
             }
@@ -1069,6 +1420,21 @@ namespace DrawBody.Prototype
                 || !IsCurrentStageSession(
                     gimmickData.StageId, gimmickData.StageRevision, gimmickData.RetryRevision, isRetry))
             {
+                return;
+            }
+            if (gimmickData.Kind == "local_game_player_left"
+                && OnlinePlayerIdentity.IsOwnedByConnection(gimmickData.ObjectId, gimmickData.PlayerId))
+            {
+                RemoveVirtualGamePlayer(gimmickData.ObjectId);
+                return;
+            }
+            if (gimmickData.Kind == LocalGamePlayerRejectedKind
+                && IsHostPlayer(gimmickData.PlayerId)
+                && !string.IsNullOrEmpty(gimmickData.ObjectId))
+            {
+                rejectedGamePlayerUntil[gimmickData.ObjectId] = Time.unscaledTime + 2.5f;
+                RemoveVirtualGamePlayer(gimmickData.ObjectId);
+                GimmickDataReceived?.Invoke(gimmickData);
                 return;
             }
             if (HandleNetworkDiagnostic(gimmickData)) return;

@@ -741,12 +741,14 @@ namespace DrawBody.Prototype
                 }
                 if (nameText != null)
                 {
-                    nameText.text = player.DisplayName;
+                    nameText.text = string.IsNullOrEmpty(player.InputDevice)
+                        ? player.DisplayName
+                        : $"{player.DisplayName}  [{player.InputDevice}]";
                     nameText.color = Color.Lerp(playerColor, Color.black, 0.18f);
                 }
                 if (youText != null)
                 {
-                    bool isLocal = player.PlayerId == localPlayerId;
+                    bool isLocal = OnlinePlayerIdentity.IsOwnedByConnection(player.PlayerId, localPlayerId);
                     youText.transform.parent.gameObject.SetActive(isLocal);
                     youText.text = LocalizationManager.T("multi_you_badge");
                 }
@@ -978,13 +980,16 @@ namespace DrawBody.Prototype
                 string host = player.IsHost ? " " + LocalizationManager.T("multi_host") : string.Empty;
                 int playerSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, player.PlayerId);
                 string playerLabel = $"P{Mathf.Max(0, playerSlot) + 1}";
-                text += $"\n{playerLabel}  {player.DisplayName}  {ready}{host}";
+                string device = string.IsNullOrEmpty(player.InputDevice) ? string.Empty : $" [{player.InputDevice}]";
+                text += $"\n{playerLabel}  {player.DisplayName}{device}  {ready}{host}";
             }
 
             if (ShouldShowLobbyMessage(message))
             {
                 text += "\n" + message;
             }
+
+            text += "\n\n" + LocalizationManager.T("local_lobby_controls");
 
             return text;
         }
@@ -1027,7 +1032,8 @@ namespace DrawBody.Prototype
                 string ready = player.IsReady ? LocalizationManager.T("multi_ready") : LocalizationManager.T("multi_wait");
                 string host = player.IsHost ? " " + LocalizationManager.T("multi_host") : string.Empty;
                 int playerSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, player.PlayerId);
-                text.Append($"P{Mathf.Max(0, playerSlot) + 1}  {player.DisplayName}  {ready}{host}");
+                string device = string.IsNullOrEmpty(player.InputDevice) ? string.Empty : $" [{player.InputDevice}]";
+                text.Append($"P{Mathf.Max(0, playerSlot) + 1}  {player.DisplayName}{device}  {ready}{host}");
             }
             return text.ToString();
         }
@@ -1064,11 +1070,12 @@ namespace DrawBody.Prototype
                 if (i < count && players[i] != null)
                 {
                     OnlinePlayerInfo player = players[i];
-                    bool local = player.PlayerId == localPlayerId;
+                    bool local = OnlinePlayerIdentity.IsOwnedByConnection(player.PlayerId, localPlayerId);
                     int playerSlot = PlayerColorPalette.GetLobbyPlayerSlot(lobby, player.PlayerId);
                     string icon = $"P{Mathf.Max(0, playerSlot) + 1}";
                     string ready = player.IsReady ? LocalizationManager.T("multi_ready") : LocalizationManager.T("multi_wait");
-                    text += $"{icon}  {player.DisplayName}    {ready}\n";
+                    string device = string.IsNullOrEmpty(player.InputDevice) ? string.Empty : $" [{player.InputDevice}]";
+                    text += $"{icon}  {player.DisplayName}{device}    {ready}\n";
                 }
                 else
                 {

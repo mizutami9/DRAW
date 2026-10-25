@@ -318,13 +318,12 @@ namespace DrawBody.Prototype
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(FindObjectsSortMode.None);
             bool online = stageManager != null && stageManager.IsOnlineStageActive;
-            Transform localPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
             float platformTop = platformPosition.y + 0.5f;
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
                 if (player == null || !player.isActiveAndEnabled || !player.gameObject.activeInHierarchy
-                    || online && player.transform != localPlayer) continue;
+                    || online && !stageManager.IsLocallyControlledPlayer(player)) continue;
 
                 Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(false);
                 Bounds bounds = new Bounds(player.transform.position, Vector3.zero);
@@ -374,7 +373,7 @@ namespace DrawBody.Prototype
             if (target == null || !target.gameObject.activeInHierarchy) return;
             if (stageManager == null) stageManager = Object.FindFirstObjectByType<StageManager>();
             bool online = stageManager != null && stageManager.IsOnlineStageActive;
-            if (online && target.transform != stageManager.ActivePlayerTransform) return;
+            if (online && !stageManager.IsLocallyControlledPlayer(target)) return;
             string playerId = online
                 ? stageManager.GetOnlinePlayerId(target)
                 : "local_" + target.GetInstanceID();
@@ -673,7 +672,7 @@ namespace DrawBody.Prototype
             if (player == null || enemy == null || enemy.IsDefeated) return;
             if (stageManager == null) stageManager = Object.FindFirstObjectByType<StageManager>();
             if (stageManager != null && stageManager.IsOnlineStageActive
-                && player.transform != stageManager.ActivePlayerTransform) return;
+                && !stageManager.IsLocallyControlledPlayer(player)) return;
             stageManager?.RespawnFromHazard(player);
         }
 
@@ -929,7 +928,7 @@ namespace DrawBody.Prototype
             if (player == null) return;
             if (stageManager == null) stageManager = Object.FindFirstObjectByType<StageManager>();
             if (stageManager != null && stageManager.IsOnlineStageActive
-                && player.transform != stageManager.ActivePlayerTransform) return;
+                && !stageManager.IsLocallyControlledPlayer(player)) return;
             Object.FindFirstObjectByType<StageMovingGauntletController>()?.RequestElimination(player);
         }
     }
@@ -987,7 +986,7 @@ namespace DrawBody.Prototype
             if (player == null) return;
             if (stageManager == null) stageManager = Object.FindFirstObjectByType<StageManager>();
             if (stageManager != null && stageManager.IsOnlineStageActive
-                && player.transform != stageManager.ActivePlayerTransform) return;
+                && !stageManager.IsLocallyControlledPlayer(player)) return;
             Object.FindFirstObjectByType<StageMovingGauntletController>()?.RequestElimination(player);
         }
     }

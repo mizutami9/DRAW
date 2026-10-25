@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace DrawBody.Prototype
 {
     public sealed class DrawManager : MonoBehaviour
     {
-        public const float IndividualInkLimit = 800f;
-        public const float TeamInkBaseLimit = 800f;
-        public const float TeamInkPerAdditionalPlayer = 400f;
+        public const float IndividualInkLimit = 500f;
+        public const float TeamInkPerPlayer = 350f;
         private const float TurtleGameplayCoordinateScale = 3f;
         private const float SlimeGameplayCoordinateScale = 5f;
-        private const float ValidationAlarmDisplaySeconds = 2f;
+        private const float ValidationAlarmDisplaySeconds = 3f;
         private const float StartPointHintDisplaySeconds = 2f;
         public const int BodyCoordinateVersion = 3;
 
@@ -128,6 +128,9 @@ namespace DrawBody.Prototype
         private GameObject connectionMarker;
         private bool active;
         private bool drawing;
+        private bool independentLocalSession;
+        private PlayerController2D localSessionPlayer;
+        private bool ownsDrawPanel;
         private float lastValidDrawPointTime;
         private bool initialized;
         private Species currentSpecies = Species.Human;
@@ -149,6 +152,12 @@ namespace DrawBody.Prototype
         [SerializeField] private Button eraserToolButton;
         private GameObject eraserCursor;
         private float eraserCursorRadius = -1f;
+        private RectTransform gamepadCursor;
+        private Vector2 gamepadCursorPosition;
+        private bool gamepadCursorInitialized;
+        [SerializeField] private float gamepadCursorSpeed = 360f;
+        private readonly List<RaycastResult> gamepadUiRaycasts = new List<RaycastResult>(16);
+        private PointerEventData gamepadPointerData;
         private readonly List<Vector2> clearedPartUndoPoints = new List<Vector2>();
         private readonly List<float> clearedPartUndoStrokeWidths = new List<float>();
         private Species clearedPartUndoSpecies;
@@ -158,11 +167,31 @@ namespace DrawBody.Prototype
         private bool lastUniqueSpeciesConfirmAllowed = true;
         private float validationAlarmUntil;
         private float startPointHintUntil;
+        private CanvasGroup pointerInputCanvasGroup;
+        private readonly Dictionary<Graphic, bool> pointerGraphicRaycastDefaults =
+            new Dictionary<Graphic, bool>();
+        private float nextEraseAt;
+        private float nextSharedInkRefreshAt;
+        private Rect localViewport = new Rect(0f, 0f, 1f, 1f);
+        private bool useWideLocalSplitLayout;
 
         public event System.Action<BodyPart> CurrentPartChanged;
         public event System.Action<Species> CurrentSpeciesChanged;
         public event System.Action SpeciesAvailabilityChanged;
         public float UsedInk => GetTotalInk();
+        public bool IsActive => active;
+        public bool UsesGamepadInput
+        {
+            get
+            {
+                LocalPlayerInputBinding binding = independentLocalSession && localSessionPlayer != null
+                    ? localSessionPlayer.InputBinding
+                    : stageManager != null && stageManager.ActivePlayerController != null
+                        ? stageManager.ActivePlayerController.InputBinding
+                        : null;
+                return binding != null && binding.HasUsableGamepad;
+            }
+        }
         public BodyPart CurrentPart => currentPart;
         public Species CurrentSpecies => currentSpecies;
         public StageSpeciesMask AllowedSpecies => allowedSpecies;
@@ -170,7 +199,7 @@ namespace DrawBody.Prototype
         public static float CalculateTeamInkLimit(int playerCount)
         {
             int participants = Mathf.Clamp(playerCount, 1, 4);
-            return TeamInkBaseLimit + (participants - 1) * TeamInkPerAdditionalPlayer;
+            return participants * TeamInkPerPlayer;
         }
 
         public bool IsSpeciesAllowed(Species species)
@@ -180,7 +209,20 @@ namespace DrawBody.Prototype
 
         public bool CanConfirmCurrentSpecies()
         {
-            return stageManager == null || stageManager.CanConfirmSpeciesForActivePlayer(currentSpecies);
+            return stageManager == null || stageManager.CanConfirmSpeciesForPlayer(
+                independentLocalSession ? localSessionPlayer : stageManager.ActivePlayerController,
+                currentSpecies);
+        }
+
+        public bool OwnsScreenPoint(Vector2 screenPoint)
+        {
+            RectTransform panel = drawPanel != null ? drawPanel.transform as RectTransform : null;
+            if (panel == null) return false;
+            Canvas canvas = drawPanel.GetComponentInParent<Canvas>();
+            Camera camera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
+                ? canvas.worldCamera
+                : null;
+            return RectTransformUtility.RectangleContainsScreenPoint(panel, screenPoint, camera);
         }
 
         public void RefreshUniqueSpeciesAvailability()
@@ -374,6 +416,16 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            DrawScreenVisualPolisher polisher = drawPanel.GetComponent<DrawScreenVisualPolisher>();
+            polisher?.ApplyViewportLayout(useWideLocalSplitLayout);
+            if (useWideLocalSplitLayout)
+            {
+                LayoutWideSplitTransientUi(panelRect);
+                ResolveInkUi();
+                RefreshInkText();
+                return;
+            }
+
             // The canvas scales from its width. On wide Game views the usable UI height can
             // therefore be much shorter than 720, making the square workspaces overlap both
             // the part bar above and the tool dock below. Preserve drawing coordinates by
@@ -400,7 +452,7 @@ namespace DrawBody.Prototype
                 drawArea.localScale = Vector3.one * workspaceScale;
             }
 
-            LayoutStartPointHint(workspaceCenterY, workspaceScale);
+            LayoutStartPointHint(-230f, workspaceCenterY, drawAreaSquareSize * workspaceScale);
 
             if (previewRoot != null && previewRoot.parent is RectTransform previewArea)
             {
@@ -439,8 +491,58 @@ namespace DrawBody.Prototype
                 }
             }
 
-            DrawScreenVisualPolisher polisher = drawPanel.GetComponent<DrawScreenVisualPolisher>();
-            polisher?.Polish();
+            ResolveInkUi();
+            RefreshInkText();
+
+        }
+
+        private void LayoutWideSplitTransientUi(RectTransform panelRect)
+        {
+            if (panelRect == null) return;
+            if (messageText != null)
+            {
+                messageText.rectTransform.anchorMin = new Vector2(0.5f, 1f);
+                messageText.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+                messageText.rectTransform.pivot = new Vector2(0.5f, 1f);
+                messageText.rectTransform.anchoredPosition = new Vector2(0f, -4f);
+                messageText.rectTransform.sizeDelta = new Vector2(
+                    Mathf.Min(760f, panelRect.rect.width * 0.64f), 48f);
+                messageText.alignment = TextAnchor.MiddleCenter;
+                messageText.horizontalOverflow = HorizontalWrapMode.Wrap;
+                messageText.verticalOverflow = VerticalWrapMode.Overflow;
+                messageText.resizeTextForBestFit = true;
+                messageText.resizeTextMinSize = 8;
+                messageText.resizeTextMaxSize = 16;
+            }
+            if (validationBanner != null)
+            {
+                RectTransform banner = validationBanner.transform as RectTransform;
+                if (banner != null)
+                {
+                    banner.anchorMin = new Vector2(0.5f, 1f);
+                    banner.anchorMax = new Vector2(0.5f, 1f);
+                    banner.pivot = new Vector2(0.5f, 1f);
+                    banner.anchoredPosition = new Vector2(0f, -2f);
+                    banner.sizeDelta = new Vector2(
+                        Mathf.Min(820f, panelRect.rect.width * 0.68f), 58f);
+                }
+                if (validationBannerText != null)
+                {
+                    validationBannerText.horizontalOverflow = HorizontalWrapMode.Wrap;
+                    validationBannerText.verticalOverflow = VerticalWrapMode.Overflow;
+                    validationBannerText.resizeTextForBestFit = true;
+                    validationBannerText.resizeTextMinSize = 10;
+                    validationBannerText.resizeTextMaxSize = 17;
+                    validationBannerText.alignment = TextAnchor.MiddleCenter;
+                }
+            }
+            if (drawArea != null)
+            {
+                LayoutStartPointHint(
+                    drawArea.anchoredPosition.x,
+                    drawArea.anchoredPosition.y,
+                    drawArea.rect.height * Mathf.Abs(drawArea.localScale.y));
+            }
         }
 
         private static void EnsureRectMask(GameObject target)
@@ -592,6 +694,11 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void OnDestroy()
+        {
+            if (ownsDrawPanel && drawPanel != null) Destroy(drawPanel);
+        }
+
         private void HandleInkBudgetChanged(OnlineBodyData bodyData)
         {
             RefreshInkText();
@@ -617,6 +724,12 @@ namespace DrawBody.Prototype
                 RefreshConnectionMessage();
             }
 
+            if (independentLocalSession && Time.unscaledTime >= nextSharedInkRefreshAt)
+            {
+                nextSharedInkRefreshAt = Time.unscaledTime + 0.08f;
+                RefreshInkText();
+            }
+
             if (startPointHintUntil > 0f && Time.unscaledTime >= startPointHintUntil)
             {
                 HideStartPointHint();
@@ -634,24 +747,35 @@ namespace DrawBody.Prototype
                 RefreshConnectionMessage();
             }
 
-            if (Input.GetKeyDown(KeyCode.C))
+            PlayerController2D inputPlayer = independentLocalSession
+                ? localSessionPlayer
+                : stageManager != null ? stageManager.ActivePlayerController : null;
+            LocalPlayerInputBinding inputBinding = inputPlayer != null ? inputPlayer.InputBinding : null;
+
+            bool usesKeyboard = inputBinding == null || inputBinding.UsesLegacyKeyboardMouse;
+            if (usesKeyboard && Input.GetKeyDown(KeyCode.C))
             {
                 ClearDrawing();
             }
 
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            if (usesKeyboard && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)))
             {
                 ConfirmDrawing();
             }
 
             UpdateEraserCursor();
-            HandleMouseInput();
+            if (inputBinding == null || inputBinding.UsesLegacyKeyboardMouse)
+            {
+                HandleMouseInput();
+            }
+            HandleGamepadInput(inputBinding);
         }
 
         public void SetActive(bool value)
         {
             active = value;
             drawing = false;
+            gamepadCursorInitialized = false;
             lastUniqueSpeciesConfirmAllowed = CanConfirmCurrentSpecies();
 
             if (drawPanel != null)
@@ -662,9 +786,19 @@ namespace DrawBody.Prototype
             feedback?.SetActive(value);
             UpdateToolButtons();
             UpdateEraserCursor();
+            UpdateGamepadCursorVisibility();
             RefreshInkText();
             if (value)
             {
+                // Anchors can retain the previous stage's full/split geometry
+                // until the end of the frame. Rebuild from the actual viewport
+                // before sizing the wide DRAW controls, otherwise P1 can keep
+                // the one-player pen/eraser scale while P2 uses the split scale.
+                Canvas.ForceUpdateCanvases();
+                RectTransform panelRect = drawPanel != null
+                    ? drawPanel.transform as RectTransform
+                    : null;
+                if (panelRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(panelRect);
                 ApplyResponsiveWorkspaceLayout();
                 CaptureEditSnapshot();
                 RefreshConnectionMessage();
@@ -1124,8 +1258,40 @@ namespace DrawBody.Prototype
             return GetPartsForSpecies(currentSpecies);
         }
 
+        private void CyclePart(int direction)
+        {
+            BodyPart[] parts = GetCurrentParts();
+            if (parts == null || parts.Length == 0) return;
+            int index = System.Array.IndexOf(parts, currentPart);
+            if (index < 0) index = 0;
+            SetCurrentPart(parts[(index + direction + parts.Length) % parts.Length]);
+        }
+
+        private void CycleSpecies(int direction)
+        {
+            Species[] values = (Species[])System.Enum.GetValues(typeof(Species));
+            int start = System.Array.IndexOf(values, currentSpecies);
+            for (int offset = 1; offset <= values.Length; offset++)
+            {
+                int index = (start + direction * offset) % values.Length;
+                if (index < 0) index += values.Length;
+                if (!IsSpeciesAllowed(values[index])) continue;
+                SetSpecies(values[index]);
+                return;
+            }
+        }
+
         public void ConfirmDrawing()
         {
+            if (independentLocalSession)
+            {
+                // Keep the pre-edit snapshot until StageManager verifies that
+                // the rebuilt colliders fit the assigned room/return point.
+                if (!TryApplyDrawing(true)) return;
+                stageManager?.RequestIndependentLocalRedrawCommit(localSessionPlayer, this);
+                return;
+            }
+
             bool deferCommit = stageManager != null && stageManager.IsDrawingMode;
             if (TryApplyDrawing(deferCommit))
             {
@@ -1156,7 +1322,9 @@ namespace DrawBody.Prototype
         {
             if (!CanConfirmCurrentSpecies())
             {
-                if (stageManager != null && stageManager.PromptSpeciesSwapRequest(currentSpecies))
+                if (stageManager != null && stageManager.PromptSpeciesSwapRequest(
+                    currentSpecies,
+                    independentLocalSession ? localSessionPlayer : stageManager.ActivePlayerController))
                 {
                     return false;
                 }
@@ -1202,9 +1370,15 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            int localIndex = independentLocalSession && stageManager != null
+                ? stageManager.GetLocalPlayerIndex(localSessionPlayer)
+                : 0;
+            string connectionId = onlineManager != null ? onlineManager.LocalPlayerId : "local";
             onlineManager?.SendBodyData(new OnlineBodyData
             {
-                PlayerId = "local",
+                PlayerId = OnlinePlayerIdentity.Compose(connectionId, localIndex),
+                ConnectionId = connectionId,
+                LocalPlayerIndex = localIndex,
                 Revision = ++onlineBodyRevision,
                 Json = ExportCurrentBodyJson()
             });
@@ -1237,6 +1411,138 @@ namespace DrawBody.Prototype
             {
                 RebuildPreviewVisuals();
             }
+        }
+
+        public void ConfigureIndependentLocalSession(PlayerController2D targetPlayer, bool enabled)
+        {
+            independentLocalSession = enabled;
+            localSessionPlayer = enabled ? targetPlayer : null;
+            if (targetPlayer != null)
+                SetBuildTarget(targetPlayer.GetComponent<BodyBuilder>(), targetPlayer.GetComponent<PlayerAbilityController>());
+        }
+
+        public DrawManager CreateIndependentLocalClone(PlayerController2D targetPlayer, DrawingState initialState)
+        {
+            if (drawPanel == null) return null;
+            GameObject managerObject = new GameObject($"Local Draw Manager {targetPlayer?.name}");
+            managerObject.transform.SetParent(transform, false);
+            DrawManager cloneManager = managerObject.AddComponent<DrawManager>();
+            GameObject clonedPanel = Instantiate(drawPanel, drawPanel.transform.parent);
+            clonedPanel.name = $"DrawPanel {targetPlayer?.name}";
+
+            cloneManager.stageManager = stageManager;
+            cloneManager.onlineManager = onlineManager;
+            cloneManager.drawPanel = clonedPanel;
+            cloneManager.ownsDrawPanel = true;
+            cloneManager.drawArea = FindClonedComponent<RectTransform>(clonedPanel.transform, drawPanel.transform, drawArea);
+            cloneManager.lineRoot = FindClonedComponent<RectTransform>(clonedPanel.transform, drawPanel.transform, lineRoot);
+            cloneManager.previewRoot = FindClonedComponent<RectTransform>(clonedPanel.transform, drawPanel.transform, previewRoot);
+            cloneManager.inkText = FindClonedComponent<Text>(clonedPanel.transform, drawPanel.transform, inkText);
+            cloneManager.inkGaugeFill = FindClonedComponent<Image>(clonedPanel.transform, drawPanel.transform, inkGaugeFill);
+            cloneManager.partText = FindClonedComponent<Text>(clonedPanel.transform, drawPanel.transform, partText);
+            cloneManager.messageText = FindClonedComponent<Text>(clonedPanel.transform, drawPanel.transform, messageText);
+            cloneManager.abilityText = FindClonedComponent<Text>(clonedPanel.transform, drawPanel.transform, abilityText);
+            cloneManager.feedback = FindClonedComponent<DrawFeedbackController>(clonedPanel.transform, drawPanel.transform, feedback);
+            cloneManager.penToolButton = FindClonedComponent<Button>(clonedPanel.transform, drawPanel.transform, penToolButton);
+            cloneManager.eraserToolButton = FindClonedComponent<Button>(clonedPanel.transform, drawPanel.transform, eraserToolButton);
+            cloneManager.ConfigureIndependentLocalSession(targetPlayer, true);
+            BindClonedDrawUi(clonedPanel, cloneManager);
+            cloneManager.NormalizeDrawLayout();
+            if (initialState != null) cloneManager.LoadState(initialState, true);
+            cloneManager.SetActive(false);
+            return cloneManager;
+        }
+
+        private static void BindClonedDrawUi(GameObject clonedPanel, DrawManager cloneManager)
+        {
+            if (clonedPanel == null || cloneManager == null) return;
+            DrawButtonCommand[] commands = clonedPanel.GetComponentsInChildren<DrawButtonCommand>(true);
+            for (int i = 0; i < commands.Length; i++) commands[i]?.RebindForClonedSession(cloneManager);
+            BrushSizeSliderCommand[] sliders = clonedPanel.GetComponentsInChildren<BrushSizeSliderCommand>(true);
+            for (int i = 0; i < sliders.Length; i++) sliders[i]?.RebindForClonedSession(cloneManager);
+            PartButtonCommand[] parts = clonedPanel.GetComponentsInChildren<PartButtonCommand>(true);
+            for (int i = 0; i < parts.Length; i++) parts[i]?.RebindForClonedSession(cloneManager);
+            SpeciesButtonCommand[] species = clonedPanel.GetComponentsInChildren<SpeciesButtonCommand>(true);
+            for (int i = 0; i < species.Length; i++) species[i]?.RebindForClonedSession(cloneManager);
+            DrawScreenVisualPolisher polisher = clonedPanel.GetComponent<DrawScreenVisualPolisher>();
+            if (polisher != null)
+            {
+                polisher.BindDrawManager(cloneManager);
+                polisher.Polish();
+            }
+        }
+
+        public void SetLocalViewport(Rect viewport)
+        {
+            if (drawPanel == null) return;
+            RectTransform panelRect = drawPanel.GetComponent<RectTransform>();
+            if (panelRect == null || drawPanel.transform.parent as RectTransform == null) return;
+            bool changed = localViewport != viewport;
+            localViewport = viewport;
+            useWideLocalSplitLayout = viewport.width > 0.75f && viewport.height < 0.75f;
+            panelRect.anchorMin = new Vector2(viewport.xMin, viewport.yMin);
+            panelRect.anchorMax = new Vector2(viewport.xMax, viewport.yMax);
+            panelRect.pivot = new Vector2(0.5f, 0.5f);
+            panelRect.anchoredPosition = Vector2.zero;
+            panelRect.sizeDelta = Vector2.zero;
+            panelRect.localScale = Vector3.one;
+            RectMask2D viewportMask = drawPanel.GetComponent<RectMask2D>();
+            if (viewportMask == null) viewportMask = drawPanel.AddComponent<RectMask2D>();
+            viewportMask.enabled = useWideLocalSplitLayout;
+            if (changed)
+            {
+                Canvas.ForceUpdateCanvases();
+                ApplyResponsiveWorkspaceLayout();
+            }
+        }
+
+        public void SetPointerInputEnabled(bool enabled)
+        {
+            if (drawPanel == null) return;
+            if (pointerInputCanvasGroup == null)
+            {
+                pointerInputCanvasGroup = drawPanel.GetComponent<CanvasGroup>();
+                if (pointerInputCanvasGroup == null)
+                    pointerInputCanvasGroup = drawPanel.AddComponent<CanvasGroup>();
+            }
+            pointerInputCanvasGroup.interactable = true;
+            // A controller cursor resolves buttons inside its own panel directly.
+            // Disabling EventSystem raycasts here prevents the hardware mouse from
+            // operating another local player's DRAW viewport.
+            pointerInputCanvasGroup.blocksRaycasts = enabled;
+            Graphic[] graphics = drawPanel.GetComponentsInChildren<Graphic>(true);
+            for (int i = 0; i < graphics.Length; i++)
+            {
+                Graphic graphic = graphics[i];
+                if (graphic == null) continue;
+                if (!pointerGraphicRaycastDefaults.ContainsKey(graphic))
+                    pointerGraphicRaycastDefaults[graphic] = graphic.raycastTarget;
+                graphic.raycastTarget = enabled && pointerGraphicRaycastDefaults[graphic];
+            }
+        }
+
+        private static T FindClonedComponent<T>(Transform cloneRoot, Transform sourceRoot, T source)
+            where T : Component
+        {
+            if (source == null) return null;
+            string path = GetRelativePath(sourceRoot, source.transform);
+            Transform target = string.IsNullOrEmpty(path) ? cloneRoot : cloneRoot.Find(path);
+            return target != null ? target.GetComponent<T>() : null;
+        }
+
+        private static string GetRelativePath(Transform root, Transform target)
+        {
+            if (root == target) return string.Empty;
+            List<string> parts = new List<string>();
+            Transform current = target;
+            while (current != null && current != root)
+            {
+                parts.Add(current.name);
+                current = current.parent;
+            }
+            if (current != root) return string.Empty;
+            parts.Reverse();
+            return string.Join("/", parts);
         }
 
         public DrawingState CreateState()
@@ -1571,49 +1877,22 @@ namespace DrawBody.Prototype
             {
                 if (toolMode == ToolMode.Eraser)
                 {
-                    if (TryGetDrawPoint(out Vector2 erasePoint))
+                    if (TryGetDrawPoint(out Vector2 erasePoint) && EraseAt(erasePoint))
                     {
-                        EraseAt(erasePoint);
+                        feedback?.Erase(erasePoint);
                     }
 
                     drawing = false;
                     return;
                 }
 
-                drawing = TryGetDrawPoint(out Vector2 point);
-                PartDrawing current = drawings[currentPart];
-                if (drawing)
-                {
-                    lastValidDrawPointTime = Time.unscaledTime;
-                    if (!CanStartStroke(point, out Vector2 startPoint))
-                    {
-                        drawing = false;
-                        ShowStartPointHint();
-                        RefreshConnectionMessage();
-                        return;
-                    }
-
-                    if (current.Points.Count > 0)
-                    {
-                        current.Points.Add(StrokeBreak);
-                    }
-
-                    hasClearedPartUndo = false;
-                    clearedPartUndoPoints.Clear();
-                    clearedPartUndoStrokeWidths.Clear();
-                    current.StrokeWidths.Add(lineWidth);
-                    current.Points.Add(startPoint);
-                    feedback?.BeginStroke(startPoint, GetPartColor());
-                    RefreshInkText();
-                    RefreshConnectionMessage();
-                }
+                drawing = TryGetDrawPoint(out Vector2 point) && BeginStrokeAt(point);
             }
 
             if (Input.GetMouseButton(0) && toolMode == ToolMode.Eraser)
             {
-                if (TryGetDrawPoint(out Vector2 erasePoint))
+                if (TryGetDrawPoint(out Vector2 erasePoint) && EraseAt(erasePoint))
                 {
-                    EraseAt(erasePoint);
                     feedback?.Erase(erasePoint);
                 }
 
@@ -1643,21 +1922,180 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void EraseAt(Vector2 point)
+        private bool BeginStrokeAt(Vector2 point)
         {
+            PartDrawing current = drawings[currentPart];
+            lastValidDrawPointTime = Time.unscaledTime;
+            if (!CanStartStroke(point, out Vector2 startPoint))
+            {
+                ShowStartPointHint();
+                RefreshConnectionMessage();
+                return false;
+            }
+
+            if (current.Points.Count > 0) current.Points.Add(StrokeBreak);
+            hasClearedPartUndo = false;
+            clearedPartUndoPoints.Clear();
+            clearedPartUndoStrokeWidths.Clear();
+            current.StrokeWidths.Add(lineWidth);
+            current.Points.Add(startPoint);
+            feedback?.BeginStroke(startPoint, GetPartColor());
+            RefreshInkText();
+            RefreshConnectionMessage();
+            return true;
+        }
+
+        private void HandleGamepadInput(LocalPlayerInputBinding binding)
+        {
+            RectTransform panelRect = drawPanel != null ? drawPanel.transform as RectTransform : null;
+            bool available = active && binding != null && binding.HasUsableGamepad
+                && drawArea != null && panelRect != null;
+            if (!available)
+            {
+                if (gamepadCursor != null) gamepadCursor.gameObject.SetActive(false);
+                return;
+            }
+
+            EnsureGamepadCursor();
+            if (!gamepadCursorInitialized)
+            {
+                Vector3 drawCenterWorld = drawArea.TransformPoint(drawArea.rect.center);
+                gamepadCursorPosition = panelRect.InverseTransformPoint(drawCenterWorld);
+                gamepadCursorInitialized = true;
+            }
+
+            Vector2 input = binding.ReadDrawCursor();
+            float panelScale = Mathf.Max(0.1f, Mathf.Abs(panelRect.localScale.x));
+            gamepadCursorPosition += input
+                * (gamepadCursorSpeed / panelScale * Time.unscaledDeltaTime);
+            Rect bounds = panelRect.rect;
+            const float margin = 12f;
+            gamepadCursorPosition.x = Mathf.Clamp(gamepadCursorPosition.x, bounds.xMin + margin, bounds.xMax - margin);
+            gamepadCursorPosition.y = Mathf.Clamp(gamepadCursorPosition.y, bounds.yMin + margin, bounds.yMax - margin);
+            gamepadCursor.anchoredPosition = gamepadCursorPosition;
+            gamepadCursor.localScale = Vector3.one / panelScale;
+            gamepadCursor.gameObject.SetActive(true);
+            gamepadCursor.SetAsLastSibling();
+
+            Canvas ownerCanvas = drawPanel.GetComponentInParent<Canvas>();
+            Camera uiCamera = ownerCanvas != null
+                && ownerCanvas.renderMode != RenderMode.ScreenSpaceOverlay
+                    ? ownerCanvas.worldCamera
+                    : null;
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(
+                uiCamera, panelRect.TransformPoint(gamepadCursorPosition));
+            Vector2 drawPoint = Vector2.zero;
+            bool insideDrawArea = RectTransformUtility.RectangleContainsScreenPoint(
+                drawArea, screenPoint, uiCamera)
+                && RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    drawArea, screenPoint, uiCamera, out drawPoint)
+                && drawArea.rect.Contains(drawPoint);
+
+            bool erase = binding.DrawEraseHeld()
+                || toolMode == ToolMode.Eraser && binding.DrawPrimaryHeld();
+            if (erase && insideDrawArea)
+            {
+                if (drawing) FinishStroke();
+                if (EraseAt(drawPoint)) feedback?.Erase(drawPoint);
+                return;
+            }
+
+            if (binding.DrawPrimaryPressed())
+            {
+                if (insideDrawArea) drawing = BeginStrokeAt(drawPoint);
+                else TryClickGamepadUi(screenPoint);
+            }
+            if (binding.DrawPrimaryHeld() && drawing)
+            {
+                if (insideDrawArea)
+                {
+                    lastValidDrawPointTime = Time.unscaledTime;
+                    TryAddPoint(drawPoint);
+                }
+                else
+                {
+                    FinishStroke();
+                }
+            }
+            if (binding.DrawPrimaryReleased()) FinishStroke();
+        }
+
+        private bool TryClickGamepadUi(Vector2 screenPoint)
+        {
+            if (EventSystem.current == null || drawPanel == null) return false;
+            gamepadPointerData = new PointerEventData(EventSystem.current);
+            gamepadPointerData.Reset();
+            gamepadPointerData.position = screenPoint;
+            gamepadPointerData.button = PointerEventData.InputButton.Left;
+
+            Canvas ownerCanvas = drawPanel.GetComponentInParent<Canvas>();
+            Camera uiCamera = ownerCanvas != null
+                && ownerCanvas.renderMode != RenderMode.ScreenSpaceOverlay
+                    ? ownerCanvas.worldCamera
+                    : null;
+            Button[] buttons = drawPanel.GetComponentsInChildren<Button>(true);
+            Button target = null;
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                Button candidate = buttons[i];
+                RectTransform rect = candidate != null ? candidate.transform as RectTransform : null;
+                if (rect == null || !candidate.gameObject.activeInHierarchy
+                    || !candidate.IsActive() || !candidate.IsInteractable()
+                    || !RectTransformUtility.RectangleContainsScreenPoint(rect, screenPoint, uiCamera))
+                    continue;
+                // GetComponentsInChildren follows hierarchy/render order, so the
+                // last matching control is the visible top-most button.
+                target = candidate;
+            }
+            if (target == null) return false;
+            ExecuteEvents.Execute(target.gameObject, gamepadPointerData, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.Execute(target.gameObject, gamepadPointerData, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(target.gameObject, gamepadPointerData, ExecuteEvents.pointerClickHandler);
+            return true;
+        }
+
+        private void EnsureGamepadCursor()
+        {
+            if (gamepadCursor != null) return;
+            GameObject cursorObject = new GameObject("GamepadDrawCursor", typeof(RectTransform), typeof(Image), typeof(Outline));
+            cursorObject.transform.SetParent(drawPanel.transform, false);
+            gamepadCursor = cursorObject.GetComponent<RectTransform>();
+            gamepadCursor.anchorMin = new Vector2(0.5f, 0.5f);
+            gamepadCursor.anchorMax = new Vector2(0.5f, 0.5f);
+            gamepadCursor.pivot = new Vector2(0.5f, 0.5f);
+            gamepadCursor.sizeDelta = new Vector2(15f, 15f);
+            gamepadCursor.localRotation = Quaternion.Euler(0f, 0f, 45f);
+            Image image = cursorObject.GetComponent<Image>();
+            image.color = new Color(1f, 0.78f, 0.12f, 0.92f);
+            image.raycastTarget = false;
+            Outline outline = cursorObject.GetComponent<Outline>();
+            outline.effectColor = new Color(0.08f, 0.12f, 0.16f, 0.95f);
+            outline.effectDistance = new Vector2(2f, -2f);
+        }
+
+        private void UpdateGamepadCursorVisibility()
+        {
+            if (gamepadCursor != null) gamepadCursor.gameObject.SetActive(active);
+        }
+
+        private bool EraseAt(Vector2 point)
+        {
+            if (Time.unscaledTime < nextEraseAt) return false;
+            nextEraseAt = Time.unscaledTime + 1f / 30f;
             PartDrawing current = drawings[currentPart];
             NormalizeStrokeWidths(current, DefaultBrushWidth);
             if (!EraseCircle(current.Points, current.StrokeWidths, point, eraserRadius))
             {
-                return;
+                return false;
             }
 
             current.UsedInk = CalculateInk(current.Points);
-            RebuildAllVisuals();
+            RebuildPartVisuals(currentPart);
             SetPartSegmentVisibility();
             RefreshInkText();
             RefreshConnectionMessage();
             UpdateConnectionMarker();
+            return true;
         }
 
         private static bool EraseCircle(
@@ -2134,7 +2572,8 @@ namespace DrawBody.Prototype
             if (teamInkBreakdownText != null)
             {
                 teamInkBreakdownText.text = stageManager != null
-                    ? stageManager.GetInkUsageBreakdown(totalInk)
+                    ? stageManager.GetInkUsageBreakdown(totalInk,
+                        independentLocalSession ? localSessionPlayer : stageManager.ActivePlayerController)
                     : string.Empty;
                 teamInkBreakdownText.color = teamOver ? warningText : normalText;
             }
@@ -2157,11 +2596,8 @@ namespace DrawBody.Prototype
                 partText.text = $"{LocalizationManager.T("part")}: {GetPartLabel(currentPart)}";
             }
 
-            if (abilityText != null)
-            {
-                PlayerAbilityController.AbilityProfile profile = PlayerAbilityController.CalculateProfile(this);
-                RefreshAbilityCard(profile);
-            }
+            PlayerAbilityController.AbilityProfile profile = PlayerAbilityController.CalculateProfile(this);
+            RefreshAbilityCard(profile);
         }
 
         private void RefreshAbilityCard(PlayerAbilityController.AbilityProfile profile)
@@ -2214,8 +2650,11 @@ namespace DrawBody.Prototype
                     break;
             }
 
-            abilityText.text = string.Empty;
-            abilityText.gameObject.SetActive(false);
+            if (abilityText != null)
+            {
+                abilityText.text = string.Empty;
+                abilityText.gameObject.SetActive(false);
+            }
             if (abilityTitleText != null) abilityTitleText.text = title;
             if (abilityEffectText != null) abilityEffectText.text = effect;
             if (abilityInkText != null)
@@ -2554,7 +2993,8 @@ namespace DrawBody.Prototype
         {
             if (stageManager != null)
             {
-                return stageManager.GetConfirmedInkExcludingActivePlayer();
+                return stageManager.GetConfirmedInkExcludingActivePlayer(
+                    independentLocalSession ? localSessionPlayer : stageManager.ActivePlayerController);
             }
             return onlineManager != null ? onlineManager.GetConfirmedInkExcludingLocal() : 0f;
         }
@@ -2689,7 +3129,10 @@ namespace DrawBody.Prototype
             startPointHintText.gameObject.SetActive(false);
         }
 
-        private void LayoutStartPointHint(float workspaceCenterY, float workspaceScale)
+        private void LayoutStartPointHint(
+            float workspaceCenterX,
+            float workspaceCenterY,
+            float visibleWorkspaceSize)
         {
             EnsureStartPointHint();
             if (startPointHintText == null)
@@ -2702,9 +3145,9 @@ namespace DrawBody.Prototype
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 1f);
             rect.anchoredPosition = new Vector2(
-                -230f,
-                workspaceCenterY - drawAreaSquareSize * workspaceScale * 0.5f - 6f);
-            rect.sizeDelta = new Vector2(Mathf.Max(300f, drawAreaSquareSize * workspaceScale + 80f), 30f);
+                workspaceCenterX,
+                workspaceCenterY - visibleWorkspaceSize * 0.5f - 4f);
+            rect.sizeDelta = new Vector2(Mathf.Max(180f, visibleWorkspaceSize + 20f), 24f);
         }
 
         private void ShowStartPointHint()
@@ -2738,6 +3181,9 @@ namespace DrawBody.Prototype
             {
                 validationBanner = existing.gameObject;
                 validationBannerText = existing.GetComponentInChildren<Text>(true);
+                Image existingBackground = existing.GetComponent<Image>();
+                if (existingBackground != null) existingBackground.raycastTarget = false;
+                if (validationBannerText != null) validationBannerText.raycastTarget = false;
                 return;
             }
 
@@ -2756,6 +3202,7 @@ namespace DrawBody.Prototype
 
             Image background = validationBanner.GetComponent<Image>();
             DoodlePaperUi.Apply(background, new Color(1f, 0.88f, 0.82f, 0.98f));
+            background.raycastTarget = false;
             Outline backgroundOutline = validationBanner.AddComponent<Outline>();
             backgroundOutline.enabled = false;
 
@@ -2780,6 +3227,7 @@ namespace DrawBody.Prototype
             validationBannerText.horizontalOverflow = HorizontalWrapMode.Wrap;
             validationBannerText.verticalOverflow = VerticalWrapMode.Truncate;
             validationBannerText.color = new Color(0.68f, 0.06f, 0.06f);
+            validationBannerText.raycastTarget = false;
             Outline textOutline = textObject.AddComponent<Outline>();
             textOutline.effectColor = new Color(1f, 1f, 1f, 0.75f);
             textOutline.effectDistance = new Vector2(1f, -1f);
@@ -3786,6 +4234,36 @@ namespace DrawBody.Prototype
                 }
             }
 
+            UpdatePreviewHighlight();
+        }
+
+        private void RebuildPartVisuals(BodyPart part)
+        {
+            if (!drawings.TryGetValue(part, out PartDrawing partDrawing)) return;
+
+            for (int i = 0; i < partDrawing.LineSegments.Count; i++)
+                if (partDrawing.LineSegments[i] != null) Destroy(partDrawing.LineSegments[i]);
+            for (int i = 0; i < partDrawing.PreviewSegments.Count; i++)
+                if (partDrawing.PreviewSegments[i] != null) Destroy(partDrawing.PreviewSegments[i]);
+            partDrawing.LineSegments.Clear();
+            partDrawing.PreviewSegments.Clear();
+
+            NormalizeStrokeWidths(partDrawing, DefaultBrushWidth);
+            int strokeIndex = 0;
+            for (int i = 1; i < partDrawing.Points.Count; i++)
+            {
+                if (IsBreakPoint(partDrawing.Points[i - 1]))
+                {
+                    strokeIndex++;
+                    continue;
+                }
+                if (IsBreakPoint(partDrawing.Points[i])) continue;
+                float width = strokeIndex < partDrawing.StrokeWidths.Count
+                    ? partDrawing.StrokeWidths[strokeIndex]
+                    : DefaultBrushWidth;
+                CreateSegment(partDrawing, part, partDrawing.Points[i - 1],
+                    partDrawing.Points[i], width);
+            }
             UpdatePreviewHighlight();
         }
 

@@ -123,7 +123,6 @@ namespace DrawBody.Prototype
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            Transform localPlayer = stageManager.ActivePlayerTransform;
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
@@ -132,7 +131,7 @@ namespace DrawBody.Prototype
                 // selected character may consume that input; the other one must
                 // remain a fully simulated physics target so throws keep their
                 // velocity.
-                if (player.transform != localPlayer) continue;
+                if (!stageManager.IsLocallyControlledPlayer(player)) continue;
                 player.SetControlsEnabled(true);
             }
         }
@@ -145,7 +144,7 @@ namespace DrawBody.Prototype
             if (!IsOnline()) participants.Add(id);
             if (IsOnline() && !HasAuthority())
             {
-                if (id != onlineManager?.LocalPlayerId) return;
+                if (!OnlinePlayerIdentity.IsOwnedByConnection(id, onlineManager?.LocalPlayerId)) return;
                 onlineManager.SendGimmickData(new OnlineGimmickData
                 {
                     ObjectId = StageId, Kind = EliminateRequestKind,

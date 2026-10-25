@@ -533,11 +533,15 @@ namespace DrawBody.Prototype
             if (stageManager == null || cellCenters.Count == 0) return;
             if (stageManager.IsOnlineStageActive)
             {
-                int index = PlayerColorPalette.GetLobbyPlayerSlot(
-                    onlineManager?.CurrentLobby, onlineManager?.LocalPlayerId);
-                PlayerController2D local = stageManager.ActivePlayerTransform != null
-                    ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-                PlacePlayer(local, index);
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
+                {
+                    PlayerController2D local = localPlayers[i];
+                    string gamePlayerId = stageManager.GetOnlinePlayerId(local);
+                    int index = PlayerColorPalette.GetLobbyPlayerSlot(
+                        onlineManager?.CurrentLobby, gamePlayerId);
+                    PlacePlayer(local, index);
+                }
                 return;
             }
 

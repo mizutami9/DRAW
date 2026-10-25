@@ -226,7 +226,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bodyData.PlayerId = localPlayerId;
+            if (string.IsNullOrEmpty(bodyData.PlayerId) || bodyData.PlayerId == "local") bodyData.PlayerId = localPlayerId;
             string payload = JsonUtility.ToJson(bodyData);
             if (isHost)
             {
@@ -249,7 +249,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            playerState.PlayerId = localPlayerId;
+            if (string.IsNullOrEmpty(playerState.PlayerId) || playerState.PlayerId == "local") playerState.PlayerId = localPlayerId;
             string payload = JsonUtility.ToJson(playerState);
             if (isHost)
             {
@@ -268,7 +268,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            carryData.CarrierPlayerId = localPlayerId;
+            carryData.CarrierPlayerId = OnlinePlayerIdentity.ValidateOrPrimary(
+                carryData.CarrierPlayerId, localPlayerId);
             string payload = JsonUtility.ToJson(carryData);
             if (isHost)
             {
@@ -287,7 +288,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            gimmickData.PlayerId = localPlayerId;
+            if (string.IsNullOrEmpty(gimmickData.PlayerId) || gimmickData.PlayerId == "local")
+                gimmickData.PlayerId = localPlayerId;
             if (isHost && gimmickData.Kind == "stage_retry" && CurrentLobby != null)
             {
                 CurrentLobby.RetryRevision++;
@@ -465,7 +467,8 @@ namespace DrawBody.Prototype
                 string peerPlayerId = GetPeerPlayerId(tcpClient);
                 if (state != null && !string.IsNullOrEmpty(peerPlayerId))
                 {
-                    state.PlayerId = peerPlayerId;
+                    state.PlayerId = OnlinePlayerIdentity.ValidateOrPrimary(state.PlayerId, peerPlayerId);
+                    state.ConnectionId = peerPlayerId;
                     state.PlayerSlot = PlayerColorPalette.GetLobbyPlayerSlot(CurrentLobby, peerPlayerId);
                     payload = JsonUtility.ToJson(state);
                 }
@@ -478,7 +481,8 @@ namespace DrawBody.Prototype
                 string peerPlayerId = GetPeerPlayerId(tcpClient);
                 if (bodyData != null && !string.IsNullOrEmpty(peerPlayerId))
                 {
-                    bodyData.PlayerId = peerPlayerId;
+                    bodyData.PlayerId = OnlinePlayerIdentity.ValidateOrPrimary(bodyData.PlayerId, peerPlayerId);
+                    bodyData.ConnectionId = peerPlayerId;
                     payload = JsonUtility.ToJson(bodyData);
                 }
                 BodyDataReceived?.Invoke(bodyData);
@@ -498,7 +502,7 @@ namespace DrawBody.Prototype
                 string peerPlayerId = GetPeerPlayerId(tcpClient);
                 if (carryData != null && !string.IsNullOrEmpty(peerPlayerId))
                 {
-                    carryData.CarrierPlayerId = peerPlayerId;
+                    carryData.CarrierPlayerId = OnlinePlayerIdentity.ValidateOrPrimary(carryData.CarrierPlayerId, peerPlayerId);
                     payload = JsonUtility.ToJson(carryData);
                 }
                 CarryDataReceived?.Invoke(carryData);
@@ -510,7 +514,7 @@ namespace DrawBody.Prototype
                 string peerPlayerId = GetPeerPlayerId(tcpClient);
                 if (gimmickData != null && !string.IsNullOrEmpty(peerPlayerId))
                 {
-                    gimmickData.PlayerId = peerPlayerId;
+                    gimmickData.PlayerId = OnlinePlayerIdentity.ValidateOrPrimary(gimmickData.PlayerId, peerPlayerId);
                     payload = JsonUtility.ToJson(gimmickData);
                 }
                 GimmickDataReceived?.Invoke(gimmickData);

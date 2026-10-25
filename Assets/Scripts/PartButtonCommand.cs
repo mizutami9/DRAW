@@ -68,6 +68,27 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void BindDrawManager(DrawManager manager)
+        {
+            if (drawManager == manager) return;
+            if (drawManager != null && subscribed)
+            {
+                drawManager.CurrentPartChanged -= RefreshVisual;
+                drawManager.CurrentSpeciesChanged -= RefreshSpecies;
+            }
+            subscribed = false;
+            drawManager = manager;
+            EnsureSubscribed();
+        }
+
+        public void RebindForClonedSession(DrawManager manager)
+        {
+            BindDrawManager(manager);
+            if (button == null) button = GetComponent<Button>();
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(SelectPart);
+        }
+
         private void OnDisable()
         {
             LocalizationManager.LanguageChanged -= RefreshLabel;

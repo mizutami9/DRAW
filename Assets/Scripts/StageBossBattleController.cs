@@ -230,7 +230,7 @@ namespace DrawBody.Prototype
             if (string.IsNullOrEmpty(id) || eliminatedIds.Contains(id)) return;
             if (IsOnline)
             {
-                if (id != onlineManager.LocalPlayerId && !HasAuthority) return;
+                if (!OnlinePlayerIdentity.IsOwnedByConnection(id, onlineManager.LocalPlayerId) && !HasAuthority) return;
                 if (!HasAuthority)
                 {
                     ApplyElimination(id);

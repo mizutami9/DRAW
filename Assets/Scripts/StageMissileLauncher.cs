@@ -288,7 +288,6 @@ namespace DrawBody.Prototype
             HashSet<StageEnemyCharacter> enemies = new HashSet<StageEnemyCharacter>();
             StageManager manager = Object.FindFirstObjectByType<StageManager>();
             bool online = manager != null && manager.IsOnlineStageActive;
-            Transform localPlayer = manager != null ? manager.ActivePlayerTransform : null;
             StageEditorObject ownerMarker = owner != null ? owner.GetComponent<StageEditorObject>() : null;
             bool friendlyDefenseMissile = ownerMarker != null
                 && !string.IsNullOrEmpty(ownerMarker.objectId)
@@ -306,7 +305,7 @@ namespace DrawBody.Prototype
                 }
                 PlayerController2D player = hit.GetComponentInParent<PlayerController2D>();
                 if (!friendlyDefenseMissile && player != null && players.Add(player) && !player.IsInvulnerable
-                    && (!online || player.transform == localPlayer))
+                    && (!online || manager.IsLocallyControlledPlayer(player)))
                 {
                     manager?.RespawnFromHazard(player);
                 }
@@ -314,6 +313,7 @@ namespace DrawBody.Prototype
                 {
                     continue;
                 }
+                if (online && player != null && !manager.IsLocallyControlledPlayer(player)) continue;
 
                 Rigidbody2D targetBody = hit.attachedRigidbody;
                 if (targetBody == null || targetBody.bodyType != RigidbodyType2D.Dynamic || !bodies.Add(targetBody))

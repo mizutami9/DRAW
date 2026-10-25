@@ -407,8 +407,8 @@ namespace DrawBody.Prototype
             if (string.IsNullOrEmpty(id) || eliminated.Contains(id)) return;
             if (IsOnline && !HasAuthority)
             {
-                if (id == onlineManager?.LocalPlayerId)
-                    Send(EliminateRequestKind, new EliminationRequest { PlayerId = id });
+                if (OnlinePlayerIdentity.IsOwnedByConnection(id, onlineManager?.LocalPlayerId))
+                    Send(EliminateRequestKind, new EliminationRequest { PlayerId = id }, player);
                 return;
             }
             ApplyElimination(id);
@@ -537,8 +537,8 @@ namespace DrawBody.Prototype
             if (string.IsNullOrEmpty(id)) return;
             if (IsOnline && !HasAuthority)
             {
-                if (source != null && source.transform == stageManager.ActivePlayerTransform)
-                    Send(ScratchRequestKind, new IdRequest { Id = id });
+                if (source != null && stageManager.IsLocallyControlledPlayer(source))
+                    Send(ScratchRequestKind, new IdRequest { Id = id }, source);
                 return;
             }
             ApplyScratch(id);
@@ -558,8 +558,8 @@ namespace DrawBody.Prototype
             lane = Mathf.Clamp(lane, 0, playerCount - 1);
             if (IsOnline && !HasAuthority)
             {
-                if (source != null && source.transform == stageManager.ActivePlayerTransform)
-                    Send(ButtonRequestKind, new ButtonRequest { Lane = lane, Set = set });
+                if (source != null && stageManager.IsLocallyControlledPlayer(source))
+                    Send(ButtonRequestKind, new ButtonRequest { Lane = lane, Set = set }, source);
                 return;
             }
             ApplyButton(set, lane);
@@ -1130,9 +1130,13 @@ namespace DrawBody.Prototype
 
         private void SetLocalControls(bool enabledValue)
         {
-            PlayerController2D local = stageManager?.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            local?.SetControlsEnabled(enabledValue && !IsEliminated(local));
+            if (stageManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                local?.SetControlsEnabled(enabledValue && !IsEliminated(local));
+            }
         }
 
         private void SetLivingControls(bool enabledValue)
@@ -1142,7 +1146,7 @@ namespace DrawBody.Prototype
                 if (players[i] != null && !IsEliminated(players[i]))
                 {
                     bool isControlledPlayer = stageManager != null
-                        && players[i].transform == stageManager.ActivePlayerTransform;
+                        && stageManager.IsLocallyControlledPlayer(players[i]);
                     players[i].SetControlsEnabled(enabledValue && isControlledPlayer);
                     if (!enabledValue) players[i].ResetMotion();
                 }
@@ -1153,7 +1157,7 @@ namespace DrawBody.Prototype
             if (player == null || IsOnline || stageManager == null) return false;
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
                 FindObjectsSortMode.None);
-            return players.Length > 1 && player.transform != stageManager.ActivePlayerTransform;
+            return players.Length > 1 && !stageManager.IsLocallyControlledPlayer(player);
         }
 
         private void ShowPositionMarkers(bool visible)
@@ -1423,10 +1427,15 @@ namespace DrawBody.Prototype
             switchGates[set, targetLane]?.SetOpen(true);
         }
 
-        private void Send<T>(string kind, T payload)
+        private void Send<T>(string kind, T payload, PlayerController2D source = null)
         {
             onlineManager?.SendGimmickData(new OnlineGimmickData
-            { ObjectId = StageId, Kind = kind, Json = JsonUtility.ToJson(payload) });
+            {
+                ObjectId = StageId,
+                Kind = kind,
+                PlayerId = source != null ? stageManager.GetOnlinePlayerId(source) : null,
+                Json = JsonUtility.ToJson(payload)
+            });
         }
     }
 

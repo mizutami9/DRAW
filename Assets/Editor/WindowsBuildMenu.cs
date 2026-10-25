@@ -57,7 +57,7 @@ namespace DrawBody.EditorTools
             "Hardened Steam demo (IL2CPP + filtered content)",
             ScriptingImplementation.IL2CPP,
             BuildFeature.Demo | BuildFeature.Steam | BuildFeature.Hardened,
-            "0.1.0-demo.1",
+            "0.1.0-demo.4",
             SteamDistributionIds.DemoAppId,
             SteamDistributionIds.DemoDepotId,
             "steam-demo");

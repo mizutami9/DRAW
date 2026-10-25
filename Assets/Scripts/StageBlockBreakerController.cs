@@ -218,7 +218,7 @@ namespace DrawBody.Prototype
             if (!IsOnlineActive()) participantIds.Add(id);
             if (IsOnlineActive())
             {
-                if (id != onlineManager.LocalPlayerId) return;
+                if (!OnlinePlayerIdentity.IsOwnedByConnection(id, onlineManager.LocalPlayerId)) return;
                 if (!HasAuthority())
                 {
                     Send(KindEliminateRequest, new PlayerState { PlayerId = id });
@@ -826,9 +826,13 @@ namespace DrawBody.Prototype
         private void SetLocalControls(bool enabled)
         {
             if (stageManager == null) return;
-            PlayerController2D active = stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            if (active != null && active.gameObject.activeSelf) active.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                if (local != null && local.gameObject.activeSelf)
+                    local.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
+            }
         }
 
         private string ResolvePlayerId(PlayerController2D player)

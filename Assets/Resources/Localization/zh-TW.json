@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D 或左搖桿：移動空格/A：跳轉 F/X：技能點擊/RT：動作選擇：重畫 Start：Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "左搖桿：遊標 RT：繪製/選擇 LT：擦除 CREATE / VIEW：關閉"
     },
     {
       "key": "status_clear",
@@ -2846,7 +2846,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "設定運行。 實現目標之前,時間退出。"
+      "value": "時間攻擊。明確指出每個人的總完成時間是否在 {0} 分鐘之內。"
     },
     {
       "key": "ready_room_game_10_3",
@@ -4381,29 +4381,368 @@
       "value": "快跑。"
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "切換操作角色"
+      "key": "gameplay_control_switch",
+      "value": "切換操作角色"
     },
     {
-        "key":  "feedback_button",
-        "value":  "意見回饋 / 錯誤回報"
+      "key": "feedback_button",
+      "value": "意見回饋 / 錯誤回報"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "感謝遊玩！\n意見回饋 / 錯誤回報"
+      "key": "feedback_clear_button",
+      "value": "感謝遊玩！\n意見回饋 / 錯誤回報"
     },
-    { "key": "option_complete", "value": "完成" },
-    { "key": "option_screen_mode_format", "value": "顯示模式：{0}" },
-    { "key": "option_resolution_format", "value": "解析度：{0}×{1}" },
-    { "key": "option_fullscreen", "value": "全螢幕" },
-    { "key": "option_windowed", "value": "視窗模式" },
-    { "key": "online_steam_not_running", "value": "請啟動 Steam，然後從 Steam 收藏庫啟動 NICO DRAW。" },
-    { "key": "online_steam_ticket_failed", "value": "無法取得 Steam 驗證票證：{0}" },
-    { "key": "wishlist_button", "value": "願望清單" },
-    { "key": "single_recommend_title", "value": "推薦多人遊戲！" },
-    { "key": "single_recommend_message", "value": "NICO DRAW 最適合大家一起合作遊玩！\n請試著與 2–4 名玩家一起玩！" },
-    { "key": "single_recommend_ok", "value": "確定" }
-    ,{ "key": "title_exit_confirm", "value": "要離開 NICO DRAW 嗎？" },
-    { "key": "background_word_push", "value": "推！" }
+    {
+      "key": "option_complete",
+      "value": "完成"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "顯示模式：{0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "解析度：{0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "全螢幕"
+    },
+    {
+      "key": "option_windowed",
+      "value": "視窗模式"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "請啟動 Steam，然後從 Steam 收藏庫啟動 NICO DRAW。"
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "無法取得 Steam 驗證票證：{0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "願望清單"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "推薦多人遊戲！"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW 最適合大家一起合作遊玩！\n請試著與 2–4 名玩家一起玩！"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "確定"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "要離開 NICO DRAW 嗎？"
+    },
+    {
+      "key": "background_word_push",
+      "value": "推！"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "按住十字 / A：滑行方陣 / X：抓握"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "方形/X：刮擦/抓取"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "方形/X：投擲"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "SQUARE / X：向右搖桿扣球"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "保持十字/A：殼保持方形/X：轉動 90°"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "按住十字：滑行方陣：抓住"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "方形：刮擦/抓取"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "方形：投擲"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "方形：向右搖桿扣球"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "保持十字：殼保持方形：轉動 90°"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "按住 A：滑行 X：抓取"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X：刮擦/抓取"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X：投擲"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X：向右搖桿扣球"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "按住 A：外殼 按住 X：轉動 90°"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "無時間限制"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "不包含在演示中"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "左搖桿：移動 RT / A / B：繪製並選擇 LT：擦除"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB：繪製MENU\nESC：MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB：繪製MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / 選取：圖 MENU\nOPTIONS / START：MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE：繪製MENU\nOPTIONS：MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE：繪製MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW：繪製MENU\nMENU：MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW：繪製MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Q：切換角色"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "三角形/Y：開關字符"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "三角形：切換字符"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y：切換字符"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "團隊總分"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "遊戲結束\n總計 {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "在 {0} 中重試"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "總計 {0} 內清除"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "總計 {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "自動（鍵盤/遊戲手把）"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "遊戲手把（斷開連接）"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "鍵盤+滑鼠"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} 遊戲手把已斷線。重新連線以恢復相同播放器。"
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} 遊戲手把已重新連線。"
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "鍵盤/滑鼠從 P1 發布。按控制器按鈕領取 P1。"
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "未分配的鍵盤：START 加入/鍵盤：ENTER 加入，BACKSPACE 離開/P2：SELECT + B 離開"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} 已加入 ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} 左。"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "每台裝置最多可容納 2 名玩家，房間內總共可容納 4 名玩家。"
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "房間已滿（4 名玩家）。額外的本地玩家被移除。"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 切換至 {0}。"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 名玩家準備就緒"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START：加入"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "按下任一控制器按鈕即可加入"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "本地遊戲 {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "在開始階段之前新增或刪除本地玩家。"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "墊{0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "玩家 {0}/2\n鍵盤：ENTER 加入/BACKSPACE 離開\n控制器：START 加入/按住 B 離開"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "本地玩家 {0}/2 個連接的墊子 {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "建立房間失敗。在 {0} 秒後重試（還剩 {1} 次嘗試）"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "在漂浮的小鳥中找到匹配的姿勢！"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "將相符的人體姿勢放入鎖孔中！"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "還剩 {0}/3 {1:0.0} 秒"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "重試這一輪"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "第 {0} 輪/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "第 {0} 輪清空！"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "時間到了！"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "帶著烏龜穿過充滿彈簧的房間！"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "明確指出每個人的總完成時間是否在 1 分鐘內。"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "一切順利！"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "打破小箱子！  留意敵人！"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "用史萊姆尖刺打破板條箱！"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "剩下 {0}/3 個箱子 {1}/{2} {3}"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "遊戲結束重試第 {0} 輪"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "第 {0} 輪清空！"
+    },
+    {
+      "key": "spectator_following",
+      "value": "觀看：{0} 用 ← / → 切換"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "第 {0}/3 輪開始於 {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "倒數計時期間您可以在自己的車道內移動"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "本地合作期間無法進行頭銜抽獎。首先返回 1 名玩家。"
+    }
   ]
 }

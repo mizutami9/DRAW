@@ -11,8 +11,18 @@ namespace DrawBody.Prototype
         private RectTransform rectTransform;
         private EscapeMenuVisualPolisher visualPolisher;
         private bool open;
+        private bool localSplitLayout;
 
         public bool IsOpen => open;
+
+        public void SetLocalSplitLayout(bool enabled)
+        {
+            if (localSplitLayout == enabled) return;
+            localSplitLayout = enabled;
+            NormalizeLayout();
+            if (rectTransform != null)
+                rectTransform.anchoredPosition = open ? openPosition : closedPosition;
+        }
 
         private void Awake()
         {
@@ -121,6 +131,29 @@ namespace DrawBody.Prototype
             rectTransform.anchorMax = new Vector2(0f, 0f);
             rectTransform.pivot = new Vector2(0f, 0f);
             rectTransform.sizeDelta = new Vector2(320f, 420f);
+            rectTransform.localScale = Vector3.one;
+
+            // A shared pause menu belongs to P1. In a two-player horizontal
+            // split, keep the whole paper inside P1's upper viewport instead
+            // of straddling the divider and covering P2's screen.
+            float normalY = 86f;
+            float splitY = normalY;
+            RectTransform parentRect = rectTransform.parent as RectTransform;
+            if (localSplitLayout && parentRect != null)
+            {
+                float parentHeight = parentRect.rect.height;
+                float upperViewportHeight = parentHeight * 0.5f;
+                float splitScale = Mathf.Clamp(
+                    (upperViewportHeight - 24f) / rectTransform.sizeDelta.y,
+                    0.72f,
+                    1f);
+                rectTransform.localScale = Vector3.one * splitScale;
+                float visualHeight = rectTransform.sizeDelta.y * splitScale;
+                splitY = upperViewportHeight
+                    + Mathf.Max(12f, (upperViewportHeight - visualHeight) * 0.5f);
+            }
+            openPosition = new Vector2(localSplitLayout ? 18f : 12f, splitY);
+            closedPosition = new Vector2(-342f, splitY);
 
             if (visualPolisher == null)
             {

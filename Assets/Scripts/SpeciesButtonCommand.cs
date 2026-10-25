@@ -86,6 +86,28 @@ namespace DrawBody.Prototype
             subscribed = true;
         }
 
+        public void BindDrawManager(DrawManager manager)
+        {
+            if (drawManager == manager) return;
+            if (drawManager != null && subscribed)
+            {
+                drawManager.CurrentSpeciesChanged -= RefreshVisual;
+                drawManager.SpeciesAvailabilityChanged -= RefreshAvailability;
+            }
+            subscribed = false;
+            drawManager = manager;
+            EnsureSubscribed();
+            RefreshVisual(drawManager != null ? drawManager.CurrentSpecies : species);
+        }
+
+        public void RebindForClonedSession(DrawManager manager)
+        {
+            BindDrawManager(manager);
+            if (button == null) button = GetComponent<Button>();
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(SelectSpecies);
+        }
+
         private void RefreshAvailability()
         {
             RefreshVisual(drawManager != null ? drawManager.CurrentSpecies : species);

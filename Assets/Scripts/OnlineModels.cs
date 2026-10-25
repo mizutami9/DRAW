@@ -25,6 +25,9 @@ namespace DrawBody.Prototype
     public sealed class OnlinePlayerInfo
     {
         public string PlayerId;
+        public string ConnectionId;
+        public int LocalPlayerIndex;
+        public string InputDevice;
         public string DisplayName;
         public bool IsHost;
         public bool IsReady;
@@ -49,6 +52,9 @@ namespace DrawBody.Prototype
     public sealed class OnlineBodyData
     {
         public string PlayerId;
+        public string ConnectionId;
+        public int LocalPlayerIndex;
+        public string InputDevice;
         public string ContentFingerprint;
         public int Revision;
         public string BodyHash;
@@ -90,6 +96,9 @@ namespace DrawBody.Prototype
     public sealed class OnlinePlayerState
     {
         public string PlayerId;
+        public string ConnectionId;
+        public int LocalPlayerIndex;
+        public string InputDevice;
         public string ContentFingerprint;
         public string StageId;
         public int StageRevision;
@@ -131,6 +140,50 @@ namespace DrawBody.Prototype
         public bool HumanCarryStruggling;
         public string LastAppliedThrowCarrierId;
         public int LastAppliedThrowSequence;
+    }
+
+    public static class OnlinePlayerIdentity
+    {
+        private const string Separator = "#L";
+
+        public static string Compose(string connectionId, int localPlayerIndex)
+        {
+            if (string.IsNullOrEmpty(connectionId)) connectionId = "local";
+            return localPlayerIndex <= 0 ? connectionId : connectionId + Separator + localPlayerIndex;
+        }
+
+        public static bool IsOwnedByConnection(string playerId, string connectionId)
+        {
+            return TryGetLocalPlayerIndex(playerId, connectionId, out _);
+        }
+
+        public static bool TryGetLocalPlayerIndex(
+            string playerId,
+            string connectionId,
+            out int localPlayerIndex)
+        {
+            localPlayerIndex = -1;
+            if (string.IsNullOrEmpty(playerId) || string.IsNullOrEmpty(connectionId)) return false;
+            if (playerId == connectionId)
+            {
+                localPlayerIndex = 0;
+                return true;
+            }
+
+            string prefix = connectionId + Separator;
+            if (!playerId.StartsWith(prefix, StringComparison.Ordinal)) return false;
+            string suffix = playerId.Substring(prefix.Length);
+            if (!int.TryParse(suffix, out int parsed) || parsed < 1
+                || parsed >= StageManager.MaxLocalPlayersPerConnection) return false;
+            if (playerId != Compose(connectionId, parsed)) return false;
+            localPlayerIndex = parsed;
+            return true;
+        }
+
+        public static string ValidateOrPrimary(string claimedPlayerId, string connectionId)
+        {
+            return IsOwnedByConnection(claimedPlayerId, connectionId) ? claimedPlayerId : connectionId;
+        }
     }
 
     [Serializable]

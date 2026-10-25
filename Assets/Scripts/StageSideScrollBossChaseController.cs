@@ -668,8 +668,13 @@ namespace DrawBody.Prototype
 
         private void CheckLocalFallOrCatch()
         {
-            PlayerController2D local = stageManager.ActivePlayerTransform != null ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            if (IsLiving(local) && (local.transform.position.y < -8.4f || local.transform.position.x <= bossX + 2.8f)) RequestForcedElimination(local);
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                if (IsLiving(local) && (local.transform.position.y < -8.4f
+                    || local.transform.position.x <= bossX + 2.8f)) RequestForcedElimination(local);
+            }
         }
 
         internal void ProjectileHit(PlayerController2D player) => RequestElimination(player);
@@ -682,7 +687,8 @@ namespace DrawBody.Prototype
             if (string.IsNullOrEmpty(id) || eliminated.Contains(id)) return;
             if (stageManager.IsOnlineStageActive && !HasAuthority)
             {
-                if (id == onlineManager?.LocalPlayerId) Send(WeaponRequestKind, new WeaponRequest { Index = weaponIndex });
+                if (OnlinePlayerIdentity.IsOwnedByConnection(id, onlineManager?.LocalPlayerId))
+                    Send(WeaponRequestKind, new WeaponRequest { Index = weaponIndex });
                 return;
             }
             ActivateCounterWeapon(weaponIndex);
@@ -725,7 +731,7 @@ namespace DrawBody.Prototype
             if (string.IsNullOrEmpty(id) || eliminated.Contains(id)) return;
             if (stageManager.IsOnlineStageActive && !HasAuthority)
             {
-                if (id != onlineManager?.LocalPlayerId) return;
+                if (!OnlinePlayerIdentity.IsOwnedByConnection(id, onlineManager?.LocalPlayerId)) return;
                 Send(EliminateRequestKind, new EliminationState { PlayerId = id });
                 return;
             }
@@ -1020,7 +1026,8 @@ namespace DrawBody.Prototype
 
         private bool CanRelocateAfterRedraw(string playerId)
         {
-            return !stageManager.IsOnlineStageActive || playerId == onlineManager?.LocalPlayerId;
+            return !stageManager.IsOnlineStageActive
+                || OnlinePlayerIdentity.IsOwnedByConnection(playerId, onlineManager?.LocalPlayerId);
         }
 
         private Vector2 FindSafeReturnPosition()
@@ -1092,7 +1099,7 @@ namespace DrawBody.Prototype
             {
                 PlayerController2D candidate = players[i];
                 if (candidate == null || stageManager.IsOnlineStageActive
-                    && candidate.transform != stageManager.ActivePlayerTransform) continue;
+                    && !stageManager.IsLocallyControlledPlayer(candidate)) continue;
                 Rigidbody2D body = candidate.GetComponent<Rigidbody2D>();
                 if (body != null) body.linearVelocity = Vector2.zero;
                 StageMirrorFinalBossController.AlignCharacterBottomToSurface(
@@ -1104,8 +1111,10 @@ namespace DrawBody.Prototype
 
         private void SetLocalControls(bool value)
         {
-            PlayerController2D active = stageManager?.ActivePlayerTransform != null ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            active?.SetControlsEnabled(value && !stageManager.IsDrawingMode);
+            if (stageManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+                localPlayers[i]?.SetControlsEnabled(value && !stageManager.IsDrawingMode);
         }
 
         private void LockCamera()

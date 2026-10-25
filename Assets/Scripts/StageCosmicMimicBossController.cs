@@ -423,17 +423,20 @@ namespace DrawBody.Prototype
 
         private void ApplyLocalCosmicInput()
         {
-            Transform active = stageManager.ActivePlayerTransform;
-            PlayerController2D player = active != null ? active.GetComponent<PlayerController2D>() : null;
-            if (player == null || !player.ControlsEnabled || eliminatedPlayers.Contains(ResolvePlayerId(player))) return;
-            Rigidbody2D body = player.GetComponent<Rigidbody2D>();
-            if (body == null || !body.simulated || body.bodyType != RigidbodyType2D.Dynamic) return;
-            bool descend = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)
-                || Input.GetAxisRaw("Vertical") < -0.35f;
-            if (descend) body.linearVelocity = new Vector2(body.linearVelocity.x,
-                Mathf.MoveTowards(body.linearVelocity.y, -8.5f, 18f * Time.deltaTime));
-            else if (body.linearVelocity.y < -3.2f)
-                body.linearVelocity = new Vector2(body.linearVelocity.x, -3.2f);
+            IReadOnlyList<PlayerController2D> locals = stageManager.LocalPlayers;
+            for (int i = 0; i < locals.Count; i++)
+            {
+                PlayerController2D player = locals[i];
+                if (player == null || !player.ControlsEnabled || eliminatedPlayers.Contains(ResolvePlayerId(player))) continue;
+                Rigidbody2D body = player.GetComponent<Rigidbody2D>();
+                if (body == null || !body.simulated || body.bodyType != RigidbodyType2D.Dynamic) continue;
+                LocalPlayerInputBinding binding = player.InputBinding;
+                bool descend = binding != null && binding.ReadMove().y < -0.35f;
+                if (descend) body.linearVelocity = new Vector2(body.linearVelocity.x,
+                    Mathf.MoveTowards(body.linearVelocity.y, -8.5f, 18f * Time.deltaTime));
+                else if (body.linearVelocity.y < -3.2f)
+                    body.linearVelocity = new Vector2(body.linearVelocity.x, -3.2f);
+            }
         }
 
         private void RestoreAllPlayers()
@@ -451,8 +454,8 @@ namespace DrawBody.Prototype
                 }
                 pair.Key.SetStageAirJumpStrength(-1f);
                 SetPlayerVisible(pair.Key, true);
-                if (stageManager != null && stageManager.ActivePlayerTransform == pair.Key.transform)
-                    pair.Key.SetControlsEnabled(true);
+                if (stageManager != null && stageManager.IsLocallyControlledPlayer(pair.Key))
+                    pair.Key.SetControlsEnabled(stageManager.ShouldEnableLocalGameplayControls);
             }
             savedPhysics.Clear();
             eliminatedPlayers.Clear();
@@ -1320,11 +1323,14 @@ namespace DrawBody.Prototype
             if (!IsStageActive) return;
             if (IsOnline && !HasAuthority)
             {
-                Transform active = stageManager.ActivePlayerTransform;
-                PlayerController2D localPlayer = active != null ? active.GetComponent<PlayerController2D>() : null;
-                if (localPlayer != null && !eliminatedPlayers.Contains(ResolvePlayerId(localPlayer))
-                    && Vector2.Distance(localPlayer.transform.position, point) <= radius)
-                    RequestElimination(localPlayer);
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
+                {
+                    PlayerController2D localPlayer = localPlayers[i];
+                    if (localPlayer != null && !eliminatedPlayers.Contains(ResolvePlayerId(localPlayer))
+                        && Vector2.Distance(localPlayer.transform.position, point) <= radius)
+                        RequestElimination(localPlayer);
+                }
                 return;
             }
             PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
@@ -1338,10 +1344,14 @@ namespace DrawBody.Prototype
         {
             if (IsOnline && !HasAuthority)
             {
-                Transform active = stageManager.ActivePlayerTransform;
-                PlayerController2D localPlayer = active != null ? active.GetComponent<PlayerController2D>() : null;
-                if (localPlayer != null && new Rect(center - size * 0.5f, size).Contains(localPlayer.transform.position))
-                    RequestElimination(localPlayer);
+                Rect localArea = new Rect(center - size * 0.5f, size);
+                IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+                for (int i = 0; i < localPlayers.Count; i++)
+                {
+                    PlayerController2D localPlayer = localPlayers[i];
+                    if (localPlayer != null && localArea.Contains(localPlayer.transform.position))
+                        RequestElimination(localPlayer);
+                }
                 return;
             }
             PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);

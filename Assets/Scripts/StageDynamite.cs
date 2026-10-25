@@ -151,14 +151,14 @@ namespace DrawBody.Prototype
             HashSet<PlayerController2D> affectedPlayers = new HashSet<PlayerController2D>();
             bool online = stageManager != null && stageManager.IsOnlineStageActive;
             bool host = !online || stageManager.IsOnlineStageHost;
-            Transform localPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
 
             for (int i = 0; i < hits.Length; i++)
             {
                 Collider2D hit = hits[i];
                 if (hit == null) continue;
                 PlayerController2D player = hit.GetComponentInParent<PlayerController2D>();
-                if (player != null && affectedPlayers.Add(player) && (!online || player.transform == localPlayer))
+                if (player != null && affectedPlayers.Add(player)
+                    && (!online || stageManager.IsLocallyControlledPlayer(player)))
                 {
                     Rigidbody2D playerBody = player.GetComponent<Rigidbody2D>();
                     Vector2 offset = (Vector2)player.transform.position - (Vector2)transform.position;

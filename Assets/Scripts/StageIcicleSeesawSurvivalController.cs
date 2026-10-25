@@ -419,12 +419,11 @@ namespace DrawBody.Prototype
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            Transform onlineLocal = IsOnline ? stageManager.ActivePlayerTransform : null;
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
                 if (player == null || IsEliminated(player)
-                    || onlineLocal != null && player.transform != onlineLocal) continue;
+                    || IsOnline && !stageManager.IsLocallyControlledPlayer(player)) continue;
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
                 if (body == null || body.bodyType != RigidbodyType2D.Dynamic) continue;
                 PlayerAbilityController ability = player.GetComponent<PlayerAbilityController>();
@@ -596,9 +595,7 @@ namespace DrawBody.Prototype
         {
             if (player == null) return false;
             if (!IsOnline) return true;
-            return stageManager != null
-                && stageManager.ActivePlayerTransform != null
-                && player.transform == stageManager.ActivePlayerTransform;
+            return stageManager != null && stageManager.IsLocallyControlledPlayer(player);
         }
 
         internal void HandleIcicleImpact(HazardType type, Vector2 worldPosition)
@@ -869,11 +866,10 @@ namespace DrawBody.Prototype
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            Transform onlineLocal = IsOnline ? stageManager.ActivePlayerTransform : null;
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
-                if (player == null || onlineLocal != null && player.transform != onlineLocal) continue;
+                if (player == null || IsOnline && !stageManager.IsLocallyControlledPlayer(player)) continue;
                 float distance = Mathf.Abs(player.transform.position.x - worldX);
                 if (distance > 6f) continue;
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
@@ -905,7 +901,7 @@ namespace DrawBody.Prototype
             if (IsOnline)
             {
                 string localId = onlineManager != null ? onlineManager.LocalPlayerId : null;
-                if (id != localId) return;
+                if (!OnlinePlayerIdentity.IsOwnedByConnection(id, localId)) return;
                 if (!HasAuthority)
                 {
                     onlineManager.SendGimmickData(new OnlineGimmickData
@@ -1029,14 +1025,13 @@ namespace DrawBody.Prototype
         {
             PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            Transform onlineLocal = IsOnline ? stageManager.ActivePlayerTransform : null;
             int placed = 0;
             for (int i = 0; i < players.Length; i++)
             {
                 PlayerController2D player = players[i];
-                if (player == null || onlineLocal != null && player.transform != onlineLocal) continue;
-                float x = onlineLocal != null
-                    ? GetOnlineSpawnX()
+                if (player == null || IsOnline && !stageManager.IsLocallyControlledPlayer(player)) continue;
+                float x = IsOnline
+                    ? GetOnlineSpawnX(stageManager.GetOnlinePlayerId(player))
                     : (placed - (players.Length - 1) * 0.5f) * 2f;
                 Vector2 position = new Vector2(x, SeesawY + 1.55f);
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
@@ -1053,14 +1048,13 @@ namespace DrawBody.Prototype
             Physics2D.SyncTransforms();
         }
 
-        private float GetOnlineSpawnX()
+        private float GetOnlineSpawnX(string gamePlayerId)
         {
             OnlinePlayerInfo[] lobbyPlayers = onlineManager?.CurrentLobby?.Players;
             if (lobbyPlayers == null || lobbyPlayers.Length <= 1) return 0f;
-            string localId = onlineManager.LocalPlayerId;
             for (int i = 0; i < lobbyPlayers.Length; i++)
             {
-                if (lobbyPlayers[i] != null && lobbyPlayers[i].PlayerId == localId)
+                if (lobbyPlayers[i] != null && lobbyPlayers[i].PlayerId == gamePlayerId)
                     return (i - (lobbyPlayers.Length - 1) * 0.5f) * 2.2f;
             }
             return 0f;
@@ -1068,10 +1062,13 @@ namespace DrawBody.Prototype
 
         private void SetLocalControls(bool enabled)
         {
-            PlayerController2D active = stageManager != null && stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
-            active?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode && !IsEliminated(active));
+            if (stageManager == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                local?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode && !IsEliminated(local));
+            }
         }
 
         private bool IsEliminated(PlayerController2D player)

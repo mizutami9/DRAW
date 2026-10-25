@@ -30,11 +30,11 @@
     },
     {
       "key": "status_play",
-      "value": ""
+      "value": "A/D of linker joystick: Spatie bewegen/A: Springen F/X: Vaardigheid Klik/RT: Actie selecteren: Opnieuw tekenen Start: Menu"
     },
     {
       "key": "status_draw",
-      "value": ""
+      "value": "LINKER STICK: CURSOR RT: TEKENEN / SELECTEREN LT: WISSEN CREATE / VIEW: SLUITEN"
     },
     {
       "key": "status_clear",
@@ -2838,7 +2838,7 @@
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "Speelde rennen. Bereik het doel voordat de tijd om is."
+      "value": "TIJD AANVAL. DUIDELIJK OF IEDEREEN GECOMBINEERDE EINDTIJD BINNEN {0} MINUTEN LIGT."
     },
     {
       "key": "ready_room_game_10_3",
@@ -4373,31 +4373,376 @@
       "value": "REN."
     },
     {
-        "key":  "gameplay_control_switch",
-        "value":  "Personage wisselen"
+      "key": "gameplay_control_switch",
+      "value": "Personage wisselen"
     },
     {
-        "key":  "feedback_button",
-        "value":  "FEEDBACK / BUG MELDEN"
+      "key": "feedback_button",
+      "value": "FEEDBACK / BUG MELDEN"
     },
     {
-        "key":  "feedback_clear_button",
-        "value":  "Bedankt voor het spelen!\nFeedback / Bug melden"
+      "key": "feedback_clear_button",
+      "value": "Bedankt voor het spelen!\nFeedback / Bug melden"
     },
-    { "key": "option_complete", "value": "KLAAR" },
-    { "key": "option_screen_mode_format", "value": "WEERGAVE: {0}" },
-    { "key": "option_resolution_format", "value": "RESOLUTIE: {0}×{1}" },
-    { "key": "option_fullscreen", "value": "VOLLEDIG SCHERM" },
-    { "key": "option_windowed", "value": "VENSTERMODUS" },
-    { "key": "online_steam_not_running", "value": "Start Steam en open daarna NICO DRAW vanuit je Steam-bibliotheek." },
-    { "key": "online_steam_ticket_failed", "value": "Kan geen Steam-authenticatieticket ophalen: {0}" },
-    { "key": "wishlist_button", "value": "VERLANGLIJST" },
-    { "key": "single_recommend_title", "value": "MULTIPLAYER AANBEVOLEN!" },
-    { "key": "single_recommend_message", "value": "NICO DRAW is het leukst als je samenwerkt!\nProbeer het met 2–4 spelers!" },
-    { "key": "single_recommend_ok", "value": "OK" }
-    ,{ "key": "title_exit_confirm", "value": "NICO DRAW afsluiten?" },
-    { "key": "draw_species_swap_outgoing_confirm", "value": "{0} gebruikt dit personage al. Een ruilverzoek sturen?" },
-    { "key": "draw_species_swap_send", "value": "VERZOEK VERSTUREN" },
-    { "key": "background_word_push", "value": "DUW!" }
+    {
+      "key": "option_complete",
+      "value": "KLAAR"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "WEERGAVE: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "RESOLUTIE: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "VOLLEDIG SCHERM"
+    },
+    {
+      "key": "option_windowed",
+      "value": "VENSTERMODUS"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Start Steam en open daarna NICO DRAW vanuit je Steam-bibliotheek."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Kan geen Steam-authenticatieticket ophalen: {0}"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "VERLANGLIJST"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "MULTIPLAYER AANBEVOLEN!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW is het leukst als je samenwerkt!\nProbeer het met 2–4 spelers!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OK"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "NICO DRAW afsluiten?"
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} gebruikt dit personage al. Een ruilverzoek sturen?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "VERZOEK VERSTUREN"
+    },
+    {
+      "key": "background_word_push",
+      "value": "DUW!"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "HOUD KRUIS / A: GLIJD VIERKANT / X: GRAB"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "VIERKANT / X: KRAS / GRAB"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "VIERKANT / X: GOOIEN"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "VIERKANT / X: SPIJK NAAR RECHTER STICK"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "HOUD KRUIS / A: SHELL HOUD VIERKANT / X: DRAAI 90°"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "KRUIS VASTHOUDEN: GLIJDEN VIERKANT: GRIJPEN"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "VIERKANT: KRAS / GRAB"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "VIERKANT: GOOIEN"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "VIERKANT: SPIJK NAAR RECHTER STICK"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "HOUD KRUIS: SHELL HOUD VIERKANT: DRAAI 90°"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "VASTHOUDEN A: GLIJDEN X: Grijpen"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: KRAS / GRAB"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: GOOIEN"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SPIJK NAAR RECHTER STICK"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "HOLD A: SHELL HOLD X: DRAAI 90°"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "GEEN TIJDSLIMIET"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "NIET INBEGREPEN IN DEMO"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "LINKER STICK: BEWEGEN RT / A / B: TEKENEN EN SELECTEREN LT: WISSEN"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: TEKENEN MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: TEKENEN MENU"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / SELECTEER: TEKENEN MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: TEKENEN MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: TEKENEN MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: TEKENEN MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: TEKENEN MENU"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Vraag: VERANDER VAN KARAKTER"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "DRIEHOEK / Y: WIJZIGEN VAN KARAKTER"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "DRIEHOEK: VERANDER VAN KARAKTER"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: VERANDER VAN KARAKTER"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TEAMTOTAAL VOORBIJ"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "GAME OVER\nTOTAAL {0} / {1}"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "OPNIEUW PROBEREN IN {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "WISSEN BINNEN {0} TOTAAL"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "TOTAAL {0} / {1}"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automatisch (toetsenbord / gamepad)"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (losgekoppeld)"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Toetsenbord + muis"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD ONTKOPPELD. VERBIND DEZE OPNIEUW OM DEZELFDE SPELER TE HERSTELLEN."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD OPNIEUW VERBONDEN."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "TOETSENBORD/MUIS VRIJGEGEVEN VAN P1. DRUK OP EEN CONTROLLERKNOP OM P1 TE CLAIMEREN."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "NIET TOEGEWEZEN PAD: START OM DEEL TE NEMEN / TOETSENBORD: ENTER OM DEEL TE NEMEN, BACKSPACE OM TE VERLATEN / P2: SELECT + B OM TE VERLATEN"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} AANGESLOTEN ({1})"
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} LINKS."
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "TOT 2 SPELERS PER APPARAAT EN 4 SPELERS IN TOTAAL IN DE RUIMTE."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "DE KAMER IS VOL (4 SPELERS). DE EXTRA LOKALE SPELER WERD VERWIJDERD."
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 OVERGESCHAKELD NAAR {0}."
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 SPELERS KLAAR"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: DOE MEE"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "DRUK OP EEN CONTROLLERKNOP OM DEEL TE NEMEN"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "LOKAAL SPELEN {0}/2"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "VOEG LOKALE SPELERS TOE OF VERWIJDER VOORDAT DE STAGE BEGINT."
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PAD {0}"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "SPELERS {0}/2\nTOETSENBORD: ENTER OM DEEL TE NEMEN / BACKSPACE OM TE VERLATEN\nCONTROLLER: START OM DEEL TE NEMEN / B HOUDEN OM TE VERLATEN"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "LOKALE SPELERS {0}/2 VERBONDEN PADS {1}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Het maken van een ruimte is mislukt. Opnieuw proberen over {0}s ({1} pogingen resterend)"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "VIND DE BIJPASSENDE POSE ONDER DE DRIJVENDE VOGELS!"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "PLAATS DE BIJPASSENDE MENSELIJKE POSE IN HET SLEUTELGAT!"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "RONDE {0}/3 {1:0.0}s LINKS"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "DEZE RONDE OPNIEUW PROBEREN"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "RONDE {0}/3"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "RONDE {0} DUIDELIJK!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "TIJD OMHOOG!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "DRAAG DE SCHILDPAD DOOR DE KAMER VOL VEREN!"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "DUIDELIJK OF IEDEREEN GECOMBINEERDE EINDTIJD BINNEN 1 MINUUT PER SPELER IS."
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "ALLE RONDEN WEG!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "Breek de kleine kratten!  KIJK DE VIJANDEN!"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "Breek de kratten met de slijmaar!"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "RONDE {0}/3 KRATEN {1}/{2} {3}s LINKS"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "SPEL OVER OPNIEUW PROBEREN RONDE {0}"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "RONDE {0} DUIDELIJK!"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Toeschouwen: {0} Schakel met ← / →"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "RONDE {0}/3 BEGINT IN {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "JE KUNT TIJDENS HET AFSTELLEN BINNEN JE BAAN BEWEGEN"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "TITELTEKENING IS NIET BESCHIKBAAR TIJDENS LOKALE CO-OP. GA EERST TERUG NAAR 1 SPELER."
+    }
   ]
 }

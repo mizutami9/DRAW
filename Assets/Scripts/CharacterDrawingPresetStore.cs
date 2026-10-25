@@ -8,6 +8,7 @@ namespace DrawBody.Prototype
     public static class CharacterDrawingPresetStore
     {
         public const int SlotCount = 10;
+        public static event Action PresetsChanged;
         private const string AutoSaveFileName = "character_autosave.json";
 
         [Serializable]
@@ -47,7 +48,9 @@ namespace DrawBody.Prototype
 
         public static bool Save(int slot, DrawManager.DrawingState state)
         {
-            return SaveToPath(GetPath(slot), state);
+            bool saved = SaveToPath(GetPath(slot), state);
+            if (saved) PresetsChanged?.Invoke();
+            return saved;
         }
 
         public static bool SaveAuto(DrawManager.DrawingState state)
@@ -94,7 +97,9 @@ namespace DrawBody.Prototype
                 }
                 speciesState.StrokeWidths[species] = copiedWidths;
             }
-            return SaveToPath(GetSpeciesPath(species, slot), speciesState);
+            bool saved = SaveToPath(GetSpeciesPath(species, slot), speciesState);
+            if (saved) PresetsChanged?.Invoke();
+            return saved;
         }
 
         private static bool SaveToPath(string path, DrawManager.DrawingState state)

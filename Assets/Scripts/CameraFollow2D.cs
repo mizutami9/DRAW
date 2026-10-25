@@ -21,6 +21,8 @@ namespace DrawBody.Prototype
         private const float PlayerCacheRefreshInterval = 0.25f;
 
         public float MinimumOrthographicSize => minimumOrthographicSize;
+        public Transform Target => target;
+        public bool FramesAllActivePlayers => frameAllActivePlayers;
 
         public void SetMinimumOrthographicSize(float value)
         {
@@ -35,6 +37,27 @@ namespace DrawBody.Prototype
                     controlledCamera.orthographicSize,
                     minimumOrthographicSize);
             }
+        }
+
+        public void SetFrameAllActivePlayers(bool enabled)
+        {
+            frameAllActivePlayers = enabled;
+        }
+
+        public void CopySettingsFrom(CameraFollow2D source, Transform nextTarget, bool frameGroup)
+        {
+            if (source != null)
+            {
+                offset = source.offset;
+                followSpeed = source.followSpeed;
+                minimumOrthographicSize = source.minimumOrthographicSize;
+                maximumOrthographicSize = source.maximumOrthographicSize;
+                groupPadding = source.groupPadding;
+                zoomSpeed = source.zoomSpeed;
+            }
+            target = nextTarget;
+            frameAllActivePlayers = frameGroup;
+            if (controlledCamera == null) controlledCamera = GetComponent<Camera>();
         }
 
         private void Awake()

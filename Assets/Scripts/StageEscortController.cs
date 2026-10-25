@@ -1658,7 +1658,7 @@ namespace DrawBody.Prototype
             {
                 PlayerController2D player = players[i];
                 if (player == null || !player.gameObject.activeInHierarchy || IsOnline && !IsLocalPlayer(player)) continue;
-                bool isControlledPlayer = stageManager.ActivePlayerTransform == player.transform;
+                bool isControlledPlayer = stageManager.IsLocallyControlledPlayer(player);
                 player.SetControlsEnabled(planning && isControlledPlayer && !stageManager.IsDrawingMode);
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
                 if (body == null) continue;
@@ -1677,7 +1677,7 @@ namespace DrawBody.Prototype
 
         private bool IsLocalPlayer(PlayerController2D player)
         {
-            return stageManager != null && player.transform == stageManager.ActivePlayerTransform;
+            return stageManager != null && stageManager.IsLocallyControlledPlayer(player);
         }
 
         private void UpdateReplica()

@@ -510,14 +510,20 @@ namespace DrawBody.Prototype
 
         private HashSet<int> GetLocalCarriedParticleSequences()
         {
-            Transform active = stageManager != null ? stageManager.ActivePlayerTransform : null;
-            StageGrainCarrier carrier = active != null ? active.GetComponent<StageGrainCarrier>() : null;
             HashSet<int> sequences = new HashSet<int>();
-            if (carrier == null) return sequences;
-            foreach (StageGrainParticle particle in StageGrainParticle.All)
-                if (particle != null && particle.NetworkSequence > 0
-                    && particle.IsContainedByForMeasurement(carrier))
-                    sequences.Add(particle.NetworkSequence);
+            if (stageManager == null) return sequences;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                StageGrainCarrier carrier = localPlayers[i] != null
+                    ? localPlayers[i].GetComponent<StageGrainCarrier>()
+                    : null;
+                if (carrier == null) continue;
+                foreach (StageGrainParticle particle in StageGrainParticle.All)
+                    if (particle != null && particle.NetworkSequence > 0
+                        && particle.IsContainedByForMeasurement(carrier))
+                        sequences.Add(particle.NetworkSequence);
+            }
             return sequences;
         }
 

@@ -354,6 +354,43 @@ namespace DrawBody.Prototype
             DropHeld(Vector2.zero);
         }
 
+        private bool LocalAbilityPressed()
+        {
+            return playerController != null
+                ? playerController.ReadLocalAbilityPressed()
+                : Input.GetKeyDown(KeyCode.F);
+        }
+
+        private bool LocalAbilityHeld()
+        {
+            return playerController != null
+                ? playerController.ReadLocalAbilityHeld()
+                : Input.GetKey(KeyCode.F);
+        }
+
+        private bool LocalPrimaryPressed()
+        {
+            return playerController != null
+                ? playerController.ReadLocalPrimaryPressed()
+                : Input.GetMouseButtonDown(0);
+        }
+
+        private Vector2 ResolveLocalAimPoint(Vector3 anchor)
+        {
+            Vector2 gamepadAim = playerController != null
+                ? playerController.ReadLocalAimDirection()
+                : Vector2.zero;
+            if (gamepadAim.sqrMagnitude >= 0.01f)
+                return (Vector2)anchor + gamepadAim.normalized * 8f;
+            LocalPlayerInputBinding binding = playerController != null ? playerController.InputBinding : null;
+            if (binding != null && !binding.UsesLegacyKeyboardMouse)
+                return (Vector2)anchor + Vector2.right * GetFacingDirection() * 8f;
+            Camera camera = Camera.main;
+            return camera != null
+                ? (Vector2)camera.ScreenToWorldPoint(Input.mousePosition)
+                : (Vector2)anchor + Vector2.right * GetFacingDirection() * 8f;
+        }
+
         private void Update()
         {
             if (Time.timeScale <= 0f)
@@ -399,7 +436,7 @@ namespace DrawBody.Prototype
                 DropHeld(Vector2.zero);
                 DetachSlimeFromFriend(false);
                 DetachCatFromObject(false);
-                if (Input.GetKeyDown(KeyCode.F) && Time.time >= nextSlimeSpikeTime)
+                if (LocalAbilityPressed() && Time.time >= nextSlimeSpikeTime)
                 {
                     nextSlimeSpikeTime = Time.time + SlimeSpikeCooldown;
                     UseSlimeSpike(GetSlimeSpikeDirection(), true);
@@ -411,7 +448,7 @@ namespace DrawBody.Prototype
                 DropHeld(Vector2.zero);
                 bool attachHeld = scriptedSlimeAttachment
                     ? scriptedSlimeAttachmentHeld
-                    : Input.GetKey(KeyCode.F);
+                    : LocalAbilityHeld();
                 if (!attachHeld)
                 {
                     friendGrabRequiresRelease = false;
@@ -429,7 +466,7 @@ namespace DrawBody.Prototype
                         catScratchConsumesHold = false;
                         return;
                     }
-                    if (Input.GetKeyDown(KeyCode.F) && Time.time >= nextCatScratchTime)
+                    if (LocalAbilityPressed() && Time.time >= nextCatScratchTime)
                     {
                         nextCatScratchTime = Time.time + CatScratchCooldown;
                         PlayCatScratchEffect();
@@ -442,7 +479,7 @@ namespace DrawBody.Prototype
                     }
                     if (catScratchConsumesHold)
                     {
-                        if (!Input.GetKey(KeyCode.F)) catScratchConsumesHold = false;
+                        if (!LocalAbilityHeld()) catScratchConsumesHold = false;
                         return;
                     }
                 }
@@ -475,7 +512,7 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (LocalAbilityPressed())
             {
                 if (heldTransform == null)
                 {
@@ -495,15 +532,13 @@ namespace DrawBody.Prototype
 
             StageGun heldGun = heldTransform != null ? heldTransform.GetComponent<StageGun>() : null;
             StageBazooka heldBazooka = heldTransform != null ? heldTransform.GetComponent<StageBazooka>() : null;
-            if (heldGun != null && Input.GetMouseButtonDown(0))
+            if (heldGun != null && LocalPrimaryPressed())
             {
-                Camera camera = Camera.main;
-                if (camera != null) heldGun.TryFire(camera.ScreenToWorldPoint(Input.mousePosition));
+                heldGun.TryFire(ResolveLocalAimPoint(heldTransform.position));
             }
-            else if (heldBazooka != null && Input.GetMouseButtonDown(0))
+            else if (heldBazooka != null && LocalPrimaryPressed())
             {
-                Camera camera = Camera.main;
-                if (camera != null) heldBazooka.TryFire(camera.ScreenToWorldPoint(Input.mousePosition));
+                heldBazooka.TryFire(ResolveLocalAimPoint(heldTransform.position));
             }
         }
 
@@ -648,10 +683,7 @@ namespace DrawBody.Prototype
             }
             else
             {
-                Camera camera = Camera.main;
-                Vector2 aimWorld = camera != null
-                    ? (Vector2)camera.ScreenToWorldPoint(Input.mousePosition)
-                    : (Vector2)anchor + Vector2.right * GetFacingDirection();
+                Vector2 aimWorld = ResolveLocalAimPoint(anchor);
                 direction = aimWorld - (Vector2)anchor;
             }
 
@@ -663,7 +695,7 @@ namespace DrawBody.Prototype
         private void HandleHeldWeaponInput()
         {
             if (!IsHuman() || heldTransform == null) return;
-            if (Input.GetKeyDown(KeyCode.F)
+            if (LocalAbilityPressed()
                 && (heldTransform.GetComponent<StageGun>() != null
                     || heldTransform.GetComponent<StageBazooka>() != null
                     || heldTransform.GetComponent<StageFlashlight>() != null))
@@ -671,10 +703,8 @@ namespace DrawBody.Prototype
                 DropHeld(Vector2.zero);
                 return;
             }
-            if (!Input.GetMouseButtonDown(0)) return;
-            Camera camera = Camera.main;
-            if (camera == null) return;
-            Vector2 aim = camera.ScreenToWorldPoint(Input.mousePosition);
+            if (!LocalPrimaryPressed()) return;
+            Vector2 aim = ResolveLocalAimPoint(heldTransform.position);
             StageGun gun = heldTransform.GetComponent<StageGun>();
             if (gun != null) gun.TryFire(aim);
             else heldTransform.GetComponent<StageBazooka>()?.TryFire(aim);
@@ -2734,6 +2764,14 @@ namespace DrawBody.Prototype
             Bounds slimeBounds = new Bounds(transform.position, Vector3.one);
             if (TryGetSolidBounds(playerController, out slimeBounds)) origin = slimeBounds.center;
 
+            Vector2 inputAim = playerController != null
+                ? playerController.ReadLocalAimDirection()
+                : Vector2.zero;
+            if (inputAim.sqrMagnitude >= 0.01f) return inputAim.normalized;
+            LocalPlayerInputBinding binding = playerController != null ? playerController.InputBinding : null;
+            if (binding != null && !binding.UsesLegacyKeyboardMouse)
+                return Vector2.right * GetFacingDirection();
+
             Camera gameCamera = Camera.main;
             if (gameCamera == null) return Vector2.up;
             Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -2834,7 +2872,6 @@ namespace DrawBody.Prototype
             // A slime spike may still be shown there, but it must never eliminate
             // another participant while everyone is drawing or getting ready.
             if (stageManager.IsChallengeReadyRoomActive) return false;
-            Transform localPlayerTransform = stageManager.ActivePlayerTransform;
             Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, angle);
             HashSet<PlayerController2D> players = new HashSet<PlayerController2D>();
             bool hitAny = false;
@@ -2845,7 +2882,11 @@ namespace DrawBody.Prototype
                 PlayerController2D target = hit.GetComponentInParent<PlayerController2D>();
                 if (target == null || target == playerController || !target.gameObject.activeInHierarchy) continue;
                 if (!players.Add(target)) continue;
-                if (localPlayerOnly && target.transform != localPlayerTransform) continue;
+                // A remote spike is simulated on every peer, but only that
+                // peer's locally-owned avatars should apply the hazard result.
+                // Comparing against ActivePlayerTransform dropped P2-P4 in
+                // mixed local/online sessions.
+                if (localPlayerOnly && !stageManager.IsLocallyControlledPlayer(target)) continue;
                 if (stageManager.IsPlayerEliminated(target) || stageManager.IsPlayerRespawning(target)) continue;
                 stageManager.RespawnFromHazard(target);
                 hitAny = true;
@@ -3765,18 +3806,18 @@ namespace DrawBody.Prototype
                 return false;
             }
 
-            // The active player is always locally controlled. During lobby/body
+            // Every avatar owned by this machine is local. During lobby/body
             // resynchronisation the id dictionaries can be rebuilt one frame
-            // before the EOS local id settles; never let that transient state make
-            // the participant's own Human controller ignore F.
-            if (stageManager.ActivePlayerTransform == transform)
+            // before the EOS local id settles; never let that transient state
+            // make P2-P4 ignore their own carry input.
+            if (stageManager.IsLocallyControlledPlayer(playerController))
             {
                 return false;
             }
 
             string playerId = stageManager.GetOnlinePlayerId(playerController);
             return !string.IsNullOrEmpty(playerId)
-                && playerId != onlineManager.LocalPlayerId;
+                && !OnlinePlayerIdentity.IsOwnedByConnection(playerId, onlineManager.LocalPlayerId);
         }
 
         private void SendCarryEvent(string action, Vector2 releaseVelocity)
@@ -3788,6 +3829,7 @@ namespace DrawBody.Prototype
 
             onlineManager.SendCarryData(new OnlineCarryData
             {
+                CarrierPlayerId = stageManager != null ? stageManager.GetOnlinePlayerId(playerController) : null,
                 TargetPlayerId = heldOnlinePlayerId,
                 Action = action,
                 ReleaseVelocity = releaseVelocity,
@@ -3801,6 +3843,7 @@ namespace DrawBody.Prototype
             if (onlineManager == null || string.IsNullOrEmpty(targetPlayerId)) return;
             onlineManager.SendCarryData(new OnlineCarryData
             {
+                CarrierPlayerId = stageManager != null ? stageManager.GetOnlinePlayerId(playerController) : null,
                 TargetPlayerId = targetPlayerId,
                 Action = action,
                 ReleaseVelocity = releaseVelocity,

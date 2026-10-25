@@ -256,7 +256,7 @@ namespace DrawBody.Prototype
             if (!stageManager.IsOnlineStageActive) participantIds.Add(id);
             if (stageManager.IsOnlineStageActive)
             {
-                if (id != onlineManager?.LocalPlayerId) return;
+                if (!OnlinePlayerIdentity.IsOwnedByConnection(id, onlineManager?.LocalPlayerId)) return;
                 if (!HasAuthority)
                 {
                     onlineManager.SendGimmickData(new OnlineGimmickData
@@ -337,9 +337,9 @@ namespace DrawBody.Prototype
         private void SetLocalControls(bool enabled)
         {
             if (stageManager == null) return;
-            PlayerController2D active = stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>() : null;
-            active?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+                localPlayers[i]?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
         }
 
         private void BuildInstructionSign()

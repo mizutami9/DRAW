@@ -111,6 +111,7 @@ namespace DrawBody.Prototype
         private int landingEventSequence;
         private bool lastLandingWasHard;
         private float remoteRespawnGraceUntil;
+        private LocalPlayerInputBinding inputBinding;
 
         public bool IsGrounded { get; private set; }
         public bool ControlsEnabled => controlsEnabled;
@@ -130,6 +131,64 @@ namespace DrawBody.Prototype
         public float TemporarySpeedBoostRemaining => temporarySpeedRemaining;
         public DrawManager.Species CurrentSpecies => currentSpecies;
         public bool HasWeaponRecoilMomentum => Time.fixedTime < weaponRecoilMomentumUntil;
+        public LocalPlayerInputBinding InputBinding => inputBinding != null
+            ? inputBinding
+            : inputBinding = GetComponent<LocalPlayerInputBinding>();
+
+        public float ReadLocalMoveX()
+        {
+            LocalPlayerInputBinding binding = InputBinding;
+            if (binding == null) return Input.GetAxisRaw("Horizontal");
+            return binding.ReadMoveX();
+        }
+
+        public bool ReadLocalJumpPressed()
+        {
+            LocalPlayerInputBinding binding = InputBinding;
+            bool keyboard = binding == null || binding.UsesLegacyKeyboardMouse;
+            bool legacyInputManager = binding == null;
+            return binding != null && binding.JumpPressed()
+                || keyboard && (Input.GetKeyDown(KeyCode.W)
+                    || Input.GetKeyDown(KeyCode.UpArrow)
+                    || currentSpecies != DrawManager.Species.Turtle
+                    && (Input.GetKeyDown(KeyCode.Space)
+                        || legacyInputManager && Input.GetButtonDown("Jump")));
+        }
+
+        public bool ReadLocalJumpHeld()
+        {
+            LocalPlayerInputBinding binding = InputBinding;
+            bool keyboard = binding == null || binding.UsesLegacyKeyboardMouse;
+            bool legacyInputManager = binding == null;
+            return binding != null && binding.JumpHeld()
+                || keyboard && (Input.GetKey(KeyCode.Space)
+                    || legacyInputManager && Input.GetButton("Jump"));
+        }
+
+        public bool ReadLocalAbilityPressed()
+        {
+            LocalPlayerInputBinding binding = InputBinding;
+            return binding != null && binding.AbilityPressed()
+                || (binding == null || binding.UsesLegacyKeyboardMouse) && Input.GetKeyDown(KeyCode.F);
+        }
+
+        public bool ReadLocalAbilityHeld()
+        {
+            LocalPlayerInputBinding binding = InputBinding;
+            return binding != null && binding.AbilityHeld()
+                || (binding == null || binding.UsesLegacyKeyboardMouse) && Input.GetKey(KeyCode.F);
+        }
+
+        public bool ReadLocalPrimaryPressed()
+        {
+            LocalPlayerInputBinding binding = InputBinding;
+            return binding != null && binding.PrimaryPressed()
+                || (binding == null || binding.UsesLegacyKeyboardMouse) && Input.GetMouseButtonDown(0);
+        }
+
+        public Vector2 ReadLocalAimDirection() => InputBinding != null
+            ? InputBinding.ReadAim()
+            : Vector2.zero;
 
         public void ApplySpeedBoost(float multiplier, float duration)
         {
@@ -380,6 +439,12 @@ namespace DrawBody.Prototype
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            inputBinding = GetComponent<LocalPlayerInputBinding>();
+            if (inputBinding == null)
+            {
+                inputBinding = gameObject.AddComponent<LocalPlayerInputBinding>();
+                inputBinding.BindAutoPrimary();
+            }
             // The same player object is reused when changing stages. Some
             // mechanics temporarily suspend it, so retain the authored gameplay
             // state instead of relying on the current (possibly suspended) state
@@ -455,7 +520,7 @@ namespace DrawBody.Prototype
 
             horizontalInput = scriptedInputEnabled
                 ? scriptedHorizontalInput
-                : Input.GetAxisRaw("Horizontal");
+                : ReadLocalMoveX();
             UpdateFacing();
             UpdateTurtleAbilityInput();
 
@@ -478,11 +543,7 @@ namespace DrawBody.Prototype
             }
             else
             {
-                jumpPressed = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow);
-                if (currentSpecies != DrawManager.Species.Turtle)
-                {
-                    jumpPressed |= Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space);
-                }
+                jumpPressed = ReadLocalJumpPressed();
             }
 
             if (jumpPressed)
@@ -526,9 +587,7 @@ namespace DrawBody.Prototype
                     && abilityController.CurrentProfile.Species == DrawManager.Species.Bird);
             if (!isBird) return;
 
-            bool riseHeld = scriptedInputEnabled
-                ? scriptedJumpHeld
-                : Input.GetButton("Jump") || Input.GetKey(KeyCode.Space);
+            bool riseHeld = scriptedInputEnabled ? scriptedJumpHeld : ReadLocalJumpHeld();
             float nextY = rb.linearVelocity.y;
             if (riseHeld)
             {
@@ -634,7 +693,7 @@ namespace DrawBody.Prototype
             bool preserveHeldTurtleShell = currentSpecies == DrawManager.Species.Turtle
                 && controlsEnabled
                 && !scriptedInputEnabled
-                && Input.GetKey(KeyCode.Space);
+                && ReadLocalJumpHeld();
             // Online body rebuilds can destroy the old Rigidbody2D one frame
             // before carry cleanup releases its cached PlayerController2D.
             // Motion reset must still clear controller state without touching
@@ -694,8 +753,8 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            SetTurtleShellState(scriptedInputEnabled ? scriptedJumpHeld : Input.GetKey(KeyCode.Space));
-            SetTurtleRotation(!scriptedInputEnabled && Input.GetKey(KeyCode.F));
+            SetTurtleShellState(scriptedInputEnabled ? scriptedJumpHeld : ReadLocalJumpHeld());
+            SetTurtleRotation(!scriptedInputEnabled && ReadLocalAbilityHeld());
             if (turtleShelled)
             {
                 horizontalInput = 0f;
@@ -1332,7 +1391,7 @@ namespace DrawBody.Prototype
                 && canGlide
                 && currentSpecies == DrawManager.Species.Bird
                 && isBuiltAsBird
-                && (scriptedInputEnabled ? scriptedJumpHeld : Input.GetButton("Jump"))
+                && (scriptedInputEnabled ? scriptedJumpHeld : ReadLocalJumpHeld())
                 && rb.linearVelocity.y < currentGlideFallSpeed;
             if (gliding)
             {

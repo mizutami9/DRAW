@@ -214,7 +214,8 @@ namespace DrawBody.Prototype
                 if (slot == null || string.IsNullOrEmpty(slot.PlayerId)
                     || !slot.Root.gameObject.activeSelf) continue;
                 PlayerController2D player = stageManager.GetOnlinePlayerController(slot.PlayerId);
-                bool local = onlineManager != null && slot.PlayerId == onlineManager.LocalPlayerId;
+                bool local = onlineManager != null && OnlinePlayerIdentity.IsOwnedByConnection(
+                    slot.PlayerId, onlineManager.LocalPlayerId);
                 bool respawning = local
                     ? stageManager.IsPlayerRespawning(player)
                     : remoteRespawning.TryGetValue(slot.PlayerId, out bool remoteValue) && remoteValue;
@@ -230,7 +231,14 @@ namespace DrawBody.Prototype
                 PlayerRedrawStateController redraw = player != null
                     ? player.GetComponent<PlayerRedrawStateController>()
                     : null;
-                bool redrawing = local ? stageManager.IsDrawingMode : redraw != null && redraw.IsRedrawing;
+                LocalCoopSessionManager localCoop = local
+                    ? stageManager.GetComponent<LocalCoopSessionManager>()
+                    : null;
+                bool redrawing = local
+                    ? localCoop != null && localCoop.LocalPlayerCount > 1
+                        ? localCoop.IsPlayerDrawing(player)
+                        : stageManager.IsDrawingMode
+                    : redraw != null && redraw.IsRedrawing;
 
                 StatusKind kind;
                 Sprite icon;

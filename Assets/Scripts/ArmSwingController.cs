@@ -113,13 +113,18 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            float horizontal = Input.GetAxisRaw("Horizontal");
+            float horizontal = playerController != null
+                ? playerController.ReadLocalMoveX()
+                : Input.GetAxisRaw("Horizontal");
             if (Mathf.Abs(horizontal) > 0.01f)
             {
                 lastHorizontalDirection = Mathf.Sign(horizontal);
             }
 
-            if (Input.GetMouseButtonDown(0) && !swinging && Time.timeScale > 0f && (carryController == null || !carryController.IsHolding))
+            bool primaryPressed = playerController != null
+                ? playerController.ReadLocalPrimaryPressed()
+                : Input.GetMouseButtonDown(0);
+            if (primaryPressed && !swinging && Time.timeScale > 0f && (carryController == null || !carryController.IsHolding))
             {
                 StartSwing();
             }

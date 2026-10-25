@@ -82,6 +82,8 @@ namespace DrawBody.Prototype
         private ClearScreenCharacterParade clearCharacterParade;
         private PlaytestFeedbackController playtestFeedback;
 
+        public bool ShouldShowLocalRoster => titleShowing || multiShowing || stageSelecting;
+
         private void Awake()
         {
             stageManager = FindFirstObjectByType<StageManager>();
@@ -164,6 +166,15 @@ namespace DrawBody.Prototype
             gameplayNoticeText.text = message ?? string.Empty;
             gameplayNotice.SetActive(true);
             gameplayNotice.transform.SetAsLastSibling();
+            Canvas.ForceUpdateCanvases();
+            RectTransform noticeRect = gameplayNotice.transform as RectTransform;
+            if (noticeRect != null)
+            {
+                // Localized notices must wrap instead of losing their final
+                // words. Size the paper from the actual rendered language.
+                float requiredHeight = Mathf.Max(68f, gameplayNoticeText.preferredHeight + 22f);
+                noticeRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, requiredHeight);
+            }
             gameplayNoticeRoutine = StartCoroutine(HideGameplayNoticeAfter(Mathf.Max(0.5f, seconds)));
         }
 
@@ -190,10 +201,11 @@ namespace DrawBody.Prototype
             gameplayNotice = new GameObject("Gameplay Notice", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             gameplayNotice.transform.SetParent(transform, false);
             RectTransform root = gameplayNotice.GetComponent<RectTransform>();
-            root.anchorMin = root.anchorMax = new Vector2(0.5f, 1f);
+            root.anchorMin = new Vector2(0.07f, 1f);
+            root.anchorMax = new Vector2(0.93f, 1f);
             root.pivot = new Vector2(0.5f, 1f);
             root.anchoredPosition = new Vector2(0f, -34f);
-            root.sizeDelta = new Vector2(780f, 68f);
+            root.sizeDelta = new Vector2(0f, 68f);
             Image paper = gameplayNotice.GetComponent<Image>();
             DoodlePaperUi.Apply(paper, new Color(1f, 0.91f, 0.72f, 0.97f));
             Outline outline = gameplayNotice.AddComponent<Outline>();
@@ -216,6 +228,9 @@ namespace DrawBody.Prototype
             gameplayNoticeText.fontSize = 25;
             gameplayNoticeText.fontStyle = FontStyle.Bold;
             gameplayNoticeText.alignment = TextAnchor.MiddleCenter;
+            gameplayNoticeText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            gameplayNoticeText.verticalOverflow = VerticalWrapMode.Overflow;
+            gameplayNoticeText.resizeTextForBestFit = false;
             gameplayNoticeText.color = new Color(0.25f, 0.12f, 0.08f, 1f);
             gameplayNoticeText.raycastTarget = false;
             gameplayNotice.SetActive(false);
@@ -489,6 +504,7 @@ namespace DrawBody.Prototype
             }
 
             ResolveMenuDrawer();
+            ConfigureMenuForLocalPlayers();
             bool menuOpen = menuDrawer != null ? menuDrawer.IsOpen : menuPanel.activeSelf;
             if (menuOpen)
             {
@@ -531,6 +547,7 @@ namespace DrawBody.Prototype
             }
 
             ResolveMenuDrawer();
+            ConfigureMenuForLocalPlayers();
             bool menuOpen = menuDrawer != null
                 ? menuDrawer.IsOpen
                 : menuPanel.activeSelf;
@@ -562,6 +579,8 @@ namespace DrawBody.Prototype
             {
                 return;
             }
+
+            ConfigureMenuForLocalPlayers();
 
             bool online = ResolveStageManager() != null && ResolveStageManager().IsOnlineStageActive;
             bool host = online && ResolveStageManager().IsOnlineStageHost;
@@ -686,6 +705,18 @@ namespace DrawBody.Prototype
 
         public void ShowSinglePlayRecommendation()
         {
+            StageManager manager = ResolveStageManager();
+            LocalCoopSessionManager localCoop = manager != null
+                ? manager.GetComponent<LocalCoopSessionManager>()
+                : null;
+            if (localCoop != null && localCoop.HasDedicatedSecondaryPlayers)
+            {
+                // The recommendation exists to encourage a solo player to add
+                // a partner. When two local devices are already participating,
+                // LOCAL can proceed directly to stage selection.
+                manager.OpenSingleMenu();
+                return;
+            }
             EnsureSinglePlayRecommendationPanel();
             RefreshSinglePlayRecommendationText();
             if (singlePlayRecommendationPanel == null) return;
@@ -1510,14 +1541,40 @@ namespace DrawBody.Prototype
             return settings != null && settings.TryClosePopup();
         }
 
+        public bool TryHandleTitleGamepadBack()
+        {
+            if (titleExitConfirmationPanel != null && titleExitConfirmationPanel.activeInHierarchy)
+            {
+                HideTitleExitConfirmation();
+                return true;
+            }
+            if (singlePlayRecommendationPanel != null && singlePlayRecommendationPanel.activeInHierarchy)
+            {
+                singlePlayRecommendationPanel.SetActive(false);
+                return true;
+            }
+            return TryCloseOptionPopup();
+        }
+
         public bool IsTitleSubmenuShowing =>
             multiShowing && multiPanel != null && multiPanel.activeInHierarchy
             || optionShowing && optionPanel != null && optionPanel.activeInHierarchy;
         public bool IsOptionShowing => optionShowing && optionPanel != null && optionPanel.activeInHierarchy;
+        public bool IsGameplayMenuShowing => menuPanel != null
+            && (menuPanel.activeInHierarchy || menuDrawer != null && menuDrawer.IsOpen);
         public bool IsGameplayOverlayShowing => drawing
             || optionShowing
             || menuPanel != null && menuPanel.activeInHierarchy
             || gameplayHudDrawer != null && gameplayHudDrawer.IsOpenOrTransitioning;
+
+        private void ConfigureMenuForLocalPlayers()
+        {
+            ResolveMenuDrawer();
+            StageManager manager = ResolveStageManager();
+            bool split = manager != null && manager.ShouldUseLocalSplitScreen
+                && manager.LocalPlayers.Count > 1;
+            menuDrawer?.SetLocalSplitLayout(split);
+        }
 
         public void SetStageEditor(bool editing)
         {

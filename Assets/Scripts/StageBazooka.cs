@@ -159,6 +159,7 @@ namespace DrawBody.Prototype
 
         private sealed class PredictedRecoil
         {
+            public string PlayerId;
             public Vector2 VelocityChange;
             public float ExpiresAt;
         }
@@ -225,6 +226,7 @@ namespace DrawBody.Prototype
             {
                 RequestSequence = ++nextLocalFireRequestSequence,
                 WeaponId = weaponId,
+                ShooterPlayerId = recoilTargetId,
                 Origin = origin,
                 Direction = direction.normalized,
                 RecoilTargetId = recoilTargetId,
@@ -237,10 +239,12 @@ namespace DrawBody.Prototype
                 predictedLocalFeedback.Add(data.RequestSequence);
                 PlayFireFeedback(data.Origin, data.Direction);
                 if (!string.IsNullOrEmpty(data.RecoilTargetId)
-                    && data.RecoilTargetId == onlineManager?.LocalPlayerId)
+                    && OnlinePlayerIdentity.IsOwnedByConnection(
+                        data.RecoilTargetId, onlineManager?.LocalPlayerId))
                 {
                     predictedLocalRecoil[data.RequestSequence] = new PredictedRecoil
                     {
+                        PlayerId = data.RecoilTargetId,
                         VelocityChange = data.Recoil,
                         ExpiresAt = Time.unscaledTime + 2.5f
                     };
@@ -281,7 +285,8 @@ namespace DrawBody.Prototype
                 if (data == null || data.Sequence <= lastSequence) return;
                 lastSequence = data.Sequence;
                 StageBazookaRocket.Create(transform, this, data.Sequence, data.Origin, data.Direction, false);
-                bool predictedFeedback = data.ShooterPlayerId == onlineManager?.LocalPlayerId
+                bool predictedFeedback = OnlinePlayerIdentity.IsOwnedByConnection(
+                        data.ShooterPlayerId, onlineManager?.LocalPlayerId)
                     && data.RequestSequence > 0
                     && predictedLocalFeedback.Remove(data.RequestSequence);
                 bool recoilAlreadyApplied = data.RequestSequence > 0
@@ -293,7 +298,8 @@ namespace DrawBody.Prototype
             else if (message.Kind == FireRejectedKind && !HasAuthority && IsHost(message.PlayerId))
             {
                 FireData data = JsonUtility.FromJson<FireData>(message.Json);
-                if (data == null || data.ShooterPlayerId != onlineManager?.LocalPlayerId
+                if (data == null || !OnlinePlayerIdentity.IsOwnedByConnection(
+                        data.ShooterPlayerId, onlineManager?.LocalPlayerId)
                     || data.RequestSequence <= 0) return;
                 predictedLocalFeedback.Remove(data.RequestSequence);
                 RollbackPrediction(data.RequestSequence);
@@ -428,8 +434,11 @@ namespace DrawBody.Prototype
         private void ApplyRecoilToLocalPlayer(string playerId, Vector2 recoil)
         {
             if (!IsOnline || string.IsNullOrEmpty(playerId) || onlineManager == null
-                || playerId != onlineManager.LocalPlayerId || recoil.sqrMagnitude < 0.01f) return;
-            Transform local = stageManager != null ? stageManager.ActivePlayerTransform : null;
+                || !OnlinePlayerIdentity.IsOwnedByConnection(playerId, onlineManager.LocalPlayerId)
+                || recoil.sqrMagnitude < 0.01f) return;
+            PlayerController2D local = stageManager != null
+                ? stageManager.GetOnlinePlayerController(playerId)
+                : null;
             local?.GetComponent<PlayerCarryController>()?.ApplyDirectWeaponRecoil(recoil);
         }
 
@@ -437,7 +446,9 @@ namespace DrawBody.Prototype
         {
             if (!predictedLocalRecoil.TryGetValue(requestSequence, out PredictedRecoil prediction)) return;
             predictedLocalRecoil.Remove(requestSequence);
-            Transform local = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            PlayerController2D local = stageManager != null
+                ? stageManager.GetOnlinePlayerController(prediction.PlayerId)
+                : null;
             local?.GetComponent<PlayerCarryController>()
                 ?.RollbackDirectWeaponRecoil(prediction.VelocityChange);
             onlineManager?.RecordNetworkCorrection();

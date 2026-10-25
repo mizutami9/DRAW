@@ -140,7 +140,7 @@ namespace DrawBody.Prototype
         private readonly List<StageObjectData> authoredJumpPads = new List<StageObjectData>();
         private readonly Dictionary<string, BeamReflectionRequest> reflectionRequests =
             new Dictionary<string, BeamReflectionRequest>();
-        private readonly Dictionary<int, float> nextLocalReflectionAt = new Dictionary<int, float>();
+        private readonly Dictionary<string, float> nextLocalReflectionAt = new Dictionary<string, float>();
         private Vector2 beamSourceAnchor;
         private Vector2 beamGoalAnchor;
         private float remaining;
@@ -1030,59 +1030,65 @@ namespace DrawBody.Prototype
         {
             if (HasAuthority || phase != RelayPhase.Active || onlineManager == null
                 || beam?.NetworkTargetPoints == null || beam.NetworkTargetPoints.Length < 2) return;
-            if (nextLocalReflectionAt.TryGetValue(beam.Index, out float nextAt)
-                && Time.unscaledTime < nextAt) return;
-            Transform active = stageManager != null ? stageManager.ActivePlayerTransform : null;
-            PlayerController2D local = active != null ? active.GetComponent<PlayerController2D>() : null;
-            if (local == null) return;
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int localIndex = 0; localIndex < localPlayers.Count; localIndex++)
+            {
+                PlayerController2D local = localPlayers[localIndex];
+                if (local == null) continue;
+                string gamePlayerId = stageManager.GetOnlinePlayerId(local);
+                string sendKey = beam.Index + ":" + gamePlayerId;
+                if (nextLocalReflectionAt.TryGetValue(sendKey, out float nextAt)
+                    && Time.unscaledTime < nextAt) continue;
 
-            bool hasHit = false;
-            Vector2 hitPoint = Vector2.zero;
-            Vector2 hitNormal = Vector2.zero;
-            Vector2 incomingDirection = beam.Direction.normalized;
-            for (int segment = 0; segment + 1 < beam.NetworkTargetPoints.Length && !hasHit; segment++)
-            {
-                Vector2 origin = beam.NetworkTargetPoints[segment];
-                Vector2 delta = beam.NetworkTargetPoints[segment + 1] - origin;
-                float distance = delta.magnitude;
-                if (distance <= 0.05f) continue;
-                Vector2 direction = delta / distance;
-                RaycastHit2D[] hits = Physics2D.CircleCastAll(
-                    origin, LaserReflectionAssistRadius, direction, distance);
-                System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-                for (int i = 0; i < hits.Length; i++)
+                bool hasHit = false;
+                Vector2 hitPoint = Vector2.zero;
+                Vector2 hitNormal = Vector2.zero;
+                Vector2 incomingDirection = beam.Direction.normalized;
+                for (int segment = 0; segment + 1 < beam.NetworkTargetPoints.Length && !hasHit; segment++)
                 {
-                    Collider2D collider = hits[i].collider;
-                    if (collider == null || collider.isTrigger
-                        || collider.GetComponentInParent<PlayerController2D>() != local) continue;
-                    Vector2 normal = hits[i].normal.sqrMagnitude > 0.2f
-                        ? hits[i].normal.normalized
-                        : -direction;
-                    hasHit = true;
-                    hitPoint = hits[i].point;
-                    hitNormal = normal;
-                    incomingDirection = direction;
-                    break;
+                    Vector2 origin = beam.NetworkTargetPoints[segment];
+                    Vector2 delta = beam.NetworkTargetPoints[segment + 1] - origin;
+                    float distance = delta.magnitude;
+                    if (distance <= 0.05f) continue;
+                    Vector2 direction = delta / distance;
+                    RaycastHit2D[] hits = Physics2D.CircleCastAll(
+                        origin, LaserReflectionAssistRadius, direction, distance);
+                    System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+                    for (int i = 0; i < hits.Length; i++)
+                    {
+                        Collider2D collider = hits[i].collider;
+                        if (collider == null || collider.isTrigger
+                            || collider.GetComponentInParent<PlayerController2D>() != local) continue;
+                        Vector2 normal = hits[i].normal.sqrMagnitude > 0.2f
+                            ? hits[i].normal.normalized
+                            : -direction;
+                        hasHit = true;
+                        hitPoint = hits[i].point;
+                        hitNormal = normal;
+                        incomingDirection = direction;
+                        break;
+                    }
                 }
-            }
-            nextLocalReflectionAt[beam.Index] = Time.unscaledTime + 0.12f;
-            onlineManager.SendGimmickData(new OnlineGimmickData
-            {
-                ObjectId = StageId,
-                Kind = ReflectionRequestKind,
-                Json = JsonUtility.ToJson(new BeamReflectionRequest
+                nextLocalReflectionAt[sendKey] = Time.unscaledTime + 0.12f;
+                onlineManager.SendGimmickData(new OnlineGimmickData
                 {
-                    Round = round,
-                    Attempt = roundAttempt,
-                    BeamIndex = beam.Index,
-                    RequestSequence = ++reflectionRequestSequence,
-                    HasHit = hasHit,
-                    Point = hitPoint,
-                    Normal = hitNormal,
-                    IncomingDirection = incomingDirection,
-                    PlayerPosition = local.transform.position
-                })
-            });
+                    ObjectId = StageId,
+                    Kind = ReflectionRequestKind,
+                    PlayerId = gamePlayerId,
+                    Json = JsonUtility.ToJson(new BeamReflectionRequest
+                    {
+                        Round = round,
+                        Attempt = roundAttempt,
+                        BeamIndex = beam.Index,
+                        RequestSequence = ++reflectionRequestSequence,
+                        HasHit = hasHit,
+                        Point = hitPoint,
+                        Normal = hitNormal,
+                        IncomingDirection = incomingDirection,
+                        PlayerPosition = local.transform.position
+                    })
+                });
+            }
         }
 
         private bool TryGetReportedPlayerHit(
@@ -1491,10 +1497,9 @@ namespace DrawBody.Prototype
         private void ApplyCountdownControls(bool enabled)
         {
             if (stageManager == null) return;
-            PlayerController2D local = stageManager.ActivePlayerTransform != null
-                ? stageManager.ActivePlayerTransform.GetComponent<PlayerController2D>()
-                : null;
-            local?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
+            IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            for (int i = 0; i < localPlayers.Count; i++)
+                localPlayers[i]?.SetControlsEnabled(enabled && !stageManager.IsDrawingMode);
         }
 
         private void BroadcastState(bool force = false)
