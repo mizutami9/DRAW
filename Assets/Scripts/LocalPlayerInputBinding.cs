@@ -58,7 +58,11 @@ namespace DrawBody.Prototype
 #endif
                 return deviceKind == DeviceKind.Gamepad
                     ? LocalizationManager.T("input_device_gamepad_disconnected")
-                    : LocalizationManager.T("input_device_automatic");
+                    // AutoPrimary's concrete fallback is keyboard/mouse until a
+                    // controller produces input and claims P1.  Exposing the
+                    // internal "automatic" state in the lobby made a working
+                    // keyboard assignment look like device detection failed.
+                    : LocalizationManager.T("input_device_keyboard_mouse");
             }
         }
 

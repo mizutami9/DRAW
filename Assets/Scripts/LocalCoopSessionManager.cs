@@ -477,7 +477,11 @@ namespace DrawBody.Prototype
             for (int i = 0; i < Gamepad.all.Count; i++)
             {
                 Gamepad pad = Gamepad.all[i];
-                if (pad == null || IsGamepadAssigned(pad) || !pad.startButton.wasPressedThisFrame) continue;
+                // P1 must follow the device that is actually being used.  The
+                // old START-only check left P1 as AutoPrimary when a player
+                // navigated and confirmed menus with an ordinary pad button.
+                if (pad == null || IsGamepadAssigned(pad)
+                    || !HasOrdinaryGamepadIntent(pad)) continue;
                 if (TryJoinGamepad(pad)) return;
             }
 

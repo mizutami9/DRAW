@@ -71,6 +71,124 @@ namespace DrawBody.Prototype
             public int RetryRevision;
             public OnlinePlayerInfo[] Players;
         }
+
+        // EOS P2P packets are limited to 1170 bytes. OnlinePlayerState is sent
+        // many times per second and its descriptive JSON field names pushed a
+        // normal two-player snapshot beyond that limit. Keep the public model
+        // readable, but use compact field names only on the realtime wire.
+        [Serializable]
+        private sealed class RealtimePlayerStatePayload
+        {
+            public string a, b, d, e, f, i, m, n, al, am, an, ar;
+            public int c, g, h, j, k, l, r, z, aa, ai, aj, ap, as_;
+            public Vector2 o, p, ad, ao;
+            public float q, ae, af, ag, ah, ak;
+            public bool s, t, u, v, w, x, y, ab, ac, aq;
+
+            public static RealtimePlayerStatePayload FromState(OnlinePlayerState state)
+            {
+                return new RealtimePlayerStatePayload
+                {
+                    a = state.PlayerId,
+                    b = state.ConnectionId,
+                    c = state.LocalPlayerIndex,
+                    d = state.InputDevice,
+                    e = state.ContentFingerprint,
+                    f = state.StageId,
+                    g = state.StageRevision,
+                    h = state.RetryRevision,
+                    i = state.DisplayName,
+                    j = state.Sequence,
+                    k = state.PlayerSlot,
+                    l = state.BodyRevision,
+                    m = state.BodyHash,
+                    n = state.BodySpecies,
+                    o = state.Position,
+                    p = state.Velocity,
+                    q = state.Rotation,
+                    r = state.FacingDirection,
+                    s = state.Redrawing,
+                    t = state.Respawning,
+                    u = state.Eliminated,
+                    v = state.TurtleShelled,
+                    w = state.Grounded,
+                    x = state.WallSticking,
+                    y = state.Gliding,
+                    z = state.JumpSequence,
+                    aa = state.LandingSequence,
+                    ab = state.HardLanding,
+                    ac = state.AimingWeapon,
+                    ad = state.AimDirection,
+                    ae = state.SpeedBoostMultiplier,
+                    af = state.SpeedBoostRemaining,
+                    ag = state.RespawnRemaining,
+                    ah = state.RespawnGraceRemaining,
+                    ai = state.EmoteId,
+                    aj = state.EmoteSequence,
+                    ak = state.EmoteRemaining,
+                    al = state.SlimeAttachedToPlayerId,
+                    am = state.CarriedPlayerId,
+                    an = state.CarryAction,
+                    ao = state.CarryOffset,
+                    ap = state.CarryEventSequence,
+                    aq = state.HumanCarryStruggling,
+                    ar = state.LastAppliedThrowCarrierId,
+                    as_ = state.LastAppliedThrowSequence
+                };
+            }
+
+            public OnlinePlayerState ToState()
+            {
+                return new OnlinePlayerState
+                {
+                    PlayerId = a,
+                    ConnectionId = b,
+                    LocalPlayerIndex = c,
+                    InputDevice = d,
+                    ContentFingerprint = e,
+                    StageId = f,
+                    StageRevision = g,
+                    RetryRevision = h,
+                    DisplayName = i,
+                    Sequence = j,
+                    PlayerSlot = k,
+                    BodyRevision = l,
+                    BodyHash = m,
+                    BodySpecies = n,
+                    Position = o,
+                    Velocity = p,
+                    Rotation = q,
+                    FacingDirection = r,
+                    Redrawing = s,
+                    Respawning = t,
+                    Eliminated = u,
+                    TurtleShelled = v,
+                    Grounded = w,
+                    WallSticking = x,
+                    Gliding = y,
+                    JumpSequence = z,
+                    LandingSequence = aa,
+                    HardLanding = ab,
+                    AimingWeapon = ac,
+                    AimDirection = ad,
+                    SpeedBoostMultiplier = ae,
+                    SpeedBoostRemaining = af,
+                    RespawnRemaining = ag,
+                    RespawnGraceRemaining = ah,
+                    EmoteId = ai,
+                    EmoteSequence = aj,
+                    EmoteRemaining = ak,
+                    SlimeAttachedToPlayerId = al,
+                    CarriedPlayerId = am,
+                    CarryAction = an,
+                    CarryOffset = ao,
+                    CarryEventSequence = ap,
+                    HumanCarryStruggling = aq,
+                    LastAppliedThrowCarrierId = ar,
+                    LastAppliedThrowSequence = as_
+                };
+            }
+        }
         private LobbyInterface lobbyInterface;
         private P2PInterface p2pInterface;
         private ConnectInterface connectInterface;
@@ -977,7 +1095,7 @@ namespace DrawBody.Prototype
             }
 
             if (string.IsNullOrEmpty(playerState.PlayerId) || playerState.PlayerId == "local") playerState.PlayerId = LocalPlayerId;
-            string payload = JsonUtility.ToJson(playerState);
+            string payload = SerializeRealtimeState(playerState);
             if (isHost)
             {
                 BroadcastRealtimeState(payload);
@@ -2182,7 +2300,7 @@ namespace DrawBody.Prototype
             }
             else if (type == MessageState)
             {
-                OnlinePlayerState state = JsonUtility.FromJson<OnlinePlayerState>(payload);
+                OnlinePlayerState state = DeserializeRealtimeState(payload);
                 if (isHost && peer != null && state != null)
                 {
                     EnsureSessionPeer(peer);
@@ -2190,7 +2308,7 @@ namespace DrawBody.Prototype
                     state.PlayerId = OnlinePlayerIdentity.ValidateOrPrimary(state.PlayerId, connectionId);
                     state.ConnectionId = connectionId;
                     state.PlayerSlot = PlayerColorPalette.GetLobbyPlayerSlot(CurrentLobby, state.PlayerId);
-                    payload = JsonUtility.ToJson(state);
+                    payload = SerializeRealtimeState(state);
                 }
                 PlayerStateReceived?.Invoke(state);
                 if (isHost)
@@ -2400,6 +2518,23 @@ namespace DrawBody.Prototype
         private void SendRealtimeState(ProductUserId remote, string payload)
         {
             Send(remote, MessageState, payload, RealtimeStateChannel, PacketReliability.UnreliableUnordered);
+        }
+
+        private static string SerializeRealtimeState(OnlinePlayerState state)
+        {
+            return JsonUtility.ToJson(RealtimePlayerStatePayload.FromState(state));
+        }
+
+        private static OnlinePlayerState DeserializeRealtimeState(string payload)
+        {
+            if (string.IsNullOrEmpty(payload)) return null;
+            // Accept the previous verbose representation so local development
+            // builds fail gracefully while both peers are being updated.
+            if (payload.IndexOf("\"PlayerId\"", StringComparison.Ordinal) >= 0)
+                return JsonUtility.FromJson<OnlinePlayerState>(payload);
+            RealtimePlayerStatePayload compact =
+                JsonUtility.FromJson<RealtimePlayerStatePayload>(payload);
+            return compact?.ToState();
         }
 
         private void BroadcastRealtimeGimmick(string payload, ProductUserId except = null)
