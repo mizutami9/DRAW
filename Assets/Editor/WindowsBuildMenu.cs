@@ -25,7 +25,8 @@ namespace DrawBody.EditorTools
             AiTest = 1 << 1,
             Steam = 1 << 2,
             Playtest = 1 << 3,
-            Hardened = 1 << 4
+            Hardened = 1 << 4,
+            SteamDemoApp = 1 << 5
         }
 
         private static readonly BuildConfiguration LocalBuild = new BuildConfiguration(
@@ -72,6 +73,16 @@ namespace DrawBody.EditorTools
             SteamDistributionIds.PlaytestDepotId,
             "steam-playtest");
 
+        private static readonly BuildConfiguration SteamDemoFullContentTestBuild = new BuildConfiguration(
+            "Builds/NICO DRAW Steam Demo Full Test",
+            "Hardened full-content product build for the Steam demo test branch",
+            ScriptingImplementation.IL2CPP,
+            BuildFeature.Steam | BuildFeature.SteamDemoApp | BuildFeature.Hardened,
+            "0.1.0-full-test.1",
+            SteamDistributionIds.DemoAppId,
+            SteamDistributionIds.DemoDepotId,
+            "steam-demo-full-test");
+
         [InitializeOnLoadMethod]
         private static void ScheduleInterruptedManifestRecovery()
         {
@@ -108,6 +119,12 @@ namespace DrawBody.EditorTools
             RunBuild(SteamDemoBuild);
         }
 
+        [MenuItem("PICO/Build Windows Steam Demo Full-Content Test")]
+        public static void BuildWindowsSteamDemoFullContentTest()
+        {
+            RunBuild(SteamDemoFullContentTestBuild);
+        }
+
         [MenuItem("PICO/Build Windows Steam Playtest")]
         public static void BuildWindowsSteamPlaytest()
         {
@@ -136,7 +153,8 @@ namespace DrawBody.EditorTools
             // the project's normal bundle version instead of a temporary Steam version.
             using (new SignedManifestScope(
                 ContentManifestPath,
-                configuration.Has(BuildFeature.Demo)))
+                configuration.Has(BuildFeature.Demo)
+                    || configuration.Has(BuildFeature.SteamDemoApp)))
             using (new PlayerSettingsScope())
             {
                 ApplyPlayerSettings(configuration);
@@ -217,6 +235,7 @@ namespace DrawBody.EditorTools
             if ((features & BuildFeature.Demo) != 0) defines.Add("NICO_DRAW_DEMO");
             if ((features & BuildFeature.AiTest) != 0) defines.Add("NICO_DRAW_AI_TEST");
             if ((features & BuildFeature.Playtest) != 0) defines.Add("NICO_DRAW_PLAYTEST");
+            if ((features & BuildFeature.SteamDemoApp) != 0) defines.Add("NICO_DRAW_STEAM_DEMO_APP");
             return defines.Count > 0 ? defines.ToArray() : null;
         }
 
@@ -246,6 +265,12 @@ namespace DrawBody.EditorTools
 
         [MenuItem("PICO/Build Windows Steam Demo", true)]
         private static bool ValidateBuildWindowsSteamDemo()
+        {
+            return IsBuildMenuAvailable();
+        }
+
+        [MenuItem("PICO/Build Windows Steam Demo Full-Content Test", true)]
+        private static bool ValidateBuildWindowsSteamDemoFullContentTest()
         {
             return IsBuildMenuAvailable();
         }

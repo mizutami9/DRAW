@@ -14,9 +14,9 @@ namespace DrawBody.Prototype
 #if NICO_DRAW_PLAYTEST
         // Private Steam Playtest app used for final multiplayer verification.
         internal const uint AppId = SteamDistributionIds.PlaytestAppId;
-#elif NICO_DRAW_DEMO
-        // Public Steam demo app. Steam release builds currently include the
-        // demo content filter, so they must restart/initialize against this app.
+#elif NICO_DRAW_DEMO || NICO_DRAW_STEAM_DEMO_APP
+        // Public Steam demo app. Both the filtered public demo and the
+        // full-content internal test build initialize against this app.
         internal const uint AppId = SteamDistributionIds.DemoAppId;
 #else
         // Kept for explicit non-demo Steam test builds.

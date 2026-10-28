@@ -81,8 +81,17 @@ if (-not (Test-Path -LiteralPath $distributionManifestPath -PathType Leaf)) {
         if ($ExpectedDepotId -ne 0 -and [string]$distribution.steamDepotId -ne [string]$ExpectedDepotId) {
             $failures.Add("Build DepotID $($distribution.steamDepotId) does not match upload DepotID $ExpectedDepotId.")
         }
-        if ($ExpectedAppId -eq 5231000 -and $distribution.flavor -ne "steam-demo") {
-            $failures.Add("The Steam Demo upload requires a steam-demo build.")
+        if ($ExpectedAppId -eq 5231000 `
+            -and $distribution.flavor -notin @("steam-demo", "steam-demo-full-test")) {
+            $failures.Add("The Steam Demo upload requires a steam-demo or steam-demo-full-test build.")
+        }
+        if ($distribution.flavor -eq "steam-demo-full-test") {
+            if (@($distribution.scriptingDefines) -contains "NICO_DRAW_DEMO") {
+                $failures.Add("The full-content Steam test build must not contain the NICO_DRAW_DEMO define.")
+            }
+            if (@($distribution.scriptingDefines) -notcontains "NICO_DRAW_STEAM_DEMO_APP") {
+                $failures.Add("The full-content Steam test build is missing the demo AppID routing define.")
+            }
         }
         if ($ExpectedAppId -eq 5230890 -and $distribution.flavor -ne "steam-playtest") {
             $failures.Add("The Steam Playtest upload requires a steam-playtest build.")
