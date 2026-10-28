@@ -293,6 +293,34 @@ namespace DrawBody.Prototype
             }
         }
 
+        public void ResetDynamiteTarget(Transform dynamiteTarget)
+        {
+            if (dynamiteTarget == null)
+            {
+                return;
+            }
+
+            bool broadcast = syncManager != null
+                && syncManager.IsOnlineActive
+                && syncManager.IsHost;
+            for (int i = 0; i < links.Count; i++)
+            {
+                LinkRuntime link = links[i];
+                if (link == null || !link.TargetsDynamite(dynamiteTarget)) continue;
+
+                link.ResetDynamiteActivation();
+                if (objectsById.TryGetValue(link.SourceId, out Transform source)
+                    && source != null)
+                {
+                    source.GetComponent<StageGimmickTrigger>()?.ResetReusableState();
+                }
+                if (broadcast)
+                {
+                    syncManager.BroadcastLinkState(link.SourceId, link.CreateState());
+                }
+            }
+        }
+
         private List<LinkRuntime> GetActivationGroup(LinkRuntime activatedLink)
         {
             List<LinkRuntime> group = new List<LinkRuntime>();
@@ -655,6 +683,19 @@ namespace DrawBody.Prototype
                     && action == other.action;
             }
 
+            public bool TargetsDynamite(Transform candidate)
+            {
+                return dynamite != null && target == candidate;
+            }
+
+            public void ResetDynamiteActivation()
+            {
+                if (dynamite == null) return;
+                pressed = false;
+                active = false;
+                progress = 0f;
+            }
+
             public void Activate()
             {
                 if (target == null)
@@ -715,6 +756,7 @@ namespace DrawBody.Prototype
                 {
                     // Once its fuse has started, releasing a hold button cannot
                     // put the explosive back into an unlit state.
+                    active = false;
                     return;
                 }
 
@@ -818,7 +860,7 @@ namespace DrawBody.Prototype
                 if (dynamite != null)
                 {
                     target.gameObject.SetActive(true);
-                    if (active) dynamite.ActivateFromLink();
+                    if (active && !wasActive) dynamite.ActivateFromLink();
                     return;
                 }
                 if (linkActivatable != null)
@@ -1336,6 +1378,13 @@ namespace DrawBody.Prototype
             latched = true;
             contacts.Clear();
             ApplyPressedState(true);
+        }
+
+        public void ResetReusableState()
+        {
+            latched = false;
+            contacts.Clear();
+            ApplyPressedState(false);
         }
 
         private void CacheCapVisuals()

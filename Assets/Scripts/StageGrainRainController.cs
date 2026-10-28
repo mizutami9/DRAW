@@ -429,6 +429,7 @@ namespace DrawBody.Prototype
         private void CreateForecastMarkers(int wave)
         {
             ClearForecastMarkers();
+            GameSfx.Play(SfxId.BossAttackWarning, 0.72f);
             for (int i = 0; i < playerCount; i++)
             {
                 float x = GetForecastX(wave, i);
@@ -470,6 +471,7 @@ namespace DrawBody.Prototype
             success = measuredGrams >= targetGrams;
             state = RoundState.Result;
             resultRemaining = success ? 3.2f : 5f;
+            if (success) GameSfx.Play(SfxId.GoalReached);
             BroadcastState(true);
         }
 
@@ -598,6 +600,7 @@ namespace DrawBody.Prototype
                 || !onlineManager.IsHostPlayer(data.PlayerId)) return;
             RainState snapshot = JsonUtility.FromJson<RainState>(data.Json);
             if (snapshot == null || snapshot.Sequence <= receivedStateSequence) return;
+            RoundState previousState = state;
             receivedStateSequence = snapshot.Sequence;
             if (snapshot.Round != round || snapshot.Attempt != roundAttempt)
             {
@@ -617,6 +620,8 @@ namespace DrawBody.Prototype
             measuredGrams = snapshot.MeasuredGrams;
             targetGrams = snapshot.TargetGrams;
             success = snapshot.Success;
+            if (previousState != RoundState.Result && state == RoundState.Result && success)
+                GameSfx.Play(SfxId.GoalReached);
         }
 
         private void BroadcastState(bool force)

@@ -263,6 +263,7 @@ namespace DrawBody.Prototype
 #if NICO_DRAW_AI_TEST
             string[] args = Environment.GetCommandLineArgs();
             if (!HasFlag(args, "-pico-ai-test")) return;
+            if (HasFlag(args, "-pico-local-online-test")) return;
             GameObject root = new GameObject("NICO DRAW AI Online Test");
             DontDestroyOnLoad(root);
             root.AddComponent<AiOnlineTestRuntime>();

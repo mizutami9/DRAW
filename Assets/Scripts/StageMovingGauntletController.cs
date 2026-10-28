@@ -44,6 +44,7 @@ namespace DrawBody.Prototype
         private int missileSequence;
         private Vector2 lastObservedPlatformPosition;
         private bool chaseStarted;
+        private bool finalChaseCuePlayed;
         private float chaseStartedAt;
         private float nextChaseAttackAt;
         private StageMovingGauntletGiantGhost giantGhost;
@@ -109,6 +110,11 @@ namespace DrawBody.Prototype
             bool vertical = platformPosition.x >= HorizontalEndX - 0.2f || platformPosition.y > 0.15f;
             SetRideWallsVisible(!vertical);
             stageLoader?.SetRuntimeSpawnPosition(platformPosition + new Vector2(-4.5f, 1.05f));
+            if (!finalChaseCuePlayed && platformPosition.y >= VerticalEndY - 0.1f)
+            {
+                finalChaseCuePlayed = true;
+                GameSfx.Play(SfxId.BossAttackWarning, 1.05f);
+            }
 
             if (!HasAuthority) return;
             if (!vertical)
@@ -395,6 +401,7 @@ namespace DrawBody.Prototype
             if (string.IsNullOrEmpty(playerId) || !eliminatedPlayerIds.Add(playerId)) return;
             if (target == null) target = FindPlayer(playerId);
             if (target == null) return;
+            GameSfx.PlayAt(SfxId.PlayerDeath, target.transform.position);
             target.SetControlsEnabled(false);
             Rigidbody2D body = target.GetComponent<Rigidbody2D>();
             if (body != null)

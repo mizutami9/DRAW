@@ -1643,7 +1643,7 @@ namespace DrawBody.Prototype
         {
             foreach (StageCrumblingFloor floor in crumblingFloors.Values)
             {
-                if (floor != null && floor.HasTriggered)
+                if (floor != null)
                 {
                     BroadcastCrumblingFloorState(floor);
                 }

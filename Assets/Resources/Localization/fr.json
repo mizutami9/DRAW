@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Nom du joueur"
+      "value": "Nom"
     },
     {
       "key": "option_player_name_placeholder",

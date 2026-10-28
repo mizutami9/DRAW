@@ -496,9 +496,33 @@ namespace DrawBody.Prototype
                     {
                         NormalizeStageButton(button, label);
                     }
+                    else if (button.name == "StageSelectBackButton")
+                    {
+                        NormalizeBackButton(button, label);
+                    }
                     label.transform.SetAsLastSibling();
                 }
             }
+        }
+
+        private static void NormalizeBackButton(Button button, Text label)
+        {
+            Color paperColor = new Color(0.98f, 0.62f, 0.58f, 0.98f);
+            Color inkColor = new Color(0.72f, 0.12f, 0.16f, 1f);
+            Image image = button.GetComponent<Image>();
+            if (image != null)
+            {
+                DoodlePaperUi.Apply(image, paperColor);
+            }
+
+            StageCardHover hover = button.GetComponent<StageCardHover>();
+            if (hover != null)
+            {
+                hover.SetColors(paperColor, new Color(1f, 0.76f, 0.62f, 1f));
+            }
+
+            EnsureInkSpill(button.transform as RectTransform, "stage-select-back", inkColor);
+            label.color = new Color(0.2f, 0.045f, 0.04f, 1f);
         }
 
         private static void NormalizeStageButton(Button button, Text label)
@@ -525,7 +549,18 @@ namespace DrawBody.Prototype
             label.verticalOverflow = VerticalWrapMode.Truncate;
 
             Image image = button.GetComponent<Image>();
-            if (image != null) DoodlePaperUi.Apply(image, new Color(0.98f, 0.96f, 0.9f, 0.95f));
+            Color paperColor = GetStageButtonPaperColor(command != null ? command.StageId : button.name);
+            Color inkColor = GetStageButtonInkColor(command != null ? command.StageId : button.name);
+            if (image != null) DoodlePaperUi.Apply(image, paperColor);
+            StageCardHover hover = button.GetComponent<StageCardHover>();
+            if (hover != null)
+            {
+                hover.SetColors(paperColor, Color.Lerp(paperColor, inkColor, 0.25f));
+            }
+            EnsureInkSpill(button.transform as RectTransform,
+                command != null ? command.StageId : button.name, inkColor);
+            label.color = new Color(0.12f, 0.09f, 0.07f, 1f);
+            label.transform.SetAsLastSibling();
             Outline outline = button.GetComponent<Outline>();
             if (outline == null) outline = button.gameObject.AddComponent<Outline>();
             outline.enabled = false;
@@ -536,6 +571,122 @@ namespace DrawBody.Prototype
                 status.gameObject.SetActive(false);
                 Destroy(status.gameObject);
             }
+        }
+
+        private static Color GetStageButtonPaperColor(string stageId)
+        {
+            int seed = StableHash(stageId);
+            float hue = Mathf.Repeat((seed % 997) * 0.618034f, 1f);
+            float saturation = 0.28f + (seed % 5) * 0.025f;
+            float value = 0.98f - (seed % 3) * 0.012f;
+            Color color = Color.HSVToRGB(hue, saturation, value);
+            color.a = 0.98f;
+            return color;
+        }
+
+        private static Color GetStageButtonInkColor(string stageId)
+        {
+            int seed = StableHash(stageId);
+            float hue = Mathf.Repeat((seed % 997) * 0.618034f, 1f);
+            Color color = Color.HSVToRGB(hue, 0.72f, 0.72f);
+            color.a = 1f;
+            return color;
+        }
+
+        private static int StableHash(string value)
+        {
+            unchecked
+            {
+                int hash = 17;
+                for (int i = 0; i < (value != null ? value.Length : 0); i++)
+                {
+                    hash = hash * 31 + value[i];
+                }
+                return hash & 0x7fffffff;
+            }
+        }
+
+        private static void EnsureInkSpill(RectTransform button, string stageId, Color inkColor)
+        {
+            if (button == null)
+            {
+                return;
+            }
+
+            Transform old = button.Find("StageInkSpill");
+            if (old != null)
+            {
+                return;
+            }
+
+            GameObject rootObject = new GameObject("StageInkSpill", typeof(RectTransform));
+            rootObject.transform.SetParent(button, false);
+            RectTransform root = rootObject.GetComponent<RectTransform>();
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = new Vector2(5f, 4f);
+            root.offsetMax = new Vector2(-5f, -4f);
+            root.SetAsFirstSibling();
+
+            int seed = StableHash(stageId);
+            float side = (seed & 1) == 0 ? -1f : 1f;
+            float centerX = side * (35f + seed % 13);
+            float centerY = -2f + seed % 7;
+            Color puddle = new Color(inkColor.r, inkColor.g, inkColor.b, 0.24f);
+            Color soft = new Color(inkColor.r, inkColor.g, inkColor.b, 0.13f);
+
+            CreateInkBlob(root, "Puddle", new Vector2(centerX, centerY),
+                new Vector2(58f + seed % 17, 31f + seed % 9), (seed % 9) - 4f, puddle);
+            CreateInkBlob(root, "LobeA", new Vector2(centerX - side * 25f, centerY - 5f),
+                new Vector2(29f + seed % 9, 22f + seed % 5), -(seed % 13), puddle);
+            CreateInkBlob(root, "LobeB", new Vector2(centerX + side * 25f, centerY + 7f),
+                new Vector2(25f + seed % 11, 19f + seed % 6), seed % 15, soft);
+
+            for (int i = 0; i < 3; i++)
+            {
+                float x = -side * (42f + i * 16f) + ((seed >> (i * 3)) & 7) - 3f;
+                float y = -11f + ((seed >> (i * 4 + 2)) & 15);
+                float size = 5f + ((seed >> (i * 2 + 1)) & 5);
+                CreateInkBlob(root, "Drop" + i, new Vector2(x, y),
+                    new Vector2(size, size * (0.82f + i * 0.1f)), 0f, puddle);
+            }
+
+            CreateInkStreak(root, new Vector2(centerX - side * 50f, centerY - 10f),
+                new Vector2(centerX + side * 42f, centerY + 9f), 3f + seed % 3, soft);
+        }
+
+        private static void CreateInkBlob(Transform parent, string name, Vector2 position,
+            Vector2 size, float rotation, Color color)
+        {
+            GameObject blob = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            blob.transform.SetParent(parent, false);
+            RectTransform rect = blob.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+            rect.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            Image image = blob.GetComponent<Image>();
+            image.sprite = DoodleRuntimeAssets.CircleSprite;
+            image.color = color;
+            image.raycastTarget = false;
+        }
+
+        private static void CreateInkStreak(Transform parent, Vector2 from, Vector2 to,
+            float width, Color color)
+        {
+            GameObject streak = new GameObject("Streak", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            streak.transform.SetParent(parent, false);
+            RectTransform rect = streak.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0f, 0.5f);
+            rect.anchoredPosition = from;
+            rect.sizeDelta = new Vector2(Vector2.Distance(from, to), width);
+            rect.localRotation = Quaternion.Euler(0f, 0f,
+                Mathf.Atan2(to.y - from.y, to.x - from.x) * Mathf.Rad2Deg);
+            Image image = streak.GetComponent<Image>();
+            image.color = color;
+            image.raycastTarget = false;
         }
 
         private static Text FindStageButtonLabel(Button button)

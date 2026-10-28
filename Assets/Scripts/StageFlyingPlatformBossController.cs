@@ -369,18 +369,18 @@ namespace DrawBody.Prototype
             GameObject monitor = new GameObject("15-1 Boss HP Monitor");
             monitor.transform.SetParent(transform, false);
             monitor.transform.localPosition = new Vector3(0f, 7.35f, 0.4f);
-            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(15f, 2.35f), 218);
-            StageEscortController.AddFilledRect(monitor.transform, "HP Track", new Vector2(0f, -0.25f), new Vector2(11.8f, 0.48f), new Color(0.15f, 0.16f, 0.18f), 222);
+            DoodleMonitorVisuals.Build(monitor.transform, new Vector2(15f, 2.7f), 218);
+            StageEscortController.AddFilledRect(monitor.transform, "HP Track", new Vector2(0f, -0.58f), new Vector2(11.8f, 0.4f), new Color(0.15f, 0.16f, 0.18f), 222);
             GameObject fill = new GameObject("HP Fill");
             fill.transform.SetParent(monitor.transform, false);
-            fill.transform.localPosition = new Vector3(-5.9f, -0.25f, -0.03f);
-            fill.transform.localScale = new Vector3(11.8f, 0.34f, 1f);
+            fill.transform.localPosition = new Vector3(-5.9f, -0.58f, -0.03f);
+            fill.transform.localScale = new Vector3(11.8f, 0.28f, 1f);
             SpriteRenderer renderer = fill.AddComponent<SpriteRenderer>();
             renderer.sprite = StageLinkedShieldSurvivalController.GetSquareSprite();
             renderer.color = new Color(0.95f, 0.2f, 0.32f);
             renderer.sortingOrder = 224;
             hpFill = fill.transform;
-            hpText = StageEscortController.CreateText(monitor.transform, "HP", new Vector3(0f, 0.5f, -0.04f), 54, 0.13f, new Color(0.08f, 0.25f, 0.48f), 225);
+            hpText = StageEscortController.CreateText(monitor.transform, "HP", new Vector3(0f, 0.58f, -0.04f), 54, 0.12f, new Color(0.08f, 0.25f, 0.48f), 225);
         }
 
         private void BuildAimGuide()
@@ -455,12 +455,12 @@ namespace DrawBody.Prototype
                     Position = pad.Position
                 }, localPlayerId);
             }
-            if (binding != null && binding.PrimaryPressed() && phase == BattlePhase.Fighting)
+            if (localPlayer.ReadLocalPrimaryPressed() && phase == BattlePhase.Fighting)
             {
                 if (HasAuthority) TryFire(localRoom, aimDirection);
                 else Send(ShotRequestKind, new ShotRequest { Direction = aimDirection }, localPlayerId);
             }
-            if (binding != null && binding.AbilityPressed() && phase == BattlePhase.Fighting)
+            if (localPlayer.ReadLocalAbilityPressed() && phase == BattlePhase.Fighting)
             {
                 if (HasAuthority) TryDropBomb(localRoom);
                 else Send(BombRequestKind, new PadMessage { Room = localRoom, Position = pad.Position }, localPlayerId);
@@ -1042,8 +1042,8 @@ namespace DrawBody.Prototype
             float ratio = Mathf.Clamp01(health / (float)Mathf.Max(1, maximumHealth));
             if (hpFill != null)
             {
-                hpFill.localScale = new Vector3(11.8f * ratio, 0.34f, 1f);
-                hpFill.localPosition = new Vector3(-5.9f + 5.9f * ratio, -0.25f, -0.03f);
+                hpFill.localScale = new Vector3(11.8f * ratio, 0.28f, 1f);
+                hpFill.localPosition = new Vector3(-5.9f + 5.9f * ratio, -0.58f, -0.03f);
             }
             if (statusText != null) statusText.text = string.Empty;
         }

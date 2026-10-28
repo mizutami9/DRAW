@@ -17,6 +17,7 @@ namespace DrawBody.Prototype
         private Image drawerImage;
         private Outline drawerOutline;
 
+        public bool IsOpen => open;
         public bool IsOpenOrTransitioning => open
             || contentRoot != null && contentRoot.activeInHierarchy;
 

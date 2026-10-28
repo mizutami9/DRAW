@@ -436,7 +436,19 @@ namespace DrawBody.Prototype
                     }
                     yield return null;
                 }
-                Debug.LogError("[PICO REGRESSION] Timed out waiting for players/READY.");
+                OnlinePlayerInfo[] timedOutPlayers = CurrentLobby?.Players;
+                List<string> timedOutRoster = new List<string>();
+                if (timedOutPlayers != null)
+                {
+                    for (int i = 0; i < timedOutPlayers.Length; i++)
+                    {
+                        OnlinePlayerInfo member = timedOutPlayers[i];
+                        if (member == null) continue;
+                        timedOutRoster.Add($"{member.PlayerId}[connection={member.ConnectionId},local={member.LocalPlayerIndex},ready={member.IsReady}]");
+                    }
+                }
+                Debug.LogError("[PICO REGRESSION] Timed out waiting for players/READY. "
+                    + string.Join(", ", timedOutRoster));
                 yield break;
             }
 
@@ -501,8 +513,31 @@ namespace DrawBody.Prototype
             if (players == null || players.Length == 0) return false;
             for (int i = 0; i < players.Length; i++)
             {
-                if (players[i] == null || string.IsNullOrEmpty(players[i].PlayerId) || !players[i].IsReady)
-                    return false;
+                OnlinePlayerInfo player = players[i];
+                if (player == null || string.IsNullOrEmpty(player.PlayerId)) return false;
+                if (player.LocalPlayerIndex <= 0)
+                {
+                    if (!player.IsReady) return false;
+                    continue;
+                }
+
+                // A local P2 is a game-player seat, not another network
+                // connection. Its READY state belongs to the owning connection.
+                // Lobby snapshots can briefly retain the virtual seat's old
+                // value even after P1 becomes ready, which otherwise prevents
+                // a mixed local/online room from ever starting.
+                bool ownerReady = false;
+                for (int ownerIndex = 0; ownerIndex < players.Length; ownerIndex++)
+                {
+                    OnlinePlayerInfo owner = players[ownerIndex];
+                    if (owner != null && owner.LocalPlayerIndex <= 0
+                        && owner.PlayerId == player.ConnectionId)
+                    {
+                        ownerReady = owner.IsReady;
+                        break;
+                    }
+                }
+                if (!ownerReady) return false;
             }
             return true;
         }

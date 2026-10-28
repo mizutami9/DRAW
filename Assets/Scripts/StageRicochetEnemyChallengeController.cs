@@ -90,6 +90,7 @@ namespace DrawBody.Prototype
         private float playingElapsed;
         private float nextBallAt;
         private float nextStateAt;
+        private int lastServeCountdownCue = int.MinValue;
         private Vector2 preparedBallDirection = Vector2.up;
         private bool initialServeStarted;
         private bool oldCameraEnabled;
@@ -141,6 +142,7 @@ namespace DrawBody.Prototype
         private void Update()
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
+            UpdateServeCountdownAudio();
             if (!HasAuthority)
             {
                 if (phase == Phase.Serve)
@@ -168,6 +170,7 @@ namespace DrawBody.Prototype
                 if (phaseRemaining <= 0f)
                 {
                     phase = Phase.Playing;
+                    GameSfx.Play(SfxId.StageCountdownGo);
                     ball?.LaunchPrepared();
                     BroadcastState(true);
                 }
@@ -363,12 +366,13 @@ namespace DrawBody.Prototype
             {
                 phase = Phase.Clear;
                 phaseRemaining = 2.4f;
-                GameSfx.Play(SfxId.EmotePop);
+                GameSfx.Play(SfxId.GoalReached);
             }
             else
             {
                 phase = Phase.Intermission;
                 phaseRemaining = 2f;
+                GameSfx.Play(SfxId.GoalReached, 0.82f);
             }
             BroadcastState(true);
         }
@@ -382,6 +386,7 @@ namespace DrawBody.Prototype
             {
                 phase = Phase.Failed;
                 phaseRemaining = 3f;
+                GameSfx.Play(SfxId.StageFailed);
             }
             else nextBallAt = Time.time + 0.9f;
             BroadcastState(true);
@@ -398,6 +403,7 @@ namespace DrawBody.Prototype
                 (top ? 1f : -1f) * (InnerHalfHeight - 0.75f));
             preparedBallDirection = top ? Vector2.down : Vector2.up;
             phase = Phase.Serve;
+            lastServeCountdownCue = int.MinValue;
             phaseRemaining = initialServeStarted
                 ? ServeCountdownSeconds
                 : InitialServeCountdownSeconds;
@@ -406,6 +412,15 @@ namespace DrawBody.Prototype
             ballGeneration++;
             ball.PrepareLaunch(preparedBallDirection, GetCurrentBallSpeed(), Mathf.CeilToInt(phaseRemaining));
             BroadcastState(true);
+        }
+
+        private void UpdateServeCountdownAudio()
+        {
+            if (phase != Phase.Serve) return;
+            int cue = Mathf.CeilToInt(phaseRemaining);
+            if (cue < 1 || cue > 3 || cue == lastServeCountdownCue) return;
+            lastServeCountdownCue = cue;
+            GameSfx.Play(SfxId.StageCountdownTick);
         }
 
         private float GetCurrentBallSpeed()
@@ -496,11 +511,11 @@ namespace DrawBody.Prototype
             board.transform.position = new Vector3(0f, 10.15f, 0.2f);
             DoodleMonitorVisuals.Build(board.transform, new Vector2(19f, 2.5f), 24);
             roundText = StageEscortController.CreateText(board.transform, "Round",
-                new Vector3(-5.5f, 0.25f, -0.03f), 48, 0.09f, new Color(0.4f, 0.9f, 1f), 27);
+                new Vector3(-5.5f, 0.3f, -0.03f), 54, 0.12f, new Color(0.04f, 0.43f, 0.58f), 30);
             ballText = StageEscortController.CreateText(board.transform, "Balls",
-                new Vector3(5.5f, 0.25f, -0.03f), 48, 0.09f, new Color(1f, 0.78f, 0.18f), 27);
+                new Vector3(5.5f, 0.3f, -0.03f), 54, 0.12f, new Color(0.78f, 0.39f, 0.06f), 30);
             statusText = StageEscortController.CreateText(board.transform, "Status",
-                new Vector3(0f, -0.55f, -0.03f), 48, 0.09f, new Color(0.2f, 1f, 0.7f), 27);
+                new Vector3(0f, -0.55f, -0.03f), 48, 0.105f, new Color(0.1f, 0.28f, 0.5f), 30);
         }
 
         private void RefreshDisplay()
@@ -573,10 +588,22 @@ namespace DrawBody.Prototype
             if (data.Kind != StateKind || HasAuthority || !IsHost(data.PlayerId)) return;
             NetworkState state = JsonUtility.FromJson<NetworkState>(data.Json);
             if (state == null || state.Sequence <= lastSequence) return;
+            Phase previousPhase = phase;
+            int previousBallsLost = ballsLost;
             lastSequence = state.Sequence;
             phase = (Phase)Mathf.Clamp(state.PhaseValue, 0, (int)Phase.Clear);
+            if (previousPhase != Phase.Serve && phase == Phase.Serve)
+                lastServeCountdownCue = int.MinValue;
+            if (previousPhase == Phase.Serve && phase == Phase.Playing)
+                GameSfx.Play(SfxId.StageCountdownGo);
+            else if (previousPhase == Phase.Playing
+                && (phase == Phase.Intermission || phase == Phase.Clear))
+                GameSfx.Play(SfxId.GoalReached, phase == Phase.Clear ? 1f : 0.82f);
+            else if (previousPhase != Phase.Failed && phase == Phase.Failed)
+                GameSfx.Play(SfxId.StageFailed);
             round = state.Round;
             ballsLost = state.BallsLost;
+            if (ballsLost > previousBallsLost) GameSfx.Play(SfxId.PlayerHit);
             phaseRemaining = state.PhaseRemaining;
             playingElapsed = Mathf.Max(0f, state.PlayingElapsed);
             preparedBallDirection = state.BallDirection.sqrMagnitude > 0.01f
@@ -618,7 +645,15 @@ namespace DrawBody.Prototype
             }
             List<string> remove = new List<string>();
             foreach (KeyValuePair<string, StageRicochetEnemyTarget> pair in enemies)
-                if (!seen.Contains(pair.Key)) { if (pair.Value != null) Destroy(pair.Value.gameObject); remove.Add(pair.Key); }
+                if (!seen.Contains(pair.Key))
+                {
+                    if (pair.Value != null)
+                    {
+                        GameSfx.PlayAt(SfxId.EnemyDefeat, pair.Value.transform.position, 0.82f);
+                        Destroy(pair.Value.gameObject);
+                    }
+                    remove.Add(pair.Key);
+                }
             for (int i = 0; i < remove.Count; i++) enemies.Remove(remove[i]);
         }
 
@@ -731,6 +766,7 @@ namespace DrawBody.Prototype
             StageRicochetImpactPulse.Create(transform.parent, point);
             GameSfx.PlayAt(SfxId.Ricochet, point, 1f);
             if (hp > 0) return;
+            GameSfx.PlayAt(SfxId.EnemyDefeat, point, 0.9f);
             owner?.NotifyEnemyDefeated(this);
             if (enemy != null) enemy.ApplyDefeated();
             else gameObject.SetActive(false);

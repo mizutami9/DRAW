@@ -84,6 +84,7 @@ namespace DrawBody.Prototype
         private bool updatingCategoryDropdown;
         private Vector3 editorCameraPositionBeforeTest;
         private float editorCameraSizeBeforeTest;
+        private float editorCameraMaximumSize;
         private bool hasEditorCameraStateBeforeTest;
         private StageObjectCategory currentCategory = StageObjectCategory.Terrain;
         private readonly List<StageObjectType> filteredPaletteTypes = new List<StageObjectType>();
@@ -97,12 +98,24 @@ namespace DrawBody.Prototype
         private Vector2 dragOffset;
         private CopyDirection copyDirection = CopyDirection.Right;
         private bool draggingDebugPlayer;
+        private PlayerController2D debugPlayerBeingDragged;
+        private int debugPlayerBeingDraggedIndex = -1;
         private Vector2 debugPlayerDragOffset;
-        private bool hasDebugTestStartPosition;
-        private Vector3 debugTestStartPosition;
+        private readonly bool[] hasDebugTestStartPositions =
+            new bool[StageManager.MaxLocalPlayersPerConnection];
+        private readonly Vector3[] debugTestStartPositions =
+            new Vector3[StageManager.MaxLocalPlayersPerConnection];
 
         public bool IsEditing => active;
-        public bool HasDebugTestStartPosition => hasDebugTestStartPosition;
+        public bool HasDebugTestStartPosition
+        {
+            get
+            {
+                for (int i = 0; i < hasDebugTestStartPositions.Length; i++)
+                    if (hasDebugTestStartPositions[i]) return true;
+                return false;
+            }
+        }
         public bool HasMultipleSelection => rangeSelectedObjects.Count > 1;
         public CopyDirection CurrentCopyDirection => copyDirection;
         public string CopyDirectionLabel => LocalizationManager.T(
@@ -439,7 +452,13 @@ namespace DrawBody.Prototype
             active = true;
             dragging = false;
             draggingDebugPlayer = false;
-            hasDebugTestStartPosition = false;
+            debugPlayerBeingDragged = null;
+            debugPlayerBeingDraggedIndex = -1;
+            for (int i = 0; i < hasDebugTestStartPositions.Length; i++)
+            {
+                hasDebugTestStartPositions[i] = false;
+                debugTestStartPositions[i] = Vector3.zero;
+            }
             hasEditorCameraStateBeforeTest = false;
             ClearRangeSelection();
             undoStack.Clear();
@@ -468,16 +487,17 @@ namespace DrawBody.Prototype
                 }
                 inputDriver.Configure(this, worldCamera);
 
-                Vector3 camPos = worldCamera.transform.position;
-                camPos.x = 0f;
-                camPos.y = 0f;
-                worldCamera.transform.position = camPos;
-                worldCamera.orthographicSize = testPlayCameraSize;
+                // The final framing is calculated after the stage data has been
+                // loaded. Some authored stages (notably 2-3 and 11-1) are much
+                // wider than the normal gameplay camera and were otherwise
+                // opened on an apparently empty patch around the origin.
+                editorCameraMaximumSize = maxCameraSize;
             }
 
             LoadWorkingData();
             BuildEditorObjects();
-            PositionDebugPlayerAtStageSpawn();
+            PositionDebugPlayersAtStageSpawn();
+            FrameLoadedStage();
             SetPanel(true);
             RefreshObjectTypeDropdown();
             EnsureListReferences();
@@ -492,6 +512,8 @@ namespace DrawBody.Prototype
             active = false;
             dragging = false;
             draggingDebugPlayer = false;
+            debugPlayerBeingDragged = null;
+            debugPlayerBeingDraggedIndex = -1;
             drawingRect = false;
             drawingTerrainStroke = false;
             ClearRangeSelection();
@@ -502,50 +524,73 @@ namespace DrawBody.Prototype
 
         public bool TryGetDebugTestStartPosition(out Vector3 position)
         {
-            position = debugTestStartPosition;
-            return hasDebugTestStartPosition;
+            int playerIndex = stageManager != null
+                ? stageManager.GetLocalPlayerIndex(stageManager.ActivePlayerController)
+                : 0;
+            return TryGetDebugTestStartPosition(playerIndex, out position);
         }
 
-        private void PositionDebugPlayerAtStageSpawn()
+        public bool TryGetDebugTestStartPosition(int localPlayerIndex, out Vector3 position)
         {
-            Transform debugPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
-            if (debugPlayer == null)
+            if (localPlayerIndex < 0 || localPlayerIndex >= hasDebugTestStartPositions.Length)
             {
-                return;
+                position = Vector3.zero;
+                return false;
             }
+            position = debugTestStartPositions[localPlayerIndex];
+            return hasDebugTestStartPositions[localPlayerIndex];
+        }
 
+        private bool TryGetStageSpawnPosition(out Vector2 position)
+        {
             for (int i = 0; i < objects.Count; i++)
             {
                 if (objects[i] != null && objects[i].type == StageObjectType.Spawn)
                 {
-                    MoveDebugPlayer(objects[i].position);
-                    return;
+                    position = objects[i].position;
+                    return true;
                 }
             }
+            position = Vector2.zero;
+            return false;
         }
 
-        private void RestoreDebugPlayerPosition()
+        private void PositionDebugPlayersAtStageSpawn()
         {
-            if (hasDebugTestStartPosition)
+            if (stageManager == null || !TryGetStageSpawnPosition(out Vector2 spawnPosition)) return;
+            IReadOnlyList<PlayerController2D> players = stageManager.LocalPlayers;
+            float firstOffset = -(players.Count - 1) * 2.2f * 0.5f;
+            for (int i = 0; i < players.Count; i++)
             {
-                MoveDebugPlayer(debugTestStartPosition);
-            }
-            else
-            {
-                PositionDebugPlayerAtStageSpawn();
+                MoveDebugPlayer(players[i], spawnPosition + Vector2.right * (firstOffset + i * 2.2f));
             }
         }
 
-        private void MoveDebugPlayer(Vector2 position)
+        private void RestoreDebugPlayerPositions()
         {
-            Transform debugPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
+            if (stageManager == null) return;
+            IReadOnlyList<PlayerController2D> players = stageManager.LocalPlayers;
+            bool hasSpawn = TryGetStageSpawnPosition(out Vector2 spawnPosition);
+            float firstOffset = -(players.Count - 1) * 2.2f * 0.5f;
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (TryGetDebugTestStartPosition(i, out Vector3 testPosition))
+                    MoveDebugPlayer(players[i], testPosition);
+                else if (hasSpawn)
+                    MoveDebugPlayer(players[i], spawnPosition + Vector2.right * (firstOffset + i * 2.2f));
+            }
+        }
+
+        private static void MoveDebugPlayer(PlayerController2D debugPlayer, Vector2 position)
+        {
             if (debugPlayer == null)
             {
                 return;
             }
 
-            Vector3 destination = new Vector3(position.x, position.y, debugPlayer.position.z);
-            debugPlayer.position = destination;
+            Transform playerTransform = debugPlayer.transform;
+            Vector3 destination = new Vector3(position.x, position.y, playerTransform.position.z);
+            playerTransform.position = destination;
             Rigidbody2D body = debugPlayer.GetComponent<Rigidbody2D>();
             if (body != null)
             {

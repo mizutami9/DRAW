@@ -78,6 +78,7 @@ namespace DrawBody.Prototype
         private bool started;
         private bool failed;
         private bool rosterReady;
+        private int lastCountdownCue = int.MinValue;
         private readonly HashSet<string> localFinishRequested = new HashSet<string>();
 
         public bool CanFinish => started && !failed;
@@ -130,6 +131,7 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
             if (!rosterReady) BuildParticipantRoster();
+            UpdateCountdownAudio();
 
             if (!stageManager.IsGameplayActive)
             {
@@ -204,6 +206,7 @@ namespace DrawBody.Prototype
                 if (introRemaining <= 0f)
                 {
                     started = true;
+                    GameSfx.Play(SfxId.StageCountdownGo);
                     elapsed = 0f;
                     startFlashRemaining = 0.8f;
                     ApplyLocalControlState();
@@ -357,6 +360,7 @@ namespace DrawBody.Prototype
             int lane = FindParticipant(playerId);
             if (lane < 0 || finishTimes[lane] >= 0f) return;
             finishTimes[lane] = elapsed;
+            GameSfx.Play(SfxId.GoalReached, 0.82f);
             FreezeFinishedLocalPlayer(lane);
             Broadcast(true);
 
@@ -369,6 +373,7 @@ namespace DrawBody.Prototype
             else
             {
                 failed = true;
+                GameSfx.Play(SfxId.StageFailed);
                 retryRemaining = RetryDelay;
                 SetLocalControls(false);
                 ShowFailureOverlay();
@@ -431,6 +436,9 @@ namespace DrawBody.Prototype
 
             RaceState state = JsonUtility.FromJson<RaceState>(data.Json);
             if (state == null || state.Sequence <= receivedStateSequence) return;
+            bool wasStarted = started;
+            bool wasFailed = failed;
+            float[] previousFinishTimes = (float[])finishTimes.Clone();
             receivedStateSequence = state.Sequence;
             elapsed = state.Elapsed;
             introRemaining = state.IntroRemaining;
@@ -441,6 +449,11 @@ namespace DrawBody.Prototype
             playerCount = Mathf.Clamp(state.PlayerCount, 1, MaxLanes);
             CopyArray(state.PlayerIds, participantIds, null);
             CopyArray(state.FinishTimes, finishTimes, -1f);
+            if (!wasStarted && started) GameSfx.Play(SfxId.StageCountdownGo);
+            if (!wasFailed && failed) GameSfx.Play(SfxId.StageFailed);
+            for (int i = 0; i < finishTimes.Length; i++)
+                if (previousFinishTimes[i] < 0f && finishTimes[i] >= 0f)
+                    GameSfx.Play(SfxId.GoalReached, 0.82f);
             rosterReady = true;
             ConfigureActiveLanes();
             if (monitorTexts.Count == 0) BuildMonitors();
@@ -454,6 +467,15 @@ namespace DrawBody.Prototype
             }
             ApplyLocalControlState();
             if (failed) ShowFailureOverlay();
+        }
+
+        private void UpdateCountdownAudio()
+        {
+            if (started || failed || !stageManager.IsGameplayActive) return;
+            int cue = Mathf.CeilToInt(introRemaining);
+            if (cue < 1 || cue > 3 || cue == lastCountdownCue) return;
+            lastCountdownCue = cue;
+            GameSfx.Play(SfxId.StageCountdownTick);
         }
 
         private void Broadcast(bool force)

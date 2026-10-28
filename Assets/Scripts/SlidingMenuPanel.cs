@@ -73,13 +73,17 @@ namespace DrawBody.Prototype
             }
 
             NormalizeLayout();
-            gameObject.SetActive(true);
             if (!open)
             {
                 rectTransform.anchoredPosition = closedPosition;
             }
 
+            // MenuPanel starts inactive in the scene, so its first SetActive
+            // invokes Awake synchronously. Awake hides the panel when open is
+            // still false; setting the flag afterwards left IsOpen=true while
+            // every button remained inactive and unclickable.
             open = true;
+            gameObject.SetActive(true);
         }
 
         public void OpenImmediate()

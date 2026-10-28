@@ -81,7 +81,7 @@ namespace DrawBody.Prototype
             stageLoader?.HideStages();
             StageBackgroundAppearance.Apply(stageBackgroundColor);
             BuildEditorObjects();
-            RestoreDebugPlayerPosition();
+            RestoreDebugPlayerPositions();
             RestoreEditorCameraStateAfterTest();
             SetPanel(true);
             RefreshObjectTypeDropdown();

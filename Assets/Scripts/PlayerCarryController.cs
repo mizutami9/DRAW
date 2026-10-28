@@ -84,6 +84,8 @@ namespace DrawBody.Prototype
         private readonly List<bool> friendCarryOriginalEnabledStates = new List<bool>();
         private readonly List<bool> friendCarryOriginalTriggerStates = new List<bool>();
         private float nextFriendProxyRefreshAt;
+        private bool hasAuthorizedFriendCarrierJumpPadSpeed;
+        private float authorizedFriendCarrierJumpPadSpeed;
         private bool hasFriendCarrierBoundsCache;
         private Vector3 friendCarrierBoundsLocalCenter;
         private Vector3 friendCarrierBoundsLocalSize;
@@ -161,6 +163,35 @@ namespace DrawBody.Prototype
         }
 
         public bool IsCarryingFriend => slimeAttachedAsFriendCarrier && slimeAttachedPlayer != null;
+
+        public void AuthorizeFriendCarrierJumpPadSpeed(float upwardSpeed)
+        {
+            if (!IsCarryingFriend || float.IsNaN(upwardSpeed) || float.IsInfinity(upwardSpeed)) return;
+            hasAuthorizedFriendCarrierJumpPadSpeed = true;
+            authorizedFriendCarrierJumpPadSpeed = Mathf.Max(
+                MaxFriendCarrierUpwardSpeed,
+                upwardSpeed);
+        }
+
+        public bool TryGetCurrentPlayerTopOffset(out float topOffset)
+        {
+            topOffset = 0f;
+            if (playerBody == null || playerController == null
+                || !TryGetSolidBounds(playerController, out Bounds ownBounds))
+            {
+                return false;
+            }
+
+            float top = ownBounds.max.y;
+            if (IsCarryingFriend
+                && TryGetSolidBounds(slimeAttachedPlayer, out Bounds carriedBounds))
+            {
+                top = Mathf.Max(top, carriedBounds.max.y);
+            }
+
+            topOffset = Mathf.Max(0f, top - playerBody.position.y);
+            return true;
+        }
 
         public bool ReleaseIfHolding(Transform target)
         {
@@ -583,10 +614,27 @@ namespace DrawBody.Prototype
 
             // A dense carried drawing must never become a repeated upward
             // impulse source. Normal jumps and slime wall jumps stay below this
-            // ceiling, while runaway carry feedback is cut immediately.
-            if (draggingFriend && velocity.y > MaxFriendCarrierUpwardSpeed)
+            // ceiling, while runaway carry feedback is cut immediately. A jump
+            // pad explicitly authorizes its intended launch speed so carrying a
+            // friend does not reduce that launch to this safety ceiling.
+            float allowedUpwardSpeed = MaxFriendCarrierUpwardSpeed;
+            if (hasAuthorizedFriendCarrierJumpPadSpeed)
             {
-                velocity.y = MaxFriendCarrierUpwardSpeed;
+                if (!draggingFriend || velocity.y <= MaxFriendCarrierUpwardSpeed)
+                {
+                    hasAuthorizedFriendCarrierJumpPadSpeed = false;
+                    authorizedFriendCarrierJumpPadSpeed = 0f;
+                }
+                else
+                {
+                    allowedUpwardSpeed = Mathf.Max(
+                        allowedUpwardSpeed,
+                        authorizedFriendCarrierJumpPadSpeed);
+                }
+            }
+            if (draggingFriend && velocity.y > allowedUpwardSpeed)
+            {
+                velocity.y = allowedUpwardSpeed;
                 playerBody.linearVelocity = velocity;
             }
 
@@ -1334,6 +1382,8 @@ namespace DrawBody.Prototype
             slimeAttachedPlayer = null;
             slimeAttachedBody = null;
             slimeAttachedAsFriendCarrier = false;
+            hasAuthorizedFriendCarrierJumpPadSpeed = false;
+            authorizedFriendCarrierJumpPadSpeed = 0f;
             friendAttachedOnlinePlayerId = null;
             slimeOwnColliders = new Collider2D[0];
             slimeTargetColliders = new Collider2D[0];
@@ -1883,10 +1933,16 @@ namespace DrawBody.Prototype
                 SetCollisionIgnored(releasedColliders, carrierColliders, true);
             }
 
-            heldPlayerController?.SetFriendCarried(false);
-            heldPlayerController?.SetHumanCarryStruggling(false);
-            heldPlayerController?.ResetMotion();
-            heldPlayerController?.SetControlsEnabled(heldPlayerPreviousControlsEnabled);
+            // Unity's destroyed Components remain non-null CLR references, so
+            // null-conditional calls can still enter methods on a destroyed
+            // native object. Use Unity's overloaded null check here.
+            if (heldPlayerController != null)
+            {
+                heldPlayerController.SetFriendCarried(false);
+                heldPlayerController.SetHumanCarryStruggling(false);
+                heldPlayerController.ResetMotion();
+                heldPlayerController.SetControlsEnabled(heldPlayerPreviousControlsEnabled);
+            }
             if (heldBody != null)
             {
                 heldBody.bodyType = previousBodyType;

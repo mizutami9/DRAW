@@ -7,18 +7,23 @@ namespace DrawBody.Prototype
     [Serializable]
     public sealed class OnlineCrumblingFloorState
     {
+        public int Cycle;
         public bool Triggered;
         public bool Broken;
         public float Progress;
+        public float RespawnProgress;
     }
 
     [DisallowMultipleComponent]
     public sealed class StageCrumblingFloor : MonoBehaviour
     {
         private const float FallDuration = 0.7f;
+        private const float RespawnDelay = 10f;
         private static Sprite countdownBadgeSprite;
 
         private Collider2D[] floorColliders;
+        private Renderer[] visualRenderers;
+        private bool[] originalRendererEnabledStates;
         private LineRenderer[] cracks;
         private TextMesh countdownText;
         private TextMesh countdownShadow;
@@ -30,8 +35,11 @@ namespace DrawBody.Prototype
         private Quaternion originalLocalRotation;
         private float crackDuration = 0.4f;
         private float elapsed;
+        private float respawnElapsed;
+        private int cycle;
         private bool triggered;
         private bool broken;
+        private bool hidden;
         private bool requestSent;
 
         public string ObjectId => marker != null ? marker.objectId : string.Empty;
@@ -51,6 +59,13 @@ namespace DrawBody.Prototype
             Vector2 floorSize = box != null ? box.size : new Vector2(3f, 0.5f);
             cracks = CreateCracks(floorSize);
             CreateCountdownDisplay(floorSize);
+            visualRenderers = GetComponentsInChildren<Renderer>(true);
+            originalRendererEnabledStates = new bool[visualRenderers.Length];
+            for (int i = 0; i < visualRenderers.Length; i++)
+            {
+                originalRendererEnabledStates[i] = visualRenderers[i] != null
+                    && visualRenderers[i].enabled;
+            }
             SetCrackAlpha(0.68f);
             RefreshCountdownText();
         }
@@ -67,20 +82,40 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            elapsed = Mathf.Min(elapsed + Time.deltaTime, TotalDuration);
-            ApplyProgress();
-
-            if (!broken && elapsed >= crackDuration)
+            if (!hidden)
             {
-                broken = true;
-                GameSfx.PlayAt(SfxId.CrumblingFloorCollapse, transform.position);
-                SetCollidersEnabled(false);
-                syncManager?.NotifyCrumblingFloorChanged(this);
+                elapsed = Mathf.Min(elapsed + Time.deltaTime, TotalDuration);
+                ApplyProgress();
+
+                if (!broken && elapsed >= crackDuration)
+                {
+                    broken = true;
+                    respawnElapsed = 0f;
+                    GameSfx.PlayAt(SfxId.CrumblingFloorCollapse, transform.position);
+                    SetCollidersEnabled(false);
+                    syncManager?.NotifyCrumblingFloorChanged(this);
+                }
+
+                if (broken)
+                {
+                    respawnElapsed = Mathf.Min(RespawnDelay, respawnElapsed + Time.deltaTime);
+                }
+
+                if (elapsed >= TotalDuration)
+                {
+                    HideForRespawn();
+                    syncManager?.NotifyCrumblingFloorChanged(this);
+                }
+                return;
             }
 
-            if (elapsed >= TotalDuration)
+            respawnElapsed = Mathf.Min(RespawnDelay, respawnElapsed + Time.deltaTime);
+            if (respawnElapsed >= RespawnDelay
+                && (syncManager == null || !syncManager.ShouldAskHost))
             {
-                gameObject.SetActive(false);
+                cycle++;
+                RestoreFloor(cycle);
+                syncManager?.NotifyCrumblingFloorChanged(this);
             }
         }
 
@@ -130,14 +165,22 @@ namespace DrawBody.Prototype
 
         public void TriggerAuthoritatively()
         {
+            TriggerAuthoritatively(true);
+        }
+
+        private void TriggerAuthoritatively(bool advanceCycle)
+        {
             if (triggered)
             {
                 return;
             }
 
+            if (advanceCycle) cycle++;
             triggered = true;
             requestSent = true;
             elapsed = 0f;
+            respawnElapsed = 0f;
+            hidden = false;
             GameSfx.PlayAt(SfxId.CrumblingFloorWarning, transform.position);
             ApplyProgress();
         }
@@ -146,22 +189,45 @@ namespace DrawBody.Prototype
         {
             return new OnlineCrumblingFloorState
             {
+                Cycle = cycle,
                 Triggered = triggered,
                 Broken = broken,
-                Progress = Mathf.Clamp01(elapsed / TotalDuration)
+                Progress = Mathf.Clamp01(elapsed / TotalDuration),
+                RespawnProgress = Mathf.Clamp01(respawnElapsed / RespawnDelay)
             };
         }
 
         public void ApplyNetworkState(OnlineCrumblingFloorState state)
         {
-            if (state == null || !state.Triggered)
+            if (state == null || state.Cycle < cycle)
             {
                 return;
             }
 
+            if (!state.Triggered)
+            {
+                RestoreFloor(state.Cycle);
+                return;
+            }
+
+            if (state.Cycle > cycle)
+            {
+                cycle = state.Cycle;
+                triggered = false;
+                broken = false;
+                hidden = false;
+                requestSent = false;
+                elapsed = 0f;
+                respawnElapsed = 0f;
+                transform.localPosition = originalLocalPosition;
+                transform.localRotation = originalLocalRotation;
+                SetCollidersEnabled(true);
+                SetVisualsEnabled(true);
+            }
+
             if (!triggered)
             {
-                TriggerAuthoritatively();
+                TriggerAuthoritatively(false);
             }
 
             elapsed = Mathf.Max(elapsed, Mathf.Clamp01(state.Progress) * TotalDuration);
@@ -170,11 +236,53 @@ namespace DrawBody.Prototype
             {
                 SetCollidersEnabled(false);
             }
+            respawnElapsed = Mathf.Max(
+                respawnElapsed,
+                Mathf.Clamp01(state.RespawnProgress) * RespawnDelay);
             ApplyProgress();
 
             if (elapsed >= TotalDuration)
             {
-                gameObject.SetActive(false);
+                HideForRespawn();
+            }
+        }
+
+        private void HideForRespawn()
+        {
+            if (hidden) return;
+            hidden = true;
+            SetCollidersEnabled(false);
+            SetVisualsEnabled(false);
+        }
+
+        private void RestoreFloor(int restoredCycle)
+        {
+            cycle = Mathf.Max(cycle, restoredCycle);
+            triggered = false;
+            broken = false;
+            hidden = false;
+            requestSent = false;
+            elapsed = 0f;
+            respawnElapsed = 0f;
+            transform.localPosition = originalLocalPosition;
+            transform.localRotation = originalLocalRotation;
+            SetCollidersEnabled(true);
+            SetVisualsEnabled(true);
+            SetCrackAlpha(0.68f);
+            RefreshCountdownText();
+        }
+
+        private void SetVisualsEnabled(bool value)
+        {
+            if (visualRenderers == null) return;
+            for (int i = 0; i < visualRenderers.Length; i++)
+            {
+                Renderer renderer = visualRenderers[i];
+                if (renderer == null) continue;
+                renderer.enabled = value
+                    && originalRendererEnabledStates != null
+                    && i < originalRendererEnabledStates.Length
+                    && originalRendererEnabledStates[i];
             }
         }
 

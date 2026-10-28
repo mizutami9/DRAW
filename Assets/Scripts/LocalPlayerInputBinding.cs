@@ -32,6 +32,7 @@ namespace DrawBody.Prototype
         private bool legacyAxesUnavailable;
         private bool legacyDpadAxesUnavailable;
         private bool gameplayInputSuppressed;
+        private StageManager cachedStageManager;
 
         public int LocalPlayerIndex => localPlayerIndex;
         public DeviceKind Kind => deviceKind;
@@ -61,7 +62,11 @@ namespace DrawBody.Prototype
             }
         }
 
-        public bool UsesLegacyKeyboardMouse => deviceKind == DeviceKind.KeyboardMouse;
+        // AutoPrimary is the shared P1 slot used by characters created from the
+        // single-player drawer. It deliberately falls back to the same keyboard
+        // and mouse input as P1; StageManager enables only the selected avatar.
+        public bool UsesLegacyKeyboardMouse => deviceKind == DeviceKind.KeyboardMouse
+            || deviceKind == DeviceKind.AutoPrimary;
         public bool UsesPlayStationGlyphs
         {
             get
@@ -163,6 +168,10 @@ namespace DrawBody.Prototype
         public Vector2 ReadMove()
         {
             if (gameplayInputSuppressed) return Vector2.zero;
+            LocalPlayerInputBinding sharedPrimary = ResolveSharedPrimaryBinding();
+            if (sharedPrimary != null
+                && sharedPrimary.deviceKind == DeviceKind.LegacyJoystick)
+                return sharedPrimary.ReadMove();
 #if ENABLE_INPUT_SYSTEM
             Gamepad pad = ResolveGamepadForInput();
             if (pad != null)
@@ -199,6 +208,10 @@ namespace DrawBody.Prototype
         public Vector2 ReadAim()
         {
             if (gameplayInputSuppressed) return Vector2.zero;
+            LocalPlayerInputBinding sharedPrimary = ResolveSharedPrimaryBinding();
+            if (sharedPrimary != null
+                && sharedPrimary.deviceKind == DeviceKind.LegacyJoystick)
+                return sharedPrimary.ReadAim();
 #if ENABLE_INPUT_SYSTEM
             Gamepad pad = ResolveGamepadForInput();
             if (pad != null)
@@ -220,6 +233,10 @@ namespace DrawBody.Prototype
 
         public Vector2 ReadDrawCursor()
         {
+            LocalPlayerInputBinding sharedPrimary = ResolveSharedPrimaryBinding();
+            if (sharedPrimary != null
+                && sharedPrimary.deviceKind == DeviceKind.LegacyJoystick)
+                return sharedPrimary.ReadDrawCursor();
 #if ENABLE_INPUT_SYSTEM
             Gamepad pad = ResolveGamepadForInput();
             if (pad != null)
@@ -244,6 +261,10 @@ namespace DrawBody.Prototype
         public bool DrawPrimaryPressed()
         {
             if (gameplayInputSuppressed) return false;
+            LocalPlayerInputBinding sharedPrimary = ResolveSharedPrimaryBinding();
+            if (sharedPrimary != null
+                && sharedPrimary.deviceKind == DeviceKind.LegacyJoystick)
+                return sharedPrimary.DrawPrimaryPressed();
 #if ENABLE_INPUT_SYSTEM
             Gamepad pad = ResolveGamepadForInput();
             if (pad != null)
@@ -260,6 +281,10 @@ namespace DrawBody.Prototype
         public bool DrawPrimaryHeld()
         {
             if (gameplayInputSuppressed) return false;
+            LocalPlayerInputBinding sharedPrimary = ResolveSharedPrimaryBinding();
+            if (sharedPrimary != null
+                && sharedPrimary.deviceKind == DeviceKind.LegacyJoystick)
+                return sharedPrimary.DrawPrimaryHeld();
 #if ENABLE_INPUT_SYSTEM
             Gamepad pad = ResolveGamepadForInput();
             if (pad != null)
@@ -276,6 +301,10 @@ namespace DrawBody.Prototype
         public bool DrawPrimaryReleased()
         {
             if (gameplayInputSuppressed) return false;
+            LocalPlayerInputBinding sharedPrimary = ResolveSharedPrimaryBinding();
+            if (sharedPrimary != null
+                && sharedPrimary.deviceKind == DeviceKind.LegacyJoystick)
+                return sharedPrimary.DrawPrimaryReleased();
 #if ENABLE_INPUT_SYSTEM
             Gamepad pad = ResolveGamepadForInput();
             if (pad != null)
@@ -313,6 +342,10 @@ namespace DrawBody.Prototype
 
         public Vector2 ReadMenuDirection()
         {
+            LocalPlayerInputBinding sharedPrimary = ResolveSharedPrimaryBinding();
+            if (sharedPrimary != null
+                && sharedPrimary.deviceKind == DeviceKind.LegacyJoystick)
+                return sharedPrimary.ReadMenuDirection();
 #if ENABLE_INPUT_SYSTEM
             Gamepad pad = ResolveGamepadForInput();
             if (pad != null) return pad.dpad.ReadValue();
@@ -334,6 +367,10 @@ namespace DrawBody.Prototype
 
         public Vector2 ReadUiCursor(bool useRightStick)
         {
+            LocalPlayerInputBinding sharedPrimary = ResolveSharedPrimaryBinding();
+            if (sharedPrimary != null
+                && sharedPrimary.deviceKind == DeviceKind.LegacyJoystick)
+                return sharedPrimary.ReadUiCursor(useRightStick);
 #if ENABLE_INPUT_SYSTEM
             Gamepad pad = ResolveGamepadForInput();
             if (pad != null)
@@ -408,6 +445,10 @@ namespace DrawBody.Prototype
 
         private bool ReadButton(ButtonRole role, ButtonPhase phase)
         {
+            LocalPlayerInputBinding sharedPrimary = ResolveSharedPrimaryBinding();
+            if (sharedPrimary != null
+                && sharedPrimary.deviceKind == DeviceKind.LegacyJoystick)
+                return sharedPrimary.ReadButton(role, phase);
 #if ENABLE_INPUT_SYSTEM
             Gamepad pad = ResolveGamepadForInput();
             if (pad != null)
@@ -502,13 +543,34 @@ namespace DrawBody.Prototype
             return fallback;
         }
 
+        private LocalPlayerInputBinding ResolveSharedPrimaryBinding()
+        {
+            if (deviceKind != DeviceKind.AutoPrimary) return null;
+            if (cachedStageManager == null)
+                cachedStageManager = FindFirstObjectByType<StageManager>();
+            if (cachedStageManager == null || cachedStageManager.LocalPlayers.Count == 0)
+                return null;
+            LocalPlayerInputBinding primary = cachedStageManager.LocalPlayers[0] != null
+                ? cachedStageManager.LocalPlayers[0].InputBinding
+                : null;
+            return primary != this ? primary : null;
+        }
+
 #if ENABLE_INPUT_SYSTEM
         private Gamepad ResolveGamepadForInput()
         {
             Gamepad assigned = ResolveGamepad();
             if (assigned != null || deviceKind != DeviceKind.AutoPrimary) return assigned;
-            // An unassigned pad must never leak into P1 through Gamepad.current.
-            // LocalCoopSessionManager binds it explicitly when START is pressed.
+
+            // AutoPrimary characters created from the single-player drawer
+            // share P1's controls. Mirror only P1's explicitly assigned pad;
+            // never fall back to Gamepad.current because an unjoined device
+            // must not start controlling a character by accident.
+            LocalPlayerInputBinding primary = ResolveSharedPrimaryBinding();
+            if (primary != null && primary.deviceKind == DeviceKind.Gamepad)
+            {
+                return primary.ResolveGamepad();
+            }
             return null;
         }
 

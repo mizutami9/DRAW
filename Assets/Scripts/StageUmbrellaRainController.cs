@@ -16,7 +16,8 @@ namespace DrawBody.Prototype
         private const float FriendY = 5.28f;
         private const float FinalX = 80f;
         private const float FinalShelterX = 75f;
-        private const float UmbrellaHalfWidth = 5.1f;
+        private const float BaseUmbrellaHalfWidth = 5.1f;
+        private const float FourPlayerUmbrellaScale = 1.5f;
         private const float CanopyOffsetY = 2.42f;
         private const float RainExposureSeconds = 0.32f;
 
@@ -69,6 +70,7 @@ namespace DrawBody.Prototype
         private bool restoredPlayers;
         private CameraFollow2D stageCamera;
         private float previousCameraMinimum;
+        private float umbrellaHalfWidth = BaseUmbrellaHalfWidth;
 
         private bool HasAuthority => stageManager == null
             || !stageManager.IsOnlineStageActive
@@ -107,10 +109,13 @@ namespace DrawBody.Prototype
                 previousCameraMinimum = stageCamera.MinimumOrthographicSize;
                 stageCamera.SetMinimumOrthographicSize(10f);
             }
-            friend = StageUmbrellaFriend.Create(transform, new Vector2(friendX, FriendY));
+            int participantCount = Mathf.Clamp(stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1, 1, 4);
+            float umbrellaScale = participantCount >= 4 ? FourPlayerUmbrellaScale : 1f;
+            umbrellaHalfWidth = BaseUmbrellaHalfWidth * umbrellaScale;
+            friend = StageUmbrellaFriend.Create(transform, new Vector2(friendX, FriendY), umbrellaScale);
             CreateSpawnBazooka();
             rainVisual = StageDeadlyRainVisual.Create(transform);
-            rainVisual.SetShelter(friendX, FriendY + CanopyOffsetY, UmbrellaHalfWidth, FinalShelterX);
+            rainVisual.SetShelter(friendX, FriendY + CanopyOffsetY, umbrellaHalfWidth, FinalShelterX);
             RefreshPlayers();
             CaptureParticipants();
             SetLocalControls(false);
@@ -163,7 +168,7 @@ namespace DrawBody.Prototype
                 friend.SetPosition(friendX, FriendY);
                 friend.SetMotion(friendSpeed, motion);
             }
-            rainVisual?.SetShelter(friendX, FriendY + CanopyOffsetY, UmbrellaHalfWidth, FinalShelterX);
+            rainVisual?.SetShelter(friendX, FriendY + CanopyOffsetY, umbrellaHalfWidth, FinalShelterX);
             CheckLocalRainExposure();
         }
 
@@ -230,7 +235,7 @@ namespace DrawBody.Prototype
 
                 bool sheltered = player.transform.position.x >= FinalShelterX && player.transform.position.y <= 0.55f
                     || player.transform.position.y <= FriendY + CanopyOffsetY
-                        && Mathf.Abs(player.transform.position.x - friendX) <= UmbrellaHalfWidth - 0.5f;
+                        && Mathf.Abs(player.transform.position.x - friendX) <= umbrellaHalfWidth - 0.5f;
                 if (sheltered)
                 {
                     exposure[player] = 0f;
@@ -477,15 +482,29 @@ namespace DrawBody.Prototype
         private Transform characterVisual;
         private Transform canopy;
         private TextMesh cue;
+        private Transform speechBubble;
+        private TextMesh speechText;
         private float walkPhase;
+        private float nextSpeechAt;
+        private float hideSpeechAt;
 
-        public static StageUmbrellaFriend Create(Transform parent, Vector2 position)
+        private static readonly string[] SpeechKeys =
+        {
+            "umbrella_friend_speech_nice_rain",
+            "umbrella_friend_speech_fools_get_wet",
+            "umbrella_friend_speech_keep_close",
+            "umbrella_friend_speech_puddle_weather",
+            "umbrella_friend_speech_dry_and_clever"
+        };
+
+        public static StageUmbrellaFriend Create(Transform parent, Vector2 position, float umbrellaScale)
         {
             GameObject root = new GameObject("Umbrella Guide Friend");
             root.transform.SetParent(parent, false);
             root.transform.position = position;
             StageUmbrellaFriend result = root.AddComponent<StageUmbrellaFriend>();
-            result.Build();
+            result.Build(Mathf.Max(1f, umbrellaScale));
+            result.nextSpeechAt = Time.time + Random.Range(3.5f, 6.5f);
             return result;
         }
 
@@ -504,7 +523,21 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void Build()
+        private void Update()
+        {
+            if (speechBubble == null || speechText == null) return;
+            if (speechBubble.gameObject.activeSelf && Time.time >= hideSpeechAt)
+                speechBubble.gameObject.SetActive(false);
+            if (Time.time < nextSpeechAt) return;
+
+            speechText.text = LocalizationManager.T(SpeechKeys[Random.Range(0, SpeechKeys.Length)]);
+            speechBubble.gameObject.SetActive(true);
+            hideSpeechAt = Time.time + Random.Range(2.4f, 3.1f);
+            nextSpeechAt = hideSpeechAt + Random.Range(5.5f, 9.5f);
+            GameSfx.PlayAt(SfxId.EmotePop, transform.position, 0.42f);
+        }
+
+        private void Build(float umbrellaScale)
         {
             characterVisual = new GameObject("Frog Rain Guide").transform;
             characterVisual.SetParent(transform, false);
@@ -541,9 +574,9 @@ namespace DrawBody.Prototype
             canopy = new GameObject("Wide Umbrella").transform;
             canopy.SetParent(characterVisual, false);
             bool hasCanopyArtwork = BuildCanopy(canopy, 3.4f, 0.84f);
-            // Widen only the canopy axis. Its height and the handle position stay
-            // in the guide character's hand while the shelter span grows by 1.5x.
-            canopy.localScale = new Vector3(1.5f, 1f, 1f);
+            // Widen only the canopy axis. The authored 1.5x width is the normal
+            // 1-3 player size; a four-player match applies one more 1.5x factor.
+            canopy.localScale = new Vector3(1.5f * umbrellaScale, 1f, 1f);
             // Anchor the curved handle in the guide's raised right hand. The
             // PNG includes the full long handle, while the fallback uses the
             // shorter line-art handle, so their canopy offsets differ.
@@ -558,6 +591,20 @@ namespace DrawBody.Prototype
 
             cue = StageEscortController.CreateText(transform, "Motion Cue", new Vector3(0f, 3.05f, -0.1f),
                 56, 0.1f, new Color(1f, 0.35f, 0.12f), 54);
+
+            GameObject bubble = new GameObject("Umbrella Friend Speech Bubble");
+            bubble.transform.SetParent(transform, false);
+            bubble.transform.localPosition = new Vector3(0f, 3.62f, -0.12f);
+            StageEscortController.AddFilledRect(bubble.transform, "Paper", Vector2.zero,
+                new Vector2(5.8f, 0.82f), new Color(1f, 0.98f, 0.82f, 0.95f), 55);
+            StageEscortController.AddBoxOutline(bubble.transform, Vector2.zero,
+                new Vector2(5.8f, 0.82f), new Color(0.08f, 0.32f, 0.5f), 56);
+            StageEscortController.AddLine(bubble.transform, new Vector2(0.35f, -0.41f),
+                new Vector2(0.1f, -0.72f), 0.055f, new Color(0.08f, 0.32f, 0.5f), 56);
+            speechText = StageEscortController.CreateText(bubble.transform, "English Line",
+                new Vector3(0f, -0.02f, -0.03f), 38, 0.075f, new Color(0.04f, 0.22f, 0.4f), 57);
+            speechBubble = bubble.transform;
+            bubble.SetActive(false);
         }
 
         private static bool BuildCanopy(Transform parent, float halfWidth, float height)

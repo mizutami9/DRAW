@@ -71,6 +71,22 @@ namespace DrawBody.Prototype
             visualThemeRoot = root;
         }
 
+        public void CreateNatureStageAmbience(
+            string stageId,
+            IList<StageObjectData> objects,
+            Transform parent)
+        {
+            if (parent == null || !IsNatureStageId(stageId)) return;
+            Transform existing = parent.Find("Nature Stage Ambience");
+            if (existing != null) DestroyImmediate(existing.gameObject);
+            GameObject ambience = new GameObject("Nature Stage Ambience");
+            ambience.transform.SetParent(parent, false);
+            ambience.AddComponent<ThemedBackdropAmbientAnimator>().Configure(
+                ThemedBackdropAmbientAnimator.AmbientTheme.Nature,
+                GetCaveBackdropBounds(objects),
+                GetStableNatureVisualSeed(stageId + "|nature-ambience"));
+        }
+
         public void CreateCaveStageBackdrop(
             string stageId,
             IList<StageObjectData> objects,
@@ -92,12 +108,15 @@ namespace DrawBody.Prototype
             backdrop.transform.SetParent(parent, false);
             backdrop.transform.localPosition = Vector3.zero;
 
+            int seed = GetStableNatureVisualSeed(stageId + "|cave-backdrop");
             AddCaveBackdropPaper(backdrop.transform, bounds);
             AddCaveBackdropDrawing(
                 backdrop.transform,
                 bounds,
                 objects,
-                GetStableNatureVisualSeed(stageId + "|cave-backdrop"));
+                seed);
+            backdrop.AddComponent<ThemedBackdropAmbientAnimator>().Configure(
+                ThemedBackdropAmbientAnimator.AmbientTheme.Cave, bounds, seed + 1301);
         }
 
         public void CreateUnderwaterStageBackdrop(
@@ -123,6 +142,8 @@ namespace DrawBody.Prototype
             int seed = GetStableNatureVisualSeed(stageId + "|underwater-backdrop");
             AddUnderwaterWaterBackdrop(backdrop.transform, bounds, seed);
             AddUnderwaterSeaweedField(backdrop.transform, objects, seed + 1709);
+            backdrop.AddComponent<ThemedBackdropAmbientAnimator>().Configure(
+                ThemedBackdropAmbientAnimator.AmbientTheme.Underwater, bounds, seed + 2551);
         }
 
         public void CreateNightCityStageBackdrop(
@@ -149,6 +170,8 @@ namespace DrawBody.Prototype
             int seed = GetStableNatureVisualSeed(stageId + "|night-city-backdrop");
             AddNightCityBackdrop(backdrop.transform, bounds, seed);
             AddNightCityInfrastructure(backdrop.transform, bounds, objects, seed + 2917);
+            backdrop.AddComponent<ThemedBackdropAmbientAnimator>().Configure(
+                ThemedBackdropAmbientAnimator.AmbientTheme.NightCity, bounds, seed + 3559);
         }
 
         public void CreateFactoryStageBackdrop(
@@ -175,6 +198,8 @@ namespace DrawBody.Prototype
             int seed = GetStableNatureVisualSeed(stageId + "|factory-backdrop");
             bool keepArenaInteriorClear = HasAlternatePlayerLayoutDefinitions(stageId, objects);
             AddFactoryBackdrop(backdrop.transform, bounds, seed, !keepArenaInteriorClear);
+            backdrop.AddComponent<ThemedBackdropAmbientAnimator>().Configure(
+                ThemedBackdropAmbientAnimator.AmbientTheme.Factory, bounds, seed + 4051);
             if (!keepArenaInteriorClear)
             {
                 // 13-3's authored objects still retain the legacy five-room
@@ -209,6 +234,7 @@ namespace DrawBody.Prototype
 
             int seed = GetStableNatureVisualSeed(stageId + "|space-backdrop");
             AddSpaceBackdrop(backdrop.transform, bounds, seed);
+            backdrop.AddComponent<SpaceBackdropAnimator>().Configure(bounds, seed + 2909);
             AddSpaceInfrastructure(backdrop.transform, bounds, objects, stageId, seed + 6173);
         }
 
@@ -235,6 +261,8 @@ namespace DrawBody.Prototype
 
             int seed = GetStableNatureVisualSeed(stageId + "|snowfield-backdrop");
             AddSnowfieldBackdrop(backdrop.transform, bounds, seed);
+            backdrop.AddComponent<ThemedBackdropAmbientAnimator>().Configure(
+                ThemedBackdropAmbientAnimator.AmbientTheme.Snowfield, bounds, seed + 5101);
         }
 
         public void CreateAmusementParkStageBackdrop(
@@ -257,10 +285,10 @@ namespace DrawBody.Prototype
             GameObject backdrop = new GameObject("Amusement Park Stage Backdrop");
             backdrop.transform.SetParent(parent, false);
             backdrop.transform.localPosition = Vector3.zero;
-            AddAmusementParkBackdrop(
-                backdrop.transform,
-                bounds,
-                GetStableNatureVisualSeed(stageId + "|amusement-park-backdrop"));
+            int seed = GetStableNatureVisualSeed(stageId + "|amusement-park-backdrop");
+            AddAmusementParkBackdrop(backdrop.transform, bounds, seed);
+            backdrop.AddComponent<ThemedBackdropAmbientAnimator>().Configure(
+                ThemedBackdropAmbientAnimator.AmbientTheme.AmusementPark, bounds, seed + 6203);
         }
 
         public void CreateCompetitionArenaStageBackdrop(
@@ -283,10 +311,10 @@ namespace DrawBody.Prototype
             GameObject backdrop = new GameObject("Competition Arena Stage Backdrop");
             backdrop.transform.SetParent(parent, false);
             backdrop.transform.localPosition = Vector3.zero;
-            AddCompetitionArenaBackdrop(
-                backdrop.transform,
-                bounds,
-                GetStableNatureVisualSeed(stageId + "|competition-arena-backdrop"));
+            int seed = GetStableNatureVisualSeed(stageId + "|competition-arena-backdrop");
+            AddCompetitionArenaBackdrop(backdrop.transform, bounds, seed);
+            backdrop.AddComponent<ThemedBackdropAmbientAnimator>().Configure(
+                ThemedBackdropAmbientAnimator.AmbientTheme.CompetitionArena, bounds, seed + 7307);
         }
 
         public GameObject Create(StageObjectData data, Transform parent)
@@ -716,6 +744,10 @@ namespace DrawBody.Prototype
 
             StageDynamite dynamite = obj.AddComponent<StageDynamite>();
             dynamite.Configure(data.bombFuseSeconds > 0f ? data.bombFuseSeconds : 5f, size);
+            if (visualThemeStageId == "4-2")
+            {
+                dynamite.ConfigureRespawn(5f);
+            }
             AddEditorMetadata(obj, data);
             return obj;
         }
@@ -4893,19 +4925,42 @@ namespace DrawBody.Prototype
 
             GameObject trigger = new GameObject("Jump Trigger");
             trigger.transform.SetParent(obj.transform, false);
-            trigger.transform.localPosition = new Vector3(0f, 0.15f, 0f);
+            bool isCompactJumpPad = data.size.x <= 1.5f || data.size.y <= 0.58f;
+            trigger.transform.localPosition = new Vector3(0f, isCompactJumpPad ? 0.08f : 0.15f, 0f);
             BoxCollider2D triggerCollider = trigger.AddComponent<BoxCollider2D>();
             triggerCollider.isTrigger = true;
-            triggerCollider.size = new Vector2(0.95f, 0.7f);
+            // A compact pad scales its child trigger down with the artwork. Its old
+            // lower edge then sat above the solid landing face, so thin hand-drawn
+            // feet could stand on list item 23 without ever entering the trigger.
+            triggerCollider.size = isCompactJumpPad
+                ? new Vector2(1.15f, 0.84f)
+                : new Vector2(0.95f, 0.7f);
             JumpPad jumpPad = trigger.AddComponent<JumpPad>();
             jumpPad.Configure(obj.transform, data.actionStrength > 0f ? data.actionStrength : 27f);
-            if (!string.IsNullOrEmpty(data.objectId)
-                && data.objectId.StartsWith("6-1_", System.StringComparison.Ordinal))
+            bool isStage33JumpPad = !string.IsNullOrEmpty(data.objectId)
+                && data.objectId.StartsWith("3-3_", System.StringComparison.Ordinal);
+            if (isStage33JumpPad
+                || !string.IsNullOrEmpty(data.objectId)
+                    && data.objectId.StartsWith("6-1_", System.StringComparison.Ordinal))
             {
-                // 6-1 already defines the launch velocity for the bird carrying
-                // a teammate. The common x3 bird bonus made 40 become 120 and
-                // launched the pair directly into the upper spikes.
+                // These enclosed carry courses already author the launch velocity
+                // needed by the bird. The common x3 bird bonus launches a carried
+                // teammate into the ceiling instead of along the intended route.
                 jumpPad.ConfigureBirdMultiplier(1f);
+            }
+            if (isStage33JumpPad)
+            {
+                StageEditorObject[] stageObjects = parent.GetComponentsInChildren<StageEditorObject>(true);
+                for (int i = 0; i < stageObjects.Length; i++)
+                {
+                    StageEditorObject boundary = stageObjects[i];
+                    if (boundary == null || boundary.type != StageObjectType.StageBoundary) continue;
+                    if (TryGetStageBoundaryInnerEdges(boundary, out _, out _, out float ceilingY))
+                    {
+                        jumpPad.ConfigureCeilingLimit(ceilingY, 0.3f);
+                        break;
+                    }
+                }
             }
 
             if (!AddResourceSprite(

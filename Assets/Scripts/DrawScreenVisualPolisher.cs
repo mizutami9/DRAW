@@ -403,12 +403,12 @@ namespace DrawBody.Prototype
 
             Text personalLabel = EnsureLabel(inkCard, "PersonalInkLabel", "YOU", 13, TextAnchor.MiddleLeft);
             SetTopRect(personalLabel.rectTransform, new Vector2(12f, -32f), new Vector2(150f, 22f), new Vector2(0f, 1f));
-            Text personalValue = EnsureLabel(inkCard, "PersonalInkValue", "0 / 500", 14, TextAnchor.MiddleRight);
+            Text personalValue = EnsureLabel(inkCard, "PersonalInkValue", $"0 / {DrawManager.IndividualInkLimit:0}", 14, TextAnchor.MiddleRight);
             SetTopRect(personalValue.rectTransform, new Vector2(162f, -32f), new Vector2(118f, 22f), new Vector2(0f, 1f));
 
             Text teamLabel = EnsureLabel(inkCard, "TeamInkLabel", "TEAM", 13, TextAnchor.MiddleLeft);
             SetTopRect(teamLabel.rectTransform, new Vector2(12f, -75f), new Vector2(150f, 20f), new Vector2(0f, 1f));
-            Text teamValue = EnsureLabel(inkCard, "TeamInkValue", "0 / 350", 14, TextAnchor.MiddleRight);
+            Text teamValue = EnsureLabel(inkCard, "TeamInkValue", $"0 / {DrawManager.CalculateTeamInkLimit(1):0}", 14, TextAnchor.MiddleRight);
             SetTopRect(teamValue.rectTransform, new Vector2(162f, -75f), new Vector2(118f, 20f), new Vector2(0f, 1f));
             Text teamBreakdown = EnsureLabel(
                 inkCard, "TeamInkBreakdown", string.Empty, 10, TextAnchor.MiddleCenter);
@@ -1594,17 +1594,22 @@ namespace DrawBody.Prototype
 
         private void RefreshPresetSlotVisuals()
         {
+            // These labels do not depend on the active DrawManager. Restore
+            // them first so a panel-enable / cloned-session binding race can
+            // never leave the preset controls with the temporary empty text
+            // used while the runtime UI is being constructed.
+            SetPlainText("DrawingPresetTitle", LocalizationManager.T("draw_preset_sets_title"));
+            SetButtonText(FindRect(transform, "DrawingPresetOpenButton")?.GetComponent<Button>(),
+                LocalizationManager.T("draw_preset_button"), 17);
+            SetButtonText(FindRect(transform, "DrawingPresetCloseButton")?.GetComponent<Button>(),
+                LocalizationManager.T("draw_preset_back"), 16);
+
             ResolveDrawManager();
             if (drawManager == null)
             {
                 return;
             }
 
-            SetPlainText("DrawingPresetTitle", LocalizationManager.T("draw_preset_sets_title"));
-            SetButtonText(FindRect(transform, "DrawingPresetOpenButton")?.GetComponent<Button>(),
-                LocalizationManager.T("draw_preset_button"), 17);
-            SetButtonText(FindRect(transform, "DrawingPresetCloseButton")?.GetComponent<Button>(),
-                LocalizationManager.T("draw_preset_back"), 16);
             for (int i = 0; i < CharacterDrawingPresetStore.SlotCount; i++)
             {
                 RectTransform slot = FindRect(transform, "DrawingPresetSlot" + (i + 1));
@@ -1671,9 +1676,14 @@ namespace DrawBody.Prototype
             Text label = button != null ? button.GetComponentInChildren<Text>(true) : null;
             if (label != null)
             {
+                label.gameObject.SetActive(true);
+                label.enabled = true;
                 label.text = value;
                 label.fontSize = size;
                 label.fontStyle = FontStyle.Bold;
+                Color color = label.color;
+                color.a = 1f;
+                label.color = color;
             }
         }
 
@@ -1939,6 +1949,7 @@ namespace DrawBody.Prototype
         {
             Transform existing = parent.Find(name);
             Text text = existing != null ? existing.GetComponent<Text>() : null;
+            bool created = text == null;
             if (text == null)
             {
                 GameObject obj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
@@ -1948,7 +1959,10 @@ namespace DrawBody.Prototype
                 text.font = template != null ? template.font : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             }
 
-            text.text = value;
+            // Layout rebuilds frequently call EnsureLabel with an empty
+            // placeholder before localization/state refresh runs. Preserve an
+            // existing runtime label instead of flashing or remaining blank.
+            if (created || !string.IsNullOrEmpty(value)) text.text = value;
             text.fontSize = fontSize;
             text.alignment = alignment;
             text.raycastTarget = false;

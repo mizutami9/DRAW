@@ -8,6 +8,8 @@ namespace DrawBody.Prototype
         [SerializeField] private float targetJumpHeight;
         [SerializeField] private Transform animatedRoot;
         [SerializeField] private float birdLaunchMultiplier = 3f;
+        private float ceilingLimitY = float.PositiveInfinity;
+        private float ceilingClearance = 0.3f;
 
         private Vector3 animatedOrigin;
         private float bounceTimer;
@@ -30,6 +32,12 @@ namespace DrawBody.Prototype
         public void ConfigureTargetHeight(float height)
         {
             targetJumpHeight = Mathf.Max(0f, height);
+        }
+
+        public void ConfigureCeilingLimit(float ceilingY, float clearance)
+        {
+            ceilingLimitY = ceilingY;
+            ceilingClearance = Mathf.Max(0.1f, clearance);
         }
 
         private void Update()
@@ -120,9 +128,9 @@ namespace DrawBody.Prototype
                     ? birdLaunchMultiplier
                     : 1f;
             float launchVelocity = jumpVelocity;
+            float gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
             if (targetJumpHeight > 0f)
             {
-                float gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
                 if (gravity > 0.01f)
                     launchVelocity = Mathf.Sqrt(2f * gravity * targetJumpHeight);
 
@@ -149,9 +157,35 @@ namespace DrawBody.Prototype
             }
             float currentLaunchSpeed = Vector2.Dot(velocity, launchDirection);
             float targetLaunchSpeed = launchVelocity * speciesMultiplier;
-            if (currentLaunchSpeed < targetLaunchSpeed)
+            bool ceilingLimited = false;
+            if (!float.IsInfinity(ceilingLimitY)
+                && launchDirection.y > 0.001f
+                && gravity > 0.01f
+                && launchCarry != null
+                && launchCarry.TryGetCurrentPlayerTopOffset(out float topOffset))
+            {
+                // Cap the ballistic apex using the actual authored character
+                // bounds. This keeps a bird and its carried teammate just below
+                // an enclosed stage ceiling even when their drawings are tall.
+                float currentTop = rb.position.y + topOffset;
+                float availableRise = ceilingLimitY - ceilingClearance - currentTop;
+                float safeVerticalSpeed = availableRise > 0f
+                    ? Mathf.Sqrt(2f * gravity * availableRise)
+                    : 0f;
+                ceilingLimited = safeVerticalSpeed / launchDirection.y < targetLaunchSpeed;
+                targetLaunchSpeed = Mathf.Min(
+                    targetLaunchSpeed,
+                    safeVerticalSpeed / launchDirection.y);
+            }
+            if (currentLaunchSpeed < targetLaunchSpeed
+                || ceilingLimited && currentLaunchSpeed > targetLaunchSpeed)
                 velocity += launchDirection * (targetLaunchSpeed - currentLaunchSpeed);
             rb.linearVelocity = velocity;
+            if (launchCarry != null && launchCarry.IsCarryingFriend)
+            {
+                launchCarry.AuthorizeFriendCarrierJumpPadSpeed(
+                    Mathf.Max(0f, launchDirection.y * targetLaunchSpeed));
+            }
             bounceTimer = 0.22f;
             GameSfx.PlayAt(SfxId.JumpPadLaunch, transform.position, speciesMultiplier > 1f ? 1.15f : 1f);
         }

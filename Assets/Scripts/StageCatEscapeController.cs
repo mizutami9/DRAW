@@ -617,10 +617,11 @@ namespace DrawBody.Prototype
             CreateTeamWall("2-3_team_wall_10", 270f, 3);
             CreateTeamWall("2-3_team_wall_20", 286f, 5);
             CreateTeamWall("2-3_team_wall_30", 303f, 10);
-            for (int lane = 0; lane < playerCount; lane++)
-                CreateRamp(314f, LaneY[lane], 380f, -35f);
-            CreateFloor(379f, 428f, -35f);
-            CreateGoal(new Vector2(419f, -33.8f));
+            // End the upper lane floors here so those players drop into the
+            // lowest lane. The lowest route stays level through the finish;
+            // converging ramps made every lower route an impassable climb.
+            CreateFloor(314f, 428f, LaneY[0]);
+            CreateGoal(new Vector2(419f, LaneY[0] + 1.2f));
         }
 
         private void BuildLane(int lane)
@@ -677,26 +678,6 @@ namespace DrawBody.Prototype
         private void CreatePlatform(float x, float y, float width)
         {
             CreateTerrain(StageObjectType.Platform, "Athletic Platform", new Vector2(x, y), new Vector2(width, 0.55f));
-        }
-
-        private void CreateRamp(float fromX, float fromY, float toX, float toY)
-        {
-            Vector2 from = new Vector2(fromX, fromY);
-            Vector2 to = new Vector2(toX, toY);
-            Vector2 direction = (to - from).normalized;
-            Vector2 upwardNormal = new Vector2(-direction.y, direction.x);
-            StageObjectData data = StageObjectFactory.CreateDefaultData(StageObjectType.Platform,
-                (from + to) * 0.5f - upwardNormal * 0.35f);
-            data.objectId = "2-3_terrain_" + terrainSerial++;
-            data.size = new Vector2(Vector2.Distance(from, to), 0.7f);
-            data.rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            data.keepSeparate = true;
-            GameObject created = factory != null ? factory.Create(data, transform) : null;
-            if (created != null)
-            {
-                created.name = "Lane Merge Ramp";
-                syncManager?.RegisterRuntimeObject(created.transform);
-            }
         }
 
         private void CreateWall(float x, float bottom, float top)

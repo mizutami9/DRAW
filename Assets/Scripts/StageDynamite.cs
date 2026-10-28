@@ -9,8 +9,10 @@ namespace DrawBody.Prototype
         private const float BlastRangeWarningSeconds = 0.8f;
 
         private float fuseSeconds = 5f;
+        private float respawnSeconds;
         private Vector2 visualSize = new Vector2(1.4f, 1.25f);
         private float detonateAt;
+        private float respawnAt;
         private bool armed;
         private bool exploded;
         private int lastTick = -1;
@@ -20,6 +22,7 @@ namespace DrawBody.Prototype
         private ExplosionRangeIndicator rangeIndicator;
         private StageManager stageManager;
         private StageGimmickSyncManager syncManager;
+        private StageGimmickLinkController linkController;
         private static Sprite circleSprite;
         private static Material lineMaterial;
 
@@ -30,10 +33,16 @@ namespace DrawBody.Prototype
             BuildVisual();
         }
 
+        public void ConfigureRespawn(float seconds)
+        {
+            respawnSeconds = Mathf.Max(0f, seconds);
+        }
+
         private void Start()
         {
             stageManager = Object.FindFirstObjectByType<StageManager>();
             syncManager = GetComponentInParent<StageGimmickSyncManager>();
+            linkController = GetComponentInParent<StageGimmickLinkController>();
             RuntimeStageEditor editor = Object.FindFirstObjectByType<RuntimeStageEditor>();
             if (editor != null && editor.IsEditing)
             {
@@ -49,7 +58,15 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            if (!armed || exploded) return;
+            if (exploded)
+            {
+                if (respawnSeconds > 0f && Time.time >= respawnAt)
+                {
+                    Respawn();
+                }
+                return;
+            }
+            if (!armed) return;
             float remaining = Mathf.Max(0f, detonateAt - Time.time);
             SetCountdown(remaining);
             int tick = Mathf.CeilToInt(remaining);
@@ -122,7 +139,42 @@ namespace DrawBody.Prototype
             if (ownCollider != null) ownCollider.enabled = false;
             SetBundleVisible(false);
             GameSfx.PlayAt(SfxId.DynamiteExplosion, transform.position);
-            Destroy(gameObject, 1.1f);
+            if (respawnSeconds > 0f)
+            {
+                respawnAt = Time.time + respawnSeconds;
+            }
+            else
+            {
+                Destroy(gameObject, 1.1f);
+            }
+        }
+
+        private void Respawn()
+        {
+            exploded = false;
+            armed = false;
+            detonateAt = 0f;
+            respawnAt = 0f;
+            lastTick = -1;
+
+            SetBundleVisible(true);
+            SetCountdown(fuseSeconds);
+            if (countdownText != null) countdownText.gameObject.SetActive(true);
+            if (warningGlow != null)
+            {
+                warningGlow.gameObject.SetActive(true);
+                warningGlow.color = new Color(1f, 0.1f, 0.02f, 0.08f);
+            }
+            if (fuseSpark != null) fuseSpark.enabled = false;
+            Collider2D ownCollider = GetComponent<Collider2D>();
+            if (ownCollider != null) ownCollider.enabled = true;
+
+            rangeIndicator = ExplosionRangeIndicator.Create(
+                transform.position,
+                CalculateBlastRadius(),
+                true);
+            rangeIndicator.gameObject.SetActive(false);
+            linkController?.ResetDynamiteTarget(transform);
         }
 
         private float CalculateBlastRadius()

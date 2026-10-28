@@ -114,6 +114,7 @@ namespace DrawBody.Prototype
         private BoardPhase phase;
         private float nextMagnetInputAt;
         private int localMagnetInputSequence;
+        private int lastCountdownCue = int.MinValue;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -173,6 +174,7 @@ namespace DrawBody.Prototype
             ConfigureCamera();
             PreparePlayers();
             AnimateBoard();
+            UpdateCountdownAudio();
 
             if (!HasAuthority && phase == BoardPhase.Active && Time.unscaledTime >= nextMagnetInputAt)
             {
@@ -199,6 +201,7 @@ namespace DrawBody.Prototype
                     if (countdownRemaining <= 0f)
                     {
                         phase = BoardPhase.Active;
+                        GameSfx.Play(SfxId.StageCountdownGo);
                         BroadcastState(true);
                     }
                     break;
@@ -239,6 +242,7 @@ namespace DrawBody.Prototype
             phase = BoardPhase.Countdown;
             remaining = RoundSeconds;
             countdownRemaining = CountdownSeconds;
+            lastCountdownCue = int.MinValue;
             transitionRemaining = 0f;
             filledMask = 0;
             magneticField = Vector2.zero;
@@ -250,6 +254,15 @@ namespace DrawBody.Prototype
             StartCoroutine(PositionPlayersAfterBuild());
             BroadcastState(true);
             RefreshMonitor();
+        }
+
+        private void UpdateCountdownAudio()
+        {
+            if (phase != BoardPhase.Countdown) return;
+            int cue = Mathf.Clamp(Mathf.CeilToInt(countdownRemaining), 1, 3);
+            if (cue == lastCountdownCue) return;
+            lastCountdownCue = cue;
+            GameSfx.Play(SfxId.StageCountdownTick);
         }
 
         private void BuildArena()
@@ -491,8 +504,11 @@ namespace DrawBody.Prototype
             }
             else if (round == 2)
             {
-                Vector2 start = playerCount == 3 ? BoardPoint(-0.52f, -0.5f) : BoardPoint(-0.72f, -0.58f);
-                Vector2 goal = playerCount == 3 ? BoardPoint(0f, 0.68f) : BoardPoint(0.72f, 0.58f);
+                // The triangular maze crosses the generic diagonal endpoints.
+                // Keep its ball and hole in the open bottom/top pockets so the
+                // expanded ball-vs-wall collision shape has a valid route.
+                Vector2 start = playerCount == 3 ? BoardPoint(-0.2f, -0.7f) : BoardPoint(-0.72f, -0.58f);
+                Vector2 goal = playerCount == 3 ? BoardPoint(0f, 0.9f) : BoardPoint(0.72f, 0.58f);
                 CreateHole(goal, 0);
                 CreateBall(start, 0);
                 CreateMaze();
@@ -715,13 +731,22 @@ namespace DrawBody.Prototype
         {
             if (stageManager == null || stageManager.IsDrawingMode) return;
             IReadOnlyList<PlayerController2D> localPlayers = stageManager.LocalPlayers;
+            LocalCoopSessionManager localCoop = stageManager.GetComponent<LocalCoopSessionManager>();
+            bool usesSharedPrimaryInput = localPlayers.Count > 1
+                && (localCoop == null || !localCoop.HasDedicatedSecondaryPlayers);
+            PlayerController2D activePlayer = stageManager.ActivePlayerController;
             for (int i = 0; i < localPlayers.Count; i++)
             {
                 PlayerController2D controller = localPlayers[i];
                 Rigidbody2D body = controller != null ? controller.GetComponent<Rigidbody2D>() : null;
                 if (body == null) continue;
                 LocalPlayerInputBinding binding = controller.InputBinding;
-                Vector2 input = binding != null ? binding.ReadMove() : Vector2.zero;
+                // Drawer-added offline characters share P1's device and are
+                // selected with Q. Unlike dedicated local co-op players, only
+                // the selected avatar may consume that shared input on 8-3.
+                Vector2 input = usesSharedPrimaryInput && controller != activePlayer
+                    ? Vector2.zero
+                    : binding != null ? binding.ReadMove() : Vector2.zero;
                 Vector2 candidate = body.position + input.normalized * (5.2f * Time.fixedDeltaTime);
                 if (assignedEdges.TryGetValue(controller, out int edge))
                     body.position = ClampToAssignedLane(candidate, edge, controller);
@@ -915,34 +940,18 @@ namespace DrawBody.Prototype
         private void RefreshMonitor()
         {
             if (monitorMain == null || monitorSub == null) return;
-            switch (phase)
+            monitorMain.text = LocalizationManager.Format("tilt_board_monitor", round, remaining);
+            monitorSub.text = LocalizationManager.T("tilt_board_hint");
+            if (phase == BoardPhase.Countdown)
             {
-                case BoardPhase.Countdown:
-                    int count = Mathf.Clamp(Mathf.CeilToInt(countdownRemaining), 1, 3);
-                    monitorMain.text = LocalizationManager.Format("tilt_board_countdown", round, count);
-                    monitorSub.text = LocalizationManager.T("tilt_board_countdown_hint");
-                    if (countdownText != null)
-                    {
-                        countdownText.gameObject.SetActive(true);
-                        countdownText.text = count.ToString();
-                        float pulse = 1f + Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f) * 0.08f;
-                        countdownText.transform.localScale = Vector3.one * pulse;
-                    }
-                    break;
-                case BoardPhase.Active:
-                    monitorMain.text = LocalizationManager.Format("tilt_board_monitor", round, remaining);
-                    monitorSub.text = round == 2
-                        ? LocalizationManager.T("tilt_board_maze")
-                        : LocalizationManager.Format("tilt_board_progress", CountBits(filledMask), holes.Count);
-                    break;
-                case BoardPhase.RoundClear:
-                    monitorMain.text = LocalizationManager.Format("tilt_board_round_clear", round);
-                    monitorSub.text = LocalizationManager.T("tilt_board_hint");
-                    break;
-                case BoardPhase.Failed:
-                    monitorMain.text = LocalizationManager.T("tilt_board_timeout");
-                    monitorSub.text = LocalizationManager.T("tilt_board_hint");
-                    break;
+                int count = Mathf.Clamp(Mathf.CeilToInt(countdownRemaining), 1, 3);
+                if (countdownText != null)
+                {
+                    countdownText.gameObject.SetActive(true);
+                    countdownText.text = count.ToString();
+                    float pulse = 1f + Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f) * 0.08f;
+                    countdownText.transform.localScale = Vector3.one * pulse;
+                }
             }
             if (phase != BoardPhase.Countdown && countdownText != null)
             {
@@ -1259,6 +1268,8 @@ namespace DrawBody.Prototype
                     GameSfx.Play(SfxId.GoalReached);
                 else if (previousPhase != BoardPhase.Failed && incomingPhase == BoardPhase.Failed)
                     GameSfx.Play(SfxId.PlayerDeath, 0.7f);
+                else if (previousPhase == BoardPhase.Countdown && incomingPhase == BoardPhase.Active)
+                    GameSfx.Play(SfxId.StageCountdownGo);
             }
             phase = incomingPhase;
             remaining = state.Remaining;

@@ -385,6 +385,7 @@ namespace DrawBody.Prototype
             objectFactory.CreateSnowfieldStageBackdrop(data.id, runtimeObjects, stageRoot);
             objectFactory.CreateAmusementParkStageBackdrop(data.id, runtimeObjects, stageRoot);
             objectFactory.CreateCompetitionArenaStageBackdrop(data.id, runtimeObjects, stageRoot);
+            objectFactory.CreateNatureStageAmbience(data.id, runtimeObjects, stageRoot);
             AddNatureStageVines(data.id, runtimeObjects);
 
             ConfigureStageGimmicks(data);

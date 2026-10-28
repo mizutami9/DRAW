@@ -7,8 +7,9 @@ namespace DrawBody.Prototype
 {
     public sealed class DrawManager : MonoBehaviour
     {
-        public const float IndividualInkLimit = 500f;
-        public const float TeamInkPerPlayer = 350f;
+        public const float IndividualInkLimit = 800f;
+        public const float TeamInkBaseLimit = 800f;
+        public const float TeamInkPerAdditionalPlayer = 400f;
         private const float TurtleGameplayCoordinateScale = 3f;
         private const float SlimeGameplayCoordinateScale = 5f;
         private const float ValidationAlarmDisplaySeconds = 3f;
@@ -199,7 +200,7 @@ namespace DrawBody.Prototype
         public static float CalculateTeamInkLimit(int playerCount)
         {
             int participants = Mathf.Clamp(playerCount, 1, 4);
-            return participants * TeamInkPerPlayer;
+            return TeamInkBaseLimit + (participants - 1) * TeamInkPerAdditionalPlayer;
         }
 
         public bool IsSpeciesAllowed(Species species)

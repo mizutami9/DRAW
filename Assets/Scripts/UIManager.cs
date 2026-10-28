@@ -28,10 +28,6 @@ namespace DrawBody.Prototype
         private Text stageSelectLockedText;
         private Text stageSelectLeaveLabel;
         private GameObject leaveSessionConfirmPanel;
-        private GameObject singlePlayRecommendationPanel;
-        private Text singlePlayRecommendationTitle;
-        private Text singlePlayRecommendationMessage;
-        private Text singlePlayRecommendationOkLabel;
         private GameObject titleExitConfirmationPanel;
         private Text titleExitConfirmationMessage;
         private Text titleExitConfirmationYesLabel;
@@ -531,13 +527,13 @@ namespace DrawBody.Prototype
                 }
             }
 
+            ResolveStageManager()?.SetGameplayMenuOverlayActive(!menuOpen);
             RefreshHudVisibility();
         }
 
         /// <summary>
-        /// Keyboard escape must feel immediate.  In particular, do not let a
-        /// second press reverse an opening slide before the panel is visible.
-        /// Mouse/TAB driven drawers keep their normal animated behaviour.
+        /// Opens and closes the gameplay menu with the same left-edge slide used
+        /// by the TAB drawer, while keeping the logical state responsive to ESC.
         /// </summary>
         public void ToggleMenuFromEscape()
         {
@@ -554,7 +550,17 @@ namespace DrawBody.Prototype
             GameSfx.Play(menuOpen ? SfxId.UiButtonBack : SfxId.UiTabChange);
             if (menuOpen)
             {
-                HideMenu();
+                HideGameplayActionConfirm();
+                if (menuDrawer != null)
+                {
+                    menuDrawer.Close();
+                }
+                else
+                {
+                    menuPanel.SetActive(false);
+                }
+                ResolveStageManager()?.SetGameplayMenuOverlayActive(false);
+                RefreshHudVisibility();
                 return;
             }
 
@@ -562,7 +568,7 @@ namespace DrawBody.Prototype
             gameplayHudDrawer?.Close();
             if (menuDrawer != null)
             {
-                menuDrawer.OpenImmediate();
+                menuDrawer.Open();
             }
             else
             {
@@ -570,6 +576,7 @@ namespace DrawBody.Prototype
                 menuPanel.transform.SetAsLastSibling();
             }
 
+            ResolveStageManager()?.SetGameplayMenuOverlayActive(true);
             RefreshHudVisibility();
         }
 
@@ -701,106 +708,6 @@ namespace DrawBody.Prototype
             gameplayActionConfirmPanel.SetActive(true);
             gameplayActionConfirmPanel.transform.SetAsLastSibling();
             GameSfx.Play(SfxId.UiButtonPress);
-        }
-
-        public void ShowSinglePlayRecommendation()
-        {
-            StageManager manager = ResolveStageManager();
-            LocalCoopSessionManager localCoop = manager != null
-                ? manager.GetComponent<LocalCoopSessionManager>()
-                : null;
-            if (localCoop != null && localCoop.HasDedicatedSecondaryPlayers)
-            {
-                // The recommendation exists to encourage a solo player to add
-                // a partner. When two local devices are already participating,
-                // LOCAL can proceed directly to stage selection.
-                manager.OpenSingleMenu();
-                return;
-            }
-            EnsureSinglePlayRecommendationPanel();
-            RefreshSinglePlayRecommendationText();
-            if (singlePlayRecommendationPanel == null) return;
-            singlePlayRecommendationPanel.SetActive(true);
-            singlePlayRecommendationPanel.transform.SetAsLastSibling();
-        }
-
-        private void EnsureSinglePlayRecommendationPanel()
-        {
-            if (singlePlayRecommendationPanel != null) return;
-
-            Font font = GetComponentInChildren<Text>(true)?.font;
-            if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-
-            singlePlayRecommendationPanel = new GameObject(
-                "SinglePlayRecommendationPanel", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-            singlePlayRecommendationPanel.transform.SetParent(transform, false);
-            Stretch(singlePlayRecommendationPanel.GetComponent<RectTransform>());
-            Image blocker = singlePlayRecommendationPanel.GetComponent<Image>();
-            blocker.color = new Color(0.025f, 0.04f, 0.055f, 0.68f);
-
-            GameObject card = new GameObject(
-                "SinglePlayRecommendationCard", typeof(RectTransform), typeof(CanvasRenderer),
-                typeof(Image), typeof(Outline), typeof(Shadow));
-            card.transform.SetParent(singlePlayRecommendationPanel.transform, false);
-            RectTransform cardRect = card.GetComponent<RectTransform>();
-            cardRect.anchorMin = cardRect.anchorMax = new Vector2(0.5f, 0.5f);
-            cardRect.pivot = new Vector2(0.5f, 0.5f);
-            cardRect.anchoredPosition = Vector2.zero;
-            cardRect.sizeDelta = new Vector2(700f, 330f);
-            DoodlePaperUi.Apply(card.GetComponent<Image>(), new Color(0.99f, 0.97f, 0.86f, 1f));
-            Outline outline = card.GetComponent<Outline>();
-            outline.enabled = false;
-            Shadow shadow = card.GetComponent<Shadow>();
-            shadow.effectColor = new Color(0f, 0f, 0f, 0.28f);
-            shadow.effectDistance = new Vector2(10f, -11f);
-            CreateClearPaintStroke(card.transform, "RecommendationHighlight", new Vector2(0f, 108f),
-                new Vector2(570f, 66f), new Color(1f, 0.72f, 0.08f, 0.24f));
-
-            singlePlayRecommendationTitle = CreateClearText(
-                "SinglePlayRecommendationTitle", card.transform, font, 31, TextAnchor.MiddleCenter,
-                new Vector2(0f, 108f), new Vector2(620f, 58f));
-            singlePlayRecommendationTitle.fontStyle = FontStyle.Bold;
-            singlePlayRecommendationTitle.color = new Color(0.68f, 0.12f, 0.09f, 1f);
-
-            singlePlayRecommendationMessage = CreateClearText(
-                "SinglePlayRecommendationMessage", card.transform, font, 22, TextAnchor.MiddleCenter,
-                new Vector2(0f, 18f), new Vector2(620f, 124f));
-            singlePlayRecommendationMessage.color = new Color(0.13f, 0.1f, 0.07f, 1f);
-            singlePlayRecommendationMessage.resizeTextForBestFit = true;
-            singlePlayRecommendationMessage.resizeTextMinSize = 15;
-            singlePlayRecommendationMessage.resizeTextMaxSize = 22;
-
-            Button ok = CreateClearButton(
-                "SinglePlayRecommendationOk", card.transform, font, new Vector2(0f, -112f),
-                new Vector2(210f, 58f), new Color(0.48f, 0.88f, 0.48f, 1f));
-            singlePlayRecommendationOkLabel = ok.GetComponentInChildren<Text>(true);
-            ok.onClick.AddListener(() =>
-            {
-                singlePlayRecommendationPanel.SetActive(false);
-                ResolveStageManager()?.OpenSingleMenu();
-            });
-
-            RefreshSinglePlayRecommendationText();
-            singlePlayRecommendationPanel.SetActive(false);
-        }
-
-        private void RefreshSinglePlayRecommendationText()
-        {
-            if (singlePlayRecommendationTitle != null)
-            {
-                singlePlayRecommendationTitle.text = LocalizationManager.T("single_recommend_title");
-                singlePlayRecommendationTitle.font = LocalizationManager.LoadCurrentFont(singlePlayRecommendationTitle.font);
-            }
-            if (singlePlayRecommendationMessage != null)
-            {
-                singlePlayRecommendationMessage.text = LocalizationManager.T("single_recommend_message");
-                singlePlayRecommendationMessage.font = LocalizationManager.LoadCurrentFont(singlePlayRecommendationMessage.font);
-            }
-            if (singlePlayRecommendationOkLabel != null)
-            {
-                singlePlayRecommendationOkLabel.text = LocalizationManager.T("single_recommend_ok");
-                singlePlayRecommendationOkLabel.font = LocalizationManager.LoadCurrentFont(singlePlayRecommendationOkLabel.font);
-            }
         }
 
         public void ShowTitleExitConfirmation()
@@ -1287,6 +1194,7 @@ namespace DrawBody.Prototype
                 }
             }
 
+            ResolveStageManager()?.SetGameplayMenuOverlayActive(false);
             RefreshHudVisibility();
         }
 
@@ -1298,8 +1206,11 @@ namespace DrawBody.Prototype
             }
 
             ResolveMenuDrawer();
+            // SlidingMenuPanel stays active while its close animation finishes.
+            // Its logical IsOpen flag changes immediately, so using activeSelf
+            // here used to discard TAB presses during that short transition.
             bool menuShowing = menuPanel != null
-                && (menuPanel.activeSelf || menuDrawer != null && menuDrawer.IsOpen);
+                && (menuDrawer != null ? menuDrawer.IsOpen : menuPanel.activeSelf);
             if (menuShowing)
             {
                 return;
@@ -1548,11 +1459,6 @@ namespace DrawBody.Prototype
                 HideTitleExitConfirmation();
                 return true;
             }
-            if (singlePlayRecommendationPanel != null && singlePlayRecommendationPanel.activeInHierarchy)
-            {
-                singlePlayRecommendationPanel.SetActive(false);
-                return true;
-            }
             return TryCloseOptionPopup();
         }
 
@@ -1561,11 +1467,11 @@ namespace DrawBody.Prototype
             || optionShowing && optionPanel != null && optionPanel.activeInHierarchy;
         public bool IsOptionShowing => optionShowing && optionPanel != null && optionPanel.activeInHierarchy;
         public bool IsGameplayMenuShowing => menuPanel != null
-            && (menuPanel.activeInHierarchy || menuDrawer != null && menuDrawer.IsOpen);
+            && (menuDrawer != null ? menuDrawer.IsOpen : menuPanel.activeInHierarchy);
         public bool IsGameplayOverlayShowing => drawing
             || optionShowing
-            || menuPanel != null && menuPanel.activeInHierarchy
-            || gameplayHudDrawer != null && gameplayHudDrawer.IsOpenOrTransitioning;
+            || IsGameplayMenuShowing
+            || gameplayHudDrawer != null && gameplayHudDrawer.IsOpen;
 
         private void ConfigureMenuForLocalPlayers()
         {
@@ -2288,7 +2194,6 @@ namespace DrawBody.Prototype
         {
             RefreshGameplayMenu();
             RefreshGameplayActionConfirmText();
-            RefreshSinglePlayRecommendationText();
             RefreshTitleExitConfirmationText();
             RefreshSpeciesSwapText();
             if (stageSelectLockedText != null)

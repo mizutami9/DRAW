@@ -93,7 +93,7 @@ namespace DrawBody.Prototype
 
         internal static Sprite GetTitleMenuIconSprite(int iconIndex)
         {
-            const int iconCount = 21;
+            const int iconCount = 22;
             if (titleMenuIconSprites == null) titleMenuIconSprites = new Sprite[iconCount];
             int safeIndex = Mathf.Clamp(iconIndex, 0, iconCount - 1);
             if (titleMenuIconSprites[safeIndex] == null)
@@ -554,6 +554,15 @@ namespace DrawBody.Prototype
                     DrawThickLine(pixels, size, new Vector2(22f, 41f), new Vector2(22f, 15f), 7f, true);
                     DrawThickLine(pixels, size, new Vector2(22f, 15f), new Vector2(39f, 10f), 8f, true);
                     DrawThickLine(pixels, size, new Vector2(14f, 42f), new Vector2(27f, 42f), 5f, true);
+                    break;
+                case 21: // Single-player silhouette.
+                    FillCircle(pixels, size, 24, 34, 8, true);
+                    FillPolygon(pixels, size, new[]
+                    {
+                        new Vector2Int(10, 7), new Vector2Int(12, 20),
+                        new Vector2Int(18, 27), new Vector2Int(30, 27),
+                        new Vector2Int(36, 20), new Vector2Int(38, 7)
+                    });
                     break;
                 default: // Ink bottle.
                     DrawRectOutline(pixels, size, 10, 8, 38, 33, 3);

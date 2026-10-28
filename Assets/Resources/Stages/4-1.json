@@ -962,7 +962,7 @@
             "type": 159,
             "position": {
                 "x": 0.0,
-                "y": -19.82
+                "y": -19.81999969482422
             },
             "size": {
                 "x": 1.7999999523162842,
@@ -1449,31 +1449,6 @@
             "connectedRects": [],
             "keepSeparate": false,
             "actionStrength": 2.4000000953674318,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 7,
-            "spawnBoxSize": 10.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "4-1-coop-thick-laser-08",
-            "type": 167,
-            "position": {
-                "x": 68.0,
-                "y": -17.149999618530275
-            },
-            "size": {
-                "x": 1.7999999523162842,
-                "y": 1.25
-            },
-            "rotation": -90.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 2.75,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
             "spawnPattern": 7,

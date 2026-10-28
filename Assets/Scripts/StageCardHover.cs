@@ -95,6 +95,13 @@ namespace DrawBody.Prototype
             Apply(false);
         }
 
+        public void SetColors(Color normal, Color hover)
+        {
+            normalColor = normal;
+            hoverColor = hover;
+            Apply(highlighted);
+        }
+
         private void Apply(bool value)
         {
             highlighted = value;

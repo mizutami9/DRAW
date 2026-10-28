@@ -537,6 +537,8 @@ namespace DrawBody.Prototype
                 if (draggingDebugPlayer && Input.GetMouseButtonUp(0))
                 {
                     draggingDebugPlayer = false;
+                    debugPlayerBeingDragged = null;
+                    debugPlayerBeingDraggedIndex = -1;
                 }
                 if (drawingTerrainStroke && Input.GetMouseButtonUp(0))
                 {
@@ -624,20 +626,29 @@ namespace DrawBody.Prototype
                 if (Input.GetMouseButton(0))
                 {
                     Vector2 next = world + debugPlayerDragOffset;
-                    MoveDebugPlayer(next);
-                    debugTestStartPosition = new Vector3(next.x, next.y,
-                        stageManager != null && stageManager.ActivePlayerTransform != null
-                            ? stageManager.ActivePlayerTransform.position.z
-                            : 0f);
-                    hasDebugTestStartPosition = true;
+                    MoveDebugPlayer(debugPlayerBeingDragged, next);
+                    if (debugPlayerBeingDraggedIndex >= 0
+                        && debugPlayerBeingDraggedIndex < debugTestStartPositions.Length)
+                    {
+                        debugTestStartPositions[debugPlayerBeingDraggedIndex] = new Vector3(
+                            next.x,
+                            next.y,
+                            debugPlayerBeingDragged != null
+                                ? debugPlayerBeingDragged.transform.position.z
+                                : 0f);
+                        hasDebugTestStartPositions[debugPlayerBeingDraggedIndex] = true;
+                    }
                     SetStatus(LocalizationManager.Format(
-                        "stage_editor_status_debug_start",
+                        "stage_editor_status_debug_start_player",
+                        debugPlayerBeingDraggedIndex + 1,
                         next.x,
                         next.y));
                 }
                 if (Input.GetMouseButtonUp(0))
                 {
                     draggingDebugPlayer = false;
+                    debugPlayerBeingDragged = null;
+                    debugPlayerBeingDraggedIndex = -1;
                     GameSfx.Play(SfxId.EditorObjectDrop);
                 }
                 return;
@@ -718,51 +729,65 @@ namespace DrawBody.Prototype
 
         private bool TryBeginDebugPlayerDrag(Vector2 world)
         {
-            Transform debugPlayer = stageManager != null ? stageManager.ActivePlayerTransform : null;
-            if (debugPlayer == null || !debugPlayer.gameObject.activeInHierarchy)
+            if (stageManager == null)
             {
                 return false;
             }
 
-            bool hit = false;
-            Collider2D[] colliders = debugPlayer.GetComponentsInChildren<Collider2D>(false);
-            for (int i = 0; i < colliders.Length; i++)
+            IReadOnlyList<PlayerController2D> players = stageManager.LocalPlayers;
+            PlayerController2D debugPlayer = null;
+            int debugPlayerIndex = -1;
+            // Check later local slots first so an overlapping P2 can still be
+            // selected instead of every click being captured by P1.
+            for (int playerIndex = players.Count - 1; playerIndex >= 0; playerIndex--)
             {
-                if (colliders[i] != null && colliders[i].enabled && colliders[i].OverlapPoint(world))
+                PlayerController2D candidate = players[playerIndex];
+                if (candidate == null || !candidate.gameObject.activeInHierarchy) continue;
+                bool hit = false;
+                Collider2D[] colliders = candidate.GetComponentsInChildren<Collider2D>(false);
+                for (int i = 0; i < colliders.Length; i++)
                 {
-                    hit = true;
-                    break;
-                }
-            }
-
-            if (!hit)
-            {
-                Renderer[] renderers = debugPlayer.GetComponentsInChildren<Renderer>(false);
-                for (int i = 0; i < renderers.Length; i++)
-                {
-                    if (renderers[i] != null && renderers[i].enabled && renderers[i].bounds.Contains(world))
+                    if (colliders[i] != null && colliders[i].enabled && colliders[i].OverlapPoint(world))
                     {
                         hit = true;
                         break;
                     }
                 }
-            }
 
-            if (!hit)
-            {
-                return false;
+                if (!hit)
+                {
+                    Renderer[] renderers = candidate.GetComponentsInChildren<Renderer>(false);
+                    for (int i = 0; i < renderers.Length; i++)
+                    {
+                        if (renderers[i] != null && renderers[i].enabled
+                            && renderers[i].bounds.Contains(world))
+                        {
+                            hit = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!hit) continue;
+                debugPlayer = candidate;
+                debugPlayerIndex = playerIndex;
+                break;
             }
+            if (debugPlayer == null) return false;
 
             ClearRangeSelection();
             selectedData = null;
             selectedObject = null;
             dragging = false;
             draggingDebugPlayer = true;
-            debugPlayerDragOffset = (Vector2)debugPlayer.position - world;
-            debugTestStartPosition = debugPlayer.position;
-            hasDebugTestStartPosition = true;
+            debugPlayerBeingDragged = debugPlayer;
+            debugPlayerBeingDraggedIndex = debugPlayerIndex;
+            debugPlayerDragOffset = (Vector2)debugPlayer.transform.position - world;
+            debugTestStartPositions[debugPlayerIndex] = debugPlayer.transform.position;
+            hasDebugTestStartPositions[debugPlayerIndex] = true;
             GameSfx.Play(SfxId.EditorObjectMove);
-            SetStatus(LocalizationManager.T("stage_editor_status_debug_start_drag"));
+            SetStatus(LocalizationManager.Format(
+                "stage_editor_status_debug_start_drag_player", debugPlayerIndex + 1));
             return true;
         }
 
@@ -816,6 +841,81 @@ namespace DrawBody.Prototype
 
         private int cameraZoomHandledFrame = -1;
 
+        private void FrameLoadedStage()
+        {
+            if (worldCamera == null || objects.Count == 0)
+            {
+                return;
+            }
+
+            bool hasBounds = false;
+            Rect bounds = default;
+
+            // A stage boundary is the authored statement of the complete
+            // playable area. Prefer it so runtime-generated courses whose JSON
+            // only contains a boundary and spawn marker are still visible in
+            // the editor overview.
+            for (int i = 0; i < objects.Count; i++)
+            {
+                StageObjectData data = objects[i];
+                if (data == null || data.type != StageObjectType.StageBoundary)
+                {
+                    continue;
+                }
+
+                EncapsulateEditorBounds(ref bounds, ref hasBounds, GetBoundaryFitBounds(data));
+            }
+
+            if (!hasBounds)
+            {
+                for (int i = 0; i < objects.Count; i++)
+                {
+                    StageObjectData data = objects[i];
+                    if (data == null)
+                    {
+                        continue;
+                    }
+
+                    EncapsulateEditorBounds(ref bounds, ref hasBounds, GetBoundaryFitBounds(data));
+                }
+            }
+
+            if (!hasBounds)
+            {
+                return;
+            }
+
+            const float padding = 1.08f;
+            float aspect = Mathf.Max(0.1f, worldCamera.aspect);
+            float requiredSize = Mathf.Max(
+                bounds.height * 0.5f,
+                bounds.width / (2f * aspect)) * padding;
+            requiredSize = Mathf.Max(minCameraSize, requiredSize);
+            editorCameraMaximumSize = Mathf.Max(maxCameraSize, requiredSize);
+
+            Vector3 position = worldCamera.transform.position;
+            position.x = bounds.center.x;
+            position.y = bounds.center.y;
+            worldCamera.transform.position = position;
+            worldCamera.orthographicSize = requiredSize;
+        }
+
+        private static void EncapsulateEditorBounds(ref Rect total, ref bool hasBounds, Rect candidate)
+        {
+            if (!hasBounds)
+            {
+                total = candidate;
+                hasBounds = true;
+                return;
+            }
+
+            float xMin = Mathf.Min(total.xMin, candidate.xMin);
+            float yMin = Mathf.Min(total.yMin, candidate.yMin);
+            float xMax = Mathf.Max(total.xMax, candidate.xMax);
+            float yMax = Mathf.Max(total.yMax, candidate.yMax);
+            total = Rect.MinMaxRect(xMin, yMin, xMax, yMax);
+        }
+
         private void ApplyEditorCameraZoom(float wheel)
         {
             if (worldCamera == null || Mathf.Abs(wheel) <= 0.001f) return;
@@ -823,8 +923,8 @@ namespace DrawBody.Prototype
             // 14-3 contains a wide room plus several player/round layouts.
             // A proportional step remains noticeable even when zoomed far out.
             float editorMaximumSize = IsLaserRelayLayoutEditor
-                ? Mathf.Max(maxCameraSize, 80f)
-                : maxCameraSize;
+                ? Mathf.Max(editorCameraMaximumSize, 80f)
+                : Mathf.Max(maxCameraSize, editorCameraMaximumSize);
             float zoomFactor = Mathf.Pow(1.12f, -wheel);
             worldCamera.orthographicSize = Mathf.Clamp(
                 worldCamera.orthographicSize * zoomFactor,

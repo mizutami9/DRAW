@@ -3487,7 +3487,7 @@
             "type": 261,
             "position": {
                 "x": -1.0,
-                "y": 28.68
+                "y": 28.68000030517578
             },
             "size": {
                 "x": 10.0,
@@ -3512,7 +3512,7 @@
             "type": 261,
             "position": {
                 "x": 2.5,
-                "y": -2.32
+                "y": -2.319999933242798
             },
             "size": {
                 "x": 8.0,
@@ -3537,11 +3537,11 @@
             "type": 261,
             "position": {
                 "x": 15.0,
-                "y": -2.32
+                "y": -2.4000000953674318
             },
             "size": {
-                "x": 8.0,
-                "y": 6.0
+                "x": 6.0,
+                "y": 4.0
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -3762,7 +3762,7 @@
             "type": 261,
             "position": {
                 "x": 30.0,
-                "y": -16.31921226501465
+                "y": -16.319211959838868
             },
             "size": {
                 "x": 8.0,
@@ -4712,7 +4712,7 @@
             "type": 261,
             "position": {
                 "x": 0.25,
-                "y": -33.32
+                "y": -33.31999969482422
             },
             "size": {
                 "x": 10.0,
@@ -4723,6 +4723,31 @@
             "pathThickness": 0.0,
             "connectedRects": [],
             "keepSeparate": true,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_a8d758943d7543c6",
+            "type": 261,
+            "position": {
+                "x": 22.5,
+                "y": -10.300000190734864
+            },
+            "size": {
+                "x": 8.0,
+                "y": 6.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
             "actionStrength": 0.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,

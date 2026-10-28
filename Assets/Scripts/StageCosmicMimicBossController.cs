@@ -69,6 +69,8 @@ namespace DrawBody.Prototype
             public float MoveSpeed;
             public float NextDecisionAt;
             public float NextJumpAt;
+            public float NextAttackAt;
+            public int AttackAlternator;
             public float LockedUntil;
             public int Facing = 1;
         }
@@ -256,7 +258,7 @@ namespace DrawBody.Prototype
                     SpawnTimedClone();
                     nextCloneAt += CloneInterval;
                 }
-                if (Time.time >= nextAttackAt) ScheduleAttack();
+                ScheduleDueAttacks();
                 if (AreAllPlayersEliminated() && !transitionRunning)
                     StartCoroutine(FailBattle());
                 else if (remaining <= 0f && !transitionRunning)
@@ -314,7 +316,10 @@ namespace DrawBody.Prototype
             SpawnBossForCurrentForm();
             remaining = FormDuration;
             state = BattleState.Active;
-            nextAttackAt = Time.time + 1.8f;
+            // The boss and every later clone own separate clocks. Starting the
+            // boss with jitter also prevents each form from opening on the
+            // exact same beat.
+            nextAttackAt = Time.time + UnityEngine.Random.Range(1.45f, 2.15f);
             nextCloneAt = Time.time + CloneInterval;
             nextCloneId = 0;
             attackAlternator = UnityEngine.Random.Range(0, 2);
@@ -501,6 +506,7 @@ namespace DrawBody.Prototype
                 : 1.1f;
             for (int i = 0; i < copiedColliders.Length; i++) copiedColliders[i].enabled = false;
             bossSpecies = GetSpecies(source);
+            ApplyCosmicCharacterLook(bossRoot, bossVisual, formIndex * 41 + 7, false);
             CreateBossProps();
             bossVelocity = Vector2.zero;
             bossMoveDirection = 0f;
@@ -546,8 +552,12 @@ namespace DrawBody.Prototype
             bazooka.SetActive(false);
             bazookaProp = bazooka.transform;
 
-            GameObject spike = CreateSpikeVisual(bossRoot, Vector2.zero, 2.4f, 165);
-            spike.name = "Carried Giant Spike";
+            GameObject spike = bossSpecies == DrawManager.Species.Cat
+                ? CreateCatClawWeapon(bossRoot, Vector2.zero, 1.5f, 165)
+                : CreateBirdSpikeBallVisual(bossRoot, Vector2.zero, 1.65f, 165);
+            spike.name = bossSpecies == DrawManager.Species.Cat
+                ? "Carried Cat Claw Fan"
+                : "Carried Bird Thorn Orb";
             spike.transform.localPosition = new Vector3(0.9f, 0f, -0.12f);
             spike.SetActive(false);
             carriedSpike = spike.transform;
@@ -561,6 +571,43 @@ namespace DrawBody.Prototype
             shell.transform.localScale = new Vector3(2.6f, 1.9f, 1f);
             shell.SetActive(false);
             shellOverlay = shell.transform;
+        }
+
+        private static void ApplyCosmicCharacterLook(
+            Transform root, Transform visual, int seed, bool clone)
+        {
+            if (visual != null)
+            {
+                CosmicMimicRainbowTint tint = visual.GetComponent<CosmicMimicRainbowTint>();
+                if (tint == null) tint = visual.gameObject.AddComponent<CosmicMimicRainbowTint>();
+                tint.Configure(seed, clone ? 0.78f : 1f);
+            }
+            if (root == null || root.Find("Cosmic Crayon Aura") != null) return;
+            GameObject aura = new GameObject("Cosmic Crayon Aura");
+            aura.transform.SetParent(root, false);
+            aura.transform.localPosition = new Vector3(0f, 0f, 0.35f);
+            int moteCount = clone ? 8 : 12;
+            float radius = clone ? 1.28f : 1.58f;
+            for (int i = 0; i < moteCount; i++)
+            {
+                float angle = (i * 360f / moteCount + seed * 13f) * Mathf.Deg2Rad;
+                GameObject mote = new GameObject("Rainbow Pencil Light " + (i + 1));
+                mote.transform.SetParent(aura.transform, false);
+                mote.transform.localPosition = new Vector3(
+                    Mathf.Cos(angle) * radius,
+                    Mathf.Sin(angle) * radius * 0.72f,
+                    0f);
+                float size = (i % 3 == 0 ? 0.2f : 0.13f) * (clone ? 0.82f : 1f);
+                mote.transform.localScale = new Vector3(size * 1.35f, size, 1f);
+                SpriteRenderer renderer = mote.AddComponent<SpriteRenderer>();
+                renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+                Color color = Color.HSVToRGB(Mathf.Repeat(seed * 0.071f + i / (float)moteCount, 1f), 0.82f, 1f);
+                color.a = clone ? 0.62f : 0.82f;
+                renderer.color = color;
+                renderer.sortingOrder = 158;
+            }
+            CosmicMimicAuraMotion motion = aura.AddComponent<CosmicMimicAuraMotion>();
+            motion.Configure(seed, clone);
         }
 
         private void UpdateBossMotion()
@@ -643,48 +690,57 @@ namespace DrawBody.Prototype
             }
         }
 
-        private void ScheduleAttack()
+        private void ScheduleDueAttacks()
         {
-            if (bossRoot == null) return;
-            PlayerController2D target = FindNearestLivingPlayer(bossRoot.position);
-            if (target == null) return;
-            AttackType type = GetAttackType(bossSpecies, attackAlternator++ % 2);
-            List<int> attackerIds = new List<int> { 0 };
-            List<Vector2> origins = new List<Vector2> { bossRoot.position };
-            List<Vector2> targets = new List<Vector2> { target.transform.position };
-            List<int> variants = new List<int>
+            if (bossRoot != null && Time.time >= nextAttackAt)
             {
-                type == AttackType.TurtleLaser ? UnityEngine.Random.Range(0, 4) : 0
-            };
+                ScheduleAttack(0, bossRoot.position, attackAlternator++);
+                nextAttackAt = Time.time + GetAttackDelay();
+            }
+
             for (int i = 0; i < mimicClones.Count; i++)
             {
                 MimicClone clone = mimicClones[i];
-                if (clone.Root == null) continue;
-                PlayerController2D cloneTarget = FindNearestLivingPlayer(clone.Root.position);
-                attackerIds.Add(clone.Id);
-                origins.Add(clone.Root.position);
-                targets.Add(cloneTarget != null ? (Vector2)cloneTarget.transform.position : target.transform.position);
-                variants.Add(type == AttackType.TurtleLaser ? UnityEngine.Random.Range(0, 4) : 0);
+                if (clone == null || clone.Root == null || Time.time < clone.NextAttackAt) continue;
+                ScheduleAttack(clone.Id, clone.Root.position, clone.AttackAlternator++);
+                // Each clone rolls its own small delay. The clocks are never
+                // reset from the shared boss clock, so attacks remain staggered.
+                clone.NextAttackAt = Time.time + GetAttackDelay();
             }
+        }
+
+        private float GetAttackDelay()
+        {
+            float baseDelay = bossSpecies == DrawManager.Species.Cat ? 2.7f
+                : bossSpecies == DrawManager.Species.Turtle ? 4.7f : 3.5f;
+            return UnityEngine.Random.Range(baseDelay * 0.82f, baseDelay * 1.22f);
+        }
+
+        private void ScheduleAttack(int attackerId, Vector2 origin, int ability)
+        {
+            PlayerController2D target = FindNearestLivingPlayer(origin);
+            if (target == null) return;
+            AttackType type = GetAttackType(bossSpecies, ability % 2);
+            int variant = type == AttackType.TurtleLaser ? UnityEngine.Random.Range(0, 4) : 0;
             AttackPacket packet = new AttackPacket
             {
                 Serial = ++attackSerial,
                 Type = (int)type,
-                Origin = origins[0],
-                Target = targets[0],
-                Variant = variants[0],
+                Origin = origin,
+                Target = target.transform.position,
+                Variant = variant,
                 Seed = UnityEngine.Random.Range(1, int.MaxValue),
-                AttackerIds = attackerIds.ToArray(),
-                Origins = origins.ToArray(),
-                Targets = targets.ToArray(),
-                Variants = variants.ToArray()
+                AttackerIds = new[] { attackerId },
+                Origins = new[] { origin },
+                Targets = new[] { (Vector2)target.transform.position },
+                Variants = new[] { variant }
             };
             currentAttack = packet;
             lastPlayedAttackSerial = packet.Serial;
             PlayAttack(packet);
-            float baseDelay = bossSpecies == DrawManager.Species.Cat ? 2.7f
-                : bossSpecies == DrawManager.Species.Turtle ? 4.7f : 3.5f;
-            nextAttackAt = Time.time + UnityEngine.Random.Range(baseDelay * 0.82f, baseDelay * 1.22f);
+#if NICO_DRAW_AI_TEST
+            Debug.Log($"[PICO 15-3 ATTACK] t={Time.time:0.000} attacker={attackerId} type={type} serial={packet.Serial}");
+#endif
             BroadcastState(true);
         }
 
@@ -711,23 +767,27 @@ namespace DrawBody.Prototype
                     break;
                 case AttackType.HumanBomb:
                     for (int i = 0; i < count; i++)
+                    {
+                        CreateRainbowTargetMarker(GetAttackTarget(packet, i), 1.5f);
                         SpawnBomb(GetAttackOrigin(packet, i), GetAttackTarget(packet, i), 0.72f, 7.5f, 1.5f, GetAttackerId(packet, i));
+                    }
                     break;
                 case AttackType.CatScratch:
                     for (int i = 0; i < count; i++) StartCoroutine(CatScratch(packet, i));
                     break;
                 case AttackType.CatSpikeDash:
-                    for (int i = 0; i < count; i++) StartCoroutine(SpikeDash(packet, i, 14f));
+                    for (int i = 0; i < count; i++) StartCoroutine(SpikeDash(packet, i, 14f, false));
                     break;
                 case AttackType.BirdBomb:
                     for (int i = 0; i < count; i++)
                     {
                         Vector2 origin = GetAttackOrigin(packet, i);
-                        SpawnBomb(origin, new Vector2(origin.x, ArenaBottom), 0.62f, 6.2f, 3f, GetAttackerId(packet, i));
+                        CreateRainbowTargetMarker(new Vector2(origin.x, ArenaBottom), 1f);
+                        SpawnBomb(origin, new Vector2(origin.x, ArenaBottom), 0.62f, 6.2f, 1f, GetAttackerId(packet, i));
                     }
                     break;
                 case AttackType.BirdSpikeDash:
-                    for (int i = 0; i < count; i++) StartCoroutine(SpikeDash(packet, i, 11f));
+                    for (int i = 0; i < count; i++) StartCoroutine(SpikeDash(packet, i, 11f, true));
                     break;
                 case AttackType.TurtleLaser:
                     for (int i = 0; i < count; i++) StartCoroutine(TurtleLaser(packet, i));
@@ -812,8 +872,12 @@ namespace DrawBody.Prototype
         private Transform CreateTemporarySpike(Transform attacker)
         {
             if (attacker == null) return null;
-            GameObject spike = CreateSpikeVisual(attacker, new Vector2(0.9f, 0f), 2.4f, 165);
-            spike.name = "Clone Carried Giant Spike";
+            GameObject spike = bossSpecies == DrawManager.Species.Cat
+                ? CreateCatClawWeapon(attacker, new Vector2(0.9f, 0f), 1.5f, 165)
+                : CreateBirdSpikeBallVisual(attacker, new Vector2(0.9f, 0f), 1.65f, 165);
+            spike.name = bossSpecies == DrawManager.Species.Cat
+                ? "Clone Cat Claw Fan"
+                : "Clone Bird Thorn Orb";
             spike.transform.localPosition = new Vector3(0.9f, 0f, -0.12f);
             return spike.transform;
         }
@@ -871,22 +935,31 @@ namespace DrawBody.Prototype
         {
             int attackerId = GetAttackerId(packet, attackerIndex);
             Vector2 target = GetAttackTarget(packet, attackerIndex);
-            LockAttacker(attackerId, 0.55f);
+            LockAttacker(attackerId, 1.15f);
             Transform attacker = GetAttackerRoot(attackerId);
+            GameObject warning = CreateScratchWarning(target);
+            float warningElapsed = 0f;
+            while (warningElapsed < 0.68f)
+            {
+                warningElapsed += Time.deltaTime;
+                if (warning != null)
+                {
+                    float pulse = 0.9f + Mathf.Sin(warningElapsed * 18f) * 0.08f;
+                    warning.transform.localScale = Vector3.one * pulse;
+                }
+                yield return null;
+            }
+            if (warning != null) Destroy(warning);
             if (attacker != null) attacker.position = Vector2.MoveTowards(attacker.position, target, 2.4f);
-            GameObject slash = new GameObject("Cat Scratch");
-            slash.transform.SetParent(transform, false);
-            slash.transform.position = target;
-            for (int i = -1; i <= 1; i++)
-                StageEscortController.AddLine(slash.transform, new Vector2(-1f, i * 0.22f - 0.25f),
-                    new Vector2(1f, i * 0.22f + 0.25f), 0.1f, new Color(1f, 0.28f, 0.1f), 190);
+            GameObject slash = CreateCatSlashVisual(target);
             CosmicHazard hazard = slash.AddComponent<CosmicHazard>();
-            hazard.Configure(this, 1.35f, 0.35f);
-            yield return new WaitForSeconds(0.38f);
+            hazard.Configure(this, 1.25f, 0.28f);
+            yield return new WaitForSeconds(0.3f);
             if (slash != null) Destroy(slash);
         }
 
-        private IEnumerator SpikeDash(AttackPacket packet, int attackerIndex, float speed)
+        private IEnumerator SpikeDash(
+            AttackPacket packet, int attackerIndex, float speed, bool birdStyle)
         {
             int attackerId = GetAttackerId(packet, attackerIndex);
             Transform attacker = GetAttackerRoot(attackerId);
@@ -894,12 +967,32 @@ namespace DrawBody.Prototype
             if (spike != null) spike.gameObject.SetActive(true);
             Vector2 direction = (GetAttackTarget(packet, attackerIndex) - GetAttackOrigin(packet, attackerIndex)).normalized;
             if (direction.sqrMagnitude < 0.1f) direction = Vector2.right;
-            LockAttacker(attackerId, 1.35f);
+            if (spike != null)
+            {
+                spike.localPosition = (Vector3)(direction * 1.05f) + Vector3.back * 0.12f;
+                spike.localRotation = birdStyle
+                    ? Quaternion.identity
+                    : Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            }
+            LockAttacker(attackerId, 1.75f);
+            float chargeElapsed = 0f;
+            while (chargeElapsed < 0.48f && attacker != null)
+            {
+                chargeElapsed += Time.deltaTime;
+                if (spike != null)
+                {
+                    float pulse = 1f + Mathf.Sin(chargeElapsed * 24f) * 0.1f;
+                    spike.localScale = Vector3.one * pulse;
+                    if (birdStyle) spike.Rotate(0f, 0f, 155f * Time.deltaTime);
+                }
+                yield return null;
+            }
             float elapsed = 0f;
-            while (elapsed < 1.25f && attacker != null)
+            while (elapsed < 1.12f && attacker != null)
             {
                 elapsed += Time.deltaTime;
                 attacker.position += (Vector3)(direction * speed * Time.deltaTime);
+                if (birdStyle && spike != null) spike.Rotate(0f, 0f, 460f * Time.deltaTime);
                 Vector2 p = attacker.position;
                 if (Mathf.Abs(p.x) > ArenaHalfWidth - 1f) direction.x *= -1f;
                 if (p.y < ArenaBottom + 1f || p.y > ArenaTop - 1f) direction.y *= -1f;
@@ -947,26 +1040,44 @@ namespace DrawBody.Prototype
 
         private IEnumerator SlimeSpikes(AttackPacket packet, bool multiply)
         {
-            List<Vector2> origins = new List<Vector2>();
             int attackerCount = GetAttackCount(packet);
-            for (int i = 0; i < attackerCount; i++) origins.Add(GetAttackOrigin(packet, i));
             int rayCount = multiply ? 8 : 6;
-            List<GameObject> warnings = new List<GameObject>();
-            for (int i = 0; i < origins.Count; i++)
+            List<GameObject> charges = new List<GameObject>();
+            for (int i = 0; i < attackerCount; i++)
+            {
+                Transform attacker = GetAttackerRoot(GetAttackerId(packet, i));
+                Transform parent = attacker != null ? attacker : transform;
+                Vector2 localPosition = attacker != null ? Vector2.zero : GetAttackOrigin(packet, i);
+                GameObject charge = CreateSlimeSpikeChargeVisual(parent, localPosition,
+                    multiply ? 1.5f : 1.25f, 184);
+                charge.name = multiply ? "Slime Eight Spike Charge" : "Slime Six Spike Charge";
+                charges.Add(charge);
+            }
+            float chargeElapsed = 0f;
+            while (chargeElapsed < 0.85f)
+            {
+                chargeElapsed += Time.deltaTime;
+                for (int i = 0; i < charges.Count; i++)
+                {
+                    if (charges[i] == null) continue;
+                    float pulse = 0.72f + chargeElapsed / 0.85f * 0.38f
+                        + Mathf.Sin(chargeElapsed * 20f + i) * 0.07f;
+                    charges[i].transform.localScale = Vector3.one * pulse;
+                    charges[i].transform.Rotate(0f, 0f, 115f * Time.deltaTime);
+                }
+                yield return null;
+            }
+            for (int i = 0; i < attackerCount; i++)
+            {
+                Transform attacker = GetAttackerRoot(GetAttackerId(packet, i));
+                Vector2 origin = attacker != null ? (Vector2)attacker.position : GetAttackOrigin(packet, i);
+                if (i < charges.Count && charges[i] != null) Destroy(charges[i]);
                 for (int ray = 0; ray < rayCount; ray++)
                 {
                     float angle = (ray * (360f / rayCount) + (packet.Seed % 23)) * Mathf.Deg2Rad;
-                    Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-                    warnings.Add(CreateWarningLine(origins[i], origins[i] + direction * 5f));
+                    SpawnSpikeProjectile(origin, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 8.2f);
                 }
-            yield return new WaitForSeconds(0.85f);
-            for (int i = 0; i < warnings.Count; i++) if (warnings[i] != null) Destroy(warnings[i]);
-            for (int i = 0; i < origins.Count; i++)
-                for (int ray = 0; ray < rayCount; ray++)
-                {
-                    float angle = (ray * (360f / rayCount) + (packet.Seed % 23)) * Mathf.Deg2Rad;
-                    SpawnSpikeProjectile(origins[i], new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 8.2f);
-                }
+            }
         }
 
         private void SpawnProjectile(Vector2 origin, Vector2 velocity, float radius, float life, bool missile)
@@ -977,16 +1088,17 @@ namespace DrawBody.Prototype
             if (missile)
             {
                 StageGun.CreateSprite(projectile.transform, "Rocket Body", Vector2.zero,
-                    new Vector2(0.72f, 0.25f), new Color(0.22f, 0.5f, 0.27f, 1f), 188);
+                    new Vector2(0.72f, 0.25f), new Color(0.18f, 0.78f, 1f, 1f), 188);
                 StageGun.CreateSprite(projectile.transform, "Rocket Tip", new Vector2(0.38f, 0f),
-                    new Vector2(0.28f, 0.3f), new Color(0.9f, 0.2f, 0.12f, 1f), 189);
+                    new Vector2(0.28f, 0.3f), new Color(1f, 0.22f, 0.72f, 1f), 189);
+                StageGun.CreateSprite(projectile.transform, "Rocket Gold Band", new Vector2(0.12f, 0f),
+                    new Vector2(0.13f, 0.32f), new Color(1f, 0.78f, 0.12f, 1f), 190);
                 TrailRenderer trail = projectile.AddComponent<TrailRenderer>();
                 trail.time = 0.28f;
                 trail.startWidth = 0.24f;
                 trail.endWidth = 0.02f;
                 trail.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
-                trail.startColor = new Color(1f, 0.65f, 0.12f, 0.9f);
-                trail.endColor = new Color(1f, 0.15f, 0.05f, 0f);
+                trail.colorGradient = CreateFinaleGradient(0.95f, 0f);
                 trail.sortingOrder = 187;
                 projectile.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg);
             }
@@ -996,8 +1108,17 @@ namespace DrawBody.Prototype
 
         private void SpawnSpikeProjectile(Vector2 origin, Vector2 velocity)
         {
-            GameObject projectile = CreateSpikeVisual(transform, origin, 1.35f, 188);
+            float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+            Color color = FinaleColor(Mathf.RoundToInt((angle + 360f) / 45f));
+            GameObject projectile = CreateSpikeVisual(transform, origin, 1.35f, 188, color);
             projectile.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg - 90f);
+            TrailRenderer trail = projectile.AddComponent<TrailRenderer>();
+            trail.time = 0.22f;
+            trail.startWidth = 0.15f;
+            trail.endWidth = 0.01f;
+            trail.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+            trail.colorGradient = CreateFinaleGradient(0.72f, 0f);
+            trail.sortingOrder = 187;
             CosmicProjectile motion = projectile.AddComponent<CosmicProjectile>();
             motion.Configure(this, velocity, 0.5f, 4f, false);
         }
@@ -1032,7 +1153,223 @@ namespace DrawBody.Prototype
             }
         }
 
+        private GameObject CreateScratchWarning(Vector2 position)
+        {
+            GameObject root = new GameObject("Cat Paw Warning");
+            root.transform.SetParent(transform, false);
+            root.transform.position = position;
+            Color padColor = new Color(0.96f, 0.16f, 0.62f, 0.5f);
+            CreateCrayonStamp(root.transform, "Paw Pad", new Vector2(0f, -0.28f),
+                new Vector2(1.18f, 0.86f), padColor, 186, 0f);
+            Vector2[] toes =
+            {
+                new Vector2(-0.67f, 0.5f), new Vector2(-0.23f, 0.72f),
+                new Vector2(0.25f, 0.72f), new Vector2(0.68f, 0.48f)
+            };
+            for (int i = 0; i < toes.Length; i++)
+            {
+                CreateCrayonStamp(root.transform, "Toe " + (i + 1), toes[i],
+                    new Vector2(0.42f, 0.55f),
+                    WithAlpha(FinaleColor(i + 1), 0.58f), 187, (i - 1.5f) * -8f);
+            }
+            return root;
+        }
+
+        private void CreateRainbowTargetMarker(Vector2 position, float duration)
+        {
+            GameObject root = new GameObject("Cosmic Rainbow Target");
+            root.transform.SetParent(transform, false);
+            root.transform.position = position;
+            for (int i = 0; i < 10; i++)
+            {
+                float angle = i * Mathf.PI * 2f / 10f;
+                float radius = i % 2 == 0 ? 0.82f : 1.02f;
+                CreateCrayonStamp(root.transform, "Rainbow Warning " + (i + 1),
+                    new Vector2(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius),
+                    new Vector2(0.24f, 0.14f), WithAlpha(FinaleColor(i), 0.72f), 186,
+                    angle * Mathf.Rad2Deg);
+            }
+            CosmicMimicAuraMotion motion = root.AddComponent<CosmicMimicAuraMotion>();
+            motion.Configure(currentAttack != null ? currentAttack.Seed : attackSerial, false, 190f);
+            Destroy(root, Mathf.Max(0.2f, duration));
+        }
+
+        private GameObject CreateCatSlashVisual(Vector2 position)
+        {
+            GameObject root = new GameObject("Painted Cat Claw Swipe");
+            root.transform.SetParent(transform, false);
+            root.transform.position = position;
+            for (int claw = -1; claw <= 1; claw++)
+            {
+                Color clawStart = FinaleColor(claw + 3);
+                Color clawEnd = FinaleColor(claw + 5);
+                for (int step = 0; step < 10; step++)
+                {
+                    float t = step / 9f;
+                    float x = Mathf.Lerp(-1.28f, 1.28f, t);
+                    float y = claw * 0.29f + Mathf.Lerp(-0.34f, 0.34f, t)
+                        + Mathf.Sin(t * Mathf.PI) * 0.2f;
+                    float taper = 0.55f + Mathf.Sin(t * Mathf.PI) * 0.45f;
+                    Color color = Color.Lerp(clawStart, clawEnd, t);
+                    color.a = Mathf.Lerp(0.82f, 0.98f, taper);
+                    CreateCrayonStamp(root.transform, $"Claw {claw + 2}-{step + 1}",
+                        new Vector2(x, y), new Vector2(0.48f * taper, 0.19f * taper),
+                        color, 190 + claw + 1, 16f - Mathf.Cos(t * Mathf.PI) * 9f);
+                }
+            }
+            return root;
+        }
+
+        private static GameObject CreateCatClawWeapon(
+            Transform parent, Vector2 position, float size, int order)
+        {
+            GameObject root = new GameObject("Three Painted Claws");
+            root.transform.SetParent(parent, false);
+            root.transform.localPosition = position;
+            for (int claw = -1; claw <= 1; claw++)
+            {
+                Color baseColor = FinaleColor(claw + 2);
+                Color tipColor = Color.Lerp(FinaleColor(claw + 4), Color.white, 0.35f);
+                float spread = claw * 0.28f;
+                for (int step = 0; step < 6; step++)
+                {
+                    float t = step / 5f;
+                    CreateCrayonStamp(root.transform, $"Claw Blade {claw + 2}-{step + 1}",
+                        new Vector2(size * (0.12f + t * 0.66f), spread * size + Mathf.Sin(t * Mathf.PI) * 0.11f),
+                        new Vector2(size * Mathf.Lerp(0.3f, 0.12f, t), size * Mathf.Lerp(0.2f, 0.07f, t)),
+                        Color.Lerp(baseColor, tipColor, t), order + step, claw * 7f);
+                }
+            }
+            CreateCrayonStamp(root.transform, "Claw Cuff", new Vector2(-size * 0.05f, 0f),
+                new Vector2(size * 0.48f, size * 0.72f), new Color(0.28f, 0.08f, 0.52f, 1f), order, 0f);
+            AddFinaleTrail(root, order - 1, size * 0.32f);
+            return root;
+        }
+
+        private static GameObject CreateBirdSpikeBallVisual(
+            Transform parent, Vector2 position, float size, int order)
+        {
+            return CreateSpikeBallVisual(parent, position, size, order, 12,
+                new Color(0.22f, 0.08f, 0.62f, 0.94f),
+                new Color(0.24f, 0.88f, 1f, 1f),
+                new Color(1f, 0.74f, 0.12f, 1f),
+                new Color(1f, 0.28f, 0.78f, 0.72f));
+        }
+
+        private static GameObject CreateSlimeSpikeChargeVisual(
+            Transform parent, Vector2 position, float size, int order)
+        {
+            return CreateSpikeBallVisual(parent, position, size, order, 8,
+                new Color(0.32f, 0.66f, 0.16f, 0.9f),
+                new Color(0.72f, 0.18f, 0.76f, 1f),
+                new Color(0.98f, 0.58f, 0.08f, 1f),
+                new Color(0.38f, 1f, 0.74f, 0.7f));
+        }
+
+        private static GameObject CreateSpikeBallVisual(
+            Transform parent, Vector2 position, float size, int order, int spikeCount,
+            Color coreColor, Color spikeColor, Color alternateSpikeColor, Color hatchColor)
+        {
+            GameObject root = new GameObject("Crayon Spike Ball");
+            root.transform.SetParent(parent, false);
+            root.transform.localPosition = position;
+
+            GameObject core = new GameObject("Scribbled Core");
+            core.transform.SetParent(root.transform, false);
+            SpriteRenderer coreRenderer = core.AddComponent<SpriteRenderer>();
+            coreRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
+            coreRenderer.color = coreColor;
+            coreRenderer.sortingOrder = order;
+            core.transform.localScale = Vector3.one * size * 0.72f;
+
+            for (int i = 0; i < spikeCount; i++)
+            {
+                float angle = i * 360f / spikeCount + (i % 2 == 0 ? -2.5f : 2f);
+                float radians = angle * Mathf.Deg2Rad;
+                Vector2 direction = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
+                Color thornColor = Color.Lerp(spikeColor, alternateSpikeColor,
+                    i / (float)Mathf.Max(1, spikeCount - 1));
+                GameObject spike = CreateSpikeVisual(root.transform,
+                    direction * size * 0.42f, size * 0.62f, order + 2, thornColor);
+                spike.name = "Pencil Thorn " + (i + 1);
+                spike.transform.localRotation = Quaternion.Euler(0f, 0f, angle - 90f);
+            }
+
+            StageEscortController.AddLine(root.transform,
+                new Vector2(-size * 0.3f, -size * 0.22f),
+                new Vector2(size * 0.28f, size * 0.25f), 0.045f, hatchColor, order + 3);
+            StageEscortController.AddLine(root.transform,
+                new Vector2(-size * 0.26f, size * 0.28f),
+                new Vector2(size * 0.3f, -size * 0.18f), 0.045f, hatchColor, order + 3);
+            AddFinaleTrail(root, order - 1, size * 0.28f);
+            return root;
+        }
+
+        private static void AddFinaleTrail(GameObject root, int order, float width)
+        {
+            TrailRenderer trail = root.AddComponent<TrailRenderer>();
+            trail.time = 0.3f;
+            trail.startWidth = width;
+            trail.endWidth = 0.01f;
+            trail.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+            trail.colorGradient = CreateFinaleGradient(0.68f, 0f);
+            trail.sortingOrder = order;
+        }
+
+        private static Gradient CreateFinaleGradient(float startAlpha, float endAlpha)
+        {
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new[]
+                {
+                    new GradientColorKey(new Color(0.2f, 0.9f, 1f), 0f),
+                    new GradientColorKey(new Color(1f, 0.24f, 0.76f), 0.34f),
+                    new GradientColorKey(new Color(1f, 0.82f, 0.12f), 0.67f),
+                    new GradientColorKey(new Color(0.45f, 1f, 0.36f), 1f)
+                },
+                new[]
+                {
+                    new GradientAlphaKey(startAlpha, 0f),
+                    new GradientAlphaKey(startAlpha * 0.75f, 0.55f),
+                    new GradientAlphaKey(endAlpha, 1f)
+                });
+            return gradient;
+        }
+
+        private static Color FinaleColor(int index)
+        {
+            return Color.HSVToRGB(Mathf.Repeat(0.08f + index * 0.173f, 1f), 0.8f, 1f);
+        }
+
+        private static Color WithAlpha(Color color, float alpha)
+        {
+            color.a = alpha;
+            return color;
+        }
+
+        private static GameObject CreateCrayonStamp(
+            Transform parent, string name, Vector2 position, Vector2 size,
+            Color color, int order, float rotation)
+        {
+            GameObject stamp = new GameObject(name);
+            stamp.transform.SetParent(parent, false);
+            stamp.transform.localPosition = position;
+            stamp.transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            stamp.transform.localScale = new Vector3(size.x, size.y, 1f);
+            SpriteRenderer renderer = stamp.AddComponent<SpriteRenderer>();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+            renderer.color = color;
+            renderer.sortingOrder = order;
+            return stamp;
+        }
+
         private static GameObject CreateSpikeVisual(Transform parent, Vector2 position, float size, int order)
+        {
+            return CreateSpikeVisual(parent, position, size, order, new Color(0.88f, 0.06f, 0.1f));
+        }
+
+        private static GameObject CreateSpikeVisual(
+            Transform parent, Vector2 position, float size, int order, Color color)
         {
             GameObject root = new GameObject("Red Pencil Spike");
             root.transform.SetParent(parent, false);
@@ -1043,7 +1380,7 @@ namespace DrawBody.Prototype
             line.positionCount = 3;
             line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
             line.startWidth = line.endWidth = 0.09f;
-            line.startColor = line.endColor = new Color(0.88f, 0.06f, 0.1f);
+            line.startColor = line.endColor = color;
             line.sortingOrder = order;
             line.SetPosition(0, new Vector3(-size * 0.45f, -size * 0.45f));
             line.SetPosition(1, new Vector3(0f, size * 0.55f));
@@ -1075,13 +1412,18 @@ namespace DrawBody.Prototype
             visual.localScale = Vector3.one;
             Collider2D[] colliders = root.GetComponentsInChildren<Collider2D>(true);
             for (int i = 0; i < colliders.Length; i++) colliders[i].enabled = false;
+            ApplyCosmicCharacterLook(root.transform, visual, formIndex * 41 + id * 17 + 11, true);
             MimicClone clone = new MimicClone
             {
                 Id = id,
                 Root = root.transform,
                 Visual = visual,
                 NextDecisionAt = Time.time + UnityEngine.Random.Range(0.2f, 0.8f),
-                NextJumpAt = Time.time + UnityEngine.Random.Range(0.7f, 2.2f)
+                NextJumpAt = Time.time + UnityEngine.Random.Range(0.7f, 2.2f),
+                NextAttackAt = HasAuthority
+                    ? Time.time + UnityEngine.Random.Range(0.75f, 1.65f)
+                    : float.PositiveInfinity,
+                AttackAlternator = UnityEngine.Random.Range(0, 2)
             };
             mimicClones.Add(clone);
             return clone;
@@ -1761,6 +2103,90 @@ namespace DrawBody.Prototype
             return ability != null ? ability.CurrentProfile.Species : DrawManager.Species.Human;
         }
 
+    }
+
+    internal sealed class CosmicMimicRainbowTint : MonoBehaviour
+    {
+        private SpriteRenderer[] sprites;
+        private LineRenderer[] lines;
+        private float[] spriteAlpha;
+        private float[] lineStartAlpha;
+        private float[] lineEndAlpha;
+        private float phase;
+        private float intensity = 1f;
+        private float nextRefreshAt;
+
+        internal void Configure(int seed, float strength)
+        {
+            phase = Mathf.Repeat(seed * 0.071f, 1f);
+            intensity = Mathf.Clamp01(strength);
+            sprites = GetComponentsInChildren<SpriteRenderer>(true);
+            lines = GetComponentsInChildren<LineRenderer>(true);
+            spriteAlpha = new float[sprites.Length];
+            lineStartAlpha = new float[lines.Length];
+            lineEndAlpha = new float[lines.Length];
+            for (int i = 0; i < sprites.Length; i++)
+                spriteAlpha[i] = sprites[i] != null ? sprites[i].color.a : 1f;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                lineStartAlpha[i] = lines[i] != null ? lines[i].startColor.a : 1f;
+                lineEndAlpha[i] = lines[i] != null ? lines[i].endColor.a : 1f;
+            }
+            ApplyColors();
+        }
+
+        private void Update()
+        {
+            if (Time.unscaledTime < nextRefreshAt) return;
+            nextRefreshAt = Time.unscaledTime + 0.08f;
+            ApplyColors();
+        }
+
+        private void ApplyColors()
+        {
+            float clock = Time.unscaledTime * 0.055f + phase;
+            for (int i = 0; sprites != null && i < sprites.Length; i++)
+            {
+                SpriteRenderer renderer = sprites[i];
+                if (renderer == null) continue;
+                Color rainbow = Color.HSVToRGB(Mathf.Repeat(clock + i * 0.137f, 1f), 0.78f, 1f);
+                rainbow = Color.Lerp(Color.white, rainbow, intensity);
+                rainbow.a = spriteAlpha[i];
+                renderer.color = rainbow;
+            }
+            for (int i = 0; lines != null && i < lines.Length; i++)
+            {
+                LineRenderer renderer = lines[i];
+                if (renderer == null) continue;
+                Color start = Color.HSVToRGB(Mathf.Repeat(clock + i * 0.113f, 1f), 0.86f, 1f);
+                Color end = Color.HSVToRGB(Mathf.Repeat(clock + i * 0.113f + 0.2f, 1f), 0.86f, 1f);
+                start.a = lineStartAlpha[i];
+                end.a = lineEndAlpha[i];
+                renderer.startColor = start;
+                renderer.endColor = end;
+            }
+        }
+    }
+
+    internal sealed class CosmicMimicAuraMotion : MonoBehaviour
+    {
+        private float phase;
+        private float spinSpeed;
+        private float pulseAmount;
+
+        internal void Configure(int seed, bool clone, float spin = 42f)
+        {
+            phase = Mathf.Repeat(seed * 0.037f, 1f) * Mathf.PI * 2f;
+            spinSpeed = (seed & 1) == 0 ? spin : -spin;
+            pulseAmount = clone ? 0.07f : 0.12f;
+        }
+
+        private void Update()
+        {
+            transform.Rotate(0f, 0f, spinSpeed * Time.deltaTime);
+            float pulse = 1f + Mathf.Sin(Time.unscaledTime * 3.6f + phase) * pulseAmount;
+            transform.localScale = Vector3.one * pulse;
+        }
     }
 
     internal sealed class CosmicProjectile : MonoBehaviour

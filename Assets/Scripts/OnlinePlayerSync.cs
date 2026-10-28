@@ -868,8 +868,25 @@ namespace DrawBody.Prototype
                     || state == OnlineConnectionState.Playing)
                 && (connectionChanged || rosterChanged))
             {
+                // Publish every local seat immediately. A P2 can be paired on
+                // the title before the online lobby exists, so its first normal
+                // update may otherwise miss the lobby setup window and leave
+                // the host waiting for a game-player that was never announced.
+                SendLocalState(true);
                 RequestBodyResync();
             }
+        }
+
+        public void PublishLocalRosterNow()
+        {
+            SendLocalState(true);
+        }
+
+        public void PublishLocalPlayerNow(PlayerController2D localPlayer, int localIndex)
+        {
+            if (localPlayer == null || localIndex < 0
+                || localIndex >= StageManager.MaxLocalPlayersPerConnection) return;
+            SendOneLocalState(localPlayer, localIndex);
         }
 
         private void PruneRemoteTracking(OnlineLobbyInfo lobby, string localPlayerId)

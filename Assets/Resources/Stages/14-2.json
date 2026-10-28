@@ -33,31 +33,6 @@
             "linkAction": ""
         },
         {
-            "objectId": "14-2_left_wall",
-            "type": 1,
-            "position": {
-                "x": -40.0,
-                "y": 0.0
-            },
-            "size": {
-                "x": 0.800000011920929,
-                "y": 17.0
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": true,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
             "objectId": "14-2_right_wall",
             "type": 1,
             "position": {

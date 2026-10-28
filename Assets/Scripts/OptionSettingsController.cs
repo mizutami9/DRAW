@@ -167,7 +167,7 @@ namespace DrawBody.Prototype
                 Text label = labelObject.GetComponent<Text>();
                 label.font = font; label.fontSize = 20; label.fontStyle = FontStyle.Bold;
                 label.alignment = TextAnchor.MiddleLeft; label.color = new Color(0.12f, 0.1f, 0.08f);
-                LocalizedText localized = labelObject.AddComponent<LocalizedText>(); localized.SetKey("option_player_name_guide");
+                LocalizedText localized = labelObject.AddComponent<LocalizedText>(); localized.SetKey("option_player_name");
 
                 GameObject inputObject = new GameObject("OptionPlayerNameInput", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(InputField));
                 inputObject.transform.SetParent(panel, false);
@@ -806,7 +806,9 @@ namespace DrawBody.Prototype
                 if (triggerLabel != null)
                 {
                     triggerLabel.font = LocalizationManager.LoadCurrentFont(triggerLabel.font);
-                    triggerLabel.text = LocalizationManager.CurrentLanguageDefinition.nativeName + "  ▼";
+                    // The themed selector already has a dedicated arrow icon.
+                    // Keeping a second glyph in the label rendered 日本語▼▼.
+                    triggerLabel.text = LocalizationManager.CurrentLanguageDefinition.nativeName;
                 }
             }
             RefreshLanguagePopupSelection();

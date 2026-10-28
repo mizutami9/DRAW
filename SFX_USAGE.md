@@ -1,6 +1,6 @@
 # SE使用一覧
 
-更新日: 2026-09-01
+更新日: 2026-10-26
 
 ゲーム内のSEは `GameSfx` を経由し、OPTIONのSE音量設定と `SfxCatalog` の音量・ピッチ・連打制限が適用される。
 音源欄は `Assets/Resources/` からの相対パス。`生成音` は実行時に波形を生成するため、音声ファイルを使用しない。
@@ -159,3 +159,18 @@
 - UI、カウントダウン、ステージ結果は画面全体へ聞かせる非空間音として再生する。
 - 同一SEの短時間連打は `SfxCatalog` の `Cooldown` で抑制する。
 - `StageClear` はクリア確定時、`ClearStampImpact` と `ClearCelebrationChime` は結果画面のアニメーションに合わせて時間差で再生する。
+
+## 2026-10-26 追加監査
+
+2026-08-25以降に追加・再構築された専用ステージ制御を再確認し、次の無音箇所へ既存SEを追加した。
+
+| ステージ | 追加したタイミング | 使用SE |
+|---|---|---|
+| 8-3 | 各ラウンドの3・2・1と開始 | `StageCountdownTick`, `StageCountdownGo` |
+| 9-3 | 落下予告、計量成功 | `BossAttackWarning`, `GoalReached` |
+| 10-1 | 3・2・1、スタート、各走者のゴール、合計タイム失敗 | `StageCountdownTick`, `StageCountdownGo`, `GoalReached`, `StageFailed` |
+| 11-1 | 最終追跡の開始、プレイヤー脱落 | `BossAttackWarning`, `PlayerDeath` |
+| 13-1 | 味方キャラクターの発話 | `EmotePop` |
+| 13-2 | サーブの3・2・1と開始、敵撃破、ラウンド完了、失敗 | `StageCountdownTick`, `StageCountdownGo`, `EnemyDefeat`, `GoalReached`, `StageFailed` |
+
+今回、新規音声ファイルは追加していない。上記は既存のKenney公式パック由来CC0音源、またはプロジェクト内で波形生成するオリジナルSEを`SfxCatalog`経由で再利用している。

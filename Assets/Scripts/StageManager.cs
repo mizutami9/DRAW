@@ -62,6 +62,7 @@ namespace DrawBody.Prototype
         private bool titleMode;
         private bool titleTextInputActive;
         private bool optionOverlayActive;
+        private bool gameplayMenuOverlayActive;
         private bool onlineStateSubscribed;
         private bool onlineSessionEnding;
         private string endingOnlineLobbyId;
@@ -166,9 +167,11 @@ namespace DrawBody.Prototype
         public bool IsGameplayActive => stageStarted && !titleMode && !stageEditing && !drawing && !cleared;
         public bool ShouldUseLocalSplitScreen => stageStarted && !titleMode && !stageEditing
             && GetComponent<LocalCoopSessionManager>()?.HasDedicatedSecondaryPlayers == true;
-        public bool ShouldEnableLocalGameplayControls => IsGameplayActive && !optionOverlayActive && !titleTextInputActive;
+        public bool ShouldEnableLocalGameplayControls => IsGameplayActive && !optionOverlayActive
+            && !gameplayMenuOverlayActive && !titleTextInputActive;
         public bool ShouldEnableLocalCharacterControls => stageStarted && !stageEditing
-            && !drawing && !cleared && !optionOverlayActive && !titleTextInputActive;
+            && !drawing && !cleared && !optionOverlayActive
+            && !gameplayMenuOverlayActive && !titleTextInputActive;
         public float ChallengeRemainingSeconds => challengeRemaining;
         public bool ChallengeTimeUp => challengeFailed;
         public string ChallengeFailureDisplayText => LocalizationManager.T(
@@ -192,11 +195,24 @@ namespace DrawBody.Prototype
                 return StageRedrawZone.IsPlayerInZone(player);
             }
         }
+        private bool HasDedicatedSecondaryInput =>
+            GetComponent<LocalCoopSessionManager>()?.HasDedicatedSecondaryPlayers == true;
+        // 8-3 suppresses the normal PlayerController2D movement and moves each
+        // player through its lane controller instead.
+        private bool UsesStageManagedPlayerMovement => currentStageId == "8-3";
+        public bool CanAddGameplayCharacter => CanUseGameplayCharacterControls
+            && !HasDedicatedSecondaryInput
+            && localPlayers.Count < MaxLocalPlayersPerConnection;
+        public bool CanDeleteGameplayCharacter => CanUseGameplayCharacterControls
+            && !HasDedicatedSecondaryInput
+            && localPlayers.Count > 1;
         // Switching which already-created offline character is controlled does
         // not mutate stage layout or player count, so it is safe during normal
         // play on every stage. Adding/deleting still requires a safe zone.
-        public bool CanSwitchGameplayCharacter => CanUseGameplayCharacterControls
-            || (stageStarted && !drawing && !cleared && !stageEditing);
+        public bool CanSwitchGameplayCharacter => localPlayers.Count > 1
+            && !HasDedicatedSecondaryInput
+            && (CanUseGameplayCharacterControls
+                || (stageStarted && !drawing && !cleared && !stageEditing));
         public string CurrentStageId => currentStageId;
         public bool RequiresUniquePlayerSpecies => StageSpeciesRules.RequiresUniqueSpecies(currentStageId);
         public string ChallengeStartCountdownText
@@ -448,6 +464,11 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            // Drawer-added characters share P1's device and are an offline-only
+            // roster concept. Online local slots must each have a dedicated
+            // device, including invite/direct-join paths that skip OpenMultiMenu.
+            RemoveAutomaticSecondaryCharacters();
+
             if (onlineSessionLobbyId != lobby.LobbyId)
             {
                 onlineSessionEnding = false;
@@ -653,7 +674,22 @@ namespace DrawBody.Prototype
 
         public void OpenMultiMenu()
         {
+            RemoveAutomaticSecondaryCharacters();
             uiManager?.SetMulti(true);
+        }
+
+        private void RemoveAutomaticSecondaryCharacters()
+        {
+            for (int i = localPlayers.Count - 1; i >= 1; i--)
+            {
+                PlayerController2D local = localPlayers[i];
+                LocalPlayerInputBinding binding = local != null ? local.InputBinding : null;
+                if (binding == null
+                    || binding.Kind == LocalPlayerInputBinding.DeviceKind.AutoPrimary)
+                {
+                    RemoveLocalCharacter(local);
+                }
+            }
         }
 
         public void SetTitleTextInputActive(bool active)
@@ -693,7 +729,20 @@ namespace DrawBody.Prototype
             {
                 for (int i = 0; i < localPlayers.Count; i++) localPlayers[i]?.ResetMotion();
             }
-            SetAllPlayerControls(!active && stageStarted && !drawing && !cleared
+            SetAllPlayerControls(!active && !gameplayMenuOverlayActive
+                && stageStarted && !drawing && !cleared
+                && !stageEditing && !titleTextInputActive);
+        }
+
+        public void SetGameplayMenuOverlayActive(bool active)
+        {
+            gameplayMenuOverlayActive = active;
+            if (active)
+            {
+                for (int i = 0; i < localPlayers.Count; i++) localPlayers[i]?.ResetMotion();
+            }
+            SetAllPlayerControls(!active && !optionOverlayActive
+                && stageStarted && !drawing && !cleared
                 && !stageEditing && !titleTextInputActive);
         }
 
@@ -922,7 +971,8 @@ namespace DrawBody.Prototype
                 }
             }
 
-            if (gamepadMenu && !drawing && !cleared && !titleMode)
+            if (gamepadMenu && !drawing && !cleared && !titleMode
+                && !independentDrawingActive)
             {
                 uiManager?.ToggleMenuFromEscape();
             }
@@ -930,14 +980,17 @@ namespace DrawBody.Prototype
             bool localSplitHandlesDrawing = localCoop != null
                 && localCoop.HasDedicatedSecondaryPlayers;
             if (gamepadDrawToggle && !localSplitHandlesDrawing
-                && !cleared && !titleMode && !optionOverlayActive)
+                && !cleared && !titleMode && !optionOverlayActive && !gameplayMenuOverlayActive)
             {
                 if (drawing) RequestCancelDrawingMode();
                 else EnterDrawingMode();
             }
 
+            // The player list can briefly retain an automatic/inactive slot
+            // while returning from local co-op. Only a genuinely assigned
+            // secondary input should hand TAB over to the split-screen handler.
             if (Input.GetKeyDown(KeyCode.Tab) && !cleared
-                && (localCoop == null || localCoop.LocalPlayerCount <= 1))
+                && (localCoop == null || !localCoop.HasDedicatedSecondaryPlayers))
             {
                 if (drawing)
                 {
@@ -953,7 +1006,7 @@ namespace DrawBody.Prototype
                 && !titleMode && !drawing && !cleared
                 && !optionOverlayActive && !IsOnlineInStage()
                 && (localCoop == null || !localCoop.HasDedicatedSecondaryPlayers)
-                && player != null && player.ControlsEnabled)
+                && player != null && (player.ControlsEnabled || UsesStageManagedPlayerMovement))
             {
                 SwitchCharacter();
             }
@@ -1896,13 +1949,23 @@ namespace DrawBody.Prototype
 
         public bool CanEnterDrawingMode()
         {
+            // TITLE's DRAW button intentionally uses the same full-screen editor,
+            // but it is not an in-stage redraw. The per-player co-op guard below
+            // rejects titleMode, so keep the title entry path separate.
+            if (titleMode)
+            {
+                return player != null && stageStarted && !stageEditing && !cleared
+                    && !optionOverlayActive && !titleTextInputActive && !challengeFailed;
+            }
+
             return CanPlayerEnterDrawingMode(player);
         }
 
         public bool CanPlayerEnterDrawingMode(PlayerController2D targetPlayer)
         {
             if (targetPlayer == null || !stageStarted || titleMode || stageEditing
-                || cleared || optionOverlayActive || titleTextInputActive || challengeFailed
+                || cleared || optionOverlayActive || gameplayMenuOverlayActive
+                || titleTextInputActive || challengeFailed
                 || (challengeStarting && !IsChallengeReadyRoomActive && !spawnCorrectionRequired))
             {
                 return false;
@@ -2042,7 +2105,10 @@ namespace DrawBody.Prototype
         public void EnterDrawingMode()
         {
             LocalCoopSessionManager localCoop = GetComponent<LocalCoopSessionManager>();
-            if (localCoop != null && localCoop.LocalPlayerCount > 1)
+            // Characters added from the single-player drawer share P1 input and
+            // use the normal full-screen DRAW flow. Only split-screen players
+            // with separately assigned devices own independent DRAW sessions.
+            if (localCoop != null && localCoop.HasDedicatedSecondaryPlayers)
             {
                 localCoop.ToggleDrawing(player);
                 return;
@@ -2384,7 +2450,13 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            bool hasDebugStart = stageEditor.TryGetDebugTestStartPosition(out Vector3 debugStartPosition);
+            bool[] hasDebugStarts = new bool[localPlayers.Count];
+            Vector3[] debugStartPositions = new Vector3[localPlayers.Count];
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                hasDebugStarts[i] = stageEditor.TryGetDebugTestStartPosition(
+                    i, out debugStartPositions[i]);
+            }
             SetEditedStageTestMode(true);
             NotebookBackgroundDoodles.SetWorldVisible(true);
             stageEditor.TestPlay();
@@ -2413,10 +2485,12 @@ namespace DrawBody.Prototype
                 AssignInitialUniqueSpecies();
             }
             RespawnPlayers();
-            if (hasDebugStart && player != null)
+            for (int i = 0; i < localPlayers.Count && i < hasDebugStarts.Length; i++)
             {
-                TeleportPlayerWithoutPhysics(player, debugStartPosition);
-                player.ResetMotion();
+                PlayerController2D localPlayer = localPlayers[i];
+                if (!hasDebugStarts[i] || localPlayer == null) continue;
+                TeleportPlayerWithoutPhysics(localPlayer, debugStartPositions[i]);
+                localPlayer.ResetMotion();
             }
             SetActivePlayer(player != null ? player : primaryPlayer, true);
         }
@@ -2683,14 +2757,31 @@ namespace DrawBody.Prototype
                 return false;
             }
 
-            LocalPlayerInputBinding binding = candidate.InputBinding;
-            if (binding != null && binding.Kind != LocalPlayerInputBinding.DeviceKind.AutoPrimary)
+            if (HasIndependentLocalInput(candidate))
             {
                 return false;
             }
 
             bool isLocalSwitchablePlayer = localPlayers.Contains(candidate);
             return isLocalSwitchablePlayer && candidate != player;
+        }
+
+        private bool HasIndependentLocalInput(PlayerController2D candidate)
+        {
+            if (candidate == null)
+            {
+                return false;
+            }
+
+            LocalCoopSessionManager localCoop = GetComponent<LocalCoopSessionManager>();
+            if (localCoop == null || !localCoop.HasDedicatedSecondaryPlayers)
+            {
+                return false;
+            }
+
+            LocalPlayerInputBinding binding = candidate.InputBinding;
+            return binding != null
+                && binding.Kind != LocalPlayerInputBinding.DeviceKind.AutoPrimary;
         }
 
         public void GetClearCelebrationPlayers(List<PlayerController2D> results)
@@ -3874,17 +3965,30 @@ namespace DrawBody.Prototype
             AddLocalCharacter();
         }
 
-        public PlayerController2D AddLocalCharacter()
+        public PlayerController2D AddLocalCharacter(bool deferReadyReset = false)
         {
             if (localPlayers.Count >= MaxLocalPlayersPerConnection || primaryPlayer == null)
             {
                 return null;
             }
 
-            SaveDrawingState(primaryPlayer);
+            // The shared-character drawer can add another avatar after Q has
+            // selected P2/P3. DrawManager currently represents that selected
+            // avatar, so saving it as primary would overwrite P1's body state.
+            PlayerController2D sourcePlayer = player != null && localPlayers.Contains(player)
+                ? player
+                : primaryPlayer;
+            SaveDrawingState(sourcePlayer);
             int localIndex = localPlayers.Count;
-            Vector3 offset = new Vector3(Mathf.Sign(primaryPlayer.FacingDirection) * (1.25f * localIndex), 0.35f, 0f);
-            GameObject clone = Instantiate(primaryPlayer.gameObject, primaryPlayer.transform.position + offset, primaryPlayer.transform.rotation, primaryPlayer.transform.parent);
+            Vector3 offset = new Vector3(
+                Mathf.Sign(sourcePlayer.FacingDirection) * 1.25f,
+                0.35f,
+                0f);
+            GameObject clone = Instantiate(
+                sourcePlayer.gameObject,
+                sourcePlayer.transform.position + offset,
+                sourcePlayer.transform.rotation,
+                sourcePlayer.transform.parent);
             clone.name = $"Player {localIndex + 1}";
             PlayerController2D addedPlayer = clone.GetComponent<PlayerController2D>();
             if (addedPlayer == null)
@@ -3907,7 +4011,7 @@ namespace DrawBody.Prototype
             addedPlayer.transform.localScale = stablePlayerLocalScale;
             addedPlayer.ResetMotion();
             addedPlayer.SetControlsEnabled(false);
-            if (drawingStates.TryGetValue(primaryPlayer, out DrawManager.DrawingState state))
+            if (drawingStates.TryGetValue(sourcePlayer, out DrawManager.DrawingState state))
             {
                 drawingStates[addedPlayer] = CloneDrawingState(state);
             }
@@ -3928,7 +4032,7 @@ namespace DrawBody.Prototype
             BodyBuilder bodyBuilder = addedPlayer.GetComponent<BodyBuilder>();
             if (bodyBuilder != null)
             {
-                bodyBuilder.SetFacingDirection(primaryPlayer.FacingDirection);
+                bodyBuilder.SetFacingDirection(sourcePlayer.FacingDirection);
                 bodyBuilder.SetPlayerColor(PlayerColorPalette.GetColor(localIndex));
             }
 
@@ -3936,7 +4040,13 @@ namespace DrawBody.Prototype
             LiftPlayerOutOfGround(addedPlayer);
             RefreshControlledPlayerMarkers();
             drawManager?.RefreshInkBudgetDisplay();
-            onlineManager?.SetLocalReady(false);
+            // A dedicated local-coop join binds its device immediately after
+            // this method returns. SetLocalReady raises StateChanged
+            // synchronously, and the online roster handler removes secondary
+            // AutoPrimary characters. Defer that notification until the caller
+            // has installed the dedicated binding so the new seat is not
+            // mistaken for a drawer-added offline character.
+            if (!deferReadyReset) onlineManager?.SetLocalReady(false);
             return addedPlayer;
         }
 
@@ -4121,13 +4231,13 @@ namespace DrawBody.Prototype
 
         public void SwitchCharacter()
         {
+            if (primaryPlayer == null || localPlayers.Count <= 1)
+            {
+                return;
+            }
             if (!CanSwitchGameplayCharacter)
             {
                 ShowReadyRoomOnlyCharacterChangeNotice();
-                return;
-            }
-            if (primaryPlayer == null || localPlayers.Count <= 1)
-            {
                 return;
             }
             int current = Mathf.Max(0, localPlayers.IndexOf(player));
@@ -4275,7 +4385,7 @@ namespace DrawBody.Prototype
             if (targetPlayer == null) return true;
 
             Vector3 original = targetPlayer.transform.position;
-            bool resolved = TryPlaceAtSafeSpawn(targetPlayer, preferred, out safePosition);
+            bool resolved = TryPlaceAtSafeSpawn(targetPlayer, preferred, out safePosition, true);
             TeleportPlayerWithoutPhysics(targetPlayer, original);
             targetPlayer.ResetMotion();
             Physics2D.SyncTransforms();
@@ -4330,7 +4440,7 @@ namespace DrawBody.Prototype
                 PlayerController2D candidate = candidates[i];
                 if (candidate == null || !candidate.gameObject.activeInHierarchy) continue;
                 Vector3 preferred = candidate.transform.position;
-                if (TryPlaceAtSafeSpawn(candidate, preferred, out Vector3 safePosition))
+                if (TryPlaceAtSafeSpawn(candidate, preferred, out Vector3 safePosition, true))
                 {
                     RecordAssignedPlayerStart(candidate, safePosition);
                     continue;
@@ -4372,7 +4482,7 @@ namespace DrawBody.Prototype
 
             SetPlayerRedrawingState(redrawPlayer, false);
             Physics2D.SyncTransforms();
-            if (!TryPlaceAtSafeSpawn(redrawPlayer, preferred, out Vector3 safePosition))
+            if (!TryPlaceAtSafeSpawn(redrawPlayer, preferred, out Vector3 safePosition, !redrawInPlace))
             {
                 TeleportPlayerWithoutPhysics(redrawPlayer, hiddenPosition);
                 redrawPlayer.ResetMotion();
@@ -4435,13 +4545,31 @@ namespace DrawBody.Prototype
                 uiManager?.ShowGameplayNotice(LocalizationManager.T("draw_save_complete"));
         }
 
-        private bool TryPlaceAtSafeSpawn(PlayerController2D targetPlayer, Vector3 preferred, out Vector3 safePosition)
+        private bool TryPlaceAtSafeSpawn(
+            PlayerController2D targetPlayer,
+            Vector3 preferred,
+            out Vector3 safePosition,
+            bool enforceStartSlot = false)
         {
             safePosition = preferred;
-            if (targetPlayer == null || !TryGetPlayerSolidBounds(targetPlayer, out _))
+            if (targetPlayer == null || !TryGetPlayerSolidBounds(targetPlayer, out Bounds initialBounds))
                 return true;
 
             Vector3 original = targetPlayer.transform.position;
+            float minimumRootX = float.NegativeInfinity;
+            float maximumRootX = float.PositiveInfinity;
+            if (enforceStartSlot
+                && !TryGetStageStartSlot(
+                    targetPlayer,
+                    initialBounds,
+                    preferred,
+                    out preferred.x,
+                    out minimumRootX,
+                    out maximumRootX))
+            {
+                return false;
+            }
+
             // A one-way platform can be entered from below, so it must not make
             // a large drawing fail the challenge-start fit validation.
             bool requiresGround = TryFindGroundSurfaceBelow(preferred, out _, false);
@@ -4454,6 +4582,7 @@ namespace DrawBody.Prototype
                 {
                     float direction = side == 0 ? 1f : -1f;
                     Vector3 candidate = preferred + Vector3.right * (ring * step * direction);
+                    if (candidate.x < minimumRootX || candidate.x > maximumRootX) continue;
                     if (requiresGround && !TryFindGroundSurfaceBelow(candidate, out _, false)) continue;
                     TeleportPlayerWithoutPhysics(targetPlayer, candidate);
                     AlignPlayerBottomToGround(targetPlayer, candidate, false);
@@ -4470,6 +4599,138 @@ namespace DrawBody.Prototype
             TeleportPlayerWithoutPhysics(targetPlayer, original);
             targetPlayer.ResetMotion();
             return false;
+        }
+
+        private bool TryGetStageStartSlot(
+            PlayerController2D targetPlayer,
+            Bounds bodyBounds,
+            Vector3 preferred,
+            out float preferredRootX,
+            out float minimumRootX,
+            out float maximumRootX)
+        {
+            preferredRootX = preferred.x;
+            minimumRootX = float.NegativeInfinity;
+            maximumRootX = float.PositiveInfinity;
+            if (targetPlayer == null || spawnPoint == null) return true;
+
+            int playerCount;
+            int playerSlot;
+            if (IsOnlineInStage())
+            {
+                playerCount = GetLobbyPlayerCount();
+                playerSlot = GetLobbyPlayerSlot(GetOnlinePlayerId(targetPlayer));
+            }
+            else
+            {
+                playerCount = Mathf.Max(1, localPlayers.Count);
+                playerSlot = localPlayers.IndexOf(targetPlayer);
+            }
+            playerCount = Mathf.Clamp(playerCount, 1, 4);
+            if (playerSlot < 0 || playerSlot >= playerCount) return true;
+
+            const float bodyGap = 0.24f;
+            const float laneInset = bodyGap * 0.5f;
+            float bodyCenterOffset = bodyBounds.center.x - targetPlayer.transform.position.x;
+            float bodyLeftOffset = bodyBounds.min.x - targetPlayer.transform.position.x;
+            float bodyRightOffset = bodyBounds.max.x - targetPlayer.transform.position.x;
+
+            // 12-2 deliberately starts between a row of jump pads. Preserve its
+            // authored safe centers while still rejecting a body wider than the
+            // space assigned to one participant.
+            if (currentStageId == "12-2")
+            {
+                const float specialLaneWidth = 5.6f;
+                float laneCenter = preferred.x;
+                float laneLeft = laneCenter - specialLaneWidth * 0.5f;
+                float laneRight = laneCenter + specialLaneWidth * 0.5f;
+                minimumRootX = laneLeft + laneInset - bodyLeftOffset;
+                maximumRootX = laneRight - laneInset - bodyRightOffset;
+                preferredRootX = laneCenter - bodyCenterOffset;
+                return minimumRootX <= maximumRootX;
+            }
+
+            // 9-3 is authored at double spatial scale and intentionally gives
+            // each player a much wider start lane for large slime drawings.
+            if (currentStageId == "9-3")
+            {
+                const float largeLaneWidth = 15.5f;
+                float laneCenter = preferred.x;
+                float laneLeft = laneCenter - largeLaneWidth * 0.5f;
+                float laneRight = laneCenter + largeLaneWidth * 0.5f;
+                minimumRootX = laneLeft + laneInset - bodyLeftOffset;
+                maximumRootX = laneRight - laneInset - bodyRightOffset;
+                preferredRootX = laneCenter - bodyCenterOffset;
+                return minimumRootX <= maximumRootX;
+            }
+
+            if (!TryGetStageStartHorizontalRange(out float availableLeft, out float availableRight))
+                return true;
+
+            float availableWidth = availableRight - availableLeft;
+            if (availableWidth <= bodyGap * playerCount) return false;
+
+            float widestBody = GetWidestKnownStartBody(bodyBounds.size.x);
+            float desiredLaneWidth = Mathf.Max(2.2f, widestBody + bodyGap);
+            float laneWidth = Mathf.Min(desiredLaneWidth, availableWidth / playerCount);
+            float groupWidth = laneWidth * playerCount;
+            float desiredCenter = spawnPoint.position.x;
+            float groupCenter = Mathf.Clamp(
+                desiredCenter,
+                availableLeft + groupWidth * 0.5f,
+                availableRight - groupWidth * 0.5f);
+            float groupLeft = groupCenter - groupWidth * 0.5f;
+            float slotLeft = groupLeft + laneWidth * playerSlot;
+            float slotRight = slotLeft + laneWidth;
+            float slotCenter = (slotLeft + slotRight) * 0.5f;
+
+            minimumRootX = slotLeft + laneInset - bodyLeftOffset;
+            maximumRootX = slotRight - laneInset - bodyRightOffset;
+            preferredRootX = slotCenter - bodyCenterOffset;
+            return minimumRootX <= maximumRootX;
+        }
+
+        private bool TryGetStageStartHorizontalRange(out float left, out float right)
+        {
+            left = 0f;
+            right = 0f;
+            if (spawnPoint == null) return false;
+
+            if (TryGetSpawnSurfaceHorizontalBounds(spawnPoint.position, out left, out right))
+            {
+                const float platformEdgeInset = 0.18f;
+                left += platformEdgeInset;
+                right -= platformEdgeInset;
+                return right > left;
+            }
+
+            StageEditorObject[] stageObjects = Object.FindObjectsByType<StageEditorObject>(
+                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < stageObjects.Length; i++)
+            {
+                StageEditorObject boundary = stageObjects[i];
+                if (boundary == null || boundary.type != StageObjectType.StageBoundary) continue;
+                if (!StageObjectFactory.TryGetStageBoundaryInnerEdges(
+                        boundary, out float boundaryLeft, out float boundaryRight, out _)) continue;
+                if (spawnPoint.position.x < boundaryLeft || spawnPoint.position.x > boundaryRight) continue;
+                const float boundaryInset = 0.16f;
+                left = boundaryLeft + boundaryInset;
+                right = boundaryRight - boundaryInset;
+                return right > left;
+            }
+            return false;
+        }
+
+        private float GetWidestKnownStartBody(float fallbackWidth)
+        {
+            float widest = Mathf.Max(0.1f, fallbackWidth);
+            for (int i = 0; i < localPlayers.Count; i++)
+                if (TryGetPlayerSolidBounds(localPlayers[i], out Bounds localBounds))
+                    widest = Mathf.Max(widest, localBounds.size.x);
+            foreach (KeyValuePair<string, PlayerController2D> pair in onlineRemotePlayers)
+                if (TryGetPlayerSolidBounds(pair.Value, out Bounds remoteBounds))
+                    widest = Mathf.Max(widest, remoteBounds.size.x);
+            return widest;
         }
 
         private bool HasStageSolidOverlap(PlayerController2D targetPlayer)
@@ -5193,9 +5454,7 @@ namespace DrawBody.Prototype
                 }
                 Physics2D.SyncTransforms();
                 targetPlayer.ResetMotion();
-                LocalPlayerInputBinding binding = targetPlayer.InputBinding;
-                bool independentlyBound = binding != null
-                    && binding.Kind != LocalPlayerInputBinding.DeviceKind.AutoPrimary;
+                bool independentlyBound = HasIndependentLocalInput(targetPlayer);
                 targetPlayer.SetControlsEnabled((independentlyBound || targetPlayer == player)
                     && stageStarted && !drawing && !cleared && !stageEditing);
                 respawnGraceUntil[targetPlayer] = Time.unscaledTime + RespawnGraceDuration;
@@ -5248,9 +5507,7 @@ namespace DrawBody.Prototype
                 AlignPlayerBottomToGround(targetPlayer, safePosition);
                 LiftPlayerOutOfGround(targetPlayer);
                 targetPlayer.ResetMotion();
-                LocalPlayerInputBinding binding = targetPlayer.InputBinding;
-                bool independentlyBound = binding != null
-                    && binding.Kind != LocalPlayerInputBinding.DeviceKind.AutoPrimary;
+                bool independentlyBound = HasIndependentLocalInput(targetPlayer);
                 targetPlayer.SetControlsEnabled((independentlyBound || targetPlayer == player)
                     && stageStarted && !drawing && !cleared && !stageEditing
                     && !optionOverlayActive && !titleTextInputActive);
@@ -5819,9 +6076,74 @@ namespace DrawBody.Prototype
 
                 surfaceLeft = collider.bounds.min.x;
                 surfaceRight = collider.bounds.max.x;
+                float surfaceY = collider.bounds.max.y;
+
+                // Procedural arenas such as 11-2 build one visually continuous
+                // start floor from many neighboring colliders. Treat the whole
+                // connected row as one surface; using only the collider directly
+                // below the marker would give each of four players less than one
+                // floor tile and incorrectly force ordinary bodies into redraw.
+                Collider2D[] all = Object.FindObjectsByType<Collider2D>(
+                    FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+                bool expanded;
+                do
+                {
+                    expanded = false;
+                    for (int candidateIndex = 0; candidateIndex < all.Length; candidateIndex++)
+                    {
+                        Collider2D candidate = all[candidateIndex];
+                        if (candidate == null || candidate == collider || candidate.isTrigger
+                            || candidate.GetComponentInParent<PlayerController2D>() != null
+                            || (groundLayer.value & 1 << candidate.gameObject.layer) == 0
+                            || !IsHorizontalSpawnSupport(candidate)
+                            || Mathf.Abs(candidate.bounds.max.y - surfaceY) > 0.18f)
+                        {
+                            continue;
+                        }
+
+                        const float seamTolerance = 0.12f;
+                        bool touches = candidate.bounds.max.x >= surfaceLeft - seamTolerance
+                            && candidate.bounds.min.x <= surfaceRight + seamTolerance;
+                        if (!touches) continue;
+                        float nextLeft = Mathf.Min(surfaceLeft, candidate.bounds.min.x);
+                        float nextRight = Mathf.Max(surfaceRight, candidate.bounds.max.x);
+                        if (nextLeft < surfaceLeft - 0.001f || nextRight > surfaceRight + 0.001f)
+                        {
+                            surfaceLeft = nextLeft;
+                            surfaceRight = nextRight;
+                            expanded = true;
+                        }
+                    }
+                }
+                while (expanded);
                 return surfaceRight > surfaceLeft;
             }
             return false;
+        }
+
+        private static bool IsHorizontalSpawnSupport(Collider2D collider)
+        {
+            if (collider == null) return false;
+            if (collider.CompareTag("Ground")) return true;
+            StageEditorObject marker = collider.GetComponentInParent<StageEditorObject>();
+            if (marker == null) return false;
+            switch (marker.type)
+            {
+                case StageObjectType.Platform:
+                case StageObjectType.HalfPlatform:
+                case StageObjectType.OneWayPlatform:
+                case StageObjectType.IceFloor:
+                case StageObjectType.CloudPlatform:
+                case StageObjectType.BreakableFloor:
+                case StageObjectType.FallingFloor:
+                case StageObjectType.MovingPlatform:
+                case StageObjectType.MovingOneWayPlatform:
+                case StageObjectType.EscortPlayerOnlyFloor:
+                case StageObjectType.Seesaw:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private void SetActivePlayer(PlayerController2D nextPlayer, bool enableControls)
@@ -5835,9 +6157,7 @@ namespace DrawBody.Prototype
             {
                 SaveDrawingState(player);
                 player.GetComponent<PlayerCarryController>()?.ForceDrop();
-                LocalPlayerInputBinding previousBinding = player.InputBinding;
-                bool previousIndependentlyBound = previousBinding != null
-                    && previousBinding.Kind != LocalPlayerInputBinding.DeviceKind.AutoPrimary;
+                bool previousIndependentlyBound = HasIndependentLocalInput(player);
                 player.SetControlsEnabled(previousIndependentlyBound && ShouldEnableLocalGameplayControls);
             }
 
@@ -5855,9 +6175,7 @@ namespace DrawBody.Prototype
             {
                 PlayerController2D local = localPlayers[i];
                 if (local == null) continue;
-                LocalPlayerInputBinding binding = local.InputBinding;
-                bool independentlyBound = binding != null
-                    && binding.Kind != LocalPlayerInputBinding.DeviceKind.AutoPrimary;
+                bool independentlyBound = HasIndependentLocalInput(local);
                 bool independentlyDrawing = localCoop != null && localCoop.IsPlayerDrawing(local);
                 local.SetControlsEnabled(enabled && !independentlyDrawing
                     && (independentlyBound || local == player));
@@ -5887,10 +6205,16 @@ namespace DrawBody.Prototype
         {
             bool showMarker = localPlayers.Count > 1 || IsOnlineInStage();
             for (int i = 0; i < localPlayers.Count; i++)
-                SetControlledPlayerMarker(localPlayers[i], showMarker && localPlayers[i] == player);
+                SetControlledPlayerMarker(
+                    localPlayers[i],
+                    showMarker && localPlayers[i] == player,
+                    UsesStageManagedPlayerMovement && IsGameplayActive);
         }
 
-        private static void SetControlledPlayerMarker(PlayerController2D targetPlayer, bool controlled)
+        private static void SetControlledPlayerMarker(
+            PlayerController2D targetPlayer,
+            bool controlled,
+            bool forceVisible = false)
         {
             if (targetPlayer == null)
             {
@@ -5903,7 +6227,7 @@ namespace DrawBody.Prototype
                 marker = targetPlayer.gameObject.AddComponent<ControlledPlayerMarker>();
             }
 
-            marker.SetControlled(controlled);
+            marker.SetControlled(controlled, forceVisible);
         }
 
         public void ApplyDefaultPlayerColors()
@@ -5972,6 +6296,11 @@ namespace DrawBody.Prototype
 
         public bool CanConfirmSpeciesForPlayer(PlayerController2D targetPlayer, DrawManager.Species species)
         {
+            if (!StageSpeciesRules.IsAllowed(
+                StageSpeciesRules.GetAllowedForStage(currentStageId), species))
+            {
+                return false;
+            }
             if (!RequiresUniquePlayerSpecies)
             {
                 return true;
@@ -6510,6 +6839,15 @@ namespace DrawBody.Prototype
 
             SaveDrawingState(player);
 
+            // 15-3 preserves every valid choice. Its stage-rule pass replaces
+            // only a forbidden/duplicate species with an unused allowed one.
+            if (string.Equals(currentStageId, "15-3", System.StringComparison.OrdinalIgnoreCase))
+            {
+                ConfigureActivePlayerTargets();
+                LoadDrawingState(player);
+                return;
+            }
+
             if (IsOnlineInStage() || onlineManager?.CurrentLobby != null)
             {
                 int connectionSlot = GetLobbyPlayerSlot(onlineManager != null
@@ -6554,10 +6892,21 @@ namespace DrawBody.Prototype
             drawManager.LoadState(state, true);
         }
 
-        private static DrawManager.Species GetUniqueSpeciesForSlot(int slot)
+        private DrawManager.Species GetUniqueSpeciesForSlot(int slot)
         {
             IReadOnlyList<DrawManager.Species> ordered = StageSpeciesRules.GetOrderedSpecies();
-            return ordered[Mathf.Abs(slot) % ordered.Count];
+            StageSpeciesMask availability = StageSpeciesRules.GetAllowedForStage(currentStageId);
+            List<DrawManager.Species> allowed = new List<DrawManager.Species>();
+            for (int i = 0; i < ordered.Count; i++)
+            {
+                if (StageSpeciesRules.IsAllowed(availability, ordered[i]))
+                {
+                    allowed.Add(ordered[i]);
+                }
+            }
+            return allowed.Count > 0
+                ? allowed[Mathf.Abs(slot) % allowed.Count]
+                : DrawManager.Species.Human;
         }
 
         private void ResolveSimultaneousUniqueSpeciesConflict(
@@ -6597,6 +6946,8 @@ namespace DrawBody.Prototype
             for (int i = 0; i < ordered.Count; i++)
             {
                 DrawManager.Species candidate = ordered[i];
+                if (!StageSpeciesRules.IsAllowed(
+                    StageSpeciesRules.GetAllowedForStage(currentStageId), candidate)) continue;
                 if (!IsSpeciesUsedByAnotherPlayer(candidate))
                 {
                     AssignSpeciesToPlayer(conflictingLocal, candidate);
@@ -6654,21 +7005,9 @@ namespace DrawBody.Prototype
             }
 
             StageSpeciesMask availability = StageSpeciesRules.GetAllowedForStage(currentStageId);
-            drawManager.SetAllowedSpecies(availability);
-            DrawManager.Species fallback = StageSpeciesRules.GetFirstAllowed(availability);
-
             if (player != null)
             {
                 SaveDrawingState(player);
-            }
-
-            foreach (KeyValuePair<PlayerController2D, DrawManager.DrawingState> entry in drawingStates)
-            {
-                if (entry.Value != null && !StageSpeciesRules.IsAllowed(availability, entry.Value.Species))
-                {
-                    entry.Value.Species = fallback;
-                    entry.Value.Part = DrawManager.BodyPart.Torso;
-                }
             }
 
             List<PlayerController2D> playersToRefresh = new List<PlayerController2D>();
@@ -6678,6 +7017,28 @@ namespace DrawBody.Prototype
             {
                 AddPlayerOnce(playersToRefresh, remote.Value);
             }
+
+            if (string.Equals(currentStageId, "15-3", System.StringComparison.OrdinalIgnoreCase))
+            {
+                playersToRefresh.Sort((left, right) =>
+                    GetSpeciesNormalizationOrder(left).CompareTo(GetSpeciesNormalizationOrder(right)));
+                NormalizeUniqueAllowedSpecies(playersToRefresh, availability);
+            }
+            else
+            {
+                DrawManager.Species fallback = StageSpeciesRules.GetFirstAllowed(availability);
+                foreach (KeyValuePair<PlayerController2D, DrawManager.DrawingState> entry in drawingStates)
+                {
+                    if (entry.Value != null
+                        && !StageSpeciesRules.IsAllowed(availability, entry.Value.Species))
+                    {
+                        entry.Value.Species = fallback;
+                        entry.Value.Part = DrawManager.BodyPart.Torso;
+                    }
+                }
+            }
+
+            drawManager.SetAllowedSpecies(availability);
 
             for (int i = 0; i < playersToRefresh.Count; i++)
             {
@@ -6698,6 +7059,48 @@ namespace DrawBody.Prototype
             {
                 LoadDrawingState(player);
             }
+        }
+
+        private void NormalizeUniqueAllowedSpecies(
+            IReadOnlyList<PlayerController2D> players,
+            StageSpeciesMask availability)
+        {
+            HashSet<DrawManager.Species> used = new HashSet<DrawManager.Species>();
+            List<DrawManager.DrawingState> replacements = new List<DrawManager.DrawingState>();
+            for (int i = 0; i < players.Count; i++)
+            {
+                PlayerController2D target = players[i];
+                if (target == null
+                    || !drawingStates.TryGetValue(target, out DrawManager.DrawingState state)
+                    || state == null) continue;
+                if (StageSpeciesRules.IsAllowed(availability, state.Species)
+                    && used.Add(state.Species)) continue;
+                replacements.Add(state);
+            }
+
+            IReadOnlyList<DrawManager.Species> ordered = StageSpeciesRules.GetOrderedSpecies();
+            for (int i = 0; i < replacements.Count; i++)
+            {
+                DrawManager.Species replacement = StageSpeciesRules.GetFirstAllowed(availability);
+                for (int speciesIndex = 0; speciesIndex < ordered.Count; speciesIndex++)
+                {
+                    DrawManager.Species candidate = ordered[speciesIndex];
+                    if (!StageSpeciesRules.IsAllowed(availability, candidate) || used.Contains(candidate)) continue;
+                    replacement = candidate;
+                    break;
+                }
+                replacements[i].Species = replacement;
+                replacements[i].Part = DrawManager.BodyPart.Torso;
+                used.Add(replacement);
+            }
+        }
+
+        private int GetSpeciesNormalizationOrder(PlayerController2D target)
+        {
+            int onlineSlot = GetLobbyPlayerSlot(GetOnlinePlayerId(target));
+            if (onlineSlot >= 0) return onlineSlot;
+            int localSlot = localPlayers.IndexOf(target);
+            return localSlot >= 0 ? localSlot : int.MaxValue;
         }
 
         private static void AddPlayerOnce(List<PlayerController2D> players, PlayerController2D candidate)
@@ -6817,6 +7220,7 @@ namespace DrawBody.Prototype
         private Collider2D[] bodyColliders;
         private float nextColliderRefreshAt;
         private bool controlled;
+        private bool forceVisible;
 
         private void Awake()
         {
@@ -6837,15 +7241,16 @@ namespace DrawBody.Prototype
             LocalizationManager.LanguageChanged -= RefreshText;
         }
 
-        public void SetControlled(bool value)
+        public void SetControlled(bool value, bool showWhileControlsSuppressed = false)
         {
             controlled = value;
-            SetRenderersVisible(controlled && controller != null && controller.ControlsEnabled);
+            forceVisible = showWhileControlsSuppressed;
+            SetRenderersVisible(IsVisible());
         }
 
         private void LateUpdate()
         {
-            bool visible = controlled && controller != null && controller.ControlsEnabled;
+            bool visible = IsVisible();
             SetRenderersVisible(visible);
             if (!visible)
             {
@@ -6946,9 +7351,15 @@ namespace DrawBody.Prototype
         private void RefreshText()
         {
             EnsureVisual();
-            string marker = LocalizationManager.T("player_controlled_marker") + "\n▼";
+            string marker = LocalizationManager.T("player_controlled_marker") + "\n\u25BC";
             mainText.text = marker;
             shadowText.text = marker;
+        }
+
+        private bool IsVisible()
+        {
+            return controlled && controller != null
+                && (controller.ControlsEnabled || forceVisible);
         }
 
         private void SetRenderersVisible(bool visible)

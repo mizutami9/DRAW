@@ -604,10 +604,10 @@ namespace DrawBody.Prototype
                 EnsureOptionRow(panel, "OptionRow" + i, rowY[i], rowColors[i]);
             }
 
-            EnsureOptionIcon(panel, "OptionBgmIcon", 7, new Vector2(-365f, rowY[0]), 42f);
+            EnsureOptionIcon(panel, "OptionBgmIcon", 7, new Vector2(-375f, rowY[0]), 42f);
             RectTransform bgmLabel = FindRect(panel, "OptionBgmLabel");
             UsePlainLocalizedOptionLabel(bgmLabel, "option_bgm");
-            PlaceOptionText(bgmLabel, new Vector2(-286f, rowY[0]),
+            PlaceOptionText(bgmLabel, new Vector2(-265f, rowY[0]),
                 new Vector2(130f, 42f), TextAnchor.MiddleLeft, 22, true);
             RectTransform bgmSlider = FindRect(panel, "OptionBgmSlider");
             PlaceOptionRect(bgmSlider, new Vector2(55f, rowY[0]), new Vector2(390f, 40f));
@@ -617,10 +617,10 @@ namespace DrawBody.Prototype
             PlaceOptionText(FindRect(panel, "OptionBgmValue"), new Vector2(310f, rowY[0]),
                 new Vector2(84f, 40f), TextAnchor.MiddleCenter, 19, true);
 
-            EnsureOptionIcon(panel, "OptionSeIcon", 8, new Vector2(-365f, rowY[1]), 42f);
+            EnsureOptionIcon(panel, "OptionSeIcon", 8, new Vector2(-375f, rowY[1]), 42f);
             RectTransform seLabel = FindRect(panel, "OptionSeLabel");
             UsePlainLocalizedOptionLabel(seLabel, "option_se");
-            PlaceOptionText(seLabel, new Vector2(-286f, rowY[1]),
+            PlaceOptionText(seLabel, new Vector2(-265f, rowY[1]),
                 new Vector2(130f, 42f), TextAnchor.MiddleLeft, 22, true);
             RectTransform seSlider = FindRect(panel, "OptionSeSlider");
             PlaceOptionRect(seSlider, new Vector2(55f, rowY[1]), new Vector2(390f, 40f));
@@ -630,10 +630,10 @@ namespace DrawBody.Prototype
             PlaceOptionText(FindRect(panel, "OptionSeValue"), new Vector2(310f, rowY[1]),
                 new Vector2(84f, 40f), TextAnchor.MiddleCenter, 19, true);
 
-            EnsureOptionIcon(panel, "OptionLanguageIcon", 5, new Vector2(-365f, rowY[2]), 42f);
+            EnsureOptionIcon(panel, "OptionLanguageIcon", 5, new Vector2(-375f, rowY[2]), 42f);
             RectTransform languageLabel = FindRect(panel, "OptionLanguageLabel");
             UsePlainLocalizedOptionLabel(languageLabel, "option_language");
-            PlaceOptionText(languageLabel, new Vector2(-272f, rowY[2]), new Vector2(165f, 42f),
+            PlaceOptionText(languageLabel, new Vector2(-245f, rowY[2]), new Vector2(165f, 42f),
                 TextAnchor.MiddleLeft, 22, true);
             RectTransform japanese = FindRect(panel, "OptionJapaneseButton");
             RectTransform english = FindRect(panel, "OptionEnglishButton");
@@ -660,7 +660,7 @@ namespace DrawBody.Prototype
             HideIfExists(panel, "OptionVibrationButton");
             HideIfExists(panel, "OptionLanguageValue");
 
-            EnsureOptionIcon(panel, "OptionDisplayIcon", 9, new Vector2(-365f, rowY[3]), 42f);
+            EnsureOptionIcon(panel, "OptionDisplayIcon", 9, new Vector2(-375f, rowY[3]), 42f);
             RectTransform screenMode = FindRect(panel, "OptionScreenModeButton");
             RectTransform resolution = FindRect(panel, "OptionResolutionButton");
             PlaceOptionRect(screenMode, new Vector2(-110f, rowY[3]), new Vector2(310f, 46f));
@@ -668,8 +668,8 @@ namespace DrawBody.Prototype
             ThemeOptionButton(screenMode, new Color(0.91f, 0.98f, 0.96f, 1f), 17);
             ThemeOptionButton(resolution, new Color(0.91f, 0.98f, 0.96f, 1f), 17);
 
-            EnsureOptionIcon(panel, "OptionPlayerNameIcon", 10, new Vector2(-365f, rowY[4]), 42f);
-            PlaceOptionText(FindRect(panel, "OptionPlayerNameLabel"), new Vector2(-270f, rowY[4]),
+            EnsureOptionIcon(panel, "OptionPlayerNameIcon", 10, new Vector2(-375f, rowY[4]), 42f);
+            PlaceOptionText(FindRect(panel, "OptionPlayerNameLabel"), new Vector2(-240f, rowY[4]),
                 new Vector2(175f, 42f), TextAnchor.MiddleLeft, 20, true);
             RectTransform playerNameInput = FindRect(panel, "OptionPlayerNameInput");
             PlaceOptionRect(playerNameInput, new Vector2(100f, rowY[4]), new Vector2(485f, 46f));

@@ -15,7 +15,12 @@ namespace DrawBody.Prototype
         private const string EliminateKind = "side_boss_eliminate";
         private const float FloorY = -3.8f;
         private const float StartDelay = 3f;
-        private const int RequiredHits = 5;
+        private const int MaximumHealth = 100;
+        private const int CounterBombDamage = 20;
+        private const float GiantHandWarningDuration = 1.35f;
+        private const float GiantHandMaximumReach = 14f;
+        private const float GiantHandTipReach = 2.3f;
+        private const float GiantHandHitHalfHeight = 1.35f;
 
         private enum Phase { Ready, Running, Defeated, Failed }
         private enum AttackType { Barrage, AimedShot, Laser, BreakFloor, GiantHand }
@@ -78,6 +83,8 @@ namespace DrawBody.Prototype
         private Transform boss;
         private Transform bossFace;
         private SpriteRenderer bossCore;
+        private SpriteRenderer bossDamageFlashOverlay;
+        private Coroutine bossHitFlashRoutine;
         private TextMesh monitorMain;
         private TextMesh monitorSub;
         private Transform hpFill;
@@ -90,7 +97,7 @@ namespace DrawBody.Prototype
         private float nextAttackAt = 6f;
         private float nextBroadcastAt;
         private float nextPlayerRefreshAt;
-        private int bossHealth = RequiredHits;
+        private int bossHealth = MaximumHealth;
         private int sequence;
         private int receivedSequence;
         private int attackSequence;
@@ -206,15 +213,26 @@ namespace DrawBody.Prototype
             CreateSpikes(39f, FloorY + 1.48f, 4);
             CreateSpikes(59f, FloorY + 0.48f, 3);
             CreateSpikes(106f, FloorY + 0.68f, 4);
-            CreateSpikes(146f, FloorY + 1.28f, 3);
+            // The fifth bomb button already creates its own approach spring at
+            // x=144.8, so do not stack a second spring beside these spikes.
+            CreateSpikes(146f, FloorY + 1.28f, 3, false);
             CreateSpikes(169f, FloorY + 0.28f, 5);
 
             CreateJumpPad(14f, FloorY + 0.55f);
             CreateJumpPad(44f, FloorY + 1.55f);
             CreateJumpPad(73f, FloorY + 0.55f);
             CreateJumpPad(115f, FloorY + 0.75f);
-            CreateJumpPad(153f, FloorY + 1.35f);
             CreateJumpPad(174f, FloorY + 0.35f);
+
+            // Raised dodge routes: each one starts a little beyond its jump pad
+            // and matches the height of the first ceiling-button platform. The
+            // three low barrage lanes pass underneath a player standing here.
+            CreateElevatedDodgeFloor(14f);
+            CreateElevatedDodgeFloor(44f);
+            CreateElevatedDodgeFloor(73f);
+            CreateElevatedDodgeFloor(115f);
+            CreateElevatedDodgeFloor(153f);
+            CreateElevatedDodgeFloor(174f);
 
             CreateCeilingBombButton(27.5f, 0.7f);
             CreateCeilingBombButton(56f, 0.15f);
@@ -222,6 +240,17 @@ namespace DrawBody.Prototype
             CreateCeilingBombButton(112f, 0.45f);
             CreateCeilingBombButton(147f, 1.55f);
             CreateCeilingBombButton(184f, 0.35f);
+        }
+
+        private void CreateElevatedDodgeFloor(float jumpPadX)
+        {
+            const float firstButtonFloorY = 0.7f;
+            const float landingOffset = 2.1f;
+            // Keep this at one factory segment so there is no collider seam in
+            // the middle of the landing area.
+            const float platformWidth = 5f;
+            float left = jumpPadX + landingOffset;
+            CreateFloor(left, left + platformWidth, firstButtonFloorY, false);
         }
 
         private StageSideBossFloor CreateFloor(float left, float right, float y, bool crumble)
@@ -283,11 +312,11 @@ namespace DrawBody.Prototype
             root.AddComponent<StageSideBossMovingFloor>().Configure(position, travel);
         }
 
-        private void CreateSpikes(float startX, float y, int count)
+        private void CreateSpikes(float startX, float y, int count, bool createLeadJumpPad = true)
         {
-            // Every spike row is introduced by an existing project jump pad so
-            // players always receive the intended visual and gameplay warning.
-            CreateJumpPad(startX - 2f, y + 0.05f);
+            // Spike rows normally get an approach pad. A nearby authored pad can
+            // opt out so two springs are never stacked beside each other.
+            if (createLeadJumpPad) CreateJumpPad(startX - 2f, y + 0.05f);
             if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
             if (objectFactory == null) objectFactory = gameObject.AddComponent<StageObjectFactory>();
             float width = count * 0.72f;
@@ -321,6 +350,11 @@ namespace DrawBody.Prototype
 
         private void CreateCeilingBombButton(float x, float ceilingY)
         {
+            const float ceilingThickness = 0.55f;
+            const float buttonHeight = 0.72f;
+            // The factory's drawn base occupies 33% of the configured button
+            // height above the upside-down root pivot.
+            const float buttonVisualTopRatio = 0.33f;
             CreateButtonCeiling(x, ceilingY);
             CreateJumpPad(x - 2.2f, FloorY + 0.55f);
             if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
@@ -328,7 +362,9 @@ namespace DrawBody.Prototype
             StageSideBossWeapon weapon = StageSideBossWeapon.Create(
                 transform,
                 weapons.Count,
-                new Vector2(x, ceilingY - 0.72f),
+                // Put the visible base (not the larger interaction trigger)
+                // exactly against the underside of the ceiling.
+                new Vector2(x, ceilingY - ceilingThickness * 0.5f - buttonHeight * buttonVisualTopRatio),
                 objectFactory,
                 this,
                 HasAuthority);
@@ -382,6 +418,23 @@ namespace DrawBody.Prototype
             SpriteRenderer messyBoss = NicoDrawBossArt.Apply(
                 bossFace, "boss-chase", new Vector2(10f, 7f), 70);
             if (messyBoss != null) bossCore = messyBoss;
+            CreateBossDamageFlashOverlay();
+        }
+
+        private void CreateBossDamageFlashOverlay()
+        {
+            if (bossCore == null || bossCore.sprite == null) return;
+            GameObject overlay = new GameObject("Boss Damage Flash");
+            overlay.transform.SetParent(bossCore.transform, false);
+            bossDamageFlashOverlay = overlay.AddComponent<SpriteRenderer>();
+            bossDamageFlashOverlay.sprite = bossCore.sprite;
+            bossDamageFlashOverlay.drawMode = bossCore.drawMode;
+            bossDamageFlashOverlay.size = bossCore.size;
+            bossDamageFlashOverlay.flipX = bossCore.flipX;
+            bossDamageFlashOverlay.flipY = bossCore.flipY;
+            bossDamageFlashOverlay.sortingLayerID = bossCore.sortingLayerID;
+            bossDamageFlashOverlay.sortingOrder = bossCore.sortingOrder + 12;
+            bossDamageFlashOverlay.color = new Color(1f, 0.04f, 0.03f, 0f);
         }
 
         private void BuildMonitor()
@@ -451,8 +504,7 @@ namespace DrawBody.Prototype
         {
             GameSfx.PlayAt(SfxId.BossAttackWarning, new Vector2(scrollX - 6f, 5.8f));
             yield return new WaitForSeconds(0.9f);
-            float attackScrollX = state.Origin.x + 15f;
-            int count = attackScrollX >= 130f ? 9 : attackScrollX >= 60f ? 7 : 5;
+            const int count = 3;
             System.Random random = new System.Random(state.Sequence * 7919 + 152);
             for (int i = 0; i < count; i++)
             {
@@ -505,22 +557,39 @@ namespace DrawBody.Prototype
 
         private IEnumerator RunGiantHand(AttackState state)
         {
-            Vector2 center = new Vector2(scrollX - 3f, state.Lane);
-            GameObject warning = CreateWarningRect(center, new Vector2(25f, 1.8f), new Color(0.95f, 0.18f, 0.35f, 0.2f));
+            float dangerLength = GiantHandMaximumReach + GiantHandTipReach;
+            Vector2 warningSize = new Vector2(dangerLength, GiantHandHitHalfHeight * 2f);
+            Vector2 center = new Vector2(
+                PredictGiantHandOriginX(GiantHandWarningDuration) + dangerLength * 0.5f,
+                state.Lane);
+            GameObject warning = CreateWarningRect(center, warningSize, new Color(0.95f, 0.18f, 0.35f, 0.2f));
             GameSfx.PlayAt(SfxId.BossAttackWarning, center, 1.05f);
-            yield return new WaitForSeconds(1.35f);
+            float warningTimer = 0f;
+            while (warningTimer < GiantHandWarningDuration && phase == Phase.Running)
+            {
+                warningTimer += Time.deltaTime;
+                float remaining = Mathf.Max(0f, GiantHandWarningDuration - warningTimer);
+                if (warning != null)
+                {
+                    warning.transform.position = new Vector3(
+                        PredictGiantHandOriginX(remaining) + dangerLength * 0.5f,
+                        state.Lane,
+                        warning.transform.position.z);
+                }
+                yield return null;
+            }
             if (warning != null) Destroy(warning);
+            if (phase != Phase.Running) yield break;
             GameSfx.PlayAt(SfxId.BossDash, new Vector2(bossX + 1f, state.Lane), 1.05f);
             GameObject hand = CreateGiantDoodleHand(out LineRenderer armOutline, out LineRenderer armFill, out Transform handTip);
             hand.transform.position = new Vector3(bossX + 1f, state.Lane, -0.3f);
 
-            const float maximumReach = 14f;
             float timer = 0f;
             while (timer < 0.34f && phase == Phase.Running)
             {
                 timer += Time.deltaTime;
                 float normalized = Mathf.Clamp01(timer / 0.34f);
-                float reach = maximumReach * EaseOutBack(normalized);
+                float reach = GiantHandMaximumReach * (1f - Mathf.Pow(1f - normalized, 3f));
                 UpdateGiantHandPose(armOutline, armFill, handTip, reach, normalized);
                 HitPlayersAlongHand(hand.transform.position, state.Lane, reach);
                 yield return null;
@@ -530,8 +599,8 @@ namespace DrawBody.Prototype
             while (timer < 0.22f && phase == Phase.Running)
             {
                 timer += Time.deltaTime;
-                UpdateGiantHandPose(armOutline, armFill, handTip, maximumReach, 1f);
-                HitPlayersAlongHand(hand.transform.position, state.Lane, maximumReach);
+                UpdateGiantHandPose(armOutline, armFill, handTip, GiantHandMaximumReach, 1f);
+                HitPlayersAlongHand(hand.transform.position, state.Lane, GiantHandMaximumReach);
                 yield return null;
             }
 
@@ -540,7 +609,7 @@ namespace DrawBody.Prototype
             {
                 timer += Time.deltaTime;
                 float normalized = Mathf.Clamp01(timer / 0.38f);
-                float reach = maximumReach * (1f - Mathf.SmoothStep(0f, 1f, normalized));
+                float reach = GiantHandMaximumReach * (1f - Mathf.SmoothStep(0f, 1f, normalized));
                 UpdateGiantHandPose(armOutline, armFill, handTip, reach, 1f - normalized);
                 HitPlayersAlongHand(hand.transform.position, state.Lane, reach);
                 yield return null;
@@ -627,15 +696,32 @@ namespace DrawBody.Prototype
         private void HitPlayersAlongHand(Vector3 origin, float lane, float reach)
         {
             if (!HasAuthority || phase != Phase.Running || reach < 0.45f) return;
-            float width = reach + 2.2f;
-            HitPlayersInRect(new Vector2(origin.x + reach * 0.5f, lane), new Vector2(width, 1.35f));
+            float dangerLength = reach + GiantHandTipReach;
+            HitPlayersInRect(
+                new Vector2(origin.x + dangerLength * 0.5f, lane),
+                new Vector2(dangerLength * 0.5f, GiantHandHitHalfHeight));
         }
 
-        private static float EaseOutBack(float value)
+        private float PredictGiantHandOriginX(float secondsAhead)
         {
-            const float overshoot = 1.25f;
-            float shifted = Mathf.Clamp01(value) - 1f;
-            return 1f + (overshoot + 1f) * shifted * shifted * shifted + overshoot * shifted * shifted;
+            float currentModelBossX = CalculateBossX(scrollX);
+            float predictedScrollX = scrollX;
+            const int predictionSteps = 4;
+            float stepDuration = Mathf.Max(0f, secondsAhead) / predictionSteps;
+            for (int i = 0; i < predictionSteps; i++)
+            {
+                float progress = Mathf.Clamp01(predictedScrollX / 180f);
+                float speed = Mathf.Lerp(2.25f, 3.15f, Mathf.InverseLerp(0.62f, 1f, progress));
+                predictedScrollX += speed * stepDuration;
+            }
+            float predictedBossX = CalculateBossX(predictedScrollX);
+            return bossX + (predictedBossX - currentModelBossX) + 1f;
+        }
+
+        private static float CalculateBossX(float atScrollX)
+        {
+            float progress = Mathf.Clamp01(atScrollX / 180f);
+            return atScrollX - Mathf.Lerp(15.2f, 12.8f, progress);
         }
 
         private void CheckCounterWeapons()
@@ -705,8 +791,8 @@ namespace DrawBody.Prototype
         internal void CounterBombLanded(int weaponIndex, Vector2 position)
         {
             if (!HasAuthority || weaponIndex < 0 || weaponIndex >= weapons.Count || !landedCounterBombs.Add(weaponIndex)) return;
-            bossHealth = Mathf.Max(0, bossHealth - 1);
-            if (bossCore != null) StartCoroutine(BossHitFlash());
+            bossHealth = Mathf.Max(0, bossHealth - CounterBombDamage);
+            PlayBossHitFlash();
             GameSfx.PlayAt(SfxId.BombExplosion, position, 1f);
             BroadcastState(true);
             if (bossHealth <= 0) StartCoroutine(DefeatBoss());
@@ -950,9 +1036,9 @@ namespace DrawBody.Prototype
         private void RefreshMonitor()
         {
             if (monitorMain == null) return;
-            monitorMain.text = LocalizationManager.Format("side_boss_hp", bossHealth, RequiredHits);
+            monitorMain.text = LocalizationManager.Format("side_boss_hp", bossHealth, MaximumHealth);
             if (monitorSub != null) monitorSub.text = string.Empty;
-            float ratio = Mathf.Clamp01(bossHealth / (float)RequiredHits);
+            float ratio = Mathf.Clamp01(bossHealth / (float)MaximumHealth);
             hpFill.localScale = new Vector3(8.8f * ratio, 0.22f, 1f);
             hpFill.localPosition = new Vector3(-4.4f + 4.4f * ratio, -0.28f, -0.03f);
         }
@@ -1168,8 +1254,10 @@ namespace DrawBody.Prototype
         {
             if (state == null || state.Sequence <= receivedSequence) return;
             Phase previousPhase = phase;
+            int previousBossHealth = bossHealth;
             receivedSequence = state.Sequence; phase = (Phase)Mathf.Clamp(state.Phase, 0, (int)Phase.Failed);
             elapsed = state.Elapsed; scrollX = Mathf.Lerp(scrollX, state.ScrollX, 0.65f); bossX = state.BossX; bossHealth = state.BossHealth;
+            if (bossHealth < previousBossHealth) PlayBossHitFlash();
             if (activatedWeapons == null || activatedWeapons.Length != weapons.Count) activatedWeapons = new bool[weapons.Count];
             if (state.ActivatedWeapons != null)
                 for (int i = 0; i < Mathf.Min(weapons.Count, state.ActivatedWeapons.Length); i++)
@@ -1222,10 +1310,26 @@ namespace DrawBody.Prototype
             if (onlineManager != null) onlineManager.SendGimmickData(new OnlineGimmickData { ObjectId = StageId, Kind = kind, Json = JsonUtility.ToJson(state) });
         }
 
+        private void PlayBossHitFlash()
+        {
+            if (bossDamageFlashOverlay == null) return;
+            if (bossHitFlashRoutine != null) StopCoroutine(bossHitFlashRoutine);
+            bossHitFlashRoutine = StartCoroutine(BossHitFlash());
+        }
+
         private IEnumerator BossHitFlash()
         {
-            if (bossCore == null) yield break; Color old = bossCore.color; bossCore.color = Color.white;
-            yield return new WaitForSeconds(0.12f); if (bossCore != null) bossCore.color = old;
+            if (bossDamageFlashOverlay == null) yield break;
+            for (int pulse = 0; pulse < 3; pulse++)
+            {
+                bossDamageFlashOverlay.color = new Color(1f, 0.035f, 0.02f, 0.82f);
+                yield return new WaitForSeconds(0.075f);
+                if (bossDamageFlashOverlay == null) yield break;
+                bossDamageFlashOverlay.color = new Color(1f, 0.035f, 0.02f, 0f);
+                yield return new WaitForSeconds(0.055f);
+                if (bossDamageFlashOverlay == null) yield break;
+            }
+            bossHitFlashRoutine = null;
         }
 
         private GameObject CreateTargetMarker(Vector2 position, float radius)
@@ -1416,6 +1520,9 @@ namespace DrawBody.Prototype
         private bool authoritative;
         private SpriteRenderer[] buttonRenderers;
         private Color[] originalColors;
+        private SpriteRenderer glowRenderer;
+        private Vector3 restLocalPosition;
+        private Vector3 pressedLocalPosition;
         private bool activated;
 
         public static StageSideBossWeapon Create(
@@ -1436,13 +1543,38 @@ namespace DrawBody.Prototype
             root.name = "Ceiling Boss Bomb Button " + (index + 1);
             StageSideBossWeapon weapon = root.AddComponent<StageSideBossWeapon>();
             weapon.owner = owner; weapon.weaponIndex = index; weapon.authoritative = authoritative;
+            weapon.restLocalPosition = root.transform.localPosition;
+            weapon.pressedLocalPosition = weapon.restLocalPosition + Vector3.up * 0.22f;
             weapon.buttonRenderers = root.GetComponentsInChildren<SpriteRenderer>();
             weapon.originalColors = new Color[weapon.buttonRenderers.Length];
             for (int i = 0; i < weapon.buttonRenderers.Length; i++) weapon.originalColors[i] = weapon.buttonRenderers[i].color;
             GameObject mark = new GameObject("Giant Bomb Mark"); mark.transform.SetParent(root.transform, false); mark.transform.localPosition = new Vector3(0f, -0.95f, -0.05f); mark.transform.localScale = Vector3.one * 0.72f;
             SpriteRenderer icon = mark.AddComponent<SpriteRenderer>(); icon.sprite = DoodleRuntimeAssets.CircleSprite; icon.color = new Color(0.12f, 0.12f, 0.15f); icon.sortingOrder = 28;
             StageEscortController.AddLine(mark.transform, new Vector2(0.18f, 0.32f), new Vector2(0.42f, 0.62f), 0.11f, new Color(1f, 0.5f, 0.12f), 29);
+            GameObject glow = new GameObject("Unpressed Red Glow");
+            glow.transform.SetParent(root.transform, false);
+            glow.transform.localPosition = new Vector3(0f, 0.12f, 0.08f);
+            glow.transform.localScale = new Vector3(2.05f, 0.78f, 1f);
+            weapon.glowRenderer = glow.AddComponent<SpriteRenderer>();
+            weapon.glowRenderer.sprite = DoodleRuntimeAssets.CircleSprite;
+            weapon.glowRenderer.color = new Color(1f, 0.025f, 0.015f, 0.28f);
+            weapon.glowRenderer.sortingOrder = 2;
             return weapon;
+        }
+
+        private void Update()
+        {
+            transform.localPosition = Vector3.Lerp(
+                transform.localPosition,
+                activated ? pressedLocalPosition : restLocalPosition,
+                1f - Mathf.Exp(-18f * Time.deltaTime));
+            if (activated || glowRenderer == null) return;
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 6.5f + weaponIndex * 0.7f);
+            glowRenderer.color = new Color(1f, 0.025f, 0.015f, Mathf.Lerp(0.18f, 0.48f, pulse));
+            glowRenderer.transform.localScale = new Vector3(
+                Mathf.Lerp(1.9f, 2.15f, pulse),
+                Mathf.Lerp(0.68f, 0.86f, pulse),
+                1f);
         }
 
         public void Activate(Transform boss)
@@ -1463,9 +1595,13 @@ namespace DrawBody.Prototype
         public void SetActivated(bool value)
         {
             activated = value;
+            if (glowRenderer != null)
+                glowRenderer.color = value
+                    ? new Color(0.08f, 0.08f, 0.09f, 0f)
+                    : new Color(1f, 0.025f, 0.015f, 0.28f);
             if (buttonRenderers == null) return;
             for (int i = 0; i < buttonRenderers.Length; i++)
-                if (buttonRenderers[i] != null) buttonRenderers[i].color = value ? new Color(0.3f, 0.3f, 0.32f, originalColors[i].a) : originalColors[i];
+                if (buttonRenderers[i] != null) buttonRenderers[i].color = value ? new Color(0.16f, 0.16f, 0.18f, originalColors[i].a) : originalColors[i];
         }
     }
 

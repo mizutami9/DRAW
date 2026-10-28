@@ -12,11 +12,11 @@
             "type": 151,
             "position": {
                 "x": 66.0,
-                "y": 4.0
+                "y": 6.0
             },
             "size": {
                 "x": 164.0,
-                "y": 38.0
+                "y": 42.0
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -162,11 +162,11 @@
             "type": 184,
             "position": {
                 "x": 12.899999618530274,
-                "y": 4.299998760223389
+                "y": 6.299998760223389
             },
             "size": {
                 "x": 0.800000011920929,
-                "y": 36.0
+                "y": 40.0
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -187,11 +187,11 @@
             "type": 184,
             "position": {
                 "x": 24.0,
-                "y": 4.0
+                "y": 6.150000095367432
             },
             "size": {
                 "x": 0.800000011920929,
-                "y": 36.0
+                "y": 40.29999923706055
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -212,11 +212,11 @@
             "type": 184,
             "position": {
                 "x": 35.0,
-                "y": 4.0
+                "y": 6.150000095367432
             },
             "size": {
                 "x": 0.800000011920929,
-                "y": 36.0
+                "y": 40.29999923706055
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -508,31 +508,6 @@
             "linkAction": ""
         },
         {
-            "objectId": "3-3_planet_3",
-            "type": 185,
-            "position": {
-                "x": 109.5,
-                "y": 14.0
-            },
-            "size": {
-                "x": 3.0,
-                "y": 3.0
-            },
-            "rotation": 5.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
             "objectId": "3-3_planet_4",
             "type": 185,
             "position": {
@@ -544,31 +519,6 @@
                 "y": 2.4000000953674318
             },
             "rotation": 25.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "3-3_planet_5",
-            "type": 185,
-            "position": {
-                "x": 119.0,
-                "y": 8.0
-            },
-            "size": {
-                "x": 2.799999952316284,
-                "y": 2.799999952316284
-            },
-            "rotation": 12.0,
             "pathPoints": [],
             "pathThickness": 0.0,
             "connectedRects": [],
@@ -612,7 +562,7 @@
             "type": 61,
             "position": {
                 "x": 101.0,
-                "y": 0.47999998927116396
+                "y": 0.5
             },
             "size": {
                 "x": 1.399999976158142,
@@ -837,11 +787,11 @@
             "type": 184,
             "position": {
                 "x": 132.0,
-                "y": 4.0
+                "y": 6.150000095367432
             },
             "size": {
                 "x": 0.8500000238418579,
-                "y": 36.0
+                "y": 40.29999923706055
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -886,12 +836,12 @@
             "objectId": "3-3_goal",
             "type": 3,
             "position": {
-                "x": 142.0,
-                "y": 0.4000000059604645
+                "x": 141.39999389648438,
+                "y": 0.8999999761581421
             },
             "size": {
-                "x": 3.0,
-                "y": 4.0
+                "x": 4.5,
+                "y": 5.5
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -1687,7 +1637,7 @@
             "type": 261,
             "position": {
                 "x": -9.899999618530274,
-                "y": -0.0199999582767485
+                "y": -0.01999995857477188
             },
             "size": {
                 "x": 8.0,

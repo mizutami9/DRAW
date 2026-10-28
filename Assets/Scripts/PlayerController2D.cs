@@ -400,7 +400,7 @@ namespace DrawBody.Prototype
             {
                 SetTurtleShellState(false);
             }
-            SetTurtleRotation(false);
+            SetTurtleRotation(false, true);
             currentSpecies = species;
             if (species != DrawManager.Species.Bird)
             {
@@ -628,7 +628,7 @@ namespace DrawBody.Prototype
                 StopBirdGlideAudio();
                 horizontalInput = 0f;
                 SetTurtleShellState(false);
-                SetTurtleRotation(false);
+                SetTurtleRotation(false, true);
                 rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
             }
         }
@@ -690,6 +690,10 @@ namespace DrawBody.Prototype
 
         public void ResetMotion()
         {
+            // A carry owner can retain the managed wrapper briefly after an
+            // online avatar's native Unity object has been destroyed. Calling
+            // GetComponent on that wrapper throws during disconnect/teardown.
+            if (this == null) return;
             bool preserveHeldTurtleShell = currentSpecies == DrawManager.Species.Turtle
                 && controlsEnabled
                 && !scriptedInputEnabled
@@ -724,7 +728,7 @@ namespace DrawBody.Prototype
             {
                 SetTurtleShellState(false);
             }
-            SetTurtleRotation(false);
+            SetTurtleRotation(false, true);
         }
 
         public void RestoreGameplayPhysicsState()
@@ -773,9 +777,13 @@ namespace DrawBody.Prototype
             GameSfx.PlayAt(active ? SfxId.TurtleShellEnter : SfxId.TurtleShellExit, transform.position);
         }
 
-        private void SetTurtleRotation(bool active)
+        private void SetTurtleRotation(bool active, bool forceReset = false)
         {
-            if (turtleTurnHeld == active && !active)
+            float targetRotation = active && currentSpecies == DrawManager.Species.Turtle
+                ? -90f * facingDirection
+                : 0f;
+            if (turtleTurnHeld == active
+                && (rb == null || Mathf.Abs(Mathf.DeltaAngle(rb.rotation, targetRotation)) <= 0.01f))
             {
                 return;
             }
@@ -785,12 +793,9 @@ namespace DrawBody.Prototype
             if (rb != null)
             {
                 Bounds beforeRotationBounds = default;
-                bool preserveGroundContact = IsGrounded && TryGetBodyBounds(out beforeRotationBounds);
+                bool preserveGroundContact = !forceReset && IsGrounded && TryGetBodyBounds(out beforeRotationBounds);
                 float previousRotation = rb.rotation;
                 Vector2 previousPosition = rb.position;
-                float targetRotation = active && currentSpecies == DrawManager.Species.Turtle
-                    ? -90f * facingDirection
-                    : 0f;
                 float rotationDelta = Mathf.DeltaAngle(rb.rotation, targetRotation);
                 rb.rotation = targetRotation;
                 rb.angularVelocity = 0f;
@@ -809,7 +814,7 @@ namespace DrawBody.Prototype
                         Physics2D.SyncTransforms();
                     }
                 }
-                if (Mathf.Abs(rotationDelta) > 0.01f && HasDeepTurtleRotationOverlap())
+                if (!forceReset && Mathf.Abs(rotationDelta) > 0.01f && HasDeepTurtleRotationOverlap())
                 {
                     // There is no valid way to turn a long neck inside a gap that
                     // is shorter than the rotated drawing. Reject the turn instead

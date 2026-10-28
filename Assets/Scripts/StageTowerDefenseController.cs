@@ -1100,15 +1100,16 @@ namespace DrawBody.Prototype
         private Transform visual;
         private bool finished;
         private TextMesh speech;
+        private TextMesh speechShadow;
         private float nextSpeechAt;
         private float hideSpeechAt;
         private static readonly string[] FunnySpeechKeys =
         {
-            "survival_get_ready",
-            "multi_wait",
-            "cat_escape_go",
-            "spike_chase_run",
-            "stage_ready_label"
+            "tower_ally_speech_get_ready",
+            "tower_ally_speech_wait",
+            "tower_ally_speech_run",
+            "tower_ally_speech_ready",
+            "tower_ally_speech_together"
         };
 
         public static StageTowerDefenseAlly Create(Transform parent, Vector2 position, StageTowerDefenseController owner)
@@ -1186,17 +1187,14 @@ namespace DrawBody.Prototype
             heart.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
             NicoDrawBossArt.Apply(visual, "ally-defense", new Vector2(1.55f, 1.9f), 43);
 
-            GameObject speechObject = new GameObject("Ally Speech");
-            speechObject.transform.SetParent(transform, false);
-            speechObject.transform.localPosition = new Vector3(0f, 1.65f, -0.1f);
-            speech = speechObject.AddComponent<TextMesh>();
-            speech.anchor = TextAnchor.MiddleCenter;
-            speech.alignment = TextAlignment.Center;
-            speech.fontSize = 54;
-            speech.characterSize = 0.075f;
+            speechShadow = StageEscortController.CreateText(transform, "Ally Speech Shadow",
+                new Vector3(0.045f, 1.605f, -0.09f), 54, 0.075f,
+                new Color(0.03f, 0.12f, 0.22f, 0.96f), 48);
+            speechShadow.fontStyle = FontStyle.Bold;
+            speech = StageEscortController.CreateText(transform, "Ally Speech",
+                new Vector3(0f, 1.65f, -0.1f), 54, 0.075f,
+                new Color(1f, 0.94f, 0.62f, 1f), 49);
             speech.fontStyle = FontStyle.Bold;
-            speech.color = new Color(0.08f, 0.2f, 0.38f, 1f);
-            speechObject.GetComponent<MeshRenderer>().sortingOrder = 48;
         }
 
         private void Update()
@@ -1204,13 +1202,20 @@ namespace DrawBody.Prototype
             if (speech == null) return;
             if (hideSpeechAt > 0f && Time.time >= hideSpeechAt)
             {
-                speech.text = string.Empty;
+                SetSpeechText(string.Empty);
                 hideSpeechAt = 0f;
             }
             if (finished || owner == null || !owner.ShouldAllySpeak || Time.time < nextSpeechAt) return;
-            speech.text = LocalizationManager.T(FunnySpeechKeys[Random.Range(0, FunnySpeechKeys.Length)]);
+            SetSpeechText(LocalizationManager.T(FunnySpeechKeys[Random.Range(0, FunnySpeechKeys.Length)]));
+            GameSfx.PlayAt(SfxId.EmotePop, transform.position, 0.62f);
             hideSpeechAt = Time.time + 1.25f;
             nextSpeechAt = Time.time + Random.Range(4.5f, 8f);
+        }
+
+        private void SetSpeechText(string value)
+        {
+            if (speech != null) speech.text = value;
+            if (speechShadow != null) speechShadow.text = value;
         }
 
         private void AddDot(Vector2 position, float size, Color color)
@@ -1254,9 +1259,10 @@ namespace DrawBody.Prototype
             {
                 // A language-neutral panic mark avoids forcing an English scream
                 // into every locale while keeping the comic-book reaction clear.
-                speech.text = "!!!";
+                SetSpeechText("!!!");
                 speech.fontSize = 68;
                 speech.color = new Color(0.88f, 0.08f, 0.12f, 1f);
+                if (speechShadow != null) speechShadow.fontSize = 68;
                 hideSpeechAt = 0f;
             }
             StartCoroutine(DefeatRoutine(vanishAfterScream));
@@ -1320,6 +1326,13 @@ namespace DrawBody.Prototype
                     color.a = 1f - progress;
                     speech.color = color;
                     speech.transform.localScale = Vector3.one * (1f + progress * 0.55f);
+                    if (speechShadow != null)
+                    {
+                        Color shadowColor = speechShadow.color;
+                        shadowColor.a = 1f - progress;
+                        speechShadow.color = shadowColor;
+                        speechShadow.transform.localScale = speech.transform.localScale;
+                    }
                 }
                 yield return null;
             }

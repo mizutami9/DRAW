@@ -188,9 +188,17 @@ namespace DrawBody.Prototype
         private bool CanUseCharacterCommand()
         {
             if (stageManager == null) return true;
-            return command == Command.SwitchCharacter
-                ? stageManager.CanSwitchGameplayCharacter
-                : stageManager.CanUseGameplayCharacterControls;
+            switch (command)
+            {
+                case Command.AddCharacter:
+                    return stageManager.CanAddGameplayCharacter;
+                case Command.DeleteCharacter:
+                    return stageManager.CanDeleteGameplayCharacter;
+                case Command.SwitchCharacter:
+                    return stageManager.CanSwitchGameplayCharacter;
+                default:
+                    return true;
+            }
         }
 
         private bool IsOnlineActive()
