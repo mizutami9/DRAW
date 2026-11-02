@@ -209,10 +209,19 @@ namespace DrawBody.Prototype
         // Switching which already-created offline character is controlled does
         // not mutate stage layout or player count, so it is safe during normal
         // play on every stage. Adding/deleting still requires a safe zone.
-        public bool CanSwitchGameplayCharacter => localPlayers.Count > 1
-            && !HasDedicatedSecondaryInput
-            && (CanUseGameplayCharacterControls
-                || (stageStarted && !drawing && !cleared && !stageEditing));
+        public bool CanSwitchGameplayCharacter
+        {
+            get
+            {
+                if (HasDedicatedSecondaryInput) return false;
+                int eligibleCount = GetSwitchEligibleLocalPlayerCount();
+                bool canRecoverFromInvalidSelection = !IsPlayerEligibleForCharacterSwitch(player)
+                    && eligibleCount > 0;
+                return (eligibleCount > 1 || canRecoverFromInvalidSelection)
+                    && (CanUseGameplayCharacterControls
+                        || (stageStarted && !drawing && !cleared && !stageEditing));
+            }
+        }
         public string CurrentStageId => currentStageId;
         public bool RequiresUniquePlayerSpecies => StageSpeciesRules.RequiresUniqueSpecies(currentStageId);
         public string ChallengeStartCountdownText
@@ -316,6 +325,17 @@ namespace DrawBody.Prototype
 
         private void Awake()
         {
+            // Editor capture utilities temporarily use manual 2D simulation.
+            // Normal gameplay must always advance physics from FixedUpdate;
+            // otherwise controllers can set velocity and animate while every
+            // Rigidbody2D remains at its original coordinate.
+            if (Physics2D.simulationMode != SimulationMode2D.FixedUpdate)
+            {
+                Debug.LogWarning(
+                    $"[PICO PHYSICS] Restoring simulation mode from {Physics2D.simulationMode} to FixedUpdate.");
+                Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+            }
+
             if (player == null)
             {
                 player = FindFirstObjectByType<PlayerController2D>();
@@ -1006,7 +1026,9 @@ namespace DrawBody.Prototype
                 && !titleMode && !drawing && !cleared
                 && !optionOverlayActive && !IsOnlineInStage()
                 && (localCoop == null || !localCoop.HasDedicatedSecondaryPlayers)
-                && player != null && (player.ControlsEnabled || UsesStageManagedPlayerMovement))
+                && player != null
+                && (player.ControlsEnabled || UsesStageManagedPlayerMovement
+                    || !IsPlayerEligibleForCharacterSwitch(player)))
             {
                 SwitchCharacter();
             }
@@ -1108,7 +1130,7 @@ namespace DrawBody.Prototype
                     ? SfxId.CoinCollect
                     : SfxId.CollectibleCollect,
                 collectible.transform.position);
-            collectedCount++;
+            collectedCount += collectible.CollectibleValue;
             uiManager?.SetChallengeHud(true, challengeRemaining, collectionTarget, collectedCount, requiredCollectionCount, false);
 
             CollectionState state = new CollectionState
@@ -1456,7 +1478,7 @@ namespace DrawBody.Prototype
 
         public void SetPlayerGoalState(PlayerController2D goalPlayer, bool inside)
         {
-            if (goalPlayer == null || cleared || !stageStarted || stageRuleMode != StageRuleMode.Normal)
+            if (goalPlayer == null || cleared || !stageStarted || !UsesGoalCompletion)
             {
                 return;
             }
@@ -1533,6 +1555,17 @@ namespace DrawBody.Prototype
             return requiredPlayers > 0;
         }
 
+        // 14-2 uses Survival to set up its ready room and rain controller, but
+        // its win condition is still reaching the door with all survivors.
+        private bool UsesGoalCompletion => stageRuleMode == StageRuleMode.Normal || currentStageId == "14-2";
+
+        internal void ReevaluateGoalCompletion()
+        {
+            if (!stageStarted || cleared || !UsesGoalCompletion) return;
+            if (IsOnlineInStage()) TryClearWhenAllOnlinePlayersAtGoal();
+            else if (AreAllLocalPlayersAtGoal()) ClearStage();
+        }
+
         private void SetOnlineGoalState(string playerId, bool inside)
         {
             if (string.IsNullOrEmpty(playerId))
@@ -1558,16 +1591,22 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            StageSpikeChaseController spikeChase = currentStageId == "6-3"
+                ? Object.FindFirstObjectByType<StageSpikeChaseController>()
+                : null;
+            StageUmbrellaRainController umbrellaRain = currentStageId == "14-2"
+                ? Object.FindFirstObjectByType<StageUmbrellaRainController>()
+                : null;
+            int survivingPlayers = 0;
             for (int i = 0; i < lobby.Players.Length; i++)
             {
                 OnlinePlayerInfo lobbyPlayer = lobby.Players[i];
-                StageSpikeChaseController spikeChase = currentStageId == "6-3"
-                    ? Object.FindFirstObjectByType<StageSpikeChaseController>()
-                    : null;
-                if (lobbyPlayer != null && spikeChase != null && spikeChase.IsPlayerEliminated(lobbyPlayer.PlayerId))
+                if (lobbyPlayer != null && (spikeChase != null && spikeChase.IsPlayerEliminated(lobbyPlayer.PlayerId)
+                    || umbrellaRain != null && umbrellaRain.IsPlayerEliminated(lobbyPlayer.PlayerId)))
                 {
                     continue;
                 }
+                survivingPlayers++;
                 if (lobbyPlayer == null
                     || string.IsNullOrEmpty(lobbyPlayer.PlayerId)
                     || !onlinePlayerIdsAtGoal.Contains(lobbyPlayer.PlayerId))
@@ -1576,7 +1615,9 @@ namespace DrawBody.Prototype
                 }
             }
 
-            ClearStage();
+            // Elimination challenges must fail/retry when everybody is dead.
+            // An empty survivor set is never a successful "everyone reached it" set.
+            if (survivingPlayers > 0) ClearStage();
         }
 
         private void ResetGoalProgress()
@@ -2190,6 +2231,10 @@ namespace DrawBody.Prototype
                 return;
             }
 
+            // The shared DrawManager is temporarily retargeted when a remote body
+            // arrives. Persist the accepted local edit before DRAW closes so a
+            // simultaneous peer redraw can never restore our previous body.
+            SaveDrawingState(player);
             drawing = false;
             drawingOpenedForSpawnCorrection = false;
             RestoreRedrawPose(returnToStart);
@@ -3677,6 +3722,12 @@ namespace DrawBody.Prototype
             Vector2 movement = (Vector2)targetAnchor - currentPosition;
             float distance = movement.magnitude;
             if (distance <= 0.0001f) return targetAnchor;
+            // Remote interpolation can advance the carrier beyond a thin solid in
+            // one update. Repeating a sweep from the stranded old position then
+            // blocks forever. Once the visual gap is obvious, prefer the
+            // authoritative carry anchor; the carrier itself is already subject
+            // to stage collision and the carried body's colliders are disabled.
+            if (distance > 1.25f) return targetAnchor;
 
             Vector2 direction = movement / distance;
             Vector2 castCenter = currentPosition + onlineCarryBoundsCenterOffset;
@@ -3893,7 +3944,10 @@ namespace DrawBody.Prototype
                 return false;
             }
 
-            SaveDrawingState(player);
+            DrawManager.DrawingState localState = drawingStates.TryGetValue(
+                    player, out DrawManager.DrawingState savedLocalState)
+                ? CloneDrawingState(savedLocalState)
+                : drawManager.CreateState();
             BodyBuilder remoteBuilder = remotePlayer.GetComponent<BodyBuilder>();
             PlayerAbilityController remoteAbilities = remotePlayer.GetComponent<PlayerAbilityController>();
             drawManager.SetBuildTarget(remoteBuilder, remoteAbilities);
@@ -3901,7 +3955,8 @@ namespace DrawBody.Prototype
             drawingStates[remotePlayer] = CloneDrawingState(remoteState);
             remoteBuilder?.SetNetworkBodyReady(true);
             ConfigureActivePlayerTargets();
-            LoadDrawingState(player);
+            drawingStates[player] = CloneDrawingState(localState);
+            drawManager.LoadState(localState, true);
             remotePlayer.SetControlsEnabled(false);
             LiftPlayerOutOfGround(remotePlayer);
             IgnoreOnlinePlayerCollisions(remotePlayer);
@@ -4019,12 +4074,14 @@ namespace DrawBody.Prototype
             if (RequiresUniquePlayerSpecies)
             {
                 int speciesSlot = localIndex;
-                if (onlineManager?.CurrentLobby != null)
+                if (IsOnlineInStage() && onlineManager?.CurrentLobby != null)
                 {
                     int connectionSlot = GetLobbyPlayerSlot(onlineManager.LocalPlayerId);
                     if (connectionSlot >= 0) speciesSlot = connectionSlot + localIndex;
                 }
-                AssignSpeciesToPlayer(addedPlayer, GetUniqueSpeciesForSlot(speciesSlot));
+                AssignSpeciesToPlayer(
+                    addedPlayer,
+                    GetUnusedAllowedSpeciesForPlayer(addedPlayer, speciesSlot));
                 ConfigureActivePlayerTargets();
                 LoadDrawingState(player);
             }
@@ -4241,7 +4298,29 @@ namespace DrawBody.Prototype
                 return;
             }
             int current = Mathf.Max(0, localPlayers.IndexOf(player));
-            SetActivePlayer(localPlayers[(current + 1) % localPlayers.Count], true);
+            for (int offset = 1; offset <= localPlayers.Count; offset++)
+            {
+                PlayerController2D candidate = localPlayers[(current + offset) % localPlayers.Count];
+                if (!IsPlayerEligibleForCharacterSwitch(candidate)) continue;
+                if (candidate == player) return;
+                SetActivePlayer(candidate, true);
+                return;
+            }
+        }
+
+        private bool IsPlayerEligibleForCharacterSwitch(PlayerController2D candidate)
+        {
+            return candidate != null
+                && candidate.gameObject.activeInHierarchy
+                && !IsPlayerEliminated(candidate);
+        }
+
+        private int GetSwitchEligibleLocalPlayerCount()
+        {
+            int count = 0;
+            for (int i = 0; i < localPlayers.Count; i++)
+                if (IsPlayerEligibleForCharacterSwitch(localPlayers[i])) count++;
+            return count;
         }
 
         public void ShowReadyRoomOnlyCharacterChangeNotice()
@@ -4385,7 +4464,14 @@ namespace DrawBody.Prototype
             if (targetPlayer == null) return true;
 
             Vector3 original = targetPlayer.transform.position;
-            bool resolved = TryPlaceAtSafeSpawn(targetPlayer, preferred, out safePosition, true);
+            // 2-3 lays cats out from their real bounds after the ready room. Its
+            // generic per-player lane is narrower than the actual starting area
+            // and falsely rejects the default cat. 15-3 is likewise one open
+            // zero-gravity arena: its four-player slot probe is narrower than the
+            // usable arena and can reject the untouched default cat even though a
+            // safe point exists immediately beside the authored marker.
+            bool enforceStartSlot = currentStageId != "2-3" && currentStageId != "15-3";
+            bool resolved = TryPlaceAtSafeSpawn(targetPlayer, preferred, out safePosition, enforceStartSlot);
             TeleportPlayerWithoutPhysics(targetPlayer, original);
             targetPlayer.ResetMotion();
             Physics2D.SyncTransforms();
@@ -4430,6 +4516,23 @@ namespace DrawBody.Prototype
         {
             // Let stage-specific Start methods finish placing players first.
             yield return null;
+
+            // 13-1 has a three-second intro, but a joining participant can receive
+            // its final body/slot state a few frames after SelectStage. Waiting for
+            // that state and reapplying the local slot prevents the old title-room
+            // position from being validated as the stage start position.
+            if (currentStageId == "13-1" && IsOnlineInStage()
+                && onlineManager != null && !IsLocalOnlineHost(onlineManager.CurrentLobby))
+            {
+                yield return new WaitForSecondsRealtime(0.65f);
+                if (!stageStarted || currentStageId != "13-1")
+                {
+                    spawnFitValidationRoutine = null;
+                    yield break;
+                }
+                RespawnPlayers();
+                yield return null;
+            }
 
             List<PlayerController2D> candidates = new List<PlayerController2D>();
             for (int i = 0; i < localPlayers.Count; i++)
@@ -5052,7 +5155,11 @@ namespace DrawBody.Prototype
             {
                 eliminationSpectating = false;
                 spectatedPlayer = null;
-                cameraFollow?.SetTarget(primaryPlayer.transform);
+                PlayerController2D cameraTarget = GetCameraTargetAfterPrimaryRevival(primaryPlayer);
+                if (cameraTarget != null)
+                {
+                    cameraFollow?.SetTarget(cameraTarget.transform);
+                }
                 return;
             }
 
@@ -5127,7 +5234,24 @@ namespace DrawBody.Prototype
             if (cameraFollow == null || !cameraFollow.enabled) return;
             eliminationSpectating = false;
             spectatedPlayer = null;
-            cameraFollow.SetTarget(revivedPlayer.transform);
+            PlayerController2D cameraTarget = GetCameraTargetAfterPrimaryRevival(revivedPlayer);
+            if (cameraTarget != null)
+            {
+                cameraFollow.SetTarget(cameraTarget.transform);
+            }
+        }
+
+        private PlayerController2D GetCameraTargetAfterPrimaryRevival(PlayerController2D revivedPlayer)
+        {
+            // Online play owns one local avatar, so the primary player remains
+            // the camera target. In switchable offline play, reviving P1 must
+            // not steal the camera from the character P1 is currently driving.
+            if (!IsOnlineInStage() && player != null && localPlayers.Contains(player))
+            {
+                return player;
+            }
+
+            return primaryPlayer != null ? primaryPlayer : revivedPlayer;
         }
 
         private static void RestorePlayerPhysics(
@@ -5461,7 +5585,11 @@ namespace DrawBody.Prototype
                 if (!IsChallengeReadyRoomActive
                     && targetPlayer == primaryPlayer && cameraFollow != null && cameraFollow.enabled)
                 {
-                    cameraFollow.SetTarget(targetPlayer.transform);
+                    PlayerController2D cameraTarget = GetCameraTargetAfterPrimaryRevival(targetPlayer);
+                    if (cameraTarget != null)
+                    {
+                        cameraFollow.SetTarget(cameraTarget.transform);
+                    }
                 }
             }
 
@@ -5608,7 +5736,9 @@ namespace DrawBody.Prototype
             for (int i = 0; i < goals.Length; i++)
                 if (goals[i] != null
                     && GetClosestColliderDistance(candidate.transform, goals[i].transform)
-                        <= GetLagCompensatedInteractionDistance(candidate, 2.5f))
+                        <= GetLagCompensatedInteractionDistance(
+                            candidate,
+                            currentStageId == "14-2" ? 5f : 2.5f))
                     return true;
             return false;
         }
@@ -5616,8 +5746,11 @@ namespace DrawBody.Prototype
         private bool CanOnlinePlayerBreakSlimeBox(string playerId, string objectId)
         {
             PlayerController2D attacker = GetOnlinePlayerController(playerId);
-            if (attacker == null || attacker.CurrentSpecies != DrawManager.Species.Slime
-                || string.IsNullOrEmpty(objectId)) return false;
+            if (attacker == null || string.IsNullOrEmpty(objectId)) return false;
+            // Only the slime ability emits this request. Do not reject it from
+            // the host's replicated species field: body/profile packets can be
+            // applied one frame later than the reliable hit request, which made
+            // valid participant hits fail intermittently (notably in 10-1).
             StageEditorObject[] objects = Object.FindObjectsByType<StageEditorObject>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             for (int i = 0; i < objects.Length; i++)
@@ -5777,8 +5910,22 @@ namespace DrawBody.Prototype
                 return false;
             }
 
+            // Controllers may notify immediately, followed by the spectator relay
+            // on its next Update. Accept both without replaying the transition.
+            if (eliminatedPlayers.Contains(targetPlayer)) return true;
             CreateRespawnBurst(targetPlayer.transform.position, GetPlayerEffectColor(targetPlayer), false);
             eliminatedPlayers.Add(targetPlayer);
+            if (!HasDedicatedSecondaryInput && targetPlayer == player)
+            {
+                int eliminatedIndex = Mathf.Max(0, localPlayers.IndexOf(targetPlayer));
+                for (int offset = 1; offset <= localPlayers.Count; offset++)
+                {
+                    PlayerController2D survivor = localPlayers[(eliminatedIndex + offset) % localPlayers.Count];
+                    if (!IsPlayerEligibleForCharacterSwitch(survivor) || survivor == targetPlayer) continue;
+                    SetActivePlayer(survivor, true);
+                    break;
+                }
+            }
             FollowSurvivorAfterElimination(targetPlayer);
             return true;
         }
@@ -5790,12 +5937,13 @@ namespace DrawBody.Prototype
                 return;
             }
 
-            eliminatedPlayers.Remove(targetPlayer);
+            bool wasEliminated = eliminatedPlayers.Remove(targetPlayer);
             if (!stageStarted || cleared || titleMode || stageEditing)
             {
                 return;
             }
-            CreateRespawnBurst(targetPlayer.transform.position, GetPlayerEffectColor(targetPlayer), true);
+            if (wasEliminated)
+                CreateRespawnBurst(targetPlayer.transform.position, GetPlayerEffectColor(targetPlayer), true);
         }
 
         private void CreateRespawnBurst(Vector3 position, Color color, bool appearing)
@@ -6463,7 +6611,8 @@ namespace DrawBody.Prototype
             // other player decides. The confirmed roster must retain the old
             // species until the host applies both sides atomically.
             LocalCoopSessionManager localCoop = GetComponent<LocalCoopSessionManager>();
-            if (localCoop?.TryGetDrawingState(requester, out DrawManager.DrawingState localState) == true)
+            DrawManager.DrawingState localState;
+            if (localCoop != null && localCoop.TryGetDrawingState(requester, out localState))
                 pendingSpeciesSwapDrawingState = localState;
             else if (requester == player && drawManager != null)
                 pendingSpeciesSwapDrawingState = drawManager.CreateState();
@@ -6907,6 +7056,41 @@ namespace DrawBody.Prototype
             return allowed.Count > 0
                 ? allowed[Mathf.Abs(slot) % allowed.Count]
                 : DrawManager.Species.Human;
+        }
+
+        private DrawManager.Species GetUnusedAllowedSpeciesForPlayer(
+            PlayerController2D target,
+            int preferredSlot)
+        {
+            IReadOnlyList<DrawManager.Species> ordered = StageSpeciesRules.GetOrderedSpecies();
+            StageSpeciesMask availability = StageSpeciesRules.GetAllowedForStage(currentStageId);
+            List<DrawManager.Species> allowed = new List<DrawManager.Species>();
+            for (int i = 0; i < ordered.Count; i++)
+                if (StageSpeciesRules.IsAllowed(availability, ordered[i])) allowed.Add(ordered[i]);
+            if (allowed.Count == 0) return DrawManager.Species.Human;
+
+            HashSet<DrawManager.Species> used = new HashSet<DrawManager.Species>();
+            for (int i = 0; i < localPlayers.Count; i++)
+            {
+                PlayerController2D local = localPlayers[i];
+                if (local == null || local == target) continue;
+                if (TryGetConfirmedSpecies(local, out DrawManager.Species species)) used.Add(species);
+            }
+            foreach (KeyValuePair<string, PlayerController2D> remote in onlineRemotePlayers)
+            {
+                if (remote.Value == null || remote.Value == target) continue;
+                if (TryGetConfirmedSpecies(remote.Value, out DrawManager.Species species)) used.Add(species);
+            }
+
+            int start = Mathf.Abs(preferredSlot) % allowed.Count;
+            for (int offset = 0; offset < allowed.Count; offset++)
+            {
+                DrawManager.Species candidate = allowed[(start + offset) % allowed.Count];
+                if (!used.Contains(candidate)) return candidate;
+            }
+            // This can only happen when there are more participants than the
+            // stage exposes species. Keep the assignment valid and deterministic.
+            return allowed[start];
         }
 
         private void ResolveSimultaneousUniqueSpeciesConflict(

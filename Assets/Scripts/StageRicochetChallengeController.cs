@@ -59,6 +59,9 @@ namespace DrawBody.Prototype
         private const int PredictionDotCount = 208;
         private const int MaximumPredictedReflections = 32;
         private const float PredictionDotSpacing = 0.36f;
+        // Clockwise relay order: gunner -> teammate(s) -> target. This keeps a
+        // single unambiguous path for every 1-4 player topology.
+        private static readonly int[] RelayCellOrder = { 0, 1, 3, 2 };
 
         public bool IsRoundActive => state != null && state.Phase == 0;
 
@@ -204,16 +207,9 @@ namespace DrawBody.Prototype
             state.Phase = 0;
             state.EnemyPattern = Random.Range(0, 3);
 
-            // The gun must always remain reachable. Players are assigned to the
-            // first N cells, while the target may use any of the four rooms.
-            int occupiedCellCount = Mathf.Clamp(playerCount, 1, cellCenters.Count);
-            int gunCell = Random.Range(0, occupiedCellCount);
-
+            int gunCell = RelayCellOrder[0];
             state.GunPosition = RandomPointInCell(gunCell, true);
-            // In 4P the target room is adjacent to the gun room. The direct edge
-            // stays closed; the other three internal edges form the long route
-            // through all three teammates before the target passage opens.
-            state.EnemyPosition = RandomUnusedExternalTargetPoint(gunCell);
+            state.EnemyPosition = SelectRelayTargetPoint();
             ApplyRoundState();
             BroadcastState(true);
             RefreshMonitor();
@@ -268,6 +264,23 @@ namespace DrawBody.Prototype
 
             Vector2 selected = candidates[Random.Range(0, candidates.Count)];
             usedEnemyPositions.Add(selected);
+            return selected;
+        }
+
+        private Vector2 SelectRelayTargetPoint()
+        {
+            int lastIndex = Mathf.Clamp(playerCount - 1, 0, RelayCellOrder.Length - 1);
+            // Put the enemy on an outer side perpendicular to the incoming shot,
+            // so the last teammate must reflect instead of letting it fly straight.
+            Vector2[] targetByRelayEnd =
+            {
+                new Vector2(-17.55f, 4.3f), // 1P: direct target from the gun room
+                new Vector2(8f, 9.35f),     // 2P: incoming from left, reflect upward
+                new Vector2(17.55f, -4.3f), // 3P: incoming from above, reflect right
+                new Vector2(-8f, -9.35f)    // 4P: incoming from right, reflect down
+            };
+            Vector2 selected = targetByRelayEnd[lastIndex];
+            if (!HasUsedEnemyPosition(selected)) usedEnemyPositions.Add(selected);
             return selected;
         }
 
@@ -425,31 +438,9 @@ namespace DrawBody.Prototype
             for (int i = 0; i < internalPassages.Length; i++) SetPassage(internalPassages[i], false);
             for (int i = 0; i < outerPassages.Length; i++) SetPassage(outerPassages[i], false);
 
-            int gunCell = GetCell(state.GunPosition);
-            int targetCell = GetOuterTargetCell(state.EnemyPosition);
-            if (playerCount >= 4 && AreAdjacentCells(gunCell, targetCell))
-            {
-                // The 2x2 rooms form a cycle. Closing the direct gun-to-target
-                // edge leaves the unique three-edge route through both other rooms.
-                int[] cycle = { 0, 1, 3, 2 };
-                for (int i = 0; i < cycle.Length; i++)
-                {
-                    int a = cycle[i];
-                    int b = cycle[(i + 1) % cycle.Length];
-                    if ((a == gunCell && b == targetCell) || (a == targetCell && b == gunCell)) continue;
-                    SetPassage(GetInternalPassage(a, b), true);
-                }
-            }
-            else
-            {
-                // Keep the less restrictive original routing for 1-3 players.
-                bool crossesColumns = Mathf.Sign(state.GunPosition.x) != Mathf.Sign(state.EnemyPosition.x);
-                bool crossesRows = Mathf.Sign(state.GunPosition.y) != Mathf.Sign(state.EnemyPosition.y);
-                SetPassage(internalPassages[0], crossesColumns);
-                SetPassage(internalPassages[1], crossesColumns);
-                SetPassage(internalPassages[2], crossesRows);
-                SetPassage(internalPassages[3], crossesRows);
-            }
+            int relayCount = Mathf.Clamp(playerCount, 1, RelayCellOrder.Length);
+            for (int i = 0; i < relayCount - 1; i++)
+                SetPassage(GetInternalPassage(RelayCellOrder[i], RelayCellOrder[i + 1]), true);
             SetPassage(GetOuterPassage(state.EnemyPosition), true);
         }
 
@@ -554,6 +545,7 @@ namespace DrawBody.Prototype
         {
             if (player == null) return;
             index = Mathf.Clamp(index, 0, cellCenters.Count - 1);
+            index = RelayCellOrder[index];
             Vector2 destination = new Vector2(cellCenters[index].x, cellFloors[index] + 3f);
             Rigidbody2D body = player.GetComponent<Rigidbody2D>();
             if (body != null)

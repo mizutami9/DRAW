@@ -11,11 +11,11 @@
             "objectId": "6-1_boundary",
             "type": 151,
             "position": {
-                "x": 94.0,
+                "x": 81.19999694824219,
                 "y": 5.0
             },
             "size": {
-                "x": 236.0,
+                "x": 244.0,
                 "y": 44.0
             },
             "rotation": 0.0,
@@ -62,7 +62,7 @@
             "type": 0,
             "position": {
                 "x": -10.0,
-                "y": -3.0
+                "y": -3.0999999046325685
             },
             "size": {
                 "x": 22.0,
@@ -86,33 +86,8 @@
             "objectId": "6-1_bazooka",
             "type": 188,
             "position": {
-                "x": -15.0,
-                "y": -2.049999952316284
-            },
-            "size": {
-                "x": 1.4500000476837159,
-                "y": 0.7200000286102295
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "6-1_bazooka_02",
-            "type": 188,
-            "position": {
-                "x": -12.0,
-                "y": -2.0
+                "x": -38.5,
+                "y": -2.5
             },
             "size": {
                 "x": 1.4500000476837159,
@@ -137,11 +112,11 @@
             "type": 61,
             "position": {
                 "x": -1.0,
-                "y": -2.1500000953674318
+                "y": -2.0
             },
             "size": {
-                "x": 2.4000000953674318,
-                "y": 0.800000011920929
+                "x": 3.0,
+                "y": 1.5
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -261,12 +236,12 @@
             "objectId": "6-1_goal",
             "type": 3,
             "position": {
-                "x": 199.0,
+                "x": 198.5,
                 "y": 3.0
             },
             "size": {
-                "x": 3.0,
-                "y": 4.0
+                "x": 4.0,
+                "y": 4.5
             },
             "rotation": 0.0,
             "pathPoints": [],
@@ -786,8 +761,8 @@
             "objectId": "6-1_orbit_upper_02",
             "type": 187,
             "position": {
-                "x": 202.0,
-                "y": 19.0
+                "x": 201.5,
+                "y": 19.5
             },
             "size": {
                 "x": 1.649999976158142,
@@ -937,7 +912,7 @@
             "type": 190,
             "position": {
                 "x": 29.0,
-                "y": 8.0
+                "y": 4.0
             },
             "size": {
                 "x": 2.5,
@@ -986,8 +961,8 @@
             "objectId": "6-1_moving_spike_04",
             "type": 190,
             "position": {
-                "x": 72.0,
-                "y": 10.0
+                "x": 74.0,
+                "y": -1.5
             },
             "size": {
                 "x": 2.700000047683716,
@@ -1037,7 +1012,7 @@
             "type": 190,
             "position": {
                 "x": 121.0,
-                "y": 9.0
+                "y": -1.5
             },
             "size": {
                 "x": 2.799999952316284,
@@ -1087,7 +1062,7 @@
             "type": 190,
             "position": {
                 "x": 171.0,
-                "y": 10.0
+                "y": -2.0
             },
             "size": {
                 "x": 3.0,
@@ -1136,8 +1111,8 @@
             "objectId": "6-1_moving_spike_upper_01",
             "type": 190,
             "position": {
-                "x": 116.0,
-                "y": 17.0
+                "x": 110.0,
+                "y": 22.0
             },
             "size": {
                 "x": 2.200000047683716,
@@ -1162,7 +1137,7 @@
             "type": 190,
             "position": {
                 "x": 82.0,
-                "y": 18.0
+                "y": 20.5
             },
             "size": {
                 "x": 2.3499999046325685,
@@ -1186,8 +1161,8 @@
             "objectId": "6-1_moving_spike_upper_03",
             "type": 190,
             "position": {
-                "x": 111.0,
-                "y": 15.0
+                "x": 98.5,
+                "y": 22.0
             },
             "size": {
                 "x": 2.5,
@@ -1236,8 +1211,8 @@
             "objectId": "6-1_moving_spike_upper_05",
             "type": 190,
             "position": {
-                "x": 153.0,
-                "y": 14.0
+                "x": 154.0,
+                "y": 22.0
             },
             "size": {
                 "x": 2.799999952316284,
@@ -1311,8 +1286,8 @@
             "objectId": "6-1_moving_spike_upper_08",
             "type": 190,
             "position": {
-                "x": 205.0,
-                "y": 18.0
+                "x": 194.5,
+                "y": 22.5
             },
             "size": {
                 "x": 3.0999999046325685,
@@ -1512,7 +1487,707 @@
             "type": 261,
             "position": {
                 "x": -16.0,
-                "y": 1.0800000429153443
+                "y": 1.0
+            },
+            "size": {
+                "x": 10.0,
+                "y": 8.0
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_e8bc3517c69442af",
+            "type": 61,
+            "position": {
+                "x": 44.0,
+                "y": 0.5
+            },
+            "size": {
+                "x": 3.0,
+                "y": 1.5
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 57.599998474121097,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_c02a54a0fb124a2a",
+            "type": 61,
+            "position": {
+                "x": 92.5,
+                "y": 3.0
+            },
+            "size": {
+                "x": 3.0,
+                "y": 1.5
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 57.599998474121097,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_b9c79cb884fa4922",
+            "type": 61,
+            "position": {
+                "x": 144.0,
+                "y": 0.0
+            },
+            "size": {
+                "x": 3.0,
+                "y": 1.5
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 57.599998474121097,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_b728a2b5386e4b4e",
+            "type": 0,
+            "position": {
+                "x": -29.10000228881836,
+                "y": -4.099999904632568
+            },
+            "size": {
+                "x": 22.0,
+                "y": 0.800000011920929
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": true,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_5c3b9e5113664538",
+            "type": 188,
+            "position": {
+                "x": -37.05000305175781,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_df33c4baf40d4f38",
+            "type": 188,
+            "position": {
+                "x": -35.600006103515628,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_d3ef1ccb44284c91",
+            "type": 188,
+            "position": {
+                "x": -34.15000915527344,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_927c040c58084496",
+            "type": 188,
+            "position": {
+                "x": -32.70001220703125,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_ae95fd70372f48ab",
+            "type": 188,
+            "position": {
+                "x": -31.25001335144043,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_a36f507d15944b6c",
+            "type": 188,
+            "position": {
+                "x": -29.800012588500978,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_21315404c5294cec",
+            "type": 188,
+            "position": {
+                "x": -28.350011825561525,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_86fbdaa5b59046fc",
+            "type": 188,
+            "position": {
+                "x": -26.90001106262207,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_a68528d5433144b1",
+            "type": 188,
+            "position": {
+                "x": -25.450010299682618,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_26df2ba69a8642e2",
+            "type": 188,
+            "position": {
+                "x": -24.000009536743165,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_689039fca9f741ab",
+            "type": 188,
+            "position": {
+                "x": -22.55000877380371,
+                "y": -2.5
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_3af55f1a7d934f51",
+            "type": 188,
+            "position": {
+                "x": -38.5,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_dc0a6277d0834001",
+            "type": 188,
+            "position": {
+                "x": -37.05000305175781,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_7e7b2d8d274248ff",
+            "type": 188,
+            "position": {
+                "x": -35.600006103515628,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_03fd820ff7c84007",
+            "type": 188,
+            "position": {
+                "x": -34.15000915527344,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_61010cacf83e44e5",
+            "type": 188,
+            "position": {
+                "x": -32.70001220703125,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_2c1fec0fae0c4565",
+            "type": 188,
+            "position": {
+                "x": -31.25001335144043,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_debef6c52b2b4619",
+            "type": 188,
+            "position": {
+                "x": -29.800012588500978,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_bf210ef9f934486a",
+            "type": 188,
+            "position": {
+                "x": -28.350011825561525,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_bcd9d7b687674a74",
+            "type": 188,
+            "position": {
+                "x": -26.90001106262207,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_1ad27d3d24024cae",
+            "type": 188,
+            "position": {
+                "x": -25.450010299682618,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_42944feaa1e04d15",
+            "type": 188,
+            "position": {
+                "x": -24.000009536743165,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_166eb20594344962",
+            "type": 188,
+            "position": {
+                "x": -22.55000877380371,
+                "y": -1.7799997329711915
+            },
+            "size": {
+                "x": 1.4500000476837159,
+                "y": 0.7200000286102295
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        },
+        {
+            "objectId": "obj_bb87171eefe04764",
+            "type": 261,
+            "position": {
+                "x": -6.0,
+                "y": 1.0
             },
             "size": {
                 "x": 10.0,

@@ -21,6 +21,50 @@
       "value": "แก้ไข"
     },
     {
+      "key": "option_reset_progress",
+      "value": "รีเซ็ตความคืบหน้า"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "รีเซ็ตความคืบหน้า"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "รีเซ็ตสถิติการผ่านทุกด่านหรือไม่?\nระดับเสียง ภาษา ชื่อผู้เล่น และรูปวาดจะยังคงอยู่"
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "รีเซ็ตความคืบหน้าของด่านแล้ว"
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "รีเซ็ต"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ยกเลิก"
+    },
+    {
+      "key": "option_complete",
+      "value": "เสร็จสิ้น"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "การแสดงผล: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "ความละเอียด: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "เต็มหน้าจอ"
+    },
+    {
+      "key": "option_windowed",
+      "value": "โหมดหน้าต่าง"
+    },
+    {
       "key": "lang_ja",
       "value": "ญี่ปุ่น"
     },
@@ -130,7 +174,7 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "สลาก {0}."
     },
     {
       "key": "head",
@@ -262,7 +306,7 @@
     },
     {
       "key": "ability_card_cat",
-      "value": "CAT"
+      "value": "แมว"
     },
     {
       "key": "ability_card_bird",
@@ -274,7 +318,7 @@
     },
     {
       "key": "ability_card_slime",
-      "value": "SLIME"
+      "value": "สลิม"
     },
     {
       "key": "ability_description_human",
@@ -315,6 +359,114 @@
     {
       "key": "ability_control_slime",
       "value": "Fอัพเพอร์เค แอตแทค"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "สแควร์ / X: โยน"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "สแควร์ / X: เกา / คว้า"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "ถือไม้กางเขน / A: GLIDE SQUARE / X: GRAB"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "ถือไม้กางเขน / A: เปลือกถือสี่เหลี่ยม / X: หมุน 90°"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "SQUARE / X: พุ่งไปทางแท่งขวา"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "สามเหลี่ยม / Y: สลับตัวละคร"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "ถาม: สลับตัวละคร"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / เลือก: วาด MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: วาด MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: วาด MENU"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "สแควร์: โยน"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "สแควร์: รอยขีดข่วน / คว้า"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "ถือไม้กางเขน: GLIDE SQUARE: คว้า"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "ถือไม้กางเขน: เปลือกถือสี่เหลี่ยม: หมุน 90°"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "สแควร์: พุ่งไปทางแท่งขวา"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: โยน"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: เกา / คว้า"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "ถือ A: ร่อน X: คว้า"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "ถือ A: เชลล์ ถือ X: หมุน 90°"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: พุ่งไปทางแท่งขวา"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "สามเหลี่ยม: สลับตัวละคร"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: เปลี่ยนตัวละคร"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: วาด MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: วาด MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: วาด MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: วาด MENU"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "ไม่รวมอยู่ในการสาธิต"
     },
     {
       "key": "ability_effect_human_combined",
@@ -386,7 +538,7 @@
     },
     {
       "key": "ability_cat_back_leg_gauge",
-      "value": "RUN"
+      "value": "วิ่ง"
     },
     {
       "key": "ability_cat_front_leg_gauge",
@@ -449,6 +601,98 @@
       "value": "4 หลุม ลึก"
     },
     {
+      "key": "input_device_keyboard_mouse",
+      "value": "คีย์บอร์ด+เมาส์"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "เกมแพด (ตัดการเชื่อมต่อ)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "อัตโนมัติ (คีย์บอร์ด / เกมแพด)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD ถูกตัดการเชื่อมต่อ เชื่อมต่อใหม่เพื่อกู้คืนผู้เล่นคนเดิม"
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "{0} เชื่อมต่อ GAMEPAD ใหม่แล้ว"
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} เข้าร่วม ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "ผู้เล่นสูงสุด 2 คนต่ออุปกรณ์และผู้เล่นทั้งหมด 4 คนในห้อง"
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "เพิ่มหรือลบผู้เล่นในพื้นที่ก่อนที่จะเริ่มเวที"
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "ห้องเต็มแล้ว (ผู้เล่น 4 คน) ผู้เล่นท้องถิ่นพิเศษถูกลบออกแล้ว"
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "PAD ที่ไม่ได้มอบหมาย: START เพื่อเข้าร่วม / แป้นพิมพ์: ENTER เพื่อเข้าร่วม, BACKSPACE เพื่อออก / P2: SELECT + B เพื่อออก"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "ผู้เล่นในพื้นที่ {0}/2 แผ่นที่เชื่อมต่อกัน {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "เล่นในพื้นที่ {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "พันธมิตรฯ {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "กดปุ่มควบคุมใดก็ได้เพื่อเข้าร่วม"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: เข้าร่วม"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "ผู้เล่น 2 คนพร้อมแล้ว"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "ผู้เล่น {0}/2\nแป้นพิมพ์: ENTER เพื่อเข้าร่วม / BACKSPACE เพื่อออก\nผู้ควบคุม: START เพื่อเข้าร่วม / กด B เพื่อออก"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 เปลี่ยนเป็น {0}"
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "คีย์บอร์ด/เมาส์ที่วางจำหน่ายจาก P1 กดปุ่มควบคุมเพื่อขอรับ P1"
+    },
+    {
+      "key": "local_player_left",
+      "value": "ป{0} ซ้าย"
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "การวาดชื่อไม่พร้อมใช้งานระหว่างความร่วมมือในท้องถิ่น กลับไปที่ผู้เล่น 1 คนก่อน"
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "แท่งซ้าย: ย้าย RT / A / B: วาด & เลือก LT: ลบ"
+    },
+    {
       "key": "multi_room_setup",
       "value": "ห้อง พัก"
     },
@@ -497,6 +741,10 @@
       "value": "ภาพ {0} / {1}"
     },
     {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
+    },
+    {
       "key": "tower_defense_time_remaining",
       "value": "เวลา {0:0.0}"
     },
@@ -515,6 +763,26 @@
     {
       "key": "tower_defense_clear",
       "value": "เคลียร์!"
+    },
+    {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
     },
     {
       "key": "value_coin_amount",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "สลาก"
     },
     {
       "key": "title_option",
@@ -571,6 +839,10 @@
     {
       "key": "title_exit",
       "value": "ออก"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "ออกจาก NICO DRAW หรือไม่?"
     },
     {
       "key": "title_debug",
@@ -629,6 +901,10 @@
       "value": "นักแสดงสามารถเปลี่ยนแปลงได้เพียงในห้องพร้อม"
     },
     {
+      "key": "character_switch_redraw_zone_only",
+      "value": "เปลี่ยนตัวละครได้เฉพาะเมื่ออยู่บนพื้นวาดใหม่เท่านั้น"
+    },
+    {
       "key": "trailer_debug_capture_help",
       "value": "โร เบิร์ต     ESC  ปากกา"
     },
@@ -666,7 +942,7 @@
     },
     {
       "key": "trailer_tas_status_idle",
-      "value": "IDLE"
+      "value": "อัตถุว่าง"
     },
     {
       "key": "trailer_tas_status_recording",
@@ -703,6 +979,38 @@
     {
       "key": "menu_to_title",
       "value": "ชื่อ"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "เริ่มด่านนี้ใหม่ตั้งแต่ต้นหรือไม่?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ลองใหม่"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "จบด่านปัจจุบันและกลับไปหน้าเลือกด่านหรือไม่?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "เลือกด่าน"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "การเปลี่ยนแปลงที่ยังไม่เสร็จจะไม่ถูกบันทึก ต้องการกลับโดยไม่บันทึกหรือไม่?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "กลับโดยไม่บันทึก"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "บันทึกตัวละครที่วาดใหม่แล้ว"
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "บันทึกไม่สำเร็จ โปรดกด “เสร็จสิ้น” อีกครั้ง"
     },
     {
       "key": "language_settings",
@@ -898,7 +1206,7 @@
     },
     {
       "key": "multi_local",
-      "value": "ภายใน"
+      "value": "Local"
     },
     {
       "key": "multi_ready",
@@ -910,7 +1218,7 @@
     },
     {
       "key": "multi_host",
-      "value": "HOST"
+      "value": "ผู้รับ"
     },
     {
       "key": "multi_default_room_name",
@@ -929,6 +1237,10 @@
       "value": "คุณ"
     },
     {
+      "key": "spectator_following",
+      "value": "การชม: {0} สลับด้วย ← / →"
+    },
+    {
       "key": "online_player_host",
       "value": "เครื่อง"
     },
@@ -943,6 +1255,18 @@
     {
       "key": "online_fake_initialized",
       "value": "เริ่มงานแบ็คเอนต์เทียมแล้ว"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "ไม่สามารถเล่นออนไลน์ได้เนื่องจากข้อมูลเกมหรือเวอร์ชันไม่ตรงกัน โปรดตรวจสอบไฟล์เกมใน Steam"
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "โฮสต์ตัดการเชื่อมต่อ ห้องจึงถูกปิด"
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "การเชื่อมต่อเซสชันขาดหาย โปรดเข้าร่วมห้องอีกครั้ง"
     },
     {
       "key": "online_logging_in",
@@ -1041,6 +1365,14 @@
       "value": "การล็อกอินของ OS ล้มเหลว: {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "เปิด Steam แล้วเริ่ม NICO DRAW จากคลัง Steam ของคุณ"
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "ไม่สามารถรับตั๋วยืนยันตัวตน Steam ได้: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "ESOS สร้างล็อบบี้ไม่สําเร็จ: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "ล้มเหลวในการค้นหารหัสห้อง: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "การสร้างห้องล้มเหลว กำลังลองอีกครั้งใน {0} วินาที (เหลืออีก {1} ครั้ง)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1186,7 +1522,7 @@
     },
     {
       "key": "draw_species_swap_title",
-      "value": "CHARACTER SWAP"
+      "value": "การแลกเปลี่ยนตัวละคร"
     },
     {
       "key": "draw_species_swap_hint",
@@ -1197,8 +1533,16 @@
       "value": "{0} ต้องการที่จะแลกเปลี่ยน {1} สําหรับ {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} กำลังใช้ตัวละครนี้อยู่ ส่งคำขอสลับหรือไม่?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "ส่งคำขอ"
+    },
+    {
       "key": "draw_species_swap_accept",
-      "value": "SWAP"
+      "value": "แลกเปลี่ยน"
     },
     {
       "key": "draw_species_swap_reject",
@@ -1207,6 +1551,14 @@
     {
       "key": "draw_species_swap_pending",
       "value": "รอการตอบรับคําขอแลกเปลี่ยน..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "ส่งคำขอแลกแล้ว"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "กำลังรอคำตอบจาก {0}\nคำขอแลก: {1} กับ {2}"
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "เริ่มการทดสอบ: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "การเคลื่อนไหว P{0}ตําแหน่งเริ่มต้นการทดลอง"
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "ป{0} เริ่มการทดสอบ: X {1:0.00} / Y {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1574,7 +1934,7 @@
     },
     {
       "key": "draw_undo_once",
-      "value": "UNDO"
+      "value": "ยกเลิก"
     },
     {
       "key": "draw_reset_all",
@@ -1609,6 +1969,10 @@
       "value": "2551. ราชกิจจานุเบกษา พ.ศ."
     },
     {
+      "key": "draw_preset_back",
+      "value": "กลับ"
+    },
+    {
       "key": "draw_preset_five_species",
       "value": "นก กระจอก เทศ"
     },
@@ -1626,7 +1990,7 @@
     },
     {
       "key": "draw_preset_empty",
-      "value": "EMPTY"
+      "value": "เบาๆ"
     },
     {
       "key": "draw_preset_register",
@@ -2037,6 +2401,10 @@
       "value": "พร้อม"
     },
     {
+      "key": "background_word_push",
+      "value": "ผลัก!"
+    },
+    {
       "key": "stage_dynamite_label",
       "value": "TNT"
     },
@@ -2322,7 +2690,7 @@
     },
     {
       "key": "stage_object_checkpoint",
-      "value": "Checkpoint"
+      "value": "จุดตรวจ"
     },
     {
       "key": "stage_object_warp_entrance",
@@ -2669,6 +3037,10 @@
       "value": "เวลาขึ้น"
     },
     {
+      "key": "challenge_no_time_limit",
+      "value": "ไม่มีการจำกัดเวลา"
+    },
+    {
       "key": "challenge_retry_hint",
       "value": "กด R เพื่อลองใหม่"
     },
@@ -2749,6 +3121,26 @@
       "value": "มี เวลา มาก ขึ้น {0}"
     },
     {
+      "key": "ice_race_rule",
+      "value": "เคลียร์ภายใน {0} ทั้งหมด"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "รวม {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "ทีมทั้งหมดจบลงแล้ว"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "ลองอีกครั้งใน {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "จบเกม\nทั้งหมด {0} / {1}"
+    },
+    {
       "key": "survival_get_ready",
       "value": "เตรียมพร้อม!"
     },
@@ -2791,6 +3183,10 @@
     {
       "key": "ready_room_game_default",
       "value": "เตรียม เริ่ม เกม"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "วิ่ง."
     },
     {
       "key": "ready_room_game_2_2",
@@ -2898,7 +3294,7 @@
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "ป้องกัน อันตราย"
+      "value": "หลบการโจมตีของศัตรู"
     },
     {
       "key": "ready_room_clear_one_survivor",
@@ -2907,6 +3303,10 @@
     {
       "key": "ready_room_clear_one_goal",
       "value": "เมื่อคนเล่นใด ๆ สอนกอล"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "ชัดเจนว่าเวลาเสร็จสิ้นรวมของทุกคนอยู่ภายใน 1 นาทีต่อผู้เล่นหนึ่งคน"
     },
     {
       "key": "spike_chase_monitor_title",
@@ -2921,32 +3321,56 @@
       "value": "จง วิ่ง ไป ที่ หมู่ บ้าน!"
     },
     {
-      "key": "wind_speedrun_title",
-      "value": "นก แก้ว ยัง คง บิน ต่อ ไป!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "ไม่มี INK (เพลง)"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "เวลา {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "เวลาขึ้น"
-    },
-    {
       "key": "umbrella_rain_title",
-      "value": "จง อยู่ ใต้ ร่ม!"
+      "value": "อย่าโดนฝน"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "นําคุณออก - สอนเชลเตอร์"
+      "value": "อย่าโดนฝน"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "ทุกคนถูกจับคาหนังคาเขา"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -3170,7 +3594,7 @@
     },
     {
       "key": "boss_health",
-      "value": "ขนาด HP  {0} / {1}"
+      "value": "HP  {0} / {1}"
     },
     {
       "key": "boss_enter_room",
@@ -3337,8 +3761,72 @@
       "value": "อุดรูให้หมด!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "รอบ {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "รอบ {0}/3 {1:0.0} วินาที"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "รอบ {0} ชัดเจน!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "หมดเวลาแล้ว!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "ลองรอบนี้อีกครั้ง"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "วางท่าของมนุษย์ที่เข้ากันไว้ในรูกุญแจ!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "ค้นหาท่าที่ตรงกันระหว่างนกที่ลอยอยู่!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "อุ้มเต่าผ่านห้องที่เต็มไปด้วยน้ำพุ!"
+    },
+    {
       "key": "tilt_board_monitor",
       "value": "เสียง {0}/3    {1:0.0}ด้านซ้าย"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "รอบ {0}/3 เริ่มใน {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "คุณสามารถเคลื่อนที่ภายในเลนของคุณได้ระหว่างการนับถอยหลัง"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "รอบ {0}/3 ลัง {1}/{2} {3} ซ้าย"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "ทำลายลังด้วยสไลม์สไปค์!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "ทำลายลังเล็ก ๆ !  ดูศัตรู!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "รอบ {0} ชัดเจน!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "จบเกมแล้วลองใหม่อีกครั้ง {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "เคลียร์ทุกรอบ!"
     },
     {
       "key": "tilt_board_progress",
@@ -3393,12 +3881,40 @@
       "value": "10-3 RICOCHET RELY"
     },
     {
+      "key": "cat_escape_title",
+      "value": "2-3  หนีแมวยักษ์!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "รอ {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "เริ่มใน {0}"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "วิ่ง!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "ช่วยกันข่วน  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
       "key": "ricochet_round",
       "value": "เสียง {0} / {1}"
     },
     {
       "key": "ricochet_ammo",
-      "value": "AMMO {0}"
+      "value": "กระสุน {0}"
     },
     {
       "key": "ricochet_instruction",
@@ -3794,11 +4310,11 @@
     },
     {
       "key": "option_bgm",
-      "value": "ขนาด BGM"
+      "value": "BGM"
     },
     {
       "key": "option_se",
-      "value": "SE"
+      "value": "เซ"
     },
     {
       "key": "option_keys",
@@ -4017,6 +4533,34 @@
       "value": "เสียงที่ประมวลผลได้"
     },
     {
+      "key": "gameplay_control_switch",
+      "value": "สลับตัวละคร"
+    },
+    {
+      "key": "feedback_button",
+      "value": "ความคิดเห็น / รายงานบั๊ก"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "ขอบคุณที่เล่น!\nความคิดเห็น / รายงานบั๊ก"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "รายการสิ่งที่อยากได้"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "แนะนำให้เล่นหลายคน!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW สนุกที่สุดเมื่อร่วมมือกัน!\nลองเล่นพร้อมกัน 2–4 คนดูสิ!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "ตกลง"
+    },
+    {
       "key": "stage_object_background_paw_print",
       "value": "พิมพ์แบบ Paw"
     },
@@ -4154,7 +4698,7 @@
     },
     {
       "key": "stage_object_background_confetti",
-      "value": "Confetti"
+      "value": "โคนเฟตติ"
     },
     {
       "key": "stage_object_background_fireworks",
@@ -4255,494 +4799,6 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "รากต้นไม้"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "วิ่ง!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "เริ่มใน {0}"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "รอ {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  หนีแมวยักษ์!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "ช่วยกันข่วน  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "เปลี่ยนตัวละครได้เฉพาะเมื่ออยู่บนพื้นวาดใหม่เท่านั้น"
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "กลับ"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "กำลังรอคำตอบจาก {0}\nคำขอแลก: {1} กับ {2}"
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "ส่งคำขอแลกแล้ว"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "เริ่มด่านนี้ใหม่ตั้งแต่ต้นหรือไม่?"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "ลองใหม่"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "จบด่านปัจจุบันและกลับไปหน้าเลือกด่านหรือไม่?"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "การเปลี่ยนแปลงที่ยังไม่เสร็จจะไม่ถูกบันทึก ต้องการกลับโดยไม่บันทึกหรือไม่?"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "กลับโดยไม่บันทึก"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "บันทึกตัวละครที่วาดใหม่แล้ว"
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "บันทึกไม่สำเร็จ โปรดกด “เสร็จสิ้น” อีกครั้ง"
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "เลือกด่าน"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "ไม่สามารถเล่นออนไลน์ได้เนื่องจากข้อมูลเกมหรือเวอร์ชันไม่ตรงกัน โปรดตรวจสอบไฟล์เกมใน Steam"
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "การเชื่อมต่อเซสชันขาดหาย โปรดเข้าร่วมห้องอีกครั้ง"
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "โฮสต์ตัดการเชื่อมต่อ ห้องจึงถูกปิด"
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "ยกเลิก"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "รีเซ็ต"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "รีเซ็ตความคืบหน้า"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "รีเซ็ตสถิติการผ่านทุกด่านหรือไม่?\nระดับเสียง ภาษา ชื่อผู้เล่น และรูปวาดจะยังคงอยู่"
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "รีเซ็ตความคืบหน้าของด่านแล้ว"
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "รีเซ็ตความคืบหน้า"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "วิ่ง."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "สลับตัวละคร"
-    },
-    {
-      "key": "feedback_button",
-      "value": "ความคิดเห็น / รายงานบั๊ก"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "ขอบคุณที่เล่น!\nความคิดเห็น / รายงานบั๊ก"
-    },
-    {
-      "key": "option_complete",
-      "value": "เสร็จสิ้น"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "การแสดงผล: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "ความละเอียด: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "เต็มหน้าจอ"
-    },
-    {
-      "key": "option_windowed",
-      "value": "โหมดหน้าต่าง"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "เปิด Steam แล้วเริ่ม NICO DRAW จากคลัง Steam ของคุณ"
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "ไม่สามารถรับตั๋วยืนยันตัวตน Steam ได้: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "รายการสิ่งที่อยากได้"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "แนะนำให้เล่นหลายคน!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "NICO DRAW สนุกที่สุดเมื่อร่วมมือกัน!\nลองเล่นพร้อมกัน 2–4 คนดูสิ!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "ตกลง"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "ออกจาก NICO DRAW หรือไม่?"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} กำลังใช้ตัวละครนี้อยู่ ส่งคำขอสลับหรือไม่?"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "ส่งคำขอ"
-    },
-    {
-      "key": "background_word_push",
-      "value": "ผลัก!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "ถือไม้กางเขน / A: GLIDE SQUARE / X: GRAB"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "สแควร์ / X: เกา / คว้า"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "สแควร์ / X: โยน"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "SQUARE / X: พุ่งไปทางแท่งขวา"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "ถือไม้กางเขน / A: เปลือกถือสี่เหลี่ยม / X: หมุน 90°"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "ถือไม้กางเขน: GLIDE SQUARE: คว้า"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "สแควร์: รอยขีดข่วน / คว้า"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "สแควร์: โยน"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "สแควร์: พุ่งไปทางแท่งขวา"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "ถือไม้กางเขน: เปลือกถือสี่เหลี่ยม: หมุน 90°"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "ถือ A: ร่อน X: คว้า"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "X: เกา / คว้า"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "X: โยน"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: พุ่งไปทางแท่งขวา"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "ถือ A: เชลล์ ถือ X: หมุน 90°"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "ไม่มีการจำกัดเวลา"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "ไม่รวมอยู่ในการสาธิต"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "แท่งซ้าย: ย้าย RT / A / B: วาด & เลือก LT: ลบ"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: วาด MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: วาด MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / เลือก: วาด MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: วาด MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: วาด MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: วาด MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: วาด MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "ถาม: สลับตัวละคร"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "สามเหลี่ยม / Y: สลับตัวละคร"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "สามเหลี่ยม: สลับตัวละคร"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "Y: เปลี่ยนตัวละคร"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "ทีมทั้งหมดจบลงแล้ว"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "จบเกม\nทั้งหมด {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "ลองอีกครั้งใน {0}"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "เคลียร์ภายใน {0} ทั้งหมด"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "รวม {0} / {1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "อัตโนมัติ (คีย์บอร์ด / เกมแพด)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "เกมแพด (ตัดการเชื่อมต่อ)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "คีย์บอร์ด+เมาส์"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "P{0} GAMEPAD ถูกตัดการเชื่อมต่อ เชื่อมต่อใหม่เพื่อกู้คืนผู้เล่นคนเดิม"
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "{0} เชื่อมต่อ GAMEPAD ใหม่แล้ว"
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "คีย์บอร์ด/เมาส์ที่วางจำหน่ายจาก P1 กดปุ่มควบคุมเพื่อขอรับ P1"
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "PAD ที่ไม่ได้มอบหมาย: START เพื่อเข้าร่วม / แป้นพิมพ์: ENTER เพื่อเข้าร่วม, BACKSPACE เพื่อออก / P2: SELECT + B เพื่อออก"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "P{0} เข้าร่วม ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "ป{0} ซ้าย"
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "ผู้เล่นสูงสุด 2 คนต่ออุปกรณ์และผู้เล่นทั้งหมด 4 คนในห้อง"
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "ห้องเต็มแล้ว (ผู้เล่น 4 คน) ผู้เล่นท้องถิ่นพิเศษถูกลบออกแล้ว"
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "P1 เปลี่ยนเป็น {0}"
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "ผู้เล่น 2 คนพร้อมแล้ว"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: เข้าร่วม"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "กดปุ่มควบคุมใดก็ได้เพื่อเข้าร่วม"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "เล่นในพื้นที่ {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "เพิ่มหรือลบผู้เล่นในพื้นที่ก่อนที่จะเริ่มเวที"
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "พันธมิตรฯ {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "ผู้เล่น {0}/2\nแป้นพิมพ์: ENTER เพื่อเข้าร่วม / BACKSPACE เพื่อออก\nผู้ควบคุม: START เพื่อเข้าร่วม / กด B เพื่อออก"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "ผู้เล่นในพื้นที่ {0}/2 แผ่นที่เชื่อมต่อกัน {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "การสร้างห้องล้มเหลว กำลังลองอีกครั้งใน {0} วินาที (เหลืออีก {1} ครั้ง)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "ค้นหาท่าที่ตรงกันระหว่างนกที่ลอยอยู่!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "วางท่าของมนุษย์ที่เข้ากันไว้ในรูกุญแจ!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "รอบ {0}/3 {1:0.0} วินาที"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "ลองรอบนี้อีกครั้ง"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "รอบ {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "รอบ {0} ชัดเจน!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "หมดเวลาแล้ว!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "อุ้มเต่าผ่านห้องที่เต็มไปด้วยน้ำพุ!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "ชัดเจนว่าเวลาเสร็จสิ้นรวมของทุกคนอยู่ภายใน 1 นาทีต่อผู้เล่นหนึ่งคน"
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "เคลียร์ทุกรอบ!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "ทำลายลังเล็ก ๆ !  ดูศัตรู!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "ทำลายลังด้วยสไลม์สไปค์!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "รอบ {0}/3 ลัง {1}/{2} {3} ซ้าย"
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "จบเกมแล้วลองใหม่อีกครั้ง {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "รอบ {0} ชัดเจน!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "การชม: {0} สลับด้วย ← / →"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "รอบ {0}/3 เริ่มใน {1}"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "คุณสามารถเคลื่อนที่ภายในเลนของคุณได้ระหว่างการนับถอยหลัง"
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "การวาดชื่อไม่พร้อมใช้งานระหว่างความร่วมมือในท้องถิ่น กลับไปที่ผู้เล่น 1 คนก่อน"
     }
   ]
 }

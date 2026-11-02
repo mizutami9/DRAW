@@ -7,6 +7,8 @@ namespace DrawBody.Prototype
     /// </summary>
     public static class SteamDistributionIds
     {
+        public const uint ProductAppId = 5090120;
+        public const uint ProductDepotId = 5090121;
         public const uint DemoAppId = 5231000;
         public const uint DemoDepotId = 5231001;
         public const uint PlaytestAppId = 5230890;

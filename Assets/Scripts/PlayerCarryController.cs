@@ -477,6 +477,28 @@ namespace DrawBody.Prototype
             if (!ricochetWeaponMode && CanAttachToFriend())
             {
                 DropHeld(Vector2.zero);
+                if (IsBird() && !scriptedSlimeAttachment)
+                {
+                    // Bird carry uses the same press-to-toggle interaction as a
+                    // human pickup: one F press grabs, the next releases. A
+                    // forced collision drop still waits for the old press to be
+                    // released before another grab can begin.
+                    if (!LocalAbilityHeld()) friendGrabRequiresRelease = false;
+                    if (LocalAbilityPressed() && !friendGrabRequiresRelease)
+                    {
+                        if (slimeAttachedPlayer != null || catClawedObject != null)
+                        {
+                            DetachSlimeFromFriend(true);
+                            DetachCatFromObject(true);
+                        }
+                        else
+                        {
+                            TryAttachSlimeToFriend();
+                            if (slimeAttachedPlayer == null) TryAttachCatToObject();
+                        }
+                    }
+                    return;
+                }
                 bool attachHeld = scriptedSlimeAttachment
                     ? scriptedSlimeAttachmentHeld
                     : LocalAbilityHeld();

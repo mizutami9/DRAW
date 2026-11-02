@@ -50,6 +50,12 @@ namespace DrawBody.Prototype
             {
                 return false;
             }
+            if (string.Equals(stageId, "14-2", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(stageId, "15-1", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(stageId, "15-2", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
             return GetWorldNumber(stageId) >= 11;
         }
 

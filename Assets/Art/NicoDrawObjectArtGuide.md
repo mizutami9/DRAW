@@ -117,6 +117,7 @@ NICO DRAWのゲーム内で使う2Dスプライト。
 - Ghost enemy: pale violet-blue sheet silhouette with uneven wispy arms and a loose wavy hem; it has no face and uses sparse diagonal colored-pencil hatching so its wall-phasing shape stays readable.
 - Arena boss: one tall purple bean scribble with bent antenna-like horns, stick arms and a blank face area for live expression lines.
 - Flying boss: one rough violet circle with uneven spikes, two wing zigzags and three facial strokes.
+- Stage 15-1 power items use four dedicated crayon sprites: cyan `power-crayon-triple.png`, purple `power-crayon-homing.png`, orange `power-crayon-bomb-scatter.png`, and rainbow `power-crayon-self-destruct.png`. The self-destruct crayon keeps its hand-drawn rainbow bands while code adds a cycling halo and orbiting colored-pencil sparks; the bomb-scatter effect launches synchronized bombs in eight directions.
 - Chase boss: one wide purple oval with two loop arms, top spikes and three facial strokes.
 - Mirror final boss keeps the players' drawings unchanged because visual identity with the real players is its core rule.
 - Escort ally: one loose sky-blue circle scribble with two short legs and three facial marks.

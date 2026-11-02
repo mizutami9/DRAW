@@ -108,6 +108,9 @@ namespace DrawBody.Prototype
         BossSuction,
 
         ClearStampImpact,
-        ClearCelebrationChime
+        ClearCelebrationChime,
+        BossSwordSlash,
+        BossCatSwipe,
+        BlizzardWind
     }
 }

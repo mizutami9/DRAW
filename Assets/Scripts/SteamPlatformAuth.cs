@@ -19,8 +19,8 @@ namespace DrawBody.Prototype
         // full-content internal test build initialize against this app.
         internal const uint AppId = SteamDistributionIds.DemoAppId;
 #else
-        // Kept for explicit non-demo Steam test builds.
-        internal const uint AppId = SteamDistributionIds.PlaytestAppId;
+        // Paid full-product Steam build.
+        internal const uint AppId = SteamDistributionIds.ProductAppId;
 #endif
         private const int InitialTicketBufferSize = 1024;
         private const string EosTicketAudience = "epiconlineservices";
@@ -31,6 +31,23 @@ namespace DrawBody.Prototype
 
         internal static bool IsAvailable => instance != null && instance.initialized;
         internal static string SteamId => IsAvailable ? SteamUser.GetSteamID().ToString() : string.Empty;
+
+        internal static bool TryGetCurrentGameLanguage(out string language)
+        {
+            language = string.Empty;
+            if (!IsAvailable) return false;
+            try
+            {
+                language = SteamApps.GetCurrentGameLanguage();
+                return !string.IsNullOrWhiteSpace(language);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("[NICO DRAW Steam] Could not read the game language: " + exception.Message);
+                language = string.Empty;
+                return false;
+            }
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Install()

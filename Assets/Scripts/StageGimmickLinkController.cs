@@ -324,7 +324,12 @@ namespace DrawBody.Prototype
         private List<LinkRuntime> GetActivationGroup(LinkRuntime activatedLink)
         {
             List<LinkRuntime> group = new List<LinkRuntime>();
-            if (activatedLink == null || !activatedLink.IsButtonSource)
+            // Ordinary buttons that happen to share a target are independent.
+            // Only the explicit simultaneous/hold variants form a multi-button
+            // group whose members must all be pressed before the link fires.
+            if (activatedLink == null
+                || (!activatedLink.IsSimultaneousButtonSource
+                    && !activatedLink.IsHoldButtonSource))
             {
                 group.Add(activatedLink);
                 return group;

@@ -21,12 +21,56 @@
       "value": "Регистратор"
     },
     {
+      "key": "option_reset_progress",
+      "value": "СБРОСИТЬ ПРОГРЕСС"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "СБРОСИТЬ ПРОГРЕСС"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Сбросить прохождение всех уровней?\nГромкость, язык, имя игрока и рисунки будут сохранены."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Прогресс уровней сброшен."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "СБРОС"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ОТМЕНА"
+    },
+    {
+      "key": "option_complete",
+      "value": "ГОТОВО"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "ЭКРАН: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "РАЗРЕШЕНИЕ: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "ПОЛНЫЙ ЭКРАН"
+    },
+    {
+      "key": "option_windowed",
+      "value": "ОКОННЫЙ РЕЖИМ"
+    },
+    {
       "key": "lang_ja",
       "value": "японский"
     },
     {
       "key": "lang_en",
-      "value": "EN"
+      "value": "СМ."
     },
     {
       "key": "status_play",
@@ -130,7 +174,7 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "Рисование {0}."
     },
     {
       "key": "head",
@@ -302,7 +346,7 @@
     },
     {
       "key": "ability_control_cat",
-      "value": "F: SCRATCH / GRAB"
+      "value": "F: СКРЕЩИВАТЬ / СХВАТИТЬ"
     },
     {
       "key": "ability_control_bird",
@@ -315,6 +359,114 @@
     {
       "key": "ability_control_slime",
       "value": "FОригинальное название: UPWARDPIKE ATTACK"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "КВАДРАТ / X: БРОСОК"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "КВАДРАТ / X: ЦАРАПАТЬ / ЗАХВАТЬ"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "ДЕРЖАТЬ КРЕСТ / A: КВАДРАТ Скольжения / X: ЗАХВАТЬ"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "ДЕРЖАТЬ КРЕСТ / A: SHELL HOLD SQUARE / X: ПОВОРОТ НА 90°"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "КВАДРАТ / X: ШИП К ПРАВОМУ КЛЮЧУ"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "ТРЕУГОЛЬНИК / Y: ПЕРЕКЛЮЧЕНИЕ СИМВОЛА"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "В: ПЕРЕКЛЮЧЕНИЕ ПЕРСОНАЖА"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / ВЫБОР: РИСОВАТЬ MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: РИСОВАТЬ MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: НАРИСОВАТЬ MENU"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "КВАДРАТ: БРОСОК"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "КВАДРАТ: ЦАРАПАТЬ / ЗАХВАТЬ"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "УДЕРЖИВАНИЕ КРЕСТОВОГО: СКОЛЬЖЕНИЕ КВАДРАТ: ЗАХВАТ"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "УДЕРЖИВАНИЕ КРЕСТОВОГО: ОБОЛОЧКА УДЕРЖИВАЮЩЕГО КВАДРАТ: ПОВОРОТ НА 90°"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "КВАДРАТ: ШИП К ПРАВОМУ ДУШКЕ"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "Х: БРОСАТЬ"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: ЦАРАПАТЬ/ЗАХВАТЬ"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "УДЕРЖИВАЙТЕ A: ПЛАВЬТЕ X: ЗАХВАТАЙТЕ"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "УДЕРЖИВАНИЕ A: УДЕРЖИВАНИЕ ОБОЛОЧКИ X: ПОВОРОТ НА 90°"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: ШИП К ПРАВОМУ КЛЮЧУ"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "ТРЕУГОЛЬНИК: ПЕРЕКЛЮЧЕНИЕ ПЕРСОНАЖА"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: ПЕРЕКЛЮЧЕНИЕ ПЕРСОНАЖА"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: РИСОВАТЬ MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: РИСОВАТЬ MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: НАРИСОВАТЬ MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: НАРИСОВАТЬ MENU"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "НЕ ВКЛЮЧЕНО В ДЕМО"
     },
     {
       "key": "ability_effect_human_combined",
@@ -449,8 +601,100 @@
       "value": "4 Узкая дыра"
     },
     {
+      "key": "input_device_keyboard_mouse",
+      "value": "Клавиатура + мышь"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Геймпад (отключен)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Автоматический (клавиатура/геймпад)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} ГЕЙМПАД ОТКЛЮЧЕН. ПЕРЕСОЕДИНИТЕ ЕГО, ЧТОБЫ ВОССТАНОВИТЬ ТО ЖЕ ПЛЕЕР."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} ГЕЙМПАД ПЕРЕСОЕДИНЕН."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} СОЕДИНЕН ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "ДО 2 ИГРОКОВ НА УСТРОЙСТВО И ВСЕГО 4 ИГРОКОВ В КОМНАТЕ."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "ДОБАВЬТЕ ИЛИ УДАЛИТЕ ЛОКАЛЬНЫХ ИГРОКОВ ПЕРЕД НАЧАЛОМ ЭТАПА."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "КОМНАТА ПОЛНА (4 ИГРОКА). ЛИШНИЙ ЛОКАЛЬНЫЙ ИГРОК БЫЛ УДАЛЕН."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "НЕНАЗНАЧЕННАЯ ПАНЕЛЬ: START ДЛЯ ПРИСОЕДИНЕНИЯ / КЛАВИАТУРА: ENTER ДЛЯ ПРИСОЕДИНЕНИЯ, BACKSPACE ДЛЯ ВЫХОДА / P2: SELECT + B ДЛЯ ВЫХОДА"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "ЛОКАЛЬНЫЕ ИГРОКИ {0}/2 ПОДКЛЮЧЕННЫЕ ПЛОЩАДКИ {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "ЛОКАЛЬНАЯ ИГРА {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "ПАД {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "НАЖМИТЕ ЛЮБУЮ КНОПКУ КОНТРОЛЛЕРА, ЧТОБЫ ПРИСОЕДИНИТЬСЯ"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: ПРИСОЕДИНЯЙТЕСЬ"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 игрока готовы"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "ИГРОКОВ {0}/2\nКЛАВИАТУРА: ENTER ДЛЯ ПРИСОЕДИНЕНИЯ / BACKSPACE ДЛЯ ВЫХОДА\nКОНТРОЛЛЕР: START ДЛЯ ПРИСОЕДИНЕНИЯ / УДЕРЖИВАЙТЕ B ДЛЯ ВЫХОДА"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 ПЕРЕКЛЮЧЕН НА {0}."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "КЛАВИАТУРА/МЫШЬ ОТПУЩЕНА ИЗ P1. НАЖМИТЕ КНОПКУ КОНТРОЛЛЕРА, ЧТОБЫ ЗАЯВИТЬ P1."
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} СЛЕВА."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "РОЗЫГРЫШ ТИТУЛА НЕДОСТУПЕН ВО ВРЕМЯ ЛОКАЛЬНОЙ КООПЕРАЦИИ. СНАЧАЛА ВЕРНУТЬСЯ К 1 ИГРОКУ."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "ЛЕВАЯ КАЛКА: ДВИЖЕНИЕ RT / A / B: НАРИСОВАНИЕ И ВЫБОР LT: СТЕРЕТЬ"
+    },
+    {
       "key": "multi_room_setup",
-      "value": "ROOM SETUP"
+      "value": "УСТАНОВКА ПОМЕЩЕНИЯ"
     },
     {
       "key": "multi_participants",
@@ -497,6 +741,10 @@
       "value": "фаза {0} / {1}"
     },
     {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
+    },
+    {
       "key": "tower_defense_time_remaining",
       "value": "Время {0:0.0}"
     },
@@ -515,6 +763,26 @@
     {
       "key": "tower_defense_clear",
       "value": "Защита чиста!"
+    },
+    {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
     },
     {
       "key": "value_coin_amount",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "РИСОВАНИЕ"
     },
     {
       "key": "title_option",
@@ -573,8 +841,12 @@
       "value": "Выход"
     },
     {
+      "key": "title_exit_confirm",
+      "value": "Выйти из NICO DRAW?"
+    },
+    {
       "key": "title_debug",
-      "value": "DEBUG"
+      "value": "ОТЛАДКА"
     },
     {
       "key": "trailer_debug_title",
@@ -629,6 +901,10 @@
       "value": "Чарактеры могут быть изменены только в готовой комнате."
     },
     {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Сменить персонажа можно только на полу перерисовки."
+    },
+    {
       "key": "trailer_debug_capture_help",
       "value": "Заменить прятки     ESC  Название"
     },
@@ -666,7 +942,7 @@
     },
     {
       "key": "trailer_tas_status_idle",
-      "value": "IDLE"
+      "value": "НЕДЕЙСТВИТЕЛЬНЫЙ"
     },
     {
       "key": "trailer_tas_status_recording",
@@ -703,6 +979,38 @@
     {
       "key": "menu_to_title",
       "value": "Название"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Начать этот уровень заново?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ЕЩЁ РАЗ"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Завершить текущий уровень и вернуться к выбору уровня?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "ВЫБОР УРОВНЯ"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "Незавершённые изменения не будут сохранены. Вернуться без сохранения?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "ВЕРНУТЬСЯ БЕЗ СОХРАНЕНИЯ"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Перерисованный персонаж сохранён."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Не удалось сохранить. Нажмите «ГОТОВО» ещё раз."
     },
     {
       "key": "language_settings",
@@ -898,7 +1206,7 @@
     },
     {
       "key": "multi_local",
-      "value": "местный"
+      "value": "Local"
     },
     {
       "key": "multi_ready",
@@ -929,6 +1237,10 @@
       "value": "Ты"
     },
     {
+      "key": "spectator_following",
+      "value": "Наблюдение: {0} Переключайтесь с помощью ← / →"
+    },
+    {
       "key": "online_player_host",
       "value": "ведущий"
     },
@@ -943,6 +1255,18 @@
     {
       "key": "online_fake_initialized",
       "value": "Фальшивый бэкэнд инициализировался."
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Сетевая игра недоступна: игровые данные или версия не совпадают. Проверьте целостность файлов игры в Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Хост отключился, поэтому комната была закрыта."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Соединение с сессией потеряно. Войдите в комнату снова."
     },
     {
       "key": "online_logging_in",
@@ -1041,6 +1365,14 @@
       "value": "Логин EOS не работает: {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "Запустите Steam, затем откройте NICO DRAW из библиотеки Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Не удалось получить билет аутентификации Steam: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "EOS создала лобби, которое провалилось: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "Поиск кода номера не удался: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Не удалось создать комнату. Повторная попытка через {0} с (осталось {1} попыток)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1197,6 +1533,14 @@
       "value": "{0} Хотите торговать своей {1} для {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} уже использует этого персонажа. Отправить запрос на обмен?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "ОТПРАВИТЬ ЗАПРОС"
+    },
+    {
       "key": "draw_species_swap_accept",
       "value": "СВАП"
     },
@@ -1207,6 +1551,14 @@
     {
       "key": "draw_species_swap_pending",
       "value": "В ожидании ответа на запрос о свопе..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "ЗАПРОС НА ОБМЕН ОТПРАВЛЕН"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Ожидание ответа от {0}.\nЗапрошенный обмен: {1} на {2}."
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "Тестовый старт: X {0:0.00} / Y/ {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "Перемещение P{0}Позиция начала теста."
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "П{0} Начало испытания: X {1:0.00} / И {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1382,7 +1742,7 @@
     },
     {
       "key": "stage_editor_copy_up",
-      "value": "↑ UP"
+      "value": "↑ ВВЕРХ"
     },
     {
       "key": "stage_editor_status_copy_direction",
@@ -1609,6 +1969,10 @@
       "value": "5-ХАРАКТЕРНЫЕ ПРЕЗИТЫ"
     },
     {
+      "key": "draw_preset_back",
+      "value": "НАЗАД"
+    },
+    {
       "key": "draw_preset_five_species",
       "value": "Человеческий КОТ ПЕРВОЙ ТУРТЛЕВЫЙ СЛАЙМ"
     },
@@ -1746,7 +2110,7 @@
     },
     {
       "key": "stage_object_background_apple",
-      "value": "Apple"
+      "value": "Яблоко"
     },
     {
       "key": "stage_object_background_banana",
@@ -2035,6 +2399,10 @@
     {
       "key": "stage_ready_label",
       "value": "Готовый"
+    },
+    {
+      "key": "background_word_push",
+      "value": "ТОЛКАЙ!"
     },
     {
       "key": "stage_dynamite_label",
@@ -2669,6 +3037,10 @@
       "value": "Время вышло"
     },
     {
+      "key": "challenge_no_time_limit",
+      "value": "БЕЗ ОГРАНИЧЕНИЙ ПО ВРЕМЕНИ"
+    },
+    {
       "key": "challenge_retry_hint",
       "value": "Нажмите R, чтобы повторить"
     },
@@ -2749,6 +3121,26 @@
       "value": "Время в пути {0}"
     },
     {
+      "key": "ice_race_rule",
+      "value": "ОЧИСТИТЬ В ТЕЧЕНИЕ {0} ВСЕГО"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "ИТОГО {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "КОМАНДНЫЙ ИТОГО БОЛЬШЕ"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "ПОВТОРИТЬ ЧЕРЕЗ {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "ИГРА ЗАВЕРШЕНА\nВСЕГО {0} / {1}"
+    },
+    {
       "key": "survival_get_ready",
       "value": "Готовься!"
     },
@@ -2791,6 +3183,10 @@
     {
       "key": "ready_room_game_default",
       "value": "Готовьтесь начать игру"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "БЕГИ."
     },
     {
       "key": "ready_room_game_2_2",
@@ -2898,7 +3294,7 @@
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "Победить врагов"
+      "value": "УКЛОНЯЙСЯ ОТ АТАК ВРАГА"
     },
     {
       "key": "ready_room_clear_one_survivor",
@@ -2907,6 +3303,10 @@
     {
       "key": "ready_room_clear_one_goal",
       "value": "Ясно, когда любой игрок достигает цели."
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "ПРОЯВЛЯЕТСЯ, ЕСЛИ ОБЩЕЕ ВРЕМЯ ФИНИША КАЖДОГО ИГРОКА НАХОДИТСЯ В пределах 1 МИНУТЫ."
     },
     {
       "key": "spike_chase_monitor_title",
@@ -2921,32 +3321,56 @@
       "value": "Беги к цели!"
     },
     {
-      "key": "wind_speedrun_title",
-      "value": "Ветер меняется!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "меньше INK Сильнее ветра"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "Время {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "Время вышло"
-    },
-    {
       "key": "umbrella_rain_title",
-      "value": "Оставайтесь под Умбреллой!"
+      "value": "Не попадай под дождь"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "RAIN KNOCKS YOU OUT - RACH SHELTER смотреть онлайн"
+      "value": "Не попадай под дождь"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "Все были в дожде!"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -3337,8 +3761,72 @@
       "value": "ЗАКРОЙТЕ ОТВЕРСТИЯ!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "РАУНД {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "КРУГЛЫЙ {0}/3 {1:0.0} СЛЕВА"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "КРУГЛЫЙ {0} ЧИСТО!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "ВРЕМЯ ВЫШЛО!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "ПОВТОРНАЯ ПОПЫТКА ЭТОГО РАУНДА"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "ПОСТАВЬТЕ СООТВЕТСТВУЮЩУЮ ЧЕЛОВЕЧЕСКУЮ ПОЗУ В ЗАМОЧНУЮ СКВАРЕ!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "НАЙДИТЕ ПОДХОДЯЩУЮ ПОЗУ СРЕДИ ПЛАВАЮЩИХ ПТИЦ!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "ПРОНЕСИТЕ ЧЕРЕПАХУ ЧЕРЕЗ КОМНАТУ, ПОЛНУЮ ПРУЖИНАМИ!"
+    },
+    {
       "key": "tilt_board_monitor",
       "value": "рычать {0}/3    {1:0.0}Слева"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "РАУНД {0}/3 НАЧИНАЕТСЯ В {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "ВЫ МОЖЕТЕ Двигаться внутри своей полосы во время обратного отсчета."
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "КРУГЛЫЙ {0}/3 ЯЩИКА {1}/{2} {3} СЛЕВА."
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "РАЗБИВАЙТЕ ЯЩИКИ СЛИЗЯНЫМ ШИПОМ!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "РАЗБИВАЙТЕ МАЛЕНЬКИЕ ЯЩИКИ!  СМОТРИТЕ НА ВРАГОВ!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "КРУГЛЫЙ {0} ЧИСТО!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "ИГРА ЗАВЕРШЕНА ПОВТОР РАУНДА {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "ВСЕ РАУНДЫ ЧИСТО!"
     },
     {
       "key": "tilt_board_progress",
@@ -3391,6 +3879,34 @@
     {
       "key": "ricochet_title",
       "value": "10-3 Рикошет Релей"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  УБЕГИ ОТ ГИГАНТСКОГО КОТА!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ОЖИДАНИЕ {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "СТАРТ ЧЕРЕЗ {0}"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "БЕГИ!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "КОМАНДНЫЕ ЦАРАПИНЫ  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
     },
     {
       "key": "ricochet_round",
@@ -3726,7 +4242,7 @@
     },
     {
       "key": "debug_stage",
-      "value": "1-0 Debug"
+      "value": "1-0 Отладка"
     },
     {
       "key": "stage_editor_open",
@@ -3794,7 +4310,7 @@
     },
     {
       "key": "option_bgm",
-      "value": "БГМ"
+      "value": "BGM"
     },
     {
       "key": "option_se",
@@ -3838,7 +4354,7 @@
     },
     {
       "key": "label_ball_hit",
-      "value": "5 Ball Hit"
+      "value": "5 мячей"
     },
     {
       "key": "stage_editor_quick",
@@ -4017,6 +4533,34 @@
       "value": "Сгенерированный во время выполнения звук"
     },
     {
+      "key": "gameplay_control_switch",
+      "value": "Сменить персонажа"
+    },
+    {
+      "key": "feedback_button",
+      "value": "ОТЗЫВ / СООБЩИТЬ ОБ ОШИБКЕ"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "Спасибо за игру!\nОтзыв / Сообщить об ошибке"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "В ЖЕЛАЕМОЕ"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "РЕКОМЕНДУЕТСЯ МУЛЬТИПЛЕЕР!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "В NICO DRAW веселее играть сообща!\nПопробуйте сыграть вдвоём, втроём или вчетвером!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "ХОРОШО."
+    },
+    {
       "key": "stage_object_background_paw_print",
       "value": "Печать лапы"
     },
@@ -4042,7 +4586,7 @@
     },
     {
       "key": "stage_object_background_blizzard",
-      "value": "Blizzard"
+      "value": "Снежная буря"
     },
     {
       "key": "stage_object_background_feather",
@@ -4255,494 +4799,6 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Корень дерева"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "БЕГИ!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "СТАРТ ЧЕРЕЗ {0}"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "ОЖИДАНИЕ {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  УБЕГИ ОТ ГИГАНТСКОГО КОТА!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "КОМАНДНЫЕ ЦАРАПИНЫ  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "Сменить персонажа можно только на полу перерисовки."
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "НАЗАД"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "Ожидание ответа от {0}.\nЗапрошенный обмен: {1} на {2}."
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "ЗАПРОС НА ОБМЕН ОТПРАВЛЕН"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "Начать этот уровень заново?"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "ЕЩЁ РАЗ"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "Завершить текущий уровень и вернуться к выбору уровня?"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "Незавершённые изменения не будут сохранены. Вернуться без сохранения?"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "ВЕРНУТЬСЯ БЕЗ СОХРАНЕНИЯ"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "Перерисованный персонаж сохранён."
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "Не удалось сохранить. Нажмите «ГОТОВО» ещё раз."
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "ВЫБОР УРОВНЯ"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "Сетевая игра недоступна: игровые данные или версия не совпадают. Проверьте целостность файлов игры в Steam."
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "Соединение с сессией потеряно. Войдите в комнату снова."
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "Хост отключился, поэтому комната была закрыта."
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "ОТМЕНА"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "СБРОС"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "СБРОСИТЬ ПРОГРЕСС"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "Сбросить прохождение всех уровней?\nГромкость, язык, имя игрока и рисунки будут сохранены."
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "Прогресс уровней сброшен."
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "СБРОСИТЬ ПРОГРЕСС"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "БЕГИ."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "Сменить персонажа"
-    },
-    {
-      "key": "feedback_button",
-      "value": "ОТЗЫВ / СООБЩИТЬ ОБ ОШИБКЕ"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "Спасибо за игру!\nОтзыв / Сообщить об ошибке"
-    },
-    {
-      "key": "option_complete",
-      "value": "ГОТОВО"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "ЭКРАН: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "РАЗРЕШЕНИЕ: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "ПОЛНЫЙ ЭКРАН"
-    },
-    {
-      "key": "option_windowed",
-      "value": "ОКОННЫЙ РЕЖИМ"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "Запустите Steam, затем откройте NICO DRAW из библиотеки Steam."
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "Не удалось получить билет аутентификации Steam: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "В ЖЕЛАЕМОЕ"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "РЕКОМЕНДУЕТСЯ МУЛЬТИПЛЕЕР!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "В NICO DRAW веселее играть сообща!\nПопробуйте сыграть вдвоём, втроём или вчетвером!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "OK"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "Выйти из NICO DRAW?"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} уже использует этого персонажа. Отправить запрос на обмен?"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "ОТПРАВИТЬ ЗАПРОС"
-    },
-    {
-      "key": "background_word_push",
-      "value": "ТОЛКАЙ!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "ДЕРЖАТЬ КРЕСТ / A: КВАДРАТ Скольжения / X: ЗАХВАТЬ"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "КВАДРАТ / X: ЦАРАПАТЬ / ЗАХВАТЬ"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "КВАДРАТ / X: БРОСОК"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "КВАДРАТ / X: ШИП К ПРАВОМУ КЛЮЧУ"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "ДЕРЖАТЬ КРЕСТ / A: SHELL HOLD SQUARE / X: ПОВОРОТ НА 90°"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "УДЕРЖИВАНИЕ КРЕСТОВОГО: СКОЛЬЖЕНИЕ КВАДРАТ: ЗАХВАТ"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "КВАДРАТ: ЦАРАПАТЬ / ЗАХВАТЬ"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "КВАДРАТ: БРОСОК"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "КВАДРАТ: ШИП К ПРАВОМУ ДУШКЕ"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "УДЕРЖИВАНИЕ КРЕСТОВОГО: ОБОЛОЧКА УДЕРЖИВАЮЩЕГО КВАДРАТ: ПОВОРОТ НА 90°"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "УДЕРЖИВАЙТЕ A: ПЛАВЬТЕ X: ЗАХВАТАЙТЕ"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "X: ЦАРАПАТЬ/ЗАХВАТЬ"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "Х: БРОСАТЬ"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: ШИП К ПРАВОМУ КЛЮЧУ"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "УДЕРЖИВАНИЕ A: УДЕРЖИВАНИЕ ОБОЛОЧКИ X: ПОВОРОТ НА 90°"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "БЕЗ ОГРАНИЧЕНИЙ ПО ВРЕМЕНИ"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "НЕ ВКЛЮЧЕНО В ДЕМО"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "ЛЕВАЯ КАЛКА: ДВИЖЕНИЕ RT / A / B: НАРИСОВАНИЕ И ВЫБОР LT: СТЕРЕТЬ"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: РИСОВАТЬ MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: НАРИСОВАТЬ MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / ВЫБОР: РИСОВАТЬ MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: РИСОВАТЬ MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: НАРИСОВАТЬ MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: РИСОВАТЬ MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: НАРИСОВАТЬ MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "В: ПЕРЕКЛЮЧЕНИЕ ПЕРСОНАЖА"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "ТРЕУГОЛЬНИК / Y: ПЕРЕКЛЮЧЕНИЕ СИМВОЛА"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "ТРЕУГОЛЬНИК: ПЕРЕКЛЮЧЕНИЕ ПЕРСОНАЖА"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "Y: ПЕРЕКЛЮЧЕНИЕ ПЕРСОНАЖА"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "КОМАНДНЫЙ ИТОГО БОЛЬШЕ"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "ИГРА ЗАВЕРШЕНА\nВСЕГО {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "ПОВТОРИТЬ ЧЕРЕЗ {0}"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "ОЧИСТИТЬ В ТЕЧЕНИЕ {0} ВСЕГО"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "ИТОГО {0} / {1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "Автоматический (клавиатура/геймпад)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "Геймпад (отключен)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "Клавиатура + мышь"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "P{0} ГЕЙМПАД ОТКЛЮЧЕН. ПЕРЕСОЕДИНИТЕ ЕГО, ЧТОБЫ ВОССТАНОВИТЬ ТО ЖЕ ПЛЕЕР."
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "P{0} ГЕЙМПАД ПЕРЕСОЕДИНЕН."
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "КЛАВИАТУРА/МЫШЬ ОТПУЩЕНА ИЗ P1. НАЖМИТЕ КНОПКУ КОНТРОЛЛЕРА, ЧТОБЫ ЗАЯВИТЬ P1."
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "НЕНАЗНАЧЕННАЯ ПАНЕЛЬ: START ДЛЯ ПРИСОЕДИНЕНИЯ / КЛАВИАТУРА: ENTER ДЛЯ ПРИСОЕДИНЕНИЯ, BACKSPACE ДЛЯ ВЫХОДА / P2: SELECT + B ДЛЯ ВЫХОДА"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "P{0} СОЕДИНЕН ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "P{0} СЛЕВА."
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "ДО 2 ИГРОКОВ НА УСТРОЙСТВО И ВСЕГО 4 ИГРОКОВ В КОМНАТЕ."
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "КОМНАТА ПОЛНА (4 ИГРОКА). ЛИШНИЙ ЛОКАЛЬНЫЙ ИГРОК БЫЛ УДАЛЕН."
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "P1 ПЕРЕКЛЮЧЕН НА {0}."
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "2 игрока готовы"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: ПРИСОЕДИНЯЙТЕСЬ"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "НАЖМИТЕ ЛЮБУЮ КНОПКУ КОНТРОЛЛЕРА, ЧТОБЫ ПРИСОЕДИНИТЬСЯ"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "ЛОКАЛЬНАЯ ИГРА {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "ДОБАВЬТЕ ИЛИ УДАЛИТЕ ЛОКАЛЬНЫХ ИГРОКОВ ПЕРЕД НАЧАЛОМ ЭТАПА."
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "ПАД {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "ИГРОКОВ {0}/2\nКЛАВИАТУРА: ENTER ДЛЯ ПРИСОЕДИНЕНИЯ / BACKSPACE ДЛЯ ВЫХОДА\nКОНТРОЛЛЕР: START ДЛЯ ПРИСОЕДИНЕНИЯ / УДЕРЖИВАЙТЕ B ДЛЯ ВЫХОДА"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "ЛОКАЛЬНЫЕ ИГРОКИ {0}/2 ПОДКЛЮЧЕННЫЕ ПЛОЩАДКИ {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "Не удалось создать комнату. Повторная попытка через {0} с (осталось {1} попыток)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "НАЙДИТЕ ПОДХОДЯЩУЮ ПОЗУ СРЕДИ ПЛАВАЮЩИХ ПТИЦ!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "ПОСТАВЬТЕ СООТВЕТСТВУЮЩУЮ ЧЕЛОВЕЧЕСКУЮ ПОЗУ В ЗАМОЧНУЮ СКВАРЕ!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "КРУГЛЫЙ {0}/3 {1:0.0} СЛЕВА"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "ПОВТОРНАЯ ПОПЫТКА ЭТОГО РАУНДА"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "РАУНД {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "КРУГЛЫЙ {0} ЧИСТО!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "ВРЕМЯ ВЫШЛО!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "ПРОНЕСИТЕ ЧЕРЕПАХУ ЧЕРЕЗ КОМНАТУ, ПОЛНУЮ ПРУЖИНАМИ!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "ПРОЯВЛЯЕТСЯ, ЕСЛИ ОБЩЕЕ ВРЕМЯ ФИНИША КАЖДОГО ИГРОКА НАХОДИТСЯ В пределах 1 МИНУТЫ."
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "ВСЕ РАУНДЫ ЧИСТО!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "РАЗБИВАЙТЕ МАЛЕНЬКИЕ ЯЩИКИ!  СМОТРИТЕ НА ВРАГОВ!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "РАЗБИВАЙТЕ ЯЩИКИ СЛИЗЯНЫМ ШИПОМ!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "КРУГЛЫЙ {0}/3 ЯЩИКА {1}/{2} {3} СЛЕВА."
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "ИГРА ЗАВЕРШЕНА ПОВТОР РАУНДА {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "КРУГЛЫЙ {0} ЧИСТО!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "Наблюдение: {0} Переключайтесь с помощью ← / →"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "РАУНД {0}/3 НАЧИНАЕТСЯ В {1}"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "ВЫ МОЖЕТЕ Двигаться внутри своей полосы во время обратного отсчета."
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "РОЗЫГРЫШ ТИТУЛА НЕДОСТУПЕН ВО ВРЕМЯ ЛОКАЛЬНОЙ КООПЕРАЦИИ. СНАЧАЛА ВЕРНУТЬСЯ К 1 ИГРОКУ."
     }
   ]
 }

@@ -60,6 +60,7 @@ namespace DrawBody.Prototype
         private RectTransform popup;
         private RectTransform layer;
         private bool active;
+        internal int WalkerCountForTest => walkers.Count;
 
         public void Begin(StageManager stageManager, RectTransform popupRoot)
         {
@@ -351,13 +352,27 @@ namespace DrawBody.Prototype
             }
 
             LineRenderer[] lines = root.GetComponentsInChildren<LineRenderer>(true);
+            // Elimination challenges hide a defeated character by disabling all
+            // of its renderers. The clear parade is a data snapshot rather than
+            // a copy of current visibility, so fall back to those disabled body
+            // strokes when no drawable line remains. This keeps every lobby
+            // participant in the celebration without enabling gameplay objects.
+            bool hasEnabledLine = false;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i] != null && lines[i].enabled && lines[i].positionCount >= 2)
+                {
+                    hasEnabledLine = true;
+                    break;
+                }
+            }
             List<PendingStroke> pending = new List<PendingStroke>();
             Bounds bounds = default;
             bool hasBounds = false;
             for (int i = 0; i < lines.Length; i++)
             {
                 LineRenderer line = lines[i];
-                if (line == null || !line.enabled || line.positionCount < 2)
+                if (line == null || line.positionCount < 2 || (!line.enabled && hasEnabledLine))
                 {
                     continue;
                 }

@@ -928,7 +928,16 @@ namespace DrawBody.Prototype
             StageObjectData data = StageObjectFactory.CreateDefaultData(StageObjectType.Goal, position);
             data.objectId = "2-3_goal";
             data.size = new Vector2(2.2f, 3.2f);
-            factory?.Create(data, transform);
+            GameObject goal = factory?.Create(data, transform);
+            // The visible double door is wider than Goal's generic trigger. In
+            // 2-3 several cats can arrive side by side, so accept the full doorway
+            // without changing its artwork.
+            BoxCollider2D trigger = goal != null ? goal.GetComponent<BoxCollider2D>() : null;
+            if (trigger != null)
+            {
+                trigger.size = new Vector2(3.6f, 1.05f);
+                trigger.offset = new Vector2(0f, 0.05f);
+            }
         }
 
         private void BuildMonitor()

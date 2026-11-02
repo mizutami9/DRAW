@@ -581,17 +581,39 @@ namespace DrawBody.Prototype
 
         private IEnumerator PositionPlayersAfterSetup()
         {
-            yield return null;
+            // Stage controllers are created while the online roster and local
+            // player list are still settling. The host commonly reaches this
+            // coroutine first; a one-frame scan therefore skipped its own avatar
+            // permanently while participants happened to work.
+            for (int frame = 0; frame < 120
+                    && stageManager != null
+                    && stageManager.LocalPlayers.Count == 0; frame++)
+                yield return null;
             if (arenaRoot == null || stageManager == null || stageManager.CurrentStageId != StageId) yield break;
 
-            PlayerController2D[] players = Object.FindObjectsByType<PlayerController2D>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-            int placed = 0;
-            for (int i = 0; i < players.Length; i++)
+            System.Collections.Generic.IReadOnlyList<PlayerController2D> players = stageManager.LocalPlayers;
+            for (int i = 0; i < players.Count; i++)
             {
                 PlayerController2D player = players[i];
-                if (IsOnline && !stageManager.IsLocallyControlledPlayer(player)) continue;
-                Vector2 position = new Vector2(-12.35f + placed * 1.15f, FloorY + 1.35f);
+                if (player == null) continue;
+                int lane = i;
+                if (IsOnline && onlineManager?.CurrentLobby != null)
+                {
+                    lane = PlayerColorPalette.GetLobbyPlayerSlot(
+                        onlineManager.CurrentLobby,
+                        stageManager.GetOnlinePlayerId(player));
+                    if (lane < 0) lane = i;
+                }
+                Vector2 position = new Vector2(-12.35f + lane * 1.15f, FloorY + 1.35f);
+                // Online body/ready-room initialization can leave the locally
+                // owned host body in its temporary non-solid state for this
+                // stage's one-frame relocation. Restore the accepted drawing
+                // before enabling controls so host and participant start alike.
+                player.GetComponent<PlayerRedrawStateController>()?.SetRedrawing(false);
+                BodyBuilder builder = player.GetComponent<BodyBuilder>();
+                builder?.SetNetworkBodyReady(true);
+                builder?.RestoreAfterRespawnOrRetry();
+                builder?.EnsureGeneratedBodyCollidersEnabled();
                 Rigidbody2D body = player.GetComponent<Rigidbody2D>();
                 if (body != null)
                 {
@@ -604,7 +626,6 @@ namespace DrawBody.Prototype
                 else player.transform.position = position;
                 player.ResetMotion();
                 stageManager.RecordAssignedPlayerStart(player, position);
-                placed++;
             }
             Physics2D.SyncTransforms();
         }

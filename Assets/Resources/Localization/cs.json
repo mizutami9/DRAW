@@ -21,6 +21,50 @@
       "value": "REGISTR"
     },
     {
+      "key": "option_reset_progress",
+      "value": "RESETOVAT POSTUP"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "RESETOVAT POSTUP"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Resetovat záznamy o dokončení všech úrovní?\nHlasitost, jazyk, jméno hráče a kresby zůstanou zachovány."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Postup úrovněmi byl resetován."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "RESETOVAT"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ZRUŠIT"
+    },
+    {
+      "key": "option_complete",
+      "value": "HOTOVO"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "ZOBRAZENÍ: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "ROZLIŠENÍ: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "CELÁ OBRAZOVKA"
+    },
+    {
+      "key": "option_windowed",
+      "value": "REŽIM OKNA"
+    },
+    {
       "key": "lang_ja",
       "value": "japonsky"
     },
@@ -130,7 +174,7 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "Vytáhněte {0}."
     },
     {
       "key": "head",
@@ -206,7 +250,7 @@
     },
     {
       "key": "arm_normal",
-      "value": "Normal Reach"
+      "value": "Normální dosah"
     },
     {
       "key": "arm_long",
@@ -258,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "HUMAN"
+      "value": "LIDÉ"
     },
     {
       "key": "ability_card_cat",
@@ -274,7 +318,7 @@
     },
     {
       "key": "ability_card_slime",
-      "value": "SLIME"
+      "value": "SLIMOVÁ"
     },
     {
       "key": "ability_description_human",
@@ -298,15 +342,15 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: THROW"
+      "value": "FVYRÁŽET:"
     },
     {
       "key": "ability_control_cat",
-      "value": "F: SCRATCH / GRAB"
+      "value": "F: ŠKRÁBÁNÍ / CHYTÁNÍ"
     },
     {
       "key": "ability_control_bird",
-      "value": "HOLD SPACE: GLIDE  F: GRAB"
+      "value": "POČKEJTE. SPACE: ŠPLHÁNÍ  F- ZASTAVTE:"
     },
     {
       "key": "ability_control_turtle",
@@ -315,6 +359,114 @@
     {
       "key": "ability_control_slime",
       "value": "F: UPWARD SPIKE ATTACK"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "ČTVEREC / X: HOĎ"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "QUARE / X: SCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "DRŽTE KŘÍŽ / A: KLOUZEJTE ČTVEREC / X: chyťte"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "HOLD CROSS / A: SHELL HOLD QUARE / X: OTOČENÍ O 90°"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "SQUARE / X: SPIKE SMĚREM K PRAVÉ PALICE"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "TROJÚHELNÍK / Y: PŘEPNĚTE ZNAK"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Otázka: PŘEPNĚTE ZNAK"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "VYTVOŘIT / VYBRAT: KRESLIT MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: KRESLIT MENU\nESCMENU:"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: KRESLIT MENU"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "SQUARE: HOĎ"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "QUARE: SCRATCH / GRAB"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "DRŽTE KŘÍŽ: KLOUZTE NÁMĚSTNÍK: chyťte se"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "UCHYCOVACÍ KŘÍŽ: SHELL HOLD QUATRO: OTOČENÍ O 90°"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "SQUARE: SPIKE SMĚREM K PRAVÉ PALICE"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: HOĎ"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: ŠKRABNOUT / UCHYTIT"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "DRŽET A: KLOUZAT X: UCHYTIT"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "DRŽENÍ A: SHELL DRŽENÍ X: OTOČENÍ O 90°"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: KOUKOU SMĚREM K PRAVÉ TYČCE"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "TROJÚHELNÍK: PŘEPNĚTE ZNAK"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: PŘEPNĚTE ZNAK"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "VYTVOŘIT: KRESLIT MENU MOŽNOSTI: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VYHLED: KRESLIT MENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "VYTVOŘTE MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VYHLED: MENU KRESLIT"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "NENÍ ZAHRNUTO V DEMO"
     },
     {
       "key": "ability_effect_human_combined",
@@ -378,7 +530,7 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JUMP"
+      "value": "SKOČ ."
     },
     {
       "key": "ability_human_arm_gauge",
@@ -386,7 +538,7 @@
     },
     {
       "key": "ability_cat_back_leg_gauge",
-      "value": "RUN"
+      "value": "BĚŽTE."
     },
     {
       "key": "ability_cat_front_leg_gauge",
@@ -394,11 +546,11 @@
     },
     {
       "key": "ability_bird_gauge",
-      "value": "GLIDE"
+      "value": "SKLÁDÁNÍ"
     },
     {
       "key": "ability_turtle_gauge",
-      "value": "DEFENSE"
+      "value": "OBRANA"
     },
     {
       "key": "ability_slime_gauge",
@@ -410,11 +562,11 @@
     },
     {
       "key": "ability_slime_gauge_low",
-      "value": "LIGHT: GRIP UP"
+      "value": "SVĚTLO: DRŽTE SE"
     },
     {
       "key": "ability_slime_gauge_high",
-      "value": "HEAVY: SPEED + JUMP UP"
+      "value": "TĚŽKÝ: RYCHLOST + SKOK NAHORU"
     },
     {
       "key": "ability_slime_badge",
@@ -442,11 +594,103 @@
     },
     {
       "key": "label_far_lever",
-      "value": "3 Far Lever"
+      "value": "3 Vzdálenost"
     },
     {
       "key": "label_narrow_hole",
       "value": "4 Úzká díra"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Klávesnice + myš"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (odpojený)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automaticky (klávesnice / gamepad)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD ODPOJEN. ZNOVU HO PŘIPOJTE A OBNOVTE STEJNÝ PŘEHRÁVAČ."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD ZNOVU PŘIPOJEN."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} PŘIPOJEN ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "AŽ 2 HRÁČI NA ZAŘÍZENÍ A CELKEM 4 HRÁČI V MÍSTNOSTI."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "PŘIDEJTE NEBO ODEBRAŇTE MÍSTNÍ HRÁČE PŘED ZAHÁJENÍM FÁZE."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "MÍSTNOST JE PLNÁ (4 HRÁČI). EXTRA MÍSTNÍ HRÁČ BYL ODEBRAN."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "NEPŘIZŘAZENÝ PODLOŽKA: START PRO PŘIPOJENÍ / KLÁVESNICE: ENTER PRO PŘIPOJENÍ, BACKSPACE PRO ODCHOD / P2: SELECT + B PRO ODCHOD"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "MÍSTNÍ HRÁČI {0}/2 PŘIPOJENÉ PODLOŽKY {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "MÍSTNÍ HRANÍ {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PÁSKA {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "PŘIPOJTE SE STISKNĚTE JAKÉKOLI TLAČÍTKO NA OVLADAČE"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: PŘIPOJTE SE"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 HRÁČI PŘIPRAVENI"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "HRÁČI {0}/2\nKLÁVESNICE: ENTER PŘIPOJIT SE / BACKSPACE ODEŠLI\nOVLÁDAČ: START PŘIPOJIT SE / ODEJÍT DRŽENÍM B"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 PŘEPNUTO NA {0}."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "KLÁVESNICE/MYŠ UVOLNĚNÁ Z P1. STISKNĚTE TLAČÍTKO OVLADAČE PRO NÁROKOVÁNÍ P1."
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} VLEVO."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "LOSOVÁNÍ TITULŮ JE NEDOSTUPNÉ BĚHEM MÍSTNÍHO CO-OP. NEJPRVE NÁVRAT K 1 HRÁČI."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "LEVÁ PÁČKA: POHYB RT / A / B: DRAW & SELECT LT: ERASE"
     },
     {
       "key": "multi_room_setup",
@@ -497,6 +741,10 @@
       "value": "FÁZE {0} / {1}"
     },
     {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
+    },
+    {
       "key": "tower_defense_time_remaining",
       "value": "ČAS {0:0.0}"
     },
@@ -517,8 +765,28 @@
       "value": "Defense Clear!"
     },
     {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
+    },
+    {
       "key": "value_coin_amount",
-      "value": "COIN {0} / {1}"
+      "value": "MINCE {0} / {1}"
     },
     {
       "key": "value_coin_time",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "VYTÁHNĚTE"
     },
     {
       "key": "title_option",
@@ -573,8 +841,12 @@
       "value": "Ukončit"
     },
     {
+      "key": "title_exit_confirm",
+      "value": "Ukončit NICO DRAW?"
+    },
+    {
       "key": "title_debug",
-      "value": "DEBUG"
+      "value": "DEBUGOVÁNÍ"
     },
     {
       "key": "trailer_debug_title",
@@ -590,7 +862,7 @@
     },
     {
       "key": "trailer_debug_start",
-      "value": "START SEQUENCE"
+      "value": "ZAČNĚTE SEKVENCI"
     },
     {
       "key": "trailer_debug_back",
@@ -629,6 +901,10 @@
       "value": "Osoby se mohou měnit jen v opravném pokoji."
     },
     {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Postavu lze změnit pouze na podlaze pro překreslení."
+    },
+    {
       "key": "trailer_debug_capture_help",
       "value": "R REPLAY H HIDE HUD     ESC  HLAVA"
     },
@@ -646,7 +922,7 @@
     },
     {
       "key": "trailer_tas_play",
-      "value": "F10 PLAY ALL"
+      "value": "F10 HRAJE VŠECHNY"
     },
     {
       "key": "trailer_tas_reset",
@@ -658,7 +934,7 @@
     },
     {
       "key": "trailer_tas_pause",
-      "value": "P PAUSE"
+      "value": "P PŘESTÁVKA"
     },
     {
       "key": "trailer_tas_step",
@@ -666,7 +942,7 @@
     },
     {
       "key": "trailer_tas_status_idle",
-      "value": "IDLE"
+      "value": "NEÚČINNÁ"
     },
     {
       "key": "trailer_tas_status_recording",
@@ -686,7 +962,7 @@
     },
     {
       "key": "trailer_tas_preset_format",
-      "value": "PRESET {0}"
+      "value": "PŘEDEM NASTAVENÍ {0}"
     },
     {
       "key": "trailer_tas_save_preset",
@@ -705,12 +981,44 @@
       "value": "Název"
     },
     {
+      "key": "menu_retry_confirm_message",
+      "value": "Restartovat tuto úroveň od začátku?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ZNOVU"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Ukončit aktuální úroveň a vrátit se k výběru úrovně?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "VÝBĚR ÚROVNĚ"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "Nedokončené změny nebudou uloženy. Vrátit se bez uložení?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "ZPĚT BEZ ULOŽENÍ"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Překreslená postava byla uložena."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Uložení se nezdařilo. Stiskněte znovu „HOTOVO“."
+    },
+    {
       "key": "language_settings",
       "value": "Nastavení jazyka"
     },
     {
       "key": "multi_play",
-      "value": "MULTI PLAY"
+      "value": "MULTIPLAY"
     },
     {
       "key": "multi_random_button",
@@ -794,7 +1102,7 @@
     },
     {
       "key": "multi_lobby_id_placeholder",
-      "value": "Enter Lobby ID"
+      "value": "Enter Identifikace lobby"
     },
     {
       "key": "multi_join",
@@ -806,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "ROOM LOBBY"
+      "value": "V LOBBY MÍSTNOSTI"
     },
     {
       "key": "multi_lobby_status_default",
@@ -818,7 +1126,7 @@
     },
     {
       "key": "multi_start_stage_1_1",
-      "value": "Start 1-1"
+      "value": "Začátek 1-1"
     },
     {
       "key": "multi_stage_select",
@@ -898,7 +1206,7 @@
     },
     {
       "key": "multi_local",
-      "value": "Místní"
+      "value": "Local"
     },
     {
       "key": "multi_ready",
@@ -910,7 +1218,7 @@
     },
     {
       "key": "multi_host",
-      "value": "HOST"
+      "value": "HOSTITEL"
     },
     {
       "key": "multi_default_room_name",
@@ -929,6 +1237,10 @@
       "value": "TY"
     },
     {
+      "key": "spectator_following",
+      "value": "Diváci: {0} Přepněte pomocí ← / →"
+    },
+    {
       "key": "online_player_host",
       "value": "Hostitel"
     },
@@ -943,6 +1255,18 @@
     {
       "key": "online_fake_initialized",
       "value": "Falešný backend zahájen."
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Online hra není dostupná, protože herní data nebo verze nesouhlasí. Ověřte soubory hry ve službě Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Hostitel se odpojil, místnost byla uzavřena."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Spojení s relací bylo přerušeno. Připojte se prosím znovu k místnosti."
     },
     {
       "key": "online_logging_in",
@@ -1041,6 +1365,14 @@
       "value": "EOS přihlášení selhalo: {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "Spusťte Steam a poté NICO DRAW z knihovny služby Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Nepodařilo se získat ověřovací tiket služby Steam: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "EOS vytvořit lobby selhala: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "Vyhledávání kódů pokoje selhalo: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Vytvoření místnosti se nezdařilo. Další pokus za {0} s (zbývá {1} pokusů)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1197,16 +1533,32 @@
       "value": "{0} chce vyměnit váš {1} místo {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} již používá tuto postavu. Odeslat žádost o výměnu?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "ODESLAT ŽÁDOST"
+    },
+    {
       "key": "draw_species_swap_accept",
-      "value": "SWAP"
+      "value": "ZMĚNA"
     },
     {
       "key": "draw_species_swap_reject",
-      "value": "DECLINE"
+      "value": "ÚPADEK"
     },
     {
       "key": "draw_species_swap_pending",
       "value": "Čekám na odpověď na žádost o výměnu..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "ŽÁDOST O VÝMĚNU ODESLÁNA"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Čeká se na odpověď hráče {0}.\nPožadovaná výměna: {1} za {2}."
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1222,11 +1574,11 @@
     },
     {
       "key": "stage_object_grain_emitter",
-      "value": "GRAIN DISPENSER"
+      "value": "DISPEČER Z OBILOVIN"
     },
     {
       "key": "stage_object_grain_scale",
-      "value": "100g SCALE"
+      "value": "100 g SCALE"
     },
     {
       "key": "stage_object_grain_gate",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "Začátek zkoušky: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "Pohyb P{0}Zkušební startní pozice."
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "P{0} start zkoušky: X {1:0.00} / Y {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1374,7 +1734,7 @@
     },
     {
       "key": "stage_editor_copy_down",
-      "value": "↓ DOWN"
+      "value": "↓ DOLŮ"
     },
     {
       "key": "stage_editor_copy_left",
@@ -1382,7 +1742,7 @@
     },
     {
       "key": "stage_editor_copy_up",
-      "value": "↑ UP"
+      "value": "↑ NAHORU"
     },
     {
       "key": "stage_editor_status_copy_direction",
@@ -1542,7 +1902,7 @@
     },
     {
       "key": "stage_editor_weight_threshold",
-      "value": "Per Player"
+      "value": "Pro každého hráče"
     },
     {
       "key": "stage_editor_status_weight_threshold",
@@ -1574,11 +1934,11 @@
     },
     {
       "key": "draw_undo_once",
-      "value": "UNDO"
+      "value": "ODSTRANĚNO"
     },
     {
       "key": "draw_reset_all",
-      "value": "RESET ALL"
+      "value": "VŠE RESETOVAT"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1590,7 +1950,7 @@
     },
     {
       "key": "draw_reset_confirm_yes",
-      "value": "RESET"
+      "value": "PŘESTAVBA"
     },
     {
       "key": "draw_reset_confirm_no",
@@ -1609,6 +1969,10 @@
       "value": "5- PRÉZY"
     },
     {
+      "key": "draw_preset_back",
+      "value": "ZPĚT"
+    },
+    {
       "key": "draw_preset_five_species",
       "value": "LIDSKÉ KOCOUR BARDTURLY SLIME"
     },
@@ -1618,7 +1982,7 @@
     },
     {
       "key": "draw_preset_slot",
-      "value": "SLOT {0}"
+      "value": "ZÁKLADNÍ DÍL {0}"
     },
     {
       "key": "draw_preset_saved",
@@ -1626,7 +1990,7 @@
     },
     {
       "key": "draw_preset_empty",
-      "value": "EMPTY"
+      "value": "PRÁZDNÉ"
     },
     {
       "key": "draw_preset_register",
@@ -1634,7 +1998,7 @@
     },
     {
       "key": "draw_preset_apply",
-      "value": "SET"
+      "value": "ZESTAV"
     },
     {
       "key": "draw_preset_save_confirm_title",
@@ -1678,7 +2042,7 @@
     },
     {
       "key": "stage_object_background_cloud",
-      "value": "Cloud"
+      "value": "Oblak"
     },
     {
       "key": "stage_object_background_push",
@@ -1730,7 +2094,7 @@
     },
     {
       "key": "stage_object_background_rainbow",
-      "value": "Rainbow"
+      "value": "Vlněná boucha"
     },
     {
       "key": "stage_object_background_mountain",
@@ -1762,7 +2126,7 @@
     },
     {
       "key": "stage_object_background_ice_cream",
-      "value": "Ice Cream"
+      "value": "Ledové krémy"
     },
     {
       "key": "stage_object_background_coffee_cup",
@@ -1846,7 +2210,7 @@
     },
     {
       "key": "stage_object_background_gem",
-      "value": "Gem"
+      "value": "Důvěry"
     },
     {
       "key": "stage_object_background_coin",
@@ -1858,7 +2222,7 @@
     },
     {
       "key": "stage_object_background_light_bulb",
-      "value": "Light Bulb (Idea)"
+      "value": "Žárovka (představa)"
     },
     {
       "key": "stage_object_background_gear",
@@ -1894,11 +2258,11 @@
     },
     {
       "key": "stage_object_background_loop_arrow",
-      "value": "Loop Arrow"
+      "value": "PŘIPRAVTE MI ŠÍPY."
     },
     {
       "key": "stage_object_background_jump",
-      "value": "JUMP!"
+      "value": "SKÁČEJTE!"
     },
     {
       "key": "stage_object_background_throw",
@@ -1978,7 +2342,7 @@
     },
     {
       "key": "stage_editor_snap_attach",
-      "value": "Snap"
+      "value": "Vytáhnout"
     },
     {
       "key": "stage_editor_link_source",
@@ -2018,7 +2382,7 @@
     },
     {
       "key": "stage_goal_label",
-      "value": "GOAL"
+      "value": "ÚČELEM"
     },
     {
       "key": "stage_room_number",
@@ -2026,15 +2390,19 @@
     },
     {
       "key": "stage_weapon_bomb",
-      "value": "BOMB"
+      "value": "BOMBA"
     },
     {
       "key": "stage_weapon_missile",
-      "value": "MISSILE"
+      "value": "RAKETA"
     },
     {
       "key": "stage_ready_label",
       "value": "Připraven"
+    },
+    {
+      "key": "background_word_push",
+      "value": "TLAČ!"
     },
     {
       "key": "stage_dynamite_label",
@@ -2142,7 +2510,7 @@
     },
     {
       "key": "stage_object_spawn",
-      "value": "Start"
+      "value": "Začněte"
     },
     {
       "key": "stage_object_goal",
@@ -2174,7 +2542,7 @@
     },
     {
       "key": "stage_object_slippery_slope",
-      "value": "Slippery Slope"
+      "value": "Slippery slope"
     },
     {
       "key": "stage_object_climbable_wall",
@@ -2190,7 +2558,7 @@
     },
     {
       "key": "stage_object_cloud_platform",
-      "value": "Cloud Floor"
+      "value": "Podlaha z mraků"
     },
     {
       "key": "stage_object_breakable_floor",
@@ -2226,7 +2594,7 @@
     },
     {
       "key": "ricochet_breaker_start_in",
-      "value": "START IN {0}"
+      "value": "ZAČNĚTE. {0}"
     },
     {
       "key": "ricochet_enemy_round",
@@ -2262,15 +2630,15 @@
     },
     {
       "key": "stage_object_spike_planet",
-      "value": "Spike Planet"
+      "value": "TOŽE PLANETY."
     },
     {
       "key": "stage_object_enemy_flyer_zigzag",
-      "value": "Zigzag Flyer"
+      "value": "ZYGZAGOVÉ LETÍCÍ NEPŘÁTELÉ."
     },
     {
       "key": "stage_object_enemy_flyer_orbit",
-      "value": "Orbit Flyer"
+      "value": "VRÁTE SE DO OBLOHY, NEPŘÁTELÉ."
     },
     {
       "key": "stage_object_bazooka",
@@ -2418,7 +2786,7 @@
     },
     {
       "key": "stage_object_shutter",
-      "value": "Shutter"
+      "value": "Zámek"
     },
     {
       "key": "stage_object_fence",
@@ -2462,11 +2830,11 @@
     },
     {
       "key": "stage_object_barrel",
-      "value": "Barrel"
+      "value": "Barel"
     },
     {
       "key": "stage_object_rock",
-      "value": "Rock"
+      "value": "Základní"
     },
     {
       "key": "stage_object_ice_block",
@@ -2498,7 +2866,7 @@
     },
     {
       "key": "stage_object_enemy_walker",
-      "value": "Walker Enemy"
+      "value": "Walkerův nepřítel"
     },
     {
       "key": "stage_object_enemy_jumper",
@@ -2506,7 +2874,7 @@
     },
     {
       "key": "stage_object_enemy_charger",
-      "value": "Charger Enemy"
+      "value": "Nepříteli nabíječky"
     },
     {
       "key": "stage_object_enemy_flyer",
@@ -2602,11 +2970,11 @@
     },
     {
       "key": "stage_object_box_dropper",
-      "value": "Box Dropper"
+      "value": "Vlákna"
     },
     {
       "key": "stage_object_spike_dropper",
-      "value": "Spike Dropper"
+      "value": "- TO JE TO, CO JSEM UDĚLAL."
     },
     {
       "key": "stage_object_collectible_fish",
@@ -2650,7 +3018,7 @@
     },
     {
       "key": "stage_rule_all",
-      "value": "ALL"
+      "value": "VŠICHNI ."
     },
     {
       "key": "stage_editor_status_rule",
@@ -2667,6 +3035,10 @@
     {
       "key": "challenge_time_up",
       "value": "ČAS"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "ŽÁDNÝ ČASOVÝ LIMIT"
     },
     {
       "key": "challenge_retry_hint",
@@ -2749,6 +3121,26 @@
       "value": "ČASOVÝ SOUČET {0}"
     },
     {
+      "key": "ice_race_rule",
+      "value": "VYMAZAT DO CELKU {0}"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "CELKEM {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TÝM CELKEM KONEC"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "ZKUSTE ZNOVU ZA {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "PŘES HRA\nCELKEM {0} / {1}"
+    },
+    {
       "key": "survival_get_ready",
       "value": "Připravte se!"
     },
@@ -2793,6 +3185,10 @@
       "value": "Připravte se začít hru."
     },
     {
+      "key": "ready_room_game_2_3",
+      "value": "UTÍKEJ."
+    },
+    {
       "key": "ready_room_game_2_2",
       "value": "VÝBĚR RYBÍ PŘED ČASOU"
     },
@@ -2814,7 +3210,7 @@
     },
     {
       "key": "ready_room_game_8_1",
-      "value": "DODGE THE FALLING PILLARS"
+      "value": "VYHNĚTE SE PADAJÍCÍM SLOUPŮM"
     },
     {
       "key": "ready_room_game_8_2",
@@ -2890,15 +3286,15 @@
     },
     {
       "key": "ready_room_game_15_1",
-      "value": "DEFEAT CRAYON DEVIL"
+      "value": "PORAZIT TUŽKOVÉHO ĎÁBLA."
     },
     {
       "key": "ready_room_game_15_2",
-      "value": "DEFEAT CRAYON STALKER"
+      "value": "PORAZIT PENCILOVÉHO STÍHAČE ."
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "ZRUŠIT NEMOCI"
+      "value": "VYHÝBEJ SE ÚTOKŮM NEPŘÁTEL"
     },
     {
       "key": "ready_room_clear_one_survivor",
@@ -2909,8 +3305,12 @@
       "value": "Clear, když jeden hráč dosáhne cíle."
     },
     {
+      "key": "ready_room_clear_team_time",
+      "value": "JISTÁ, POKUD JE SPOLEČNÝ ČAS DOKONČENÍ KAŽDÉHO DO 1 MINUTY NA HRÁČE."
+    },
+    {
       "key": "spike_chase_monitor_title",
-      "value": "SPIKE WALL LAUNCH"
+      "value": "SPIKE STĚNY START"
     },
     {
       "key": "spike_chase_monitor_ready",
@@ -2921,32 +3321,56 @@
       "value": "Utíkej k bráně!"
     },
     {
-      "key": "wind_speedrun_title",
-      "value": "Ten vítr se pořád mění!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "LES INK = STRONGER WIND"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "ČAS {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "ČAS"
-    },
-    {
       "key": "umbrella_rain_title",
-      "value": "Zůstaň pod UMBRELlou!"
+      "value": "Nevycházej do deště"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "RAIN vás zná - REACH SHELTER"
+      "value": "Nevycházej do deště"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "Všichni byli chyceni v dešti!"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -3134,7 +3558,7 @@
     },
     {
       "key": "survival_all_dead",
-      "value": "ALL PLAYERS OUT"
+      "value": "VŠICHNI HRÁČI VENKU."
     },
     {
       "key": "survival_retrying",
@@ -3230,7 +3654,7 @@
     },
     {
       "key": "jump_rope_jump_now",
-      "value": "JUMP!"
+      "value": "SKÁČEJTE!"
     },
     {
       "key": "jump_rope_keep_jumping",
@@ -3246,7 +3670,7 @@
     },
     {
       "key": "jump_rope_all_out",
-      "value": "ALL PLAYERS OUT"
+      "value": "VŠICHNI HRÁČI VENKU."
     },
     {
       "key": "jump_rope_clear_title",
@@ -3274,7 +3698,7 @@
     },
     {
       "key": "escort_friend_defeat_cry",
-      "value": "AAAH!"
+      "value": "- JO, TO JE PRAVDA."
     },
     {
       "key": "escort_defense_instruction",
@@ -3290,7 +3714,7 @@
     },
     {
       "key": "escort_clear_title",
-      "value": "ESCORT COMPLETE!"
+      "value": "DOPROVOD KOMPLETNÍ!"
     },
     {
       "key": "escort_clear_sub",
@@ -3337,8 +3761,72 @@
       "value": "UCPĚTE OTVORY!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "KOLO {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "KOLO {0}/3 {1:0.0} s VLEVO"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "KOLO {0} ČISTO!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "ČAS UP!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "OPAKOVÁNÍ TOHOTO KOLA"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "DEJTE ODPOVÍDAJÍCÍ LIDSKOU POZU DO KLÍČOVÉ DÍRY!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "NAJDĚTE ODPOVÍDAJÍCÍ POZU MEZI PLOVOUCÍMI PTÁKY!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "PŘENESTE ŽELVU MÍSTNOSTÍ PLNOU PRAMEN!"
+    },
+    {
       "key": "tilt_board_monitor",
       "value": "KRUHOVÁ {0}/3    {1:0.0}s LEFT"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "KOLO {0}/3 ZAČÍNÁ V {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "BĚHEM ODPOČTU SE MŮŽETE POHYBOVAT VE SVÉM PRUHU"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "KOLO {0}/3 BEDENKY {1}/{2} {3} s VLEVO"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "ROZBÍJTE BEDENKY SLIME PIKE!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "ROZBÍJTE MALÉ PŘEPRAVKY!  POZOR NA NEPŘÁTELE!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "KOLO {0} ČISTO!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "HRA PŘES OPAKOVÁNÍ KOLO {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "VŠECHNA KOLA JASNÁ!"
     },
     {
       "key": "tilt_board_progress",
@@ -3393,12 +3881,40 @@
       "value": "10-3 RICOCHET RELAY"
     },
     {
+      "key": "cat_escape_title",
+      "value": "2-3  UTEČ OBŘÍ KOČCE!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ČEKÁNÍ {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "START ZA {0}"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "UTÍKEJ!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "TÝMOVÉ ŠKRÁBANCE  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
       "key": "ricochet_round",
       "value": "KRUHOVÁ {0} / {1}"
     },
     {
       "key": "ricochet_ammo",
-      "value": "AMMO {0}"
+      "value": "AMMUNIE {0}"
     },
     {
       "key": "ricochet_instruction",
@@ -3466,7 +3982,7 @@
     },
     {
       "key": "stage_object_falling_rock",
-      "value": "Falling Rock"
+      "value": "Zpadnoucí skála"
     },
     {
       "key": "stage_object_press_machine",
@@ -3490,7 +4006,7 @@
     },
     {
       "key": "stage_object_big_gear",
-      "value": "Big Gear"
+      "value": "ZUBNÍ KOLO."
     },
     {
       "key": "stage_object_rope_pulley",
@@ -3522,7 +4038,7 @@
     },
     {
       "key": "stage_object_counter",
-      "value": "Counter"
+      "value": "Přehled"
     },
     {
       "key": "menu_stage_select",
@@ -3658,11 +4174,11 @@
     },
     {
       "key": "redraw",
-      "value": "Redraw"
+      "value": "Překreslení"
     },
     {
       "key": "pen",
-      "value": "Pen"
+      "value": "Číslo"
     },
     {
       "key": "eraser",
@@ -3970,7 +4486,7 @@
     },
     {
       "key": "block_breaker_blocks",
-      "value": "{0} BLOCKS LEFT"
+      "value": "{0} ZLEVÉ BLOKY"
     },
     {
       "key": "block_breaker_retry",
@@ -3978,7 +4494,7 @@
     },
     {
       "key": "sfx_browser_title",
-      "value": "SE BROWSER"
+      "value": "SE PROHLÍŽEČ"
     },
     {
       "key": "sfx_browser_help",
@@ -3986,11 +4502,11 @@
     },
     {
       "key": "sfx_browser_play",
-      "value": "PLAY"
+      "value": "HRAJTE"
     },
     {
       "key": "sfx_browser_stop",
-      "value": "STOP"
+      "value": "ZASTAVTE."
     },
     {
       "key": "sfx_browser_reload",
@@ -4010,11 +4526,39 @@
     },
     {
       "key": "sfx_browser_muted",
-      "value": "MUTED"
+      "value": "ZMUTUJE"
     },
     {
       "key": "sfx_browser_generated",
       "value": "Runtime- generovaný zvuk"
+    },
+    {
+      "key": "gameplay_control_switch",
+      "value": "Přepnout postavu"
+    },
+    {
+      "key": "feedback_button",
+      "value": "ZPĚTNÁ VAZBA / NAHLÁSIT CHYBU"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "Děkujeme za hraní!\nZpětná vazba / Nahlásit chybu"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "SEZNAM PŘÁNÍ"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "DOPORUČUJEME HRU PRO VÍCE HRÁČŮ!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW je nejlepší při společné spolupráci!\nZkuste si zahrát ve 2–4 hráčích!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "DOBŘE."
     },
     {
       "key": "stage_object_background_paw_print",
@@ -4030,11 +4574,11 @@
     },
     {
       "key": "stage_object_background_snow_crystal",
-      "value": "Snow Crystal"
+      "value": "Sněhový krystal"
     },
     {
       "key": "stage_object_background_icicle",
-      "value": "Icicle"
+      "value": "ICECLE"
     },
     {
       "key": "stage_object_background_snowman",
@@ -4042,7 +4586,7 @@
     },
     {
       "key": "stage_object_background_blizzard",
-      "value": "Blizzard"
+      "value": "Sněžná bouře"
     },
     {
       "key": "stage_object_background_feather",
@@ -4082,7 +4626,7 @@
     },
     {
       "key": "stage_object_background_padlock",
-      "value": "Padlock"
+      "value": "Zámek"
     },
     {
       "key": "stage_object_background_slime_blob",
@@ -4098,7 +4642,7 @@
     },
     {
       "key": "stage_object_background_ladybug",
-      "value": "Ladybug"
+      "value": "Ženy"
     },
     {
       "key": "stage_object_background_sunflower",
@@ -4118,7 +4662,7 @@
     },
     {
       "key": "stage_object_background_spiderweb",
-      "value": "Spiderweb"
+      "value": "Pavuční síť"
     },
     {
       "key": "stage_object_background_stalactite",
@@ -4126,11 +4670,11 @@
     },
     {
       "key": "stage_object_background_lantern",
-      "value": "Lantern"
+      "value": "Lanterny"
     },
     {
       "key": "stage_object_background_minecart",
-      "value": "Minecart"
+      "value": "Minekart"
     },
     {
       "key": "stage_object_background_pickaxe",
@@ -4138,7 +4682,7 @@
     },
     {
       "key": "stage_object_background_trophy",
-      "value": "Trophy"
+      "value": "Trofej"
     },
     {
       "key": "stage_object_background_medal",
@@ -4186,7 +4730,7 @@
     },
     {
       "key": "stage_object_background_notebook",
-      "value": "Notebook"
+      "value": "Zápisník"
     },
     {
       "key": "stage_object_background_blackboard",
@@ -4210,7 +4754,7 @@
     },
     {
       "key": "stage_object_background_spotlight",
-      "value": "Spotlight"
+      "value": "Světlo pozornosti"
     },
     {
       "key": "stage_object_background_microphone",
@@ -4250,499 +4794,11 @@
     },
     {
       "key": "stage_object_background_moss",
-      "value": "Moss"
+      "value": "Hřeben"
     },
     {
       "key": "stage_object_background_tree_root",
       "value": "Kořen stromu"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "UTÍKEJ!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "START ZA {0}"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "ČEKÁNÍ {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  UTEČ OBŘÍ KOČCE!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "TÝMOVÉ ŠKRÁBANCE  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "Postavu lze změnit pouze na podlaze pro překreslení."
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "ZPĚT"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "Čeká se na odpověď hráče {0}.\nPožadovaná výměna: {1} za {2}."
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "ŽÁDOST O VÝMĚNU ODESLÁNA"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "Restartovat tuto úroveň od začátku?"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "ZNOVU"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "Ukončit aktuální úroveň a vrátit se k výběru úrovně?"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "Nedokončené změny nebudou uloženy. Vrátit se bez uložení?"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "ZPĚT BEZ ULOŽENÍ"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "Překreslená postava byla uložena."
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "Uložení se nezdařilo. Stiskněte znovu „HOTOVO“."
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "VÝBĚR ÚROVNĚ"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "Online hra není dostupná, protože herní data nebo verze nesouhlasí. Ověřte soubory hry ve službě Steam."
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "Spojení s relací bylo přerušeno. Připojte se prosím znovu k místnosti."
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "Hostitel se odpojil, místnost byla uzavřena."
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "ZRUŠIT"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "RESETOVAT"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "RESETOVAT POSTUP"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "Resetovat záznamy o dokončení všech úrovní?\nHlasitost, jazyk, jméno hráče a kresby zůstanou zachovány."
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "Postup úrovněmi byl resetován."
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "RESETOVAT POSTUP"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "UTÍKEJ."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "Přepnout postavu"
-    },
-    {
-      "key": "feedback_button",
-      "value": "ZPĚTNÁ VAZBA / NAHLÁSIT CHYBU"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "Děkujeme za hraní!\nZpětná vazba / Nahlásit chybu"
-    },
-    {
-      "key": "option_complete",
-      "value": "HOTOVO"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "ZOBRAZENÍ: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "ROZLIŠENÍ: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "CELÁ OBRAZOVKA"
-    },
-    {
-      "key": "option_windowed",
-      "value": "REŽIM OKNA"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "Spusťte Steam a poté NICO DRAW z knihovny služby Steam."
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "Nepodařilo se získat ověřovací tiket služby Steam: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "SEZNAM PŘÁNÍ"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "DOPORUČUJEME HRU PRO VÍCE HRÁČŮ!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "NICO DRAW je nejlepší při společné spolupráci!\nZkuste si zahrát ve 2–4 hráčích!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "OK"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "Ukončit NICO DRAW?"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} již používá tuto postavu. Odeslat žádost o výměnu?"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "ODESLAT ŽÁDOST"
-    },
-    {
-      "key": "background_word_push",
-      "value": "TLAČ!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "DRŽTE KŘÍŽ / A: KLOUZEJTE ČTVEREC / X: chyťte"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "QUARE / X: SCRATCH / GRAB"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "ČTVEREC / X: HOĎ"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "SQUARE / X: SPIKE SMĚREM K PRAVÉ PALICE"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "HOLD CROSS / A: SHELL HOLD QUARE / X: OTOČENÍ O 90°"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "DRŽTE KŘÍŽ: KLOUZTE NÁMĚSTNÍK: chyťte se"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "QUARE: SCRATCH / GRAB"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "SQUARE: HOĎ"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "SQUARE: SPIKE SMĚREM K PRAVÉ PALICE"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "UCHYCOVACÍ KŘÍŽ: SHELL HOLD QUATRO: OTOČENÍ O 90°"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "DRŽET A: KLOUZAT X: UCHYTIT"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "X: ŠKRABNOUT / UCHYTIT"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "X: HOĎ"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: KOUKOU SMĚREM K PRAVÉ TYČCE"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "DRŽENÍ A: SHELL DRŽENÍ X: OTOČENÍ O 90°"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "ŽÁDNÝ ČASOVÝ LIMIT"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "NENÍ ZAHRNUTO V DEMO"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "LEVÁ PÁČKA: POHYB RT / A / B: DRAW & SELECT LT: ERASE"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: DRAW MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: DRAW MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / SELECT: DRAW MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: DRAW MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: DRAW MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: DRAW MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: DRAW MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "Otázka: PŘEPNĚTE ZNAK"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "TROJÚHELNÍK / Y: PŘEPNĚTE ZNAK"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "TROJÚHELNÍK: PŘEPNĚTE ZNAK"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "Y: PŘEPNĚTE ZNAK"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "TÝM CELKEM KONEC"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "PŘES HRA\nCELKEM {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "ZKUSTE ZNOVU ZA {0}"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "VYMAZAT DO CELKU {0}"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "CELKEM {0} / {1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "Automaticky (klávesnice / gamepad)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "Gamepad (odpojený)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "Klávesnice + myš"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "P{0} GAMEPAD ODPOJEN. ZNOVU HO PŘIPOJTE A OBNOVTE STEJNÝ PŘEHRÁVAČ."
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "P{0} GAMEPAD ZNOVU PŘIPOJEN."
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "KLÁVESNICE/MYŠ UVOLNĚNÁ Z P1. STISKNĚTE TLAČÍTKO OVLADAČE PRO NÁROKOVÁNÍ P1."
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "NEPŘIZŘAZENÝ PODLOŽKA: START PRO PŘIPOJENÍ / KLÁVESNICE: ENTER PRO PŘIPOJENÍ, BACKSPACE PRO ODCHOD / P2: SELECT + B PRO ODCHOD"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "P{0} PŘIPOJEN ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "P{0} VLEVO."
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "AŽ 2 HRÁČI NA ZAŘÍZENÍ A CELKEM 4 HRÁČI V MÍSTNOSTI."
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "MÍSTNOST JE PLNÁ (4 HRÁČI). EXTRA MÍSTNÍ HRÁČ BYL ODEBRAN."
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "P1 PŘEPNUTO NA {0}."
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "2 HRÁČI PŘIPRAVENI"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: PŘIPOJTE SE"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "PŘIPOJTE SE STISKNĚTE JAKÉKOLI TLAČÍTKO NA OVLADAČE"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "MÍSTNÍ HRANÍ {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "PŘIDEJTE NEBO ODEBRAŇTE MÍSTNÍ HRÁČE PŘED ZAHÁJENÍM FÁZE."
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "PAD {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "HRÁČI {0}/2\nKLÁVESNICE: ENTER PŘIPOJIT SE / BACKSPACE ODEŠLI\nOVLÁDAČ: START PŘIPOJIT SE / ODEJÍT DRŽENÍM B"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "MÍSTNÍ HRÁČI {0}/2 PŘIPOJENÉ PODLOŽKY {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "Vytvoření místnosti se nezdařilo. Další pokus za {0} s (zbývá {1} pokusů)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "NAJDĚTE ODPOVÍDAJÍCÍ POZU MEZI PLOVOUCÍMI PTÁKY!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "DEJTE ODPOVÍDAJÍCÍ LIDSKOU POZU DO KLÍČOVÉ DÍRY!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "KOLO {0}/3 {1:0.0} s VLEVO"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "OPAKOVÁNÍ TOHOTO KOLA"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "KOLO {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "KOLO {0} ČISTO!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "ČAS UP!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "PŘENESTE ŽELVU MÍSTNOSTÍ PLNOU PRAMEN!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "JISTÁ, POKUD JE SPOLEČNÝ ČAS DOKONČENÍ KAŽDÉHO DO 1 MINUTY NA HRÁČE."
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "VŠECHNA KOLA JASNÁ!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "ROZBÍJTE MALÉ PŘEPRAVKY!  POZOR NA NEPŘÁTELE!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "ROZBÍJTE BEDENKY SLIME PIKE!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "KOLO {0}/3 BEDENKY {1}/{2} {3} s VLEVO"
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "HRA PŘES OPAKOVÁNÍ KOLO {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "KOLO {0} ČISTO!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "Diváci: {0} Přepněte pomocí ← / →"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "KOLO {0}/3 ZAČÍNÁ V {1}"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "BĚHEM ODPOČTU SE MŮŽETE POHYBOVAT VE SVÉM PRUHU"
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "LOSOVÁNÍ TITULŮ JE NEDOSTUPNÉ BĚHEM MÍSTNÍHO CO-OP. NEJPRVE NÁVRAT K 1 HRÁČI."
     }
   ]
 }

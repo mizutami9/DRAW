@@ -18,6 +18,9 @@ namespace DrawBody.Prototype
         private const string AttackKind = "flying_boss_attack";
         private const string HomingVolleyKind = "flying_boss_homing_volley";
         private const string EliminateKind = "flying_boss_eliminate";
+        private const string ItemDropKind = "flying_boss_item_drop";
+        private const string ItemPickupKind = "flying_boss_item_pickup";
+        private const string WeaponImpactKind = "flying_boss_weapon_impact";
         private const int PlayerMissileDamage = 1;
         private const int PlayerBombDamage = 5;
         private const float ArenaHalfWidth = 17f;
@@ -25,10 +28,18 @@ namespace DrawBody.Prototype
 
         private enum BattlePhase { Ready, Fighting, Defeated, Failed }
         private enum AttackType { Dash, Beam, Homing, Chase, Suction }
+        public enum PowerItemType { TripleMissile, HomingMissile, BombRain, SelfDestruct }
 
         [System.Serializable] private sealed class PadMessage { public int Sequence; public int Room; public Vector2 Position; }
         [System.Serializable] private sealed class ShotRequest { public Vector2 Direction; }
         [System.Serializable] private sealed class EliminationMessage { public string PlayerId; }
+        [System.Serializable]
+        private sealed class WeaponImpactState
+        {
+            public int ShotSequence;
+            public Vector2 Position;
+            public float Scale;
+        }
         [System.Serializable]
         private sealed class ShotState
         {
@@ -36,6 +47,7 @@ namespace DrawBody.Prototype
             public int OwnerRoom;
             public Vector2 Position;
             public Vector2 Direction;
+            public bool Homing;
         }
         [System.Serializable]
         private sealed class BombState
@@ -43,6 +55,7 @@ namespace DrawBody.Prototype
             public int Sequence;
             public int OwnerRoom;
             public Vector2 Position;
+            public Vector2 Velocity;
         }
         [System.Serializable]
         private sealed class AttackState
@@ -59,6 +72,20 @@ namespace DrawBody.Prototype
         {
             public int Sequence;
             public Vector2 Origin;
+        }
+        [System.Serializable]
+        private sealed class PowerItemState
+        {
+            public int Sequence;
+            public int Type;
+            public Vector2 Position;
+        }
+        [System.Serializable]
+        private sealed class PowerPickupState
+        {
+            public int Sequence;
+            public int Room;
+            public int Type;
         }
         [System.Serializable]
         private sealed class BossState
@@ -94,7 +121,13 @@ namespace DrawBody.Prototype
         private readonly HashSet<int> receivedHomingVolleys = new HashSet<int>();
         private readonly List<PlayerController2D> mountedPlayers = new List<PlayerController2D>();
         private readonly List<StageFlyingBossShot> shots = new List<StageFlyingBossShot>();
+        private readonly HashSet<int> impactedShotSequences = new HashSet<int>();
         private readonly List<Transform> bossOrbitShards = new List<Transform>();
+        private readonly Dictionary<int, StageFlyingPowerItem> powerItems = new Dictionary<int, StageFlyingPowerItem>();
+        private readonly float[] tripleMissileUntil = new float[4];
+        private readonly float[] homingMissileUntil = new float[4];
+        private readonly float[] bombRainUntil = new float[4];
+        private readonly float[] nextBombRainAt = new float[4];
         private readonly Dictionary<PlayerController2D, Dictionary<Renderer, bool>> hiddenPlayerRenderers =
             new Dictionary<PlayerController2D, Dictionary<Renderer, bool>>();
         private readonly Dictionary<PlayerController2D, Dictionary<Collider2D, bool>> hiddenPlayerColliders =
@@ -126,6 +159,8 @@ namespace DrawBody.Prototype
         private int bombSequence;
         private int attackSequence;
         private int homingVolleySequence;
+        private int powerItemSequence;
+        private float nextPowerItemAt;
         private float readyRemaining = 3f;
         private float nextAttackAt;
         private float nextStateAt;
@@ -212,6 +247,7 @@ namespace DrawBody.Prototype
                     {
                         phase = BattlePhase.Fighting;
                         nextAttackAt = Time.time + 1.8f;
+                        nextPowerItemAt = Time.time + 6f;
                         BroadcastState(true);
                         GameSfx.Play(SfxId.StageCountdownGo);
                     }
@@ -227,6 +263,7 @@ namespace DrawBody.Prototype
                         bossPosition = Vector2.MoveTowards(bossPosition, idleTarget, 2.4f * Time.deltaTime);
                     }
                     if (!attackRunning && Time.time >= nextAttackAt) BeginNextAttack();
+                    UpdatePowerItems();
                     if (healthRatio <= 0.5f && Time.time >= nextPressureHomingAt)
                     {
                         LaunchPressureHomingVolley(healthRatio);
@@ -471,25 +508,42 @@ namespace DrawBody.Prototype
         {
             if (phase != BattlePhase.Fighting || room < 0 || room >= playerCount || Time.time < nextShotAt[room] || eliminated.Contains(roomPlayerIds[room])) return;
             nextShotAt[room] = Time.time + 0.32f;
-            ShotState state = new ShotState { Sequence = ++shotSequence, OwnerRoom = room, Position = pads[room].Position + direction.normalized * 0.8f, Direction = direction.normalized };
-            ApplyShot(state);
-            if (IsOnline) Send(ShotKind, state);
+            int count = Time.time < tripleMissileUntil[room] ? 3 : 1;
+            for (int i = 0; i < count; i++)
+            {
+                float angle = count == 1 ? 0f : (i - 1) * 9f;
+                Vector2 shotDirection = Quaternion.Euler(0f, 0f, angle) * direction.normalized;
+                ShotState state = new ShotState
+                {
+                    Sequence = ++shotSequence,
+                    OwnerRoom = room,
+                    Position = pads[room].Position + shotDirection * 0.8f,
+                    Direction = shotDirection,
+                    Homing = Time.time < homingMissileUntil[room]
+                };
+                ApplyShot(state);
+                if (IsOnline) Send(ShotKind, state);
+            }
         }
 
         private void ApplyShot(ShotState state)
         {
             if (state == null || !receivedShots.Add(state.Sequence)) return;
-            shots.Add(StageFlyingBossShot.Create(transform, this, state.Sequence, state.OwnerRoom, state.Position, state.Direction, HasAuthority));
+            if (impactedShotSequences.Contains(state.Sequence)) return;
+            shots.Add(StageFlyingBossShot.Create(transform, this, state.Sequence, state.OwnerRoom,
+                state.Position, state.Direction, state.Homing, HasAuthority));
             GameSfx.PlayAt(SfxId.MissileLaunch, state.Position, 0.55f);
         }
 
         internal bool ResolvePlayerShot(int sequence, int ownerRoom, Vector2 position)
         {
-            if (!HasAuthority || phase != BattlePhase.Fighting) return false;
+            if (phase != BattlePhase.Fighting) return false;
             if (Vector2.Distance(position, bossPosition) <= 1.9f)
             {
                 GameSfx.PlayAt(SfxId.MissileImpact, position, 0.9f);
-                DamageBoss(PlayerMissileDamage, position);
+                CreateWeaponExplosion(position, 1.25f);
+                BroadcastWeaponImpact(sequence, position, 1.25f);
+                if (HasAuthority) DamageBoss(PlayerMissileDamage, position);
                 return true;
             }
             for (int room = 0; room < playerCount; room++)
@@ -499,17 +553,60 @@ namespace DrawBody.Prototype
                 if (room == ownerRoom || eliminated.Contains(roomPlayerIds[room])) continue;
                 if (Vector2.Distance(position, GetRoomHitPosition(room)) > 0.62f) continue;
                 GameSfx.PlayAt(SfxId.MissileImpact, position, 0.9f);
-                EliminateRoom(room);
+                CreateWeaponExplosion(position, 1.1f);
+                BroadcastWeaponImpact(sequence, position, 1.1f);
+                if (HasAuthority) EliminateRoom(room);
                 return true;
             }
             return false;
+        }
+
+        private static void CreateWeaponExplosion(Vector2 position, float scale)
+        {
+            GameObject burst = new GameObject("Player Weapon Impact Explosion");
+            burst.transform.position = position;
+            burst.AddComponent<BombExplosionVisual>().Configure(scale, false);
+        }
+
+        private void BroadcastWeaponImpact(int shotSequence, Vector2 position, float scale)
+        {
+            if (!IsOnline || !HasAuthority) return;
+            Send(WeaponImpactKind, new WeaponImpactState
+            {
+                ShotSequence = shotSequence,
+                Position = position,
+                Scale = scale
+            });
+        }
+
+        private void ApplyWeaponImpact(WeaponImpactState impact)
+        {
+            if (impact == null) return;
+            impactedShotSequences.Add(impact.ShotSequence);
+            for (int i = shots.Count - 1; i >= 0; i--)
+            {
+                StageFlyingBossShot shot = shots[i];
+                if (shot == null) { shots.RemoveAt(i); continue; }
+                if (shot.Sequence != impact.ShotSequence) continue;
+                Destroy(shot.gameObject);
+                shots.RemoveAt(i);
+                break;
+            }
+            CreateWeaponExplosion(impact.Position, Mathf.Max(0.4f, impact.Scale));
+            GameSfx.PlayAt(SfxId.MissileImpact, impact.Position, 0.9f);
         }
 
         private void TryDropBomb(int room)
         {
             if (phase != BattlePhase.Fighting || room < 0 || room >= playerCount || Time.time < nextBombAt[room] || eliminated.Contains(roomPlayerIds[room])) return;
             nextBombAt[room] = Time.time + 1.15f;
-            BombState state = new BombState { Sequence = ++bombSequence, OwnerRoom = room, Position = pads[room].Position + Vector2.down * 0.65f };
+            BombState state = new BombState
+            {
+                Sequence = ++bombSequence,
+                OwnerRoom = room,
+                Position = pads[room].Position + Vector2.down * 0.65f,
+                Velocity = Vector2.down * 2.3f
+            };
             ApplyBomb(state);
             if (IsOnline) Send(BombKind, state);
         }
@@ -517,7 +614,10 @@ namespace DrawBody.Prototype
         private void ApplyBomb(BombState state)
         {
             if (state == null) return;
-            StageFlyingPlayerBomb.Create(transform, this, state.Sequence, state.OwnerRoom, state.Position, HasAuthority);
+            Vector2 velocity = state.Velocity.sqrMagnitude > 0.001f
+                ? state.Velocity : Vector2.down * 2.3f;
+            StageFlyingPlayerBomb.Create(transform, this, state.Sequence, state.OwnerRoom,
+                state.Position, velocity, HasAuthority);
             GameSfx.PlayAt(SfxId.BombFuseStart, state.Position, 0.7f);
         }
 
@@ -543,6 +643,129 @@ namespace DrawBody.Prototype
             BroadcastState(true);
             if (health <= 0) StartCoroutine(DefeatBoss());
         }
+
+        private void UpdatePowerItems()
+        {
+            if (!HasAuthority || phase != BattlePhase.Fighting) return;
+            if (Time.time >= nextPowerItemAt)
+            {
+                nextPowerItemAt = Time.time + Random.Range(9f, 11f);
+                int roll = Random.Range(0, 100);
+                PowerItemType type = roll < 30 ? PowerItemType.TripleMissile
+                    : roll < 60 ? PowerItemType.HomingMissile
+                    : roll < 90 ? PowerItemType.BombRain
+                    : PowerItemType.SelfDestruct;
+                PowerItemState item = new PowerItemState
+                {
+                    Sequence = ++powerItemSequence,
+                    Type = (int)type,
+                    Position = new Vector2(Random.Range(-14.5f, 14.5f), 11.5f)
+                };
+                ApplyPowerItem(item);
+                if (IsOnline) Send(ItemDropKind, item);
+            }
+
+            for (int room = 0; room < playerCount; room++)
+            {
+                if (eliminated.Contains(roomPlayerIds[room]) || Time.time >= bombRainUntil[room]
+                    || Time.time < nextBombRainAt[room]) continue;
+                nextBombRainAt[room] = Time.time + 1.55f;
+                Vector2 origin = pads[room].Position;
+                float angleOffset = (bombSequence & 1) == 0 ? 0f : 22.5f;
+                for (int directionIndex = 0; directionIndex < 8; directionIndex++)
+                {
+                    float angle = (angleOffset + directionIndex * 45f) * Mathf.Deg2Rad;
+                    Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                    SpawnPlayerBomb(room, origin + direction * 0.65f, direction * 4.8f);
+                }
+            }
+        }
+
+        private void SpawnPlayerBomb(int room, Vector2 position, Vector2 velocity)
+        {
+            BombState state = new BombState
+            {
+                Sequence = ++bombSequence,
+                OwnerRoom = room,
+                Position = position,
+                Velocity = velocity
+            };
+            ApplyBomb(state);
+            if (IsOnline) Send(BombKind, state);
+        }
+
+        private void ApplyPowerItem(PowerItemState state)
+        {
+            if (state == null || powerItems.ContainsKey(state.Sequence)) return;
+            StageFlyingPowerItem item = StageFlyingPowerItem.Create(transform, this, state.Sequence,
+                (PowerItemType)Mathf.Clamp(state.Type, 0, (int)PowerItemType.SelfDestruct),
+                state.Position, HasAuthority);
+            if (item != null) powerItems[state.Sequence] = item;
+        }
+
+        internal void TryCollectPowerItem(int itemSequence, PowerItemType type, Vector2 position)
+        {
+            if (!HasAuthority || phase != BattlePhase.Fighting) return;
+            int bestRoom = -1;
+            float bestDistance = 1.35f;
+            for (int room = 0; room < playerCount; room++)
+            {
+                if (eliminated.Contains(roomPlayerIds[room])) continue;
+                float distance = Vector2.Distance(position, GetRoomHitPosition(room));
+                if (distance >= bestDistance) continue;
+                bestDistance = distance;
+                bestRoom = room;
+            }
+            if (bestRoom < 0) return;
+            PowerPickupState pickup = new PowerPickupState
+            {
+                Sequence = itemSequence,
+                Room = bestRoom,
+                Type = (int)type
+            };
+            ApplyPowerPickup(pickup);
+            if (IsOnline) Send(ItemPickupKind, pickup);
+        }
+
+        private void ApplyPowerPickup(PowerPickupState pickup)
+        {
+            if (pickup == null || pickup.Room < 0 || pickup.Room >= playerCount) return;
+            if (powerItems.TryGetValue(pickup.Sequence, out StageFlyingPowerItem item))
+            {
+                if (item != null) Destroy(item.gameObject);
+                powerItems.Remove(pickup.Sequence);
+            }
+            PowerItemType type = (PowerItemType)Mathf.Clamp(pickup.Type, 0, (int)PowerItemType.SelfDestruct);
+            float until = Time.time + 10f;
+            if (type == PowerItemType.TripleMissile) tripleMissileUntil[pickup.Room] = until;
+            else if (type == PowerItemType.HomingMissile) homingMissileUntil[pickup.Room] = until;
+            else if (type == PowerItemType.BombRain)
+            {
+                bombRainUntil[pickup.Room] = until;
+                nextBombRainAt[pickup.Room] = Time.time;
+            }
+            else
+            {
+                StageFlyingSelfDestructCharge.Create(transform, this, pickup.Room,
+                    pads[pickup.Room], HasAuthority);
+            }
+            GameSfx.PlayAt(SfxId.CollectibleCollect, GetRoomHitPosition(pickup.Room), 0.9f);
+        }
+
+        internal void ResolveSelfDestruct(int room, Vector2 position)
+        {
+            if (!HasAuthority || phase != BattlePhase.Fighting) return;
+            const float radius = 7.5f;
+            if (Vector2.Distance(position, bossPosition) <= radius) DamageBoss(50, position);
+            for (int other = 0; other < playerCount; other++)
+            {
+                if (!eliminated.Contains(roomPlayerIds[other])
+                    && Vector2.Distance(position, GetRoomHitPosition(other)) <= radius)
+                    EliminateRoom(other);
+            }
+        }
+
+        internal Vector2 CurrentBossPosition => bossPosition;
 
         private void BeginNextAttack()
         {
@@ -954,6 +1177,11 @@ namespace DrawBody.Prototype
         private void MountPlayer(PlayerController2D player, int room)
         {
             if (player == null || room < 0 || room >= playerCount) return;
+            if (mountedPlayers.Contains(player))
+            {
+                SyncMountedPlayer(room);
+                return;
+            }
             player.GetComponent<BodyBuilder>()?.RestoreBuiltBodyFallbackState();
             player.GetComponent<PlayerCarryController>()?.ForceDrop();
             player.SetControlsEnabled(false);
@@ -974,8 +1202,36 @@ namespace DrawBody.Prototype
         private void LateUpdate()
         {
             if (stageManager == null || stageManager.CurrentStageId != StageId) return;
-            for (int room = 0; room < playerCount; room++) SyncMountedPlayer(room);
+            // On online stage load this controller can start before the remote
+            // avatar (and occasionally before the local online identity) has
+            // been materialized. Retry mounting missing representations instead
+            // of leaving their Rigidbody active in the floorless sky arena.
+            for (int room = 0; room < playerCount; room++)
+            {
+                PlayerController2D roomPlayer = ResolvePlayer(roomPlayerIds[room]);
+                if (roomPlayer != null && !mountedPlayers.Contains(roomPlayer))
+                    MountPlayer(roomPlayer, room);
+                else
+                    SyncMountedPlayer(room);
+            }
             MaintainFixedCamera();
+        }
+
+        internal bool IsPlayerMountedForTest(PlayerController2D target)
+        {
+            if (target == null || !mountedPlayers.Contains(target)) return false;
+            Rigidbody2D body = target.GetComponent<Rigidbody2D>();
+            return body == null || !body.simulated;
+        }
+
+        internal void MoveLocalPadForTest(PlayerController2D target, float horizontal)
+        {
+            if (!IsPlayerMountedForTest(target)) return;
+            int room = FindRoom(stageManager.GetOnlinePlayerId(target));
+            if (room < 0 || room >= playerCount || pads[room] == null) return;
+            pads[room].SetPosition(ClampPadPosition(
+                pads[room].Position + Vector2.right * horizontal * 7f * Time.deltaTime));
+            SyncMountedPlayer(room);
         }
 
         private void RestorePlayers()
@@ -1102,10 +1358,13 @@ namespace DrawBody.Prototype
         private void ApplyState(BossState state)
         {
             if (state == null || state.Sequence <= lastStateSequence) return;
+            int previousHealth = health;
             lastStateSequence = state.Sequence;
             phase = (BattlePhase)Mathf.Clamp(state.Phase, 0, (int)BattlePhase.Failed);
             health = state.Health;
             maximumHealth = state.MaximumHealth;
+            if (health < previousHealth && previousHealth > 0)
+                StartCoroutine(BossHitFlash());
             // Attack packets contain the complete deterministic path. While a
             // client is playing that path, an older 10 Hz snapshot must not
             // pull the boss back toward its setup position and visually erase
@@ -1165,6 +1424,12 @@ namespace DrawBody.Prototype
             else if (data.Kind == BombKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyBomb(JsonUtility.FromJson<BombState>(data.Json));
             else if (data.Kind == AttackKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyAttack(JsonUtility.FromJson<AttackState>(data.Json));
             else if (data.Kind == HomingVolleyKind && IsHostPlayer(data.PlayerId) && !HasAuthority) ApplyPressureHomingVolley(JsonUtility.FromJson<HomingVolleyState>(data.Json));
+            else if (data.Kind == ItemDropKind && IsHostPlayer(data.PlayerId) && !HasAuthority)
+                ApplyPowerItem(JsonUtility.FromJson<PowerItemState>(data.Json));
+            else if (data.Kind == ItemPickupKind && IsHostPlayer(data.PlayerId) && !HasAuthority)
+                ApplyPowerPickup(JsonUtility.FromJson<PowerPickupState>(data.Json));
+            else if (data.Kind == WeaponImpactKind && IsHostPlayer(data.PlayerId) && !HasAuthority)
+                ApplyWeaponImpact(JsonUtility.FromJson<WeaponImpactState>(data.Json));
             else if (data.Kind == EliminateKind && IsHostPlayer(data.PlayerId))
             {
                 EliminationMessage message = JsonUtility.FromJson<EliminationMessage>(data.Json);
@@ -1435,21 +1700,34 @@ namespace DrawBody.Prototype
         private float expiresAt;
         private bool authoritative;
 
-        public static StageFlyingBossShot Create(Transform parent, StageFlyingPlatformBossController owner, int sequence, int ownerRoom, Vector2 position, Vector2 direction, bool authoritative)
+        public int Sequence => sequence;
+        private bool homing;
+
+        public static StageFlyingBossShot Create(Transform parent, StageFlyingPlatformBossController owner,
+            int sequence, int ownerRoom, Vector2 position, Vector2 direction, bool homing, bool authoritative)
         {
             GameObject root = new GameObject("Player Missile " + sequence);
             root.transform.SetParent(parent, false);
             root.transform.position = position;
             root.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             StageFlyingBossShot shot = root.AddComponent<StageFlyingBossShot>();
-            shot.owner = owner; shot.sequence = sequence; shot.ownerRoom = ownerRoom; shot.velocity = direction.normalized * 13f; shot.expiresAt = Time.time + 4.5f; shot.authoritative = authoritative;
+            shot.owner = owner; shot.sequence = sequence; shot.ownerRoom = ownerRoom;
+            shot.velocity = direction.normalized * 13f; shot.expiresAt = Time.time + 4.5f;
+            shot.homing = homing; shot.authoritative = authoritative;
             BossAttackVisuals.AddMissile(root.transform, 1.05f, 0.36f,
-                new Color(0.18f, 0.8f, 1f), new Color(1f, 0.82f, 0.18f), 145);
+                homing ? new Color(0.9f, 0.18f, 1f) : new Color(0.18f, 0.8f, 1f),
+                homing ? new Color(0.2f, 1f, 0.62f) : new Color(1f, 0.82f, 0.18f), 145);
             return shot;
         }
 
         private void Update()
         {
+            if (homing && owner != null)
+            {
+                Vector2 desired = (owner.CurrentBossPosition - (Vector2)transform.position).normalized * 13f;
+                velocity = Vector2.Lerp(velocity, desired, 1f - Mathf.Exp(-4.5f * Time.deltaTime));
+                transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg);
+            }
             transform.position += (Vector3)(velocity * Time.deltaTime);
             if (authoritative && owner != null && owner.ResolvePlayerShot(sequence, ownerRoom, transform.position))
             {
@@ -1505,12 +1783,12 @@ namespace DrawBody.Prototype
         private StageFlyingPlatformBossController owner;
         private int ownerRoom;
         private float explodeAt;
-        private float verticalSpeed;
+        private Vector2 velocity;
         private bool authoritative;
         private TextMesh timer;
 
         public static void Create(Transform parent, StageFlyingPlatformBossController owner, int sequence,
-            int ownerRoom, Vector2 position, bool authoritative)
+            int ownerRoom, Vector2 position, Vector2 initialVelocity, bool authoritative)
         {
             GameObject root = new GameObject("Player Drop Bomb " + sequence);
             root.transform.SetParent(parent, false);
@@ -1520,7 +1798,7 @@ namespace DrawBody.Prototype
             bomb.ownerRoom = ownerRoom;
             bomb.authoritative = authoritative;
             bomb.explodeAt = Time.time + 1.65f;
-            bomb.verticalSpeed = -2.3f;
+            bomb.velocity = initialVelocity;
 
             GameObject outline = new GameObject("Bomb Ink Outline");
             outline.transform.SetParent(root.transform, false);
@@ -1543,8 +1821,8 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            verticalSpeed -= 4.5f * Time.deltaTime;
-            transform.position += Vector3.up * (verticalSpeed * Time.deltaTime);
+            velocity += Vector2.down * (4.5f * Time.deltaTime);
+            transform.position += (Vector3)(velocity * Time.deltaTime);
             float remaining = Mathf.Max(0f, explodeAt - Time.time);
             if (timer != null) timer.text = remaining.ToString("0.0");
             if (remaining > 0f) return;
@@ -1553,6 +1831,189 @@ namespace DrawBody.Prototype
             explosion.transform.position = transform.position;
             explosion.AddComponent<BombExplosionVisual>().Configure(2.25f, false);
             GameSfx.PlayAt(SfxId.BombExplosion, transform.position, 0.9f);
+            Destroy(gameObject);
+        }
+    }
+
+    public sealed class StageFlyingPowerItem : MonoBehaviour
+    {
+        private StageFlyingPlatformBossController owner;
+        private int sequence;
+        private StageFlyingPlatformBossController.PowerItemType type;
+        private bool authoritative;
+        private float fallSpeed = 5.2f;
+        private float pulsePhase;
+        private SpriteRenderer artRenderer;
+        private SpriteRenderer rainbowGlow;
+        private Transform rainbowOrbit;
+        private SpriteRenderer[] rainbowSparks;
+
+        public static StageFlyingPowerItem Create(Transform parent, StageFlyingPlatformBossController owner,
+            int sequence, StageFlyingPlatformBossController.PowerItemType type, Vector2 position, bool authoritative)
+        {
+            GameObject root = new GameObject("Flying Power Item " + type + " " + sequence);
+            root.transform.SetParent(parent, false);
+            root.transform.position = position;
+            StageFlyingPowerItem item = root.AddComponent<StageFlyingPowerItem>();
+            item.owner = owner;
+            item.sequence = sequence;
+            item.type = type;
+            item.authoritative = authoritative;
+            item.pulsePhase = sequence * 0.71f;
+
+            string resourceName = type == StageFlyingPlatformBossController.PowerItemType.TripleMissile
+                ? "power-crayon-triple"
+                : type == StageFlyingPlatformBossController.PowerItemType.HomingMissile
+                    ? "power-crayon-homing"
+                    : type == StageFlyingPlatformBossController.PowerItemType.BombRain
+                        ? "power-crayon-bomb-scatter"
+                        : "power-crayon-self-destruct";
+            Sprite sprite = Resources.Load<Sprite>("StageObjects/NicoDraw/" + resourceName);
+            GameObject art = new GameObject("Hand Drawn Power Crayon");
+            art.transform.SetParent(root.transform, false);
+            item.artRenderer = art.AddComponent<SpriteRenderer>();
+            item.artRenderer.sprite = sprite != null ? sprite : DoodleRuntimeAssets.SquareSprite;
+            item.artRenderer.color = sprite != null ? Color.white : GetFallbackColor(type);
+            item.artRenderer.sortingOrder = 159;
+            Vector2 sourceSize = item.artRenderer.sprite != null
+                ? item.artRenderer.sprite.bounds.size : Vector2.one;
+            float artScale = Mathf.Min(2.55f / Mathf.Max(0.01f, sourceSize.x),
+                1.7f / Mathf.Max(0.01f, sourceSize.y));
+            art.transform.localScale = Vector3.one * artScale;
+
+            if (type == StageFlyingPlatformBossController.PowerItemType.SelfDestruct)
+                item.BuildRainbowMotion(root.transform);
+            return item;
+        }
+
+        private static Color GetFallbackColor(StageFlyingPlatformBossController.PowerItemType itemType)
+        {
+            if (itemType == StageFlyingPlatformBossController.PowerItemType.TripleMissile)
+                return new Color(0.15f, 0.82f, 1f);
+            if (itemType == StageFlyingPlatformBossController.PowerItemType.HomingMissile)
+                return new Color(0.82f, 0.22f, 1f);
+            if (itemType == StageFlyingPlatformBossController.PowerItemType.BombRain)
+                return new Color(1f, 0.68f, 0.08f);
+            return Color.white;
+        }
+
+        private void BuildRainbowMotion(Transform parent)
+        {
+            GameObject glow = new GameObject("Dynamic Rainbow Crayon Glow");
+            glow.transform.SetParent(parent, false);
+            glow.transform.localScale = Vector3.one * 2.1f;
+            rainbowGlow = glow.AddComponent<SpriteRenderer>();
+            rainbowGlow.sprite = DoodleRuntimeAssets.CircleSprite;
+            rainbowGlow.sortingOrder = 157;
+
+            GameObject orbit = new GameObject("Dynamic Rainbow Pencil Sparks");
+            orbit.transform.SetParent(parent, false);
+            rainbowOrbit = orbit.transform;
+            rainbowSparks = new SpriteRenderer[7];
+            for (int i = 0; i < rainbowSparks.Length; i++)
+            {
+                float angle = i * Mathf.PI * 2f / rainbowSparks.Length;
+                GameObject spark = new GameObject("Rainbow Crayon Spark " + (i + 1));
+                spark.transform.SetParent(rainbowOrbit, false);
+                spark.transform.localPosition = new Vector3(
+                    Mathf.Cos(angle) * 1.55f, Mathf.Sin(angle) * 0.92f, 0f);
+                spark.transform.localScale = new Vector3(0.2f, 0.09f, 1f);
+                spark.transform.localRotation = Quaternion.Euler(0f, 0f, angle * Mathf.Rad2Deg);
+                rainbowSparks[i] = spark.AddComponent<SpriteRenderer>();
+                rainbowSparks[i].sprite = DoodleRuntimeAssets.SquareSprite;
+                rainbowSparks[i].sortingOrder = 160;
+            }
+        }
+
+        private void Update()
+        {
+            transform.position += Vector3.down * (fallSpeed * Time.deltaTime);
+            float pulse = 1f + Mathf.Sin(Time.time * 7f + pulsePhase) * 0.08f;
+            transform.localScale = Vector3.one * pulse;
+            transform.Rotate(0f, 0f,
+                (type == StageFlyingPlatformBossController.PowerItemType.SelfDestruct ? 52f : 18f)
+                * Time.deltaTime);
+            if (type == StageFlyingPlatformBossController.PowerItemType.SelfDestruct)
+            {
+                float hue = Mathf.Repeat(Time.unscaledTime * 0.32f + pulsePhase * 0.07f, 1f);
+                Color rainbow = Color.HSVToRGB(hue, 0.82f, 1f);
+                if (artRenderer != null) artRenderer.color = Color.Lerp(Color.white, rainbow, 0.2f);
+                if (rainbowGlow != null)
+                {
+                    rainbow.a = 0.2f + (pulse - 0.92f) * 0.65f;
+                    rainbowGlow.color = rainbow;
+                    rainbowGlow.transform.localScale = Vector3.one * Mathf.Lerp(1.9f, 2.45f,
+                        0.5f + Mathf.Sin(Time.unscaledTime * 8f + pulsePhase) * 0.5f);
+                }
+                if (rainbowOrbit != null) rainbowOrbit.Rotate(0f, 0f, 95f * Time.deltaTime);
+                for (int i = 0; rainbowSparks != null && i < rainbowSparks.Length; i++)
+                    if (rainbowSparks[i] != null)
+                    {
+                        Color sparkColor = Color.HSVToRGB(
+                            Mathf.Repeat(hue + i / (float)rainbowSparks.Length, 1f), 0.86f, 1f);
+                        sparkColor.a = 0.82f;
+                        rainbowSparks[i].color = sparkColor;
+                    }
+            }
+            if (authoritative) owner?.TryCollectPowerItem(sequence, type, transform.position);
+            if (transform.position.y < -11f) Destroy(gameObject);
+        }
+    }
+
+    public sealed class StageFlyingSelfDestructCharge : MonoBehaviour
+    {
+        private StageFlyingPlatformBossController owner;
+        private StageFlyingPlayerPad pad;
+        private int room;
+        private bool authoritative;
+        private float explodeAt;
+        private SpriteRenderer glow;
+        private TextMesh timer;
+
+        public static void Create(Transform parent, StageFlyingPlatformBossController owner, int room,
+            StageFlyingPlayerPad pad, bool authoritative)
+        {
+            if (pad == null) return;
+            GameObject root = new GameObject("Self Destruct Charge P" + (room + 1));
+            root.transform.SetParent(parent, false);
+            StageFlyingSelfDestructCharge charge = root.AddComponent<StageFlyingSelfDestructCharge>();
+            charge.owner = owner;
+            charge.room = room;
+            charge.pad = pad;
+            charge.authoritative = authoritative;
+            charge.explodeAt = Time.time + 5f;
+            GameObject aura = new GameObject("Self Destruct Aura");
+            aura.transform.SetParent(root.transform, false);
+            aura.transform.localScale = Vector3.one * 2.5f;
+            charge.glow = aura.AddComponent<SpriteRenderer>();
+            charge.glow.sprite = DoodleRuntimeAssets.CircleSprite;
+            charge.glow.sortingOrder = 162;
+            charge.timer = StageEscortController.CreateText(root.transform, "Self Destruct Timer",
+                new Vector3(0f, 1.15f, -0.04f), 42, 0.085f, new Color(1f, 0.1f, 0.16f), 163);
+            GameSfx.PlayAt(SfxId.BombFuseStart, pad.Position, 1f);
+        }
+
+        private void Update()
+        {
+            if (pad == null) { Destroy(gameObject); return; }
+            transform.position = pad.Position + Vector2.up * 0.7f;
+            float remaining = Mathf.Max(0f, explodeAt - Time.time);
+            float urgency = 1f - remaining / 5f;
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * Mathf.Lerp(5f, 18f, urgency));
+            if (glow != null)
+            {
+                glow.color = Color.Lerp(new Color(1f, 0.72f, 0.08f, 0.2f),
+                    new Color(1f, 0.05f, 0.12f, 0.78f), urgency * (0.55f + pulse * 0.45f));
+                glow.transform.localScale = Vector3.one * Mathf.Lerp(2.2f, 4.2f, urgency + pulse * 0.12f);
+            }
+            if (timer != null) timer.text = Mathf.CeilToInt(remaining).ToString();
+            if (remaining > 0f) return;
+            Vector2 point = transform.position;
+            GameObject explosion = new GameObject("Self Destruct Explosion");
+            explosion.transform.position = point;
+            explosion.AddComponent<BombExplosionVisual>().Configure(7.5f, false);
+            GameSfx.PlayAt(SfxId.DynamiteExplosion, point, 1.25f);
+            if (authoritative) owner?.ResolveSelfDestruct(room, point);
             Destroy(gameObject);
         }
     }

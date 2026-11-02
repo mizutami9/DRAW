@@ -817,6 +817,16 @@ namespace DrawBody.Prototype
             }
         }
 
+        public bool IsPanelVisible => drawPanel != null && drawPanel.activeInHierarchy;
+
+        public void RestoreActivePanelVisibility()
+        {
+            if (!active || drawPanel == null || drawPanel.activeSelf) return;
+            drawPanel.SetActive(true);
+            feedback?.SetActive(true);
+            UpdateGamepadCursorVisibility();
+        }
+
         public void CancelEditing()
         {
             FinishStroke();

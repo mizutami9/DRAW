@@ -48,6 +48,7 @@ for ($caseIndex = 0; $caseIndex -lt $cases.Count; $caseIndex++) {
         "-pico-regression-backend=direct",
         "-pico-regression-port=$port",
         "-pico-regression-players=4",
+        "-pico-topology-processes=$($case.Layouts.Count)",
         "-pico-regression-stage=$Stage",
         "-pico-debug-no-time-limit",
         "-screen-width", "800", "-screen-height", "450", "-screen-fullscreen", "0"

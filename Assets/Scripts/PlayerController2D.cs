@@ -99,7 +99,8 @@ namespace DrawBody.Prototype
         private bool friendCarried;
         private bool humanCarryStruggling;
         private float weaponRecoilMomentumUntil = -100f;
-        private float environmentalPushUntil = -100f;
+        private float environmentalWindUntil = -100f;
+        private Vector2 environmentalWindVelocity;
         private bool remoteActionStateEnabled;
         private bool remoteGrounded;
         private bool remoteWallSticking;
@@ -112,6 +113,10 @@ namespace DrawBody.Prototype
         private bool lastLandingWasHard;
         private float remoteRespawnGraceUntil;
         private LocalPlayerInputBinding inputBinding;
+        private float movementDiagnosticStartedAt = -1f;
+        private Vector2 movementDiagnosticStartPosition;
+        private float nextMovementDiagnosticLogAt;
+        private bool movementInputLogged;
 
         public bool IsGrounded { get; private set; }
         public bool ControlsEnabled => controlsEnabled;
@@ -227,14 +232,15 @@ namespace DrawBody.Prototype
             rb.linearVelocity -= appliedVelocityChange;
         }
 
-        public void ApplyEnvironmentalPush(Vector2 velocityChange, float steeringDelay = 0.1f)
+        public void SetEnvironmentalWind(Vector2 driftVelocity, float duration = 0.12f)
         {
-            if (rb == null || rb.bodyType != RigidbodyType2D.Dynamic
-                || velocityChange.sqrMagnitude < 0.000001f) return;
-            rb.linearVelocity += velocityChange;
-            environmentalPushUntil = Mathf.Max(
-                environmentalPushUntil,
-                Time.fixedTime + Mathf.Clamp(steeringDelay, 0.04f, 0.3f));
+            if (rb == null || rb.bodyType != RigidbodyType2D.Dynamic) return;
+            // Sustained wind is a signed drift, not a window of weakened braking.
+            // Retaining the old movement direction made a leftward blizzard feel
+            // like a rightward push after running to the right.
+            environmentalWindVelocity = driftVelocity;
+            environmentalWindUntil = Time.fixedTime + Mathf.Clamp(duration, 0.04f, 0.3f);
+            rb.linearVelocity += Vector2.up * (driftVelocity.y * Time.fixedDeltaTime);
         }
 
         public void SetScriptedInput(float horizontal, bool jumpHeld, bool jumpPressed = false)
@@ -521,6 +527,17 @@ namespace DrawBody.Prototype
             horizontalInput = scriptedInputEnabled
                 ? scriptedHorizontalInput
                 : ReadLocalMoveX();
+            if (!movementInputLogged && Mathf.Abs(horizontalInput) >= 0.25f)
+            {
+                movementInputLogged = true;
+                LocalPlayerInputBinding activeBinding = InputBinding;
+                Debug.Log(
+                    $"[PICO PLAYER INPUT ACTIVE] stage={stageManager?.CurrentStageId ?? "unknown"} "
+                    + $"player={name} input={horizontalInput:0.###} "
+                    + $"device={(activeBinding != null ? activeBinding.Kind.ToString() : "none")} "
+                    + $"deviceName={(activeBinding != null ? activeBinding.DeviceDisplayName : "none")} "
+                    + $"inputSuppressed={(activeBinding != null && activeBinding.GameplayInputSuppressed)}");
+            }
             UpdateFacing();
             UpdateTurtleAbilityInput();
 
@@ -567,6 +584,7 @@ namespace DrawBody.Prototype
             PlayLandingSound(groundedBeforeProbe, verticalSpeedBeforeProbe);
             UpdateWallContact();
             Move();
+            MonitorMovementStall();
             PlayMovementSound();
             ApplyAirAbility();
             TryJump();
@@ -715,7 +733,8 @@ namespace DrawBody.Prototype
             lastJumpPressedAt = -100f;
             scriptedJumpPressed = false;
             weaponRecoilMomentumUntil = -100f;
-            environmentalPushUntil = -100f;
+            environmentalWindUntil = -100f;
+            environmentalWindVelocity = Vector2.zero;
             wallJumpControlLockUntil = -100f;
             wallJumpMomentumUntil = -100f;
             wallJumpSourceSide = 0;
@@ -739,13 +758,84 @@ namespace DrawBody.Prototype
                 if (rb == null) return;
             }
 
+            bool hadInvalidGameplayState = !rb.simulated
+                || rb.bodyType != gameplayBodyType
+                || (rb.constraints & (RigidbodyConstraints2D.FreezePositionX
+                    | RigidbodyConstraints2D.FreezePositionY)) != 0;
+            bool previousSimulated = rb.simulated;
+            RigidbodyType2D previousBodyType = rb.bodyType;
+            RigidbodyConstraints2D previousConstraints = rb.constraints;
+            movementDiagnosticStartedAt = -1f;
+            movementInputLogged = false;
             rb.simulated = true;
             rb.bodyType = gameplayBodyType;
             rb.gravityScale = gameplayGravityScale;
-            rb.freezeRotation = gameplayFreezeRotation;
+            // Restoring only freezeRotation preserves stale FreezePositionX/Y
+            // bits. A previous carry/challenge/redraw state can therefore leave
+            // the player producing walk velocity and animation while the body is
+            // permanently pinned to one coordinate. Gameplay never freezes
+            // translation, so restore the complete authored constraint set.
+            rb.constraints = gameplayFreezeRotation
+                ? RigidbodyConstraints2D.FreezeRotation
+                : RigidbodyConstraints2D.None;
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
             rb.WakeUp();
+            LocalPlayerInputBinding readyBinding = InputBinding;
+            Debug.Log(
+                $"[PICO PLAYER PHYSICS READY] stage={stageManager?.CurrentStageId ?? "unknown"} "
+                + $"player={name} device={(readyBinding != null ? readyBinding.Kind.ToString() : "none")} "
+                + $"deviceName={(readyBinding != null ? readyBinding.DeviceDisplayName : "none")} "
+                + $"position={rb.position} simulated={rb.simulated} bodyType={rb.bodyType} "
+                + $"constraints={rb.constraints} gravity={rb.gravityScale:0.###}");
+            if (hadInvalidGameplayState)
+            {
+                Debug.LogWarning(
+                    $"[PICO PLAYER PHYSICS RECOVERY] player={name} "
+                    + $"simulated={previousSimulated}->{rb.simulated} "
+                    + $"bodyType={previousBodyType}->{rb.bodyType} "
+                    + $"constraints={previousConstraints}->{rb.constraints}");
+            }
+        }
+
+        private void MonitorMovementStall()
+        {
+            if (!controlsEnabled || friendCarried || rb == null
+                || Mathf.Abs(horizontalInput) < 0.25f || Time.timeScale <= 0f)
+            {
+                movementDiagnosticStartedAt = -1f;
+                return;
+            }
+
+            if (movementDiagnosticStartedAt < 0f)
+            {
+                movementDiagnosticStartedAt = Time.unscaledTime;
+                movementDiagnosticStartPosition = rb.position;
+                return;
+            }
+
+            if (Time.unscaledTime - movementDiagnosticStartedAt < 0.65f) return;
+            Vector2 displacement = rb.position - movementDiagnosticStartPosition;
+            if (Mathf.Abs(displacement.x) < 0.025f
+                && Time.unscaledTime >= nextMovementDiagnosticLogAt)
+            {
+                LocalPlayerInputBinding binding = InputBinding;
+                Debug.LogWarning(
+                    $"[PICO PLAYER MOVEMENT STALLED] stage={stageManager?.CurrentStageId ?? "unknown"} "
+                    + $"player={name} input={horizontalInput:0.###} "
+                    + $"device={(binding != null ? binding.Kind.ToString() : "none")} "
+                    + $"deviceName={(binding != null ? binding.DeviceDisplayName : "none")} "
+                    + $"inputSuppressed={(binding != null && binding.GameplayInputSuppressed)} "
+                    + $"position={rb.position} transform={transform.position} "
+                    + $"velocity={rb.linearVelocity} displacement={displacement} "
+                    + $"simulated={rb.simulated} bodyType={rb.bodyType} "
+                    + $"constraints={rb.constraints} awake={rb.IsAwake()} "
+                    + $"grounded={IsGrounded} controls={controlsEnabled} carried={friendCarried} "
+                    + $"timeScale={Time.timeScale:0.###}");
+                nextMovementDiagnosticLogAt = Time.unscaledTime + 2f;
+            }
+            movementDiagnosticStartedAt = Time.unscaledTime;
+            movementDiagnosticStartPosition = rb.position;
         }
 
         private void UpdateTurtleAbilityInput()
@@ -929,15 +1019,6 @@ namespace DrawBody.Prototype
             {
                 return;
             }
-            if (Time.fixedTime < environmentalPushUntil)
-            {
-                float desiredX = horizontalInput * moveSpeed * EffectiveMoveSpeedMultiplier;
-                float softenedSteering = acceleration * 0.08f * Time.fixedDeltaTime;
-                rb.linearVelocity = new Vector2(
-                    Mathf.MoveTowards(rb.linearVelocity.x, desiredX, softenedSteering),
-                    rb.linearVelocity.y);
-                return;
-            }
             if (Time.fixedTime < wallJumpControlLockUntil)
             {
                 rb.linearVelocity = new Vector2(wallJumpLockedVelocityX, rb.linearVelocity.y);
@@ -985,7 +1066,8 @@ namespace DrawBody.Prototype
 
             Vector2 currentSupportVelocity = GetCurrentSupportVelocity();
             float targetSpeed = currentSupportVelocity.x
-                + horizontalInput * moveSpeed * EffectiveMoveSpeedMultiplier;
+                + horizontalInput * moveSpeed * EffectiveMoveSpeedMultiplier
+                + (Time.fixedTime < environmentalWindUntil ? environmentalWindVelocity.x : 0f);
             float speedDifference = targetSpeed - rb.linearVelocity.x;
             float rate;
             if (IsGrounded && groundedOnIce)
@@ -1517,7 +1599,7 @@ namespace DrawBody.Prototype
         {
             bool grounded = remoteActionStateEnabled && !controlsEnabled ? remoteGrounded : IsGrounded;
             bool moving = remoteActionStateEnabled && !controlsEnabled || Mathf.Abs(horizontalInput) >= 0.2f;
-            if (!grounded || !moving || Mathf.Abs(rb.linearVelocity.x) < 0.5f || Time.time < nextFootstepTime)
+            if (groundedOnRaceIce || !grounded || !moving || Mathf.Abs(rb.linearVelocity.x) < 0.5f || Time.time < nextFootstepTime)
             {
                 return;
             }

@@ -119,7 +119,10 @@ namespace DrawBody.Prototype
 
             GameObject serviceObject = new GameObject("GameBgm");
             instance = serviceObject.AddComponent<GameBgm>();
-            DontDestroyOnLoad(serviceObject);
+            if (Application.isPlaying)
+            {
+                DontDestroyOnLoad(serviceObject);
+            }
             return instance;
         }
 

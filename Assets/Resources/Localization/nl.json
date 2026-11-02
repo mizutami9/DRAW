@@ -21,6 +21,50 @@
       "value": "REGISTER"
     },
     {
+      "key": "option_reset_progress",
+      "value": "VOORTGANG RESETTEN"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "VOORTGANG RESETTEN"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Alle voltooide levels resetten?\nVolume, taal, spelersnaam en tekeningen blijven behouden."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "De levelvoortgang is gereset."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "RESETTEN"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ANNULEREN"
+    },
+    {
+      "key": "option_complete",
+      "value": "KLAAR"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "WEERGAVE: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "RESOLUTIE: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "VOLLEDIG SCHERM"
+    },
+    {
+      "key": "option_windowed",
+      "value": "VENSTERMODUS"
+    },
+    {
       "key": "lang_ja",
       "value": "Japans"
     },
@@ -130,7 +174,7 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "Teken {0}."
     },
     {
       "key": "head",
@@ -138,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Torso"
+      "value": "Torsus"
     },
     {
       "key": "left_arm",
@@ -262,15 +306,15 @@
     },
     {
       "key": "ability_card_cat",
-      "value": "CAT"
+      "value": "KATTEN"
     },
     {
       "key": "ability_card_bird",
-      "value": "BIRD"
+      "value": "VOGEL"
     },
     {
       "key": "ability_card_turtle",
-      "value": "TURTLE"
+      "value": "SCHILDPAD"
     },
     {
       "key": "ability_card_slime",
@@ -302,7 +346,7 @@
     },
     {
       "key": "ability_control_cat",
-      "value": "F: SCRATCH / GRAB"
+      "value": "F: KRABBEN / GRIJPEN"
     },
     {
       "key": "ability_control_bird",
@@ -315,6 +359,114 @@
     {
       "key": "ability_control_slime",
       "value": "F: UPWARD Spike Attack"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "VIERKANT / X: GOOIEN"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "VIERKANT / X: KRAS / GRAB"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "HOUD KRUIS / A: GLIJD VIERKANT / X: GRAB"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "HOUD KRUIS / A: SHELL HOUD VIERKANT / X: DRAAI 90°"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "VIERKANT / X: SPIJK NAAR RECHTER STICK"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "DRIEHOEK / Y: WIJZIGEN VAN KARAKTER"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Vraag: VERANDER VAN KARAKTER"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / SELECTEER: TEKENEN MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: TEKENEN MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: TEKENEN MENU"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "VIERKANT: GOOIEN"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "VIERKANT: KRAS / GRAB"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "KRUIS VASTHOUDEN: GLIJDEN VIERKANT: GRIJPEN"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "HOUD KRUIS: SHELL HOUD VIERKANT: DRAAI 90°"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "VIERKANT: SPIJK NAAR RECHTER STICK"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: GOOIEN"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: KRAS / GRAB"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "VASTHOUDEN A: GLIJDEN X: Grijpen"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "HOLD A: SHELL HOLD X: DRAAI 90°"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SPIJK NAAR RECHTER STICK"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "DRIEHOEK: VERANDER VAN KARAKTER"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: VERANDER VAN KARAKTER"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: TEKENEN MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: TEKENEN MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: TEKENEN MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: TEKENEN MENU"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "NIET INBEGREPEN IN DEMO"
     },
     {
       "key": "ability_effect_human_combined",
@@ -366,7 +518,7 @@
     },
     {
       "key": "ability_rank",
-      "value": "RANK {0}"
+      "value": "RANG {0}"
     },
     {
       "key": "ability_gauge_low",
@@ -378,7 +530,7 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JUMP"
+      "value": "SPRINGEN ."
     },
     {
       "key": "ability_human_arm_gauge",
@@ -390,15 +542,15 @@
     },
     {
       "key": "ability_cat_front_leg_gauge",
-      "value": "SCRATCH"
+      "value": "SCHRAMMEN"
     },
     {
       "key": "ability_bird_gauge",
-      "value": "GLIDE"
+      "value": "GLIJDEN"
     },
     {
       "key": "ability_turtle_gauge",
-      "value": "DEFENSE"
+      "value": "VERDEDIGING"
     },
     {
       "key": "ability_slime_gauge",
@@ -442,11 +594,103 @@
     },
     {
       "key": "label_far_lever",
-      "value": "3 Far Lever"
+      "value": "3 Verhoogde hefboom"
     },
     {
       "key": "label_narrow_hole",
-      "value": "4 Narrow Hole"
+      "value": "4 Een smal gat"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Toetsenbord + muis"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (losgekoppeld)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automatisch (toetsenbord / gamepad)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD ONTKOPPELD. VERBIND DEZE OPNIEUW OM DEZELFDE SPELER TE HERSTELLEN."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD OPNIEUW VERBONDEN."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} AANGESLOTEN ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "TOT 2 SPELERS PER APPARAAT EN 4 SPELERS IN TOTAAL IN DE RUIMTE."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "VOEG LOKALE SPELERS TOE OF VERWIJDER VOORDAT DE STAGE BEGINT."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "DE KAMER IS VOL (4 SPELERS). DE EXTRA LOKALE SPELER WERD VERWIJDERD."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "NIET TOEGEWEZEN PAD: START OM DEEL TE NEMEN / TOETSENBORD: ENTER OM DEEL TE NEMEN, BACKSPACE OM TE VERLATEN / P2: SELECT + B OM TE VERLATEN"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "LOKALE SPELERS {0}/2 VERBONDEN PADS {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "LOKAAL SPELEN {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PAD {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "DRUK OP EEN CONTROLLERKNOP OM DEEL TE NEMEN"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: DOE MEE"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 SPELERS KLAAR"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "SPELERS {0}/2\nTOETSENBORD: ENTER OM DEEL TE NEMEN / BACKSPACE OM TE VERLATEN\nCONTROLLER: START OM DEEL TE NEMEN / B HOUDEN OM TE VERLATEN"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 OVERGESCHAKELD NAAR {0}."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "TOETSENBORD/MUIS VRIJGEGEVEN VAN P1. DRUK OP EEN CONTROLLERKNOP OM P1 TE CLAIMEREN."
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} LINKS."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "TITELTEKENING IS NIET BESCHIKBAAR TIJDENS LOKALE CO-OP. GA EERST TERUG NAAR 1 SPELER."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "LINKER STICK: BEWEGEN RT / A / B: TEKENEN EN SELECTEREN LT: WISSEN"
     },
     {
       "key": "multi_room_setup",
@@ -454,7 +698,7 @@
     },
     {
       "key": "multi_participants",
-      "value": "PLAYERS"
+      "value": "SPELERS"
     },
     {
       "key": "multi_room_create_title",
@@ -462,7 +706,7 @@
     },
     {
       "key": "multi_room_join_title",
-      "value": "JOIN ROOM"
+      "value": "EEN KAMER ."
     },
     {
       "key": "multi_room_id",
@@ -497,6 +741,10 @@
       "value": "FASE {0} / {1}"
     },
     {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
+    },
+    {
       "key": "tower_defense_time_remaining",
       "value": "TIJD {0:0.0}"
     },
@@ -517,8 +765,28 @@
       "value": "Defense veilig!"
     },
     {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
+    },
+    {
       "key": "value_coin_amount",
-      "value": "COIN {0} / {1}"
+      "value": "MONETAIR {0} / {1}"
     },
     {
       "key": "value_coin_time",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "TEKEN"
     },
     {
       "key": "title_option",
@@ -571,6 +839,10 @@
     {
       "key": "title_exit",
       "value": "Afsluiten"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "NICO DRAW afsluiten?"
     },
     {
       "key": "title_debug",
@@ -629,6 +901,10 @@
       "value": "Characters kunnen alleen veranderd worden in de ready room."
     },
     {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Je kunt alleen van personage wisselen op een hertekenvloer."
+    },
+    {
       "key": "trailer_debug_capture_help",
       "value": "R REPLAY HID HUD     ESC  TITEL"
     },
@@ -642,7 +918,7 @@
     },
     {
       "key": "trailer_tas_record",
-      "value": "F9 RECORD/STOP"
+      "value": "F9 OPNAME/STOP"
     },
     {
       "key": "trailer_tas_play",
@@ -666,7 +942,7 @@
     },
     {
       "key": "trailer_tas_status_idle",
-      "value": "IDLE"
+      "value": "ONWERKZAAM"
     },
     {
       "key": "trailer_tas_status_recording",
@@ -690,7 +966,7 @@
     },
     {
       "key": "trailer_tas_save_preset",
-      "value": "SAVE SHAPES"
+      "value": "BEWAAR VORMEN"
     },
     {
       "key": "trailer_tas_placement_help",
@@ -703,6 +979,38 @@
     {
       "key": "menu_to_title",
       "value": "Titel"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Dit level opnieuw beginnen?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "OPNIEUW"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Het huidige level verlaten en terugkeren naar de levelselectie?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "LEVELSELECTIE"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "Onvoltooide wijzigingen worden niet opgeslagen. Teruggaan zonder op te slaan?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "TERUG ZONDER OPSLAAN"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Het opnieuw getekende personage is opgeslagen."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Opslaan mislukt. Druk opnieuw op ‘KLAAR’."
     },
     {
       "key": "language_settings",
@@ -818,7 +1126,7 @@
     },
     {
       "key": "multi_start_stage_1_1",
-      "value": "Start 1-1"
+      "value": "Begin met 1-1."
     },
     {
       "key": "multi_stage_select",
@@ -898,7 +1206,7 @@
     },
     {
       "key": "multi_local",
-      "value": "Lokale"
+      "value": "Local"
     },
     {
       "key": "multi_ready",
@@ -910,7 +1218,7 @@
     },
     {
       "key": "multi_host",
-      "value": "HOST"
+      "value": "HUISGEVER"
     },
     {
       "key": "multi_default_room_name",
@@ -929,8 +1237,12 @@
       "value": "JIJ"
     },
     {
+      "key": "spectator_following",
+      "value": "Toeschouwen: {0} Schakel met ← / →"
+    },
+    {
       "key": "online_player_host",
-      "value": "Host"
+      "value": "Huisgever"
     },
     {
       "key": "online_player_number",
@@ -943,6 +1255,18 @@
     {
       "key": "online_fake_initialized",
       "value": "Nep backend geïnitialiseerd."
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Online spelen is niet beschikbaar omdat de spelgegevens of versie niet overeenkomen. Controleer de spelbestanden in Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "De host heeft de verbinding verbroken; de kamer is gesloten."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "De verbinding met de sessie is verbroken. Neem opnieuw deel aan de kamer."
     },
     {
       "key": "online_logging_in",
@@ -1041,6 +1365,14 @@
       "value": "EOS-aanmelding mislukt: {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "Start Steam en open daarna NICO DRAW vanuit je Steam-bibliotheek."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Kan geen Steam-authenticatieticket ophalen: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "EOS aanmaken lobby mislukt: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "Zoeken naar ruimtecode is mislukt: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Het maken van een ruimte is mislukt. Opnieuw proberen over {0}s ({1} pogingen resterend)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1166,7 +1502,7 @@
     },
     {
       "key": "stage_species_available_compact",
-      "value": "USE: {0}"
+      "value": "GEBRUIK: {0}"
     },
     {
       "key": "stage_select_debug_created",
@@ -1186,7 +1522,7 @@
     },
     {
       "key": "draw_species_swap_title",
-      "value": "CHARACTER SWAP"
+      "value": "SCHAKEL VAN KARAKTERS"
     },
     {
       "key": "draw_species_swap_hint",
@@ -1197,16 +1533,32 @@
       "value": "{0} wil uw {1} voor {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} gebruikt dit personage al. Een ruilverzoek sturen?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "VERZOEK VERSTUREN"
+    },
+    {
       "key": "draw_species_swap_accept",
-      "value": "SWAP"
+      "value": "VERWISSELING"
     },
     {
       "key": "draw_species_swap_reject",
-      "value": "DECLINE"
+      "value": "AFNAME"
     },
     {
       "key": "draw_species_swap_pending",
       "value": "Wachten op een antwoord op het verzoek tot ruil..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "RUILVERZOEK VERZONDEN"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Wachten op antwoord van {0}.\nAangevraagde ruil: {1} voor {2}."
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "Teststart: X {0:0.00} # Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "Verhuizen P{0}De startpositie van de testspel."
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "P{0} teststart: X {1:0.00} / Y {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1410,7 +1770,7 @@
     },
     {
       "key": "stage_editor_bomb_fuse_seconds",
-      "value": "Fuse (sec)"
+      "value": "TOT DE EXPLOSIE."
     },
     {
       "key": "stage_editor_crumble_delay",
@@ -1426,11 +1786,11 @@
     },
     {
       "key": "stage_editor_drop_interval",
-      "value": "Drop Interval (sec)"
+      "value": "- JA. - JA. - JA."
     },
     {
       "key": "stage_editor_beam_interval",
-      "value": "Beam Interval (sec)"
+      "value": "Beaminterval (sec)"
     },
     {
       "key": "stage_editor_box_size",
@@ -1526,7 +1886,7 @@
     },
     {
       "key": "stage_editor_status_box_pattern",
-      "value": "Dropped boxes: {0}"
+      "value": "Gegote dozen: {0}"
     },
     {
       "key": "stage_editor_status_bomb_pattern",
@@ -1574,7 +1934,7 @@
     },
     {
       "key": "draw_undo_once",
-      "value": "UNDO"
+      "value": "VERNIETIGBAAR"
     },
     {
       "key": "draw_reset_all",
@@ -1590,7 +1950,7 @@
     },
     {
       "key": "draw_reset_confirm_yes",
-      "value": "RESET"
+      "value": "HERSTELLEN"
     },
     {
       "key": "draw_reset_confirm_no",
@@ -1598,15 +1958,19 @@
     },
     {
       "key": "draw_preset_title",
-      "value": "{0} PRESETS"
+      "value": "{0} VOORINSTELLINGEN"
     },
     {
       "key": "draw_preset_button",
-      "value": "PRESETS"
+      "value": "VOORINSTELLINGEN"
     },
     {
       "key": "draw_preset_sets_title",
       "value": "5-CHARACTERPRESET"
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "TERUG"
     },
     {
       "key": "draw_preset_five_species",
@@ -1622,7 +1986,7 @@
     },
     {
       "key": "draw_preset_saved",
-      "value": "SAVED"
+      "value": "VERZEKERD"
     },
     {
       "key": "draw_preset_empty",
@@ -1630,15 +1994,15 @@
     },
     {
       "key": "draw_preset_register",
-      "value": "SAVE"
+      "value": "SLAAN ."
     },
     {
       "key": "draw_preset_apply",
-      "value": "SET"
+      "value": "VERZAMELING"
     },
     {
       "key": "draw_preset_save_confirm_title",
-      "value": "SAVE TO PRESET {0}?"
+      "value": "SPEER OP VOORINSTELLING {0}?"
     },
     {
       "key": "draw_preset_save_confirm_message",
@@ -1702,7 +2066,7 @@
     },
     {
       "key": "stage_object_background_smiley",
-      "value": "Smiley"
+      "value": "Smiley ."
     },
     {
       "key": "stage_object_background_heart",
@@ -1758,7 +2122,7 @@
     },
     {
       "key": "stage_object_background_donut",
-      "value": "Donut"
+      "value": "Donuts"
     },
     {
       "key": "stage_object_background_ice_cream",
@@ -1790,7 +2154,7 @@
     },
     {
       "key": "stage_object_background_ufo",
-      "value": "UFO"
+      "value": "UFO'S"
     },
     {
       "key": "stage_object_background_hot_air_balloon",
@@ -1846,7 +2210,7 @@
     },
     {
       "key": "stage_object_background_gem",
-      "value": "Gem"
+      "value": "Edelsteen"
     },
     {
       "key": "stage_object_background_coin",
@@ -1910,7 +2274,7 @@
     },
     {
       "key": "stage_object_background_goal",
-      "value": "GOAL!"
+      "value": "DOEL! DOEL!"
     },
     {
       "key": "stage_editor_status_rotate_decoration",
@@ -2006,7 +2370,7 @@
     },
     {
       "key": "stage_editor_boundary_quick",
-      "value": "Frame"
+      "value": "Reken"
     },
     {
       "key": "stage_editor_status_boundary_fitted",
@@ -2018,7 +2382,7 @@
     },
     {
       "key": "stage_goal_label",
-      "value": "GOAL"
+      "value": "DOEL"
     },
     {
       "key": "stage_room_number",
@@ -2026,19 +2390,23 @@
     },
     {
       "key": "stage_weapon_bomb",
-      "value": "BOMB"
+      "value": "BOMME"
     },
     {
       "key": "stage_weapon_missile",
-      "value": "MISSILE"
+      "value": "MISSIEL"
     },
     {
       "key": "stage_ready_label",
       "value": "Klaar"
     },
     {
+      "key": "background_word_push",
+      "value": "DUW!"
+    },
+    {
       "key": "stage_dynamite_label",
-      "value": "TNT"
+      "value": "TNT ."
     },
     {
       "key": "stage_editor_background_color",
@@ -2046,7 +2414,7 @@
     },
     {
       "key": "laser_relay_editor_players",
-      "value": "PLAYERS {0}"
+      "value": "SPELERS {0}"
     },
     {
       "key": "laser_relay_editor_round",
@@ -2206,7 +2574,7 @@
     },
     {
       "key": "stage_object_moving_one_way_platform",
-      "value": "Sticky Moving One-Way Floor"
+      "value": "Sticky Moving One-Way vloer"
     },
     {
       "key": "ricochet_breaker_title",
@@ -2234,7 +2602,7 @@
     },
     {
       "key": "ricochet_enemy_balls",
-      "value": "BALL {0} / {1}"
+      "value": "BALLEN {0} / {1}"
     },
     {
       "key": "ricochet_enemy_next",
@@ -2262,15 +2630,15 @@
     },
     {
       "key": "stage_object_spike_planet",
-      "value": "Spike Planet"
+      "value": "DE TOEGE PLANEET."
     },
     {
       "key": "stage_object_enemy_flyer_zigzag",
-      "value": "Zigzag Flyer"
+      "value": "ZIEGZAG VLIEGENDE VIJAND."
     },
     {
       "key": "stage_object_enemy_flyer_orbit",
-      "value": "Orbit Flyer"
+      "value": "EEN ROTERENDE VIJAND."
     },
     {
       "key": "stage_object_bazooka",
@@ -2290,7 +2658,7 @@
     },
     {
       "key": "stage_object_pose_character_keyhole",
-      "value": "Pose Keyhole"
+      "value": "Posatie sleuteloog"
     },
     {
       "key": "stage_object_updraft_zone",
@@ -2306,7 +2674,7 @@
     },
     {
       "key": "stage_object_redraw_zone",
-      "value": "Redraw Zone"
+      "value": "Re-tekenzone"
     },
     {
       "key": "stage_editor_bullet_wall_hits",
@@ -2418,7 +2786,7 @@
     },
     {
       "key": "stage_object_shutter",
-      "value": "Shutter"
+      "value": "Schutter"
     },
     {
       "key": "stage_object_fence",
@@ -2462,11 +2830,11 @@
     },
     {
       "key": "stage_object_barrel",
-      "value": "Barrel"
+      "value": "Vaten en vaten"
     },
     {
       "key": "stage_object_rock",
-      "value": "Rock"
+      "value": "Rots"
     },
     {
       "key": "stage_object_ice_block",
@@ -2478,7 +2846,7 @@
     },
     {
       "key": "stage_object_rubber_box",
-      "value": "Rubber Box"
+      "value": "Rubberen doos"
     },
     {
       "key": "stage_object_bomb",
@@ -2518,7 +2886,7 @@
     },
     {
       "key": "stage_object_enemy_dropper",
-      "value": "Enemy Spawner"
+      "value": "Vriend Spawner"
     },
     {
       "key": "stage_object_missile_launcher",
@@ -2602,11 +2970,11 @@
     },
     {
       "key": "stage_object_box_dropper",
-      "value": "Box Dropper"
+      "value": "EEN APPARAAT OM DE DOOS TE LATEN VALLEN."
     },
     {
       "key": "stage_object_spike_dropper",
-      "value": "Spike Dropper"
+      "value": "EEN TOEDOEN."
     },
     {
       "key": "stage_object_collectible_fish",
@@ -2666,7 +3034,11 @@
     },
     {
       "key": "challenge_time_up",
-      "value": "TIME UP"
+      "value": "TIJD IS VOORBIJ ."
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "GEEN TIJDSLIMIET"
     },
     {
       "key": "challenge_retry_hint",
@@ -2749,6 +3121,26 @@
       "value": "TIME UP RETRY IN {0}"
     },
     {
+      "key": "ice_race_rule",
+      "value": "WISSEN BINNEN {0} TOTAAL"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "TOTAAL {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TEAMTOTAAL VOORBIJ"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "OPNIEUW PROBEREN IN {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "GAME OVER\nTOTAAL {0} / {1}"
+    },
+    {
       "key": "survival_get_ready",
       "value": "Klaar!"
     },
@@ -2791,6 +3183,10 @@
     {
       "key": "ready_room_game_default",
       "value": "Klaar om het spel te beginnen"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "REN."
     },
     {
       "key": "ready_room_game_2_2",
@@ -2890,15 +3286,15 @@
     },
     {
       "key": "ready_room_game_15_1",
-      "value": "DEFEAT CRAYON DEVIL"
+      "value": "DE DUIVEL VAN DE POTLOOD VERSLAAN ."
     },
     {
       "key": "ready_room_game_15_2",
-      "value": "DEFEAT CRAYON STALKER"
+      "value": "VERSLAAN DE POTLOOD STALKER ."
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "DE VRAAGSTUKKEN"
+      "value": "ONTWIJK DE AANVALLEN VAN DE VIJAND"
     },
     {
       "key": "ready_room_clear_one_survivor",
@@ -2907,6 +3303,10 @@
     {
       "key": "ready_room_clear_one_goal",
       "value": "Duidelijk wanneer iemand het doel bereikt."
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "DUIDELIJK OF IEDEREEN GECOMBINEERDE EINDTIJD BINNEN 1 MINUUT PER SPELER IS."
     },
     {
       "key": "spike_chase_monitor_title",
@@ -2921,32 +3321,56 @@
       "value": "Ren naar het doel!"
     },
     {
-      "key": "wind_speedrun_title",
-      "value": "Het raam blijft veranderen!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "MINDER INK = STRONGER WIND"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "TIJD {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "TIME UP"
-    },
-    {
       "key": "umbrella_rain_title",
-      "value": "Blijf onder de Umbrella!"
+      "value": "Blijf uit de regen"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "Rain knocks you out - Reach Shelter"
+      "value": "Blijf uit de regen"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "Iedereen werd in de regen gepakt!"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -2962,7 +3386,7 @@
     },
     {
       "key": "linked_shield_failed",
-      "value": "TEAM DOWN - RESTARTING"
+      "value": "TEAM DOWN - OPNIEUW STARTEN"
     },
     {
       "key": "linked_shield_clear",
@@ -2974,7 +3398,7 @@
     },
     {
       "key": "laser_relay_progress",
-      "value": "GOALS {0}/{1}"
+      "value": "DOELSTELLINGEN {0}/{1}"
     },
     {
       "key": "laser_relay_hint",
@@ -3078,7 +3502,7 @@
     },
     {
       "key": "mirror_brawl_failed",
-      "value": "TIME UP"
+      "value": "TIJD IS VOORBIJ ."
     },
     {
       "key": "mirror_brawl_time_up",
@@ -3274,7 +3698,7 @@
     },
     {
       "key": "escort_friend_defeat_cry",
-      "value": "AAAH!"
+      "value": "IK HEB HET."
     },
     {
       "key": "escort_defense_instruction",
@@ -3337,8 +3761,72 @@
       "value": "DICHT DE GATEN!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "RONDE {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "RONDE {0}/3 {1:0.0}s LINKS"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "RONDE {0} DUIDELIJK!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "TIJD OMHOOG!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "DEZE RONDE OPNIEUW PROBEREN"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "PLAATS DE BIJPASSENDE MENSELIJKE POSE IN HET SLEUTELGAT!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "VIND DE BIJPASSENDE POSE ONDER DE DRIJVENDE VOGELS!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "DRAAG DE SCHILDPAD DOOR DE KAMER VOL VEREN!"
+    },
+    {
       "key": "tilt_board_monitor",
       "value": "TOER {0}/3    {1:0.0}LINKS"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "RONDE {0}/3 BEGINT IN {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "JE KUNT TIJDENS HET AFSTELLEN BINNEN JE BAAN BEWEGEN"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "RONDE {0}/3 KRATEN {1}/{2} {3}s LINKS"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "Breek de kratten met de slijmaar!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "Breek de kleine kratten!  KIJK DE VIJANDEN!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "RONDE {0} DUIDELIJK!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "SPEL OVER OPNIEUW PROBEREN RONDE {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "ALLE RONDEN WEG!"
     },
     {
       "key": "tilt_board_progress",
@@ -3393,12 +3881,40 @@
       "value": "10-3 RICOCHET RELAY"
     },
     {
+      "key": "cat_escape_title",
+      "value": "2-3  ONTSNAP AAN DE REUZENKAT!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "WACHTEN {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "START OVER {0}"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "REN!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "TEAMKRABBEN  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
       "key": "ricochet_round",
       "value": "TOER {0} / {1}"
     },
     {
       "key": "ricochet_ammo",
-      "value": "AMMO {0}"
+      "value": "AMMUNITIE {0}"
     },
     {
       "key": "ricochet_instruction",
@@ -3446,7 +3962,7 @@
     },
     {
       "key": "stage_object_spike",
-      "value": "Spike"
+      "value": "Spike ."
     },
     {
       "key": "stage_object_fire",
@@ -3498,7 +4014,7 @@
     },
     {
       "key": "stage_object_slider",
-      "value": "Slider"
+      "value": "Schuifmachine"
     },
     {
       "key": "stage_object_rotating_bar",
@@ -3506,7 +4022,7 @@
     },
     {
       "key": "stage_object_pendulum",
-      "value": "Pendulum"
+      "value": "Vloer"
     },
     {
       "key": "stage_object_keyhole",
@@ -3654,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "Menu"
+      "value": "Menu's"
     },
     {
       "key": "redraw",
@@ -3662,7 +4178,7 @@
     },
     {
       "key": "pen",
-      "value": "Pen"
+      "value": "Pennen"
     },
     {
       "key": "eraser",
@@ -3746,7 +4262,7 @@
     },
     {
       "key": "stage_clear",
-      "value": "CLEAR"
+      "value": "KLAAR."
     },
     {
       "key": "stage_locked",
@@ -3782,7 +4298,7 @@
     },
     {
       "key": "stage_editor_test",
-      "value": "Test"
+      "value": "Testen"
     },
     {
       "key": "stage_editor_back",
@@ -3798,7 +4314,7 @@
     },
     {
       "key": "option_se",
-      "value": "SE"
+      "value": "- JA."
     },
     {
       "key": "option_keys",
@@ -3978,7 +4494,7 @@
     },
     {
       "key": "sfx_browser_title",
-      "value": "SE BROWSER"
+      "value": "BROWSER"
     },
     {
       "key": "sfx_browser_help",
@@ -3990,7 +4506,7 @@
     },
     {
       "key": "sfx_browser_stop",
-      "value": "STOP"
+      "value": "STOP ."
     },
     {
       "key": "sfx_browser_reload",
@@ -4010,15 +4526,43 @@
     },
     {
       "key": "sfx_browser_muted",
-      "value": "MUTED"
+      "value": "GEVOELIGE"
     },
     {
       "key": "sfx_browser_generated",
       "value": "Runtime gegenereerd geluid"
     },
     {
+      "key": "gameplay_control_switch",
+      "value": "Personage wisselen"
+    },
+    {
+      "key": "feedback_button",
+      "value": "FEEDBACK / BUG MELDEN"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "Bedankt voor het spelen!\nFeedback / Bug melden"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "VERLANGLIJST"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "MULTIPLAYER AANBEVOLEN!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW is het leukst als je samenwerkt!\nProbeer het met 2–4 spelers!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OKÉ , OKÉ ."
+    },
+    {
       "key": "stage_object_background_paw_print",
-      "value": "Paw Print"
+      "value": "Pauwprint"
     },
     {
       "key": "stage_object_background_fish",
@@ -4038,11 +4582,11 @@
     },
     {
       "key": "stage_object_background_snowman",
-      "value": "Snowman"
+      "value": "Sneeuwman ."
     },
     {
       "key": "stage_object_background_blizzard",
-      "value": "Blizzard"
+      "value": "Sneeuwstorm"
     },
     {
       "key": "stage_object_background_feather",
@@ -4106,11 +4650,11 @@
     },
     {
       "key": "stage_object_background_tulip",
-      "value": "Tulip"
+      "value": "Tulpen"
     },
     {
       "key": "stage_object_background_skeleton",
-      "value": "Skeleton"
+      "value": "Skelet"
     },
     {
       "key": "stage_object_background_bat",
@@ -4130,15 +4674,15 @@
     },
     {
       "key": "stage_object_background_minecart",
-      "value": "Minecart"
+      "value": "Mineraal"
     },
     {
       "key": "stage_object_background_pickaxe",
-      "value": "Pickaxe"
+      "value": "Vrouwen en kinderen"
     },
     {
       "key": "stage_object_background_trophy",
-      "value": "Trophy"
+      "value": "Trofee"
     },
     {
       "key": "stage_object_background_medal",
@@ -4146,7 +4690,7 @@
     },
     {
       "key": "stage_object_background_whistle",
-      "value": "Whistle"
+      "value": "Fluit"
     },
     {
       "key": "stage_object_background_balloon",
@@ -4206,11 +4750,11 @@
     },
     {
       "key": "stage_object_background_stopwatch",
-      "value": "Stopwatch"
+      "value": "Stopphorloge"
     },
     {
       "key": "stage_object_background_spotlight",
-      "value": "Spotlight"
+      "value": "In de schijnwerpers"
     },
     {
       "key": "stage_object_background_microphone",
@@ -4234,7 +4778,7 @@
     },
     {
       "key": "stage_object_background_alien",
-      "value": "Alien"
+      "value": "Buitenlanders"
     },
     {
       "key": "stage_object_background_comet",
@@ -4255,494 +4799,6 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Boomwortel"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "REN!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "START OVER {0}"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "WACHTEN {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  ONTSNAP AAN DE REUZENKAT!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "TEAMKRABBEN  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "Je kunt alleen van personage wisselen op een hertekenvloer."
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "TERUG"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "Wachten op antwoord van {0}.\nAangevraagde ruil: {1} voor {2}."
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "RUILVERZOEK VERZONDEN"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "Dit level opnieuw beginnen?"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "OPNIEUW"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "Het huidige level verlaten en terugkeren naar de levelselectie?"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "Onvoltooide wijzigingen worden niet opgeslagen. Teruggaan zonder op te slaan?"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "TERUG ZONDER OPSLAAN"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "Het opnieuw getekende personage is opgeslagen."
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "Opslaan mislukt. Druk opnieuw op ‘KLAAR’."
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "LEVELSELECTIE"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "Online spelen is niet beschikbaar omdat de spelgegevens of versie niet overeenkomen. Controleer de spelbestanden in Steam."
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "De verbinding met de sessie is verbroken. Neem opnieuw deel aan de kamer."
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "De host heeft de verbinding verbroken; de kamer is gesloten."
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "ANNULEREN"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "RESETTEN"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "VOORTGANG RESETTEN"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "Alle voltooide levels resetten?\nVolume, taal, spelersnaam en tekeningen blijven behouden."
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "De levelvoortgang is gereset."
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "VOORTGANG RESETTEN"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "REN."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "Personage wisselen"
-    },
-    {
-      "key": "feedback_button",
-      "value": "FEEDBACK / BUG MELDEN"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "Bedankt voor het spelen!\nFeedback / Bug melden"
-    },
-    {
-      "key": "option_complete",
-      "value": "KLAAR"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "WEERGAVE: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "RESOLUTIE: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "VOLLEDIG SCHERM"
-    },
-    {
-      "key": "option_windowed",
-      "value": "VENSTERMODUS"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "Start Steam en open daarna NICO DRAW vanuit je Steam-bibliotheek."
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "Kan geen Steam-authenticatieticket ophalen: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "VERLANGLIJST"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "MULTIPLAYER AANBEVOLEN!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "NICO DRAW is het leukst als je samenwerkt!\nProbeer het met 2–4 spelers!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "OK"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "NICO DRAW afsluiten?"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} gebruikt dit personage al. Een ruilverzoek sturen?"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "VERZOEK VERSTUREN"
-    },
-    {
-      "key": "background_word_push",
-      "value": "DUW!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "HOUD KRUIS / A: GLIJD VIERKANT / X: GRAB"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "VIERKANT / X: KRAS / GRAB"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "VIERKANT / X: GOOIEN"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "VIERKANT / X: SPIJK NAAR RECHTER STICK"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "HOUD KRUIS / A: SHELL HOUD VIERKANT / X: DRAAI 90°"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "KRUIS VASTHOUDEN: GLIJDEN VIERKANT: GRIJPEN"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "VIERKANT: KRAS / GRAB"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "VIERKANT: GOOIEN"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "VIERKANT: SPIJK NAAR RECHTER STICK"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "HOUD KRUIS: SHELL HOUD VIERKANT: DRAAI 90°"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "VASTHOUDEN A: GLIJDEN X: Grijpen"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "X: KRAS / GRAB"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "X: GOOIEN"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: SPIJK NAAR RECHTER STICK"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "HOLD A: SHELL HOLD X: DRAAI 90°"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "GEEN TIJDSLIMIET"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "NIET INBEGREPEN IN DEMO"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "LINKER STICK: BEWEGEN RT / A / B: TEKENEN EN SELECTEREN LT: WISSEN"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: TEKENEN MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: TEKENEN MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / SELECTEER: TEKENEN MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: TEKENEN MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: TEKENEN MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: TEKENEN MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: TEKENEN MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "Vraag: VERANDER VAN KARAKTER"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "DRIEHOEK / Y: WIJZIGEN VAN KARAKTER"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "DRIEHOEK: VERANDER VAN KARAKTER"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "Y: VERANDER VAN KARAKTER"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "TEAMTOTAAL VOORBIJ"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "GAME OVER\nTOTAAL {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "OPNIEUW PROBEREN IN {0}"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "WISSEN BINNEN {0} TOTAAL"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "TOTAAL {0} / {1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "Automatisch (toetsenbord / gamepad)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "Gamepad (losgekoppeld)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "Toetsenbord + muis"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "P{0} GAMEPAD ONTKOPPELD. VERBIND DEZE OPNIEUW OM DEZELFDE SPELER TE HERSTELLEN."
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "P{0} GAMEPAD OPNIEUW VERBONDEN."
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "TOETSENBORD/MUIS VRIJGEGEVEN VAN P1. DRUK OP EEN CONTROLLERKNOP OM P1 TE CLAIMEREN."
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "NIET TOEGEWEZEN PAD: START OM DEEL TE NEMEN / TOETSENBORD: ENTER OM DEEL TE NEMEN, BACKSPACE OM TE VERLATEN / P2: SELECT + B OM TE VERLATEN"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "P{0} AANGESLOTEN ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "P{0} LINKS."
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "TOT 2 SPELERS PER APPARAAT EN 4 SPELERS IN TOTAAL IN DE RUIMTE."
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "DE KAMER IS VOL (4 SPELERS). DE EXTRA LOKALE SPELER WERD VERWIJDERD."
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "P1 OVERGESCHAKELD NAAR {0}."
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "2 SPELERS KLAAR"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: DOE MEE"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "DRUK OP EEN CONTROLLERKNOP OM DEEL TE NEMEN"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "LOKAAL SPELEN {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "VOEG LOKALE SPELERS TOE OF VERWIJDER VOORDAT DE STAGE BEGINT."
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "PAD {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "SPELERS {0}/2\nTOETSENBORD: ENTER OM DEEL TE NEMEN / BACKSPACE OM TE VERLATEN\nCONTROLLER: START OM DEEL TE NEMEN / B HOUDEN OM TE VERLATEN"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "LOKALE SPELERS {0}/2 VERBONDEN PADS {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "Het maken van een ruimte is mislukt. Opnieuw proberen over {0}s ({1} pogingen resterend)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "VIND DE BIJPASSENDE POSE ONDER DE DRIJVENDE VOGELS!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "PLAATS DE BIJPASSENDE MENSELIJKE POSE IN HET SLEUTELGAT!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "RONDE {0}/3 {1:0.0}s LINKS"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "DEZE RONDE OPNIEUW PROBEREN"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "RONDE {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "RONDE {0} DUIDELIJK!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "TIJD OMHOOG!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "DRAAG DE SCHILDPAD DOOR DE KAMER VOL VEREN!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "DUIDELIJK OF IEDEREEN GECOMBINEERDE EINDTIJD BINNEN 1 MINUUT PER SPELER IS."
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "ALLE RONDEN WEG!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "Breek de kleine kratten!  KIJK DE VIJANDEN!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "Breek de kratten met de slijmaar!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "RONDE {0}/3 KRATEN {1}/{2} {3}s LINKS"
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "SPEL OVER OPNIEUW PROBEREN RONDE {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "RONDE {0} DUIDELIJK!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "Toeschouwen: {0} Schakel met ← / →"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "RONDE {0}/3 BEGINT IN {1}"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "JE KUNT TIJDENS HET AFSTELLEN BINNEN JE BAAN BEWEGEN"
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "TITELTEKENING IS NIET BESCHIKBAAR TIJDENS LOKALE CO-OP. GA EERST TERUG NAAR 1 SPELER."
     }
   ]
 }

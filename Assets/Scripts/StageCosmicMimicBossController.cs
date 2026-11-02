@@ -8,7 +8,9 @@ namespace DrawBody.Prototype
     /// <summary>
     /// Stage 15-3. A host-authoritative, no-attack survival boss which copies
     /// every participating player's exact GeneratedBody in species order.
-    /// Each copied form lasts 40 seconds and is worth 50 HP.
+    /// Each copied form is a distinct boss phase and is worth 50 HP. Most
+    /// forms last 40 seconds; slime lasts 50 seconds so its 1/2/4/8 split can
+    /// finish before the phase ends.
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(9000)]
@@ -17,8 +19,11 @@ namespace DrawBody.Prototype
         private const string StageId = "15-3";
         private const string StateKind = "cosmic_mimic_state";
         private const string HitKind = "cosmic_mimic_hit";
+        private const string RevivePickupKind = "cosmic_mimic_revive_pickup_request";
+        private const float ReviveFallSpeed = 6f;
+        private const float ReviveProtectionSeconds = 2f;
         private const float FormDuration = 40f;
-        private const float CloneInterval = 8f;
+        private const float SlimeFormDuration = 50f;
         private const float ArenaHalfWidth = 18.5f;
         private const float ArenaBottom = -8.7f;
         private const float ArenaTop = 8.2f;
@@ -26,8 +31,10 @@ namespace DrawBody.Prototype
         private enum BattleState { Intro, Active, Intermission, Cleared, Failed }
         private enum AttackType
         {
-            HumanRocket, HumanBomb, CatScratch, CatSpikeDash, BirdBomb,
-            BirdSpikeDash, TurtleLaser, TurtleBomb, SlimeSpikes, SlimeMultiply
+            HumanLongSword, HumanDagger, CatScratch, CatSpikeDash, BirdBomb,
+            BirdSpikeDash, TurtleLaser, TurtleBomb, SlimeSpikes, SlimeMultiply,
+            BirdFlock, BirdGust,
+            HumanSwordRain, CatPawStamp, BirdBombRain, SlimeWallSpikes
         }
 
         [Serializable]
@@ -48,6 +55,8 @@ namespace DrawBody.Prototype
             public bool BossShelled;
             public CloneSnapshot[] Clones;
             public AttackPacket Attack;
+            public ReviveDropSnapshot[] ReviveDrops;
+            public ReviveSnapshot[] Revivals;
         }
 
         [Serializable]
@@ -73,6 +82,11 @@ namespace DrawBody.Prototype
             public int AttackAlternator;
             public float LockedUntil;
             public int Facing = 1;
+            public float SpawnedAt;
+            public float VisualScale = 1f;
+            public Vector2 NetworkTarget;
+            public float NetworkSampleTime;
+            public bool HasNetworkTarget;
         }
 
         [Serializable]
@@ -91,7 +105,40 @@ namespace DrawBody.Prototype
         }
 
         [Serializable]
-        private sealed class HitRequest { public string PlayerId; }
+        private sealed class HitRequest { public string PlayerId; public int LifeRevision; }
+
+        [Serializable]
+        private sealed class ReviveDropSnapshot
+        {
+            public int Id;
+            public string TargetId;
+            public Vector2 Position;
+            public Color Color;
+        }
+
+        [Serializable]
+        private sealed class ReviveSnapshot
+        {
+            public string PlayerId;
+            public int Revision;
+            public Vector2 Position;
+            public float ProtectionRemaining;
+        }
+
+        [Serializable]
+        private sealed class RevivePickupRequest
+        {
+            public int DropId;
+            public string PlayerId;
+        }
+
+        private sealed class ReviveDrop
+        {
+            public ReviveDropSnapshot State;
+            public Transform Root;
+            public float ReceivedAt;
+            public float NextRequestAt;
+        }
 
         private sealed class SavedPhysics
         {
@@ -126,8 +173,12 @@ namespace DrawBody.Prototype
         private bool transitionRunning;
         private Coroutine resumeRoutine;
         private float nextAttackAt;
-        private float nextCloneAt;
         private int nextCloneId;
+        private int slimeSplitStage;
+        private float nextBirdFlockAt;
+        private float nextBirdGustAt;
+        private float nextEnvironmentalAttackAt;
+        private bool slimeWallSpikesStarted;
         private int attackAlternator;
         private int stateSequence;
         private int lastStateSequence;
@@ -137,6 +188,9 @@ namespace DrawBody.Prototype
         private float bossLockedUntil;
         private bool bossShelled;
         private Vector2 bossVelocity;
+        private Vector2 remoteBossTarget;
+        private float remoteBossSampleTime;
+        private bool hasRemoteBossTarget;
         private float bossMoveDirection;
         private float bossMoveSpeed;
         private float nextBossMoveDecisionAt;
@@ -150,10 +204,43 @@ namespace DrawBody.Prototype
         private Transform bazookaProp;
         private Transform carriedSpike;
         private Transform shellOverlay;
+        private Transform longSwordProp;
+        private Transform daggerProp;
+        private float bossVisualScale = 1f;
+        private float bossBaseVisualScale = 1f;
+        private int catGrowthStage;
+        private float catGrowthFrom = 1f;
+        private float catGrowthTo = 1f;
+        private float catGrowthStartedAt;
         private Transform monitorRoot;
         private Transform timeSegmentRoot;
         private readonly List<Transform> timeSegmentFills = new List<Transform>();
         private readonly List<float> timeSegmentWidths = new List<float>();
+        private float cameraShakeUntil;
+        private float cameraShakeMagnitude;
+        private float transitionEffectUntil;
+        private int arrivalPresentationCount;
+        private int defeatPresentationCount;
+        private GameObject activeScreenFlash;
+        private int pawStampVolley;
+        private int reviveDropSequence;
+        private float nextReviveDropAt;
+        private readonly Dictionary<int, ReviveDrop> reviveDrops = new Dictionary<int, ReviveDrop>();
+        private readonly Dictionary<string, ReviveSnapshot> revivals = new Dictionary<string, ReviveSnapshot>();
+        private readonly Dictionary<string, int> appliedLifeRevisions = new Dictionary<string, int>();
+        private readonly Dictionary<string, float> reviveProtectionUntil = new Dictionary<string, float>();
+        private Material reviveCrayonMaterial;
+
+        private float EffectiveFormDuration
+            => bossSpecies == DrawManager.Species.Slime ? SlimeFormDuration : FormDuration;
+
+#if NICO_DRAW_AI_TEST
+        internal int BossGaugeCountForTest => timeSegmentFills.Count;
+        internal bool RemoteBossInterpolationReadyForTest => bossRoot != null;
+        internal bool HasTransitionSmokeForTest => Time.unscaledTime < transitionEffectUntil;
+        internal int ArrivalPresentationCountForTest => arrivalPresentationCount;
+        internal int DefeatPresentationCountForTest => defeatPresentationCount;
+#endif
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -187,6 +274,8 @@ namespace DrawBody.Prototype
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
             resumeRoutine = null;
             transitionRunning = false;
+            ClearReviveDrops();
+            CleanupScreenFlash();
             RestoreAllPlayers();
             RestoreCamera();
         }
@@ -194,6 +283,9 @@ namespace DrawBody.Prototype
         private void OnDestroy()
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
+            CleanupScreenFlash();
+            ClearReviveDrops();
+            if (reviveCrayonMaterial != null) Destroy(reviveCrayonMaterial);
             RestoreAllPlayers();
             RestoreCamera();
         }
@@ -234,6 +326,10 @@ namespace DrawBody.Prototype
             currentAttack = null;
             lastPlayedAttackSerial = 0;
             eliminatedPlayers.Clear();
+            revivals.Clear();
+            appliedLifeRevisions.Clear();
+            reviveProtectionUntil.Clear();
+            nextReviveDropAt = 0f;
             resumeRoutine = null;
             if (HasAuthority)
             {
@@ -248,16 +344,14 @@ namespace DrawBody.Prototype
             MaintainCamera();
             ApplyCosmicPhysicsToAll();
             ApplyLocalCosmicInput();
+            UpdateProgressiveBossVisuals();
+            UpdateReviveDrops();
             if (HasAuthority && state == BattleState.Active)
             {
                 remaining = Mathf.Max(0f, remaining - Time.deltaTime);
                 UpdateBossMotion();
                 UpdateMimicClones(true);
-                while (Time.time >= nextCloneAt && remaining > 0f)
-                {
-                    SpawnTimedClone();
-                    nextCloneAt += CloneInterval;
-                }
+                UpdateSpeciesTimeline();
                 ScheduleDueAttacks();
                 if (AreAllPlayersEliminated() && !transitionRunning)
                     StartCoroutine(FailBattle());
@@ -266,10 +360,13 @@ namespace DrawBody.Prototype
             }
             else if (state == BattleState.Active)
             {
+                UpdateRemoteBossPresentation();
                 UpdateMimicClones(false);
             }
             if (state == BattleState.Active && bossRoot != null)
-                HitPlayersNear(bossRoot.position, bossContactRadius);
+                HitPlayersNear(bossRoot.position, bossContactRadius
+                    * (bossSpecies == DrawManager.Species.Slime || bossSpecies == DrawManager.Species.Cat
+                        ? GetGrowthFactor(bossVisualScale) : 1f));
             if (HasAuthority) BroadcastState(false);
             RefreshMonitor();
         }
@@ -279,6 +376,15 @@ namespace DrawBody.Prototype
             if (!IsStageActive) return;
             MaintainCamera();
             MaintainEliminatedPlayers();
+        }
+
+        private void UpdateRemoteBossPresentation()
+        {
+            if (HasAuthority || bossRoot == null || !hasRemoteBossTarget) return;
+            float prediction = Mathf.Clamp(Time.unscaledTime - remoteBossSampleTime, 0f, 0.14f);
+            Vector2 target = remoteBossTarget + bossVelocity * prediction;
+            float blend = 1f - Mathf.Exp(-18f * Time.deltaTime);
+            bossRoot.position = Vector2.Lerp(bossRoot.position, target, blend);
         }
 
         private void MaintainEliminatedPlayers()
@@ -303,6 +409,7 @@ namespace DrawBody.Prototype
             transitionRunning = true;
             state = first ? BattleState.Intro : BattleState.Intermission;
             formIndex = Mathf.Clamp(nextForm, 0, Mathf.Max(0, orderedPlayerIds.Count - 1));
+            RebuildTimeSegments();
             DestroyBoss();
             remaining = 3f;
             BroadcastState(true);
@@ -314,14 +421,24 @@ namespace DrawBody.Prototype
                 yield return new WaitForSecondsRealtime(1f);
             }
             SpawnBossForCurrentForm();
-            remaining = FormDuration;
+            if (bossRoot != null)
+            {
+                arrivalPresentationCount++;
+                yield return StartCoroutine(PlayBossArrivalPresentation());
+            }
+            remaining = bossSpecies == DrawManager.Species.Slime ? SlimeFormDuration : FormDuration;
             state = BattleState.Active;
             // The boss and every later clone own separate clocks. Starting the
             // boss with jitter also prevents each form from opening on the
             // exact same beat.
             nextAttackAt = Time.time + UnityEngine.Random.Range(1.45f, 2.15f);
-            nextCloneAt = Time.time + CloneInterval;
             nextCloneId = 0;
+            slimeSplitStage = 0;
+            nextBirdFlockAt = Time.time + 15f;
+            nextBirdGustAt = Time.time + 31.5f;
+            nextEnvironmentalAttackAt = Time.time + 22.5f;
+            slimeWallSpikesStarted = false;
+            pawStampVolley = 0;
             attackAlternator = UnityEngine.Random.Range(0, 2);
             transitionRunning = false;
             BroadcastState(true);
@@ -332,10 +449,12 @@ namespace DrawBody.Prototype
         {
             transitionRunning = true;
             state = BattleState.Intermission;
+            defeatPresentationCount++;
+            BroadcastState(true);
+            yield return StartCoroutine(PlayBossDefeatPresentation());
             currentHp = Mathf.Max(0, currentHp - 50);
             BroadcastState(true);
-            GameSfx.Play(SfxId.EmotePop);
-            yield return new WaitForSecondsRealtime(1.7f);
+            yield return new WaitForSecondsRealtime(0.35f);
             if (formIndex + 1 >= orderedPlayerIds.Count)
             {
                 state = BattleState.Cleared;
@@ -473,7 +592,10 @@ namespace DrawBody.Prototype
             if (source == null) return;
             GameObject root = new GameObject("Cosmic Mimic Boss");
             root.transform.SetParent(transform, false);
-            root.transform.position = new Vector2(0f, 3.4f);
+            // Every form materializes at the visual center of the arena. The
+            // white arrival flash hides this placement, so the boss is simply
+            // there when the flash clears rather than sliding in from above.
+            root.transform.position = new Vector2(0f, (ArenaBottom + ArenaTop) * 0.5f);
             root.layer = source.gameObject.layer;
             bossRoot = root.transform;
             Transform generated = source.transform.Find("GeneratedBody");
@@ -482,6 +604,8 @@ namespace DrawBody.Prototype
                 bossVisual = Instantiate(generated.gameObject, root.transform).transform;
                 bossVisual.name = "GeneratedBody";
                 bossVisual.localPosition = generated.localPosition;
+                bossVisual.localRotation = Quaternion.identity;
+                bossVisual.localScale = Vector3.one;
             }
             else
             {
@@ -501,11 +625,47 @@ namespace DrawBody.Prototype
                 if (!hasBounds) { copiedBounds = copiedColliders[i].bounds; hasBounds = true; }
                 else copiedBounds.Encapsulate(copiedColliders[i].bounds);
             }
-            bossContactRadius = hasBounds
-                ? Mathf.Clamp(Mathf.Max(copiedBounds.extents.x, copiedBounds.extents.y) * 0.72f, 0.75f, 2.2f)
-                : 1.1f;
-            for (int i = 0; i < copiedColliders.Length; i++) copiedColliders[i].enabled = false;
+            if (!hasBounds)
+            {
+                Renderer[] copiedRenderers = bossVisual != null
+                    ? bossVisual.GetComponentsInChildren<Renderer>(true) : Array.Empty<Renderer>();
+                for (int i = 0; i < copiedRenderers.Length; i++)
+                {
+                    if (!copiedRenderers[i].enabled) continue;
+                    if (!hasBounds) { copiedBounds = copiedRenderers[i].bounds; hasBounds = true; }
+                    else copiedBounds.Encapsulate(copiedRenderers[i].bounds);
+                }
+            }
             bossSpecies = GetSpecies(source);
+            if (hasBounds && bossVisual != null)
+            {
+                // A player's drawing can have any absolute dimensions. The mimic
+                // always starts from a fixed arena-sized envelope, then phase
+                // growth/splitting is applied on top of that fixed base size.
+                Vector3 centerOffset = root.transform.InverseTransformVector(
+                    copiedBounds.center - root.transform.position);
+                bossVisual.localPosition -= centerOffset;
+                float maxWidth = bossSpecies == DrawManager.Species.Bird ? 10.5f : 3.8f;
+                float maxHeight = bossSpecies == DrawManager.Species.Bird ? 7.4f : 3.6f;
+                bossBaseVisualScale = Mathf.Clamp(Mathf.Min(
+                    maxWidth / Mathf.Max(0.1f, copiedBounds.size.x),
+                    maxHeight / Mathf.Max(0.1f, copiedBounds.size.y)), 0.12f, 6f);
+                bossContactRadius = Mathf.Clamp(
+                    Mathf.Max(copiedBounds.extents.x, copiedBounds.extents.y)
+                    * bossBaseVisualScale * 0.72f, 0.9f,
+                    bossSpecies == DrawManager.Species.Bird ? 3.2f : 1.8f);
+            }
+            else
+            {
+                bossBaseVisualScale = bossSpecies == DrawManager.Species.Bird ? 2.2f : 1f;
+                bossContactRadius = bossSpecies == DrawManager.Species.Bird ? 2.4f : 1.1f;
+            }
+            for (int i = 0; i < copiedColliders.Length; i++) copiedColliders[i].enabled = false;
+            bossVisualScale = bossBaseVisualScale;
+            catGrowthStage = 0;
+            catGrowthFrom = catGrowthTo = bossBaseVisualScale;
+            catGrowthStartedAt = Time.unscaledTime;
+            bossVisual.localScale = new Vector3(bossVisualScale, bossVisualScale, 1f);
             ApplyCosmicCharacterLook(bossRoot, bossVisual, formIndex * 41 + 7, false);
             CreateBossProps();
             bossVelocity = Vector2.zero;
@@ -524,12 +684,25 @@ namespace DrawBody.Prototype
                 if (mimicClones[i].Root != null) Destroy(mimicClones[i].Root.gameObject);
             mimicClones.Clear();
             if (bossRoot != null) Destroy(bossRoot.gameObject);
-            bossRoot = bossVisual = bazookaProp = carriedSpike = shellOverlay = null;
+            bossRoot = bossVisual = bazookaProp = carriedSpike = shellOverlay = longSwordProp = daggerProp = null;
+            bossVisualScale = 1f;
+            bossBaseVisualScale = 1f;
+            hasRemoteBossTarget = false;
         }
 
         private void CreateBossProps()
         {
             if (bossRoot == null) return;
+            if (bossSpecies == DrawManager.Species.Human)
+            {
+                GameObject longSword = CreateCrayonSword(bossRoot, "Rainbow Long Sword", 2.9f, 0.28f, 176);
+                longSword.transform.localPosition = new Vector3(7.5f, 0.1f, -0.18f);
+                GameObject dagger = CreateCrayonSword(bossRoot, "Rainbow Short Sword", 1.65f, 0.24f, 177);
+                dagger.transform.localPosition = new Vector3(-7.5f, 0.02f, -0.17f);
+                longSwordProp = longSword.transform;
+                daggerProp = dagger.transform;
+                StartCoroutine(PlaySwordEquipEntrance());
+            }
             GameObject bazooka = new GameObject("Crayon Bazooka");
             bazooka.transform.SetParent(bossRoot, false);
             bazooka.transform.localPosition = new Vector3(0.8f, 0.15f, -0.1f);
@@ -633,7 +806,9 @@ namespace DrawBody.Prototype
                 {
                     float toward = target.transform.position.x < bossRoot.position.x ? -1f : 1f;
                     bossMoveDirection = UnityEngine.Random.value < 0.78f ? toward : -toward;
-                    float speciesSpeed = bossSpecies == DrawManager.Species.Cat ? 1.15f
+                    float catElapsed = EffectiveFormDuration - remaining;
+                    float catSpeed = catElapsed < 15f ? 0.55f : catElapsed < 30f ? 1.3f : 1.55f;
+                    float speciesSpeed = bossSpecies == DrawManager.Species.Cat ? catSpeed
                         : bossSpecies == DrawManager.Species.Turtle ? 0.72f : 1f;
                     bossMoveSpeed = UnityEngine.Random.Range(2.1f, 4.2f) * speciesSpeed;
                     nextBossMoveDecisionAt = Time.time + UnityEngine.Random.Range(0.65f, 1.75f);
@@ -642,9 +817,11 @@ namespace DrawBody.Prototype
 
             if (Time.time >= nextBossJumpAt)
             {
-                // Match the player's low-gravity hops: a discrete jump rather
-                // than unrestricted vertical steering.
-                bossVelocity.y = Mathf.Max(bossVelocity.y, UnityEngine.Random.Range(3.2f, 4.4f));
+                float verticalGap = target != null
+                    ? target.transform.position.y - bossRoot.position.y : 0f;
+                float jump = Mathf.Lerp(4.2f, 7.2f, Mathf.InverseLerp(0f, 10f, verticalGap));
+                bossVelocity.y = Mathf.Max(bossVelocity.y,
+                    jump + UnityEngine.Random.Range(-0.25f, 0.45f));
                 nextBossJumpAt = Time.time + UnityEngine.Random.Range(1.15f, 2.9f);
             }
 
@@ -652,12 +829,19 @@ namespace DrawBody.Prototype
             bossVelocity.x = Mathf.MoveTowards(bossVelocity.x, desiredX, 7.5f * Time.deltaTime);
             float gravityMultiplier = bossSpecies == DrawManager.Species.Bird ? 0.1f : 0.18f;
             bossVelocity.y += Physics2D.gravity.y * gravityMultiplier * Time.deltaTime;
+            if (bossSpecies == DrawManager.Species.Bird && target != null)
+            {
+                float desiredY = Mathf.Clamp((target.transform.position.y - bossRoot.position.y) * 1.35f, -5.8f, 5.8f);
+                bossVelocity.y = Mathf.MoveTowards(bossVelocity.y, desiredY, 5.4f * Time.deltaTime);
+            }
             bossVelocity.y = Mathf.Max(bossVelocity.y, -3.2f);
             Vector2 next = (Vector2)bossRoot.position + bossVelocity * Time.deltaTime;
             float minimumX = -ArenaHalfWidth + 1.3f;
             float maximumX = ArenaHalfWidth - 1.3f;
-            float minimumY = ArenaBottom + 1.4f;
-            float maximumY = ArenaTop - 1.5f;
+            // The damaging body may overlap the arena edge. Keeping only the
+            // root inside prevents clipping while removing the old safe bands.
+            float minimumY = ArenaBottom + 0.42f;
+            float maximumY = ArenaTop - 0.42f;
             if (next.x <= minimumX || next.x >= maximumX)
             {
                 next.x = Mathf.Clamp(next.x, minimumX, maximumX);
@@ -677,7 +861,8 @@ namespace DrawBody.Prototype
             }
             bossRoot.position = next;
             if (Mathf.Abs(bossVelocity.x) > 0.15f) bossFacing = bossVelocity.x < 0f ? -1 : 1;
-            if (bossVisual != null) bossVisual.localScale = new Vector3(bossFacing, 1f, 1f);
+            if (bossVisual != null) bossVisual.localScale = new Vector3(
+                bossFacing * bossVisualScale, bossVisualScale, 1f);
             if (bazookaProp != null)
             {
                 bazookaProp.localPosition = new Vector3(0.8f * bossFacing, 0.15f, -0.1f);
@@ -690,9 +875,191 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void UpdateSpeciesTimeline()
+        {
+            float elapsed = EffectiveFormDuration - remaining;
+            if (bossSpecies == DrawManager.Species.Slime)
+            {
+                int targetStage = elapsed >= 45f ? 3 : elapsed >= 30f ? 2 : elapsed >= 15f ? 1 : 0;
+                while (slimeSplitStage < targetStage)
+                {
+                    slimeSplitStage++;
+                    ScheduleSpecificAttack(AttackType.SlimeMultiply, slimeSplitStage);
+                }
+                if (elapsed >= EffectiveFormDuration * 0.5f && !slimeWallSpikesStarted)
+                {
+                    slimeWallSpikesStarted = true;
+                    ScheduleSpecificAttack(AttackType.SlimeWallSpikes, 0);
+                }
+                return;
+            }
+
+            if (elapsed >= EffectiveFormDuration * 0.5f && Time.time >= nextEnvironmentalAttackAt)
+            {
+                if (bossSpecies == DrawManager.Species.Human)
+                    ScheduleEnvironmentalAttack(AttackType.HumanSwordRain);
+                else if (bossSpecies == DrawManager.Species.Cat)
+                    ScheduleEnvironmentalAttack(AttackType.CatPawStamp);
+                else if (bossSpecies == DrawManager.Species.Bird)
+                    ScheduleEnvironmentalAttack(AttackType.BirdBombRain);
+                float progress = Mathf.Clamp01(elapsed / EffectiveFormDuration);
+                nextEnvironmentalAttackAt = Time.time + UnityEngine.Random.Range(
+                    Mathf.Lerp(4.4f, 2.35f, progress),
+                    Mathf.Lerp(5.5f, 3.1f, progress));
+            }
+
+            if (bossSpecies != DrawManager.Species.Bird) return;
+            if (Time.time >= nextBirdFlockAt)
+            {
+                int route = UnityEngine.Random.Range(0, 3);
+                int intensity = Mathf.Clamp(Mathf.FloorToInt(elapsed / 10f), 0, 3);
+                ScheduleSpecificAttack(AttackType.BirdFlock, route + intensity * 10);
+                nextBirdFlockAt = Time.time + Mathf.Lerp(12f, 4.25f, intensity / 3f);
+            }
+            if (elapsed >= 30f && Time.time >= nextBirdGustAt)
+            {
+                ScheduleSpecificAttack(AttackType.BirdGust, bossFacing);
+                nextBirdGustAt = Time.time + 8f;
+            }
+        }
+
+        private void ScheduleEnvironmentalAttack(AttackType type)
+        {
+            if (bossRoot == null) return;
+            float elapsed = EffectiveFormDuration - remaining;
+            int phaseVariant = type == AttackType.HumanSwordRain
+                ? Mathf.Clamp(Mathf.FloorToInt(elapsed / 5f), 0, 8)
+                : Mathf.Clamp(Mathf.FloorToInt(elapsed / 10f), 0, 4);
+            float margin = type == AttackType.CatPawStamp ? 3.4f : 1.7f;
+            Vector2 target = new Vector2(
+                UnityEngine.Random.Range(-ArenaHalfWidth + margin, ArenaHalfWidth - margin),
+                type == AttackType.CatPawStamp
+                    ? UnityEngine.Random.Range(ArenaBottom + 2.1f, ArenaTop - 2.1f)
+                    : ArenaBottom + 0.7f);
+            AttackPacket packet = new AttackPacket
+            {
+                Serial = ++attackSerial,
+                Type = (int)type,
+                Origin = new Vector2(target.x, ArenaTop - 0.2f),
+                Target = target,
+                Variant = phaseVariant,
+                Seed = UnityEngine.Random.Range(1, int.MaxValue),
+                AttackerIds = new[] { 0 },
+                Origins = new[] { new Vector2(target.x, ArenaTop - 0.2f) },
+                Targets = new[] { target },
+                Variants = new[] { phaseVariant }
+            };
+            if (type == AttackType.CatPawStamp)
+            {
+                // One more simultaneous stamp on every environmental volley.
+                int count = ++pawStampVolley;
+                packet.Targets = CreatePawStampTargets(count, packet.Seed, margin);
+                packet.Target = packet.Targets[0];
+            }
+            currentAttack = packet;
+            lastPlayedAttackSerial = packet.Serial;
+            PlayAttack(packet);
+            BroadcastState(true);
+        }
+
+        private void ScheduleSpecificAttack(AttackType type, int variant)
+        {
+            if (bossRoot == null) return;
+            PlayerController2D target = FindRandomLivingPlayer();
+            Vector2 targetPosition = target != null ? (Vector2)target.transform.position : Vector2.zero;
+            AttackPacket packet = new AttackPacket
+            {
+                Serial = ++attackSerial,
+                Type = (int)type,
+                Origin = bossRoot.position,
+                Target = targetPosition,
+                Variant = variant,
+                Seed = UnityEngine.Random.Range(1, int.MaxValue),
+                AttackerIds = new[] { 0 },
+                Origins = new[] { (Vector2)bossRoot.position },
+                Targets = new[] { targetPosition },
+                Variants = new[] { variant }
+            };
+            currentAttack = packet;
+            lastPlayedAttackSerial = packet.Serial;
+            PlayAttack(packet);
+            BroadcastState(true);
+        }
+
+        private static float GetSlimeVisualScale(int totalCount)
+            => totalCount >= 8 ? 0.58f : totalCount >= 4 ? 0.72f : totalCount >= 2 ? 0.86f : 1f;
+
+        private float GetGrowthFactor(float absoluteVisualScale)
+            => absoluteVisualScale / Mathf.Max(0.001f, bossBaseVisualScale);
+
+        private IEnumerator SlimeSplitPresentation(AttackPacket packet)
+        {
+            List<Transform> roots = new List<Transform>();
+            if (bossRoot != null) roots.Add(bossRoot);
+            for (int i = 0; i < mimicClones.Count; i++)
+                if (mimicClones[i].Root != null) roots.Add(mimicClones[i].Root);
+
+            List<GameObject> splitBuds = new List<GameObject>();
+            for (int i = 0; i < roots.Count; i++)
+            {
+                for (int side = -1; side <= 1; side += 2)
+                {
+                    GameObject bud = new GameObject("Stretching Slime Bud");
+                    bud.transform.SetParent(roots[i], false);
+                    bud.transform.localPosition = new Vector3(side * 0.62f, 0.05f, 0.12f);
+                    SpriteRenderer renderer = bud.AddComponent<SpriteRenderer>();
+                    renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+                    renderer.color = WithAlpha(FinaleColor(i * 2 + (side > 0 ? 1 : 0)), 0.72f);
+                    renderer.sortingOrder = 181;
+                    splitBuds.Add(bud);
+                }
+            }
+            GameSfx.PlayAt(SfxId.SlimeRelease, packet.Origin, 0.78f);
+            float elapsed = 0f;
+            while (elapsed < 0.96f)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / 0.96f);
+                float ooze = Mathf.Sin(t * Mathf.PI);
+                float wobble = Mathf.Sin(t * Mathf.PI * 5f) * (1f - t) * 0.09f;
+                float stretch = 1f + ooze * 0.55f + wobble;
+                float pinch = 1f - ooze * 0.28f - wobble * 0.45f;
+                for (int i = 0; i < roots.Count; i++)
+                    if (roots[i] != null) roots[i].localScale = new Vector3(stretch, pinch, 1f);
+                for (int i = 0; i < splitBuds.Count; i++)
+                    if (splitBuds[i] != null)
+                    {
+                        float budScale = 0.12f + ooze * 0.92f + wobble;
+                        splitBuds[i].transform.localScale = new Vector3(budScale * 1.25f, budScale * 0.78f, 1f);
+                    }
+                yield return null;
+            }
+            for (int i = 0; i < roots.Count; i++) if (roots[i] != null) roots[i].localScale = Vector3.one;
+            for (int i = 0; i < splitBuds.Count; i++) if (splitBuds[i] != null) Destroy(splitBuds[i]);
+            CreateCrayonImpactBurst(packet.Origin, packet.Seed, 1.1f);
+            GameSfx.PlayAt(SfxId.ClearStampImpact, packet.Origin, 0.82f);
+
+            if (HasAuthority)
+            {
+                int existing = mimicClones.Count + 1;
+                List<Vector2> origins = new List<Vector2>(existing) { bossRoot != null ? (Vector2)bossRoot.position : packet.Origin };
+                for (int i = 0; i < mimicClones.Count; i++)
+                    if (mimicClones[i].Root != null) origins.Add(mimicClones[i].Root.position);
+                for (int i = 0; i < origins.Count && mimicClones.Count < 7; i++)
+                {
+                    float side = (i & 1) == 0 ? -1f : 1f;
+                    SpawnMimicClone(++nextCloneId, origins[i] + new Vector2(side * 1.25f, 0.45f));
+                }
+                float scale = bossBaseVisualScale * GetSlimeVisualScale(mimicClones.Count + 1);
+                bossVisualScale = scale;
+                for (int i = 0; i < mimicClones.Count; i++) mimicClones[i].VisualScale = scale;
+                BroadcastState(true);
+            }
+        }
+
         private void ScheduleDueAttacks()
         {
-            if (bossRoot != null && Time.time >= nextAttackAt)
+            if (bossRoot != null && Time.time >= nextAttackAt && Time.time >= bossLockedUntil)
             {
                 ScheduleAttack(0, bossRoot.position, attackAlternator++);
                 nextAttackAt = Time.time + GetAttackDelay();
@@ -701,7 +1068,8 @@ namespace DrawBody.Prototype
             for (int i = 0; i < mimicClones.Count; i++)
             {
                 MimicClone clone = mimicClones[i];
-                if (clone == null || clone.Root == null || Time.time < clone.NextAttackAt) continue;
+                if (clone == null || clone.Root == null || Time.time < clone.NextAttackAt
+                    || Time.time < clone.LockedUntil) continue;
                 ScheduleAttack(clone.Id, clone.Root.position, clone.AttackAlternator++);
                 // Each clone rolls its own small delay. The clocks are never
                 // reset from the shared boss clock, so attacks remain staggered.
@@ -712,16 +1080,27 @@ namespace DrawBody.Prototype
         private float GetAttackDelay()
         {
             float baseDelay = bossSpecies == DrawManager.Species.Cat ? 2.7f
-                : bossSpecies == DrawManager.Species.Turtle ? 4.7f : 3.5f;
-            return UnityEngine.Random.Range(baseDelay * 0.82f, baseDelay * 1.22f);
+                : bossSpecies == DrawManager.Species.Turtle ? 4.7f
+                : bossSpecies == DrawManager.Species.Slime ? 5.6f : 3.5f;
+            float progress = Mathf.Clamp01((EffectiveFormDuration - remaining) / EffectiveFormDuration);
+            float escalation = bossSpecies == DrawManager.Species.Human && progress >= 0.75f ? 0.48f
+                : bossSpecies == DrawManager.Species.Cat && progress >= 0.5f ? 0.58f
+                : Mathf.Lerp(1f, 0.58f, progress);
+            return UnityEngine.Random.Range(baseDelay * 0.82f, baseDelay * 1.22f) * escalation;
         }
 
         private void ScheduleAttack(int attackerId, Vector2 origin, int ability)
         {
-            PlayerController2D target = FindNearestLivingPlayer(origin);
+            PlayerController2D target = FindRandomLivingPlayer();
             if (target == null) return;
-            AttackType type = GetAttackType(bossSpecies, ability % 2);
-            int variant = type == AttackType.TurtleLaser ? UnityEngine.Random.Range(0, 4) : 0;
+            AttackType type = bossSpecies == DrawManager.Species.Slime
+                ? AttackType.SlimeSpikes
+                : GetAttackType(bossSpecies, ability % 2);
+            float elapsed = EffectiveFormDuration - remaining;
+            int variant = type == AttackType.TurtleLaser ? UnityEngine.Random.Range(0, 4)
+                : bossSpecies == DrawManager.Species.Human && elapsed >= 20f ? 1
+                : bossSpecies == DrawManager.Species.Cat && elapsed >= 30f ? 1
+                : bossSpecies == DrawManager.Species.Slime ? 1 : 0;
             AttackPacket packet = new AttackPacket
             {
                 Serial = ++attackSerial,
@@ -752,7 +1131,7 @@ namespace DrawBody.Prototype
                 case DrawManager.Species.Bird: return ability == 0 ? AttackType.BirdBomb : AttackType.BirdSpikeDash;
                 case DrawManager.Species.Turtle: return ability == 0 ? AttackType.TurtleLaser : AttackType.TurtleBomb;
                 case DrawManager.Species.Slime: return ability == 0 ? AttackType.SlimeSpikes : AttackType.SlimeMultiply;
-                default: return ability == 0 ? AttackType.HumanRocket : AttackType.HumanBomb;
+                default: return ability == 0 ? AttackType.HumanLongSword : AttackType.HumanDagger;
             }
         }
 
@@ -762,21 +1141,17 @@ namespace DrawBody.Prototype
             int count = GetAttackCount(packet);
             switch ((AttackType)packet.Type)
             {
-                case AttackType.HumanRocket:
+                case AttackType.HumanLongSword:
+                    for (int i = 0; i < count; i++) StartCoroutine(HumanSwordAttack(packet, i));
+                    break;
+                case AttackType.HumanDagger:
                     for (int i = 0; i < count; i++) StartCoroutine(HumanRocket(packet, i));
                     break;
-                case AttackType.HumanBomb:
-                    for (int i = 0; i < count; i++)
-                    {
-                        CreateRainbowTargetMarker(GetAttackTarget(packet, i), 1.5f);
-                        SpawnBomb(GetAttackOrigin(packet, i), GetAttackTarget(packet, i), 0.72f, 7.5f, 1.5f, GetAttackerId(packet, i));
-                    }
-                    break;
                 case AttackType.CatScratch:
-                    for (int i = 0; i < count; i++) StartCoroutine(CatScratch(packet, i));
+                    for (int i = 0; i < count; i++) StartCoroutine(CatAttackSequence(packet, i, true));
                     break;
                 case AttackType.CatSpikeDash:
-                    for (int i = 0; i < count; i++) StartCoroutine(SpikeDash(packet, i, 14f, false));
+                    for (int i = 0; i < count; i++) StartCoroutine(CatAttackSequence(packet, i, false));
                     break;
                 case AttackType.BirdBomb:
                     for (int i = 0; i < count; i++)
@@ -795,8 +1170,17 @@ namespace DrawBody.Prototype
                 case AttackType.TurtleBomb:
                     for (int i = 0; i < count; i++) StartCoroutine(TurtleBomb(packet, i));
                     break;
-                case AttackType.SlimeSpikes: StartCoroutine(SlimeSpikes(packet, false)); break;
-                case AttackType.SlimeMultiply: StartCoroutine(SlimeSpikes(packet, true)); break;
+                case AttackType.SlimeSpikes: StartCoroutine(SlimeSpikes(packet, packet.Variant > 0)); break;
+                case AttackType.SlimeMultiply: StartCoroutine(SlimeSplitPresentation(packet)); break;
+                case AttackType.BirdFlock: StartCoroutine(BirdFlockAttack(packet)); break;
+                case AttackType.BirdGust: StartCoroutine(BirdGustAttack(packet)); break;
+                case AttackType.HumanSwordRain: StartCoroutine(HumanSwordRain(packet)); break;
+                case AttackType.CatPawStamp:
+                    int stamps = packet.Targets != null && packet.Targets.Length > 0 ? packet.Targets.Length : 1;
+                    for (int i = 0; i < stamps; i++) StartCoroutine(CatPawStamp(packet, i));
+                    break;
+                case AttackType.BirdBombRain: StartCoroutine(BirdBombRain(packet)); break;
+                case AttackType.SlimeWallSpikes: StartCoroutine(SlimeWallSpikes(packet)); break;
             }
         }
 
@@ -843,6 +1227,640 @@ namespace DrawBody.Prototype
             if (clone == null) return;
             clone.LockedUntil = Mathf.Max(clone.LockedUntil, until);
             clone.Velocity = Vector2.zero;
+        }
+
+        private static GameObject CreateCrayonSword(Transform parent, string name, float length, float width, int order)
+        {
+            GameObject root = new GameObject(name);
+            root.transform.SetParent(parent, false);
+            StageGun.CreateSprite(root.transform, "Blade", new Vector2(0f, length * 0.38f),
+                new Vector2(width, length * 0.78f), new Color(0.18f, 0.86f, 1f), order);
+            StageGun.CreateSprite(root.transform, "Blade Accent", new Vector2(width * 0.2f, length * 0.4f),
+                new Vector2(width * 0.14f, length * 0.72f), new Color(1f, 0.25f, 0.72f), order + 1);
+            StageGun.CreateSprite(root.transform, "Guard", Vector2.zero,
+                new Vector2(width * 2.4f, width * 0.36f), new Color(1f, 0.76f, 0.12f), order + 2);
+            StageGun.CreateSprite(root.transform, "Grip", new Vector2(0f, -length * 0.14f),
+                new Vector2(width * 0.48f, length * 0.27f), new Color(0.3f, 0.08f, 0.5f), order + 1);
+            return root;
+        }
+
+        private IEnumerator PlaySwordEquipEntrance()
+        {
+            if (longSwordProp == null || daggerProp == null) yield break;
+            Vector3 longStart = longSwordProp.localPosition;
+            Vector3 shortStart = daggerProp.localPosition;
+            float elapsed = 0f;
+            while (elapsed < 0.72f && longSwordProp != null && daggerProp != null)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / 0.72f));
+                longSwordProp.localPosition = Vector3.Lerp(longStart, new Vector3(0.82f, 0.1f, -0.18f), t);
+                daggerProp.localPosition = Vector3.Lerp(shortStart, new Vector3(-0.76f, 0.02f, -0.17f), t);
+                longSwordProp.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-70f, -18f, t));
+                daggerProp.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(70f, 24f, t));
+                yield return null;
+            }
+            if (bossRoot != null)
+            {
+                CreateCrayonImpactBurst(bossRoot.position, formIndex * 97 + 17, 0.9f);
+                TriggerCameraShake(0.45f, 0.28f);
+                GameSfx.PlayAt(SfxId.ClearStampImpact, bossRoot.position, 0.8f);
+            }
+        }
+
+        private IEnumerator HumanSwordAttack(AttackPacket packet, int index)
+        {
+            int attackerId = GetAttackerId(packet, index);
+            Transform attacker = GetAttackerRoot(attackerId);
+            if (attacker == null) yield break;
+            int strikes = GetAttackVariant(packet, index) > 0 ? 3 : 1;
+            LockAttacker(attackerId, strikes > 1 ? 3.25f : 1.4f);
+            System.Random random = new System.Random(packet.Seed + index * 911);
+            Vector2 strikePoint = GetAttackTarget(packet, index);
+            for (int strike = 0; strike < strikes && attacker != null; strike++)
+            {
+                if (strike > 0)
+                {
+                    float angle = (float)(random.NextDouble() * Mathf.PI * 2f);
+                    float distance = Mathf.Lerp(4.5f, 8.2f, (float)random.NextDouble());
+                    strikePoint += new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance;
+                }
+                strikePoint.x = Mathf.Clamp(strikePoint.x, -ArenaHalfWidth + 2.8f, ArenaHalfWidth - 2.8f);
+                strikePoint.y = Mathf.Clamp(strikePoint.y, ArenaBottom + 0.55f, ArenaTop - 0.55f);
+                float windup = strikes > 1 ? 0.28f : 0.48f;
+                float t = 0f;
+                GameSfx.PlayAt(SfxId.BossCharge, attacker.position, 0.72f);
+                while (t < windup && attacker != null)
+                {
+                    t += Time.deltaTime;
+                    float p = Mathf.Clamp01(t / windup);
+                    attacker.localRotation = Quaternion.Euler(0f, 0f, -bossFacing * Mathf.Sin(p * Mathf.PI) * 22f);
+                    if (longSwordProp != null)
+                        longSwordProp.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-105f, -38f, p) * bossFacing);
+                    yield return null;
+                }
+                if (attacker == null) yield break;
+                Vector2 dashStart = attacker.position;
+                Vector2 approach = (dashStart - strikePoint).normalized;
+                if (approach.sqrMagnitude < 0.1f) approach = Vector2.left;
+                Vector2 dashEnd = strikePoint + approach * 1.15f;
+                float dashElapsed = 0f;
+                GameSfx.PlayAt(SfxId.BossSwordSlash, dashStart, 0.72f);
+                while (dashElapsed < 0.14f && attacker != null)
+                {
+                    dashElapsed += Time.deltaTime;
+                    float p = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(dashElapsed / 0.14f));
+                    attacker.position = Vector2.Lerp(dashStart, dashEnd, p);
+                    yield return null;
+                }
+                if (attacker == null) yield break;
+                attacker.localRotation = Quaternion.identity;
+                bossFacing = dashEnd.x < dashStart.x ? -1 : 1;
+                GameObject slash = CreateSwordSlashVisual(dashStart, strikePoint, strike);
+                slash.transform.position = strikePoint;
+                slash.transform.localScale = Vector3.one * 1.28f;
+                slash.AddComponent<CosmicHazard>().Configure(this, 2.55f, 0.34f);
+                CreateCrayonImpactBurst(strikePoint, packet.Seed + strike * 37, 0.78f);
+                TriggerCameraShake(0.58f, 0.16f);
+                GameSfx.PlayAt(SfxId.BossSwordSlash, strikePoint, 0.95f);
+                GameSfx.PlayAt(SfxId.MissileImpact, strikePoint, 0.7f);
+                yield return new WaitForSeconds(strikes > 1 ? 0.22f : 0.38f);
+            }
+            if (strikes > 1 && attacker != null)
+            {
+                if (longSwordProp != null) longSwordProp.localRotation = Quaternion.Euler(0f, 0f, bossFacing * -8f);
+                CreateCrayonImpactBurst(attacker.position + Vector3.down, packet.Seed + 31, 0.6f);
+                yield return new WaitForSeconds(0.82f);
+            }
+        }
+
+        private GameObject CreateSwordSlashVisual(Vector2 origin, Vector2 target, int strike)
+        {
+            GameObject root = new GameObject("Rainbow Sword Sweep");
+            root.transform.SetParent(transform, false);
+            root.transform.position = Vector2.Lerp(origin, target, 0.68f);
+            LineRenderer line = root.AddComponent<LineRenderer>();
+            line.useWorldSpace = false; line.positionCount = 9;
+            line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+            line.startWidth = 0.38f; line.endWidth = 0.06f;
+            line.colorGradient = CreateFinaleGradient(0.96f, 0.12f); line.sortingOrder = 196;
+            for (int i = 0; i < 9; i++)
+            {
+                float t = i / 8f;
+                float angle = Mathf.Lerp(205f + strike * 12f, -25f + strike * 12f, t) * Mathf.Deg2Rad;
+                line.SetPosition(i, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 2.05f);
+            }
+            Destroy(root, 0.34f);
+            return root;
+        }
+
+        private IEnumerator HumanDaggerAttack(AttackPacket packet, int index)
+        {
+            int attackerId = GetAttackerId(packet, index);
+            int throws = GetAttackVariant(packet, index) > 0 ? 5 : 1;
+            LockAttacker(attackerId, throws > 1 ? 1.7f : 0.8f);
+            for (int i = 0; i < throws; i++)
+            {
+                Transform attacker = GetAttackerRoot(attackerId);
+                if (attacker == null) yield break;
+                PlayerController2D selected = FindRandomLivingPlayer();
+                Vector2 target = selected != null ? (Vector2)selected.transform.position : GetAttackTarget(packet, index);
+                Vector2 direction = (target - (Vector2)attacker.position).normalized;
+                SpawnDaggerProjectile(attacker.position, direction * 13.5f);
+                GameSfx.PlayAt(SfxId.CannonFire, attacker.position, 0.48f);
+                yield return new WaitForSeconds(throws > 1 ? 0.18f : 0.32f);
+            }
+        }
+
+        private void SpawnDaggerProjectile(Vector2 origin, Vector2 velocity)
+        {
+            GameObject dagger = CreateCrayonSword(transform, "Thrown Rainbow Dagger", 1.2f, 0.2f, 192);
+            dagger.transform.position = origin;
+            dagger.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg - 90f);
+            dagger.AddComponent<CosmicProjectile>().Configure(this, velocity, 0.48f, 3.5f, false);
+        }
+
+        private IEnumerator CatAttackSequence(AttackPacket packet, int index, bool scratch)
+        {
+            int repeats = GetAttackVariant(packet, index) > 0 ? 3 : 1;
+            for (int i = 0; i < repeats; i++)
+            {
+                Transform attacker = GetAttackerRoot(GetAttackerId(packet, index));
+                if (!scratch && attacker != null && i == 0)
+                {
+                    float groom = 0f;
+                    while (groom < 0.62f && attacker != null)
+                    {
+                        groom += Time.deltaTime;
+                        attacker.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(groom * 15f) * 7f);
+                        yield return null;
+                    }
+                    if (attacker != null) attacker.localRotation = Quaternion.identity;
+                }
+                if (scratch) yield return StartCoroutine(CatScratch(packet, index));
+                else yield return StartCoroutine(SpikeDash(packet, index, repeats > 1 ? 18.5f : 15.5f, false));
+                if (i + 1 < repeats) yield return new WaitForSeconds(0.18f);
+            }
+        }
+
+        private IEnumerator BirdFlockAttack(AttackPacket packet)
+        {
+            int route = Mathf.Abs(packet.Variant) % 10;
+            int intensity = Mathf.Clamp(Mathf.Abs(packet.Variant) / 10, 0, 3);
+            List<GameObject> warnings = new List<GameObject>();
+            float y = Mathf.Clamp(packet.Target.y, ArenaBottom + 1.5f, ArenaTop - 1.5f);
+            int count = (route == 2 ? 12 : 9) + intensity * 3;
+            if (route == 0)
+                warnings.Add(CreateWarningArea(new Vector2(-ArenaHalfWidth, y),
+                    new Vector2(ArenaHalfWidth, y), (count - 1) * 0.48f + 1.35f));
+            else if (route == 1)
+                warnings.Add(CreateWarningArea(new Vector2(-ArenaHalfWidth, ArenaBottom + 0.8f),
+                    new Vector2(ArenaHalfWidth, ArenaTop - 0.8f), 1.45f));
+            else
+            {
+                warnings.Add(CreateWarningArea(new Vector2(-ArenaHalfWidth, ArenaBottom + 0.8f),
+                    new Vector2(ArenaHalfWidth, ArenaTop - 0.8f), 1.45f));
+                warnings.Add(CreateWarningArea(new Vector2(-ArenaHalfWidth, ArenaTop - 0.8f),
+                    new Vector2(ArenaHalfWidth, ArenaBottom + 0.8f), 1.45f));
+            }
+            GameSfx.Play(SfxId.BossAttackWarning, 0.76f);
+            yield return new WaitForSeconds(Mathf.Lerp(1.05f, 0.72f, intensity / 3f));
+            for (int i = 0; i < warnings.Count; i++) if (warnings[i] != null) Destroy(warnings[i]);
+            GameSfx.PlayAt(SfxId.BirdFlap, packet.Origin, 0.9f);
+            for (int i = 0; i < count; i++) StartCoroutine(SpawnBirdRunner(route, y, i, count, intensity));
+        }
+
+        private IEnumerator SpawnBirdRunner(int route, float y, int index, int count, int intensity)
+        {
+            yield return new WaitForSeconds(index * Mathf.Lerp(0.1f, 0.045f, intensity / 3f));
+            bool upper = route == 2 && (index & 1) == 1;
+            Vector2 start = route == 0 ? new Vector2(-ArenaHalfWidth - 1f, y + (index - count / 2) * 0.48f)
+                : new Vector2(-ArenaHalfWidth - 1f, upper ? ArenaTop - 0.8f : ArenaBottom + 0.8f);
+            Vector2 end = route == 0 ? new Vector2(ArenaHalfWidth + 1f, start.y)
+                : new Vector2(ArenaHalfWidth + 1f, upper ? ArenaBottom + 0.8f : ArenaTop - 0.8f);
+            GameObject bird = new GameObject("Small Rainbow Bird Minion");
+            bird.transform.SetParent(transform, false); bird.transform.position = start;
+            if (bossVisual != null)
+            {
+                Transform visual = Instantiate(bossVisual.gameObject, bird.transform).transform;
+                visual.name = "Mini Drawn Bird Body";
+                visual.localPosition = Vector3.zero;
+                visual.localRotation = Quaternion.identity;
+                visual.localScale = Vector3.one * bossBaseVisualScale
+                    * Mathf.Lerp(0.3f, 0.4f, intensity / 3f);
+                Collider2D[] colliders = visual.GetComponentsInChildren<Collider2D>(true);
+                for (int i = 0; i < colliders.Length; i++) colliders[i].enabled = false;
+                ApplyCosmicCharacterLook(bird.transform, visual, PacketSeedForBird(index, intensity), true);
+            }
+            else
+            {
+                SpriteRenderer renderer = bird.AddComponent<SpriteRenderer>();
+                renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+                renderer.color = Color.HSVToRGB(Mathf.Repeat(index * 0.13f, 1f), 0.8f, 1f);
+                renderer.sortingOrder = 190;
+                bird.transform.localScale = new Vector3(0.65f, 0.34f, 1f);
+            }
+            Vector2 velocity = (end - start).normalized * Mathf.Lerp(12.5f, 16.5f, intensity / 3f);
+            bird.transform.localScale = new Vector3(velocity.x < 0f ? -1f : 1f, 1f, 1f);
+            bird.AddComponent<CosmicProjectile>().Configure(this, velocity,
+                Mathf.Lerp(0.52f, 0.7f, intensity / 3f), 4.2f, false);
+        }
+
+        private static int PacketSeedForBird(int index, int intensity)
+            => 1703 + index * 97 + intensity * 521;
+
+        private IEnumerator BirdGustAttack(AttackPacket packet)
+        {
+            if (bossRoot == null) yield break;
+            LockAttacker(0, 1.7f);
+            GameObject warning = CreateWarningLine(new Vector2(-ArenaHalfWidth, bossRoot.position.y),
+                new Vector2(ArenaHalfWidth, bossRoot.position.y));
+            float elapsed = 0f;
+            while (elapsed < 0.85f && bossVisual != null)
+            {
+                elapsed += Time.deltaTime;
+                float flap = 1f + Mathf.Sin(elapsed * 19f) * 0.2f;
+                bossVisual.localScale = new Vector3(bossFacing * bossVisualScale * flap, bossVisualScale / flap, 1f);
+                yield return null;
+            }
+            if (warning != null) Destroy(warning);
+            int direction = packet.Variant >= 0 ? 1 : -1;
+            PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (eliminatedPlayers.Contains(ResolvePlayerId(players[i]))) continue;
+                Rigidbody2D body = players[i].GetComponent<Rigidbody2D>();
+                if (body != null && (HasAuthority || stageManager.IsLocallyControlledPlayer(players[i])))
+                    body.AddForce(new Vector2(direction * 8.5f, 1.5f), ForceMode2D.Impulse);
+            }
+            CreateCrayonImpactBurst(bossRoot.position, packet.Seed, 1.35f);
+            TriggerCameraShake(1.1f, 0.26f);
+            GameSfx.PlayAt(SfxId.BirdFlap, bossRoot.position, 0.9f);
+        }
+
+        private IEnumerator HumanSwordRain(AttackPacket packet)
+        {
+            int swordCount = Mathf.Clamp(packet.Variant - 3, 1, 4);
+            System.Random random = new System.Random(packet.Seed);
+            for (int i = 0; i < swordCount; i++)
+            {
+                Vector2 target = packet.Target;
+                if (i > 0)
+                    target.x = Mathf.Clamp(target.x + Mathf.Lerp(-7f, 7f,
+                        (float)random.NextDouble()), -ArenaHalfWidth + 1.1f, ArenaHalfWidth - 1.1f);
+                StartCoroutine(HumanSwordFall(target, packet.Seed + i * 173));
+                if (i + 1 < swordCount) yield return new WaitForSeconds(0.14f);
+            }
+        }
+
+        private IEnumerator HumanSwordFall(Vector2 target, int seed)
+        {
+            Vector2 start = new Vector2(target.x, ArenaTop + 1.6f);
+            GameObject sword = CreateCrayonSword(transform, "Falling Rainbow Sword", 2.8f, 0.3f, 198);
+            sword.transform.position = start;
+            sword.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+            GameObject warning = CreateWarningLine(
+                new Vector2(target.x, ArenaTop), new Vector2(target.x, ArenaBottom));
+            GameSfx.PlayAt(SfxId.BossAttackWarning, target, 0.78f);
+            float pose = 0f;
+            while (pose < 0.62f)
+            {
+                pose += Time.deltaTime;
+                if (sword != null)
+                {
+                    float pulse = 1f + Mathf.Sin(pose * 22f) * 0.06f;
+                    sword.transform.localScale = Vector3.one * pulse;
+                }
+                yield return null;
+            }
+            if (warning != null) Destroy(warning);
+            GameSfx.PlayAt(SfxId.BossSwordSlash, start, 0.72f);
+            float fall = 0f;
+            while (fall < 0.66f && sword != null)
+            {
+                fall += Time.deltaTime;
+                float t = Mathf.Clamp01(fall / 0.66f);
+                sword.transform.position = Vector2.Lerp(start, target, t * t);
+                HitPlayersNear(sword.transform.position, 0.78f);
+                yield return null;
+            }
+            CreateCrayonImpactBurst(target, seed, 0.95f);
+            TriggerCameraShake(0.48f, 0.18f);
+            GameSfx.PlayAt(SfxId.MissileImpact, target, 0.86f);
+            if (sword != null) Destroy(sword);
+        }
+
+        private static Vector2[] CreatePawStampTargets(int count, int seed, float margin)
+        {
+            var random = new System.Random(seed);
+            Vector2[] targets = new Vector2[Mathf.Max(1, count)];
+            for (int i = 0; i < targets.Length; i++)
+            {
+                // Spread simultaneous stamps out instead of stacking their damage
+                // at almost identical points. Keep random positions within the arena.
+                Vector2 best = Vector2.zero;
+                float bestDistance = -1f;
+                for (int attempt = 0; attempt < 24; attempt++)
+                {
+                    Vector2 candidate = new Vector2(
+                        Mathf.Lerp(-ArenaHalfWidth + margin, ArenaHalfWidth - margin, (float)random.NextDouble()),
+                        Mathf.Lerp(ArenaBottom + 2.1f, ArenaTop - 2.1f, (float)random.NextDouble()));
+                    float distance = float.PositiveInfinity;
+                    for (int j = 0; j < i; j++) distance = Mathf.Min(distance, (candidate - targets[j]).sqrMagnitude);
+                    if (distance > bestDistance) { best = candidate; bestDistance = distance; }
+                    if (distance >= 36f) break;
+                }
+                targets[i] = best;
+            }
+            return targets;
+        }
+
+        private IEnumerator CatPawStamp(AttackPacket packet, int index)
+        {
+            Vector2 target = packet.Targets != null && index < packet.Targets.Length ? packet.Targets[index] : packet.Target;
+            float growth = 1f + Mathf.Clamp(packet.Variant, 0, 4) * 0.22f;
+            GameObject warning = CreateScratchWarning(target);
+            warning.name = "Giant Red Paw Stamp Warning";
+            warning.transform.localScale = Vector3.one * (2.15f * growth);
+            Renderer[] warningRenderers = warning.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < warningRenderers.Length; i++)
+            {
+                if (warningRenderers[i] is SpriteRenderer sprite)
+                    sprite.color = new Color(1f, 0.04f, 0.08f, 0.48f);
+            }
+            if (index == 0) GameSfx.PlayAt(SfxId.BossAttackWarning, target, 0.82f);
+            float elapsed = 0f;
+            while (elapsed < 0.88f)
+            {
+                elapsed += Time.deltaTime;
+                if (warning != null)
+                {
+                    float pulse = 2.15f * growth * (0.92f + Mathf.Sin(elapsed * 18f) * 0.07f);
+                    warning.transform.localScale = Vector3.one * pulse;
+                }
+                yield return null;
+            }
+            if (warning != null) Destroy(warning);
+            GameObject stamp = CreateScratchWarning(target);
+            stamp.name = "Giant Rainbow Paw Impact";
+            stamp.transform.localScale = Vector3.one * (2.3f * growth);
+            stamp.AddComponent<CosmicHazard>().Configure(this, 2.45f * growth, 0.42f);
+            CreateCrayonImpactBurst(target, packet.Seed + index, 1.35f * growth);
+            if (index == 0)
+            {
+                TriggerCameraShake(0.9f, 0.28f);
+                GameSfx.PlayAt(SfxId.ClearStampImpact, target, 1f);
+                GameSfx.PlayAt(SfxId.BossCatSwipe, target, 0.82f);
+            }
+            yield return new WaitForSeconds(0.44f);
+            if (stamp != null) Destroy(stamp);
+        }
+
+        private IEnumerator BirdBombRain(AttackPacket packet)
+        {
+            Vector2 target = packet.Target;
+            CreateRainbowTargetMarker(target, 0.85f);
+            GameSfx.PlayAt(SfxId.BossAttackWarning, target, 0.72f);
+            yield return new WaitForSeconds(0.62f);
+            SpawnBomb(new Vector2(target.x, ArenaTop + 0.8f), target,
+                1.05f, 5.4f, 1f, 700 + packet.Serial);
+            GameSfx.PlayAt(SfxId.BombFuseStart, new Vector2(target.x, ArenaTop), 0.8f);
+        }
+
+        private IEnumerator SlimeWallSpikes(AttackPacket packet)
+        {
+            GameObject left = CreateSlimeSpikeStrip("Left Closing Slime Spikes", true, false, 14);
+            GameObject right = CreateSlimeSpikeStrip("Right Closing Slime Spikes", true, true, 14);
+            GameObject bottom = CreateSlimeSpikeStrip("Bottom Closing Slime Spikes", false, false, 24);
+            GameObject top = CreateSlimeSpikeStrip("Top Closing Slime Spikes", false, true, 24);
+            GameSfx.Play(SfxId.BossAttackWarning, 0.9f);
+            GameSfx.Play(SfxId.SlimeRelease, 0.82f);
+            float elapsed = 0f;
+            const float duration = 23f;
+            while (elapsed < duration && state == BattleState.Active)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duration));
+                float inset = Mathf.Lerp(0.2f, 3.15f, t);
+                if (left != null) left.transform.position = new Vector2(-ArenaHalfWidth + inset, 0f);
+                if (right != null) right.transform.position = new Vector2(ArenaHalfWidth - inset, 0f);
+                if (bottom != null) bottom.transform.position = new Vector2(0f, ArenaBottom + inset);
+                if (top != null) top.transform.position = new Vector2(0f, ArenaTop - inset);
+                HitPlayersInBox(new Vector2(-ArenaHalfWidth + inset, 0f), new Vector2(1.25f, ArenaTop - ArenaBottom));
+                HitPlayersInBox(new Vector2(ArenaHalfWidth - inset, 0f), new Vector2(1.25f, ArenaTop - ArenaBottom));
+                HitPlayersInBox(new Vector2(0f, ArenaBottom + inset), new Vector2(ArenaHalfWidth * 2f, 1.25f));
+                HitPlayersInBox(new Vector2(0f, ArenaTop - inset), new Vector2(ArenaHalfWidth * 2f, 1.25f));
+                yield return null;
+            }
+            if (left != null) Destroy(left);
+            if (right != null) Destroy(right);
+            if (bottom != null) Destroy(bottom);
+            if (top != null) Destroy(top);
+        }
+
+        private GameObject CreateSlimeSpikeStrip(string name, bool vertical, bool farSide, int count)
+        {
+            GameObject root = new GameObject(name);
+            root.transform.SetParent(transform, false);
+            for (int i = 0; i < count; i++)
+            {
+                float normalized = count <= 1 ? 0.5f : i / (float)(count - 1);
+                Vector2 position = vertical
+                    ? new Vector2(0f, Mathf.Lerp(ArenaBottom + 0.7f, ArenaTop - 0.7f, normalized))
+                    : new Vector2(Mathf.Lerp(-ArenaHalfWidth + 0.7f, ArenaHalfWidth - 0.7f, normalized), 0f);
+                GameObject spike = CreateSpikeVisual(root.transform, position, 1.18f, 194, FinaleColor(i));
+                float rotation = vertical ? (farSide ? 90f : -90f) : (farSide ? 180f : 0f);
+                spike.transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            }
+            return root;
+        }
+
+        private void CreateCrayonImpactBurst(Vector2 position, int seed, float scale)
+        {
+            transitionEffectUntil = Mathf.Max(transitionEffectUntil, Time.unscaledTime + 0.48f);
+            GameObject root = new GameObject("Crayon Impact Burst");
+            root.transform.SetParent(transform, false); root.transform.position = position;
+            for (int i = 0; i < 12; i++)
+            {
+                float angle = (i * 30f + seed % 19) * Mathf.Deg2Rad;
+                GameObject ray = new GameObject("Impact Ray"); ray.transform.SetParent(root.transform, false);
+                LineRenderer line = ray.AddComponent<LineRenderer>();
+                line.useWorldSpace = false; line.positionCount = 2; line.sharedMaterial = DoodleRuntimeAssets.LineMaterial;
+                line.startWidth = 0.16f; line.endWidth = 0.03f; line.sortingOrder = 199;
+                Color color = Color.HSVToRGB(Mathf.Repeat(i / 12f + seed * 0.01f, 1f), 0.82f, 1f);
+                line.startColor = color; line.endColor = new Color(color.r, color.g, color.b, 0f);
+                line.SetPosition(0, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 0.4f * scale);
+                line.SetPosition(1, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 2.4f * scale);
+            }
+            Destroy(root, 0.48f);
+        }
+
+        private void TriggerCameraShake(float magnitude, float duration)
+        {
+            cameraShakeMagnitude = Mathf.Max(cameraShakeMagnitude, magnitude);
+            cameraShakeUntil = Mathf.Max(cameraShakeUntil, Time.unscaledTime + duration);
+        }
+
+        private void UpdateProgressiveBossVisuals()
+        {
+            if (bossSpecies != DrawManager.Species.Cat || bossVisual == null || state != BattleState.Active) return;
+            float elapsed = Mathf.Max(0f, EffectiveFormDuration - remaining);
+            int stage = Mathf.Clamp(Mathf.FloorToInt(elapsed / (EffectiveFormDuration * 0.25f)), 0, 3);
+            float[] scales = { 1f, 1.35f, 1.75f, 2.2f };
+            if (stage != catGrowthStage)
+            {
+                catGrowthFrom = bossVisualScale;
+                catGrowthTo = bossBaseVisualScale * scales[stage];
+                catGrowthStage = stage;
+                catGrowthStartedAt = Time.unscaledTime;
+                GameSfx.PlayAt(SfxId.BossCharge, bossRoot != null ? bossRoot.position : Vector3.zero, 0.72f);
+            }
+            float t = Mathf.Clamp01((Time.unscaledTime - catGrowthStartedAt) / 0.78f);
+            float bouncy = Mathf.SmoothStep(0f, 1f, t)
+                + Mathf.Sin(t * Mathf.PI * 5f) * (1f - t) * 0.075f;
+            bossVisualScale = Mathf.LerpUnclamped(catGrowthFrom, catGrowthTo, bouncy);
+            bossVisual.localScale = new Vector3(bossFacing * bossVisualScale, bossVisualScale, 1f);
+        }
+
+        private IEnumerator PlayBossArrivalPresentation()
+        {
+            if (bossRoot == null) yield break;
+            SetRenderersVisible(bossRoot, false);
+            CleanupScreenFlash();
+            GameObject flash = CreateScreenFlash(Color.white, 10000);
+            activeScreenFlash = flash;
+            SpriteRenderer flashRenderer = flash != null ? flash.GetComponent<SpriteRenderer>() : null;
+            GameSfx.Play(SfxId.BossCharge, 0.95f);
+            float elapsed = 0f;
+            bool revealed = false;
+            while (elapsed < 1.05f)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                if (!revealed && elapsed >= 0.28f)
+                {
+                    revealed = true;
+                    SetRenderersVisible(bossRoot, true);
+                    GameSfx.PlayAt(SfxId.ClearStampImpact, bossRoot.position, 0.92f);
+                }
+                if (flashRenderer != null)
+                {
+                    float alpha = elapsed < 0.2f ? 1f : 1f - Mathf.Clamp01((elapsed - 0.2f) / 0.85f);
+                    flashRenderer.color = new Color(1f, 1f, 1f, alpha);
+                }
+                yield return null;
+            }
+            if (flash != null) Destroy(flash);
+            if (activeScreenFlash == flash) activeScreenFlash = null;
+            SetRenderersVisible(bossRoot, true);
+            CreateCrayonImpactBurst(bossRoot.position, formIndex * 101 + 29, 1.45f);
+            TriggerCameraShake(0.72f, 0.32f);
+        }
+
+        private IEnumerator PlayBossDefeatPresentation()
+        {
+            if (bossRoot == null) yield break;
+            bossLockedUntil = Time.time + 3f;
+            bossVelocity = Vector2.zero;
+            for (int i = 0; i < mimicClones.Count; i++)
+            {
+                mimicClones[i].LockedUntil = Time.time + 3f;
+                mimicClones[i].Velocity = Vector2.zero;
+            }
+            GameSfx.PlayAt(SfxId.EnemyCharge, bossRoot.position, 0.72f);
+            yield return new WaitForSecondsRealtime(0.32f);
+            Vector2 blastPosition = bossRoot != null ? (Vector2)bossRoot.position : Vector2.zero;
+            CreateBossExplosionBloom(blastPosition);
+            CreateCrayonImpactBurst(blastPosition, formIndex * 131 + 47, 2.35f);
+            CreateBossSmokeCloud(blastPosition, formIndex * 173 + 61);
+            TriggerCameraShake(1.45f, 0.55f);
+            GameSfx.PlayAt(SfxId.DynamiteExplosion, blastPosition, 1f);
+            GameSfx.PlayAt(SfxId.EnemyDefeat, blastPosition, 0.9f);
+            if (bossRoot != null) SetRenderersVisible(bossRoot, false);
+            for (int i = 0; i < mimicClones.Count; i++)
+                if (mimicClones[i].Root != null) SetRenderersVisible(mimicClones[i].Root, false);
+            yield return new WaitForSecondsRealtime(1.15f);
+        }
+
+        private GameObject CreateScreenFlash(Color color, int order)
+        {
+            if (gameCamera == null) gameCamera = Camera.main;
+            if (gameCamera == null) return null;
+            GameObject root = new GameObject("Boss Screen Flash");
+            root.transform.position = new Vector3(gameCamera.transform.position.x, gameCamera.transform.position.y, 0f);
+            SpriteRenderer renderer = root.AddComponent<SpriteRenderer>();
+            renderer.sprite = DoodleRuntimeAssets.SquareSprite;
+            renderer.color = color;
+            renderer.sortingOrder = order;
+            float height = gameCamera.orthographicSize * 2.25f;
+            float width = height * gameCamera.aspect;
+            root.transform.localScale = new Vector3(width, height, 1f);
+            return root;
+        }
+
+        private void CleanupScreenFlash()
+        {
+            if (activeScreenFlash != null) Destroy(activeScreenFlash);
+            activeScreenFlash = null;
+            // Also clean a flash left by a previous controller instance whose
+            // coroutine was interrupted on the same frame as a stage change.
+            GameObject[] roots = gameObject.scene.IsValid()
+                ? gameObject.scene.GetRootGameObjects() : Array.Empty<GameObject>();
+            for (int i = 0; i < roots.Length; i++)
+                if (roots[i] != null && roots[i].name == "Boss Screen Flash") Destroy(roots[i]);
+        }
+
+        private static void SetRenderersVisible(Transform root, bool visible)
+        {
+            if (root == null) return;
+            Renderer[] renderers = root.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++) renderers[i].enabled = visible;
+        }
+
+        private void CreateBossSmokeCloud(Vector2 position, int seed)
+        {
+            GameObject root = new GameObject("Boss Explosion Smoke");
+            root.transform.SetParent(transform, false);
+            root.transform.position = position;
+            for (int i = 0; i < 18; i++)
+            {
+                float angle = (i * 137.5f + seed) * Mathf.Deg2Rad;
+                float radius = 0.45f + (i % 6) * 0.36f;
+                GameObject puff = new GameObject("Crayon Smoke Puff " + (i + 1));
+                puff.transform.SetParent(root.transform, false);
+                puff.transform.localPosition = new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius * 0.68f, 0f);
+                puff.transform.localScale = Vector3.one * (0.8f + (i % 5) * 0.19f);
+                SpriteRenderer renderer = puff.AddComponent<SpriteRenderer>();
+                renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+                renderer.color = new Color(0.54f + (i % 3) * 0.08f, 0.52f, 0.66f, 0.9f);
+                renderer.sortingOrder = 205 + i % 3;
+            }
+            CosmicSmokeFade fade = root.AddComponent<CosmicSmokeFade>();
+            fade.Configure(1.2f, 1.55f);
+        }
+
+        private void CreateBossExplosionBloom(Vector2 position)
+        {
+            GameObject root = new GameObject("Boss Explosion Bloom");
+            root.transform.SetParent(transform, false);
+            root.transform.position = position;
+            Color[] colors =
+            {
+                new Color(1f, 0.96f, 0.48f, 0.96f),
+                new Color(1f, 0.42f, 0.08f, 0.88f),
+                new Color(1f, 0.12f, 0.48f, 0.76f)
+            };
+            for (int i = 0; i < colors.Length; i++)
+            {
+                GameObject disc = new GameObject("Explosion Color " + (i + 1));
+                disc.transform.SetParent(root.transform, false);
+                disc.transform.localScale = Vector3.one * (0.72f + i * 0.32f);
+                SpriteRenderer renderer = disc.AddComponent<SpriteRenderer>();
+                renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+                renderer.color = colors[i];
+                renderer.sortingOrder = 214 - i;
+            }
+            CosmicSmokeFade fade = root.AddComponent<CosmicSmokeFade>();
+            fade.Configure(0.46f, 4.8f);
         }
 
         private Transform CreateTemporaryBazooka(Transform attacker)
@@ -919,9 +1937,19 @@ namespace DrawBody.Prototype
                     Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 prop.localScale = Vector3.one;
             }
-            GameObject warning = CreateBazookaAimGuide(origin, direction, target);
-            yield return new WaitForSeconds(1.05f);
-            if (warning != null) Destroy(warning);
+            Transform attacker = GetAttackerRoot(attackerId);
+            GameSfx.PlayAt(SfxId.EnemyCharge, origin, 0.78f);
+            float charge = 0f;
+            while (charge < 0.72f && attacker != null)
+            {
+                charge += Time.deltaTime;
+                float kick = Mathf.Sin(charge * 28f) * Mathf.Lerp(0.03f, 0.13f, charge / 0.72f);
+                attacker.localRotation = Quaternion.Euler(0f, 0f, kick * 48f);
+                if (prop != null)
+                    prop.localScale = Vector3.one * (1f + Mathf.Sin(charge * 22f) * 0.045f);
+                yield return null;
+            }
+            if (attacker != null) attacker.localRotation = Quaternion.identity;
             SpawnProjectile(origin + direction * 1.05f, direction * 15.5f, 0.55f, 4f, true);
             if (prop != null)
             {
@@ -929,33 +1957,60 @@ namespace DrawBody.Prototype
                 else Destroy(prop.gameObject);
             }
             GameSfx.PlayAt(SfxId.CannonFire, origin);
+            GameSfx.PlayAt(SfxId.MissileLaunch, origin, 0.9f);
         }
 
         private IEnumerator CatScratch(AttackPacket packet, int attackerIndex)
         {
             int attackerId = GetAttackerId(packet, attackerIndex);
             Vector2 target = GetAttackTarget(packet, attackerIndex);
-            LockAttacker(attackerId, 1.15f);
+            LockAttacker(attackerId, 1.35f);
             Transform attacker = GetAttackerRoot(attackerId);
-            GameObject warning = CreateScratchWarning(target);
-            float warningElapsed = 0f;
-            while (warningElapsed < 0.68f)
+            if (attacker == null) yield break;
+            Transform paw = attackerId == 0 ? carriedSpike : CreateTemporarySpike(attacker);
+            if (paw != null)
             {
-                warningElapsed += Time.deltaTime;
-                if (warning != null)
+                paw.gameObject.SetActive(true);
+                paw.localPosition = new Vector3(-1.0f * bossFacing, 0.55f, -0.12f);
+                paw.localRotation = Quaternion.Euler(0f, 0f, -82f * bossFacing);
+            }
+            GameSfx.PlayAt(SfxId.EnemyCharge, attacker.position, 0.66f);
+            float pose = 0f;
+            while (pose < 0.52f && attacker != null)
+            {
+                pose += Time.deltaTime;
+                float p = Mathf.Clamp01(pose / 0.52f);
+                attacker.localRotation = Quaternion.Euler(0f, 0f, -bossFacing * Mathf.Sin(p * Mathf.PI) * 21f);
+                if (paw != null)
                 {
-                    float pulse = 0.9f + Mathf.Sin(warningElapsed * 18f) * 0.08f;
-                    warning.transform.localScale = Vector3.one * pulse;
+                    paw.localPosition = Vector3.Lerp(
+                        new Vector3(-1.0f * bossFacing, 0.55f, -0.12f),
+                        new Vector3(0.15f * bossFacing, 1.05f, -0.12f), p);
+                    paw.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(-82f, -24f, p) * bossFacing);
                 }
                 yield return null;
             }
-            if (warning != null) Destroy(warning);
-            if (attacker != null) attacker.position = Vector2.MoveTowards(attacker.position, target, 2.4f);
+            if (attacker == null) yield break;
+            attacker.localRotation = Quaternion.identity;
+            if (paw != null)
+            {
+                paw.localPosition = new Vector3(1.25f * bossFacing, -0.05f, -0.12f);
+                paw.localRotation = Quaternion.Euler(0f, 0f, 52f * bossFacing);
+            }
+            attacker.position = Vector2.MoveTowards(attacker.position, target, 2.8f);
             GameObject slash = CreateCatSlashVisual(target);
+            float attackScale = Mathf.Max(1f, GetGrowthFactor(bossVisualScale));
+            slash.transform.localScale = Vector3.one * attackScale;
             CosmicHazard hazard = slash.AddComponent<CosmicHazard>();
-            hazard.Configure(this, 1.25f, 0.28f);
-            yield return new WaitForSeconds(0.3f);
+            hazard.Configure(this, 1.55f * attackScale, 0.3f);
+            GameSfx.PlayAt(SfxId.BossCatSwipe, target, 0.92f);
+            yield return new WaitForSeconds(0.32f);
             if (slash != null) Destroy(slash);
+            if (paw != null)
+            {
+                if (attackerId == 0) paw.gameObject.SetActive(false);
+                else Destroy(paw.gameObject);
+            }
         }
 
         private IEnumerator SpikeDash(
@@ -975,6 +2030,7 @@ namespace DrawBody.Prototype
                     : Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
             }
             LockAttacker(attackerId, 1.75f);
+            GameSfx.PlayAt(SfxId.BossCharge, attacker != null ? attacker.position : Vector3.zero, 0.72f);
             float chargeElapsed = 0f;
             while (chargeElapsed < 0.48f && attacker != null)
             {
@@ -988,6 +2044,8 @@ namespace DrawBody.Prototype
                 yield return null;
             }
             float elapsed = 0f;
+            GameSfx.PlayAt(birdStyle ? SfxId.BirdFlap : SfxId.BossCatSwipe,
+                attacker != null ? attacker.position : Vector3.zero, 0.88f);
             while (elapsed < 1.12f && attacker != null)
             {
                 elapsed += Time.deltaTime;
@@ -996,7 +2054,9 @@ namespace DrawBody.Prototype
                 Vector2 p = attacker.position;
                 if (Mathf.Abs(p.x) > ArenaHalfWidth - 1f) direction.x *= -1f;
                 if (p.y < ArenaBottom + 1f || p.y > ArenaTop - 1f) direction.y *= -1f;
-                CosmicHazard.HitPlayersNear(this, attacker.position, 1.35f);
+                float dashRadius = birdStyle ? 1.55f
+                    : 1.35f * Mathf.Max(1f, GetGrowthFactor(bossVisualScale));
+                CosmicHazard.HitPlayersNear(this, attacker.position, dashRadius);
                 yield return null;
             }
             if (spike != null)
@@ -1043,6 +2103,7 @@ namespace DrawBody.Prototype
             int attackerCount = GetAttackCount(packet);
             int rayCount = multiply ? 8 : 6;
             List<GameObject> charges = new List<GameObject>();
+            GameSfx.PlayAt(SfxId.EnemyCharge, packet.Origin, 0.72f);
             for (int i = 0; i < attackerCount; i++)
             {
                 Transform attacker = GetAttackerRoot(GetAttackerId(packet, i));
@@ -1077,6 +2138,7 @@ namespace DrawBody.Prototype
                     float angle = (ray * (360f / rayCount) + (packet.Seed % 23)) * Mathf.Deg2Rad;
                     SpawnSpikeProjectile(origin, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 8.2f);
                 }
+                GameSfx.PlayAt(SfxId.BeamFire, origin, 0.68f);
             }
         }
 
@@ -1394,7 +2456,7 @@ namespace DrawBody.Prototype
             float side = nextCloneId % 2 == 0 ? -1f : 1f;
             Vector2 position = (Vector2)bossRoot.position + new Vector2(side * (2.1f + nextCloneId * 0.25f), 0.8f);
             position.x = Mathf.Clamp(position.x, -ArenaHalfWidth + 1.3f, ArenaHalfWidth - 1.3f);
-            position.y = Mathf.Clamp(position.y, ArenaBottom + 1.4f, ArenaTop - 1.5f);
+            position.y = Mathf.Clamp(position.y, ArenaBottom + 0.42f, ArenaTop - 0.42f);
             SpawnMimicClone(++nextCloneId, position);
             GameSfx.Play(SfxId.EmotePop);
         }
@@ -1423,7 +2485,10 @@ namespace DrawBody.Prototype
                 NextAttackAt = HasAuthority
                     ? Time.time + UnityEngine.Random.Range(0.75f, 1.65f)
                     : float.PositiveInfinity,
-                AttackAlternator = UnityEngine.Random.Range(0, 2)
+                AttackAlternator = UnityEngine.Random.Range(0, 2),
+                SpawnedAt = Time.time,
+                VisualScale = bossSpecies == DrawManager.Species.Slime
+                    ? bossBaseVisualScale * GetSlimeVisualScale(mimicClones.Count + 2) : bossVisualScale
             };
             mimicClones.Add(clone);
             return clone;
@@ -1438,7 +2503,8 @@ namespace DrawBody.Prototype
                 if (Time.time < clone.LockedUntil)
                 {
                     clone.Velocity = Vector2.zero;
-                    HitPlayersNear(clone.Root.position, bossContactRadius);
+                    HitPlayersNear(clone.Root.position,
+                        bossContactRadius * GetGrowthFactor(clone.VisualScale));
                     continue;
                 }
                 if (authoritative)
@@ -1455,30 +2521,67 @@ namespace DrawBody.Prototype
                         else
                         {
                             float toward = target.transform.position.x < clone.Root.position.x ? -1f : 1f;
-                            clone.MoveDirection = UnityEngine.Random.value < 0.76f ? toward : -toward;
+                            int slimePattern = bossSpecies == DrawManager.Species.Slime ? Mathf.Abs(clone.Id) % 4 : 0;
+                            float pursuitChance = bossSpecies != DrawManager.Species.Slime ? 0.76f
+                                : slimePattern == 0 ? 0.9f
+                                : slimePattern == 1 ? 0.62f
+                                : slimePattern == 2 ? 0.42f : 0.76f;
+                            clone.MoveDirection = UnityEngine.Random.value < pursuitChance ? toward : -toward;
                             float speciesSpeed = bossSpecies == DrawManager.Species.Cat ? 1.12f
                                 : bossSpecies == DrawManager.Species.Turtle ? 0.74f : 1f;
-                            clone.MoveSpeed = UnityEngine.Random.Range(1.8f, 3.65f) * speciesSpeed;
-                            clone.NextDecisionAt = Time.time + UnityEngine.Random.Range(0.65f, 1.7f);
+                            float slimeSpeed = bossSpecies != DrawManager.Species.Slime ? 1f
+                                : slimePattern == 0 ? 0.72f
+                                : slimePattern == 1 ? 1.05f
+                                : slimePattern == 2 ? 1.48f : 0.9f;
+                            clone.MoveSpeed = UnityEngine.Random.Range(1.8f, 3.65f) * speciesSpeed * slimeSpeed;
+                            clone.NextDecisionAt = Time.time + UnityEngine.Random.Range(
+                                slimePattern == 2 ? 0.35f : 0.65f,
+                                slimePattern == 0 ? 2.2f : 1.7f);
                         }
                     }
                     if (Time.time >= clone.NextJumpAt)
                     {
-                        clone.Velocity.y = Mathf.Max(clone.Velocity.y, UnityEngine.Random.Range(3.3f, 4.5f));
-                        clone.NextJumpAt = Time.time + UnityEngine.Random.Range(1.2f, 2.85f);
+                        float verticalGap = target != null
+                            ? target.transform.position.y - clone.Root.position.y : 0f;
+                        clone.Velocity.y = Mathf.Max(clone.Velocity.y,
+                            Mathf.Lerp(4.2f, 7.1f, Mathf.InverseLerp(0f, 10f, verticalGap))
+                            + UnityEngine.Random.Range(-0.25f, 0.4f));
+                        float jumpFactor = bossSpecies == DrawManager.Species.Slime
+                            ? Mathf.Lerp(0.72f, 1.25f, (Mathf.Abs(clone.Id) % 4) / 3f) : 1f;
+                        clone.NextJumpAt = Time.time + UnityEngine.Random.Range(1.2f, 2.85f) * jumpFactor;
                     }
                     clone.Velocity.x = Mathf.MoveTowards(clone.Velocity.x,
                         clone.MoveDirection * clone.MoveSpeed, 7.2f * Time.deltaTime);
                     clone.Velocity.y += Physics2D.gravity.y
                         * (bossSpecies == DrawManager.Species.Bird ? 0.1f : 0.18f) * Time.deltaTime;
+                    if (bossSpecies == DrawManager.Species.Bird && target != null)
+                    {
+                        float desiredY = Mathf.Clamp(
+                            (target.transform.position.y - clone.Root.position.y) * 1.35f, -5.8f, 5.8f);
+                        clone.Velocity.y = Mathf.MoveTowards(clone.Velocity.y,
+                            desiredY, 5.4f * Time.deltaTime);
+                    }
                     clone.Velocity.y = Mathf.Max(clone.Velocity.y, -3.2f);
+                }
+                else if (clone.HasNetworkTarget)
+                {
+                    float prediction = Mathf.Clamp(Time.unscaledTime - clone.NetworkSampleTime, 0f, 0.14f);
+                    Vector2 target = clone.NetworkTarget + clone.Velocity * prediction;
+                    float blend = 1f - Mathf.Exp(-18f * Time.deltaTime);
+                    clone.Root.position = Vector2.Lerp(clone.Root.position, target, blend);
+                    if (Mathf.Abs(clone.Velocity.x) > 0.15f) clone.Facing = clone.Velocity.x < 0f ? -1 : 1;
+                    if (clone.Visual != null) clone.Visual.localScale = new Vector3(
+                        clone.Facing * clone.VisualScale, clone.VisualScale, 1f);
+                    HitPlayersNear(clone.Root.position,
+                        bossContactRadius * GetGrowthFactor(clone.VisualScale));
+                    continue;
                 }
 
                 Vector2 next = (Vector2)clone.Root.position + clone.Velocity * Time.deltaTime;
                 float minX = -ArenaHalfWidth + 1.3f;
                 float maxX = ArenaHalfWidth - 1.3f;
-                float minY = ArenaBottom + 1.4f;
-                float maxY = ArenaTop - 1.5f;
+                float minY = ArenaBottom + 0.42f;
+                float maxY = ArenaTop - 0.42f;
                 if (next.x <= minX || next.x >= maxX)
                 {
                     next.x = Mathf.Clamp(next.x, minX, maxX);
@@ -1489,8 +2592,10 @@ namespace DrawBody.Prototype
                 else if (next.y >= maxY) { next.y = maxY; clone.Velocity.y = Mathf.Min(0f, clone.Velocity.y); }
                 clone.Root.position = next;
                 if (Mathf.Abs(clone.Velocity.x) > 0.15f) clone.Facing = clone.Velocity.x < 0f ? -1 : 1;
-                if (clone.Visual != null) clone.Visual.localScale = new Vector3(clone.Facing, 1f, 1f);
-                HitPlayersNear(clone.Root.position, bossContactRadius);
+                if (clone.Visual != null) clone.Visual.localScale = new Vector3(
+                    clone.Facing * clone.VisualScale, clone.VisualScale, 1f);
+                HitPlayersNear(clone.Root.position,
+                    bossContactRadius * GetGrowthFactor(clone.VisualScale));
             }
         }
 
@@ -1524,10 +2629,13 @@ namespace DrawBody.Prototype
                     MimicClone clone = mimicClones.Find(item => item.Id == state.Id);
                     if (clone == null) clone = SpawnMimicClone(state.Id, state.Position);
                     if (clone == null || clone.Root == null) continue;
-                    clone.Root.position = Vector2.Lerp(clone.Root.position, state.Position, 0.68f);
+                    clone.NetworkTarget = state.Position;
+                    clone.NetworkSampleTime = Time.unscaledTime;
+                    clone.HasNetworkTarget = true;
                     clone.Velocity = state.Velocity;
                     clone.Facing = state.Facing == 0 ? 1 : state.Facing;
-                    if (clone.Visual != null) clone.Visual.localScale = new Vector3(clone.Facing, 1f, 1f);
+                    if (clone.Visual != null) clone.Visual.localScale = new Vector3(
+                        clone.Facing * clone.VisualScale, clone.VisualScale, 1f);
                 }
             }
             for (int i = mimicClones.Count - 1; i >= 0; i--)
@@ -1536,6 +2644,12 @@ namespace DrawBody.Prototype
                 if (mimicClones[i].Root != null) Destroy(mimicClones[i].Root.gameObject);
                 mimicClones.RemoveAt(i);
             }
+            if (bossSpecies == DrawManager.Species.Slime)
+            {
+                float scale = bossBaseVisualScale * GetSlimeVisualScale(mimicClones.Count + 1);
+                bossVisualScale = scale;
+                for (int i = 0; i < mimicClones.Count; i++) mimicClones[i].VisualScale = scale;
+            }
         }
 
         private void SetBossShelled(bool value)
@@ -1543,8 +2657,8 @@ namespace DrawBody.Prototype
             bossShelled = value;
             if (shellOverlay != null) shellOverlay.gameObject.SetActive(value);
             if (bossVisual != null) bossVisual.localScale = value
-                ? new Vector3(bossFacing * 0.72f, 0.72f, 1f)
-                : new Vector3(bossFacing, 1f, 1f);
+                ? new Vector3(bossFacing * bossVisualScale * 0.72f, bossVisualScale * 0.72f, 1f)
+                : new Vector3(bossFacing * bossVisualScale, bossVisualScale, 1f);
         }
 
         private static void GetLaserGeometry(int side, out Vector2 center, out Vector2 size,
@@ -1579,6 +2693,22 @@ namespace DrawBody.Prototype
             line.sortingOrder = 181;
             line.SetPosition(0, start);
             line.SetPosition(1, end);
+            return warning;
+        }
+
+        private GameObject CreateWarningArea(Vector2 start, Vector2 end, float thickness)
+        {
+            GameObject warning = new GameObject("Translucent Red Attack Area");
+            warning.transform.SetParent(transform, false);
+            Vector2 delta = end - start;
+            warning.transform.position = (start + end) * 0.5f;
+            warning.transform.rotation = Quaternion.Euler(0f, 0f,
+                Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);
+            warning.transform.localScale = new Vector3(delta.magnitude, Mathf.Max(0.5f, thickness), 1f);
+            SpriteRenderer fill = warning.AddComponent<SpriteRenderer>();
+            fill.sprite = DoodleRuntimeAssets.SquareSprite;
+            fill.color = new Color(1f, 0.03f, 0.08f, 0.18f);
+            fill.sortingOrder = 180;
             return warning;
         }
 
@@ -1628,9 +2758,10 @@ namespace DrawBody.Prototype
         {
             if (target == null || state == BattleState.Cleared || state == BattleState.Failed) return;
             string id = ResolvePlayerId(target);
+            if (string.IsNullOrEmpty(id) || eliminatedPlayers.Contains(id) || IsReviveProtected(id)) return;
             if (IsOnline && !HasAuthority)
             {
-                Send(HitKind, new HitRequest { PlayerId = id });
+                Send(HitKind, new HitRequest { PlayerId = id, LifeRevision = GetLifeRevision(id) });
                 return;
             }
             Eliminate(id, target);
@@ -1638,12 +2769,13 @@ namespace DrawBody.Prototype
 
         private void Eliminate(string id, PlayerController2D player)
         {
-            if (player == null || string.IsNullOrEmpty(id) || !eliminatedPlayers.Add(id)) return;
+            if (player == null || string.IsNullOrEmpty(id) || IsReviveProtected(id) || !eliminatedPlayers.Add(id)) return;
             player.GetComponent<PlayerCarryController>()?.ForceDrop();
             Rigidbody2D body = player.GetComponent<Rigidbody2D>();
             if (body != null) { body.linearVelocity = Vector2.zero; body.simulated = false; }
             player.SetControlsEnabled(false);
             SetPlayerVisible(player, false);
+            stageManager.NotifyPlayerEliminated(player);
             GameSfx.Play(SfxId.PlayerDeath);
             BroadcastState(true);
         }
@@ -1670,7 +2802,7 @@ namespace DrawBody.Prototype
                 {
                     PlayerController2D localPlayer = localPlayers[i];
                     if (localPlayer != null && !eliminatedPlayers.Contains(ResolvePlayerId(localPlayer))
-                        && Vector2.Distance(localPlayer.transform.position, point) <= radius)
+                        && IsPlayerColliderWithinRadius(localPlayer, point, radius))
                         RequestElimination(localPlayer);
                 }
                 return;
@@ -1678,7 +2810,7 @@ namespace DrawBody.Prototype
             PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             for (int i = 0; i < players.Length; i++)
                 if (!eliminatedPlayers.Contains(ResolvePlayerId(players[i]))
-                    && Vector2.Distance(players[i].transform.position, point) <= radius)
+                    && IsPlayerColliderWithinRadius(players[i], point, radius))
                     RequestElimination(players[i]);
         }
 
@@ -1691,7 +2823,7 @@ namespace DrawBody.Prototype
                 for (int i = 0; i < localPlayers.Count; i++)
                 {
                     PlayerController2D localPlayer = localPlayers[i];
-                    if (localPlayer != null && localArea.Contains(localPlayer.transform.position))
+                    if (localPlayer != null && DoesPlayerColliderOverlapRect(localPlayer, localArea))
                         RequestElimination(localPlayer);
                 }
                 return;
@@ -1699,7 +2831,39 @@ namespace DrawBody.Prototype
             PlayerController2D[] players = FindObjectsByType<PlayerController2D>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             Rect area = new Rect(center - size * 0.5f, size);
             for (int i = 0; i < players.Length; i++)
-                if (area.Contains(players[i].transform.position)) RequestElimination(players[i]);
+                if (DoesPlayerColliderOverlapRect(players[i], area)) RequestElimination(players[i]);
+        }
+
+        private static bool IsPlayerColliderWithinRadius(
+            PlayerController2D player,
+            Vector2 point,
+            float radius)
+        {
+            if (player == null) return false;
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(false);
+            float radiusSquared = radius * radius;
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled || collider.isTrigger) continue;
+                Vector2 closest = collider.ClosestPoint(point);
+                if ((closest - point).sqrMagnitude <= radiusSquared) return true;
+            }
+            return ((Vector2)player.transform.position - point).sqrMagnitude <= radiusSquared;
+        }
+
+        private static bool DoesPlayerColliderOverlapRect(PlayerController2D player, Rect area)
+        {
+            if (player == null) return false;
+            Bounds attackBounds = new Bounds(area.center, new Vector3(area.width, area.height, 2f));
+            Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(false);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider != null && collider.enabled && !collider.isTrigger
+                    && collider.bounds.Intersects(attackBounds)) return true;
+            }
+            return area.Contains(player.transform.position);
         }
 
         private PlayerController2D FindNearestLivingPlayer(Vector2 position)
@@ -1715,6 +2879,22 @@ namespace DrawBody.Prototype
                 if (candidate < distance) { distance = candidate; best = player; }
             }
             return best;
+        }
+
+        private PlayerController2D FindRandomLivingPlayer()
+        {
+            List<PlayerController2D> candidates = new List<PlayerController2D>();
+            for (int i = 0; i < orderedPlayerIds.Count; i++)
+            {
+                string id = orderedPlayerIds[i];
+                if (eliminatedPlayers.Contains(id)) continue;
+                PlayerController2D candidate = ResolvePlayer(id);
+                if (candidate != null && candidate.gameObject.activeInHierarchy)
+                    candidates.Add(candidate);
+            }
+            return candidates.Count > 0
+                ? candidates[UnityEngine.Random.Range(0, candidates.Count)]
+                : null;
         }
 
         private void SetPlayerVisible(PlayerController2D player, bool visible)
@@ -1750,6 +2930,242 @@ namespace DrawBody.Prototype
             hiddenColliders.Remove(player);
         }
 
+        private bool IsReviveProtected(string id)
+            => id != null && reviveProtectionUntil.TryGetValue(id, out float until) && Time.time < until;
+
+        private int GetLifeRevision(string id)
+            => id != null && appliedLifeRevisions.TryGetValue(id, out int revision) ? revision : 0;
+
+        private void UpdateReviveDrops()
+        {
+            if (state != BattleState.Active || eliminatedPlayers.Count == 0 || AreAllPlayersEliminated())
+            {
+                ClearReviveDrops();
+                nextReviveDropAt = 0f;
+                return;
+            }
+
+            if (HasAuthority)
+            {
+                if (nextReviveDropAt <= 0f) nextReviveDropAt = Time.time + UnityEngine.Random.Range(4f, 8f);
+                if (Time.time >= nextReviveDropAt)
+                {
+                    nextReviveDropAt = Time.time + UnityEngine.Random.Range(6f, 10f);
+                    List<string> candidates = new List<string>();
+                    foreach (string id in orderedPlayerIds)
+                    {
+                        if (!eliminatedPlayers.Contains(id) || ResolvePlayer(id) == null) continue;
+                        bool alreadyFalling = false;
+                        foreach (ReviveDrop drop in reviveDrops.Values)
+                            if (drop.State.TargetId == id) { alreadyFalling = true; break; }
+                        if (!alreadyFalling) candidates.Add(id);
+                    }
+                    if (candidates.Count > 0)
+                    {
+                        string id = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+                        PlayerController2D survivor = FindRandomLivingPlayer();
+                        float centerX = survivor != null ? survivor.transform.position.x : 0f;
+                        BodyBuilder builder = ResolvePlayer(id)?.GetComponent<BodyBuilder>();
+                        CreateReviveDrop(new ReviveDropSnapshot
+                        {
+                            Id = ++reviveDropSequence,
+                            TargetId = id,
+                            Position = new Vector2(Mathf.Clamp(centerX + UnityEngine.Random.Range(-5f, 5f),
+                                -ArenaHalfWidth + 2f, ArenaHalfWidth - 2f), ArenaTop + 0.5f),
+                            Color = builder != null ? builder.PlayerColor : Color.white
+                        });
+                        BroadcastState(true);
+                    }
+                }
+            }
+
+            // Collection can remove other crayons for the same revived player.
+            foreach (int key in new List<int>(reviveDrops.Keys))
+            {
+                if (!reviveDrops.TryGetValue(key, out ReviveDrop drop)) continue;
+                if (!eliminatedPlayers.Contains(drop.State.TargetId) || drop.Root == null)
+                {
+                    RemoveReviveDrop(key);
+                    continue;
+                }
+                if (HasAuthority)
+                {
+                    drop.State.Position += Vector2.down * (ReviveFallSpeed * Time.deltaTime);
+                    drop.Root.position = drop.State.Position;
+                    if (drop.State.Position.y < ArenaBottom - 1.5f) { RemoveReviveDrop(key); continue; }
+                    foreach (string collectorId in orderedPlayerIds)
+                        if (TryCollectReviveDrop(key, collectorId, 0.85f)) break;
+                }
+                else
+                {
+                    float age = Mathf.Clamp(Time.unscaledTime - drop.ReceivedAt, 0f, 0.15f);
+                    Vector2 predicted = drop.State.Position + Vector2.down * (ReviveFallSpeed * age);
+                    drop.Root.position = Vector2.Lerp(drop.Root.position, predicted,
+                        1f - Mathf.Exp(-24f * Time.deltaTime));
+                    if (Time.unscaledTime >= drop.NextRequestAt)
+                    {
+                        foreach (PlayerController2D local in stageManager.LocalPlayers)
+                        {
+                            string id = ResolvePlayerId(local);
+                            if (id == null || eliminatedPlayers.Contains(id)
+                                || !IsPlayerColliderWithinRadius(local, drop.Root.position, 0.85f)) continue;
+                            drop.NextRequestAt = Time.unscaledTime + 0.2f;
+                            Send(RevivePickupKind, new RevivePickupRequest { DropId = key, PlayerId = id });
+                            break;
+                        }
+                    }
+                }
+                if (drop.Root != null)
+                    drop.Root.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(Time.time * 4f + key) * 16f);
+            }
+        }
+
+        private void CreateReviveDrop(ReviveDropSnapshot snapshot)
+        {
+            GameObject root = new GameObject("Revive Crayon " + snapshot.Id);
+            root.transform.SetParent(transform, false);
+            root.transform.position = snapshot.Position;
+            SpriteRenderer art = root.AddComponent<SpriteRenderer>();
+            art.sprite = Resources.Load<Sprite>("StageObjects/NicoDraw/power-crayon-triple");
+            art.color = snapshot.Color;
+            art.sortingOrder = 190;
+            // Reuse the 15-1 drawing. Recolor its pigment in the shader, keeping
+            // pencil outlines, paper highlights and transparency intact.
+            if (reviveCrayonMaterial == null)
+            {
+                Shader shader = Resources.Load<Shader>("Shaders/PlayerCrayonTint");
+                if (shader != null) reviveCrayonMaterial = new Material(shader);
+            }
+            if (reviveCrayonMaterial != null) art.sharedMaterial = reviveCrayonMaterial;
+            if (art.sprite != null)
+            {
+                Vector2 size = art.sprite.bounds.size;
+                root.transform.localScale = Vector3.one * Mathf.Min(2.55f / Mathf.Max(0.01f, size.x),
+                    1.7f / Mathf.Max(0.01f, size.y));
+            }
+            reviveDrops[snapshot.Id] = new ReviveDrop
+            {
+                State = snapshot, Root = root.transform, ReceivedAt = Time.unscaledTime
+            };
+        }
+
+        private bool TryCollectReviveDrop(int id, string collectorId, float radius)
+        {
+            if (!HasAuthority || state != BattleState.Active || string.IsNullOrEmpty(collectorId)
+                || !orderedPlayerIds.Contains(collectorId) || eliminatedPlayers.Contains(collectorId)
+                || !reviveDrops.TryGetValue(id, out ReviveDrop drop)
+                || !eliminatedPlayers.Contains(drop.State.TargetId)) return false;
+            PlayerController2D collector = ResolvePlayer(collectorId);
+            PlayerController2D target = ResolvePlayer(drop.State.TargetId);
+            if (target == null || collector == null || !collector.gameObject.activeInHierarchy
+                || !IsPlayerColliderWithinRadius(collector, drop.State.Position, radius)) return false;
+
+            ReviveSnapshot revival = new ReviveSnapshot
+            {
+                PlayerId = drop.State.TargetId,
+                Revision = GetLifeRevision(drop.State.TargetId) + 1,
+                Position = new Vector2(Mathf.Clamp(collector.transform.position.x, -ArenaHalfWidth + 3f, ArenaHalfWidth - 3f),
+                    Mathf.Clamp(collector.transform.position.y + 0.6f, ArenaBottom + 3f, ArenaTop - 3f)),
+                ProtectionRemaining = ReviveProtectionSeconds
+            };
+            revivals[revival.PlayerId] = revival;
+            ApplyRevival(revival, target);
+            RemoveReviveDrop(id);
+            BroadcastState(true);
+            return true;
+        }
+
+        private void ApplyRevival(ReviveSnapshot revival, PlayerController2D target)
+        {
+            appliedLifeRevisions[revival.PlayerId] = revival.Revision;
+            eliminatedPlayers.Remove(revival.PlayerId);
+            reviveProtectionUntil[revival.PlayerId] = Time.time + Mathf.Max(0f, revival.ProtectionRemaining);
+            target.gameObject.SetActive(true);
+            target.GetComponent<PlayerCarryController>()?.ForceDrop();
+            target.ResetMotion();
+            SetPlayerVisible(target, true);
+            target.GetComponent<BodyBuilder>()?.RestoreAfterRespawnOrRetry();
+            Rigidbody2D body = target.GetComponent<Rigidbody2D>();
+            if (body != null)
+            {
+                body.position = revival.Position;
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+                body.simulated = true;
+            }
+            target.transform.position = revival.Position;
+            Physics2D.SyncTransforms();
+            stageManager.NotifyPlayerRevived(target);
+            target.SetControlsEnabled(stageManager.IsLocallyControlledPlayer(target)
+                && !stageManager.ShouldBlockSharedLocalInput(target)
+                && stageManager.ShouldEnableLocalGameplayControls);
+            GameSfx.PlayAt(SfxId.PlayerRespawn, revival.Position, 0.9f);
+        }
+
+        private ReviveDropSnapshot[] CaptureReviveDrops()
+        {
+            List<ReviveDropSnapshot> snapshots = new List<ReviveDropSnapshot>();
+            foreach (ReviveDrop drop in reviveDrops.Values) snapshots.Add(drop.State);
+            return snapshots.ToArray();
+        }
+
+        private ReviveSnapshot[] CaptureRevivals()
+        {
+            List<ReviveSnapshot> snapshots = new List<ReviveSnapshot>();
+            foreach (ReviveSnapshot revival in revivals.Values)
+            {
+                revival.ProtectionRemaining = reviveProtectionUntil.TryGetValue(revival.PlayerId, out float until)
+                    ? Mathf.Max(0f, until - Time.time) : 0f;
+                snapshots.Add(revival);
+            }
+            return snapshots.ToArray();
+        }
+
+        private void ApplyRevivals(ReviveSnapshot[] snapshots, string[] deadIds)
+        {
+            if (snapshots == null) return;
+            foreach (ReviveSnapshot snapshot in snapshots)
+            {
+                if (snapshot == null || string.IsNullOrEmpty(snapshot.PlayerId)
+                    || snapshot.Revision <= GetLifeRevision(snapshot.PlayerId)) continue;
+                PlayerController2D target = ResolvePlayer(snapshot.PlayerId);
+                if (target == null) continue; // Retry on the next complete snapshot.
+                if (deadIds != null && Array.IndexOf(deadIds, snapshot.PlayerId) >= 0)
+                    appliedLifeRevisions[snapshot.PlayerId] = snapshot.Revision;
+                else ApplyRevival(snapshot, target);
+            }
+        }
+
+        private void ApplyReviveDrops(ReviveDropSnapshot[] snapshots)
+        {
+            HashSet<int> incoming = new HashSet<int>();
+            if (snapshots != null && state == BattleState.Active)
+                foreach (ReviveDropSnapshot snapshot in snapshots)
+                {
+                    if (snapshot == null || !eliminatedPlayers.Contains(snapshot.TargetId)) continue;
+                    incoming.Add(snapshot.Id);
+                    if (!reviveDrops.TryGetValue(snapshot.Id, out ReviveDrop drop)) CreateReviveDrop(snapshot);
+                    else { drop.State = snapshot; drop.ReceivedAt = Time.unscaledTime; }
+                }
+            foreach (int id in new List<int>(reviveDrops.Keys))
+                if (!incoming.Contains(id)) RemoveReviveDrop(id);
+        }
+
+        private void RemoveReviveDrop(int id)
+        {
+            if (reviveDrops.TryGetValue(id, out ReviveDrop drop) && drop.Root != null)
+            {
+                drop.Root.gameObject.SetActive(false);
+                Destroy(drop.Root.gameObject);
+            }
+            reviveDrops.Remove(id);
+        }
+
+        private void ClearReviveDrops()
+        {
+            foreach (int id in new List<int>(reviveDrops.Keys)) RemoveReviveDrop(id);
+        }
+
         private void BroadcastState(bool force)
         {
             if (!IsOnline || !HasAuthority || onlineManager == null || (!force && Time.unscaledTime < nextBroadcastAt)) return;
@@ -1770,7 +3186,9 @@ namespace DrawBody.Prototype
                 BossFacing = bossFacing,
                 BossShelled = bossShelled,
                 Clones = CaptureCloneSnapshots(),
-                Attack = currentAttack
+                Attack = currentAttack,
+                ReviveDrops = CaptureReviveDrops(),
+                Revivals = CaptureRevivals()
             });
         }
 
@@ -1794,16 +3212,28 @@ namespace DrawBody.Prototype
             {
                 DestroyBoss();
                 SpawnBossForCurrentForm();
+                RebuildTimeSegments();
+                arrivalPresentationCount++;
+                StartCoroutine(PlayBossArrivalPresentation());
+            }
+            else if (previous == BattleState.Active && state == BattleState.Intermission && bossRoot != null)
+            {
+                defeatPresentationCount++;
+                StartCoroutine(PlayBossDefeatPresentation());
             }
             if (bossRoot != null)
             {
-                bossRoot.position = Vector2.Lerp(bossRoot.position, snapshot.BossPosition, 0.62f);
+                remoteBossTarget = snapshot.BossPosition;
+                remoteBossSampleTime = Time.unscaledTime;
+                hasRemoteBossTarget = true;
                 bossVelocity = snapshot.BossVelocity;
                 bossFacing = snapshot.BossFacing == 0 ? 1 : snapshot.BossFacing;
                 SetBossShelled(snapshot.BossShelled);
             }
             ApplyCloneSnapshots(snapshot.Clones);
+            ApplyRevivals(snapshot.Revivals, snapshot.EliminatedPlayerIds);
             ApplyEliminated(snapshot.EliminatedPlayerIds);
+            ApplyReviveDrops(snapshot.ReviveDrops);
             if (snapshot.Attack != null && snapshot.Attack.Serial > lastPlayedAttackSerial)
             {
                 lastPlayedAttackSerial = snapshot.Attack.Serial;
@@ -1823,11 +3253,12 @@ namespace DrawBody.Prototype
                 bool dead = incoming.Contains(id);
                 if (dead)
                 {
-                    eliminatedPlayers.Add(id);
+                    bool newlyEliminated = eliminatedPlayers.Add(id);
                     Rigidbody2D body = player.GetComponent<Rigidbody2D>();
                     if (body != null) { body.linearVelocity = Vector2.zero; body.simulated = false; }
                     player.SetControlsEnabled(false);
                     SetPlayerVisible(player, false);
+                    if (newlyEliminated) stageManager.NotifyPlayerEliminated(player);
                 }
                 else if (eliminatedPlayers.Remove(id))
                 {
@@ -1847,8 +3278,15 @@ namespace DrawBody.Prototype
             else if (data.Kind == HitKind && HasAuthority)
             {
                 HitRequest request = JsonUtility.FromJson<HitRequest>(data.Json);
-                if (request != null && request.PlayerId == data.PlayerId)
+                if (request != null && request.PlayerId == data.PlayerId
+                    && request.LifeRevision == GetLifeRevision(request.PlayerId))
                     Eliminate(request.PlayerId, ResolvePlayer(request.PlayerId));
+            }
+            else if (data.Kind == RevivePickupKind && HasAuthority)
+            {
+                RevivePickupRequest request = JsonUtility.FromJson<RevivePickupRequest>(data.Json);
+                if (request != null && request.PlayerId == data.PlayerId)
+                    TryCollectReviveDrop(request.DropId, request.PlayerId, 2.5f);
             }
         }
 
@@ -1978,17 +3416,17 @@ namespace DrawBody.Prototype
         private void RefreshMonitor()
         {
             if (timeSegmentRoot == null) return;
-            int expected = Mathf.Max(1, orderedPlayerIds.Count);
+            const int expected = 1;
             if (timeSegmentFills.Count != expected) RebuildTimeSegments();
             for (int i = 0; i < timeSegmentFills.Count; i++)
             {
                 Transform fill = timeSegmentFills[i];
                 if (fill == null) continue;
-                float ratio;
-                if (i < formIndex || state == BattleState.Cleared) ratio = 0f;
-                else if (i > formIndex || state == BattleState.Intro) ratio = 1f;
-                else if (state == BattleState.Intermission) ratio = 0f;
-                else ratio = Mathf.Clamp01(remaining / FormDuration);
+                float ratio = state == BattleState.Cleared || state == BattleState.Intermission
+                    ? 0f
+                    : state == BattleState.Intro
+                        ? 1f
+                        : Mathf.Clamp01(remaining / Mathf.Max(0.01f, EffectiveFormDuration));
                 float width = timeSegmentWidths[i];
                 fill.localScale = new Vector3(width * ratio, 0.58f, 1f);
                 float segmentStart = GetSegmentStart(i, timeSegmentFills.Count);
@@ -2003,7 +3441,7 @@ namespace DrawBody.Prototype
                 Destroy(timeSegmentRoot.GetChild(i).gameObject);
             timeSegmentFills.Clear();
             timeSegmentWidths.Clear();
-            int count = Mathf.Max(1, orderedPlayerIds.Count);
+            const int count = 1;
             const float totalWidth = 12.8f;
             const float gap = 0.16f;
             float width = (totalWidth - gap * (count - 1)) / count;
@@ -2027,8 +3465,8 @@ namespace DrawBody.Prototype
                 fill.transform.localScale = new Vector3(width, 0.58f, 1f);
                 SpriteRenderer renderer = fill.AddComponent<SpriteRenderer>();
                 renderer.sprite = StageLinkedShieldSurvivalController.GetSquareSprite();
-                DrawManager.Species species = i < orderedPlayerIds.Count
-                    ? GetSpecies(ResolvePlayer(orderedPlayerIds[i]))
+                DrawManager.Species species = formIndex < orderedPlayerIds.Count
+                    ? GetSpecies(ResolvePlayer(orderedPlayerIds[formIndex]))
                     : DrawManager.Species.Human;
                 renderer.color = colors[Mathf.Clamp((int)species, 0, colors.Length - 1)];
                 renderer.sortingOrder = 224;
@@ -2066,7 +3504,11 @@ namespace DrawBody.Prototype
             if (gameCamera == null) return;
             if (cameraFollow == null) cameraFollow = gameCamera.GetComponent<CameraFollow2D>();
             if (cameraFollow != null) cameraFollow.enabled = false;
-            gameCamera.transform.position = new Vector3(0f, 0.4f, gameCamera.transform.position.z);
+            Vector2 shake = Time.unscaledTime < cameraShakeUntil
+                ? UnityEngine.Random.insideUnitCircle * cameraShakeMagnitude
+                : Vector2.zero;
+            if (shake == Vector2.zero) cameraShakeMagnitude = 0f;
+            gameCamera.transform.position = new Vector3(shake.x, 0.4f + shake.y, gameCamera.transform.position.z);
             gameCamera.orthographicSize = Mathf.Max(11.2f, 20.8f / Mathf.Max(0.1f, gameCamera.aspect));
         }
 
@@ -2103,6 +3545,39 @@ namespace DrawBody.Prototype
             return ability != null ? ability.CurrentProfile.Species : DrawManager.Species.Human;
         }
 
+    }
+
+    internal sealed class CosmicSmokeFade : MonoBehaviour
+    {
+        private SpriteRenderer[] renderers;
+        private float duration = 1.2f;
+        private float expansion = 1.5f;
+        private float startedAt;
+        private Vector3 startScale;
+
+        internal void Configure(float seconds, float expansionMultiplier)
+        {
+            duration = Mathf.Max(0.2f, seconds);
+            expansion = Mathf.Max(1f, expansionMultiplier);
+            startedAt = Time.unscaledTime;
+            startScale = transform.localScale;
+            renderers = GetComponentsInChildren<SpriteRenderer>(true);
+        }
+
+        private void Update()
+        {
+            float t = Mathf.Clamp01((Time.unscaledTime - startedAt) / duration);
+            transform.localScale = startScale * Mathf.Lerp(1f, expansion, Mathf.SmoothStep(0f, 1f, t));
+            if (renderers != null)
+                for (int i = 0; i < renderers.Length; i++)
+                    if (renderers[i] != null)
+                    {
+                        Color color = renderers[i].color;
+                        color.a = (1f - t) * 0.9f;
+                        renderers[i].color = color;
+                    }
+            if (t >= 1f) Destroy(gameObject);
+        }
     }
 
     internal sealed class CosmicMimicRainbowTint : MonoBehaviour
@@ -2209,9 +3684,16 @@ namespace DrawBody.Prototype
 
         private void Update()
         {
-            transform.position += (Vector3)(velocity * Time.deltaTime);
+            Vector2 start = transform.position;
+            Vector2 delta = velocity * Time.deltaTime;
+            transform.position = start + delta;
             velocity = Vector2.Lerp(velocity, velocity * 0.97f, Time.deltaTime * 1.8f);
-            owner?.HitPlayersNear(transform.position, radius);
+            // Sweep along the travelled segment. Fast slime spikes used to hop
+            // over narrow hand-drawn bodies between two rendered frames.
+            int steps = Mathf.Clamp(Mathf.CeilToInt(delta.magnitude /
+                Mathf.Max(0.12f, radius * 0.45f)), 1, 12);
+            for (int i = 0; i <= steps; i++)
+                owner?.HitPlayersNear(Vector2.Lerp(start, start + delta, i / (float)steps), radius);
             if (Time.time < expiresAt) return;
             if (bomb)
             {

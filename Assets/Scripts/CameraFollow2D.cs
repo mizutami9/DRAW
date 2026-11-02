@@ -21,6 +21,7 @@ namespace DrawBody.Prototype
         private const float PlayerCacheRefreshInterval = 0.25f;
 
         public float MinimumOrthographicSize => minimumOrthographicSize;
+        public Vector3 FollowOffset => offset;
         public Transform Target => target;
         public bool FramesAllActivePlayers => frameAllActivePlayers;
 
@@ -37,6 +38,11 @@ namespace DrawBody.Prototype
                     controlledCamera.orthographicSize,
                     minimumOrthographicSize);
             }
+        }
+
+        public void SetFollowOffset(Vector3 value)
+        {
+            offset = value;
         }
 
         public void SetFrameAllActivePlayers(bool enabled)

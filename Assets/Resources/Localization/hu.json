@@ -21,6 +21,50 @@
       "value": "NYILVÁNTARTÓ"
     },
     {
+      "key": "option_reset_progress",
+      "value": "HALADÁS VISSZAÁLLÍTÁSA"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "HALADÁS VISSZAÁLLÍTÁSA"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Visszaállítod az összes teljesített pályát?\nA hangerő, a nyelv, a játékosnév és a rajzok megmaradnak."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "A pályahaladás visszaállítva."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "VISSZAÁLLÍTÁS"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "MÉGSE"
+    },
+    {
+      "key": "option_complete",
+      "value": "KÉSZ"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "KIJELZŐ: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "FELBONTÁS: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "TELJES KÉPERNYŐ"
+    },
+    {
+      "key": "option_windowed",
+      "value": "ABLAKOS MÓD"
+    },
+    {
       "key": "lang_ja",
       "value": "Japán"
     },
@@ -130,7 +174,7 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "Rajzolj! {0}."
     },
     {
       "key": "head",
@@ -138,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Torso"
+      "value": "A torzsa"
     },
     {
       "key": "left_arm",
@@ -190,7 +234,7 @@
     },
     {
       "key": "slime_body",
-      "value": "Slime"
+      "value": "Szalam"
     },
     {
       "key": "jump_normal",
@@ -262,7 +306,7 @@
     },
     {
       "key": "ability_card_cat",
-      "value": "CAT"
+      "value": "MACSKA"
     },
     {
       "key": "ability_card_bird",
@@ -274,7 +318,7 @@
     },
     {
       "key": "ability_card_slime",
-      "value": "SLIME"
+      "value": "SZALAM"
     },
     {
       "key": "ability_description_human",
@@ -298,11 +342,11 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: THROW"
+      "value": "F: DOBÁS"
     },
     {
       "key": "ability_control_cat",
-      "value": "F: SCRATCH / GRAB"
+      "value": "F: RÁGCSÁSS / RAGADJ"
     },
     {
       "key": "ability_control_bird",
@@ -315,6 +359,114 @@
     {
       "key": "ability_control_slime",
       "value": "F: UPWARD SPIKE ATTACK"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "NEGYED / X: DOBÁS"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "SZÖVEG / X: KARCOLÁS / MEGRAGAD"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "KERESZT TARTÁSA / A: CSÚSZTÁSI SZÖVEG / X: MEGFOGADÁS"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "KERESZT TARTÁSA / A: SHELL HOLD SQUARE / X: FORDULAT 90°-kal"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "SZÖVEG / X: SZÜLÉS JOBBRA BOLT FELÉ"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "HÁROMSZÖG / Y: VÁLTÓ KARAKTER"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "K: KARAKTER VÁLTÁSA"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / KIVÁLASZTÁS: DRAW MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: SORSOLÁS MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: RAJZ MENU"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "TÉR: DOBÁS"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "SZÖVEG: KARMOZÁS / MEGRADÁS"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "KERESZT TARTÁSA: CSÚSZTÁSI TERÜLET: FOGRA"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "KERESZT TARTÁSA: SHELL HOLD NEGYED: 90°-kal elfordítani"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "SZÖVEG: TÜSKE JOBB BOLT FELÉ"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: DOBÁS"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: KAPCSOLAT / MEGRADÁS"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "HOLD A: CSÚSZTÁS X: FOGRA"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "HOLD A: SHELL HOLD X: FORDULAT 90°-kal"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SPIKE JOBB BOLT FELÉ"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "HÁROMSZÖG: VÁLTÓ KARAKTER"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: VÁLTÓ KARAKTER"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: SORSOLÁS MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: SORSOLÁS MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: RAJZ MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: RAJZ MENU"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "NEM TARTALMAZZA A DEMÓBAN"
     },
     {
       "key": "ability_effect_human_combined",
@@ -366,11 +518,11 @@
     },
     {
       "key": "ability_rank",
-      "value": "RANK {0}"
+      "value": "RENDELKE {0}"
     },
     {
       "key": "ability_gauge_low",
-      "value": "LOW"
+      "value": "ALACSONY"
     },
     {
       "key": "ability_gauge_high",
@@ -378,7 +530,7 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JUMP"
+      "value": "HÚZD LE!"
     },
     {
       "key": "ability_human_arm_gauge",
@@ -386,15 +538,15 @@
     },
     {
       "key": "ability_cat_back_leg_gauge",
-      "value": "RUN"
+      "value": "FUTÁS."
     },
     {
       "key": "ability_cat_front_leg_gauge",
-      "value": "SCRATCH"
+      "value": "RÁGCSAPÁS"
     },
     {
       "key": "ability_bird_gauge",
-      "value": "GLIDE"
+      "value": "ÁTCSÚSZÁS"
     },
     {
       "key": "ability_turtle_gauge",
@@ -418,7 +570,7 @@
     },
     {
       "key": "ability_slime_badge",
-      "value": "INK SIZE {0:0}%"
+      "value": "INK MÉRET {0:0}%"
     },
     {
       "key": "ability_slime_hint",
@@ -442,11 +594,103 @@
     },
     {
       "key": "label_far_lever",
-      "value": "3 Far Lever"
+      "value": "3 A túlzott tőke"
     },
     {
       "key": "label_narrow_hole",
       "value": "4 Keskeny lyuk"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Billentyűzet + egér"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (lekapcsolva)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automata (billentyűzet / játékvezérlő)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD LESZÁLLÍTOTT. A JÁTÉKOS VISSZAÁLLÍTÁSÁHOZ KAPCSOLJA ÚJRA."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD ÚJRA CSATLAKOZTATVA."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} CSATLAKOZTATVA ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "ESZKÖZÖNKÉNT AKÁR 2 JÁTÉKOS ÉS ÖSSZESEN 4 JÁTÉKOS A SZOBÁBAN."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "HELYI JÁTÉKOSOK HOZZÁADÁSA VAGY ELTÁVOLÍTÁSA A SZAKASZ KEZDÉSE ELŐTT."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "A SZOBA MEGTELT (4 JÁTÉKOS). AZ EXTRA HELYI JÁTÉKOST eltávolítottuk."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "NÉLKÜLI PAD: START CSATLAKOZÁSHOZ / BILLENTYŰZET: ENTER CSATLAKOZÁS, BACKSPACE KIlépéshez / P2: KIVÁLASZTÁS + B A KIlépéshez"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "HELYI JÁTÉKOSOK {0}/2 CSATLAKOZTATOTT PAD {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "HELYI JÁTÉK {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "A PAD {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "A CSATLAKOZÁSHOZ NYOMJON MEG BÁRMELY VEZÉRLŐ GOMBOT"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: CSATLAKOZÁS"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 JÁTÉKOS KÉSZ"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "JÁTÉKOSOK {0}/2\nBILLENTYŰZET: ENTER CSATLAKOZÁS / BACKSPACE HAGYNI\nVEZÉRLŐ: START CSATLAKOZÁS / B-TARTÁS A KIlépéshez"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 VÁLTVA A(z) {0}-RE."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "BILLENTYŰZET/EGÉR KIADVA A P1-BŐL. NYOMJON MEG EGY VEZÉRLŐ GOMBOT A P1 IGÉNYLÉSÉHEZ."
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} BAL."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "A CÍM SORSOLÁSA NEM ELÉRHETŐ A HELYI EGYÜTTMŰKÖDÉS ALATT. ELŐször VISSZA 1 JÁTÉKOSHOZ."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "BAL POSSZ: MOVE RT / A / B: DRAW & SELECT LT: ERASE"
     },
     {
       "key": "multi_room_setup",
@@ -494,7 +738,11 @@
     },
     {
       "key": "tower_defense_phase",
-      "value": "PHASE {0} / {1}"
+      "value": "FÁZIS {0} / {1}"
+    },
+    {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
     },
     {
       "key": "tower_defense_time_remaining",
@@ -506,7 +754,7 @@
     },
     {
       "key": "tower_defense_airstrike",
-      "value": "AIRSTRIKE IN {0}"
+      "value": "LÉGI TÁMADÁS. {0}"
     },
     {
       "key": "tower_defense_retry",
@@ -515,6 +763,26 @@
     {
       "key": "tower_defense_clear",
       "value": "Vigyázz!"
+    },
+    {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
     },
     {
       "key": "value_coin_amount",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "RAJZOLJ!"
     },
     {
       "key": "title_option",
@@ -573,8 +841,12 @@
       "value": "Kilépés"
     },
     {
+      "key": "title_exit_confirm",
+      "value": "Kilépsz a NICO DRAW-ból?"
+    },
+    {
       "key": "title_debug",
-      "value": "DEBUG"
+      "value": "A HIBÁK KIOLDÁSA"
     },
     {
       "key": "trailer_debug_title",
@@ -629,6 +901,10 @@
       "value": "A dolgozókat csak a készenléti szobában lehet megváltoztatni."
     },
     {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Karaktert csak újrarajzoló padlón válthatsz."
+    },
+    {
       "key": "trailer_debug_capture_help",
       "value": "R REPLAY H HIDE HUD     ESC  CÍM"
     },
@@ -646,7 +922,7 @@
     },
     {
       "key": "trailer_tas_play",
-      "value": "F10 PLAY ALL"
+      "value": "F10 JÁTSSZON MINDENT"
     },
     {
       "key": "trailer_tas_reset",
@@ -658,7 +934,7 @@
     },
     {
       "key": "trailer_tas_pause",
-      "value": "P PAUSE"
+      "value": "P SZÜNET"
     },
     {
       "key": "trailer_tas_step",
@@ -666,7 +942,7 @@
     },
     {
       "key": "trailer_tas_status_idle",
-      "value": "IDLE"
+      "value": "ÜRES."
     },
     {
       "key": "trailer_tas_status_recording",
@@ -703,6 +979,38 @@
     {
       "key": "menu_to_title",
       "value": "Cím"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Újrakezded ezt a pályát az elejéről?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "ÚJRA"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Kilépsz a jelenlegi pályáról és visszatérsz a pályaválasztóhoz?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "PÁLYAVÁLASZTÁS"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "A befejezetlen módosítások nem lesznek mentve. Visszalépsz mentés nélkül?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "VISSZA MENTÉS NÉLKÜL"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Az újrarajzolt karakter mentve."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "A mentés sikertelen. Nyomd meg újra a „KÉSZ” gombot."
     },
     {
       "key": "language_settings",
@@ -794,7 +1102,7 @@
     },
     {
       "key": "multi_lobby_id_placeholder",
-      "value": "Enter Lobby ID"
+      "value": "Enter A lobbi azonosítója"
     },
     {
       "key": "multi_join",
@@ -898,7 +1206,7 @@
     },
     {
       "key": "multi_local",
-      "value": "Helyi"
+      "value": "Local"
     },
     {
       "key": "multi_ready",
@@ -910,7 +1218,7 @@
     },
     {
       "key": "multi_host",
-      "value": "HOST"
+      "value": "ÜDVÖZLŐ"
     },
     {
       "key": "multi_default_room_name",
@@ -929,8 +1237,12 @@
       "value": "TE"
     },
     {
+      "key": "spectator_following",
+      "value": "Spectating: {0} Váltás a ← / → gombbal"
+    },
+    {
       "key": "online_player_host",
-      "value": "Host"
+      "value": "Üdvözlő"
     },
     {
       "key": "online_player_number",
@@ -943,6 +1255,18 @@
     {
       "key": "online_fake_initialized",
       "value": "Hamis háttér inicializálva."
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Az online játék nem érhető el, mert a játékadatok vagy a verzió nem egyezik. Ellenőrizd a játékfájlokat a Steamben."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "A házigazda lecsatlakozott, ezért a szoba bezárult."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Megszakadt a kapcsolat a játékmenettel. Csatlakozz újra a szobához."
     },
     {
       "key": "online_logging_in",
@@ -1041,6 +1365,14 @@
       "value": "Az EOS bejelentkezés nem sikerült: {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "Indítsd el a Steamet, majd a Steam-könyvtárból a NICO DRAW játékot."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Nem sikerült Steam-hitelesítési jegyet kérni: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "Az EOS lobby létrehozása nem sikerült: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "A szobakód keresése sikertelen: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "A szoba létrehozása nem sikerült. Újra próbálkozás {0}s ({1} kísérlet maradt)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1166,7 +1502,7 @@
     },
     {
       "key": "stage_species_available_compact",
-      "value": "USE: {0}"
+      "value": "HASZNÁLAT: {0}"
     },
     {
       "key": "stage_select_debug_created",
@@ -1197,16 +1533,32 @@
       "value": "{0} El akarja cserélni a {1} MELLÉKLET {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} már ezt a karaktert használja. Küldesz cserekérelmet?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "KÉRELEM KÜLDÉSE"
+    },
+    {
       "key": "draw_species_swap_accept",
-      "value": "SWAP"
+      "value": "ÁTVÁLTÁS"
     },
     {
       "key": "draw_species_swap_reject",
-      "value": "DECLINE"
+      "value": "A VISSZAESÉS"
     },
     {
       "key": "draw_species_swap_pending",
       "value": "Várom a választ a swap kérésre..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "CSEREKÉRELEM ELKÜLDVE"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Várakozás {0} válaszára.\nKért csere: {1} erre: {2}."
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1222,7 +1574,7 @@
     },
     {
       "key": "stage_object_grain_emitter",
-      "value": "GRAIN DISPENSER"
+      "value": "GAZDÁLKODÓ GÉP"
     },
     {
       "key": "stage_object_grain_scale",
@@ -1258,7 +1610,7 @@
     },
     {
       "key": "species_slime",
-      "value": "Slime"
+      "value": "Szalam"
     },
     {
       "key": "stage_editor_objects_tab",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "Vizsgálat kezdete: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "P mozgás{0}A tesztjáték kezdő pozíciója."
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "P{0} vizsgálati kezdet: X {1:0.00} / Y {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1382,7 +1742,7 @@
     },
     {
       "key": "stage_editor_copy_up",
-      "value": "↑ UP"
+      "value": "↑ FEL"
     },
     {
       "key": "stage_editor_status_copy_direction",
@@ -1414,7 +1774,7 @@
     },
     {
       "key": "stage_editor_crumble_delay",
-      "value": "Crumble Delay (sec)"
+      "value": "Károsodás késedelem (sec)"
     },
     {
       "key": "stage_editor_bomb_wall_hits",
@@ -1426,11 +1786,11 @@
     },
     {
       "key": "stage_editor_drop_interval",
-      "value": "Drop Interval (sec)"
+      "value": "A LECSAPÁS IDŐTARTAMA:"
     },
     {
       "key": "stage_editor_beam_interval",
-      "value": "Beam Interval (sec)"
+      "value": "A sugárintervallum (sec)"
     },
     {
       "key": "stage_editor_box_size",
@@ -1558,7 +1918,7 @@
     },
     {
       "key": "ink_team_formula",
-      "value": "TEAM CAP ({0}P)"
+      "value": "CSAPATKAPPA ({0}P)"
     },
     {
       "key": "draw_pen_size",
@@ -1574,11 +1934,11 @@
     },
     {
       "key": "draw_undo_once",
-      "value": "UNDO"
+      "value": "MEGTÖRÖLTE"
     },
     {
       "key": "draw_reset_all",
-      "value": "RESET ALL"
+      "value": "MINDENT VISSZAÁLLÍTANI."
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1590,11 +1950,11 @@
     },
     {
       "key": "draw_reset_confirm_yes",
-      "value": "RESET"
+      "value": "ÚJRAÁLLÍTÁSA"
     },
     {
       "key": "draw_reset_confirm_no",
-      "value": "CANCEL"
+      "value": "TÖRLÉS"
     },
     {
       "key": "draw_preset_title",
@@ -1607,6 +1967,10 @@
     {
       "key": "draw_preset_sets_title",
       "value": "5 - FELSZERELÉS"
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "VISSZA"
     },
     {
       "key": "draw_preset_five_species",
@@ -1626,15 +1990,15 @@
     },
     {
       "key": "draw_preset_empty",
-      "value": "EMPTY"
+      "value": "ÜRES"
     },
     {
       "key": "draw_preset_register",
-      "value": "SAVE"
+      "value": "- TAKARÍTSD MEG!"
     },
     {
       "key": "draw_preset_apply",
-      "value": "SET"
+      "value": "SZŰRÉS"
     },
     {
       "key": "draw_preset_save_confirm_title",
@@ -1802,7 +2166,7 @@
     },
     {
       "key": "stage_object_background_castle",
-      "value": "Castle"
+      "value": "Vár"
     },
     {
       "key": "stage_object_background_treasure_chest",
@@ -1810,7 +2174,7 @@
     },
     {
       "key": "stage_object_background_mole",
-      "value": "Mole"
+      "value": "Szopó"
     },
     {
       "key": "stage_object_background_fossil",
@@ -1846,7 +2210,7 @@
     },
     {
       "key": "stage_object_background_gem",
-      "value": "Gem"
+      "value": "Gyémák"
     },
     {
       "key": "stage_object_background_coin",
@@ -1870,7 +2234,7 @@
     },
     {
       "key": "stage_object_background_magnet",
-      "value": "Magnet"
+      "value": "Magnes"
     },
     {
       "key": "stage_object_background_dice",
@@ -1898,7 +2262,7 @@
     },
     {
       "key": "stage_object_background_jump",
-      "value": "JUMP!"
+      "value": "HÚZD LE!"
     },
     {
       "key": "stage_object_background_throw",
@@ -1978,7 +2342,7 @@
     },
     {
       "key": "stage_editor_snap_attach",
-      "value": "Snap"
+      "value": "Csatlakozás"
     },
     {
       "key": "stage_editor_link_source",
@@ -2026,15 +2390,19 @@
     },
     {
       "key": "stage_weapon_bomb",
-      "value": "BOMB"
+      "value": "BOMBA"
     },
     {
       "key": "stage_weapon_missile",
-      "value": "MISSILE"
+      "value": "RAKÉTA"
     },
     {
       "key": "stage_ready_label",
       "value": "Kész"
+    },
+    {
+      "key": "background_word_push",
+      "value": "TOLD!"
     },
     {
       "key": "stage_dynamite_label",
@@ -2050,7 +2418,7 @@
     },
     {
       "key": "laser_relay_editor_round",
-      "value": "STAGE {0}"
+      "value": "FÁZIS {0}"
     },
     {
       "key": "laser_relay_editor_preview",
@@ -2174,7 +2542,7 @@
     },
     {
       "key": "stage_object_slippery_slope",
-      "value": "Slippery Slope"
+      "value": "Slippery slope"
     },
     {
       "key": "stage_object_climbable_wall",
@@ -2234,7 +2602,7 @@
     },
     {
       "key": "ricochet_enemy_balls",
-      "value": "BALL {0} / {1}"
+      "value": "TÚLZÁS. {0} / {1}"
     },
     {
       "key": "ricochet_enemy_next",
@@ -2262,7 +2630,7 @@
     },
     {
       "key": "stage_object_spike_planet",
-      "value": "Spike Planet"
+      "value": "TÖGÖS BOLYGÓ."
     },
     {
       "key": "stage_object_enemy_flyer_zigzag",
@@ -2366,7 +2734,7 @@
     },
     {
       "key": "stage_object_lever",
-      "value": "Lever"
+      "value": "A tőke"
     },
     {
       "key": "stage_object_toggle_switch",
@@ -2462,11 +2830,11 @@
     },
     {
       "key": "stage_object_barrel",
-      "value": "Barrel"
+      "value": "Főcsont"
     },
     {
       "key": "stage_object_rock",
-      "value": "Rock"
+      "value": "Kő"
     },
     {
       "key": "stage_object_ice_block",
@@ -2590,11 +2958,11 @@
     },
     {
       "key": "stage_object_fan",
-      "value": "Fan"
+      "value": "A ventilátor"
     },
     {
       "key": "stage_object_magnet",
-      "value": "Magnet"
+      "value": "Magnes"
     },
     {
       "key": "stage_object_belt",
@@ -2606,7 +2974,7 @@
     },
     {
       "key": "stage_object_spike_dropper",
-      "value": "Spike Dropper"
+      "value": "A CSŐCSAPÓ."
     },
     {
       "key": "stage_object_collectible_fish",
@@ -2669,6 +3037,10 @@
       "value": "IDŐPONT"
     },
     {
+      "key": "challenge_no_time_limit",
+      "value": "NINCS IDŐKORLAT"
+    },
+    {
       "key": "challenge_retry_hint",
       "value": "Nyomja meg az R-t az újraindításhoz"
     },
@@ -2726,7 +3098,7 @@
     },
     {
       "key": "grain_rain_round",
-      "value": "STAGE {0}/{1}"
+      "value": "FÁZIS {0}/{1}"
     },
     {
       "key": "grain_rain_blizzard",
@@ -2747,6 +3119,26 @@
     {
       "key": "ice_speedrun_time_up",
       "value": "IDŐPONT {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "TÖRLÉS {0} ÖSSZESEN BELÜL"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "ÖSSZESEN {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "CSAPAT ÖSSZESEN"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "PRÓBÁLJON ÚJRA: {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "JÁTÉK MŰKÖDÉSE\nÖSSZESEN {0} / {1}"
     },
     {
       "key": "survival_get_ready",
@@ -2778,7 +3170,7 @@
     },
     {
       "key": "ready_room_recommended_none",
-      "value": "NONE"
+      "value": "EGYETLEN."
     },
     {
       "key": "ready_room_restriction",
@@ -2791,6 +3183,10 @@
     {
       "key": "ready_room_game_default",
       "value": "Készülj fel a játékra."
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "FUSS."
     },
     {
       "key": "ready_room_game_2_2",
@@ -2830,7 +3226,7 @@
     },
     {
       "key": "ready_room_game_9_2",
-      "value": "COLLECT COINS WHILE FALLING"
+      "value": "GYŰJTSE ÖSSZE A ÉRMÉT, MIKÖZBEN ELESIK."
     },
     {
       "key": "ready_room_game_9_3",
@@ -2890,15 +3286,15 @@
     },
     {
       "key": "ready_room_game_15_1",
-      "value": "DEFEAT CRAYON DEVIL"
+      "value": "LEGYŐZZÜK A CRAYON DEVILT."
     },
     {
       "key": "ready_room_game_15_2",
-      "value": "DEFEAT CRAYON STALKER"
+      "value": "LEGYŐZD A CERUZÁS ÜLDÖZŐT"
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "DEFEATE THE ENEMIES"
+      "value": "KERÜLD KI AZ ELLENSÉG TÁMADÁSAIT"
     },
     {
       "key": "ready_room_clear_one_survivor",
@@ -2907,6 +3303,10 @@
     {
       "key": "ready_room_clear_one_goal",
       "value": "Tisztán kell látni, ha egy játékos eléri a célpontot."
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "TÖRLÉS, HA MINDENKINEK A KOMBINÁLT FINISZ IDŐ JÁTÉKOSONKÉNT 1 PERCEN BELÜL VAN."
     },
     {
       "key": "spike_chase_monitor_title",
@@ -2921,32 +3321,56 @@
       "value": "Futás!"
     },
     {
-      "key": "wind_speedrun_title",
-      "value": "A szél átváltozik!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "ELTÉRÉS INK = STRONGER WIND"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "Idő {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "IDŐPONT"
-    },
-    {
       "key": "umbrella_rain_title",
-      "value": "Maradj az UMBRELLA alatt!"
+      "value": "Ne állj az esőbe"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "Az eső kiismer - REACH SHELTER"
+      "value": "Ne állj az esőbe"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "Mindenkit elkaptak az esőben!"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -3230,11 +3654,11 @@
     },
     {
       "key": "jump_rope_jump_now",
-      "value": "JUMP!"
+      "value": "HÚZD LE!"
     },
     {
       "key": "jump_rope_keep_jumping",
-      "value": "JUMP THE HURDLES!"
+      "value": "SZÁLLJ LE!"
     },
     {
       "key": "jump_rope_slow",
@@ -3337,8 +3761,72 @@
       "value": "TÖMJÉTEK BE A LYUKAKAT!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "FORDULÓ {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "FORDULAT {0}/3. {1:0.0}s BAL"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "{0}. KÖR TISZTA!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "IDŐ MEG!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "ÚJRAPRÓBÁLÁS EZNEK A KORDULÓBAN"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "HELYEZD BE A TELJESÍTMÉNY EMBERI PÓZOT A KULCSLYUKBA!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "TALÁLJA MEG A ISMERŐ PÓZOT A LEBESZŐ MADARAK KÖZÖTT!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "VIDD át A TEKNŐSBÉKÁT A RUGÓKKAL TELJES SZOBÁN!"
+    },
+    {
       "key": "tilt_board_monitor",
       "value": "KÖLTSÉG {0}/3    {1:0.0}LEFT"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "{0}/3. FORDULÓ: {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "A VISSZAMÉRÉS ALATT MOZGATHAT A SÁVÁN BELÜL"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "KEREK, {0}/3. LEKEDA {1}/{2} {3} s BAL"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "TÖRJI BE A LÁDÁKAT A NYÁKSZÜSÉVEL!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "TÖRJÖK BE A KIS LÁKÁKAT!  FIGYELJ AZ ELLENSÉGEKRE!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "{0}. KÖR TISZTA!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "A JÁTÉK VÉGE ÚJRAPRÓBÁLÁSI KÖRBE {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "MINDEN KÖR TISZTA!"
     },
     {
       "key": "tilt_board_progress",
@@ -3393,12 +3881,40 @@
       "value": "10-3 RICOCHET RELAY"
     },
     {
+      "key": "cat_escape_title",
+      "value": "2-3  MENEKÜLJ AZ ÓRIÁSMACSKA ELŐL!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "VÁRAKOZÁS {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "KEZDÉS {0} MÚLVA"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "FUSS!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "CSAPATKARMOLÁS  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
       "key": "ricochet_round",
       "value": "KÖLTSÉG {0} / {1}"
     },
     {
       "key": "ricochet_ammo",
-      "value": "AMMO {0}"
+      "value": "AMMUNIZÁCIÓ {0}"
     },
     {
       "key": "ricochet_instruction",
@@ -3430,11 +3946,11 @@
     },
     {
       "key": "stage_object_seesaw",
-      "value": "Seesaw"
+      "value": "Szívás"
     },
     {
       "key": "stage_object_turntable",
-      "value": "Turntable"
+      "value": "Forgatókönyv"
     },
     {
       "key": "stage_object_cannon",
@@ -3466,7 +3982,7 @@
     },
     {
       "key": "stage_object_falling_rock",
-      "value": "Falling Rock"
+      "value": "A sziklás"
     },
     {
       "key": "stage_object_press_machine",
@@ -3498,7 +4014,7 @@
     },
     {
       "key": "stage_object_slider",
-      "value": "Slider"
+      "value": "Szívcsapó"
     },
     {
       "key": "stage_object_rotating_bar",
@@ -3506,7 +4022,7 @@
     },
     {
       "key": "stage_object_pendulum",
-      "value": "Pendulum"
+      "value": "A függő"
     },
     {
       "key": "stage_object_keyhole",
@@ -3770,7 +4286,7 @@
     },
     {
       "key": "stage_editor_snap",
-      "value": "Grid"
+      "value": "Rendszer"
     },
     {
       "key": "stage_editor_delete",
@@ -3798,7 +4314,7 @@
     },
     {
       "key": "option_se",
-      "value": "SE"
+      "value": "A KÖVETKEZŐ:"
     },
     {
       "key": "option_keys",
@@ -3834,7 +4350,7 @@
     },
     {
       "key": "slime",
-      "value": "Slime"
+      "value": "Szalam"
     },
     {
       "key": "label_ball_hit",
@@ -3962,7 +4478,7 @@
     },
     {
       "key": "stage_rule_block_breaker",
-      "value": "Block Breaker"
+      "value": "Blokkoló eltörő"
     },
     {
       "key": "block_breaker_goal",
@@ -3978,7 +4494,7 @@
     },
     {
       "key": "sfx_browser_title",
-      "value": "SE BROWSER"
+      "value": "A BÖNGÉSZŐ"
     },
     {
       "key": "sfx_browser_help",
@@ -3986,7 +4502,7 @@
     },
     {
       "key": "sfx_browser_play",
-      "value": "PLAY"
+      "value": "JÁTSSZ!"
     },
     {
       "key": "sfx_browser_stop",
@@ -4010,11 +4526,39 @@
     },
     {
       "key": "sfx_browser_muted",
-      "value": "MUTED"
+      "value": "CSÖNDES"
     },
     {
       "key": "sfx_browser_generated",
       "value": "Futásidő-generált hang"
+    },
+    {
+      "key": "gameplay_control_switch",
+      "value": "Karakterváltás"
+    },
+    {
+      "key": "feedback_button",
+      "value": "VISSZAJELZÉS / HIBAJELENTÉS"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "Köszönjük, hogy játszottál!\nVisszajelzés / Hibajelentés"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "KÍVÁNSÁGLISTA"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "TÖBBJÁTÉKOS MÓD AJÁNLOTT!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "A NICO DRAW együttműködve a legszórakoztatóbb!\nPróbáljátok ki 2–4 játékossal!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "RENDBEN."
     },
     {
       "key": "stage_object_background_paw_print",
@@ -4034,7 +4578,7 @@
     },
     {
       "key": "stage_object_background_icicle",
-      "value": "Icicle"
+      "value": "Fénnyék"
     },
     {
       "key": "stage_object_background_snowman",
@@ -4042,7 +4586,7 @@
     },
     {
       "key": "stage_object_background_blizzard",
-      "value": "Blizzard"
+      "value": "Húsvihar"
     },
     {
       "key": "stage_object_background_feather",
@@ -4082,11 +4626,11 @@
     },
     {
       "key": "stage_object_background_padlock",
-      "value": "Padlock"
+      "value": "Fűtár"
     },
     {
       "key": "stage_object_background_slime_blob",
-      "value": "Slime"
+      "value": "Szalam"
     },
     {
       "key": "stage_object_background_bubbles",
@@ -4098,7 +4642,7 @@
     },
     {
       "key": "stage_object_background_ladybug",
-      "value": "Ladybug"
+      "value": "Ladybug."
     },
     {
       "key": "stage_object_background_sunflower",
@@ -4122,7 +4666,7 @@
     },
     {
       "key": "stage_object_background_stalactite",
-      "value": "Stalactite"
+      "value": "Stalactit"
     },
     {
       "key": "stage_object_background_lantern",
@@ -4130,7 +4674,7 @@
     },
     {
       "key": "stage_object_background_minecart",
-      "value": "Minecart"
+      "value": "Minekártyák"
     },
     {
       "key": "stage_object_background_pickaxe",
@@ -4202,15 +4746,15 @@
     },
     {
       "key": "stage_object_background_canvas",
-      "value": "Canvas"
+      "value": "Főszín"
     },
     {
       "key": "stage_object_background_stopwatch",
-      "value": "Stopwatch"
+      "value": "Szállórák"
     },
     {
       "key": "stage_object_background_spotlight",
-      "value": "Spotlight"
+      "value": "A középpontban"
     },
     {
       "key": "stage_object_background_microphone",
@@ -4230,7 +4774,7 @@
     },
     {
       "key": "stage_object_background_planet",
-      "value": "Planet"
+      "value": "Planéta"
     },
     {
       "key": "stage_object_background_alien",
@@ -4255,494 +4799,6 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Fa gyökere"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "FUSS!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "KEZDÉS {0} MÚLVA"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "VÁRAKOZÁS {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  MENEKÜLJ AZ ÓRIÁSMACSKA ELŐL!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "CSAPATKARMOLÁS  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "Karaktert csak újrarajzoló padlón válthatsz."
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "VISSZA"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "Várakozás {0} válaszára.\nKért csere: {1} erre: {2}."
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "CSEREKÉRELEM ELKÜLDVE"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "Újrakezded ezt a pályát az elejéről?"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "ÚJRA"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "Kilépsz a jelenlegi pályáról és visszatérsz a pályaválasztóhoz?"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "A befejezetlen módosítások nem lesznek mentve. Visszalépsz mentés nélkül?"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "VISSZA MENTÉS NÉLKÜL"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "Az újrarajzolt karakter mentve."
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "A mentés sikertelen. Nyomd meg újra a „KÉSZ” gombot."
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "PÁLYAVÁLASZTÁS"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "Az online játék nem érhető el, mert a játékadatok vagy a verzió nem egyezik. Ellenőrizd a játékfájlokat a Steamben."
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "Megszakadt a kapcsolat a játékmenettel. Csatlakozz újra a szobához."
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "A házigazda lecsatlakozott, ezért a szoba bezárult."
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "MÉGSE"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "VISSZAÁLLÍTÁS"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "HALADÁS VISSZAÁLLÍTÁSA"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "Visszaállítod az összes teljesített pályát?\nA hangerő, a nyelv, a játékosnév és a rajzok megmaradnak."
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "A pályahaladás visszaállítva."
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "HALADÁS VISSZAÁLLÍTÁSA"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "FUSS."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "Karakterváltás"
-    },
-    {
-      "key": "feedback_button",
-      "value": "VISSZAJELZÉS / HIBAJELENTÉS"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "Köszönjük, hogy játszottál!\nVisszajelzés / Hibajelentés"
-    },
-    {
-      "key": "option_complete",
-      "value": "KÉSZ"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "KIJELZŐ: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "FELBONTÁS: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "TELJES KÉPERNYŐ"
-    },
-    {
-      "key": "option_windowed",
-      "value": "ABLAKOS MÓD"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "Indítsd el a Steamet, majd a Steam-könyvtárból a NICO DRAW játékot."
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "Nem sikerült Steam-hitelesítési jegyet kérni: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "KÍVÁNSÁGLISTA"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "TÖBBJÁTÉKOS MÓD AJÁNLOTT!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "A NICO DRAW együttműködve a legszórakoztatóbb!\nPróbáljátok ki 2–4 játékossal!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "OK"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "Kilépsz a NICO DRAW-ból?"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} már ezt a karaktert használja. Küldesz cserekérelmet?"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "KÉRELEM KÜLDÉSE"
-    },
-    {
-      "key": "background_word_push",
-      "value": "TOLD!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "KERESZT TARTÁSA / A: CSÚSZTÁSI SZÖVEG / X: MEGFOGADÁS"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "SZÖVEG / X: KARCOLÁS / MEGRAGAD"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "NEGYED / X: DOBÁS"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "SZÖVEG / X: SZÜLÉS JOBBRA BOLT FELÉ"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "KERESZT TARTÁSA / A: SHELL HOLD SQUARE / X: FORDULAT 90°-kal"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "KERESZT TARTÁSA: CSÚSZTÁSI TERÜLET: FOGRA"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "SZÖVEG: KARMOZÁS / MEGRADÁS"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "TÉR: DOBÁS"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "SZÖVEG: TÜSKE JOBB BOLT FELÉ"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "KERESZT TARTÁSA: SHELL HOLD NEGYED: 90°-kal elfordítani"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "HOLD A: CSÚSZTÁS X: FOGRA"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "X: KAPCSOLAT / MEGRADÁS"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "X: DOBÁS"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: SPIKE JOBB BOLT FELÉ"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "HOLD A: SHELL HOLD X: FORDULAT 90°-kal"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "NINCS IDŐKORLAT"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "NEM TARTALMAZZA A DEMÓBAN"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "BAL POSSZ: MOVE RT / A / B: DRAW & SELECT LT: ERASE"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: SORSOLÁS MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: RAJZ MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / KIVÁLASZTÁS: DRAW MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: SORSOLÁS MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: RAJZ MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: SORSOLÁS MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: RAJZ MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "K: KARAKTER VÁLTÁSA"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "HÁROMSZÖG / Y: VÁLTÓ KARAKTER"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "HÁROMSZÖG: VÁLTÓ KARAKTER"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "Y: VÁLTÓ KARAKTER"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "CSAPAT ÖSSZESEN"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "JÁTÉK MŰKÖDÉSE\nÖSSZESEN {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "PRÓBÁLJON ÚJRA: {0}"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "TÖRLÉS {0} ÖSSZESEN BELÜL"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "ÖSSZESEN {0} / {1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "Automata (billentyűzet / játékvezérlő)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "Gamepad (lekapcsolva)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "Billentyűzet + egér"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "P{0} GAMEPAD LESZÁLLÍTOTT. A JÁTÉKOS VISSZAÁLLÍTÁSÁHOZ KAPCSOLJA ÚJRA."
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "P{0} GAMEPAD ÚJRA CSATLAKOZTATVA."
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "BILLENTYŰZET/EGÉR KIADVA A P1-BŐL. NYOMJON MEG EGY VEZÉRLŐ GOMBOT A P1 IGÉNYLÉSÉHEZ."
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "NÉLKÜLI PAD: START CSATLAKOZÁSHOZ / BILLENTYŰZET: ENTER CSATLAKOZÁS, BACKSPACE KIlépéshez / P2: KIVÁLASZTÁS + B A KIlépéshez"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "P{0} CSATLAKOZTATVA ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "P{0} BAL."
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "ESZKÖZÖNKÉNT AKÁR 2 JÁTÉKOS ÉS ÖSSZESEN 4 JÁTÉKOS A SZOBÁBAN."
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "A SZOBA MEGTELT (4 JÁTÉKOS). AZ EXTRA HELYI JÁTÉKOST eltávolítottuk."
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "P1 VÁLTVA A(z) {0}-RE."
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "2 JÁTÉKOS KÉSZ"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: CSATLAKOZÁS"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "A CSATLAKOZÁSHOZ NYOMJON MEG BÁRMELY VEZÉRLŐ GOMBOT"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "HELYI JÁTÉK {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "HELYI JÁTÉKOSOK HOZZÁADÁSA VAGY ELTÁVOLÍTÁSA A SZAKASZ KEZDÉSE ELŐTT."
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "PAD {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "JÁTÉKOSOK {0}/2\nBILLENTYŰZET: ENTER CSATLAKOZÁS / BACKSPACE HAGYNI\nVEZÉRLŐ: START CSATLAKOZÁS / B-TARTÁS A KIlépéshez"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "HELYI JÁTÉKOSOK {0}/2 CSATLAKOZTATOTT PAD {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "A szoba létrehozása nem sikerült. Újra próbálkozás {0}s ({1} kísérlet maradt)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "TALÁLJA MEG A ISMERŐ PÓZOT A LEBESZŐ MADARAK KÖZÖTT!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "HELYEZD BE A TELJESÍTMÉNY EMBERI PÓZOT A KULCSLYUKBA!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "FORDULAT {0}/3. {1:0.0}s BAL"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "ÚJRAPRÓBÁLÁS EZNEK A KORDULÓBAN"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "FORDULÓ {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "{0}. KÖR TISZTA!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "IDŐ MEG!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "VIDD át A TEKNŐSBÉKÁT A RUGÓKKAL TELJES SZOBÁN!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "TÖRLÉS, HA MINDENKINEK A KOMBINÁLT FINISZ IDŐ JÁTÉKOSONKÉNT 1 PERCEN BELÜL VAN."
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "MINDEN KÖR TISZTA!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "TÖRJÖK BE A KIS LÁKÁKAT!  FIGYELJ AZ ELLENSÉGEKRE!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "TÖRJI BE A LÁDÁKAT A NYÁKSZÜSÉVEL!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "KEREK, {0}/3. LEKEDA {1}/{2} {3} s BAL"
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "A JÁTÉK VÉGE ÚJRAPRÓBÁLÁSI KÖRBE {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "{0}. KÖR TISZTA!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "Spectating: {0} Váltás a ← / → gombbal"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "{0}/3. FORDULÓ: {1}"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "A VISSZAMÉRÉS ALATT MOZGATHAT A SÁVÁN BELÜL"
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "A CÍM SORSOLÁSA NEM ELÉRHETŐ A HELYI EGYÜTTMŰKÖDÉS ALATT. ELŐször VISSZA 1 JÁTÉKOSHOZ."
     }
   ]
 }

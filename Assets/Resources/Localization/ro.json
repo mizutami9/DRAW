@@ -21,6 +21,50 @@
       "value": "REGISTRUL"
     },
     {
+      "key": "option_reset_progress",
+      "value": "RESETEAZĂ PROGRESUL"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "RESETEAZĂ PROGRESUL"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Resetezi toate nivelurile terminate?\nVolumul, limba, numele jucătorului și desenele vor fi păstrate."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Progresul nivelurilor a fost resetat."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "RESETEAZĂ"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "ANULEAZĂ"
+    },
+    {
+      "key": "option_complete",
+      "value": "GATA"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "AFIȘARE: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "REZOLUȚIE: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "ECRAN COMPLET"
+    },
+    {
+      "key": "option_windowed",
+      "value": "MOD FEREASTRĂ"
+    },
+    {
       "key": "lang_ja",
       "value": "Japoneză"
     },
@@ -130,7 +174,7 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "Desenează {0}."
     },
     {
       "key": "head",
@@ -138,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Torso"
+      "value": "Tortul"
     },
     {
       "key": "left_arm",
@@ -262,11 +306,11 @@
     },
     {
       "key": "ability_card_cat",
-      "value": "CAT"
+      "value": "PISICA"
     },
     {
       "key": "ability_card_bird",
-      "value": "BIRD"
+      "value": "PĂSĂRI"
     },
     {
       "key": "ability_card_turtle",
@@ -302,11 +346,11 @@
     },
     {
       "key": "ability_control_cat",
-      "value": "F: SCRATCH / GRAB"
+      "value": "F: ZGÂRIET / PRINDE"
     },
     {
       "key": "ability_control_bird",
-      "value": "HOLD SPACE: GLIDE  F: GRAB"
+      "value": "ŢINEŢI-VĂ SPACE: ALUNECARE  F- IA-O !"
     },
     {
       "key": "ability_control_turtle",
@@ -315,6 +359,114 @@
     {
       "key": "ability_control_slime",
       "value": "F: Attack Spike Upward"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "PĂTRAT / X: ARUNCA"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "PĂTRAT / X: ZGĂRURI / APUCĂ"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "ȚINE CRUCE / A: PĂTRAT DE GLIDE / X: APĂȘI"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "ȚINEȚI CRUCE / A: PĂTRAT ȚINEȚI COCICĂ / X: RÂȘTIȚI 90°"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "PĂTRAT / X: SPĂCĂ SĂTRE BĂTĂ DREAPTA"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "TRIANGUL / Y: COMUTARE CARACTER"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Î: Comutați caracterul"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / SELECTARE: DRAW MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: DESENEAZĂ MENIUL\nESCMENUA:"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: DESENEAZĂ MENIUL"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "PĂTRAT: ARUNCA"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "PĂTRAT: ZGĂRIRE / APĂSĂ"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "ȚINE CRUCE: GLIDE SQUARE: GRAB"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "ȚINEȚI CRUCE: PĂTRAT DE ȚINEREA COCHIILOR: ROȚIȚI 90°"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "PĂTRAT: ȚĂPĂ CĂTRE BĂȚA DREAPTA"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: Aruncă"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: Zgarie / APPUȚI"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "Țineți A: Glisați X: APUȚI"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "HOLD A: SHELL HOLD X: ROTIRE 90°"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SPIKE SĂTRE BĂTĂ DREAPTA"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "TRIANGUL: COMUTARE CARACTER"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: Comutați caracterul"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREEAZĂ: DESENEAZĂ OPȚIUNI DE MENIU: MENIU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: DESENEAZĂ MENIU: MENIU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREEAZĂ: DESENEAZĂ MENIUL"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: DESENEAZĂ MENIUL"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "NU ESTE INCLUS ÎN DEMO"
     },
     {
       "key": "ability_effect_human_combined",
@@ -366,11 +518,11 @@
     },
     {
       "key": "ability_rank",
-      "value": "RANK {0}"
+      "value": "RANGOARE {0}"
     },
     {
       "key": "ability_gauge_low",
-      "value": "LOW"
+      "value": "SCĂDERE"
     },
     {
       "key": "ability_gauge_high",
@@ -378,7 +530,7 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JUMP"
+      "value": "SĂRIŢI !"
     },
     {
       "key": "ability_human_arm_gauge",
@@ -386,15 +538,15 @@
     },
     {
       "key": "ability_cat_back_leg_gauge",
-      "value": "RUN"
+      "value": "FUGI ."
     },
     {
       "key": "ability_cat_front_leg_gauge",
-      "value": "SCRATCH"
+      "value": "GÂŢÂIE"
     },
     {
       "key": "ability_bird_gauge",
-      "value": "GLIDE"
+      "value": "GLISĂ"
     },
     {
       "key": "ability_turtle_gauge",
@@ -442,11 +594,103 @@
     },
     {
       "key": "label_far_lever",
-      "value": "3 Far Lever"
+      "value": "3 Încetul încet"
     },
     {
       "key": "label_narrow_hole",
       "value": "4 Groapă îngustă"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Tastatură + Mouse"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (deconectat)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automat (tastatură / gamepad)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD DECONECTAT. RECONECTAȚI-O PENTRU A RESTAURĂ ACELAȘI JUCĂTOR."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD RECONECTAT."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} ÎNREGISTRAT ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "PÂNĂ 2 JUCĂTORI PE DISPOZIT ȘI 4 JUCĂTORI ÎN TOTAL ÎN SALĂ."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "ADĂUGAȚI SAU ELIMINAȚI JUCĂTORI LOCALI ÎNAINTE DE A ÎNCEPE ETAPA."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "CAMERA E PLINA (4 JUCĂTORI). JUCĂTORUL EXTRA-LOCAL A FOST Șters."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "PAD NEASIGNAT: START PENTRU ALĂTURARE / TASTATURĂ: ENTER PENTRU ALĂTURARE, BACKSPACE PENTRU PLĂCARE / P2: SELECTARE + B PENTRU PLĂCARE"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "JUCĂTORI LOCALI {0}/2 PADS CONECTATE {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "LOCAL PLAY {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PĂMPĂLĂU {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "APĂSAȚI ORICE BUTON CONTROLLER PENTRU A ÎNSCRIE"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: ÎNSCRIEȚI-VĂ"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 JUCĂTORI gata"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "JUCĂTORI {0}/2\nTASTATURĂ: ENTER PENTRU A ÎNSCRIE / BACKSPACE PENTRU A PĂRĂSI\nCONTROLLER: START PENTRU A ÎNSCRIE / Țineți apăsat B PENTRU PARTEA"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 A COMUTAT LA {0}."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "TASTATURA/MOUSE-UL LANSAȚI DE LA P1. APĂSAȚI UN BUTON CONTROLLER PENTRU A REVENICA P1."
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} STÂNGA."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "TRAGEREA TITLULUI NU ESTE DISPONIBIL ÎN TIMPUL COOPERAȚII LOCALE. ÎNTÂI ÎNTÂI LA 1 JUCĂTOR."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "STICK STAND: MOVE RT / A / B: DRAW & SELECT LT: ERASE"
     },
     {
       "key": "multi_room_setup",
@@ -497,6 +741,10 @@
       "value": "FAZĂ {0} / {1}"
     },
     {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
+    },
+    {
       "key": "tower_defense_time_remaining",
       "value": "TIMP {0:0.0}"
     },
@@ -517,8 +765,28 @@
       "value": "Apără-te!"
     },
     {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
+    },
+    {
       "key": "value_coin_amount",
-      "value": "COIN {0} / {1}"
+      "value": "MONEDĂ {0} / {1}"
     },
     {
       "key": "value_coin_time",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "DESENEAZĂ"
     },
     {
       "key": "title_option",
@@ -571,6 +839,10 @@
     {
       "key": "title_exit",
       "value": "Ieșire"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Ieși din NICO DRAW?"
     },
     {
       "key": "title_debug",
@@ -629,6 +901,10 @@
       "value": "Personajele pot fi schimbate doar în camera pregătită."
     },
     {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Poți schimba personajul doar pe o podea de redesenare."
+    },
+    {
       "key": "trailer_debug_capture_help",
       "value": "R REPLAY HIDE HUD     ESC  TITLUL"
     },
@@ -666,7 +942,7 @@
     },
     {
       "key": "trailer_tas_status_idle",
-      "value": "IDLE"
+      "value": "INACTIVITATE"
     },
     {
       "key": "trailer_tas_status_recording",
@@ -690,7 +966,7 @@
     },
     {
       "key": "trailer_tas_save_preset",
-      "value": "SAVE SHAPES"
+      "value": "SALVARE DE FORME"
     },
     {
       "key": "trailer_tas_placement_help",
@@ -705,12 +981,44 @@
       "value": "Titlu"
     },
     {
+      "key": "menu_retry_confirm_message",
+      "value": "Repornești acest nivel de la început?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "REÎNCEARCĂ"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Închei nivelul curent și revii la selectarea nivelului?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "SELECTARE NIVEL"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "Modificările nefinalizate nu vor fi salvate. Revii fără salvare?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "ÎNAPOI FĂRĂ SALVARE"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Personajul redesenat a fost salvat."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Salvarea a eșuat. Apasă din nou „GATA”."
+    },
+    {
       "key": "language_settings",
       "value": "Configurări lingvistice"
     },
     {
       "key": "multi_play",
-      "value": "MULTI PLAY"
+      "value": "MULTI-JOACĂ"
     },
     {
       "key": "multi_random_button",
@@ -754,7 +1062,7 @@
     },
     {
       "key": "multi_max_players",
-      "value": "Max Players"
+      "value": "Jucătorii max"
     },
     {
       "key": "multi_visibility",
@@ -766,7 +1074,7 @@
     },
     {
       "key": "multi_public",
-      "value": "Public"
+      "value": "Publice"
     },
     {
       "key": "multi_private",
@@ -910,7 +1218,7 @@
     },
     {
       "key": "multi_host",
-      "value": "HOST"
+      "value": "OASPETE"
     },
     {
       "key": "multi_default_room_name",
@@ -929,6 +1237,10 @@
       "value": "Tu"
     },
     {
+      "key": "spectator_following",
+      "value": "Privire: {0} Comutați cu ← / →"
+    },
+    {
       "key": "online_player_host",
       "value": "Gazdă"
     },
@@ -943,6 +1255,18 @@
     {
       "key": "online_fake_initialized",
       "value": "Fals suport inițializat."
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Jocul online nu este disponibil deoarece datele sau versiunea jocului nu corespund. Verifică fișierele jocului în Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Gazda s-a deconectat, iar camera a fost închisă."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Conexiunea la sesiune s-a întrerupt. Intră din nou în cameră."
     },
     {
       "key": "online_logging_in",
@@ -1041,6 +1365,14 @@
       "value": "Autentificare EOS a eșuat: {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "Pornește Steam, apoi deschide NICO DRAW din biblioteca Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Nu s-a putut obține un tichet de autentificare Steam: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "EOS creează lobby eșuat: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "Căutarea codului camerei a eșuat: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Crearea camerei a eșuat. Reîncercare în {0} s ({1} încercări rămase)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1197,8 +1533,16 @@
       "value": "{0} vrea să-ţi schimbe {1} pentru {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} folosește deja acest personaj. Trimiți o cerere de schimb?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "TRIMITE CEREREA"
+    },
+    {
       "key": "draw_species_swap_accept",
-      "value": "SWAP"
+      "value": "SCHIMBARE"
     },
     {
       "key": "draw_species_swap_reject",
@@ -1207,6 +1551,14 @@
     {
       "key": "draw_species_swap_pending",
       "value": "Aştept un răspuns la cererea de schimb..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "CERERE DE SCHIMB TRIMISĂ"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Se așteaptă răspunsul lui {0}.\nSchimb solicitat: {1} pentru {2}."
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "Pornirea încercării: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "Mișcarea P{0}Poziţia de pornire a testului."
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "P{0} Începutul încercării: X {1:0.00} / Y {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1382,7 +1742,7 @@
     },
     {
       "key": "stage_editor_copy_up",
-      "value": "↑ UP"
+      "value": "↑ ÎN SUS"
     },
     {
       "key": "stage_editor_status_copy_direction",
@@ -1410,7 +1770,7 @@
     },
     {
       "key": "stage_editor_bomb_fuse_seconds",
-      "value": "Fuse (sec)"
+      "value": "ÎN SECUNDE PÂNĂ LA EXPLOZIE."
     },
     {
       "key": "stage_editor_crumble_delay",
@@ -1574,7 +1934,7 @@
     },
     {
       "key": "draw_undo_once",
-      "value": "UNDO"
+      "value": "ÎNDEPĂRTAT"
     },
     {
       "key": "draw_reset_all",
@@ -1594,7 +1954,7 @@
     },
     {
       "key": "draw_reset_confirm_no",
-      "value": "CANCEL"
+      "value": "ANULAREA"
     },
     {
       "key": "draw_preset_title",
@@ -1609,6 +1969,10 @@
       "value": "5-CHARACTER PRESETS"
     },
     {
+      "key": "draw_preset_back",
+      "value": "ÎNAPOI"
+    },
+    {
       "key": "draw_preset_five_species",
       "value": "UMAN CAT TURTLE SLIME"
     },
@@ -1618,7 +1982,7 @@
     },
     {
       "key": "draw_preset_slot",
-      "value": "SLOT {0}"
+      "value": "LOCURI DE JOC {0}"
     },
     {
       "key": "draw_preset_saved",
@@ -1626,7 +1990,7 @@
     },
     {
       "key": "draw_preset_empty",
-      "value": "EMPTY"
+      "value": "GOALĂ"
     },
     {
       "key": "draw_preset_register",
@@ -1634,7 +1998,7 @@
     },
     {
       "key": "draw_preset_apply",
-      "value": "SET"
+      "value": "SETUL"
     },
     {
       "key": "draw_preset_save_confirm_title",
@@ -1694,7 +2058,7 @@
     },
     {
       "key": "stage_object_background_dog_face",
-      "value": "Dog Face"
+      "value": "Faţa de câine"
     },
     {
       "key": "stage_object_background_stick_figure",
@@ -1846,7 +2210,7 @@
     },
     {
       "key": "stage_object_background_gem",
-      "value": "Gem"
+      "value": "Gems"
     },
     {
       "key": "stage_object_background_coin",
@@ -1978,7 +2342,7 @@
     },
     {
       "key": "stage_editor_snap_attach",
-      "value": "Snap"
+      "value": "Fă-o"
     },
     {
       "key": "stage_editor_link_source",
@@ -2035,6 +2399,10 @@
     {
       "key": "stage_ready_label",
       "value": "Gata."
+    },
+    {
+      "key": "background_word_push",
+      "value": "ÎMPINGE!"
     },
     {
       "key": "stage_dynamite_label",
@@ -2142,7 +2510,7 @@
     },
     {
       "key": "stage_object_spawn",
-      "value": "Start"
+      "value": "Începe."
     },
     {
       "key": "stage_object_goal",
@@ -2162,7 +2530,7 @@
     },
     {
       "key": "stage_object_half_platform",
-      "value": "Half Floor"
+      "value": "Jumătate de etaj"
     },
     {
       "key": "stage_object_one_way_platform",
@@ -2170,7 +2538,7 @@
     },
     {
       "key": "stage_object_ice_floor",
-      "value": "Ice Floor"
+      "value": "Podeaua de gheață"
     },
     {
       "key": "stage_object_slippery_slope",
@@ -2190,7 +2558,7 @@
     },
     {
       "key": "stage_object_cloud_platform",
-      "value": "Cloud Floor"
+      "value": "Podeaua cu nori"
     },
     {
       "key": "stage_object_breakable_floor",
@@ -2198,7 +2566,7 @@
     },
     {
       "key": "stage_object_falling_floor",
-      "value": "Falling Floor"
+      "value": "Piatră care cade"
     },
     {
       "key": "stage_object_moving_platform",
@@ -2230,11 +2598,11 @@
     },
     {
       "key": "ricochet_enemy_round",
-      "value": "ROUND {0} / {1}"
+      "value": "ROND {0} / {1}"
     },
     {
       "key": "ricochet_enemy_balls",
-      "value": "BALL {0} / {1}"
+      "value": "MINGEA. {0} / {1}"
     },
     {
       "key": "ricochet_enemy_next",
@@ -2266,11 +2634,11 @@
     },
     {
       "key": "stage_object_enemy_flyer_zigzag",
-      "value": "Zigzag Flyer"
+      "value": "Flare cu zigzag"
     },
     {
       "key": "stage_object_enemy_flyer_orbit",
-      "value": "Orbit Flyer"
+      "value": "INAMICUL CARE ZBOARĂ ÎN ROTATIE."
     },
     {
       "key": "stage_object_bazooka",
@@ -2338,7 +2706,7 @@
     },
     {
       "key": "stage_object_mid_goal",
-      "value": "Mid Goal"
+      "value": "Obiectivul central"
     },
     {
       "key": "stage_object_goal_effect",
@@ -2418,7 +2786,7 @@
     },
     {
       "key": "stage_object_shutter",
-      "value": "Shutter"
+      "value": "Închidere"
     },
     {
       "key": "stage_object_fence",
@@ -2466,11 +2834,11 @@
     },
     {
       "key": "stage_object_rock",
-      "value": "Rock"
+      "value": "Roca"
     },
     {
       "key": "stage_object_ice_block",
-      "value": "Ice Block"
+      "value": "Blocul de gheață"
     },
     {
       "key": "stage_object_floating_box",
@@ -2490,7 +2858,7 @@
     },
     {
       "key": "stage_object_bomb_dropper",
-      "value": "Bomb Maker"
+      "value": "Fabricantul de bombe"
     },
     {
       "key": "stage_object_dynamite",
@@ -2498,11 +2866,11 @@
     },
     {
       "key": "stage_object_enemy_walker",
-      "value": "Walker Enemy"
+      "value": "Inamicul Walker"
     },
     {
       "key": "stage_object_enemy_jumper",
-      "value": "Jumper Enemy"
+      "value": "Inamicul Jumper"
     },
     {
       "key": "stage_object_enemy_charger",
@@ -2514,7 +2882,7 @@
     },
     {
       "key": "stage_object_enemy_shooter",
-      "value": "Shooter Enemy"
+      "value": "Duşmanul împuşcat"
     },
     {
       "key": "stage_object_enemy_dropper",
@@ -2602,11 +2970,11 @@
     },
     {
       "key": "stage_object_box_dropper",
-      "value": "Box Dropper"
+      "value": "Capacitate de transport"
     },
     {
       "key": "stage_object_spike_dropper",
-      "value": "Spike Dropper"
+      "value": "DISPOZITIVUL DE ATERIZARE."
     },
     {
       "key": "stage_object_collectible_fish",
@@ -2626,7 +2994,7 @@
     },
     {
       "key": "stage_object_beam_emitter",
-      "value": "Beam Emitter"
+      "value": "Emitator de fascicule"
     },
     {
       "key": "stage_rule_normal",
@@ -2667,6 +3035,10 @@
     {
       "key": "challenge_time_up",
       "value": "Timpul a expirat."
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "FĂRĂ LIMITĂ DE TIMP"
     },
     {
       "key": "challenge_retry_hint",
@@ -2749,6 +3121,26 @@
       "value": "TIMPUL DE RETRAS {0}"
     },
     {
+      "key": "ice_race_rule",
+      "value": "Ștergeți în {0} TOTAL"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "TOTAL {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TOTAL ECHIPĂ TERMINAT"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "ÎNCERCAȚI ÎN {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "JOC PESTE TOTAL {0} / {1}"
+    },
+    {
       "key": "survival_get_ready",
       "value": "Pregătiţi-vă!"
     },
@@ -2778,7 +3170,7 @@
     },
     {
       "key": "ready_room_recommended_none",
-      "value": "NONE"
+      "value": "NICIUNUL"
     },
     {
       "key": "ready_room_restriction",
@@ -2791,6 +3183,10 @@
     {
       "key": "ready_room_game_default",
       "value": "Pregătiţi-vă să începeţi jocul."
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "FUGI."
     },
     {
       "key": "ready_room_game_2_2",
@@ -2890,15 +3286,15 @@
     },
     {
       "key": "ready_room_game_15_1",
-      "value": "DEFEAT CRAYON DEVIL"
+      "value": "ÎNVINGEŢI DIAVOLUL CREIONULUI."
     },
     {
       "key": "ready_room_game_15_2",
-      "value": "DEFEAT CRAYON STALKER"
+      "value": "ÎNVINGE-L PE STALKERUL CU CREION."
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "Învinge inamicii"
+      "value": "FEREȘTE-TE DE ATACURILE INAMICULUI"
     },
     {
       "key": "ready_room_clear_one_survivor",
@@ -2907,6 +3303,10 @@
     {
       "key": "ready_room_clear_one_goal",
       "value": "E clar când cineva ajunge la gol."
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "ȘTERGEȚI DACĂ ORA COMBINATĂ DE FINALARE A TUTUROR ESTE ÎN 1 MINUT PE JUCĂTOR."
     },
     {
       "key": "spike_chase_monitor_title",
@@ -2921,32 +3321,56 @@
       "value": "Fugi la gol!"
     },
     {
-      "key": "wind_speedrun_title",
-      "value": "Vântul continuă să se schimbe!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "Mai puțin INK = vânt mai puternic"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "TIMP {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "Timpul a expirat."
-    },
-    {
       "key": "umbrella_rain_title",
-      "value": "Rămâi sub umbrelă!"
+      "value": "Ferește-te de ploaie"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "Ploaia te bate - ajunge la adăpost"
+      "value": "Ferește-te de ploaie"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "Toată lumea a fost prinsă în ploaie!"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -3310,7 +3734,7 @@
     },
     {
       "key": "drawn_escort_round_running",
-      "value": "ROUND {0}/3"
+      "value": "ROND {0}/3"
     },
     {
       "key": "drawn_escort_round_clear",
@@ -3337,8 +3761,72 @@
       "value": "ASTUPAȚI GĂURILE!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "ROND {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "ROUND {0}/3 {1:0.0} sânga"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "ROTUND {0} CLARIT!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "TIMPUL A SOSIT!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "ÎNCERCAREA ACEASTA RUNDĂ"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "PUNEȚI POZĂ UMĂ POTRIVĂ ÎN GAURĂ!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "GĂSIȚI POZA POTRIVITĂ PRINTRE PĂSĂRILE plutitoare!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "CARACȚI țestoasa prin camera plină de izvoare!"
+    },
+    {
       "key": "tilt_board_monitor",
       "value": "ROUND {0}/3    {1:0.0}Stânga"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "RUNDA {0}/3 ÎNCEPE ÎN {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "VA PUTEȚI MUTA ÎN BANDA DVS. ÎN TIMPUL NUMĂRĂTORII ÎN RĂSĂ"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "ROTUND {0}/3 LĂZI {1}/{2} {3} s STÂNGA"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "RUPE LAZILE CU SPIKE SLIME!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "SPARGE LĂZIILE MICI!  Uitați-vă la dușmani!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "ROTUND {0} CLARIT!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "RUNDA DE REÎNCERCARE GAME OVER {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "TOATE RUDELE CLARITE!"
     },
     {
       "key": "tilt_board_progress",
@@ -3393,12 +3881,40 @@
       "value": "10-3 RICOCHET RELAY"
     },
     {
+      "key": "cat_escape_title",
+      "value": "2-3  SCAPĂ DE PISICA URIAȘĂ!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "AȘTEPTARE {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "ÎNCEPE ÎN {0}"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "FUGI!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "ZGÂRIETURI DE ECHIPĂ  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
       "key": "ricochet_round",
-      "value": "ROUND {0} / {1}"
+      "value": "ROND {0} / {1}"
     },
     {
       "key": "ricochet_ammo",
-      "value": "AMMO {0}"
+      "value": "AMBUNARE {0}"
     },
     {
       "key": "ricochet_instruction",
@@ -3466,7 +3982,7 @@
     },
     {
       "key": "stage_object_falling_rock",
-      "value": "Falling Rock"
+      "value": "Piatră care cade"
     },
     {
       "key": "stage_object_press_machine",
@@ -3498,7 +4014,7 @@
     },
     {
       "key": "stage_object_slider",
-      "value": "Slider"
+      "value": "Scuipătoare"
     },
     {
       "key": "stage_object_rotating_bar",
@@ -3506,7 +4022,7 @@
     },
     {
       "key": "stage_object_pendulum",
-      "value": "Pendulum"
+      "value": "Călătorie"
     },
     {
       "key": "stage_object_keyhole",
@@ -3522,7 +4038,7 @@
     },
     {
       "key": "stage_object_counter",
-      "value": "Counter"
+      "value": "Controlare"
     },
     {
       "key": "menu_stage_select",
@@ -3658,11 +4174,11 @@
     },
     {
       "key": "redraw",
-      "value": "Redraw"
+      "value": "Răspuns"
     },
     {
       "key": "pen",
-      "value": "Pen"
+      "value": "Până în urmă"
     },
     {
       "key": "eraser",
@@ -3670,7 +4186,7 @@
     },
     {
       "key": "shape_square",
-      "value": "Box"
+      "value": "Cutie"
     },
     {
       "key": "shape_circle",
@@ -3782,7 +4298,7 @@
     },
     {
       "key": "stage_editor_test",
-      "value": "Test"
+      "value": "Teste"
     },
     {
       "key": "stage_editor_back",
@@ -3986,15 +4502,15 @@
     },
     {
       "key": "sfx_browser_play",
-      "value": "PLAY"
+      "value": "JOACĂ"
     },
     {
       "key": "sfx_browser_stop",
-      "value": "STOP"
+      "value": "OPREŞTE-TE !"
     },
     {
       "key": "sfx_browser_reload",
-      "value": "RELOAD"
+      "value": "ÎNCĂRCARE"
     },
     {
       "key": "sfx_browser_no_results",
@@ -4017,6 +4533,34 @@
       "value": "Sunet generat pe timp de rulare"
     },
     {
+      "key": "gameplay_control_switch",
+      "value": "Schimbă personajul"
+    },
+    {
+      "key": "feedback_button",
+      "value": "FEEDBACK / RAPORTEAZĂ O EROARE"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "Mulțumim că ai jucat!\nFeedback / Raportează o eroare"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "LISTĂ DE DORINȚE"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "RECOMANDĂM MODUL MULTIPLAYER!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW este cel mai distractiv când cooperați!\nÎncercați să jucați în 2–4 jucători!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "BINE, BINE."
+    },
+    {
       "key": "stage_object_background_paw_print",
       "value": "Tipărește laba"
     },
@@ -4034,7 +4578,7 @@
     },
     {
       "key": "stage_object_background_icicle",
-      "value": "Icicle"
+      "value": "Cârniţă"
     },
     {
       "key": "stage_object_background_snowman",
@@ -4042,7 +4586,7 @@
     },
     {
       "key": "stage_object_background_blizzard",
-      "value": "Blizzard"
+      "value": "Zăpadă de zăpadă"
     },
     {
       "key": "stage_object_background_feather",
@@ -4090,7 +4634,7 @@
     },
     {
       "key": "stage_object_background_bubbles",
-      "value": "Bubbles"
+      "value": "Bubble-uri"
     },
     {
       "key": "stage_object_background_butterfly",
@@ -4118,7 +4662,7 @@
     },
     {
       "key": "stage_object_background_spiderweb",
-      "value": "Spiderweb"
+      "value": "Reţeaua de păianjen"
     },
     {
       "key": "stage_object_background_stalactite",
@@ -4186,7 +4730,7 @@
     },
     {
       "key": "stage_object_background_notebook",
-      "value": "Notebook"
+      "value": "Carnet de notă"
     },
     {
       "key": "stage_object_background_blackboard",
@@ -4202,7 +4746,7 @@
     },
     {
       "key": "stage_object_background_canvas",
-      "value": "Canvas"
+      "value": "Canoane"
     },
     {
       "key": "stage_object_background_stopwatch",
@@ -4230,7 +4774,7 @@
     },
     {
       "key": "stage_object_background_planet",
-      "value": "Planet"
+      "value": "Planeta"
     },
     {
       "key": "stage_object_background_alien",
@@ -4238,7 +4782,7 @@
     },
     {
       "key": "stage_object_background_comet",
-      "value": "Comet"
+      "value": "Cometa"
     },
     {
       "key": "stage_object_background_black_hole_decor",
@@ -4250,499 +4794,11 @@
     },
     {
       "key": "stage_object_background_moss",
-      "value": "Moss"
+      "value": "Moș"
     },
     {
       "key": "stage_object_background_tree_root",
       "value": "Rădăcină de copac"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "FUGI!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "ÎNCEPE ÎN {0}"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "AȘTEPTARE {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  SCAPĂ DE PISICA URIAȘĂ!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "ZGÂRIETURI DE ECHIPĂ  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "Poți schimba personajul doar pe o podea de redesenare."
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "ÎNAPOI"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "Se așteaptă răspunsul lui {0}.\nSchimb solicitat: {1} pentru {2}."
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "CERERE DE SCHIMB TRIMISĂ"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "Repornești acest nivel de la început?"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "REÎNCEARCĂ"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "Închei nivelul curent și revii la selectarea nivelului?"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "Modificările nefinalizate nu vor fi salvate. Revii fără salvare?"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "ÎNAPOI FĂRĂ SALVARE"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "Personajul redesenat a fost salvat."
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "Salvarea a eșuat. Apasă din nou „GATA”."
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "SELECTARE NIVEL"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "Jocul online nu este disponibil deoarece datele sau versiunea jocului nu corespund. Verifică fișierele jocului în Steam."
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "Conexiunea la sesiune s-a întrerupt. Intră din nou în cameră."
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "Gazda s-a deconectat, iar camera a fost închisă."
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "ANULEAZĂ"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "RESETEAZĂ"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "RESETEAZĂ PROGRESUL"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "Resetezi toate nivelurile terminate?\nVolumul, limba, numele jucătorului și desenele vor fi păstrate."
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "Progresul nivelurilor a fost resetat."
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "RESETEAZĂ PROGRESUL"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "FUGI."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "Schimbă personajul"
-    },
-    {
-      "key": "feedback_button",
-      "value": "FEEDBACK / RAPORTEAZĂ O EROARE"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "Mulțumim că ai jucat!\nFeedback / Raportează o eroare"
-    },
-    {
-      "key": "option_complete",
-      "value": "GATA"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "AFIȘARE: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "REZOLUȚIE: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "ECRAN COMPLET"
-    },
-    {
-      "key": "option_windowed",
-      "value": "MOD FEREASTRĂ"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "Pornește Steam, apoi deschide NICO DRAW din biblioteca Steam."
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "Nu s-a putut obține un tichet de autentificare Steam: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "LISTĂ DE DORINȚE"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "RECOMANDĂM MODUL MULTIPLAYER!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "NICO DRAW este cel mai distractiv când cooperați!\nÎncercați să jucați în 2–4 jucători!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "OK"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "Ieși din NICO DRAW?"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} folosește deja acest personaj. Trimiți o cerere de schimb?"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "TRIMITE CEREREA"
-    },
-    {
-      "key": "background_word_push",
-      "value": "ÎMPINGE!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "ȚINE CRUCE / A: PĂTRAT DE GLIDE / X: APĂȘI"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "PĂTRAT / X: ZGĂRURI / APUCĂ"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "PĂTRAT / X: ARUNCA"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "PĂTRAT / X: SPĂCĂ SĂTRE BĂTĂ DREAPTA"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "ȚINEȚI CRUCE / A: PĂTRAT ȚINEȚI COCICĂ / X: RÂȘTIȚI 90°"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "ȚINE CRUCE: GLIDE SQUARE: GRAB"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "PĂTRAT: ZGĂRIRE / APĂSĂ"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "PĂTRAT: ARUNCA"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "PĂTRAT: ȚĂPĂ CĂTRE BĂȚA DREAPTA"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "ȚINEȚI CRUCE: PĂTRAT DE ȚINEREA COCHIILOR: ROȚIȚI 90°"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "Țineți A: Glisați X: APUȚI"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "X: Zgarie / APPUȚI"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "X: Aruncă"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: SPIKE SĂTRE BĂTĂ DREAPTA"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "HOLD A: SHELL HOLD X: ROTIRE 90°"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "FĂRĂ LIMITĂ DE TIMP"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "NU ESTE INCLUS ÎN DEMO"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "STICK STAND: MOVE RT / A / B: DRAW & SELECT LT: ERASE"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: DRAW MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: DRAW MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / SELECTARE: DRAW MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: DRAW MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: DRAW MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: DRAW MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: DRAW MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "Î: Comutați caracterul"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "TRIANGUL / Y: COMUTARE CARACTER"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "TRIANGUL: COMUTARE CARACTER"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "Y: Comutați caracterul"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "TOTAL ECHIPĂ TERMINAT"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "GAME OVER\nTOTAL {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "ÎNCERCAȚI ÎN {0}"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "Ștergeți în {0} TOTAL"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "TOTAL {0} / {1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "Automat (tastatură / gamepad)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "Gamepad (deconectat)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "Tastatură + Mouse"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "P{0} GAMEPAD DECONECTAT. RECONECTAȚI-O PENTRU A RESTAURĂ ACELAȘI JUCĂTOR."
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "P{0} GAMEPAD RECONECTAT."
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "TASTATURA/MOUSE-UL LANSAȚI DE LA P1. APĂSAȚI UN BUTON CONTROLLER PENTRU A REVENICA P1."
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "PAD NEASIGNAT: START PENTRU ALĂTURARE / TASTATURĂ: ENTER PENTRU ALĂTURARE, BACKSPACE PENTRU PLĂCARE / P2: SELECTARE + B PENTRU PLĂCARE"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "P{0} ÎNREGISTRAT ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "P{0} STÂNGA."
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "PÂNĂ 2 JUCĂTORI PE DISPOZIT ȘI 4 JUCĂTORI ÎN TOTAL ÎN SALĂ."
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "CAMERA E PLINA (4 JUCĂTORI). JUCĂTORUL EXTRA-LOCAL A FOST Șters."
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "P1 A COMUTAT LA {0}."
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "2 JUCĂTORI gata"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: ÎNSCRIEȚI-VĂ"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "APĂSAȚI ORICE BUTON CONTROLLER PENTRU A ÎNSCRIE"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "LOCAL PLAY {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "ADĂUGAȚI SAU ELIMINAȚI JUCĂTORI LOCALI ÎNAINTE DE A ÎNCEPE ETAPA."
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "PAD {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "JUCĂTORI {0}/2\nTASTATURĂ: ENTER PENTRU A ÎNSCRIE / BACKSPACE PENTRU A PĂRĂSI\nCONTROLLER: START PENTRU A ÎNSCRIE / Țineți apăsat B PENTRU PARTEA"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "JUCĂTORI LOCALI {0}/2 PADS CONECTATE {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "Crearea camerei a eșuat. Reîncercare în {0} s ({1} încercări rămase)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "GĂSIȚI POZA POTRIVITĂ PRINTRE PĂSĂRILE plutitoare!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "PUNEȚI POZĂ UMĂ POTRIVĂ ÎN GAURĂ!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "ROUND {0}/3 {1:0.0} sânga"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "ÎNCERCAREA ACEASTA RUNDĂ"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "ROUND {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "ROTUND {0} CLARIT!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "TIME UP!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "CARACȚI țestoasa prin camera plină de izvoare!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "ȘTERGEȚI DACĂ ORA COMBINATĂ DE FINALARE A TUTUROR ESTE ÎN 1 MINUT PE JUCĂTOR."
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "TOATE RUDELE CLARITE!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "SPARGE LĂZIILE MICI!  Uitați-vă la dușmani!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "RUPE LAZILE CU SPIKE SLIME!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "ROTUND {0}/3 LĂZI {1}/{2} {3} s STÂNGA"
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "RUNDA DE REÎNCERCARE GAME OVER {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "ROTUND {0} CLARIT!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "Privire: {0} Comutați cu ← / →"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "RUNDA {0}/3 ÎNCEPE ÎN {1}"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "VA PUTEȚI MUTA ÎN BANDA DVS. ÎN TIMPUL NUMĂRĂTORII ÎN RĂSĂ"
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "TRAGEREA TITLULUI NU ESTE DISPONIBIL ÎN TIMPUL COOPERAȚII LOCALE. ÎNTÂI ÎNTÂI LA 1 JUCĂTOR."
     }
   ]
 }

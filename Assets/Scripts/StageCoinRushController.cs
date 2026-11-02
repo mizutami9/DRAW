@@ -100,7 +100,8 @@ namespace DrawBody.Prototype
             SpriteRenderer renderer = art.AddComponent<SpriteRenderer>();
             renderer.sprite = GetSharedCoinSprite();
             NormalizeCoinArtwork(renderer);
-            renderer.color = Color.white;
+            int coinValue = GetCoinValue(index);
+            ApplyCoinAppearance(art, renderer, coinValue, index);
             renderer.sortingOrder = 16;
 
             if (!previewOnly)
@@ -110,8 +111,31 @@ namespace DrawBody.Prototype
                 trigger.isTrigger = true;
 
                 StageCollectible collectible = coin.AddComponent<StageCollectible>();
-                collectible.Configure(id, StageObjectType.CollectibleCoin);
+                collectible.Configure(id, StageObjectType.CollectibleCoin, coinValue);
             }
+        }
+
+        internal static int GetCoinValue(int index)
+        {
+            int ordinal = index + 1;
+            // Offset rainbow coins from the red cadence so both requested
+            // frequencies remain intact instead of every 100th coin replacing red.
+            if ((ordinal - 25) % 50 == 0) return 10;
+            if (ordinal % 20 == 0) return 5;
+            return 1;
+        }
+
+        internal static void ApplyCoinAppearance(GameObject art, SpriteRenderer renderer, int value, int seed)
+        {
+            if (art == null || renderer == null) return;
+            if (value <= 1)
+            {
+                renderer.color = Color.white;
+                return;
+            }
+            art.name = value >= 10 ? "Rainbow Coin Art (10)" : "Red Coin Art (5)";
+            StageRareCoinVisual visual = art.AddComponent<StageRareCoinVisual>();
+            visual.Configure(renderer, value, seed);
         }
 
         private static float HashSigned(int value)

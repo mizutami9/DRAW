@@ -389,6 +389,7 @@ namespace DrawBody.Prototype
             { "slime_missile_hint", "\u58c1\u3092\u98db\u3073\u79fb\u308a\u3001\u8cab\u901a\u30df\u30b5\u30a4\u30eb\u3092\u304b\u308f\u305b\uff01" },
             { "tower_defense_title", "\u0038\u002d\u0033\u0020\u0020\u5473\u65b9\u3092\u5b88\u308c\uff01" },
             { "tower_defense_phase", "\u30d5\u30a7\u30fc\u30ba\u0020\u007b\u0030\u007d\u0020\u002f\u0020\u007b\u0031\u007d" },
+            { "tower_defense_rank_up", "ランク {0}" },
             { "tower_defense_time_remaining", "残り時間 {0:0.0}" },
             { "tower_defense_protect", "\u5de6\u53f3\u304b\u3089\u6765\u308b\u6575\u304b\u3089\u5473\u65b9\u3092\u5b88\u308d\u3046" },
             { "tower_defense_airstrike", "\u7a7a\u7206\u307e\u3067\u0020\u007b\u0030\u007d" },
@@ -1012,34 +1013,39 @@ namespace DrawBody.Prototype
             { "ready_room_game_9_3", "落ちてくる粒を集めて、目標重量を目指そう" },
             { "ready_room_game_10_1", "タイムアタック。全員のゴールタイム合計が、{0}分以内ならクリア。" },
             { "ready_room_game_10_3", "銃弾を反射させて敵を倒そう" },
-            { "ready_room_game_11_1", "暗闇を照らして、幽霊から逃げ切ろう" },
-            { "ready_room_game_11_2", "最後まで生き残ろう" },
+            { "ready_room_game_11_1", "ゴールしろ" },
+            { "ready_room_game_11_2", "生き残れ" },
             { "ready_room_game_11_3", "爆弾を投げてブロックを全部壊そう" },
             { "ready_room_game_12_1", "箱を壊して、コインを集めよう" },
             { "ready_room_game_12_2", "制限時間内にコインを集めよう" },
             { "ready_room_game_12_3", "制限時間内にコインを集めよう" },
             { "ready_room_game_13_1", "敵から味方を守ろう" },
             { "ready_room_game_13_2", "ボールを跳ね返して敵を倒そう" },
-            { "ready_room_game_14_1", "傾くシーソーで、つららと敵を避けて生き残ろう" },
+            { "ready_room_game_14_1", "生き残れ" },
             { "ready_room_game_14_2", "傘で雨にあたらないようにしよう" },
             { "ready_room_game_14_3", "身体でレーザーを順番に反射してゴールへつなごう" },
             { "ready_room_game_15_1", "クレヨンデビルを倒そう" },
             { "ready_room_game_15_2", "クレヨンストーカーを倒そう" },
-            { "ready_room_game_15_3", "敵を倒そう\nだが、敵の攻撃を避けろ" },
+            { "ready_room_game_15_3", "敵の攻撃を避けろ" },
             { "ready_room_clear_one_survivor", "一人でも生き残ればクリア。" },
             { "ready_room_clear_one_goal", "一人でもゴールすればクリア。" },
             { "ready_room_clear_team_time", "全員のゴールタイム合計が、人数×1分以内ならクリア。" },
             { "spike_chase_monitor_title", "トゲ壁 発進まで" },
             { "spike_chase_monitor_ready", "合図まで待て！" },
             { "spike_chase_monitor_goal", "右のゴールへ走れ！" },
-            { "umbrella_rain_title", "傘の下から出るな！" },
-            { "umbrella_rain_hint", "雨に触れると脱落　誰か1人が雨宿りへ" },
+            { "umbrella_rain_title", "雨に当たるな" },
+            { "umbrella_rain_hint", "雨に当たるな" },
             { "umbrella_rain_all_out", "全員が雨に打たれた！" },
-            { "umbrella_friend_speech_nice_rain", "NICE RAIN TODAY." },
-            { "umbrella_friend_speech_fools_get_wet", "ONLY FOOLS GET WET." },
-            { "umbrella_friend_speech_keep_close", "KEEP CLOSE, STAY DRY." },
-            { "umbrella_friend_speech_puddle_weather", "PERFECT PUDDLE WEATHER." },
-            { "umbrella_friend_speech_dry_and_clever", "DRY AND CLEVER. THAT'S ME." },
+            { "umbrella_friend_speech_nice_rain", "RAINY" },
+            { "umbrella_friend_speech_fools_get_wet", "RUN" },
+            { "umbrella_friend_speech_keep_close", "CLOSE" },
+            { "umbrella_friend_speech_puddle_weather", "SPLASH" },
+            { "umbrella_friend_speech_dry_and_clever", "DRY" },
+            { "escort_friend_word_go", "GO" },
+            { "escort_friend_word_run", "RUN" },
+            { "escort_friend_word_wait", "WAIT" },
+            { "escort_friend_word_jump", "JUMP" },
+            { "escort_friend_word_move", "MOVE" },
             { "linked_shield_title", "14-3  リンクシールド" },
             { "linked_shield_ready", "ボタンのリンク先を確認！" },
             { "linked_shield_hint", "味方へ飛ぶミサイルを1秒の壁で防げ！" },
@@ -1247,6 +1253,7 @@ namespace DrawBody.Prototype
             { "slime_missile_hint", "WALL-JUMP AND DODGE PIERCING MISSILES!" },
             { "tower_defense_title", "8-3  PROTECT YOUR FRIEND!" },
             { "tower_defense_phase", "PHASE {0} / {1}" },
+            { "tower_defense_rank_up", "RANK {0}" },
             { "tower_defense_time_remaining", "TIME {0:0.0}" },
             { "tower_defense_protect", "Defend your friend from both sides" },
             { "tower_defense_airstrike", "AIRSTRIKE IN {0}" },
@@ -1876,34 +1883,39 @@ namespace DrawBody.Prototype
             { "ready_room_game_9_3", "COLLECT THE FALLING GRAINS AND REACH THE TARGET WEIGHT" },
             { "ready_room_game_10_1", "TIME ATTACK. CLEAR IF EVERYONE'S COMBINED FINISH TIME IS WITHIN {0} MINUTES." },
             { "ready_room_game_10_3", "RICOCHET BULLETS TO DEFEAT THE ENEMIES" },
-            { "ready_room_game_11_1", "LIGHT THE DARKNESS AND ESCAPE THE GHOSTS" },
-            { "ready_room_game_11_2", "SURVIVE UNTIL TIME RUNS OUT" },
+            { "ready_room_game_11_1", "REACH THE GOAL" },
+            { "ready_room_game_11_2", "SURVIVE" },
             { "ready_room_game_11_3", "THROW BOMBS TO BREAK EVERY BLOCK" },
             { "ready_room_game_12_1", "BREAK BOXES AND COLLECT COINS" },
             { "ready_room_game_12_2", "COLLECT COINS BEFORE TIME RUNS OUT" },
             { "ready_room_game_12_3", "COLLECT COINS BEFORE TIME RUNS OUT" },
             { "ready_room_game_13_1", "DEFEND YOUR FRIEND FROM THE ENEMIES" },
             { "ready_room_game_13_2", "BOUNCE THE BALL BACK TO DEFEAT THE ENEMIES" },
-            { "ready_room_game_14_1", "SURVIVE THE ICICLES AND ENEMIES ON THE TILTING SEESAW" },
+            { "ready_room_game_14_1", "SURVIVE" },
             { "ready_room_game_14_2", "USE THE UMBRELLA TO STAY OUT OF THE RAIN" },
             { "ready_room_game_14_3", "RELAY THE LASER THROUGH EVERY BODY TO THE GOAL" },
             { "ready_room_game_15_1", "DEFEAT CRAYON DEVIL" },
             { "ready_room_game_15_2", "DEFEAT CRAYON STALKER" },
-            { "ready_room_game_15_3", "DEFEAT THE ENEMIES\nBUT DODGE THEIR ATTACKS" },
+            { "ready_room_game_15_3", "DODGE THE ENEMY ATTACKS" },
             { "ready_room_clear_one_survivor", "CLEAR IF AT LEAST ONE PLAYER SURVIVES." },
             { "ready_room_clear_one_goal", "CLEAR WHEN ANY ONE PLAYER REACHES THE GOAL." },
             { "ready_room_clear_team_time", "CLEAR IF EVERYONE'S COMBINED FINISH TIME IS WITHIN 1 MINUTE PER PLAYER." },
             { "spike_chase_monitor_title", "SPIKE WALL LAUNCH" },
             { "spike_chase_monitor_ready", "WAIT FOR THE SIGNAL!" },
             { "spike_chase_monitor_goal", "RUN TO THE GOAL!" },
-            { "umbrella_rain_title", "STAY UNDER THE UMBRELLA!" },
-            { "umbrella_rain_hint", "RAIN KNOCKS YOU OUT - REACH SHELTER" },
+            { "umbrella_rain_title", "STAY OUT OF THE RAIN" },
+            { "umbrella_rain_hint", "STAY OUT OF THE RAIN" },
             { "umbrella_rain_all_out", "EVERYONE WAS CAUGHT IN THE RAIN!" },
-            { "umbrella_friend_speech_nice_rain", "NICE RAIN TODAY." },
-            { "umbrella_friend_speech_fools_get_wet", "ONLY FOOLS GET WET." },
-            { "umbrella_friend_speech_keep_close", "KEEP CLOSE, STAY DRY." },
-            { "umbrella_friend_speech_puddle_weather", "PERFECT PUDDLE WEATHER." },
-            { "umbrella_friend_speech_dry_and_clever", "DRY AND CLEVER. THAT'S ME." },
+            { "umbrella_friend_speech_nice_rain", "RAINY" },
+            { "umbrella_friend_speech_fools_get_wet", "RUN" },
+            { "umbrella_friend_speech_keep_close", "CLOSE" },
+            { "umbrella_friend_speech_puddle_weather", "SPLASH" },
+            { "umbrella_friend_speech_dry_and_clever", "DRY" },
+            { "escort_friend_word_go", "GO" },
+            { "escort_friend_word_run", "RUN" },
+            { "escort_friend_word_wait", "WAIT" },
+            { "escort_friend_word_jump", "JUMP" },
+            { "escort_friend_word_move", "MOVE" },
             { "linked_shield_title", "14-3  LINKED SHIELDS" },
             { "linked_shield_ready", "CHECK EACH BUTTON LINK!" },
             { "linked_shield_hint", "BLOCK MISSILES WITH 1-SECOND SHIELDS!" },
@@ -2152,8 +2164,67 @@ namespace DrawBody.Prototype
         private void Awake()
         {
             LoadExternalTables();
-            string saved = NormalizeLegacyLanguageCode(PlayerPrefs.GetString("language", InitialLanguageCode));
+            string saved = PlayerPrefs.HasKey("language")
+                ? NormalizeLegacyLanguageCode(PlayerPrefs.GetString("language", InitialLanguageCode))
+                : DetectInitialLanguageCode();
             SetLanguage(saved);
+        }
+
+        private static string DetectInitialLanguageCode()
+        {
+#if NICO_DRAW_STEAM && !DISABLESTEAMWORKS && (UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN)
+            if (SteamPlatformAuth.TryGetCurrentGameLanguage(out string steamLanguage))
+            {
+                string steamCode = MapPlatformLanguageCode(steamLanguage);
+                if (languageDefinitionsByCode.ContainsKey(steamCode)) return steamCode;
+            }
+#endif
+            string systemCode = MapPlatformLanguageCode(Application.systemLanguage.ToString());
+            return languageDefinitionsByCode.ContainsKey(systemCode) ? systemCode : InitialLanguageCode;
+        }
+
+        private static string MapPlatformLanguageCode(string language)
+        {
+            switch ((language ?? string.Empty).Trim().ToLowerInvariant())
+            {
+                case "japanese": return "ja";
+                case "english": return "en";
+                case "french": return "fr";
+                case "italian": return "it";
+                case "german": return "de";
+                case "spanish": return "es";
+                case "latam":
+                case "spanishlatam": return "es-419";
+                case "brazilian": return "pt-BR";
+                case "portuguese": return "pt-PT";
+                case "russian": return "ru";
+                case "schinese":
+                case "chinesesimplified": return "zh-CN";
+                case "tchinese":
+                case "chinesetraditional":
+                case "chinese": return "zh-TW";
+                case "koreana":
+                case "korean": return "ko";
+                case "arabic": return "ar";
+                case "indonesian": return "id";
+                case "ukrainian": return "uk";
+                case "dutch": return "nl";
+                case "greek": return "el";
+                case "swedish": return "sv";
+                case "thai": return "th";
+                case "czech": return "cs";
+                case "danish": return "da";
+                case "turkish": return "tr";
+                case "norwegian": return "no";
+                case "hungarian": return "hu";
+                case "finnish": return "fi";
+                case "bulgarian": return "bg";
+                case "vietnamese": return "vi";
+                case "polish": return "pl";
+                case "malay": return "ms";
+                case "romanian": return "ro";
+                default: return InitialLanguageCode;
+            }
         }
 
         public static void SetLanguage(Language language)

@@ -16,6 +16,7 @@ namespace DrawBody.Prototype
     /// It joins local seats through the same Enter/START path used by players,
     /// then validates ownership, movement, shared-menu routing and network roster.
     /// </summary>
+    [DefaultExecutionOrder(-10000)]
     public sealed class LocalOnlineTopologyTestRuntime : MonoBehaviour
     {
         [Serializable]
@@ -38,11 +39,13 @@ namespace DrawBody.Prototype
         private readonly List<Vector2> movementStarts = new List<Vector2>();
 #if ENABLE_INPUT_SYSTEM
         private readonly List<Gamepad> virtualPads = new List<Gamepad>();
+        private readonly List<InputDevice> disabledPhysicalDevices = new List<InputDevice>();
         private Keyboard virtualKeyboard;
 #endif
         private StageManager stageManager;
         private OnlineManager onlineManager;
         private UIManager uiManager;
+        private LocalCoopSessionManager localCoop;
         private string reportDirectory;
         private string runId;
         private string caseName;
@@ -50,6 +53,7 @@ namespace DrawBody.Prototype
         private string[] layoutTokens;
         private int clientInstance;
         private int expectedPlayers = 4;
+        private int expectedProcesses = 1;
         private int joinStep;
         private float nextJoinAt;
         private float gameplayStartedAt = -1f;
@@ -69,6 +73,8 @@ namespace DrawBody.Prototype
         private bool jumpSeen;
         private bool abilitySeen;
         private bool primarySeen;
+        private bool concurrentDrawOpened;
+        private bool concurrentDrawChecked;
         private bool finished;
         private int exceptions;
 
@@ -98,6 +104,8 @@ namespace DrawBody.Prototype
                 clientInstance = Mathf.Max(0, parsedClient);
             if (int.TryParse(GetArg(args, "-pico-regression-players"), out int parsedPlayers))
                 expectedPlayers = Mathf.Clamp(parsedPlayers, 2, 4);
+            if (int.TryParse(GetArg(args, "-pico-topology-processes"), out int parsedProcesses))
+                expectedProcesses = Mathf.Clamp(parsedProcesses, 1, 4);
             Directory.CreateDirectory(reportDirectory);
             Application.logMessageReceived += HandleLog;
             CreateVirtualDevices();
@@ -112,6 +120,9 @@ namespace DrawBody.Prototype
             for (int i = 0; i < virtualPads.Count; i++)
                 if (virtualPads[i] != null && virtualPads[i].added) InputSystem.RemoveDevice(virtualPads[i]);
             if (virtualKeyboard != null && virtualKeyboard.added) InputSystem.RemoveDevice(virtualKeyboard);
+            for (int i = 0; i < disabledPhysicalDevices.Count; i++)
+                if (disabledPhysicalDevices[i] != null && disabledPhysicalDevices[i].added)
+                    InputSystem.EnableDevice(disabledPhysicalDevices[i]);
 #endif
         }
 
@@ -128,8 +139,8 @@ namespace DrawBody.Prototype
                 CaptureMovementStarts();
             }
             float elapsed = Time.unscaledTime - gameplayStartedAt;
-            ObserveMappedButtons();
             DriveGameplayInputs(elapsed);
+            ObserveMappedButtons();
             RunChecks(elapsed);
         }
 
@@ -138,6 +149,7 @@ namespace DrawBody.Prototype
             if (stageManager == null) stageManager = FindFirstObjectByType<StageManager>();
             if (onlineManager == null) onlineManager = FindFirstObjectByType<OnlineManager>();
             if (uiManager == null) uiManager = FindFirstObjectByType<UIManager>();
+            if (localCoop == null) localCoop = FindFirstObjectByType<LocalCoopSessionManager>();
         }
 
         private void DriveNormalJoinCommands()
@@ -213,6 +225,14 @@ namespace DrawBody.Prototype
                 }
 #endif
             }
+
+#if ENABLE_INPUT_SYSTEM
+            // Queued virtual-device events would otherwise be consumed on the
+            // next player-loop input update, after another component may already
+            // have sampled the one-frame button edge. Process them now; this
+            // test runtime executes before gameplay input owners.
+            InputSystem.Update();
+#endif
 
             if (layoutTokens[0] == "keyboard" && p2MenuChecked
                 && !p1MenuRequested && elapsed >= 5f)
@@ -300,11 +320,37 @@ namespace DrawBody.Prototype
                 if (uiManager != null && !uiManager.IsGameplayMenuShowing)
                     CheckOptionButtonWorks();
             }
-            // 15-3 creates its first independent mimic clone after eight
+            IReadOnlyList<PlayerController2D> drawLocals = stageManager.LocalPlayers;
+            if (drawLocals.Count >= 2 && !concurrentDrawOpened && elapsed >= 3.85f)
+            {
+                concurrentDrawOpened = true;
+#if NICO_DRAW_AI_TEST
+                localCoop?.OpenDrawingForRegression(drawLocals[1]);
+                localCoop?.OpenDrawingForRegression(drawLocals[0]);
+#endif
+                // Reproduce the former ownership collision: UIManager's shared
+                // close path targets the same panel used by P1's local session.
+                uiManager?.SetDrawing(true);
+                uiManager?.SetDrawing(false);
+                concurrentDrawChecked = true;
+                bool p1Active = localCoop != null && localCoop.IsPlayerDrawing(drawLocals[0]);
+                bool p2Active = localCoop != null && localCoop.IsPlayerDrawing(drawLocals[1]);
+                bool p1Visible = localCoop != null && localCoop.IsPlayerDrawingPanelVisible(drawLocals[0]);
+                bool p2Visible = localCoop != null && localCoop.IsPlayerDrawingPanelVisible(drawLocals[1]);
+                Add(p1Active && p2Active,
+                    "P1 and P2 remained in concurrent DRAW sessions",
+                    $"concurrent DRAW state diverged: P1={p1Active}, P2={p2Active}");
+                Add(p1Visible && p2Visible,
+                    "P1 and P2 concurrent DRAW panels remained visible",
+                    $"concurrent DRAW panel disappeared: P1={p1Visible}, P2={p2Visible}");
+                localCoop?.CancelAllDrawingSessions();
+            }
+            // 15-3 creates its first independent mimic clone after fifteen
             // seconds of active combat. Keep that stage alive long enough for
             // boss/clone attack staggering to be observable in test builds.
             bool observeMimicClone = stageManager != null && stageManager.CurrentStageId == "15-3";
-            if (menuClosed && (!observeMimicClone || elapsed >= 16f)
+            bool drawCheckComplete = drawLocals.Count < 2 || concurrentDrawChecked;
+            if (menuClosed && drawCheckComplete && (!observeMimicClone || elapsed >= 16f)
                 || elapsed >= (observeMimicClone ? 20f : 12f)) Finish();
         }
 
@@ -488,6 +534,25 @@ namespace DrawBody.Prototype
 
         private System.Collections.IEnumerator QuitSoon()
         {
+            // Keep every connection alive until every process has recorded its
+            // result. Otherwise the first finisher disconnects and can prevent a
+            // slightly slower host (especially the two-local-seat case) from
+            // reaching its final DRAW/roster checks.
+            float deadline = Time.unscaledTime + 8f;
+            while (Time.unscaledTime < deadline)
+            {
+                int completed = 0;
+                try
+                {
+                    completed = Directory.GetFiles(reportDirectory,
+                        "topology-client-*.done").Length;
+                }
+                catch
+                {
+                }
+                if (completed >= expectedProcesses) break;
+                yield return new WaitForSecondsRealtime(0.1f);
+            }
             yield return new WaitForSecondsRealtime(0.25f);
             Application.Quit(failed.Count == 0 ? 0 : 1);
         }
@@ -514,6 +579,17 @@ namespace DrawBody.Prototype
         private void CreateVirtualDevices()
         {
 #if ENABLE_INPUT_SYSTEM
+            // An attached physical controller can report tiny stick drift and
+            // claim AutoPrimary before the virtual test pad does. The harness
+            // would then drive a different device and falsely report every button
+            // as dead. Isolate automation from real hardware in this process.
+            for (int i = Gamepad.all.Count - 1; i >= 0; i--)
+            {
+                Gamepad physical = Gamepad.all[i];
+                if (physical == null || !physical.enabled) continue;
+                disabledPhysicalDevices.Add(physical);
+                InputSystem.DisableDevice(physical);
+            }
             int pads = 0;
             bool keyboard = false;
             for (int i = 0; i < layoutTokens.Length; i++)

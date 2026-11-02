@@ -34,6 +34,8 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, int> lastRemoteSequences = new Dictionary<string, int>();
         private readonly Dictionary<string, float> lastRemoteStateReceivedAt = new Dictionary<string, float>();
         private readonly Dictionary<string, bool> lastRemoteRespawningStates = new Dictionary<string, bool>();
+        private readonly Dictionary<string, OnlineRespawnReplicaVisibility> remoteRespawnVisibility =
+            new Dictionary<string, OnlineRespawnReplicaVisibility>();
         private readonly Dictionary<string, OnlineBodyData> pendingRemoteBodyData =
             new Dictionary<string, OnlineBodyData>();
         private readonly Dictionary<string, int> lastRemoteBodyRevisions =
@@ -377,6 +379,25 @@ namespace DrawBody.Prototype
             bool hadPrevious = lastRemoteRespawningStates.TryGetValue(state.PlayerId, out bool wasRespawning);
             lastRemoteRespawningStates[state.PlayerId] = state.Respawning;
 
+            PlayerController2D remote = stageManager.GetOnlinePlayerController(state.PlayerId);
+            bool isOwnedState = onlineManager != null
+                && OnlinePlayerIdentity.IsOwnedByConnection(state.PlayerId, onlineManager.LocalPlayerId);
+            // Direct transport may echo a participant's own state back to that
+            // participant. Replica-only visibility must never hide an owned body,
+            // otherwise it stops sending the later "respawn finished" state.
+            if (remote != null
+                && !isOwnedState
+                && !stageManager.IsLocallyControlledPlayer(remote))
+            {
+                if (!remoteRespawnVisibility.TryGetValue(state.PlayerId,
+                        out OnlineRespawnReplicaVisibility visibility))
+                {
+                    visibility = new OnlineRespawnReplicaVisibility();
+                    remoteRespawnVisibility[state.PlayerId] = visibility;
+                }
+                visibility.SetRespawning(remote, state.Respawning);
+            }
+
             if (state.Respawning && (!hadPrevious || !wasRespawning))
             {
                 stageManager.PlayOnlinePlayerLifeEffect(state.PlayerId, state.Position, false);
@@ -384,6 +405,51 @@ namespace DrawBody.Prototype
             else if (!state.Respawning && hadPrevious && wasRespawning)
             {
                 stageManager.PlayOnlinePlayerLifeEffect(state.PlayerId, state.Position, true);
+            }
+        }
+
+        private sealed class OnlineRespawnReplicaVisibility
+        {
+            private readonly Dictionary<Renderer, bool> rendererStates = new Dictionary<Renderer, bool>();
+            private readonly Dictionary<Collider2D, bool> colliderStates = new Dictionary<Collider2D, bool>();
+            private bool hidden;
+
+            public void SetRespawning(PlayerController2D player, bool value)
+            {
+                if (player == null) return;
+                if (value)
+                {
+                    // Keep the proxy root and Rigidbody alive so authoritative
+                    // Transform snapshots continue to land during the five-second
+                    // wait. Body resync may add children, so rescan every packet.
+                    Renderer[] renderers = player.GetComponentsInChildren<Renderer>(true);
+                    for (int i = 0; i < renderers.Length; i++)
+                    {
+                        Renderer item = renderers[i];
+                        if (item == null) continue;
+                        if (!rendererStates.ContainsKey(item)) rendererStates[item] = item.enabled;
+                        item.enabled = false;
+                    }
+                    Collider2D[] colliders = player.GetComponentsInChildren<Collider2D>(true);
+                    for (int i = 0; i < colliders.Length; i++)
+                    {
+                        Collider2D item = colliders[i];
+                        if (item == null) continue;
+                        if (!colliderStates.ContainsKey(item)) colliderStates[item] = item.enabled;
+                        item.enabled = false;
+                    }
+                    hidden = true;
+                    return;
+                }
+
+                if (!hidden) return;
+                foreach (KeyValuePair<Renderer, bool> pair in rendererStates)
+                    if (pair.Key != null) pair.Key.enabled = pair.Value;
+                foreach (KeyValuePair<Collider2D, bool> pair in colliderStates)
+                    if (pair.Key != null) pair.Key.enabled = pair.Value;
+                rendererStates.Clear();
+                colliderStates.Clear();
+                hidden = false;
             }
         }
 
@@ -479,6 +545,12 @@ namespace DrawBody.Prototype
                 if (remoteTransform != null)
                 {
                     PlayerController2D remotePlayer = remoteTransform.GetComponent<PlayerController2D>();
+                    // Some stage transitions temporarily hide/show every renderer
+                    // on a replica. The root fallback SpriteRenderer is a solid
+                    // rectangle and must stay disabled once a drawn body exists.
+                    // Reassert the BodyBuilder invariant so a missed restore does
+                    // not persist into the stage-select scene until the next redraw.
+                    remoteTransform.GetComponent<BodyBuilder>()?.RestoreBuiltBodyFallbackState();
                     remotePlayer?.ApplyRemoteFacingDirection(pair.Value.FacingDirection);
                     remotePlayer?.ApplyRemoteTurtleShellState(pair.Value.TurtleShelled);
                     PlayerController2D attachmentTarget = string.IsNullOrEmpty(pair.Value.SlimeAttachedToPlayerId)

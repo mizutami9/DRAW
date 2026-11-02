@@ -36,6 +36,7 @@ namespace DrawBody.Prototype
 
         public int LocalPlayerIndex => localPlayerIndex;
         public DeviceKind Kind => deviceKind;
+        public bool GameplayInputSuppressed => gameplayInputSuppressed;
         public int GamepadDeviceId => gamepadDeviceId;
         public int LegacyJoystickNumber => legacyJoystickNumber;
         public string DeviceDisplayName
@@ -53,7 +54,7 @@ namespace DrawBody.Prototype
                     return LocalizationManager.T("input_device_gamepad_disconnected");
                 }
 #if ENABLE_INPUT_SYSTEM
-                Gamepad pad = ResolveGamepad();
+                Gamepad pad = ResolveGamepadForInput();
                 if (pad != null && !string.IsNullOrWhiteSpace(pad.displayName)) return pad.displayName;
 #endif
                 return deviceKind == DeviceKind.Gamepad
@@ -183,7 +184,12 @@ namespace DrawBody.Prototype
                 Vector2 stick = pad.leftStick.ReadValue();
                 if (stick.sqrMagnitude < stickDeadzone * stickDeadzone) stick = Vector2.zero;
                 Vector2 dpad = pad.dpad.ReadValue();
-                return dpad.sqrMagnitude > stick.sqrMagnitude ? dpad : stick;
+                Vector2 padMove = dpad.sqrMagnitude > stick.sqrMagnitude ? dpad : stick;
+                // AutoPrimary is deliberately shared by keyboard and the first
+                // unassigned pad in single-player. An idle connected controller
+                // must not swallow WASD/arrow input.
+                if (padMove.sqrMagnitude > 0f || deviceKind != DeviceKind.AutoPrimary)
+                    return padMove;
             }
 #endif
             if (deviceKind == DeviceKind.LegacyJoystick)
@@ -574,6 +580,20 @@ namespace DrawBody.Prototype
             if (primary != null && primary.deviceKind == DeviceKind.Gamepad)
             {
                 return primary.ResolveGamepad();
+            }
+
+            // Before a second local seat explicitly joins, P1 is intentionally
+            // device-agnostic. Let the first unclaimed connected pad coexist with
+            // keyboard/mouse instead of permanently claiming P1 merely because it
+            // was used to navigate a menu.
+            Gamepad current = Gamepad.current;
+            if (current != null && !IsDeviceClaimedByAnotherBinding(current.deviceId))
+                return current;
+            for (int i = 0; i < Gamepad.all.Count; i++)
+            {
+                Gamepad candidate = Gamepad.all[i];
+                if (candidate != null && !IsDeviceClaimedByAnotherBinding(candidate.deviceId))
+                    return candidate;
             }
             return null;
         }

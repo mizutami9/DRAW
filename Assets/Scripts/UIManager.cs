@@ -469,7 +469,14 @@ namespace DrawBody.Prototype
             this.drawing = drawing;
             if (drawingHintPanel != null)
             {
-                drawingHintPanel.SetActive(drawing);
+                // P1's independent local DRAW session reuses this original panel.
+                // A shared UI refresh must not hide it while P1/P2 are concurrently
+                // editing, otherwise only the screen disappears and the player
+                // remains stuck in the redraw state.
+                LocalCoopSessionManager localCoop = FindFirstObjectByType<LocalCoopSessionManager>();
+                bool independentLocalDrawing = !drawing
+                    && localCoop != null && localCoop.HasActiveDrawingSessions;
+                if (!independentLocalDrawing) drawingHintPanel.SetActive(drawing);
             }
 
             // The full theme pass walks every UI element and is already applied

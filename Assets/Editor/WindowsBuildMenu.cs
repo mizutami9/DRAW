@@ -83,6 +83,16 @@ namespace DrawBody.EditorTools
             SteamDistributionIds.DemoDepotId,
             "steam-demo-full-test");
 
+        private static readonly BuildConfiguration SteamProductBuild = new BuildConfiguration(
+            "Builds/NICO DRAW Steam Product",
+            "Hardened full-product Steam build",
+            ScriptingImplementation.IL2CPP,
+            BuildFeature.Steam | BuildFeature.Hardened,
+            "0.1.0",
+            SteamDistributionIds.ProductAppId,
+            SteamDistributionIds.ProductDepotId,
+            "steam-product");
+
         [InitializeOnLoadMethod]
         private static void ScheduleInterruptedManifestRecovery()
         {
@@ -123,6 +133,12 @@ namespace DrawBody.EditorTools
         public static void BuildWindowsSteamDemoFullContentTest()
         {
             RunBuild(SteamDemoFullContentTestBuild);
+        }
+
+        [MenuItem("PICO/Build Windows Steam Product")]
+        public static void BuildWindowsSteamProduct()
+        {
+            RunBuild(SteamProductBuild);
         }
 
         [MenuItem("PICO/Build Windows Steam Playtest")]
@@ -271,6 +287,12 @@ namespace DrawBody.EditorTools
 
         [MenuItem("PICO/Build Windows Steam Demo Full-Content Test", true)]
         private static bool ValidateBuildWindowsSteamDemoFullContentTest()
+        {
+            return IsBuildMenuAvailable();
+        }
+
+        [MenuItem("PICO/Build Windows Steam Product", true)]
+        private static bool ValidateBuildWindowsSteamProduct()
         {
             return IsBuildMenuAvailable();
         }

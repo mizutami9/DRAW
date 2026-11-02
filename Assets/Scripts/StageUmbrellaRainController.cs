@@ -49,6 +49,7 @@ namespace DrawBody.Prototype
         private StageGimmickSyncManager syncManager;
         private StageUmbrellaFriend friend;
         private StageDeadlyRainVisual rainVisual;
+        private StageUmbrellaWeatherBackdrop weatherBackdrop;
         private TextMesh instructionTitle;
         private TextMesh instructionHint;
         private PlayerController2D[] players = System.Array.Empty<PlayerController2D>();
@@ -70,6 +71,7 @@ namespace DrawBody.Prototype
         private bool restoredPlayers;
         private CameraFollow2D stageCamera;
         private float previousCameraMinimum;
+        private Vector3 previousCameraOffset;
         private float umbrellaHalfWidth = BaseUmbrellaHalfWidth;
 
         private bool HasAuthority => stageManager == null
@@ -95,7 +97,10 @@ namespace DrawBody.Prototype
         {
             if (onlineManager != null) onlineManager.GimmickDataReceived -= HandleNetworkData;
             if (stageCamera != null)
+            {
                 stageCamera.SetMinimumOrthographicSize(previousCameraMinimum);
+                stageCamera.SetFollowOffset(previousCameraOffset);
+            }
             RestoreHiddenPlayers();
         }
 
@@ -107,13 +112,19 @@ namespace DrawBody.Prototype
             if (stageCamera != null)
             {
                 previousCameraMinimum = stageCamera.MinimumOrthographicSize;
+                previousCameraOffset = stageCamera.FollowOffset;
                 stageCamera.SetMinimumOrthographicSize(10f);
+                Vector3 raisedOffset = previousCameraOffset;
+                raisedOffset.y += 1.8f;
+                stageCamera.SetFollowOffset(raisedOffset);
             }
             int participantCount = Mathf.Clamp(stageManager != null ? stageManager.GetInkBudgetPlayerCount() : 1, 1, 4);
             float umbrellaScale = participantCount >= 4 ? FourPlayerUmbrellaScale : 1f;
             umbrellaHalfWidth = BaseUmbrellaHalfWidth * umbrellaScale;
             friend = StageUmbrellaFriend.Create(transform, new Vector2(friendX, FriendY), umbrellaScale);
-            CreateSpawnBazooka();
+            CreateSpawnEquipment();
+            CreateGapRecoveryPads();
+            weatherBackdrop = StageUmbrellaWeatherBackdrop.Create(transform);
             rainVisual = StageDeadlyRainVisual.Create(transform);
             rainVisual.SetShelter(friendX, FriendY + CanopyOffsetY, umbrellaHalfWidth, FinalShelterX);
             RefreshPlayers();
@@ -122,25 +133,66 @@ namespace DrawBody.Prototype
             RefreshPresentation();
         }
 
-        private void CreateSpawnBazooka()
+        private void CreateSpawnEquipment()
         {
             if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
             if (objectFactory == null) return;
             StageEditorObject[] existing = GetComponentsInChildren<StageEditorObject>(true);
+            bool hasBazooka = false;
             for (int i = 0; i < existing.Length; i++)
             {
-                if (existing[i] != null && existing[i].objectId == "14-2_spawn_bazooka") return;
+                if (existing[i] != null && existing[i].objectId == "14-2_spawn_bazooka")
+                {
+                    hasBazooka = true;
+                    break;
+                }
             }
 
-            StageObjectData data = StageObjectFactory.CreateDefaultData(
-                StageObjectType.Bazooka,
-                new Vector2(StartX + 0.5f, -2.35f));
-            data.objectId = "14-2_spawn_bazooka";
-            GameObject bazooka = objectFactory.Create(data, transform);
-            if (bazooka != null)
+            if (!hasBazooka)
             {
-                if (syncManager == null) syncManager = GetComponent<StageGimmickSyncManager>();
-                syncManager?.RegisterRuntimeObject(bazooka.transform);
+                StageObjectData data = StageObjectFactory.CreateDefaultData(
+                    StageObjectType.Bazooka,
+                    new Vector2(-22.5f, -2.1f));
+                data.objectId = "14-2_spawn_bazooka";
+                GameObject bazooka = objectFactory.Create(data, transform);
+                if (bazooka != null)
+                {
+                    if (syncManager == null) syncManager = GetComponent<StageGimmickSyncManager>();
+                    syncManager?.RegisterRuntimeObject(bazooka.transform);
+                }
+            }
+
+            existing = GetComponentsInChildren<StageEditorObject>(true);
+            for (int i = 0; i < existing.Length; i++)
+                if (existing[i] != null && existing[i].objectId == "14-2_spawn_handgun") return;
+            StageObjectData handgunData = StageObjectFactory.CreateDefaultData(
+                StageObjectType.Handgun,
+                new Vector2(-24.5f, -2.1f));
+            handgunData.objectId = "14-2_spawn_handgun";
+            GameObject handgun = objectFactory.Create(handgunData, transform);
+            if (handgun != null) syncManager?.RegisterRuntimeObject(handgun.transform);
+        }
+
+        private void CreateGapRecoveryPads()
+        {
+            if (objectFactory == null) return;
+            float[] gapCenters = { -15.25f, -4.25f, 8.5f, 21.25f, 35.25f, 48.5f, 63.5f };
+            for (int i = 0; i < gapCenters.Length; i++)
+            {
+                string id = "14-2_gap_pad_" + (i + 1).ToString("00");
+                StageEditorObject[] existing = GetComponentsInChildren<StageEditorObject>(true);
+                bool found = false;
+                for (int j = 0; j < existing.Length; j++)
+                    if (existing[j] != null && existing[j].objectId == id) { found = true; break; }
+                if (found) continue;
+                StageObjectData data = StageObjectFactory.CreateDefaultData(
+                    StageObjectType.JumpPad,
+                    new Vector2(gapCenters[i], -5.15f));
+                data.objectId = id;
+                data.size = new Vector2(1.15f, 0.42f);
+                data.actionStrength = 32f;
+                GameObject pad = objectFactory.Create(data, transform);
+                if (pad != null) syncManager?.RegisterRuntimeObject(pad.transform);
             }
         }
 
@@ -169,6 +221,9 @@ namespace DrawBody.Prototype
                 friend.SetMotion(friendSpeed, motion);
             }
             rainVisual?.SetShelter(friendX, FriendY + CanopyOffsetY, umbrellaHalfWidth, FinalShelterX);
+            bool weatherCleared = friendX >= FinalX - 0.01f;
+            rainVisual?.SetCleared(weatherCleared);
+            weatherBackdrop?.SetCleared(weatherCleared);
             CheckLocalRainExposure();
         }
 
@@ -225,6 +280,11 @@ namespace DrawBody.Prototype
 
         private void CheckLocalRainExposure()
         {
+            if (friendX >= FinalX - 0.01f)
+            {
+                exposure.Clear();
+                return;
+            }
             if (Time.unscaledTime >= nextPlayerRefreshAt) RefreshPlayers();
             for (int i = 0; i < players.Length; i++)
             {
@@ -288,6 +348,7 @@ namespace DrawBody.Prototype
                     Json = JsonUtility.ToJson(new EliminationState { PlayerId = id })
                 });
             if (AreAllPlayersEliminated()) BeginFailure();
+            else stageManager.ReevaluateGoalCompletion();
             BroadcastState(true);
         }
 
@@ -297,6 +358,11 @@ namespace DrawBody.Prototype
             PlayerController2D player = ResolvePlayer(id);
             if (player != null) HidePlayer(player);
             GameSfx.Play(SfxId.PlayerDeath);
+        }
+
+        internal bool IsPlayerEliminated(string playerId)
+        {
+            return !string.IsNullOrEmpty(playerId) && eliminatedIds.Contains(playerId);
         }
 
         private void HidePlayer(PlayerController2D player)
@@ -357,9 +423,7 @@ namespace DrawBody.Prototype
             StageEscortController.AddBoxOutline(board.transform, Vector2.zero,
                 new Vector2(13f, 2.05f), new Color(0.06f, 0.3f, 0.58f), 25);
             instructionTitle = StageEscortController.CreateText(board.transform, "Title",
-                new Vector3(0f, 0.38f, -0.04f), 46, 0.075f, new Color(0.02f, 0.38f, 0.75f), 27);
-            instructionHint = StageEscortController.CreateText(board.transform, "Hint",
-                new Vector3(0f, -0.48f, -0.04f), 36, 0.055f, new Color(0.16f, 0.14f, 0.12f), 27);
+                new Vector3(0f, 0f, -0.04f), 52, 0.085f, new Color(0.02f, 0.38f, 0.75f), 27);
         }
 
         private void RefreshPlayers()
@@ -481,7 +545,6 @@ namespace DrawBody.Prototype
     {
         private Transform characterVisual;
         private Transform canopy;
-        private TextMesh cue;
         private Transform speechBubble;
         private TextMesh speechText;
         private float walkPhase;
@@ -516,11 +579,6 @@ namespace DrawBody.Prototype
             if (characterVisual != null)
                 characterVisual.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(walkPhase) * (Mathf.Abs(speed) > 0.1f ? 2.8f : 0.5f));
             if (canopy != null) canopy.localRotation = Quaternion.Euler(0f, 0f, Mathf.Clamp(-speed * 1.2f, -4.5f, 4.5f));
-            if (cue != null)
-            {
-                string name = mode != null ? mode.ToString() : string.Empty;
-                cue.text = name == "Stop" ? "…" : name == "Backstep" ? "←" : name == "Fast" ? "»" : string.Empty;
-            }
         }
 
         private void Update()
@@ -589,20 +647,11 @@ namespace DrawBody.Prototype
                 StageEscortController.AddLine(canopy, new Vector2(0f, -1.48f), new Vector2(0.3f, -1.68f), 0.11f, ink, 48);
             }
 
-            cue = StageEscortController.CreateText(transform, "Motion Cue", new Vector3(0f, 3.05f, -0.1f),
-                56, 0.1f, new Color(1f, 0.35f, 0.12f), 54);
-
-            GameObject bubble = new GameObject("Umbrella Friend Speech Bubble");
+            GameObject bubble = new GameObject("Umbrella Friend Speech");
             bubble.transform.SetParent(transform, false);
-            bubble.transform.localPosition = new Vector3(0f, 3.62f, -0.12f);
-            StageEscortController.AddFilledRect(bubble.transform, "Paper", Vector2.zero,
-                new Vector2(5.8f, 0.82f), new Color(1f, 0.98f, 0.82f, 0.95f), 55);
-            StageEscortController.AddBoxOutline(bubble.transform, Vector2.zero,
-                new Vector2(5.8f, 0.82f), new Color(0.08f, 0.32f, 0.5f), 56);
-            StageEscortController.AddLine(bubble.transform, new Vector2(0.35f, -0.41f),
-                new Vector2(0.1f, -0.72f), 0.055f, new Color(0.08f, 0.32f, 0.5f), 56);
+            bubble.transform.localPosition = new Vector3(1.45f, 1.45f, -0.12f);
             speechText = StageEscortController.CreateText(bubble.transform, "English Line",
-                new Vector3(0f, -0.02f, -0.03f), 38, 0.075f, new Color(0.04f, 0.22f, 0.4f), 57);
+                new Vector3(0f, -0.02f, -0.03f), 42, 0.075f, new Color(0.04f, 0.22f, 0.4f), 57);
             speechBubble = bubble.transform;
             bubble.SetActive(false);
         }
@@ -697,6 +746,7 @@ namespace DrawBody.Prototype
         private float canopyY;
         private float halfWidth;
         private float finalShelterX;
+        private bool cleared;
 
         public static StageDeadlyRainVisual Create(Transform parent)
         {
@@ -715,13 +765,15 @@ namespace DrawBody.Prototype
             finalShelterX = finalX;
         }
 
+        public void SetCleared(bool value) => cleared = value;
+
         private void Build()
         {
             targetCamera = Camera.main;
             Material material = new Material(Shader.Find("Sprites/Default"));
             float horizontalExtent = GetHorizontalExtent();
             float verticalExtent = GetVerticalExtent();
-            for (int i = 0; i < 104; i++)
+            for (int i = 0; i < 196; i++)
             {
                 GameObject obj = new GameObject("Rain Streak " + i);
                 obj.transform.SetParent(transform, false);
@@ -730,8 +782,8 @@ namespace DrawBody.Prototype
                 line.positionCount = 2;
                 line.SetPosition(0, new Vector3(-0.15f, 0.42f, 0f));
                 line.SetPosition(1, new Vector3(0.15f, -0.42f, 0f));
-                line.startWidth = 0.045f;
-                line.endWidth = 0.025f;
+                line.startWidth = 0.055f;
+                line.endWidth = 0.032f;
                 line.sharedMaterial = material;
                 line.startColor = new Color(0.08f, 0.42f, 0.95f, 0.88f);
                 line.endColor = new Color(0.18f, 0.72f, 1f, 0.45f);
@@ -740,7 +792,7 @@ namespace DrawBody.Prototype
                     Random.Range(-horizontalExtent, horizontalExtent),
                     Random.Range(-verticalExtent, verticalExtent),
                     -0.05f);
-                drops.Add(new Drop { Transform = obj.transform, Speed = Random.Range(9.5f, 15.5f), Drift = Random.Range(-0.85f, -0.25f) });
+                drops.Add(new Drop { Transform = obj.transform, Speed = Random.Range(13.5f, 21f), Drift = Random.Range(-1.2f, -0.45f) });
             }
         }
 
@@ -755,6 +807,8 @@ namespace DrawBody.Prototype
             {
                 Drop drop = drops[i];
                 if (drop?.Transform == null) continue;
+                drop.Transform.gameObject.SetActive(!cleared);
+                if (cleared) continue;
                 Vector3 local = drop.Transform.localPosition;
                 local.x += drop.Drift * Time.deltaTime;
                 local.y -= drop.Speed * Time.deltaTime;
@@ -782,6 +836,86 @@ namespace DrawBody.Prototype
             return targetCamera != null && targetCamera.orthographic
                 ? targetCamera.orthographicSize + 2f
                 : 12f;
+        }
+    }
+
+    public sealed class StageUmbrellaWeatherBackdrop : MonoBehaviour
+    {
+        private readonly List<SpriteRenderer> cloudRenderers = new List<SpriteRenderer>();
+        private readonly List<SpriteRenderer> sunRenderers = new List<SpriteRenderer>();
+        private float clearAmount;
+
+        public static StageUmbrellaWeatherBackdrop Create(Transform parent)
+        {
+            GameObject root = new GameObject("14-2 Cloudy Grassland Backdrop");
+            root.transform.SetParent(parent, false);
+            StageUmbrellaWeatherBackdrop result = root.AddComponent<StageUmbrellaWeatherBackdrop>();
+            result.Build();
+            return result;
+        }
+
+        public void SetCleared(bool value)
+        {
+            clearAmount = Mathf.MoveTowards(clearAmount, value ? 1f : 0f, Time.deltaTime * 0.42f);
+            for (int i = 0; i < cloudRenderers.Count; i++)
+            {
+                SpriteRenderer renderer = cloudRenderers[i];
+                if (renderer == null) continue;
+                renderer.color = Color.Lerp(
+                    new Color(0.52f, 0.58f, 0.66f, 0.46f),
+                    new Color(0.86f, 0.93f, 1f, 0.18f), clearAmount);
+            }
+            for (int i = 0; i < sunRenderers.Count; i++)
+                if (sunRenderers[i] != null)
+                    sunRenderers[i].color = new Color(1f, 0.83f, 0.2f, Mathf.Lerp(0.02f, 0.56f, clearAmount));
+        }
+
+        private void Build()
+        {
+            Color farGrass = new Color(0.45f, 0.66f, 0.35f, 0.28f);
+            Color nearGrass = new Color(0.24f, 0.58f, 0.25f, 0.38f);
+            for (int x = -45; x <= 95; x += 10)
+            {
+                AddOval("Far Meadow", new Vector2(x, -1.6f + Mathf.Sin(x * 0.2f) * 0.45f), new Vector2(14f, 4.1f), farGrass, -42);
+                AddOval("Near Meadow", new Vector2(x + 3f, -3.45f), new Vector2(12f, 2.7f), nearGrass, -41);
+                for (int blade = 0; blade < 6; blade++)
+                {
+                    float bladeX = x - 4f + blade * 1.65f;
+                    StageEscortController.AddLine(transform, new Vector2(bladeX, -3.2f),
+                        new Vector2(bladeX + (blade % 2 == 0 ? -0.16f : 0.18f), -2.45f + (blade % 3) * 0.15f),
+                        0.035f, new Color(0.15f, 0.45f, 0.2f, 0.44f), -39);
+                }
+            }
+            for (int x = -40; x <= 90; x += 13)
+            {
+                float y = 4.4f + Mathf.Sin(x * 0.31f) * 1.1f;
+                for (int part = 0; part < 3; part++)
+                {
+                    SpriteRenderer cloud = AddOval("Soft Cloud", new Vector2(x + part * 1.25f, y + (part == 1 ? 0.35f : 0f)),
+                        new Vector2(3.5f, 1.6f), new Color(0.52f, 0.58f, 0.66f, 0.46f), -44);
+                    cloudRenderers.Add(cloud);
+                }
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                SpriteRenderer sun = AddOval("Clearing Sun", new Vector2(76f, 7.2f),
+                    new Vector2(1.2f + i * 0.5f, 1.2f + i * 0.5f),
+                    new Color(1f, 0.83f, 0.2f, 0.02f), -46 + i);
+                sunRenderers.Add(sun);
+            }
+        }
+
+        private SpriteRenderer AddOval(string objectName, Vector2 position, Vector2 size, Color color, int order)
+        {
+            GameObject obj = new GameObject(objectName);
+            obj.transform.SetParent(transform, false);
+            obj.transform.localPosition = new Vector3(position.x, position.y, 2f);
+            obj.transform.localScale = size;
+            SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
+            renderer.sprite = DoodleRuntimeAssets.CircleSprite;
+            renderer.color = color;
+            renderer.sortingOrder = order;
+            return renderer;
         }
     }
 }

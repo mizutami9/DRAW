@@ -17,7 +17,7 @@ namespace DrawBody.Prototype
         private bool bodyWasSimulated;
         private RigidbodyType2D bodyTypeBeforeRedraw;
         private float gravityScaleBeforeRedraw;
-        private bool freezeRotationBeforeRedraw;
+        private RigidbodyConstraints2D constraintsBeforeRedraw;
         private bool hasBodyPhysicsSnapshot;
         private bool redrawing;
         private GameObject indicatorRoot;
@@ -73,7 +73,7 @@ namespace DrawBody.Prototype
                     bodyWasSimulated = body.simulated;
                     bodyTypeBeforeRedraw = body.bodyType;
                     gravityScaleBeforeRedraw = body.gravityScale;
-                    freezeRotationBeforeRedraw = body.freezeRotation;
+                    constraintsBeforeRedraw = body.constraints;
                     hasBodyPhysicsSnapshot = true;
                     body.simulated = false;
                 }
@@ -92,7 +92,7 @@ namespace DrawBody.Prototype
                     {
                         body.bodyType = bodyTypeBeforeRedraw;
                         body.gravityScale = gravityScaleBeforeRedraw;
-                        body.freezeRotation = freezeRotationBeforeRedraw;
+                        body.constraints = constraintsBeforeRedraw;
                     }
                     body.simulated = bodyWasSimulated;
                     body.linearVelocity = Vector2.zero;
@@ -233,12 +233,15 @@ namespace DrawBody.Prototype
                 else bounds.Encapsulate(renderer.bounds);
             }
             Vector3 worldPosition = new Vector3(bounds.center.x, bounds.max.y + 0.72f, transform.position.z - 0.2f);
-            indicatorRoot.transform.position = worldPosition;
-            Camera camera = Camera.main;
-            float scale = camera != null && camera.orthographic
-                ? Mathf.Clamp(camera.orthographicSize / 8f, 1f, 1.65f)
-                : 1f;
-            indicatorRoot.transform.localScale = Vector3.one * scale;
+            if (indicatorRoot != null)
+            {
+                indicatorRoot.transform.position = worldPosition;
+                Camera camera = Camera.main;
+                float scale = camera != null && camera.orthographic
+                    ? Mathf.Clamp(camera.orthographicSize / 8f, 1f, 1.65f)
+                    : 1f;
+                indicatorRoot.transform.localScale = Vector3.one * scale;
+            }
         }
 
         private void OnDisable()

@@ -19,6 +19,7 @@ namespace DrawBody.Prototype
         private const string MessageState = "state";
         private const string MessageBody = "body";
         private const string MessageBodyChunk = "body_chunk";
+        private const string MessageFragment = "fragment";
         private const string MessageCarry = "carry";
         private const string MessageStageSelect = "stage_select";
         private const string MessageSessionSync = "session_sync";
@@ -34,6 +35,8 @@ namespace DrawBody.Prototype
         private const int RoomCreateTransientRetries = 4;
         private const int RandomMatchSearchRetries = 3;
         private const int BodyChunkRawBytes = 700;
+        private const int MaxP2PPacketBytes = 1170;
+        private const int FragmentRawBytes = 780;
         private const byte ReliableChannel = 0;
         private const byte RealtimeStateChannel = 1;
         private const byte RealtimeGimmickChannel = 2;
@@ -52,14 +55,23 @@ namespace DrawBody.Prototype
         private readonly Dictionary<string, bool> readyByPlayerId = new Dictionary<string, bool>();
         private readonly Dictionary<string, float> lastPeerPacketAt = new Dictionary<string, float>();
         private readonly Dictionary<string, BodyChunkAssembly> bodyChunkAssemblies = new Dictionary<string, BodyChunkAssembly>();
+        private readonly Dictionary<string, FragmentAssembly> fragmentAssemblies = new Dictionary<string, FragmentAssembly>();
         private readonly Dictionary<string, int> playerSlotsById = new Dictionary<string, int>();
         private readonly HashSet<string> verifiedPrivatePeers = new HashSet<string>(StringComparer.Ordinal);
         private int nextBodyTransferId;
+        private int nextFragmentTransferId;
 
         private sealed class BodyChunkAssembly
         {
             public byte[][] Chunks;
             public int Received;
+        }
+
+        private sealed class FragmentAssembly
+        {
+            public byte[][] Chunks;
+            public int Received;
+            public float CreatedAt;
         }
 
         [Serializable]
@@ -2179,6 +2191,8 @@ namespace DrawBody.Prototype
             lastAppliedSessionMode = -1;
             lastAppliedStageRevision = -1;
             lastAppliedRetryRevision = -1;
+            bodyChunkAssemblies.Clear();
+            fragmentAssemblies.Clear();
         }
 
         private void PumpP2P()
@@ -2251,6 +2265,11 @@ namespace DrawBody.Prototype
                 && !verifiedPrivatePeers.Contains(peer.ToString()))
             {
                 if (type == MessageJoinProof) VerifyPrivateRoomPeer(peer, payload);
+                return;
+            }
+            if (type == MessageFragment)
+            {
+                HandleFragment(peer, payload);
                 return;
             }
             if (type == MessageReady)
@@ -2728,6 +2747,50 @@ namespace DrawBody.Prototype
             }
 
             byte[] bytes = Encoding.UTF8.GetBytes(type + "\t" + (payload ?? string.Empty));
+            if (bytes.Length > MaxP2PPacketBytes && type != MessageFragment)
+            {
+                SendFragmented(remote, bytes, channel, reliability);
+                return;
+            }
+            SendPacketBytes(remote, type, bytes, channel, reliability);
+        }
+
+        private void SendFragmented(
+            ProductUserId remote,
+            byte[] messageBytes,
+            byte channel,
+            PacketReliability reliability)
+        {
+            string transferId = (++nextFragmentTransferId).ToString("X8");
+            int count = Mathf.CeilToInt(messageBytes.Length / (float)FragmentRawBytes);
+            for (int i = 0; i < count; i++)
+            {
+                int offset = i * FragmentRawBytes;
+                int length = Mathf.Min(FragmentRawBytes, messageBytes.Length - offset);
+                string payload = transferId + "|" + i + "|" + count + "|"
+                    + Convert.ToBase64String(messageBytes, offset, length);
+                byte[] fragmentBytes = Encoding.UTF8.GetBytes(MessageFragment + "\t" + payload);
+                SendPacketBytes(remote, MessageFragment, fragmentBytes, channel, reliability);
+            }
+        }
+
+        private void SendPacketBytes(
+            ProductUserId remote,
+            string messageType,
+            byte[] bytes,
+            byte channel,
+            PacketReliability reliability)
+        {
+            // Final invariant at the only production EOS SendPacket call site.
+            // Even if a future message path accidentally bypasses Send's normal
+            // fragmentation check, never hand an oversized packet to EOS.
+            if (bytes == null || bytes.Length > MaxP2PPacketBytes)
+            {
+                Debug.LogError(
+                    $"[PICO ONLINE] oversized_packet_blocked bytes={bytes?.Length ?? 0} "
+                    + $"limit={MaxP2PPacketBytes} type={messageType} channel={channel}");
+                return;
+            }
             SendPacketOptions options = new SendPacketOptions
             {
                 LocalUserId = localUserId,
@@ -2746,8 +2809,65 @@ namespace DrawBody.Prototype
             if (result != Result.Success && Time.unscaledTime >= nextSendFailureLogAt)
             {
                 nextSendFailureLogAt = Time.unscaledTime + 2f;
-                Debug.LogWarning($"[PICO ONLINE] send_failed result={result} type={type} channel={channel} remote={remote}");
+                Debug.LogWarning($"[PICO ONLINE] send_failed result={result} type={messageType} channel={channel} remote={remote}");
             }
+        }
+
+        private void HandleFragment(ProductUserId peer, string payload)
+        {
+            string[] parts = payload.Split(new[] { '|' }, 4);
+            if (parts.Length != 4
+                || !int.TryParse(parts[1], out int index)
+                || !int.TryParse(parts[2], out int count)
+                || count <= 0 || count > 2048 || index < 0 || index >= count)
+            {
+                return;
+            }
+
+            byte[] chunk;
+            try { chunk = Convert.FromBase64String(parts[3]); }
+            catch (FormatException) { return; }
+
+            float now = Time.unscaledTime;
+            if (fragmentAssemblies.Count > 128)
+            {
+                List<string> stale = new List<string>();
+                foreach (KeyValuePair<string, FragmentAssembly> pair in fragmentAssemblies)
+                    if (now - pair.Value.CreatedAt > 5f) stale.Add(pair.Key);
+                for (int i = 0; i < stale.Count; i++) fragmentAssemblies.Remove(stale[i]);
+                if (fragmentAssemblies.Count > 128) fragmentAssemblies.Clear();
+            }
+
+            string peerId = peer != null ? peer.ToString() : "unknown";
+            string key = peerId + "|" + parts[0];
+            if (!fragmentAssemblies.TryGetValue(key, out FragmentAssembly assembly)
+                || assembly.Chunks.Length != count)
+            {
+                assembly = new FragmentAssembly
+                {
+                    Chunks = new byte[count][],
+                    CreatedAt = now
+                };
+                fragmentAssemblies[key] = assembly;
+            }
+            if (assembly.Chunks[index] == null)
+            {
+                assembly.Chunks[index] = chunk;
+                assembly.Received++;
+            }
+            if (assembly.Received != count) return;
+
+            int totalLength = 0;
+            for (int i = 0; i < count; i++) totalLength += assembly.Chunks[i].Length;
+            byte[] combined = new byte[totalLength];
+            int writeOffset = 0;
+            for (int i = 0; i < count; i++)
+            {
+                Buffer.BlockCopy(assembly.Chunks[i], 0, combined, writeOffset, assembly.Chunks[i].Length);
+                writeOffset += assembly.Chunks[i].Length;
+            }
+            fragmentAssemblies.Remove(key);
+            HandleMessage(peer, Encoding.UTF8.GetString(combined));
         }
 
         private void AcceptPeer(ProductUserId peer)

@@ -94,6 +94,13 @@ namespace DrawBody.Prototype
         private float elapsed;
         private float scrollX;
         private float bossX = -15f;
+        private float replicaScrollTarget;
+        private float replicaBossTarget = -15f;
+        private float replicaScrollVelocity;
+        private float replicaSnapshotAt;
+        private float replicaScrollSmoothVelocity;
+        private float replicaBossSmoothVelocity;
+        private bool hasReplicaTarget;
         private float nextAttackAt = 6f;
         private float nextBroadcastAt;
         private float nextPlayerRefreshAt;
@@ -108,6 +115,7 @@ namespace DrawBody.Prototype
         private bool bossDefeatVisualStarted;
 
         public override bool UsesGlobalFallBoundary => false;
+        internal bool RemoteMotionReadyForTest => HasAuthority || hasReplicaTarget;
         private bool HasAuthority => stageManager == null || !stageManager.IsOnlineStageActive || stageManager.IsOnlineStageHost;
 
         private void Awake()
@@ -180,6 +188,7 @@ namespace DrawBody.Prototype
             }
             else
             {
+                UpdateReplicaMotion();
                 CheckLocalFallOrCatch();
             }
             UpdateCameraAndBoss();
@@ -1033,6 +1042,18 @@ namespace DrawBody.Prototype
             if (monitor != null) monitor.position = new Vector3(scrollX, 7.25f, -0.45f);
         }
 
+        private void UpdateReplicaMotion()
+        {
+            if (!hasReplicaTarget) return;
+            float age = Mathf.Clamp(Time.unscaledTime - replicaSnapshotAt, 0f, 0.25f);
+            float predictedScroll = replicaScrollTarget + replicaScrollVelocity * age;
+            float predictedBoss = replicaBossTarget + replicaScrollVelocity * age;
+            scrollX = Mathf.SmoothDamp(scrollX, predictedScroll, ref replicaScrollSmoothVelocity,
+                0.09f, 18f, Time.deltaTime);
+            bossX = Mathf.SmoothDamp(bossX, predictedBoss, ref replicaBossSmoothVelocity,
+                0.08f, 20f, Time.deltaTime);
+        }
+
         private void RefreshMonitor()
         {
             if (monitorMain == null) return;
@@ -1256,7 +1277,21 @@ namespace DrawBody.Prototype
             Phase previousPhase = phase;
             int previousBossHealth = bossHealth;
             receivedSequence = state.Sequence; phase = (Phase)Mathf.Clamp(state.Phase, 0, (int)Phase.Failed);
-            elapsed = state.Elapsed; scrollX = Mathf.Lerp(scrollX, state.ScrollX, 0.65f); bossX = state.BossX; bossHealth = state.BossHealth;
+            elapsed = state.Elapsed;
+            float packetAge = hasReplicaTarget ? Mathf.Max(0.001f, Time.unscaledTime - replicaSnapshotAt) : 0.1f;
+            replicaScrollVelocity = hasReplicaTarget
+                ? Mathf.Clamp((state.ScrollX - replicaScrollTarget) / packetAge, 0f, 8f)
+                : 2.25f;
+            replicaScrollTarget = state.ScrollX;
+            replicaBossTarget = state.BossX;
+            replicaSnapshotAt = Time.unscaledTime;
+            if (!hasReplicaTarget)
+            {
+                scrollX = state.ScrollX;
+                bossX = state.BossX;
+            }
+            hasReplicaTarget = true;
+            bossHealth = state.BossHealth;
             if (bossHealth < previousBossHealth) PlayBossHitFlash();
             if (activatedWeapons == null || activatedWeapons.Length != weapons.Count) activatedWeapons = new bool[weapons.Count];
             if (state.ActivatedWeapons != null)
@@ -1580,6 +1615,7 @@ namespace DrawBody.Prototype
         public void Activate(Transform boss)
         {
             if (activated) return; SetActivated(true);
+            GameSfx.PlayAt(SfxId.SwitchPress, transform.position, 0.9f);
             if (boss == null) return;
             GameObject projectile = new GameObject("Falling Giant Boss Bomb");
             projectile.transform.position = boss.position + Vector3.up * 10f;

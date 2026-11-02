@@ -21,6 +21,50 @@
       "value": "Registern"
     },
     {
+      "key": "option_reset_progress",
+      "value": "ÅTERSTÄLL FRAMSTEG"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "ÅTERSTÄLL FRAMSTEG"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Återställa alla avklarade banor?\nVolym, språk, spelarnamn och teckningar behålls."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Banframstegen har återställts."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "ÅTERSTÄLL"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "AVBRYT"
+    },
+    {
+      "key": "option_complete",
+      "value": "KLAR"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "SKÄRM: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "UPPLÖSNING: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "HELSKÄRM"
+    },
+    {
+      "key": "option_windowed",
+      "value": "FÖNSTERLÄGE"
+    },
+    {
       "key": "lang_ja",
       "value": "Japansk japansk japansk"
     },
@@ -130,11 +174,11 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "Dra {0}."
     },
     {
       "key": "head",
-      "value": "Head"
+      "value": "Huvud"
     },
     {
       "key": "torso",
@@ -186,11 +230,11 @@
     },
     {
       "key": "tail_feather",
-      "value": "Tail Feather"
+      "value": "Tailfjäder"
     },
     {
       "key": "slime_body",
-      "value": "Slime"
+      "value": "Slim"
     },
     {
       "key": "jump_normal",
@@ -206,7 +250,7 @@
     },
     {
       "key": "arm_normal",
-      "value": "Normal Reach"
+      "value": "Normal räckvidd"
     },
     {
       "key": "arm_long",
@@ -218,11 +262,11 @@
     },
     {
       "key": "torso_normal",
-      "value": "Normal"
+      "value": "Normalt."
     },
     {
       "key": "torso_switch",
-      "value": "Heavy Switch"
+      "value": "Svårt växling"
     },
     {
       "key": "torso_heavy",
@@ -262,7 +306,7 @@
     },
     {
       "key": "ability_card_cat",
-      "value": "CAT"
+      "value": "KATTER"
     },
     {
       "key": "ability_card_bird",
@@ -270,11 +314,11 @@
     },
     {
       "key": "ability_card_turtle",
-      "value": "TURTLE"
+      "value": "SKÖLDPADDOR"
     },
     {
       "key": "ability_card_slime",
-      "value": "SLIME"
+      "value": "SLIM"
     },
     {
       "key": "ability_description_human",
@@ -317,6 +361,114 @@
       "value": "FUPWARD SPIKE ATTACK"
     },
     {
+      "key": "ability_control_pad_human",
+      "value": "RUTA / X: KASTA"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "KVADRATUR / X: SKRAPA / GRIP"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "HÅLL KORS / A: GLIDRUTA / X: GRAB"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "HÅLL KORSET / A: SKALHÅLLSRUTA / X: VÄND 90°"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "RUTA / X: SPIKE MOT HÖGER PINNE"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "TRIANGEL / Y: SWITCH KARAKTER"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "F: BYT KARAKTER"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / VÄLJ: DRAW MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: DRA MENYN\nESCMENYN:"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: RITTA MENU"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "RUTA: KAST"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "RUTA: SKRAPA / GRAB"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "HÅLLKORS: GLIDRUTA: GRIP"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "HÅLLKORSET: SKALHÅLLSRUTA: VRID 90°"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "RUTA: SPIKE MOT HÖGER PINNE"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: KASTA"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: SKRAPA/GRIP"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "HÅLL A: GLID X: GRIP"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "HOLD A: SKAL HOLD X: VRID 90°"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SPIKE MOT HÖGER STICK"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "TRIANGEL: SWITCH KARAKTER"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: BYT KARAKTER"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "SKAPA: RITA MENYALTERNATIV: MENY"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VISA: RITA MENYN: MENYN"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: RITTA MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: RITTA MENU"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "INGÅR INTE I DEMO"
+    },
+    {
       "key": "ability_effect_human_combined",
       "value": "Power ×{0:0.00}  Hoppa ×{1:0.00}"
     },
@@ -326,7 +478,7 @@
     },
     {
       "key": "ability_effect_bird",
-      "value": "Float power {0:0}%"
+      "value": "Flytande kraft {0:0}%"
     },
     {
       "key": "ability_effect_turtle",
@@ -346,7 +498,7 @@
     },
     {
       "key": "ability_ink_bird",
-      "value": "Wings {0:0.0} / 700 INK"
+      "value": "Vingar {0:0.0} / 700 INK"
     },
     {
       "key": "ability_ink_turtle",
@@ -374,7 +526,7 @@
     },
     {
       "key": "ability_gauge_high",
-      "value": "HIGH"
+      "value": "HÖG"
     },
     {
       "key": "ability_human_jump_gauge",
@@ -386,15 +538,15 @@
     },
     {
       "key": "ability_cat_back_leg_gauge",
-      "value": "RUN"
+      "value": "RUNT."
     },
     {
       "key": "ability_cat_front_leg_gauge",
-      "value": "SCRATCH"
+      "value": "SKRATTA"
     },
     {
       "key": "ability_bird_gauge",
-      "value": "GLIDE"
+      "value": "SLIPPA"
     },
     {
       "key": "ability_turtle_gauge",
@@ -438,19 +590,111 @@
     },
     {
       "key": "label_heavy_switch",
-      "value": "2 Heavy Switch"
+      "value": "2 Svå skift"
     },
     {
       "key": "label_far_lever",
-      "value": "3 Far Lever"
+      "value": "3 Längre hävstång"
     },
     {
       "key": "label_narrow_hole",
-      "value": "4 Narrow Hole"
+      "value": "4 Smal hål"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Tangentbord + mus"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (bortkopplad)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automatisk (tangentbord / gamepad)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD FRÅNOPPLAD. ANSLUT DEN ÅTER FÖR ATT ÅTERSTÄLLA SAMMA SPELAARE."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD ÅTERansluten."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} GÄNDE MED ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "UPP TILL 2 SPELARE PER ENHET OCH TOTALT 4 SPELARE I RUMMET."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "LÄGG TILL ELLER TA BORT LOKALA SPELARE INNAN DU STARTAR SCENEN."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "RUMMET ÄR FULLT (4 SPELARE). DEN EXTRA LOKALA SPELAREN BLEV BORT."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "EGEN TILLDELAD PAD: START FÖR ATT GÅ MED / TANGENTBORD: ENTER FÖR ATT GÅ MED, BACKSPACE FÖR ATT LÄMNA / P2: VÄLJ + B FÖR ATT LÄMNA"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "LOKALA SPELARE {0}/2 ANSLUTNA PLATSER {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "LOCAL PLAY {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PADD {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "TRYCK PÅ NÅGON KONTROLLKNAPP FÖR ATT GÅ MED"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: GÅ MED"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 SPELARE KLAR"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "SPELARE {0}/2\nTANGENTBORD: ENTER FÖR ATT GÅ MED / BACKSPACE FÖR ATT LÄMNA\nKONTROLL: START FÖR ATT GÅ MED / HÅLL B FÖR ATT LÄMNA"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 BYTTADE TILL {0}."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "TANGENTBORD/MUS LÄPPAS FRÅN P1. TRYCK PÅ EN KONTROLLKNAPP FÖR ATT GÖRA P1."
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} VÄNSTER."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "TITELDRAGNING ÄR INTE TILLGÄNGLIG UNDER LOKAL CO-OP. ÅTERGÅ TILL 1 SPELARE FÖRST."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "VÄNSTER PINNE: FLYTTA RT / A / B: DRAG & VÄLJ LT: RADERA"
     },
     {
       "key": "multi_room_setup",
-      "value": "ROOM SETUP"
+      "value": "RUMSUPPSTÄLLNING"
     },
     {
       "key": "multi_participants",
@@ -462,15 +706,15 @@
     },
     {
       "key": "multi_room_join_title",
-      "value": "JOIN ROOM"
+      "value": "KOM IN I RUMMET."
     },
     {
       "key": "multi_room_id",
-      "value": "ROOM ID"
+      "value": "RUMSNUMMER"
     },
     {
       "key": "multi_local_test_no_invite",
-      "value": "LOCAL TEST (INVITES OFF)"
+      "value": "LOKAL TEST (INBJUDER BORT)"
     },
     {
       "key": "multi_you_badge",
@@ -497,6 +741,10 @@
       "value": "Fasa {0} / {1}"
     },
     {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
+    },
+    {
       "key": "tower_defense_time_remaining",
       "value": "Tid {0:0.0}"
     },
@@ -506,7 +754,7 @@
     },
     {
       "key": "tower_defense_airstrike",
-      "value": "AIRSTRIKE IN {0}"
+      "value": "LUFTSTRIDERNA IN. {0}"
     },
     {
       "key": "tower_defense_retry",
@@ -517,8 +765,28 @@
       "value": "Defense Clear!"
     },
     {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
+    },
+    {
       "key": "value_coin_amount",
-      "value": "COIN {0} / {1}"
+      "value": "MYNT {0} / {1}"
     },
     {
       "key": "value_coin_time",
@@ -534,11 +802,11 @@
     },
     {
       "key": "value_coin_clear",
-      "value": "100 COIN CLEAR!"
+      "value": "100 MYNT KLAR!"
     },
     {
       "key": "human_circuit_powered",
-      "value": "POWER ON!"
+      "value": "STRÖM PÅ!"
     },
     {
       "key": "title_single",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "DRA"
     },
     {
       "key": "title_option",
@@ -558,19 +826,23 @@
     },
     {
       "key": "option_back",
-      "value": "BACK  ESC"
+      "value": "TILLBAKA  ESC"
     },
     {
       "key": "option_back_esc",
-      "value": "BACK  ESC"
+      "value": "TILLBAKA  ESC"
     },
     {
       "key": "ui_back_esc",
-      "value": "BACK  ESC"
+      "value": "TILLBAKA  ESC"
     },
     {
       "key": "title_exit",
       "value": "Avsluta"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Avsluta NICO DRAW?"
     },
     {
       "key": "title_debug",
@@ -590,27 +862,27 @@
     },
     {
       "key": "trailer_debug_start",
-      "value": "START SEQUENCE"
+      "value": "START SEKVENS"
     },
     {
       "key": "trailer_debug_back",
-      "value": "BACK  ESC"
+      "value": "TILLBAKA  ESC"
     },
     {
       "key": "trailer_debug_edit_shapes",
-      "value": "EDIT CHARACTERS"
+      "value": "REDIGERA TECKEN"
     },
     {
       "key": "steam_header_debug_button",
-      "value": "STEAM HEADER"
+      "value": "DAMPHUVUD"
     },
     {
       "key": "steam_header_capture",
-      "value": "EXPORT 920×430 PNG"
+      "value": "EXPORT 920X430 PNG"
     },
     {
       "key": "steam_header_exit",
-      "value": "BACK TO TITLE"
+      "value": "TILLBAKA TILL TITELN"
     },
     {
       "key": "steam_header_ready",
@@ -618,7 +890,7 @@
     },
     {
       "key": "steam_header_saved",
-      "value": "Saved: {0}"
+      "value": "Spara: {0}"
     },
     {
       "key": "player_redrawing_status",
@@ -629,12 +901,16 @@
       "value": "Karaktärer kan bara förändras i den verkliga roomen."
     },
     {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Du kan bara byta figur på ett omritningsgolv."
+    },
+    {
       "key": "trailer_debug_capture_help",
       "value": "R REPLAY H HIDE HUD     ESC  Titeln"
     },
     {
       "key": "trailer_tas_title",
-      "value": "TRAILER TAS RECORDER"
+      "value": "TRAILER TAS-REGISTRATOR"
     },
     {
       "key": "trailer_tas_help",
@@ -642,7 +918,7 @@
     },
     {
       "key": "trailer_tas_record",
-      "value": "F9 RECORD/STOP"
+      "value": "F9 UPPTECKNING/STOPPA"
     },
     {
       "key": "trailer_tas_play",
@@ -654,7 +930,7 @@
     },
     {
       "key": "trailer_tas_clear",
-      "value": "CLEAR SELECTED"
+      "value": "KLART MARKERAD"
     },
     {
       "key": "trailer_tas_pause",
@@ -662,7 +938,7 @@
     },
     {
       "key": "trailer_tas_step",
-      "value": "O STEP"
+      "value": "O STEG"
     },
     {
       "key": "trailer_tas_status_idle",
@@ -674,7 +950,7 @@
     },
     {
       "key": "trailer_tas_status_playback",
-      "value": "PLAYING ALL TRACKS"
+      "value": "SPELA ALLA SPÅR."
     },
     {
       "key": "trailer_tas_paused",
@@ -686,7 +962,7 @@
     },
     {
       "key": "trailer_tas_preset_format",
-      "value": "PRESET {0}"
+      "value": "FÖRINSTALLERAD {0}"
     },
     {
       "key": "trailer_tas_save_preset",
@@ -705,16 +981,48 @@
       "value": "Titel"
     },
     {
+      "key": "menu_retry_confirm_message",
+      "value": "Starta om den här banan från början?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "FÖRSÖK IGEN"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Avsluta den aktuella banan och återgå till banvalet?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "BANVAL"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "Ofärdiga ändringar sparas inte. Gå tillbaka utan att spara?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "TILLBAKA UTAN ATT SPARA"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Den omritade figuren har sparats."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Det gick inte att spara. Tryck på ”KLAR” igen."
+    },
+    {
       "key": "language_settings",
       "value": "Språkinställningar"
     },
     {
       "key": "multi_play",
-      "value": "MULTI PLAY"
+      "value": "MULTIPLAYER"
     },
     {
       "key": "multi_random_button",
-      "value": "Random Match"
+      "value": "Sammanfall"
     },
     {
       "key": "multi_room_button",
@@ -722,7 +1030,7 @@
     },
     {
       "key": "multi_random_match",
-      "value": "Random Match"
+      "value": "Sammanfall"
     },
     {
       "key": "multi_searching_players",
@@ -746,7 +1054,7 @@
     },
     {
       "key": "multi_join_room",
-      "value": "Join Room"
+      "value": "Förena rummet"
     },
     {
       "key": "multi_create_room_body",
@@ -774,7 +1082,7 @@
     },
     {
       "key": "multi_toggle_visibility",
-      "value": "Toggle"
+      "value": "Välj"
     },
     {
       "key": "multi_prev",
@@ -794,7 +1102,7 @@
     },
     {
       "key": "multi_lobby_id_placeholder",
-      "value": "Enter Lobby ID"
+      "value": "Ange din lobby-ID."
     },
     {
       "key": "multi_join",
@@ -802,7 +1110,7 @@
     },
     {
       "key": "multi_refresh",
-      "value": "Refresh"
+      "value": "Uppfriskning"
     },
     {
       "key": "multi_room_lobby",
@@ -818,11 +1126,11 @@
     },
     {
       "key": "multi_start_stage_1_1",
-      "value": "Start 1-1"
+      "value": "Börja 1-1"
     },
     {
       "key": "multi_stage_select",
-      "value": "Stage Select"
+      "value": "Stadium Välj"
     },
     {
       "key": "multi_all_ready_required",
@@ -862,7 +1170,7 @@
     },
     {
       "key": "multi_copied_lobby_id",
-      "value": "Copied Lobby ID."
+      "value": "Kopierad lobby-identitet."
     },
     {
       "key": "multi_copied_room_code",
@@ -898,11 +1206,11 @@
     },
     {
       "key": "multi_local",
-      "value": "Lokal"
+      "value": "Local"
     },
     {
       "key": "multi_ready",
-      "value": "READY"
+      "value": "REDO."
     },
     {
       "key": "multi_wait",
@@ -918,7 +1226,7 @@
     },
     {
       "key": "multi_friend_room_name",
-      "value": "Friend Room"
+      "value": "Vännerrummet"
     },
     {
       "key": "online_player_you",
@@ -927,6 +1235,10 @@
     {
       "key": "player_controlled_marker",
       "value": "DU ÄR DU"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Speciellt: {0} Växla med ← / →"
     },
     {
       "key": "online_player_host",
@@ -945,8 +1257,20 @@
       "value": "Fake backend initialiserad."
     },
     {
+      "key": "online_content_mismatch",
+      "value": "Onlinespel är inte tillgängligt eftersom speldata eller version inte stämmer överens. Verifiera spelfilerna i Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Värden kopplade från, så rummet stängdes."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Anslutningen till sessionen bröts. Gå med i rummet igen."
+    },
+    {
       "key": "online_logging_in",
-      "value": "Logging in..."
+      "value": "Logga in..."
     },
     {
       "key": "online_local_test_player",
@@ -954,7 +1278,7 @@
     },
     {
       "key": "online_fake_stage_start",
-      "value": "Fake stage start."
+      "value": "Falska start."
     },
     {
       "key": "online_private_room_created",
@@ -1041,6 +1365,14 @@
       "value": "EOS-inloggning misslyckades: {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "Starta Steam och öppna sedan NICO DRAW från ditt Steam-bibliotek."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Kunde inte hämta en Steam-autentiseringsbiljett: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "EOS skapar lobby misslyckats: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "Rumskodsökning misslyckades: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Det gick inte att skapa rum. Försöker igen om {0}s ({1} försök kvar)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1154,7 +1490,7 @@
     },
     {
       "key": "stage_label",
-      "value": "Stage {0}"
+      "value": "Scenario {0}"
     },
     {
       "key": "stage_world_label",
@@ -1162,11 +1498,11 @@
     },
     {
       "key": "stage_species_available",
-      "value": "AVAILABLE CHARACTERS"
+      "value": "TILLGÄNGLIGA TECKEN"
     },
     {
       "key": "stage_species_available_compact",
-      "value": "USE: {0}"
+      "value": "ANVÄNDNING: {0}"
     },
     {
       "key": "stage_select_debug_created",
@@ -1186,7 +1522,7 @@
     },
     {
       "key": "draw_species_swap_title",
-      "value": "CHARACTER SWAP"
+      "value": "KÄRLEKSVÄXLING"
     },
     {
       "key": "draw_species_swap_hint",
@@ -1197,8 +1533,16 @@
       "value": "{0} vill handla din {1} För {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} använder redan den här figuren. Skicka en bytesförfrågan?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "SKICKA FÖRFRÅGAN"
+    },
+    {
       "key": "draw_species_swap_accept",
-      "value": "SWAP"
+      "value": "UTBYTET"
     },
     {
       "key": "draw_species_swap_reject",
@@ -1207,6 +1551,14 @@
     {
       "key": "draw_species_swap_pending",
       "value": "Väntar på ett svar på swap begäran..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "BYTESFÖRFRÅGAN SKICKAD"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Väntar på svar från {0}.\nBegärt byte: {1} mot {2}."
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1222,11 +1574,11 @@
     },
     {
       "key": "stage_object_grain_emitter",
-      "value": "GRAIN DISPENSER"
+      "value": "GRÖNSORTER"
     },
     {
       "key": "stage_object_grain_scale",
-      "value": "100g SCALE"
+      "value": "100 g SKAL"
     },
     {
       "key": "stage_object_grain_gate",
@@ -1234,7 +1586,7 @@
     },
     {
       "key": "stage_object_escort_friend_button",
-      "value": "FRIEND BUTTON"
+      "value": "VÄNKNAPPEN"
     },
     {
       "key": "stage_object_escort_player_one_way_floor",
@@ -1254,11 +1606,11 @@
     },
     {
       "key": "species_turtle",
-      "value": "Turtle"
+      "value": "Sköldpaddor"
     },
     {
       "key": "species_slime",
-      "value": "Slime"
+      "value": "Slim"
     },
     {
       "key": "stage_editor_objects_tab",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "Teststart: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "Flytta P{0}Testspelens startposition."
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "P{0} Teststart: X {1:0.00} / Y {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1414,7 +1774,7 @@
     },
     {
       "key": "stage_editor_crumble_delay",
-      "value": "Crumble Delay (sec)"
+      "value": "Fördröjning (sek)"
     },
     {
       "key": "stage_editor_bomb_wall_hits",
@@ -1422,7 +1782,7 @@
     },
     {
       "key": "stage_editor_conveyor_speed",
-      "value": "Belt Speed"
+      "value": "Bältehastighet"
     },
     {
       "key": "stage_editor_drop_interval",
@@ -1430,7 +1790,7 @@
     },
     {
       "key": "stage_editor_beam_interval",
-      "value": "Beam Interval (sec)"
+      "value": "Strålintervall (sec)"
     },
     {
       "key": "stage_editor_box_size",
@@ -1474,7 +1834,7 @@
     },
     {
       "key": "stage_editor_status_box_size",
-      "value": "Dropped box size: {0:0.0}"
+      "value": "Kaststorlek: {0:0.0}"
     },
     {
       "key": "stage_editor_status_spike_size",
@@ -1554,7 +1914,7 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "PERSONAL CAP"
+      "value": "PERSONLIG TÄCKNING"
     },
     {
       "key": "ink_team_formula",
@@ -1562,7 +1922,7 @@
     },
     {
       "key": "draw_pen_size",
-      "value": "PEN SIZE"
+      "value": "PENSTORLEK"
     },
     {
       "key": "draw_ink",
@@ -1574,7 +1934,7 @@
     },
     {
       "key": "draw_undo_once",
-      "value": "UNDO"
+      "value": "AVSKAFFAT"
     },
     {
       "key": "draw_reset_all",
@@ -1590,7 +1950,7 @@
     },
     {
       "key": "draw_reset_confirm_yes",
-      "value": "RESET"
+      "value": "ÅTERSTÄLLNING"
     },
     {
       "key": "draw_reset_confirm_no",
@@ -1609,6 +1969,10 @@
       "value": "5-CHARACTER PRESETS"
     },
     {
+      "key": "draw_preset_back",
+      "value": "TILLBAKA"
+    },
+    {
       "key": "draw_preset_five_species",
       "value": "Human CAT BIRD TURTLE SLIME"
     },
@@ -1618,7 +1982,7 @@
     },
     {
       "key": "draw_preset_slot",
-      "value": "SLOT {0}"
+      "value": "SLOTT {0}"
     },
     {
       "key": "draw_preset_saved",
@@ -1634,7 +1998,7 @@
     },
     {
       "key": "draw_preset_apply",
-      "value": "SET"
+      "value": "SAMMANSÄTTNING"
     },
     {
       "key": "draw_preset_save_confirm_title",
@@ -1650,7 +2014,7 @@
     },
     {
       "key": "draw_preset_load_confirm_title",
-      "value": "SET PRESET {0}?"
+      "value": "INSTÄLLNING {0}?"
     },
     {
       "key": "draw_preset_load_confirm_message",
@@ -1674,11 +2038,11 @@
     },
     {
       "key": "stage_object_background_bush",
-      "value": "Background Bush"
+      "value": "Bakgrund Bush"
     },
     {
       "key": "stage_object_background_cloud",
-      "value": "Cloud"
+      "value": "Moln"
     },
     {
       "key": "stage_object_background_push",
@@ -1686,11 +2050,11 @@
     },
     {
       "key": "stage_object_background_arrow",
-      "value": "Arrow"
+      "value": "Pist"
     },
     {
       "key": "stage_object_background_cat_face",
-      "value": "Cat Face"
+      "value": "Kattans ansikte"
     },
     {
       "key": "stage_object_background_dog_face",
@@ -1726,11 +2090,11 @@
     },
     {
       "key": "stage_object_background_lightning",
-      "value": "Lightning"
+      "value": "Blitz"
     },
     {
       "key": "stage_object_background_rainbow",
-      "value": "Rainbow"
+      "value": "Regnbåge"
     },
     {
       "key": "stage_object_background_mountain",
@@ -1738,11 +2102,11 @@
     },
     {
       "key": "stage_object_background_four_leaf_clover",
-      "value": "Four-leaf Clover"
+      "value": "Fyra bladklover"
     },
     {
       "key": "stage_object_background_mushroom",
-      "value": "Mushroom"
+      "value": "Svamp"
     },
     {
       "key": "stage_object_background_apple",
@@ -1750,7 +2114,7 @@
     },
     {
       "key": "stage_object_background_banana",
-      "value": "Banana"
+      "value": "Bananer"
     },
     {
       "key": "stage_object_background_watermelon",
@@ -1762,7 +2126,7 @@
     },
     {
       "key": "stage_object_background_ice_cream",
-      "value": "Ice Cream"
+      "value": "Jälde"
     },
     {
       "key": "stage_object_background_coffee_cup",
@@ -1786,7 +2150,7 @@
     },
     {
       "key": "stage_object_background_rocket",
-      "value": "Rocket"
+      "value": "Rakett"
     },
     {
       "key": "stage_object_background_ufo",
@@ -1794,7 +2158,7 @@
     },
     {
       "key": "stage_object_background_hot_air_balloon",
-      "value": "Hot-air Balloon"
+      "value": "Balong med varm luft"
     },
     {
       "key": "stage_object_background_house",
@@ -1802,19 +2166,19 @@
     },
     {
       "key": "stage_object_background_castle",
-      "value": "Castle"
+      "value": "Slott"
     },
     {
       "key": "stage_object_background_treasure_chest",
-      "value": "Treasure Chest"
+      "value": "Skatten"
     },
     {
       "key": "stage_object_background_mole",
-      "value": "Mole"
+      "value": "Mol"
     },
     {
       "key": "stage_object_background_fossil",
-      "value": "Fossil"
+      "value": "Fossiler"
     },
     {
       "key": "stage_object_background_crystal",
@@ -1842,7 +2206,7 @@
     },
     {
       "key": "stage_object_background_shield",
-      "value": "Shield"
+      "value": "Sköld"
     },
     {
       "key": "stage_object_background_gem",
@@ -1862,7 +2226,7 @@
     },
     {
       "key": "stage_object_background_gear",
-      "value": "Gear"
+      "value": "Rör"
     },
     {
       "key": "stage_object_background_spring",
@@ -1874,7 +2238,7 @@
     },
     {
       "key": "stage_object_background_dice",
-      "value": "Dice"
+      "value": "Tågar"
     },
     {
       "key": "stage_object_background_speech_bubble",
@@ -1890,15 +2254,15 @@
     },
     {
       "key": "stage_object_background_exclamation_mark",
-      "value": "Exclamation Mark (!)"
+      "value": "Utskallningsmärke (!)"
     },
     {
       "key": "stage_object_background_loop_arrow",
-      "value": "Loop Arrow"
+      "value": "- SLÅ EN PIL."
     },
     {
       "key": "stage_object_background_jump",
-      "value": "JUMP!"
+      "value": "HOPPA!"
     },
     {
       "key": "stage_object_background_throw",
@@ -1930,11 +2294,11 @@
     },
     {
       "key": "stage_editor_link_action",
-      "value": "Action"
+      "value": "Handling"
     },
     {
       "key": "stage_editor_link_mode_reveal",
-      "value": "Appear"
+      "value": "Uppträder"
     },
     {
       "key": "stage_editor_link_mode_hide",
@@ -1978,7 +2342,7 @@
     },
     {
       "key": "stage_editor_snap_attach",
-      "value": "Snap"
+      "value": "Snabba"
     },
     {
       "key": "stage_editor_link_source",
@@ -1990,7 +2354,7 @@
     },
     {
       "key": "stage_editor_unlink",
-      "value": "Unlink"
+      "value": "Avkoppling"
     },
     {
       "key": "stage_editor_selected_add",
@@ -2006,7 +2370,7 @@
     },
     {
       "key": "stage_editor_boundary_quick",
-      "value": "Frame"
+      "value": "Rymma"
     },
     {
       "key": "stage_editor_status_boundary_fitted",
@@ -2026,7 +2390,7 @@
     },
     {
       "key": "stage_weapon_bomb",
-      "value": "BOMB"
+      "value": "BOMBEN"
     },
     {
       "key": "stage_weapon_missile",
@@ -2034,7 +2398,11 @@
     },
     {
       "key": "stage_ready_label",
-      "value": "READY"
+      "value": "REDO."
+    },
+    {
+      "key": "background_word_push",
+      "value": "PUTTA!"
     },
     {
       "key": "stage_dynamite_label",
@@ -2050,7 +2418,7 @@
     },
     {
       "key": "laser_relay_editor_round",
-      "value": "STAGE {0}"
+      "value": "SCENARIO {0}"
     },
     {
       "key": "laser_relay_editor_preview",
@@ -2070,7 +2438,7 @@
     },
     {
       "key": "stage_editor_color_opacity",
-      "value": "Opacity"
+      "value": "Öppenhet"
     },
     {
       "key": "stage_editor_status_background_color",
@@ -2102,11 +2470,11 @@
     },
     {
       "key": "stage_category_start_goal",
-      "value": "Start/Goal"
+      "value": "Start/mål"
     },
     {
       "key": "stage_category_switch",
-      "value": "Switch"
+      "value": "Skicka"
     },
     {
       "key": "stage_category_door_gate",
@@ -2118,7 +2486,7 @@
     },
     {
       "key": "stage_category_action",
-      "value": "Action"
+      "value": "Handling"
     },
     {
       "key": "stage_category_trap",
@@ -2134,7 +2502,7 @@
     },
     {
       "key": "stage_object_platform",
-      "value": "Floor"
+      "value": "Går"
     },
     {
       "key": "stage_object_wall",
@@ -2170,15 +2538,15 @@
     },
     {
       "key": "stage_object_ice_floor",
-      "value": "Ice Floor"
+      "value": "Isgolv"
     },
     {
       "key": "stage_object_slippery_slope",
-      "value": "Slippery Slope"
+      "value": "SLIPPA UPP."
     },
     {
       "key": "stage_object_climbable_wall",
-      "value": "Climbable Wall"
+      "value": "Klimmerbar vägg"
     },
     {
       "key": "stage_object_rope",
@@ -2186,15 +2554,15 @@
     },
     {
       "key": "stage_object_ladder",
-      "value": "Ladder"
+      "value": "Ledare"
     },
     {
       "key": "stage_object_cloud_platform",
-      "value": "Cloud Floor"
+      "value": "Skygolv"
     },
     {
       "key": "stage_object_breakable_floor",
-      "value": "Breakable Floor"
+      "value": "Bräcklig golv"
     },
     {
       "key": "stage_object_falling_floor",
@@ -2218,7 +2586,7 @@
     },
     {
       "key": "ricochet_breaker_blocks",
-      "value": "BLOCKS {0}  BALLS ×{1}"
+      "value": "BLOKER {0}  BOLLOR ×{1}"
     },
     {
       "key": "ricochet_breaker_retry",
@@ -2234,7 +2602,7 @@
     },
     {
       "key": "ricochet_enemy_balls",
-      "value": "BALL {0} / {1}"
+      "value": "BOLL. {0} / {1}"
     },
     {
       "key": "ricochet_enemy_next",
@@ -2254,23 +2622,23 @@
     },
     {
       "key": "stage_object_handgun",
-      "value": "Gun"
+      "value": "Pistol"
     },
     {
       "key": "stage_object_bullet_breakable_wall",
-      "value": "Bullet-Breakable Wall"
+      "value": "Skottbrytbara väggar"
     },
     {
       "key": "stage_object_spike_planet",
-      "value": "Spike Planet"
+      "value": "- DET ÄR EN TORGPLANET."
     },
     {
       "key": "stage_object_enemy_flyer_zigzag",
-      "value": "Zigzag Flyer"
+      "value": "JAG ÄR EN FLYGANDE FIENDE."
     },
     {
       "key": "stage_object_enemy_flyer_orbit",
-      "value": "Orbit Flyer"
+      "value": "EN ROTERANDE FIENDE."
     },
     {
       "key": "stage_object_bazooka",
@@ -2286,27 +2654,27 @@
     },
     {
       "key": "stage_object_pose_character_key",
-      "value": "Pose Key"
+      "value": "Slå nyckel"
     },
     {
       "key": "stage_object_pose_character_keyhole",
-      "value": "Pose Keyhole"
+      "value": "Posera nyckelhåla"
     },
     {
       "key": "stage_object_updraft_zone",
-      "value": "Updraft"
+      "value": "Överflöd"
     },
     {
       "key": "stage_object_speed_ring2_x",
-      "value": "Speed Mark"
+      "value": "VÄNTARMÄRKEN."
     },
     {
       "key": "stage_object_speed_ring3_x",
-      "value": "Speed Mark (Strong)"
+      "value": "Hastighetsmärke (stark)"
     },
     {
       "key": "stage_object_redraw_zone",
-      "value": "Redraw Zone"
+      "value": "Omställningszon"
     },
     {
       "key": "stage_editor_bullet_wall_hits",
@@ -2322,23 +2690,23 @@
     },
     {
       "key": "stage_object_checkpoint",
-      "value": "Checkpoint"
+      "value": "Kontrollpunkt"
     },
     {
       "key": "stage_object_warp_entrance",
-      "value": "Warp Entrance"
+      "value": "Warp ingång"
     },
     {
       "key": "stage_object_warp_exit",
-      "value": "Warp Exit"
+      "value": "Warputgång"
     },
     {
       "key": "stage_object_respawn_point",
-      "value": "Respawn Point"
+      "value": "Respawnpunkt"
     },
     {
       "key": "stage_object_mid_goal",
-      "value": "Mid Goal"
+      "value": "Mittmål"
     },
     {
       "key": "stage_object_goal_effect",
@@ -2346,7 +2714,7 @@
     },
     {
       "key": "stage_object_button",
-      "value": "Button"
+      "value": "Knappen"
     },
     {
       "key": "stage_object_weight_button",
@@ -2354,7 +2722,7 @@
     },
     {
       "key": "stage_object_simultaneous_button",
-      "value": "Simultaneous Button"
+      "value": "Samtidigt knapp"
     },
     {
       "key": "stage_object_hold_button",
@@ -2362,19 +2730,19 @@
     },
     {
       "key": "stage_object_triangle_box",
-      "value": "Triangle Box"
+      "value": "Triangelslåda"
     },
     {
       "key": "stage_object_lever",
-      "value": "Lever"
+      "value": "Livret"
     },
     {
       "key": "stage_object_toggle_switch",
-      "value": "Toggle Switch"
+      "value": "Ändra växeln"
     },
     {
       "key": "stage_object_timer_switch",
-      "value": "Timer Switch"
+      "value": "Tidsväxling"
     },
     {
       "key": "stage_object_sensor",
@@ -2382,15 +2750,15 @@
     },
     {
       "key": "stage_object_red_switch",
-      "value": "Red Switch"
+      "value": "Röd övergång"
     },
     {
       "key": "stage_object_blue_switch",
-      "value": "Blue Switch"
+      "value": "Blå Switch"
     },
     {
       "key": "stage_object_green_switch",
-      "value": "Green Switch"
+      "value": "Grön växling"
     },
     {
       "key": "stage_object_yellow_switch",
@@ -2418,15 +2786,15 @@
     },
     {
       "key": "stage_object_shutter",
-      "value": "Shutter"
+      "value": "Förlåtning"
     },
     {
       "key": "stage_object_fence",
-      "value": "Fence"
+      "value": "Vägg"
     },
     {
       "key": "stage_object_laser_gate",
-      "value": "Laser Gate"
+      "value": "Laserport"
     },
     {
       "key": "stage_object_color_gate",
@@ -2434,15 +2802,15 @@
     },
     {
       "key": "stage_object_one_way_gate",
-      "value": "One-way Gate"
+      "value": "Envägsport"
     },
     {
       "key": "stage_object_timed_gate",
-      "value": "Timed Gate"
+      "value": "Tidsgränsen"
     },
     {
       "key": "stage_object_breakable_wall",
-      "value": "Breakable Wall"
+      "value": "Den brytbara väggen"
     },
     {
       "key": "stage_object_hidden_wall",
@@ -2450,19 +2818,19 @@
     },
     {
       "key": "stage_object_wood_box",
-      "value": "Wood Box"
+      "value": "Träskåp"
     },
     {
       "key": "stage_object_iron_box",
-      "value": "Iron Box"
+      "value": "Järnlåda"
     },
     {
       "key": "stage_object_ball",
-      "value": "Ball"
+      "value": "Boll."
     },
     {
       "key": "stage_object_barrel",
-      "value": "Barrel"
+      "value": "Fjädrar"
     },
     {
       "key": "stage_object_rock",
@@ -2470,7 +2838,7 @@
     },
     {
       "key": "stage_object_ice_block",
-      "value": "Ice Block"
+      "value": "Isblock"
     },
     {
       "key": "stage_object_floating_box",
@@ -2482,7 +2850,7 @@
     },
     {
       "key": "stage_object_bomb",
-      "value": "Bomb"
+      "value": "Bomben"
     },
     {
       "key": "stage_object_pickup_fuse_bomb",
@@ -2490,23 +2858,23 @@
     },
     {
       "key": "stage_object_bomb_dropper",
-      "value": "Bomb Maker"
+      "value": "Bombtillverkare"
     },
     {
       "key": "stage_object_dynamite",
-      "value": "Dynamite"
+      "value": "Dinamit"
     },
     {
       "key": "stage_object_enemy_walker",
-      "value": "Walker Enemy"
+      "value": "Walker fiende"
     },
     {
       "key": "stage_object_enemy_jumper",
-      "value": "Jumper Enemy"
+      "value": "Jumper Fiende"
     },
     {
       "key": "stage_object_enemy_charger",
-      "value": "Charger Enemy"
+      "value": "Charger Fiend"
     },
     {
       "key": "stage_object_enemy_flyer",
@@ -2514,15 +2882,15 @@
     },
     {
       "key": "stage_object_enemy_shooter",
-      "value": "Shooter Enemy"
+      "value": "Skytare fiende"
     },
     {
       "key": "stage_object_enemy_dropper",
-      "value": "Enemy Spawner"
+      "value": "Fiende Skapare"
     },
     {
       "key": "stage_object_missile_launcher",
-      "value": "Missile Launcher"
+      "value": "Raketlancerare"
     },
     {
       "key": "stage_editor_link_mode_activate",
@@ -2538,7 +2906,7 @@
     },
     {
       "key": "stage_editor_enemy_size",
-      "value": "Enemy Size"
+      "value": "Fiendens storlek"
     },
     {
       "key": "stage_editor_status_enemy_pattern",
@@ -2566,7 +2934,7 @@
     },
     {
       "key": "stage_object_bucket",
-      "value": "Bucket"
+      "value": "Bakt"
     },
     {
       "key": "stage_object_jump_pad",
@@ -2598,15 +2966,15 @@
     },
     {
       "key": "stage_object_belt",
-      "value": "Belt"
+      "value": "Bälte"
     },
     {
       "key": "stage_object_box_dropper",
-      "value": "Box Dropper"
+      "value": "- DET ÄR ETT SÄTT ATT SLÄPPA LÅDAN."
     },
     {
       "key": "stage_object_spike_dropper",
-      "value": "Spike Dropper"
+      "value": "- DET ÄR EN SLÄPNINGSANORDNING."
     },
     {
       "key": "stage_object_collectible_fish",
@@ -2626,11 +2994,11 @@
     },
     {
       "key": "stage_object_beam_emitter",
-      "value": "Beam Emitter"
+      "value": "Strålutsläppare"
     },
     {
       "key": "stage_rule_normal",
-      "value": "Normal"
+      "value": "Normalt."
     },
     {
       "key": "stage_rule_timed",
@@ -2669,6 +3037,10 @@
       "value": "Tid UPP"
     },
     {
+      "key": "challenge_no_time_limit",
+      "value": "INGEN TIDSGRÄNS"
+    },
+    {
       "key": "challenge_retry_hint",
       "value": "Tryck R för att retry"
     },
@@ -2682,7 +3054,7 @@
     },
     {
       "key": "survival_goal_sub",
-      "value": "MOVE TO THE GLOWING FLOOR"
+      "value": "FLYTTA TILL DEN GLÖDANDE GOLVET"
     },
     {
       "key": "grain_rain_target",
@@ -2690,7 +3062,7 @@
     },
     {
       "key": "grain_rain_ready",
-      "value": "MOVE INTO POSITION BEFORE THE RAIN"
+      "value": "GÅ I POSITION INNAN DET REGNAR."
     },
     {
       "key": "grain_rain_catch",
@@ -2702,7 +3074,7 @@
     },
     {
       "key": "grain_rain_floor_clear",
-      "value": "REMOVING GRAINS ON THE FLOOR"
+      "value": "AVLÄGSNANDE AV KORN PÅ GOLVET"
     },
     {
       "key": "grain_rain_clear",
@@ -2718,7 +3090,7 @@
     },
     {
       "key": "grain_rain_success",
-      "value": "RARE GRAIN TARGET REACHED!"
+      "value": "SÄLDA SPANNMÅL UPPNÅTTS!"
     },
     {
       "key": "grain_rain_retry",
@@ -2726,7 +3098,7 @@
     },
     {
       "key": "grain_rain_round",
-      "value": "STAGE {0}/{1}"
+      "value": "SCENARIO {0}/{1}"
     },
     {
       "key": "grain_rain_blizzard",
@@ -2747,6 +3119,26 @@
     {
       "key": "ice_speedrun_time_up",
       "value": "TIME UP RETRY IN {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "RADERA INOM {0} TOTALT"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "TOTALT {0}/{1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "LAGET TOTALT ÖVER"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "FÖRSÖK IGEN OM {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "SPEL ÖVER\nTOTALT {0} / {1}"
     },
     {
       "key": "survival_get_ready",
@@ -2770,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "READY {0} / {1}"
+      "value": "REDO. {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -2791,6 +3183,10 @@
     {
       "key": "ready_room_game_default",
       "value": "Få klarhet att starta spelet"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "SPRING."
     },
     {
       "key": "ready_room_game_2_2",
@@ -2814,11 +3210,11 @@
     },
     {
       "key": "ready_room_game_8_1",
-      "value": "DODGE THE FALLING PILLARS"
+      "value": "UNDVIK FALLANDE PELARE"
     },
     {
       "key": "ready_room_game_8_2",
-      "value": "REFLECT THE BALL AND BREAK EVERY BLOCK"
+      "value": "REFLEXA BOLLEN OCH BRYTA VARJE BLOCK."
     },
     {
       "key": "ready_room_game_8_3",
@@ -2830,7 +3226,7 @@
     },
     {
       "key": "ready_room_game_9_2",
-      "value": "COLLECT COINS WHILE FALLING"
+      "value": "SAMLA MYNT NÄR DU FALLER"
     },
     {
       "key": "ready_room_game_9_3",
@@ -2850,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "SURVIVE UNTIL TIME RUNS OUT"
+      "value": "ATT ÖVERLEVA TILLS TIDEN GÅR UT."
     },
     {
       "key": "ready_room_game_11_3",
@@ -2862,11 +3258,11 @@
     },
     {
       "key": "ready_room_game_12_2",
-      "value": "COLLECT COINS BEFORE TIME RUNS OUT"
+      "value": "SAMLA MYNT INNAN TIDEN TAR SLUT"
     },
     {
       "key": "ready_room_game_12_3",
-      "value": "COLLECT COINS BEFORE TIME RUNS OUT"
+      "value": "SAMLA MYNT INNAN TIDEN TAR SLUT"
     },
     {
       "key": "ready_room_game_13_1",
@@ -2874,7 +3270,7 @@
     },
     {
       "key": "ready_room_game_13_2",
-      "value": "BOUNCE THE BALL BACK TO DEFEAT THE ENEMIES"
+      "value": "SKJUT TILLBAKA BOLLEN FÖR ATT BESEGRA FIENDEN."
     },
     {
       "key": "ready_room_game_14_1",
@@ -2894,11 +3290,11 @@
     },
     {
       "key": "ready_room_game_15_2",
-      "value": "DEFEAT CRAYON STALKER"
+      "value": "BESEGRA PENNA STALKER."
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "Att trotsa fienderna"
+      "value": "UNDVIK FIENDENS ATTACKER"
     },
     {
       "key": "ready_room_clear_one_survivor",
@@ -2909,8 +3305,12 @@
       "value": "När någon lekare når målet"
     },
     {
+      "key": "ready_room_clear_team_time",
+      "value": "KLARA OM ALLAS KOMBINERADE SLUTTID ÄR INOM 1 MINUT PER SPELARE."
+    },
+    {
       "key": "spike_chase_monitor_title",
-      "value": "SPIKE WALL LAUNCH"
+      "value": "SPIKE VÄGGEN LANSERING"
     },
     {
       "key": "spike_chase_monitor_ready",
@@ -2918,35 +3318,59 @@
     },
     {
       "key": "spike_chase_monitor_goal",
-      "value": "RUN TO THE GOAL!"
-    },
-    {
-      "key": "wind_speedrun_title",
-      "value": "The WIND KEEPS Changing!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "Mindre INK STRONGER WIND"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "Tid {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "Tid UPP"
+      "value": "RÖR TILL MÅLET!"
     },
     {
       "key": "umbrella_rain_title",
-      "value": "Ställ in UMBRELLA!"
+      "value": "Håll dig undan regnet"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "RAIN KNOCKS YOU OUT - REACH SHELTER"
+      "value": "Håll dig undan regnet"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "Alla var skickliga i regnet!"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -2958,7 +3382,7 @@
     },
     {
       "key": "linked_shield_hint",
-      "value": "BLOCK MISSILES WITH 1-SECOND SHIELDS!"
+      "value": "BLOCKERA MISSILER MED 1 SEKUND SKÖLD!"
     },
     {
       "key": "linked_shield_failed",
@@ -2966,7 +3390,7 @@
     },
     {
       "key": "linked_shield_clear",
-      "value": "60-SECOND DEFENSE CLEAR!"
+      "value": "60-SEKUNDERS FÖRSVAR KLAR!"
     },
     {
       "key": "laser_relay_monitor",
@@ -3006,15 +3430,15 @@
     },
     {
       "key": "flying_boss_failed",
-      "value": "ALL PLATFORMS DOWN"
+      "value": "ALLA PLATTFORMAR NERE."
     },
     {
       "key": "flying_boss_homing_warning",
-      "value": "HOMING MISSILES - SPREAD OUT!"
+      "value": "HÄMNINGSRAKETER - SPRID UT!"
     },
     {
       "key": "flying_boss_target_warning",
-      "value": "TARGETED - LEAVE THE TEAM!"
+      "value": "MÅLET - LÄMNA LAGET!"
     },
     {
       "key": "flying_boss_suction_warning",
@@ -3070,11 +3494,11 @@
     },
     {
       "key": "mirror_brawl_clear",
-      "value": "CPU TEAM DEFEATED!"
+      "value": "CPU-TEAMET BESEGRADE!"
     },
     {
       "key": "mirror_brawl_clear_sub",
-      "value": "FINAL BATTLE CLEARED!"
+      "value": "SLUTSKRIGET KLARAT!"
     },
     {
       "key": "mirror_brawl_failed",
@@ -3106,7 +3530,7 @@
     },
     {
       "key": "side_boss_clear",
-      "value": "PURSUER DEFEATED!"
+      "value": "FÖRFÖLJAREN BESEGRAD!"
     },
     {
       "key": "side_boss_failed",
@@ -3114,7 +3538,7 @@
     },
     {
       "key": "spike_chase_run",
-      "value": "RUN!"
+      "value": "RUNT!"
     },
     {
       "key": "survival_watch_floor",
@@ -3162,7 +3586,7 @@
     },
     {
       "key": "pillar_survival_clear",
-      "value": "PILLAR SURVIVAL CLEARED!"
+      "value": "PILLARS ÖVERLEVNAD KLAR!"
     },
     {
       "key": "boss_name",
@@ -3230,11 +3654,11 @@
     },
     {
       "key": "jump_rope_jump_now",
-      "value": "JUMP!"
+      "value": "HOPPA! HOPPA!"
     },
     {
       "key": "jump_rope_keep_jumping",
-      "value": "JUMP THE HURDLES!"
+      "value": "HOPPA ÖVER HINDREN!"
     },
     {
       "key": "jump_rope_slow",
@@ -3250,11 +3674,11 @@
     },
     {
       "key": "jump_rope_clear_title",
-      "value": "HURDLE SURVIVAL CLEARED!"
+      "value": "HURDLE-ÖVERLEVNAD KLAR!"
     },
     {
       "key": "jump_rope_clear_sub",
-      "value": "SURVIVOR FOUND"
+      "value": "ÖVERLEVANDE HITTADES"
     },
     {
       "key": "escort_title",
@@ -3262,7 +3686,7 @@
     },
     {
       "key": "escort_friend_active",
-      "value": "FRIEND MOVING"
+      "value": "VÄN PÅ VÄG."
     },
     {
       "key": "escort_instruction",
@@ -3337,8 +3761,72 @@
       "value": "TÄPP I HÅLEN!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "RUND {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "RUND {0}/3 {1:0.0}s VÄNSTER"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "RUNDT {0} KLART!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "TIDEN UPP!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "FÖRSÖKER IGEN DENNA OMGÅNG"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "SÄTT DEN MATCHANDE MÄNNISKA POSITIONEN I NYCKELHÅLLET!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "HITTA DEN MATCHANDE POSTEN BLAND DE FLYTANDE FÅGlarna!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "BÄR SKÖLDPADAN GENOM RUMMET FULLT AV FJÄDRAR!"
+    },
+    {
       "key": "tilt_board_monitor",
       "value": "RUND {0}/3    {1:0.0}Left för"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "RUNDA {0}/3 STARTAR OM {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "DU KAN RÖRA DIG INOM DITT KÖR UNDER NEDERräkningen"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "RUNDA {0}/3 LÅGAR {1}/{2} {3}s VÄNSTER"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "KÖS LÅDARNA MED SLIMSPIKEN!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "KÖR DE SMÅ LÅDARNA!  SE FIENDERNA!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "RUNDT {0} KLART!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "SPELET ÖVER FÖRSÖK OMGÅNG {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "ALLA RUNDAR KLAR!"
     },
     {
       "key": "tilt_board_progress",
@@ -3346,7 +3834,7 @@
     },
     {
       "key": "tilt_board_maze",
-      "value": "PULL THE BALL THROUGH THE MAZE WITH MAGNETISM!"
+      "value": "DRA BOLLEN GENOM LABYRINTEN MED MAGNETISM!"
     },
     {
       "key": "tilt_board_round_clear",
@@ -3374,7 +3862,7 @@
     },
     {
       "key": "drawn_escort_launch",
-      "value": "FRIEND START"
+      "value": "VÄNSKAP START"
     },
     {
       "key": "drawn_escort_failed",
@@ -3391,6 +3879,34 @@
     {
       "key": "ricochet_title",
       "value": "10-3 RICOCHET RELAY"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3  FLY FRÅN JÄTTEKATTEN!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "VÄNTAR {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "STARTAR OM {0}"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "SPRING!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "LAGKLÖS  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
     },
     {
       "key": "ricochet_round",
@@ -3418,7 +3934,7 @@
     },
     {
       "key": "stage_object_escort_goal",
-      "value": "Friend Goal"
+      "value": "Vänskapsmål"
     },
     {
       "key": "stage_object_escort_player_only_floor",
@@ -3434,15 +3950,15 @@
     },
     {
       "key": "stage_object_turntable",
-      "value": "Turntable"
+      "value": "Värmtavla"
     },
     {
       "key": "stage_object_cannon",
-      "value": "Cannon"
+      "value": "Kanoner"
     },
     {
       "key": "stage_object_catapult",
-      "value": "Catapult"
+      "value": "Katapult"
     },
     {
       "key": "stage_object_spike",
@@ -3466,7 +3982,7 @@
     },
     {
       "key": "stage_object_falling_rock",
-      "value": "Falling Rock"
+      "value": "Fallande sten"
     },
     {
       "key": "stage_object_press_machine",
@@ -3486,19 +4002,19 @@
     },
     {
       "key": "stage_object_gear",
-      "value": "Gear"
+      "value": "Rör"
     },
     {
       "key": "stage_object_big_gear",
-      "value": "Big Gear"
+      "value": "JAG HAR EN TANDCYKEL."
     },
     {
       "key": "stage_object_rope_pulley",
-      "value": "Rope Pulley"
+      "value": "Låpspulley"
     },
     {
       "key": "stage_object_slider",
-      "value": "Slider"
+      "value": "Slidare"
     },
     {
       "key": "stage_object_rotating_bar",
@@ -3506,11 +4022,11 @@
     },
     {
       "key": "stage_object_pendulum",
-      "value": "Pendulum"
+      "value": "Pendel"
     },
     {
       "key": "stage_object_keyhole",
-      "value": "Keyhole"
+      "value": "Nyckelhåla"
     },
     {
       "key": "stage_object_stage_boundary",
@@ -3522,11 +4038,11 @@
     },
     {
       "key": "stage_object_counter",
-      "value": "Counter"
+      "value": "Avsnittet"
     },
     {
       "key": "menu_stage_select",
-      "value": "Stage Select"
+      "value": "Stadium Välj"
     },
     {
       "key": "menu_leave_session",
@@ -3534,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Restart Stage"
+      "value": "Återstartsstadium"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -3586,7 +4102,7 @@
     },
     {
       "key": "stage_editor_straight",
-      "value": "Straight"
+      "value": "Rätt"
     },
     {
       "key": "stage_editor_status_straight_on",
@@ -3658,7 +4174,7 @@
     },
     {
       "key": "redraw",
-      "value": "Redraw"
+      "value": "Redigera"
     },
     {
       "key": "pen",
@@ -3666,11 +4182,11 @@
     },
     {
       "key": "eraser",
-      "value": "Eraser"
+      "value": "Rörare"
     },
     {
       "key": "shape_square",
-      "value": "Box"
+      "value": "Förpackning"
     },
     {
       "key": "shape_circle",
@@ -3698,7 +4214,7 @@
     },
     {
       "key": "undo",
-      "value": "Undo"
+      "value": "Avskaffat"
     },
     {
       "key": "character_switch",
@@ -3710,11 +4226,11 @@
     },
     {
       "key": "character_delete",
-      "value": "Delete Char"
+      "value": "Ta bort char"
     },
     {
       "key": "character_control_switch",
-      "value": "Switch Char"
+      "value": "Skicka Char"
     },
     {
       "key": "stage_select",
@@ -3734,7 +4250,7 @@
     },
     {
       "key": "stage_select_edit_off",
-      "value": "Edit: OFF"
+      "value": "Redigera: OFF"
     },
     {
       "key": "stage_select_edit_on",
@@ -3774,7 +4290,7 @@
     },
     {
       "key": "stage_editor_delete",
-      "value": "Delete"
+      "value": "Ta bort"
     },
     {
       "key": "stage_editor_save",
@@ -3786,7 +4302,7 @@
     },
     {
       "key": "stage_editor_back",
-      "value": "BACK  ESC"
+      "value": "TILLBAKA  ESC"
     },
     {
       "key": "option_subtitle",
@@ -3798,7 +4314,7 @@
     },
     {
       "key": "option_se",
-      "value": "SE"
+      "value": "SE:"
     },
     {
       "key": "option_keys",
@@ -3830,23 +4346,23 @@
     },
     {
       "key": "turtle",
-      "value": "Turtle"
+      "value": "Sköldpaddor"
     },
     {
       "key": "slime",
-      "value": "Slime"
+      "value": "Slim"
     },
     {
       "key": "label_ball_hit",
-      "value": "5 Ball Hit"
+      "value": "FICK FEM."
     },
     {
       "key": "stage_editor_quick",
-      "value": "QUICK PARTS"
+      "value": "SNABBDELAR"
     },
     {
       "key": "stage_editor_selection",
-      "value": "SELECTION"
+      "value": "URVAL"
     },
     {
       "key": "stage_editor_status_open",
@@ -3894,7 +4410,7 @@
     },
     {
       "key": "stage_editor_status_undo_done",
-      "value": "Undid the last edit."
+      "value": "Jag har avlyst den senaste redigeringen."
     },
     {
       "key": "stage_editor_status_nothing_redo",
@@ -3902,7 +4418,7 @@
     },
     {
       "key": "stage_editor_status_redo_done",
-      "value": "Redid the edit."
+      "value": "Redigera om."
     },
     {
       "key": "stage_editor_status_select_link_source",
@@ -3942,7 +4458,7 @@
     },
     {
       "key": "stage_editor_status_saved",
-      "value": "Saved: {0}"
+      "value": "Spara: {0}"
     },
     {
       "key": "stage_editor_status_save_editor_only",
@@ -3962,7 +4478,7 @@
     },
     {
       "key": "stage_rule_block_breaker",
-      "value": "Block Breaker"
+      "value": "Blockbrotare"
     },
     {
       "key": "block_breaker_goal",
@@ -3970,7 +4486,7 @@
     },
     {
       "key": "block_breaker_blocks",
-      "value": "{0} BLOCKS LEFT"
+      "value": "{0} VÄNSTERBLOCK"
     },
     {
       "key": "block_breaker_retry",
@@ -3978,7 +4494,7 @@
     },
     {
       "key": "sfx_browser_title",
-      "value": "SE BROWSER"
+      "value": "SE WEBBLÄSARE"
     },
     {
       "key": "sfx_browser_help",
@@ -3990,11 +4506,11 @@
     },
     {
       "key": "sfx_browser_stop",
-      "value": "STOP"
+      "value": "SLUTA."
     },
     {
       "key": "sfx_browser_reload",
-      "value": "RELOAD"
+      "value": "ÖVERLASTNING"
     },
     {
       "key": "sfx_browser_no_results",
@@ -4010,15 +4526,43 @@
     },
     {
       "key": "sfx_browser_muted",
-      "value": "MUTED"
+      "value": "TÖMD"
     },
     {
       "key": "sfx_browser_generated",
       "value": "Runtime-genererat ljud"
     },
     {
+      "key": "gameplay_control_switch",
+      "value": "Byt karaktär"
+    },
+    {
+      "key": "feedback_button",
+      "value": "FEEDBACK / RAPPORTERA FEL"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "Tack för att du spelade!\nFeedback / Rapportera fel"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "ÖNSKELISTA"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "FLERSPELARLÄGE REKOMMENDERAS!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW är roligast när ni samarbetar!\nProva att spela med 2–4 spelare!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "OKEJ, OKEJ."
+    },
+    {
       "key": "stage_object_background_paw_print",
-      "value": "Paw Print"
+      "value": "Pawprint"
     },
     {
       "key": "stage_object_background_fish",
@@ -4026,23 +4570,23 @@
     },
     {
       "key": "stage_object_background_yarn_ball",
-      "value": "Yarn Ball"
+      "value": "Yarnball"
     },
     {
       "key": "stage_object_background_snow_crystal",
-      "value": "Snow Crystal"
+      "value": "Snökristall"
     },
     {
       "key": "stage_object_background_icicle",
-      "value": "Icicle"
+      "value": "Icke"
     },
     {
       "key": "stage_object_background_snowman",
-      "value": "Snowman"
+      "value": "Snömän"
     },
     {
       "key": "stage_object_background_blizzard",
-      "value": "Blizzard"
+      "value": "Snöstorm"
     },
     {
       "key": "stage_object_background_feather",
@@ -4058,7 +4602,7 @@
     },
     {
       "key": "stage_object_background_pipe",
-      "value": "Pipe"
+      "value": "Rör"
     },
     {
       "key": "stage_object_background_bolt",
@@ -4066,27 +4610,27 @@
     },
     {
       "key": "stage_object_background_chain",
-      "value": "Chain"
+      "value": "Längden"
     },
     {
       "key": "stage_object_background_steam",
-      "value": "Steam"
+      "value": "Damp"
     },
     {
       "key": "stage_object_background_turtle",
-      "value": "Turtle"
+      "value": "Sköldpaddor"
     },
     {
       "key": "stage_object_background_hourglass",
-      "value": "Hourglass"
+      "value": "Klockor"
     },
     {
       "key": "stage_object_background_padlock",
-      "value": "Padlock"
+      "value": "Lås"
     },
     {
       "key": "stage_object_background_slime_blob",
-      "value": "Slime"
+      "value": "Slim"
     },
     {
       "key": "stage_object_background_bubbles",
@@ -4094,31 +4638,31 @@
     },
     {
       "key": "stage_object_background_butterfly",
-      "value": "Butterfly"
+      "value": "Fjäderfjäder"
     },
     {
       "key": "stage_object_background_ladybug",
-      "value": "Ladybug"
+      "value": "- Ladybug."
     },
     {
       "key": "stage_object_background_sunflower",
-      "value": "Sunflower"
+      "value": "Solros"
     },
     {
       "key": "stage_object_background_tulip",
-      "value": "Tulip"
+      "value": "Tulpan"
     },
     {
       "key": "stage_object_background_skeleton",
-      "value": "Skeleton"
+      "value": "Skelett"
     },
     {
       "key": "stage_object_background_bat",
-      "value": "Bat"
+      "value": "Fjädermus"
     },
     {
       "key": "stage_object_background_spiderweb",
-      "value": "Spiderweb"
+      "value": "Spindeln"
     },
     {
       "key": "stage_object_background_stalactite",
@@ -4126,15 +4670,15 @@
     },
     {
       "key": "stage_object_background_lantern",
-      "value": "Lantern"
+      "value": "Lantorna"
     },
     {
       "key": "stage_object_background_minecart",
-      "value": "Minecart"
+      "value": "Minekart"
     },
     {
       "key": "stage_object_background_pickaxe",
-      "value": "Pickaxe"
+      "value": "Piskax"
     },
     {
       "key": "stage_object_background_trophy",
@@ -4146,7 +4690,7 @@
     },
     {
       "key": "stage_object_background_whistle",
-      "value": "Whistle"
+      "value": "Fisteln"
     },
     {
       "key": "stage_object_background_balloon",
@@ -4166,11 +4710,11 @@
     },
     {
       "key": "stage_object_background_binoculars",
-      "value": "Binoculars"
+      "value": "Binklar"
     },
     {
       "key": "stage_object_background_bridge",
-      "value": "Bridge"
+      "value": "Brygga"
     },
     {
       "key": "stage_object_background_crayon",
@@ -4178,39 +4722,39 @@
     },
     {
       "key": "stage_object_background_pencil",
-      "value": "Pencil"
+      "value": "Pennen"
     },
     {
       "key": "stage_object_background_eraser",
-      "value": "Eraser"
+      "value": "Rörare"
     },
     {
       "key": "stage_object_background_notebook",
-      "value": "Notebook"
+      "value": "Läsbok"
     },
     {
       "key": "stage_object_background_blackboard",
-      "value": "Blackboard"
+      "value": "Svartbräda"
     },
     {
       "key": "stage_object_background_palette",
-      "value": "Palette"
+      "value": "Palet"
     },
     {
       "key": "stage_object_background_paintbrush",
-      "value": "Paintbrush"
+      "value": "Pinterborste"
     },
     {
       "key": "stage_object_background_canvas",
-      "value": "Canvas"
+      "value": "Tvätt"
     },
     {
       "key": "stage_object_background_stopwatch",
-      "value": "Stopwatch"
+      "value": "Stoppvakter"
     },
     {
       "key": "stage_object_background_spotlight",
-      "value": "Spotlight"
+      "value": "Rådsljus"
     },
     {
       "key": "stage_object_background_microphone",
@@ -4226,15 +4770,15 @@
     },
     {
       "key": "stage_object_background_gift_box",
-      "value": "Gift Box"
+      "value": "Giftslåda"
     },
     {
       "key": "stage_object_background_planet",
-      "value": "Planet"
+      "value": "Planeten"
     },
     {
       "key": "stage_object_background_alien",
-      "value": "Alien"
+      "value": "Utländska"
     },
     {
       "key": "stage_object_background_comet",
@@ -4254,495 +4798,7 @@
     },
     {
       "key": "stage_object_background_tree_root",
-      "value": "Tree Root"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "SPRING!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "STARTAR OM {0}"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "VÄNTAR {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  FLY FRÅN JÄTTEKATTEN!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "LAGKLÖS  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "Du kan bara byta figur på ett omritningsgolv."
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "TILLBAKA"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "Väntar på svar från {0}.\nBegärt byte: {1} mot {2}."
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "BYTESFÖRFRÅGAN SKICKAD"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "Starta om den här banan från början?"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "FÖRSÖK IGEN"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "Avsluta den aktuella banan och återgå till banvalet?"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "Ofärdiga ändringar sparas inte. Gå tillbaka utan att spara?"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "TILLBAKA UTAN ATT SPARA"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "Den omritade figuren har sparats."
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "Det gick inte att spara. Tryck på ”KLAR” igen."
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "BANVAL"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "Onlinespel är inte tillgängligt eftersom speldata eller version inte stämmer överens. Verifiera spelfilerna i Steam."
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "Anslutningen till sessionen bröts. Gå med i rummet igen."
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "Värden kopplade från, så rummet stängdes."
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "AVBRYT"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "ÅTERSTÄLL"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "ÅTERSTÄLL FRAMSTEG"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "Återställa alla avklarade banor?\nVolym, språk, spelarnamn och teckningar behålls."
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "Banframstegen har återställts."
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "ÅTERSTÄLL FRAMSTEG"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "SPRING."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "Byt karaktär"
-    },
-    {
-      "key": "feedback_button",
-      "value": "FEEDBACK / RAPPORTERA FEL"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "Tack för att du spelade!\nFeedback / Rapportera fel"
-    },
-    {
-      "key": "option_complete",
-      "value": "KLAR"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "SKÄRM: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "UPPLÖSNING: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "HELSKÄRM"
-    },
-    {
-      "key": "option_windowed",
-      "value": "FÖNSTERLÄGE"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "Starta Steam och öppna sedan NICO DRAW från ditt Steam-bibliotek."
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "Kunde inte hämta en Steam-autentiseringsbiljett: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "ÖNSKELISTA"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "FLERSPELARLÄGE REKOMMENDERAS!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "NICO DRAW är roligast när ni samarbetar!\nProva att spela med 2–4 spelare!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "OK"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "Avsluta NICO DRAW?"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} använder redan den här figuren. Skicka en bytesförfrågan?"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "SKICKA FÖRFRÅGAN"
-    },
-    {
-      "key": "background_word_push",
-      "value": "PUTTA!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "HÅLL KORS / A: GLIDRUTA / X: GRAB"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "KVADRATUR / X: SKRAPA / GRIP"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "RUTA / X: KASTA"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "RUTA / X: SPIKE MOT HÖGER PINNE"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "HÅLL KORSET / A: SKALHÅLLSRUTA / X: VÄND 90°"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "HÅLLKORS: GLIDRUTA: GRIP"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "RUTA: SKRAPA / GRAB"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "RUTA: KAST"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "RUTA: SPIKE MOT HÖGER PINNE"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "HÅLLKORSET: SKALHÅLLSRUTA: VRID 90°"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "HÅLL A: GLID X: GRIP"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "X: SKRAPA/GRIP"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "X: KASTA"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: SPIKE MOT HÖGER STICK"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "HOLD A: SKAL HOLD X: VRID 90°"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "INGEN TIDSGRÄNS"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "INGÅR INTE I DEMO"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "VÄNSTER PINNE: FLYTTA RT / A / B: DRAG & VÄLJ LT: RADERA"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: DRAW MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: RITTA MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / VÄLJ: DRAW MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: DRAW MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: RITTA MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: DRAW MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: RITTA MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "F: BYT KARAKTER"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "TRIANGEL / Y: SWITCH KARAKTER"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "TRIANGEL: SWITCH KARAKTER"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "Y: BYT KARAKTER"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "LAGET TOTALT ÖVER"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "SPEL ÖVER\nTOTALT {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "FÖRSÖK IGEN OM {0}"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "RADERA INOM {0} TOTALT"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "TOTALT {0}/{1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "Automatisk (tangentbord / gamepad)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "Gamepad (bortkopplad)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "Tangentbord + mus"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "P{0} GAMEPAD FRÅNOPPLAD. ANSLUT DEN ÅTER FÖR ATT ÅTERSTÄLLA SAMMA SPELAARE."
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "P{0} GAMEPAD ÅTERansluten."
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "TANGENTBORD/MUS LÄPPAS FRÅN P1. TRYCK PÅ EN KONTROLLKNAPP FÖR ATT GÖRA P1."
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "EGEN TILLDELAD PAD: START FÖR ATT GÅ MED / TANGENTBORD: ENTER FÖR ATT GÅ MED, BACKSPACE FÖR ATT LÄMNA / P2: VÄLJ + B FÖR ATT LÄMNA"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "P{0} GÄNDE MED ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "P{0} VÄNSTER."
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "UPP TILL 2 SPELARE PER ENHET OCH TOTALT 4 SPELARE I RUMMET."
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "RUMMET ÄR FULLT (4 SPELARE). DEN EXTRA LOKALA SPELAREN BLEV BORT."
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "P1 BYTTADE TILL {0}."
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "2 SPELARE KLAR"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: GÅ MED"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "TRYCK PÅ NÅGON KONTROLLKNAPP FÖR ATT GÅ MED"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "LOCAL PLAY {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "LÄGG TILL ELLER TA BORT LOKALA SPELARE INNAN DU STARTAR SCENEN."
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "PAD {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "SPELARE {0}/2\nTANGENTBORD: ENTER FÖR ATT GÅ MED / BACKSPACE FÖR ATT LÄMNA\nKONTROLL: START FÖR ATT GÅ MED / HÅLL B FÖR ATT LÄMNA"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "LOKALA SPELARE {0}/2 ANSLUTNA PLATSER {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "Det gick inte att skapa rum. Försöker igen om {0}s ({1} försök kvar)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "HITTA DEN MATCHANDE POSTEN BLAND DE FLYTANDE FÅGlarna!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "SÄTT DEN MATCHANDE MÄNNISKA POSITIONEN I NYCKELHÅLLET!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "RUND {0}/3 {1:0.0}s VÄNSTER"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "FÖRSÖKER IGEN DENNA OMGÅNG"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "RUND {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "RUNDT {0} KLART!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "TIDEN UPP!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "BÄR SKÖLDPADAN GENOM RUMMET FULLT AV FJÄDRAR!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "KLARA OM ALLAS KOMBINERADE SLUTTID ÄR INOM 1 MINUT PER SPELARE."
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "ALLA RUNDAR KLAR!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "KÖR DE SMÅ LÅDARNA!  SE FIENDERNA!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "KÖS LÅDARNA MED SLIMSPIKEN!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "RUNDA {0}/3 LÅGAR {1}/{2} {3}s VÄNSTER"
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "SPELET ÖVER FÖRSÖK OMGÅNG {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "RUNDT {0} KLART!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "Speciellt: {0} Växla med ← / →"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "RUNDA {0}/3 STARTAR OM {1}"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "DU KAN RÖRA DIG INOM DITT KÖR UNDER NEDERräkningen"
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "TITELDRAGNING ÄR INTE TILLGÄNGLIG UNDER LOKAL CO-OP. ÅTERGÅ TILL 1 SPELARE FÖRST."
+      "value": "Träets rot"
     }
   ]
 }

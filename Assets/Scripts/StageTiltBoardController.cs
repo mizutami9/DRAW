@@ -51,6 +51,9 @@ namespace DrawBody.Prototype
             public Vector2 Position;
             public Vector2 Velocity;
             public bool Sunk;
+            public Vector2 NetworkTarget;
+            public float NetworkSampleTime;
+            public bool HasNetworkTarget;
         }
 
         private sealed class HoleState
@@ -184,6 +187,7 @@ namespace DrawBody.Prototype
 
             if (!HasAuthority)
             {
+                UpdateRemoteBallPresentation();
                 if (phase == BoardPhase.Countdown)
                     countdownRemaining = Mathf.Max(0f, countdownRemaining - Time.unscaledDeltaTime);
                 else if (phase == BoardPhase.Active && !LocalMultiplayerDebugMode.NoTimeLimit)
@@ -859,6 +863,24 @@ namespace DrawBody.Prototype
             }
         }
 
+        private void UpdateRemoteBallPresentation()
+        {
+            float now = Time.unscaledTime;
+            for (int i = 0; i < balls.Count; i++)
+            {
+                BallState ball = balls[i];
+                if (ball == null || ball.Transform == null || ball.Sunk || !ball.HasNetworkTarget) continue;
+                float age = Mathf.Max(0f, now - ball.NetworkSampleTime);
+                Vector2 predicted = ball.NetworkTarget
+                    + Vector2.ClampMagnitude(ball.Velocity, 7.2f) * Mathf.Min(age, 0.08f);
+                if (Vector2.Distance(ball.Position, predicted) > 2.5f) ball.Position = predicted;
+                else ball.Position = Vector2.Lerp(ball.Position, predicted,
+                    1f - Mathf.Exp(-22f * Time.unscaledDeltaTime));
+                ball.Transform.position = ball.Position;
+                ball.Transform.Rotate(0f, 0f, -ball.Velocity.x * 18f * Time.unscaledDeltaTime);
+            }
+        }
+
         private void ResolveMaze(ref Vector2 position, ref Vector2 velocity)
         {
             for (int i = 0; i < mazeWalls.Count; i++)
@@ -1278,11 +1300,18 @@ namespace DrawBody.Prototype
             magneticField = state.MagneticField;
             for (int i = 0; i < balls.Count && state.Balls != null && i < state.Balls.Length; i++)
             {
-                balls[i].Position = state.Balls[i];
+                bool snap = !hadNetworkState || !sameRound || !balls[i].HasNetworkTarget;
+                balls[i].NetworkTarget = state.Balls[i];
+                balls[i].NetworkSampleTime = Time.unscaledTime;
+                balls[i].HasNetworkTarget = true;
                 balls[i].Velocity = state.Velocities != null && i < state.Velocities.Length ? state.Velocities[i] : Vector2.zero;
                 balls[i].Sunk = (state.SunkMask & (1 << i)) != 0;
                 balls[i].Transform.gameObject.SetActive(!balls[i].Sunk);
-                balls[i].Transform.position = balls[i].Position;
+                if (snap)
+                {
+                    balls[i].Position = state.Balls[i];
+                    balls[i].Transform.position = balls[i].Position;
+                }
             }
             for (int i = 0; i < holes.Count; i++)
             {

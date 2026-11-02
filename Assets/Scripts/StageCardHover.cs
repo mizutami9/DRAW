@@ -102,6 +102,28 @@ namespace DrawBody.Prototype
             Apply(highlighted);
         }
 
+        public void SyncLayoutBaseline()
+        {
+            if (rectTransform == null)
+            {
+                rectTransform = GetComponent<RectTransform>();
+            }
+            if (rectTransform == null)
+            {
+                return;
+            }
+
+            // Stage-select polishing can replace the scene-builder layout after Awake.
+            // Keep hover/deselect from restoring the old pre-polish coordinates.
+            highlighted = false;
+            rectTransform.localRotation = Quaternion.identity;
+            rectTransform.localScale = Vector3.one;
+            basePosition = rectTransform.anchoredPosition;
+            baseRotation = Quaternion.identity;
+            baseScale = Vector3.one;
+            Apply(false);
+        }
+
         private void Apply(bool value)
         {
             highlighted = value;

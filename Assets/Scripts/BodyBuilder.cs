@@ -999,6 +999,18 @@ namespace DrawBody.Prototype
             Physics2D.SyncTransforms();
         }
 
+        public void EnsureGeneratedBodyCollidersEnabled()
+        {
+            if (bodyRoot != null) bodyRoot.gameObject.SetActive(true);
+            for (int i = 0; i < generatedSegments.Count; i++)
+            {
+                CapsuleCollider2D generatedCollider = generatedSegments[i].Collider;
+                if (generatedCollider != null) generatedCollider.enabled = true;
+            }
+            playerController?.InvalidateBodyColliderCache();
+            Physics2D.SyncTransforms();
+        }
+
         private Vector2 GetPartAnimationPivot(
             DrawManager.BodyPart part,
             IReadOnlyList<Vector2> drawPoints,

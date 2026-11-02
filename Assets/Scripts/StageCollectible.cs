@@ -8,17 +8,20 @@ namespace DrawBody.Prototype
     {
         [SerializeField] private string objectId;
         [SerializeField] private StageObjectType collectibleType;
+        [SerializeField] private int collectibleValue = 1;
         private bool collected;
         private Transform collectorTransform;
 
         public string ObjectId => objectId;
         public StageObjectType CollectibleType => collectibleType;
+        public int CollectibleValue => Mathf.Max(1, collectibleValue);
         public Transform CollectorTransform => collectorTransform;
 
-        public void Configure(string id, StageObjectType type)
+        public void Configure(string id, StageObjectType type, int value = 1)
         {
             objectId = id;
             collectibleType = type;
+            collectibleValue = Mathf.Max(1, value);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -64,7 +67,9 @@ namespace DrawBody.Prototype
             Vector3 startScale = transform.localScale;
             Quaternion startRotation = transform.rotation;
             Color feedbackColor = collectibleType == StageObjectType.CollectibleCoin
-                ? new Color(1f, 0.7f, 0.08f, 1f)
+                ? collectibleValue >= 10 ? new Color(0.25f, 0.92f, 1f, 1f)
+                    : collectibleValue >= 5 ? new Color(1f, 0.12f, 0.16f, 1f)
+                    : new Color(1f, 0.7f, 0.08f, 1f)
                 : collectibleType == StageObjectType.CollectibleFish
                     ? new Color(0.1f, 0.65f, 1f, 1f)
                     : new Color(1f, 0.36f, 0.18f, 1f);
@@ -116,6 +121,33 @@ namespace DrawBody.Prototype
                 nearest = players[i].transform;
             }
             return nearest;
+        }
+    }
+
+    [DisallowMultipleComponent]
+    public sealed class StageRareCoinVisual : MonoBehaviour
+    {
+        private SpriteRenderer target;
+        private int value;
+        private Vector3 baseScale;
+        private float phase;
+
+        public void Configure(SpriteRenderer renderer, int coinValue, int seed)
+        {
+            target = renderer;
+            value = coinValue;
+            baseScale = transform.localScale;
+            phase = seed * 0.71f;
+            if (target != null && value == 5) target.color = new Color(1f, 0.14f, 0.18f, 1f);
+        }
+
+        private void Update()
+        {
+            if (target == null || value <= 1) return;
+            float pulse = 1f + Mathf.Sin(Time.unscaledTime * 4.5f + phase) * 0.08f;
+            transform.localScale = baseScale * pulse;
+            if (value >= 10)
+                target.color = Color.HSVToRGB(Mathf.Repeat(Time.unscaledTime * 0.2f + phase, 1f), 0.72f, 1f);
         }
     }
 }

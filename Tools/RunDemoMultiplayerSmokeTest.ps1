@@ -15,7 +15,9 @@ param(
     [switch]$ConcurrentRedraw,
     [switch]$ReadyRoomSmoke,
     [switch]$CatBombSmoke,
+    [switch]$MimicTransitionSmoke,
     [switch]$SkipRedraw,
+    [switch]$StageLaunchSmoke,
     [switch]$LateJoin,
     [ValidateRange(0.1, 10.0)]
     [double]$PositionTolerance = 1.75,
@@ -57,9 +59,14 @@ $common = @(
     "-pico-debug-no-time-limit",
     "-screen-width", "800", "-screen-height", "450", "-screen-fullscreen", "0"
 )
+if ($StageLaunchSmoke) {
+    $common += "-pico-stage-launch-smoke"
+    $common += "-pico-smoke-skip-redraw"
+}
 if ($ConcurrentRedraw) { $common += "-pico-smoke-concurrent-redraw" }
 if ($ReadyRoomSmoke) { $common += "-pico-ready-room-smoke" }
 if ($CatBombSmoke) { $common += "-pico-cat-bomb-smoke" }
+if ($MimicTransitionSmoke) { $common += "-pico-mimic-transition-smoke" }
 if ($SkipRedraw) { $common += "-pico-smoke-skip-redraw" }
 if ($LateJoin) { $common += "-pico-regression-start-players=$($Players - 1)" }
 if ($SoakSeconds -gt 0) {
@@ -223,8 +230,8 @@ if (!(Test-Path $analyzerScript)) {
 }
 
 $passed = $reports.Count -eq $Players -and @($reports | Where-Object result -ne "PASS").Count -eq 0 -and
-    $logErrors.Count -eq 0 -and $maxPositionDesync -le $PositionTolerance -and $speciesMismatches -eq 0 -and
-    $invariantViolations -eq 0
+    $logErrors.Count -eq 0 -and $speciesMismatches -eq 0 -and
+    ($StageLaunchSmoke -or ($maxPositionDesync -le $PositionTolerance -and $invariantViolations -eq 0))
 $summary = [ordered]@{
     runId = $runId
     executable = $resolvedExe

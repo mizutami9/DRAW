@@ -113,6 +113,9 @@ namespace DrawBody.Prototype
         private StageOscillatingAim hardMissileAim;
         private TrajectoryVisual bombTrajectory;
         private TrajectoryVisual missileTrajectory;
+        private StageEnemyRankGate rankGate;
+        private int presentedPhase;
+        private Coroutine rankAnnouncementRoutine;
 
         public bool HasAuthority => stageManager == null || !stageManager.IsOnlineStageActive || stageManager.IsOnlineStageHost;
         internal bool ShouldAllySpeak => hardMode;
@@ -169,6 +172,7 @@ namespace DrawBody.Prototype
 
             if (!hardMode) BuildAirstrikeFloorZones();
             BuildMonitor();
+            if (hardMode) rankGate = StageEnemyRankGate.Create(transform, new Vector2(20.55f, -0.2f));
             LockCameraToArena();
             ally = StageTowerDefenseAlly.Create(transform, hardMode ? new Vector2(-19.5f, -2.98f) : new Vector2(0f, -2.98f), this);
             leftButton = AttachButton(hardMode ? "13-1_bomb_button" : "8-3_left_button", true);
@@ -718,8 +722,48 @@ namespace DrawBody.Prototype
         private void RefreshDisplay()
         {
             if (phaseText == null || timerText == null) return;
-            phaseText.text = LocalizationManager.Format("tower_defense_phase", CurrentPhase(), 3);
+            int phase = CurrentPhase();
+            phaseText.text = LocalizationManager.Format("tower_defense_phase", phase, 3);
             timerText.text = Mathf.CeilToInt(remainingSeconds).ToString("00") + ".0";
+            if (hardMode && phase != presentedPhase)
+            {
+                bool announce = presentedPhase > 0 && phase > presentedPhase;
+                presentedPhase = phase;
+                rankGate?.SetRank(phase, announce);
+                if (announce)
+                {
+                    if (rankAnnouncementRoutine != null) StopCoroutine(rankAnnouncementRoutine);
+                    rankAnnouncementRoutine = StartCoroutine(PresentRankUp(phase));
+                }
+            }
+        }
+
+        private IEnumerator PresentRankUp(int rank)
+        {
+            if (messageText == null)
+            {
+                messageText = CreateText(transform, new Vector2(0f, 1.4f), 0.28f, 95,
+                    new Color(1f, 0.28f, 0.1f, 1f));
+                messageText.fontStyle = FontStyle.Bold;
+            }
+            messageText.text = LocalizationManager.Format("tower_defense_rank_up", rank);
+            messageText.gameObject.SetActive(true);
+            GameSfx.Play(SfxId.CircuitComplete, 1.05f);
+            float elapsed = 0f;
+            while (elapsed < 1.45f)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / 1.45f);
+                float pop = t < 0.22f ? Mathf.SmoothStep(0f, 1.25f, t / 0.22f)
+                    : Mathf.Lerp(1.25f, 1f, Mathf.InverseLerp(0.22f, 0.5f, t));
+                messageText.transform.localScale = Vector3.one * pop;
+                Color color = messageText.color;
+                color.a = t > 0.72f ? 1f - Mathf.InverseLerp(0.72f, 1f, t) : 1f;
+                messageText.color = color;
+                yield return null;
+            }
+            messageText.gameObject.SetActive(false);
+            rankAnnouncementRoutine = null;
         }
 
         private void BroadcastState(bool force = false)
@@ -873,6 +917,128 @@ namespace DrawBody.Prototype
         }
     }
 
+    public sealed class StageEnemyRankGate : MonoBehaviour
+    {
+        private readonly List<SpriteRenderer> rankPips = new List<SpriteRenderer>();
+        private Transform art;
+        private float pulseRemaining;
+        private Vector3 baseScale;
+
+        public static StageEnemyRankGate Create(Transform parent, Vector2 position)
+        {
+            GameObject root = new GameObject("13-1 Enemy Rank Gate");
+            root.transform.SetParent(parent, false);
+            root.transform.position = new Vector3(position.x, position.y, 0.5f);
+            StageEnemyRankGate gate = root.AddComponent<StageEnemyRankGate>();
+            gate.Build();
+            return gate;
+        }
+
+        public void SetRank(int rank, bool animate)
+        {
+            rank = Mathf.Clamp(rank, 1, 3);
+            for (int i = 0; i < rankPips.Count; i++)
+                if (rankPips[i] != null)
+                    rankPips[i].color = i < rank
+                        ? Color.HSVToRGB((i * 0.22f + rank * 0.09f) % 1f, 0.82f, 1f)
+                        : new Color(0.18f, 0.2f, 0.28f, 0.42f);
+            if (!animate) return;
+            pulseRemaining = 1.2f;
+            GameSfx.PlayAt(SfxId.BossCharge, transform.position, 0.86f);
+            for (int i = 0; i < 18; i++)
+                StageEnemyRankSpark.Create(transform.parent, transform.position, i, rank);
+        }
+
+        private void Build()
+        {
+            art = new GameObject("Crayon Enemy Portal Art").transform;
+            art.SetParent(transform, false);
+            Sprite sprite = Resources.Load<Sprite>("StageObjects/NicoDraw/enemy-rank-gate");
+            if (sprite != null)
+            {
+                SpriteRenderer renderer = art.gameObject.AddComponent<SpriteRenderer>();
+                renderer.sprite = sprite;
+                renderer.color = Color.white;
+                renderer.sortingOrder = 8;
+                Vector2 bounds = sprite.bounds.size;
+                float scale = bounds.x > 0f && bounds.y > 0f ? Mathf.Min(5.8f / bounds.x, 7.2f / bounds.y) : 1f;
+                art.localScale = Vector3.one * scale;
+            }
+            else
+            {
+                StageGun.AddLine(art, "Portal Oval", EllipsePoints(new Vector2(0f, 0.5f), 2.55f, 3.25f),
+                    0.22f, new Color(0.48f, 0.16f, 0.7f, 0.82f), 8);
+            }
+            baseScale = art.localScale;
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject pip = StageGun.CreateSprite(transform, "Rank Pip " + (i + 1),
+                    new Vector2(-0.58f + i * 0.58f, -3.65f), new Vector2(0.35f, 0.35f),
+                    new Color(0.18f, 0.2f, 0.28f, 0.42f), 12);
+                pip.GetComponent<SpriteRenderer>().sprite = DoodleRuntimeAssets.CircleSprite;
+                rankPips.Add(pip.GetComponent<SpriteRenderer>());
+            }
+        }
+
+        private void Update()
+        {
+            if (art == null) return;
+            float idle = 1f + Mathf.Sin(Time.time * 2.4f) * 0.025f;
+            float pulse = pulseRemaining > 0f ? 1f + Mathf.Sin((1.2f - pulseRemaining) * 18f) * pulseRemaining * 0.18f : 1f;
+            pulseRemaining = Mathf.Max(0f, pulseRemaining - Time.deltaTime);
+            art.localScale = baseScale * idle * pulse;
+            art.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(Time.time * 1.25f) * 1.4f);
+        }
+
+        private static Vector2[] EllipsePoints(Vector2 center, float radiusX, float radiusY)
+        {
+            Vector2[] points = new Vector2[33];
+            for (int i = 0; i < points.Length; i++)
+            {
+                float angle = i / 32f * Mathf.PI * 2f;
+                points[i] = center + new Vector2(Mathf.Cos(angle) * radiusX, Mathf.Sin(angle) * radiusY);
+            }
+            return points;
+        }
+    }
+
+    public sealed class StageEnemyRankSpark : MonoBehaviour
+    {
+        private Vector2 velocity;
+        private float life = 0.9f;
+        private SpriteRenderer sparkRenderer;
+
+        public static void Create(Transform parent, Vector2 origin, int index, int rank)
+        {
+            GameObject root = new GameObject("Rank Up Crayon Spark");
+            root.transform.SetParent(parent, true);
+            root.transform.position = origin;
+            root.transform.localScale = Vector3.one * (0.16f + index % 4 * 0.035f);
+            SpriteRenderer sprite = root.AddComponent<SpriteRenderer>();
+            sprite.sprite = DoodleRuntimeAssets.CircleSprite;
+            sprite.color = Color.HSVToRGB((index * 0.09f + rank * 0.13f) % 1f, 0.78f, 1f);
+            sprite.sortingOrder = 24;
+            StageEnemyRankSpark spark = root.AddComponent<StageEnemyRankSpark>();
+            float angle = index / 18f * Mathf.PI * 2f;
+            spark.velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * (2.8f + index % 3 * 0.8f);
+            spark.sparkRenderer = sprite;
+        }
+
+        private void Update()
+        {
+            transform.position += (Vector3)(velocity * Time.deltaTime);
+            velocity *= 1f - Mathf.Min(0.9f, Time.deltaTime * 2.5f);
+            life -= Time.deltaTime;
+            if (sparkRenderer != null)
+            {
+                Color color = sparkRenderer.color;
+                color.a = Mathf.Clamp01(life / 0.45f);
+                sparkRenderer.color = color;
+            }
+            if (life <= 0f) Destroy(gameObject);
+        }
+    }
+
     public sealed class StageTowerDefenseEnemyHealth : MonoBehaviour
     {
         private StageTowerDefenseController owner;
@@ -1000,7 +1166,9 @@ namespace DrawBody.Prototype
         {
             owner = controller;
             left = isLeft;
-            showStatusLabel = showStatus;
+            // The physical button and its glow already communicate readiness.
+            // Avoid floating READY/cooldown text over the stage artwork.
+            showStatusLabel = false;
             BoxCollider2D trigger = GetComponent<BoxCollider2D>();
             if (trigger == null) trigger = gameObject.AddComponent<BoxCollider2D>();
             trigger.isTrigger = true;
@@ -1010,7 +1178,7 @@ namespace DrawBody.Prototype
                 new Vector2(1.15f, 0.34f), new Color(0.2f, 0.9f, 0.75f, 0.75f), 41);
             glow = glowObject.GetComponent<SpriteRenderer>();
             label = CreateLabel();
-            label.gameObject.SetActive(showStatusLabel);
+            label.gameObject.SetActive(false);
         }
 
         private TextMesh CreateLabel()

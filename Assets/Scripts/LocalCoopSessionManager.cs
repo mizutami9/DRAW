@@ -62,6 +62,7 @@ namespace DrawBody.Prototype
         private GameObject localRosterRoot;
         private readonly Image[] localRosterPlayerIcons = new Image[2];
         private Text localRosterHintText;
+        private Text localRosterTitleText;
         private int lastRosterPlayerCount = -1;
         private string lastRosterLanguage = string.Empty;
 #if ENABLE_INPUT_SYSTEM
@@ -171,7 +172,6 @@ namespace DrawBody.Prototype
         {
 #if ENABLE_INPUT_SYSTEM
             UpdateGameplayInputSuppression();
-            DetectPrimaryGamepadIntent();
             MonitorAssignedDevices();
             HandleDeviceJoining();
             HandleDrawingSessions();
@@ -197,7 +197,9 @@ namespace DrawBody.Prototype
                 LocalPlayerInputBinding binding = players[i] != null ? players[i].InputBinding : null;
                 if (binding == null) continue;
                 bool isController = binding.Kind == LocalPlayerInputBinding.DeviceKind.Gamepad
-                    || binding.Kind == LocalPlayerInputBinding.DeviceKind.LegacyJoystick;
+                    || binding.Kind == LocalPlayerInputBinding.DeviceKind.LegacyJoystick
+                    || binding.Kind == LocalPlayerInputBinding.DeviceKind.AutoPrimary
+                        && binding.HasUsableGamepad;
                 // Outside a stage, P1's pad is dedicated to UI navigation.
                 // P2 cannot operate UI, so it remains free to move its
                 // title-background characters.
@@ -251,7 +253,7 @@ namespace DrawBody.Prototype
             // The upper-left paper margin is common to title, lobby and stage
             // select, and does not cover their primary controls.
             root.anchoredPosition = new Vector2(24f, -24f);
-            root.sizeDelta = new Vector2(304f, 54f);
+            root.sizeDelta = new Vector2(304f, 76f);
             root.localRotation = Quaternion.Euler(0f, 0f, -0.35f);
             localRosterRoot.GetComponent<Image>().color = new Color(1f, 0.975f, 0.84f, 0.96f);
             Outline rootOutline = localRosterRoot.GetComponent<Outline>();
@@ -263,6 +265,8 @@ namespace DrawBody.Prototype
                 ? existingText.font
                 : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
+            localRosterTitleText = CreateRosterText(root, font, "Local Heading",
+                new Vector2(55f, 62f), new Vector2(100f, 22f), 16, TextAnchor.MiddleCenter);
             localRosterPlayerIcons[0] = CreateRosterPlayerIcon(root, "Player 1", new Vector2(32f, 27f));
             localRosterPlayerIcons[1] = CreateRosterPlayerIcon(root, "Player 2", new Vector2(77f, 27f));
             localRosterHintText = CreateRosterText(root, font, "Join Hint",
@@ -327,10 +331,10 @@ namespace DrawBody.Prototype
             localRosterRoot.transform.SetAsLastSibling();
 
             IReadOnlyList<PlayerController2D> players = stageManager.LocalPlayers;
-            // P1 already exists and is playable before a device explicitly
-            // claims AutoPrimary. Count actual seats, otherwise the initial
-            // title/start screen incorrectly paints both silhouettes as empty.
-            int joinedCount = Mathf.Clamp(players.Count, 0, localRosterPlayerIcons.Length);
+            // P1 is already participating even before a device claims AutoPrimary.
+            // An extra switchable avatar still belongs to that same person; only
+            // a separately bound input device occupies the second local seat.
+            int joinedCount = players.Count == 0 ? 0 : HasDedicatedSecondaryPlayers ? 2 : 1;
             string language = LocalizationManager.CurrentLanguageCode;
             if (joinedCount == lastRosterPlayerCount && language == lastRosterLanguage) return;
             lastRosterPlayerCount = joinedCount;
@@ -347,6 +351,11 @@ namespace DrawBody.Prototype
                 : "local_roster_compact_full");
             Font localizedFont = LocalizationManager.LoadCurrentFont(localRosterHintText.font);
             localRosterHintText.font = localizedFont;
+            if (localRosterTitleText != null)
+            {
+                localRosterTitleText.text = LocalizationManager.T("title_single");
+                localRosterTitleText.font = localizedFont;
+            }
         }
 
         private void LateUpdate()
@@ -466,54 +475,6 @@ namespace DrawBody.Prototype
 #endif
 
 #if ENABLE_INPUT_SYSTEM
-        private void DetectPrimaryGamepadIntent()
-        {
-            if (stageManager == null || stageManager.LocalPlayers.Count != 1)
-                return;
-            PlayerController2D primaryPlayer = stageManager.LocalPlayers[0];
-            LocalPlayerInputBinding primary = primaryPlayer != null ? primaryPlayer.InputBinding : null;
-            if (primary == null || primary.Kind != LocalPlayerInputBinding.DeviceKind.AutoPrimary) return;
-
-            for (int i = 0; i < Gamepad.all.Count; i++)
-            {
-                Gamepad pad = Gamepad.all[i];
-                // P1 must follow the device that is actually being used.  The
-                // old START-only check left P1 as AutoPrimary when a player
-                // navigated and confirmed menus with an ordinary pad button.
-                if (pad == null || IsGamepadAssigned(pad)
-                    || !HasOrdinaryGamepadIntent(pad)) continue;
-                if (TryJoinGamepad(pad)) return;
-            }
-
-            string[] legacyJoysticks = Gamepad.all.Count == 0
-                ? Input.GetJoystickNames()
-                : System.Array.Empty<string>();
-            for (int i = 0; i < Mathf.Min(4, legacyJoysticks.Length); i++)
-            {
-                int joystickNumber = i + 1;
-                if (string.IsNullOrWhiteSpace(legacyJoysticks[i])
-                    || IsLegacyJoystickAssigned(joystickNumber)
-                    || !WasLegacyJoystickButtonPressed(joystickNumber, 9)) continue;
-                primary.BindLegacyJoystick(0, joystickNumber);
-                stageManager.ShowLocalCoopNotice(LocalizationManager.Format(
-                    "local_primary_device_claimed", primary.DeviceDisplayName));
-                nextDeviceJoinAt = Time.unscaledTime + 0.2f;
-                return;
-            }
-        }
-
-        private static bool HasOrdinaryGamepadIntent(Gamepad pad)
-        {
-            if (pad == null) return false;
-            if (pad.leftStick.ReadValue().sqrMagnitude > 0.16f
-                || pad.rightStick.ReadValue().sqrMagnitude > 0.16f
-                || pad.dpad.ReadValue().sqrMagnitude > 0f) return true;
-            return pad.buttonSouth.wasPressedThisFrame || pad.buttonEast.wasPressedThisFrame
-                || pad.buttonWest.wasPressedThisFrame || pad.buttonNorth.wasPressedThisFrame
-                || pad.leftShoulder.wasPressedThisFrame || pad.rightShoulder.wasPressedThisFrame
-                || pad.leftTrigger.wasPressedThisFrame || pad.rightTrigger.wasPressedThisFrame;
-        }
-
         private void HandleDeviceJoining()
         {
             if (stageManager == null) return;
@@ -1174,6 +1135,19 @@ namespace DrawBody.Prototype
                 if (keyboardDrawToggle || binding != null && binding.DrawTogglePressed()) ToggleDrawing(local);
                 if (session.IsActive)
                 {
+                    // UIManager also references P1's original DRAW panel. A shared
+                    // UI refresh used to be able to hide that panel while the
+                    // independent redraw state stayed active. Keep the visual and
+                    // state atomic, and cleanly cancel if gameplay no longer permits
+                    // this local redraw.
+                    if (!stageManager.CanPlayerEnterDrawingMode(local))
+                    {
+                        session.CancelEditing();
+                        stageManager.CancelIndependentLocalRedraw(local);
+                        session.SetActive(false);
+                        continue;
+                    }
+                    session.RestoreActivePanelVisibility();
                     local.SetControlsEnabled(false);
                     bool keyboardCancel = binding != null && binding.UsesLegacyKeyboardMouse
                         && Input.GetKeyDown(KeyCode.Escape);
@@ -1223,6 +1197,39 @@ namespace DrawBody.Prototype
             return localPlayer != null && drawSessions.TryGetValue(localPlayer, out DrawManager session)
                 && session != null && session.IsActive;
         }
+
+        public bool HasActiveDrawingSessions
+        {
+            get
+            {
+                foreach (KeyValuePair<PlayerController2D, DrawManager> pair in drawSessions)
+                    if (pair.Value != null && pair.Value.IsActive) return true;
+                return false;
+            }
+        }
+
+        public bool IsPlayerDrawingPanelVisible(PlayerController2D localPlayer)
+        {
+            return localPlayer != null
+                && drawSessions.TryGetValue(localPlayer, out DrawManager session)
+                && session != null && session.IsActive && session.IsPanelVisible;
+        }
+
+#if NICO_DRAW_AI_TEST
+        public bool OpenDrawingForRegression(PlayerController2D localPlayer)
+        {
+            if (localPlayer == null || stageManager == null || !HasDedicatedSecondaryPlayers) return false;
+            EnsureDrawSessions();
+            if (!drawSessions.TryGetValue(localPlayer, out DrawManager session) || session == null) return false;
+            if (session.IsActive) return true;
+            localPlayer.ResetMotion();
+            localPlayer.SetControlsEnabled(false);
+            stageManager.BeginIndependentLocalRedraw(localPlayer);
+            session.SetAllowedSpecies(StageSpeciesRules.GetAllowedForStage(stageManager.CurrentStageId));
+            session.SetActive(true);
+            return true;
+        }
+#endif
 
         public bool TryGetLocalDrawSessionInk(PlayerController2D localPlayer, out float ink)
         {

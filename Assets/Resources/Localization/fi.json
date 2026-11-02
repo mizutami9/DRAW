@@ -21,6 +21,50 @@
       "value": "REKISTE"
     },
     {
+      "key": "option_reset_progress",
+      "value": "NOLLAA EDISTYMINEN"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "NOLLAA EDISTYMINEN"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Nollataanko kaikkien tasojen suoritukset?\nÄänenvoimakkuus, kieli, pelaajan nimi ja piirrokset säilytetään."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Tasojen edistyminen nollattiin."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "NOLLAA"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "PERUUTA"
+    },
+    {
+      "key": "option_complete",
+      "value": "VALMIS"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "NÄYTTÖ: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "TARKKUUS: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "KOKO NÄYTTÖ"
+    },
+    {
+      "key": "option_windowed",
+      "value": "IKKUNATILA"
+    },
+    {
       "key": "lang_ja",
       "value": "Japani"
     },
@@ -130,7 +174,7 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "Piirtää {0}."
     },
     {
       "key": "head",
@@ -222,7 +266,7 @@
     },
     {
       "key": "torso_switch",
-      "value": "Heavy Switch"
+      "value": "Vaikea vaihtelu"
     },
     {
       "key": "torso_heavy",
@@ -262,15 +306,15 @@
     },
     {
       "key": "ability_card_cat",
-      "value": "CAT"
+      "value": "KISSA"
     },
     {
       "key": "ability_card_bird",
-      "value": "BIRD"
+      "value": "LINTU"
     },
     {
       "key": "ability_card_turtle",
-      "value": "TURTLE"
+      "value": "KILPIKONNA"
     },
     {
       "key": "ability_card_slime",
@@ -302,11 +346,11 @@
     },
     {
       "key": "ability_control_cat",
-      "value": "F: SCRATCH / GRAB"
+      "value": "F: KIRISTÄÄ / TARTUTTAA"
     },
     {
       "key": "ability_control_bird",
-      "value": "HOLD SPACE: GLIDE  F: GRAB"
+      "value": "PIDÄ KIINNI. SPACE: LIUKU  FOTETAAN:"
     },
     {
       "key": "ability_control_turtle",
@@ -315,6 +359,114 @@
     {
       "key": "ability_control_slime",
       "value": "F: YLEMPI SPIKE-hyökkäys"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "NELIÖ / X: HEITTÄ"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "NELIÖ / X: RAAPUT / OTA"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "PIDÄ RISTIKSI / A: LUKUNELIÖ / X: OTA"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "PIDÄ RISTI / A: SHELL HOLD NELIÖ / X: KÄÄNTÄ 90°"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "NELIÖ / X: PIIKKI OIKEALLE KEPPILLE"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "KOLMIO / Y: VAIHTOMERKKI"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "K: VAIHTOHAHMO"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / VALITSE: PIIRTÄ MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: ARVO MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: PIIRI MENU"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "NELIÖ: HEITTÄ"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "NELIÖ: RAAPUT / OTA"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "PIDÄ RISTIKSI: LIUKKUNELIÖ: OTA"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "PIDÄ RISTI: SHELL HOLD NELIÖ: KÄÄNTÄ 90°"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "NELIÖ: PIIKKI OIKEALLE KEPPILLE"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: HEITA"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: SCRATCH / GAB"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "PIDÄ A: LUKU X: OTA"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "PITO A: SHELL HOLD X: KÄÄNTÄ 90°"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: PIIKKI OIKEALLE KEPPILLE"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "KOLMIO: VAIHTOMERKKI"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: VAIHTO-OMINAISUUS"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: ARVO MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: ARVO MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: PIIRI MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: PIIRI MENU"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "EI SISÄLTY DEMOON"
     },
     {
       "key": "ability_effect_human_combined",
@@ -366,7 +518,7 @@
     },
     {
       "key": "ability_rank",
-      "value": "RANK {0}"
+      "value": "KORKEA-ARVO {0}"
     },
     {
       "key": "ability_gauge_low",
@@ -378,7 +530,7 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JUMP"
+      "value": "HYPPÄÄ ."
     },
     {
       "key": "ability_human_arm_gauge",
@@ -390,15 +542,15 @@
     },
     {
       "key": "ability_cat_front_leg_gauge",
-      "value": "SCRATCH"
+      "value": "RAAPUTUS"
     },
     {
       "key": "ability_bird_gauge",
-      "value": "GLIDE"
+      "value": "LIIKENNUS"
     },
     {
       "key": "ability_turtle_gauge",
-      "value": "DEFENSE"
+      "value": "PUOLUSTUS"
     },
     {
       "key": "ability_slime_gauge",
@@ -438,15 +590,107 @@
     },
     {
       "key": "label_heavy_switch",
-      "value": "2 Heavy Switch"
+      "value": "2 Vaikea vaihtelu"
     },
     {
       "key": "label_far_lever",
-      "value": "3 Far Lever"
+      "value": "3 Kaiken kaukana"
     },
     {
       "key": "label_narrow_hole",
       "value": "4 Kapea reikä"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Näppäimistö + hiiri"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Peliohjain (irrotettu)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Automaattinen (näppäimistö / peliohjain)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD IRTI YHTEYDESSÄ. Yhdistä se UUDELLEEN PALAUTTAASI SAMA SOITIN."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD YHDISTETTY UUDELLEEN."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} LIITTYNYT ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "JOPA 2 PELAAJAA LAITTEELLA JA HUONEESSA YHTEENSÄ 4 PELAAJAA."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "LISÄÄ TAI POISTA PAIKALLISIA PELAAJIA ENNEN VAIHEEN ALOITTAMISTA."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "HUONE ON TÄYNNÄ (4 PELAAJAA). LISÄPAIKALLINEN PELAAJA POISTETTU."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "LIITTYMÄTTÖMÄN TÄRKEÄÄN: START LIITTYMISEKSI / NÄPPÄIMISTÖ: ENTER LIITTYKSI, BACKSPACE LÄHETÄÄN / P2: VALITSE + B LÄHETYKSI"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "PAIKALLISIA PELAAJIA {0} / 2 YHDISTETTYÄ PALJAA {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "PAIKALLINEN LEIKKI {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PÖYDÄN {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "PAINA MITÄÄN OHJAINPAINIKETA LIITTYÄksesi"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: LIITY"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 PELAAJAA VALMIS"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "PELAAJIA {0}/2\nNÄPPÄIMISTÖ: ENTER LIITTYÄ / BACKSPACE LÄHTEÄ\nOHJAIN: START LIITY / PIDÄ B POISTUASI"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 VAIHDETTU TILAAN {0}."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "NÄPPÄIMISTÖ/HIIRI vapautettu P1:stä. PAINA OHJAINPAINIKKEELLA VAATIMUS P1."
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} VASEN."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "TITTELYARVO EI OLE KÄYTETTÄVISSÄ PAIKALLISEN YHTEISTYÖN AIKANA. PALAA ENSIN 1 PELAAJAAN."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "VASEN SAUKKO: SIIRRÄ RT / A / B: PIIRTÄ & VALITSE LT: POISTA"
     },
     {
       "key": "multi_room_setup",
@@ -458,7 +702,7 @@
     },
     {
       "key": "multi_room_create_title",
-      "value": "CREATE ROOM"
+      "value": "LUOKAA TILAA"
     },
     {
       "key": "multi_room_join_title",
@@ -497,6 +741,10 @@
       "value": "VAIHE {0} / {1}"
     },
     {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
+    },
+    {
       "key": "tower_defense_time_remaining",
       "value": "AIKA {0:0.0}"
     },
@@ -515,6 +763,26 @@
     {
       "key": "tower_defense_clear",
       "value": "Defense selvä!"
+    },
+    {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
     },
     {
       "key": "value_coin_amount",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "PIIRTÄÄ"
     },
     {
       "key": "title_option",
@@ -573,12 +841,16 @@
       "value": "Lopeta"
     },
     {
+      "key": "title_exit_confirm",
+      "value": "Lopetetaanko NICO DRAW?"
+    },
+    {
       "key": "title_debug",
-      "value": "DEBUG"
+      "value": "KÄÄNTELY"
     },
     {
       "key": "trailer_debug_title",
-      "value": "TRAILER CAPTURE DEBUG"
+      "value": "NÄYTÄJÄLJEN TALLENNUS"
     },
     {
       "key": "trailer_debug_scenario_01",
@@ -598,7 +870,7 @@
     },
     {
       "key": "trailer_debug_edit_shapes",
-      "value": "EDIT CHARACTERS"
+      "value": "MUOKKAA MERKKEJÄ"
     },
     {
       "key": "steam_header_debug_button",
@@ -629,12 +901,16 @@
       "value": "Vain huoneessa voi vaihtaa kirjoja."
     },
     {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Voit vaihtaa hahmoa vain uudelleenpiirtolattialla."
+    },
+    {
       "key": "trailer_debug_capture_help",
       "value": "R REPLAY HIDE HUD     ESC  OSASTO"
     },
     {
       "key": "trailer_tas_title",
-      "value": "TRAILER TAS RECORDER"
+      "value": "TRAILER TAS-LEVYTYSLAITE"
     },
     {
       "key": "trailer_tas_help",
@@ -658,7 +934,7 @@
     },
     {
       "key": "trailer_tas_pause",
-      "value": "P PAUSE"
+      "value": "P-PAUSA"
     },
     {
       "key": "trailer_tas_step",
@@ -666,7 +942,7 @@
     },
     {
       "key": "trailer_tas_status_idle",
-      "value": "IDLE"
+      "value": "TYHJÄNÄ"
     },
     {
       "key": "trailer_tas_status_recording",
@@ -678,7 +954,7 @@
     },
     {
       "key": "trailer_tas_paused",
-      "value": "PAUSED"
+      "value": "PYSÄYTTELY"
     },
     {
       "key": "trailer_tas_status_format",
@@ -690,7 +966,7 @@
     },
     {
       "key": "trailer_tas_save_preset",
-      "value": "SAVE SHAPES"
+      "value": "SÄILYTYSMUODOT"
     },
     {
       "key": "trailer_tas_placement_help",
@@ -703,6 +979,38 @@
     {
       "key": "menu_to_title",
       "value": "Nimi"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Aloitetaanko taso alusta?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "YRITÄ UUDELLEEN"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Lopetetaanko nykyinen taso ja palataanko tason valintaan?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "TASON VALINTA"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "Keskeneräisiä muutoksia ei tallenneta. Palataanko tallentamatta?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "PALAA TALLENTAMATTA"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Uudelleen piirretty hahmo tallennettiin."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Tallennus epäonnistui. Paina uudelleen ”VALMIS”."
     },
     {
       "key": "language_settings",
@@ -878,7 +1186,7 @@
     },
     {
       "key": "multi_offline_lobby_id",
-      "value": "Offline"
+      "value": "Vastaanottajana"
     },
     {
       "key": "multi_room_code_label",
@@ -898,7 +1206,7 @@
     },
     {
       "key": "multi_local",
-      "value": "Paikallinen"
+      "value": "Local"
     },
     {
       "key": "multi_ready",
@@ -910,7 +1218,7 @@
     },
     {
       "key": "multi_host",
-      "value": "HOST"
+      "value": "ISÄNTÄ"
     },
     {
       "key": "multi_default_room_name",
@@ -929,6 +1237,10 @@
       "value": "Sinä."
     },
     {
+      "key": "spectator_following",
+      "value": "Tarkastelu: {0} Vaihda painikkeella ← / →"
+    },
+    {
       "key": "online_player_host",
       "value": "Palvelin"
     },
@@ -943,6 +1255,18 @@
     {
       "key": "online_fake_initialized",
       "value": "Väärä taustaosa alustettu."
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Verkkopeli ei ole käytettävissä, koska pelitiedot tai versio eivät täsmää. Tarkista pelitiedostot Steamissa."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Isäntä katkaisi yhteyden, joten huone suljettiin."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Yhteys peli-istuntoon katkesi. Liity huoneeseen uudelleen."
     },
     {
       "key": "online_logging_in",
@@ -1041,6 +1365,14 @@
       "value": "EOS-kirjautuminen epäonnistui: {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "Käynnistä Steam ja avaa sitten NICO DRAW Steam-kirjastostasi."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Steam-todennuslipun hakeminen epäonnistui: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "EOS-luo aula epäonnistui: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "Huoneen koodin haku epäonnistui: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Huoneen luominen epäonnistui. Yritetään uudelleen {0} s kuluttua ({1} yritystä jäljellä)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1170,7 +1506,7 @@
     },
     {
       "key": "stage_select_debug_created",
-      "value": "CREATED"
+      "value": "LUOTU"
     },
     {
       "key": "stage_select_debug_not_created",
@@ -1186,7 +1522,7 @@
     },
     {
       "key": "draw_species_swap_title",
-      "value": "CHARACTER SWAP"
+      "value": "HENKILÖN VAIHTO"
     },
     {
       "key": "draw_species_swap_hint",
@@ -1197,16 +1533,32 @@
       "value": "{0} haluaa vaihtaa {1} B. {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} käyttää jo tätä hahmoa. Lähetetäänkö vaihtopyyntö?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "LÄHETÄ PYYNTÖ"
+    },
+    {
       "key": "draw_species_swap_accept",
-      "value": "SWAP"
+      "value": "VAIHTO"
     },
     {
       "key": "draw_species_swap_reject",
-      "value": "DECLINE"
+      "value": "HEIKENTYMINEN"
     },
     {
       "key": "draw_species_swap_pending",
       "value": "Odotan vastausta vaihtopyyntöön..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "VAIHTOPYYNTÖ LÄHETETTY"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Odotetaan pelaajan {0} vastausta.\nPyydetty vaihto: {1} vastaan {2}."
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1226,7 +1578,7 @@
     },
     {
       "key": "stage_object_grain_scale",
-      "value": "100g SCALE"
+      "value": "100 g SKAALLE"
     },
     {
       "key": "stage_object_grain_gate",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "Testin aloitus: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "Liikkuminen P{0}Test-pelin lähtöasema."
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "P{0} Kokeen alkua: X {1:0.00} / Y {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1378,11 +1738,11 @@
     },
     {
       "key": "stage_editor_copy_left",
-      "value": "← LEFT"
+      "value": "← VASEMMISTO"
     },
     {
       "key": "stage_editor_copy_up",
-      "value": "↑ UP"
+      "value": "↑ YLHÄÄLLÄ"
     },
     {
       "key": "stage_editor_status_copy_direction",
@@ -1410,7 +1770,7 @@
     },
     {
       "key": "stage_editor_bomb_fuse_seconds",
-      "value": "Fuse (sec)"
+      "value": "Säästö (sek)"
     },
     {
       "key": "stage_editor_crumble_delay",
@@ -1430,7 +1790,7 @@
     },
     {
       "key": "stage_editor_beam_interval",
-      "value": "Beam Interval (sec)"
+      "value": "Värjelyväli (sek)"
     },
     {
       "key": "stage_editor_box_size",
@@ -1558,7 +1918,7 @@
     },
     {
       "key": "ink_team_formula",
-      "value": "TEAM CAP ({0}P)"
+      "value": "TYÖRYHMÄKAPPA ({0}P)"
     },
     {
       "key": "draw_pen_size",
@@ -1574,7 +1934,7 @@
     },
     {
       "key": "draw_undo_once",
-      "value": "UNDO"
+      "value": "VÄHENNETTY"
     },
     {
       "key": "draw_reset_all",
@@ -1590,11 +1950,11 @@
     },
     {
       "key": "draw_reset_confirm_yes",
-      "value": "RESET"
+      "value": "LAITETAAN UUDELLEEN"
     },
     {
       "key": "draw_reset_confirm_no",
-      "value": "CANCEL"
+      "value": "ILMOITETAAN"
     },
     {
       "key": "draw_preset_title",
@@ -1609,6 +1969,10 @@
       "value": "5 CHARACTER PRESESETS"
     },
     {
+      "key": "draw_preset_back",
+      "value": "TAKAISIN"
+    },
+    {
       "key": "draw_preset_five_species",
       "value": "IHMISKAT"
     },
@@ -1618,11 +1982,11 @@
     },
     {
       "key": "draw_preset_slot",
-      "value": "SLOT {0}"
+      "value": "PÖYTÄ {0}"
     },
     {
       "key": "draw_preset_saved",
-      "value": "SAVED"
+      "value": "PELASTETTU"
     },
     {
       "key": "draw_preset_empty",
@@ -1630,11 +1994,11 @@
     },
     {
       "key": "draw_preset_register",
-      "value": "SAVE"
+      "value": "SÄÄSTÄ"
     },
     {
       "key": "draw_preset_apply",
-      "value": "SET"
+      "value": "SÄÄSTÖ"
     },
     {
       "key": "draw_preset_save_confirm_title",
@@ -1770,7 +2134,7 @@
     },
     {
       "key": "stage_object_background_pizza",
-      "value": "Pizza"
+      "value": "Pitsa"
     },
     {
       "key": "stage_object_background_bread",
@@ -1786,11 +2150,11 @@
     },
     {
       "key": "stage_object_background_rocket",
-      "value": "Rocket"
+      "value": "Raketti"
     },
     {
       "key": "stage_object_background_ufo",
-      "value": "UFO"
+      "value": "ULKOMAAT"
     },
     {
       "key": "stage_object_background_hot_air_balloon",
@@ -1802,7 +2166,7 @@
     },
     {
       "key": "stage_object_background_castle",
-      "value": "Castle"
+      "value": "Kastiili"
     },
     {
       "key": "stage_object_background_treasure_chest",
@@ -1846,7 +2210,7 @@
     },
     {
       "key": "stage_object_background_gem",
-      "value": "Gem"
+      "value": "Kivipelit"
     },
     {
       "key": "stage_object_background_coin",
@@ -2026,7 +2390,7 @@
     },
     {
       "key": "stage_weapon_bomb",
-      "value": "BOMB"
+      "value": "POMMI"
     },
     {
       "key": "stage_weapon_missile",
@@ -2037,8 +2401,12 @@
       "value": "Valmis"
     },
     {
+      "key": "background_word_push",
+      "value": "TYÖNNÄ!"
+    },
+    {
       "key": "stage_dynamite_label",
-      "value": "TNT"
+      "value": "TNT:"
     },
     {
       "key": "stage_editor_background_color",
@@ -2094,7 +2462,7 @@
     },
     {
       "key": "stage_editor_none",
-      "value": "(none)"
+      "value": "- Ei mitään ."
     },
     {
       "key": "stage_category_terrain",
@@ -2206,7 +2574,7 @@
     },
     {
       "key": "stage_object_moving_one_way_platform",
-      "value": "Sticky Moving One-Way Floor"
+      "value": "Liikaa liikkuvaa yhden suunnan lattia"
     },
     {
       "key": "ricochet_breaker_title",
@@ -2234,7 +2602,7 @@
     },
     {
       "key": "ricochet_enemy_balls",
-      "value": "BALL {0} / {1}"
+      "value": "PALLO . {0} / {1}"
     },
     {
       "key": "ricochet_enemy_next",
@@ -2262,15 +2630,15 @@
     },
     {
       "key": "stage_object_spike_planet",
-      "value": "Spike Planet"
+      "value": "SE ON TOGEEN PLANEETTA."
     },
     {
       "key": "stage_object_enemy_flyer_zigzag",
-      "value": "Zigzag Flyer"
+      "value": "JIGZAG-LENTOJEN VIHOLLINEN."
     },
     {
       "key": "stage_object_enemy_flyer_orbit",
-      "value": "Orbit Flyer"
+      "value": "KÄÄNNYTTÄVÄ VIHOLLINEN"
     },
     {
       "key": "stage_object_bazooka",
@@ -2366,7 +2734,7 @@
     },
     {
       "key": "stage_object_lever",
-      "value": "Lever"
+      "value": "Vähittäiset"
     },
     {
       "key": "stage_object_toggle_switch",
@@ -2466,7 +2834,7 @@
     },
     {
       "key": "stage_object_rock",
-      "value": "Rock"
+      "value": "Kivi"
     },
     {
       "key": "stage_object_ice_block",
@@ -2602,11 +2970,11 @@
     },
     {
       "key": "stage_object_box_dropper",
-      "value": "Box Dropper"
+      "value": "Laatikon pudottaja"
     },
     {
       "key": "stage_object_spike_dropper",
-      "value": "Spike Dropper"
+      "value": "SE ON KAAPPI."
     },
     {
       "key": "stage_object_collectible_fish",
@@ -2667,6 +3035,10 @@
     {
       "key": "challenge_time_up",
       "value": "KATSAUS"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "EI AIKARAJAA"
     },
     {
       "key": "challenge_retry_hint",
@@ -2749,6 +3121,26 @@
       "value": "AIKAA MYÖHEMMIN {0}"
     },
     {
+      "key": "ice_race_rule",
+      "value": "TYHJENNÄ {0} YHTEENSÄ"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "YHTEENSÄ {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TIIMI YHTEENSÄ"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "YRITÄ UUDELLEEN {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "PELI YLI\nYHTEENSÄ {0} / {1}"
+    },
+    {
       "key": "survival_get_ready",
       "value": "Valmiina!"
     },
@@ -2791,6 +3183,10 @@
     {
       "key": "ready_room_game_default",
       "value": "Valmistaudu aloittamaan peli"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "JUOKSE."
     },
     {
       "key": "ready_room_game_2_2",
@@ -2890,7 +3286,7 @@
     },
     {
       "key": "ready_room_game_15_1",
-      "value": "DEFEAT CRAYON DEVIL"
+      "value": "VOITTAA KYNÄ PAHOLAINEN ."
     },
     {
       "key": "ready_room_game_15_2",
@@ -2898,7 +3294,7 @@
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "VAIHEEET"
+      "value": "VÄISTÄ VIHOLLISEN HYÖKKÄYKSIÄ"
     },
     {
       "key": "ready_room_clear_one_survivor",
@@ -2909,8 +3305,12 @@
       "value": "Kun joku pelaaja löytää maalin."
     },
     {
+      "key": "ready_room_clear_team_time",
+      "value": "TYHJENNÄ, JOS KAIKKIEN YHDISTYNYT MÄÄRIAIKA ON 1 MINUUTTISSA PELAAJA kohden."
+    },
+    {
       "key": "spike_chase_monitor_title",
-      "value": "SPIKE WALL LAUNCH"
+      "value": "PÖYDÄN SEINÄN LAUKAUS"
     },
     {
       "key": "spike_chase_monitor_ready",
@@ -2921,32 +3321,56 @@
       "value": "Juokse maaliin!"
     },
     {
-      "key": "wind_speedrun_title",
-      "value": "Tuuli muuttuu!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "Vähemmän INK = STRONGER WIND"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "AIKA {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "KATSAUS"
-    },
-    {
       "key": "umbrella_rain_title",
-      "value": "Pysy Umbrellan alla!"
+      "value": "Pysy poissa sateesta"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "RAIN KUOLEE - REACH SHELTER"
+      "value": "Pysy poissa sateesta"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "Kaikki jäivät kiinni."
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -3337,8 +3761,72 @@
       "value": "TUKKIKAA REIÄT!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "KIERROS {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "KIERROS {0}/3 {1:0.0}s VASEMMALLA"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "KIERROS {0} TYHJÄ!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "AIKA ON!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "YRITÄÄN UUDELLEEN TÄMÄN KIERROSEN"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "LAITA AVAINREIKÄÄN SOPIVA IHMISPOSE!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "LÖYDÄ SOPIVA ASENTO KELLUVIEN LINTUJEN joukosta!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "KANNA KIPIKONNI TÄYNÄÄN JOUSIA TÄYNNÄN HUONEEN LÄPI!"
+    },
+    {
       "key": "tilt_board_monitor",
       "value": "-Ei. {0}/3    {1:0.0}Vasemmalle"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "KIERROS {0}/3 ALKAA VUODEN {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "VOITTAA LIIKKUA KISTASI SISÄLLÄ ASETUKSEN AIKANA"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "PYÖRÄS {0}/3 KRAATIA {1}/{2} {3} s VASEMMALLA"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "RIKO LAATIT LIMAPIIKELLÄ!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "RIKKO PIENET LAITIT!  KATSO VIHOLLISIA!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "KIERROS {0} TYHJÄ!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "PELI YRITYS UUDELLEEN KIERROS {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "KAIKKI PYÖRÄT SELKEÄ!"
     },
     {
       "key": "tilt_board_progress",
@@ -3393,12 +3881,40 @@
       "value": "10-3 RICOCHET RELAY"
     },
     {
+      "key": "cat_escape_title",
+      "value": "2-3  PAKENE JÄTTILÄISKISSAA!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "ODOTUS {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "ALKAA {0}:N KULUTTUA"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "JUOKSE!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "RYHMÄN RAAPAISUT  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
       "key": "ricochet_round",
       "value": "-Ei. {0} / {1}"
     },
     {
       "key": "ricochet_ammo",
-      "value": "AMMO {0}"
+      "value": "AMMUNIT {0}"
     },
     {
       "key": "ricochet_instruction",
@@ -3446,7 +3962,7 @@
     },
     {
       "key": "stage_object_spike",
-      "value": "Spike"
+      "value": "- Se on hyvä."
     },
     {
       "key": "stage_object_fire",
@@ -3462,7 +3978,7 @@
     },
     {
       "key": "stage_object_laser",
-      "value": "Laser"
+      "value": "Laseri"
     },
     {
       "key": "stage_object_falling_rock",
@@ -3794,7 +4310,7 @@
     },
     {
       "key": "option_bgm",
-      "value": "MGM"
+      "value": "BGM"
     },
     {
       "key": "option_se",
@@ -3962,7 +4478,7 @@
     },
     {
       "key": "stage_rule_block_breaker",
-      "value": "Block Breaker"
+      "value": "Pysäyttäjä"
     },
     {
       "key": "block_breaker_goal",
@@ -3978,7 +4494,7 @@
     },
     {
       "key": "sfx_browser_title",
-      "value": "SE BROWSER"
+      "value": "SE SELAIMEN"
     },
     {
       "key": "sfx_browser_help",
@@ -3994,7 +4510,7 @@
     },
     {
       "key": "sfx_browser_reload",
-      "value": "RELOAD"
+      "value": "LAATA UUDELLEEN"
     },
     {
       "key": "sfx_browser_no_results",
@@ -4015,6 +4531,34 @@
     {
       "key": "sfx_browser_generated",
       "value": "Runtimegeneroitu ääni"
+    },
+    {
+      "key": "gameplay_control_switch",
+      "value": "Vaihda hahmoa"
+    },
+    {
+      "key": "feedback_button",
+      "value": "PALAUTE / ILMOITA VIRHEESTÄ"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "Kiitos kun pelasit!\nPalaute / Ilmoita virheestä"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "TOIVELISTA"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "MONINPELIÄ SUOSITELLAAN!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW on hauskimmillaan yhteistyössä!\nKokeilkaa pelaamista 2–4 pelaajalla!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "HYVÄ ON."
     },
     {
       "key": "stage_object_background_paw_print",
@@ -4042,11 +4586,11 @@
     },
     {
       "key": "stage_object_background_blizzard",
-      "value": "Blizzard"
+      "value": "Säämyrsky"
     },
     {
       "key": "stage_object_background_feather",
-      "value": "Feather"
+      "value": "Tyyli"
     },
     {
       "key": "stage_object_background_bird_nest",
@@ -4098,7 +4642,7 @@
     },
     {
       "key": "stage_object_background_ladybug",
-      "value": "Ladybug"
+      "value": "Nainenpuukko"
     },
     {
       "key": "stage_object_background_sunflower",
@@ -4106,7 +4650,7 @@
     },
     {
       "key": "stage_object_background_tulip",
-      "value": "Tulip"
+      "value": "Tulipit"
     },
     {
       "key": "stage_object_background_skeleton",
@@ -4114,11 +4658,11 @@
     },
     {
       "key": "stage_object_background_bat",
-      "value": "Bat"
+      "value": "Pihkähdy"
     },
     {
       "key": "stage_object_background_spiderweb",
-      "value": "Spiderweb"
+      "value": "Hämähäkkiverkko"
     },
     {
       "key": "stage_object_background_stalactite",
@@ -4130,7 +4674,7 @@
     },
     {
       "key": "stage_object_background_minecart",
-      "value": "Minecart"
+      "value": "Myyntikortti"
     },
     {
       "key": "stage_object_background_pickaxe",
@@ -4138,7 +4682,7 @@
     },
     {
       "key": "stage_object_background_trophy",
-      "value": "Trophy"
+      "value": "Voittokortti"
     },
     {
       "key": "stage_object_background_medal",
@@ -4190,7 +4734,7 @@
     },
     {
       "key": "stage_object_background_blackboard",
-      "value": "Blackboard"
+      "value": "Vihreä taulu"
     },
     {
       "key": "stage_object_background_palette",
@@ -4238,7 +4782,7 @@
     },
     {
       "key": "stage_object_background_comet",
-      "value": "Comet"
+      "value": "Kometta"
     },
     {
       "key": "stage_object_background_black_hole_decor",
@@ -4255,494 +4799,6 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Puujuuri"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "JUOKSE!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "ALKAA {0}:N KULUTTUA"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "ODOTUS {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  PAKENE JÄTTILÄISKISSAA!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "RYHMÄN RAAPAISUT  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "Voit vaihtaa hahmoa vain uudelleenpiirtolattialla."
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "TAKAISIN"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "Odotetaan pelaajan {0} vastausta.\nPyydetty vaihto: {1} vastaan {2}."
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "VAIHTOPYYNTÖ LÄHETETTY"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "Aloitetaanko taso alusta?"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "YRITÄ UUDELLEEN"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "Lopetetaanko nykyinen taso ja palataanko tason valintaan?"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "Keskeneräisiä muutoksia ei tallenneta. Palataanko tallentamatta?"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "PALAA TALLENTAMATTA"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "Uudelleen piirretty hahmo tallennettiin."
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "Tallennus epäonnistui. Paina uudelleen ”VALMIS”."
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "TASON VALINTA"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "Verkkopeli ei ole käytettävissä, koska pelitiedot tai versio eivät täsmää. Tarkista pelitiedostot Steamissa."
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "Yhteys peli-istuntoon katkesi. Liity huoneeseen uudelleen."
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "Isäntä katkaisi yhteyden, joten huone suljettiin."
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "PERUUTA"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "NOLLAA"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "NOLLAA EDISTYMINEN"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "Nollataanko kaikkien tasojen suoritukset?\nÄänenvoimakkuus, kieli, pelaajan nimi ja piirrokset säilytetään."
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "Tasojen edistyminen nollattiin."
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "NOLLAA EDISTYMINEN"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "JUOKSE."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "Vaihda hahmoa"
-    },
-    {
-      "key": "feedback_button",
-      "value": "PALAUTE / ILMOITA VIRHEESTÄ"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "Kiitos kun pelasit!\nPalaute / Ilmoita virheestä"
-    },
-    {
-      "key": "option_complete",
-      "value": "VALMIS"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "NÄYTTÖ: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "TARKKUUS: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "KOKO NÄYTTÖ"
-    },
-    {
-      "key": "option_windowed",
-      "value": "IKKUNATILA"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "Käynnistä Steam ja avaa sitten NICO DRAW Steam-kirjastostasi."
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "Steam-todennuslipun hakeminen epäonnistui: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "TOIVELISTA"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "MONINPELIÄ SUOSITELLAAN!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "NICO DRAW on hauskimmillaan yhteistyössä!\nKokeilkaa pelaamista 2–4 pelaajalla!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "OK"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "Lopetetaanko NICO DRAW?"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} käyttää jo tätä hahmoa. Lähetetäänkö vaihtopyyntö?"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "LÄHETÄ PYYNTÖ"
-    },
-    {
-      "key": "background_word_push",
-      "value": "TYÖNNÄ!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "PIDÄ RISTIKSI / A: LUKUNELIÖ / X: OTA"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "NELIÖ / X: RAAPUT / OTA"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "NELIÖ / X: HEITTÄ"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "NELIÖ / X: PIIKKI OIKEALLE KEPPILLE"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "PIDÄ RISTI / A: SHELL HOLD NELIÖ / X: KÄÄNTÄ 90°"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "PIDÄ RISTIKSI: LIUKKUNELIÖ: OTA"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "NELIÖ: RAAPUT / OTA"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "NELIÖ: HEITTÄ"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "NELIÖ: PIIKKI OIKEALLE KEPPILLE"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "PIDÄ RISTI: SHELL HOLD NELIÖ: KÄÄNTÄ 90°"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "PIDÄ A: LUKU X: OTA"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "X: SCRATCH / GAB"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "X: HEITA"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: PIIKKI OIKEALLE KEPPILLE"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "PITO A: SHELL HOLD X: KÄÄNTÄ 90°"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "EI AIKARAJAA"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "EI SISÄLTY DEMOON"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "VASEN SAUKKO: SIIRRÄ RT / A / B: PIIRTÄ & VALITSE LT: POISTA"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: ARVO MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: PIIRI MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / VALITSE: PIIRTÄ MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: ARVO MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: PIIRI MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: ARVO MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: PIIRI MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "K: VAIHTOHAHMO"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "KOLMIO / Y: VAIHTOMERKKI"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "KOLMIO: VAIHTOMERKKI"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "Y: SWITCH CHARACTER"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "TIIMI YHTEENSÄ"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "PELI YLI\nYHTEENSÄ {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "YRITÄ UUDELLEEN {0}"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "TYHJENNÄ {0} YHTEENSÄ"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "YHTEENSÄ {0} / {1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "Automaattinen (näppäimistö / peliohjain)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "Peliohjain (irrotettu)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "Näppäimistö + hiiri"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "P{0} GAMEPAD IRTI YHTEYDESSÄ. Yhdistä se UUDELLEEN PALAUTTAASI SAMA SOITIN."
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "P{0} GAMEPAD YHDISTETTY UUDELLEEN."
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "NÄPPÄIMISTÖ/HIIRI vapautettu P1:stä. PAINA OHJAINPAINIKKEELLA VAATIMUS P1."
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "LIITTYMÄTTÖMÄN TÄRKEÄÄN: START LIITTYMISEKSI / NÄPPÄIMISTÖ: ENTER LIITTYKSI, BACKSPACE LÄHETÄÄN / P2: VALITSE + B LÄHETYKSI"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "P{0} LIITTYNYT ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "P{0} VASEN."
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "JOPA 2 PELAAJAA LAITTEELLA JA HUONEESSA YHTEENSÄ 4 PELAAJAA."
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "HUONE ON TÄYNNÄ (4 PELAAJAA). LISÄPAIKALLINEN PELAAJA POISTETTU."
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "P1 VAIHDETTU TILAAN {0}."
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "2 PELAAJAA VALMIS"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: LIITY"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "PAINA MITÄÄN OHJAINPAINIKETA LIITTYÄksesi"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "PAIKALLINEN LEIKKI {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "LISÄÄ TAI POISTA PAIKALLISIA PELAAJIA ENNEN VAIHEEN ALOITTAMISTA."
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "PAD {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "PELAAJIA {0}/2\nNÄPPÄIMISTÖ: ENTER LIITTYÄ / BACKSPACE LÄHTEÄ\nOHJAIN: START LIITY / PIDÄ B POISTUASI"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "PAIKALLISIA PELAAJIA {0} / 2 YHDISTETTYÄ PALJAA {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "Huoneen luominen epäonnistui. Yritetään uudelleen {0} s kuluttua ({1} yritystä jäljellä)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "LÖYDÄ SOPIVA ASENTO KELLUVIEN LINTUJEN joukosta!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "LAITA AVAINREIKÄÄN SOPIVA IHMISPOSE!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "KIERROS {0}/3 {1:0.0}s VASEMMALLA"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "YRITÄÄN UUDELLEEN TÄMÄN KIERROSEN"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "KIERROS {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "KIERROS {0} TYHJÄ!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "AIKA ON!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "KANNA KIPIKONNI TÄYNÄÄN JOUSIA TÄYNNÄN HUONEEN LÄPI!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "TYHJENNÄ, JOS KAIKKIEN YHDISTYNYT MÄÄRIAIKA ON 1 MINUUTTISSA PELAAJA kohden."
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "KAIKKI PYÖRÄT SELKEÄ!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "RIKKO PIENET LAITIT!  KATSO VIHOLLISIA!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "RIKO LAATIT LIMAPIIKELLÄ!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "PYÖRÄS {0}/3 KRAATIA {1}/{2} {3} s VASEMMALLA"
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "PELI YRITYS UUDELLEEN KIERROS {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "KIERROS {0} TYHJÄ!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "Tarkastelu: {0} Vaihda painikkeella ← / →"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "KIERROS {0}/3 ALKAA VUODEN {1}"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "VOITTAA LIIKKUA KISTASI SISÄLLÄ ASETUKSEN AIKANA"
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "TITTELYARVO EI OLE KÄYTETTÄVISSÄ PAIKALLISEN YHTEISTYÖN AIKANA. PALAA ENSIN 1 PELAAJAAN."
     }
   ]
 }

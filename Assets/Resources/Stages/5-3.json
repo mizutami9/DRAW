@@ -1,18 +1,36 @@
 {
-  "id": "5-3",
-  "displayName": "Stage 5-3 Slime Crate Rush",
-  "backgroundColorHex": "#D4D9DAFF",
-  "ruleMode": 0,
-  "timeLimitSeconds": 60.0,
-  "collectionTarget": 100,
-  "requiredCollectionCount": 1,
-  "objects": [
-    {
-      "objectId": "5-3_runtime_spawn",
-      "type": 2,
-      "position": { "x": 0.0, "y": 0.3 },
-      "size": { "x": 0.7, "y": 0.7 },
-      "rotation": 0.0
-    }
-  ]
+    "id": "5-3",
+    "displayName": "Stage 5-3 Slime Crate Rush",
+    "backgroundColorHex": "#D4D9DAFF",
+    "ruleMode": 0,
+    "timeLimitSeconds": 60.0,
+    "collectionTarget": 163,
+    "requiredCollectionCount": 1,
+    "objects": [
+        {
+            "objectId": "5-3_runtime_spawn",
+            "type": 2,
+            "position": {
+                "x": 0.0,
+                "y": 0.30000001192092898
+            },
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.699999988079071
+            },
+            "rotation": 0.0,
+            "pathPoints": [],
+            "pathThickness": 0.0,
+            "connectedRects": [],
+            "keepSeparate": false,
+            "actionStrength": 0.0,
+            "movementAngle": 0.0,
+            "movementSpeed": 0.0,
+            "spawnPattern": 0,
+            "spawnBoxSize": 0.0,
+            "bombFuseSeconds": 0.0,
+            "linkTargetId": "",
+            "linkAction": ""
+        }
+    ]
 }

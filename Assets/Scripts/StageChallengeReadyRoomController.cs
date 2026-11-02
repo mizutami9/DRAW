@@ -2226,11 +2226,50 @@ namespace DrawBody.Prototype
             safePosition = targetPlayer != null ? targetPlayer.transform.position : Vector3.zero;
             if (targetPlayer == null || !returnPositions.TryGetValue(targetPlayer, out Vector3 preferred)) return true;
             bool stageWasActive = suspendedStageRoot != null && suspendedStageRoot.gameObject.activeSelf;
-            if (suspendedStageRoot != null && !stageWasActive) suspendedStageRoot.gameObject.SetActive(true);
-            bool fits = stageManager.TryResolveChallengeStartPosition(targetPlayer, preferred, out safePosition);
-            if (suspendedStageRoot != null && !stageWasActive) suspendedStageRoot.gameObject.SetActive(false);
+            List<Collider2D> suspendedRoomColliders = SuspendReadyRoomColliders();
+            bool fits;
+            try
+            {
+                if (suspendedStageRoot != null && !stageWasActive) suspendedStageRoot.gameObject.SetActive(true);
+                Physics2D.SyncTransforms();
+                fits = stageManager.TryResolveChallengeStartPosition(targetPlayer, preferred, out safePosition);
+            }
+            finally
+            {
+                if (suspendedStageRoot != null && !stageWasActive) suspendedStageRoot.gameObject.SetActive(false);
+                RestoreReadyRoomColliders(suspendedRoomColliders);
+            }
             if (fits) returnPositions[targetPlayer] = safePosition;
             return fits;
+        }
+
+        private List<Collider2D> SuspendReadyRoomColliders()
+        {
+            // The ready booths and the real arena intentionally share world
+            // coordinates. During the synchronous stage-fit probe, a booth
+            // floor or wall must not be mistaken for stage geometry. This was
+            // most visible in 15-3, whose zero-gravity starts overlap the lower
+            // half of the two-player booth grid. Player colliders are already
+            // ignored by StageManager; suspend only this ready-room geometry.
+            Collider2D[] colliders = GetComponentsInChildren<Collider2D>(true);
+            List<Collider2D> suspended = new List<Collider2D>(colliders.Length);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider2D collider = colliders[i];
+                if (collider == null || !collider.enabled) continue;
+                collider.enabled = false;
+                suspended.Add(collider);
+            }
+            Physics2D.SyncTransforms();
+            return suspended;
+        }
+
+        private static void RestoreReadyRoomColliders(List<Collider2D> colliders)
+        {
+            if (colliders == null) return;
+            for (int i = 0; i < colliders.Count; i++)
+                if (colliders[i] != null) colliders[i].enabled = true;
+            Physics2D.SyncTransforms();
         }
 
         private bool TryValidateAllStageStarts(out string rejectedId, out PlayerController2D rejectedPlayer)
@@ -2281,6 +2320,12 @@ namespace DrawBody.Prototype
             launched = true;
             stageManager?.ForceCloseDrawingForChallengeLaunch();
             if (suspendedStageRoot != null) suspendedStageRoot.gameObject.SetActive(true);
+
+            // Keep booth terrain out of the final placement query as well. The
+            // validation pass above resolves the same positions, but Launch
+            // performs one last placement for locally owned characters before
+            // the ready-room object is destroyed.
+            SuspendReadyRoomColliders();
 
             foreach (KeyValuePair<PlayerController2D, Vector3> entry in returnPositions)
             {

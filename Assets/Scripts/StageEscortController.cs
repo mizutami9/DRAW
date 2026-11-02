@@ -886,11 +886,11 @@ namespace DrawBody.Prototype
         private const float WalkSpeed = 1.15f;
         private static readonly string[] SpeechKeys =
         {
-            "ice_speedrun_start",
-            "cat_escape_go",
-            "multi_wait",
-            "survival_get_ready",
-            "spike_chase_run"
+            "escort_friend_word_go",
+            "escort_friend_word_run",
+            "escort_friend_word_wait",
+            "escort_friend_word_jump",
+            "escort_friend_word_move"
         };
         private bool authoritative;
         private bool stopped;

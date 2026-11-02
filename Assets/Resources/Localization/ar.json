@@ -21,12 +21,56 @@
       "value": "النظام الإداري"
     },
     {
+      "key": "option_reset_progress",
+      "value": "إعادة ضبط التقدم"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "إعادة ضبط التقدم"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "هل تريد إعادة ضبط سجلات إكمال جميع المراحل؟\nسيتم الاحتفاظ بمستوى الصوت واللغة واسم اللاعب والرسومات."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "تمت إعادة ضبط سجلات إكمال المراحل."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "إعادة ضبط"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "إلغاء"
+    },
+    {
+      "key": "option_complete",
+      "value": "تم"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "العرض: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "الدقة: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "ملء الشاشة"
+    },
+    {
+      "key": "option_windowed",
+      "value": "وضع النافذة"
+    },
+    {
       "key": "lang_ja",
       "value": "اليابان"
     },
     {
       "key": "lang_en",
-      "value": "EN"
+      "value": "في"
     },
     {
       "key": "status_play",
@@ -50,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "Preview"
+      "value": "المشاهدة السابقة"
     },
     {
       "key": "clear",
@@ -130,15 +174,15 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "الرسم {0}."
     },
     {
       "key": "head",
-      "value": "Head"
+      "value": "الرأس"
     },
     {
       "key": "torso",
-      "value": "Torso"
+      "value": "الجهاز"
     },
     {
       "key": "left_arm",
@@ -174,7 +218,7 @@
     },
     {
       "key": "tail",
-      "value": "Tail"
+      "value": "الذيل"
     },
     {
       "key": "left_wing",
@@ -186,11 +230,11 @@
     },
     {
       "key": "tail_feather",
-      "value": "Tail Feather"
+      "value": "ريش الذيل"
     },
     {
       "key": "slime_body",
-      "value": "Slime"
+      "value": "السلم"
     },
     {
       "key": "jump_normal",
@@ -210,7 +254,7 @@
     },
     {
       "key": "arm_long",
-      "value": "Long Reach"
+      "value": "الوصول الطويل"
     },
     {
       "key": "arm_fast",
@@ -262,19 +306,19 @@
     },
     {
       "key": "ability_card_cat",
-      "value": "CAT"
+      "value": "القطة"
     },
     {
       "key": "ability_card_bird",
-      "value": "BIRD"
+      "value": "الطائر"
     },
     {
       "key": "ability_card_turtle",
-      "value": "TURTLE"
+      "value": "السلاحف"
     },
     {
       "key": "ability_card_slime",
-      "value": "SLIME"
+      "value": "السلم"
     },
     {
       "key": "ability_description_human",
@@ -298,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: THROW"
+      "value": "Fالقذف:"
     },
     {
       "key": "ability_control_cat",
@@ -306,7 +350,7 @@
     },
     {
       "key": "ability_control_bird",
-      "value": "HOLD SPACE: GLIDE  F: GRAB"
+      "value": "إحتفظي SPACE: التزحلق  F: التقاط"
     },
     {
       "key": "ability_control_turtle",
@@ -315,6 +359,114 @@
     {
       "key": "ability_control_slime",
       "value": "F: UPWARD SPIKE ATTACK"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "مربع / X: رمي"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "مربع / X: خدش / انتزاع"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "عقد متقاطع / A: مربع الانزلاق / X: الاستيلاء"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "عقد متقاطع / A: SHELL HOLD SQUARE / X: استدر بزاوية 90 درجة"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "المربع / X: انطلق نحو العصا اليمنى"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "المثلث / Y: تبديل الحرف"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "س: تبديل الشخصية"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / تحديد: رسم MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: رسم MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: رسم MENU"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "مربع: رمي"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "مربع: خدش / انتزاع"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "عقد الصليب: مربع الإنزلاق: انتزاع"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "عقد متقاطع: شيل عقد مربع: استدر 90 درجة"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "مربع: انطلق نحو العصا اليمنى"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "عاشرا: رمي"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "عاشرًا: اخدش/امسك"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "عقد أ: الانزلاق X: انتزاع"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "عقد أ: عقد شيل X: دوران 90 درجة"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: انطلق نحو العصا اليمنى"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "المثلث: تبديل الشخصية"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "ص: تبديل الشخصية"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: رسم MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: رسم MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: رسم MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: رسم MENU"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "غير مدرج في العرض التوضيحي"
     },
     {
       "key": "ability_effect_human_combined",
@@ -346,7 +498,7 @@
     },
     {
       "key": "ability_ink_bird",
-      "value": "Wings {0:0.0} / 700 INK"
+      "value": "الأجنحة {0:0.0} / 700 INK"
     },
     {
       "key": "ability_ink_turtle",
@@ -366,11 +518,11 @@
     },
     {
       "key": "ability_rank",
-      "value": "RANK {0}"
+      "value": "رتبة {0}"
     },
     {
       "key": "ability_gauge_low",
-      "value": "LOW"
+      "value": "منخفضة"
     },
     {
       "key": "ability_gauge_high",
@@ -378,19 +530,19 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JUMP"
+      "value": "قفز"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "THROW"
+      "value": "رمي"
     },
     {
       "key": "ability_cat_back_leg_gauge",
-      "value": "RUN"
+      "value": "أركض"
     },
     {
       "key": "ability_cat_front_leg_gauge",
-      "value": "SCRATCH"
+      "value": "الخدش"
     },
     {
       "key": "ability_bird_gauge",
@@ -402,11 +554,11 @@
     },
     {
       "key": "ability_slime_gauge",
-      "value": "MOBILITY"
+      "value": "التنقل"
     },
     {
       "key": "ability_slime_ink_gauge",
-      "value": "BODY INK"
+      "value": "الجسم INK"
     },
     {
       "key": "ability_slime_gauge_low",
@@ -418,7 +570,7 @@
     },
     {
       "key": "ability_slime_badge",
-      "value": "INK SIZE {0:0}%"
+      "value": "INK الحجم {0:0}%"
     },
     {
       "key": "ability_slime_hint",
@@ -434,27 +586,119 @@
     },
     {
       "key": "label_high_platform",
-      "value": "1 High Platform"
+      "value": "1 منصة عالية"
     },
     {
       "key": "label_heavy_switch",
-      "value": "2 Heavy Switch"
+      "value": "2 التبديل الثقيل"
     },
     {
       "key": "label_far_lever",
-      "value": "3 Far Lever"
+      "value": "3 الرافعة البعيدة"
     },
     {
       "key": "label_narrow_hole",
-      "value": "4 Narrow Hole"
+      "value": "4 ثقب ضيق"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "لوحة المفاتيح + الفأرة"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "لوحة الألعاب (غير متصلة)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "تلقائي (لوحة المفاتيح / لوحة الألعاب)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "ص{0} تم قطع اتصال لوحة الألعاب. أعد توصيله لاستعادة نفس اللاعب."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "ص{0} إعادة توصيل لوحة الألعاب."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "تم الانضمام إلى {0} ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "ما يصل إلى لاعبين لكل جهاز و4 لاعبين إجمالاً في الغرفة."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "قم بإضافة أو إزالة اللاعبين المحليين قبل بدء المرحلة."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "الغرفة ممتلئة (4 لاعبين). تمت إزالة اللاعب المحلي الإضافي."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "لوحة غير مخصصة: START للانضمام / لوحة المفاتيح: ENTER للانضمام، BACKSPACE للمغادرة / P2: حدد + B للمغادرة"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "اللاعبون المحليون {0}/2 منصات متصلة {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "اللعب المحلي {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "الوسادة {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "اضغط على أي زر تحكم للانضمام"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: انضم"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 لاعبين جاهزين"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "اللاعبون {0}/2\nلوحة المفاتيح: ENTER للانضمام / BACKSPACE للمغادرة\nوحدة التحكم: START للانضمام / اضغط مع الاستمرار على B للمغادرة"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "تم تحويل P1 إلى {0}."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "تم إصدار لوحة المفاتيح/الماوس من P1. اضغط على زر وحدة التحكم للمطالبة بـ P1."
+    },
+    {
+      "key": "local_player_left",
+      "value": "ف{0} يسار."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "سحب اللقب غير متاح أثناء اللعب التعاوني المحلي. العودة إلى لاعب واحد أولا."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "العصا اليسرى: حرك RT / A / B: ارسم وحدد LT: مسح"
     },
     {
       "key": "multi_room_setup",
-      "value": "ROOM SETUP"
+      "value": "إعداد الغرف"
     },
     {
       "key": "multi_participants",
-      "value": "PLAYERS"
+      "value": "اللاعبون"
     },
     {
       "key": "multi_room_create_title",
@@ -462,7 +706,7 @@
     },
     {
       "key": "multi_room_join_title",
-      "value": "JOIN ROOM"
+      "value": "غرفة المشاركة"
     },
     {
       "key": "multi_room_id",
@@ -470,7 +714,7 @@
     },
     {
       "key": "multi_local_test_no_invite",
-      "value": "LOCAL TEST (INVITES OFF)"
+      "value": "الاختبار المحلي (المدعوات خارج)"
     },
     {
       "key": "multi_you_badge",
@@ -494,7 +738,11 @@
     },
     {
       "key": "tower_defense_phase",
-      "value": "PHASE {0} / {1}"
+      "value": "المرحلة {0} / {1}"
+    },
+    {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
     },
     {
       "key": "tower_defense_time_remaining",
@@ -517,8 +765,28 @@
       "value": "اللعنة!"
     },
     {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
+    },
+    {
       "key": "value_coin_amount",
-      "value": "COIN {0} / {1}"
+      "value": "العملة {0} / {1}"
     },
     {
       "key": "value_coin_time",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "الرسم"
     },
     {
       "key": "title_option",
@@ -573,8 +841,12 @@
       "value": "خروج"
     },
     {
+      "key": "title_exit_confirm",
+      "value": "هل تريد الخروج من NICO DRAW؟"
+    },
+    {
       "key": "title_debug",
-      "value": "DEBUG"
+      "value": "إزالة التلفاز"
     },
     {
       "key": "trailer_debug_title",
@@ -590,7 +862,7 @@
     },
     {
       "key": "trailer_debug_start",
-      "value": "START SEQUENCE"
+      "value": "التسلسل البدء"
     },
     {
       "key": "trailer_debug_back",
@@ -598,11 +870,11 @@
     },
     {
       "key": "trailer_debug_edit_shapes",
-      "value": "EDIT CHARACTERS"
+      "value": "تحرير الأحرف"
     },
     {
       "key": "steam_header_debug_button",
-      "value": "STEAM HEADER"
+      "value": "الرأس بخار"
     },
     {
       "key": "steam_header_capture",
@@ -610,7 +882,7 @@
     },
     {
       "key": "steam_header_exit",
-      "value": "BACK TO TITLE"
+      "value": "العودة إلى العنوان"
     },
     {
       "key": "steam_header_ready",
@@ -629,6 +901,10 @@
       "value": "المراسلون يمكن أن يتغيّرون في غرفة الإستراحة"
     },
     {
+      "key": "character_switch_redraw_zone_only",
+      "value": "لا يمكنك تبديل الشخصية إلا فوق أرضية إعادة الرسم."
+    },
+    {
       "key": "trailer_debug_capture_help",
       "value": "R REPLAY HIDE HUD     ESC  TITLE"
     },
@@ -642,7 +918,7 @@
     },
     {
       "key": "trailer_tas_record",
-      "value": "F9 RECORD/STOP"
+      "value": "F9 سجل/وقف"
     },
     {
       "key": "trailer_tas_play",
@@ -650,7 +926,7 @@
     },
     {
       "key": "trailer_tas_reset",
-      "value": "F8 RESET TAKE"
+      "value": "F8 إعادة تشغيل"
     },
     {
       "key": "trailer_tas_clear",
@@ -658,15 +934,15 @@
     },
     {
       "key": "trailer_tas_pause",
-      "value": "P PAUSE"
+      "value": "P توقف"
     },
     {
       "key": "trailer_tas_step",
-      "value": "O STEP"
+      "value": "O خطوة"
     },
     {
       "key": "trailer_tas_status_idle",
-      "value": "IDLE"
+      "value": "عفواً"
     },
     {
       "key": "trailer_tas_status_recording",
@@ -686,11 +962,11 @@
     },
     {
       "key": "trailer_tas_preset_format",
-      "value": "PRESET {0}"
+      "value": "إعداد مسبق {0}"
     },
     {
       "key": "trailer_tas_save_preset",
-      "value": "SAVE SHAPES"
+      "value": "حفظ الأشكال"
     },
     {
       "key": "trailer_tas_placement_help",
@@ -705,12 +981,44 @@
       "value": "العنوان"
     },
     {
+      "key": "menu_retry_confirm_message",
+      "value": "هل تريد إعادة هذه المرحلة من البداية؟"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "إعادة المحاولة"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "هل تريد إنهاء المرحلة الحالية والعودة إلى اختيار المراحل؟"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "اختيار المراحل"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "لن يتم حفظ التغييرات غير المكتملة. هل تريد الرجوع دون حفظ؟"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "الرجوع دون حفظ"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "تم حفظ الشخصية بعد إعادة رسمها."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "تعذر الحفظ. اضغط «تم» مرة أخرى."
+    },
+    {
       "key": "language_settings",
       "value": "اللغات"
     },
     {
       "key": "multi_play",
-      "value": "MULTI PLAY"
+      "value": "اللعب المتعدد"
     },
     {
       "key": "multi_random_button",
@@ -738,7 +1046,7 @@
     },
     {
       "key": "multi_room_title",
-      "value": "ROOM"
+      "value": "غرفة"
     },
     {
       "key": "multi_create_room",
@@ -878,7 +1186,7 @@
     },
     {
       "key": "multi_offline_lobby_id",
-      "value": "Offline"
+      "value": "خارج الإنترنت"
     },
     {
       "key": "multi_room_code_label",
@@ -898,19 +1206,19 @@
     },
     {
       "key": "multi_local",
-      "value": "محلية"
+      "value": "Local"
     },
     {
       "key": "multi_ready",
-      "value": "READY"
+      "value": "جاهز"
     },
     {
       "key": "multi_wait",
-      "value": "WAIT"
+      "value": "انتظروا"
     },
     {
       "key": "multi_host",
-      "value": "HOST"
+      "value": "المضيف"
     },
     {
       "key": "multi_default_room_name",
@@ -929,6 +1237,10 @@
       "value": "أنت"
     },
     {
+      "key": "spectator_following",
+      "value": "المشاهدة: {0} التبديل مع ← / →"
+    },
+    {
       "key": "online_player_host",
       "value": "المضيفة"
     },
@@ -943,6 +1255,18 @@
     {
       "key": "online_fake_initialized",
       "value": "المساندة المزيفة بدأت"
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "اللعب عبر الإنترنت غير متاح لأن بيانات اللعبة أو الإصدار غير متطابقين. تحقق من ملفات اللعبة في Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "انقطع اتصال المضيف، لذا أُغلقت الغرفة."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "انقطع الاتصال بالجلسة. يُرجى الانضمام إلى الغرفة مرة أخرى."
     },
     {
       "key": "online_logging_in",
@@ -1041,6 +1365,14 @@
       "value": "وفشلت شركة EOS لوجست: {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "شغّل Steam، ثم شغّل NICO DRAW من مكتبة Steam."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "تعذر الحصول على تذكرة مصادقة Steam: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "EOS خلق ردهة فشل: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "وفشل البحث في الغرفة: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "فشل إنشاء الغرفة. إعادة المحاولة في {0}ق ({1} المحاولات المتبقية)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1166,7 +1502,7 @@
     },
     {
       "key": "stage_species_available_compact",
-      "value": "USE: {0}"
+      "value": "استخدام: {0}"
     },
     {
       "key": "stage_select_debug_created",
@@ -1186,7 +1522,7 @@
     },
     {
       "key": "draw_species_swap_title",
-      "value": "CHARACTER SWAP"
+      "value": "تبادل الشخصيات"
     },
     {
       "key": "draw_species_swap_hint",
@@ -1197,16 +1533,32 @@
       "value": "{0} يريد أن يبادلك {1} for {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} يستخدم هذه الشخصية بالفعل. هل تريد إرسال طلب تبديل؟"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "إرسال الطلب"
+    },
+    {
       "key": "draw_species_swap_accept",
-      "value": "SWAP"
+      "value": "التغيير"
     },
     {
       "key": "draw_species_swap_reject",
-      "value": "DECLINE"
+      "value": "انخفاض"
     },
     {
       "key": "draw_species_swap_pending",
       "value": "في انتظار استجابة لطلب المبادلة..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "تم إرسال طلب التبديل"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "بانتظار رد {0}.\nالتبديل المطلوب: {1} مقابل {2}."
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1226,7 +1578,7 @@
     },
     {
       "key": "stage_object_grain_scale",
-      "value": "100g SCALE"
+      "value": "100 غرام من المعدل"
     },
     {
       "key": "stage_object_grain_gate",
@@ -1258,7 +1610,7 @@
     },
     {
       "key": "species_slime",
-      "value": "Slime"
+      "value": "السلم"
     },
     {
       "key": "stage_editor_objects_tab",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "بداية الاختبار: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "تحريك P{0}وضع البدء في تجربة اللعب"
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "ب{0} بداية الاختبار: X {1:0.00} (و) {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1358,7 +1718,7 @@
     },
     {
       "key": "stage_editor_redo",
-      "value": "Redo"
+      "value": "ريدو"
     },
     {
       "key": "stage_editor_copy",
@@ -1382,7 +1742,7 @@
     },
     {
       "key": "stage_editor_copy_up",
-      "value": "↑ UP"
+      "value": "↑ فوق"
     },
     {
       "key": "stage_editor_status_copy_direction",
@@ -1410,7 +1770,7 @@
     },
     {
       "key": "stage_editor_bomb_fuse_seconds",
-      "value": "Fuse (sec)"
+      "value": "مضخة (sec)"
     },
     {
       "key": "stage_editor_crumble_delay",
@@ -1442,7 +1802,7 @@
     },
     {
       "key": "stage_editor_spike_size",
-      "value": "Spike Size"
+      "value": "حجم العصا"
     },
     {
       "key": "stage_editor_status_move_distance",
@@ -1490,7 +1850,7 @@
     },
     {
       "key": "stage_editor_conveyor_right",
-      "value": "Direction: Right →"
+      "value": "الاتجاه: اليمين"
     },
     {
       "key": "stage_editor_status_conveyor_direction",
@@ -1550,11 +1910,11 @@
     },
     {
       "key": "stage_editor_status_weight_threshold_invalid",
-      "value": "Enter a number from 1 to 2000."
+      "value": "Enter رقم من 1 إلى 2000."
     },
     {
       "key": "ink_personal_cap",
-      "value": "PERSONAL CAP"
+      "value": "القبض الشخصي"
     },
     {
       "key": "ink_team_formula",
@@ -1562,7 +1922,7 @@
     },
     {
       "key": "draw_pen_size",
-      "value": "PEN SIZE"
+      "value": "حجم القلم"
     },
     {
       "key": "draw_ink",
@@ -1574,7 +1934,7 @@
     },
     {
       "key": "draw_undo_once",
-      "value": "UNDO"
+      "value": "إبطال"
     },
     {
       "key": "draw_reset_all",
@@ -1590,23 +1950,27 @@
     },
     {
       "key": "draw_reset_confirm_yes",
-      "value": "RESET"
+      "value": "إعادة تشغيل"
     },
     {
       "key": "draw_reset_confirm_no",
-      "value": "CANCEL"
+      "value": "إلغاء"
     },
     {
       "key": "draw_preset_title",
-      "value": "{0} PRESETS"
+      "value": "{0} إعدادات مسبقة"
     },
     {
       "key": "draw_preset_button",
-      "value": "PRESETS"
+      "value": "إعدادات مسبقة"
     },
     {
       "key": "draw_preset_sets_title",
       "value": "5 - معدات ميكانيكية"
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "رجوع"
     },
     {
       "key": "draw_preset_five_species",
@@ -1618,11 +1982,11 @@
     },
     {
       "key": "draw_preset_slot",
-      "value": "SLOT {0}"
+      "value": "حفرة {0}"
     },
     {
       "key": "draw_preset_saved",
-      "value": "SAVED"
+      "value": "تم إنقاذها"
     },
     {
       "key": "draw_preset_empty",
@@ -1630,11 +1994,11 @@
     },
     {
       "key": "draw_preset_register",
-      "value": "SAVE"
+      "value": "حفظ"
     },
     {
       "key": "draw_preset_apply",
-      "value": "SET"
+      "value": "المجموعة"
     },
     {
       "key": "draw_preset_save_confirm_title",
@@ -1650,7 +2014,7 @@
     },
     {
       "key": "draw_preset_load_confirm_title",
-      "value": "SET PRESET {0}?"
+      "value": "إعداد مسبق {0}?"
     },
     {
       "key": "draw_preset_load_confirm_message",
@@ -1678,7 +2042,7 @@
     },
     {
       "key": "stage_object_background_cloud",
-      "value": "Cloud"
+      "value": "السحابة"
     },
     {
       "key": "stage_object_background_push",
@@ -1686,7 +2050,7 @@
     },
     {
       "key": "stage_object_background_arrow",
-      "value": "Arrow"
+      "value": "السهم"
     },
     {
       "key": "stage_object_background_cat_face",
@@ -1702,7 +2066,7 @@
     },
     {
       "key": "stage_object_background_smiley",
-      "value": "Smiley"
+      "value": "(سميلي)"
     },
     {
       "key": "stage_object_background_heart",
@@ -1722,7 +2086,7 @@
     },
     {
       "key": "stage_object_background_rain",
-      "value": "Rain"
+      "value": "المطر"
     },
     {
       "key": "stage_object_background_lightning",
@@ -1746,15 +2110,15 @@
     },
     {
       "key": "stage_object_background_apple",
-      "value": "Apple"
+      "value": "التفاح"
     },
     {
       "key": "stage_object_background_banana",
-      "value": "Banana"
+      "value": "الموز"
     },
     {
       "key": "stage_object_background_watermelon",
-      "value": "Watermelon"
+      "value": "البطيخ"
     },
     {
       "key": "stage_object_background_donut",
@@ -1762,7 +2126,7 @@
     },
     {
       "key": "stage_object_background_ice_cream",
-      "value": "Ice Cream"
+      "value": "الآيس كريم"
     },
     {
       "key": "stage_object_background_coffee_cup",
@@ -1786,11 +2150,11 @@
     },
     {
       "key": "stage_object_background_rocket",
-      "value": "Rocket"
+      "value": "صاروخ"
     },
     {
       "key": "stage_object_background_ufo",
-      "value": "UFO"
+      "value": "أوفو"
     },
     {
       "key": "stage_object_background_hot_air_balloon",
@@ -1810,11 +2174,11 @@
     },
     {
       "key": "stage_object_background_mole",
-      "value": "Mole"
+      "value": "الجثث"
     },
     {
       "key": "stage_object_background_fossil",
-      "value": "Fossil"
+      "value": "الحفريات"
     },
     {
       "key": "stage_object_background_crystal",
@@ -1842,7 +2206,7 @@
     },
     {
       "key": "stage_object_background_shield",
-      "value": "Shield"
+      "value": "الدرع"
     },
     {
       "key": "stage_object_background_gem",
@@ -1850,11 +2214,11 @@
     },
     {
       "key": "stage_object_background_coin",
-      "value": "Coin"
+      "value": "العملة"
     },
     {
       "key": "stage_object_background_bone",
-      "value": "Bone"
+      "value": "العظام"
     },
     {
       "key": "stage_object_background_light_bulb",
@@ -1862,7 +2226,7 @@
     },
     {
       "key": "stage_object_background_gear",
-      "value": "Gear"
+      "value": "المعدات"
     },
     {
       "key": "stage_object_background_spring",
@@ -1870,15 +2234,15 @@
     },
     {
       "key": "stage_object_background_magnet",
-      "value": "Magnet"
+      "value": "المغناطيس"
     },
     {
       "key": "stage_object_background_dice",
-      "value": "Dice"
+      "value": "القضيب"
     },
     {
       "key": "stage_object_background_speech_bubble",
-      "value": "Speech Bubble"
+      "value": "فقاعة الكلام"
     },
     {
       "key": "stage_object_background_check_mark",
@@ -1914,15 +2278,15 @@
     },
     {
       "key": "stage_editor_status_rotate_decoration",
-      "value": "Rotate: Shift + wheel (0.5 degree precision)"
+      "value": "تدوير: Shift + عجلة (0.5 درجة دقة)"
     },
     {
       "key": "stage_editor_status_rotate_mounted",
-      "value": "Rotate: Shift + wheel (15°), with Alt (1°)"
+      "value": "تدوير: Shift + عجلة (15°) ، مع Alt (1°)"
     },
     {
       "key": "stage_editor_status_rotate_object",
-      "value": "Rotate: Shift + wheel (15°), with Alt (1°)"
+      "value": "تدوير: Shift + عجلة (15°) ، مع Alt (1°)"
     },
     {
       "key": "stage_editor_status_scale_decoration",
@@ -1978,7 +2342,7 @@
     },
     {
       "key": "stage_editor_snap_attach",
-      "value": "Snap"
+      "value": "التقط"
     },
     {
       "key": "stage_editor_link_source",
@@ -1990,7 +2354,7 @@
     },
     {
       "key": "stage_editor_unlink",
-      "value": "Unlink"
+      "value": "إزالة الرابط"
     },
     {
       "key": "stage_editor_selected_add",
@@ -2006,7 +2370,7 @@
     },
     {
       "key": "stage_editor_boundary_quick",
-      "value": "Frame"
+      "value": "الإطار"
     },
     {
       "key": "stage_editor_status_boundary_fitted",
@@ -2022,11 +2386,11 @@
     },
     {
       "key": "stage_room_number",
-      "value": "ROOM {0}"
+      "value": "غرفة {0}"
     },
     {
       "key": "stage_weapon_bomb",
-      "value": "BOMB"
+      "value": "قنبلة"
     },
     {
       "key": "stage_weapon_missile",
@@ -2034,11 +2398,15 @@
     },
     {
       "key": "stage_ready_label",
-      "value": "READY"
+      "value": "جاهز"
+    },
+    {
+      "key": "background_word_push",
+      "value": "ادفع!"
     },
     {
       "key": "stage_dynamite_label",
-      "value": "TNT"
+      "value": "(تنت)"
     },
     {
       "key": "stage_editor_background_color",
@@ -2046,11 +2414,11 @@
     },
     {
       "key": "laser_relay_editor_players",
-      "value": "PLAYERS {0}"
+      "value": "اللاعبون {0}"
     },
     {
       "key": "laser_relay_editor_round",
-      "value": "STAGE {0}"
+      "value": "المرحلة {0}"
     },
     {
       "key": "laser_relay_editor_preview",
@@ -2070,7 +2438,7 @@
     },
     {
       "key": "stage_editor_color_opacity",
-      "value": "Opacity"
+      "value": "المفتوحة"
     },
     {
       "key": "stage_editor_status_background_color",
@@ -2094,7 +2462,7 @@
     },
     {
       "key": "stage_editor_none",
-      "value": "(none)"
+      "value": "(لا أحد)"
     },
     {
       "key": "stage_category_terrain",
@@ -2106,7 +2474,7 @@
     },
     {
       "key": "stage_category_switch",
-      "value": "Switch"
+      "value": "التبديل"
     },
     {
       "key": "stage_category_door_gate",
@@ -2114,7 +2482,7 @@
     },
     {
       "key": "stage_category_movable",
-      "value": "Movable"
+      "value": "متحرك"
     },
     {
       "key": "stage_category_action",
@@ -2122,11 +2490,11 @@
     },
     {
       "key": "stage_category_trap",
-      "value": "Trap"
+      "value": "فخ"
     },
     {
       "key": "stage_category_gimmick",
-      "value": "Gimmick"
+      "value": "(جيميك)"
     },
     {
       "key": "stage_category_enemy",
@@ -2158,7 +2526,7 @@
     },
     {
       "key": "stage_object_ceiling",
-      "value": "Ceiling"
+      "value": "السقف"
     },
     {
       "key": "stage_object_half_platform",
@@ -2170,11 +2538,11 @@
     },
     {
       "key": "stage_object_ice_floor",
-      "value": "Ice Floor"
+      "value": "أرضية ثلجية"
     },
     {
       "key": "stage_object_slippery_slope",
-      "value": "Slippery Slope"
+      "value": "المنحدر المنحدر"
     },
     {
       "key": "stage_object_climbable_wall",
@@ -2182,7 +2550,7 @@
     },
     {
       "key": "stage_object_rope",
-      "value": "Rope"
+      "value": "الحبل"
     },
     {
       "key": "stage_object_ladder",
@@ -2202,7 +2570,7 @@
     },
     {
       "key": "stage_object_moving_platform",
-      "value": "Moving Floor"
+      "value": "الطابق المتحرك"
     },
     {
       "key": "stage_object_moving_one_way_platform",
@@ -2230,11 +2598,11 @@
     },
     {
       "key": "ricochet_enemy_round",
-      "value": "ROUND {0} / {1}"
+      "value": "مستديرة {0} / {1}"
     },
     {
       "key": "ricochet_enemy_balls",
-      "value": "BALL {0} / {1}"
+      "value": "الكرة {0} / {1}"
     },
     {
       "key": "ricochet_enemy_next",
@@ -2250,7 +2618,7 @@
     },
     {
       "key": "ricochet_enemy_remaining",
-      "value": "ENEMIES LEFT {0}"
+      "value": "العدو متبقي {0}"
     },
     {
       "key": "stage_object_handgun",
@@ -2262,11 +2630,11 @@
     },
     {
       "key": "stage_object_spike_planet",
-      "value": "Spike Planet"
+      "value": "كوكب سبايك"
     },
     {
       "key": "stage_object_enemy_flyer_zigzag",
-      "value": "Zigzag Flyer"
+      "value": "طائرة زيغزاج"
     },
     {
       "key": "stage_object_enemy_flyer_orbit",
@@ -2274,7 +2642,7 @@
     },
     {
       "key": "stage_object_bazooka",
-      "value": "Bazooka"
+      "value": "بازوكا"
     },
     {
       "key": "stage_object_enemy_bomber",
@@ -2290,7 +2658,7 @@
     },
     {
       "key": "stage_object_pose_character_keyhole",
-      "value": "Pose Keyhole"
+      "value": "ضع فتحة مفتاحية"
     },
     {
       "key": "stage_object_updraft_zone",
@@ -2298,11 +2666,11 @@
     },
     {
       "key": "stage_object_speed_ring2_x",
-      "value": "Speed Mark"
+      "value": "علامة السرعة"
     },
     {
       "key": "stage_object_speed_ring3_x",
-      "value": "Speed Mark (Strong)"
+      "value": "علامة السرعة (قوية)"
     },
     {
       "key": "stage_object_redraw_zone",
@@ -2326,7 +2694,7 @@
     },
     {
       "key": "stage_object_warp_entrance",
-      "value": "Warp Entrance"
+      "value": "مدخل حرب"
     },
     {
       "key": "stage_object_warp_exit",
@@ -2334,7 +2702,7 @@
     },
     {
       "key": "stage_object_respawn_point",
-      "value": "Respawn Point"
+      "value": "نقطة الإستراحة"
     },
     {
       "key": "stage_object_mid_goal",
@@ -2346,11 +2714,11 @@
     },
     {
       "key": "stage_object_button",
-      "value": "Button"
+      "value": "الزر"
     },
     {
       "key": "stage_object_weight_button",
-      "value": "Weight Button"
+      "value": "زر الوزن"
     },
     {
       "key": "stage_object_simultaneous_button",
@@ -2358,7 +2726,7 @@
     },
     {
       "key": "stage_object_hold_button",
-      "value": "Hold Button"
+      "value": "إمسك الزر"
     },
     {
       "key": "stage_object_triangle_box",
@@ -2366,7 +2734,7 @@
     },
     {
       "key": "stage_object_lever",
-      "value": "Lever"
+      "value": "الرافعة"
     },
     {
       "key": "stage_object_toggle_switch",
@@ -2374,11 +2742,11 @@
     },
     {
       "key": "stage_object_timer_switch",
-      "value": "Timer Switch"
+      "value": "تغيير التوقيت"
     },
     {
       "key": "stage_object_sensor",
-      "value": "Sensor"
+      "value": "أجهزة الاستشعار"
     },
     {
       "key": "stage_object_red_switch",
@@ -2402,11 +2770,11 @@
     },
     {
       "key": "stage_object_remote_control",
-      "value": "Remote Control"
+      "value": "التحكم عن بعد"
     },
     {
       "key": "stage_object_ink_scale",
-      "value": "Ink Scale"
+      "value": "Ink النطاق"
     },
     {
       "key": "stage_object_door",
@@ -2422,7 +2790,7 @@
     },
     {
       "key": "stage_object_fence",
-      "value": "Fence"
+      "value": "السياج"
     },
     {
       "key": "stage_object_laser_gate",
@@ -2450,11 +2818,11 @@
     },
     {
       "key": "stage_object_wood_box",
-      "value": "Wood Box"
+      "value": "الصندوق الخشبي"
     },
     {
       "key": "stage_object_iron_box",
-      "value": "Iron Box"
+      "value": "الصندوق الحديدي"
     },
     {
       "key": "stage_object_ball",
@@ -2462,7 +2830,7 @@
     },
     {
       "key": "stage_object_barrel",
-      "value": "Barrel"
+      "value": "البرميل"
     },
     {
       "key": "stage_object_rock",
@@ -2470,7 +2838,7 @@
     },
     {
       "key": "stage_object_ice_block",
-      "value": "Ice Block"
+      "value": "كتلة الجليد"
     },
     {
       "key": "stage_object_floating_box",
@@ -2506,7 +2874,7 @@
     },
     {
       "key": "stage_object_enemy_charger",
-      "value": "Charger Enemy"
+      "value": "العدو المتحمّل"
     },
     {
       "key": "stage_object_enemy_flyer",
@@ -2518,7 +2886,7 @@
     },
     {
       "key": "stage_object_enemy_dropper",
-      "value": "Enemy Spawner"
+      "value": "العدو (سبونر)"
     },
     {
       "key": "stage_object_missile_launcher",
@@ -2538,7 +2906,7 @@
     },
     {
       "key": "stage_editor_enemy_size",
-      "value": "Enemy Size"
+      "value": "حجم العدو"
     },
     {
       "key": "stage_editor_status_enemy_pattern",
@@ -2554,7 +2922,7 @@
     },
     {
       "key": "stage_object_coin",
-      "value": "Coin"
+      "value": "العملة"
     },
     {
       "key": "stage_object_star",
@@ -2566,7 +2934,7 @@
     },
     {
       "key": "stage_object_bucket",
-      "value": "Bucket"
+      "value": "السلة"
     },
     {
       "key": "stage_object_jump_pad",
@@ -2590,11 +2958,11 @@
     },
     {
       "key": "stage_object_fan",
-      "value": "Fan"
+      "value": "المروحة"
     },
     {
       "key": "stage_object_magnet",
-      "value": "Magnet"
+      "value": "المغناطيس"
     },
     {
       "key": "stage_object_belt",
@@ -2614,7 +2982,7 @@
     },
     {
       "key": "stage_object_collectible_coin",
-      "value": "Coin"
+      "value": "العملة"
     },
     {
       "key": "stage_object_collectible_star",
@@ -2626,7 +2994,7 @@
     },
     {
       "key": "stage_object_beam_emitter",
-      "value": "Beam Emitter"
+      "value": "إصدار الشعاع"
     },
     {
       "key": "stage_rule_normal",
@@ -2667,6 +3035,10 @@
     {
       "key": "challenge_time_up",
       "value": "الوقت"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "لا يوجد حد زمني"
     },
     {
       "key": "challenge_retry_hint",
@@ -2726,7 +3098,7 @@
     },
     {
       "key": "grain_rain_round",
-      "value": "STAGE {0}/{1}"
+      "value": "المرحلة {0}/{1}"
     },
     {
       "key": "grain_rain_blizzard",
@@ -2747,6 +3119,26 @@
     {
       "key": "ice_speedrun_time_up",
       "value": "TIME UP RETRY IN {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "واضح ضمن {0} الإجمالي"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "المجموع {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "إجمالي الفريق أكثر"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "إعادة المحاولة في {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "انتهت اللعبة\nالإجمالي {0} / {1}"
     },
     {
       "key": "survival_get_ready",
@@ -2770,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "READY {0} / {1}"
+      "value": "جاهز {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -2793,6 +3185,10 @@
       "value": "لنبدأ اللعبة"
     },
     {
+      "key": "ready_room_game_2_3",
+      "value": "اركض."
+    },
+    {
       "key": "ready_room_game_2_2",
       "value": "تطوّر في النهاية قبل أن تدق"
     },
@@ -2802,7 +3198,7 @@
     },
     {
       "key": "ready_room_game_6_2",
-      "value": "DODGE THE HURDLES AND SURVIVE"
+      "value": "تتجنب العقبات وتنجو"
     },
     {
       "key": "ready_room_game_6_3",
@@ -2826,7 +3222,7 @@
     },
     {
       "key": "ready_room_game_9_1",
-      "value": "DODGE THE MISSILES AND SURVIVE"
+      "value": "تتجنب الصواريخ وتنجو"
     },
     {
       "key": "ready_room_game_9_2",
@@ -2842,7 +3238,7 @@
     },
     {
       "key": "ready_room_game_10_3",
-      "value": "RICOCHET BULLETS TO DEFEAT THE ENEMIES"
+      "value": "ريكوشيت رصاصات لهزيمة الأعداء"
     },
     {
       "key": "ready_room_game_11_1",
@@ -2890,7 +3286,7 @@
     },
     {
       "key": "ready_room_game_15_1",
-      "value": "DEFEAT CRAYON DEVIL"
+      "value": "هزيمة شيطان القلم"
     },
     {
       "key": "ready_room_game_15_2",
@@ -2898,7 +3294,7 @@
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "DEFEAT the ENEMIES"
+      "value": "تجنب هجمات الأعداء"
     },
     {
       "key": "ready_room_clear_one_survivor",
@@ -2907,6 +3303,10 @@
     {
       "key": "ready_room_clear_one_goal",
       "value": "اغلقوا عندما يقوم احدى اللاعبين بترويض الهدف"
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "قم بتوضيح ما إذا كان وقت الانتهاء المشترك للجميع هو في حدود دقيقة واحدة لكل لاعب."
     },
     {
       "key": "spike_chase_monitor_title",
@@ -2921,32 +3321,56 @@
       "value": "اركضوا نحو الهدف"
     },
     {
-      "key": "wind_speedrun_title",
-      "value": "!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "LESS INK ♪ STRONGER WIND"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "الوقت {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "الوقت"
-    },
-    {
       "key": "umbrella_rain_title",
-      "value": "إبقوا تحت الأوبرالا"
+      "value": "ابتعد عن المطر"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "راين يزعجك"
+      "value": "ابتعد عن المطر"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "كُلّ شخص كَانَ يَكْتبُ في الراينِ!"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -2962,7 +3386,7 @@
     },
     {
       "key": "linked_shield_failed",
-      "value": "TEAM DOWN - RESTARTING"
+      "value": "فريق أسفل - إعادة البدء"
     },
     {
       "key": "linked_shield_clear",
@@ -3030,7 +3454,7 @@
     },
     {
       "key": "mirror_boss_phase",
-      "value": "PHASE {0}  DOUBLES LEFT: {1}"
+      "value": "المرحلة {0}  المضاعفة اليسرى: {1}"
     },
     {
       "key": "mirror_boss_hint",
@@ -3054,7 +3478,7 @@
     },
     {
       "key": "mirror_brawl_phase",
-      "value": "PHASE {0}  LEFT: {1}"
+      "value": "المرحلة {0}  يساراً: {1}"
     },
     {
       "key": "mirror_brawl_phase_clear",
@@ -3254,7 +3678,7 @@
     },
     {
       "key": "jump_rope_clear_sub",
-      "value": "SURVIVOR FOUND"
+      "value": "الباقي على قيد الحياة"
     },
     {
       "key": "escort_title",
@@ -3310,7 +3734,7 @@
     },
     {
       "key": "drawn_escort_round_running",
-      "value": "ROUND {0}/3"
+      "value": "مستديرة {0}/3"
     },
     {
       "key": "drawn_escort_round_clear",
@@ -3337,8 +3761,72 @@
       "value": "سدّوا الثقوب!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "الجولة {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "الجولة {0}/3 {1:0.0} ثانية لليسار"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "جولة {0} واضحة!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "انتهى الوقت!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "إعادة محاولة هذه الجولة"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "ضع الوضع البشري المطابق في ثقب المفتاح!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "ابحث عن الوضعية المطابقة بين الطيور العائمة!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "احمل السلحفاة عبر الغرفة المليئة بالينابيع!"
+    },
+    {
       "key": "tilt_board_monitor",
       "value": "ROUND {0}/3    {1:0.0}SEFT"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "الجولة {0}/3 تبدأ في {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "يمكنك التحرك داخل حارتك أثناء العد التنازلي"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "جولة {0}/3 صناديق {1}/{2} {3} ثانية على اليسار"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "اكسر الصناديق باستخدام مسمار السلايم!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "كسر الصناديق الصغيرة!  مشاهدة الأعداء!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "جولة {0} واضحة!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "انتهت اللعبة من إعادة محاولة الجولة {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "كل جولة واضحة!"
     },
     {
       "key": "tilt_board_progress",
@@ -3393,12 +3881,40 @@
       "value": "10-3 RCOCHET RELAY"
     },
     {
+      "key": "cat_escape_title",
+      "value": "2-3  اهرب من القط العملاق!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "انتظار {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "البدء خلال {0}"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "اركض!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "خدوش الفريق  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
       "key": "ricochet_round",
-      "value": "ROUND {0} / {1}"
+      "value": "مستديرة {0} / {1}"
     },
     {
       "key": "ricochet_ammo",
-      "value": "AMMO {0}"
+      "value": "الذخيرة {0}"
     },
     {
       "key": "ricochet_instruction",
@@ -3422,7 +3938,7 @@
     },
     {
       "key": "stage_object_escort_player_only_floor",
-      "value": "Friend-Pass Floor"
+      "value": "طابق \"فريدي پاس\""
     },
     {
       "key": "stage_object_escort_head_bridge",
@@ -3430,11 +3946,11 @@
     },
     {
       "key": "stage_object_seesaw",
-      "value": "Seesaw"
+      "value": "سيزاو"
     },
     {
       "key": "stage_object_turntable",
-      "value": "Turntable"
+      "value": "اللوحة المتحولة"
     },
     {
       "key": "stage_object_cannon",
@@ -3446,7 +3962,7 @@
     },
     {
       "key": "stage_object_spike",
-      "value": "Spike"
+      "value": "سبايك"
     },
     {
       "key": "stage_object_fire",
@@ -3462,7 +3978,7 @@
     },
     {
       "key": "stage_object_laser",
-      "value": "Laser"
+      "value": "الليزر"
     },
     {
       "key": "stage_object_falling_rock",
@@ -3470,7 +3986,7 @@
     },
     {
       "key": "stage_object_press_machine",
-      "value": "Press Machine"
+      "value": "آلة الضغط"
     },
     {
       "key": "stage_object_electricity",
@@ -3478,15 +3994,15 @@
     },
     {
       "key": "stage_object_saw",
-      "value": "Saw"
+      "value": "رأس"
     },
     {
       "key": "stage_object_black_hole",
-      "value": "Black Hole"
+      "value": "الثقب الأسود"
     },
     {
       "key": "stage_object_gear",
-      "value": "Gear"
+      "value": "المعدات"
     },
     {
       "key": "stage_object_big_gear",
@@ -3494,11 +4010,11 @@
     },
     {
       "key": "stage_object_rope_pulley",
-      "value": "Rope Pulley"
+      "value": "سحب الحبل"
     },
     {
       "key": "stage_object_slider",
-      "value": "Slider"
+      "value": "سلايدر"
     },
     {
       "key": "stage_object_rotating_bar",
@@ -3506,7 +4022,7 @@
     },
     {
       "key": "stage_object_pendulum",
-      "value": "Pendulum"
+      "value": "الممرر"
     },
     {
       "key": "stage_object_keyhole",
@@ -3518,7 +4034,7 @@
     },
     {
       "key": "stage_object_clock",
-      "value": "Clock"
+      "value": "الساعة"
     },
     {
       "key": "stage_object_counter",
@@ -3586,7 +4102,7 @@
     },
     {
       "key": "stage_editor_straight",
-      "value": "Straight"
+      "value": "مباشرة"
     },
     {
       "key": "stage_editor_status_straight_on",
@@ -3654,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "Menu"
+      "value": "قائمة الطعام"
     },
     {
       "key": "redraw",
@@ -3662,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Pen"
+      "value": "القلم"
     },
     {
       "key": "eraser",
-      "value": "Eraser"
+      "value": "مُحذف"
     },
     {
       "key": "shape_square",
@@ -3698,7 +4214,7 @@
     },
     {
       "key": "undo",
-      "value": "Undo"
+      "value": "إبطال"
     },
     {
       "key": "character_switch",
@@ -3714,7 +4230,7 @@
     },
     {
       "key": "character_control_switch",
-      "value": "Switch Char"
+      "value": "قم بتبديل شار"
     },
     {
       "key": "stage_select",
@@ -3726,31 +4242,31 @@
     },
     {
       "key": "debug_stage",
-      "value": "1-0 Debug"
+      "value": "1-0 إصلاح"
     },
     {
       "key": "stage_editor_open",
-      "value": "Edit 1-1"
+      "value": "تحرير 1-1"
     },
     {
       "key": "stage_select_edit_off",
-      "value": "Edit: OFF"
+      "value": "إصدار: إيقاف"
     },
     {
       "key": "stage_select_edit_on",
-      "value": "Edit: ON"
+      "value": "تحرير: ON"
     },
     {
       "key": "stage_unplayed",
-      "value": "NEW"
+      "value": "جديدة"
     },
     {
       "key": "stage_clear",
-      "value": "CLEAR"
+      "value": "واضح"
     },
     {
       "key": "stage_locked",
-      "value": "LOCKED"
+      "value": "مقفل"
     },
     {
       "key": "stage_select_info",
@@ -3762,7 +4278,7 @@
     },
     {
       "key": "stage_object_balance",
-      "value": "Scale"
+      "value": "النطاق"
     },
     {
       "key": "stage_editor_size",
@@ -3770,7 +4286,7 @@
     },
     {
       "key": "stage_editor_snap",
-      "value": "Grid"
+      "value": "الشبكة"
     },
     {
       "key": "stage_editor_delete",
@@ -3798,7 +4314,7 @@
     },
     {
       "key": "option_se",
-      "value": "SE"
+      "value": "- نعم ."
     },
     {
       "key": "option_keys",
@@ -3834,11 +4350,11 @@
     },
     {
       "key": "slime",
-      "value": "Slime"
+      "value": "السلم"
     },
     {
       "key": "label_ball_hit",
-      "value": "5 Ball Hit"
+      "value": "5 كرة ضرب"
     },
     {
       "key": "stage_editor_quick",
@@ -3962,7 +4478,7 @@
     },
     {
       "key": "stage_rule_block_breaker",
-      "value": "Block Breaker"
+      "value": "كسر الحواجز"
     },
     {
       "key": "block_breaker_goal",
@@ -3970,7 +4486,7 @@
     },
     {
       "key": "block_breaker_blocks",
-      "value": "{0} BLOCKS LEFT"
+      "value": "{0} الكتل اليسرى"
     },
     {
       "key": "block_breaker_retry",
@@ -3978,7 +4494,7 @@
     },
     {
       "key": "sfx_browser_title",
-      "value": "SE BROWSER"
+      "value": "المتصفح"
     },
     {
       "key": "sfx_browser_help",
@@ -3986,7 +4502,7 @@
     },
     {
       "key": "sfx_browser_play",
-      "value": "PLAY"
+      "value": "لعب"
     },
     {
       "key": "sfx_browser_stop",
@@ -3994,7 +4510,7 @@
     },
     {
       "key": "sfx_browser_reload",
-      "value": "RELOAD"
+      "value": "إعادة التحميل"
     },
     {
       "key": "sfx_browser_no_results",
@@ -4010,15 +4526,43 @@
     },
     {
       "key": "sfx_browser_muted",
-      "value": "MUTED"
+      "value": "غطى"
     },
     {
       "key": "sfx_browser_generated",
       "value": "الصوت الجاهز"
     },
     {
+      "key": "gameplay_control_switch",
+      "value": "تبديل الشخصية"
+    },
+    {
+      "key": "feedback_button",
+      "value": "ملاحظات / الإبلاغ عن خطأ"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "شكرًا للعب!\nملاحظات / الإبلاغ عن خطأ"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "قائمة الأمنيات"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "يُنصح باللعب الجماعي!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "تكون NICO DRAW أكثر متعة عند التعاون معًا!\nجرّب اللعب مع 2–4 لاعبين!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "حسنًا"
+    },
+    {
       "key": "stage_object_background_paw_print",
-      "value": "Paw Print"
+      "value": "طباعة الـ \" Paw Print \""
     },
     {
       "key": "stage_object_background_fish",
@@ -4034,7 +4578,7 @@
     },
     {
       "key": "stage_object_background_icicle",
-      "value": "Icicle"
+      "value": "الـ (Icecle)"
     },
     {
       "key": "stage_object_background_snowman",
@@ -4042,7 +4586,7 @@
     },
     {
       "key": "stage_object_background_blizzard",
-      "value": "Blizzard"
+      "value": "عاصفة ثلجية"
     },
     {
       "key": "stage_object_background_feather",
@@ -4058,19 +4602,19 @@
     },
     {
       "key": "stage_object_background_pipe",
-      "value": "Pipe"
+      "value": "الأنابيب"
     },
     {
       "key": "stage_object_background_bolt",
-      "value": "Bolt"
+      "value": "(بولت)"
     },
     {
       "key": "stage_object_background_chain",
-      "value": "Chain"
+      "value": "السلسلة"
     },
     {
       "key": "stage_object_background_steam",
-      "value": "Steam"
+      "value": "بخار"
     },
     {
       "key": "stage_object_background_turtle",
@@ -4082,15 +4626,15 @@
     },
     {
       "key": "stage_object_background_padlock",
-      "value": "Padlock"
+      "value": "قفل"
     },
     {
       "key": "stage_object_background_slime_blob",
-      "value": "Slime"
+      "value": "السلم"
     },
     {
       "key": "stage_object_background_bubbles",
-      "value": "Bubbles"
+      "value": "فقاعات"
     },
     {
       "key": "stage_object_background_butterfly",
@@ -4106,15 +4650,15 @@
     },
     {
       "key": "stage_object_background_tulip",
-      "value": "Tulip"
+      "value": "طيور التوليب"
     },
     {
       "key": "stage_object_background_skeleton",
-      "value": "Skeleton"
+      "value": "العظم"
     },
     {
       "key": "stage_object_background_bat",
-      "value": "Bat"
+      "value": "الخفاش"
     },
     {
       "key": "stage_object_background_spiderweb",
@@ -4122,15 +4666,15 @@
     },
     {
       "key": "stage_object_background_stalactite",
-      "value": "Stalactite"
+      "value": "الستالكتيت"
     },
     {
       "key": "stage_object_background_lantern",
-      "value": "Lantern"
+      "value": "المصباح"
     },
     {
       "key": "stage_object_background_minecart",
-      "value": "Minecart"
+      "value": "عربة التجميل"
     },
     {
       "key": "stage_object_background_pickaxe",
@@ -4142,11 +4686,11 @@
     },
     {
       "key": "stage_object_background_medal",
-      "value": "Medal"
+      "value": "ميدالية"
     },
     {
       "key": "stage_object_background_whistle",
-      "value": "Whistle"
+      "value": "النفخة"
     },
     {
       "key": "stage_object_background_balloon",
@@ -4154,7 +4698,7 @@
     },
     {
       "key": "stage_object_background_confetti",
-      "value": "Confetti"
+      "value": "الكونفيتي"
     },
     {
       "key": "stage_object_background_fireworks",
@@ -4174,15 +4718,15 @@
     },
     {
       "key": "stage_object_background_crayon",
-      "value": "Crayon"
+      "value": "كريون"
     },
     {
       "key": "stage_object_background_pencil",
-      "value": "Pencil"
+      "value": "القلم"
     },
     {
       "key": "stage_object_background_eraser",
-      "value": "Eraser"
+      "value": "مُحذف"
     },
     {
       "key": "stage_object_background_notebook",
@@ -4194,7 +4738,7 @@
     },
     {
       "key": "stage_object_background_palette",
-      "value": "Palette"
+      "value": "اللوحة"
     },
     {
       "key": "stage_object_background_paintbrush",
@@ -4202,7 +4746,7 @@
     },
     {
       "key": "stage_object_background_canvas",
-      "value": "Canvas"
+      "value": "القماش"
     },
     {
       "key": "stage_object_background_stopwatch",
@@ -4210,7 +4754,7 @@
     },
     {
       "key": "stage_object_background_spotlight",
-      "value": "Spotlight"
+      "value": "الضوء الراقي"
     },
     {
       "key": "stage_object_background_microphone",
@@ -4218,7 +4762,7 @@
     },
     {
       "key": "stage_object_background_cheese",
-      "value": "Cheese"
+      "value": "الجبن"
     },
     {
       "key": "stage_object_background_surprise_box",
@@ -4230,11 +4774,11 @@
     },
     {
       "key": "stage_object_background_planet",
-      "value": "Planet"
+      "value": "الكوكب"
     },
     {
       "key": "stage_object_background_alien",
-      "value": "Alien"
+      "value": "الأجانب"
     },
     {
       "key": "stage_object_background_comet",
@@ -4242,7 +4786,7 @@
     },
     {
       "key": "stage_object_background_black_hole_decor",
-      "value": "Black Hole"
+      "value": "الثقب الأسود"
     },
     {
       "key": "stage_object_background_soap_bubble",
@@ -4255,494 +4799,6 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "تري رووت"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "اركض!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "البدء خلال {0}"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "انتظار {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  اهرب من القط العملاق!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "خدوش الفريق  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "لا يمكنك تبديل الشخصية إلا فوق أرضية إعادة الرسم."
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "رجوع"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "بانتظار رد {0}.\nالتبديل المطلوب: {1} مقابل {2}."
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "تم إرسال طلب التبديل"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "هل تريد إعادة هذه المرحلة من البداية؟"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "إعادة المحاولة"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "هل تريد إنهاء المرحلة الحالية والعودة إلى اختيار المراحل؟"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "لن يتم حفظ التغييرات غير المكتملة. هل تريد الرجوع دون حفظ؟"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "الرجوع دون حفظ"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "تم حفظ الشخصية بعد إعادة رسمها."
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "تعذر الحفظ. اضغط «تم» مرة أخرى."
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "اختيار المراحل"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "اللعب عبر الإنترنت غير متاح لأن بيانات اللعبة أو الإصدار غير متطابقين. تحقق من ملفات اللعبة في Steam."
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "انقطع الاتصال بالجلسة. يُرجى الانضمام إلى الغرفة مرة أخرى."
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "انقطع اتصال المضيف، لذا أُغلقت الغرفة."
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "إلغاء"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "إعادة ضبط"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "إعادة ضبط التقدم"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "هل تريد إعادة ضبط سجلات إكمال جميع المراحل؟\nسيتم الاحتفاظ بمستوى الصوت واللغة واسم اللاعب والرسومات."
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "تمت إعادة ضبط سجلات إكمال المراحل."
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "إعادة ضبط التقدم"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "اركض."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "تبديل الشخصية"
-    },
-    {
-      "key": "feedback_button",
-      "value": "ملاحظات / الإبلاغ عن خطأ"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "شكرًا للعب!\nملاحظات / الإبلاغ عن خطأ"
-    },
-    {
-      "key": "option_complete",
-      "value": "تم"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "العرض: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "الدقة: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "ملء الشاشة"
-    },
-    {
-      "key": "option_windowed",
-      "value": "وضع النافذة"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "شغّل Steam، ثم شغّل NICO DRAW من مكتبة Steam."
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "تعذر الحصول على تذكرة مصادقة Steam: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "قائمة الأمنيات"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "يُنصح باللعب الجماعي!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "تكون NICO DRAW أكثر متعة عند التعاون معًا!\nجرّب اللعب مع 2–4 لاعبين!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "حسنًا"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "هل تريد الخروج من NICO DRAW؟"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} يستخدم هذه الشخصية بالفعل. هل تريد إرسال طلب تبديل؟"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "إرسال الطلب"
-    },
-    {
-      "key": "background_word_push",
-      "value": "ادفع!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "عقد متقاطع / A: مربع الانزلاق / X: الاستيلاء"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "مربع / X: خدش / انتزاع"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "مربع / X: رمي"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "المربع / X: انطلق نحو العصا اليمنى"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "عقد متقاطع / A: SHELL HOLD SQUARE / X: استدر بزاوية 90 درجة"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "عقد الصليب: مربع الإنزلاق: انتزاع"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "مربع: خدش / انتزاع"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "مربع: رمي"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "مربع: انطلق نحو العصا اليمنى"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "عقد متقاطع: شيل عقد مربع: استدر 90 درجة"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "عقد أ: الانزلاق X: انتزاع"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "عاشرًا: اخدش/امسك"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "عاشرا: رمي"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: انطلق نحو العصا اليمنى"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "عقد أ: عقد شيل X: دوران 90 درجة"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "لا يوجد حد زمني"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "غير مدرج في العرض التوضيحي"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "العصا اليسرى: حرك RT / A / B: ارسم وحدد LT: مسح"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: رسم MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: رسم MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / تحديد: رسم MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: رسم MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: رسم MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: رسم MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: رسم MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "س: تبديل الشخصية"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "المثلث / Y: تبديل الحرف"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "المثلث: تبديل الشخصية"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "ص: تبديل الشخصية"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "إجمالي الفريق أكثر"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "انتهت اللعبة\nالإجمالي {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "إعادة المحاولة في {0}"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "واضح ضمن {0} الإجمالي"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "المجموع {0} / {1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "تلقائي (لوحة المفاتيح / لوحة الألعاب)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "لوحة الألعاب (غير متصلة)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "لوحة المفاتيح + الفأرة"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "ص{0} تم قطع اتصال لوحة الألعاب. أعد توصيله لاستعادة نفس اللاعب."
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "ص{0} إعادة توصيل لوحة الألعاب."
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "تم إصدار لوحة المفاتيح/الماوس من P1. اضغط على زر وحدة التحكم للمطالبة بـ P1."
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "لوحة غير مخصصة: START للانضمام / لوحة المفاتيح: ENTER للانضمام، BACKSPACE للمغادرة / P2: حدد + B للمغادرة"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "تم الانضمام إلى {0} ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "ف{0} يسار."
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "ما يصل إلى لاعبين لكل جهاز و4 لاعبين إجمالاً في الغرفة."
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "الغرفة ممتلئة (4 لاعبين). تمت إزالة اللاعب المحلي الإضافي."
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "تم تحويل P1 إلى {0}."
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "2 لاعبين جاهزين"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: انضم"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "اضغط على أي زر تحكم للانضمام"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "اللعب المحلي {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "قم بإضافة أو إزالة اللاعبين المحليين قبل بدء المرحلة."
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "الوسادة {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "اللاعبون {0}/2\nلوحة المفاتيح: ENTER للانضمام / BACKSPACE للمغادرة\nوحدة التحكم: START للانضمام / اضغط مع الاستمرار على B للمغادرة"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "اللاعبون المحليون {0}/2 منصات متصلة {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "فشل إنشاء الغرفة. إعادة المحاولة في {0}ق ({1} المحاولات المتبقية)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "ابحث عن الوضعية المطابقة بين الطيور العائمة!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "ضع الوضع البشري المطابق في ثقب المفتاح!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "الجولة {0}/3 {1:0.0} ثانية لليسار"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "إعادة محاولة هذه الجولة"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "الجولة {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "جولة {0} واضحة!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "انتهى الوقت!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "احمل السلحفاة عبر الغرفة المليئة بالينابيع!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "قم بتوضيح ما إذا كان وقت الانتهاء المشترك للجميع هو في حدود دقيقة واحدة لكل لاعب."
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "كل جولة واضحة!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "كسر الصناديق الصغيرة!  مشاهدة الأعداء!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "اكسر الصناديق باستخدام مسمار السلايم!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "جولة {0}/3 صناديق {1}/{2} {3} ثانية على اليسار"
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "انتهت اللعبة من إعادة محاولة الجولة {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "جولة {0} واضحة!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "المشاهدة: {0} التبديل مع ← / →"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "الجولة {0}/3 تبدأ في {1}"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "يمكنك التحرك داخل حارتك أثناء العد التنازلي"
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "سحب اللقب غير متاح أثناء اللعب التعاوني المحلي. العودة إلى لاعب واحد أولا."
     }
   ]
 }

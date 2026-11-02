@@ -269,6 +269,7 @@ namespace DrawBody.Prototype
                 }
                 if (crateObject.GetComponent<CarryableObject>() == null)
                     crateObject.AddComponent<CarryableObject>();
+                EnsureShootCollider(crateObject);
                 StageValueCrate crate = crateObject.GetComponent<StageValueCrate>();
                 if (crate == null) crate = crateObject.AddComponent<StageValueCrate>();
                 crate.Configure(this, id, values[index]);
@@ -276,6 +277,17 @@ namespace DrawBody.Prototype
                 crateValues[id] = values[index];
                 if (index >= BaseCrateCount) syncManager?.RegisterRuntimeObject(crateObject.transform);
             }
+        }
+
+        private static void EnsureShootCollider(GameObject crateObject)
+        {
+            if (crateObject == null) return;
+            Collider2D[] colliders = crateObject.GetComponentsInChildren<Collider2D>(true);
+            for (int i = 0; i < colliders.Length; i++)
+                if (colliders[i] != null && colliders[i].enabled && !colliders[i].isTrigger) return;
+            BoxCollider2D fallback = crateObject.AddComponent<BoxCollider2D>();
+            fallback.size = Vector2.one;
+            fallback.isTrigger = false;
         }
 
         private static List<int> BuildGuaranteedValues(int count)

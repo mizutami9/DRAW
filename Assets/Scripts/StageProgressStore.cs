@@ -19,9 +19,20 @@ namespace DrawBody.Prototype
         public static void MarkCleared(string stageId)
         {
             if (!IsRegularStageId(stageId) || IsCleared(stageId)) return;
-            PlayerPrefs.SetInt(ClearKeyPrefix + stageId, 1);
-            PlayerPrefs.Save();
-            Changed?.Invoke();
+            try
+            {
+                PlayerPrefs.SetInt(ClearKeyPrefix + stageId, 1);
+                PlayerPrefs.Save();
+                Changed?.Invoke();
+            }
+            catch (PlayerPrefsException exception)
+            {
+                // Progress persistence must never prevent the actual clear flow
+                // (clear UI, parade, controls) from completing. This can happen
+                // when several local online test clients write the shared Windows
+                // preference store at exactly the same time.
+                Debug.LogWarning($"[STAGE PROGRESS] Could not persist clear for {stageId}: {exception.Message}");
+            }
         }
 
         public static void ResetClearRecords()

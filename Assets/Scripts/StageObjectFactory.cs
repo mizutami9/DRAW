@@ -62,6 +62,11 @@ namespace DrawBody.Prototype
         private static readonly Color ArenaSandColor = new Color(0.91f, 0.76f, 0.47f, 1f);
         private static readonly Color ArenaOutlineColor = new Color(0.24f, 0.27f, 0.28f, 0.96f);
         private static readonly Color ArenaSkyColor = new Color(0.72f, 0.9f, 0.97f, 0.3f);
+        // Keep the goal trigger slightly larger than the visible doorway. A player
+        // touching the painted edge must still count as being inside the goal.
+        private static readonly Vector2 GoalDoorArtworkSize = new Vector2(2.3f, 0.92f);
+        private static readonly Vector2 GoalDoorTriggerSize = new Vector2(2.4f, 0.96f);
+        private const float IceRaceFinishTileSize = 0.48f;
         private Transform visualThemeRoot;
         private string visualThemeStageId;
 
@@ -202,7 +207,7 @@ namespace DrawBody.Prototype
                 ThemedBackdropAmbientAnimator.AmbientTheme.Factory, bounds, seed + 4051);
             if (!keepArenaInteriorClear)
             {
-                // 13-3's authored objects still retain the legacy five-room
+                // 13-3's authored objects retain separate room coordinates
                 // coordinates for editing. Its runtime backdrop belongs to the
                 // single sequential room and must not trace that old strip.
                 IList<StageObjectData> infrastructureObjects = stageId == "13-3" ? null : objects;
@@ -3791,6 +3796,12 @@ namespace DrawBody.Prototype
             else
             {
                 StageBoxDropper dropper = obj.AddComponent<StageBoxDropper>();
+                // This authored dispenser is button-operated from creation,
+                // including before the circuit controller starts or while a
+                // ready-room/editor transition temporarily disables it.
+                if (!string.IsNullOrEmpty(data.objectId)
+                    && data.objectId.StartsWith("13-3_box_generator_", StringComparison.Ordinal))
+                    dropper.ConfigureManualDispense();
                 dropper.Configure(
                     this,
                     parent,
@@ -5649,8 +5660,8 @@ namespace DrawBody.Prototype
 
             BoxCollider2D collider = obj.AddComponent<BoxCollider2D>();
             collider.size = iceRaceGoal
-                ? new Vector2(Mathf.Max(2.4f, data.size.x), Mathf.Max(3f, data.size.y))
-                : new Vector2(2.2f, 0.86f);
+                ? GetIceRaceFinishTriggerSize(data.size)
+                : GoalDoorTriggerSize;
             collider.offset = iceRaceGoal ? Vector2.zero : new Vector2(0f, -0.02f);
             collider.isTrigger = true;
             obj.AddComponent<Goal>();
@@ -5665,7 +5676,7 @@ namespace DrawBody.Prototype
             // Goal artwork is scenery behind the character. Keeping it below
             // the body stroke order (10) prevents the doorway from covering a
             // player who is standing inside it.
-            if (AddResourceSprite(obj.transform, "StageObjects/NicoDraw/goal-door", new Vector2(2.3f, 0.92f), 6, "Colored Pencil Exit Door"))
+            if (AddResourceSprite(obj.transform, "StageObjects/NicoDraw/goal-door", GoalDoorArtworkSize, 6, "Colored Pencil Exit Door"))
             {
                 AddEditorMetadata(obj, data);
                 return obj;
@@ -5730,7 +5741,7 @@ namespace DrawBody.Prototype
         {
             float height = Mathf.Max(4.8f, requestedSize.y);
             float openingWidth = Mathf.Max(3.2f, requestedSize.x + 1.8f);
-            float tile = 0.48f;
+            float tile = IceRaceFinishTileSize;
             Color paperWhite = new Color(0.96f, 0.97f, 0.94f, 1f);
             Color pencilBlack = new Color(0.08f, 0.09f, 0.1f, 1f);
 
@@ -5765,6 +5776,14 @@ namespace DrawBody.Prototype
                 new Vector3(openingWidth * 0.5f + tile * 0.52f, actualHeight * 0.5f, 0f),
                 new Vector3(openingWidth * 0.5f + tile * 0.52f, -actualHeight * 0.5f, 0f)
             }, new Color(0.04f, 0.04f, 0.05f, 0.92f), 0.055f, 8);
+        }
+
+        private static Vector2 GetIceRaceFinishTriggerSize(Vector2 requestedSize)
+        {
+            float openingWidth = Mathf.Max(3.2f, requestedSize.x + 1.8f);
+            float height = Mathf.Max(4.8f, requestedSize.y);
+            float actualHeight = Mathf.Ceil(height / IceRaceFinishTileSize) * IceRaceFinishTileSize;
+            return new Vector2(openingWidth, actualHeight);
         }
 
         private static void CreateFinishTile(Transform parent, string name, Vector2 position, Vector2 size, Color color)
@@ -9468,7 +9487,7 @@ namespace DrawBody.Prototype
                     return Rect.MinMaxRect(-22f, -7f, 22f, 12f);
                 case "13-3":
                     // 13-3 now reuses one sequential circuit room instead of
-                    // laying five rooms out across a 160-unit-wide strip.
+                    // laying the authored rooms out across a wide strip.
                     return Rect.MinMaxRect(-22.5f, -9.5f, 22.5f, 10.5f);
                 case "14-3":
                     return Rect.MinMaxRect(-24f, -12f, 31f, 13f);

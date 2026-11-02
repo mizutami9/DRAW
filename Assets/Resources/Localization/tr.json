@@ -21,6 +21,50 @@
       "value": "REG"
     },
     {
+      "key": "option_reset_progress",
+      "value": "İLERLEMEYİ SIFIRLA"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "İLERLEMEYİ SIFIRLA"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Tüm bölüm tamamlama kayıtları sıfırlansın mı?\nSes, dil, oyuncu adı ve çizimler korunacak."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Bölüm ilerlemesi sıfırlandı."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "SIFIRLA"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "İPTAL"
+    },
+    {
+      "key": "option_complete",
+      "value": "TAMAM"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "EKRAN: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "ÇÖZÜNÜRLÜK: {0}×{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "TAM EKRAN"
+    },
+    {
+      "key": "option_windowed",
+      "value": "PENCERE MODU"
+    },
+    {
       "key": "lang_ja",
       "value": "Japon Japonca"
     },
@@ -130,7 +174,7 @@
     },
     {
       "key": "msg_part_required",
-      "value": "Draw {0}."
+      "value": "Çizim {0}."
     },
     {
       "key": "head",
@@ -174,11 +218,11 @@
     },
     {
       "key": "tail",
-      "value": "Tail"
+      "value": "Kuyruk"
     },
     {
       "key": "left_wing",
-      "value": "Left Wing"
+      "value": "Sol Kanat"
     },
     {
       "key": "right_wing",
@@ -198,11 +242,11 @@
     },
     {
       "key": "jump_double",
-      "value": "Jump x2"
+      "value": "Atla x2"
     },
     {
       "key": "jump_triple",
-      "value": "Jump x3"
+      "value": "Atlay x3"
     },
     {
       "key": "arm_normal",
@@ -210,7 +254,7 @@
     },
     {
       "key": "arm_long",
-      "value": "Long Reach"
+      "value": "Uzak Uçuş"
     },
     {
       "key": "arm_fast",
@@ -258,19 +302,19 @@
     },
     {
       "key": "ability_card_human",
-      "value": "HUMAN"
+      "value": "İNSAN"
     },
     {
       "key": "ability_card_cat",
-      "value": "CAT"
+      "value": "KEDI"
     },
     {
       "key": "ability_card_bird",
-      "value": "BIRD"
+      "value": "KUŞ"
     },
     {
       "key": "ability_card_turtle",
-      "value": "TURTLE"
+      "value": "KAPLUMBAĞA"
     },
     {
       "key": "ability_card_slime",
@@ -298,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: THROW"
+      "value": "FATMAK:"
     },
     {
       "key": "ability_control_cat",
@@ -317,12 +361,120 @@
       "value": "FUPWARD SPIKE ATTACK"
     },
     {
+      "key": "ability_control_pad_human",
+      "value": "KARE / X: AT"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "KARE / X: KAZIMA / KUTMA"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "ÇAPRAZ TUT / A: KAYMA KARE / X: TUTA"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "ÇAPRAZ TUT / A: KABUK TUTMA KARE / X: 90° DÖNÜŞ"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "KARE / X: SAĞ ÇUBUĞA DOĞRU ÇUBUK"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "ÜÇGEN / Y: ANAHTAR KARAKTERİ"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "S: KARAKTERİ DEĞİŞTİRİN"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / SEÇ: ÇİZ MENU\nOPTIONS / START: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: ÇİZİM MENU\nESC: MENU"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: ÇEK MENU"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "KARE: AT"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "KARE: KAZIMA / KAPMA"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "ÇAPRAZ TUTUN: KAYMA KARE: KUTUN"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "ÇAPRAZ TUTUN: KABUK TUTMA KARE: 90° DÖNÜN"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "KARE: SAĞ ÇUBUĞA DOĞRU ÇUBUK"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: AT"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: KAZIMA / KUTMA"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "A'YA BASILI TUT: KAYAR X: TUTA"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "A TUTUN: KABUK TUTUN X: 90° DÖNÜN"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SAĞ ÇUBUĞA DOĞRU ÇUBUĞA ÇIKIN"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "ÜÇGEN: ANAHTAR KARAKTERİ"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: KARAKTER DEĞİŞTİR"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "CREATE: ÇİZİM MENU\nOPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "VIEW: ÇİZİM MENU\nMENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "CREATE: ÇEK MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "VIEW: ÇEK MENU"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "DEMOYA DAHİL DEĞİLDİR"
+    },
+    {
       "key": "ability_effect_human_combined",
       "value": "Güç ×{0:0.00}  Jump ×{1:0.00}"
     },
     {
       "key": "ability_effect_cat",
-      "value": "Run ×{0:0.00}  Claw range ×{1:0.00}"
+      "value": "Çık ×{0:0.00}  Çekil aralığı ×{1:0.00}"
     },
     {
       "key": "ability_effect_bird",
@@ -366,11 +518,11 @@
     },
     {
       "key": "ability_rank",
-      "value": "RANK {0}"
+      "value": "RENK {0}"
     },
     {
       "key": "ability_gauge_low",
-      "value": "LOW"
+      "value": "DÜŞÜK"
     },
     {
       "key": "ability_gauge_high",
@@ -378,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JUMP"
+      "value": "ATLAMAK"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "THROW"
+      "value": "AT ."
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -402,23 +554,23 @@
     },
     {
       "key": "ability_slime_gauge",
-      "value": "MOBILITY"
+      "value": "HAREKETLILIK"
     },
     {
       "key": "ability_slime_ink_gauge",
-      "value": "BODY INK"
+      "value": "VÜCUT INK"
     },
     {
       "key": "ability_slime_gauge_low",
-      "value": "LIGHT: GRIP UP"
+      "value": "IŞIK: TUTUN"
     },
     {
       "key": "ability_slime_gauge_high",
-      "value": "HEAVY: SPEED + JUMP UP"
+      "value": "AĞIR: HIZ + ATLAMA"
     },
     {
       "key": "ability_slime_badge",
-      "value": "INK SIZE {0:0}%"
+      "value": "INK BOYUT {0:0}%"
     },
     {
       "key": "ability_slime_hint",
@@ -434,27 +586,119 @@
     },
     {
       "key": "label_high_platform",
-      "value": "1 High Platform"
+      "value": "1 Yüksek Platform"
     },
     {
       "key": "label_heavy_switch",
-      "value": "2 Heavy Switch"
+      "value": "2 Ağır Çıkış"
     },
     {
       "key": "label_far_lever",
-      "value": "3 Far Lever"
+      "value": "3 Uzak Bir Lever"
     },
     {
       "key": "label_narrow_hole",
-      "value": "4 Narrow Hole"
+      "value": "4 Dar Çukur"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "Klavye + Fare"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Oyun kumandası (bağlantısı kesildi)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Otomatik (klavye / oyun kumandası)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD'İN BAĞLANTISI KESİLDİ. AYNI OYNATICIYI GERİ YÜKLEMEK İÇİN YENİDEN BAĞLAYIN."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD YENİDEN BAĞLANDI."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} KATILDI ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "CİHAZ BAŞINA EN FAZLA 2 OYUNCU VE ODADA TOPLAM 4 OYUNCU."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "SAHNEYE BAŞLAMADAN ÖNCE YEREL OYUNCULARI EKLEYİN VEYA KALDIRIN."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "ODA DOLU (4 OYUNCU). EKSTRA YEREL OYUNCU KALDIRILDI."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "ATANMAYAN PAD: START KATILMAK İÇİN / KLAVYE: ENTER KATILMAK İÇİN, BACKSPACE ÇIKMAK İÇİN / P2: AYRILMAK İÇİN SEÇ + B"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "YEREL OYUNCULAR {0}/2 BAĞLI PEDLER {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "YEREL OYUN {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PED {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "KATILMAK İÇİN HERHANGİ BİR KONTROL DÜĞMESİNE BASIN"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: KATILIN"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 OYUNCU HAZIR"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "OYUNCULAR {0}/2\nKLAVYE: ENTER KATILMAK İÇİN / BACKSPACE ÇIKMAK İÇİN\nKONTROLÖR: START KATILMAK İÇİN / ÇIKMAK İÇİN B'Yİ BASILI TUTUN"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 {0}'A GEÇTİ."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "KLAVYE/FARE P1'DEN ÇIKTI. P1'İ TALEP ETMEK İÇİN BİR KONTROL DÜĞMESİNE BASIN."
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} SOL."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "YEREL İŞBİRLİĞİ SIRASINDA BAŞLIK ÇEKİLİŞİ YAPILMAZ. ÖNCE 1 OYUNCUYA DÖNÜN."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "SOL ÇUBUK: RT / A / B'yi TAŞI: ÇİZ VE SEÇ LT: SİL"
     },
     {
       "key": "multi_room_setup",
-      "value": "ROOM SETUP"
+      "value": "ODA DÜZENLEMESI"
     },
     {
       "key": "multi_participants",
-      "value": "PLAYERS"
+      "value": "OYUNCULAR"
     },
     {
       "key": "multi_room_create_title",
@@ -462,11 +706,11 @@
     },
     {
       "key": "multi_room_join_title",
-      "value": "JOIN ROOM"
+      "value": "BIRLIK ODASI"
     },
     {
       "key": "multi_room_id",
-      "value": "ROOM ID"
+      "value": "ODA KIMLIĞI"
     },
     {
       "key": "multi_local_test_no_invite",
@@ -482,11 +726,11 @@
     },
     {
       "key": "slime_missile_floor_warning",
-      "value": "FLOOR VANISHING! GRAB A WALL"
+      "value": "YERE DÜŞTÜ, DUVARA YAPIŞTI."
     },
     {
       "key": "slime_missile_hint",
-      "value": "WALL-JUMP AND DODGE PIERCING MISSILES!"
+      "value": "DUVARDAN ATLAYIP DELIK AÇAN FÜZELERDEN KAÇIN!"
     },
     {
       "key": "tower_defense_title",
@@ -494,7 +738,11 @@
     },
     {
       "key": "tower_defense_phase",
-      "value": "PHASE {0} / {1}"
+      "value": "FAZA {0} / {1}"
+    },
+    {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
     },
     {
       "key": "tower_defense_time_remaining",
@@ -506,15 +754,35 @@
     },
     {
       "key": "tower_defense_airstrike",
-      "value": "AIRSTRIKE IN {0}"
+      "value": "HAVA SALDIRISI . {0}"
     },
     {
       "key": "tower_defense_retry",
-      "value": "FRIEND DOWN... RETRY IN {0}"
+      "value": "ARKADAŞIN AŞAĞIDA... TEKRAR DENE. {0}"
     },
     {
       "key": "tower_defense_clear",
       "value": "DEF CLEAR!"
+    },
+    {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
     },
     {
       "key": "value_coin_amount",
@@ -526,7 +794,7 @@
     },
     {
       "key": "value_coin_hint",
-      "value": "BREAK BOXES AND COLLECT COINS!"
+      "value": "KUTULARI KIR VE PARA TOPLA!"
     },
     {
       "key": "value_coin_time_up",
@@ -534,7 +802,7 @@
     },
     {
       "key": "value_coin_clear",
-      "value": "100 COIN CLEAR!"
+      "value": "100 ÇUVAL TEMIZ!"
     },
     {
       "key": "human_circuit_powered",
@@ -550,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRAW"
+      "value": "ÇIZIM"
     },
     {
       "key": "title_option",
@@ -558,19 +826,23 @@
     },
     {
       "key": "option_back",
-      "value": "BACK  ESC"
+      "value": "GERI DÖN .  ESC"
     },
     {
       "key": "option_back_esc",
-      "value": "BACK  ESC"
+      "value": "GERI DÖN .  ESC"
     },
     {
       "key": "ui_back_esc",
-      "value": "BACK  ESC"
+      "value": "GERI DÖN .  ESC"
     },
     {
       "key": "title_exit",
       "value": "Çıkış"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "NICO DRAW'dan çıkılsın mı?"
     },
     {
       "key": "title_debug",
@@ -578,7 +850,7 @@
     },
     {
       "key": "trailer_debug_title",
-      "value": "TRAILER CAPTURE DEBUG"
+      "value": "RAKIP TUTMA HATASI"
     },
     {
       "key": "trailer_debug_scenario_01",
@@ -594,23 +866,23 @@
     },
     {
       "key": "trailer_debug_back",
-      "value": "BACK  ESC"
+      "value": "GERI DÖN .  ESC"
     },
     {
       "key": "trailer_debug_edit_shapes",
-      "value": "EDIT CHARACTERS"
+      "value": "HARFLERI DÜZENLE"
     },
     {
       "key": "steam_header_debug_button",
-      "value": "STEAM HEADER"
+      "value": "BUHAR BAŞLIĞI"
     },
     {
       "key": "steam_header_capture",
-      "value": "EXPORT 920×430 PNG"
+      "value": "İHRACAT 920×430 PNG"
     },
     {
       "key": "steam_header_exit",
-      "value": "BACK TO TITLE"
+      "value": "BAŞLIKLARA GERI DÖNELIM ."
     },
     {
       "key": "steam_header_ready",
@@ -622,11 +894,15 @@
     },
     {
       "key": "player_redrawing_status",
-      "value": "REDRAWING..."
+      "value": "YENIDEN ÇIZIM..."
     },
     {
       "key": "character_change_ready_room_only",
       "value": "CHARACTERS, ODALI'da CHANGED CHANGED CHANGED."
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Karakteri yalnızca yeniden çizim zemininde değiştirebilirsin."
     },
     {
       "key": "trailer_debug_capture_help",
@@ -634,7 +910,7 @@
     },
     {
       "key": "trailer_tas_title",
-      "value": "TRAILER TAS RECORDER"
+      "value": "RAKIP TAS KAYDEDICI"
     },
     {
       "key": "trailer_tas_help",
@@ -642,15 +918,15 @@
     },
     {
       "key": "trailer_tas_record",
-      "value": "F9 RECORD/STOP"
+      "value": "F9 KAYIT / DURDUR"
     },
     {
       "key": "trailer_tas_play",
-      "value": "F10 PLAY ALL"
+      "value": "F10 HER ŞEYI ÇAL"
     },
     {
       "key": "trailer_tas_reset",
-      "value": "F8 RESET TAKE"
+      "value": "F8 YENIDEN AYARLAMA"
     },
     {
       "key": "trailer_tas_clear",
@@ -658,7 +934,7 @@
     },
     {
       "key": "trailer_tas_pause",
-      "value": "P PAUSE"
+      "value": "P DURAKLAMA"
     },
     {
       "key": "trailer_tas_step",
@@ -666,19 +942,19 @@
     },
     {
       "key": "trailer_tas_status_idle",
-      "value": "IDLE"
+      "value": "İŞE YARAMAZ"
     },
     {
       "key": "trailer_tas_status_recording",
-      "value": "RECORDING"
+      "value": "KAYIT"
     },
     {
       "key": "trailer_tas_status_playback",
-      "value": "PLAYING ALL TRACKS"
+      "value": "TÜM PARÇALARI ÇALIYORUM."
     },
     {
       "key": "trailer_tas_paused",
-      "value": "PAUSED"
+      "value": "DURUM"
     },
     {
       "key": "trailer_tas_status_format",
@@ -686,7 +962,7 @@
     },
     {
       "key": "trailer_tas_preset_format",
-      "value": "PRESET {0}"
+      "value": "ÖN AYARLAMA {0}"
     },
     {
       "key": "trailer_tas_save_preset",
@@ -705,16 +981,48 @@
       "value": "Başlık:"
     },
     {
+      "key": "menu_retry_confirm_message",
+      "value": "Bu bölüme baştan başlansın mı?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "YENİDEN DENE"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Mevcut bölümden çıkıp bölüm seçimine dönülsün mü?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "BÖLÜM SEÇİMİ"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "Tamamlanmamış değişiklikler kaydedilmeyecek. Kaydetmeden geri dönülsün mü?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "KAYDETMEDEN GERİ DÖN"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Yeniden çizilen karakter kaydedildi."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Kaydedilemedi. Lütfen yeniden “BİTTİ” düğmesine basın."
+    },
+    {
       "key": "language_settings",
       "value": "Dil Ayarları"
     },
     {
       "key": "multi_play",
-      "value": "MULTI PLAY"
+      "value": "ÇOKLU OYUN"
     },
     {
       "key": "multi_random_button",
-      "value": "Random Match"
+      "value": "Rastgele eşleşme"
     },
     {
       "key": "multi_room_button",
@@ -722,7 +1030,7 @@
     },
     {
       "key": "multi_random_match",
-      "value": "Random Match"
+      "value": "Rastgele eşleşme"
     },
     {
       "key": "multi_searching_players",
@@ -738,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "ROOM"
+      "value": "ODA"
     },
     {
       "key": "multi_create_room",
-      "value": "Create Room"
+      "value": "Oda Oluştur"
     },
     {
       "key": "multi_join_room",
-      "value": "Join Room"
+      "value": "Birlik Odası"
     },
     {
       "key": "multi_create_room_body",
@@ -806,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "ROOM LOBBY"
+      "value": "ODA LOBISI"
     },
     {
       "key": "multi_lobby_status_default",
@@ -850,7 +1158,7 @@
     },
     {
       "key": "multi_matching",
-      "value": "Matching..."
+      "value": "Uygun..."
     },
     {
       "key": "multi_host_only_start",
@@ -862,7 +1170,7 @@
     },
     {
       "key": "multi_copied_lobby_id",
-      "value": "Copied Lobby ID."
+      "value": "Lobby kimliği kopyalandı."
     },
     {
       "key": "multi_copied_room_code",
@@ -886,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Connecting..."
+      "value": "Bağlantı..."
     },
     {
       "key": "multi_room",
@@ -898,7 +1206,7 @@
     },
     {
       "key": "multi_local",
-      "value": "Yerel Yerel Yerel Yerel"
+      "value": "Local"
     },
     {
       "key": "multi_ready",
@@ -906,11 +1214,11 @@
     },
     {
       "key": "multi_wait",
-      "value": "WAIT"
+      "value": "BEKLE."
     },
     {
       "key": "multi_host",
-      "value": "HOST"
+      "value": "EV SAHIBI"
     },
     {
       "key": "multi_default_room_name",
@@ -918,7 +1226,7 @@
     },
     {
       "key": "multi_friend_room_name",
-      "value": "Friend Room"
+      "value": "Arkadaş odası"
     },
     {
       "key": "online_player_you",
@@ -927,6 +1235,10 @@
     {
       "key": "player_controlled_marker",
       "value": "SİZİN"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Seyirci: {0} ← / → ile geçiş yapın"
     },
     {
       "key": "online_player_host",
@@ -945,8 +1257,20 @@
       "value": "Sahte geri dönüş başlangıçlı."
     },
     {
+      "key": "online_content_mismatch",
+      "value": "Oyun verileri veya sürüm eşleşmediği için çevrimiçi oyun kullanılamıyor. Steam'de oyun dosyalarını doğrulayın."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Sunucunun bağlantısı kesildiği için oda kapatıldı."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Oturum bağlantısı kesildi. Lütfen odaya yeniden katılın."
+    },
+    {
       "key": "online_logging_in",
-      "value": "Logging in..."
+      "value": "Giriş yapıyorum..."
     },
     {
       "key": "online_local_test_player",
@@ -962,7 +1286,7 @@
     },
     {
       "key": "online_public_room_created",
-      "value": "Public room created."
+      "value": "Kamu odası yaratıldı."
     },
     {
       "key": "online_joined_fake_room",
@@ -1041,6 +1365,14 @@
       "value": "Giriş başarısız oldu: EVET {0}"
     },
     {
+      "key": "online_steam_not_running",
+      "value": "Steam’i başlatın, ardından NICO DRAW’u Steam Kitaplığınızdan açın."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Steam kimlik doğrulama bileti alınamadı: {0}"
+    },
+    {
       "key": "online_eos_create_lobby_failed",
       "value": "Artırılmış lobi başarısız oldu: {0}"
     },
@@ -1063,6 +1395,10 @@
     {
       "key": "online_eos_room_code_search_failed",
       "value": "Oda kodu arama başarısız oldu: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Oda oluşturma işlemi başarısız oldu. {0} saniye içinde yeniden deneniyor ({1} deneme kaldı)"
     },
     {
       "key": "online_eos_room_code_not_found",
@@ -1162,15 +1498,15 @@
     },
     {
       "key": "stage_species_available",
-      "value": "AVAILABLE CHARACTERS"
+      "value": "KULLANILABILIR KARAKTERLER"
     },
     {
       "key": "stage_species_available_compact",
-      "value": "USE: {0}"
+      "value": "KULLANIM: {0}"
     },
     {
       "key": "stage_select_debug_created",
-      "value": "CREATED"
+      "value": "YARATILMIŞ"
     },
     {
       "key": "stage_select_debug_not_created",
@@ -1186,7 +1522,7 @@
     },
     {
       "key": "draw_species_swap_title",
-      "value": "CHARACTER SWAP"
+      "value": "KARAKTER DEĞIŞIMI"
     },
     {
       "key": "draw_species_swap_hint",
@@ -1197,16 +1533,32 @@
       "value": "{0} Ticaret etmek ister {1} Çünkü {2}."
     },
     {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} bu karakteri kullanıyor. Takas isteği gönderilsin mi?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "İSTEK GÖNDER"
+    },
+    {
       "key": "draw_species_swap_accept",
-      "value": "SWAP"
+      "value": "DEĞIŞME"
     },
     {
       "key": "draw_species_swap_reject",
-      "value": "DECLINE"
+      "value": "DÜŞÜŞ"
     },
     {
       "key": "draw_species_swap_pending",
       "value": "Değişim talebine bir cevap için bekleyin..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "TAKAS İSTEĞİ GÖNDERİLDİ"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "{0} adlı oyuncunun yanıtı bekleniyor.\nİstenen takas: {1} ile {2}."
     },
     {
       "key": "draw_species_swap_accepted",
@@ -1222,7 +1574,7 @@
     },
     {
       "key": "stage_object_grain_emitter",
-      "value": "GRAIN DISPENSER"
+      "value": "TAHIL DAĞITICISI"
     },
     {
       "key": "stage_object_grain_scale",
@@ -1234,11 +1586,11 @@
     },
     {
       "key": "stage_object_escort_friend_button",
-      "value": "FRIEND BUTTON"
+      "value": "ARKADAŞ DÜĞMESI"
     },
     {
       "key": "stage_object_escort_player_one_way_floor",
-      "value": "PLAYER-ONLY ONE-WAY FLOOR"
+      "value": "TEK YÖNLÜ KAT SADECE OYUNCULARA"
     },
     {
       "key": "species_human",
@@ -1279,6 +1631,14 @@
     {
       "key": "stage_editor_status_debug_start",
       "value": "Test başlar: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "Hareketli P{0}Test oyununun başlangıç pozisyonu."
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "P{0} Test başlangıcı: X {1:0.00} / Y {2:0.00}"
     },
     {
       "key": "stage_editor_status_validation_failed",
@@ -1334,7 +1694,7 @@
     },
     {
       "key": "stage_editor_object_list",
-      "value": "Object List"
+      "value": "Nesne Listesi"
     },
     {
       "key": "stage_editor_link_list",
@@ -1378,11 +1738,11 @@
     },
     {
       "key": "stage_editor_copy_left",
-      "value": "← LEFT"
+      "value": "← SOL"
     },
     {
       "key": "stage_editor_copy_up",
-      "value": "↑ UP"
+      "value": "↑ YUKARI"
     },
     {
       "key": "stage_editor_status_copy_direction",
@@ -1402,15 +1762,15 @@
     },
     {
       "key": "stage_editor_move_distance",
-      "value": "Move Distance"
+      "value": "Uzaklık"
     },
     {
       "key": "stage_editor_move_speed",
-      "value": "Move Speed"
+      "value": "Hareket Hızı"
     },
     {
       "key": "stage_editor_bomb_fuse_seconds",
-      "value": "Fuse (sec)"
+      "value": "Sıkıştırıcı (sec)"
     },
     {
       "key": "stage_editor_crumble_delay",
@@ -1426,11 +1786,11 @@
     },
     {
       "key": "stage_editor_drop_interval",
-      "value": "Drop Interval (sec)"
+      "value": "Drop Interval (sek)"
     },
     {
       "key": "stage_editor_beam_interval",
-      "value": "Beam Interval (sec)"
+      "value": "Çığlık aralığı (sek)"
     },
     {
       "key": "stage_editor_box_size",
@@ -1554,7 +1914,7 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "PERSONAL CAP"
+      "value": "KIŞISEL ŞAPKA"
     },
     {
       "key": "ink_team_formula",
@@ -1562,7 +1922,7 @@
     },
     {
       "key": "draw_pen_size",
-      "value": "PEN SIZE"
+      "value": "KALEM BOYUTU"
     },
     {
       "key": "draw_ink",
@@ -1574,7 +1934,7 @@
     },
     {
       "key": "draw_undo_once",
-      "value": "UNDO"
+      "value": "İPTAL EDILDI ."
     },
     {
       "key": "draw_reset_all",
@@ -1582,7 +1942,7 @@
     },
     {
       "key": "draw_reset_confirm_title",
-      "value": "RESET EVERYTHING?"
+      "value": "HER ŞEYI YENIDEN AYARLIYOR MUSUN?"
     },
     {
       "key": "draw_reset_confirm_message",
@@ -1590,23 +1950,27 @@
     },
     {
       "key": "draw_reset_confirm_yes",
-      "value": "RESET"
+      "value": "YENIDEN AYARLAMA"
     },
     {
       "key": "draw_reset_confirm_no",
-      "value": "CANCEL"
+      "value": "İPTAL"
     },
     {
       "key": "draw_preset_title",
-      "value": "{0} PRESETS"
+      "value": "{0} ÖN AYARLARI"
     },
     {
       "key": "draw_preset_button",
-      "value": "PRESETS"
+      "value": "ÖN AYARLARI"
     },
     {
       "key": "draw_preset_sets_title",
       "value": "5-CHARACTER PRESETS"
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "GERİ"
     },
     {
       "key": "draw_preset_five_species",
@@ -1618,7 +1982,7 @@
     },
     {
       "key": "draw_preset_slot",
-      "value": "SLOT {0}"
+      "value": "ÇATIŞTIRICI {0}"
     },
     {
       "key": "draw_preset_saved",
@@ -1626,15 +1990,15 @@
     },
     {
       "key": "draw_preset_empty",
-      "value": "EMPTY"
+      "value": "BOŞ"
     },
     {
       "key": "draw_preset_register",
-      "value": "SAVE"
+      "value": "KAYDET"
     },
     {
       "key": "draw_preset_apply",
-      "value": "SET"
+      "value": "SETI"
     },
     {
       "key": "draw_preset_save_confirm_title",
@@ -1650,7 +2014,7 @@
     },
     {
       "key": "draw_preset_load_confirm_title",
-      "value": "SET PRESET {0}?"
+      "value": "ÖNTANIMLI AYAR {0}?"
     },
     {
       "key": "draw_preset_load_confirm_message",
@@ -1702,7 +2066,7 @@
     },
     {
       "key": "stage_object_background_smiley",
-      "value": "Smiley"
+      "value": "Gülümsemesi"
     },
     {
       "key": "stage_object_background_heart",
@@ -1730,7 +2094,7 @@
     },
     {
       "key": "stage_object_background_rainbow",
-      "value": "Rainbow"
+      "value": "Gökkuşağı"
     },
     {
       "key": "stage_object_background_mountain",
@@ -1738,11 +2102,11 @@
     },
     {
       "key": "stage_object_background_four_leaf_clover",
-      "value": "Four-leaf Clover"
+      "value": "Dört yapraklı Clover"
     },
     {
       "key": "stage_object_background_mushroom",
-      "value": "Mushroom"
+      "value": "Mantar"
     },
     {
       "key": "stage_object_background_apple",
@@ -1750,7 +2114,7 @@
     },
     {
       "key": "stage_object_background_banana",
-      "value": "Banana"
+      "value": "Banan"
     },
     {
       "key": "stage_object_background_watermelon",
@@ -1810,11 +2174,11 @@
     },
     {
       "key": "stage_object_background_mole",
-      "value": "Mole"
+      "value": "Kırbağa"
     },
     {
       "key": "stage_object_background_fossil",
-      "value": "Fossil"
+      "value": "Fosiller"
     },
     {
       "key": "stage_object_background_crystal",
@@ -1842,7 +2206,7 @@
     },
     {
       "key": "stage_object_background_shield",
-      "value": "Shield"
+      "value": "Kalkan"
     },
     {
       "key": "stage_object_background_gem",
@@ -1858,7 +2222,7 @@
     },
     {
       "key": "stage_object_background_light_bulb",
-      "value": "Light Bulb (Idea)"
+      "value": "Işık Bulbı (İdeya)"
     },
     {
       "key": "stage_object_background_gear",
@@ -1874,7 +2238,7 @@
     },
     {
       "key": "stage_object_background_dice",
-      "value": "Dice"
+      "value": "Çöpler"
     },
     {
       "key": "stage_object_background_speech_bubble",
@@ -1890,7 +2254,7 @@
     },
     {
       "key": "stage_object_background_exclamation_mark",
-      "value": "Exclamation Mark (!)"
+      "value": "Çığlık Markası (!)"
     },
     {
       "key": "stage_object_background_loop_arrow",
@@ -1898,7 +2262,7 @@
     },
     {
       "key": "stage_object_background_jump",
-      "value": "JUMP!"
+      "value": "ATLA! ATLA!"
     },
     {
       "key": "stage_object_background_throw",
@@ -1910,7 +2274,7 @@
     },
     {
       "key": "stage_object_background_goal",
-      "value": "GOAL!"
+      "value": "HEDEF!"
     },
     {
       "key": "stage_editor_status_rotate_decoration",
@@ -1938,11 +2302,11 @@
     },
     {
       "key": "stage_editor_link_mode_hide",
-      "value": "Disappear"
+      "value": "Kaybolmak"
     },
     {
       "key": "stage_editor_link_mode_unlock",
-      "value": "Unlock"
+      "value": "Kilitlemeyi aç"
     },
     {
       "key": "stage_editor_link_mode_move",
@@ -1950,19 +2314,19 @@
     },
     {
       "key": "stage_editor_link_mode_move_right",
-      "value": "Move Platform Right"
+      "value": "Platformu Sağa Kaldır"
     },
     {
       "key": "stage_editor_link_mode_move_up",
-      "value": "Move Platform Up"
+      "value": "Platform yukarı taşı"
     },
     {
       "key": "stage_editor_link_mode_move_left",
-      "value": "Move Platform Left"
+      "value": "Çeviri Sol"
     },
     {
       "key": "stage_editor_link_mode_move_down",
-      "value": "Move Platform Down"
+      "value": "Platformunu Aşağıya Kaldır"
     },
     {
       "key": "stage_editor_status_link_action_changed",
@@ -1990,7 +2354,7 @@
     },
     {
       "key": "stage_editor_unlink",
-      "value": "Unlink"
+      "value": "Bağlantıyı aç"
     },
     {
       "key": "stage_editor_selected_add",
@@ -2018,23 +2382,27 @@
     },
     {
       "key": "stage_goal_label",
-      "value": "GOAL"
+      "value": "HEDEF"
     },
     {
       "key": "stage_room_number",
-      "value": "ROOM {0}"
+      "value": "ODA {0}"
     },
     {
       "key": "stage_weapon_bomb",
-      "value": "BOMB"
+      "value": "BOMBA"
     },
     {
       "key": "stage_weapon_missile",
-      "value": "MISSILE"
+      "value": "FÜZELERI"
     },
     {
       "key": "stage_ready_label",
       "value": "DİN"
+    },
+    {
+      "key": "background_word_push",
+      "value": "İT!"
     },
     {
       "key": "stage_dynamite_label",
@@ -2046,11 +2414,11 @@
     },
     {
       "key": "laser_relay_editor_players",
-      "value": "PLAYERS {0}"
+      "value": "OYUNCULAR {0}"
     },
     {
       "key": "laser_relay_editor_round",
-      "value": "STAGE {0}"
+      "value": "ETAP {0}"
     },
     {
       "key": "laser_relay_editor_preview",
@@ -2094,11 +2462,11 @@
     },
     {
       "key": "stage_editor_none",
-      "value": "(none)"
+      "value": "(Hiçbiri)"
     },
     {
       "key": "stage_category_terrain",
-      "value": "Terrain"
+      "value": "Topraklar"
     },
     {
       "key": "stage_category_start_goal",
@@ -2114,7 +2482,7 @@
     },
     {
       "key": "stage_category_movable",
-      "value": "Movable"
+      "value": "Hareketli"
     },
     {
       "key": "stage_category_action",
@@ -2130,7 +2498,7 @@
     },
     {
       "key": "stage_category_enemy",
-      "value": "Enemies"
+      "value": "Düşmanlar"
     },
     {
       "key": "stage_object_platform",
@@ -2146,7 +2514,7 @@
     },
     {
       "key": "stage_object_goal",
-      "value": "Goal"
+      "value": "Hedef"
     },
     {
       "key": "stage_object_balance_scale",
@@ -2166,7 +2534,7 @@
     },
     {
       "key": "stage_object_one_way_platform",
-      "value": "One-way Floor"
+      "value": "Tek yönlü zemin"
     },
     {
       "key": "stage_object_ice_floor",
@@ -2194,11 +2562,11 @@
     },
     {
       "key": "stage_object_breakable_floor",
-      "value": "Breakable Floor"
+      "value": "Çürüyen Zemin"
     },
     {
       "key": "stage_object_falling_floor",
-      "value": "Falling Floor"
+      "value": "Düşen zemin"
     },
     {
       "key": "stage_object_moving_platform",
@@ -2230,11 +2598,11 @@
     },
     {
       "key": "ricochet_enemy_round",
-      "value": "ROUND {0} / {1}"
+      "value": "DÖRTLÜK {0} / {1}"
     },
     {
       "key": "ricochet_enemy_balls",
-      "value": "BALL {0} / {1}"
+      "value": "TOP . {0} / {1}"
     },
     {
       "key": "ricochet_enemy_next",
@@ -2250,7 +2618,7 @@
     },
     {
       "key": "ricochet_enemy_remaining",
-      "value": "ENEMIES LEFT {0}"
+      "value": "DÜŞMANLAR TERK EDILDI . {0}"
     },
     {
       "key": "stage_object_handgun",
@@ -2262,15 +2630,15 @@
     },
     {
       "key": "stage_object_spike_planet",
-      "value": "Spike Planet"
+      "value": "TOGE GEZEGENLERI."
     },
     {
       "key": "stage_object_enemy_flyer_zigzag",
-      "value": "Zigzag Flyer"
+      "value": "ZYGZAG UÇAN DÜŞMANI."
     },
     {
       "key": "stage_object_enemy_flyer_orbit",
-      "value": "Orbit Flyer"
+      "value": "DÖNÜŞÜRKEN UÇAN DÜŞMANLAR."
     },
     {
       "key": "stage_object_bazooka",
@@ -2278,15 +2646,15 @@
     },
     {
       "key": "stage_object_enemy_bomber",
-      "value": "Bombing Flyer"
+      "value": "Bombard Flyer"
     },
     {
       "key": "stage_object_moving_spike_planet",
-      "value": "Moving Spike Ball"
+      "value": "Çekilen Spike Top"
     },
     {
       "key": "stage_object_pose_character_key",
-      "value": "Pose Key"
+      "value": "Posta anahtarı"
     },
     {
       "key": "stage_object_pose_character_keyhole",
@@ -2294,7 +2662,7 @@
     },
     {
       "key": "stage_object_updraft_zone",
-      "value": "Updraft"
+      "value": "Yukarı çekim"
     },
     {
       "key": "stage_object_speed_ring2_x",
@@ -2318,27 +2686,27 @@
     },
     {
       "key": "stage_object_rotating_platform",
-      "value": "Rotating Floor"
+      "value": "Devrim zemini"
     },
     {
       "key": "stage_object_checkpoint",
-      "value": "Checkpoint"
+      "value": "Kontrol noktası"
     },
     {
       "key": "stage_object_warp_entrance",
-      "value": "Warp Entrance"
+      "value": "Warp Girişi"
     },
     {
       "key": "stage_object_warp_exit",
-      "value": "Warp Exit"
+      "value": "Warp Çıkışı"
     },
     {
       "key": "stage_object_respawn_point",
-      "value": "Respawn Point"
+      "value": "Çıkış Noktası"
     },
     {
       "key": "stage_object_mid_goal",
-      "value": "Mid Goal"
+      "value": "Orta hedef"
     },
     {
       "key": "stage_object_goal_effect",
@@ -2370,11 +2738,11 @@
     },
     {
       "key": "stage_object_toggle_switch",
-      "value": "Toggle Switch"
+      "value": "Dönüştürme Değiştir"
     },
     {
       "key": "stage_object_timer_switch",
-      "value": "Timer Switch"
+      "value": "Zamanlama Değişimi"
     },
     {
       "key": "stage_object_sensor",
@@ -2382,11 +2750,11 @@
     },
     {
       "key": "stage_object_red_switch",
-      "value": "Red Switch"
+      "value": "Kırmızı Çıkış"
     },
     {
       "key": "stage_object_blue_switch",
-      "value": "Blue Switch"
+      "value": "Mavi Çıkış"
     },
     {
       "key": "stage_object_green_switch",
@@ -2406,7 +2774,7 @@
     },
     {
       "key": "stage_object_ink_scale",
-      "value": "Ink Scale"
+      "value": "Ink Skala"
     },
     {
       "key": "stage_object_door",
@@ -2414,11 +2782,11 @@
     },
     {
       "key": "stage_object_locked_door",
-      "value": "Locked Door"
+      "value": "Kilitli Kapı"
     },
     {
       "key": "stage_object_shutter",
-      "value": "Shutter"
+      "value": "Kapak"
     },
     {
       "key": "stage_object_fence",
@@ -2434,27 +2802,27 @@
     },
     {
       "key": "stage_object_one_way_gate",
-      "value": "One-way Gate"
+      "value": "Tek yönlü kapı"
     },
     {
       "key": "stage_object_timed_gate",
-      "value": "Timed Gate"
+      "value": "Zamanlı Kapı"
     },
     {
       "key": "stage_object_breakable_wall",
-      "value": "Breakable Wall"
+      "value": "Çürüyen Duvar"
     },
     {
       "key": "stage_object_hidden_wall",
-      "value": "Hidden Wall"
+      "value": "Gizli Duvar"
     },
     {
       "key": "stage_object_wood_box",
-      "value": "Wood Box"
+      "value": "Ahşap Kutu"
     },
     {
       "key": "stage_object_iron_box",
-      "value": "Iron Box"
+      "value": "Demir Kutusu"
     },
     {
       "key": "stage_object_ball",
@@ -2486,15 +2854,15 @@
     },
     {
       "key": "stage_object_pickup_fuse_bomb",
-      "value": "Bomb (Fuse Starts on Pickup)"
+      "value": "Bomba (Fuzel Çıkarken Başlıyor)"
     },
     {
       "key": "stage_object_bomb_dropper",
-      "value": "Bomb Maker"
+      "value": "Bomba Yapımcısı"
     },
     {
       "key": "stage_object_dynamite",
-      "value": "Dynamite"
+      "value": "Dinamit"
     },
     {
       "key": "stage_object_enemy_walker",
@@ -2526,7 +2894,7 @@
     },
     {
       "key": "stage_editor_link_mode_activate",
-      "value": "Activate"
+      "value": "Aktifleştir"
     },
     {
       "key": "stage_editor_status_activate_action_fixed",
@@ -2570,7 +2938,7 @@
     },
     {
       "key": "stage_object_jump_pad",
-      "value": "Jump Pad"
+      "value": "Atlama Çubuğu"
     },
     {
       "key": "stage_object_spring",
@@ -2602,11 +2970,11 @@
     },
     {
       "key": "stage_object_box_dropper",
-      "value": "Box Dropper"
+      "value": "Kutup düşücüsü"
     },
     {
       "key": "stage_object_spike_dropper",
-      "value": "Spike Dropper"
+      "value": "ÇIKIŞ CIHAZI."
     },
     {
       "key": "stage_object_collectible_fish",
@@ -2626,7 +2994,7 @@
     },
     {
       "key": "stage_object_beam_emitter",
-      "value": "Beam Emitter"
+      "value": "ÇIĞLIK FIRLATMA CIHAZI."
     },
     {
       "key": "stage_rule_normal",
@@ -2638,7 +3006,7 @@
     },
     {
       "key": "stage_rule_survival",
-      "value": "Survival"
+      "value": "Hayatta Kalmak"
     },
     {
       "key": "stage_rule_seconds",
@@ -2669,6 +3037,10 @@
       "value": "UP TIME UP"
     },
     {
+      "key": "challenge_no_time_limit",
+      "value": "ZAMAN SINIRI YOK"
+    },
+    {
       "key": "challenge_retry_hint",
       "value": "Press R yenidentry"
     },
@@ -2690,11 +3062,11 @@
     },
     {
       "key": "grain_rain_ready",
-      "value": "MOVE INTO POSITION BEFORE THE RAIN"
+      "value": "YAĞMURDAN ÖNCE POZISYONUNA GEÇ ."
     },
     {
       "key": "grain_rain_catch",
-      "value": "CATCH THE GRAINS!"
+      "value": "HIZIRLARI YAKALAYIN!"
     },
     {
       "key": "grain_rain_measuring",
@@ -2706,19 +3078,19 @@
     },
     {
       "key": "grain_rain_clear",
-      "value": "CLEAR!"
+      "value": "- AÇIK!"
     },
     {
       "key": "grain_rain_failed",
-      "value": "SO CLOSE!"
+      "value": "ÇOK YAKINDI!"
     },
     {
       "key": "grain_rain_result",
-      "value": "GRAINS ON HEADS  {0:0}g / {1:0}g"
+      "value": "BAŞLARDA TAHILLAR  {0:0}g / {1:0}g"
     },
     {
       "key": "grain_rain_success",
-      "value": "RARE GRAIN TARGET REACHED!"
+      "value": "NADIR TAHIL HEDEFINE ULAŞTIK!"
     },
     {
       "key": "grain_rain_retry",
@@ -2726,7 +3098,7 @@
     },
     {
       "key": "grain_rain_round",
-      "value": "STAGE {0}/{1}"
+      "value": "ETAP {0}/{1}"
     },
     {
       "key": "grain_rain_blizzard",
@@ -2747,6 +3119,26 @@
     {
       "key": "ice_speedrun_time_up",
       "value": "UP RETRY IN IN {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "TOPLAM {0} İÇERİSİNİ TEMİZLEYİN"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "TOPLAM {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TAKIM TOPLAM BİTTİ"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "{0} İÇİNDE YENİDEN DENE"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "OYUN BİTTİ\nTOPLAM {0} / {1}"
     },
     {
       "key": "survival_get_ready",
@@ -2774,15 +3166,15 @@
     },
     {
       "key": "ready_room_recommended",
-      "value": "RECOMMENDED"
+      "value": "ÖNERILEN"
     },
     {
       "key": "ready_room_recommended_none",
-      "value": "NONE"
+      "value": "HIÇBIR ŞEY ."
     },
     {
       "key": "ready_room_restriction",
-      "value": "NO CHARACTER CHANGE OR REDRAW AFTER LEAVING"
+      "value": "AYRILDIKTAN SONRA KARAKTER DEĞIŞIMI YA DA YENIDEN ÇIZIMI YOK."
     },
     {
       "key": "ready_room_restriction_redraw_allowed",
@@ -2793,8 +3185,12 @@
       "value": "GET DY TOMI"
     },
     {
+      "key": "ready_room_game_2_3",
+      "value": "KOŞ."
+    },
+    {
       "key": "ready_room_game_2_2",
-      "value": "COLLECT THE FISH BEFORE TIME RUNS OUT"
+      "value": "ZAMAN BITMEDEN BALIKLARI TOPLAYIN ."
     },
     {
       "key": "ready_room_game_4_3",
@@ -2802,7 +3198,7 @@
     },
     {
       "key": "ready_room_game_6_2",
-      "value": "DODGE THE HURDLES AND SURVIVE"
+      "value": "ENGELLERDEN KAÇIN VE HAYATTA KAL"
     },
     {
       "key": "ready_room_game_6_3",
@@ -2814,7 +3210,7 @@
     },
     {
       "key": "ready_room_game_8_1",
-      "value": "DODGE THE FALLING PILLARS"
+      "value": "DÜŞEN SÜTUNLARDAN KAÇIN"
     },
     {
       "key": "ready_room_game_8_2",
@@ -2826,11 +3222,11 @@
     },
     {
       "key": "ready_room_game_9_1",
-      "value": "DODGE THE MISSILES AND SURVIVE"
+      "value": "FÜZELERDEN KAÇIN VE HAYATTA KAL"
     },
     {
       "key": "ready_room_game_9_2",
-      "value": "COLLECT COINS WHILE FALLING"
+      "value": "DÜŞERKEN PARA TOPLA"
     },
     {
       "key": "ready_room_game_9_3",
@@ -2850,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "SURVIVE UNTIL TIME RUNS OUT"
+      "value": "ZAMAN BITENE KADAR HAYATTA KAL"
     },
     {
       "key": "ready_room_game_11_3",
@@ -2858,15 +3254,15 @@
     },
     {
       "key": "ready_room_game_12_1",
-      "value": "BREAK BOXES AND COLLECT COINS"
+      "value": "KUTULARI KIR VE PARA TOPLA ."
     },
     {
       "key": "ready_room_game_12_2",
-      "value": "COLLECT COINS BEFORE TIME RUNS OUT"
+      "value": "ZAMAN BITMEDEN PARA TOPLA ."
     },
     {
       "key": "ready_room_game_12_3",
-      "value": "COLLECT COINS BEFORE TIME RUNS OUT"
+      "value": "ZAMAN BITMEDEN PARA TOPLA ."
     },
     {
       "key": "ready_room_game_13_1",
@@ -2898,19 +3294,23 @@
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "DEFLER"
+      "value": "DÜŞMAN SALDIRILARINDAN KAÇ"
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "CLEAR IF AT LEAST ONE PLAYER SURVIVES."
+      "value": "EN AZ BIR OYUNCU HAYATTA KALIRSA AÇIK."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "CLEAR WHEN ANY ONE PLAYER REACHES THE GOAL."
+      "value": "BIR OYUNCU HEDEFE ULAŞTIĞINDA AÇIK."
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "HERKESİN BİRLEŞİK BİTİŞ SÜRESİ OYUNCU BAŞINA 1 DAKİKA İÇERİSİNDE OLDUĞUNU AÇIKLAYIN."
     },
     {
       "key": "spike_chase_monitor_title",
-      "value": "SPIKE WALL LAUNCH"
+      "value": "ÇÖKME DUVARI FIRLATMA"
     },
     {
       "key": "spike_chase_monitor_ready",
@@ -2921,32 +3321,56 @@
       "value": "Ey Âdem!"
     },
     {
-      "key": "wind_speedrun_title",
-      "value": "Selâm!"
-    },
-    {
-      "key": "wind_speedrun_hint",
-      "value": "LESS INK = STRONGER WIND"
-    },
-    {
-      "key": "wind_speedrun_timer",
-      "value": "Saat {0:0.0}"
-    },
-    {
-      "key": "wind_speedrun_time_up",
-      "value": "UP TIME UP"
-    },
-    {
       "key": "umbrella_rain_title",
-      "value": "STAY UNDER THE UMBRELLA!"
+      "value": "Yağmurdan uzak dur"
     },
     {
       "key": "umbrella_rain_hint",
-      "value": "RAIN KNOCKS OUT - REACH SHELTER"
+      "value": "Yağmurdan uzak dur"
     },
     {
       "key": "umbrella_rain_all_out",
       "value": "EVERYONE WAS CAUGHT IN RAIN!"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
     },
     {
       "key": "linked_shield_title",
@@ -2958,15 +3382,15 @@
     },
     {
       "key": "linked_shield_hint",
-      "value": "BLOCK MISSILES WITH 1-SECOND SHIELDS!"
+      "value": "BIR SANIYELIK KALKANLARLA FÜZEYI ENGELLEYIN!"
     },
     {
       "key": "linked_shield_failed",
-      "value": "TEAM DOWN - RESTARTING"
+      "value": "TAKIM AŞAĞI - YENIDEN BAŞLATILIYOR"
     },
     {
       "key": "linked_shield_clear",
-      "value": "60-SECOND DEFENSE CLEAR!"
+      "value": "60 SANIYELIK SAVUNMA TEMIZ!"
     },
     {
       "key": "laser_relay_monitor",
@@ -2974,7 +3398,7 @@
     },
     {
       "key": "laser_relay_progress",
-      "value": "GOALS {0}/{1}"
+      "value": "HEDEFLER {0}/{1}"
     },
     {
       "key": "laser_relay_hint",
@@ -3010,7 +3434,7 @@
     },
     {
       "key": "flying_boss_homing_warning",
-      "value": "HOMING MISSILES - SPREAD OUT!"
+      "value": "MERKEZ RAKETLERI - YAYIL!"
     },
     {
       "key": "flying_boss_target_warning",
@@ -3018,11 +3442,11 @@
     },
     {
       "key": "flying_boss_suction_warning",
-      "value": "SUCTION - MOVE AWAY!"
+      "value": "EMLEME - ÇEKIL!"
     },
     {
       "key": "mirror_boss_recording",
-      "value": "RECORDING MOVEMENT...  {0}s"
+      "value": "HAREKET KAYDETMEK...  {0}S"
     },
     {
       "key": "mirror_boss_recording_hint",
@@ -3030,7 +3454,7 @@
     },
     {
       "key": "mirror_boss_phase",
-      "value": "PHASE {0}  DOUBLES LEFT: {1}"
+      "value": "FAZA {0}  SOLDA IKI KAT: {1}"
     },
     {
       "key": "mirror_boss_hint",
@@ -3054,11 +3478,11 @@
     },
     {
       "key": "mirror_brawl_phase",
-      "value": "PHASE {0}  LEFT: {1}"
+      "value": "FAZA {0}  SOL: {1}"
     },
     {
       "key": "mirror_brawl_phase_clear",
-      "value": "PHASE {0} CLEAR!"
+      "value": "FAZA {0} - AÇIK!"
     },
     {
       "key": "mirror_brawl_hint",
@@ -3070,11 +3494,11 @@
     },
     {
       "key": "mirror_brawl_clear",
-      "value": "CPU TEAM DEFEATED!"
+      "value": "POLIS EKIBI YENILDI!"
     },
     {
       "key": "mirror_brawl_clear_sub",
-      "value": "FINAL BATTLE CLEARED!"
+      "value": "SON SAVAŞ BITTI!"
     },
     {
       "key": "mirror_brawl_failed",
@@ -3086,7 +3510,7 @@
     },
     {
       "key": "mirror_brawl_all_down",
-      "value": "EVERYONE IS DOWN!"
+      "value": "HERKES YERE DÜŞTÜ!"
     },
     {
       "key": "mirror_brawl_retry",
@@ -3106,15 +3530,15 @@
     },
     {
       "key": "side_boss_clear",
-      "value": "PURSUER DEFEATED!"
+      "value": "TAKIPÇI YENILDI!"
     },
     {
       "key": "side_boss_failed",
-      "value": "EVERYONE WAS CAUGHT"
+      "value": "HERKES YAKALANDI ."
     },
     {
       "key": "spike_chase_run",
-      "value": "RUN!"
+      "value": "KAÇ! KAÇ!"
     },
     {
       "key": "survival_watch_floor",
@@ -3130,7 +3554,7 @@
     },
     {
       "key": "survival_floor_dropped",
-      "value": "STAY ON THE SAFE FLOOR!"
+      "value": "GÜVENLI YERDE KAL!"
     },
     {
       "key": "survival_all_dead",
@@ -3138,15 +3562,15 @@
     },
     {
       "key": "survival_retrying",
-      "value": "RESTARTING SOON"
+      "value": "YAKINDA YENIDEN BAŞLATACAĞIM."
     },
     {
       "key": "survival_clear_title",
-      "value": "SURVIVOR FOUND!"
+      "value": "HAYATTA KALAN BULUNDU!"
     },
     {
       "key": "survival_clear_sub",
-      "value": "SURVIVAL CLEARED"
+      "value": "HAYATTA KALMAK ONAYLANDI."
     },
     {
       "key": "pillar_survival_title",
@@ -3162,7 +3586,7 @@
     },
     {
       "key": "pillar_survival_clear",
-      "value": "PILLAR SURVIVAL CLEARED!"
+      "value": "TEMEL HAYATTA KALMAK TEMIZLENDI!"
     },
     {
       "key": "boss_name",
@@ -3170,7 +3594,7 @@
     },
     {
       "key": "boss_health",
-      "value": "HP HP  {0} / {1}"
+      "value": "HP  {0} / {1}"
     },
     {
       "key": "boss_enter_room",
@@ -3230,11 +3654,11 @@
     },
     {
       "key": "jump_rope_jump_now",
-      "value": "JUMP!"
+      "value": "ATLA! ATLA!"
     },
     {
       "key": "jump_rope_keep_jumping",
-      "value": "JUMP THE HURDLES!"
+      "value": "ÇATIŞMALARI ATLA!"
     },
     {
       "key": "jump_rope_slow",
@@ -3242,7 +3666,7 @@
     },
     {
       "key": "jump_rope_accelerate",
-      "value": "SPEED UP! FINAL SPRINT!"
+      "value": "ÇABUK OLUN, SON SPRINT!"
     },
     {
       "key": "jump_rope_all_out",
@@ -3250,11 +3674,11 @@
     },
     {
       "key": "jump_rope_clear_title",
-      "value": "HURDLE SURVIVAL CLEARED!"
+      "value": "HURDLE HAYATTA KALMASI TEMIZLENDI!"
     },
     {
       "key": "jump_rope_clear_sub",
-      "value": "SURVIVOR FOUND"
+      "value": "HAYATTA KALANLAR BULUNDU"
     },
     {
       "key": "escort_title",
@@ -3262,7 +3686,7 @@
     },
     {
       "key": "escort_friend_active",
-      "value": "FRIEND MOVING"
+      "value": "ARKADAŞIM HAREKET EDIYOR"
     },
     {
       "key": "escort_instruction",
@@ -3274,23 +3698,23 @@
     },
     {
       "key": "escort_friend_defeat_cry",
-      "value": "AAAH!"
+      "value": "- EVET."
     },
     {
       "key": "escort_defense_instruction",
-      "value": "RUN AHEAD AND CLEAR TRAPS, BOXES, AND ENEMIES"
+      "value": "ÖNÜNE KOŞ VE TUZAKLARI, KUTULARI VE DÜŞMANLARI TEMIZLE"
     },
     {
       "key": "escort_respawning",
-      "value": "NEXT FRIEND IN  {0:0.0}"
+      "value": "BIR SONRAKI ARKADAŞIM.  {0:0.0}"
     },
     {
       "key": "escort_respawn_sub",
-      "value": "PREPARING A NEW FRIEND..."
+      "value": "YENI BIR ARKADAŞ HAZIRLIYORUM..."
     },
     {
       "key": "escort_clear_title",
-      "value": "ESCORT COMPLETE!"
+      "value": "ESKORTU TAMAM!"
     },
     {
       "key": "escort_clear_sub",
@@ -3310,11 +3734,11 @@
     },
     {
       "key": "drawn_escort_round_running",
-      "value": "ROUND {0}/3"
+      "value": "DÖRTLÜ {0}/3"
     },
     {
       "key": "drawn_escort_round_clear",
-      "value": "ROUND {0} CLEAR!"
+      "value": "DÖRTLÜ {0} - AÇIK!"
     },
     {
       "key": "aquarium_seal_monitor",
@@ -3337,8 +3761,72 @@
       "value": "DELİKLERİ KAPATIN!"
     },
     {
+      "key": "pose_rooms_round",
+      "value": "YUVARLAK {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "YUVARLAK {0}/3 {1:0.0}s SOL"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "YUVARLAK {0} TEMİZ!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "ZAMAN DOLDU!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "BU TURU YENİDEN DENEYİYORUM"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "UYGUN İNSAN POZİSİNİ ANAHTAR DELİĞİNE KOYUN!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "YÜZEN KUŞLAR ARASINDA UYGUN POZU BULUN!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "KAPLUMBAĞAYI YAYLARLA DOLU ODADA TAŞIYIN!"
+    },
+    {
       "key": "tilt_board_monitor",
-      "value": "ROUND {0}/3    {1:0.0}s LEFT"
+      "value": "DÖRTLÜ {0}/3    {1:0.0}KAL"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "{0}/3 YUVARLAK {1}'DA BAŞLIYOR"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "GERİ SAYIM SIRASINDA ŞERİDİNİZDE HAREKET EDEBİLİRSİNİZ"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "YUVARLAK {0}/3 KASALAR {1}/{2} {3} SOL"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "Sümük Dikeniyle Sandıkları Kırın!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "KÜÇÜK KASALARI KIRIN!  DÜŞMANLARI İZLEYİN!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "YUVARLAK {0} TEMİZ!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "OYUN BİTTİ YENİDEN DENEME TURU {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "HER YER TEMİZ!"
     },
     {
       "key": "tilt_board_progress",
@@ -3346,11 +3834,11 @@
     },
     {
       "key": "tilt_board_maze",
-      "value": "PULL THE BALL THROUGH THE MAZE WITH MAGNETISM!"
+      "value": "MAGNETIZMEYLE TOPU LABIRENTTEN ÇEK!"
     },
     {
       "key": "tilt_board_round_clear",
-      "value": "ROUND {0} CLEAR!"
+      "value": "DÖRTLÜ {0} - AÇIK!"
     },
     {
       "key": "tilt_board_timeout",
@@ -3393,20 +3881,48 @@
       "value": "10-3 RICOCHET RELAY"
     },
     {
+      "key": "cat_escape_title",
+      "value": "2-3  DEV KEDİDEN KAÇ!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "BEKLEME {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "{0} İÇİNDE BAŞLIYOR"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "KOŞ!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "TAKIM TIRMALAMASI  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
       "key": "ricochet_round",
-      "value": "ROUND {0} / {1}"
+      "value": "DÖRTLÜ {0} / {1}"
     },
     {
       "key": "ricochet_ammo",
-      "value": "AMMO {0}"
+      "value": "AMMUNITION {0}"
     },
     {
       "key": "ricochet_instruction",
-      "value": "RICOCHET BULLETS OFF FRIENDS TO HIT THE TARGET"
+      "value": "HEDEFE VURMAK IÇIN ARKADAŞLARINDAN MERMI ÇEK ."
     },
     {
       "key": "ricochet_failed",
-      "value": "OUT OF AMMO! RESTARTING"
+      "value": "SILAHIMIZ BITTI, YENIDEN BAŞLATIYORUZ."
     },
     {
       "key": "ricochet_clear",
@@ -3414,7 +3930,7 @@
     },
     {
       "key": "stage_object_escort_spawner",
-      "value": "Friend Spawner"
+      "value": "Arkadaş Spawner"
     },
     {
       "key": "stage_object_escort_goal",
@@ -3422,7 +3938,7 @@
     },
     {
       "key": "stage_object_escort_player_only_floor",
-      "value": "Friend-Pass Floor"
+      "value": "Arkadaş Geçidi Merdiven"
     },
     {
       "key": "stage_object_escort_head_bridge",
@@ -3434,11 +3950,11 @@
     },
     {
       "key": "stage_object_turntable",
-      "value": "Turntable"
+      "value": "Dönüşme Tablosu"
     },
     {
       "key": "stage_object_cannon",
-      "value": "Cannon"
+      "value": "Kanon ."
     },
     {
       "key": "stage_object_catapult",
@@ -3470,7 +3986,7 @@
     },
     {
       "key": "stage_object_press_machine",
-      "value": "Press Machine"
+      "value": "Basın makinesi"
     },
     {
       "key": "stage_object_electricity",
@@ -3482,7 +3998,7 @@
     },
     {
       "key": "stage_object_black_hole",
-      "value": "Black Hole"
+      "value": "Siyah Delik"
     },
     {
       "key": "stage_object_gear",
@@ -3490,7 +4006,7 @@
     },
     {
       "key": "stage_object_big_gear",
-      "value": "Big Gear"
+      "value": "DIŞ ARABALARI."
     },
     {
       "key": "stage_object_rope_pulley",
@@ -3498,15 +4014,15 @@
     },
     {
       "key": "stage_object_slider",
-      "value": "Slider"
+      "value": "Kaydırıcı"
     },
     {
       "key": "stage_object_rotating_bar",
-      "value": "Rotating Bar"
+      "value": "Dönüşme Çubuğu"
     },
     {
       "key": "stage_object_pendulum",
-      "value": "Pendulum"
+      "value": "Döngü"
     },
     {
       "key": "stage_object_keyhole",
@@ -3534,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Restart Stage"
+      "value": "Yeniden başlatma aşaması"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -3574,7 +4090,7 @@
     },
     {
       "key": "stage_editor_status_add_straight",
-      "value": "Drag to place a straight {0}."
+      "value": "Düz bir yerleştirmek için sürükle {0}."
     },
     {
       "key": "stage_editor_thickness",
@@ -3658,7 +4174,7 @@
     },
     {
       "key": "redraw",
-      "value": "Redraw"
+      "value": "Yeniden çiz"
     },
     {
       "key": "pen",
@@ -3666,7 +4182,7 @@
     },
     {
       "key": "eraser",
-      "value": "Eraser"
+      "value": "Çıkarıcı"
     },
     {
       "key": "shape_square",
@@ -3682,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Done!"
+      "value": "- Tamam!"
     },
     {
       "key": "draw_redo",
@@ -3698,7 +4214,7 @@
     },
     {
       "key": "undo",
-      "value": "Undo"
+      "value": "İptal edildi ."
     },
     {
       "key": "character_switch",
@@ -3710,7 +4226,7 @@
     },
     {
       "key": "character_delete",
-      "value": "Delete Char"
+      "value": "Çarkı Sil"
     },
     {
       "key": "character_control_switch",
@@ -3734,11 +4250,11 @@
     },
     {
       "key": "stage_select_edit_off",
-      "value": "Edit: OFF"
+      "value": "Düzenle: Kapat"
     },
     {
       "key": "stage_select_edit_on",
-      "value": "Edit: ON"
+      "value": "Düzenle: ON"
     },
     {
       "key": "stage_unplayed",
@@ -3750,7 +4266,7 @@
     },
     {
       "key": "stage_locked",
-      "value": "LOCKED"
+      "value": "KILITLI ."
     },
     {
       "key": "stage_select_info",
@@ -3762,7 +4278,7 @@
     },
     {
       "key": "stage_object_balance",
-      "value": "Scale"
+      "value": "Skala"
     },
     {
       "key": "stage_editor_size",
@@ -3770,11 +4286,11 @@
     },
     {
       "key": "stage_editor_snap",
-      "value": "Grid"
+      "value": "Çubuğu"
     },
     {
       "key": "stage_editor_delete",
-      "value": "Delete"
+      "value": "Sil"
     },
     {
       "key": "stage_editor_save",
@@ -3786,7 +4302,7 @@
     },
     {
       "key": "stage_editor_back",
-      "value": "BACK  ESC"
+      "value": "GERI DÖN .  ESC"
     },
     {
       "key": "option_subtitle",
@@ -3838,11 +4354,11 @@
     },
     {
       "key": "label_ball_hit",
-      "value": "5 Ball Hit"
+      "value": "5 Top vuruldu"
     },
     {
       "key": "stage_editor_quick",
-      "value": "QUICK PARTS"
+      "value": "HIZLI PARÇALAR"
     },
     {
       "key": "stage_editor_selection",
@@ -3902,7 +4418,7 @@
     },
     {
       "key": "stage_editor_status_redo_done",
-      "value": "Redid the edit."
+      "value": "Düzenlemeyi yeniden düzenle."
     },
     {
       "key": "stage_editor_status_select_link_source",
@@ -3962,15 +4478,15 @@
     },
     {
       "key": "stage_rule_block_breaker",
-      "value": "Block Breaker"
+      "value": "Blok Kesicisi"
     },
     {
       "key": "block_breaker_goal",
-      "value": "THROW BOMBS! BREAK ALL NICO DRAW BLOCKS!"
+      "value": "BOMBA ATIN, HEPSINI KIRIN. NICO DRAW BLOKLAR!"
     },
     {
       "key": "block_breaker_blocks",
-      "value": "{0} BLOCKS LEFT"
+      "value": "{0} SOL BLOKLAR"
     },
     {
       "key": "block_breaker_retry",
@@ -3978,7 +4494,7 @@
     },
     {
       "key": "sfx_browser_title",
-      "value": "SE BROWSER"
+      "value": "TARAYICI"
     },
     {
       "key": "sfx_browser_help",
@@ -3986,15 +4502,15 @@
     },
     {
       "key": "sfx_browser_play",
-      "value": "PLAY"
+      "value": "OYNAYIN ."
     },
     {
       "key": "sfx_browser_stop",
-      "value": "STOP"
+      "value": "DURUN."
     },
     {
       "key": "sfx_browser_reload",
-      "value": "RELOAD"
+      "value": "YENIDEN YÜKLEME"
     },
     {
       "key": "sfx_browser_no_results",
@@ -4006,19 +4522,47 @@
     },
     {
       "key": "sfx_browser_uncategorized",
-      "value": "Uncategorized"
+      "value": "Kategoriler dışı"
     },
     {
       "key": "sfx_browser_muted",
-      "value": "MUTED"
+      "value": "SESSIZ"
     },
     {
       "key": "sfx_browser_generated",
       "value": "Runtime-rated sound"
     },
     {
+      "key": "gameplay_control_switch",
+      "value": "Karakter değiştir"
+    },
+    {
+      "key": "feedback_button",
+      "value": "GERİ BİLDİRİM / HATA BİLDİR"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "Oynadığınız için teşekkürler!\nGeri bildirim / Hata bildir"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "İSTEK LİSTESİ"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "ÇOK OYUNCULU MOD ÖNERİLİR!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW birlikte çalışırken daha eğlenceli!\n2–4 oyuncuyla oynamayı deneyin!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "TAMAM"
+    },
+    {
       "key": "stage_object_background_paw_print",
-      "value": "Paw Print"
+      "value": "Paw Baskı"
     },
     {
       "key": "stage_object_background_fish",
@@ -4030,19 +4574,19 @@
     },
     {
       "key": "stage_object_background_snow_crystal",
-      "value": "Snow Crystal"
+      "value": "Kar Kristalı"
     },
     {
       "key": "stage_object_background_icicle",
-      "value": "Icicle"
+      "value": "Dönüş"
     },
     {
       "key": "stage_object_background_snowman",
-      "value": "Snowman"
+      "value": "Karadamı"
     },
     {
       "key": "stage_object_background_blizzard",
-      "value": "Blizzard"
+      "value": "Kar fırtınası"
     },
     {
       "key": "stage_object_background_feather",
@@ -4050,7 +4594,7 @@
     },
     {
       "key": "stage_object_background_bird_nest",
-      "value": "Bird Nest"
+      "value": "Kuş yuvası"
     },
     {
       "key": "stage_object_background_wind_lines",
@@ -4058,7 +4602,7 @@
     },
     {
       "key": "stage_object_background_pipe",
-      "value": "Pipe"
+      "value": "Çöp"
     },
     {
       "key": "stage_object_background_bolt",
@@ -4082,7 +4626,7 @@
     },
     {
       "key": "stage_object_background_padlock",
-      "value": "Padlock"
+      "value": "Çatıştırıcı"
     },
     {
       "key": "stage_object_background_slime_blob",
@@ -4098,11 +4642,11 @@
     },
     {
       "key": "stage_object_background_ladybug",
-      "value": "Ladybug"
+      "value": "Kadın böceği"
     },
     {
       "key": "stage_object_background_sunflower",
-      "value": "Sunflower"
+      "value": "Güneşböceği"
     },
     {
       "key": "stage_object_background_tulip",
@@ -4110,7 +4654,7 @@
     },
     {
       "key": "stage_object_background_skeleton",
-      "value": "Skeleton"
+      "value": "Skelet"
     },
     {
       "key": "stage_object_background_bat",
@@ -4118,11 +4662,11 @@
     },
     {
       "key": "stage_object_background_spiderweb",
-      "value": "Spiderweb"
+      "value": "Örümcek ağı"
     },
     {
       "key": "stage_object_background_stalactite",
-      "value": "Stalactite"
+      "value": "Stalaktit"
     },
     {
       "key": "stage_object_background_lantern",
@@ -4134,7 +4678,7 @@
     },
     {
       "key": "stage_object_background_pickaxe",
-      "value": "Pickaxe"
+      "value": "Pikaxe"
     },
     {
       "key": "stage_object_background_trophy",
@@ -4158,7 +4702,7 @@
     },
     {
       "key": "stage_object_background_fireworks",
-      "value": "Fireworks"
+      "value": "Atölyeler"
     },
     {
       "key": "stage_object_background_tower_building",
@@ -4182,7 +4726,7 @@
     },
     {
       "key": "stage_object_background_eraser",
-      "value": "Eraser"
+      "value": "Çıkarıcı"
     },
     {
       "key": "stage_object_background_notebook",
@@ -4190,7 +4734,7 @@
     },
     {
       "key": "stage_object_background_blackboard",
-      "value": "Blackboard"
+      "value": "Kara tahtası"
     },
     {
       "key": "stage_object_background_palette",
@@ -4198,7 +4742,7 @@
     },
     {
       "key": "stage_object_background_paintbrush",
-      "value": "Paintbrush"
+      "value": "Çerez fırça"
     },
     {
       "key": "stage_object_background_canvas",
@@ -4206,15 +4750,15 @@
     },
     {
       "key": "stage_object_background_stopwatch",
-      "value": "Stopwatch"
+      "value": "Durma saatleri"
     },
     {
       "key": "stage_object_background_spotlight",
-      "value": "Spotlight"
+      "value": "İzleme noktası"
     },
     {
       "key": "stage_object_background_microphone",
-      "value": "Microphone"
+      "value": "Mikrofon"
     },
     {
       "key": "stage_object_background_cheese",
@@ -4242,11 +4786,11 @@
     },
     {
       "key": "stage_object_background_black_hole_decor",
-      "value": "Black Hole"
+      "value": "Siyah Delik"
     },
     {
       "key": "stage_object_background_soap_bubble",
-      "value": "Soap Bubble"
+      "value": "Sabun Bubble"
     },
     {
       "key": "stage_object_background_moss",
@@ -4255,494 +4799,6 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Ağaç Kökü"
-    },
-    {
-      "key": "cat_escape_go",
-      "value": "KOŞ!"
-    },
-    {
-      "key": "cat_escape_ready",
-      "value": "{0} İÇİNDE BAŞLIYOR"
-    },
-    {
-      "key": "cat_escape_room_count",
-      "value": "BEKLEME {0} / {1}"
-    },
-    {
-      "key": "cat_escape_room_countdown",
-      "value": "{0}"
-    },
-    {
-      "key": "cat_escape_title",
-      "value": "2-3  DEV KEDİDEN KAÇ!"
-    },
-    {
-      "key": "cat_escape_wall",
-      "value": "TAKIM TIRMALAMASI  {0} / {1}"
-    },
-    {
-      "key": "cat_escape_wall_counter",
-      "value": "{0} / {1}"
-    },
-    {
-      "key": "character_switch_redraw_zone_only",
-      "value": "Karakteri yalnızca yeniden çizim zemininde değiştirebilirsin."
-    },
-    {
-      "key": "draw_preset_back",
-      "value": "GERİ"
-    },
-    {
-      "key": "draw_species_swap_pending_detail",
-      "value": "{0} adlı oyuncunun yanıtı bekleniyor.\nİstenen takas: {1} ile {2}."
-    },
-    {
-      "key": "draw_species_swap_pending_title",
-      "value": "TAKAS İSTEĞİ GÖNDERİLDİ"
-    },
-    {
-      "key": "menu_retry_confirm_message",
-      "value": "Bu bölüme baştan başlansın mı?"
-    },
-    {
-      "key": "menu_retry_confirm_yes",
-      "value": "YENİDEN DENE"
-    },
-    {
-      "key": "menu_stage_select_confirm_message",
-      "value": "Mevcut bölümden çıkıp bölüm seçimine dönülsün mü?"
-    },
-    {
-      "key": "draw_cancel_confirm_message",
-      "value": "Tamamlanmamış değişiklikler kaydedilmeyecek. Kaydetmeden geri dönülsün mü?"
-    },
-    {
-      "key": "draw_cancel_confirm_yes",
-      "value": "KAYDETMEDEN GERİ DÖN"
-    },
-    {
-      "key": "draw_save_complete",
-      "value": "Yeniden çizilen karakter kaydedildi."
-    },
-    {
-      "key": "draw_save_failed",
-      "value": "Kaydedilemedi. Lütfen yeniden “BİTTİ” düğmesine basın."
-    },
-    {
-      "key": "menu_stage_select_confirm_yes",
-      "value": "BÖLÜM SEÇİMİ"
-    },
-    {
-      "key": "online_content_mismatch",
-      "value": "Oyun verileri veya sürüm eşleşmediği için çevrimiçi oyun kullanılamıyor. Steam'de oyun dosyalarını doğrulayın."
-    },
-    {
-      "key": "online_session_disconnected",
-      "value": "Oturum bağlantısı kesildi. Lütfen odaya yeniden katılın."
-    },
-    {
-      "key": "online_host_disconnected",
-      "value": "Sunucunun bağlantısı kesildiği için oda kapatıldı."
-    },
-    {
-      "key": "option_reset_cancel",
-      "value": "İPTAL"
-    },
-    {
-      "key": "option_reset_confirm",
-      "value": "SIFIRLA"
-    },
-    {
-      "key": "option_reset_progress",
-      "value": "İLERLEMEYİ SIFIRLA"
-    },
-    {
-      "key": "option_reset_progress_confirm",
-      "value": "Tüm bölüm tamamlama kayıtları sıfırlansın mı?\nSes, dil, oyuncu adı ve çizimler korunacak."
-    },
-    {
-      "key": "option_reset_progress_done",
-      "value": "Bölüm ilerlemesi sıfırlandı."
-    },
-    {
-      "key": "option_reset_progress_title",
-      "value": "İLERLEMEYİ SIFIRLA"
-    },
-    {
-      "key": "ready_room_game_2_3",
-      "value": "KOŞ."
-    },
-    {
-      "key": "gameplay_control_switch",
-      "value": "Karakter değiştir"
-    },
-    {
-      "key": "feedback_button",
-      "value": "GERİ BİLDİRİM / HATA BİLDİR"
-    },
-    {
-      "key": "feedback_clear_button",
-      "value": "Oynadığınız için teşekkürler!\nGeri bildirim / Hata bildir"
-    },
-    {
-      "key": "option_complete",
-      "value": "TAMAM"
-    },
-    {
-      "key": "option_screen_mode_format",
-      "value": "EKRAN: {0}"
-    },
-    {
-      "key": "option_resolution_format",
-      "value": "ÇÖZÜNÜRLÜK: {0}×{1}"
-    },
-    {
-      "key": "option_fullscreen",
-      "value": "TAM EKRAN"
-    },
-    {
-      "key": "option_windowed",
-      "value": "PENCERE MODU"
-    },
-    {
-      "key": "online_steam_not_running",
-      "value": "Steam’i başlatın, ardından NICO DRAW’u Steam Kitaplığınızdan açın."
-    },
-    {
-      "key": "online_steam_ticket_failed",
-      "value": "Steam kimlik doğrulama bileti alınamadı: {0}"
-    },
-    {
-      "key": "wishlist_button",
-      "value": "İSTEK LİSTESİ"
-    },
-    {
-      "key": "single_recommend_title",
-      "value": "ÇOK OYUNCULU MOD ÖNERİLİR!"
-    },
-    {
-      "key": "single_recommend_message",
-      "value": "NICO DRAW birlikte çalışırken daha eğlenceli!\n2–4 oyuncuyla oynamayı deneyin!"
-    },
-    {
-      "key": "single_recommend_ok",
-      "value": "TAMAM"
-    },
-    {
-      "key": "title_exit_confirm",
-      "value": "NICO DRAW'dan çıkılsın mı?"
-    },
-    {
-      "key": "draw_species_swap_outgoing_confirm",
-      "value": "{0} bu karakteri kullanıyor. Takas isteği gönderilsin mi?"
-    },
-    {
-      "key": "draw_species_swap_send",
-      "value": "İSTEK GÖNDER"
-    },
-    {
-      "key": "background_word_push",
-      "value": "İT!"
-    },
-    {
-      "key": "ability_control_pad_bird",
-      "value": "ÇAPRAZ TUT / A: KAYMA KARE / X: TUTA"
-    },
-    {
-      "key": "ability_control_pad_cat",
-      "value": "KARE / X: KAZIMA / KUTMA"
-    },
-    {
-      "key": "ability_control_pad_human",
-      "value": "KARE / X: AT"
-    },
-    {
-      "key": "ability_control_pad_slime",
-      "value": "KARE / X: SAĞ ÇUBUĞA DOĞRU ÇUBUK"
-    },
-    {
-      "key": "ability_control_pad_turtle",
-      "value": "ÇAPRAZ TUT / A: KABUK TUTMA KARE / X: 90° DÖNÜŞ"
-    },
-    {
-      "key": "ability_control_ps_bird",
-      "value": "ÇAPRAZ TUTUN: KAYMA KARE: KUTUN"
-    },
-    {
-      "key": "ability_control_ps_cat",
-      "value": "KARE: KAZIMA / KAPMA"
-    },
-    {
-      "key": "ability_control_ps_human",
-      "value": "KARE: AT"
-    },
-    {
-      "key": "ability_control_ps_slime",
-      "value": "KARE: SAĞ ÇUBUĞA DOĞRU ÇUBUK"
-    },
-    {
-      "key": "ability_control_ps_turtle",
-      "value": "ÇAPRAZ TUTUN: KABUK TUTMA KARE: 90° DÖNÜN"
-    },
-    {
-      "key": "ability_control_xbox_bird",
-      "value": "A'YA BASILI TUT: KAYAR X: TUTA"
-    },
-    {
-      "key": "ability_control_xbox_cat",
-      "value": "X: KAZIMA / KUTMA"
-    },
-    {
-      "key": "ability_control_xbox_human",
-      "value": "X: AT"
-    },
-    {
-      "key": "ability_control_xbox_slime",
-      "value": "X: SAĞ ÇUBUĞA DOĞRU ÇUBUĞA ÇIKIN"
-    },
-    {
-      "key": "ability_control_xbox_turtle",
-      "value": "A TUTUN: KABUK TUTUN X: 90° DÖNÜN"
-    },
-    {
-      "key": "challenge_no_time_limit",
-      "value": "ZAMAN SINIRI YOK"
-    },
-    {
-      "key": "demo_stage_unavailable",
-      "value": "DEMOYA DAHİL DEĞİLDİR"
-    },
-    {
-      "key": "draw_gamepad_pointer_hint",
-      "value": "SOL ÇUBUK: RT / A / B'yi TAŞI: ÇİZ VE SEÇ LT: SİL"
-    },
-    {
-      "key": "gameplay_actions_keyboard",
-      "value": "TAB: ÇİZİM MENU\nESC: MENU"
-    },
-    {
-      "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: ÇEK MENU"
-    },
-    {
-      "key": "gameplay_actions_pad",
-      "value": "CREATE / SEÇ: ÇİZ MENU\nOPTIONS / START: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps",
-      "value": "CREATE: ÇİZİM MENU\nOPTIONS: MENU"
-    },
-    {
-      "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: ÇEK MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox",
-      "value": "VIEW: ÇİZİM MENU\nMENU: MENU"
-    },
-    {
-      "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: ÇEK MENU"
-    },
-    {
-      "key": "gameplay_control_keyboard_switch",
-      "value": "S: KARAKTERİ DEĞİŞTİRİN"
-    },
-    {
-      "key": "gameplay_control_pad_switch",
-      "value": "ÜÇGEN / Y: ANAHTAR KARAKTERİ"
-    },
-    {
-      "key": "gameplay_control_ps_switch",
-      "value": "ÜÇGEN: ANAHTAR KARAKTERİ"
-    },
-    {
-      "key": "gameplay_control_xbox_switch",
-      "value": "Y: KARAKTER DEĞİŞTİR"
-    },
-    {
-      "key": "ice_race_failed",
-      "value": "TAKIM TOPLAM BİTTİ"
-    },
-    {
-      "key": "ice_race_game_over",
-      "value": "OYUN BİTTİ\nTOPLAM {0} / {1}"
-    },
-    {
-      "key": "ice_race_retry",
-      "value": "{0} İÇİNDE YENİDEN DENE"
-    },
-    {
-      "key": "ice_race_rule",
-      "value": "TOPLAM {0} İÇERİSİNİ TEMİZLEYİN"
-    },
-    {
-      "key": "ice_race_team",
-      "value": "TOPLAM {0} / {1}"
-    },
-    {
-      "key": "input_device_automatic",
-      "value": "Otomatik (klavye / oyun kumandası)"
-    },
-    {
-      "key": "input_device_gamepad_disconnected",
-      "value": "Oyun kumandası (bağlantısı kesildi)"
-    },
-    {
-      "key": "input_device_keyboard_mouse",
-      "value": "Klavye + Fare"
-    },
-    {
-      "key": "local_gamepad_disconnected",
-      "value": "P{0} GAMEPAD'İN BAĞLANTISI KESİLDİ. AYNI OYNATICIYI GERİ YÜKLEMEK İÇİN YENİDEN BAĞLAYIN."
-    },
-    {
-      "key": "local_gamepad_reconnected",
-      "value": "P{0} GAMEPAD YENİDEN BAĞLANDI."
-    },
-    {
-      "key": "local_keyboard_released",
-      "value": "KLAVYE/FARE P1'DEN ÇIKTI. P1'İ TALEP ETMEK İÇİN BİR KONTROL DÜĞMESİNE BASIN."
-    },
-    {
-      "key": "local_lobby_controls",
-      "value": "ATANMAYAN PAD: START KATILMAK İÇİN / KLAVYE: ENTER KATILMAK İÇİN, BACKSPACE ÇIKMAK İÇİN / P2: AYRILMAK İÇİN SEÇ + B"
-    },
-    {
-      "key": "local_player_joined",
-      "value": "P{0} KATILDI ({1})"
-    },
-    {
-      "key": "local_player_left",
-      "value": "P{0} SOL."
-    },
-    {
-      "key": "local_player_limit_reached",
-      "value": "CİHAZ BAŞINA EN FAZLA 2 OYUNCU VE ODADA TOPLAM 4 OYUNCU."
-    },
-    {
-      "key": "local_player_rejected_full",
-      "value": "ODA DOLU (4 OYUNCU). EKSTRA YEREL OYUNCU KALDIRILDI."
-    },
-    {
-      "key": "local_primary_device_claimed",
-      "value": "P1 {0}'A GEÇTİ."
-    },
-    {
-      "key": "local_roster_compact_full",
-      "value": "2 OYUNCU HAZIR"
-    },
-    {
-      "key": "local_roster_compact_join",
-      "value": "ENTER / START: KATILIN"
-    },
-    {
-      "key": "local_roster_count",
-      "value": "{0}/2"
-    },
-    {
-      "key": "local_roster_join_hint",
-      "value": "KATILMAK İÇİN HERHANGİ BİR KONTROL DÜĞMESİNE BASIN"
-    },
-    {
-      "key": "local_roster_local_count",
-      "value": "YEREL OYUN {0}/2"
-    },
-    {
-      "key": "local_roster_locked_during_stage",
-      "value": "SAHNEYE BAŞLAMADAN ÖNCE YEREL OYUNCULARI EKLEYİN VEYA KALDIRIN."
-    },
-    {
-      "key": "local_roster_pad_count",
-      "value": "PED {0}"
-    },
-    {
-      "key": "local_roster_status",
-      "value": "OYUNCULAR {0}/2\nKLAVYE: ENTER KATILMAK İÇİN / BACKSPACE ÇIKMAK İÇİN\nKONTROLÖR: START KATILMAK İÇİN / ÇIKMAK İÇİN B'Yİ BASILI TUTUN"
-    },
-    {
-      "key": "local_roster_summary",
-      "value": "YEREL OYUNCULAR {0}/2 BAĞLI PEDLER {1}"
-    },
-    {
-      "key": "online_eos_room_create_retry",
-      "value": "Oda oluşturma işlemi başarısız oldu. {0} saniye içinde yeniden deneniyor ({1} deneme kaldı)"
-    },
-    {
-      "key": "pose_rooms_bird_hint",
-      "value": "YÜZEN KUŞLAR ARASINDA UYGUN POZU BULUN!"
-    },
-    {
-      "key": "pose_rooms_human_hint",
-      "value": "UYGUN İNSAN POZİSİNİ ANAHTAR DELİĞİNE KOYUN!"
-    },
-    {
-      "key": "pose_rooms_monitor",
-      "value": "YUVARLAK {0}/3 {1:0.0}s SOL"
-    },
-    {
-      "key": "pose_rooms_retry",
-      "value": "BU TURU YENİDEN DENEYİYORUM"
-    },
-    {
-      "key": "pose_rooms_round",
-      "value": "YUVARLAK {0}/3"
-    },
-    {
-      "key": "pose_rooms_round_clear",
-      "value": "YUVARLAK {0} TEMİZ!"
-    },
-    {
-      "key": "pose_rooms_timeout",
-      "value": "ZAMAN DOLDU!"
-    },
-    {
-      "key": "pose_rooms_turtle_hint",
-      "value": "KAPLUMBAĞAYI YAYLARLA DOLU ODADA TAŞIYIN!"
-    },
-    {
-      "key": "ready_room_clear_team_time",
-      "value": "HERKESİN BİRLEŞİK BİTİŞ SÜRESİ OYUNCU BAŞINA 1 DAKİKA İÇERİSİNDE OLDUĞUNU AÇIKLAYIN."
-    },
-    {
-      "key": "slime_crate_complete",
-      "value": "HER YER TEMİZ!"
-    },
-    {
-      "key": "slime_crate_enemy_hint",
-      "value": "KÜÇÜK KASALARI KIRIN!  DÜŞMANLARI İZLEYİN!"
-    },
-    {
-      "key": "slime_crate_hint",
-      "value": "Sümük Dikeniyle Sandıkları Kırın!"
-    },
-    {
-      "key": "slime_crate_progress",
-      "value": "YUVARLAK {0}/3 KASALAR {1}/{2} {3} SOL"
-    },
-    {
-      "key": "slime_crate_retry",
-      "value": "OYUN BİTTİ YENİDEN DENEME TURU {0}"
-    },
-    {
-      "key": "slime_crate_round_clear",
-      "value": "YUVARLAK {0} TEMİZ!"
-    },
-    {
-      "key": "spectator_following",
-      "value": "Seyirci: {0} ← / → ile geçiş yapın"
-    },
-    {
-      "key": "tilt_board_countdown",
-      "value": "{0}/3 YUVARLAK {1}'DA BAŞLIYOR"
-    },
-    {
-      "key": "tilt_board_countdown_hint",
-      "value": "GERİ SAYIM SIRASINDA ŞERİDİNİZDE HAREKET EDEBİLİRSİNİZ"
-    },
-    {
-      "key": "title_draw_unavailable_local_coop",
-      "value": "YEREL İŞBİRLİĞİ SIRASINDA BAŞLIK ÇEKİLİŞİ YAPILMAZ. ÖNCE 1 OYUNCUYA DÖNÜN."
     }
   ]
 }

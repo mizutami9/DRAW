@@ -211,6 +211,9 @@ namespace DrawBody.Prototype
                 case SfxId.BossDash:
                 case SfxId.BossBeamCharge:
                 case SfxId.BossSuction:
+                case SfxId.BossSwordSlash:
+                case SfxId.BossCatSwipe:
+                case SfxId.BlizzardWind:
                     volume = 0.78f;
                     cooldown = 0.1f;
                     break;

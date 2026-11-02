@@ -1,0 +1,4804 @@
+{
+  "entries": [
+    {
+      "key": "option_player_name",
+      "value": "Nama"
+    },
+    {
+      "key": "option_player_name_placeholder",
+      "value": "Enter nama anda"
+    },
+    {
+      "key": "option_player_name_required",
+      "value": "Tolonglah. enter nama pemain."
+    },
+    {
+      "key": "option_player_name_guide",
+      "value": "ENTER Nama anda di sini"
+    },
+    {
+      "key": "option_register",
+      "value": "RISTER"
+    },
+    {
+      "key": "option_reset_progress",
+      "value": "Reset CLEAR DATA"
+    },
+    {
+      "key": "option_reset_progress_title",
+      "value": "Reset CLEAR DATA"
+    },
+    {
+      "key": "option_reset_progress_confirm",
+      "value": "Set semula semua rekod yang bersih? Volume, bahasa, nama pemain, dan gambar akan disimpan."
+    },
+    {
+      "key": "option_reset_progress_done",
+      "value": "Rekod-rekod tahap-bersihkan telah diset semula."
+    },
+    {
+      "key": "option_reset_confirm",
+      "value": "Setup semula"
+    },
+    {
+      "key": "option_reset_cancel",
+      "value": "KANCEL"
+    },
+    {
+      "key": "option_complete",
+      "value": "DIDAKAN"
+    },
+    {
+      "key": "option_screen_mode_format",
+      "value": "TAMBANG: {0}"
+    },
+    {
+      "key": "option_resolution_format",
+      "value": "Resolusi: {0}x{1}"
+    },
+    {
+      "key": "option_fullscreen",
+      "value": "LAYAR PENUH"
+    },
+    {
+      "key": "option_windowed",
+      "value": "JANGAN"
+    },
+    {
+      "key": "lang_ja",
+      "value": "Jepun"
+    },
+    {
+      "key": "lang_en",
+      "value": "EN."
+    },
+    {
+      "key": "status_play",
+      "value": "A/D atau Stick Kiri: Pindah   Space/A: Melompat   F/X: Kemampuan Klik/RT: Tindakan Pilih: Tarik semula Mulakan: Menu"
+    },
+    {
+      "key": "status_draw",
+      "value": "STICK LEFT: CURSOR RT: DRAW / SELECT LT: EASY CREATE / VIEW: CLOSE"
+    },
+    {
+      "key": "status_clear",
+      "value": "Tekan R untuk cuba lagi."
+    },
+    {
+      "key": "draw_title",
+      "value": "Reka bentuk (TAB)"
+    },
+    {
+      "key": "draw_help",
+      "value": "TAB: Kembali ke permainan ENTER: Memutuskan ESC: Batalkan"
+    },
+    {
+      "key": "preview",
+      "value": "Pratinjau"
+    },
+    {
+      "key": "clear",
+      "value": "Jelas"
+    },
+    {
+      "key": "decide",
+      "value": "Memutuskan"
+    },
+    {
+      "key": "ink",
+      "value": "TINKA."
+    },
+    {
+      "key": "remaining",
+      "value": "Selebihnya"
+    },
+    {
+      "key": "current",
+      "value": "arus"
+    },
+    {
+      "key": "part",
+      "value": "Bahagian"
+    },
+    {
+      "key": "msg_torso_first",
+      "value": "Tarik badan dulu."
+    },
+    {
+      "key": "msg_torso_base",
+      "value": "Torso adalah pangkalan, tarik bahagian lain dari penanda sambungan mereka."
+    },
+    {
+      "key": "msg_start_near",
+      "value": "{0}: bermula dari penanda sambungan."
+    },
+    {
+      "key": "msg_draw_torso_first",
+      "value": "Lukis badan sebelum menyambung bahagian lain."
+    },
+    {
+      "key": "msg_connected",
+      "value": "{0} yang berkaitan."
+    },
+    {
+      "key": "msg_not_connected",
+      "value": "{0} tidak bermula pada penanda sambungan."
+    },
+    {
+      "key": "msg_torso_needed",
+      "value": "Tork diperlukan sebelum membuat keputusan."
+    },
+    {
+      "key": "msg_part_must_start",
+      "value": "{0} mesti bermula pada penanda sambungan."
+    },
+    {
+      "key": "ink_personal_status",
+      "value": "Peribadi  {0:0.#} / {1:0}"
+    },
+    {
+      "key": "ink_team_status",
+      "value": "Pasukan  {0:0.#} / {1:0}  [{2}]"
+    },
+    {
+      "key": "msg_personal_ink_over",
+      "value": "Tidak boleh memutuskan: peribadi ink adalah {0:0.#}/{1:0}- Kurangkan dengan {2:0}."
+    },
+    {
+      "key": "msg_team_ink_over",
+      "value": "Tidak boleh memutuskan: pasukan ink adalah {0:0.#}/{1:0}- Kurangkan dengan {2:0}."
+    },
+    {
+      "key": "msg_start_at_marker",
+      "value": "{0}: bermula dari penanda."
+    },
+    {
+      "key": "msg_part_required",
+      "value": "Lukis {0}."
+    },
+    {
+      "key": "head",
+      "value": "Kepala"
+    },
+    {
+      "key": "torso",
+      "value": "Badan"
+    },
+    {
+      "key": "left_arm",
+      "value": "Tangan kiri"
+    },
+    {
+      "key": "right_arm",
+      "value": "Tangan kanan"
+    },
+    {
+      "key": "left_leg",
+      "value": "Kaki kiri"
+    },
+    {
+      "key": "right_leg",
+      "value": "Kaki kanan"
+    },
+    {
+      "key": "left_front_leg",
+      "value": "Front Kiri"
+    },
+    {
+      "key": "right_front_leg",
+      "value": "Di hadapan kanan"
+    },
+    {
+      "key": "left_back_leg",
+      "value": "Kiri Kembali"
+    },
+    {
+      "key": "right_back_leg",
+      "value": "Kembali"
+    },
+    {
+      "key": "tail",
+      "value": "Ekor"
+    },
+    {
+      "key": "left_wing",
+      "value": "Sayap Kiri"
+    },
+    {
+      "key": "right_wing",
+      "value": "Sayap kanan"
+    },
+    {
+      "key": "tail_feather",
+      "value": "Tanah ekor"
+    },
+    {
+      "key": "slime_body",
+      "value": "SLUM."
+    },
+    {
+      "key": "jump_normal",
+      "value": "Jump biasa"
+    },
+    {
+      "key": "jump_double",
+      "value": "Jump x 2"
+    },
+    {
+      "key": "jump_triple",
+      "value": "Jump x 3"
+    },
+    {
+      "key": "arm_normal",
+      "value": "Jangkauan Normal"
+    },
+    {
+      "key": "arm_long",
+      "value": "Pelancongan Panjang"
+    },
+    {
+      "key": "arm_fast",
+      "value": "Pergeseran Cepat"
+    },
+    {
+      "key": "torso_normal",
+      "value": "SAYA BIASA."
+    },
+    {
+      "key": "torso_switch",
+      "value": "Pindah berat"
+    },
+    {
+      "key": "torso_heavy",
+      "value": "Berat"
+    },
+    {
+      "key": "ability_summary",
+      "value": "Kaki {0:0.0}: {1}   Tangan {2:0.0}: {3}   Badan {4:0.0}: {5}"
+    },
+    {
+      "key": "ability_bird_glide",
+      "value": "Sayap {0:0.0} INK / Kelajuan geser {1:0.00}"
+    },
+    {
+      "key": "ability_human_status_combined",
+      "value": "KEBESAH HUMAN Senjata {0:0.0} INK  Kuasa ×{1:0.00}\nKaki {2:0.0} INK  Jump ×{3:0.00}"
+    },
+    {
+      "key": "ability_cat_status",
+      "value": "Kemahiran Kucing Kaki belakang {0:0.0} INK  Kelajuan ×{1:0.00}\nKaki depan {2:0.0} INK  Jangkauan cakar ×{3:0.00}"
+    },
+    {
+      "key": "ability_bird_status",
+      "value": "Sayap KEBESAAN Burung {0:0.0} / 700 INK\nKelajuan geser {1:0.00}"
+    },
+    {
+      "key": "ability_turtle_status",
+      "value": "TURTLE ABILITY Pertahankan SPACE: peluru tak terkalahkan Hold F: belok 90° ke arah yang menghadap"
+    },
+    {
+      "key": "ability_slime_status",
+      "value": "KEBESAH SLIME Badan {0:0.0} / 700 INK\nPanjang pucuk {1:0.0}"
+    },
+    {
+      "key": "ability_card_human",
+      "value": "MANUSIA"
+    },
+    {
+      "key": "ability_card_cat",
+      "value": "KUCING"
+    },
+    {
+      "key": "ability_card_bird",
+      "value": "Burung"
+    },
+    {
+      "key": "ability_card_turtle",
+      "value": "TIRTLE"
+    },
+    {
+      "key": "ability_card_slime",
+      "value": "SLUM."
+    },
+    {
+      "key": "ability_description_human",
+      "value": "Lebih banyak kaki INK meningkatkan kekuatan lompatan Lebih lengan INK meningkatkan kuasa buang"
+    },
+    {
+      "key": "ability_description_cat",
+      "value": "Lebih banyak kaki belakang INK meningkatkan kelajuan berjalan Lebih kaki depan INK meningkatkan julat goresan"
+    },
+    {
+      "key": "ability_description_bird",
+      "value": "Lebih banyak sayap INK meningkatkan daya meluncur"
+    },
+    {
+      "key": "ability_description_turtle",
+      "value": "Tidak dapat dikalahkan semasa tersembunyi di dalam cangkang"
+    },
+    {
+      "key": "ability_description_slime",
+      "value": "Pencet F untuk memanjangkan pucuk serangan ke arah tetikus INK membuat ia lebih lama / Tembok melompat diaktifkan"
+    },
+    {
+      "key": "ability_control_human",
+      "value": "F: MEMERUT"
+    },
+    {
+      "key": "ability_control_cat",
+      "value": "F: MENGGARUK / MENGAMBIL"
+    },
+    {
+      "key": "ability_control_bird",
+      "value": "TIDAK SPACE: GLIDE  F: GRAB"
+    },
+    {
+      "key": "ability_control_turtle",
+      "value": "TIDAK SPACE: SHELL HOLD F: TURN 90°"
+    },
+    {
+      "key": "ability_control_slime",
+      "value": "F: SPIKE TOWARD Mouse"
+    },
+    {
+      "key": "ability_control_pad_human",
+      "value": "KUADRAT / X: MELEMPAR"
+    },
+    {
+      "key": "ability_control_pad_cat",
+      "value": "SQUARE / X: GORESAN / TANGKAP"
+    },
+    {
+      "key": "ability_control_pad_bird",
+      "value": "HOLD CROSS / A: GLIDE SQUARE / X: GRAB"
+    },
+    {
+      "key": "ability_control_pad_turtle",
+      "value": "HOLD CROSS / A: SHELL HOLD SQUARE / X: TURN 90°"
+    },
+    {
+      "key": "ability_control_pad_slime",
+      "value": "Square / X: SPIKE TOWARD RIGHT STICK"
+    },
+    {
+      "key": "gameplay_control_pad_switch",
+      "value": "TRIANGLE / Y: KARAKTER SWITCH"
+    },
+    {
+      "key": "gameplay_control_keyboard_switch",
+      "value": "Q: KARAKTER SWITCH"
+    },
+    {
+      "key": "gameplay_actions_pad",
+      "value": "CREATE / SELECT: DRAW menu OPTIONS / START: Menu"
+    },
+    {
+      "key": "gameplay_actions_keyboard",
+      "value": "TAB: DRAW MENU\nESCMenu:"
+    },
+    {
+      "key": "gameplay_actions_keyboard_secondary",
+      "value": "TAB: MENU GAMBAR"
+    },
+    {
+      "key": "ability_control_ps_human",
+      "value": "TEMPAS: LEMPAS"
+    },
+    {
+      "key": "ability_control_ps_cat",
+      "value": "KUADRAT: GORESAN / PEGANG"
+    },
+    {
+      "key": "ability_control_ps_bird",
+      "value": "HOLD CROSS: GLIDE SQUARE: GRAB"
+    },
+    {
+      "key": "ability_control_ps_turtle",
+      "value": "HOLD CROSS: SHELL HOLD SQUARE: PULUS 90°"
+    },
+    {
+      "key": "ability_control_ps_slime",
+      "value": "Square: SPIKE TOWARD RIGHT STICK"
+    },
+    {
+      "key": "ability_control_xbox_human",
+      "value": "X: TEMPANG"
+    },
+    {
+      "key": "ability_control_xbox_cat",
+      "value": "X: GORESAN / TANGKAP"
+    },
+    {
+      "key": "ability_control_xbox_bird",
+      "value": "HOLD A: GLIDE X: GRAB"
+    },
+    {
+      "key": "ability_control_xbox_turtle",
+      "value": "Pegang A: SHELL Pegang X: TURN 90°"
+    },
+    {
+      "key": "ability_control_xbox_slime",
+      "value": "X: SPIKE TOWARD STICK"
+    },
+    {
+      "key": "gameplay_control_ps_switch",
+      "value": "TRIANGLE: KARAKTER SWAITCH"
+    },
+    {
+      "key": "gameplay_control_xbox_switch",
+      "value": "Y: KARAKTER SWITCH"
+    },
+    {
+      "key": "gameplay_actions_ps",
+      "value": "Penciptaan: DRAW MENU OPTIONS: MENU"
+    },
+    {
+      "key": "gameplay_actions_xbox",
+      "value": "Pemandangan: DRAW MENU MENU: MENU"
+    },
+    {
+      "key": "gameplay_actions_ps_secondary",
+      "value": "Penciptaan: Menus DRAW"
+    },
+    {
+      "key": "gameplay_actions_xbox_secondary",
+      "value": "Pemandangan: MENU DRAW"
+    },
+    {
+      "key": "demo_stage_unavailable",
+      "value": "Tidak termasuk dalam demo"
+    },
+    {
+      "key": "ability_effect_human_combined",
+      "value": "Kuasa ×{0:0.00}  Jump ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_cat",
+      "value": "Berlari ×{0:0.00}  Jangkauan cakar ×{1:0.00}"
+    },
+    {
+      "key": "ability_effect_bird",
+      "value": "Kuasa terapung {0:0}%"
+    },
+    {
+      "key": "ability_effect_turtle",
+      "value": "SPACE: SHELL /  F: 90° TURN"
+    },
+    {
+      "key": "ability_effect_slime",
+      "value": "Panjang pucuk ×{0:0.00}"
+    },
+    {
+      "key": "ability_ink_human_combined",
+      "value": "Senjata {0:0.0}/280 Kaki {1:0.0}/160 INK"
+    },
+    {
+      "key": "ability_ink_cat",
+      "value": "Kembali {0:0.0}/240 Di hadapan {1:0.0}/240 INK"
+    },
+    {
+      "key": "ability_ink_bird",
+      "value": "Sayap {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_ink_turtle",
+      "value": "Hanya aktif semasa butang ditahan"
+    },
+    {
+      "key": "ability_turtle_badge",
+      "value": "SHELL siap"
+    },
+    {
+      "key": "ability_turtle_hint",
+      "value": "SPACE dan F bekerja semasa ditahan!"
+    },
+    {
+      "key": "ability_ink_slime",
+      "value": "Badan {0:0.0} / 700 INK"
+    },
+    {
+      "key": "ability_rank",
+      "value": "RANGKING {0}"
+    },
+    {
+      "key": "ability_gauge_low",
+      "value": "Rendah"
+    },
+    {
+      "key": "ability_gauge_high",
+      "value": "Tinggi"
+    },
+    {
+      "key": "ability_human_jump_gauge",
+      "value": "MELOMPAT"
+    },
+    {
+      "key": "ability_human_arm_gauge",
+      "value": "MEMEREKA"
+    },
+    {
+      "key": "ability_cat_back_leg_gauge",
+      "value": "Berlari"
+    },
+    {
+      "key": "ability_cat_front_leg_gauge",
+      "value": "GORESAN"
+    },
+    {
+      "key": "ability_bird_gauge",
+      "value": "GLIDING"
+    },
+    {
+      "key": "ability_turtle_gauge",
+      "value": "Pertahanan"
+    },
+    {
+      "key": "ability_slime_gauge",
+      "value": "MOBILITAS"
+    },
+    {
+      "key": "ability_slime_ink_gauge",
+      "value": "Badan INK"
+    },
+    {
+      "key": "ability_slime_gauge_low",
+      "value": "LIGHT: Grip UP"
+    },
+    {
+      "key": "ability_slime_gauge_high",
+      "value": "Berat: SPEED + JUMP UP"
+    },
+    {
+      "key": "ability_slime_badge",
+      "value": "INK Ukuran {0:0}%"
+    },
+    {
+      "key": "ability_slime_hint",
+      "value": "F: Spike ke arah tikus! pecah peti dan lebih / Kurang INK = lebih lama"
+    },
+    {
+      "key": "ability_growth_hint",
+      "value": "Tarik lebih banyak untuk kuasa!"
+    },
+    {
+      "key": "redraw_unavailable_stage",
+      "value": "Anda tidak boleh menggambar semula selepas tahap ini bermula."
+    },
+    {
+      "key": "label_high_platform",
+      "value": "1 Platform Tinggi"
+    },
+    {
+      "key": "label_heavy_switch",
+      "value": "2 Switch Berat"
+    },
+    {
+      "key": "label_far_lever",
+      "value": "3 Peluang yang jauh"
+    },
+    {
+      "key": "label_narrow_hole",
+      "value": "4 Lubang Sempit"
+    },
+    {
+      "key": "input_device_keyboard_mouse",
+      "value": "KEYBOARD + MOUSE"
+    },
+    {
+      "key": "input_device_gamepad_disconnected",
+      "value": "Gamepad (diputuskan)"
+    },
+    {
+      "key": "input_device_automatic",
+      "value": "Otomatik (keyboard / gamepad)"
+    },
+    {
+      "key": "local_gamepad_disconnected",
+      "value": "P{0} GAMEPAD DISCONNECTED, RECONNECT IT untuk mengembalikan pemain yang sama."
+    },
+    {
+      "key": "local_gamepad_reconnected",
+      "value": "P{0} GAMEPAD DIHUBUNGKAN SEMULA."
+    },
+    {
+      "key": "local_player_joined",
+      "value": "P{0} DISATUK ({1})"
+    },
+    {
+      "key": "local_player_limit_reached",
+      "value": "Hingga 2 pemain setiap peranti dan 4 pemain secara keseluruhan di dalam bilik."
+    },
+    {
+      "key": "local_roster_locked_during_stage",
+      "value": "Tambah atau hapus pemain tempatan sebelum memulakan pentas."
+    },
+    {
+      "key": "local_player_rejected_full",
+      "value": "Ruang penuh 4 pemain."
+    },
+    {
+      "key": "local_lobby_controls",
+      "value": "PAD UNASIGNED: START TO JOIN / KEYBOARD: ENTER Untuk menyertai, ruang belakang untuk meninggalkan /  P2: SELECT + B untuk Keluar"
+    },
+    {
+      "key": "local_roster_summary",
+      "value": "Pemain tempatan {0}/2 PADS Terhubung {1}"
+    },
+    {
+      "key": "local_roster_count",
+      "value": "{0}/2"
+    },
+    {
+      "key": "local_roster_local_count",
+      "value": "PLAY LOCAL  {0}/2"
+    },
+    {
+      "key": "local_roster_pad_count",
+      "value": "PAD. {0}"
+    },
+    {
+      "key": "local_roster_join_hint",
+      "value": "Tekan Tombol Pengendali untuk Bergabung"
+    },
+    {
+      "key": "local_roster_compact_join",
+      "value": "ENTER / START: Bergabung"
+    },
+    {
+      "key": "local_roster_compact_full",
+      "value": "2 Pemain Bersedia"
+    },
+    {
+      "key": "local_roster_status",
+      "value": "Pemain {0}/2 KEYBOARD: ENTER Untuk menyertai / SPASIS belakang untuk meninggalkan CONTROLLER: START TO JOIN / HOLD B TO LEAVE"
+    },
+    {
+      "key": "local_primary_device_claimed",
+      "value": "P1 DISUKNYA ke {0}."
+    },
+    {
+      "key": "local_keyboard_released",
+      "value": "Papan kunci/mouse dibebaskan dari P1. tekan butang controller untuk menuntut P1."
+    },
+    {
+      "key": "local_player_left",
+      "value": "P{0} K kiri."
+    },
+    {
+      "key": "title_draw_unavailable_local_coop",
+      "value": "TITLE DRAW tidak boleh didapati semasa kerja sama tempatan."
+    },
+    {
+      "key": "draw_gamepad_pointer_hint",
+      "value": "STICK LEFT: MOVE RT / A / B: DRAW & SELECT LT: ERASE"
+    },
+    {
+      "key": "multi_room_setup",
+      "value": "PEMANGGUNGAN RUMA"
+    },
+    {
+      "key": "multi_participants",
+      "value": "Pemain"
+    },
+    {
+      "key": "multi_room_create_title",
+      "value": "BERSIH bilik"
+    },
+    {
+      "key": "multi_room_join_title",
+      "value": "Bersama-sama"
+    },
+    {
+      "key": "multi_room_id",
+      "value": "ID ROOM"
+    },
+    {
+      "key": "multi_local_test_no_invite",
+      "value": "Ujian Lokal"
+    },
+    {
+      "key": "multi_you_badge",
+      "value": "Anda"
+    },
+    {
+      "key": "slime_missile_title",
+      "value": "9-1 SLIME Missile CAVE"
+    },
+    {
+      "key": "slime_missile_floor_warning",
+      "value": "Pembersihan Lantai! Pegang Tembok"
+    },
+    {
+      "key": "slime_missile_hint",
+      "value": "Peluru berpandu Jump Wall dan Dogge Percing!"
+    },
+    {
+      "key": "tower_defense_title",
+      "value": "8-3 Lindungi TEMPODA Anda!"
+    },
+    {
+      "key": "tower_defense_phase",
+      "value": "FASE {0} / {1}"
+    },
+    {
+      "key": "tower_defense_rank_up",
+      "value": "RANK {0}"
+    },
+    {
+      "key": "tower_defense_time_remaining",
+      "value": "Waktu {0:0.0}"
+    },
+    {
+      "key": "tower_defense_protect",
+      "value": "Pertahankan kawan anda dari kedua belah pihak"
+    },
+    {
+      "key": "tower_defense_airstrike",
+      "value": "SERANGAN UDARA DALAM {0}"
+    },
+    {
+      "key": "tower_defense_retry",
+      "value": "Teman turun... kembali ke dalam {0}"
+    },
+    {
+      "key": "tower_defense_clear",
+      "value": "Pertahanan CLEAR!"
+    },
+    {
+      "key": "tower_ally_speech_get_ready",
+      "value": "GET READY!"
+    },
+    {
+      "key": "tower_ally_speech_wait",
+      "value": "WAIT!"
+    },
+    {
+      "key": "tower_ally_speech_run",
+      "value": "RUN!"
+    },
+    {
+      "key": "tower_ally_speech_ready",
+      "value": "READY!"
+    },
+    {
+      "key": "tower_ally_speech_together",
+      "value": "WE CAN DO IT!"
+    },
+    {
+      "key": "value_coin_amount",
+      "value": "Uang {0} / {1}"
+    },
+    {
+      "key": "value_coin_time",
+      "value": "Waktu {0}"
+    },
+    {
+      "key": "value_coin_hint",
+      "value": "Kotak-kotak patah dan duit syiling!"
+    },
+    {
+      "key": "value_coin_time_up",
+      "value": "Time Up... Retry dalam 5"
+    },
+    {
+      "key": "value_coin_clear",
+      "value": "100 CIN CLEAR!"
+    },
+    {
+      "key": "human_circuit_powered",
+      "value": "Power ON!"
+    },
+    {
+      "key": "title_single",
+      "value": "Lokal"
+    },
+    {
+      "key": "title_multi",
+      "value": "BERBILANG"
+    },
+    {
+      "key": "title_draw",
+      "value": "LUKIS"
+    },
+    {
+      "key": "title_option",
+      "value": "Pilihan"
+    },
+    {
+      "key": "option_back",
+      "value": "Kembali  ESC"
+    },
+    {
+      "key": "option_back_esc",
+      "value": "Kembali  ESC"
+    },
+    {
+      "key": "ui_back_esc",
+      "value": "Kembali  ESC"
+    },
+    {
+      "key": "title_exit",
+      "value": "Keluar"
+    },
+    {
+      "key": "title_exit_confirm",
+      "value": "Berhenti NICO DRAW?"
+    },
+    {
+      "key": "title_debug",
+      "value": "DEBUG."
+    },
+    {
+      "key": "trailer_debug_title",
+      "value": "PEMBANGKAN PEMBANGKAN TRAILER"
+    },
+    {
+      "key": "trailer_debug_scenario_01",
+      "value": "Relay udara 4 pemain"
+    },
+    {
+      "key": "trailer_debug_scenario_01_help",
+      "value": "Manusia melemparkan Burung, kemudian Burung → Kucing → Slime relay"
+    },
+    {
+      "key": "trailer_debug_start",
+      "value": "SEKWENSI START"
+    },
+    {
+      "key": "trailer_debug_back",
+      "value": "Kembali  ESC"
+    },
+    {
+      "key": "trailer_debug_edit_shapes",
+      "value": "Edit Karakter"
+    },
+    {
+      "key": "steam_header_debug_button",
+      "value": "HEADER STEAM"
+    },
+    {
+      "key": "steam_header_capture",
+      "value": "PENGEKSPORT 920×430 PNG"
+    },
+    {
+      "key": "steam_header_exit",
+      "value": "Kembali ke tajuk"
+    },
+    {
+      "key": "steam_header_ready",
+      "value": "Periksa komposisi, kemudian eksport PNG"
+    },
+    {
+      "key": "steam_header_saved",
+      "value": "Disimpan: {0}"
+    },
+    {
+      "key": "player_redrawing_status",
+      "value": "MENGGAMBAR SEMULA..."
+    },
+    {
+      "key": "character_change_ready_room_only",
+      "value": "Karakter hanya boleh diubah di dalam bilik siap."
+    },
+    {
+      "key": "character_switch_redraw_zone_only",
+      "value": "Anda hanya boleh menukar watak di lantai REDRAW."
+    },
+    {
+      "key": "trailer_debug_capture_help",
+      "value": "REPLAY HID HUD     ESC  Judul"
+    },
+    {
+      "key": "trailer_tas_title",
+      "value": "TELAYER TAS RECORDER"
+    },
+    {
+      "key": "trailer_tas_help",
+      "value": "Seret pelakon sambil mengangguk ♬ Overdub Manusia ♬ Burung ♬ Kucing ♬ F9 Rekod F10 Play P Pause O Langkah"
+    },
+    {
+      "key": "trailer_tas_record",
+      "value": "F9 Rekod/STOP"
+    },
+    {
+      "key": "trailer_tas_play",
+      "value": "F10 BERMAIN SEMUA"
+    },
+    {
+      "key": "trailer_tas_reset",
+      "value": "F8 Setup semula"
+    },
+    {
+      "key": "trailer_tas_clear",
+      "value": "TIDAK PILIH"
+    },
+    {
+      "key": "trailer_tas_pause",
+      "value": "PUSE"
+    },
+    {
+      "key": "trailer_tas_step",
+      "value": "O LANGKAH"
+    },
+    {
+      "key": "trailer_tas_status_idle",
+      "value": "TIDAK BERKHIDMAT"
+    },
+    {
+      "key": "trailer_tas_status_recording",
+      "value": "MEMEREKA"
+    },
+    {
+      "key": "trailer_tas_status_playback",
+      "value": "Memutar Semua Lagu"
+    },
+    {
+      "key": "trailer_tas_paused",
+      "value": "TIDUR"
+    },
+    {
+      "key": "trailer_tas_status_format",
+      "value": "{0} ⁇  Select: {1} | {2} bingkai kelajuan {3:0.##}x"
+    },
+    {
+      "key": "trailer_tas_preset_format",
+      "value": "PRASETTING {0}"
+    },
+    {
+      "key": "trailer_tas_save_preset",
+      "value": "SIMPAN BENTUK"
+    },
+    {
+      "key": "trailer_tas_placement_help",
+      "value": "Semasa tidak berfungsi, seret watak untuk menetapkan kedudukan permulaan mereka"
+    },
+    {
+      "key": "menu_continue",
+      "value": "Berlanjut"
+    },
+    {
+      "key": "menu_to_title",
+      "value": "Judul"
+    },
+    {
+      "key": "menu_retry_confirm_message",
+      "value": "Memulakan semula peringkat ini dari awal?"
+    },
+    {
+      "key": "menu_retry_confirm_yes",
+      "value": "CUBA LAGI"
+    },
+    {
+      "key": "menu_stage_select_confirm_message",
+      "value": "Menamatkan peringkat semasa dan kembali ke Stage Select?"
+    },
+    {
+      "key": "menu_stage_select_confirm_yes",
+      "value": "PEMILIHAN TAHUN"
+    },
+    {
+      "key": "draw_cancel_confirm_message",
+      "value": "Perubahan yang belum selesai tidak akan disimpan. Kembali tanpa menyimpan?"
+    },
+    {
+      "key": "draw_cancel_confirm_yes",
+      "value": "Kembali Tanpa Menjimatkan"
+    },
+    {
+      "key": "draw_save_complete",
+      "value": "Karakter awak telah diselamatkan."
+    },
+    {
+      "key": "draw_save_failed",
+      "value": "Saya tidak dapat menyimpan, sila tekan DONE lagi."
+    },
+    {
+      "key": "language_settings",
+      "value": "Tetapan Bahasa"
+    },
+    {
+      "key": "multi_play",
+      "value": "BERBILANG PERMAINAN"
+    },
+    {
+      "key": "multi_random_button",
+      "value": "Perlawanan acak"
+    },
+    {
+      "key": "multi_room_button",
+      "value": "Peribadi"
+    },
+    {
+      "key": "multi_random_match",
+      "value": "Perlawanan acak"
+    },
+    {
+      "key": "multi_searching_players",
+      "value": "Mencari pemain"
+    },
+    {
+      "key": "multi_searching_slot",
+      "value": "Mencari"
+    },
+    {
+      "key": "multi_random_status_default",
+      "value": "Cocok... Pemain 2 / 4 ○ Anda ○ Pemain2 □ Mencari □ Mencari Menanti [HADIR]"
+    },
+    {
+      "key": "multi_room_title",
+      "value": "RUM"
+    },
+    {
+      "key": "multi_create_room",
+      "value": "Buat Ruang"
+    },
+    {
+      "key": "multi_join_room",
+      "value": "Bilik Bersama"
+    },
+    {
+      "key": "multi_create_room_body",
+      "value": "Nama bilik [ Draw Together ] Max Pemain\n< 4 >\n\nVisibiliti [Public] [Private] Tahap [Host Selects] Retraw Peraturan [Penghentian Semua]"
+    },
+    {
+      "key": "multi_max_players",
+      "value": "Pemain Max"
+    },
+    {
+      "key": "multi_visibility",
+      "value": "Visibiliti"
+    },
+    {
+      "key": "multi_visibility_short",
+      "value": "Visibiliti"
+    },
+    {
+      "key": "multi_public",
+      "value": "Awam"
+    },
+    {
+      "key": "multi_private",
+      "value": "Peribadi"
+    },
+    {
+      "key": "multi_toggle_visibility",
+      "value": "Bertukar"
+    },
+    {
+      "key": "multi_prev",
+      "value": "<"
+    },
+    {
+      "key": "multi_next",
+      "value": ">"
+    },
+    {
+      "key": "multi_create",
+      "value": "Buat"
+    },
+    {
+      "key": "multi_join_room_help",
+      "value": "Enter ID Lobby yang dipaparkan pada skrin host. Dengan EOS dikonfigurasi, rakan boleh menyertai dari jauh. Jika menggunakan TCP Langsung, enter IP: 7777."
+    },
+    {
+      "key": "multi_lobby_id_placeholder",
+      "value": "Enter ID lobi"
+    },
+    {
+      "key": "multi_join",
+      "value": "Bergabunglah"
+    },
+    {
+      "key": "multi_refresh",
+      "value": "Pembaharuan"
+    },
+    {
+      "key": "multi_room_lobby",
+      "value": "RUM LOBBY"
+    },
+    {
+      "key": "multi_lobby_status_default",
+      "value": "Bilik: Draw Together ID: ABC123 2 / 4 Lobby yang boleh dimainkan space\nBermain dengan kotak, bola, dan pinggan lompat sambil menunggu."
+    },
+    {
+      "key": "multi_copy_id",
+      "value": "Salinan ID"
+    },
+    {
+      "key": "multi_start_stage_1_1",
+      "value": "Mulakan 1-1"
+    },
+    {
+      "key": "multi_stage_select",
+      "value": "Pilih peringkat"
+    },
+    {
+      "key": "multi_all_ready_required",
+      "value": "Scenes select akan dibuka apabila semua orang sudah siap."
+    },
+    {
+      "key": "multi_leave_confirm",
+      "value": "Tinggalkan bilik ini?"
+    },
+    {
+      "key": "multi_leave_yes",
+      "value": "Pergi"
+    },
+    {
+      "key": "multi_leave_no",
+      "value": "Batalkan"
+    },
+    {
+      "key": "multi_host_selecting_stage",
+      "value": "Tuan rumah sedang memilih pentas..."
+    },
+    {
+      "key": "multi_leave",
+      "value": "Pergi"
+    },
+    {
+      "key": "multi_matching",
+      "value": "Cocok dengan..."
+    },
+    {
+      "key": "multi_host_only_start",
+      "value": "Hanya tuan rumah yang boleh memulakan."
+    },
+    {
+      "key": "multi_no_lobby_id",
+      "value": "Tiada ID Lobby untuk disalin."
+    },
+    {
+      "key": "multi_copied_lobby_id",
+      "value": "Salin ID Lobby."
+    },
+    {
+      "key": "multi_copied_room_code",
+      "value": "Salin kod bilik."
+    },
+    {
+      "key": "multi_copied_connection_id",
+      "value": "Salin ID sambungan."
+    },
+    {
+      "key": "multi_no_online_lobby_id",
+      "value": "Tiada kod bilik yang tersedia."
+    },
+    {
+      "key": "multi_offline_lobby_id",
+      "value": "TIADA SAMBUNGAN DALAM TALIAN."
+    },
+    {
+      "key": "multi_room_code_label",
+      "value": "Kod"
+    },
+    {
+      "key": "multi_connecting",
+      "value": "Berhubung..."
+    },
+    {
+      "key": "multi_room",
+      "value": "Bilik"
+    },
+    {
+      "key": "multi_players",
+      "value": "Pemain"
+    },
+    {
+      "key": "multi_local",
+      "value": "Local"
+    },
+    {
+      "key": "multi_ready",
+      "value": "Siapkan"
+    },
+    {
+      "key": "multi_wait",
+      "value": "Tunggu"
+    },
+    {
+      "key": "multi_host",
+      "value": "TUAN RUMAH"
+    },
+    {
+      "key": "multi_default_room_name",
+      "value": "Bersatu Bersama"
+    },
+    {
+      "key": "multi_friend_room_name",
+      "value": "Bilik kawan"
+    },
+    {
+      "key": "online_player_you",
+      "value": "Kamu"
+    },
+    {
+      "key": "player_controlled_marker",
+      "value": "Anda"
+    },
+    {
+      "key": "spectator_following",
+      "value": "Menonton: {0}  Bertukar dengan ← / →"
+    },
+    {
+      "key": "online_player_host",
+      "value": "Tuan rumah"
+    },
+    {
+      "key": "online_player_number",
+      "value": "Pemain {0}"
+    },
+    {
+      "key": "online_fake_random_ready",
+      "value": "Perlawanan acak palsu siap."
+    },
+    {
+      "key": "online_fake_initialized",
+      "value": "Backend palsu dimulakan."
+    },
+    {
+      "key": "online_content_mismatch",
+      "value": "Permainan dalam talian tidak tersedia kerana data permainan atau versi tidak sesuai. Semak fail permainan di Steam."
+    },
+    {
+      "key": "online_host_disconnected",
+      "value": "Tuan rumah terputus, jadi bilik ditutup."
+    },
+    {
+      "key": "online_session_disconnected",
+      "value": "Sambungan sesi hilang, sila masuk semula."
+    },
+    {
+      "key": "online_logging_in",
+      "value": "Menerusi..."
+    },
+    {
+      "key": "online_local_test_player",
+      "value": "Online sebagai pemain ujian tempatan."
+    },
+    {
+      "key": "online_fake_stage_start",
+      "value": "Permulaan tahap palsu."
+    },
+    {
+      "key": "online_private_room_created",
+      "value": "Bilik peribadi dibuat."
+    },
+    {
+      "key": "online_public_room_created",
+      "value": "Ruang awam dibuat."
+    },
+    {
+      "key": "online_joined_fake_room",
+      "value": "Bergabung dalam bilik palsu."
+    },
+    {
+      "key": "online_direct_initialized",
+      "value": "TCP langsung dimulakan."
+    },
+    {
+      "key": "online_ready",
+      "value": "Online siap, tuan rumah atau menyertai bilik."
+    },
+    {
+      "key": "online_room_created",
+      "value": "Bilik dibuat. Berkongsi ID dengan kawan anda."
+    },
+    {
+      "key": "online_failed_to_host",
+      "value": "Tidak dapat menjadi tuan rumah: {0}"
+    },
+    {
+      "key": "online_room_id_format",
+      "value": "ID bilik mesti host-ip:port."
+    },
+    {
+      "key": "online_joining_room",
+      "value": "Bilik bersama..."
+    },
+    {
+      "key": "online_failed_to_join",
+      "value": "Tidak dapat menyertai: {0}"
+    },
+    {
+      "key": "online_left_lobby",
+      "value": "Lobby kiri."
+    },
+    {
+      "key": "online_ready_changed",
+      "value": "Bersiap-siap berubah."
+    },
+    {
+      "key": "online_accept_failed",
+      "value": "Mengaku gagal."
+    },
+    {
+      "key": "online_player_joined",
+      "value": "{0} bersatu."
+    },
+    {
+      "key": "online_player_left_notice",
+      "value": "{0} meninggalkan sesi."
+    },
+    {
+      "key": "online_lobby_updated",
+      "value": "Lobby diperbaharui."
+    },
+    {
+      "key": "online_starting_stage",
+      "value": "Tahap permulaan {0}."
+    },
+    {
+      "key": "online_eos_initialized",
+      "value": "EOS dimulakan. Configure EOS Plugin sebelum log in."
+    },
+    {
+      "key": "online_eos_login",
+      "value": "Login EOS..."
+    },
+    {
+      "key": "online_eos_connect_not_ready",
+      "value": "Antara muka EOS Connect tidak bersedia."
+    },
+    {
+      "key": "online_eos_login_failed",
+      "value": "Login EOS gagal: {0}"
+    },
+    {
+      "key": "online_steam_not_running",
+      "value": "Mulakan Steam, kemudian dilancarkan NICO DRAW daripada Perpustakaan Steam anda."
+    },
+    {
+      "key": "online_steam_ticket_failed",
+      "value": "Tidak dapat mendapatkan tiket pengesahan Steam: {0}"
+    },
+    {
+      "key": "online_eos_create_lobby_failed",
+      "value": "EOS membuat lobi gagal: {0}"
+    },
+    {
+      "key": "online_eos_room_created",
+      "value": "Ruang EOS dibuat."
+    },
+    {
+      "key": "online_eos_enter_lobby_id",
+      "value": "Enter ID Lobby EOS."
+    },
+    {
+      "key": "online_eos_enter_room_code",
+      "value": "Enter Kod bilik."
+    },
+    {
+      "key": "online_eos_room_code_failed",
+      "value": "Tidak dapat mendaftarkan kod bilik: {0}"
+    },
+    {
+      "key": "online_eos_room_code_search_failed",
+      "value": "Pencarian kod bilik gagal: {0}"
+    },
+    {
+      "key": "online_eos_room_create_retry",
+      "value": "Penciptaan bilik gagal. {0}s ({1} usaha ditinggalkan)"
+    },
+    {
+      "key": "online_eos_room_code_not_found",
+      "value": "Tiada ruang untuk kod {0}."
+    },
+    {
+      "key": "online_eos_room_code_collision",
+      "value": "Kode bilik bercanggah, tolong buat bilik lagi."
+    },
+    {
+      "key": "online_stage_select_opened",
+      "value": "Tuan rumah membuka tahap pilih."
+    },
+    {
+      "key": "online_stage_select_closed",
+      "value": "Tuan rumah tahap ditutup pilih."
+    },
+    {
+      "key": "online_eos_join_lobby_failed",
+      "value": "EOS menyertai lobi gagal: {0}"
+    },
+    {
+      "key": "online_eos_joined_room",
+      "value": "Bergabung dengan bilik EOS."
+    },
+    {
+      "key": "online_eos_left_lobby",
+      "value": "Lobby EOS kiri."
+    },
+    {
+      "key": "online_ready_on",
+      "value": "- Bersedia."
+    },
+    {
+      "key": "online_ready_off",
+      "value": "Saya tak bersedia."
+    },
+    {
+      "key": "online_eos_device_create_failed",
+      "value": "Penciptaan ID Peranti EOS gagal: {0}"
+    },
+    {
+      "key": "online_eos_creating_device_id",
+      "value": "Menciptakan EOS Device ID..."
+    },
+    {
+      "key": "online_eos_device_login_failed",
+      "value": "Login ID peranti EOS gagal: {0}"
+    },
+    {
+      "key": "online_eos_online_as",
+      "value": "EOS dalam talian sebagai {0}."
+    },
+    {
+      "key": "online_lobby_members_updated",
+      "value": "Anggota lobi diperbaharui."
+    },
+    {
+      "key": "online_eos_not_logged_in",
+      "value": "EOS tidak log masuk. Siapkan EOS Plugin dan log masuk terlebih dahulu."
+    },
+    {
+      "key": "online_eos_disabled",
+      "value": "EOS tidak berfungsi."
+    },
+    {
+      "key": "stage_clear_title",
+      "value": "PASTAH CLEAR!"
+    },
+    {
+      "key": "stage_clear_body",
+      "value": "Tahap {0} Bersihkan!"
+    },
+    {
+      "key": "stage_clear_body_generic",
+      "value": "Bersihkan!"
+    },
+    {
+      "key": "stage_clear_next",
+      "value": "Seterusnya {0}"
+    },
+    {
+      "key": "stage_clear_back",
+      "value": "Pilih peringkat"
+    },
+    {
+      "key": "stage_clear_all_done",
+      "value": "Semua Bersihkan!"
+    },
+    {
+      "key": "stage_label",
+      "value": "Tahap {0}"
+    },
+    {
+      "key": "stage_world_label",
+      "value": "DUNIA {0}"
+    },
+    {
+      "key": "stage_species_available",
+      "value": "KARAKTERAN yang Tersedia"
+    },
+    {
+      "key": "stage_species_available_compact",
+      "value": "Penggunaan: {0}"
+    },
+    {
+      "key": "stage_select_debug_created",
+      "value": "Dicipta"
+    },
+    {
+      "key": "stage_select_debug_not_created",
+      "value": "TIDAK Dicipta"
+    },
+    {
+      "key": "draw_species_locked",
+      "value": "{0} tidak tersedia pada peringkat ini."
+    },
+    {
+      "key": "draw_species_already_used",
+      "value": "Pemain lain sudah menggunakan {0}Pilih watak yang tersedia."
+    },
+    {
+      "key": "draw_species_swap_title",
+      "value": "KARAKTER SWAP"
+    },
+    {
+      "key": "draw_species_swap_hint",
+      "value": "{0} Tekan PERTAMA untuk meminta pertukaran."
+    },
+    {
+      "key": "draw_species_swap_request",
+      "value": "{0} mahu menukar anda {1} untuk {2}."
+    },
+    {
+      "key": "draw_species_swap_outgoing_confirm",
+      "value": "{0} menghantar permintaan pertukaran?"
+    },
+    {
+      "key": "draw_species_swap_send",
+      "value": "Kirim Permintaan"
+    },
+    {
+      "key": "draw_species_swap_accept",
+      "value": "PERTUKARAN"
+    },
+    {
+      "key": "draw_species_swap_reject",
+      "value": "PENURUNAN"
+    },
+    {
+      "key": "draw_species_swap_pending",
+      "value": "Menunggu jawapan kepada permintaan pertukaran..."
+    },
+    {
+      "key": "draw_species_swap_pending_title",
+      "value": "Penghantaran permintaan SWAP"
+    },
+    {
+      "key": "draw_species_swap_pending_detail",
+      "value": "Menunggu {0} untuk bertindak balas. {1} untuk {2}."
+    },
+    {
+      "key": "draw_species_swap_accepted",
+      "value": "Karakter bertukar!"
+    },
+    {
+      "key": "draw_species_swap_rejected",
+      "value": "Permintaan pertukaran ditolak."
+    },
+    {
+      "key": "draw_species_swap_unavailable",
+      "value": "Pemain lain tidak dapat ditemui."
+    },
+    {
+      "key": "stage_object_grain_emitter",
+      "value": "DISPENSER gandum"
+    },
+    {
+      "key": "stage_object_grain_scale",
+      "value": "100 gram."
+    },
+    {
+      "key": "stage_object_grain_gate",
+      "value": "Pintu Berat"
+    },
+    {
+      "key": "stage_object_escort_friend_button",
+      "value": "Teman Button"
+    },
+    {
+      "key": "stage_object_escort_player_one_way_floor",
+      "value": "Lantai Satu Cara Hanya Untuk Pemain"
+    },
+    {
+      "key": "species_human",
+      "value": "Manusia"
+    },
+    {
+      "key": "species_cat",
+      "value": "Kucing"
+    },
+    {
+      "key": "species_bird",
+      "value": "Burung"
+    },
+    {
+      "key": "species_turtle",
+      "value": "TERNAK."
+    },
+    {
+      "key": "species_slime",
+      "value": "SLUM."
+    },
+    {
+      "key": "stage_editor_objects_tab",
+      "value": "Objek"
+    },
+    {
+      "key": "stage_editor_links_tab",
+      "value": "Pautan"
+    },
+    {
+      "key": "stage_editor_status_debug_start_help",
+      "value": "Seret setiap watak tempatan untuk memberikan kedudukan permulaan ujian-main yang berasingan."
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag",
+      "value": "Menggerakkan kedudukan permulaan permainan ujian."
+    },
+    {
+      "key": "stage_editor_status_debug_start",
+      "value": "Permulaan ujian: X {0:0.00} / Y {1:0.00}"
+    },
+    {
+      "key": "stage_editor_status_debug_start_drag_player",
+      "value": "Bergerak P{0}Posisi permulaan permainan ujian."
+    },
+    {
+      "key": "stage_editor_status_debug_start_player",
+      "value": "P{0} permulaan ujian: X {1:0.00} / Y {2:0.00}"
+    },
+    {
+      "key": "stage_editor_status_validation_failed",
+      "value": "Tidak boleh menyimpan: {0} kesalahan (s). {1}"
+    },
+    {
+      "key": "stage_editor_status_saved_with_warnings",
+      "value": "Disimpan: {0} ({1} amaran ((s))"
+    },
+    {
+      "key": "multi_room_status_default",
+      "value": "Buat Nama Ruang Ruang [........] Pemain 2 / 3 / 4 ID Ruang Bersama Awam / Swasta [......]"
+    },
+    {
+      "key": "stage_editor_help_runtime",
+      "value": "Seret ke tempat / Klik untuk memilih / WASD untuk memindahkan Dekorasi: roda untuk skala / Shift + roda untuk berputar\nCtrl + roda: memperbesar keseluruhan pentas"
+    },
+    {
+      "key": "stage_editor_selected_multiple",
+      "value": "{0} objek yang dipilih"
+    },
+    {
+      "key": "stage_editor_status_range_selecting",
+      "value": "Objek yang sepenuhnya dikelilingi oleh kotak akan dipilih."
+    },
+    {
+      "key": "stage_editor_status_range_selected",
+      "value": "Dipilih {0} menarik objek yang dipilih untuk memindahkan mereka bersama-sama."
+    },
+    {
+      "key": "stage_editor_status_range_empty",
+      "value": "Tiada objek yang sepenuhnya dikelilingi oleh kotak pilihan."
+    },
+    {
+      "key": "stage_editor_status_range_moved",
+      "value": "Dipindahkan {0} objek yang dipilih bersama."
+    },
+    {
+      "key": "stage_editor_category",
+      "value": "Kategori"
+    },
+    {
+      "key": "stage_editor_search",
+      "value": "Cari"
+    },
+    {
+      "key": "stage_editor_type",
+      "value": "Jenis"
+    },
+    {
+      "key": "stage_editor_search_placeholder",
+      "value": "Kata carian"
+    },
+    {
+      "key": "stage_editor_object_list",
+      "value": "Senarai Objek"
+    },
+    {
+      "key": "stage_editor_link_list",
+      "value": "Senarai pautan"
+    },
+    {
+      "key": "stage_editor_width_minus",
+      "value": "W-"
+    },
+    {
+      "key": "stage_editor_width_plus",
+      "value": "W+"
+    },
+    {
+      "key": "stage_editor_height_minus",
+      "value": "H-"
+    },
+    {
+      "key": "stage_editor_height_plus",
+      "value": "H+"
+    },
+    {
+      "key": "stage_editor_redo",
+      "value": "BERGERAKLAH."
+    },
+    {
+      "key": "stage_editor_copy",
+      "value": "SALINAN."
+    },
+    {
+      "key": "stage_editor_status_copied",
+      "value": "Objek disalin."
+    },
+    {
+      "key": "stage_editor_copy_right",
+      "value": "→ Hak"
+    },
+    {
+      "key": "stage_editor_copy_down",
+      "value": "↓ HIDUP"
+    },
+    {
+      "key": "stage_editor_copy_left",
+      "value": "← KALU"
+    },
+    {
+      "key": "stage_editor_copy_up",
+      "value": "↑ NAIK"
+    },
+    {
+      "key": "stage_editor_status_copy_direction",
+      "value": "Arahan salinan: {0}"
+    },
+    {
+      "key": "stage_editor_status_copied_direction",
+      "value": "Objek disalin ke arah {0}."
+    },
+    {
+      "key": "stage_editor_status_nudge",
+      "value": "Kedudukan: X {0:0.00} / Y {1:0.00} (tombol anak panah)"
+    },
+    {
+      "key": "stage_editor_action_strength",
+      "value": "Kekuatan Pelancaran"
+    },
+    {
+      "key": "stage_editor_move_distance",
+      "value": "Pindah Jarak"
+    },
+    {
+      "key": "stage_editor_move_speed",
+      "value": "Pergerakan kelajuan"
+    },
+    {
+      "key": "stage_editor_bomb_fuse_seconds",
+      "value": "Fuse (sek)"
+    },
+    {
+      "key": "stage_editor_crumble_delay",
+      "value": "Penundaan Crumble (sek)"
+    },
+    {
+      "key": "stage_editor_bomb_wall_hits",
+      "value": "Ledakan diperlukan"
+    },
+    {
+      "key": "stage_editor_conveyor_speed",
+      "value": "Kelajuan tali pinggang"
+    },
+    {
+      "key": "stage_editor_drop_interval",
+      "value": "Drop Interval (sek)"
+    },
+    {
+      "key": "stage_editor_beam_interval",
+      "value": "Interval Beam (sek)"
+    },
+    {
+      "key": "stage_editor_box_size",
+      "value": "Ukuran kotak"
+    },
+    {
+      "key": "stage_editor_bomb_size",
+      "value": "Ukuran bom"
+    },
+    {
+      "key": "stage_editor_spike_size",
+      "value": "Ukuran Spike"
+    },
+    {
+      "key": "stage_editor_status_move_distance",
+      "value": "Jarak bergerak: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_move_speed",
+      "value": "Kelajuan bergerak: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_fuse_seconds",
+      "value": "Masa pencerahan: {0:0.0} sec"
+    },
+    {
+      "key": "stage_editor_status_crumble_delay",
+      "value": "Penundaan keruntuhan: {0:0.0} sec"
+    },
+    {
+      "key": "stage_editor_status_bomb_wall_hits",
+      "value": "Ketahanan dinding: {0:0} letupan"
+    },
+    {
+      "key": "stage_editor_status_conveyor_speed",
+      "value": "Kelajuan tali pinggang: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_drop_interval",
+      "value": "Interval drop: {0:0.0} sec"
+    },
+    {
+      "key": "stage_editor_status_box_size",
+      "value": "Ukuran kotak yang diturunkan: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_spike_size",
+      "value": "Ukuran pucuk yang diturunkan: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_size",
+      "value": "Ukuran bom yang dihasilkan: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_conveyor_left",
+      "value": "Arahan: ← Kiri"
+    },
+    {
+      "key": "stage_editor_conveyor_right",
+      "value": "Arah: Kanan →"
+    },
+    {
+      "key": "stage_editor_status_conveyor_direction",
+      "value": "Arah penghantar: {0}"
+    },
+    {
+      "key": "stage_editor_box_pattern_all",
+      "value": "Kotak: □○△"
+    },
+    {
+      "key": "stage_editor_box_pattern_square",
+      "value": "Kotak: persegi"
+    },
+    {
+      "key": "stage_editor_box_pattern_round",
+      "value": "Kotak: bulat"
+    },
+    {
+      "key": "stage_editor_box_pattern_triangle",
+      "value": "Kotak: Segitiga"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_both",
+      "value": "Bom: Bergantian Kedua-duanya"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_spawn",
+      "value": "Bom: Fuse di Spawn"
+    },
+    {
+      "key": "stage_editor_bomb_pattern_pickup",
+      "value": "Bom: Fuse di Pickup"
+    },
+    {
+      "key": "stage_editor_status_box_pattern",
+      "value": "Kotak yang diturunkan: {0}"
+    },
+    {
+      "key": "stage_editor_status_bomb_pattern",
+      "value": "Bom yang dihasilkan: {0}"
+    },
+    {
+      "key": "stage_editor_status_move_direction",
+      "value": "Arah bergerak: {0:0}° (Shift + roda)"
+    },
+    {
+      "key": "stage_editor_status_action_strength",
+      "value": "Daya pelancaran: {0:0.0}"
+    },
+    {
+      "key": "stage_editor_weight_threshold",
+      "value": "Per Pemain"
+    },
+    {
+      "key": "stage_editor_status_weight_threshold",
+      "value": "Berat pencetus skala ditetapkan kepada {0:0} INK Per pemain."
+    },
+    {
+      "key": "stage_editor_status_weight_threshold_invalid",
+      "value": "Enter nombor dari 1 hingga 2000."
+    },
+    {
+      "key": "ink_personal_cap",
+      "value": "CAP PERSONAL"
+    },
+    {
+      "key": "ink_team_formula",
+      "value": "CAP SEKumpulan ({0}P)"
+    },
+    {
+      "key": "draw_pen_size",
+      "value": "UKUR PEN"
+    },
+    {
+      "key": "draw_ink",
+      "value": "TINKA."
+    },
+    {
+      "key": "draw_clear_part",
+      "value": "BAGIAN BAGIAN"
+    },
+    {
+      "key": "draw_undo_once",
+      "value": "DILAKUKAN"
+    },
+    {
+      "key": "draw_reset_all",
+      "value": "Set semua semula"
+    },
+    {
+      "key": "draw_reset_confirm_title",
+      "value": "Set semua semula?"
+    },
+    {
+      "key": "draw_reset_confirm_message",
+      "value": "Hapus setiap bahagian badan dan kembalikan watak asal."
+    },
+    {
+      "key": "draw_reset_confirm_yes",
+      "value": "Setup semula"
+    },
+    {
+      "key": "draw_reset_confirm_no",
+      "value": "KANCEL"
+    },
+    {
+      "key": "draw_preset_title",
+      "value": "{0} PRESET"
+    },
+    {
+      "key": "draw_preset_button",
+      "value": "PRESET"
+    },
+    {
+      "key": "draw_preset_sets_title",
+      "value": "PRESET"
+    },
+    {
+      "key": "draw_preset_back",
+      "value": "Kembali"
+    },
+    {
+      "key": "draw_preset_five_species",
+      "value": "manusia kucing burung penyu SLIME"
+    },
+    {
+      "key": "draw_preset_all_species",
+      "value": "Semua lima watak"
+    },
+    {
+      "key": "draw_preset_slot",
+      "value": "KERANGKA. {0}"
+    },
+    {
+      "key": "draw_preset_saved",
+      "value": "DISELAMAT"
+    },
+    {
+      "key": "draw_preset_empty",
+      "value": "BAHAS"
+    },
+    {
+      "key": "draw_preset_register",
+      "value": "SIMPAN"
+    },
+    {
+      "key": "draw_preset_apply",
+      "value": "SET."
+    },
+    {
+      "key": "draw_preset_save_confirm_title",
+      "value": "SIMPAN UNTUK PRASET {0}?"
+    },
+    {
+      "key": "draw_preset_save_confirm_message",
+      "value": "Simpan arus {0} menggambar ke praset {1}."
+    },
+    {
+      "key": "draw_preset_overwrite_confirm_message",
+      "value": "Tuliskan semula {0} menggambar dalam preset {1}."
+    },
+    {
+      "key": "draw_preset_load_confirm_title",
+      "value": "Set PRESET {0}?"
+    },
+    {
+      "key": "draw_preset_load_confirm_message",
+      "value": "Ganti arus {0} menggambar dengan praset {1}."
+    },
+    {
+      "key": "stage_category_decoration",
+      "value": "Latar belakang"
+    },
+    {
+      "key": "stage_object_background_tree",
+      "value": "Pokok"
+    },
+    {
+      "key": "stage_object_background_grass",
+      "value": "Rumput latar belakang"
+    },
+    {
+      "key": "stage_object_background_flower",
+      "value": "Bunga"
+    },
+    {
+      "key": "stage_object_background_bush",
+      "value": "Latar belakang Bush"
+    },
+    {
+      "key": "stage_object_background_cloud",
+      "value": "Awan"
+    },
+    {
+      "key": "stage_object_background_push",
+      "value": "PUSH latar belakang"
+    },
+    {
+      "key": "stage_object_background_arrow",
+      "value": "Panah"
+    },
+    {
+      "key": "stage_object_background_cat_face",
+      "value": "Muka Kucing"
+    },
+    {
+      "key": "stage_object_background_dog_face",
+      "value": "Muka anjing"
+    },
+    {
+      "key": "stage_object_background_stick_figure",
+      "value": "Gambar Stick"
+    },
+    {
+      "key": "stage_object_background_smiley",
+      "value": "SENYUMLAH."
+    },
+    {
+      "key": "stage_object_background_heart",
+      "value": "Hati"
+    },
+    {
+      "key": "stage_object_background_star",
+      "value": "Bintang"
+    },
+    {
+      "key": "stage_object_background_moon",
+      "value": "Bulan"
+    },
+    {
+      "key": "stage_object_background_sun",
+      "value": "Matahari"
+    },
+    {
+      "key": "stage_object_background_rain",
+      "value": "Hujan"
+    },
+    {
+      "key": "stage_object_background_lightning",
+      "value": "Petir"
+    },
+    {
+      "key": "stage_object_background_rainbow",
+      "value": "Pelangi"
+    },
+    {
+      "key": "stage_object_background_mountain",
+      "value": "Gunung"
+    },
+    {
+      "key": "stage_object_background_four_leaf_clover",
+      "value": "Clover berdaun empat"
+    },
+    {
+      "key": "stage_object_background_mushroom",
+      "value": "Jamur"
+    },
+    {
+      "key": "stage_object_background_apple",
+      "value": "APEL."
+    },
+    {
+      "key": "stage_object_background_banana",
+      "value": "Pisang"
+    },
+    {
+      "key": "stage_object_background_watermelon",
+      "value": "Semangka"
+    },
+    {
+      "key": "stage_object_background_donut",
+      "value": "DONAT."
+    },
+    {
+      "key": "stage_object_background_ice_cream",
+      "value": "Ais krim"
+    },
+    {
+      "key": "stage_object_background_coffee_cup",
+      "value": "CUP Kopi"
+    },
+    {
+      "key": "stage_object_background_pizza",
+      "value": "PIZZA."
+    },
+    {
+      "key": "stage_object_background_bread",
+      "value": "Roti"
+    },
+    {
+      "key": "stage_object_background_paper_airplane",
+      "value": "Pesawat kertas"
+    },
+    {
+      "key": "stage_object_background_airplane",
+      "value": "Pesawat"
+    },
+    {
+      "key": "stage_object_background_rocket",
+      "value": "Roket"
+    },
+    {
+      "key": "stage_object_background_ufo",
+      "value": "UFO."
+    },
+    {
+      "key": "stage_object_background_hot_air_balloon",
+      "value": "Balon udara panas"
+    },
+    {
+      "key": "stage_object_background_house",
+      "value": "Rumah"
+    },
+    {
+      "key": "stage_object_background_castle",
+      "value": "Istana"
+    },
+    {
+      "key": "stage_object_background_treasure_chest",
+      "value": "Petanda Harta"
+    },
+    {
+      "key": "stage_object_background_mole",
+      "value": "Kulit"
+    },
+    {
+      "key": "stage_object_background_fossil",
+      "value": "Fosil"
+    },
+    {
+      "key": "stage_object_background_crystal",
+      "value": "KRISTAL."
+    },
+    {
+      "key": "stage_object_background_ancient_pot",
+      "value": "Pot Kuno"
+    },
+    {
+      "key": "stage_object_background_key",
+      "value": "Kunci"
+    },
+    {
+      "key": "stage_object_background_key_needed",
+      "value": "Kunci Keyhole"
+    },
+    {
+      "key": "stage_object_background_sword",
+      "value": "Pedang"
+    },
+    {
+      "key": "stage_object_background_crown",
+      "value": "Mahkota"
+    },
+    {
+      "key": "stage_object_background_shield",
+      "value": "Perisai"
+    },
+    {
+      "key": "stage_object_background_gem",
+      "value": "PERMATA."
+    },
+    {
+      "key": "stage_object_background_coin",
+      "value": "Tombak"
+    },
+    {
+      "key": "stage_object_background_bone",
+      "value": "Tulang"
+    },
+    {
+      "key": "stage_object_background_light_bulb",
+      "value": "Bulb cahaya (Idea)"
+    },
+    {
+      "key": "stage_object_background_gear",
+      "value": "Peralatan"
+    },
+    {
+      "key": "stage_object_background_spring",
+      "value": "Musim semi"
+    },
+    {
+      "key": "stage_object_background_magnet",
+      "value": "MAGNET."
+    },
+    {
+      "key": "stage_object_background_dice",
+      "value": "dadu"
+    },
+    {
+      "key": "stage_object_background_speech_bubble",
+      "value": "Gelembung Ucapan"
+    },
+    {
+      "key": "stage_object_background_check_mark",
+      "value": "Periksa Tanda (✓)"
+    },
+    {
+      "key": "stage_object_background_question_mark",
+      "value": "Soalan Mark (?)"
+    },
+    {
+      "key": "stage_object_background_exclamation_mark",
+      "value": "Tanda Seruan (!)"
+    },
+    {
+      "key": "stage_object_background_loop_arrow",
+      "value": "AKU AKAN MENEMBAKNYA."
+    },
+    {
+      "key": "stage_object_background_jump",
+      "value": "MELOMPAT!"
+    },
+    {
+      "key": "stage_object_background_throw",
+      "value": "Lemparkan!"
+    },
+    {
+      "key": "stage_object_background_start",
+      "value": "Mulakan!"
+    },
+    {
+      "key": "stage_object_background_goal",
+      "value": "Gol!"
+    },
+    {
+      "key": "stage_editor_status_rotate_decoration",
+      "value": "Berputar: Shift + roda (0.5 darjah ketepatan)"
+    },
+    {
+      "key": "stage_editor_status_rotate_mounted",
+      "value": "Berputar: Shift + roda (15°), dengan Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_rotate_object",
+      "value": "Berputar: Shift + roda (15°), dengan Alt (1°)"
+    },
+    {
+      "key": "stage_editor_status_scale_decoration",
+      "value": "Skala: roda tetikus"
+    },
+    {
+      "key": "stage_editor_link_action",
+      "value": "Tindakan"
+    },
+    {
+      "key": "stage_editor_link_mode_reveal",
+      "value": "Terlihat"
+    },
+    {
+      "key": "stage_editor_link_mode_hide",
+      "value": "Berhilang"
+    },
+    {
+      "key": "stage_editor_link_mode_unlock",
+      "value": "Buka kunci"
+    },
+    {
+      "key": "stage_editor_link_mode_move",
+      "value": "Bergerak"
+    },
+    {
+      "key": "stage_editor_link_mode_move_right",
+      "value": "Pindahkan Platform Kanan"
+    },
+    {
+      "key": "stage_editor_link_mode_move_up",
+      "value": "Pindahkan Platform ke atas"
+    },
+    {
+      "key": "stage_editor_link_mode_move_left",
+      "value": "Pindahkan Platform ke Kiri"
+    },
+    {
+      "key": "stage_editor_link_mode_move_down",
+      "value": "Pindahkan Platform ke bawah"
+    },
+    {
+      "key": "stage_editor_status_link_action_changed",
+      "value": "Tindakan pautan: {0}"
+    },
+    {
+      "key": "stage_editor_status_key_requires_keyhole",
+      "value": "Kunci mesti dihubungkan ke lubang kunci."
+    },
+    {
+      "key": "stage_editor_status_unlock_action_fixed",
+      "value": "Kunci untuk pautan lubang kunci sentiasa menggunakan Unlock."
+    },
+    {
+      "key": "stage_editor_snap_attach",
+      "value": "BERNYEDAP."
+    },
+    {
+      "key": "stage_editor_link_source",
+      "value": "Hubungan dari"
+    },
+    {
+      "key": "stage_editor_link_target",
+      "value": "Pautan ke"
+    },
+    {
+      "key": "stage_editor_unlink",
+      "value": "Menghapuskan pautan"
+    },
+    {
+      "key": "stage_editor_selected_add",
+      "value": "Tambah: {0} / Snap: {1}"
+    },
+    {
+      "key": "stage_editor_selected_object",
+      "value": "{0}  Pos {1:0.0},{2:0.0}  Ukuran {3:0.0},{4:0.0}"
+    },
+    {
+      "key": "stage_editor_boundary_resize_hint",
+      "value": "Lebar = dinding kanan / Tinggi = siling ( dinding kiri dan tepi bawah tetap tetap)"
+    },
+    {
+      "key": "stage_editor_boundary_quick",
+      "value": "Kerangka"
+    },
+    {
+      "key": "stage_editor_status_boundary_fitted",
+      "value": "Dicipta bingkai di sekeliling objek yang ditempatkan."
+    },
+    {
+      "key": "stage_editor_status_wall_fitted",
+      "value": "Tembok dipasang tepat di antara lantai dan siling."
+    },
+    {
+      "key": "stage_goal_label",
+      "value": "TEKAN"
+    },
+    {
+      "key": "stage_room_number",
+      "value": "RUM {0}"
+    },
+    {
+      "key": "stage_weapon_bomb",
+      "value": "Bom"
+    },
+    {
+      "key": "stage_weapon_missile",
+      "value": "MISISIL"
+    },
+    {
+      "key": "stage_ready_label",
+      "value": "Siapkan"
+    },
+    {
+      "key": "background_word_push",
+      "value": "DORONG!"
+    },
+    {
+      "key": "stage_dynamite_label",
+      "value": "TNT."
+    },
+    {
+      "key": "stage_editor_background_color",
+      "value": "Latar belakang"
+    },
+    {
+      "key": "laser_relay_editor_players",
+      "value": "Pemain {0}"
+    },
+    {
+      "key": "laser_relay_editor_round",
+      "value": "STADIUM {0}"
+    },
+    {
+      "key": "laser_relay_editor_preview",
+      "value": "14-3 perancangan: {0} pemain (s) / peringkat {1}"
+    },
+    {
+      "key": "stage_editor_color_title",
+      "value": "Warna latar belakang"
+    },
+    {
+      "key": "stage_editor_color_reset",
+      "value": "WARNA SEMULA JADI."
+    },
+    {
+      "key": "stage_editor_color_close",
+      "value": "Dekat"
+    },
+    {
+      "key": "stage_editor_color_opacity",
+      "value": "Kemudahan"
+    },
+    {
+      "key": "stage_editor_status_background_color",
+      "value": "Warna latar belakang telah berubah."
+    },
+    {
+      "key": "stage_editor_status_add_rect",
+      "value": "Mode Tambah: {0}Seret di peta untuk membuatnya."
+    },
+    {
+      "key": "stage_editor_status_add_point",
+      "value": "Mode Tambah: {0}Klik peta untuk menempatkannya."
+    },
+    {
+      "key": "stage_editor_status_selected_from_list",
+      "value": "Dipilih dari senarai."
+    },
+    {
+      "key": "stage_editor_no_match",
+      "value": "Tiada perlawanan."
+    },
+    {
+      "key": "stage_editor_none",
+      "value": "(tidak ada)"
+    },
+    {
+      "key": "stage_category_terrain",
+      "value": "Tanah"
+    },
+    {
+      "key": "stage_category_start_goal",
+      "value": "Mula/Tujuan"
+    },
+    {
+      "key": "stage_category_switch",
+      "value": "Pindah"
+    },
+    {
+      "key": "stage_category_door_gate",
+      "value": "Pintu/Pintu"
+    },
+    {
+      "key": "stage_category_movable",
+      "value": "Bergerak"
+    },
+    {
+      "key": "stage_category_action",
+      "value": "Tindakan"
+    },
+    {
+      "key": "stage_category_trap",
+      "value": "Jambatan"
+    },
+    {
+      "key": "stage_category_gimmick",
+      "value": "GIMMICK."
+    },
+    {
+      "key": "stage_category_enemy",
+      "value": "Musuh"
+    },
+    {
+      "key": "stage_object_platform",
+      "value": "Lantai"
+    },
+    {
+      "key": "stage_object_wall",
+      "value": "Tembok"
+    },
+    {
+      "key": "stage_object_spawn",
+      "value": "Mulakan"
+    },
+    {
+      "key": "stage_object_goal",
+      "value": "Matlamat"
+    },
+    {
+      "key": "stage_object_balance_scale",
+      "value": "Skala Keseimbangan"
+    },
+    {
+      "key": "stage_object_weight",
+      "value": "Berat badan"
+    },
+    {
+      "key": "stage_object_ceiling",
+      "value": "Luas"
+    },
+    {
+      "key": "stage_object_half_platform",
+      "value": "Setengah Lantai"
+    },
+    {
+      "key": "stage_object_one_way_platform",
+      "value": "Lantai satu arah"
+    },
+    {
+      "key": "stage_object_ice_floor",
+      "value": "Lantai Es"
+    },
+    {
+      "key": "stage_object_slippery_slope",
+      "value": "Pergelangan Glis"
+    },
+    {
+      "key": "stage_object_climbable_wall",
+      "value": "Tembok yang boleh diletakkan"
+    },
+    {
+      "key": "stage_object_rope",
+      "value": "Tali"
+    },
+    {
+      "key": "stage_object_ladder",
+      "value": "Tangga"
+    },
+    {
+      "key": "stage_object_cloud_platform",
+      "value": "Lantai Awan"
+    },
+    {
+      "key": "stage_object_breakable_floor",
+      "value": "Lantai yang boleh pecah"
+    },
+    {
+      "key": "stage_object_falling_floor",
+      "value": "Lantai jatuh"
+    },
+    {
+      "key": "stage_object_moving_platform",
+      "value": "Lantai Bergerak"
+    },
+    {
+      "key": "stage_object_moving_one_way_platform",
+      "value": "Lantai Satu Jalan yang Ganda"
+    },
+    {
+      "key": "ricochet_breaker_title",
+      "value": "8-2 REFELECT DRAW"
+    },
+    {
+      "key": "ricochet_breaker_goal",
+      "value": "Loloskan bola dengan badan anda dan pecah NICO DRAW!"
+    },
+    {
+      "key": "ricochet_breaker_blocks",
+      "value": "BLOK {0}  BALLS ×{1}"
+    },
+    {
+      "key": "ricochet_breaker_retry",
+      "value": "Waktu untuk berundur {0}"
+    },
+    {
+      "key": "ricochet_breaker_start_in",
+      "value": "Mulai masuk {0}"
+    },
+    {
+      "key": "ricochet_enemy_round",
+      "value": "DUNY {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_balls",
+      "value": "Bola {0} / {1}"
+    },
+    {
+      "key": "ricochet_enemy_next",
+      "value": "RUND seterusnya {0}"
+    },
+    {
+      "key": "ricochet_enemy_failed",
+      "value": "Tiga bola hilang!"
+    },
+    {
+      "key": "ricochet_enemy_clear",
+      "value": "Semua pusingan sudah jelas!"
+    },
+    {
+      "key": "ricochet_enemy_remaining",
+      "value": "MUSUH DITINGGALKAN {0}"
+    },
+    {
+      "key": "stage_object_handgun",
+      "value": "Senjata"
+    },
+    {
+      "key": "stage_object_bullet_breakable_wall",
+      "value": "Tembok Peluru-Broken"
+    },
+    {
+      "key": "stage_object_spike_planet",
+      "value": "Planet Spike"
+    },
+    {
+      "key": "stage_object_enemy_flyer_zigzag",
+      "value": "Flyer Zigzag"
+    },
+    {
+      "key": "stage_object_enemy_flyer_orbit",
+      "value": "MUSUH BERPUTAR."
+    },
+    {
+      "key": "stage_object_bazooka",
+      "value": "BASUKA."
+    },
+    {
+      "key": "stage_object_enemy_bomber",
+      "value": "BOM-BOM MUSUH TERBANG."
+    },
+    {
+      "key": "stage_object_moving_spike_planet",
+      "value": "Bergerak Spike Ball"
+    },
+    {
+      "key": "stage_object_pose_character_key",
+      "value": "Kunci Pos"
+    },
+    {
+      "key": "stage_object_pose_character_keyhole",
+      "value": "Letakkan lubang kunci"
+    },
+    {
+      "key": "stage_object_updraft_zone",
+      "value": "Peningkatan"
+    },
+    {
+      "key": "stage_object_speed_ring2_x",
+      "value": "Tanda Kelajuan"
+    },
+    {
+      "key": "stage_object_speed_ring3_x",
+      "value": "Tanda Kelajuan (Kekuatan)"
+    },
+    {
+      "key": "stage_object_redraw_zone",
+      "value": "Kawasan Pembaharuan semula"
+    },
+    {
+      "key": "stage_editor_bullet_wall_hits",
+      "value": "Peluru diperlukan"
+    },
+    {
+      "key": "stage_editor_status_bullet_wall_hits",
+      "value": "Peluru diperlukan: {0}"
+    },
+    {
+      "key": "stage_object_rotating_platform",
+      "value": "Lantai Berputar"
+    },
+    {
+      "key": "stage_object_checkpoint",
+      "value": "Titik pemeriksaan"
+    },
+    {
+      "key": "stage_object_warp_entrance",
+      "value": "Pintu Masuk Warp"
+    },
+    {
+      "key": "stage_object_warp_exit",
+      "value": "Keluar Warp"
+    },
+    {
+      "key": "stage_object_respawn_point",
+      "value": "Titik Respawn"
+    },
+    {
+      "key": "stage_object_mid_goal",
+      "value": "Tujuan tengah"
+    },
+    {
+      "key": "stage_object_goal_effect",
+      "value": "Kesan Tujuan"
+    },
+    {
+      "key": "stage_object_button",
+      "value": "BUTTON."
+    },
+    {
+      "key": "stage_object_weight_button",
+      "value": "Button Berat"
+    },
+    {
+      "key": "stage_object_simultaneous_button",
+      "value": "Button serentak"
+    },
+    {
+      "key": "stage_object_hold_button",
+      "value": "Tekan Button"
+    },
+    {
+      "key": "stage_object_triangle_box",
+      "value": "Kotak segitiga"
+    },
+    {
+      "key": "stage_object_lever",
+      "value": "Peningkatan"
+    },
+    {
+      "key": "stage_object_toggle_switch",
+      "value": "Tukar Switch"
+    },
+    {
+      "key": "stage_object_timer_switch",
+      "value": "Pindah Tempoh"
+    },
+    {
+      "key": "stage_object_sensor",
+      "value": "SENSOR."
+    },
+    {
+      "key": "stage_object_red_switch",
+      "value": "Switch Merah"
+    },
+    {
+      "key": "stage_object_blue_switch",
+      "value": "Switch Biru"
+    },
+    {
+      "key": "stage_object_green_switch",
+      "value": "Switch Hijau"
+    },
+    {
+      "key": "stage_object_yellow_switch",
+      "value": "Switch Kuning"
+    },
+    {
+      "key": "stage_object_pressure_plate",
+      "value": "Pelat Tekanan"
+    },
+    {
+      "key": "stage_object_remote_control",
+      "value": "Kawalan Jauh"
+    },
+    {
+      "key": "stage_object_ink_scale",
+      "value": "Ink Skala"
+    },
+    {
+      "key": "stage_object_door",
+      "value": "Pintu"
+    },
+    {
+      "key": "stage_object_locked_door",
+      "value": "Pintu Terkunci"
+    },
+    {
+      "key": "stage_object_shutter",
+      "value": "Penutup"
+    },
+    {
+      "key": "stage_object_fence",
+      "value": "Pagar"
+    },
+    {
+      "key": "stage_object_laser_gate",
+      "value": "GERBANG LASER."
+    },
+    {
+      "key": "stage_object_color_gate",
+      "value": "Pintu Warna"
+    },
+    {
+      "key": "stage_object_one_way_gate",
+      "value": "Gerbang satu arah"
+    },
+    {
+      "key": "stage_object_timed_gate",
+      "value": "Pintu Tempoh"
+    },
+    {
+      "key": "stage_object_breakable_wall",
+      "value": "Tembok yang boleh pecah"
+    },
+    {
+      "key": "stage_object_hidden_wall",
+      "value": "Tembok tersembunyi"
+    },
+    {
+      "key": "stage_object_wood_box",
+      "value": "Kotak Kayu"
+    },
+    {
+      "key": "stage_object_iron_box",
+      "value": "Kotak Besi"
+    },
+    {
+      "key": "stage_object_ball",
+      "value": "Bola"
+    },
+    {
+      "key": "stage_object_barrel",
+      "value": "Baril"
+    },
+    {
+      "key": "stage_object_rock",
+      "value": "Batu"
+    },
+    {
+      "key": "stage_object_ice_block",
+      "value": "Blok ais"
+    },
+    {
+      "key": "stage_object_floating_box",
+      "value": "Kotak terapung"
+    },
+    {
+      "key": "stage_object_rubber_box",
+      "value": "Kotak getah"
+    },
+    {
+      "key": "stage_object_bomb",
+      "value": "Bom"
+    },
+    {
+      "key": "stage_object_pickup_fuse_bomb",
+      "value": "Bom (Fusil bermula pada Pickup)"
+    },
+    {
+      "key": "stage_object_bomb_dropper",
+      "value": "Pembuat Bom"
+    },
+    {
+      "key": "stage_object_dynamite",
+      "value": "Dinamit"
+    },
+    {
+      "key": "stage_object_enemy_walker",
+      "value": "Musuh Walker"
+    },
+    {
+      "key": "stage_object_enemy_jumper",
+      "value": "Musuh Jumper"
+    },
+    {
+      "key": "stage_object_enemy_charger",
+      "value": "Musuh Pengisian"
+    },
+    {
+      "key": "stage_object_enemy_flyer",
+      "value": "Musuh Terbang"
+    },
+    {
+      "key": "stage_object_enemy_shooter",
+      "value": "Musuh Penembak"
+    },
+    {
+      "key": "stage_object_enemy_dropper",
+      "value": "Musuh Spawner"
+    },
+    {
+      "key": "stage_object_missile_launcher",
+      "value": "Peluncur Peluru Peluru Peluru Peluru"
+    },
+    {
+      "key": "stage_editor_link_mode_activate",
+      "value": "Mengaktifkan"
+    },
+    {
+      "key": "stage_editor_status_activate_action_fixed",
+      "value": "Peranti ini sentiasa menggunakan Activate"
+    },
+    {
+      "key": "stage_editor_launch_interval",
+      "value": "Peluncuran Interval"
+    },
+    {
+      "key": "stage_editor_enemy_size",
+      "value": "Ukuran Musuh"
+    },
+    {
+      "key": "stage_editor_status_enemy_pattern",
+      "value": "Musuh yang lahir: {0}"
+    },
+    {
+      "key": "stage_editor_status_enemy_size",
+      "value": "Ukuran musuh: {0:0.0}"
+    },
+    {
+      "key": "stage_object_key",
+      "value": "Kunci"
+    },
+    {
+      "key": "stage_object_coin",
+      "value": "Tombak"
+    },
+    {
+      "key": "stage_object_star",
+      "value": "Bintang"
+    },
+    {
+      "key": "stage_object_battery",
+      "value": "Baterai"
+    },
+    {
+      "key": "stage_object_bucket",
+      "value": "Baldi"
+    },
+    {
+      "key": "stage_object_jump_pad",
+      "value": "JUMP STAGE."
+    },
+    {
+      "key": "stage_object_spring",
+      "value": "Musim semi"
+    },
+    {
+      "key": "stage_object_conveyor_left",
+      "value": "Pengangkutan kiri"
+    },
+    {
+      "key": "stage_object_conveyor_right",
+      "value": "Conveyor Kanan"
+    },
+    {
+      "key": "stage_object_elevator",
+      "value": "Lift"
+    },
+    {
+      "key": "stage_object_fan",
+      "value": "FAN."
+    },
+    {
+      "key": "stage_object_magnet",
+      "value": "MAGNET."
+    },
+    {
+      "key": "stage_object_belt",
+      "value": "tali pinggang"
+    },
+    {
+      "key": "stage_object_box_dropper",
+      "value": "Dropper kotak"
+    },
+    {
+      "key": "stage_object_spike_dropper",
+      "value": "PERANTI TERJUN."
+    },
+    {
+      "key": "stage_object_collectible_fish",
+      "value": "Ikan"
+    },
+    {
+      "key": "stage_object_collectible_coin",
+      "value": "Tombak"
+    },
+    {
+      "key": "stage_object_collectible_star",
+      "value": "Bintang"
+    },
+    {
+      "key": "stage_object_challenge_clock",
+      "value": "Jam Digital"
+    },
+    {
+      "key": "stage_object_beam_emitter",
+      "value": "PERANTI PELUNCURAN BEAM."
+    },
+    {
+      "key": "stage_rule_normal",
+      "value": "BIASANYA."
+    },
+    {
+      "key": "stage_rule_timed",
+      "value": "Tempoh Terhad"
+    },
+    {
+      "key": "stage_rule_survival",
+      "value": "Keberlanjutan"
+    },
+    {
+      "key": "stage_rule_seconds",
+      "value": "{0:0}s"
+    },
+    {
+      "key": "stage_rule_count",
+      "value": "x{0}"
+    },
+    {
+      "key": "stage_rule_all",
+      "value": "Semua"
+    },
+    {
+      "key": "stage_editor_status_rule",
+      "value": "Peraturan peringkat: {0}"
+    },
+    {
+      "key": "challenge_time_remaining",
+      "value": "Masa {0:0.0}"
+    },
+    {
+      "key": "challenge_collection_progress",
+      "value": "{0}  {1} / {2}"
+    },
+    {
+      "key": "challenge_time_up",
+      "value": "Waktu untuk"
+    },
+    {
+      "key": "challenge_no_time_limit",
+      "value": "Tiada Tempoh Terhad"
+    },
+    {
+      "key": "challenge_retry_hint",
+      "value": "Cuba lagi dari menu"
+    },
+    {
+      "key": "survival_mode_title",
+      "value": "11-2 SURVIVAL"
+    },
+    {
+      "key": "survival_goal",
+      "value": "Satu PEMBANGAT PEMBANGAT!"
+    },
+    {
+      "key": "survival_goal_sub",
+      "value": "Pindah ke Lantai yang Menyala"
+    },
+    {
+      "key": "grain_rain_target",
+      "value": "Target  {0:0}g (70g x PLAYERS)"
+    },
+    {
+      "key": "grain_rain_ready",
+      "value": "Pindah ke kedudukan sebelum hujan"
+    },
+    {
+      "key": "grain_rain_catch",
+      "value": "Tangkap biji-bijian!"
+    },
+    {
+      "key": "grain_rain_measuring",
+      "value": "Beratnya..."
+    },
+    {
+      "key": "grain_rain_floor_clear",
+      "value": "Menghapuskan biji-bijian di Lantai"
+    },
+    {
+      "key": "grain_rain_clear",
+      "value": "Bersihkan!"
+    },
+    {
+      "key": "grain_rain_failed",
+      "value": "SEKARANG!"
+    },
+    {
+      "key": "grain_rain_result",
+      "value": "Buah-buahan di atas kepala  {0:0}g / {1:0}g"
+    },
+    {
+      "key": "grain_rain_success",
+      "value": "RARE GRAIN Target Tercapai!"
+    },
+    {
+      "key": "grain_rain_retry",
+      "value": "Cubalah Berpikir Lebih Baik"
+    },
+    {
+      "key": "grain_rain_round",
+      "value": "STADIUM {0}/{1}"
+    },
+    {
+      "key": "grain_rain_blizzard",
+      "value": "Tangkap Buah Buah Buah Buah Buah Buah Buah Buah Buah Buah Buah Buah Buah Buah!"
+    },
+    {
+      "key": "grain_rain_forecast",
+      "value": "Fast Grains akan menimpa Spot Zone yang ditandai setiap pemain!"
+    },
+    {
+      "key": "ice_speedrun_title",
+      "value": "10-1 ICE TEAM TIME ATTACK"
+    },
+    {
+      "key": "ice_speedrun_start",
+      "value": "Mulakan!"
+    },
+    {
+      "key": "ice_speedrun_time_up",
+      "value": "Waktu untuk berundur {0}"
+    },
+    {
+      "key": "ice_race_rule",
+      "value": "CLEAR dalam {0} Jumlah keseluruhan"
+    },
+    {
+      "key": "ice_race_team",
+      "value": "Jumlah keseluruhan {0} / {1}"
+    },
+    {
+      "key": "ice_race_failed",
+      "value": "TEMPAT TOTAL OVER"
+    },
+    {
+      "key": "ice_race_retry",
+      "value": "Berbalik ke dalam {0}"
+    },
+    {
+      "key": "ice_race_game_over",
+      "value": "Perjudian TIDAK TOTAL {0} / {1}"
+    },
+    {
+      "key": "survival_get_ready",
+      "value": "Bersedialah!"
+    },
+    {
+      "key": "survival_start",
+      "value": "Mulakan!"
+    },
+    {
+      "key": "game_over",
+      "value": "PERMAINAN BERAKHIR"
+    },
+    {
+      "key": "msg_body_too_large_for_spawn",
+      "value": "Badan ini tidak sesuai pada mulanya."
+    },
+    {
+      "key": "msg_body_too_large_for_ready_room",
+      "value": "Jenazah ini boleh keluar dari bilik."
+    },
+    {
+      "key": "ready_room_status",
+      "value": "Siapkan {0} / {1}"
+    },
+    {
+      "key": "ready_room_recommended",
+      "value": "Rekomendasi"
+    },
+    {
+      "key": "ready_room_recommended_none",
+      "value": "Tiada"
+    },
+    {
+      "key": "ready_room_restriction",
+      "value": "NO CHARACTER CHANGE OR REDRAW selepas meninggalkan"
+    },
+    {
+      "key": "ready_room_restriction_redraw_allowed",
+      "value": "Selepas Keluar: BAGIAN atau REDRAW di Lantai REDRAW"
+    },
+    {
+      "key": "ready_room_game_default",
+      "value": "Bersedia untuk Mula Permainan"
+    },
+    {
+      "key": "ready_room_game_2_3",
+      "value": "Berlarilah."
+    },
+    {
+      "key": "ready_room_game_2_2",
+      "value": "Kumpulkan Ikan Sebelum Masa Lari"
+    },
+    {
+      "key": "ready_room_game_4_3",
+      "value": "Menolak Raja Krayon"
+    },
+    {
+      "key": "ready_room_game_6_2",
+      "value": "Menamatkan Pelanggaran dan Hidup"
+    },
+    {
+      "key": "ready_room_game_6_3",
+      "value": "Tambah setiap lubang akuarium dengan badan anda"
+    },
+    {
+      "key": "ready_room_game_7_1",
+      "value": "Gunakan tubuh anda untuk membuka jalan"
+    },
+    {
+      "key": "ready_room_game_8_1",
+      "value": "DODGE THE Falling Pillars"
+    },
+    {
+      "key": "ready_room_game_8_2",
+      "value": "Refleksikan Bola dan Runtuhkan Setiap blok"
+    },
+    {
+      "key": "ready_room_game_8_3",
+      "value": "Tarik Bola Dengan INK MAGNETS AND SINK IT"
+    },
+    {
+      "key": "ready_room_game_9_1",
+      "value": "Menghadapi Peluru Peluru dan Hidup"
+    },
+    {
+      "key": "ready_room_game_9_2",
+      "value": "Koin Pengumpulan Semasa Gugur"
+    },
+    {
+      "key": "ready_room_game_9_3",
+      "value": "Kumpulkan biji-bijian yang jatuh dan tekan berat sasaran"
+    },
+    {
+      "key": "ready_room_game_10_1",
+      "value": "TANGAN MERAS. CARA jika semua orang bersama-sama akhir masa adalah dalam {0} MINUT."
+    },
+    {
+      "key": "ready_room_game_10_3",
+      "value": "Peluru RICOCHET Untuk Menangis Musuh"
+    },
+    {
+      "key": "ready_room_game_11_1",
+      "value": "Cahaya Kegelapan dan Keluar dari hantu"
+    },
+    {
+      "key": "ready_room_game_11_2",
+      "value": "Hidup Sepanjang Masa"
+    },
+    {
+      "key": "ready_room_game_11_3",
+      "value": "Lemparkan Bom untuk memecahkan setiap blok"
+    },
+    {
+      "key": "ready_room_game_12_1",
+      "value": "Kotak patah dan duit syiling"
+    },
+    {
+      "key": "ready_room_game_12_2",
+      "value": "Koin Perhimpunan Sebelum Masa Terlampau"
+    },
+    {
+      "key": "ready_room_game_12_3",
+      "value": "Koin Perhimpunan Sebelum Masa Terlampau"
+    },
+    {
+      "key": "ready_room_game_13_1",
+      "value": "Pertahankan Sahabatmu dari Musuh"
+    },
+    {
+      "key": "ready_room_game_13_2",
+      "value": "Tolak Bola Kembali untuk Menang Musuh"
+    },
+    {
+      "key": "ready_room_game_14_1",
+      "value": "KELANGKAN KEKALAN dan MEMALI di TILTING SIGH"
+    },
+    {
+      "key": "ready_room_game_14_2",
+      "value": "Gunakan payung untuk mengelakkan hujan"
+    },
+    {
+      "key": "ready_room_game_14_3",
+      "value": "RELAY LASER melalui setiap badan untuk mencapai matlamat"
+    },
+    {
+      "key": "ready_room_game_15_1",
+      "value": "KEKALAHAN IBLIS PENSIL"
+    },
+    {
+      "key": "ready_room_game_15_2",
+      "value": "KEKALAHAN PENCIL STALKER"
+    },
+    {
+      "key": "ready_room_game_15_3",
+      "value": "ELAKKAN SERANGAN MUSUH"
+    },
+    {
+      "key": "ready_room_clear_one_survivor",
+      "value": "CLEAR IF sekurang-kurangnya seorang pemain bertahan hidup."
+    },
+    {
+      "key": "ready_room_clear_one_goal",
+      "value": "Jelas apabila setiap pemain mencapai matlamat."
+    },
+    {
+      "key": "ready_room_clear_team_time",
+      "value": "CLEAR JANGAN setiap pemain mempunyai masa akhir dalam masa 1 minit."
+    },
+    {
+      "key": "spike_chase_monitor_title",
+      "value": "PELUNCURAN DINDING SPIKE"
+    },
+    {
+      "key": "spike_chase_monitor_ready",
+      "value": "Tunggu Isyarat!"
+    },
+    {
+      "key": "spike_chase_monitor_goal",
+      "value": "Berlari ke matlamat!"
+    },
+    {
+      "key": "umbrella_rain_title",
+      "value": "Jangan terkena hujan"
+    },
+    {
+      "key": "umbrella_rain_hint",
+      "value": "Jangan terkena hujan"
+    },
+    {
+      "key": "umbrella_rain_all_out",
+      "value": "Semua orang terjebak dalam hujan!"
+    },
+    {
+      "key": "umbrella_friend_speech_nice_rain",
+      "value": "RAINY"
+    },
+    {
+      "key": "umbrella_friend_speech_fools_get_wet",
+      "value": "RUN"
+    },
+    {
+      "key": "umbrella_friend_speech_keep_close",
+      "value": "CLOSE"
+    },
+    {
+      "key": "umbrella_friend_speech_puddle_weather",
+      "value": "SPLASH"
+    },
+    {
+      "key": "umbrella_friend_speech_dry_and_clever",
+      "value": "DRY"
+    },
+    {
+      "key": "escort_friend_word_go",
+      "value": "GO"
+    },
+    {
+      "key": "escort_friend_word_run",
+      "value": "RUN"
+    },
+    {
+      "key": "escort_friend_word_wait",
+      "value": "WAIT"
+    },
+    {
+      "key": "escort_friend_word_jump",
+      "value": "JUMP"
+    },
+    {
+      "key": "escort_friend_word_move",
+      "value": "MOVE"
+    },
+    {
+      "key": "linked_shield_title",
+      "value": "14-3 SHIELDS LINKED"
+    },
+    {
+      "key": "linked_shield_ready",
+      "value": "Periksa setiap pautan butang!"
+    },
+    {
+      "key": "linked_shield_hint",
+      "value": "Blok peluru berpandu dengan pelindung satu saat!"
+    },
+    {
+      "key": "linked_shield_failed",
+      "value": "TEMBAH - MEMulai semula"
+    },
+    {
+      "key": "linked_shield_clear",
+      "value": "Pertahanan 60 Detik CLEAR!"
+    },
+    {
+      "key": "laser_relay_monitor",
+      "value": "DUNY {0}/3    {1:0.0}S KALU"
+    },
+    {
+      "key": "laser_relay_progress",
+      "value": "HAL {0}/{1}"
+    },
+    {
+      "key": "laser_relay_hint",
+      "value": "Sudut luar badan anda menjadi Sudut refleksi laser"
+    },
+    {
+      "key": "laser_relay_round_clear",
+      "value": "DUNY {0} Bersihkan!"
+    },
+    {
+      "key": "laser_relay_timeout",
+      "value": "Tempoh UP! Memulakan semula pusingan ini"
+    },
+    {
+      "key": "flying_boss_hp",
+      "value": "CRAYON DEVIL HP  {0} / {1}"
+    },
+    {
+      "key": "flying_boss_ready",
+      "value": "3 - 2 - 1 Siap untuk peluncuran"
+    },
+    {
+      "key": "flying_boss_controls",
+      "value": "MOVE/LEFT STICK: PLATFORM MOUSE/RIGHT STICK: AIM CLICK/RT: MISsile  F/X: bom"
+    },
+    {
+      "key": "flying_boss_clear",
+      "value": "Bos telah dikalahkan!"
+    },
+    {
+      "key": "flying_boss_failed",
+      "value": "Semua platform turun"
+    },
+    {
+      "key": "flying_boss_homing_warning",
+      "value": "Peluru Peluru berpandu - Pemberak!"
+    },
+    {
+      "key": "flying_boss_target_warning",
+      "value": "BERTARGET - Keluar dari pasukan!"
+    },
+    {
+      "key": "flying_boss_suction_warning",
+      "value": "SUCHING - Pindahlah!"
+    },
+    {
+      "key": "mirror_boss_recording",
+      "value": "RECORD MOVEMENT...  {0}s"
+    },
+    {
+      "key": "mirror_boss_recording_hint",
+      "value": "Berlari, melompat, berputar dan berhenti  ⁇  ganda anda belajar."
+    },
+    {
+      "key": "mirror_boss_phase",
+      "value": "FASE {0}  Doppel kiri: {1}"
+    },
+    {
+      "key": "mirror_boss_hint",
+      "value": "Tarik satu ke lantai peluncuran, lalu tekan penukar merahnya!"
+    },
+    {
+      "key": "mirror_boss_clear",
+      "value": "Kesemua Doppel-defeated!"
+    },
+    {
+      "key": "mirror_boss_clear_sub",
+      "value": "Tak pernah ada bos lain."
+    },
+    {
+      "key": "mirror_brawl_phase_ready",
+      "value": "FASE {0}  START IN"
+    },
+    {
+      "key": "mirror_brawl_ready_hint",
+      "value": "Kekalakan pasukan CPU dengan memakai borang yang tepat."
+    },
+    {
+      "key": "mirror_brawl_phase",
+      "value": "FASE {0}  Kiri: {1}"
+    },
+    {
+      "key": "mirror_brawl_phase_clear",
+      "value": "FASE {0} Bersihkan!"
+    },
+    {
+      "key": "mirror_brawl_hint",
+      "value": "Klaim senjata dengan suis merah. F: membuang bom CLICK: peluru berpandu"
+    },
+    {
+      "key": "mirror_brawl_missile_ready",
+      "value": "Tembak dengan tetikus dan klik."
+    },
+    {
+      "key": "mirror_brawl_clear",
+      "value": "Pasukan CPU gagal!"
+    },
+    {
+      "key": "mirror_brawl_clear_sub",
+      "value": "Perjuangan Terakhir Terbang!"
+    },
+    {
+      "key": "mirror_brawl_failed",
+      "value": "Waktu untuk"
+    },
+    {
+      "key": "mirror_brawl_time_up",
+      "value": "Pukullah!"
+    },
+    {
+      "key": "mirror_brawl_all_down",
+      "value": "Semua orang turun!"
+    },
+    {
+      "key": "mirror_brawl_retry",
+      "value": "Bermula semula dari awal dalam 3 saat."
+    },
+    {
+      "key": "side_boss_hp",
+      "value": "CRAYON STALKER HP {0} / {1}"
+    },
+    {
+      "key": "side_boss_ready",
+      "value": "3 - 2 - 1 Bersedia"
+    },
+    {
+      "key": "side_boss_run",
+      "value": "Berlarilah dengan betul!"
+    },
+    {
+      "key": "side_boss_clear",
+      "value": "PURSUER kalah!"
+    },
+    {
+      "key": "side_boss_failed",
+      "value": "SEMUA-SUA telah ditangkap"
+    },
+    {
+      "key": "spike_chase_run",
+      "value": "Berlarilah!"
+    },
+    {
+      "key": "survival_watch_floor",
+      "value": "Lantai yang Terbang Akan Terjatuh!"
+    },
+    {
+      "key": "survival_remaining",
+      "value": "SELVIVE! Waktu TIDAK"
+    },
+    {
+      "key": "survival_safe_countdown",
+      "value": "Lantai Aman {0} / DROP IN {1:0.0}"
+    },
+    {
+      "key": "survival_floor_dropped",
+      "value": "Tetaplah di Lantai Aman!"
+    },
+    {
+      "key": "survival_all_dead",
+      "value": "Semua pemain keluar"
+    },
+    {
+      "key": "survival_retrying",
+      "value": "MEMulai semula SEGELAS"
+    },
+    {
+      "key": "survival_clear_title",
+      "value": "PEMBANGKUTU HIDUP!"
+    },
+    {
+      "key": "survival_clear_sub",
+      "value": "PEMBANGKAN SELAMAS"
+    },
+    {
+      "key": "pillar_survival_title",
+      "value": "8-1 PILLAR SURVIVAL"
+    },
+    {
+      "key": "pillar_survival_goal_sub",
+      "value": "Tonton Peringatan dan Jauhkan Pintu-pintu"
+    },
+    {
+      "key": "pillar_survival_watch_up",
+      "value": "Keluar dari zon yang bersinar"
+    },
+    {
+      "key": "pillar_survival_clear",
+      "value": "PILAR SURVIVAL CLEARED!"
+    },
+    {
+      "key": "boss_name",
+      "value": "4-3 Raja Krayon"
+    },
+    {
+      "key": "boss_health",
+      "value": "HP  {0} / {1}"
+    },
+    {
+      "key": "boss_enter_room",
+      "value": "ENTER Bilik seterusnya"
+    },
+    {
+      "key": "boss_appears",
+      "value": "Peringatan... bos!"
+    },
+    {
+      "key": "boss_fight",
+      "value": "Tembak untuk Serang / Turtle Shell untuk Menjaga"
+    },
+    {
+      "key": "boss_invulnerable",
+      "value": "BOS tidak boleh dihancurkan."
+    },
+    {
+      "key": "boss_charge",
+      "value": "KARANG! Keluar dari jalan"
+    },
+    {
+      "key": "boss_charge_countdown",
+      "value": "PEMBATAN {0}Datanglah ke tingkat tinggi!"
+    },
+    {
+      "key": "boss_special_warning",
+      "value": "Serangan Khas!"
+    },
+    {
+      "key": "boss_defeated",
+      "value": "Bos telah dikalahkan!"
+    },
+    {
+      "key": "boss_all_out",
+      "value": "Semua pemain keluar... kembali"
+    },
+    {
+      "key": "boss_waiting_count",
+      "value": "bilik menunggu  {0} / {1}  Bangun!"
+    },
+    {
+      "key": "jump_rope_mode_title",
+      "value": "6-2 HURDLE SURVIVAL"
+    },
+    {
+      "key": "jump_rope_goal",
+      "value": "Satu PEMBANGAT PEMBANGAT!"
+    },
+    {
+      "key": "jump_rope_goal_sub",
+      "value": "Jump Over Hurdles dari Kanan Untuk 60 Detik"
+    },
+    {
+      "key": "jump_rope_ready",
+      "value": "TEMPOH untuk Pengecehan dari Kanan"
+    },
+    {
+      "key": "jump_rope_jump_now",
+      "value": "MELOMPAT!"
+    },
+    {
+      "key": "jump_rope_keep_jumping",
+      "value": "Jump Hurdles!"
+    },
+    {
+      "key": "jump_rope_slow",
+      "value": "Perlahan-lahan... ambil nafas anda!"
+    },
+    {
+      "key": "jump_rope_accelerate",
+      "value": "Cepat! Final Sprint!"
+    },
+    {
+      "key": "jump_rope_all_out",
+      "value": "Semua pemain keluar"
+    },
+    {
+      "key": "jump_rope_clear_title",
+      "value": "HURDLE SURVIVAL CLEAR!"
+    },
+    {
+      "key": "jump_rope_clear_sub",
+      "value": "PEMBANGKUTU HIDUP"
+    },
+    {
+      "key": "escort_title",
+      "value": "5-3 SEKORTA TEMPODA"
+    },
+    {
+      "key": "escort_friend_active",
+      "value": "TEMPOD MOVING"
+    },
+    {
+      "key": "escort_instruction",
+      "value": "MEMBangun Jalan Dengan Kotak, Platform, dan Tubuh Anda"
+    },
+    {
+      "key": "escort_defense_title",
+      "value": "10-2 Lindungi Teman"
+    },
+    {
+      "key": "escort_friend_defeat_cry",
+      "value": "Saya tidak tahu."
+    },
+    {
+      "key": "escort_defense_instruction",
+      "value": "Berlari PELUH dan TEMPANG, KABU, dan MENDAH"
+    },
+    {
+      "key": "escort_respawning",
+      "value": "Teman seterusnya  {0:0.0}"
+    },
+    {
+      "key": "escort_respawn_sub",
+      "value": "Siapkan Sahabat Baru..."
+    },
+    {
+      "key": "escort_clear_title",
+      "value": "SPORT lengkap!"
+    },
+    {
+      "key": "escort_clear_sub",
+      "value": "TEMPO TEMPO TEMPO"
+    },
+    {
+      "key": "drawn_escort_monitor",
+      "value": "DUNY {0}/3 BUND {1:0.0}s"
+    },
+    {
+      "key": "drawn_escort_plan",
+      "value": "Sambungkan Jalan dengan Tubuhmu"
+    },
+    {
+      "key": "drawn_escort_running",
+      "value": "Bantu Teman Mencapai Sasaran"
+    },
+    {
+      "key": "drawn_escort_round_running",
+      "value": "DUNY {0}/3"
+    },
+    {
+      "key": "drawn_escort_round_clear",
+      "value": "DUNY {0} Bersihkan!"
+    },
+    {
+      "key": "aquarium_seal_monitor",
+      "value": "DUNY {0}/3    {1:0.0}S KALU"
+    },
+    {
+      "key": "aquarium_seal_progress",
+      "value": "HOLES {0}/{1}    Letakkan mereka semua dengan badan anda!"
+    },
+    {
+      "key": "aquarium_seal_round_clear",
+      "value": "DUNY {0} Bersihkan!"
+    },
+    {
+      "key": "aquarium_seal_timeout",
+      "value": "Tempoh UP! Memulakan semula pusingan ini"
+    },
+    {
+      "key": "aquarium_seal_box_hint",
+      "value": "Pukul lubang-lubang!"
+    },
+    {
+      "key": "pose_rooms_round",
+      "value": "DUNY {0}/3"
+    },
+    {
+      "key": "pose_rooms_monitor",
+      "value": "DUNY {0}/3    {1:0.0}S KALU"
+    },
+    {
+      "key": "pose_rooms_round_clear",
+      "value": "DUNY {0} Bersihkan!"
+    },
+    {
+      "key": "pose_rooms_timeout",
+      "value": "Pukullah!"
+    },
+    {
+      "key": "pose_rooms_retry",
+      "value": "Kembali ke pusingan ini"
+    },
+    {
+      "key": "pose_rooms_human_hint",
+      "value": "Tetapi meletakkan manusia yang sesuai di dalam kunci!"
+    },
+    {
+      "key": "pose_rooms_bird_hint",
+      "value": "Menemui Pos yang Cocok di Antara Burung Terbang!"
+    },
+    {
+      "key": "pose_rooms_turtle_hint",
+      "value": "Bawa Turtle melalui bilik penuh dengan mata air!"
+    },
+    {
+      "key": "tilt_board_monitor",
+      "value": "DUNY {0}/3    {1:0.0}S KALU"
+    },
+    {
+      "key": "tilt_board_countdown",
+      "value": "DUNY {0}/3 START IN {1}"
+    },
+    {
+      "key": "tilt_board_countdown_hint",
+      "value": "Anda boleh bergerak di dalam jalan anda semasa pengundian"
+    },
+    {
+      "key": "slime_crate_progress",
+      "value": "DUNY {0}/3 CRATES {1}/{2}   {3}S KALU"
+    },
+    {
+      "key": "slime_crate_hint",
+      "value": "Runtuhkan Crates dengan Spike Slim!"
+    },
+    {
+      "key": "slime_crate_enemy_hint",
+      "value": "Patah Crates Kecil!"
+    },
+    {
+      "key": "slime_crate_round_clear",
+      "value": "DUNY {0} Bersihkan!"
+    },
+    {
+      "key": "slime_crate_retry",
+      "value": "Perlawanan di pusingan {0}"
+    },
+    {
+      "key": "slime_crate_complete",
+      "value": "Semua pusingan sudah jelas!"
+    },
+    {
+      "key": "tilt_board_progress",
+      "value": "BALLS {0}/{1}    Gulung mereka ke dalam lubang!"
+    },
+    {
+      "key": "tilt_board_maze",
+      "value": "Tarik bola melalui meja dengan magnetisme!"
+    },
+    {
+      "key": "tilt_board_round_clear",
+      "value": "DUNY {0} Bersihkan!"
+    },
+    {
+      "key": "tilt_board_timeout",
+      "value": "MEMULAH!"
+    },
+    {
+      "key": "tilt_board_hint",
+      "value": "Kekuatan Magnetik Berubah INK Banyak."
+    },
+    {
+      "key": "drawn_escort_snack",
+      "value": "RUND ENTER: Mencapai SNACK di atas!"
+    },
+    {
+      "key": "drawn_escort_final_plan",
+      "value": "Membina Jalan Melalui Ular Di Atas!"
+    },
+    {
+      "key": "drawn_escort_tutorial",
+      "value": "Teman boleh berjalan di atas kepala dan badan anda"
+    },
+    {
+      "key": "drawn_escort_launch",
+      "value": "TEMPOD START"
+    },
+    {
+      "key": "drawn_escort_failed",
+      "value": "Teman itu jatuh!"
+    },
+    {
+      "key": "drawn_escort_game_over",
+      "value": "PERMAINAN BERAKHIR"
+    },
+    {
+      "key": "redraw_unavailable_escort_run",
+      "value": "Anda tidak boleh menggambar sementara kawan bergerak."
+    },
+    {
+      "key": "ricochet_title",
+      "value": "10-3 RICOCHET RELAY"
+    },
+    {
+      "key": "cat_escape_title",
+      "value": "2-3 PELANGKAN KAT Raksasa!"
+    },
+    {
+      "key": "cat_escape_room_count",
+      "value": "Tunggu {0} / {1}"
+    },
+    {
+      "key": "cat_escape_room_countdown",
+      "value": "{0}"
+    },
+    {
+      "key": "cat_escape_ready",
+      "value": "Bermula {0}"
+    },
+    {
+      "key": "cat_escape_go",
+      "value": "Berlarilah!"
+    },
+    {
+      "key": "cat_escape_wall",
+      "value": "SCRATCHS SEKumpulan  {0} / {1}"
+    },
+    {
+      "key": "cat_escape_wall_counter",
+      "value": "{0} / {1}"
+    },
+    {
+      "key": "ricochet_round",
+      "value": "DUNY {0} / {1}"
+    },
+    {
+      "key": "ricochet_ammo",
+      "value": "AMONI {0}"
+    },
+    {
+      "key": "ricochet_instruction",
+      "value": "RICOCHET Bullets dari kawan untuk memukul sasaran"
+    },
+    {
+      "key": "ricochet_failed",
+      "value": "Keluar dari AMMO!"
+    },
+    {
+      "key": "ricochet_clear",
+      "value": "5 RUND CLEAR!"
+    },
+    {
+      "key": "stage_object_escort_spawner",
+      "value": "Teman Spawner"
+    },
+    {
+      "key": "stage_object_escort_goal",
+      "value": "Matlamat rakan"
+    },
+    {
+      "key": "stage_object_escort_player_only_floor",
+      "value": "Lantai Friend-Pass"
+    },
+    {
+      "key": "stage_object_escort_head_bridge",
+      "value": "Contoh Jambatan Kepala"
+    },
+    {
+      "key": "stage_object_seesaw",
+      "value": "CECEW."
+    },
+    {
+      "key": "stage_object_turntable",
+      "value": "Laptop berputar"
+    },
+    {
+      "key": "stage_object_cannon",
+      "value": "PELURU."
+    },
+    {
+      "key": "stage_object_catapult",
+      "value": "PERANTI BATU."
+    },
+    {
+      "key": "stage_object_spike",
+      "value": "TOGE."
+    },
+    {
+      "key": "stage_object_fire",
+      "value": "Api"
+    },
+    {
+      "key": "stage_object_water",
+      "value": "Air"
+    },
+    {
+      "key": "stage_object_poison",
+      "value": "Racun"
+    },
+    {
+      "key": "stage_object_laser",
+      "value": "LASER."
+    },
+    {
+      "key": "stage_object_falling_rock",
+      "value": "Batu yang Terjatuh"
+    },
+    {
+      "key": "stage_object_press_machine",
+      "value": "Mesin Pencet"
+    },
+    {
+      "key": "stage_object_electricity",
+      "value": "Elektrik"
+    },
+    {
+      "key": "stage_object_saw",
+      "value": "Lihat"
+    },
+    {
+      "key": "stage_object_black_hole",
+      "value": "Lubang Hitam"
+    },
+    {
+      "key": "stage_object_gear",
+      "value": "Peralatan"
+    },
+    {
+      "key": "stage_object_big_gear",
+      "value": "SAYA TIDAK MAHU."
+    },
+    {
+      "key": "stage_object_rope_pulley",
+      "value": "KERETA GANTUNG."
+    },
+    {
+      "key": "stage_object_slider",
+      "value": "SLIDE."
+    },
+    {
+      "key": "stage_object_rotating_bar",
+      "value": "Bar berputar"
+    },
+    {
+      "key": "stage_object_pendulum",
+      "value": "PELANCING."
+    },
+    {
+      "key": "stage_object_keyhole",
+      "value": "Lubang kunci"
+    },
+    {
+      "key": "stage_object_stage_boundary",
+      "value": "Perbatasan peringkat"
+    },
+    {
+      "key": "stage_object_clock",
+      "value": "Jam"
+    },
+    {
+      "key": "stage_object_counter",
+      "value": "Kaunter"
+    },
+    {
+      "key": "menu_stage_select",
+      "value": "Pilih peringkat"
+    },
+    {
+      "key": "menu_leave_session",
+      "value": "Tinggalkan Sesi"
+    },
+    {
+      "key": "menu_restart_stage",
+      "value": "Bermula semula peringkat"
+    },
+    {
+      "key": "menu_leave_session_confirm",
+      "value": "Tinggalkan sesi dalam talian?"
+    },
+    {
+      "key": "menu_leave_session_host_confirm",
+      "value": "Pergi sebagai tuan rumah akan mengakhiri sesi ini untuk semua."
+    },
+    {
+      "key": "menu_leave_session_yes",
+      "value": "Pergi"
+    },
+    {
+      "key": "stage_editor_status_linked_bridge_right",
+      "value": "Dihubungkan sebagai jambatan: tepi kanan kekal dihubungkan semasa ia membentang ke kiri."
+    },
+    {
+      "key": "stage_editor_status_separate_split",
+      "value": "Bahagikan medan yang berkaitan kepada bahagian yang boleh dipilih secara individu dan boleh dihubungkan."
+    },
+    {
+      "key": "stage_editor_separate",
+      "value": "Berpisah"
+    },
+    {
+      "key": "stage_editor_status_separate_on",
+      "value": "Bahagian berasingan adalah ON. Ia boleh pecah tanpa menggabungkan dan boleh disambungkan secara individu."
+    },
+    {
+      "key": "stage_editor_status_separate_off",
+      "value": "Bahagian berasingan tidak berfungsi, medan yang menyentuh boleh bergabung."
+    },
+    {
+      "key": "stage_editor_status_terrain_connected",
+      "value": "Menghubungkan lantai dan dinding sebagai satu bentuk medan."
+    },
+    {
+      "key": "stage_editor_status_add_straight",
+      "value": "Seret untuk meletakkan lurus {0}."
+    },
+    {
+      "key": "stage_editor_thickness",
+      "value": "Ketebalan"
+    },
+    {
+      "key": "stage_editor_status_thickness",
+      "value": "Ketebalan lantai dan dinding: {0:0.00}"
+    },
+    {
+      "key": "stage_editor_straight",
+      "value": "Langsung"
+    },
+    {
+      "key": "stage_editor_status_straight_on",
+      "value": "Gambar garis lurus adalah ON."
+    },
+    {
+      "key": "stage_editor_status_straight_off",
+      "value": "Lukisan garis lurus tidak berfungsi."
+    },
+    {
+      "key": "stage_editor_freehand",
+      "value": "Mod gambar"
+    },
+    {
+      "key": "stage_editor_draw_mode",
+      "value": "Mod gambar"
+    },
+    {
+      "key": "stage_editor_select_mode",
+      "value": "Pilih mod"
+    },
+    {
+      "key": "stage_editor_status_draw_mode",
+      "value": "Mod gambar: seret pada kosong space untuk meletakkan objek."
+    },
+    {
+      "key": "stage_editor_status_select_mode",
+      "value": "Mode Pilih: pilih dan gerakkan objek yang ada."
+    },
+    {
+      "key": "stage_editor_status_add_freehand",
+      "value": "Lukis {0} bebas dengan menyeret."
+    },
+    {
+      "key": "stage_editor_status_freehand_on",
+      "value": "Lukisan lantai dan dinding bebas tangan adalah ON."
+    },
+    {
+      "key": "stage_editor_status_freehand_off",
+      "value": "Penempatan segi empat adalah ON."
+    },
+    {
+      "key": "stage_editor_status_freehand_done",
+      "value": "Drew {0} sebagai satu laluan yang berhubung ({1} (Bagian 1)"
+    },
+    {
+      "key": "stage_editor_return",
+      "value": "Kembali ke editor"
+    },
+    {
+      "key": "stage_editor_return_esc",
+      "value": "Kembali ke editor  ESC"
+    },
+    {
+      "key": "stage_editor_status_returned",
+      "value": "Kembali dari persembahan ujian."
+    },
+    {
+      "key": "cancel",
+      "value": "Batalkan"
+    },
+    {
+      "key": "retry",
+      "value": "Cuba lagi"
+    },
+    {
+      "key": "menu",
+      "value": "MENYU."
+    },
+    {
+      "key": "redraw",
+      "value": "Menarik semula"
+    },
+    {
+      "key": "pen",
+      "value": "PEN."
+    },
+    {
+      "key": "eraser",
+      "value": "Penghapusan"
+    },
+    {
+      "key": "shape_square",
+      "value": "Kotak"
+    },
+    {
+      "key": "shape_circle",
+      "value": "Lingkaran"
+    },
+    {
+      "key": "shape_line",
+      "value": "Barisan"
+    },
+    {
+      "key": "draw_finish",
+      "value": "Sudah selesai!"
+    },
+    {
+      "key": "draw_redo",
+      "value": "Kembali"
+    },
+    {
+      "key": "brush_size",
+      "value": "Ukuran"
+    },
+    {
+      "key": "ink_usage",
+      "value": "Ink Dipakai"
+    },
+    {
+      "key": "undo",
+      "value": "Dilakukan"
+    },
+    {
+      "key": "character_switch",
+      "value": "Pertukaran Karakter"
+    },
+    {
+      "key": "character_add",
+      "value": "Tambah Char"
+    },
+    {
+      "key": "character_delete",
+      "value": "Hapus Char"
+    },
+    {
+      "key": "character_control_switch",
+      "value": "Pindah Char"
+    },
+    {
+      "key": "stage_select",
+      "value": "Pilih peringkat"
+    },
+    {
+      "key": "stage_select_help",
+      "value": "15 kumpulan, 3 peringkat masing-masing. Buka Edit ON, kemudian pilih satu peringkat untuk mengeditnya."
+    },
+    {
+      "key": "debug_stage",
+      "value": "1-0, PENGUBAHSUAIAN."
+    },
+    {
+      "key": "stage_editor_open",
+      "value": "MENGEDIT 1-1"
+    },
+    {
+      "key": "stage_select_edit_off",
+      "value": "Edit: Henti"
+    },
+    {
+      "key": "stage_select_edit_on",
+      "value": "EDIT: ON"
+    },
+    {
+      "key": "stage_unplayed",
+      "value": "BARU"
+    },
+    {
+      "key": "stage_clear",
+      "value": "JELAS"
+    },
+    {
+      "key": "stage_locked",
+      "value": "Terkunci"
+    },
+    {
+      "key": "stage_select_info",
+      "value": "Mod debug: semua dunia dibuka. Pilih peringkat untuk bermain, atau menghidupkan Edit ON untuk mengeditnya."
+    },
+    {
+      "key": "stage_editor_help",
+      "value": "1:Lantai 2:Seret dinding untuk membuat blok 3:Mulai 4:Tujuan 5:Skala 6: Berat A / D / W / S: bergerak kamera roda: zoom\nF5Simpan:  F6Ujian:  EscKembali:"
+    },
+    {
+      "key": "stage_object_balance",
+      "value": "Skala"
+    },
+    {
+      "key": "stage_editor_size",
+      "value": "Ukuran"
+    },
+    {
+      "key": "stage_editor_snap",
+      "value": "GRID."
+    },
+    {
+      "key": "stage_editor_delete",
+      "value": "Hapus"
+    },
+    {
+      "key": "stage_editor_save",
+      "value": "Simpan"
+    },
+    {
+      "key": "stage_editor_test",
+      "value": "Ujian"
+    },
+    {
+      "key": "stage_editor_back",
+      "value": "Kembali  ESC"
+    },
+    {
+      "key": "option_subtitle",
+      "value": "Tetapan Permainan"
+    },
+    {
+      "key": "option_bgm",
+      "value": "BGM"
+    },
+    {
+      "key": "option_se",
+      "value": "LIHAT."
+    },
+    {
+      "key": "option_keys",
+      "value": "Kunci"
+    },
+    {
+      "key": "option_language",
+      "value": "Bahasa"
+    },
+    {
+      "key": "option_not_implemented",
+      "value": "Belum"
+    },
+    {
+      "key": "locked_stage",
+      "value": "Tahap tanpa JSON jatuh kembali ke tahap debug."
+    },
+    {
+      "key": "human",
+      "value": "Manusia"
+    },
+    {
+      "key": "cat",
+      "value": "Kucing"
+    },
+    {
+      "key": "bird",
+      "value": "Burung"
+    },
+    {
+      "key": "turtle",
+      "value": "TERNAK."
+    },
+    {
+      "key": "slime",
+      "value": "SLUM."
+    },
+    {
+      "key": "label_ball_hit",
+      "value": "5 Bola Hit"
+    },
+    {
+      "key": "stage_editor_quick",
+      "value": "Bahagian Cepat"
+    },
+    {
+      "key": "stage_editor_selection",
+      "value": "PILIH"
+    },
+    {
+      "key": "stage_editor_status_open",
+      "value": "Pilih bahagian, kemudian klik atau seret di peta untuk menempatkannya."
+    },
+    {
+      "key": "stage_editor_status_snap",
+      "value": "Snap: {0} / {1:0.##} grid satuan"
+    },
+    {
+      "key": "stage_editor_status_select_first",
+      "value": "Pilih objek terlebih dahulu."
+    },
+    {
+      "key": "stage_editor_status_resize_width",
+      "value": "Lebar berubah. Shift+Roda."
+    },
+    {
+      "key": "stage_editor_status_resize_height",
+      "value": "Tingkat berubah. Alt+Roda."
+    },
+    {
+      "key": "stage_editor_status_resize_all",
+      "value": "Pakelah roda untuk mengukur kedua-dua sumbu."
+    },
+    {
+      "key": "stage_editor_status_drag_larger",
+      "value": "Tarik kawasan yang lebih besar untuk meletakkan bahagian ini."
+    },
+    {
+      "key": "stage_editor_status_placed_rect",
+      "value": "Diletakkan {0} ({1:0.0} x {2:0.0})."
+    },
+    {
+      "key": "stage_editor_status_placed_point",
+      "value": "Diletakkan {0} pada {1:0.0}, {2:0.0}."
+    },
+    {
+      "key": "stage_editor_status_selected",
+      "value": "Seret untuk bergerak dan gunakan roda untuk mengubah saiz."
+    },
+    {
+      "key": "stage_editor_status_nothing_undo",
+      "value": "Tiada apa yang boleh dihapuskan."
+    },
+    {
+      "key": "stage_editor_status_undo_done",
+      "value": "Menghapuskan penyuntingan terakhir."
+    },
+    {
+      "key": "stage_editor_status_nothing_redo",
+      "value": "Tiada apa-apa yang perlu dilakukan."
+    },
+    {
+      "key": "stage_editor_status_redo_done",
+      "value": "Mengedit semula."
+    },
+    {
+      "key": "stage_editor_status_select_link_source",
+      "value": "Pilih suis, butang, kunci, atau lubang kunci untuk digunakan sebagai sumber pautan."
+    },
+    {
+      "key": "stage_editor_status_invalid_link_source",
+      "value": "Pilih penukar, butang, kunci, atau lubang kunci sebagai sumber pautan."
+    },
+    {
+      "key": "stage_editor_status_link_source_set",
+      "value": "Sumber pautan: {0}Pilih sasaran, lalu tekan Link ke."
+    },
+    {
+      "key": "stage_editor_status_link_source_first",
+      "value": "Tentukan sumber pautan dahulu."
+    },
+    {
+      "key": "stage_editor_status_select_link_target",
+      "value": "Pilih objek untuk digunakan sebagai sasaran pautan."
+    },
+    {
+      "key": "stage_editor_status_link_different",
+      "value": "Sumber pautan dan sasaran mestilah objek yang berbeza."
+    },
+    {
+      "key": "stage_editor_status_linked",
+      "value": "Terkait {0} untuk {1}."
+    },
+    {
+      "key": "stage_editor_status_select_linked",
+      "value": "Pilih objek yang berkaitan terlebih dahulu."
+    },
+    {
+      "key": "stage_editor_status_link_cleared",
+      "value": "Membasmi pautan."
+    },
+    {
+      "key": "stage_editor_status_saved",
+      "value": "Disimpan: {0}"
+    },
+    {
+      "key": "stage_editor_status_save_editor_only",
+      "value": "Menjimatkan kini hanya tersedia di Unity Editor."
+    },
+    {
+      "key": "stage_editor_status_factory_missing",
+      "value": "Pabrik objek pentas hilang."
+    },
+    {
+      "key": "stage_object_traffic_light",
+      "value": "Lampu Laluan"
+    },
+    {
+      "key": "block_breaker_title",
+      "value": "11-3 BLOCK Crash"
+    },
+    {
+      "key": "stage_rule_block_breaker",
+      "value": "Pemblokir blok"
+    },
+    {
+      "key": "block_breaker_goal",
+      "value": "Lemparkan Bom! NICO DRAW Blok!"
+    },
+    {
+      "key": "block_breaker_blocks",
+      "value": "{0} Blok kiri"
+    },
+    {
+      "key": "block_breaker_retry",
+      "value": "Gagal... kembali ke dalam {0}"
+    },
+    {
+      "key": "sfx_browser_title",
+      "value": "SE PELAYAR"
+    },
+    {
+      "key": "sfx_browser_help",
+      "value": "Cari mengikut tindakan atau SE ID, kemudian tekan Play untuk melihat semula bunyi yang diarahkan. Hover satu baris untuk melihat laluan sumbernya."
+    },
+    {
+      "key": "sfx_browser_play",
+      "value": "Bermain"
+    },
+    {
+      "key": "sfx_browser_stop",
+      "value": "Hentikan"
+    },
+    {
+      "key": "sfx_browser_reload",
+      "value": "PEMUATAN SEMULA"
+    },
+    {
+      "key": "sfx_browser_no_results",
+      "value": "Tiada kesan bunyi yang sesuai."
+    },
+    {
+      "key": "sfx_browser_file_missing",
+      "value": "SFX_USAGE.md tidak ditemui."
+    },
+    {
+      "key": "sfx_browser_uncategorized",
+      "value": "Tidak dikategorikan"
+    },
+    {
+      "key": "sfx_browser_muted",
+      "value": "MEMUTAT"
+    },
+    {
+      "key": "sfx_browser_generated",
+      "value": "Bunyi yang dihasilkan semasa berjalan"
+    },
+    {
+      "key": "gameplay_control_switch",
+      "value": "Bertukar Karakter"
+    },
+    {
+      "key": "feedback_button",
+      "value": "PEMBACAN / RAPORT BUG"
+    },
+    {
+      "key": "feedback_clear_button",
+      "value": "Terima kasih kerana bermain!"
+    },
+    {
+      "key": "wishlist_button",
+      "value": "SENARAI KEINGINAN"
+    },
+    {
+      "key": "single_recommend_title",
+      "value": "MULTIPLAYER RECOMMended!"
+    },
+    {
+      "key": "single_recommend_message",
+      "value": "NICO DRAW cuba main dengan 2 ⁇ 4 pemain!"
+    },
+    {
+      "key": "single_recommend_ok",
+      "value": "Baiklah."
+    },
+    {
+      "key": "stage_object_background_paw_print",
+      "value": "Pencetakan Paw"
+    },
+    {
+      "key": "stage_object_background_fish",
+      "value": "Ikan"
+    },
+    {
+      "key": "stage_object_background_yarn_ball",
+      "value": "Bola Uap"
+    },
+    {
+      "key": "stage_object_background_snow_crystal",
+      "value": "Kristal Salji"
+    },
+    {
+      "key": "stage_object_background_icicle",
+      "value": "Icing"
+    },
+    {
+      "key": "stage_object_background_snowman",
+      "value": "SALJI."
+    },
+    {
+      "key": "stage_object_background_blizzard",
+      "value": "Badai salji"
+    },
+    {
+      "key": "stage_object_background_feather",
+      "value": "bulu"
+    },
+    {
+      "key": "stage_object_background_bird_nest",
+      "value": "Sarang burung"
+    },
+    {
+      "key": "stage_object_background_wind_lines",
+      "value": "Barisan Angin"
+    },
+    {
+      "key": "stage_object_background_pipe",
+      "value": "Paip"
+    },
+    {
+      "key": "stage_object_background_bolt",
+      "value": "BOLT."
+    },
+    {
+      "key": "stage_object_background_chain",
+      "value": "Rantai"
+    },
+    {
+      "key": "stage_object_background_steam",
+      "value": "Uap"
+    },
+    {
+      "key": "stage_object_background_turtle",
+      "value": "TERNAK."
+    },
+    {
+      "key": "stage_object_background_hourglass",
+      "value": "Jam Berpasir"
+    },
+    {
+      "key": "stage_object_background_padlock",
+      "value": "Kunci"
+    },
+    {
+      "key": "stage_object_background_slime_blob",
+      "value": "SLUM."
+    },
+    {
+      "key": "stage_object_background_bubbles",
+      "value": "Gelembung"
+    },
+    {
+      "key": "stage_object_background_butterfly",
+      "value": "Kupu-kupu"
+    },
+    {
+      "key": "stage_object_background_ladybug",
+      "value": "SAYA AKAN CUBA."
+    },
+    {
+      "key": "stage_object_background_sunflower",
+      "value": "Bunga matahari"
+    },
+    {
+      "key": "stage_object_background_tulip",
+      "value": "TULIP."
+    },
+    {
+      "key": "stage_object_background_skeleton",
+      "value": "Kerangka"
+    },
+    {
+      "key": "stage_object_background_bat",
+      "value": "Kelelawar"
+    },
+    {
+      "key": "stage_object_background_spiderweb",
+      "value": "Rangkaian Laba-laba"
+    },
+    {
+      "key": "stage_object_background_stalactite",
+      "value": "Stalactit"
+    },
+    {
+      "key": "stage_object_background_lantern",
+      "value": "Lampu"
+    },
+    {
+      "key": "stage_object_background_minecart",
+      "value": "Kereta api"
+    },
+    {
+      "key": "stage_object_background_pickaxe",
+      "value": "TIRUHA."
+    },
+    {
+      "key": "stage_object_background_trophy",
+      "value": "Trofi"
+    },
+    {
+      "key": "stage_object_background_medal",
+      "value": "Medali"
+    },
+    {
+      "key": "stage_object_background_whistle",
+      "value": "Memerinti"
+    },
+    {
+      "key": "stage_object_background_balloon",
+      "value": "Balon"
+    },
+    {
+      "key": "stage_object_background_confetti",
+      "value": "BERHUJAN KERTAS."
+    },
+    {
+      "key": "stage_object_background_fireworks",
+      "value": "Api kembang api"
+    },
+    {
+      "key": "stage_object_background_tower_building",
+      "value": "Menara"
+    },
+    {
+      "key": "stage_object_background_binoculars",
+      "value": "Pinus"
+    },
+    {
+      "key": "stage_object_background_bridge",
+      "value": "Jambatan"
+    },
+    {
+      "key": "stage_object_background_crayon",
+      "value": "SAYA TIDAK TAHU APA-APA."
+    },
+    {
+      "key": "stage_object_background_pencil",
+      "value": "Pensil"
+    },
+    {
+      "key": "stage_object_background_eraser",
+      "value": "Penghapusan"
+    },
+    {
+      "key": "stage_object_background_notebook",
+      "value": "Buku catatan"
+    },
+    {
+      "key": "stage_object_background_blackboard",
+      "value": "Papan hitam"
+    },
+    {
+      "key": "stage_object_background_palette",
+      "value": "Palet"
+    },
+    {
+      "key": "stage_object_background_paintbrush",
+      "value": "Berkas cat"
+    },
+    {
+      "key": "stage_object_background_canvas",
+      "value": "Kanvas"
+    },
+    {
+      "key": "stage_object_background_stopwatch",
+      "value": "STOPWATCH."
+    },
+    {
+      "key": "stage_object_background_spotlight",
+      "value": "Pemandangan"
+    },
+    {
+      "key": "stage_object_background_microphone",
+      "value": "Mikrofon"
+    },
+    {
+      "key": "stage_object_background_cheese",
+      "value": "Keju"
+    },
+    {
+      "key": "stage_object_background_surprise_box",
+      "value": "Kotak kejutan"
+    },
+    {
+      "key": "stage_object_background_gift_box",
+      "value": "Kotak Hadiah"
+    },
+    {
+      "key": "stage_object_background_planet",
+      "value": "PLANET."
+    },
+    {
+      "key": "stage_object_background_alien",
+      "value": "Orang asing"
+    },
+    {
+      "key": "stage_object_background_comet",
+      "value": "Komet"
+    },
+    {
+      "key": "stage_object_background_black_hole_decor",
+      "value": "Lubang Hitam"
+    },
+    {
+      "key": "stage_object_background_soap_bubble",
+      "value": "Bubble Sabun"
+    },
+    {
+      "key": "stage_object_background_moss",
+      "value": "Lumpia"
+    },
+    {
+      "key": "stage_object_background_tree_root",
+      "value": "Akar pokok"
+    }
+  ]
+}

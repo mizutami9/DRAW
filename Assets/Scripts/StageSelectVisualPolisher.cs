@@ -145,6 +145,14 @@ namespace DrawBody.Prototype
                 rect.pivot = new Vector2(0.5f, 0f);
                 rect.anchoredPosition = new Vector2(0f, 146f - (variant - 1) * 54f);
                 rect.sizeDelta = new Vector2(156f, 42f);
+                rect.localRotation = Quaternion.identity;
+                rect.localScale = Vector3.one;
+
+                StageCardHover hover = buttons[i].GetComponent<StageCardHover>();
+                if (hover != null)
+                {
+                    hover.SyncLayoutBaseline();
+                }
             }
         }
 

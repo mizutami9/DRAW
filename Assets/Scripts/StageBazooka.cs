@@ -6,8 +6,9 @@ namespace DrawBody.Prototype
     public sealed class StageBazooka : MonoBehaviour
     {
         private const float FireInterval = 0.9f;
-        private const float RecoilVelocity = 13.5f;
-        private const float DownwardShotVerticalRecoilMultiplier = 4f;
+        private const float RecoilVelocity = 9f;
+        private const float DownwardShotVerticalRecoilMultiplier = 2.2f;
+        private const float CarriedRecoilMultiplier = 1.35f;
         private PlayerCarryController holder;
         private StageBazookaSystem system;
         private float nextFireAt;
@@ -97,7 +98,7 @@ namespace DrawBody.Prototype
             if (direction.sqrMagnitude < 0.1f) return;
             nextFireAt = Time.time + FireInterval;
             if (system == null) system = StageBazookaSystem.Ensure(transform);
-            float recoilMultiplier = holder.IsCarriedForWeaponRecoil() ? 5f : 1f;
+            float recoilMultiplier = holder.IsCarriedForWeaponRecoil() ? CarriedRecoilMultiplier : 1f;
             Vector2 recoil = -direction * (RecoilVelocity * recoilMultiplier);
             // A downward shot doubles as a rocket jump. Boost only the upward
             // component so diagonal shots do not throw the player sideways at
@@ -122,8 +123,9 @@ namespace DrawBody.Prototype
 
     public sealed class StageBazookaSystem : MonoBehaviour
     {
-        private const float RecoilVelocity = 13.5f;
-        private const float DownwardShotVerticalRecoilMultiplier = 4f;
+        private const float RecoilVelocity = 9f;
+        private const float DownwardShotVerticalRecoilMultiplier = 2.2f;
+        private const float CarriedRecoilMultiplier = 1.35f;
         private const string SystemId = "stage_bazooka_system";
         private const string FireRequestKind = "bazooka_fire_request";
         private const string FireKind = "bazooka_fire";
@@ -354,7 +356,7 @@ namespace DrawBody.Prototype
             Vector2 direction = data.Direction.normalized;
             PlayerCarryController carry = player.GetComponent<PlayerCarryController>();
             bool carried = carry != null && carry.IsCarriedForWeaponRecoil();
-            float multiplier = carried ? 5f : 1f;
+            float multiplier = carried ? CarriedRecoilMultiplier : 1f;
             Vector2 recoil = -direction * (RecoilVelocity * multiplier);
             if (direction.y < 0f) recoil.y *= DownwardShotVerticalRecoilMultiplier;
             data.Origin = weapon.MuzzleWorldPosition;

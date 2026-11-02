@@ -8,6 +8,9 @@ namespace DrawBody.Prototype
     public sealed class StageIcicleSeesawSurvivalController : StageEliminationChallengeController
     {
         private const string StageId = "14-1";
+        private const float BlizzardMinimumStrength = 1.7f;
+        private const float BlizzardMaximumStrength = 2.7f;
+        private const float BlizzardHorizontalSpeedLimit = 12f;
         private const string StateKind = "icicle_seesaw_state";
         private const string HazardKind = "icicle_seesaw_hazard";
         private const string EliminateRequestKind = "icicle_seesaw_eliminate_request";
@@ -21,6 +24,8 @@ namespace DrawBody.Prototype
         // side, the seesaw can dump the whole team instead of stopping safely.
         private const float MaximumTilt = 86f;
         private const float CountdownSeconds = 3f;
+        private const float CenterIcicleInterval = 10f;
+        private const float CenterIcicleWarningSeconds = 1f;
         private const int MaximumFreezePatchCount = 8;
         private const float FreezePatchWidth = 1.8f;
         private const int MaximumSettledSnowCount = 420;
@@ -112,7 +117,6 @@ namespace DrawBody.Prototype
         private TextMesh monitorText;
         private GameObject blizzardVisualRoot;
         private SpriteRenderer blizzardVeil;
-        private TextMesh blizzardDirectionText;
         private Phase phase = Phase.Waiting;
         private float durationSeconds = 60f;
         private float remainingSeconds = 60f;
@@ -120,6 +124,8 @@ namespace DrawBody.Prototype
         private float failureRemaining;
         private float elapsedSeconds;
         private float nextHazardAt = 1.4f;
+        private float nextCenterIcicleAt = CenterIcicleInterval;
+        private int randomHazardSequence;
         private float currentAngle;
         private float networkAngle;
         private float impactTilt;
@@ -130,6 +136,8 @@ namespace DrawBody.Prototype
         private float blizzardRemaining;
         private float blizzardStrength;
         private Vector2 blizzardDirection;
+        private Vector2 BlizzardFlowDirection => blizzardDirection.sqrMagnitude > 0.01f
+            ? blizzardDirection.normalized : Vector2.left;
         private int stateSequence;
         private int lastStateSequence;
         private int hazardSequence;
@@ -137,6 +145,7 @@ namespace DrawBody.Prototype
         private int snowParticleSequence;
         private int blizzardSequence;
         private int lastPresentedBlizzardSequence;
+        private BlizzardPhase lastPresentedBlizzardPhase;
         private string lastCountdownText = string.Empty;
         private bool configured;
         private bool playersPlaced;
@@ -191,6 +200,7 @@ namespace DrawBody.Prototype
 
             if (!configured) Configure(60f);
             BuildArena();
+            CreateSeesawHandgun();
             CaptureParticipants();
             stageLoader?.SetRuntimeSpawnPosition(new Vector2(0f, SeesawY + 1.5f));
             if (cameraFollow != null)
@@ -263,6 +273,7 @@ namespace DrawBody.Prototype
                     remainingSeconds = Mathf.Max(0f, remainingSeconds - Time.deltaTime);
                 UpdateBlizzardAuthority();
                 DirectHazards();
+                DirectCenterIcicle();
 
                 if (AreAllEliminated())
                 {
@@ -322,7 +333,7 @@ namespace DrawBody.Prototype
                 float inkWeight = Mathf.Clamp(0.55f + ink / 170f, 0.55f, 3.5f);
                 torque += Mathf.Clamp(local.x / SeesawHalfWidth, -1f, 1f) * inkWeight;
             }
-            return Mathf.Clamp(-torque * 14f + impactTilt, -MaximumTilt, MaximumTilt);
+            return Mathf.Clamp(-torque * 26f + impactTilt, -MaximumTilt, MaximumTilt);
         }
 
         private void DirectHazards()
@@ -349,7 +360,7 @@ namespace DrawBody.Prototype
             if (blizzardPhase == BlizzardPhase.Warning)
             {
                 blizzardPhase = BlizzardPhase.Active;
-                blizzardRemaining = 3.2f;
+                blizzardRemaining = 2.55f;
                 BroadcastState(true);
             }
             else
@@ -365,13 +376,11 @@ namespace DrawBody.Prototype
         private void BeginBlizzardWarning()
         {
             blizzardSequence++;
-            int pattern = blizzardSequence % 4;
-            blizzardDirection = pattern == 0
-                ? Vector2.right
-                : pattern == 1
-                    ? new Vector2(-0.92f, -0.38f).normalized
-                    : pattern == 2 ? Vector2.left : new Vector2(0.92f, -0.38f).normalized;
-            blizzardStrength = Mathf.Lerp(10f, 14f, Mathf.Clamp01(elapsedSeconds / durationSeconds));
+            blizzardDirection = blizzardSequence % 2 == 0
+                ? Vector2.left
+                : new Vector2(-0.94f, -0.34f).normalized;
+            blizzardStrength = Mathf.Lerp(BlizzardMinimumStrength, BlizzardMaximumStrength,
+                Mathf.Clamp01(elapsedSeconds / durationSeconds));
             blizzardPhase = BlizzardPhase.Warning;
             blizzardRemaining = 1.8f;
             BroadcastState(true);
@@ -394,9 +403,9 @@ namespace DrawBody.Prototype
             Vector2 velocity;
             if (blown)
             {
-                float sourceX = blizzardDirection.x > 0f ? -18f : 18f;
+                float sourceX = BlizzardFlowDirection.x > 0f ? -18f : 18f;
                 position = new Vector2(sourceX, Mathf.Lerp(-5.5f, 9.5f, y01));
-                velocity = blizzardDirection * Mathf.Lerp(9f, 13f, x01) + Vector2.down * 0.8f;
+                velocity = BlizzardFlowDirection * Mathf.Lerp(9f, 13f, x01) + Vector2.down * 0.8f;
             }
             else
             {
@@ -428,15 +437,14 @@ namespace DrawBody.Prototype
                 if (body == null || body.bodyType != RigidbodyType2D.Dynamic) continue;
                 PlayerAbilityController ability = player.GetComponent<PlayerAbilityController>();
                 float ink = ability != null ? Mathf.Max(0f, ability.CurrentProfile.TotalInk) : 175f;
-                float resistance = Mathf.Lerp(1.22f, 0.62f, Mathf.Clamp01(ink / 500f));
+                float resistance = Mathf.Lerp(1.08f, 0.62f, Mathf.Clamp01(ink / 500f));
                 Vector2 pushDirection = new Vector2(
-                    blizzardDirection.x,
-                    blizzardDirection.y * 0.38f).normalized;
-                player.ApplyEnvironmentalPush(
-                    pushDirection * (blizzardStrength * resistance * Time.fixedDeltaTime), 0.12f);
+                    BlizzardFlowDirection.x,
+                    BlizzardFlowDirection.y * 0.38f).normalized;
+                player.SetEnvironmentalWind(pushDirection * (blizzardStrength * resistance));
                 Vector2 velocity = body.linearVelocity;
                 body.linearVelocity = new Vector2(
-                    Mathf.Clamp(velocity.x, -24f, 24f),
+                    Mathf.Clamp(velocity.x, -BlizzardHorizontalSpeedLimit, BlizzardHorizontalSpeedLimit),
                     Mathf.Clamp(velocity.y, -18f, 24f));
             }
         }
@@ -444,12 +452,15 @@ namespace DrawBody.Prototype
         private void IssueNextHazard(float progress, bool secondary)
         {
             int sequence = ++hazardSequence;
-            HazardType type = sequence % 8 == 0
+            // Extra center attacks have their own timer and must not change the
+            // existing random attack types or deterministic target sequence.
+            int patternSequence = ++randomHazardSequence;
+            HazardType type = patternSequence % 8 == 0
                 ? HazardType.EnemyDrop
-                : sequence % 5 == 0
+                : patternSequence % 5 == 0
                     ? HazardType.ShockIcicle
-                    : sequence % 3 == 0 ? HazardType.FrostIcicle : HazardType.Icicle;
-            float x = DeterministicX(sequence + (secondary ? 101 : 0));
+                    : patternSequence % 3 == 0 ? HazardType.FrostIcicle : HazardType.Icicle;
+            float x = DeterministicX(patternSequence + (secondary ? 101 : 0));
             if (secondary) x = Mathf.Clamp(-x + Mathf.Sign(x) * 2.2f, -13.6f, 13.6f);
             HazardState state = new HazardState
             {
@@ -459,6 +470,29 @@ namespace DrawBody.Prototype
                 WarningSeconds = Mathf.Lerp(1.45f, 0.8f, progress),
                 FallSpeed = Mathf.Lerp(10.5f, 16f, progress)
             };
+            DispatchHazard(state);
+        }
+
+        private void DirectCenterIcicle()
+        {
+            if (!HasAuthority || phase != Phase.Running
+                || elapsedSeconds < nextCenterIcicleAt - CenterIcicleWarningSeconds) return;
+            // Warn one second before the 10/20/30... second drops. Skip missed
+            // intervals after a long stall rather than bursting several at once.
+            nextCenterIcicleAt = (Mathf.Floor((elapsedSeconds + CenterIcicleWarningSeconds)
+                / CenterIcicleInterval) + 1f) * CenterIcicleInterval;
+            DispatchHazard(new HazardState
+            {
+                Sequence = ++hazardSequence,
+                Type = (int)HazardType.Icicle,
+                X = 0f,
+                WarningSeconds = CenterIcicleWarningSeconds,
+                FallSpeed = Mathf.Lerp(10.5f, 16f, Mathf.Clamp01(elapsedSeconds / durationSeconds))
+            });
+        }
+
+        private void DispatchHazard(HazardState state)
+        {
             StartHazard(state);
             if (IsOnline && onlineManager != null)
             {
@@ -522,7 +556,7 @@ namespace DrawBody.Prototype
             {
                 Stage14IcicleProjectile.Create(
                     transform, this, state.Sequence, type, new Vector2(state.X, 9.1f), state.FallSpeed);
-                GameSfx.Play(SfxId.EditorObjectDrop, 0.82f);
+                GameSfx.Play(SfxId.MissileLaunch, 0.34f);
             }
         }
 
@@ -582,7 +616,7 @@ namespace DrawBody.Prototype
                 objectFactory?.CreateSpawnedEnemy(
                     type, objectId, position, 1.15f, transform, speed, facing);
             }
-            GameSfx.Play(SfxId.EditorObjectDrop, 0.9f);
+            GameSfx.Play(SfxId.MissileLaunch, 0.42f);
         }
 
         internal bool IsSeesawCollider(Collider2D other)
@@ -610,7 +644,7 @@ namespace DrawBody.Prototype
                     impactTilt = Mathf.Clamp(impactTilt - Mathf.Sign(worldPosition.x) * 12f, -MaximumTilt, MaximumTilt);
                 ApplyLocalShockwave(worldPosition.x);
             }
-            GameSfx.Play(SfxId.EditorObjectDrop, 0.88f);
+            GameSfx.Play(SfxId.PillarImpact, 0.48f);
         }
 
         private void ActivateFreezePatch(Vector2 worldPosition, float seconds)
@@ -776,18 +810,27 @@ namespace DrawBody.Prototype
             if (blizzardVisualRoot == null) return;
             bool visible = blizzardPhase != BlizzardPhase.None;
             blizzardVisualRoot.SetActive(visible);
-            if (!visible) return;
+            if (!visible)
+            {
+                lastPresentedBlizzardPhase = BlizzardPhase.None;
+                return;
+            }
 
             if (lastPresentedBlizzardSequence != blizzardSequence)
             {
                 lastPresentedBlizzardSequence = blizzardSequence;
-                GameSfx.Play(SfxId.UiToggleOn, 0.8f);
+                GameSfx.Play(SfxId.BossAttackWarning, 0.48f);
             }
 
-            Vector2 direction = blizzardDirection.sqrMagnitude > 0.01f
-                ? blizzardDirection.normalized : Vector2.right;
+            if (blizzardPhase != lastPresentedBlizzardPhase)
+            {
+                if (blizzardPhase == BlizzardPhase.Active)
+                    GameSfx.Play(SfxId.BlizzardWind, 0.72f);
+                lastPresentedBlizzardPhase = blizzardPhase;
+            }
+
+            Vector2 direction = BlizzardFlowDirection;
             bool warning = blizzardPhase == BlizzardPhase.Warning;
-            float sourceX = direction.x > 0f ? -16.5f : 16.5f;
             float stormSpeed = warning ? 5f : 13f + blizzardStrength * 0.45f;
             if (blizzardVeil != null)
             {
@@ -812,7 +855,8 @@ namespace DrawBody.Prototype
                 float length = warning
                     ? Mathf.Lerp(1.2f, 2.4f, Deterministic01(i + 1, 229))
                     : Mathf.Lerp(2.2f, 5.2f, Deterministic01(i + 1, 229));
-                Vector2 end = start + direction * length;
+                // The bright head leads; the fading tail trails upwind.
+                Vector2 end = start - direction * length;
                 float alpha = warning
                     ? 0.13f + Deterministic01(i + 1, 233) * 0.18f
                     : 0.42f + Deterministic01(i + 1, 233) * 0.46f;
@@ -849,17 +893,6 @@ namespace DrawBody.Prototype
                 flake.color = new Color(0.96f, 0.995f, 1f, alpha);
             }
 
-            if (blizzardDirectionText != null)
-            {
-                blizzardDirectionText.gameObject.SetActive(warning);
-                blizzardDirectionText.transform.position = new Vector3(sourceX, 1.8f, -0.3f);
-                blizzardDirectionText.text = direction.x > 0f
-                    ? direction.y < -0.1f ? "↘  ↘  ↘" : "→  →  →"
-                    : direction.y < -0.1f ? "↙  ↙  ↙" : "←  ←  ←";
-                blizzardDirectionText.color = warning
-                    ? new Color(0.16f, 0.68f, 0.94f, 0.88f)
-                    : new Color(0.76f, 0.94f, 1f, 0.7f);
-            }
         }
 
         private void ApplyLocalShockwave(float worldX)
@@ -1182,7 +1215,7 @@ namespace DrawBody.Prototype
                 state.CurrentBlizzardPhase, 0, (int)BlizzardPhase.Active);
             blizzardRemaining = Mathf.Max(0f, state.BlizzardRemaining);
             blizzardDirection = state.BlizzardDirection;
-            blizzardStrength = Mathf.Clamp(state.BlizzardStrength, 0f, 18f);
+            blizzardStrength = Mathf.Clamp(state.BlizzardStrength, 0f, BlizzardMaximumStrength);
             if (state.EliminatedIds != null)
                 for (int i = 0; i < state.EliminatedIds.Length; i++) ApplyElimination(state.EliminatedIds[i]);
             if (oldPhase != phase) SetLocalControls(phase == Phase.Running);
@@ -1326,9 +1359,19 @@ namespace DrawBody.Prototype
                 blizzardFlakes.Add(flake);
             }
 
-            blizzardDirectionText = CreateText(
-                blizzardVisualRoot.transform, "Blizzard Direction", Vector3.zero, 62, 0.12f, 52);
             blizzardVisualRoot.SetActive(false);
+        }
+
+        private void CreateSeesawHandgun()
+        {
+            if (objectFactory == null) objectFactory = Object.FindFirstObjectByType<StageObjectFactory>();
+            if (objectFactory == null) return;
+            StageObjectData data = StageObjectFactory.CreateDefaultData(
+                StageObjectType.Handgun,
+                new Vector2(0f, SeesawY + 0.9f));
+            data.objectId = "14-1_seesaw_handgun";
+            GameObject handgun = objectFactory.Create(data, transform);
+            if (handgun != null) gimmickSyncManager?.RegisterRuntimeObject(handgun.transform);
         }
 
         private static TextMesh CreateText(Transform parent, string name, Vector3 localPosition, int fontSize, float characterSize, int sortingOrder)
@@ -1394,6 +1437,7 @@ namespace DrawBody.Prototype
     [DisallowMultipleComponent]
     public sealed class Stage14IcicleProjectile : MonoBehaviour
     {
+        private const float HorizontalScaleMultiplier = 2.5f;
         private StageIcicleSeesawSurvivalController owner;
         private Rigidbody2D body;
         private float speed;
@@ -1417,7 +1461,7 @@ namespace DrawBody.Prototype
             body.useFullKinematicContacts = true;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             BoxCollider2D collider = root.AddComponent<BoxCollider2D>();
-            collider.size = new Vector2(0.55f, 1.75f);
+            collider.size = new Vector2(0.55f * HorizontalScaleMultiplier, 1.75f);
             collider.isTrigger = true;
 
             GameObject fill = new GameObject("Icicle Pencil Fill");
@@ -1436,13 +1480,14 @@ namespace DrawBody.Prototype
             {
                 Vector2 source = icicleArt.bounds.size;
                 fill.transform.localScale = new Vector3(
-                    source.x > 0.001f ? 0.9f / source.x : 1f,
+                    source.x > 0.001f ? 0.9f * HorizontalScaleMultiplier / source.x : 1f,
                     source.y > 0.001f ? 2.15f / source.y : 1f,
                     1f);
             }
             else
             {
-                fill.transform.localScale = new Vector3(0.5f, 1.7f, 1f);
+                fill.transform.localScale = new Vector3(
+                    0.5f * HorizontalScaleMultiplier, 1.7f, 1f);
             }
 
             GameObject tip = new GameObject("Icicle Tip");
@@ -1457,10 +1502,10 @@ namespace DrawBody.Prototype
             outline.startColor = new Color(0.12f, 0.28f, 0.42f, 1f);
             outline.endColor = outline.startColor;
             outline.sortingOrder = 48;
-            outline.SetPosition(0, new Vector3(-0.3f, 0.85f, 0f));
-            outline.SetPosition(1, new Vector3(0.3f, 0.85f, 0f));
+            outline.SetPosition(0, new Vector3(-0.3f * HorizontalScaleMultiplier, 0.85f, 0f));
+            outline.SetPosition(1, new Vector3(0.3f * HorizontalScaleMultiplier, 0.85f, 0f));
             outline.SetPosition(2, new Vector3(0f, -1.05f, 0f));
-            outline.SetPosition(3, new Vector3(-0.3f, 0.85f, 0f));
+            outline.SetPosition(3, new Vector3(-0.3f * HorizontalScaleMultiplier, 0.85f, 0f));
             tip.SetActive(icicleArt == null);
 
             Stage14IcicleProjectile projectile = root.AddComponent<Stage14IcicleProjectile>();

@@ -77,7 +77,10 @@ namespace DrawBody.Prototype
 
             GameObject serviceObject = new GameObject("GameSfx");
             instance = serviceObject.AddComponent<GameSfx>();
-            DontDestroyOnLoad(serviceObject);
+            if (Application.isPlaying)
+            {
+                DontDestroyOnLoad(serviceObject);
+            }
             return instance;
         }
 
@@ -193,6 +196,14 @@ namespace DrawBody.Prototype
                     return CreateStampImpactClip();
                 case SfxId.ClearCelebrationChime:
                     return CreateCelebrationChimeClip();
+                case SfxId.BossSwordSlash:
+                    return CreateBossSwipeClip(false);
+                case SfxId.BossCatSwipe:
+                    return CreateBossSwipeClip(true);
+                case SfxId.BossSuction:
+                    return CreateSoftWindClip("Boss Soft Wind", 0.75f, 0.18f, 0xB055u);
+                case SfxId.BlizzardWind:
+                    return CreateSoftWindClip("Blizzard Saa Wind", 1.8f, 0.23f, 0xB112u);
                 default:
                     return null;
             }
@@ -221,6 +232,10 @@ namespace DrawBody.Prototype
                 case SfxId.StageClear:
                 case SfxId.ClearStampImpact:
                 case SfxId.ClearCelebrationChime:
+                case SfxId.BossSwordSlash:
+                case SfxId.BossCatSwipe:
+                case SfxId.BossSuction:
+                case SfxId.BlizzardWind:
                     return true;
                 default:
                     return false;
@@ -439,6 +454,35 @@ namespace DrawBody.Prototype
             return clip;
         }
 
+        private static AudioClip CreateSoftWindClip(
+            string name,
+            float duration,
+            float volume,
+            uint seed)
+        {
+            const int sampleRate = 44100;
+            float[] samples = new float[Mathf.CeilToInt(sampleRate * duration)];
+            uint state = seed;
+            float slow = 0f;
+            float air = 0f;
+            for (int i = 0; i < samples.Length; i++)
+            {
+                float t = i / (float)sampleRate;
+                state = state * 1664525u + 1013904223u;
+                float white = (state >> 8) / 16777215f * 2f - 1f;
+                slow = Mathf.Lerp(slow, white, 0.992f);
+                air = Mathf.Lerp(air, white - slow, 0.82f);
+                float fadeIn = Mathf.Clamp01(t * 4.5f);
+                float fadeOut = Mathf.Clamp01((duration - t) * 5.5f);
+                float breeze = 0.82f + Mathf.Sin(t * 2.4f) * 0.12f;
+                samples[i] = Mathf.Clamp((slow * 0.72f + air * 0.16f)
+                    * volume * fadeIn * fadeOut * breeze, -0.7f, 0.7f);
+            }
+            AudioClip clip = AudioClip.Create(name, samples.Length, 1, sampleRate, false);
+            clip.SetData(samples, 0);
+            return clip;
+        }
+
         private static AudioClip CreateStampImpactClip()
         {
             const int sampleRate = 44100;
@@ -488,6 +532,17 @@ namespace DrawBody.Prototype
             AudioClip clip = AudioClip.Create("Clear Celebration Chime", sampleCount, 1, sampleRate, false);
             clip.SetData(samples, 0);
             return clip;
+        }
+
+        private static AudioClip CreateBossSwipeClip(bool cat)
+        {
+            float duration = cat ? 0.18f : 0.24f;
+            float[] samples = CreateSampleBuffer(duration);
+            AddNoise(samples, 0f, duration * 0.82f, cat ? 0.28f : 0.36f,
+                cat ? 24f : 18f, 0.82f, cat ? 0xCA71u : 0x5A0Du, cat ? 45f : 28f);
+            AddTone(samples, 0f, duration * 0.72f, cat ? 980f : 620f,
+                cat ? 360f : 145f, cat ? 0.13f : 0.2f, cat ? 24f : 17f);
+            return FinishClip(cat ? "Boss Cat Pencil Swipe" : "Boss Sword Pencil Slash", samples);
         }
 
         private AudioSource GetAvailableSource()

@@ -633,31 +633,6 @@
             "linkAction": ""
         },
         {
-            "objectId": "14-2_pad_03",
-            "type": 61,
-            "position": {
-                "x": 46.0,
-                "y": -1.149999976158142
-            },
-            "size": {
-                "x": 1.7000000476837159,
-                "y": 0.75
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 50.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
             "objectId": "14-2_bomb_right_01",
             "type": 169,
             "position": {
@@ -701,31 +676,6 @@
             "actionStrength": 0.0,
             "movementAngle": 0.0,
             "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "14-2_enemy_04",
-            "type": 175,
-            "position": {
-                "x": 55.0,
-                "y": -2.450000047683716
-            },
-            "size": {
-                "x": 1.2999999523162842,
-                "y": 1.350000023841858
-            },
-            "rotation": 180.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": false,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.75,
             "spawnPattern": 0,
             "spawnBoxSize": 0.0,
             "bombFuseSeconds": 0.0,
@@ -858,56 +808,6 @@
             "linkAction": ""
         },
         {
-            "objectId": "14-2_shelter_roof",
-            "type": 0,
-            "position": {
-                "x": 82.0625,
-                "y": 0.15000000596046449
-            },
-            "size": {
-                "x": 15.075004577636719,
-                "y": 0.800000011920929
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": true,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
-            "objectId": "14-2_shelter_left",
-            "type": 1,
-            "position": {
-                "x": 74.19999694824219,
-                "y": -1.600000023841858
-            },
-            "size": {
-                "x": 0.6499999761581421,
-                "y": 3.0
-            },
-            "rotation": 0.0,
-            "pathPoints": [],
-            "pathThickness": 0.0,
-            "connectedRects": [],
-            "keepSeparate": true,
-            "actionStrength": 0.0,
-            "movementAngle": 0.0,
-            "movementSpeed": 0.0,
-            "spawnPattern": 0,
-            "spawnBoxSize": 0.0,
-            "bombFuseSeconds": 0.0,
-            "linkTargetId": "",
-            "linkAction": ""
-        },
-        {
             "objectId": "14-2_shelter_right",
             "type": 1,
             "position": {
@@ -961,12 +861,12 @@
             "objectId": "14-2_goal",
             "type": 3,
             "position": {
-                "x": 83.0,
-                "y": -2.049999952316284
+                "x": 82.0,
+                "y": -0.35
             },
             "size": {
-                "x": 1.25,
-                "y": 2.1500000953674318
+                "x": 8.0,
+                "y": 5.3
             },
             "rotation": 0.0,
             "pathPoints": [],

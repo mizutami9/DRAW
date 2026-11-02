@@ -14,7 +14,11 @@ namespace DrawBody.Prototype
         private const string EliminateRequestKind = "boss_eliminate_request";
         private const int MaximumHealth = 100;
         private const float WaitingRoomLeftX = -8.0f;
-        private const float WaitingRoomRightX = -3.0f;
+        // Four maximum-width drawings need 7.92 world units including the same
+        // 0.24 spacing used by the shared start placement. The entry and arena
+        // floors overlap here, so extending the divider right keeps the whole
+        // waiting area supported without crossing a wall or a floor gap.
+        private const float WaitingRoomRightX = 1.0f;
         private const float WaitingRoomGateWidth = 2.0f;
         private const float LeftArenaX = -1.4f;
         private const float RightArenaX = 24.4f;
@@ -109,6 +113,11 @@ namespace DrawBody.Prototype
         private readonly List<PlayerController2D> hiddenPlayers = new List<PlayerController2D>();
         private Camera gameCamera;
         private CameraFollow2D cameraFollow;
+        private Vector2 remoteBossTarget;
+        private Vector2 remoteBossVelocity;
+        private Vector2 previousRemoteBossTarget;
+        private float remoteBossTargetReceivedAt;
+        private bool hasRemoteBossTarget;
 
         private bool IsOnline => stageManager != null && stageManager.IsOnlineStageActive;
         private bool HasAuthority => !IsOnline || stageManager.IsOnlineStageHost;
@@ -157,6 +166,7 @@ namespace DrawBody.Prototype
             if (stageManager == null || stageManager.CurrentStageId != StageId || bossRoot == null) return;
             if (!HasAuthority)
             {
+                UpdateRemoteBossPresentation();
                 RefreshMonitor();
                 return;
             }
@@ -484,7 +494,9 @@ namespace DrawBody.Prototype
         {
             charging = true;
             invulnerable = true;
-            float destinationX = facing < 0f ? LeftArenaX + 1.8f : RightArenaX - 1.8f;
+            // Sweep through the complete arena. The old 1.8-unit inset left a
+            // permanent safe pocket at the far-left edge.
+            float destinationX = facing < 0f ? LeftArenaX + 0.35f : RightArenaX - 0.35f;
             if (monitorStatus != null) monitorStatus.text = LocalizationManager.T("boss_charge");
             SetBossExpression(1);
             CreateChargePlatforms();
@@ -1300,6 +1312,49 @@ namespace DrawBody.Prototype
             });
         }
 
+        private void SetRemoteBossTarget(Vector2 position)
+        {
+            float now = Time.unscaledTime;
+            if (hasRemoteBossTarget)
+            {
+                float elapsed = Mathf.Max(0.001f, now - remoteBossTargetReceivedAt);
+                Vector2 measured = (position - previousRemoteBossTarget) / elapsed;
+                remoteBossVelocity = Vector2.Lerp(remoteBossVelocity, measured, 0.65f);
+            }
+            else remoteBossVelocity = Vector2.zero;
+            previousRemoteBossTarget = position;
+            remoteBossTarget = position;
+            remoteBossTargetReceivedAt = now;
+            hasRemoteBossTarget = true;
+        }
+
+        private void UpdateRemoteBossPresentation()
+        {
+            if (!hasRemoteBossTarget || bossRoot == null) return;
+            float age = Mathf.Max(0f, Time.unscaledTime - remoteBossTargetReceivedAt);
+            Vector2 predicted = remoteBossTarget
+                + Vector2.ClampMagnitude(remoteBossVelocity, 19f) * Mathf.Min(age, 0.08f);
+            Vector2 current = bossRoot.position;
+            if (Vector2.Distance(current, predicted) > 5f) current = predicted;
+            else current = Vector2.Lerp(current, predicted,
+                1f - Mathf.Exp(-22f * Time.unscaledDeltaTime));
+            bossRoot.position = new Vector3(current.x, current.y, bossRoot.position.z);
+            if (bossBody != null) bossBody.position = current;
+
+            if (bossVisual != null)
+            {
+                if (charging && chargeWarningRemaining > 0f)
+                {
+                    float urgency = Mathf.Clamp01(1f - chargeWarningRemaining / 5f);
+                    float shake = Mathf.Lerp(0.035f, 0.22f, urgency);
+                    bossVisual.localPosition = new Vector3(
+                        Mathf.Sin(Time.time * Mathf.Lerp(13f, 40f, urgency)) * shake,
+                        -urgency * 0.18f, 0f);
+                }
+                else bossVisual.localPosition = Vector3.zero;
+            }
+        }
+
         private void HandleNetworkData(OnlineGimmickData message)
         {
             if (message == null || message.ObjectId != NetworkId) return;
@@ -1347,12 +1402,8 @@ namespace DrawBody.Prototype
                     GameSfx.PlayAt(SfxId.BombFuseStart, bossRoot != null ? bossRoot.position : Vector3.zero, 1.35f);
                 if (state.EliminatedIds != null)
                     for (int i = 0; i < state.EliminatedIds.Length; i++) ApplyElimination(state.EliminatedIds[i]);
-                if (bossRoot != null)
-                {
-                    bossRoot.position = state.Position;
-                    if (bossBody != null) bossBody.position = state.Position;
-                    SetBossFacing();
-                }
+                SetRemoteBossTarget(state.Position);
+                SetBossFacing();
                 SetBossExpression(phase == Phase.Defeated ? 3 : phase == Phase.Special ? 2 : charging ? 1 : 0);
                 RefreshMonitor();
             }

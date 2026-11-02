@@ -169,9 +169,8 @@ namespace DrawBody.Prototype
             SpriteRenderer renderer = art.AddComponent<SpriteRenderer>();
             renderer.sprite = StageCoinRushController.GetSharedCoinSprite();
             StageCoinRushController.NormalizeCoinArtwork(renderer);
-            renderer.color = index % 7 == 0
-                ? new Color(1f, 0.92f, 0.48f, 1f)
-                : Color.white;
+            int coinValue = StageCoinRushController.GetCoinValue(index);
+            StageCoinRushController.ApplyCoinAppearance(art, renderer, coinValue, index);
             renderer.sortingOrder = 17;
 
             if (!previewOnly)
@@ -180,7 +179,7 @@ namespace DrawBody.Prototype
                 trigger.radius = 0.58f;
                 trigger.isTrigger = true;
                 StageCollectible collectible = coin.AddComponent<StageCollectible>();
-                collectible.Configure(coin.name, StageObjectType.CollectibleCoin);
+                collectible.Configure(coin.name, StageObjectType.CollectibleCoin, coinValue);
             }
 
             Vector2 initial = new Vector2(
