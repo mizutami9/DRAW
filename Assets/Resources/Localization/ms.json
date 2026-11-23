@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Akar pokok"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Peringkat selesai"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Cara membuka kunci"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Selesaikan sekurang-kurangnya {0} peringkat ({1} selesai)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Selesaikan peringkat {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Menyegerakkan kemajuan hos…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Nyahpepijat: selesaikan semua"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Kesemua 45 peringkat ditandakan sebagai selesai"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Kemajuan peringkat tidak dapat disimpan"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

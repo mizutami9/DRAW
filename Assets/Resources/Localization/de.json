@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Baumwurzel"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Abgeschlossene Level"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Freischaltbedingungen"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Schließe mindestens {0} Level ab ({1} abgeschlossen)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Schließe Level {0} ab"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Fortschritt des Hosts wird synchronisiert…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Debug: Alles abschließen"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Alle 45 Level wurden als abgeschlossen markiert"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Der Levelfortschritt konnte nicht gespeichert werden"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Akar Pohon"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Level selesai"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Cara membuka"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Selesaikan minimal {0} level ({1} selesai)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Selesaikan level {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Menyinkronkan progres host…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Debug: selesaikan semua"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Semua 45 level ditandai selesai"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Progres level tidak dapat disimpan"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

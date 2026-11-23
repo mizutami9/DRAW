@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "트리 루트"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "클리어한 스테이지"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "잠금 해제 조건"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "스테이지 {0}개 이상 클리어 (현재 {1}개)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "스테이지 {0} 클리어"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "호스트의 진행 상황을 동기화하는 중…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "디버그: 모두 클리어"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "스테이지 45개를 모두 클리어한 것으로 표시했습니다"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "스테이지 진행 상황을 저장하지 못했습니다"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

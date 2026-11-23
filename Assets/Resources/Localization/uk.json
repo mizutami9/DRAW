@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Дерево Корінь"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Пройдені рівні"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Умови відкриття"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Пройдіть щонайменше {0} рівнів (пройдено: {1})"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Пройдіть рівень {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Синхронізація прогресу ведучого…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Налагодження: пройти все"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Усі 45 рівнів позначено як пройдені"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Не вдалося зберегти прогрес"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

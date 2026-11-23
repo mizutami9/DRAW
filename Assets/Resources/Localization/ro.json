@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Rădăcină de copac"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Niveluri finalizate"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Condiții de deblocare"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Finalizează cel puțin {0} niveluri ({1} finalizate)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Finalizează nivelul {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Se sincronizează progresul gazdei…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Depanare: finalizează tot"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Toate cele 45 de niveluri au fost marcate ca finalizate"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Progresul nu a putut fi salvat"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

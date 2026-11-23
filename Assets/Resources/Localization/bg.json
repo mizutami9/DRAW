@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Дървесен корен"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Завършени нива"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Условия за отключване"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Завършете поне {0} нива (завършени: {1})"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Завършете ниво {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Синхронизиране на напредъка на домакина…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Отстраняване на грешки: завърши всички"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Всички 45 нива са отбелязани като завършени"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Напредъкът не можа да бъде запазен"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

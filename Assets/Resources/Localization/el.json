@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Ρίζα δέντρου"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Ολοκληρωμένες πίστες"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Πώς ξεκλειδώνει"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Ολοκληρώστε τουλάχιστον {0} πίστες ({1} ολοκληρωμένες)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Ολοκληρώστε την πίστα {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Συγχρονισμός προόδου του οικοδεσπότη…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Αποσφαλμάτωση: ολοκλήρωση όλων"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Και οι 45 πίστες σημειώθηκαν ως ολοκληρωμένες"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Δεν ήταν δυνατή η αποθήκευση της προόδου"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

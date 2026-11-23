@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Gốc cây"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Màn đã vượt qua"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Điều kiện mở khóa"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Vượt qua ít nhất {0} màn (đã qua {1} màn)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Vượt qua màn {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Đang đồng bộ tiến độ của chủ phòng…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Gỡ lỗi: hoàn thành tất cả"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Đã đánh dấu hoàn thành cả 45 màn"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Không thể lưu tiến độ"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

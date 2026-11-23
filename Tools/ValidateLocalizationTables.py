@@ -21,6 +21,9 @@ from CompleteLocalizationTables import (
 
 FORMAT_RE = re.compile(r"\{[^{}]+\}")
 WORD_RE = re.compile(r"[A-Za-z]{2,}")
+LITERAL_KEY_RE = re.compile(
+    r'(?:\bLocalizationManager\.(?:T|Format)|\.SetKey)\(\s*"([a-z][a-z0-9_]+)"'
+)
 
 
 def load_table(paths: list[str]) -> tuple[dict[str, str], list[str]]:
@@ -67,8 +70,11 @@ def main() -> int:
     print(f"languages={len(definitions)} reference_ids={len(source)}")
     if len(definitions) != 31:
         errors.append(f"expected 31 languages, found {len(definitions)}")
-    if len(source) != 1200:
-        errors.append(f"expected 1200 reference IDs, found {len(source)}")
+    for path in MANAGER_SOURCE.parent.rglob("*.cs"):
+        references = set(LITERAL_KEY_RE.findall(path.read_text(encoding="utf-8-sig")))
+        missing_references = sorted(references - source.keys())
+        if missing_references:
+            errors.append(f"{path.name} unknown localization IDs: {', '.join(missing_references)}")
 
     for definition in definitions:
         code = definition["code"]
@@ -87,6 +93,7 @@ def main() -> int:
             and sorted(FORMAT_RE.findall(source[key])) != sorted(FORMAT_RE.findall(table[key]))
         )
         replacement = sorted(key for key, value in table.items() if "\ufffd" in value)
+        raw_ids = sorted(key for key, value in table.items() if value.strip() == key and "_" in key)
         unexpected_english: list[str] = []
         if code not in {"ja", "en"}:
             for key, english in source.items():
@@ -106,7 +113,7 @@ def main() -> int:
         for label, values in (
             ("missing", missing), ("extra", extra), ("blank", blank),
             ("format", bad_formats), ("replacement", replacement),
-            ("unexpected English", unexpected_english),
+            ("unexpected English", unexpected_english), ("raw ID", raw_ids),
         ):
             if values:
                 errors.append(f"{code} {label}: {', '.join(values)}")

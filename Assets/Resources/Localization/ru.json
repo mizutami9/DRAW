@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Корень дерева"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Пройденные уровни"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Как открыть"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Пройдите не менее {0} уровней (уже пройдено: {1})"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Пройдите уровень {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Синхронизация прогресса ведущего…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Отладка: пройти всё"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Все 45 уровней отмечены как пройденные"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Не удалось сохранить прогресс"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

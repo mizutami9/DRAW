@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "تري رووت"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "المراحل المكتملة"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "شروط الفتح"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "أكمل {0} مرحلة على الأقل (المكتمل: {1})"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "أكمل المرحلة {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "جارٍ مزامنة تقدم المضيف…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "تصحيح: إكمال الكل"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "تم وضع علامة الاكتمال على المراحل الـ45 كلها"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "تعذّر حفظ تقدم المراحل"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

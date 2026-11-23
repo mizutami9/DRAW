@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Träets rot"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Klarade banor"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Så låser du upp banan"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Klara minst {0} banor ({1} klarade)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Klara bana {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Synkroniserar värdens framsteg…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Felsökning: klara alla"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Alla 45 banor har markerats som klarade"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Det gick inte att spara dina framsteg"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

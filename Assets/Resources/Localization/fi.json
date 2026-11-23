@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Puujuuri"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Läpäistyt kentät"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Avaamisen ehdot"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Läpäise vähintään {0} kenttää (läpäisty: {1})"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Läpäise kenttä {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Synkronoidaan isännän edistymistä…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Vianetsintä: läpäise kaikki"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Kaikki 45 kenttää merkittiin läpäistyiksi"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Edistymistä ei voitu tallentaa"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

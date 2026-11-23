@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Trærod"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Gennemførte baner"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Sådan låser du banen op"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Gennemfør mindst {0} baner ({1} gennemført)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Gennemfør bane {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Synkroniserer værtens fremskridt…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Fejlfinding: gennemfør alle"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Alle 45 baner er markeret som gennemført"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Dine fremskridt kunne ikke gemmes"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Trerot"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Fullførte baner"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Slik låser du opp banen"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Fullfør minst {0} baner ({1} fullført)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Fullfør bane {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Synkroniserer vertens fremdrift…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Feilsøking: fullfør alle"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Alle 45 baner er merket som fullført"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Kunne ikke lagre fremdriften"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

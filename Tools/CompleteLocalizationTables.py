@@ -43,6 +43,7 @@ TARGETS = {
 # explicit entry still guarantees ID parity and prevents accidental fallback.
 INTENTIONAL_ENGLISH_KEYS = {
     "boss_health",
+    "campaign_ending_thanks",
     "escort_friend_word_go",
     "escort_friend_word_jump",
     "escort_friend_word_move",

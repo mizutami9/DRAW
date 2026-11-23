@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "รากต้นไม้"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "ด่านที่ผ่านแล้ว"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "เงื่อนไขการปลดล็อก"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "ผ่านอย่างน้อย {0} ด่าน (ผ่านแล้ว {1} ด่าน)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "ผ่านด่าน {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "กำลังซิงค์ความคืบหน้าของโฮสต์…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "ดีบัก: ผ่านทุกด่าน"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "ทำเครื่องหมายว่าผ่านครบทั้ง 45 ด่านแล้ว"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "บันทึกความคืบหน้าของด่านไม่ได้"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

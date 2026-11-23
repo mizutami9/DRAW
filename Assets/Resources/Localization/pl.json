@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Korzeń drzewa"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Ukończone poziomy"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Warunki odblokowania"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Ukończ co najmniej {0} poziomów (ukończono: {1})"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Ukończ poziom {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Synchronizowanie postępów gospodarza…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Debugowanie: ukończ wszystkie"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Wszystkie 45 poziomów oznaczono jako ukończone"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Nie udało się zapisać postępów"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

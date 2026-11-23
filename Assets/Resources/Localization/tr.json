@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Ağaç Kökü"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Tamamlanan bölümler"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Açma koşulları"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "En az {0} bölüm tamamla ({1} bölüm tamamlandı)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "{0} bölümünü tamamla"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Oda sahibinin ilerlemesi eşitleniyor…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Hata ayıklama: tümünü tamamla"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "45 bölümün tümü tamamlandı olarak işaretlendi"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Bölüm ilerlemesi kaydedilemedi"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

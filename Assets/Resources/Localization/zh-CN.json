@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "树根"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "已通关关卡"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "解锁条件"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "至少通关 {0} 个关卡（已通关 {1} 个）"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "通关第 {0} 关"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "正在同步房主进度…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "调试：全部通关"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "已将全部 45 个关卡标记为通关"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "无法保存关卡进度"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

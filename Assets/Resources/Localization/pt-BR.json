@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Raiz da Árvore"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Fases concluídas"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Como desbloquear"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Conclua pelo menos {0} fases ({1} concluídas)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Conclua a fase {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Sincronizando o progresso do anfitrião…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Depuração: concluir tudo"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "As 45 fases foram marcadas como concluídas"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Não foi possível salvar o progresso"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

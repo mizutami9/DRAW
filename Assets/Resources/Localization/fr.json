@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Racine d'arbre"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Niveaux terminés"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Conditions de déblocage"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Terminez au moins {0} niveaux ({1} terminés)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Terminez le niveau {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "Synchronisation de la progression de l’hôte…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Débogage : tout terminer"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Les 45 niveaux sont marqués comme terminés"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Impossible d’enregistrer la progression"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }

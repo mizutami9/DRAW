@@ -4799,6 +4799,42 @@
     {
       "key": "stage_object_background_tree_root",
       "value": "Raiz da Árvore"
+    },
+    {
+      "key": "campaign_cleared",
+      "value": "Níveis concluídos"
+    },
+    {
+      "key": "campaign_locked_title",
+      "value": "Como desbloquear"
+    },
+    {
+      "key": "campaign_locked_count",
+      "value": "Conclui pelo menos {0} níveis ({1} concluídos)"
+    },
+    {
+      "key": "campaign_locked_previous",
+      "value": "Conclui o nível {0}"
+    },
+    {
+      "key": "campaign_waiting_progress",
+      "value": "A sincronizar o progresso do anfitrião…"
+    },
+    {
+      "key": "title_debug_clear_all",
+      "value": "Depuração: concluir tudo"
+    },
+    {
+      "key": "title_debug_clear_done",
+      "value": "Os 45 níveis foram marcados como concluídos"
+    },
+    {
+      "key": "title_debug_clear_failed",
+      "value": "Não foi possível guardar o progresso"
+    },
+    {
+      "key": "campaign_ending_thanks",
+      "value": "THANK YOU FOR PLAYING!"
     }
   ]
 }
