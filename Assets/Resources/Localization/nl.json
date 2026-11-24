@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "NAAM"
+      "value": "Spelersnaam"
     },
     {
       "key": "option_player_name_placeholder",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Torsus"
+      "value": "Romp"
     },
     {
       "key": "left_arm",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "MENSELIJK"
+      "value": "Mens"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Meer been INK verhoogt het springvermogen\nMeer arm INK verhoogt werpvermogen"
+      "value": "Meer inkt op de benen: hoger springen\nMeer inkt op de armen: harder werpen"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: GROEI"
+      "value": "F: Werpen"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / SELECTEER: TEKENEN MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Tekenen\nOPTIONS / START: Menu"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: TEKENEN MENU\nESC: MENU"
+      "value": "TAB: Tekenen\nESC: Menu"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: TEKENEN MENU"
+      "value": "TAB: Tekenen"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: TEKENEN MENU\nOPTIONS: MENU"
+      "value": "CREATE: Tekenen\nOPTIONS: Menu"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: TEKENEN MENU\nMENU: MENU"
+      "value": "VIEW: Tekenen\nMENU: Menu"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: TEKENEN MENU"
+      "value": "CREATE: Tekenen"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: TEKENEN MENU"
+      "value": "VIEW: Tekenen"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "SPRINGEN ."
+      "value": "Sprong"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "WEG"
+      "value": "Worp"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "TEKEN"
+      "value": "Tekenen"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Terug  ESC"
+      "value": "Terug · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "Doorgaan"
+      "value": "Hervatten"
     },
     {
       "key": "menu_to_title",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "KAMER"
+      "value": "Kamer"
     },
     {
       "key": "multi_create_room",
-      "value": "Ruimte aanmaken"
+      "value": "Kamer maken"
     },
     {
       "key": "multi_join_room",
-      "value": "Kamer binnengaan"
+      "value": "Deelnemen aan kamer"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "KAMERLOBBY"
+      "value": "Wachtruimte"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Verbinden..."
+      "value": "Verbinding maken…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "Klaar"
+      "value": "Gereed"
     },
     {
       "key": "multi_wait",
-      "value": "Wacht."
+      "value": "Wacht"
     },
     {
       "key": "multi_host",
-      "value": "HUISGEVER"
+      "value": "Host"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "PERSOONLIJK GLB"
+      "value": "Persoonlijke limiet"
     },
     {
       "key": "ink_team_formula",
-      "value": "CAP TEAM ({0}P)"
+      "value": "Teamlimiet ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "PEN-MAAT"
+      "value": "Lijndikte"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "CLEAR DEEL"
+      "value": "Wis onderdeel"
     },
     {
       "key": "draw_undo_once",
-      "value": "VERNIETIGBAAR"
+      "value": "Ongedaan maken"
     },
     {
       "key": "draw_reset_all",
-      "value": "RESET ALLEN"
+      "value": "Alles herstellen"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "VOORINSTELLINGEN"
+      "value": "Sjablonen"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5-CHARACTERPRESET"
+      "value": "Sjablonen"
     },
     {
       "key": "draw_preset_back",
-      "value": "TERUG"
+      "value": "Terug"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Tijd {0:0.0}"
+      "value": "Nog {0:0.0} s"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "SPEL OVER"
+      "value": "Spel voorbij"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "Klaar {0} / {1}"
+      "value": "Gereed {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Klaar om het spel te beginnen"
+      "value": "Maak je klaar om te beginnen"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "ENQUEVE TOT DE TIME RUNS OUT"
+      "value": "Overleef tot de tijd om is"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "Bereiken voordat de tijd verstrijkt."
+      "value": "Overleef tot de tijd om is"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Als er tenminste één speler overleeft."
+      "value": "Jullie halen het level als minstens één speler overleeft."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Duidelijk wanneer iemand het doel bereikt."
+      "value": "Jullie halen het level zodra een speler de finish bereikt."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Fase herstarten"
+      "value": "Level opnieuw starten"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "Menu's"
+      "value": "Menu"
     },
     {
       "key": "redraw",
@@ -4178,7 +4178,7 @@
     },
     {
       "key": "pen",
-      "value": "Pennen"
+      "value": "Pen"
     },
     {
       "key": "eraser",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Klaar!"
+      "value": "Klaar"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "- JA."
+      "value": "Geluidseffecten"
     },
     {
       "key": "option_keys",
-      "value": "Sleutels"
+      "value": "Besturing"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Spiegelen"
     }
   ]
 }

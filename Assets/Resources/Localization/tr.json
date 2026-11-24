@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "AD"
+      "value": "Oyuncu adı"
     },
     {
       "key": "option_player_name_placeholder",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "Öfke"
+      "value": "Önizleme"
     },
     {
       "key": "clear",
@@ -178,19 +178,19 @@
     },
     {
       "key": "head",
-      "value": "Head Head Head"
+      "value": "Baş"
     },
     {
       "key": "torso",
-      "value": "Torso"
+      "value": "Gövde"
     },
     {
       "key": "left_arm",
-      "value": "Sol Arm"
+      "value": "Sol kol"
     },
     {
       "key": "right_arm",
-      "value": "Doğru Ordu"
+      "value": "Sağ kol"
     },
     {
       "key": "left_leg",
@@ -198,7 +198,7 @@
     },
     {
       "key": "right_leg",
-      "value": "Doğru Yasa"
+      "value": "Sağ bacak"
     },
     {
       "key": "left_front_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "İNSAN"
+      "value": "İnsan"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Daha fazla bacak INK Artan güç\nDaha Fazla Kol INK Artan at gücü"
+      "value": "Bacakta daha çok mürekkep: daha yüksek zıplama\nKolda daha çok mürekkep: daha güçlü fırlatma"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "FATMAK:"
+      "value": "F: Fırlat"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / SEÇ: ÇİZ MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Çiz\nOPTIONS / START: Menü"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: ÇİZİM MENU\nESC: MENU"
+      "value": "TAB: Çiz\nESC: Menü"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: ÇEK MENU"
+      "value": "TAB: Çiz"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: ÇİZİM MENU\nOPTIONS: MENU"
+      "value": "CREATE: Çiz\nOPTIONS: Menü"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: ÇİZİM MENU\nMENU: MENU"
+      "value": "VIEW: Çiz\nMENU: Menü"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: ÇEK MENU"
+      "value": "CREATE: Çiz"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: ÇEK MENU"
+      "value": "VIEW: Çiz"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "ATLAMAK"
+      "value": "Zıplama"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "AT ."
+      "value": "Fırlatma"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "ÇIZIM"
+      "value": "Çiz"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "GERI DÖN .  ESC"
+      "value": "Geri · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "Devam etmeye devam et"
+      "value": "Devam et"
     },
     {
       "key": "menu_to_title",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "ODA"
+      "value": "Oda"
     },
     {
       "key": "multi_create_room",
-      "value": "Oda Oluştur"
+      "value": "Oda oluştur"
     },
     {
       "key": "multi_join_room",
-      "value": "Birlik Odası"
+      "value": "Odaya katıl"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "ODA LOBISI"
+      "value": "Bekleme odası"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Bağlantı..."
+      "value": "Bağlanıyor…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "DİN"
+      "value": "Hazır"
     },
     {
       "key": "multi_wait",
-      "value": "BEKLE."
+      "value": "Bekliyor"
     },
     {
       "key": "multi_host",
-      "value": "EV SAHIBI"
+      "value": "Oda sahibi"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "KIŞISEL ŞAPKA"
+      "value": "Kişisel sınır"
     },
     {
       "key": "ink_team_formula",
-      "value": "TEAM CAP (İngilizce){0}P)"
+      "value": "Takım sınırı ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "KALEM BOYUTU"
+      "value": "Çizgi kalınlığı"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "CLEAR"
+      "value": "Parçayı sil"
     },
     {
       "key": "draw_undo_once",
-      "value": "İPTAL EDILDI ."
+      "value": "Geri al"
     },
     {
       "key": "draw_reset_all",
-      "value": "RESET ALL ALL"
+      "value": "Tümünü sıfırla"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "ÖN AYARLARI"
+      "value": "Şablonlar"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5-CHARACTER PRESETS"
+      "value": "Şablonlar"
     },
     {
       "key": "draw_preset_back",
-      "value": "GERİ"
+      "value": "Geri"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Kalan süre: {0:0.0}"
+      "value": "Kalan {0:0.0} sn"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "WhatsApp'ı artırıyor"
+      "value": "Oyun bitti"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "DİN {0} / {1}"
+      "value": "Hazır {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "GET DY TOMI"
+      "value": "Başlamaya hazırlanın"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "ZAMAN BITENE KADAR HAYATTA KAL"
+      "value": "Süre dolana kadar hayatta kal"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "BÜTÜNÜ BÜYÜ BÜYÜ"
+      "value": "Süre dolana kadar hayatta kal"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "EN AZ BIR OYUNCU HAYATTA KALIRSA AÇIK."
+      "value": "En az bir oyuncu hayatta kalırsa bölümü geçersiniz."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "BIR OYUNCU HEDEFE ULAŞTIĞINDA AÇIK."
+      "value": "Herhangi bir oyuncu hedefe ulaşınca bölümü geçersiniz."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Yeniden başlatma aşaması"
+      "value": "Bölümü yeniden başlat"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "Menü Menü"
+      "value": "Menü"
     },
     {
       "key": "redraw",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Pen Pen Pen"
+      "value": "Kalem"
     },
     {
       "key": "eraser",
-      "value": "Çıkarıcı"
+      "value": "Silgi"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "- Tamam!"
+      "value": "Tamam"
     },
     {
       "key": "draw_redo",
-      "value": "Geri dön"
+      "value": "Geri"
     },
     {
       "key": "brush_size",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "SE SE"
+      "value": "Ses efektleri"
     },
     {
       "key": "option_keys",
-      "value": "Anahtarlar"
+      "value": "Kontroller"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Aynala"
     }
   ]
 }

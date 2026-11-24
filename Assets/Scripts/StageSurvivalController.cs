@@ -95,6 +95,7 @@ namespace DrawBody.Prototype
         private UIManager uiManager;
         private StageCountdownPresenter countdownPresenter;
         private TextMesh monitorMain;
+        private string monitorLanguageCode;
         private SurvivalPhase phase = SurvivalPhase.Intro;
         private float durationSeconds = 60f;
         private float remainingSeconds;
@@ -943,8 +944,8 @@ namespace DrawBody.Prototype
 
             if (phase == SurvivalPhase.Warning || phase == SurvivalPhase.Collapsed)
             {
-                string remaining = string.Format(
-                    LocalizationManager.T("challenge_time_remaining"),
+                string remaining = LocalizationManager.Format(
+                    "challenge_time_remaining",
                     Mathf.Max(0f, remainingSeconds));
                 SetMonitorMain(remaining, 0.17f);
                 return;
@@ -964,6 +965,17 @@ namespace DrawBody.Prototype
             if (monitorMain == null)
             {
                 return;
+            }
+            string languageCode = LocalizationManager.CurrentLanguageCode;
+            if (monitorLanguageCode != languageCode)
+            {
+                monitorLanguageCode = languageCode;
+                Font font = LocalizationManager.LoadCurrentFont(DoodleRuntimeAssets.HandwrittenFont);
+                if (font != null)
+                {
+                    monitorMain.font = font;
+                    monitorMain.GetComponent<MeshRenderer>().sharedMaterial = font.material;
+                }
             }
             monitorMain.text = value;
             float fitSize = 1.55f / Mathf.Max(1, value != null ? value.Length : 0);

@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "ІМ’Я"
+      "value": "Ім’я гравця"
     },
     {
       "key": "option_player_name_placeholder",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "Огляд"
+      "value": "Попередній перегляд"
     },
     {
       "key": "clear",
@@ -178,11 +178,11 @@
     },
     {
       "key": "head",
-      "value": "Головна"
+      "value": "Голова"
     },
     {
       "key": "torso",
-      "value": "Торсо"
+      "value": "Тулуб"
     },
     {
       "key": "left_arm",
@@ -190,15 +190,15 @@
     },
     {
       "key": "right_arm",
-      "value": "Права"
+      "value": "Права рука"
     },
     {
       "key": "left_leg",
-      "value": "Ліворуч"
+      "value": "Ліва нога"
     },
     {
       "key": "right_leg",
-      "value": "Право"
+      "value": "Права нога"
     },
     {
       "key": "left_front_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "ХУМАН"
+      "value": "Людина"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Більше ніжок INK збільшує потужність стрибків\nБільше рук INK збільшує потужність кидання"
+      "value": "Більше чорнила на ногах: вищий стрибок\nБільше чорнила на руках: сильніший кидок"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "FГоловна"
+      "value": "F: Кинути"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / ВИБРАТИ: НАМАЛЮВАТИ MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Малювати\nOPTIONS / START: Меню"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: РОЗІГРАТИ MENU\nESC: MENU"
+      "value": "TAB: Малювати\nESC: Меню"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: РОЗІГРАТИ MENU"
+      "value": "TAB: Малювати"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: РОЗІГРАТИ MENU\nOPTIONS: MENU"
+      "value": "CREATE: Малювати\nOPTIONS: Меню"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: РОЗІГРАТИ MENU\nMENU: MENU"
+      "value": "VIEW: Малювати\nMENU: Меню"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: РОЗІГРАТИ MENU"
+      "value": "CREATE: Малювати"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: РОЗІГРАТИ MENU"
+      "value": "VIEW: Малювати"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "ДЖУМП"
+      "value": "Стрибок"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "ЗАМОВИТИ"
+      "value": "Кидок"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "ВИТЯГУЙТЕ"
+      "value": "Малювати"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "ЗАМОВИТИ  ESC"
+      "value": "Назад · ESC"
     },
     {
       "key": "title_exit",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Почати цей рівень спочатку?"
+      "value": "Почати цей рівень заново?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "Полулюкс"
+      "value": "Кімната"
     },
     {
       "key": "multi_create_room",
-      "value": "Створити номер"
+      "value": "Створити кімнату"
     },
     {
       "key": "multi_join_room",
-      "value": "Вхід"
+      "value": "Увійти до кімнати"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "Полулюкс"
+      "value": "Зала очікування"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "З'єднання"
+      "value": "Підключення…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "Редакція"
+      "value": "Готовий"
     },
     {
       "key": "multi_wait",
-      "value": "СКЛАД"
+      "value": "Очікує"
     },
     {
       "key": "multi_host",
-      "value": "ХОСТ"
+      "value": "Ведучий"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "ПЕРСОНАЛ КАП"
+      "value": "Особистий ліміт"
     },
     {
       "key": "ink_team_formula",
-      "value": "КОМПАНІЯ КОМПАНІЇ{0}П)"
+      "value": "Ліміт команди ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "ПЕН РОЗМІР"
+      "value": "Товщина лінії"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "ЧАСТИНА"
+      "value": "Стерти частину"
     },
     {
       "key": "draw_undo_once",
-      "value": "ЗАМОВИТИ"
+      "value": "Скасувати"
     },
     {
       "key": "draw_reset_all",
-      "value": "ВСІ"
+      "value": "Скинути все"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "ПРЕМ'ЄРИ"
+      "value": "Шаблони"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5-CHARACTER ПРЕЗИЦІЇ"
+      "value": "Шаблони"
     },
     {
       "key": "draw_preset_back",
-      "value": "НАЗАД"
+      "value": "Назад"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "час {0:0.0}"
+      "value": "Залишилось {0:0.0} с"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "ІГРА ЗАКІНЧЕНА."
+      "value": "Гру завершено"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "Редакція {0} / {1}"
+      "value": "Готові {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "ЗБЕРІГАТИСЯ НА ЧАС"
+      "value": "Приготуйтеся до старту"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "КУРВАЛЬНІ ЧАСТИНИ"
+      "value": "Протримайтеся до кінця відліку"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "ЗДОРОВ'Я ЗДОРОВ'Я"
+      "value": "Протримайтеся до кінця відліку"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "ЗБЕРІГАЙТЕ ЯК ДОСТУПНІ ПЛАЄРНІ СУЧАСТИНИ."
+      "value": "Ви пройдете рівень, якщо виживе хоча б один гравець."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "ЗБЕРІГАЙТЕ БУДЬ-ЯКОГО ОДЯГУ, ЩО ЗДОРОВ’Я."
+      "value": "Ви пройдете рівень, коли будь-який гравець дістанеться фінішу."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Резиденція"
+      "value": "Почати рівень спочатку"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "Почати"
+      "value": "Меню"
     },
     {
       "key": "redraw",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Рушники"
+      "value": "Перо"
     },
     {
       "key": "eraser",
-      "value": "Еразмус"
+      "value": "Гумка"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "Дядько!"
+      "value": "Готово"
     },
     {
       "key": "draw_redo",
-      "value": "Зареєструватися"
+      "value": "Назад"
     },
     {
       "key": "brush_size",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "Про нас"
+      "value": "Звукові ефекти"
     },
     {
       "key": "option_keys",
-      "value": "Головна"
+      "value": "Керування"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Віддзеркалити"
     }
   ]
 }

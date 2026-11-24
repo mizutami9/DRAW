@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "ชื่อ"
+      "value": "ชื่อผู้เล่น"
     },
     {
       "key": "option_player_name_placeholder",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "แสดงตัวอย่าง"
+      "value": "ตัวอย่าง"
     },
     {
       "key": "clear",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "ทอร์โซ"
+      "value": "ลำตัว"
     },
     {
       "key": "left_arm",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "เพิ่มขา INK เพิ่มพลังงานกระโดด\nเพิ่มแขน INK เพิ่มพลังโยน"
+      "value": "เติมหมึกที่ขาเพื่อกระโดดสูงขึ้น\nเติมหมึกที่แขนเพื่อขว้างแรงขึ้น"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "Fวันพฤหัสบดี"
+      "value": "F: ขว้าง"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / เลือก: วาด MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: วาดรูป\nOPTIONS / START: เมนู"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: วาด MENU\nESC: MENU"
+      "value": "TAB: วาดรูป\nESC: เมนู"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: วาด MENU"
+      "value": "TAB: วาดรูป"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: วาด MENU\nOPTIONS: MENU"
+      "value": "CREATE: วาดรูป\nOPTIONS: เมนู"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: วาด MENU\nMENU: MENU"
+      "value": "VIEW: วาดรูป\nMENU: เมนู"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: วาด MENU"
+      "value": "CREATE: วาดรูป"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: วาด MENU"
+      "value": "VIEW: วาดรูป"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JAMM"
+      "value": "กระโดด"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "หน้า"
+      "value": "ขว้าง"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "สลาก"
+      "value": "วาดรูป"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "ย้อนกลับ  ESC"
+      "value": "ย้อนกลับ · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "ทําต่อไป"
+      "value": "เล่นต่อ"
     },
     {
       "key": "menu_to_title",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "เริ่มด่านนี้ใหม่ตั้งแต่ต้นหรือไม่?"
+      "value": "เริ่มด่านนี้ใหม่ตั้งแต่ต้นหรือไม่"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "ลอบี้"
+      "value": "ห้องรอ"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "กําลังเชื่อมต่อ..."
+      "value": "กำลังเชื่อมต่อ…"
     },
     {
       "key": "multi_room",
@@ -1214,11 +1214,11 @@
     },
     {
       "key": "multi_wait",
-      "value": "รอ"
+      "value": "กำลังรอ"
     },
     {
       "key": "multi_host",
-      "value": "ผู้รับ"
+      "value": "เจ้าของห้อง"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "แคปแบบส่วนตัว"
+      "value": "ขีดจำกัดส่วนตัว"
     },
     {
       "key": "ink_team_formula",
-      "value": "แคปป์ (TEAM CAP){0}พ)"
+      "value": "ขีดจำกัดทีม ({0} คน)"
     },
     {
       "key": "draw_pen_size",
-      "value": "ผู้ รับ บัพ ติ สมา"
+      "value": "ความหนาเส้น"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "ส่วนประกอบที่ชัดเจน"
+      "value": "ลบส่วนนี้"
     },
     {
       "key": "draw_undo_once",
-      "value": "ยกเลิก"
+      "value": "เลิกทำ"
     },
     {
       "key": "draw_reset_all",
-      "value": "ทั้งหมด"
+      "value": "รีเซ็ตทั้งหมด"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "คํานําหน้า"
+      "value": "แบบที่บันทึก"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "2551. ราชกิจจานุเบกษา พ.ศ."
+      "value": "แบบที่บันทึก"
     },
     {
       "key": "draw_preset_back",
-      "value": "กลับ"
+      "value": "ย้อนกลับ"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "เวลา {0:0.0}"
+      "value": "เหลือ {0:0.0} วิ"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "เกมจบ"
+      "value": "จบเกม"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "เตรียม เริ่ม เกม"
+      "value": "เตรียมตัวให้พร้อม"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "ไม่เกินเวลา"
+      "value": "เอาชีวิตรอดจนหมดเวลา"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "จง สอน ลูก ให้ รู้ จัก พ่อ ก่อน ที่ ลูก จะ ออก ไป"
+      "value": "เอาชีวิตรอดจนหมดเวลา"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "เคลียว่าในนัดที่ 1"
+      "value": "ผ่านด่านเมื่อมีผู้เล่นรอดอย่างน้อยหนึ่งคน"
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "เมื่อคนเล่นใด ๆ สอนกอล"
+      "value": "ผ่านด่านเมื่อผู้เล่นคนใดคนหนึ่งถึงเส้นชัย"
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "เริ่มระบบใหม่"
+      "value": "เริ่มด่านใหม่"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4182,7 +4182,7 @@
     },
     {
       "key": "eraser",
-      "value": "ลบ"
+      "value": "ยางลบ"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "เรียบร้อย!"
+      "value": "เสร็จสิ้น"
     },
     {
       "key": "draw_redo",
-      "value": "กลับ"
+      "value": "ย้อนกลับ"
     },
     {
       "key": "brush_size",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "เซ"
+      "value": "เอฟเฟกต์เสียง"
     },
     {
       "key": "option_keys",
-      "value": "กุญแจ"
+      "value": "การควบคุม"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "กลับซ้ายขวา"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "TÊN"
+      "value": "Tên người chơi"
     },
     {
       "key": "option_player_name_placeholder",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "Xem thử"
+      "value": "Xem trước"
     },
     {
       "key": "clear",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Thủy thân"
+      "value": "Thân"
     },
     {
       "key": "left_arm",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "CON NGƯỜI"
+      "value": "Người"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Thêm chân INK tăng năng lượng nhảy\nThêm tay INK tăng năng lượng ném"
+      "value": "Thêm mực vào chân để nhảy cao hơn\nThêm mực vào tay để ném mạnh hơn"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "FTHẢ:"
+      "value": "F: Ném"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE/CHỌN: VẼ MENU\nOPTIONS/START: MENU"
+      "value": "CREATE / SELECT: Vẽ\nOPTIONS / START: Menu"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: VẼ MENU\nESC: MENU"
+      "value": "TAB: Vẽ\nESC: Menu"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: VẼ MENU"
+      "value": "TAB: Vẽ"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: VẼ MENU\nOPTIONS: MENU"
+      "value": "CREATE: Vẽ\nOPTIONS: Menu"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: VẼ MENU\nMENU: MENU"
+      "value": "VIEW: Vẽ\nMENU: Menu"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: VẼ MENU"
+      "value": "CREATE: Vẽ"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: VẼ MENU"
+      "value": "VIEW: Vẽ"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "NHẢY"
+      "value": "Nhảy"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "THẢ"
+      "value": "Ném"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "CHỤP"
+      "value": "Vẽ"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Lùi  ESC"
+      "value": "Quay lại · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "Tiếp tục"
+      "value": "Chơi tiếp"
     },
     {
       "key": "menu_to_title",
@@ -1046,11 +1046,11 @@
     },
     {
       "key": "multi_room_title",
-      "value": "Phòng trưng bày"
+      "value": "Phòng"
     },
     {
       "key": "multi_create_room",
-      "value": "Tạo Phòng"
+      "value": "Tạo phòng"
     },
     {
       "key": "multi_join_room",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "Phòng trưng bày"
+      "value": "Phòng chờ"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Đang kết nối..."
+      "value": "Đang kết nối…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "ĐỌC"
+      "value": "Sẵn sàng"
     },
     {
       "key": "multi_wait",
-      "value": "Đợi"
+      "value": "Đang chờ"
     },
     {
       "key": "multi_host",
-      "value": "NHÀ CHỦ"
+      "value": "Chủ phòng"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "Bộ hồ sơ cá nhân"
+      "value": "Giới hạn cá nhân"
     },
     {
       "key": "ink_team_formula",
-      "value": "Đài phát thanh TEM{0}P)"
+      "value": "Giới hạn đội ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "PEN Sification"
+      "value": "Độ dày nét"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "Bữa tiệc trắng"
+      "value": "Xóa bộ phận"
     },
     {
       "key": "draw_undo_once",
-      "value": "THÁO BỎ"
+      "value": "Hoàn tác"
     },
     {
       "key": "draw_reset_all",
-      "value": "Dừng tất cả"
+      "value": "Đặt lại tất cả"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "BIÊN TẬP"
+      "value": "Mẫu đã lưu"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5-CHARACTER"
+      "value": "Mẫu đã lưu"
     },
     {
       "key": "draw_preset_back",
-      "value": "QUAY LẠI"
+      "value": "Quay lại"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Thời gian {0:0.0}"
+      "value": "Còn {0:0.0} giây"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "GAME Over"
+      "value": "Trò chơi kết thúc"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "ĐỌC {0} / {1}"
+      "value": "Sẵn sàng {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Chuẩn bị bắt đầu cuộc chơi"
+      "value": "Hãy chuẩn bị bắt đầu"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "NHỮNG CÂU CHỪNG THỜI TRONG THỜI GIAN"
+      "value": "Sống sót đến khi hết giờ"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "MỘT CÂU CHUYỆN MỘT NĂM TRƯỚC"
+      "value": "Sống sót đến khi hết giờ"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Nếu ít nhất là một lần."
+      "value": "Qua màn nếu có ít nhất một người chơi sống sót."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Khi bất cứ ai dám đụng vào nó."
+      "value": "Qua màn khi một người chơi bất kỳ về đích."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Khởi động lại giai đoạn"
+      "value": "Chơi lại màn"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "Trình đơn"
+      "value": "Menu"
     },
     {
       "key": "redraw",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Không bút"
+      "value": "Bút"
     },
     {
       "key": "eraser",
-      "value": "Xóa"
+      "value": "Tẩy"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "Xong!"
+      "value": "Xong"
     },
     {
       "key": "draw_redo",
-      "value": "Lùi"
+      "value": "Quay lại"
     },
     {
       "key": "brush_size",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "TỤI"
+      "value": "Hiệu ứng âm thanh"
     },
     {
       "key": "option_keys",
-      "value": "Phím"
+      "value": "Điều khiển"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Lật ngang"
     }
   ]
 }

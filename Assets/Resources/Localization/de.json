@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "NAME"
+      "value": "Spielername"
     },
     {
       "key": "option_player_name_placeholder",
@@ -186,19 +186,19 @@
     },
     {
       "key": "left_arm",
-      "value": "linker Arm"
+      "value": "Linker Arm"
     },
     {
       "key": "right_arm",
-      "value": "rechter Arm"
+      "value": "Rechter Arm"
     },
     {
       "key": "left_leg",
-      "value": "linkes Bein"
+      "value": "Linkes Bein"
     },
     {
       "key": "right_leg",
-      "value": "rechtes Bein"
+      "value": "Rechtes Bein"
     },
     {
       "key": "left_front_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "MENSCHEN"
+      "value": "Mensch"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Mehr Bein INK Erhöhung der Sprungleistung\nMehr Arm INK Erhöhung der Wurfpower"
+      "value": "Mehr Tinte in den Beinen: höherer Sprung\nMehr Tinte in den Armen: stärkerer Wurf"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: DURCH"
+      "value": "F: Werfen"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / AUSWÄHLEN: ZEICHNEN MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Zeichnen\nOPTIONS / START: Menü"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: ZEICHNEN MENU\nESC: MENU"
+      "value": "TAB: Zeichnen\nESC: Menü"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: ZEICHNEN MENU"
+      "value": "TAB: Zeichnen"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: ZEICHNEN MENU\nOPTIONS: MENU"
+      "value": "CREATE: Zeichnen\nOPTIONS: Menü"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: ZEICHNEN MENU\nMENU: MENU"
+      "value": "VIEW: Zeichnen\nMENU: Menü"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: ZEICHNEN MENU"
+      "value": "CREATE: Zeichnen"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: ZEICHNEN MENU"
+      "value": "VIEW: Zeichnen"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "SPRINGEN SIE"
+      "value": "Sprung"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "DURCH"
+      "value": "Wurf"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -706,7 +706,7 @@
     },
     {
       "key": "multi_room_join_title",
-      "value": "GEMEINSAUM"
+      "value": "Raum beitreten"
     },
     {
       "key": "multi_room_id",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "ZEICHNEN"
+      "value": "Zeichnen"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "ZURÜCK !  ESC"
+      "value": "Zurück · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "Weiterfahren"
+      "value": "Fortsetzen"
     },
     {
       "key": "menu_to_title",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Dieses Level von vorne beginnen?"
+      "value": "Dieses Level von vorn starten?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "ZIMMER"
+      "value": "Raum"
     },
     {
       "key": "multi_create_room",
-      "value": "Raum schaffen"
+      "value": "Raum erstellen"
     },
     {
       "key": "multi_join_room",
-      "value": "Eintrittsraum"
+      "value": "Raum beitreten"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "ZIMMERLOBBIE"
+      "value": "Warteraum"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Anschluss..."
+      "value": "Verbindung wird hergestellt…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "BEREIT"
+      "value": "Bereit"
     },
     {
       "key": "multi_wait",
-      "value": "WART"
+      "value": "Wartet"
     },
     {
       "key": "multi_host",
-      "value": "GASTGEBER"
+      "value": "Host"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "PERSÖNLICHE GAP"
+      "value": "Persönliches Limit"
     },
     {
       "key": "ink_team_formula",
-      "value": "TEAM CAP{0}P"
+      "value": "Teamlimit ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "PENGRÖSSE"
+      "value": "Strichstärke"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "KLÄRUNGSTEIL"
+      "value": "Körperteil löschen"
     },
     {
       "key": "draw_undo_once",
-      "value": "VERNICHTBAR"
+      "value": "Rückgängig"
     },
     {
       "key": "draw_reset_all",
-      "value": "ALLES ZURÜCKSETZEN"
+      "value": "Alles zurücksetzen"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "VORBEREITUNGEN"
+      "value": "Vorlagen"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5-ZEICHEN-PRESETS"
+      "value": "Vorlagen"
     },
     {
       "key": "draw_preset_back",
-      "value": "ZURÜCK"
+      "value": "Zurück"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Uhrzeit {0:0.0}"
+      "value": "Noch {0:0.0} s"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "ÜBERSCHLAG"
+      "value": "Spiel vorbei"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "BEREIT {0} / {1}"
+      "value": "Bereit {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "GET READ TO START THE GAME"
+      "value": "Macht euch bereit"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "ÜBERLEBEN BIS ZEITRUNNEN"
+      "value": "Überlebt bis zum Ablauf der Zeit"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "RECHTE DAS ZIEL BEVOR ZEITRUNDEN"
+      "value": "Überlebt bis zum Ablauf der Zeit"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "KLAR, WENN MINDESTENS EIN SPIELER ÜBERLEBT."
+      "value": "Das Level ist geschafft, wenn mindestens ein Spieler überlebt."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "KLAR, WENN JEDER SPIELER DAS ZIEL ERWICKT."
+      "value": "Das Level ist geschafft, sobald ein Spieler das Ziel erreicht."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Neustartphase"
+      "value": "Level neu starten"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Pendel"
+      "value": "Stift"
     },
     {
       "key": "eraser",
-      "value": "Radierwerk"
+      "value": "Radierer"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "Geschehen!"
+      "value": "Fertig"
     },
     {
       "key": "draw_redo",
-      "value": "Rücken"
+      "value": "Zurück"
     },
     {
       "key": "brush_size",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "SIEHE"
+      "value": "Soundeffekte"
     },
     {
       "key": "option_keys",
-      "value": "Schlüssel"
+      "value": "Steuerung"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Spiegeln"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Име"
+      "value": "Име на играча"
     },
     {
       "key": "option_player_name_placeholder",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Торсо"
+      "value": "Торс"
     },
     {
       "key": "left_arm",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "ЧОВЕШКИ"
+      "value": "Човек"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Още крак INK увеличава мощността на скока\nПовече ръка INK увеличава силата на хвърляне"
+      "value": "Повече мастило за краката: по-висок скок\nПовече мастило за ръцете: по-силно хвърляне"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: THOW"
+      "value": "F: Хвърляне"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / ИЗБОР: НАРИСУВАЙТЕ MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Рисувай\nOPTIONS / START: Меню"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: РИСУВАЙ MENU\nESC: MENU"
+      "value": "TAB: Рисувай\nESC: Меню"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: РИСУВАЙТЕ MENU"
+      "value": "TAB: Рисувай"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: РИСУВАЙ MENU\nOPTIONS: MENU"
+      "value": "CREATE: Рисувай\nOPTIONS: Меню"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: РИСУВАЙ MENU\nMENU: MENU"
+      "value": "VIEW: Рисувай\nMENU: Меню"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: РИСУВАЙТЕ MENU"
+      "value": "CREATE: Рисувай"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: РИСУВАЙТЕ MENU"
+      "value": "VIEW: Рисувай"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "СКАЧАЙТЕ."
+      "value": "Скок"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "РЪЧКА"
+      "value": "Хвърляне"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "НАЧЕРТАВАНЕ"
+      "value": "Рисувай"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Обратно  ESC"
+      "value": "Назад · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "Продължение"
+      "value": "Продължи"
     },
     {
       "key": "menu_to_title",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Да започнете ли нивото отначало?"
+      "value": "Да започнем ли нивото отначало?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "СТАЯ"
+      "value": "Стая"
     },
     {
       "key": "multi_create_room",
-      "value": "Създаване на стая"
+      "value": "Създай стая"
     },
     {
       "key": "multi_join_room",
-      "value": "Присъедини се към стаята."
+      "value": "Влез в стая"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "Constellation name (optional)"
+      "value": "Чакалня"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Свързване..."
+      "value": "Свързване…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "Готово."
+      "value": "Готов"
     },
     {
       "key": "multi_wait",
-      "value": "Чакай."
+      "value": "Изчаква"
     },
     {
       "key": "multi_host",
-      "value": "ХОСТ"
+      "value": "Домакин"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "ЛИЧНИ КАПА"
+      "value": "Личен лимит"
     },
     {
       "key": "ink_team_formula",
-      "value": "CAP TEAM ({0}P)"
+      "value": "Отборен лимит ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "КОЛИЧЕСТВО В ЕДНА ОПАКОВКА"
+      "value": "Дебелина на линията"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "clear Party"
+      "value": "Изчисти частта"
     },
     {
       "key": "draw_undo_once",
-      "value": "УНДО"
+      "value": "Отмени"
     },
     {
       "key": "draw_reset_all",
-      "value": "РЕСЕТ ВСИЧКИ"
+      "value": "Нулирай всичко"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "ПРЕДЛОЖЕНИЯ"
+      "value": "Шаблони"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5-каракетни престилки"
+      "value": "Шаблони"
     },
     {
       "key": "draw_preset_back",
-      "value": "НАЗАД"
+      "value": "Назад"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Време {0:0.0}"
+      "value": "Остават {0:0.0} с"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "Играта свърши."
+      "value": "Край на играта"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "Готово. {0} / {1}"
+      "value": "Готови {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Пригответе се да започнете играта"
+      "value": "Пригответе се за старт"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "Оцеляване докато изтече времето"
+      "value": "Оцелеи до края"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "ТЪРСЕТЕ ГОРАТА ПРЕДИ ДА ИЗТЕГЛЕЕ времето"
+      "value": "Оцелеи до края"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Ако поне един играч оцелее."
+      "value": "Печелите, ако оцелее поне един играч."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Ясно, когато някой играч достигне целта."
+      "value": "Печелите, когато някой играч стигне до целта."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Рестартиране на етап"
+      "value": "Започни нивото отначало"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4182,7 +4182,7 @@
     },
     {
       "key": "eraser",
-      "value": "Изтриване"
+      "value": "Гума"
     },
     {
       "key": "shape_square",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Готово!"
+      "value": "Готово"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "СЪР."
+      "value": "Звукови ефекти"
     },
     {
       "key": "option_keys",
-      "value": "Ключове"
+      "value": "Управление"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Огледално"
     }
   ]
 }

@@ -2,23 +2,23 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Nom"
+      "value": "Nom du joueur"
     },
     {
       "key": "option_player_name_placeholder",
-      "value": "Enter votre nom"
+      "value": "Saisissez votre nom"
     },
     {
       "key": "option_player_name_required",
-      "value": "S'il vous plaît. enter un nom de joueur."
+      "value": "Saisissez un nom de joueur."
     },
     {
       "key": "option_player_name_guide",
-      "value": "ENTER Votre nom ici"
+      "value": "Saisissez votre nom ici"
     },
     {
       "key": "option_register",
-      "value": "REGISTRE"
+      "value": "Enregistrer"
     },
     {
       "key": "option_reset_progress",
@@ -90,7 +90,7 @@
     },
     {
       "key": "draw_help",
-      "value": "TAB: Retour au jeu / ENTER: Décider / ESC: Annuler"
+      "value": "Choisissez une partie du corps, puis faites glisser la souris pour dessiner."
     },
     {
       "key": "preview",
@@ -154,11 +154,11 @@
     },
     {
       "key": "ink_personal_status",
-      "value": "Personnel  {0:0.#} / {1:0}"
+      "value": "Individuel {0:0.#} / {1:0}"
     },
     {
       "key": "ink_team_status",
-      "value": "Équipe  {0:0.#} / {1:0}  [{2}]"
+      "value": "Équipe {0:0.#} / {1:0} [{2}]"
     },
     {
       "key": "msg_personal_ink_over",
@@ -282,7 +282,7 @@
     },
     {
       "key": "ability_human_status_combined",
-      "value": "RESPONSABILITÉ HUMAINE\nArmes {0:0.0} INK  Puissance ×{1:0.00}\nJambes {2:0.0} INK  Sauter ×{3:0.00}"
+      "value": "CAPACITÉS DE L’HUMAIN\nBras {0:0.0} INK  Lancer ×{1:0.00}\nJambes {2:0.0} INK  Saut ×{3:0.00}"
     },
     {
       "key": "ability_cat_status",
@@ -306,7 +306,7 @@
     },
     {
       "key": "ability_card_cat",
-      "value": "LE CHAT"
+      "value": "CHAT"
     },
     {
       "key": "ability_card_bird",
@@ -314,51 +314,51 @@
     },
     {
       "key": "ability_card_turtle",
-      "value": "TURTURE"
+      "value": "TORTUE"
     },
     {
       "key": "ability_card_slime",
-      "value": "LIMITÉE"
+      "value": "SLIME"
     },
     {
       "key": "ability_description_human",
-      "value": "Plus de jambe INK augmente la puissance de saut\nPlus de bras INK augmente la puissance de lancement"
+      "value": "Plus d’encre aux jambes : saut plus haut\nPlus d’encre aux bras : lancer plus fort"
     },
     {
       "key": "ability_description_cat",
-      "value": "Plus de jambe arrière INK augmente la vitesse d'exécution\nPlus de jambe avant INK augmente la plage de rayures"
+      "value": "Plus d’encre aux pattes arrière : course plus rapide\nPlus d’encre aux pattes avant : griffes à plus longue portée"
     },
     {
       "key": "ability_description_bird",
-      "value": "Plus d'aile INK augmente la puissance de glisse"
+      "value": "Plus d’encre dans les ailes améliore le vol plané."
     },
     {
       "key": "ability_description_turtle",
-      "value": "Invincible dans la coquille"
+      "value": "La tortue est invincible à l’abri dans sa carapace."
     },
     {
       "key": "ability_description_slime",
-      "value": "Appuyez sur F pour une attaque vers le haut\nMoins INK rend le saut mural plus long / activé"
+      "value": "F : piquez dans la direction du curseur\nMoins d’encre : pointe plus longue et saut mural"
     },
     {
       "key": "ability_control_human",
-      "value": "FCROISSANCE"
+      "value": "F : LANCER"
     },
     {
       "key": "ability_control_cat",
-      "value": "F: RAYER / SAISIR"
+      "value": "F : GRIFFER OU SAISIR"
     },
     {
       "key": "ability_control_bird",
-      "value": "VENIR SPACE: GLIDE  F: GRAB"
+      "value": "MAINTENEZ ESPACE : PLANER · F : SAISIR"
     },
     {
       "key": "ability_control_turtle",
-      "value": "VENIR SPACEC'est bon. F: TURN 90°"
+      "value": "MAINTENEZ ESPACE : CARAPACE · F : PIVOTER"
     },
     {
       "key": "ability_control_slime",
-      "value": "F: Attaque à l'envers"
+      "value": "F : ATTAQUER AVEC LA POINTE"
     },
     {
       "key": "ability_control_pad_human",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / SÉLECTIONNER : TIRER MENU\nOPTIONS / START : MENU"
+      "value": "CREATE / SELECT: Dessiner\nOPTIONS / START: Menu"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB : TIRER MENU\nESC : MENU"
+      "value": "TAB: Dessiner\nESC: Menu"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB : TIRER MENU"
+      "value": "TAB: Dessiner"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE : TIRER MENU\nOPTIONS : MENU"
+      "value": "CREATE: Dessiner\nOPTIONS: Menu"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW : TIRER MENU\nMENU : MENU"
+      "value": "VIEW: Dessiner\nMENU: Menu"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE : TIRER MENU"
+      "value": "CREATE: Dessiner"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW : TIRER MENU"
+      "value": "VIEW: Dessiner"
     },
     {
       "key": "demo_stage_unavailable",
@@ -470,7 +470,7 @@
     },
     {
       "key": "ability_effect_human_combined",
-      "value": "Puissance ×{0:0.00}  Sauter ×{1:0.00}"
+      "value": "Lancer ×{0:0.00}  Saut ×{1:0.00}"
     },
     {
       "key": "ability_effect_cat",
@@ -490,7 +490,7 @@
     },
     {
       "key": "ability_ink_human_combined",
-      "value": "Armes {0:0.0}/280 Jambes {1:0.0}/160 INK"
+      "value": "Bras {0:0.0}/280 · Jambes {1:0.0}/160 INK"
     },
     {
       "key": "ability_ink_cat",
@@ -530,23 +530,23 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JUMPE"
+      "value": "SAUT"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "CROISSANCE"
+      "value": "LANCER"
     },
     {
       "key": "ability_cat_back_leg_gauge",
-      "value": "COURIR"
+      "value": "COURSE"
     },
     {
       "key": "ability_cat_front_leg_gauge",
-      "value": "RÉGLAGE"
+      "value": "GRIFFES"
     },
     {
       "key": "ability_bird_gauge",
-      "value": "LE GLISSEMENT"
+      "value": "VOL PLANÉ"
     },
     {
       "key": "ability_turtle_gauge",
@@ -578,11 +578,11 @@
     },
     {
       "key": "ability_growth_hint",
-      "value": "Draw Plus de puissance !"
+      "value": "Dessinez plus pour gagner en puissance !"
     },
     {
       "key": "redraw_unavailable_stage",
-      "value": "Vous ne pouvez pas redessiner après que cette étape a commencé."
+      "value": "Vous ne pouvez plus redessiner votre personnage une fois le niveau lancé."
     },
     {
       "key": "label_high_platform",
@@ -706,7 +706,7 @@
     },
     {
       "key": "multi_room_join_title",
-      "value": "CHAMBRE DE JOIN"
+      "value": "Rejoindre un salon"
     },
     {
       "key": "multi_room_id",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "TIRER"
+      "value": "Dessiner"
     },
     {
       "key": "title_option",
@@ -898,11 +898,11 @@
     },
     {
       "key": "character_change_ready_room_only",
-      "value": "Les personnages ne peuvent être changés que dans la salle de lecture."
+      "value": "Vous pouvez changer de personnage uniquement dans la salle d’attente."
     },
     {
       "key": "character_switch_redraw_zone_only",
-      "value": "Vous ne pouvez changer de personnage que sur un sol de redessin."
+      "value": "Vous pouvez changer de personnage uniquement sur une zone de dessin."
     },
     {
       "key": "trailer_debug_capture_help",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "Continuer"
+      "value": "Reprendre"
     },
     {
       "key": "menu_to_title",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "CHAMBRE"
+      "value": "Salon"
     },
     {
       "key": "multi_create_room",
-      "value": "Créer une salle"
+      "value": "Créer un salon"
     },
     {
       "key": "multi_join_room",
-      "value": "Rejoignez la salle"
+      "value": "Rejoindre un salon"
     },
     {
       "key": "multi_create_room_body",
@@ -1098,7 +1098,7 @@
     },
     {
       "key": "multi_join_room_help",
-      "value": "Enter l'identifiant du lobby affiché sur l'écran hôte.\n\nAvec EOS configuré, les amis peuvent se joindre à distance.\nSi vous utilisez Direct TCP, enter Il s'agit d'un projet pilote."
+      "value": "Saisissez le code du salon affiché chez l’hôte.\n\nAvec EOS, vos amis peuvent rejoindre la partie à distance.\nEn connexion TCP directe, saisissez une adresse au format IP:7777."
     },
     {
       "key": "multi_lobby_id_placeholder",
@@ -1106,7 +1106,7 @@
     },
     {
       "key": "multi_join",
-      "value": "Rejoignez"
+      "value": "Rejoindre"
     },
     {
       "key": "multi_refresh",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "CHAMBRE"
+      "value": "Salle d’attente"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1134,15 +1134,15 @@
     },
     {
       "key": "multi_all_ready_required",
-      "value": "L'étape se déverrouille quand tout le monde est prêt."
+      "value": "Vous pourrez choisir le niveau quand tout le monde sera prêt."
     },
     {
       "key": "multi_leave_confirm",
-      "value": "Quitter cette pièce ?"
+      "value": "Quitter ce salon ?"
     },
     {
       "key": "multi_leave_yes",
-      "value": "Congé"
+      "value": "Quitter"
     },
     {
       "key": "multi_leave_no",
@@ -1154,7 +1154,7 @@
     },
     {
       "key": "multi_leave",
-      "value": "Congé"
+      "value": "Quitter"
     },
     {
       "key": "multi_matching",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Connexion..."
+      "value": "Connexion…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "PRÉCÉDENT"
+      "value": "Prêt"
     },
     {
       "key": "multi_wait",
-      "value": "Attendez"
+      "value": "En attente"
     },
     {
       "key": "multi_host",
-      "value": "HÔTE"
+      "value": "Hôte"
     },
     {
       "key": "multi_default_room_name",
@@ -1522,15 +1522,15 @@
     },
     {
       "key": "draw_species_swap_title",
-      "value": "CARACTERE SWAP"
+      "value": "Échange de personnages"
     },
     {
       "key": "draw_species_swap_hint",
-      "value": "{0} est utilisé. Appuyez sur COMPLETE pour demander un swap."
+      "value": "{0} est déjà utilisé. Choisissez « Valider » pour proposer un échange."
     },
     {
       "key": "draw_species_swap_request",
-      "value": "{0} veut échanger votre {1} pour {2}."
+      "value": "{0} souhaite échanger votre personnage ({1}) contre le sien ({2})."
     },
     {
       "key": "draw_species_swap_outgoing_confirm",
@@ -1542,11 +1542,11 @@
     },
     {
       "key": "draw_species_swap_accept",
-      "value": "ÉCHANGE"
+      "value": "Accepter"
     },
     {
       "key": "draw_species_swap_reject",
-      "value": "DÉCLINE"
+      "value": "Refuser"
     },
     {
       "key": "draw_species_swap_pending",
@@ -1562,7 +1562,7 @@
     },
     {
       "key": "draw_species_swap_accepted",
-      "value": "Des personnages échangés !"
+      "value": "Personnages échangés !"
     },
     {
       "key": "draw_species_swap_rejected",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "CAP PERSONNEL"
+      "value": "LIMITE INDIVIDUELLE"
     },
     {
       "key": "ink_team_formula",
-      "value": "ÉQUIPE CAP ({0}P)"
+      "value": "LIMITE D’ÉQUIPE ({0} J)"
     },
     {
       "key": "draw_pen_size",
-      "value": "TAILLE DU PEN"
+      "value": "ÉPAISSEUR DU TRAIT"
     },
     {
       "key": "draw_ink",
@@ -1930,43 +1930,43 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "PARTIE CLAIRE"
+      "value": "EFFACER LA PARTIE"
     },
     {
       "key": "draw_undo_once",
-      "value": "RETOUR À L'EMPLOI"
+      "value": "ANNULER LE TRAIT"
     },
     {
       "key": "draw_reset_all",
-      "value": "TOUT RESET"
+      "value": "TOUT RÉINITIALISER"
     },
     {
       "key": "draw_reset_confirm_title",
-      "value": "Tout résout ?"
+      "value": "Tout réinitialiser ?"
     },
     {
       "key": "draw_reset_confirm_message",
-      "value": "Effacer chaque partie du corps et restaurer le caractère original."
+      "value": "Effacer le dessin et rétablir le personnage d’origine ?"
     },
     {
       "key": "draw_reset_confirm_yes",
-      "value": "RÉINITIALISATION"
+      "value": "RÉINITIALISER"
     },
     {
       "key": "draw_reset_confirm_no",
-      "value": "ANNULATION"
+      "value": "ANNULER"
     },
     {
       "key": "draw_preset_title",
-      "value": "{0} PRESTATIONS"
+      "value": "MODÈLES : {0}"
     },
     {
       "key": "draw_preset_button",
-      "value": "PRESTATIONS"
+      "value": "MODÈLES"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "PRESTATIONS À 5 CHARACTER"
+      "value": "MODÈLES"
     },
     {
       "key": "draw_preset_back",
@@ -1974,51 +1974,51 @@
     },
     {
       "key": "draw_preset_five_species",
-      "value": "LIMITÉE HUMAINE DU TOURNAGE DU CAT"
+      "value": "HUMAIN · CHAT · OISEAU · TORTUE · SLIME"
     },
     {
       "key": "draw_preset_all_species",
-      "value": "les cinq caractères"
+      "value": "les cinq personnages"
     },
     {
       "key": "draw_preset_slot",
-      "value": "RÉSERVATION {0}"
+      "value": "EMPLACEMENT {0}"
     },
     {
       "key": "draw_preset_saved",
-      "value": "Sauvé"
+      "value": "ENREGISTRÉ"
     },
     {
       "key": "draw_preset_empty",
-      "value": "EMPTE"
+      "value": "VIDE"
     },
     {
       "key": "draw_preset_register",
-      "value": "Sauver"
+      "value": "ENREGISTRER"
     },
     {
       "key": "draw_preset_apply",
-      "value": "DÉPÔT"
+      "value": "APPLIQUER"
     },
     {
       "key": "draw_preset_save_confirm_title",
-      "value": "ÉTABLISSEZ À PRESSER {0}?"
+      "value": "Enregistrer dans l’emplacement {0} ?"
     },
     {
       "key": "draw_preset_save_confirm_message",
-      "value": "Enregistrer le courant {0} dessin sur préréglage {1}."
+      "value": "Enregistrer le dessin de {0} dans l’emplacement {1}."
     },
     {
       "key": "draw_preset_overwrite_confirm_message",
-      "value": "Remplacer le {0} dessin en préréglage {1}."
+      "value": "Remplacer le dessin de {0} dans l’emplacement {1}."
     },
     {
       "key": "draw_preset_load_confirm_title",
-      "value": "PRÉSIDENCE {0}?"
+      "value": "Appliquer le modèle {0} ?"
     },
     {
       "key": "draw_preset_load_confirm_message",
-      "value": "Remplacer le texte actuel {0} dessin avec préréglage {1}."
+      "value": "Remplacer le dessin actuel de {0} par le modèle {1}."
     },
     {
       "key": "stage_category_decoration",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Heure {0:0.0}"
+      "value": "Encore {0:0.0} s"
     },
     {
       "key": "challenge_collection_progress",
@@ -3050,11 +3050,11 @@
     },
     {
       "key": "survival_goal",
-      "value": "Une couronne !"
+      "value": "Un survivant suffit !"
     },
     {
       "key": "survival_goal_sub",
-      "value": "Retourner à l'eau vive"
+      "value": "Rejoignez les plateformes lumineuses."
     },
     {
       "key": "grain_rain_target",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "C'est parti."
+      "value": "Partie terminée"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,151 +3162,151 @@
     },
     {
       "key": "ready_room_status",
-      "value": "PRÉCÉDENT {0} / {1}"
+      "value": "Prêts {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
-      "value": "RECOMMANDÉ"
+      "value": "Personnages conseillés"
     },
     {
       "key": "ready_room_recommended_none",
-      "value": "Aucune"
+      "value": "Aucun"
     },
     {
       "key": "ready_room_restriction",
-      "value": "PAS DE CHANGEMENT DE CARACTERE OU DE REDROIT APRÈS LE NIVEAU"
+      "value": "Vous ne pourrez ni changer de personnage ni redessiner après le départ."
     },
     {
       "key": "ready_room_restriction_redraw_allowed",
-      "value": "AUCUNE CHANGEMENT DE CARACTERE APRÈS LE NIVEAU (REDRAW OK)"
+      "value": "Après le départ, utilisez une zone de dessin pour changer de personnage ou le redessiner."
     },
     {
       "key": "ready_room_game_default",
-      "value": "Préparez-vous à lancer le jeu"
+      "value": "Préparez-vous à démarrer"
     },
     {
       "key": "ready_room_game_2_3",
-      "value": "COURS."
+      "value": "Courez !"
     },
     {
       "key": "ready_room_game_2_2",
-      "value": "COLLIQUEZ LE POISSON AVANT QUE LE TEMPS NE RENDE"
+      "value": "Ramassez les poissons avant la fin du chrono."
     },
     {
       "key": "ready_room_game_4_3",
-      "value": "DÉFAT DU ROI DE CRAYON"
+      "value": "Battez le roi des crayons."
     },
     {
       "key": "ready_room_game_6_2",
-      "value": "DODGE LES HURDLES ET SURVIENT"
+      "value": "Esquivez les obstacles et survivez."
     },
     {
       "key": "ready_room_game_6_3",
-      "value": "Plongez tous vos corps en aquarium"
+      "value": "Bouchez tous les trous de l’aquarium avec vos corps."
     },
     {
       "key": "ready_room_game_7_1",
-      "value": "UTILISER VOTRE CORPS POUR DÉLOQUER LE PATH"
+      "value": "Utilisez la forme de vos corps pour ouvrir le passage."
     },
     {
       "key": "ready_room_game_8_1",
-      "value": "DODGE LES PILLARS FALLING"
+      "value": "Évitez les piliers qui tombent."
     },
     {
       "key": "ready_room_game_8_2",
-      "value": "REFLIQUEZ LE BALL ET BREAKEZ TOUS LES BLOCS"
+      "value": "Faites rebondir la balle pour casser tous les blocs."
     },
     {
       "key": "ready_room_game_8_3",
-      "value": "POULEZ LE BALL AVEC INK LES MAGNETS ET LA PENSION"
+      "value": "Attirez la balle avec les aimants à encre pour la faire entrer dans le panier."
     },
     {
       "key": "ready_room_game_9_1",
-      "value": "DODGE LES MISSILES ET SURVIENT"
+      "value": "Esquivez les missiles et survivez."
     },
     {
       "key": "ready_room_game_9_2",
-      "value": "COLLECTE DES COINS AU FIL"
+      "value": "Ramassez des pièces pendant la chute."
     },
     {
       "key": "ready_room_game_9_3",
-      "value": "COLLECTE LES GRAGNES FALLANTES ET PORTE SUR LES OBJECTIFS"
+      "value": "Ramassez les grains qui tombent pour atteindre le poids demandé."
     },
     {
       "key": "ready_room_game_10_1",
-      "value": "ATTAQUE DU TEMPS. CLAIR SI LE TEMPS D'ARRIVÉE COMBINÉ DE TOUT LE MONDE EST DANS LES {0} MINUTES."
+      "value": "Contre-la-montre. Le total de vos temps doit rester dans la limite de {0} min."
     },
     {
       "key": "ready_room_game_10_3",
-      "value": "BULLETS RICOCHET POUR DÉFAIRE LES ENEMIES"
+      "value": "Faites ricocher les tirs pour vaincre les ennemis."
     },
     {
       "key": "ready_room_game_11_1",
-      "value": "LUMIÈREMENT LA DARKNESSE ET ÉTABLIR LES GHOSTS"
+      "value": "Atteignez l’arrivée."
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "SURVEILLANCE DU TEMPS"
+      "value": "Survivez jusqu’à la fin du chrono"
     },
     {
       "key": "ready_room_game_11_3",
-      "value": "CROISSONS À VENTIR TOUTES LES BLOQUES"
+      "value": "Lancez des bombes pour détruire tous les blocs."
     },
     {
       "key": "ready_room_game_12_1",
-      "value": "BOÎTES ET COINS COLLECTES"
+      "value": "Cassez les caisses et ramassez les pièces."
     },
     {
       "key": "ready_room_game_12_2",
-      "value": "COLLECTE DES COINS AVANT LE TEMPS"
+      "value": "Ramassez les pièces avant la fin du chrono."
     },
     {
       "key": "ready_room_game_12_3",
-      "value": "COLLECTE DES COINS AVANT LE TEMPS"
+      "value": "Ramassez les pièces avant la fin du chrono."
     },
     {
       "key": "ready_room_game_13_1",
-      "value": "Défendez votre ami des ennemis"
+      "value": "Protégez votre ami des ennemis."
     },
     {
       "key": "ready_room_game_13_2",
-      "value": "POURQUOI LE BALL DÉFAUT LES ENGINS"
+      "value": "Renvoyez la balle pour vaincre les ennemis."
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "ARRÊT DE L'OBJET AVANT L'EXERCICE"
+      "value": "Survivez jusqu’à la fin du chrono"
     },
     {
       "key": "ready_room_game_14_2",
-      "value": "UTILISER L'UMBRELLA pour rester hors du train"
+      "value": "Abritez-vous de la pluie sous le parapluie."
     },
     {
       "key": "ready_room_game_14_3",
-      "value": "RELAYEZ LE LASER PAR CHAQUE ORGANE À L'OBJET"
+      "value": "Faites passer le laser par chaque corps jusqu’à la cible."
     },
     {
       "key": "ready_room_game_15_1",
-      "value": "DÉFAT CRAYON DÉVIL"
+      "value": "Battez le démon des crayons."
     },
     {
       "key": "ready_room_game_15_2",
-      "value": "PEAU DE CRAYON DE LA DÉFAT"
+      "value": "Battez le traqueur des crayons."
     },
     {
       "key": "ready_room_game_15_3",
-      "value": "ÉVITE LES ATTAQUES ENNEMIES"
+      "value": "Esquivez les attaques ennemies."
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Je crois qu'au moins un joueur survit."
+      "value": "Le niveau est réussi si au moins un joueur survit."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "C'est clair quand un joueur atteint le but."
+      "value": "Le niveau est réussi dès qu’un joueur atteint l’arrivée."
     },
     {
       "key": "ready_room_clear_team_time",
-      "value": "CLAIR SI LE TEMPS D'ARRIVÉE COMBINÉ DE TOUT LE MONDE EST DANS LA MINUTE PAR JOUEUR."
+      "value": "Le temps total de l’équipe ne doit pas dépasser une minute par joueur."
     },
     {
       "key": "spike_chase_monitor_title",
@@ -3542,35 +3542,35 @@
     },
     {
       "key": "survival_watch_floor",
-      "value": "Regardez le flot !"
+      "value": "Les plateformes lumineuses vont tomber ! Rejoignez une plateforme sûre."
     },
     {
       "key": "survival_remaining",
-      "value": "Surveillez ! Temps restant"
+      "value": "Survivez ! Temps restant"
     },
     {
       "key": "survival_safe_countdown",
-      "value": "FLEURS DE SÉCURITÉ {0} / RENFORCEMENT {1:0.0}"
+      "value": "Plateformes sûres : {0} · Chute dans {1:0.0} s"
     },
     {
       "key": "survival_floor_dropped",
-      "value": "Restez sur le sol sûr !"
+      "value": "Restez sur une plateforme sûre !"
     },
     {
       "key": "survival_all_dead",
-      "value": "Tous les joueurs dehors"
+      "value": "Tous les joueurs ont été éliminés."
     },
     {
       "key": "survival_retrying",
-      "value": "LA RESTAURATION"
+      "value": "Redémarrage imminent…"
     },
     {
       "key": "survival_clear_title",
-      "value": "SURVEILLANCE !"
+      "value": "Au moins un survivant !"
     },
     {
       "key": "survival_clear_sub",
-      "value": "SURVIE CLARÉE"
+      "value": "Épreuve de survie réussie"
     },
     {
       "key": "pillar_survival_title",
@@ -3874,7 +3874,7 @@
     },
     {
       "key": "redraw_unavailable_escort_run",
-      "value": "Tu ne peux pas revenir quand l'ami bouge."
+      "value": "Vous ne pouvez pas redessiner votre personnage tant que votre ami avance."
     },
     {
       "key": "ricochet_title",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Étape de redémarrage"
+      "value": "Recommencer le niveau"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "Le menu"
+      "value": "Menu"
     },
     {
       "key": "redraw",
@@ -4182,7 +4182,7 @@
     },
     {
       "key": "eraser",
-      "value": "Effacement"
+      "value": "Gomme"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "Fait !"
+      "value": "Valider"
     },
     {
       "key": "draw_redo",
-      "value": "Précédent"
+      "value": "Retour"
     },
     {
       "key": "brush_size",
@@ -4210,7 +4210,7 @@
     },
     {
       "key": "ink_usage",
-      "value": "Ink Utilisé"
+      "value": "Encre utilisée"
     },
     {
       "key": "undo",
@@ -4218,19 +4218,19 @@
     },
     {
       "key": "character_switch",
-      "value": "Commutateur de caractères"
+      "value": "Changer de personnage"
     },
     {
       "key": "character_add",
-      "value": "Ajouter Char"
+      "value": "Ajouter un personnage"
     },
     {
       "key": "character_delete",
-      "value": "Supprimer Char"
+      "value": "Retirer un personnage"
     },
     {
       "key": "character_control_switch",
-      "value": "Interrupteur Char"
+      "value": "Changer de personnage"
     },
     {
       "key": "stage_select",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "JE VOUS EN PRIE."
+      "value": "Effets sonores"
     },
     {
       "key": "option_keys",
-      "value": "Clés"
+      "value": "Commandes"
     },
     {
       "key": "option_language",
@@ -4326,7 +4326,7 @@
     },
     {
       "key": "option_not_implemented",
-      "value": "Pas encore"
+      "value": "Indisponible pour le moment"
     },
     {
       "key": "locked_stage",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Miroir"
     }
   ]
 }

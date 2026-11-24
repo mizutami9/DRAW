@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "姓名"
+      "value": "玩家名稱"
     },
     {
       "key": "option_player_name_placeholder",
@@ -178,11 +178,11 @@
     },
     {
       "key": "head",
-      "value": "頭"
+      "value": "頭部"
     },
     {
       "key": "torso",
-      "value": "托爾索"
+      "value": "軀幹"
     },
     {
       "key": "left_arm",
@@ -194,11 +194,11 @@
     },
     {
       "key": "left_leg",
-      "value": "左腳"
+      "value": "左腿"
     },
     {
       "key": "right_leg",
-      "value": "右腳"
+      "value": "右腿"
     },
     {
       "key": "left_front_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "人力資源"
+      "value": "人類"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "再來一條腿 INK 增加跳動功率\n再來一臂 INK 增加拋出功率"
+      "value": "腿部墨水越多，跳得越高\n手臂墨水越多，丟得越遠"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F(THROW) (輕聲)"
+      "value": "F：投擲"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / 選取：圖 MENU\nOPTIONS / START：MENU"
+      "value": "CREATE / SELECT: 畫畫\nOPTIONS / START: 選單"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB：繪製MENU\nESC：MENU"
+      "value": "TAB: 畫畫\nESC: 選單"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB：繪製MENU"
+      "value": "TAB: 畫畫"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE：繪製MENU\nOPTIONS：MENU"
+      "value": "CREATE: 畫畫\nOPTIONS: 選單"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW：繪製MENU\nMENU：MENU"
+      "value": "VIEW: 畫畫\nMENU: 選單"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE：繪製MENU"
+      "value": "CREATE: 畫畫"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW：繪製MENU"
+      "value": "VIEW: 畫畫"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "JUMP 預覽"
+      "value": "跳躍"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "鳴叫"
+      "value": "投擲"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -706,7 +706,7 @@
     },
     {
       "key": "multi_room_join_title",
-      "value": "聯 合 室"
+      "value": "加入房間"
     },
     {
       "key": "multi_room_id",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "抽取"
+      "value": "畫畫"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "回來  ESC"
+      "value": "返回 · ESC"
     },
     {
       "key": "title_exit",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "要從頭重新開始本關嗎？"
+      "value": "要從頭重新開始這一關嗎？"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1050,7 +1050,7 @@
     },
     {
       "key": "multi_create_room",
-      "value": "創建房間"
+      "value": "建立房間"
     },
     {
       "key": "multi_join_room",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "辦公室"
+      "value": "等候大廳"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "正在連接..."
+      "value": "正在連線…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "準備"
+      "value": "已準備"
     },
     {
       "key": "multi_wait",
-      "value": "等著"
+      "value": "等待中"
     },
     {
       "key": "multi_host",
-      "value": "危險"
+      "value": "房主"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "人事管制"
+      "value": "個人上限"
     },
     {
       "key": "ink_team_formula",
-      "value": "工作隊{0}頁:1"
+      "value": "隊伍上限（{0}人）"
     },
     {
       "key": "draw_pen_size",
-      "value": "筆會"
+      "value": "筆畫粗細"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "清除部分"
+      "value": "清除部位"
     },
     {
       "key": "draw_undo_once",
-      "value": "聯發辦"
+      "value": "復原"
     },
     {
       "key": "draw_reset_all",
-      "value": "全部收起來"
+      "value": "全部重設"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,11 +1962,11 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "筆記"
+      "value": "預設"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5個插圖"
+      "value": "預設"
     },
     {
       "key": "draw_preset_back",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "時間 {0:0.0}"
+      "value": "剩餘 {0:0.0} 秒"
     },
     {
       "key": "challenge_collection_progress",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "準備 {0} / {1}"
+      "value": "已準備 {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "準備開始比賽"
+      "value": "準備開始"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "生存直到時間流出"
+      "value": "撐到時間結束"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "在離開前實現目標"
+      "value": "撐到時間結束"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "清除是否至少一個玩家倖存者。"
+      "value": "至少有一名玩家存活即可過關。"
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "當任何玩家 實現目標。"
+      "value": "任一玩家到達終點即可過關。"
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "重新開始階段"
+      "value": "重新開始關卡"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "菜單"
+      "value": "選單"
     },
     {
       "key": "redraw",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "筆"
+      "value": "畫筆"
     },
     {
       "key": "eraser",
-      "value": "擦除器"
+      "value": "橡皮擦"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "結束了!"
+      "value": "完成"
     },
     {
       "key": "draw_redo",
-      "value": "回來"
+      "value": "返回"
     },
     {
       "key": "brush_size",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "性別"
+      "value": "音效"
     },
     {
       "key": "option_keys",
-      "value": "密鑰"
+      "value": "操作"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "左右翻轉"
     }
   ]
 }

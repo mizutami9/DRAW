@@ -2,11 +2,11 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "이름"
+      "value": "플레이어 이름"
     },
     {
       "key": "option_player_name_placeholder",
-      "value": "Enter 당신의 이름"
+      "value": "플레이어 이름을 입력하세요"
     },
     {
       "key": "option_player_name_required",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "다운로드"
+      "value": "미리보기"
     },
     {
       "key": "clear",
@@ -178,19 +178,19 @@
     },
     {
       "key": "head",
-      "value": "제품정보"
+      "value": "머리"
     },
     {
       "key": "torso",
-      "value": "토르소"
+      "value": "몸통"
     },
     {
       "key": "left_arm",
-      "value": "왼쪽 팔"
+      "value": "왼팔"
     },
     {
       "key": "right_arm",
-      "value": "오른쪽 팔"
+      "value": "오른팔"
     },
     {
       "key": "left_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "채용 정보"
+      "value": "인간"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "더 많은 다리 INK 증가 점프 힘\n팔 더 INK 증가 던지기 힘"
+      "value": "다리에 잉크를 더 쓰면 더 높이 뛰어요\n팔에 잉크를 더 쓰면 더 세게 던져요"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: 삼림"
+      "value": "F: 던지기"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / 선택: 그리기 MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: 그리기\nOPTIONS / START: 메뉴"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: 그리기 MENU\nESC: MENU"
+      "value": "TAB: 그리기\nESC: 메뉴"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: 그리기 MENU"
+      "value": "TAB: 그리기"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: 그리기 MENU\nOPTIONS: MENU"
+      "value": "CREATE: 그리기\nOPTIONS: 메뉴"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: 그리기 MENU\nMENU: MENU"
+      "value": "VIEW: 그리기\nMENU: 메뉴"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: 그리기 MENU"
+      "value": "CREATE: 그리기"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: 그리기 MENU"
+      "value": "VIEW: 그리기"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "주 메뉴"
+      "value": "점프력"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "사이트맵"
+      "value": "던지기"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -706,7 +706,7 @@
     },
     {
       "key": "multi_room_join_title",
-      "value": "오시는 길"
+      "value": "방 참가"
     },
     {
       "key": "multi_room_id",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "추첨"
+      "value": "그리기"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "이름 *  ESC"
+      "value": "뒤로 · ESC"
     },
     {
       "key": "title_exit",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "객실안내"
+      "value": "방"
     },
     {
       "key": "multi_create_room",
-      "value": "객실 찾기"
+      "value": "방 만들기"
     },
     {
       "key": "multi_join_room",
-      "value": "본문 바로가기"
+      "value": "방 참가"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "객실 위치"
+      "value": "대기실"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "연결 ..."
+      "value": "연결 중…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "읽기"
+      "value": "준비 완료"
     },
     {
       "key": "multi_wait",
-      "value": "기타"
+      "value": "대기 중"
     },
     {
       "key": "multi_host",
-      "value": "계정 만들기"
+      "value": "호스트"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "공급 능력"
+      "value": "개인 한도"
     },
     {
       "key": "ink_team_formula",
-      "value": "TEAM 모자{0}·"
+      "value": "팀 한도 ({0}명)"
     },
     {
       "key": "draw_pen_size",
-      "value": "PEN 크기"
+      "value": "펜 굵기"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "CLEAR 부품"
+      "value": "부위 지우기"
     },
     {
       "key": "draw_undo_once",
-      "value": "한국어"
+      "value": "실행 취소"
     },
     {
       "key": "draw_reset_all",
-      "value": "모든 상품"
+      "value": "전체 초기화"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,11 +1962,11 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "상품정보"
+      "value": "프리셋"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5 충전기 PRESETS"
+      "value": "프리셋"
     },
     {
       "key": "draw_preset_back",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "(주) {0:0.0}"
+      "value": "남은 시간 {0:0.0}초"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "게임 OVER"
+      "value": "게임 오버"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "읽기 {0} / {1}"
+      "value": "준비 완료 {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "GAME 시작하기"
+      "value": "시작할 준비를 하세요"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "일시 정지"
+      "value": "시간이 끝날 때까지 버티세요"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "GOAL BEFORE TIME RUNS OUT에 도달"
+      "value": "시간이 끝날 때까지 버티세요"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "1명의 선수 SURVIVES를 지도하는 경우에 CLEAR."
+      "value": "한 명 이상 살아남으면 클리어합니다."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "한 명의 선수가 GOAL에 도달합니다."
+      "value": "한 명이라도 골에 도착하면 클리어합니다."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "나머지 단계"
+      "value": "스테이지 다시 시작"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "(주)"
+      "value": "메뉴"
     },
     {
       "key": "redraw",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "뚱 베어"
+      "value": "펜"
     },
     {
       "key": "eraser",
-      "value": "에라스"
+      "value": "지우개"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "한국어"
+      "value": "완료"
     },
     {
       "key": "draw_redo",
-      "value": "이름 *"
+      "value": "뒤로"
     },
     {
       "key": "brush_size",
@@ -4222,15 +4222,15 @@
     },
     {
       "key": "character_add",
-      "value": "추가 Char"
+      "value": "캐릭터 추가"
     },
     {
       "key": "character_delete",
-      "value": "삭제 Char"
+      "value": "캐릭터 빼기"
     },
     {
       "key": "character_control_switch",
-      "value": "스위치 숯"
+      "value": "조작 캐릭터 전환"
     },
     {
       "key": "stage_select",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "사이트맵"
+      "value": "효과음"
     },
     {
       "key": "option_keys",
-      "value": "이름 *"
+      "value": "조작 키"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "좌우 반전"
     }
   ]
 }

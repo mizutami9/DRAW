@@ -1315,6 +1315,21 @@ namespace DrawBody.Prototype
             RectTransform esc = FindRect(hud, "GameplayEscHintButton");
             ThemeKeyChip(tab, Yellow);
             ThemeKeyChip(esc, Cyan);
+            LocalizeGameplayKeyHint(hints, "GameplayDrawerTabButtonText", "title_draw");
+            LocalizeGameplayKeyHint(hints, "GameplayEscHintButtonText", "menu");
+        }
+
+        private static void LocalizeGameplayKeyHint(RectTransform hints, string name, string key)
+        {
+            Text label = FindRect(hints, name)?.GetComponent<Text>();
+            if (label == null) return;
+
+            label.resizeTextForBestFit = true;
+            label.resizeTextMinSize = 10;
+            label.resizeTextMaxSize = label.fontSize;
+            LocalizedText localized = label.GetComponent<LocalizedText>();
+            if (localized == null) localized = label.gameObject.AddComponent<LocalizedText>();
+            localized.SetKey(key);
         }
 
         private void ThemeStageEditor()

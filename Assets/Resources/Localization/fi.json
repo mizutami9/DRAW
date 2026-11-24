@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "NIMI"
+      "value": "Pelaajan nimi"
     },
     {
       "key": "option_player_name_placeholder",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Ylävartalo"
+      "value": "Vartalo"
     },
     {
       "key": "left_arm",
@@ -190,7 +190,7 @@
     },
     {
       "key": "right_arm",
-      "value": "Oikea käsi"
+      "value": "Oikea käsivarsi"
     },
     {
       "key": "left_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "IHMIS"
+      "value": "Ihminen"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Enemmän jalkaa INK lisää hypyn tehoa\nLisää käsivartta INK lisää heittovoimaa"
+      "value": "Lisää mustetta jaloissa: korkeampi hyppy\nLisää mustetta käsissä: vahvempi heitto"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "FTHROW"
+      "value": "F: Heitä"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / VALITSE: PIIRTÄ MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Piirrä\nOPTIONS / START: Valikko"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: ARVO MENU\nESC: MENU"
+      "value": "TAB: Piirrä\nESC: Valikko"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: PIIRI MENU"
+      "value": "TAB: Piirrä"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: ARVO MENU\nOPTIONS: MENU"
+      "value": "CREATE: Piirrä\nOPTIONS: Valikko"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: ARVO MENU\nMENU: MENU"
+      "value": "VIEW: Piirrä\nMENU: Valikko"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: PIIRI MENU"
+      "value": "CREATE: Piirrä"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: PIIRI MENU"
+      "value": "VIEW: Piirrä"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "HYPPÄÄ ."
+      "value": "Hyppy"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "KASVI"
+      "value": "Heitto"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "PIIRTÄÄ"
+      "value": "Piirrä"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Back  ESC"
+      "value": "Takaisin · ESC"
     },
     {
       "key": "title_exit",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Aloitetaanko taso alusta?"
+      "value": "Aloitetaanko tämä kenttä alusta?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "Huone"
+      "value": "Odotushuone"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Yhdistetään..."
+      "value": "Yhdistetään…"
     },
     {
       "key": "multi_room",
@@ -1214,11 +1214,11 @@
     },
     {
       "key": "multi_wait",
-      "value": "Odota"
+      "value": "Odottaa"
     },
     {
       "key": "multi_host",
-      "value": "ISÄNTÄ"
+      "value": "Isäntä"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "HENKILÖKOHTAINEN CAP"
+      "value": "Oma raja"
     },
     {
       "key": "ink_team_formula",
-      "value": "TYÖRYHMÄKAPPA ({0}P)"
+      "value": "Joukkueen raja ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "KYNÄNKOKO"
+      "value": "Viivan paksuus"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "HYVÄKSYTTY OSA"
+      "value": "Tyhjennä osa"
     },
     {
       "key": "draw_undo_once",
-      "value": "VÄHENNETTY"
+      "value": "Kumoa"
     },
     {
       "key": "draw_reset_all",
-      "value": "KAIKKI"
+      "value": "Palauta kaikki"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "ESTEET"
+      "value": "Mallit"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5 CHARACTER PRESESETS"
+      "value": "Mallit"
     },
     {
       "key": "draw_preset_back",
-      "value": "TAKAISIN"
+      "value": "Takaisin"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Aika {0:0.0}"
+      "value": "Jäljellä {0:0.0} s"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "Peli ohi"
+      "value": "Peli päättyi"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "Valmis {0} / {1}"
+      "value": "Valmiina {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Valmistaudu aloittamaan peli"
+      "value": "Valmistautukaa aloittamaan"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "PALVELEEEESSÄ AIKAA MYÖHEMMIN"
+      "value": "Selviydy ajan loppuun"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "ENNEN KUIN TAPAHTUA"
+      "value": "Selviydy ajan loppuun"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Jos edes yksi pelaaja selviää."
+      "value": "Pääsette kentän läpi, jos vähintään yksi pelaaja selviää."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Kun joku pelaaja löytää maalin."
+      "value": "Pääsette kentän läpi, kun joku pelaajista pääsee maaliin."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Aloitusvaihe"
+      "value": "Aloita kenttä alusta"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4182,7 +4182,7 @@
     },
     {
       "key": "eraser",
-      "value": "Pyyhkijä"
+      "value": "Pyyhekumi"
     },
     {
       "key": "shape_square",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Valmis!"
+      "value": "Valmis"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "SE"
+      "value": "Äänitehosteet"
     },
     {
       "key": "option_keys",
-      "value": "Avaimet"
+      "value": "Ohjaus"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Peilaa"
     }
   ]
 }

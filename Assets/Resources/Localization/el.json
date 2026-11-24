@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Όνομα"
+      "value": "Όνομα παίκτη"
     },
     {
       "key": "option_player_name_placeholder",
@@ -178,11 +178,11 @@
     },
     {
       "key": "head",
-      "value": "Υπεύθυνος"
+      "value": "Κεφάλι"
     },
     {
       "key": "torso",
-      "value": "Τόρσο"
+      "value": "Κορμός"
     },
     {
       "key": "left_arm",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "ΑΝΘΡΩΠΙΝΟ"
+      "value": "Άνθρωπος"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Κι άλλο πόδι INK αυξάνει την ισχύ άλματος\nΠερισσότερο χέρι INK αύξηση της δύναμης throwψης"
+      "value": "Περισσότερο μελάνι στα πόδια: ψηλότερο άλμα\nΠερισσότερο μελάνι στα χέρια: δυνατότερη ρίψη"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: ΠΕΤΆΞΤΕ"
+      "value": "F: Ρίψη"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "ΔΗΜΙΟΥΡΓΊΑ / ΕΠΙΛΟΓΉ: ΕΠΙΛΟΓΈΣ ΜΕΝΟΎ ΣΧΕΔΊΑΣΗΣ / ΞΕΚΊΝΗΣΗ: ΜΕΝΟΎ"
+      "value": "CREATE / SELECT: Σχεδίασε\nOPTIONS / START: Μενού"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: ΚΛΗΡΩΣΗ MENU\nESC: MENU"
+      "value": "TAB: Σχεδίασε\nESC: Μενού"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: ΖΩΓΡΑΦΙΑ MENU"
+      "value": "TAB: Σχεδίασε"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: ΚΛΗΡΩΣΗ MENU\nOPTIONS: MENU"
+      "value": "CREATE: Σχεδίασε\nOPTIONS: Μενού"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: ΚΛΗΡΩΣΗ MENU\nMENU: MENU"
+      "value": "VIEW: Σχεδίασε\nMENU: Μενού"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: ΖΩΓΡΑΦΙΑ MENU"
+      "value": "CREATE: Σχεδίασε"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: ΖΩΓΡΑΦΙΑ MENU"
+      "value": "VIEW: Σχεδίασε"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "ΠΑΙΧΝΙΔΙΑ"
+      "value": "Άλμα"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "ΣΤΑΘΜΟΣ"
+      "value": "Ρίψη"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "ΖΩΓΡΑΦΊΣΤΕ"
+      "value": "Σχεδίασε"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "ΠΙΣΩ  ESC"
+      "value": "Πίσω · ESC"
     },
     {
       "key": "title_exit",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Επανεκκίνηση αυτού του επιπέδου από την αρχή;"
+      "value": "Να ξεκινήσει η πίστα από την αρχή;"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,7 +1046,7 @@
     },
     {
       "key": "multi_room_title",
-      "value": "ΔΩΜΑΤΙΟ"
+      "value": "Δωμάτιο"
     },
     {
       "key": "multi_create_room",
@@ -1054,7 +1054,7 @@
     },
     {
       "key": "multi_join_room",
-      "value": "Εγγραφή στο δωμάτιο"
+      "value": "Συμμετοχή σε δωμάτιο"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "ΔΩΜΑΤΙΟ Lobby"
+      "value": "Αίθουσα αναμονής"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Σύνδεση..."
+      "value": "Σύνδεση…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "Ετοιμοι"
+      "value": "Έτοιμος"
     },
     {
       "key": "multi_wait",
-      "value": "Περίμενε."
+      "value": "Αναμονή"
     },
     {
       "key": "multi_host",
-      "value": "ΧΟΡΟΣ"
+      "value": "Οικοδεσπότης"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "ΠΡΟΣΩΠΙΚΗ ΚΓΠ"
+      "value": "Ατομικό όριο"
     },
     {
       "key": "ink_team_formula",
-      "value": "ΟΜΑΔΑ ΚΓΠ ({0}Ρ)"
+      "value": "Όριο ομάδας ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "ΜΕΓΕΘΟΣ ΠΕΝΑΣ"
+      "value": "Πάχος γραμμής"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "ΚΑΘΑΡΟ ΜΕΡΟΣ"
+      "value": "Σβήσιμο μέρους"
     },
     {
       "key": "draw_undo_once",
-      "value": "ΑΠΑΛΛΑΓΉ"
+      "value": "Αναίρεση"
     },
     {
       "key": "draw_reset_all",
-      "value": "ΟΛΟΙ ΟΙ ΧΩΡΕΣ"
+      "value": "Επαναφορά όλων"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "ΠΡΟΫΠΟΘΕΣΕΙΣ"
+      "value": "Πρότυπα"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "ΠΡΑΞΕΙΣ 5-ΚΑΡΑΚΤΗΡΑ"
+      "value": "Πρότυπα"
     },
     {
       "key": "draw_preset_back",
-      "value": "ΠΙΣΩ"
+      "value": "Πίσω"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Χρόνος {0:0.0}"
+      "value": "Απομένουν {0:0.0} δ."
     },
     {
       "key": "challenge_collection_progress",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "Ετοιμοι {0} / {1}"
+      "value": "Έτοιμοι {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Ετοίμασε το παιχνίδι."
+      "value": "Ετοιμαστείτε να ξεκινήσετε"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "ΕΠΙΒΕΒΑΙΩΣ ΕΩΣ ΤΟ ΧΡΟΝΟ ΕΞΕΡΓΑΖΕΤΑΙ"
+      "value": "Επιβιώστε μέχρι να λήξει ο χρόνος"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "ΦΥΛΑΞΤΕ ΤΟ ΣΤΟΧΟ ΠΡΙΝ ΑΠΟΤΕΛΕΙ ΤΟ ΧΡΟΝΟ"
+      "value": "Επιβιώστε μέχρι να λήξει ο χρόνος"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Καθαρίστε αν τουλάχιστον ένας παίκτης επιζήσει."
+      "value": "Περνάτε την πίστα αν επιβιώσει τουλάχιστον ένας παίκτης."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Να είστε ξεκάθαρος όταν κάποιος παίκτης φτάσει στο στόχο."
+      "value": "Περνάτε την πίστα όταν κάποιος παίκτης φτάσει στον τερματισμό."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Επανεκκίνηση σταδίου"
+      "value": "Επανεκκίνηση πίστας"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Στυλό"
+      "value": "Πένα"
     },
     {
       "key": "eraser",
-      "value": "Σβητής"
+      "value": "Γόμα"
     },
     {
       "key": "shape_square",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Έγινε!"
+      "value": "Έτοιμο"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "ΝΑ"
+      "value": "Ηχητικά εφέ"
     },
     {
       "key": "option_keys",
-      "value": "Κλειδιά"
+      "value": "Χειρισμός"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Κατοπτρισμός"
     }
   ]
 }

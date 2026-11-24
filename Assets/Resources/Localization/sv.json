@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Namn"
+      "value": "Spelarnamn"
     },
     {
       "key": "option_player_name_placeholder",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "Förhandsgranskning"
+      "value": "Förhandsvisning"
     },
     {
       "key": "clear",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Torso"
+      "value": "Bål"
     },
     {
       "key": "left_arm",
@@ -194,7 +194,7 @@
     },
     {
       "key": "left_leg",
-      "value": "Vänstern Leg"
+      "value": "Vänster ben"
     },
     {
       "key": "right_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "Human"
+      "value": "Människa"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Mer ben INK Ökar hoppkraften\nMer arm INK Ökar kasta makt"
+      "value": "Mer bläck på benen ger högre hopp\nMer bläck på armarna ger kraftigare kast"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "FTROW"
+      "value": "F: Kasta"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / VÄLJ: DRAW MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Rita\nOPTIONS / START: Meny"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: DRA MENYN\nESCMENYN:"
+      "value": "TAB: Rita\nESC: Meny"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: RITTA MENU"
+      "value": "TAB: Rita"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "SKAPA: RITA MENYALTERNATIV: MENY"
+      "value": "CREATE: Rita\nOPTIONS: Meny"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VISA: RITA MENYN: MENYN"
+      "value": "VIEW: Rita\nMENU: Meny"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: RITTA MENU"
+      "value": "CREATE: Rita"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: RITTA MENU"
+      "value": "VIEW: Rita"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "Jump"
+      "value": "Hopp"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "TROW"
+      "value": "Kast"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DRA"
+      "value": "Rita"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "TILLBAKA  ESC"
+      "value": "Tillbaka · ESC"
     },
     {
       "key": "title_exit",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Starta om den här banan från början?"
+      "value": "Starta om banan från början?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,7 +1046,7 @@
     },
     {
       "key": "multi_room_title",
-      "value": "Room"
+      "value": "Rum"
     },
     {
       "key": "multi_create_room",
@@ -1054,7 +1054,7 @@
     },
     {
       "key": "multi_join_room",
-      "value": "Förena rummet"
+      "value": "Gå med i rum"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "Room Lobby"
+      "value": "Väntrum"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Anslutning..."
+      "value": "Ansluter…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "REDO."
+      "value": "Redo"
     },
     {
       "key": "multi_wait",
-      "value": "Vänta"
+      "value": "Väntar"
     },
     {
       "key": "multi_host",
-      "value": "Host"
+      "value": "Värd"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "PERSONLIG TÄCKNING"
+      "value": "Personlig gräns"
     },
     {
       "key": "ink_team_formula",
-      "value": "Team CAP (Team CAP){0}P) P)"
+      "value": "Laggräns ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "PENSTORLEK"
+      "value": "Linjetjocklek"
     },
     {
       "key": "draw_ink",
@@ -1930,11 +1930,11 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "Clear Park"
+      "value": "Radera kroppsdel"
     },
     {
       "key": "draw_undo_once",
-      "value": "AVSKAFFAT"
+      "value": "Ångra"
     },
     {
       "key": "draw_reset_all",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "Presets"
+      "value": "Mallar"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5-CHARACTER PRESETS"
+      "value": "Mallar"
     },
     {
       "key": "draw_preset_back",
-      "value": "TILLBAKA"
+      "value": "Tillbaka"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Tid {0:0.0}"
+      "value": "{0:0.0} s kvar"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "Spela över"
+      "value": "Spelet är slut"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "REDO. {0} / {1}"
+      "value": "Redo {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Få klarhet att starta spelet"
+      "value": "Gör er redo att börja"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "ATT ÖVERLEVA TILLS TIDEN GÅR UT."
+      "value": "Överlev tills tiden är ute"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "REACH THE GOAL BEFORE TIME RUNS OUT"
+      "value": "Överlev tills tiden är ute"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Klart om en spelare överlever."
+      "value": "Ni klarar banan om minst en spelare överlever."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "När någon lekare når målet"
+      "value": "Ni klarar banan när en spelare når målet."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Återstartsstadium"
+      "value": "Starta om banan"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "Menyn"
+      "value": "Meny"
     },
     {
       "key": "redraw",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Penna Pen Pen Pen Pen"
+      "value": "Penna"
     },
     {
       "key": "eraser",
-      "value": "Rörare"
+      "value": "Suddgummi"
     },
     {
       "key": "shape_square",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Gjort!"
+      "value": "Klar"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "SE:"
+      "value": "Ljudeffekter"
     },
     {
       "key": "option_keys",
-      "value": "Nycklar"
+      "value": "Kontroller"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Spegelvänd"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "NOME"
+      "value": "Nome do jogador"
     },
     {
       "key": "option_player_name_placeholder",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "Antevisão"
+      "value": "Pré-visualização"
     },
     {
       "key": "clear",
@@ -178,11 +178,11 @@
     },
     {
       "key": "head",
-      "value": "Cabeçalho"
+      "value": "Cabeça"
     },
     {
       "key": "torso",
-      "value": "Torso"
+      "value": "Tronco"
     },
     {
       "key": "left_arm",
@@ -198,7 +198,7 @@
     },
     {
       "key": "right_leg",
-      "value": "Perna Direita"
+      "value": "Perna direita"
     },
     {
       "key": "left_front_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "HUMANO"
+      "value": "Humano"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Mais pernas INK aumenta a potência de salto\nMais braço INK aumenta a potência de lançamento"
+      "value": "Mais tinta nas pernas: saltos mais altos\nMais tinta nos braços: lançamentos mais fortes"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: JOGO"
+      "value": "F: Lançar"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / SELECIONAR: DESENHAR MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Desenhar\nOPTIONS / START: Menu"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: DESENHO MENU\nESC: MENU"
+      "value": "TAB: Desenhar\nESC: Menu"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: DESENHO MENU"
+      "value": "TAB: Desenhar"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: DESENHO MENU\nOPTIONS: MENU"
+      "value": "CREATE: Desenhar\nOPTIONS: Menu"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: DESENHO MENU\nMENU: MENU"
+      "value": "VIEW: Desenhar\nMENU: Menu"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: DESENHO MENU"
+      "value": "CREATE: Desenhar"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: DESENHO MENU"
+      "value": "VIEW: Desenhar"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "SALTA"
+      "value": "Salto"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "JOGAR"
+      "value": "Lançamento"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DESENHAR"
+      "value": "Desenhar"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "VOLTAR  ESC"
+      "value": "Voltar · ESC"
     },
     {
       "key": "title_exit",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Recomeçar este nível desde o início?"
+      "value": "Reiniciar este nível desde o início?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "QUARTO"
+      "value": "Sala"
     },
     {
       "key": "multi_create_room",
-      "value": "Criar espaço"
+      "value": "Criar sala"
     },
     {
       "key": "multi_join_room",
-      "value": "Junte-se à sala"
+      "value": "Entrar numa sala"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "QUARTO LOBBY"
+      "value": "Sala de espera"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Conectando..."
+      "value": "A ligar…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "Prontos"
+      "value": "Pronto"
     },
     {
       "key": "multi_wait",
-      "value": "Espera."
+      "value": "Em espera"
     },
     {
       "key": "multi_host",
-      "value": "ANFITRIÃO"
+      "value": "Anfitrião"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "CAPA PESSOAL"
+      "value": "Limite individual"
     },
     {
       "key": "ink_team_formula",
-      "value": "PAC DAS EQUIPES ({0}P)"
+      "value": "Limite da equipa ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "DIMENSÃO DA PEN"
+      "value": "Espessura do traço"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "PARTE CLARA"
+      "value": "Apagar parte"
     },
     {
       "key": "draw_undo_once",
-      "value": "DESFEITO"
+      "value": "Anular"
     },
     {
       "key": "draw_reset_all",
-      "value": "RESETIR TODOS"
+      "value": "Repor tudo"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "PRESETOS"
+      "value": "Modelos"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "APRESENTAÇÕES DE 5 CARACTER"
+      "value": "Modelos"
     },
     {
       "key": "draw_preset_back",
-      "value": "VOLTAR"
+      "value": "Voltar"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Tempo {0:0.0}"
+      "value": "Restam {0:0.0} s"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "Fim do Jogo"
+      "value": "Fim de jogo"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Prepare-se para começar o jogo"
+      "value": "Preparem-se para começar"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "Sobreviver até o tempo acabar"
+      "value": "Sobrevive até o tempo acabar"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "ALCANCE O OBJECTIVO ANTES DO TEMPO"
+      "value": "Sobrevive até o tempo acabar"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Claro que pelo menos um jogador sobrevive."
+      "value": "Passam o nível se pelo menos um jogador sobreviver."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Afastem-se quando alguém chegar ao objectivo."
+      "value": "Passam o nível quando qualquer jogador chega à meta."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Reiniciar a Etapa"
+      "value": "Reiniciar nível"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Feito!"
+      "value": "Concluir"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "- NÃO ."
+      "value": "Efeitos sonoros"
     },
     {
       "key": "option_keys",
-      "value": "Chaves"
+      "value": "Controlos"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Espelhar"
     }
   ]
 }

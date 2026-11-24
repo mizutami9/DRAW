@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Jméno"
+      "value": "Jméno hráče"
     },
     {
       "key": "option_player_name_placeholder",
@@ -182,15 +182,15 @@
     },
     {
       "key": "torso",
-      "value": "Torso."
+      "value": "Trup"
     },
     {
       "key": "left_arm",
-      "value": "Levá ruka"
+      "value": "Levá paže"
     },
     {
       "key": "right_arm",
-      "value": "Pravá ruka"
+      "value": "Pravá paže"
     },
     {
       "key": "left_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "LIDÉ"
+      "value": "Člověk"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Více nohou INK zvyšuje výkon skoku\nVíc ruky. INK zvyšuje výkon házení"
+      "value": "Více inkoustu v nohách: vyšší skok\nVíce inkoustu v pažích: silnější hod"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "FVYRÁŽET:"
+      "value": "F: Hod"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "VYTVOŘIT / VYBRAT: KRESLIT MENU"
+      "value": "CREATE / SELECT: Kreslit\nOPTIONS / START: Nabídka"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: KRESLIT MENU\nESCMENU:"
+      "value": "TAB: Kreslit\nESC: Nabídka"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: KRESLIT MENU"
+      "value": "TAB: Kreslit"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "VYTVOŘIT: KRESLIT MENU MOŽNOSTI: MENU"
+      "value": "CREATE: Kreslit\nOPTIONS: Nabídka"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VYHLED: KRESLIT MENU: MENU"
+      "value": "VIEW: Kreslit\nMENU: Nabídka"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "VYTVOŘTE MENU"
+      "value": "CREATE: Kreslit"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VYHLED: MENU KRESLIT"
+      "value": "VIEW: Kreslit"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "SKOČ ."
+      "value": "Skok"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "THOW"
+      "value": "Hod"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "VYTÁHNĚTE"
+      "value": "Kreslit"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Zpět  ESC"
+      "value": "Zpět · ESC"
     },
     {
       "key": "title_exit",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Restartovat tuto úroveň od začátku?"
+      "value": "Restartovat úroveň od začátku?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "Pokoj"
+      "value": "Místnost"
     },
     {
       "key": "multi_create_room",
-      "value": "Vytvořit pokoj"
+      "value": "Vytvořit místnost"
     },
     {
       "key": "multi_join_room",
-      "value": "Připojit pokoj"
+      "value": "Připojit se k místnosti"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "V LOBBY MÍSTNOSTI"
+      "value": "Čekárna"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Připojení..."
+      "value": "Připojování…"
     },
     {
       "key": "multi_room",
@@ -1214,11 +1214,11 @@
     },
     {
       "key": "multi_wait",
-      "value": "Počkej."
+      "value": "Čeká"
     },
     {
       "key": "multi_host",
-      "value": "HOSTITEL"
+      "value": "Hostitel"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "OSOBNÍ SZP"
+      "value": "Osobní limit"
     },
     {
       "key": "ink_team_formula",
-      "value": "Týmová SZP ({0}P)"
+      "value": "Limit týmu ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "Velikost PEN"
+      "value": "Tloušťka čáry"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "ČISTÁ ČÁST"
+      "value": "Smazat část"
     },
     {
       "key": "draw_undo_once",
-      "value": "ODSTRANĚNO"
+      "value": "Zpět o tah"
     },
     {
       "key": "draw_reset_all",
-      "value": "VŠE RESETOVAT"
+      "value": "Obnovit vše"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "PŘÍPRAVKY"
+      "value": "Předvolby"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5- PRÉZY"
+      "value": "Předvolby"
     },
     {
       "key": "draw_preset_back",
-      "value": "ZPĚT"
+      "value": "Zpět"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Čas {0:0.0}"
+      "value": "Zbývá {0:0.0} s"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "Hra skončila."
+      "value": "Konec hry"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "Připraven {0} / {1}"
+      "value": "Připraveno {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Připravte se začít hru."
+      "value": "Připravte se na start"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "PŘEZKUM DO ČASOVÝCH KONTROL"
+      "value": "Přežij do konce"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "PŘEPRAVA CÍLE PŘED ČASOU"
+      "value": "Přežij do konce"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Čisté, pokud alespoň jeden hráč přežije."
+      "value": "Úroveň splníte, pokud přežije alespoň jeden hráč."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Clear, když jeden hráč dosáhne cíle."
+      "value": "Úroveň splníte, jakmile některý hráč dorazí do cíle."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Restartovat jeviště"
+      "value": "Restartovat úroveň"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Číslo"
+      "value": "Pero"
     },
     {
       "key": "eraser",
-      "value": "Vymazat"
+      "value": "Guma"
     },
     {
       "key": "shape_square",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Hotovo!"
+      "value": "Hotovo"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "SE"
+      "value": "Zvukové efekty"
     },
     {
       "key": "option_keys",
-      "value": "Klíče"
+      "value": "Ovládání"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Zrcadlit"
     }
   ]
 }

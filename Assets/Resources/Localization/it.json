@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Nome"
+      "value": "Nome del giocatore"
     },
     {
       "key": "option_player_name_placeholder",
@@ -178,11 +178,11 @@
     },
     {
       "key": "head",
-      "value": "Capo"
+      "value": "Testa"
     },
     {
       "key": "torso",
-      "value": "Torso"
+      "value": "Busto"
     },
     {
       "key": "left_arm",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "UMANO"
+      "value": "Umano"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Più gamba INK aumenta la potenza di salto\nPiù braccio INK aumenta la potenza di lancio"
+      "value": "Più inchiostro sulle gambe: salti più alti\nPiù inchiostro sulle braccia: lanci più forti"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F:"
+      "value": "F: Lancia"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / SELEZIONA: DISEGNO MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Disegna\nOPTIONS / START: Menu"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: DISEGNO MENU\nESC: MENU"
+      "value": "TAB: Disegna\nESC: Menu"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: DISEGNO MENU"
+      "value": "TAB: Disegna"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: DISEGNO MENU\nOPTIONS: MENU"
+      "value": "CREATE: Disegna\nOPTIONS: Menu"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: DISEGNO MENU\nMENU: MENU"
+      "value": "VIEW: Disegna\nMENU: Menu"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: DISEGNO MENU"
+      "value": "CREATE: Disegna"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: DISEGNO MENU"
+      "value": "VIEW: Disegna"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "GIUGNO"
+      "value": "Salto"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "TERZA"
+      "value": "Lancio"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "DISEGNARE"
+      "value": "Disegna"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Indietro  ESC"
+      "value": "Indietro · ESC"
     },
     {
       "key": "title_exit",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Ricominciare questo livello dall'inizio?"
+      "value": "Ricominciare il livello dall’inizio?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "CAMERA"
+      "value": "Stanza"
     },
     {
       "key": "multi_create_room",
-      "value": "Creare camera"
+      "value": "Crea stanza"
     },
     {
       "key": "multi_join_room",
-      "value": "Entra in camera"
+      "value": "Entra in una stanza"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "LA HALL DELLA STANZA"
+      "value": "Sala d’attesa"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Collegamento..."
+      "value": "Connessione…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "PRONTO ."
+      "value": "Pronto"
     },
     {
       "key": "multi_wait",
-      "value": "Aspetta."
+      "value": "In attesa"
     },
     {
       "key": "multi_host",
-      "value": "O"
+      "value": "Host"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "PAC PERSONALE"
+      "value": "Limite individuale"
     },
     {
       "key": "ink_team_formula",
-      "value": "PAC TEAM ({0}P)"
+      "value": "Limite squadra ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "DIMENSIONE DELLA PENNA"
+      "value": "Spessore tratto"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "PARTE DEL COLORE"
+      "value": "Cancella parte"
     },
     {
       "key": "draw_undo_once",
-      "value": "DONNA"
+      "value": "Annulla tratto"
     },
     {
       "key": "draw_reset_all",
-      "value": "RISPARMIO ALL"
+      "value": "Ripristina tutto"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "PRESEPI"
+      "value": "Modelli"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5 PRESENTI DI CARATTERISTICHE"
+      "value": "Modelli"
     },
     {
       "key": "draw_preset_back",
-      "value": "INDIETRO"
+      "value": "Indietro"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Tempo {0:0.0}"
+      "value": "Restano {0:0.0} s"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "GIOCO"
+      "value": "Partita terminata"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "PRONTO . {0} / {1}"
+      "value": "Pronti {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "PREPARATI AD INIZIARE LA PARTITA ."
+      "value": "Preparatevi a partire"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "SURVIVE UNTIL TEMPO"
+      "value": "Sopravvivi fino allo scadere del tempo"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "SALMI PRIMA DEL TEMPO"
+      "value": "Sopravvivi fino allo scadere del tempo"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "CLEAR SE A LEAST ONE PLAYER SURVIVES."
+      "value": "Il livello è superato se sopravvive almeno un giocatore."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "CLERO: Quando un posto in cui si trova il Dio."
+      "value": "Il livello è superato quando un giocatore qualsiasi raggiunge il traguardo."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Fase di riavvio"
+      "value": "Ricomincia il livello"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "Menù"
+      "value": "Menu"
     },
     {
       "key": "redraw",
@@ -4182,7 +4182,7 @@
     },
     {
       "key": "eraser",
-      "value": "Cancellazione"
+      "value": "Gomma"
     },
     {
       "key": "shape_square",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Fatto!"
+      "value": "Fatto"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "SECONDA"
+      "value": "Effetti sonori"
     },
     {
       "key": "option_keys",
-      "value": "Chiavi"
+      "value": "Comandi"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Specchia"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "IMIĘ"
+      "value": "Nazwa gracza"
     },
     {
       "key": "option_player_name_placeholder",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Tórz"
+      "value": "Tułów"
     },
     {
       "key": "left_arm",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "CZŁOWIEK"
+      "value": "Człowiek"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Więcej nóg INK zwiększa moc skoku\nWięcej rąk INK zwiększa moc rzutu"
+      "value": "Więcej tuszu w nogach: wyższy skok\nWięcej tuszu w rękach: mocniejszy rzut"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "FWYRZUCANIE:"
+      "value": "F: Rzuć"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / WYBIERZ: RYSUJ MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Rysuj\nOPTIONS / START: Menu"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: RYSUJ MENU\nESC: MENU"
+      "value": "TAB: Rysuj\nESC: Menu"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: RYSUJ MENU"
+      "value": "TAB: Rysuj"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: RYSUJ MENU\nOPTIONS: MENU"
+      "value": "CREATE: Rysuj\nOPTIONS: Menu"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: RYSUJ MENU\nMENU: MENU"
+      "value": "VIEW: Rysuj\nMENU: Menu"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: RYSUJ MENU"
+      "value": "CREATE: Rysuj"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: RYSUJ MENU"
+      "value": "VIEW: Rysuj"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "SKOCZ ."
+      "value": "Skok"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "RZUĆ ."
+      "value": "Rzut"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "RYSUNEK"
+      "value": "Rysuj"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Z powrotem  ESC"
+      "value": "Wróć · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "Kontynuuj"
+      "value": "Wznów"
     },
     {
       "key": "menu_to_title",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Rozpocząć ten poziom od początku?"
+      "value": "Zacząć ten poziom od początku?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,7 +1046,7 @@
     },
     {
       "key": "multi_room_title",
-      "value": "POSIEDZENIE"
+      "value": "Pokój"
     },
     {
       "key": "multi_create_room",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "POMIESZCZENIE"
+      "value": "Poczekalnia"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Łączenie..."
+      "value": "Łączenie…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "PRZYGOTOWANIE"
+      "value": "Gotowy"
     },
     {
       "key": "multi_wait",
-      "value": "Czekaj"
+      "value": "Czeka"
     },
     {
       "key": "multi_host",
-      "value": "WŁAŚCICIEL"
+      "value": "Gospodarz"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "WPR OSOBOWA"
+      "value": "Limit osobisty"
     },
     {
       "key": "ink_team_formula",
-      "value": "KAPITAŁ ZESPOŁOWY ({0}P)"
+      "value": "Limit drużyny ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "WSTRZYKIWACZ"
+      "value": "Grubość linii"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "CZĘŚĆ ZAWIERAJĄCA"
+      "value": "Wyczyść część"
     },
     {
       "key": "draw_undo_once",
-      "value": "NIEWAŻNE"
+      "value": "Cofnij"
     },
     {
       "key": "draw_reset_all",
-      "value": "WYNIK WSZYSTKIE"
+      "value": "Resetuj wszystko"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "PREZES"
+      "value": "Szablony"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5 - PREZES CHARTERA"
+      "value": "Szablony"
     },
     {
       "key": "draw_preset_back",
-      "value": "WRÓĆ"
+      "value": "Wróć"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Czas {0:0.0}"
+      "value": "Zostało {0:0.0} s"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "GAME Over"
+      "value": "Koniec gry"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "PRZYGOTOWANIE {0} / {1}"
+      "value": "Gotowi {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Przygotuj się do rozpoczęcia gry"
+      "value": "Przygotujcie się do startu"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "NADZÓR DO CZASU WYKONANIA"
+      "value": "Przetrwaj do końca odliczania"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "REACH GOAL PRZED CZAS WYKONANIA"
+      "value": "Przetrwaj do końca odliczania"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Wyczyść, jeśli w końcu jeden player Survives."
+      "value": "Ukończycie poziom, jeśli przeżyje co najmniej jeden gracz."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Wyczyść, kiedy ktoś gra, osiąga cel."
+      "value": "Ukończycie poziom, gdy dowolny gracz dotrze do mety."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Przywróć etap"
+      "value": "Zacznij poziom od nowa"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Wstrzykiwacz"
+      "value": "Pióro"
     },
     {
       "key": "eraser",
-      "value": "Wymazywacz"
+      "value": "Gumka"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "Gotowe!"
+      "value": "Gotowe"
     },
     {
       "key": "draw_redo",
-      "value": "Tył"
+      "value": "Wróć"
     },
     {
       "key": "brush_size",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "WYKRYCIE"
+      "value": "Efekty dźwiękowe"
     },
     {
       "key": "option_keys",
-      "value": "Klucze"
+      "value": "Sterowanie"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Odbij"
     }
   ]
 }

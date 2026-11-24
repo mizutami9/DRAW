@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Nama"
+      "value": "Nama pemain"
     },
     {
       "key": "option_player_name_placeholder",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "Pratinjau"
+      "value": "Pratonton"
     },
     {
       "key": "clear",
@@ -186,11 +186,11 @@
     },
     {
       "key": "left_arm",
-      "value": "Tangan kiri"
+      "value": "Lengan kiri"
     },
     {
       "key": "right_arm",
-      "value": "Tangan kanan"
+      "value": "Lengan kanan"
     },
     {
       "key": "left_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "MANUSIA"
+      "value": "Manusia"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Lebih banyak kaki INK meningkatkan kekuatan lompatan Lebih lengan INK meningkatkan kuasa buang"
+      "value": "Lebih dakwat pada kaki: lompatan lebih tinggi\nLebih dakwat pada lengan: balingan lebih kuat"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: MEMERUT"
+      "value": "F: Baling"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / SELECT: DRAW menu OPTIONS / START: Menu"
+      "value": "CREATE / SELECT: Melukis\nOPTIONS / START: Menu"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: DRAW MENU\nESCMenu:"
+      "value": "TAB: Melukis\nESC: Menu"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: MENU GAMBAR"
+      "value": "TAB: Melukis"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "Penciptaan: DRAW MENU OPTIONS: MENU"
+      "value": "CREATE: Melukis\nOPTIONS: Menu"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "Pemandangan: DRAW MENU MENU: MENU"
+      "value": "VIEW: Melukis\nMENU: Menu"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "Penciptaan: Menus DRAW"
+      "value": "CREATE: Melukis"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "Pemandangan: MENU DRAW"
+      "value": "VIEW: Melukis"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "MELOMPAT"
+      "value": "Lompatan"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "MEMEREKA"
+      "value": "Balingan"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "LUKIS"
+      "value": "Melukis"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Kembali  ESC"
+      "value": "Kembali · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "Berlanjut"
+      "value": "Sambung"
     },
     {
       "key": "menu_to_title",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Memulakan semula peringkat ini dari awal?"
+      "value": "Mulakan semula peringkat ini dari awal?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "RUM"
+      "value": "Bilik"
     },
     {
       "key": "multi_create_room",
-      "value": "Buat Ruang"
+      "value": "Cipta bilik"
     },
     {
       "key": "multi_join_room",
-      "value": "Bilik Bersama"
+      "value": "Sertai bilik"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "RUM LOBBY"
+      "value": "Bilik menunggu"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Berhubung..."
+      "value": "Menyambung…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "Siapkan"
+      "value": "Sedia"
     },
     {
       "key": "multi_wait",
-      "value": "Tunggu"
+      "value": "Menunggu"
     },
     {
       "key": "multi_host",
-      "value": "TUAN RUMAH"
+      "value": "Hos"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "CAP PERSONAL"
+      "value": "Had individu"
     },
     {
       "key": "ink_team_formula",
-      "value": "CAP SEKumpulan ({0}P)"
+      "value": "Had pasukan ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "UKUR PEN"
+      "value": "Ketebalan garisan"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "BAGIAN BAGIAN"
+      "value": "Padam bahagian"
     },
     {
       "key": "draw_undo_once",
-      "value": "DILAKUKAN"
+      "value": "Buat asal"
     },
     {
       "key": "draw_reset_all",
-      "value": "Set semua semula"
+      "value": "Tetapkan semula"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,11 +1962,11 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "PRESET"
+      "value": "Templat"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "PRESET"
+      "value": "Templat"
     },
     {
       "key": "draw_preset_back",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Masa {0:0.0}"
+      "value": "Baki {0:0.0} saat"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "PERMAINAN BERAKHIR"
+      "value": "Permainan tamat"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "Siapkan {0} / {1}"
+      "value": "Sedia {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Bersedia untuk Mula Permainan"
+      "value": "Bersedia untuk bermula"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "Hidup Sepanjang Masa"
+      "value": "Bertahan sehingga masa tamat"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "KELANGKAN KEKALAN dan MEMALI di TILTING SIGH"
+      "value": "Bertahan sehingga masa tamat"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "CLEAR IF sekurang-kurangnya seorang pemain bertahan hidup."
+      "value": "Peringkat selesai jika sekurang-kurangnya seorang pemain bertahan."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Jelas apabila setiap pemain mencapai matlamat."
+      "value": "Peringkat selesai apabila mana-mana pemain sampai ke garisan penamat."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Bermula semula peringkat"
+      "value": "Mulakan semula peringkat"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "MENYU."
+      "value": "Menu"
     },
     {
       "key": "redraw",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "PEN."
+      "value": "Pen"
     },
     {
       "key": "eraser",
-      "value": "Penghapusan"
+      "value": "Pemadam"
     },
     {
       "key": "shape_square",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Sudah selesai!"
+      "value": "Selesai"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "LIHAT."
+      "value": "Kesan bunyi"
     },
     {
       "key": "option_keys",
-      "value": "Kunci"
+      "value": "Kawalan"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Cerminkan"
     }
   ]
 }

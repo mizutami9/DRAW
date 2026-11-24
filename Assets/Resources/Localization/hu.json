@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Név"
+      "value": "Játékosnév"
     },
     {
       "key": "option_player_name_placeholder",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "A torzsa"
+      "value": "Törzs"
     },
     {
       "key": "left_arm",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "EMBEREK"
+      "value": "Ember"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Több láb INK növeli az ugróerőt\nTöbb kar INK növeli a dobóerőt"
+      "value": "Több tinta a lábakon: magasabb ugrás\nTöbb tinta a karokon: erősebb dobás"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F: DOBÁS"
+      "value": "F: Dobás"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / KIVÁLASZTÁS: DRAW MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Rajzolás\nOPTIONS / START: Menü"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: SORSOLÁS MENU\nESC: MENU"
+      "value": "TAB: Rajzolás\nESC: Menü"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: RAJZ MENU"
+      "value": "TAB: Rajzolás"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: SORSOLÁS MENU\nOPTIONS: MENU"
+      "value": "CREATE: Rajzolás\nOPTIONS: Menü"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: SORSOLÁS MENU\nMENU: MENU"
+      "value": "VIEW: Rajzolás\nMENU: Menü"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: RAJZ MENU"
+      "value": "CREATE: Rajzolás"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: RAJZ MENU"
+      "value": "VIEW: Rajzolás"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "HÚZD LE!"
+      "value": "Ugrás"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "HÁROM"
+      "value": "Dobás"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "RAJZOLJ!"
+      "value": "Rajzolás"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Vissza  ESC"
+      "value": "Vissza · ESC"
     },
     {
       "key": "title_exit",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "Újrakezded ezt a pályát az elejéről?"
+      "value": "Újraindítod ezt a pályát az elejéről?"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1046,7 +1046,7 @@
     },
     {
       "key": "multi_room_title",
-      "value": "SZOBA"
+      "value": "Szoba"
     },
     {
       "key": "multi_create_room",
@@ -1054,7 +1054,7 @@
     },
     {
       "key": "multi_join_room",
-      "value": "Csatlakozó szoba"
+      "value": "Csatlakozás szobához"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "SZOBA"
+      "value": "Váróterem"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Kapcsolódás..."
+      "value": "Csatlakozás…"
     },
     {
       "key": "multi_room",
@@ -1214,11 +1214,11 @@
     },
     {
       "key": "multi_wait",
-      "value": "Várj!"
+      "value": "Várakozik"
     },
     {
       "key": "multi_host",
-      "value": "ÜDVÖZLŐ"
+      "value": "Házigazda"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "SZEMÉLYES KAP"
+      "value": "Egyéni keret"
     },
     {
       "key": "ink_team_formula",
-      "value": "CSAPATKAPPA ({0}P)"
+      "value": "Csapatkeret ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "PEN-EGYSÉG"
+      "value": "Vonalvastagság"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "Világos rész"
+      "value": "Testrész törlése"
     },
     {
       "key": "draw_undo_once",
-      "value": "MEGTÖRÖLTE"
+      "value": "Visszavonás"
     },
     {
       "key": "draw_reset_all",
-      "value": "MINDENT VISSZAÁLLÍTANI."
+      "value": "Minden visszaállítása"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "MEGJEGYZÉS"
+      "value": "Sablonok"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5 - FELSZERELÉS"
+      "value": "Sablonok"
     },
     {
       "key": "draw_preset_back",
-      "value": "VISSZA"
+      "value": "Vissza"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Idő {0:0.0}"
+      "value": "Hátra {0:0.0} mp"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "Játék vége"
+      "value": "Vége a játéknak"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "Kész {0} / {1}"
+      "value": "Készen {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Készülj fel a játékra."
+      "value": "Készüljetek a rajtra"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "A FELDOLGOZÁS IDŐPONTJA"
+      "value": "Éld túl az idő végéig"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "AZ IDŐPONT MEGERŐSÍTÉSE"
+      "value": "Éld túl az idő végéig"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Tisztán, ha legalább egy játékos túléli."
+      "value": "A pálya akkor sikerül, ha legalább egy játékos túléli."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Tisztán kell látni, ha egy játékos eléri a célpontot."
+      "value": "A pálya akkor sikerül, ha bármelyik játékos célba ér."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Újraindítási szakasz"
+      "value": "Pálya újrakezdése"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "toll"
+      "value": "Toll"
     },
     {
       "key": "eraser",
-      "value": "Törlő"
+      "value": "Radír"
     },
     {
       "key": "shape_square",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Kész!"
+      "value": "Kész"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "A KÖVETKEZŐ:"
+      "value": "Hangeffektek"
     },
     {
       "key": "option_keys",
-      "value": "Kulcsok"
+      "value": "Irányítás"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Tükrözés"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "Имя"
+      "value": "Имя игрока"
     },
     {
       "key": "option_player_name_placeholder",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "Предварительный просмотр"
+      "value": "Предпросмотр"
     },
     {
       "key": "clear",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "Торсо"
+      "value": "Туловище"
     },
     {
       "key": "left_arm",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "человек"
+      "value": "Человек"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "Больше ног INK Увеличение мощности прыжка\nБольше рук INK Увеличить силу бросков"
+      "value": "Больше чернил на ногах: выше прыжок\nБольше чернил на руках: сильнее бросок"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "F:Выход"
+      "value": "F: Бросить"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / ВЫБОР: РИСОВАТЬ MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: Рисовать\nOPTIONS / START: Меню"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: РИСОВАТЬ MENU\nESC: MENU"
+      "value": "TAB: Рисовать\nESC: Меню"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: НАРИСОВАТЬ MENU"
+      "value": "TAB: Рисовать"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: РИСОВАТЬ MENU\nOPTIONS: MENU"
+      "value": "CREATE: Рисовать\nOPTIONS: Меню"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: РИСОВАТЬ MENU\nMENU: MENU"
+      "value": "VIEW: Рисовать\nMENU: Меню"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: НАРИСОВАТЬ MENU"
+      "value": "CREATE: Рисовать"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: НАРИСОВАТЬ MENU"
+      "value": "VIEW: Рисовать"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "прыжок"
+      "value": "Прыжок"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "брось"
+      "value": "Бросок"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "РИСОВАНИЕ"
+      "value": "Рисовать"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "Вернуться  ESC"
+      "value": "Назад · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "Продолжать"
+      "value": "Продолжить"
     },
     {
       "key": "menu_to_title",
@@ -1046,15 +1046,15 @@
     },
     {
       "key": "multi_room_title",
-      "value": "комната"
+      "value": "Комната"
     },
     {
       "key": "multi_create_room",
-      "value": "Создайте комнату"
+      "value": "Создать комнату"
     },
     {
       "key": "multi_join_room",
-      "value": "Присоединяйтесь к комнате"
+      "value": "Войти в комнату"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "Рум Любби"
+      "value": "Зал ожидания"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "Подключение..."
+      "value": "Подключение…"
     },
     {
       "key": "multi_room",
@@ -1210,15 +1210,15 @@
     },
     {
       "key": "multi_ready",
-      "value": "Готовый"
+      "value": "Готов"
     },
     {
       "key": "multi_wait",
-      "value": "Ждать"
+      "value": "Ожидание"
     },
     {
       "key": "multi_host",
-      "value": "ведущий"
+      "value": "Ведущий"
     },
     {
       "key": "multi_default_room_name",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "ЛИЧНЫЙ КАП"
+      "value": "Личный лимит"
     },
     {
       "key": "ink_team_formula",
-      "value": "ТЕАМ КАП ({0}P)"
+      "value": "Лимит команды ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "ПЕН СИЗЕ"
+      "value": "Толщина линии"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "Ясная часть"
+      "value": "Стереть часть"
     },
     {
       "key": "draw_undo_once",
-      "value": "ООН"
+      "value": "Отменить"
     },
     {
       "key": "draw_reset_all",
-      "value": "Возвращайся"
+      "value": "Сбросить всё"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,15 +1962,15 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "ПРЕЗИДЕНТЫ"
+      "value": "Шаблоны"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5-ХАРАКТЕРНЫЕ ПРЕЗИТЫ"
+      "value": "Шаблоны"
     },
     {
       "key": "draw_preset_back",
-      "value": "НАЗАД"
+      "value": "Назад"
     },
     {
       "key": "draw_preset_five_species",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "Время {0:0.0}"
+      "value": "Осталось {0:0.0} с"
     },
     {
       "key": "challenge_collection_progress",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "Готовый {0} / {1}"
+      "value": "Готовы {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "Готовьтесь начать игру"
+      "value": "Приготовьтесь к старту"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "Выжить, пока время не закончится"
+      "value": "Продержитесь до конца отсчёта"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "Успокойся перед тем, как закончится время"
+      "value": "Продержитесь до конца отсчёта"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "Ясно, если хотя бы один игрок выживет."
+      "value": "Уровень пройден, если выживет хотя бы один игрок."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "Ясно, когда любой игрок достигает цели."
+      "value": "Уровень пройден, как только любой игрок доберётся до финиша."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "Перезапустить этап"
+      "value": "Начать уровень заново"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "Пенни"
+      "value": "Перо"
     },
     {
       "key": "eraser",
-      "value": "Эразер"
+      "value": "Ластик"
     },
     {
       "key": "shape_square",
@@ -4198,7 +4198,7 @@
     },
     {
       "key": "draw_finish",
-      "value": "Готово!"
+      "value": "Готово"
     },
     {
       "key": "draw_redo",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "Шеф."
+      "value": "Звуковые эффекты"
     },
     {
       "key": "option_keys",
-      "value": "Ключи"
+      "value": "Управление"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "Отразить"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "entries": [
     {
       "key": "option_player_name",
-      "value": "الاسم"
+      "value": "اسم اللاعب"
     },
     {
       "key": "option_player_name_placeholder",
@@ -94,7 +94,7 @@
     },
     {
       "key": "preview",
-      "value": "المشاهدة السابقة"
+      "value": "معاينة"
     },
     {
       "key": "clear",
@@ -182,7 +182,7 @@
     },
     {
       "key": "torso",
-      "value": "الجهاز"
+      "value": "الجذع"
     },
     {
       "key": "left_arm",
@@ -190,11 +190,11 @@
     },
     {
       "key": "right_arm",
-      "value": "اليمين"
+      "value": "الذراع اليمنى"
     },
     {
       "key": "left_leg",
-      "value": "القدم اليسرى"
+      "value": "الساق اليسرى"
     },
     {
       "key": "right_leg",
@@ -302,7 +302,7 @@
     },
     {
       "key": "ability_card_human",
-      "value": "الإنسان"
+      "value": "إنسان"
     },
     {
       "key": "ability_card_cat",
@@ -322,7 +322,7 @@
     },
     {
       "key": "ability_description_human",
-      "value": "المزيد من الساق INK زيادة القوة\nالمزيد من الذراع INK زيادة القوة"
+      "value": "مزيد من الحبر في الساقين يقوّي القفز\nمزيد من الحبر في الذراعين يقوّي الرمي"
     },
     {
       "key": "ability_description_cat",
@@ -342,7 +342,7 @@
     },
     {
       "key": "ability_control_human",
-      "value": "Fالقذف:"
+      "value": "F: رمي"
     },
     {
       "key": "ability_control_cat",
@@ -390,15 +390,15 @@
     },
     {
       "key": "gameplay_actions_pad",
-      "value": "CREATE / تحديد: رسم MENU\nOPTIONS / START: MENU"
+      "value": "CREATE / SELECT: ارسم\nOPTIONS / START: القائمة"
     },
     {
       "key": "gameplay_actions_keyboard",
-      "value": "TAB: رسم MENU\nESC: MENU"
+      "value": "TAB: ارسم\nESC: القائمة"
     },
     {
       "key": "gameplay_actions_keyboard_secondary",
-      "value": "TAB: رسم MENU"
+      "value": "TAB: ارسم"
     },
     {
       "key": "ability_control_ps_human",
@@ -450,19 +450,19 @@
     },
     {
       "key": "gameplay_actions_ps",
-      "value": "CREATE: رسم MENU\nOPTIONS: MENU"
+      "value": "CREATE: ارسم\nOPTIONS: القائمة"
     },
     {
       "key": "gameplay_actions_xbox",
-      "value": "VIEW: رسم MENU\nMENU: MENU"
+      "value": "VIEW: ارسم\nMENU: القائمة"
     },
     {
       "key": "gameplay_actions_ps_secondary",
-      "value": "CREATE: رسم MENU"
+      "value": "CREATE: ارسم"
     },
     {
       "key": "gameplay_actions_xbox_secondary",
-      "value": "VIEW: رسم MENU"
+      "value": "VIEW: ارسم"
     },
     {
       "key": "demo_stage_unavailable",
@@ -530,11 +530,11 @@
     },
     {
       "key": "ability_human_jump_gauge",
-      "value": "قفز"
+      "value": "القفز"
     },
     {
       "key": "ability_human_arm_gauge",
-      "value": "رمي"
+      "value": "الرمي"
     },
     {
       "key": "ability_cat_back_leg_gauge",
@@ -818,7 +818,7 @@
     },
     {
       "key": "title_draw",
-      "value": "الرسم"
+      "value": "ارسم"
     },
     {
       "key": "title_option",
@@ -834,7 +834,7 @@
     },
     {
       "key": "ui_back_esc",
-      "value": "باك  ESC"
+      "value": "رجوع · ESC"
     },
     {
       "key": "title_exit",
@@ -974,7 +974,7 @@
     },
     {
       "key": "menu_continue",
-      "value": "استمر"
+      "value": "متابعة"
     },
     {
       "key": "menu_to_title",
@@ -982,7 +982,7 @@
     },
     {
       "key": "menu_retry_confirm_message",
-      "value": "هل تريد إعادة هذه المرحلة من البداية؟"
+      "value": "أعد بدء المرحلة من البداية؟"
     },
     {
       "key": "menu_retry_confirm_yes",
@@ -1050,11 +1050,11 @@
     },
     {
       "key": "multi_create_room",
-      "value": "غرفة الإنشاءات"
+      "value": "إنشاء غرفة"
     },
     {
       "key": "multi_join_room",
-      "value": "غرفة الاجتماعات"
+      "value": "الانضمام إلى غرفة"
     },
     {
       "key": "multi_create_room_body",
@@ -1114,7 +1114,7 @@
     },
     {
       "key": "multi_room_lobby",
-      "value": "روم لوبي"
+      "value": "غرفة الانتظار"
     },
     {
       "key": "multi_lobby_status_default",
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "multi_connecting",
-      "value": "التواصل..."
+      "value": "جارٍ الاتصال…"
     },
     {
       "key": "multi_room",
@@ -1214,7 +1214,7 @@
     },
     {
       "key": "multi_wait",
-      "value": "انتظروا"
+      "value": "انتظار"
     },
     {
       "key": "multi_host",
@@ -1914,15 +1914,15 @@
     },
     {
       "key": "ink_personal_cap",
-      "value": "القبض الشخصي"
+      "value": "الحد الفردي"
     },
     {
       "key": "ink_team_formula",
-      "value": "فريق التكنولوجيا والتقييم الاقتصادي{0}(ف)"
+      "value": "حد الفريق ({0})"
     },
     {
       "key": "draw_pen_size",
-      "value": "حجم القلم"
+      "value": "سمك الخط"
     },
     {
       "key": "draw_ink",
@@ -1930,15 +1930,15 @@
     },
     {
       "key": "draw_clear_part",
-      "value": "الجزء المخصص"
+      "value": "مسح الجزء"
     },
     {
       "key": "draw_undo_once",
-      "value": "إبطال"
+      "value": "تراجع"
     },
     {
       "key": "draw_reset_all",
-      "value": "RESET All"
+      "value": "إعادة ضبط الكل"
     },
     {
       "key": "draw_reset_confirm_title",
@@ -1962,11 +1962,11 @@
     },
     {
       "key": "draw_preset_button",
-      "value": "إعدادات مسبقة"
+      "value": "نماذج"
     },
     {
       "key": "draw_preset_sets_title",
-      "value": "5 - معدات ميكانيكية"
+      "value": "نماذج"
     },
     {
       "key": "draw_preset_back",
@@ -3026,7 +3026,7 @@
     },
     {
       "key": "challenge_time_remaining",
-      "value": "الوقت {0:0.0}"
+      "value": "المتبقي {0:0.0} ث"
     },
     {
       "key": "challenge_collection_progress",
@@ -3150,7 +3150,7 @@
     },
     {
       "key": "game_over",
-      "value": "مرّة"
+      "value": "انتهت اللعبة"
     },
     {
       "key": "msg_body_too_large_for_spawn",
@@ -3162,7 +3162,7 @@
     },
     {
       "key": "ready_room_status",
-      "value": "جاهز {0} / {1}"
+      "value": "الجاهزون {0} / {1}"
     },
     {
       "key": "ready_room_recommended",
@@ -3182,7 +3182,7 @@
     },
     {
       "key": "ready_room_game_default",
-      "value": "لنبدأ اللعبة"
+      "value": "استعدوا للبدء"
     },
     {
       "key": "ready_room_game_2_3",
@@ -3246,7 +3246,7 @@
     },
     {
       "key": "ready_room_game_11_2",
-      "value": "الوقت الخفي"
+      "value": "ابقَ على قيد الحياة"
     },
     {
       "key": "ready_room_game_11_3",
@@ -3274,7 +3274,7 @@
     },
     {
       "key": "ready_room_game_14_1",
-      "value": "اعيد النظر في الوقت المناسب"
+      "value": "ابقَ على قيد الحياة"
     },
     {
       "key": "ready_room_game_14_2",
@@ -3298,11 +3298,11 @@
     },
     {
       "key": "ready_room_clear_one_survivor",
-      "value": "تَتَعْرفُ إذا على الأقل واحد مِنْ عرباتِ اللعب."
+      "value": "تنجحون إذا بقي لاعب واحد على الأقل على قيد الحياة."
     },
     {
       "key": "ready_room_clear_one_goal",
-      "value": "اغلقوا عندما يقوم احدى اللاعبين بترويض الهدف"
+      "value": "تنجحون عندما يصل أي لاعب إلى الهدف."
     },
     {
       "key": "ready_room_clear_team_time",
@@ -4050,7 +4050,7 @@
     },
     {
       "key": "menu_restart_stage",
-      "value": "مرحلة العودة"
+      "value": "إعادة المرحلة"
     },
     {
       "key": "menu_leave_session_confirm",
@@ -4170,7 +4170,7 @@
     },
     {
       "key": "menu",
-      "value": "قائمة الطعام"
+      "value": "القائمة"
     },
     {
       "key": "redraw",
@@ -4178,11 +4178,11 @@
     },
     {
       "key": "pen",
-      "value": "القلم"
+      "value": "قلم"
     },
     {
       "key": "eraser",
-      "value": "مُحذف"
+      "value": "ممحاة"
     },
     {
       "key": "shape_square",
@@ -4198,11 +4198,11 @@
     },
     {
       "key": "draw_finish",
-      "value": "تم!"
+      "value": "تم"
     },
     {
       "key": "draw_redo",
-      "value": "العودة"
+      "value": "رجوع"
     },
     {
       "key": "brush_size",
@@ -4314,11 +4314,11 @@
     },
     {
       "key": "option_se",
-      "value": "- نعم ."
+      "value": "المؤثرات الصوتية"
     },
     {
       "key": "option_keys",
-      "value": "المفاتيح"
+      "value": "التحكم"
     },
     {
       "key": "option_language",
@@ -4835,6 +4835,10 @@
     {
       "key": "campaign_ending_thanks",
       "value": "THANK YOU FOR PLAYING!"
+    },
+    {
+      "key": "draw_flip_horizontal",
+      "value": "عكس أفقي"
     }
   ]
 }

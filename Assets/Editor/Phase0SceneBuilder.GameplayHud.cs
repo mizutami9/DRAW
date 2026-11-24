@@ -27,7 +27,7 @@ namespace DrawBody.EditorTools
                 hintRoot.transform,
                 font,
                 "TAB",
-                "DROW MENU",
+                "title_draw",
                 new Vector2(0f, 40f),
                 true);
 
@@ -36,7 +36,7 @@ namespace DrawBody.EditorTools
                 hintRoot.transform,
                 font,
                 "ESC",
-                "MENU",
+                "menu",
                 new Vector2(0f, 4f),
                 true);
 
@@ -150,7 +150,7 @@ namespace DrawBody.EditorTools
             }
         }
 
-        private static Button CreateKeyboardHintButton(string name, Transform parent, Font font, string keyText, string labelText, Vector2 anchoredPosition, bool clickable)
+        private static Button CreateKeyboardHintButton(string name, Transform parent, Font font, string keyText, string labelKey, Vector2 anchoredPosition, bool clickable)
         {
             GameObject root = new GameObject(name + "Hint");
             root.transform.SetParent(parent, false);
@@ -192,7 +192,8 @@ namespace DrawBody.EditorTools
             Stretch(keyLabel.rectTransform);
 
             Text label = CreateText(name + "Text", root.transform, font, 19, TextAnchor.MiddleLeft);
-            label.text = labelText;
+            label.text = LocalizationManager.T(labelKey);
+            label.gameObject.AddComponent<LocalizedText>().SetKey(labelKey);
             label.color = new Color(0.12f, 0.1f, 0.08f, 0.88f);
             label.fontStyle = FontStyle.Bold;
             label.rectTransform.anchorMin = new Vector2(0f, 0f);

@@ -357,7 +357,8 @@ namespace DrawBody.Prototype
             RectTransform brush = FindRect(panel, "BrushSizeChip");
             SetDockRect(brush, new Vector2(294f, 8f), new Vector2(270f, 130f));
             RestyleCard(brush, new Color(1f, 0.975f, 0.9f, 0.96f));
-            Text brushHeader = EnsureLabel(brush, "BrushSectionHeader", "BRUSH", 13, TextAnchor.MiddleLeft);
+            Text brushHeader = EnsureLabel(brush, "BrushSectionHeader",
+                LocalizationManager.T("draw_pen_size"), 13, TextAnchor.MiddleLeft);
             SetTopRect(brushHeader.rectTransform, new Vector2(16f, -8f), new Vector2(190f, 25f), new Vector2(0f, 1f));
             brushHeader.fontStyle = FontStyle.Bold;
             ConfigureContainedText(brushHeader, 10, 14, TextAnchor.MiddleLeft);
@@ -1455,10 +1456,13 @@ namespace DrawBody.Prototype
             RectTransform partBar = FindRect(root, "PartButtonBar");
             if (root != null && partBar != null && root.rect.height > 0f)
             {
-                float partBarBottom = root.rect.height * 0.5f
-                    + partBar.anchoredPosition.y
-                    - partBar.rect.height;
-                position.y = Mathf.Min(position.y, partBarBottom - height * 0.5f - 8f);
+                float partBarBottom = root.InverseTransformPoint(
+                    partBar.TransformPoint(new Vector3(0f, partBar.rect.yMin, 0f))).y - root.rect.center.y;
+                if (position.y + height * 0.5f + cardGap > partBarBottom && abilityCard != null)
+                {
+                    position.y = abilityCard.anchoredPosition.y
+                        - (abilityCard.rect.height + height) * 0.5f - cardGap;
+                }
             }
 
             SetCenterRect(presetCard, position, new Vector2(width, height));
